@@ -61,7 +61,11 @@
 				?>
 				<div class="message_actions">
 					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
-					<div class="message_action__list">
+					<div class="message_action__list bb_more_dropdown">
+						<div class="message_action__list_popup bb_more_dropdown__title"> 
+							<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
+							<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
+						</div>
 						<ul>
 							<li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread',
 											'buddyboss' ); ?></a></li>
@@ -92,6 +96,7 @@
 							</li>
 						</ul>
 					</div>
+					<div class="bb_more_dropdown_overlay"></div>
 				</div>
 				<?php
 			} else {
@@ -103,7 +108,11 @@
 				?>
 				<div class="message_actions">
 					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
-					<div class="message_action__list">
+					<div class="message_action__list bb_more_dropdown">
+						<div class="message_action__list_popup bb_more_dropdown__title"> 
+							<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
+							<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
+						</div>
 						<ul>
 							<li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread',
 											'buddyboss' ); ?></a></li>
@@ -140,6 +149,7 @@
 							?>
 						</ul>
 					</div>
+					<div class="bb_more_dropdown_overlay"></div>
 				</div>
 				<?php
 			}
