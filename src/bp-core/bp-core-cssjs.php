@@ -194,6 +194,11 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
+		'bp-register-page-validate' 	=> array(
+			'file'         => "{$url}register-validate{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
+		),
 
 	);
 
@@ -939,6 +944,21 @@ function bp_core_register_page_js() {
 		);
 
 		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );
+	}
+
+	if ( bp_is_register_page() ) {
+		wp_enqueue_script( 'bp-register-page-validate' );
+
+		$data = array(
+			'ajaxurl'        => bp_core_ajax_url(),
+			'field_id'       => 'field_' . bp_get_xprofile_member_type_field_id(),
+			'nonce'          => wp_create_nonce( 'bp-core-register-page-js' ),
+			'mismatch_email' => __( 'Mismatch', 'buddyboss' ),
+			'valid_email'    => __( 'Enter valid email', 'buddyboss' ),
+			'required_field' => __( 'This is a required field.', 'buddyboss' ),
+		);
+
+		wp_localize_script( 'bp-register-page-validate', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );
 	}
 
 }
