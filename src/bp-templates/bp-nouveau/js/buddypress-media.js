@@ -543,6 +543,7 @@ window.bp = window.bp || {};
 		},
 
 		clearOnCloseTopicReplyModal: function() {
+			bp.Nouveau.Media.collectTopicReplyDraftActivity();
 			bp.Nouveau.Media.clearTopicReplyDraftIntervals();
 			bp.Nouveau.Media.resetTopicReplyDraftPostForm();
 		},
@@ -663,6 +664,10 @@ window.bp = window.bp || {};
 				}
 			);
 
+			if ( 'undefined' === typeof meta.bbp_topic_subscription ) {
+				meta.bbp_topic_subscription = '';
+			}
+
 			var media_valid = true;
 			if ( 'undefined' !== typeof meta.bbp_media && '' === meta.bbp_media ) {
 				media_valid = false;
@@ -759,8 +764,10 @@ window.bp = window.bp || {};
 			$form.find( '#bbp_stick_topic_select option[value="' + activity_data.bbp_stick_topic + '"]' ).prop( 'selected', true );
 
 			// Subscribe notify.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_subscription ) {
+			if ( 'undefined' !== typeof activity_data.bbp_topic_subscription && '' !== activity_data.bbp_topic_subscription ) {
 				$form.find( '#bbp_topic_subscription' ).prop( 'checked', true );
+			} else if ( 'undefined' !== typeof activity_data.bbp_topic_subscription && '' === activity_data.bbp_topic_subscription ) {
+				$form.find( '#bbp_topic_subscription' ).prop( 'checked', false );
 			} else if( 0 < this.bbp_forum_id && ! $( '#subscribe-' + this.bbp_forum_id ).hasClass( 'is-subscribed' ) ) {
 				$form.find( '#bbp_topic_subscription' ).prop( 'checked', false );
 			}
@@ -807,8 +814,10 @@ window.bp = window.bp || {};
 			}
 
 			// Subscribe notify.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_subscription ) {
+			if ( 'undefined' !== typeof activity_data.bbp_topic_subscription && '' !== activity_data.bbp_topic_subscription ) {
 				$form.find( '#bbp_topic_subscription' ).prop( 'checked', true );
+			} else if ( 'undefined' !== typeof activity_data.bbp_topic_subscription && '' === activity_data.bbp_topic_subscription ) {
+				$form.find( '#bbp_topic_subscription' ).prop( 'checked', false );
 			} else if( 0 < this.bbp_topic_id && ! $( '#subscribe-' + this.bbp_topic_id ).hasClass( 'is-subscribed' ) ) {
 				$form.find( '#bbp_topic_subscription' ).prop( 'checked', false );
 			}
