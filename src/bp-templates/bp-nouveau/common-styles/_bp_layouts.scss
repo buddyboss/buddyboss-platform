@@ -312,7 +312,7 @@
 			li {
 
 				@include font-size(16);
-				margin: $marg-sml 0;
+				margin: 0 0 $marg-sml;
 
 				a {
 					border-right: 1px solid $bp-border-dark;
