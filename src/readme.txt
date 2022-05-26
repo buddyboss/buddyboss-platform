@@ -57,6 +57,32 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.0.2 =
+* Notifications - Added icon support for notification avatar based on the notification type
+* Profiles - Handled members profile takes to wrong recipient issue when clicking on send message
+* Forums - Handled @mention dropdown not showing issue for Forum discussion and reply editor
+* Forums - Handled profile subscription tab members profile link issue
+* Activity - Handled activity comment empty content validation issue
+* Activity - Handled activity comment enter new line lag UX issue
+* Activity - Handled hidden gif issue on read more click
+* Activity - Handled read more not working issue for specific server
+* Activity - Handled documents performance issue when symlink disabled
+* Activity - Handled gif deletion issue when post edited
+* Media - Handled temporary junk files issue on the server when folder downloaded
+* Messages - Handled multiple-member thread, all members not showing issue
+* Moderation - Handled critical issue on block user action when connection component is disabled
+* Network Search - Handled discussion search issue when media attached
+* Registration - Handled small UI issues
+* BuddyPanel - Handled small UI issues when BuddyPanel disabled and group type shortcode added
+* BuddyPanel - Handled 'my group' menu wrong link issue
+* Coding Standards - Code refactoring to update all icon images with a new icon pack in the dashboard
+* Coding Standards - Small code refactoring to fix hook and added icon CSS file version query string
+* REST API - Handled activity comment empty content validation issue in the API
+* REST API - Handled member type issue for certain members in the API
+* REST API - Handled hidden group activity media privacy issue
+* REST API - Handled block member action critical issue when connections component disabled in the API
+* REST API - Handled activity end-point media issue in the response
+
 = 2.0.1.1 =
 * Messages - Fixed send message critical security issue
 
