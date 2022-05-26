@@ -78,6 +78,7 @@ class BP_Suspend_Notification extends BP_Suspend_Abstract {
 
 		if ( ! empty( $suspend_where ) ) {
 			$where_conditions .= " AND {$tbl_alias}.secondary_item_id NOT IN ( " . $suspend_where . " )";
+			$where_conditions .= " AND {$tbl_alias}.item_id NOT IN ( " . $suspend_where . " )";
 		}
 
 		/**
