@@ -25571,6 +25571,7 @@ span.icons:before {
   margin-left: 22px;
   min-width: 53px;
   max-height: 53px;
+  position: relative;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar img {
@@ -25588,6 +25589,25 @@ span.icons:before {
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar .bb-notification-members img:nth-child(2) {
   transform: translate(-14px, -25px);
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar a > i {
+  align-items: center;
+  background-color: #9b9c9f;
+  border-radius: 50%;
+  bottom: -10px;
+  color: #fff;
+  display: flex;
+  font-size: 18px;
+  justify-content: center;
+  height: 25px;
+  position: absolute;
+  left: -10px;
+  width: 25px;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar a > i.bb-icon-calendar {
+  font-size: 17px;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content {
