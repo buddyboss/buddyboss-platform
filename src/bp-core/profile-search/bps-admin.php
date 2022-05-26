@@ -94,6 +94,10 @@ function bp_ps_fields_box( $post ) {
 				continue;
 			}
 
+			if ( 'membertypes' === $fields[ $id ]->type && ! bp_member_type_enable_disable() ) {
+				continue;
+			}
+
 			$field     = $fields[ $id ];
 			$label     = esc_attr( $bp_ps_options['field_label'][ $k ] );
 			$default   = esc_attr( $field->name );
