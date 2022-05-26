@@ -257,21 +257,22 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 							$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
 						}
 						?>
-						<p><?php echo $moderate_text; ?><?php echo $approve_comment; ?>
-									  <?php
-										if ( ! empty( $trash_comment ) ) {
-											echo ', ' . $trash_comment; }
-										?>
-		<?php
-		if ( ! empty( $delete_comment ) ) {
-							echo ', ' . $delete_comment; }
-		?>
+						<p>
+							<?php
+							echo $moderate_text . $approve_comment;
+							if ( ! empty( $trash_comment ) ) {
+								echo ', ' . $trash_comment;
+							}
 
-		<?php
-		if ( ! empty( $spam_comment ) ) {
-							echo ', ' . $spam_comment; }
-		?>
-</p>
+							if ( ! empty( $delete_comment ) ) {
+								echo ', ' . $delete_comment;
+							}
+
+							if ( ! empty( $spam_comment ) ) {
+								echo ', ' . $spam_comment;
+							}
+							?>
+						</p>
 					</div>
 				</td>
 			</tr>
@@ -544,16 +545,21 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 						/* translators: Comment moderation. 1: Comment action URL */
 						$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
 						?>
-						<p><?php echo $moderate_text; ?><?php echo $approve_comment; ?>
-									  <?php
-										if ( ! empty( $trash_comment ) ) {
-											echo ', ' . $trash_comment; }
-										?>
-		<?php
-		if ( ! empty( $delete_comment ) ) {
-							echo ', ' . $delete_comment; }
-		?>
-		<?php echo ', ' . $spam_comment; ?></p>
+						<p>
+							<?php
+							echo $moderate_text . $approve_comment;
+
+							if ( ! empty( $trash_comment ) ) {
+								echo ', ' . $trash_comment;
+							}
+
+							if ( ! empty( $delete_comment ) ) {
+								echo ', ' . $delete_comment;
+							}
+
+							echo ', ' . $spam_comment;
+							?>
+						</p>
 					</div>
 				</td>
 			</tr>
