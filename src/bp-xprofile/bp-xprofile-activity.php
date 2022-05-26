@@ -208,9 +208,14 @@ function xprofile_register_activity_action( $key, $value ) {
  * @return bool
  */
 function bp_xprofile_new_avatar_activity( $user_id = 0 ) {
+	$item_type = ( isset( $_POST['item_type'] ) && ! empty( $_POST['item_type'] ) ) ? sanitize_text_field( $_POST['item_type'] ) : null;
 
 	// Bail if activity component is not active.
 	if ( ! bp_is_active( 'activity' ) ) {
+		return false;
+	}
+
+	if ( empty( $user_id ) && ( ! empty( $item_type ) && 'default' === $item_type ) ) {
 		return false;
 	}
 

@@ -829,7 +829,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				'bp_rest_register_errors',
 				$bp->signup->errors,
 				array(
-					'status' => 200,
+					'status' => 400,
 				)
 			);
 		}
@@ -1187,7 +1187,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 
 		if ( 'edit' === $context ) {
-			$data['user_email']     = $signup->user_email;
+			$data['user_email'] = $signup->user_email;
 		}
 
 		$data = $this->add_additional_fields_to_object( $data, $request );

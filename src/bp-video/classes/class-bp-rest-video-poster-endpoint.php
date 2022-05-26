@@ -389,12 +389,17 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		$video                     = new BP_Video( $id );
 		$auto_generated_thumbnails = (array) get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 
-		if ( isset( $auto_generated_thumbnails['custom_image'] ) && ! empty( $auto_generated_thumbnails['custom_image'] ) ) {
+		// New thumbnail upload time remove the previous one.
+		if ( empty( $request->get_param( 'attachment_id' ) ) && ! empty( $file ) && ! empty( $auto_generated_thumbnails['custom_image'] ) ) {
 			wp_delete_post( $auto_generated_thumbnails['custom_image'], true );
 		}
 
-		$auto_generated_thumbnails['custom_image'] = $attachment_id;
-		update_post_meta( $video->attachment_id, 'video_preview_thumbnails', $auto_generated_thumbnails);
+		// Set the meta data after upload new custom thumbnail.
+		if ( empty( $request->get_param( 'attachment_id' ) ) && ! empty( $file ) ) {
+			$auto_generated_thumbnails['custom_image'] = $attachment_id;
+			update_post_meta( $video->attachment_id, 'video_preview_thumbnails', $auto_generated_thumbnails);
+		}
+    
 		update_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', $attachment_id );
 
 		$response = $this->get_video_poster( $id, $request );
@@ -698,7 +703,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 						'thumb' => bb_video_get_attachment_symlink( $video, $auto_generated_thumbnail, 'bb-video-poster-popup-image' ),
 					),
 					'attachment_id' => $auto_generated_thumbnail,
-					'preview'       => ( $preview_thumbnail_id === $auto_generated_thumbnail ) ? true : false,
+					'preview'       => ( (int) $preview_thumbnail_id === (int) $auto_generated_thumbnail ) ? true : false,
 					'can_delete'    => false,
 					'can_set'       => ( empty( $preview_thumbnail_id ) || in_array( $preview_thumbnail_id, $auto_generated_thumbnails, true ) ) ? true : false,
 				);
@@ -712,7 +717,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 					'thumb' => bb_video_get_attachment_symlink( $video, $auto_generated_thumbnails['custom_image'], 'bb-video-poster-popup-image' ),
 				),
 				'attachment_id' => $auto_generated_thumbnails['custom_image'],
-				'preview'       => ( $preview_thumbnail_id === $auto_generated_thumbnails['custom_image'] ) ? true : false,
+				'preview'       => ( (int) $preview_thumbnail_id === (int) $auto_generated_thumbnails['custom_image'] ) ? true : false,
 				'can_delete'    => true,
 				'can_set'       => true,
 			);
