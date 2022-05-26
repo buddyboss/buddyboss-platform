@@ -180,6 +180,7 @@ window.bp = window.bp || {};
 			this.topic_reply_local_interval = false;
 			this.topic_reply_ajax_interval  = false;
 			this.draft_ajax_request         = null;
+			this.is_topic_reply_form_submit = false;
 			this.all_draft_data             = {};
 			this.topic_reply_draft          = {
 				object: false,
@@ -548,10 +549,15 @@ window.bp = window.bp || {};
 
 		clearOnCloseTopicReplyModal: function() {
 			bp.Nouveau.Media.topic_reply_draft.display_post = '';
-			bp.Nouveau.Media.collectTopicReplyDraftActivity();
+
+			if ( ! bp.Nouveau.Media.is_topic_reply_form_submit ) {
+				bp.Nouveau.Media.collectTopicReplyDraftActivity();
+			}
+
 			bp.Nouveau.Media.clearTopicReplyDraftIntervals();
 			bp.Nouveau.Media.resetTopicReplyDraftPostForm();
 			bp.Nouveau.Media.topic_reply_draft.display_post = 'edit';
+			bp.Nouveau.Media.is_topic_reply_form_submit = false;
 		},
 
 		clearTopicReplyDraftIntervals: function() {
@@ -565,6 +571,7 @@ window.bp = window.bp || {};
 		resetLocalTopicReplyDraft: function() {
 			bp.Nouveau.Media.topic_reply_draft.allow_delete_media = false;
 			bp.Nouveau.Media.topic_reply_draft.display_post = '';
+			bp.Nouveau.Media.is_topic_reply_form_submit = true;
 
 			if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
 				delete this.all_draft_data[this.topic_reply_draft.data_key];
@@ -762,10 +769,16 @@ window.bp = window.bp || {};
 		},
 
 		appendTopicDraftData: function() {
+			bp.Nouveau.Media.getTopicReplyDraftData();
+
 			var $form = $( 'form#new-post' ),
-				activity_data = this.topic_reply_draft.data,
+				activity_data = {},
 				editor_key = $form.find( '.bbp-the-content' ).data( 'key' ),
 				$editor = $form.find( '#bbp_editor_topic_content_' + editor_key );
+
+			if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
+				activity_data = this.all_draft_data[this.topic_reply_draft.data_key];
+			}
 
 			// Title.
 			$form.find( '#bbp_topic_title' ).val( activity_data.bbp_topic_title );
@@ -789,7 +802,7 @@ window.bp = window.bp || {};
 			}
 
 			// Tags.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_tags_dropdown ) {
+			if ( 'undefined' !== typeof activity_data.bbp_topic_tags_dropdown && '' !== activity_data.bbp_topic_tags_dropdown ) {
 
 				$form.find( '#bbp_topic_tags' ).val( activity_data.bbp_topic_tags );
 
@@ -816,7 +829,6 @@ window.bp = window.bp || {};
 				editor_key = $form.find( '.bbp-the-content' ).data( 'key' ),
 				$editor = $form.find( '#bbp_editor_reply_content_' + editor_key );
 
-
 			if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
 				activity_data = this.all_draft_data[this.topic_reply_draft.data_key];
 			}
@@ -839,7 +851,7 @@ window.bp = window.bp || {};
 			}
 
 			// Tags.
-			if ( 'undefined' !== typeof activity_data.bbp_topic_tags_dropdown ) {
+			if ( 'undefined' !== typeof activity_data.bbp_topic_tags_dropdown && '' !== activity_data.bbp_topic_tags_dropdown ) {
 
 				$form.find( '#bbp_topic_tags' ).val( activity_data.bbp_topic_tags );
 
