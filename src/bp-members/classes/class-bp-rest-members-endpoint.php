@@ -697,7 +697,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function user_data( $user, $context = 'view' ) {
-		$data = array(
+		$user_data = get_userdata( $user->ID );
+		$data      = array(
 			'id'                 => $user->ID,
 			'name'               => $user->display_name,
 			'user_login'         => $user->user_login,
@@ -706,13 +707,21 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'roles'              => array(),
 			'capabilities'       => array(),
 			'extra_capabilities' => array(),
-			'registered_date'    => bp_rest_prepare_date_response( get_userdata( $user->ID )->user_registered ),
+			'registered_date'    => bp_rest_prepare_date_response( $user_data->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
 			'xprofile'           => array(),
 			'followers'          => count( $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) ) ),
 			'following'          => count( $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) ) ),
+			'is_wp_admin'        => false,
 		);
+
+		// Fetch user roles.
+		$user_roles = ! empty( $user->ID ) ? $user_data->roles : '';
+		if ( ! empty( $user_roles ) ) {
+			// If user is admin then set true, otherwise it should be false.
+			$data['is_wp_admin'] = in_array( 'administrator', $user_roles, true ) ? true : false;
+		}
 
 		// Load xprofile data when required.
 		if ( 'embed' !== $context ) {
@@ -751,7 +760,6 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		if ( 'edit' === $context ) {
-			$user_data                  = get_userdata( $user->ID );
 			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
 			$data['roles']              = (array) array_values( $user_data->roles );
 			$data['capabilities']       = (array) array_keys( $user_data->allcaps );
@@ -1184,6 +1192,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				),
 				'is_following'       => array(
 					'description' => __( 'Check if a user is following or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'is_wp_admin'        => array(
+					'description' => __( 'Whether the member is an administrator.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
