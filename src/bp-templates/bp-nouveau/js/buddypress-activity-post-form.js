@@ -1050,12 +1050,14 @@ window.bp = window.bp || {};
 			}
 		},
 
-		resetDraftActivity: function() {
+		resetDraftActivity: function( is_send_server ) {
 			var self = this;
 
 			// Delete the activity from the database.
 			bp.draft_activity.post_action = 'delete';
-			bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
+			if ( is_send_server ) {
+				bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
+			}
 			bp.draft_activity.data = false;
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
@@ -4916,7 +4918,7 @@ window.bp = window.bp || {};
 
 						if ( '' === self.model.get( 'id' ) || 0 === parseInt( self.model.get( 'id' ) ) ) {
 							// Reset draft activity.
-							bp.Nouveau.Activity.postForm.resetDraftActivity();
+							bp.Nouveau.Activity.postForm.resetDraftActivity( false );
 						}
 
 						// Reset the form.
@@ -5244,7 +5246,7 @@ window.bp = window.bp || {};
 				this.updateMultiMediaOptions();
 
 				// Delete the activity from the database.
-				bp.Nouveau.Activity.postForm.resetDraftActivity();
+				bp.Nouveau.Activity.postForm.resetDraftActivity( true );
 			},
 		}
 	);

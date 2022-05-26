@@ -596,11 +596,10 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$activity_id             = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
-	$item_id                 = 0;
-	$object                  = '';
-	$is_private              = false;
-	$draft_activity_meta_key = 'draft_' . $object;
+	$activity_id = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+	$item_id     = 0;
+	$object      = '';
+	$is_private  = false;
 
 	// Try to get the item id from posted variables.
 	if ( ! empty( $_POST['item_id'] ) ) {
@@ -617,6 +616,8 @@ function bp_nouveau_ajax_post_update() {
 		$object  = 'group';
 		$status  = groups_get_current_group()->status;
 	}
+
+	$draft_activity_meta_key = 'draft_' . $object;
 
 	if (
 		bp_is_active( 'media' ) &&
@@ -684,7 +685,7 @@ function bp_nouveau_ajax_post_update() {
 			$content = sprintf( '@%s %s', bp_get_displayed_user_mentionname(), $content );
 
 			// Draft activity meta key.
-			$draft_activity_meta_key .= $object . '_' . bp_get_displayed_user()->id;
+			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
 		}
 
 		$activity_id = bp_activity_post_update(
@@ -721,7 +722,7 @@ function bp_nouveau_ajax_post_update() {
 			}
 
 			// Draft activity meta key.
-			$draft_activity_meta_key .= $object . '_' . $item_id;
+			$draft_activity_meta_key .= '_' . $item_id;
 		}
 	} else {
 		/** This filter is documented in bp-activity/bp-activity-actions.php */
