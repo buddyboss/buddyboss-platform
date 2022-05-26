@@ -444,7 +444,7 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
-		$results    = BP_Messages_Thread::get_threads_for_user(
+		$results = BP_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'     => 'ids',
 				'having_sql' => $having_sql,

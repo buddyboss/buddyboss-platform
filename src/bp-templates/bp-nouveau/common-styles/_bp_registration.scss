@@ -247,7 +247,8 @@ body.register {
 	.bb-show-pass {
 
 		.bb-icon-eye:before {
-			content: "\e8fc";
+			content: "\ee6a";
+			font-family: 'bb-icons';/* stylelint-disable-line */
 		}
 	}
 }

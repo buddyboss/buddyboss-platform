@@ -8,7 +8,7 @@
 ?>
 <form action="" method="get" id="user_messages_search_form" class="bp-messages-search-form" data-bp-search="messages">
 	<button type="submit" id="user_messages_search_submit">
-		<span class="bb-icon-search" aria-hidden="true"></span>
+		<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
 		<span class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 	</button>
 	<label for="user_messages_search" class="bp-screen-reader-text">
