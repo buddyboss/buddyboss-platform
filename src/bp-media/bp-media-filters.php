@@ -263,21 +263,22 @@ function bp_media_activity_append_media( $content, $activity ) {
 		}
 
 		if ( bp_has_media( $args ) ) {
+
+			ob_start();
 			?>
-			<?php ob_start(); ?>
 			<div class="bb-activity-media-wrap
 			<?php
-			echo 'bb-media-length-' . $media_template->media_count;
+			echo 'bb-media-length-' . esc_attr( $media_template->media_count );
 			echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 			echo true === $is_forum_activity ? ' forums-media-wrap' : '';
 			?>
 			">
 				<?php
-					bp_get_template_part( 'media/media-move' );
-					while ( bp_media() ) {
-						bp_the_media();
-						bp_get_template_part( 'media/activity-entry' );
-					}
+				bp_get_template_part( 'media/media-move' );
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				}
 				?>
 			</div>
 			<?php
