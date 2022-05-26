@@ -197,9 +197,8 @@ function bp_document_activity_append_document( $content, $activity ) {
 			'sort'     => 'ASC',
 		)
 	) ) {
-
+		ob_start();
 		?>
-		<?php ob_start(); ?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php
 			bp_get_template_part( 'document/activity-document-move' );
