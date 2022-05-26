@@ -1390,7 +1390,7 @@ function bp_document_upload() {
 	$result = array(
 		'id'   => (int) $attachment->ID,
 		'url'  => esc_url( $attachment_url ),
-		'name' => esc_attr( pathinfo( basename( get_attached_file( (int) $attachment->ID ) ), PATHINFO_FILENAME ) ),
+		'name' => esc_attr( basename( get_attached_file( (int) $attachment->ID ) ) ),
 		'type' => esc_attr( 'document' ),
 		'size' => $attachment_size,
 	);
