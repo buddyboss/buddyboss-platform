@@ -2325,9 +2325,6 @@ window.bp = window.bp || {};
 
 			if (
 				$( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'media-theatre' ) ||
-
-			if (
-				$( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'media-theatre' ) ||
 				$( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'document-theatre' )
 			) {
 				return false;
