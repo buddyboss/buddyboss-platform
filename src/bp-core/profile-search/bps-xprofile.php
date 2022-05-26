@@ -49,6 +49,32 @@ function bp_ps_xprofile_setup( $fields ) {
 					$f->options[ $key ] = $label;
 				}
 
+				if ( 'membertypes' === $f->type ) {
+					$member_type_args = array(
+						'meta_query' => array(
+							array(
+								'key'   => '_bp_member_type_enable_filter',
+								'value' => 1,
+							),
+						),
+					);
+
+					if ( bp_is_members_directory() ) {
+						$member_type_args['meta_query'][] = array(
+							'key'   => '_bp_member_type_enable_remove',
+							'value' => 0,
+						);
+					}
+
+					$active_member_type = bp_get_active_member_types( $member_type_args );
+
+					if ( ! empty( $active_member_type ) ) {
+						foreach ( $active_member_type as $member_type_id ) {
+							$f->options[ $member_type_id ] = esc_attr( get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true ) );
+						}
+					}
+				}
+
 				if ( $f->format == 'custom' ) {
 					/**
 					 * @todo add title/description
@@ -277,6 +303,7 @@ function bp_ps_xprofile_format( $type, $field_id ) {
 		'multiselectbox' => array( 'set' ),
 		'checkbox'       => array( 'set' ),
 		'datebox'        => array( 'date' ),
+		'membertypes'    => array( 'text', 'decimal' ),
 	);
 
 	if ( ! isset( $formats[ $type ] ) ) {
