@@ -396,6 +396,20 @@ div.bbp-reply-header {
 	overflow-x: auto;
 }
 
+#new-post {
+
+	.bb_discard_topic_reply_draft {
+		display: none;
+	}
+}
+
+#new-post.has-draft {
+
+	.bb_discard_topic_reply_draft {
+		display: block;
+	}
+}
+
 /* =Reply to
 -------------------------------------------------------------- */
 
