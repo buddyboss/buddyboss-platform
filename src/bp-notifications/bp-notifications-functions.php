@@ -1244,7 +1244,7 @@ function bb_notification_avatar() {
 /**
  * Get Default Avatar for notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.2
  *
  * @param string $size         Size of the notification icon, 'full' or 'thumb'.
  * @param object $notification Notification object.
@@ -1270,7 +1270,7 @@ function bb_get_default_notification_avatar( $size = 'full', $notification ) {
 /**
  * Get Default notification avatar URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.2
  *
  * @param string $size Size of the notification icon, 'full' or 'thumb'.
  *
@@ -1286,7 +1286,7 @@ function bb_get_notification_avatar_url( $size = 'full' ) {
 	/**
 	 * Filters default BuddyBoss notification avatar URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.2
 	 *
 	 * @param string $value Default BuddyBoss notification avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
@@ -1334,7 +1334,7 @@ function bb_notification_small_icon( $component_action, $html = true, $notificat
 /**
  * Get the small icon for the notification which will print beside the avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.2
  *
  * @param object $notification Notification object.
  *
