@@ -74,11 +74,12 @@ class BP_Suspend_Notification extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$suspend_where = $wpdb->prepare( "SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE user_suspended = %d AND item_type = %s", 1, 'user' );
 
 		if ( ! empty( $suspend_where ) ) {
-			$where_conditions .= " AND {$tbl_alias}.secondary_item_id NOT IN ( " . $suspend_where . " )";
-			$where_conditions .= " AND {$tbl_alias}.item_id NOT IN ( " . $suspend_where . " )";
+			$where_conditions .= " AND {$tbl_alias}.secondary_item_id NOT IN ( " . $suspend_where . " )"; // phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
+			$where_conditions .= " AND {$tbl_alias}.item_id NOT IN ( " . $suspend_where . " )"; // phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
 		}
 
 		/**

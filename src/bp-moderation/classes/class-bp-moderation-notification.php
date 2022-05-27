@@ -94,12 +94,15 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_is_moderation_member_blocking_enable( 0 ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$moderation_query = $wpdb->prepare( "SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE ( hide_parent = %d OR hide_sitewide = %d OR reported = %d ) AND item_type = %s", 1, 1, 1, 'user' );
 
+			// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
 			$sql_where .= " AND {$tbl_alias}.secondary_item_id NOT IN ( " . $moderation_query . " )";
 
 			$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 			if ( ! empty( $hidden_users_ids ) ) {
+				// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
 				$sql_where .= " AND ( {$tbl_alias}.item_id NOT IN ( " . implode( ',', $hidden_users_ids ) . " ) )";
 			}
 		}
