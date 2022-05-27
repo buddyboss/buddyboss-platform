@@ -757,7 +757,7 @@ window.bp = window.bp || {};
 					} else if ( 'undefined' !== typeof old_data[ pair ] && 'undefined' !== typeof new_data[ pair ] && old_data[ pair ] !== new_data[ pair ] ) {
 						bp.Nouveau.Media.draft_content_changed = true;
 					}
-				},
+				}
 			);
 		},
 

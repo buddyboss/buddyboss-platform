@@ -1054,7 +1054,7 @@ window.bp = window.bp || {};
 					) && ! _.isUndefined( old_data[ pair ] ) && ! _.isUndefined( new_data[ pair ] ) && old_data[ pair ] !== new_data[ pair ] ) {
 						bp.draft_content_changed = true;
 					}
-				},
+				}
 			);
 		},
 
