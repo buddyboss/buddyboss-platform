@@ -4212,7 +4212,7 @@ window.bp = window.bp || {};
 						model: this.model,
 						type: 'button',
 						id: 'discard-draft-activity',
-						className: 'button',
+						className: 'button outline',
 						name: 'discard-draft-activity',
 						value: BP_Nouveau.activity.strings.discardButton
 					}

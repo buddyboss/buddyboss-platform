@@ -256,6 +256,15 @@
 	}
 }
 
+#discard-draft-activity {
+	background-color: transparent !important;
+	border: 0 !important;
+	font-size: 15px !important;
+	line-height: 1 !important;
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
 #whats-new-form:not(.focus-in--group) #privacy-status-group-back {
 	display: none !important;
 }
