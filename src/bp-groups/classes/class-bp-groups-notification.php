@@ -361,7 +361,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'groups',
 			'bb_groups_new_message',
-			'bb_groups_new_message'
+			'bb_groups_new_message',
+			'bb-icon-f bb-icon-comment'
 		);
 	}
 
