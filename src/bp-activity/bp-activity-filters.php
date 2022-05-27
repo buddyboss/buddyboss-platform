@@ -3331,6 +3331,12 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 				true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
 			)
 		) {
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $comment_user_id ) ) {
+				continue;
+			}
+
 			// Poster name.
 			$reply_author_name = bp_core_get_user_displayname( $comment_user_id );
 			$author_id         = $comment_user_id;
