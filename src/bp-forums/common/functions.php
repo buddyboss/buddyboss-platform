@@ -1211,6 +1211,12 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 		$chunk_user_ids = array_chunk( $user_ids, 10 );
 		if ( ! empty( $chunk_user_ids ) ) {
 			foreach ( $chunk_user_ids as $key => $member_ids ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $member_ids, $reply_author ) ) {
+					continue;
+				}
+
 				$bb_email_background_updater->data(
 					array(
 						array(
@@ -1241,6 +1247,11 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 
 			// Bail if member opted out of receiving this email.
 			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+				continue;
+			}
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $reply_author ) ) {
 				continue;
 			}
 
@@ -1381,6 +1392,12 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		$chunk_user_ids = array_chunk( $user_ids, 10 );
 		if ( ! empty( $chunk_user_ids ) ) {
 			foreach ( $chunk_user_ids as $key => $member_ids ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $member_ids, $topic_author ) ) {
+					continue;
+				}
+
 				$bb_email_background_updater->data(
 					array(
 						array(
@@ -1410,6 +1427,11 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 			// Bail if member opted out of receiving this email.
 			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+				continue;
+			}
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $topic_author ) ) {
 				continue;
 			}
 
