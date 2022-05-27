@@ -729,41 +729,36 @@ window.bp = window.bp || {};
 		},
 
 		checkedTopicReplyDataChanged: function( old_data, new_data ) {
-			if ( 'undefined' !== typeof old_data.bbp_topic_title && 'undefined' !== typeof new_data.bbp_topic_title && old_data.bbp_topic_title !== new_data.bbp_topic_title ) {
-				bp.Nouveau.Media.draft_content_changed = true;
-			}
+			var draft_data_keys = [
+				'bbp_topic_title',
+				'bbp_topic_content',
+				'bbp_stick_topic',
+				'bbp_topic_tags',
+				'bbp_reply_content',
+				'bbp_media',
+				'bbp_document',
+				'bbp_video',
+				'bbp_media_gif',
+				'link_embed',
+				'link_description',
+				'link_image',
+				'link_title',
+				'link_url'
+			];
 
-			if ( 'undefined' !== typeof old_data.bbp_topic_content && 'undefined' !== typeof new_data.bbp_topic_content && old_data.bbp_topic_content !== new_data.bbp_topic_content ) {
-				bp.Nouveau.Media.draft_content_changed = true;
-			}
+			_.each(
+				draft_data_keys,
+				function( pair ) {
 
-			if ( 'undefined' !== typeof old_data.bbp_stick_topic && 'undefined' !== typeof new_data.bbp_stick_topic && old_data.bbp_stick_topic !== new_data.bbp_stick_topic ) {
-				bp.Nouveau.Media.draft_content_changed = true;
-			}
-
-			if ( 'undefined' !== typeof old_data.bbp_topic_tags && 'undefined' !== typeof new_data.bbp_topic_tags && old_data.bbp_topic_tags !== new_data.bbp_topic_tags ) {
-				bp.Nouveau.Media.draft_content_changed = true;
-			}
-
-			if ( 'undefined' !== typeof old_data.bbp_reply_content && 'undefined' !== typeof new_data.bbp_reply_content && old_data.bbp_reply_content !== new_data.bbp_reply_content ) {
-				bp.Nouveau.Media.draft_content_changed = true;
-			}
-
-			if ( 'undefined' !== typeof old_data.bbp_media && 'undefined' !== typeof new_data.bbp_media && old_data.bbp_media !== new_data.bbp_media ) {
-				bp.Nouveau.Media.draft_content_changed = true;
-			}
-
-			if ( 'undefined' !== typeof old_data.bbp_document && 'undefined' !== typeof new_data.bbp_document && old_data.bbp_document !== new_data.bbp_document ) {
-				bp.Nouveau.Media.draft_content_changed = true;
-			}
-
-			if ( 'undefined' !== typeof old_data.bbp_video && 'undefined' !== typeof new_data.bbp_video && old_data.bbp_video !== new_data.bbp_video ) {
-				bp.Nouveau.Media.draft_content_changed = true;
-			}
-
-			if ( 'undefined' !== typeof old_data.bbp_media_gif && 'undefined' !== typeof new_data.bbp_media_gif && old_data.bbp_media_gif !== new_data.bbp_media_gif ) {
-				bp.Nouveau.Media.draft_content_changed = true;
-			}
+					if ( ! _.isUndefined( old_data[ pair ] ) && _.isUndefined( new_data[ pair ] ) ) {
+						bp.draft_content_changed = true;
+					} else if ( _.isUndefined( old_data[ pair ] ) && ! _.isUndefined( new_data[ pair ] ) ) {
+						bp.draft_content_changed = true;
+					} else if ( 'undefined' !== typeof old_data[ pair ] && 'undefined' !== typeof new_data[ pair ] && old_data[ pair ] !== new_data[ pair ] ) {
+						bp.Nouveau.Media.draft_content_changed = true;
+					}
+				},
+			);
 		},
 
 		postTopicReplyDraft: function( is_force_saved, is_reload_window ) {
