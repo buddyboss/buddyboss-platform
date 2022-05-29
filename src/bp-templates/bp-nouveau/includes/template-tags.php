@@ -1566,9 +1566,8 @@ function bp_nouveau_get_container_classes() {
 		if ( $layout_prefs && (int) $layout_prefs === 1 && ( bp_is_user() || bp_is_group() ) ) {
 			$classes[] = 'bp-single-vert-nav';
 			$classes[] = 'bp-vertical-navs';
-			$classes[] = 'bb-nav-vert';
 		} else {
-			$classes[] = 'bb-nav-plain';
+			$classes[] = 'bp-single-plain-nav';
 		}
 
 		if ( $layout_prefs && bp_is_directory() ) {
