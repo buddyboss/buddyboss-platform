@@ -4256,6 +4256,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 				z-index: 1;
 				display: none;
 
+				@media screen and (max-width: 980px) {
+
+					&.bb_more_dropdown.open {
+						position: fixed;
+						top: 50%;
+						bottom: inherit;
+						right: inherit;
+						width: 220px;
+						z-index: 999;
+					}
+				}
+
 				&:after {
 					content: " ";
 					position: absolute;
