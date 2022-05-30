@@ -128,6 +128,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
 			$( document ).on( 'click', '.video-action_list .video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
 			$( document ).on( 'click', '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-custom .close-thumbnail-custom', this.deleteVideoThumb.bind( this ) );
+			$( '#buddypress [data-bp-list="video"]' ).on( 'bp_ajax_request', this.bp_ajax_video_request );
 
 			// Video Album, Video Directory.
 			bpNouveau.on( 'click', '#bb-create-video-album', this.openCreateVideoAlbumModal.bind( this ) );
@@ -739,7 +740,7 @@ window.bp = window.bp || {};
 							$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
-						
+
 						if ( response.data.id ) {
 							file.id                  = response.id;
 							response.data.uuid       = file.upload.uuid;
@@ -1580,6 +1581,16 @@ window.bp = window.bp || {};
 
 		},
 
+		bp_ajax_video_request: function ( event, data ) {
+			if ( 'undefined' !== typeof BP_Nouveau.video.group_id && 'undefined' !== typeof data && 'undefined' !== typeof data.response.scopes.groups && 0 === parseInt( data.response.scopes.groups ) ) {
+				$( '.bb-videos-actions' ).hide();
+			} else if ( BP_Nouveau.video.group_id && 'undefined' !== typeof data && 'undefined' !== typeof data.response.scopes.groups && 0 !== parseInt( data.response.scopes.groups ) ) {
+				$( '.bb-videos-actions' ).show();
+			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && 0 === parseInt( data.response.scopes.personal ) ) {
+				$( '.bb-videos-actions' ).hide();
+			}
+		},
+
 		deleteVideoThumb: function ( event ) {
 
 			var target = $( event.currentTarget );
@@ -2257,7 +2268,7 @@ window.bp = window.bp || {};
 			self.setCurrentVideo( id );
 			self.showVideo();
 			self.navigationCommands();
-			
+
 			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' ) {
 				self.getActivity();
 			} else {
@@ -2270,27 +2281,27 @@ window.bp = window.bp || {};
 
 			// document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
-		
+
 		closeTheatre: function ( event ) {
 			event.preventDefault();
 			var self = this;
 			var target = $( event.currentTarget );
-			
-			if ( 
-				$( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'media-theatre' ) || 
+
+			if (
+				$( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'media-theatre' ) ||
 				$( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'document-theatre' )
 			) {
 				return false;
 			}
-			
+
 			if ( $( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).length ) {
 				$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).attr( 'src', '' );
 			}
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_video = false;
-			
+
 			self.resetRemoveActivityCommentsData();
-			
+
 			self.current_video = false;
 		},
 
@@ -2302,13 +2313,13 @@ window.bp = window.bp || {};
 			if ( self.activity_ajax != false ) {
 				self.activity_ajax.abort();
 			}
-			
+
 			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments' );
 			if ( on_page_activity_comments.length ) {
 				self.current_video.parent_activity_comments = true;
 				on_page_activity_comments.html( '' );
 			}
-			
+
 			if ( true === self.current_video.parent_activity_comments ) {
 				$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_video.activity_id + '" id="hidden_parent_id"/>' );
 			}
