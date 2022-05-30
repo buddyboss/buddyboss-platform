@@ -81,8 +81,8 @@ function bb_core_default_install_emails( $default_components ) {
 	if ( ! class_exists( 'BP_Forums_Notification' ) ) {
 
 		// Load Forums notification file.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php' ) ) {
-			require buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php';
+		if ( file_exists( buddypress()->plugin_dir . 'bp-forums/classes/class-bp-forums-notification.php' ) ) {
+			require buddypress()->plugin_dir . 'bp-forums/classes/class-bp-forums-notification.php';
 		}
 
 		BP_Forums_Notification::instance();
