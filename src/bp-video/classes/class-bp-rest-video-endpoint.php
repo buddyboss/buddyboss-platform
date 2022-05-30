@@ -1154,18 +1154,6 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$args = array();
 		$key  = 'create';
 
-		if ( WP_REST_Server::EDITABLE === $method ) {
-			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss' ),
-				'type'              => 'integer',
-				'required'          => true,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
-			);
-
-			$key = 'update';
-		}
-
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['upload_ids'] = array(
 				'description'       => __( 'Video specific IDs.', 'buddyboss' ),
@@ -1207,6 +1195,20 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
+		if ( WP_REST_Server::EDITABLE === $method ) {
+			$args['id'] = array(
+				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss' ),
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
+			unset( $args['privacy']['default'] );
+
+			$key = 'update';
+		}
 
 		/**
 		 * Filters the method query arguments.
@@ -1793,14 +1795,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+		$video_id  = bp_activity_get_meta( $activity_id, 'bp_video_id', true );
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
+
+		if ( ! empty( $video_id ) ) {
+			$video_ids[] = $video_id;
+			$video_ids   = array_filter( array_unique( $video_id ) );
+		}
 
 		if ( empty( $video_ids ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
+		$videos = $this->assemble_response_data(
+			array(
+				'video_ids' => $video_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2027,14 +2040,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$video_ids = get_post_meta( $p_id, 'bp_video_ids', true );
+		$video_id  = get_post_meta( $p_id, 'bp_video_id', true );
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
+
+		if ( ! empty( $video_id ) ) {
+			$video_ids[] = $video_id;
+			$video_ids   = array_filter( array_unique( $video_ids ) );
+		}
 
 		if ( empty( $video_ids ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
+		$videos = $this->assemble_response_data(
+			array(
+				'video_ids' => $video_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2196,14 +2220,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+		$video_id  = bp_messages_get_meta( $message_id, 'bp_video_id', true );
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
+
+		if ( ! empty( $video_id ) ) {
+			$video_ids[] = $video_id;
+			$video_ids   = array_filter( array_unique( $video_ids ) );
+		}
 
 		if ( empty( $video_ids ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
+		$videos = $this->assemble_response_data(
+			array(
+				'video_ids' => $video_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
