@@ -861,6 +861,16 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 		$comment_parent = bp_activity_get_meta( $params['parent_id'], "bp_blogs_{$post_type}_comment_id" );
 	}
 
+	/**
+	 * Filters the content of a comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content         Content for the posted comment.
+	 * @param int    $comment_id      The activity ID for the posted activity comment.
+	 */
+	$params['content'] = apply_filters( 'bp_activity_comment_content', $params['content'], $comment_id );
+
 	// Comment args.
 	$args = array(
 		'comment_post_ID'      => $parent_activity->secondary_item_id,
