@@ -413,40 +413,40 @@ function bb_post_topic_reply_draft() {
 		wp_send_json_error();
 	}
 
-	$draft_activity = $_REQUEST['draft_activity'] ?? '';
-	$usermeta_key   = 'bb_user_topic_reply_draft';
-	$user_id        = bp_loggedin_user_id();
-	$all_data       = array();
+	$draft_topic_reply = $_REQUEST['draft_topic_reply'] ?? '';
+	$usermeta_key      = 'bb_user_topic_reply_draft';
+	$user_id           = bp_loggedin_user_id();
+	$all_data          = array();
 
-	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
-		$draft_activity = json_decode( stripslashes( $draft_activity ), true );
+	if ( ! empty( $_REQUEST['draft_topic_reply'] ) && ! is_array( $_REQUEST['draft_topic_reply'] ) ) {
+		$draft_topic_reply = json_decode( stripslashes( $draft_topic_reply ), true );
 	}
 
 	if ( ! empty( $_REQUEST['all_data'] ) && ! is_array( $_REQUEST['all_data'] ) ) {
 		$all_data = json_decode( stripslashes( $_REQUEST['all_data'] ), true );
 	}
 
-	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
+	if ( is_array( $draft_topic_reply ) && isset( $draft_topic_reply['data_key'], $draft_topic_reply['object'] ) ) {
 
 		$existing_draft = get_user_meta( $user_id, $usermeta_key, true );
 
-		if ( isset( $existing_draft[ $draft_activity['data_key'] ] ) ) {
-			unset( $existing_draft[ $draft_activity['data_key'] ] );
+		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
+			unset( $existing_draft[ $draft_topic_reply['data_key'] ] );
 		}
 
 		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
 			$existing_draft = array();
 		}
 
-		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
-			$existing_draft[ $draft_activity['data_key'] ] = $draft_activity;
+		if ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] ) {
+			$existing_draft[ $draft_topic_reply['data_key'] ] = $draft_topic_reply;
 
 			if ( ! empty( $all_data ) ) {
 
 				foreach ( $all_data as $data_key => $d_data ) {
 
 					// Avoid conflict with current data.
-					if ( $draft_activity['data_key'] === $data_key ) {
+					if ( $draft_topic_reply['data_key'] === $data_key ) {
 						continue;
 					}
 
@@ -465,7 +465,7 @@ function bb_post_topic_reply_draft() {
 
 	wp_send_json_success(
 		array(
-			'draft_activity' => $draft_activity,
+			'draft_activity' => $draft_topic_reply,
 		)
 	);
 }

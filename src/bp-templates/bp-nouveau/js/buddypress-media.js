@@ -781,7 +781,7 @@ window.bp = window.bp || {};
 				var draft_data = {
 					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
 					action: 'post_topic_reply_draft',
-					draft_activity: this.topic_reply_draft
+					draft_topic_reply: this.topic_reply_draft
 				};
 
 				// Send data to server.
@@ -802,7 +802,7 @@ window.bp = window.bp || {};
 					var formData = new FormData();
 					formData.append( '_wpnonce_post_topic_reply_draft', BP_Nouveau.forums.nonces.post_topic_reply_draft );
 					formData.append( 'action', 'post_topic_reply_draft' );
-					formData.append( 'draft_activity', JSON.stringify( this.topic_reply_draft ) );
+					formData.append( 'draft_topic_reply', JSON.stringify( this.topic_reply_draft ) );
 					formData.append( 'all_data', JSON.stringify( this.all_draft_data ) );
 
 					navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
