@@ -1676,8 +1676,8 @@ function bp_nouveau_single_item_subnav_classes() {
 	 */
 function bp_nouveau_get_single_item_subnav_classes() {
 	$customizer_option = ( bp_is_user() ) ? 'user_nav_display' : 'group_nav_display';
-	$layout_prefs = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
-	$classes = array( 'bp-navs', 'bp-subnavs', 'no-ajax' );
+	$layout_prefs      = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+	$classes           = array( 'bp-navs', 'bp-subnavs', 'no-ajax' );
 
 	// Set user or group class string
 	if ( bp_is_user() ) {
@@ -1696,7 +1696,7 @@ function bp_nouveau_get_single_item_subnav_classes() {
 		$classes[] = 'bp-messages-nav';
 	}
 
-	if ( $layout_prefs && (int) $layout_prefs === 1 && ( bp_is_user() || bp_is_group() ) ) {
+	if ( $layout_prefs && 1 === (int) $layout_prefs && ( bp_is_user() || bp_is_group() ) ) {
 		$classes[] = 'bb-subnav-vert';
 	} else {
 		$classes[] = 'bb-subnav-plain';
