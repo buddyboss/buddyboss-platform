@@ -20277,6 +20277,17 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   display: none;
 }
 
+@media screen and (max-width: 980px) {
+  #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__list.bb_more_dropdown.open {
+    position: fixed;
+    top: 50%;
+    bottom: inherit;
+    left: inherit;
+    width: 220px;
+    z-index: 999;
+  }
+}
+
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__list:after {
   content: " ";
   position: absolute;
