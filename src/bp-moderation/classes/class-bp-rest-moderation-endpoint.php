@@ -405,9 +405,18 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $moderation->id ) ) {
 
-			$friend_status = bp_is_friend( $item_id );
-			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
-				friends_remove_friend( bp_loggedin_user_id(), $item_id );
+			if ( bp_is_active( 'friends' ) ) {
+				$friend_status = bp_is_friend( $item_id );
+				if (
+					! empty( $friend_status ) &&
+					in_array(
+						$friend_status,
+						array( 'is_friend', 'pending', 'awaiting_response' ),
+						true
+					)
+				) {
+					friends_remove_friend( bp_loggedin_user_id(), $item_id );
+				}
 			}
 
 			if ( bp_is_following(
@@ -1090,6 +1099,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
+		if ( ! empty( $activity['user_id'] ) && ( bp_moderation_is_user_suspended( $activity['user_id'] ) || bp_moderation_is_user_blocked( $activity['user_id'] ) ) ) {
+			return false;
+		}
+
 		if ( is_user_logged_in() && bp_moderation_user_can( $item_id, $item_type ) ) {
 			return true;
 		}
@@ -1349,6 +1362,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
+		if ( ! empty( $group['creator_id'] ) && ( bp_moderation_is_user_suspended( $group['creator_id'] ) || bp_moderation_is_user_blocked( $group['creator_id'] ) ) ) {
+			return false;
+		}
+
 		if ( is_user_logged_in() && bp_moderation_user_can( $group_id, BP_Suspend_Group::$type ) ) {
 			return true;
 		}
@@ -1486,6 +1503,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$forum_id = $forum['id'];
 
 		if ( empty( $forum_id ) || ! empty( $forum['group'] ) ) {
+			return false;
+		}
+
+		if ( ! empty( $forum['author'] ) && ( bp_moderation_is_user_suspended( $forum['author'] ) || bp_moderation_is_user_blocked( $forum['author'] ) ) ) {
 			return false;
 		}
 
@@ -1629,6 +1650,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
+		if ( ! empty( $topic['author'] ) && ( bp_moderation_is_user_suspended( $topic['author'] ) || bp_moderation_is_user_blocked( $topic['author'] ) ) ) {
+			return false;
+		}
+
 		if ( is_user_logged_in() && bp_moderation_user_can( $topic_id, BP_Suspend_Forum_Topic::$type ) ) {
 			return true;
 		}
@@ -1768,6 +1793,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$reply_id = $reply['id'];
 
 		if ( empty( $reply_id ) ) {
+			return false;
+		}
+
+		if ( ! empty( $reply['author'] ) && ( bp_moderation_is_user_suspended( $reply['author'] ) || bp_moderation_is_user_blocked( $reply['author'] ) ) ) {
 			return false;
 		}
 
@@ -1942,6 +1971,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$user_id = $user['id'];
 
 		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		if ( ! empty( $user_id ) && ( bp_moderation_is_user_suspended( $user_id ) || bp_moderation_is_user_blocked( $user_id ) ) ) {
 			return false;
 		}
 
@@ -2163,6 +2196,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			$type = BP_Suspend_Media::$type;
 		}
 
+		if ( ! empty( $media['user_id'] ) && ( bp_moderation_is_user_suspended( $media['user_id'] ) || bp_moderation_is_user_blocked( $media['user_id'] ) ) ) {
+			return false;
+		}
+
 		if ( is_user_logged_in() && bp_moderation_user_can( $media_id, $type ) ) {
 			return true;
 		}
@@ -2354,6 +2391,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
+		if ( ! empty( $document['user_id'] ) && ( bp_moderation_is_user_suspended( $document['user_id'] ) || bp_moderation_is_user_blocked( $document['user_id'] ) ) ) {
+			return false;
+		}
+
 		if ( is_user_logged_in() && bp_moderation_user_can( $document_id, $type ) ) {
 			return true;
 		}
@@ -2448,6 +2489,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		$is_user_suspended = bp_moderation_is_user_suspended( $recipient->user_id );
 		$is_user_blocked   = bp_moderation_is_user_blocked( $recipient->user_id );
+
+		if ( ! empty( $recipient->user_id ) && ( bp_moderation_is_user_suspended( $recipient->user_id ) || bp_moderation_is_user_blocked( $recipient->user_id ) ) ) {
+			$data['current_user_permissions']['can_report'] = false;
+		}
 
 		if ( is_user_logged_in() && bp_moderation_user_can( $recipient->user_id, BP_Suspend_Member::$type ) ) {
 			$data['current_user_permissions']['can_report'] = true;
@@ -2652,6 +2697,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$comment_id = $post['id'];
 
 		if ( empty( $comment_id ) ) {
+			return false;
+		}
+
+		if ( ! empty( $post['author'] ) && ( bp_moderation_is_user_suspended( $post['author'] ) || bp_moderation_is_user_blocked( $post['author'] ) ) ) {
 			return false;
 		}
 

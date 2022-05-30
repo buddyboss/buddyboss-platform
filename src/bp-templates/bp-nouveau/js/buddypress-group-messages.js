@@ -300,7 +300,7 @@ window.bp = window.bp || {};
 			if ( isGroupPrivateThreadPageSelector.length ) {
 
 				var membersDiv = document.getElementById( 'members-list' );
-				$( '.bb-icon-loader' ).hide();
+				$( '.bb-icon-spinner' ).hide();
 				var scroll_xhr;
 				if ( $( membersDiv ).length ) {
 					membersDiv.addEventListener(
@@ -318,7 +318,7 @@ window.bp = window.bp || {};
 
 								page = page + 1;
 
-								$( '.bb-icon-loader' ).show();
+								$( '.bb-icon-spinner' ).show();
 
 								var type = '';
 								if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
@@ -366,7 +366,7 @@ window.bp = window.bp || {};
 												$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
 												feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
 											}
-											$( '.bb-icon-loader' ).hide();
+											$( '.bb-icon-spinner' ).hide();
 										}
 									}
 								);
@@ -880,7 +880,7 @@ window.bp = window.bp || {};
 						},
 						paste: {
 							forcePlainText: false,
-							cleanPastedHTML: false,
+							cleanPastedHTML: true,
 							cleanReplacements: [
 							[new RegExp( /<div/gi ), '<p'],
 							[new RegExp( /<\/div/gi ), '</p'],
@@ -888,12 +888,27 @@ window.bp = window.bp || {};
 							[new RegExp( /<\/h[1-6]/gi ), '</b'],
 							],
 							cleanAttrs: ['class', 'style', 'dir', 'id'],
-							cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-							unwrapTags: [ 'ul', 'ol', 'li' ]
+							cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
+							unwrapTags: []
 						},
-						imageDragging: false
+						imageDragging: false,
+						anchor: {
+							linkValidation: true
+						}
 					}
 				);
+
+				$( document ).on ( 'keyup', '#bp-group-message-content .medium-editor-toolbar-input', function( event ) {
+
+					var URL = event.target.value;
+					
+					if ( bp.Nouveau.isURL( URL ) ) {
+						$( event.target ).removeClass('isNotValid').addClass('isValid');
+					} else {
+						$( event.target ).removeClass('isValid').addClass('isNotValid');
+					}
+
+				});
 
 				window.group_messages_editor.subscribe(
 					'editableInput',
