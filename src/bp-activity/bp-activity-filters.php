@@ -2604,11 +2604,11 @@ function bb_remove_discussion_comment_reply_button( $buttons, $activity_comment_
  * @return bool
  */
 function bb_check_is_activity_content_empty( $data ) {
-	if ( empty( $data['content'] ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
+	if ( empty( trim( wp_strip_all_tags( $data['content'] ) ) ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
 		return true;
-	} elseif ( empty( $data['content'] ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
+	} elseif ( empty( trim( wp_strip_all_tags( $data['content'] ) ) ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
 		return true;
-	} elseif ( ! empty( $data['content'] ) ) {
+	} elseif ( ! empty( trim( wp_strip_all_tags( $data['content'] ) ) ) ) {
 		return true;
 	} else {
 		return false;
@@ -3233,3 +3233,27 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 }
 
 add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
+
+/**
+ * Fire an email when someone mentioned users into the blog post comment and post published from Rest API.
+ *
+ * @since BuddyBoss 2.0.1
+ *
+ * @param WP_Comment $comment WP_Comment class object.
+ *
+ * @return void
+ */
+function bb_rest_mention_post_type_comment( $comment ) {
+	// Bail if not a comment.
+	if (
+		empty( $comment )
+		|| ! $comment instanceof WP_Comment
+	) {
+		return;
+	}
+
+	bb_mention_post_type_comment( $comment->comment_ID, $comment->comment_approved );
+
+}
+
+add_action( 'rest_after_insert_comment', 'bb_rest_mention_post_type_comment', 10, 1 );
