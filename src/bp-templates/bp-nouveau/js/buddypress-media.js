@@ -321,8 +321,6 @@ window.bp = window.bp || {};
 			$( '.groups.messages form#send_group_message_form #whats-new-toolbar .bp-group-messages-attached-gif-container .gif-search-results' ).scroll( this.loadMoreGroupMessagesGif.bind( this ) );
 			groupMessagesToolbarContainer.on( 'click', '.gif-image-remove', this.removeGroupMessagesSelectedGif.bind( this ) );
 
-			$( document ).on( 'click', '.gif-image-container', this.playVideo.bind( this ) );
-
 			$( '.bp-existing-media-wrap' ).on( 'scroll', this.loadExistingMedia.bind( this ) );
 
 			document.addEventListener( 'keyup', this.closePopup.bind( this ) );
