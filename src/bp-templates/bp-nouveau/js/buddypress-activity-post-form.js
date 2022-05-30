@@ -338,7 +338,7 @@ window.bp = window.bp || {};
 
 			if ( 0 < parseInt( activity_data.id ) ) {
 
-				if ( typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined' ) {
+				if ( 'undefined' !== typeof window.getSelection && 'undefined' !== typeof document.createRange ) {
 					var range = document.createRange();
 					range.selectNodeContents( element );
 					range.collapse( false );
@@ -654,7 +654,7 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
 
 					// check media is enable in groups or not.
-					if ( ! _.isUndefined( activity_data.group_media ) && activity_data.group_media === false ) {
+					if ( ! _.isUndefined( activity_data.group_media ) && false === activity_data.group_media ) {
 						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 						$( '.edit-activity-content-wrap #whats-new-attachments .activity-media-container #activity-post-media-uploader .dz-default.dz-message' ).hide();
 					} else {
@@ -662,7 +662,7 @@ window.bp = window.bp || {};
 					}
 
 					// check document is enable in groups or not.
-					if ( ! _.isUndefined( activity_data.group_document ) && activity_data.group_document === false ) {
+					if ( ! _.isUndefined( activity_data.group_document ) && false === activity_data.group_document ) {
 						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 						$( '.edit-activity-content-wrap #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-default.dz-message' ).hide();
 					} else {
@@ -670,7 +670,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in groups or not.
-					if ( ! _.isUndefined( activity_data.group_video ) && activity_data.group_video === false ) {
+					if ( ! _.isUndefined( activity_data.group_video ) && false === activity_data.group_video ) {
 						$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 						$( '.edit-activity-content-wrap #whats-new-attachments .activity-video-container #activity-post-video-uploader .dz-default.dz-message' ).hide();
 					} else {
@@ -680,7 +680,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
 
 					// check emoji is enable in groups or not.
-					if ( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups === false ) {
+					if ( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && false === BP_Nouveau.media.emoji.groups ) {
 						$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
 						$( '#editor-toolbar .post-emoji' ).addClass( 'post-emoji-hide' );
 					} else {
@@ -689,7 +689,7 @@ window.bp = window.bp || {};
 
 				} else {
 					// check media is enable in profile or not.
-					if ( ! _.isUndefined( activity_data.profile_media ) && activity_data.profile_media === false ) {
+					if ( ! _.isUndefined( activity_data.profile_media ) && false === activity_data.profile_media ) {
 						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 						$( '.activity-media-container #activity-post-media-uploader .dz-default.dz-message' ).hide();
 						$( '.activity-media-container' ).css( 'pointer-events', 'none' );
@@ -699,7 +699,7 @@ window.bp = window.bp || {};
 					}
 
 					// check document is enable in profile or not.
-					if ( ! _.isUndefined( activity_data.profile_document ) && activity_data.profile_document === false ) {
+					if ( ! _.isUndefined( activity_data.profile_document ) && false === activity_data.profile_document ) {
 						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 						$( '.activity-document-container #activity-post-document-uploader .dz-default.dz-message' ).hide();
 						$( '.activity-document-container' ).css( 'pointer-events', 'none' );
@@ -709,7 +709,7 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enable in profile or not.
-					if ( ! _.isUndefined( activity_data.profile_video ) && activity_data.profile_video === false ) {
+					if ( ! _.isUndefined( activity_data.profile_video ) && false === activity_data.profile_video ) {
 						$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 						$( '.activity-video-container #activity-post-video-uploader .dz-default.dz-message' ).hide();
 						$( '.activity-video-container' ).css( 'pointer-events', 'none' );
@@ -721,7 +721,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( {model: this.model} );
 
 					// check emoji is enable in profile or not.
-					if ( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile === false ) {
+					if ( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && false === BP_Nouveau.media.emoji.profile ) {
 						$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
 						$( '#editor-toolbar .post-emoji' ).addClass( 'post-emoji-hide' );
 					} else {
@@ -838,7 +838,7 @@ window.bp = window.bp || {};
 			}
 
 			// check media is enabled in profile or not.
-			if ( BP_Nouveau.media.profile_media === false ) {
+			if ( false === BP_Nouveau.media.profile_media ) {
 				$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 				Backbone.trigger( 'activity_media_close' );
 			} else {
@@ -846,7 +846,7 @@ window.bp = window.bp || {};
 			}
 
 			// check media is enable in profile or not.
-			if ( BP_Nouveau.media.profile_document === false ) {
+			if ( false === BP_Nouveau.media.profile_document ) {
 				$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 				Backbone.trigger( 'activity_document_close' );
 			} else {
@@ -854,7 +854,7 @@ window.bp = window.bp || {};
 			}
 
 			// check video is enable in profile or not.
-			if ( BP_Nouveau.video.profile_video === false ) {
+			if ( false === BP_Nouveau.video.profile_video ) {
 				$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 				Backbone.trigger( 'activity_video_close' );
 			} else {
@@ -945,7 +945,7 @@ window.bp = window.bp || {};
 			}
 
 			// validation for content editor.
-			if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
+			if ( '' === $( $.parseHTML( content ) ).text().trim() && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
 				bp.draft_activity.data = false;
 				localStorage.removeItem( bp.draft_activity.data_key );
 				return false;

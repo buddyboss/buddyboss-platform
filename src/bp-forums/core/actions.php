@@ -403,7 +403,11 @@ function forums_notification_settings() {
 }
 add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
 
-
+/**
+ * Save topic/reply draft data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 function bb_post_topic_reply_draft() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
 		wp_send_json_error();

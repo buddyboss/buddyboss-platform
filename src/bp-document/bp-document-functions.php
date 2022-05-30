@@ -1376,8 +1376,9 @@ function bp_document_upload() {
 	do_action( 'bb_document_upload', $attachment );
 
 	// Generate document attachment preview link.
-	$attachment_id  = 'forbidden_' . $attachment->ID;
-	$attachment_url = home_url( '/' ) . 'bb-attachment-document-preview/' . base64_encode( $attachment_id );
+	$attachment_id   = 'forbidden_' . $attachment->ID;
+	$attachment_url  = home_url( '/' ) . 'bb-attachment-document-preview/' . base64_encode( $attachment_id );
+	$attachment_file = get_attached_file( $attachment->ID );
 
 	if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
@@ -1385,12 +1386,12 @@ function bp_document_upload() {
 	}
 
 	$file_system_direct = new WP_Filesystem_Direct( false );
-	$attachment_size    = $file_system_direct->size( get_attached_file( $attachment->ID ) );
+	$attachment_size    = $file_system_direct->size( $attachment_file );
 
 	$result = array(
 		'id'   => (int) $attachment->ID,
 		'url'  => esc_url( $attachment_url ),
-		'name' => esc_attr( basename( get_attached_file( (int) $attachment->ID ) ) ),
+		'name' => esc_attr( basename( $attachment_file ) ),
 		'type' => esc_attr( 'document' ),
 		'size' => $attachment_size,
 	);

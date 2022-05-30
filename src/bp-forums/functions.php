@@ -991,8 +991,9 @@ function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' )
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param  array $params Associative array containing the JS Strings needed by scripts
- * @return array         The same array with specific strings for the Forum/Topic UI if needed.
+ * @param array $params Associative array containing the JS Strings needed by scripts
+ *
+ * @return array The same array with specific strings for the Forum/Topic UI if needed.
  */
 function bb_nouveau_forum_localize_scripts( $params = array() ) {
 

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Video Attachment.
+ *
+ * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Core
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( empty( get_query_var( 'video-attachment-id' ) ) ) {
 	echo '// Silence is golden.';

@@ -776,6 +776,11 @@ function bp_nouveau_ajax_post_update() {
 	);
 }
 
+/**
+ * Save activity draft data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 function bb_nouveau_ajax_post_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
 		wp_send_json_error();
