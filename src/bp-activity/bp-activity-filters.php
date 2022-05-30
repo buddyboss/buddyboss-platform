@@ -3084,26 +3084,6 @@ function bp_activity_edit_update_video( $video_ids ) {
 }
 
 /**
- * Action to delete link preview attachment.
- *
- * @param array $activities Array of activities.
- *
- * @since 1.7.6
- */
-function bb_activity_delete_link_review_attachment( $activities ) {
-	$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
-
-	if ( ! empty( $activity_ids ) ) {
-		foreach ( $activity_ids as $activity_id ) {
-			$link_preview_meta = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
-			if ( ! empty( $link_preview_meta ) && ! empty( $link_preview_meta['attachment_id'] ) ) {
-				wp_delete_attachment( $link_preview_meta['attachment_id'], true );
-			}
-		}
-	}
-}
-
-/**
  * Function will remove like and comment button for the media/document activity.
  *
  * @param array $buttons     Array of buttons.
