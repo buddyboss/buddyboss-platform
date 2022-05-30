@@ -407,6 +407,11 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 		return;
 	}
 
+	// Check the sender is blocked by recipient or not.
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $invited_user_id, $inviter_user_id ) ) {
+		return;
+	}
+
 	$invited_link = bp_core_get_user_domain( $invited_user_id ) . bp_get_groups_slug();
 
 	$unsubscribe_args = array(
