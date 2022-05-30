@@ -76,25 +76,25 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 * Override Forums profile URL with BuddyBoss profile URL
 		 *
 		 * @since bbPress (r3401)
-		 * @param string $url
-		 * @param int    $user_id
-		 * @param string $user_nicename
+		 *
+		 * @param int $user_id user id.
+		 *
 		 * @return string
 		 */
 		public function user_profile_url( $user_id ) {
 
-			// Define local variable(s)
+			// Define local variable(s).
 			$profile_url    = '';
 			$component_slug = bbpress()->extend->buddypress->slug;
 
-			// Special handling for forum component
+			// Special handling for forum component.
 			if ( bp_is_current_component( $component_slug ) ) {
 
-				// Empty action or 'topics' action
+				// Empty action or 'topics' action.
 				if ( ! bp_current_action() || bp_is_current_action( bbp_get_topic_archive_slug() ) ) {
 					$profile_url = bp_core_get_user_domain( $user_id ) . $component_slug . '/' . bbp_get_topic_archive_slug();
 
-					// Empty action or 'topics' action
+					// Empty action or 'topics' action.
 				} elseif ( bp_is_current_action( bbp_get_reply_archive_slug() ) ) {
 					$profile_url = bp_core_get_user_domain( $user_id ) . $component_slug . '/' . bbp_get_reply_archive_slug();
 
@@ -103,11 +103,13 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 					$profile_url = $this->get_favorites_permalink( '', $user_id );
 
 					// 'subscriptions' action
-				} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) ) {
+				} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) && bp_loggedin_user_id() === $user_id ) {
 					$profile_url = $this->get_subscriptions_permalink( '', $user_id );
+				} else {
+					$profile_url = bp_core_get_user_domain( $user_id );
 				}
 
-				// Not in users' forums area
+				// Not in users' forums area.
 			} else {
 				$profile_url = bp_core_get_user_domain( $user_id );
 			}
