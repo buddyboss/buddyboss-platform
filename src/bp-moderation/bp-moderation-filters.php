@@ -256,11 +256,10 @@ function bp_moderation_block_member() {
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['moderation'] = $moderation;
 
-			$friend_status = bp_is_friend( $item_id );
+			$friend_status = function_exists( 'bp_is_friend' ) && bp_is_active( 'friends' ) ? bp_is_friend( $item_id ) : array();
 			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
-
 			if ( bp_is_following(
 				array(
 					'leader_id'   => $item_id,
@@ -701,7 +700,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
  * @return array|mixed
  */
 function bp_moderation_get_js_dependencies( $js_handles = array() ) {
-	if ( bp_is_active( 'forums' ) && bbp_is_single_topic() ) { // Topic detail page.
+	if ( bp_is_active( 'forums' ) && ( bbp_is_single_topic() || bbp_is_single_forum() ) ) { // Topic or forum detail page.
 		$js_handles[] = 'bp-nouveau-magnific-popup';
 	}
 
