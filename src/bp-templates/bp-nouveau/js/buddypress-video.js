@@ -94,6 +94,9 @@ window.bp = window.bp || {};
 				addRemoveLinks: true,
 				uploadMultiple: false,
 				maxFiles: 1,
+				thumbnailMethod: 'contain',
+				thumbnailWidth: null,
+				thumbnailHeight: '300',
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictMaxFilesExceeded: BP_Nouveau.video.thumb_dict_file_exceeded,
 				dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
@@ -896,6 +899,9 @@ window.bp = window.bp || {};
 				var VideoThumbnailTemplate = document.getElementsByClassName('uploader-post-video-thumbnail-template').length ? document.getElementsByClassName('uploader-post-video-thumbnail-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
 
 				self.videoThumbnailOptions.previewTemplate = VideoThumbnailTemplate;
+				self.videoThumbnailOptions.thumbnailMethod = 'contain';
+				self.videoThumbnailOptions.thumbnailWidth = null;
+				self.videoThumbnailOptions.thumbnailHeight = '300';
 
 				self.video_thumb_dropzone_obj = new Dropzone( 'div.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-uploader-dropzone-select', self.videoThumbnailOptions );
 
