@@ -135,14 +135,17 @@ add_action( 'bp_activity_after_save', 'bp_activity_update_comment_privacy', 3 );
 add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 999, 1 );
 
 add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
+add_action( 'bp_media_add', 'bb_activity_update_media_video_document_description', 9 );
 add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 add_filter( 'bp_media_add_handler', 'bp_activity_edit_update_media', 10 );
 
 add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
+add_action( 'bp_video_add', 'bb_activity_update_media_video_document_description', 9 );
 add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
 add_filter( 'bp_video_add_handler', 'bp_activity_edit_update_video', 10 );
 
 add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+add_action( 'bp_document_add', 'bb_activity_update_media_video_document_description', 9 );
 add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 
@@ -3119,6 +3122,67 @@ function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id 
 	$buttons['activity_delete']              = '';
 	$buttons['activity_state_comment_class'] = 'activity-state-no-comments';
 	return $buttons;
+}
+
+/**
+ * Action to delete link preview attachment.
+ *
+ * @param array $activities Array of activities.
+ *
+ * @since 1.7.6
+ */
+function bb_activity_delete_link_review_attachment( $activities ) {
+	$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+
+	if ( ! empty( $activity_ids ) ) {
+		foreach ( $activity_ids as $activity_id ) {
+			$link_preview_meta = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+			if ( ! empty( $link_preview_meta ) && ! empty( $link_preview_meta['attachment_id'] ) ) {
+				wp_delete_attachment( $link_preview_meta['attachment_id'], true );
+			}
+		}
+	}
+}
+
+/**
+ * Add activity description to activity media/document/video
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $media Media object.
+ */
+function bb_activity_update_media_video_document_description( $media ) {
+
+	if ( ! isset( $_POST ) || ! isset( $_POST['action'] ) || isset( $_POST['edit'] ) ) {
+		return false;
+	}
+
+	if ( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
+		return false;
+	}
+
+	if ( empty( $media ) || ! isset( $media->attachment_id ) || empty( $media->attachment_id ) ) {
+		return false;
+	}
+
+	$attachment_id    = $media->attachment_id;
+	$activity_content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+
+	/**
+	 * Filters the new activity content for current activity item.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $activity_content Activity content posted by user.
+	 */
+	$activity_content = apply_filters( 'bb_activity_new_media_content', $activity_content );
+
+	$attachment = array(
+		'ID'           => $attachment_id,
+		'post_content' => $activity_content,
+	);
+
+	wp_update_post( $attachment );
 }
 
 /**
