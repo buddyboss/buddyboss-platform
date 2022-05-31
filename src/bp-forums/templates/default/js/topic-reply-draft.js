@@ -69,37 +69,39 @@ window.bp = window.bp || {};
 				bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
 			}
 
-			// This will work only for Chrome.
-			window.onbeforeunload = function( event ) {
-				if ( 'undefined' !== typeof event && 'update' === bp.Nouveau.TopicReplyDraft.topic_reply_draft.post_action ) {
-					// Clear intervals.
-					bp.Nouveau.TopicReplyDraft.clearTopicReplyDraftIntervals();
-					// Collect draft data.
-					if ( ! bp.Nouveau.TopicReplyDraft.is_bb_theme ) {
-						bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
-					} else if ( bp.Nouveau.TopicReplyDraft.is_bb_theme && $( '#new-post' ).parent().hasClass( 'bb-modal-open' ) ) {
-						bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
+			if ( ! $( 'body' ).hasClass( 'activity' ) ) {
+				// This will work only for Chrome.
+				window.onbeforeunload = function( event ) {
+					if ( 'undefined' !== typeof event && 'update' === bp.Nouveau.TopicReplyDraft.topic_reply_draft.post_action ) {
+						// Clear intervals.
+						bp.Nouveau.TopicReplyDraft.clearTopicReplyDraftIntervals();
+						// Collect draft data.
+						if ( ! bp.Nouveau.TopicReplyDraft.is_bb_theme ) {
+							bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
+						} else if ( bp.Nouveau.TopicReplyDraft.is_bb_theme && $( '#new-post' ).parent().hasClass( 'bb-modal-open' ) ) {
+							bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
+						}
+						// Send latest draft data.
+						bp.Nouveau.TopicReplyDraft.postTopicReplyDraft( false, true, true );
 					}
-					// Send latest draft data.
-					bp.Nouveau.TopicReplyDraft.postTopicReplyDraft( false, true, true );
-				}
-			};
+				};
 
-			// This will work only for other browsers.
-			window.unload = function( event ) {
-				if ( 'undefined' !== typeof event && 'update' === bp.Nouveau.TopicReplyDraft.topic_reply_draft.post_action ) {
-					// Clear intervals.
-					bp.Nouveau.TopicReplyDraft.clearTopicReplyDraftIntervals();
-					// Collect draft data.
-					if ( ! bp.Nouveau.TopicReplyDraft.is_bb_theme ) {
-						bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
-					} else if ( bp.Nouveau.TopicReplyDraft.is_bb_theme && $( '#new-post' ).hasClass( 'bb-modal-open' ) ) {
-						bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
+				// This will work only for other browsers.
+				window.unload = function( event ) {
+					if ( 'undefined' !== typeof event && 'update' === bp.Nouveau.TopicReplyDraft.topic_reply_draft.post_action ) {
+						// Clear intervals.
+						bp.Nouveau.TopicReplyDraft.clearTopicReplyDraftIntervals();
+						// Collect draft data.
+						if ( ! bp.Nouveau.TopicReplyDraft.is_bb_theme ) {
+							bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
+						} else if ( bp.Nouveau.TopicReplyDraft.is_bb_theme && $( '#new-post' ).hasClass( 'bb-modal-open' ) ) {
+							bp.Nouveau.TopicReplyDraft.collectTopicReplyDraftActivity();
+						}
+						// Send latest draft data.
+						bp.Nouveau.TopicReplyDraft.postTopicReplyDraft( false, true, true );
 					}
-					// Send latest draft data.
-					bp.Nouveau.TopicReplyDraft.postTopicReplyDraft( false, true, true );
-				}
-			};
+				};
+			}
 
 			// Submit the topic form.
 			$( document ).on( 'click', '#new-post #bbp_topic_submit', this.submitTopicReplyDraftForm.bind( this ) );

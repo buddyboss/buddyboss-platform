@@ -1127,7 +1127,6 @@ window.bp = window.bp || {};
 
 			// This will work only for Chrome.
 			window.onbeforeunload = function (event) {
-
 				if ( 'undefined' !== typeof event ) {
 					bp.Nouveau.Activity.postForm.collectDraftActivity();
 					bp.Nouveau.Activity.postForm.postDraftActivity( false, true );
@@ -1468,7 +1467,6 @@ window.bp = window.bp || {};
 						if ( file.media_edit_data ) {
 							self.media.push( file.media_edit_data );
 							self.model.set( 'media', self.media );
-							bp.draft_content_changed = true;
 						}
 					}
 				);
@@ -1714,7 +1712,6 @@ window.bp = window.bp || {};
 						var filename = file.upload.filename;
 						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
 						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
-						bp.draft_content_changed = true;
 					}
 				);
 
@@ -1956,7 +1953,6 @@ window.bp = window.bp || {};
 
 						}
 
-						bp.draft_content_changed = true;
 					}
 				);
 
@@ -2276,13 +2272,20 @@ window.bp = window.bp || {};
 					this.el.style.minHeight          = gifData.images.original.height + 'px';
 					this.el.style.width           = gifData.images.original.width + 'px';
 					$( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).addClass( 'focus-in--attm' );
+
+					if ( ! _.isUndefined( bp.draft_activity.data.gif_data ) && bp.draft_activity.data.gif_data.id !== gifData.id ) {
+						bp.draft_content_changed = true;
+					} else if ( _.isUndefined( bp.draft_activity.data.gif_data ) ) {
+						bp.draft_content_changed = true;
+					}
 				}
 
-				bp.draft_content_changed = true;
 				return this;
 			},
 
-			destroy: function () {
+			destroy: function ( event ) {
+				var old_gif_data = this.model.get( 'gif_data' );
+
 				this.model.set( 'gif_data', {} );
 				if( $( '#message-feedabck' ).hasClass( 'noMediaError') ) {
 					this.model.unset( 'errors' );
@@ -2329,7 +2332,9 @@ window.bp = window.bp || {};
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'no-click' );
 				}
 
-				bp.draft_content_changed = true;
+				if ( ! _.isUndefined( event ) && ! _.isEmpty( old_gif_data ) && _.isEmpty( this.model.get( 'gif_data' ) ) ) {
+					bp.draft_content_changed = true;
+				}
 			}
 		}
 	);
