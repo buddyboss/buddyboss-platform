@@ -266,7 +266,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
 	 * @apiParam {String=asc,desc} [order=desc] Order sort attribute ascending or descending.
-	 * @apiParam {String=date_created,menu_order} [orderby=date_created] Order by a specific parameter.
+	 * @apiParam {String=date_created,menu_order,id,include} [orderby=date_created] Order by a specific parameter.
 	 * @apiParam {Number} [user_id] Limit result set to items created by a specific user (ID).
 	 * @apiParam {Number} [max] Maximum number of results to return.
 	 * @apiParam {Number} [album_id] A unique numeric ID for the Album.
@@ -326,6 +326,12 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['include'] ) ) {
 			$args['video_ids'] = $request['include'];
+			if (
+				! empty( $args['order_by'] )
+				&& 'include' === $args['order_by']
+			) {
+				$args['order_by'] = 'in';
+			}
 		}
 
 		$args['scope'] = $this->bp_rest_video_default_scope( $args['scope'], $args );
@@ -1148,18 +1154,6 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$args = array();
 		$key  = 'create';
 
-		if ( WP_REST_Server::EDITABLE === $method ) {
-			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss' ),
-				'type'              => 'integer',
-				'required'          => true,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
-			);
-
-			$key = 'update';
-		}
-
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['upload_ids'] = array(
 				'description'       => __( 'Video specific IDs.', 'buddyboss' ),
@@ -1201,6 +1195,20 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
+		if ( WP_REST_Server::EDITABLE === $method ) {
+			$args['id'] = array(
+				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss' ),
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
+			unset( $args['privacy']['default'] );
+
+			$key = 'update';
+		}
 
 		/**
 		 * Filters the method query arguments.
@@ -1424,7 +1432,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
 			'default'           => 'date_created',
 			'type'              => 'string',
-			'enum'              => array( 'date_created', 'menu_order' ),
+			'enum'              => array( 'date_created', 'menu_order', 'id', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -1787,14 +1795,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+		$video_id  = bp_activity_get_meta( $activity_id, 'bp_video_id', true );
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
+
+		if ( ! empty( $video_id ) ) {
+			$video_ids[] = $video_id;
+			$video_ids   = array_filter( array_unique( $video_id ) );
+		}
 
 		if ( empty( $video_ids ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids ) );
+		$videos = $this->assemble_response_data(
+			array(
+				'video_ids' => $video_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2021,14 +2040,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$video_ids = get_post_meta( $p_id, 'bp_video_ids', true );
+		$video_id  = get_post_meta( $p_id, 'bp_video_id', true );
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
+
+		if ( ! empty( $video_id ) ) {
+			$video_ids[] = $video_id;
+			$video_ids   = array_filter( array_unique( $video_ids ) );
+		}
 
 		if ( empty( $video_ids ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids ) );
+		$videos = $this->assemble_response_data(
+			array(
+				'video_ids' => $video_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2190,14 +2220,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+		$video_id  = bp_messages_get_meta( $message_id, 'bp_video_id', true );
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
+
+		if ( ! empty( $video_id ) ) {
+			$video_ids[] = $video_id;
+			$video_ids   = array_filter( array_unique( $video_ids ) );
+		}
 
 		if ( empty( $video_ids ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids ) );
+		$videos = $this->assemble_response_data(
+			array(
+				'video_ids' => $video_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $videos['videos'] ) ) {
 			return;

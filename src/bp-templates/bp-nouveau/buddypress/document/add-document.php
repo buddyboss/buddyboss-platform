@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Add Document
+ * The template for add document
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/add-document.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_user_logged_in() ) ) :
@@ -16,7 +19,7 @@ if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_use
 			?>
 			<div class="bb-media-actions-wrap">
 				<div class="bb-media-actions">
-					<a href="#" id="bp-add-document" class="bb-add-document button small outline"><i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?></a>
+					<a href="#" id="bp-add-document" class="bb-add-document button small outline"><i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 			<?php
@@ -24,7 +27,7 @@ if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_use
 			?>
 			<div class="bb-media-actions-wrap">
 				<div class="bb-media-actions">
-					<a href="#" id="bp-add-document" class="bb-add-document button small outline"><i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?></a>
+					<a href="#" id="bp-add-document" class="bb-add-document button small outline"><i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 			<?php

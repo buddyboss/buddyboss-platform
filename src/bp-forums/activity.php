@@ -393,7 +393,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Topic.
-			$topic_permalink = bbp_get_topic_permalink( $topic_id );
+			$topic_permalink = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? bbp_get_reply_url( $topic->ID ) : bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 			$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
 			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
@@ -416,6 +416,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @return array
 		 */
 		public function nouveau_get_activity_entry_buttons( $buttons, $activity_id ) {
+
 			// Get activity post data.
 			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
 
@@ -451,7 +452,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => bbp_get_topic_permalink( $topic_id ),
 					),
@@ -494,7 +495,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => $reply_url,
 					),
