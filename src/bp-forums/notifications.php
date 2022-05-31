@@ -42,7 +42,7 @@ add_filter( 'bp_notifications_get_registered_components', 'bbp_filter_notificati
  *
  * @package BuddyBoss
  */
-function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name, $name, $id, $screen ) {
+function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name = '', $name = '', $id = 0, $screen = 'web' ) {
 
 	// New reply notifications.
 	if ( 'bbp_new_reply' === $action_name ) {
