@@ -176,6 +176,20 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id ) {
+
+		if ( 'bb_account_password' === $component_action_name ) {
+
+			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+			$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
+
+			$content = array(
+				'title'       => bp_get_site_name(),
+				'description' => __( 'Your password was changed. If you didn\'t make this change, please reset your password.', 'buddyboss' ),
+				'link'        => $settings_link,
+				'image'       => bb_onesignal_default_notification_icon(),
+			);
+
+		}
 		return $content;
 	}
 }
