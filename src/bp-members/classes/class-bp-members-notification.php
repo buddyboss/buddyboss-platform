@@ -186,7 +186,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 				'title'       => bp_get_site_name(),
 				'description' => __( 'Your password was changed. If you didn\'t make this change, please reset your password.', 'buddyboss' ),
 				'link'        => $settings_link,
-				'image'       => bb_onesignal_default_notification_icon(),
+				'image'       => '',
 			);
 
 		}
