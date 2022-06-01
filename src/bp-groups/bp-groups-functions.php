@@ -4725,7 +4725,7 @@ function bb_get_all_members_for_groups( $args = array() ) {
 			'is_banned = 0',
 		);
 
-		if ( ! empty( $r['group_ids'] ) ) {
+		if ( ! empty( $r['group_ids'] ) && is_array( $r['group_ids'] ) ) {
 			$sql['where'][] = 'group_id IN ( ' . implode( ', ', $r['group_ids'] ) . ' )';
 		}
 
