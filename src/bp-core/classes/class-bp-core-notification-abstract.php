@@ -87,6 +87,8 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
 
+		add_filter( 'bb_notifications_get_push_notifications_content', array( $this, 'get_push_notifications_for_user' ), 9999, 6 );
+
 		// Register the Notifications filters.
 		add_action( 'bp_nouveau_notifications_init_filters', array( $this, 'register_notification_filters' ) );
 	}
@@ -310,6 +312,39 @@ abstract class BP_Core_Notification_Abstract {
 	}
 
 	/**
+	 * Filters the notification content for Push notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $content               Component action.
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param string $component_action_name Canonical notification action.
+	 * @param string $component_name        Notification component ID.
+	 * @param int    $notification_id       Notification ID.
+	 *
+	 * @return array If $format is 'object', return an array formatted like:
+	 *               array( 'title' => 'TITLE', 'description' => 'CONTENT', 'link' => 'LINK', 'image' => 'IMAGE URL' ).
+	 */
+	public function get_push_notifications_for_user( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id ) {
+
+		$custom_content = $this->format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id );
+
+		// Validate the return value & return if validated.
+		if (
+			! empty( $custom_content ) &&
+			is_array( $custom_content )
+		) {
+			$content = bp_parse_args(
+				$custom_content,
+				$content
+			);
+		}
+
+		return $content;
+	}
+
+	/**
 	 * Filters active components with registered notifications callbacks.
 	 *
 	 * @since BuddyPress 1.9.3
@@ -448,6 +483,27 @@ abstract class BP_Core_Notification_Abstract {
 	 * }
 	 */
 	abstract public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen );
+
+	/**
+	 * Format Push the notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $content               Notification content.
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param string $component_action_name Canonical notification action.
+	 * @param string $component_name        Notification component ID.
+	 * @param int    $notification_id       Notification ID.
+	 *
+	 * @return array {
+	 *  'title'       => '',
+	 *  'description' => '',
+	 *  'link'        => '',
+	 *  'image'       => '',
+	 * }
+	 */
+	abstract public function format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id );
 
 	/**
 	 * Register the notification filters.

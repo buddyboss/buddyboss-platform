@@ -160,4 +160,22 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 
 		return $content;
 	}
+
+	/**
+	 * Format the Push notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $content               Notification content.
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param string $component_action_name Canonical notification action.
+	 * @param string $component_name        Notification component ID.
+	 * @param int    $notification_id       Notification ID.
+	 *
+	 * @return array
+	 */
+	public function format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id ) {
+		return $content;
+	}
 }
