@@ -698,7 +698,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 			$content = array(
 				'title'       => $group->name,
-				'description' => esc_html__( 'The group details were updated', 'buddyboss' ),
+				'description' => __( 'The group details were updated', 'buddyboss' ),
 				'link'        => $notification_link,
 				'image'       => bb_notification_avatar_url( $notification ),
 			);
@@ -716,11 +716,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			if ( $promote_text ) {
 				$text = sprintf(
 					/* translators: Promoted text. */
-					esc_html__( 'Your role was changed to "%s"', 'buddyboss' ),
+					__( 'Your role was changed to "%s"', 'buddyboss' ),
 					$promote_text
 				);
 			} else {
-				$text = esc_html__( 'Your role was changed', 'buddyboss' );
+				$text = __( 'Your role was changed', 'buddyboss' );
 			}
 
 			$content = array(
@@ -737,7 +737,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$group_id          = $notification->item_id;
 			$group             = groups_get_group( $group_id );
 			$notification_link = bp_loggedin_user_domain() . bp_get_groups_slug() . '/invites/?n=1';
-			$text              = esc_html__( 'You\'ve been invited to join this group.', 'buddyboss' );
+			$text              = __( 'You\'ve been invited to join this group.', 'buddyboss' );
 
 			$content = array(
 				'title'       => $group->name,
@@ -758,7 +758,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$user_fullname = bp_core_get_user_displayname( $notification->secondary_item_id );
 			$text          = sprintf(
 				/* translators: user name */
-				esc_html__( '%s has requested to join this group', 'buddyboss' ),
+				__( '%s has requested to join this group', 'buddyboss' ),
 				$user_fullname
 			);
 
@@ -777,7 +777,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$group             = groups_get_group( $group_id );
 			$group_link        = bp_get_group_permalink( $group );
 			$notification_link = $group_link . '?n=1';
-			$text              = esc_html__( 'Your request to join has been approved', 'buddyboss' );
+			$text              = __( 'Your request to join has been approved', 'buddyboss' );
 
 			$content = array(
 				'title'       => $group->name,
@@ -794,7 +794,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$group             = groups_get_group( $group_id );
 			$group_link        = bp_get_group_permalink( $group );
 			$notification_link = $group_link . '?n=1';
-			$text              = esc_html__( 'Your request to join has been denied', 'buddyboss' );
+			$text              = __( 'Your request to join has been denied', 'buddyboss' );
 
 			$content = array(
 				'title'       => $group->name,

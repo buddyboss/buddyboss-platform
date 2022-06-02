@@ -299,19 +299,19 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 
 			if ( $notification_type ) {
 				if ( 'post_comment' === $notification_type ) {
-					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+					$notification_type_html = __( 'comment', 'buddyboss' );
 
 					if ( bp_is_active( 'activity' ) ) {
 						$notification_link = bp_activity_get_permalink( $notification->item_id );
 						$notification_link = apply_filters( 'bp_activity_new_at_mention_permalink', $notification_link, $notification->item_id, $notification->secondary_item_id, 1 );
 					}
 				} elseif ( 'activity_comment' === $notification_type || 'activity_post' === $notification_type ) {
-					$notification_type_html = esc_html__( 'post', 'buddyboss' );
+					$notification_type_html = __( 'post', 'buddyboss' );
 					if ( bp_is_active( 'activity' ) ) {
 						$notification_link = bp_activity_get_permalink( $notification->item_id );
 					}
 				} elseif ( 'forum_reply' === $notification_type || 'forum_topic' === $notification_type ) {
-					$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
+					$notification_type_html = __( 'discussion', 'buddyboss' );
 
 					if ( bp_is_active( 'forums' ) ) {
 						$notification_link = bbp_get_reply_url( $notification->item_id );
@@ -322,11 +322,11 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			if ( ! empty( $notification_type_html ) ) {
 				$text = sprintf(
 					/* translators: Activity type. */
-					esc_html__( 'Mentioned you in a %s', 'buddyboss' ),
+					__( 'Mentioned you in a %s', 'buddyboss' ),
 					$notification_type_html
 				);
 			} else {
-				$text = esc_html__( 'Mentioned you', 'buddyboss' );
+				$text = __( 'Mentioned you', 'buddyboss' );
 			}
 
 			$notification_link = add_query_arg( 'rid', (int) $notification->id, $notification_link );

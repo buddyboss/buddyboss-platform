@@ -310,20 +310,20 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			if ( ! empty( $except ) && ! empty( $notification->secondary_item_id ) ) {
 				$text = sprintf(
 					/* translators: 1. Member display name. 2. excerpt. */
-					esc_html__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
+					__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
 					bp_core_get_user_displayname( $notification->secondary_item_id ),
 					$except
 				);
 			} elseif ( ! empty( $notification->secondary_item_id ) && empty( $except ) ) {
 				$text = sprintf(
 					/* translators: Member display name. */
-					esc_html__( '%s replied to a discussion', 'buddyboss' ),
+					__( '%s replied to a discussion', 'buddyboss' ),
 					bp_core_get_user_displayname( $notification->secondary_item_id )
 				);
 			} else {
 				$text = sprintf(
 					/* translators: topic title. */
-					esc_html__( 'You have a new reply to %s', 'buddyboss' ),
+					__( 'You have a new reply to %s', 'buddyboss' ),
 					$topic_title
 				);
 			}
@@ -370,14 +370,14 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			if ( ! empty( $notification->secondary_item_id ) ) {
 				$text = sprintf(
 					/* translators: 1.Member display name 2. discussions title. */
-					esc_html__( '%1$s started a discussion: %2$s', 'buddyboss' ),
+					__( '%1$s started a discussion: %2$s', 'buddyboss' ),
 					bp_core_get_user_displayname( $notification->secondary_item_id ),
 					$topic_title
 				);
 			} else {
 				$text = sprintf(
 					/* translators: discussions title. */
-					esc_html__( 'You have a new discussion: %s', 'buddyboss' ),
+					__( 'You have a new discussion: %s', 'buddyboss' ),
 					$topic_title
 				);
 			}
