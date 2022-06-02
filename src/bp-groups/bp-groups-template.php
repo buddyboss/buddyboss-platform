@@ -2902,6 +2902,10 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 		}
 	}
 
+	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+		$user_id = false;
+	}
+
 	// First, get a list of descendants (don't pass a user id--we want them all).
 	$descendants = bp_get_descendent_groups( $group_id );
 	$exclude_ids = wp_list_pluck( $descendants, 'id' );
