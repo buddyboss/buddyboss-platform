@@ -189,8 +189,8 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 				'link'        => $settings_link,
 				'image'       => '',
 			);
-
 		}
+
 		return $content;
 	}
 }
