@@ -503,9 +503,12 @@ function bp_the_notification_description() {
 	 *
 	 * @return string
 	 */
-function bp_get_the_notification_description() {
-	$bp           = buddypress();
-	$notification = $bp->notifications->query_loop->notification;
+function bp_get_the_notification_description( $notification = '' ) {
+	$bp = buddypress();
+
+	if ( empty( $notification ) ) {
+		$notification = $bp->notifications->query_loop->notification;
+	}
 
 	// Callback function exists.
 	if ( isset( $bp->{ $notification->component_name }->notification_callback ) && is_callable( $bp->{ $notification->component_name }->notification_callback ) ) {
