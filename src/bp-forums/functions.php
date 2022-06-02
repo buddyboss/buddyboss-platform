@@ -1001,7 +1001,13 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 		return $params;
 	}
 
+	$user_id    = bp_loggedin_user_id();
+	$draft_data = get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
 	$params['forums'] = array(
+		'params'  => array(
+			'bb_current_user_id' => $user_id
+		),
 		'nonces'  => array(
 			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' )
 		),
@@ -1009,9 +1015,6 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss' ),
 		)
 	);
-
-	$user_id    = bp_loggedin_user_id();
-	$draft_data = get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 	$params['forums']['draft'] = array();
 	if ( ! empty( $draft_data ) ) {
