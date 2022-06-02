@@ -1242,6 +1242,83 @@ function bb_notification_avatar() {
 }
 
 /**
+ * Get avatar url for notification user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $notification Notification object.
+ *
+ * @return false|mixed|string|void
+ */
+function bb_notification_avatar_url( $notification = '' ) {
+	if ( empty( $notification ) ) {
+		$notification = buddypress()->notifications->query_loop->notification;
+	}
+
+	$component        = $notification->component_name;
+	$component_action = $notification->component_action;
+
+	switch ( $component ) {
+		case 'groups':
+			if ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'group';
+			}
+			break;
+		case 'follow':
+		case 'friends':
+			if ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'user';
+			}
+			break;
+		case has_action( 'bb_notification_avatar_' . $component ):
+			do_action( 'bb_notification_avatar_' . $component );
+			break;
+		default:
+			if ( ! empty( $notification->secondary_item_id ) ) {
+				$item_id = $notification->secondary_item_id;
+				$object  = 'user';
+			} elseif ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'user';
+			} else {
+				$item_id = 0;
+				$object  = 'notification';
+			}
+			break;
+	}
+
+	switch ( $component_action ) {
+		case 'bb_groups_new_request':
+			if ( ! empty( $notification->secondary_item_id ) ) {
+				$item_id = $notification->secondary_item_id;
+				$object  = 'user';
+			}
+			break;
+	}
+
+	$image_url = '';
+
+	if ( isset( $item_id, $object ) ) {
+
+		if ( 'notification' === $object ) {
+			$image_url = bb_get_notification_avatar_url( 'thumb' );
+		} else {
+			$image_url = bp_core_fetch_avatar(
+				array(
+					'item_id' => $item_id,
+					'object'  => $object,
+					'html'    => false,
+				)
+			);
+		}
+	}
+
+	return $image_url;
+}
+
+/**
  * Get Default Avatar for notification.
  *
  * @since BuddyBoss 2.0.2
@@ -1263,7 +1340,7 @@ function bb_get_default_notification_avatar( $size = 'full', $notification ) {
 		esc_url( $image_url ),
 		esc_attr( ( 'thumb' === $size ? 'avatar-150' : 'avatar-300 ' ) ),
 		esc_attr( ( 'thumb' === $size ? '150' : '300 ' ) ),
-		esc_attr__( 'Notification Icon', 'buddyboss' ),
+		esc_attr__( 'Notification Icon', 'buddyboss' )
 	);
 }
 
