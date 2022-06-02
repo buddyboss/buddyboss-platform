@@ -297,6 +297,29 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id ) {
+
+		$notification      = bp_notifications_get_notification( $notification_id );
+		$text              = '';
+		$notification_link = '';
+
+		// Friends request accepted.
+		if ( ! empty( $notification ) && 'friends' === $notification->component_name && 'bb_connections_request_accepted' === $notification->component_action ) {
+			$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends' );
+			$text              = __( 'Has accepted your connection request', 'buddyboss' );
+		}
+
+		// Friends request sent.
+		if ( ! empty( $notification ) && 'friends' === $notification->component_name && 'bb_connections_new_request' === $notification->component_action ) {
+			$notification_link = bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/?new';
+			$text              = __( 'Sent you a connection request', 'buddyboss' );
+		}
+
+		$content = array(
+			'title'       => bp_core_get_user_displayname( $item_id ),
+			'description' => $text,
+			'link'        => $notification_link,
+			'image'       => bb_notification_avatar_url( $notification ),
+		);
 		return $content;
 	}
 }
