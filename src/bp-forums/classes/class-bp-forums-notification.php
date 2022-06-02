@@ -275,49 +275,50 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Format the Push notifications.
+	 * Format forums push notifications.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array  $content               Notification content.
-	 * @param int    $item_id               Notification item ID.
-	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param string $component_action_name Canonical notification action.
-	 * @param string $component_name        Notification component ID.
-	 * @param int    $notification_id       Notification ID.
+	 * @param array  $content      Notification content.
+	 * @param object $notification Notification object.
 	 *
-	 * @return array
+	 * @return array {
+	 *  'title'       => '',
+	 *  'description' => '',
+	 *  'link'        => '',
+	 *  'image'       => '',
+	 * }
 	 */
-	public function format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id ) {
-		if ( 'forums' === $component_name && 'bb_forums_subscribed_reply' === $component_action_name ) {
-			$topic_id    = bbp_get_reply_topic_id( $item_id );
+	public function format_push_notification( $content, $notification ) {
+		if ( 'forums' === $notification->component_name && 'bb_forums_subscribed_reply' === $notification->component_action ) {
+			$topic_id    = bbp_get_reply_topic_id( $notification->item_id );
 			$topic_title = bbp_get_topic_title( $topic_id );
 			$topic_link  = wp_nonce_url(
 				add_query_arg(
 					array(
 						'action'   => 'bbp_mark_read',
 						'topic_id' => $topic_id,
-						'reply_id' => $item_id,
+						'reply_id' => $notification->item_id,
 					),
-					bbp_get_reply_url( $item_id )
+					bbp_get_reply_url( $notification->item_id )
 				),
 				'bbp_mark_topic_' . $topic_id
 			);
 
-			$except = '"' . bbp_get_reply_excerpt( $item_id, 50 ) . '"';
+			$except = '"' . bbp_get_reply_excerpt( $notification->item_id, 50 ) . '"';
 			$except = str_replace( '&hellip;"', '&hellip;', $except );
-			if ( ! empty( $except ) && ! empty( $secondary_item_id ) ) {
+			if ( ! empty( $except ) && ! empty( $notification->secondary_item_id ) ) {
 				$text = sprintf(
 					/* translators: 1. Member display name. 2. excerpt. */
 					esc_html__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
-					bp_core_get_user_displayname( $secondary_item_id ),
+					bp_core_get_user_displayname( $notification->secondary_item_id ),
 					$except
 				);
-			} elseif ( ! empty( $secondary_item_id ) && empty( $except ) ) {
+			} elseif ( ! empty( $notification->secondary_item_id ) && empty( $except ) ) {
 				$text = sprintf(
 					/* translators: Member display name. */
 					esc_html__( '%s replied to a discussion', 'buddyboss' ),
-					bp_core_get_user_displayname( $secondary_item_id )
+					bp_core_get_user_displayname( $notification->secondary_item_id )
 				);
 			} else {
 				$text = sprintf(
@@ -339,12 +340,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'title'       => $title,
 				'description' => $text,
 				'link'        => $topic_link,
-				'image'       => bb_notification_avatar_url( bp_notifications_get_notification( $notification_id ) ),
+				'image'       => bb_notification_avatar_url( bp_notifications_get_notification( $notification->id ) ),
 			);
 		}
 
-		if ( 'forums' === $component_name && 'bb_forums_subscribed_discussion' === $component_action_name ) {
-			$topic_id    = bbp_get_topic_id( $item_id );
+		if ( 'forums' === $notification->component_name && 'bb_forums_subscribed_discussion' === $notification->component_action ) {
+			$topic_id    = bbp_get_topic_id( $notification->item_id );
 			$topic_title = '"' . bp_create_excerpt(
 				wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
 				50,
@@ -366,11 +367,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'bbp_mark_topic_' . $topic_id
 			);
 
-			if ( ! empty( $secondary_item_id ) ) {
+			if ( ! empty( $notification->secondary_item_id ) ) {
 				$text = sprintf(
 					/* translators: 1.Member display name 2. discussions title. */
 					esc_html__( '%1$s started a discussion: %2$s', 'buddyboss' ),
-					bp_core_get_user_displayname( $secondary_item_id ),
+					bp_core_get_user_displayname( $notification->secondary_item_id ),
 					$topic_title
 				);
 			} else {
@@ -393,7 +394,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'title'       => $title,
 				'description' => $text,
 				'link'        => $topic_link,
-				'image'       => bb_notification_avatar_url( bp_notifications_get_notification( $notification_id ) ),
+				'image'       => bb_notification_avatar_url( bp_notifications_get_notification( $notification->id ) ),
 			);
 		}
 

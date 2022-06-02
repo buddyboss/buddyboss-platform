@@ -634,24 +634,24 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Format the Push notifications.
+	 * Format messages push notifications.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array  $content               Notification content.
-	 * @param int    $item_id               Notification item ID.
-	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param string $component_action_name Canonical notification action.
-	 * @param string $component_name        Notification component ID.
-	 * @param int    $notification_id       Notification ID.
+	 * @param array  $content      Notification content.
+	 * @param object $notification Notification object.
 	 *
-	 * @return array
+	 * @return array {
+	 *  'title'       => '',
+	 *  'description' => '',
+	 *  'link'        => '',
+	 *  'image'       => '',
+	 * }
 	 */
-	public function format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id ) {
+	public function format_push_notification( $content, $notification ) {
 
-		$notification = bp_notifications_get_notification( $notification_id );
-		$text         = '';
-		$link         = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );
+		$text = '';
+		$link = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );
 
 		if (
 			! empty( $notification ) &&
@@ -663,16 +663,14 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 		) {
 
 				// Get message thread ID.
-				$message   = new BP_Messages_Message( $item_id );
-				$thread_id = $message->thread_id;
-				$link      = ( ! empty( $thread_id ) ) ? bp_get_message_thread_view_link( $thread_id ) : false;
-
-				$media_ids    = bp_messages_get_meta( $item_id, 'bp_media_ids', true );
-				$document_ids = bp_messages_get_meta( $item_id, 'bp_document_ids', true );
-				$video_ids    = bp_messages_get_meta( $item_id, 'bp_video_ids', true );
-				$gif_data     = bp_messages_get_meta( $item_id, '_gif_data', true );
-
-				$excerpt = wp_strip_all_tags( $message->message );
+				$message      = new BP_Messages_Message( $notification->item_id );
+				$thread_id    = $message->thread_id;
+				$link         = ( ! empty( $thread_id ) ) ? bp_get_message_thread_view_link( $thread_id ) : false;
+				$media_ids    = bp_messages_get_meta( $notification->item_id, 'bp_media_ids', true );
+				$document_ids = bp_messages_get_meta( $notification->item_id, 'bp_document_ids', true );
+				$video_ids    = bp_messages_get_meta( $notification->item_id, 'bp_video_ids', true );
+				$gif_data     = bp_messages_get_meta( $notification->item_id, '_gif_data', true );
+				$excerpt      = wp_strip_all_tags( $message->message );
 
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';
@@ -692,8 +690,8 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 
 				if ( bp_is_active( 'groups' ) && true === bp_disable_group_messages() ) {
 
-					$group        = bp_messages_get_meta( $item_id, 'group_id', true ); // group id.
-					$message_from = bp_messages_get_meta( $item_id, 'message_from', true ); // group.
+					$group        = bp_messages_get_meta( $notification->item_id, 'group_id', true ); // group id.
+					$message_from = bp_messages_get_meta( $notification->item_id, 'message_from', true ); // group.
 					$group_name   = bp_get_group_name( groups_get_group( $group ) );
 
 					if ( empty( $message_from ) ) {
@@ -1021,7 +1019,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		$content = array(
-			'title'       => bp_core_get_user_displayname( $secondary_item_id ),
+			'title'       => bp_core_get_user_displayname( $notification->secondary_item_id ),
 			'description' => $text,
 			'link'        => $link,
 			'image'       => bb_notification_avatar_url( $notification ),

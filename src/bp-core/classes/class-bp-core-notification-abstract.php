@@ -87,7 +87,7 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
 
-		add_filter( 'bb_notifications_get_push_notifications_content', array( $this, 'get_push_notifications_for_user' ), 9999, 6 );
+		add_filter( 'bb_notifications_get_push_notifications_content', array( $this, 'get_push_notifications_for_user' ), 10, 2 );
 
 		// Register the Notifications filters.
 		add_action( 'bp_nouveau_notifications_init_filters', array( $this, 'register_notification_filters' ) );
@@ -316,19 +316,15 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array  $content               Component action.
-	 * @param int    $item_id               Notification item ID.
-	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param string $component_action_name Canonical notification action.
-	 * @param string $component_name        Notification component ID.
-	 * @param int    $notification_id       Notification ID.
+	 * @param array  $content      Component action.
+	 * @param object $notification Notification object.
 	 *
 	 * @return array If $format is 'object', return an array formatted like:
 	 *               array( 'title' => 'TITLE', 'description' => 'CONTENT', 'link' => 'LINK', 'image' => 'IMAGE URL' ).
 	 */
-	public function get_push_notifications_for_user( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id ) {
+	public function get_push_notifications_for_user( $content, $notification ) {
 
-		$custom_content = $this->format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id );
+		$custom_content = $this->format_push_notification( $content, $notification );
 
 		// Validate the return value & return if validated.
 		if (
@@ -489,12 +485,8 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array  $content               Notification content.
-	 * @param int    $item_id               Notification item ID.
-	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param string $component_action_name Canonical notification action.
-	 * @param string $component_name        Notification component ID.
-	 * @param int    $notification_id       Notification ID.
+	 * @param array  $content      Notification content.
+	 * @param object $notification Notification object.
 	 *
 	 * @return array {
 	 *  'title'       => '',
@@ -503,7 +495,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *  'image'       => '',
 	 * }
 	 */
-	abstract public function format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id );
+	abstract public function format_push_notification( $content, $notification );
 
 	/**
 	 * Register the notification filters.

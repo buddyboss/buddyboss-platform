@@ -162,25 +162,26 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Format the Push notifications.
+	 * Format members push notifications.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array  $content               Notification content.
-	 * @param int    $item_id               Notification item ID.
-	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param string $component_action_name Canonical notification action.
-	 * @param string $component_name        Notification component ID.
-	 * @param int    $notification_id       Notification ID.
+	 * @param array  $content      Notification content.
+	 * @param object $notification Notification object.
 	 *
-	 * @return array
+	 * @return array {
+	 *  'title'       => '',
+	 *  'description' => '',
+	 *  'link'        => '',
+	 *  'image'       => '',
+	 * }
 	 */
-	public function format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id ) {
+	public function format_push_notification( $content, $notification ) {
 
-		if ( 'bb_account_password' === $component_action_name ) {
+		if ( 'bb_account_password' === $notification->component_action ) {
 
 			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
-			$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
+			$settings_link = add_query_arg( 'rid', (int) $notification->id, $settings_link );
 
 			$content = array(
 				'title'       => bp_get_site_name(),

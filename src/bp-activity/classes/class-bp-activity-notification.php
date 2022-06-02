@@ -297,28 +297,28 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Format the Push notifications.
+	 * Format activity push notifications.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array  $content               Notification content.
-	 * @param int    $item_id               Notification item ID.
-	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param string $component_action_name Canonical notification action.
-	 * @param string $component_name        Notification component ID.
-	 * @param int    $notification_id       Notification ID.
+	 * @param array  $content      Notification content.
+	 * @param object $notification Notification object.
 	 *
-	 * @return array
+	 * @return array {
+	 *  'title'       => '',
+	 *  'description' => '',
+	 *  'link'        => '',
+	 *  'image'       => '',
+	 * }
 	 */
-	public function format_push_notification( $content, $item_id, $secondary_item_id, $component_action_name, $component_name, $notification_id ) {
-		$notification           = bp_notifications_get_notification( $notification_id );
-		$user_id                = $secondary_item_id;
+	public function format_push_notification( $content, $notification ) {
+		$user_id                = $notification->secondary_item_id;
 		$user_fullname          = bp_core_get_user_displayname( $user_id );
 		$notification_type_html = '';
 
 		if ( ! empty( $notification ) && 'bb_activity_comment' === $notification->component_action ) {
 
-			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
+			$notification_type = bp_notifications_get_meta( $notification->id, 'type', true );
 
 			if ( $notification_type ) {
 				if ( 'activity_comment' === $notification_type ) {
@@ -328,7 +328,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				}
 			}
 
-			$activity         = new BP_Activity_Activity( $item_id );
+			$activity         = new BP_Activity_Activity( $notification->item_id );
 			$activity_excerpt = '"' . bp_create_excerpt(
 				wp_strip_all_tags( $activity->content ),
 				50,
@@ -358,7 +358,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$activity_excerpt  = str_replace( '&hellip;"', '&hellip;', $activity_excerpt );
-			$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
+			$notification_link = add_query_arg( 'rid', (int) $notification->id, bp_activity_get_permalink( $notification->item_id ) );
 
 			if ( ! empty( $notification_type_html ) ) {
 				if ( ! empty( $activity_excerpt ) ) {
