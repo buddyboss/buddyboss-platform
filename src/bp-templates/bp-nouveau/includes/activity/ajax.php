@@ -798,6 +798,37 @@ function bb_nouveau_ajax_post_draft_activity() {
 	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
 
 		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
+
+			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
+				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
+					if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+						$draft_activity['data']['media'][ $media_key ]['bb_media_draft'] = 1;
+						update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
+					}
+				}
+			}
+
+			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_activity['data']['document'] ) && ! empty( $draft_activity['data']['document'] ) ) {
+				foreach ( $draft_activity['data']['document'] as $document_key => $new_document_attachment ) {
+					if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+						$draft_activity['data']['document'][ $document_key ]['bb_media_draft'] = 1;
+						update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
+					}
+				}
+			}
+
+			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_activity['data']['video'] ) && ! empty( $draft_activity['data']['video'] ) ) {
+				foreach ( $draft_activity['data']['video'] as $video_key => $new_video_attachment ) {
+					if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+						$draft_activity['data']['video'][ $video_key ]['bb_media_draft'] = 1;
+						update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
+					}
+				}
+			}
+
 			update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
 		} else {
 			delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );

@@ -431,6 +431,47 @@ function bb_post_topic_reply_draft() {
 		$existing_draft = get_user_meta( $user_id, $usermeta_key, true );
 
 		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
+			$removed_data = $existing_draft[ $draft_topic_reply['data_key'] ];
+
+			// Delete medias.
+			if ( isset( $removed_data['bbp_media'] ) && ! empty( $removed_data['bbp_media'] ) ) {
+				$remove_media_data = json_decode( stripslashes( $removed_data['bbp_media'] ), true );
+
+				if ( ! empty( $remove_media_data ) ) {
+					foreach ( $remove_media_data as $media_attachment ) {
+						if ( ! empty( $media_attachment['id'] ) && 0 < (int) $media_attachment['id'] ) {
+							wp_delete_attachment( $media_attachment['id'], true );
+						}
+					}
+				}
+			}
+
+			// Delete documents.
+			if ( isset( $removed_data['bbp_document'] ) && ! empty( $removed_data['bbp_document'] ) ) {
+				$remove_document_data = json_decode( stripslashes( $removed_data['bbp_document'] ), true );
+
+				if ( ! empty( $remove_document_data ) ) {
+					foreach ( $remove_document_data as $document_attachment ) {
+						if ( ! empty( $document_attachment['id'] ) && 0 < (int) $document_attachment['id'] ) {
+							wp_delete_attachment( $document_attachment['id'], true );
+						}
+					}
+				}
+			}
+
+			// Delete videos.
+			if ( isset( $removed_data['bbp_video'] ) && ! empty( $removed_data['bbp_video'] ) ) {
+				$remove_video_data = json_decode( stripslashes( $removed_data['bbp_video'] ), true );
+
+				if ( ! empty( $remove_video_data ) ) {
+					foreach ( $remove_video_data as $video_attachment ) {
+						if ( ! empty( $video_attachment['id'] ) && 0 < (int) $video_attachment['id'] ) {
+							wp_delete_attachment( $video_attachment['id'], true );
+						}
+					}
+				}
+			}
+
 			unset( $existing_draft[ $draft_topic_reply['data_key'] ] );
 		}
 
@@ -439,6 +480,55 @@ function bb_post_topic_reply_draft() {
 		}
 
 		if ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] ) {
+
+			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_topic_reply['data']['bbp_media'] ) && ! empty( $draft_topic_reply['data']['bbp_media'] ) ) {
+				$new_media_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_media'] ), true );
+
+				if ( ! empty( $new_media_data ) ) {
+					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
+						if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+							$new_media_data[ $media_key ]['bb_media_draft'] = 1;
+							update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
+						}
+					}
+				}
+
+				$draft_topic_reply['data']['bbp_media'] = json_encode( $new_media_data );
+			}
+
+			// Set document draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_topic_reply['data']['bbp_document'] ) && ! empty( $draft_topic_reply['data']['bbp_document'] ) ) {
+				$new_document_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_document'] ), true );
+
+				if ( ! empty( $new_document_data ) ) {
+					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
+						if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+							$new_document_data[ $document_key ]['bb_media_draft'] = 1;
+							update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
+						}
+					}
+				}
+
+				$draft_topic_reply['data']['bbp_document'] = json_encode( $new_document_data );
+			}
+
+			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_topic_reply['data']['bbp_video'] ) && ! empty( $draft_topic_reply['data']['bbp_video'] ) ) {
+				$new_video_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_video'] ), true );
+
+				if ( ! empty( $new_video_data ) ) {
+					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
+						if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+							$new_video_data[ $video_key ]['bb_media_draft'] = 1;
+							update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
+						}
+					}
+				}
+
+				$draft_topic_reply['data']['bbp_video'] = json_encode( $new_video_data );
+			}
+
 			$existing_draft[ $draft_topic_reply['data_key'] ] = $draft_topic_reply;
 
 			if ( ! empty( $all_data ) ) {

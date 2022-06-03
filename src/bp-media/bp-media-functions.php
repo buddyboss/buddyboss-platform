@@ -1260,7 +1260,7 @@ function bp_media_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_media_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
+	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_media_saved' AND pm.meta_value = '0' ) AND NOT EXISTS ( SELECT * FROM {$wpdb->postmeta} as pm1 WHERE pm1.meta_key = 'bb_media_draft' AND pm1.post_id = p.ID ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
 	$data  = $wpdb->get_col( $query );
 
 	if ( ! empty( $data ) ) {
