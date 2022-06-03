@@ -869,7 +869,7 @@ window.bp = window.bp || {};
 						// Add loader.
 						$this.postForm.$el.addClass( 'loading' ).addClass( 'has-draft' );
 
-						var bpActivityEvent = new Event( $( '#whats-new-toolbar' ) );
+						var bpActivityEvent = new Event( 'bp_activity_edit' );
 
 						bp.Nouveau.Activity.postForm.displayEditDraftActivityData( activity_data, bpActivityEvent );
 					}
