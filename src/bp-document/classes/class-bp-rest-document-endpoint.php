@@ -1130,17 +1130,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		}
 
-		if ( WP_REST_Server::EDITABLE === $method ) {
-			$key        = 'edit';
-			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the document.', 'buddyboss' ),
-				'type'              => 'integer',
-				'required'          => true,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
-			);
-		}
-
 		$args['content'] = array(
 			'description'       => __( 'Document Content.', 'buddyboss' ),
 			'type'              => 'string',
@@ -1170,6 +1159,19 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
+		if ( WP_REST_Server::EDITABLE === $method ) {
+			$key        = 'edit';
+			$args['id'] = array(
+				'description'       => __( 'A unique numeric ID for the document.', 'buddyboss' ),
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
+			unset( $args['privacy']['default'] );
+		}
 
 		/**
 		 * Filters the method query arguments.
@@ -2317,8 +2319,14 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+		$document_id  = bp_activity_get_meta( $activity_id, 'bp_document_id', true );
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
+
+		if ( ! empty( $document_id ) ) {
+			$document_ids[] = $document_id;
+			$document_ids   = array_filter( array_unique( $document_ids ) );
+		}
 
 		if ( empty( $document_ids ) ) {
 			return;
@@ -2604,8 +2612,14 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
+		$document_id  = bp_messages_get_meta( $message_id, 'bp_document_id', true );
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
+
+		if ( ! empty( $document_id ) ) {
+			$document_ids[] = $document_id;
+			$document_ids   = array_filter( array_unique( $document_ids ) );
+		}
 
 		if ( empty( $document_ids ) ) {
 			return;
@@ -2768,8 +2782,14 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$document_ids = get_post_meta( $p_id, 'bp_document_ids', true );
+		$document_id  = get_post_meta( $p_id, 'bp_document_id', true );
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
+
+		if ( ! empty( $document_id ) ) {
+			$document_ids[] = $document_id;
+			$document_ids   = array_filter( array_unique( $document_ids ) );
+		}
 
 		if ( empty( $document_ids ) ) {
 			return;
