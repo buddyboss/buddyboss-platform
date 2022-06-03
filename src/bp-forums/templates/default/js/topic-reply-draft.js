@@ -257,6 +257,7 @@ window.bp = window.bp || {};
 			var target                      = $( 'form#new-post' ),
 				editor_key                  = target.find( '.bbp-the-content' ).data( 'key' ),
 				$editor,
+				$medium_editor,
 				media_dropzone_container    = target.find( '#forums-post-media-uploader' ),
 				document_dropzone_container = target.find( '#forums-post-document-uploader' ),
 				video_dropzone_container    = target.find( '#forums-post-video-uploader' ),
@@ -264,13 +265,19 @@ window.bp = window.bp || {};
 
 			// Reset editor.
 			if ( 'topic' === this.topic_reply_draft.object ) {
+				$medium_editor = window.forums_medium_forum_editor[editor_key];
+
 				$editor = target.find( '#bbp_editor_topic_content_' + editor_key );
-				$editor.html( '' );
+				$editor.removeClass( 'error' );
+				$medium_editor.setContent( '' );
 				target.find( '#bbp_topic_content' ).val( '' );
 				target.find( '#bbp_topic_title' ).val( '' );
 			} else if ( 'reply' === this.topic_reply_draft.object ) {
+				$medium_editor = window.forums_medium_reply_editor[editor_key];
+
 				$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
-				$editor.html( '' );
+				$editor.removeClass( 'error' );
+				$medium_editor.setContent( '' );
 				target.find( '#bbp_reply_content' ).val( '' );
 			}
 
@@ -397,6 +404,7 @@ window.bp = window.bp || {};
 			} else if ( 'reply' === this.topic_reply_draft.object && 'undefined' !== typeof meta.bbp_reply_content && '' === $( $.parseHTML( meta.bbp_reply_content ) ).text().trim() && ! media_valid ) {
 				content_valid = false;
 			}
+
 
 			if ( content_valid ) {
 
@@ -913,12 +921,22 @@ window.bp = window.bp || {};
 		},
 
 		discardTopicReplyDraftForm: function() {
+			var forum_topic = $( 'a[data-modal-id]' ),
+				forum_reply = $( '.bbp-reply-to-link' );
+
+			forum_topic.css( 'pointer-events', 'none' );
+			forum_reply.css( 'pointer-events', 'none' );
+
 			this.topic_reply_draft.post_action = 'delete';
-			this.postTopicReplyDraft( true, false, false );
+			this.postTopicReplyDraft( true, true, false );
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
 			this.resetTopicReplyDraftPostForm();
+			$( 'body .js-modal-close' ).trigger( 'click' );
 			this.topic_reply_draft.post_action = 'update';
+
+			forum_topic.css( 'pointer-events', '' );
+			forum_reply.css( 'pointer-events', '' );
 		},
 
 		setupOnReloadWindow: function() {

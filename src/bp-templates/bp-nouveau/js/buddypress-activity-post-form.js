@@ -5328,6 +5328,13 @@ window.bp = window.bp || {};
 
 				// Delete the activity from the database.
 				bp.Nouveau.Activity.postForm.resetDraftActivity( true );
+
+				setTimeout(
+					function() {
+						$( '#whats-new-form #aw-whats-new-reset' ).trigger( 'click' );
+					},
+					0
+				);
 			},
 		}
 	);
