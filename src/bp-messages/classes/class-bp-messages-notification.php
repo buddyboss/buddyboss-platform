@@ -686,234 +686,97 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
 			}
 
-			if ( ! empty( $secondary_item_id ) ) {
-
-				if ( bp_is_active( 'groups' ) && true === bp_disable_group_messages() ) {
-
-					$group        = bp_messages_get_meta( $item_id, 'group_id', true ); // group id.
-					$message_from = bp_messages_get_meta( $item_id, 'message_from', true ); // group.
-					$group_name   = bp_get_group_name( groups_get_group( $group ) );
-
-					if ( empty( $message_from ) ) {
-						$title = bp_core_get_user_displayname( $secondary_item_id );
-						if ( ! empty( $excerpt ) ) {
-							$text = sprintf(
-								/* translators: exceprt */
-								__( 'Sent you a message: %s', 'buddyboss' ),
-								$excerpt
-							);
-						} elseif ( $media_ids ) {
-							$media_ids = array_filter( explode( ',', $media_ids ) );
-							if ( count( $media_ids ) > 1 ) {
-								$text = sprintf(
-									/* translators: photos text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'some photos', 'buddyboss' )
-								);
-							} else {
-								$text = sprintf(
-									/* translators: photo text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'a photo', 'buddyboss' )
-								);
-							}
-						} elseif ( $document_ids ) {
-							$document_ids = array_filter( explode( ',', $document_ids ) );
-							if ( count( $document_ids ) > 1 ) {
-								$text = sprintf(
-									/* translators: documents text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'some documents', 'buddyboss' )
-								);
-							} else {
-								$text = sprintf(
-									/* translators: document text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'a document', 'buddyboss' )
-								);
-							}
-						} elseif ( $video_ids ) {
-							$video_ids = array_filter( explode( ',', $video_ids ) );
-							if ( count( $video_ids ) > 1 ) {
-								$text = sprintf(
-									/* translators: videos text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'some videos', 'buddyboss' )
-								);
-							} else {
-								$text = sprintf(
-									/* translators: video text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'a video', 'buddyboss' )
-								);
-							}
-						} elseif ( ! empty( $gif_data ) ) {
-							$text = sprintf(
-								/* translators: gif text */
-								__( 'Sent you %s', 'buddyboss' ),
-								__( 'a gif', 'buddyboss' )
-							);
-						} else {
-							$text = __( 'Sent you a message', 'buddyboss' );
-						}
-					} elseif ( 'group' === $message_from ) {
-						$title = $group_name;
-						if ( ! empty( $excerpt ) ) {
-							$text = sprintf(
-								/* translators: 1. user display name 2. excerpt */
-								__( '%1$s sent a new message: %2$s', 'buddyboss' ),
-								bp_core_get_user_displayname( $secondary_item_id ),
-								$excerpt
-							);
-						} elseif ( $media_ids ) {
-							$media_ids = array_filter( explode( ',', $media_ids ) );
-							if ( count( $media_ids ) > 1 ) {
-								$text = sprintf(
-									/* translators: 1. user display name 2. photos text */
-									__( '%1$s sent %2$s', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id ),
-									__( 'some photos', 'buddyboss' )
-								);
-							} else {
-								$text = sprintf(
-									/* translators: 1. user display name 2. photo text */
-									__( '%1$s sent %2$s', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id ),
-									__( 'a photo', 'buddyboss' )
-								);
-							}
-						} elseif ( $document_ids ) {
-							$document_ids = array_filter( explode( ',', $document_ids ) );
-							if ( count( $document_ids ) > 1 ) {
-								$text = sprintf(
-									/* translators: 1. user display name 2. documents text */
-									__( '%1$s sent %2$s', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id ),
-									__( 'some documents', 'buddyboss' )
-								);
-							} else {
-								$text = sprintf(
-									/* translators: 1. user display name 2. document text */
-									__( '%1$s sent %2$s', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id ),
-									__( 'a document', 'buddyboss' )
-								);
-							}
-						} elseif ( $video_ids ) {
-							$video_ids = array_filter( explode( ',', $video_ids ) );
-							if ( count( $video_ids ) > 1 ) {
-								$text = sprintf(
-									/* translators: 1. user display name 2. videos text */
-									__( '%1$s sent %2$s', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id ),
-									__( 'some videos', 'buddyboss' )
-								);
-							} else {
-								$text = sprintf(
-									/* translators: 1. user display name 2. video text */
-									__( '%1$s sent %2$s', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id ),
-									__( 'a video', 'buddyboss' )
-								);
-							}
-						} elseif ( ! empty( $gif_data ) ) {
-							$text = sprintf(
-								/* translators: 1. user display name 2. gif text*/
-								__( '%1$s sent %2$s', 'buddyboss' ),
-								bp_core_get_user_displayname( $secondary_item_id ),
-								__( 'a gif', 'buddyboss' )
-							);
-						} else {
-							$text = sprintf(
-								/* translators: user display name */
-								__( '%s sent a new message', 'buddyboss' ),
-								bp_core_get_user_displayname( $secondary_item_id )
-							);
-						}
-					} else {
-						$title = bp_core_get_user_displayname( $secondary_item_id );
-						if ( ! empty( $excerpt ) ) {
-							$text = sprintf(
-								/* translators: exceprt */
-								__( 'Sent you a message: %s', 'buddyboss' ),
-								$excerpt
-							);
-						} elseif ( $media_ids ) {
-							$media_ids = array_filter( explode( ',', $media_ids ) );
-							if ( count( $media_ids ) > 1 ) {
-								$text = sprintf(
-									/* translators: photos text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'some photos', 'buddyboss' )
-								);
-							} else {
-								$text = sprintf(
-									/* translators: photo text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'a photo', 'buddyboss' )
-								);
-							}
-						} elseif ( $document_ids ) {
-							$document_ids = array_filter( explode( ',', $document_ids ) );
-							if ( count( $document_ids ) > 1 ) {
-								$text = sprintf(
-									/* translators: documents text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'some documents', 'buddyboss' )
-								);
-							} else {
-								$text = sprintf(
-									/* translators: document text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'a document', 'buddyboss' )
-								);
-							}
-						} elseif ( $video_ids ) {
-							$video_ids = array_filter( explode( ',', $video_ids ) );
-							if ( count( $video_ids ) > 1 ) {
-								$text = sprintf(
-									/* translators: videos text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'some videos', 'buddyboss' )
-								);
-							} else {
-								$text = sprintf(
-									/* translators: video text */
-									__( 'Sent you %s', 'buddyboss' ),
-									__( 'a video', 'buddyboss' )
-								);
-							}
-						} elseif ( ! empty( $gif_data ) ) {
-							$text = sprintf(
-								/* translators: gif text */
-								__( 'Sent you %s', 'buddyboss' ),
-								__( 'a gif', 'buddyboss' )
-							);
-						} else {
-							$text = __( 'Sent you a message', 'buddyboss' );
-						}
-					}
+			$title = bp_core_get_user_displayname( $secondary_item_id );
+			if ( ! empty( $excerpt ) ) {
+				$text = sprintf(
+				/* translators: exceprt */
+					__( 'Sent you a message: %s', 'buddyboss' ),
+					$excerpt
+				);
+			} elseif ( $media_ids ) {
+				$media_ids = array_filter( explode( ',', $media_ids ) );
+				if ( count( $media_ids ) > 1 ) {
+					$text = sprintf(
+					/* translators: photos text */
+						__( 'Sent you %s', 'buddyboss' ),
+						__( 'some photos', 'buddyboss' )
+					);
 				} else {
+					$text = sprintf(
+					/* translators: photo text */
+						__( 'Sent you %s', 'buddyboss' ),
+						__( 'a photo', 'buddyboss' )
+					);
+				}
+			} elseif ( $document_ids ) {
+				$document_ids = array_filter( explode( ',', $document_ids ) );
+				if ( count( $document_ids ) > 1 ) {
+					$text = sprintf(
+					/* translators: documents text */
+						__( 'Sent you %s', 'buddyboss' ),
+						__( 'some documents', 'buddyboss' )
+					);
+				} else {
+					$text = sprintf(
+					/* translators: document text */
+						__( 'Sent you %s', 'buddyboss' ),
+						__( 'a document', 'buddyboss' )
+					);
+				}
+			} elseif ( $video_ids ) {
+				$video_ids = array_filter( explode( ',', $video_ids ) );
+				if ( count( $video_ids ) > 1 ) {
+					$text = sprintf(
+					/* translators: videos text */
+						__( 'Sent you %s', 'buddyboss' ),
+						__( 'some videos', 'buddyboss' )
+					);
+				} else {
+					$text = sprintf(
+					/* translators: video text */
+						__( 'Sent you %s', 'buddyboss' ),
+						__( 'a video', 'buddyboss' )
+					);
+				}
+			} elseif ( ! empty( $gif_data ) ) {
+				$text = sprintf(
+				/* translators: gif text */
+					__( 'Sent you %s', 'buddyboss' ),
+					__( 'a gif', 'buddyboss' )
+				);
+			} else {
+				$text = __( 'Sent you a message', 'buddyboss' );
+			}
 
-					$title = bp_core_get_user_displayname( $secondary_item_id );
+			if ( bp_is_active( 'groups' ) && true === bp_disable_group_messages() ) {
+
+				$group        = bp_messages_get_meta( $item_id, 'group_id', true ); // group id.
+				$message_from = bp_messages_get_meta( $item_id, 'message_from', true ); // group.
+				$group_name   = bp_get_group_name( groups_get_group( $group ) );
+
+				if ( ! empty( $message_from ) && 'group' === $message_from ) {
+					$title = $group_name;
 					if ( ! empty( $excerpt ) ) {
 						$text = sprintf(
-							/* translators: exceprt */
-							__( 'Sent you a message: %s', 'buddyboss' ),
+						/* translators: 1. user display name 2. excerpt */
+							__( '%1$s sent a new message: %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
 							$excerpt
 						);
 					} elseif ( $media_ids ) {
 						$media_ids = array_filter( explode( ',', $media_ids ) );
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
-								/* translators: photos text */
-								__( 'Sent you %s', 'buddyboss' ),
+							/* translators: 1. user display name 2. photos text */
+								__( '%1$s sent %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
 								__( 'some photos', 'buddyboss' )
 							);
 						} else {
 							$text = sprintf(
-								/* translators: photo text */
-								__( 'Sent you %s', 'buddyboss' ),
+							/* translators: 1. user display name 2. photo text */
+								__( '%1$s sent %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
 								__( 'a photo', 'buddyboss' )
 							);
 						}
@@ -921,14 +784,16 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 						$document_ids = array_filter( explode( ',', $document_ids ) );
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
-								/* translators: documents text */
-								__( 'Sent you %s', 'buddyboss' ),
+							/* translators: 1. user display name 2. documents text */
+								__( '%1$s sent %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
 								__( 'some documents', 'buddyboss' )
 							);
 						} else {
 							$text = sprintf(
-								/* translators: document text */
-								__( 'Sent you %s', 'buddyboss' ),
+							/* translators: 1. user display name 2. document text */
+								__( '%1$s sent %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
 								__( 'a document', 'buddyboss' )
 							);
 						}
@@ -936,88 +801,33 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 						$video_ids = array_filter( explode( ',', $video_ids ) );
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
-								/* translators: videos text */
-								__( 'Sent you %s', 'buddyboss' ),
+							/* translators: 1. user display name 2. videos text */
+								__( '%1$s sent %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
 								__( 'some videos', 'buddyboss' )
 							);
 						} else {
 							$text = sprintf(
-								/* translators: video text */
-								__( 'Sent you %s', 'buddyboss' ),
+							/* translators: 1. user display name 2. video text */
+								__( '%1$s sent %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
 								__( 'a video', 'buddyboss' )
 							);
 						}
 					} elseif ( ! empty( $gif_data ) ) {
 						$text = sprintf(
-							/* translators: gif text */
-							__( 'Sent you %s', 'buddyboss' ),
+						/* translators: 1. user display name 2. gif text*/
+							__( '%1$s sent %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
 							__( 'a gif', 'buddyboss' )
 						);
 					} else {
-						$text = esc_html__( 'Sent you a message', 'buddyboss' );
-					}
-				}
-			} else {
-				$title = bp_core_get_user_displayname( $secondary_item_id );
-				if ( ! empty( $excerpt ) ) {
-					$text = sprintf(
-						/* translators: exceprt */
-						__( 'Sent you a message: %s', 'buddyboss' ),
-						$excerpt
-					);
-				} elseif ( $media_ids ) {
-					$media_ids = array_filter( explode( ',', $media_ids ) );
-					if ( count( $media_ids ) > 1 ) {
 						$text = sprintf(
-							/* translators: photos text */
-							__( 'Sent you %s', 'buddyboss' ),
-							__( 'some photos', 'buddyboss' )
-						);
-					} else {
-						$text = sprintf(
-							/* translators: photo text */
-							__( 'Sent you %s', 'buddyboss' ),
-							__( 'a photo', 'buddyboss' )
+						/* translators: user display name */
+							__( '%s sent a new message', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id )
 						);
 					}
-				} elseif ( $document_ids ) {
-					$document_ids = array_filter( explode( ',', $document_ids ) );
-					if ( count( $document_ids ) > 1 ) {
-						$text = sprintf(
-							/* translators: documents text */
-							__( 'Sent you %s', 'buddyboss' ),
-							__( 'some documents', 'buddyboss' )
-						);
-					} else {
-						$text = sprintf(
-							/* translators: document text */
-							__( 'Sent you %s', 'buddyboss' ),
-							__( 'a document', 'buddyboss' )
-						);
-					}
-				} elseif ( $video_ids ) {
-					$video_ids = array_filter( explode( ',', $video_ids ) );
-					if ( count( $video_ids ) > 1 ) {
-						$text = sprintf(
-							/* translators: videos text */
-							__( 'Sent you %s', 'buddyboss' ),
-							__( 'some videos', 'buddyboss' )
-						);
-					} else {
-						$text = sprintf(
-							/* translators: video text */
-							__( 'Sent you %s', 'buddyboss' ),
-							__( 'a video', 'buddyboss' )
-						);
-					}
-				} elseif ( ! empty( $gif_data ) ) {
-					$text = sprintf(
-						/* translators: gif text */
-						__( 'Sent you %s', 'buddyboss' ),
-						__( 'a gif', 'buddyboss' )
-					);
-				} else {
-					$text = __( 'Sent you a message', 'buddyboss' );
 				}
 			}
 
