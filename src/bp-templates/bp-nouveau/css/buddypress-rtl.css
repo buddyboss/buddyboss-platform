@@ -4283,6 +4283,15 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 15px;
 }
 
+@media screen and (max-width: 767px) {
+  #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
+  #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
+  #buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item,
+  #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
+    min-height: auto;
+  }
+}
+
 .activity-media-description,
 .activity-video-description {
   margin-bottom: 10px;
