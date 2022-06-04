@@ -7853,7 +7853,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.awaiting_response_friend:before,
 .bb_more_options .bb_more_options_list button.awaiting_response_friend:before,
 .bb_more_options .bb_more_options_list a.awaiting_response_friend:before {
-  content: "\e94e";
+  content: "\ef57";
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
