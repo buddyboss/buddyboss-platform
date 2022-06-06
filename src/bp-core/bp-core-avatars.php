@@ -1511,8 +1511,8 @@ function bp_avatar_ajax_set() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $avatar_dir Avatar Directory
-	 * @param array $avatar_data Avatar Data.
+	 * @param string $avatar_dir  Avatar Directory
+	 * @param array  $avatar_data Avatar Data.
 	 */
 	$avatar_dir = apply_filters( 'bb_avatar_ajax_set_avatar_dir', $avatar_dir, $avatar_data );
 

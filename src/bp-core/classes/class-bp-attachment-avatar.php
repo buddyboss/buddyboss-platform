@@ -219,7 +219,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $avatar_dir Avatar Directory
+		 * @param string $avatar_dir Avatar Directory.
 		 * @param array  $args       Avatar Data.
 		 */
 		$avatar_dir = apply_filters( 'bb_avatar_crop_set_avatar_dir', $avatar_dir, $args );
