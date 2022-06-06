@@ -68,6 +68,7 @@ function bp_messages_clear_cache_on_message_save( BP_Messages_Message $message )
 	wp_cache_delete( 'thread_recipients_' . $message->thread_id, 'bp_messages' );
 }
 add_action( 'messages_message_after_save', 'bp_messages_clear_cache_on_message_save' );
+add_action( 'messages_message_sent', 'bp_messages_clear_cache_on_message_save', 1, 2 );
 
 /**
  * Clear message cache after a message thread is deleted.
@@ -116,7 +117,7 @@ function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
 	BP_Messages_Thread::$noCache = true;
 	$thread_id                   = $thread_id;
 	$before                      = null;
-	$perpage                     = 10;
+	$perpage                     = apply_filters( 'bp_messages_default_per_page', 10 );
 
 	while ( wp_cache_get( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' ) ) {
 		wp_cache_delete( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' );
