@@ -247,7 +247,7 @@ class BP_Groups_Group {
 		// Group found so setup the object variables.
 		$this->id           = (int) $group->id;
 		$this->creator_id   = (int) $group->creator_id;
-		$this->name         = stripslashes( $group->name );
+		$this->name         = wp_specialchars_decode( stripslashes( $group->name ), ENT_QUOTES );
 		$this->slug         = $group->slug;
 		$this->description  = stripslashes( $group->description );
 		$this->status       = $group->status;
