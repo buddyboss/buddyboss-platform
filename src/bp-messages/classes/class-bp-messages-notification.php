@@ -695,7 +695,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			} elseif ( $media_ids ) {
 				$media_ids = array_filter( explode( ',', $media_ids ) );
 				if ( count( $media_ids ) > 1 ) {
-					$text = __( 'Sent yousome photos', 'buddyboss' );
+					$text = __( 'Sent you some photos', 'buddyboss' );
 				} else {
 					$text = __( 'Sent you a photo', 'buddyboss' );
 				}
