@@ -61,7 +61,7 @@ function bp_messages_clear_cache_on_message_save( BP_Messages_Message $message )
 	// Delete unread count for each recipient.
 	foreach ( (array) $message->recipients as $recipient ) {
 		wp_cache_delete( $recipient->user_id, 'bp_messages_unread_count' );
-		wp_cache_delete( "bb_thread_message_unread_count_{$recipient->user_id}_{$recipient->thread_id}", 'bp_messages_unread_count' );
+		wp_cache_delete( "bb_thread_message_unread_count_{$recipient->user_id}_{$message->thread_id}", 'bp_messages_unread_count' );
 	}
 
 	// Delete thread recipient cache.
