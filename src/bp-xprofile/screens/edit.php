@@ -46,14 +46,6 @@ function xprofile_screen_edit_profile() {
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
 				xprofile_delete_field_data( $deleted_field_id, bp_displayed_user_id() );
 			}
-
-			if ( isset( $_POST['repeater_set_sequence'] ) && ! empty( $_POST['repeater_set_sequence'] ) ) {
-
-				$field_set_sequence = wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'] ) );
-				$field_group_id     = (int) bp_action_variable( 1 );
-
-				bp_set_profile_field_set_count( $field_group_id, bp_displayed_user_id(), count( $field_set_sequence ) );
-			}
 		}
 
 		// Check we have field ID's.
@@ -132,6 +124,39 @@ function xprofile_screen_edit_profile() {
 				$errors        = true;
 				$validations[] = $message;
 			}
+		}
+
+		if ( ! empty( $errors ) ) {
+
+			// Now we've checked for required fields, lets save the values.
+			$old_values = $new_values = array();
+			foreach ( (array) $posted_field_ids as $field_id ) {
+
+				$field_visibility = xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() );
+
+				$old_values[ $field_id ] = array(
+					'value'      => xprofile_get_field_data( $field_id, bp_displayed_user_id() ),
+					'visibility' => $field_visibility,
+				);
+
+				$new_values[ $field_id ] = array(
+					'value'      => $_POST[ 'field_' . $field_id ] ?? '',
+					'visibility' => $field_visibility,
+				);
+			}
+
+			/**
+			 * Fires after getting error while updating the profile.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param int   $value            Displayed user ID.
+			 * @param array $posted_field_ids Array of field IDs that were edited.
+			 * @param bool  $errors           Whether or not any errors occurred.
+			 * @param array $old_values       Array of original values before updated.
+			 * @param array $new_values       Array of newly saved values after update.
+			 */
+			do_action( 'bb_xprofile_error_on_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
 		}
 
 		// There are validation errors.
