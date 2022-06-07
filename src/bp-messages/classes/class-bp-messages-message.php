@@ -666,7 +666,7 @@ class BP_Messages_Message {
 		 * @param string $value   Converted 'orderby' term.
 		 * @param string $orderby Original orderby value.
 		 */
-		$orderby = apply_filters( 'bp_messages_message_get_orderby', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
+		$orderby = apply_filters( 'bp_messages_message_get_orderby', self::convert_orderby_to_order_by_term( $orderby, $order ), $orderby );
 
 		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 
@@ -851,10 +851,11 @@ class BP_Messages_Message {
 	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $orderby Orderby term as passed to get().
+	 * @param string $order   Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
 	 *
 	 * @return string $order_by_term SQL-friendly orderby term.
 	 */
-	protected static function convert_orderby_to_order_by_term( $orderby ) {
+	protected static function convert_orderby_to_order_by_term( $orderby, $order = 'DESC' ) {
 		$order_by_term = '';
 
 		switch ( $orderby ) {
@@ -870,7 +871,7 @@ class BP_Messages_Message {
 				break;
 			case 'date_sent':
 			default:
-				$order_by_term = 'm.date_sent';
+				$order_by_term = "m.date_sent {$order}, m.id";
 				break;
 		}
 

@@ -66,7 +66,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		// assert!
 		$this->assertEquals(
-			array( $m1, $m2 ),
+			array( $m2, $m1 ),
 			wp_list_pluck( $thread->messages, 'id' )
 		);
 	}
