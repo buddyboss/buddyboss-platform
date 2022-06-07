@@ -191,6 +191,10 @@
 
 } // close .buddypress-wrap
 
+#buddypress.buddypress-wrap .bb-activity-media-elem .bb_more_dropdown.open {
+	overflow: initial;
+}
+
 // Single Activity Comment Entry View
 body.activity-permalink {
 
