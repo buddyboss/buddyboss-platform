@@ -263,21 +263,22 @@ function bp_media_activity_append_media( $content, $activity ) {
 		}
 
 		if ( bp_has_media( $args ) ) {
+
+			ob_start();
 			?>
-			<?php ob_start(); ?>
 			<div class="bb-activity-media-wrap
 			<?php
-			echo 'bb-media-length-' . $media_template->media_count;
+			echo 'bb-media-length-' . esc_attr( $media_template->media_count );
 			echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 			echo true === $is_forum_activity ? ' forums-media-wrap' : '';
 			?>
 			">
 				<?php
-					bp_get_template_part( 'media/media-move' );
-					while ( bp_media() ) {
-						bp_the_media();
-						bp_get_template_part( 'media/activity-entry' );
-					}
+				bp_get_template_part( 'media/media-move' );
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				}
 				?>
 			</div>
 			<?php
@@ -862,7 +863,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button">
-					<span class="bb-icon-play-thin"></span>
+					<span class="bb-icon-bl bb-icon-play"></span>
 				</a>
 				<span class="gif-icon"></span>
 			</div>
@@ -1167,7 +1168,7 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button">
-					<span class="bb-icon-play-thin"></span>
+					<span class="bb-icon-bl bb-icon-play"></span>
 				</a>
 				<span class="gif-icon"></span>
 			</div>
@@ -1248,7 +1249,7 @@ function bp_media_activity_save_gif_data( $activity ) {
 	$gif_old_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
 
 	// if edit activity then delete attachment and clear activity meta.
-	if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) ) {
+	if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) && isset( $_POST['id'] ) && $activity->id === intval( $_POST['id'] ) ) {
 		if ( ! empty( $gif_old_data ) ) {
 			wp_delete_attachment( $gif_old_data['still'], true );
 			wp_delete_attachment( $gif_old_data['mp4'], true );
@@ -1370,7 +1371,15 @@ function bp_media_import_submenu_page() {
 			<div class="boss-import-area">
 				<form id="bp-member-type-import-form" method="post" action="">
 					<div class="import-panel-content">
-						<h2><?php _e( 'Import Media', 'buddyboss' ); ?></h2>
+						<h2>
+							<?php
+							$meta_icon = bb_admin_icons( 'bp-member-type-import' );
+							if ( ! empty( $meta_icon ) ) {
+								echo '<i class="' . esc_attr( $meta_icon ) . '"></i>';
+							}
+							esc_html_e( 'Import Media', 'buddyboss' );
+							?>
+						</h2>
 
 						<?php
 						if ( $check ) {
@@ -2637,3 +2646,24 @@ function bb_setup_template_for_media_preview( $template ) {
 
 	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
 }
+
+/**
+ * Embed gif in single activity content.
+ *
+ * @since BuddyBoss 2.0.2
+ *
+ * @param string $content  content.
+ * @param object $activity Activity object.
+ *
+ * @return string
+ */
+function bp_media_activity_append_gif( $content, $activity ) {
+
+	// check if profile and groups activity gif support enabled.
+	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_groups_gif_support_enabled() ) ) {
+		return $content;
+	}
+
+	return $content . bp_media_activity_embed_gif_content( $activity->id );
+}
+

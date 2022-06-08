@@ -298,7 +298,7 @@ class BB_Messages extends Integration_Abstract {
 				$thread_ids = $this->get_thread_ids_by_userid( $user_id );
 				if ( ! empty( $thread_ids ) ) {
 					foreach ( $thread_ids as $thread_id ) {
-						Cache::instance()->purge_by_group( 'bp-messages_' . $thread_ids );
+						Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
 					}
 				}
 			}

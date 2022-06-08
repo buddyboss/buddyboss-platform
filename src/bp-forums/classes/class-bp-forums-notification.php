@@ -109,7 +109,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'forums',
 			'bb_forums_subscribed_reply',
-			'bb_forums_subscribed_reply'
+			'bb_forums_subscribed_reply',
+			'bb-icon-f bb-icon-reply'
 		);
 
 	}
@@ -145,7 +146,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'forums',
 			'bb_forums_subscribed_discussion',
-			'bb_forums_subscribed_discussion'
+			'bb_forums_subscribed_discussion',
+			'bb-icon-f bb-icon-comment-square-dots'
 		);
 	}
 
