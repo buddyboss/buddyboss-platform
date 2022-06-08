@@ -57,6 +57,30 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.0.3 =
+* Profiles - Handled repeater set title issue showing dropdown value instead of text
+* Profiles - Handled wrong date value for empty date Profile fields
+* Groups - Small improvement in groups directory filter dropdown to show Group types in alphabetical order
+* Forums - Handled single discussion display name privacy issue
+* Activity - Handled @mention not working issue in activity comments for blog post activities
+* Activity - Small improvement to redirect to specific activity comment from notification
+* Activity - Small improvement to allow searching Unicode characters in directory screen
+* Activity - Handled URL embed not working issue with the space
+* Activity - Handled link preview getting deleted issue when updating privacy
+* Activity - Small improvement to show a relevant error when not allowed to edit activity after a specified duration
+* Activity - Handled disabled auto-refresh option not working issue
+* Media - Handled document upload in a folder not showing without refresh issue in the Profile
+* Media - Small improvement to show uploaded portrait media in the right size across the network
+* Media - Small improvement to hide action buttons when no videos are found
+* Messages - Handled gif not playing issue in the message thread
+* Moderation - Small improvement to not receive an email notification from blocked members
+* REST API - Handled wrong date value for empty Profile fields in the API
+* REST API - Handled members directory send message action not taking to a right thread issue
+* LifterLMS - Handled critical issue in the profile screen
+* Events Calendar Pro - Handled past events not showing issue in search results
+* Yoast SEO - Handled update profile critical conflict in the admin dashboard and API
+* Compatibility - Code refactoring to fix a bunch of PHP 8 compatibility issues
+
 = 2.0.2 =
 * Notifications - Added icon support for notification avatar based on the notification type
 * Profiles - Handled members profile takes to wrong recipient issue when clicking on send message
