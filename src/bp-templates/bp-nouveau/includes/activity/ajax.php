@@ -350,6 +350,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
 		add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
 		add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
+		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
 	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */
@@ -391,11 +392,11 @@ function bp_nouveau_ajax_new_activity_comment() {
 	if ( ! is_user_logged_in() ) {
 		wp_send_json_error( $response );
 	}
-	
+
 	// Check content empty or not for the media, document and gif.
 	// If content will empty then return true and allow empty content in DB for the media, document and gif.
 	$content = apply_filters( 'bb_is_activity_content_empty', $_POST );
-	
+
 	if ( false === $content ) { // Check if $content will false then content would be empty.
 		wp_send_json_error(
 			array(
@@ -678,9 +679,10 @@ function bp_nouveau_ajax_post_update() {
 
 		$activity_id = bp_activity_post_update(
 			array(
-				'id'      => $activity_id,
-				'content' => $content,
-				'privacy' => $privacy,
+				'id'         => $activity_id,
+				'content'    => $content,
+				'privacy'    => $privacy,
+				'error_type' => 'wp_error',
 			)
 		);
 
@@ -718,6 +720,14 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error(
 			array(
 				'message' => __( 'There was a problem posting your update. Please try again.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if ( is_wp_error( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => $activity_id->get_error_message(),
 			)
 		);
 	}
