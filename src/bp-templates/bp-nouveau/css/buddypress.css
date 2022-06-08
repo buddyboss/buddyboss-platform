@@ -22752,6 +22752,14 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   }
 }
 
+#video-stream .bp-feedback {
+  margin: 25px 0 0 0;
+}
+
+.bb-title + #video-stream .bp-feedback {
+  margin: 0;
+}
+
 /*Video Popups*/
 .video-thumbnail-content {
   display: block;
@@ -22765,6 +22773,9 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   top: 0;
   bottom: 0;
   cursor: pointer;
+  height: 155px;
+  margin-right: 0;
+  overflow: hidden;
 }
 
 .video-thumbnail-content .video-thumbnail-custom .close-thumbnail-custom {
@@ -22796,10 +22807,16 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .video-thumbnail-custom img {
   height: 100%;
   width: auto;
-  margin: 0 auto;
+  margin: 0;
   display: block;
   min-height: 120px;
   border-radius: 4px;
+  max-width: inherit;
+  cursor: pointer;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .video-thumbnail-content .bb-dropzone-wrap {
@@ -22814,7 +22831,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bb-dropzone-wrap .video-thumbnail-custom {
   border: 3px solid transparent;
   border-radius: 5px;
-  margin-right: 10px;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .bb-custom-check[name="bb-video-thumbnail-select"] + label {
@@ -22915,6 +22931,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-image {
   height: 160px;
+  position: relative;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-image img {
@@ -22923,8 +22940,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border-radius: 5px;
   height: 100%;
   width: auto;
-  margin: 0 auto;
+  margin: 0;
   display: block;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-remove:after {
