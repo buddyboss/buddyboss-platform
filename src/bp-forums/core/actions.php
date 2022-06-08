@@ -494,7 +494,7 @@ function bb_post_topic_reply_draft() {
 					}
 				}
 
-				$draft_topic_reply['data']['bbp_media'] = json_encode( $new_media_data );
+				$draft_topic_reply['data']['bbp_media'] = wp_json_encode( $new_media_data );
 			}
 
 			// Set document draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
@@ -510,7 +510,7 @@ function bb_post_topic_reply_draft() {
 					}
 				}
 
-				$draft_topic_reply['data']['bbp_document'] = json_encode( $new_document_data );
+				$draft_topic_reply['data']['bbp_document'] = wp_json_encode( $new_document_data );
 			}
 
 			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
@@ -526,7 +526,7 @@ function bb_post_topic_reply_draft() {
 					}
 				}
 
-				$draft_topic_reply['data']['bbp_video'] = json_encode( $new_video_data );
+				$draft_topic_reply['data']['bbp_video'] = wp_json_encode( $new_video_data );
 			}
 
 			$existing_draft[ $draft_topic_reply['data_key'] ] = $draft_topic_reply;
