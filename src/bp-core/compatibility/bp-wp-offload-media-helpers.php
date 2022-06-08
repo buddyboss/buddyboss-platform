@@ -131,7 +131,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	public function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		$server_from_local          = (bool) $remove_local_files_setting['serve-from-s3'];
+		$server_from_local          = ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['serve-from-s3'] ) && (bool) $remove_local_files_setting['serve-from-s3'] );
 
 		if ( ! $server_from_local ) {
 			return true;
