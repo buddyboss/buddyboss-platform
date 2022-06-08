@@ -3897,7 +3897,7 @@ function bp_get_user_member_type( $user_id ) {
 				$member_type = $type_obj->labels['singular_name'];
 			}
 
-			$string = '<span class="bp-member-type">' . $member_type . '</span>';
+			$string = '<span class="bp-member-type bb-current-member-' . esc_attr( $type ) . '">' . $member_type . '</span>';
 		} else {
 			$string = '<span class="bp-member-type">' . $member_type . '</span>';
 		}
@@ -5002,7 +5002,15 @@ function bb_member_loop_set_member_id( $id ) {
 				return $id;
 			}
 		} else {
-			return $id;
+			if (
+				'friends' === bp_current_component() &&
+				( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() )
+			) {
+				// This will fix the issues in theme members directory page & members connections tab send message issue.
+				return bp_get_member_user_id();
+			} else {
+				return $id;
+			}
 		}
 	}
 
@@ -5220,3 +5228,42 @@ function bb_core_sync_user_notification_settings( $user_id ) {
 
 }
 add_action( 'user_register', 'bb_core_sync_user_notification_settings' );
+
+/**
+ * Function will return label background and text color's for specific member type.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param $type Type of the member
+ *
+ * @return array Return array of label color data
+ */
+function bb_get_member_type_label_colors( $type ) {
+	if ( empty( $type ) ) {
+		return false;
+	}
+	$post_id                    = bp_member_type_post_by_type( $type );
+	$cache_key                  = 'bb-member-type-label-color-' . $type;
+	$bp_member_type_label_color = wp_cache_get( $cache_key, 'bp_member_member_type' );
+	if ( false === $bp_member_type_label_color && ! empty( $post_id ) ) {
+		$label_colors_meta = get_post_meta( $post_id, '_bp_member_type_label_color', true );
+		$label_color_data  = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : array();
+		$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+		if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {
+			$background_color = buddyboss_theme_get_option( 'label_background_color' );
+			$text_color       = buddyboss_theme_get_option( 'label_text_color' );
+		} else {
+			$background_color = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+			$text_color       = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+		}
+		// Array of label's text and background color data.
+		$bp_member_type_label_color = array(
+			'color_type'       => $color_type,
+			'background-color' => $background_color,
+			'color'            => $text_color,
+		);
+		wp_cache_set( $cache_key, $bp_member_type_label_color, 'bp_member_member_type' );
+	}
+
+	return apply_filters( 'bb_get_member_type_label_colors', $bp_member_type_label_color );
+}

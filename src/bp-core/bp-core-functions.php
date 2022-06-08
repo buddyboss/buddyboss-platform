@@ -2822,6 +2822,10 @@ function bp_nav_menu_get_loggedin_pages() {
 		// Remove <span>number</span>.
 		$item_name = _bp_strip_spans_from_title( $bp_item['name'] );
 
+		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+			$bp_item['link'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $bp_item['link'] );
+		}
+
 		$page_args[ $bp_item['slug'] ] = (object) array(
 			'ID'             => $nav_counter,
 			'post_title'     => $item_name,
@@ -2946,11 +2950,17 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
-					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+					$course_label = is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ? LearnDash_Custom_Label::get_label( 'courses' ) : __( 'Course', 'buddyboss' );
+					/* translators: My Course, e.g. "My Course". */
+					$sub_name = sprintf( __( 'My %s', 'buddyboss' ), $course_label );
 				}
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
 					$key = 'group-invites-settings';
+				}
+
+				if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+					$s_nav['link'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $s_nav['link'] );
 				}
 
 				$link                  = $s_nav['link'];
@@ -7414,3 +7424,205 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 
 	return '';
 }
+
+/**
+ * Convert Media to base64 from attachment id.
+ *
+ * @since buddyboss 2.0.0
+ *
+ * @param int    $attachment_id Attachment id.
+ * @param string $size          Image size.
+ *
+ * @return string
+ */
+function bb_core_get_encoded_image( $attachment_id, $size = 'full' ) {
+	if ( empty( $attachment_id ) ) {
+		return '';
+	}
+
+	$file = '';
+
+	if ( 'full' !== $size ) {
+		$metadata = image_get_intermediate_size( $attachment_id, $size );
+		if ( isset( $metadata['path'] ) ) {
+			$wp_uploads     = wp_upload_dir();
+			$wp_uploads_dir = $wp_uploads['basedir'];
+			$file           = $wp_uploads_dir . '/' . $metadata['path'];
+		}
+	}
+
+	if ( empty( $file ) ) {
+		$file = get_attached_file( $attachment_id );
+	}
+
+	$type = pathinfo( $file, PATHINFO_EXTENSION );
+	$data = file_get_contents( $file ); // phpcs:ignore
+
+	return 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+}
+
+/**
+ * Function will return icon based on section.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param $id Id of the section.
+ *
+ * @return string Return icon name.
+ */
+function bb_admin_icons( $id ) {
+	$bb_icon_bf = 'bb-icon-bf';
+	switch ( $id ) {
+		case 'bp_main':
+			$meta_icon = $bb_icon_bf . ' bb-icon-cog';
+			break;
+		case 'bp_registration':
+		case 'bp_registration_pages':
+			$meta_icon = $bb_icon_bf . ' bb-icon-clipboard';
+			break;
+		case 'bp_privacy':
+			$meta_icon = $bb_icon_bf . ' bb-icon-lock-alt';
+			break;
+		case 'bp_xprofile':
+			$meta_icon = $bb_icon_bf . ' bb-icon-user-card';
+			break;
+		case 'bp_member_avatar_settings':
+		case 'bp_groups_avatar_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-image';
+			break;
+		case 'bp_profile_headers_settings':
+		case 'bp_groups_headers_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-maximize';
+			break;
+		case 'bp_profile_list_settings':
+		case 'bp_group_list_settings':
+		case 'bbp_settings_root_slugs':
+			$meta_icon = $bb_icon_bf . ' bb-icon-grid-small';
+			break;
+		case 'bp_member_type_settings':
+		case 'bp_groups_types':
+			$meta_icon = $bb_icon_bf . ' bb-icon-tags';
+			break;
+		case 'bp_profile_search_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-search-plus';
+			break;
+		case 'bp_search_settings_community':
+		case 'bp_search_settings_post_types':
+			$meta_icon = $bb_icon_bf . ' bb-icon-search';
+			break;
+		case 'bp_groups':
+		case 'bbp_settings_buddypress':
+			$meta_icon = $bb_icon_bf . ' bb-icon-users';
+			break;
+		case 'bp_groups_hierarchies':
+			$meta_icon = $bb_icon_bf . ' bb-icon-layers';
+			break;
+		case 'bbp_settings_users':
+		case 'bbp_settings_features':
+			$meta_icon = $bb_icon_bf . ' bb-icon-comments-square';
+			break;
+		case 'bbp_settings_per_page':
+			$meta_icon = $bb_icon_bf . ' bb-icon-sort-amount-down';
+			break;
+		case 'bbp_settings_per_rss_page':
+			$meta_icon = $bb_icon_bf . ' bb-icon-rss';
+			break;
+		case 'bbp_settings_single_slugs':
+			$meta_icon = $bb_icon_bf . ' bb-icon-pencil';
+			break;
+		case 'bbp_settings_user_slugs':
+			$meta_icon = $bb_icon_bf . ' bb-icon-user-edit';
+			break;
+		case 'bbp_settings_akismet':
+			$meta_icon = $bb_icon_bf . ' bb-icon-brand-wordpress';
+			break;
+		case 'bp_activity':
+			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
+			break;
+		case 'bp_custom_post_type':
+			$meta_icon = $bb_icon_bf . ' bb-icon-thumbtack';
+			break;
+		case 'bp_notifications':
+			$meta_icon = $bb_icon_bf . ' bb-icon-desktop';
+			break;
+		case 'bp_media_settings_photos':
+			$meta_icon = $bb_icon_bf . ' bb-icon-camera';
+			break;
+		case 'bp_media_settings_documents':
+			$meta_icon = $bb_icon_bf . ' bb-icon-folder-open';
+			break;
+		case 'bp_media_settings_videos':
+			$meta_icon = $bb_icon_bf . ' bb-icon-video';
+			break;
+		case 'bp_media_settings_emoji':
+			$meta_icon = $bb_icon_bf . ' bb-icon-emoticon-smile';
+			break;
+		case 'bp_media_settings_gifs':
+			$meta_icon = $bb_icon_bf . ' bb-icon-gif';
+			break;
+		case 'bp_media_settings_symlinks':
+			$meta_icon = $bb_icon_bf . ' bb-icon-server';
+			break;
+		case 'bp_friends':
+			$meta_icon = $bb_icon_bf . ' bb-icon-user-friends';
+			break;
+		case 'bp_invites':
+			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
+			break;
+		case 'bp_moderation_settings_blocking':
+			$meta_icon = $bb_icon_bf . ' bb-icon-user-slash';
+			break;
+		case 'bp_moderation_settings_reporting':
+			$meta_icon = $bb_icon_bf . ' bb-icon-flag';
+			break;
+		case 'bp_search_settings_general':
+			$meta_icon = $bb_icon_bf . ' bb-icon-caret-down';
+			break;
+		case 'bp_pages':
+			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
+			break;
+		case 'bp_buddyboss_app-integration':
+			$meta_icon = $bb_icon_bf . ' bb-icon-brand-buddyboss-app';
+			break;
+		case 'bp_compatibility-integration':
+			$meta_icon = $bb_icon_bf . ' bb-icon-brand-buddypress';
+			break;
+		case 'bp_ld_sync-buddypress':
+		case 'bp_ld_sync-learndash':
+		case 'bp_ld_course_tab-buddypress':
+		case 'bp_ld-integration':
+			$meta_icon = $bb_icon_bf . ' bb-icon-brand-learndash';
+			break;
+		case 'repair_community':
+		case 'repair_forums':
+			$meta_icon = $bb_icon_bf . ' bb-icon-tools';
+			break;
+		case 'default_data':
+		case 'bp-member-type-import':
+		case 'bbpress_converter_main':
+			$meta_icon = $bb_icon_bf . ' bb-icon-upload';
+			break;
+		case 'group_access_control_block':
+		case 'activity_access_control_block':
+		case 'messages_access_control_block':
+		case 'media_access_control_block';
+		case 'connection_access_control_block':
+			$meta_icon = $bb_icon_bf . ' bb-icon-lock-alt-open';
+			break;
+		case 'bp_zoom_settings_section':
+		case 'bp_zoom_gutenberg_section';
+			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
+			break;
+		case 'bp_labs_settings_notifications';
+			$meta_icon = $bb_icon_bf . ' bb-icon-flask';
+			break;
+		case 'bp_notification_settings_automatic':
+			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
+			break;
+		default:
+			$meta_icon = '';
+	}
+
+	return apply_filters( 'bb_admin_icons', $meta_icon );
+}
+
