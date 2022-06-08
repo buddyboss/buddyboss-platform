@@ -265,7 +265,7 @@ window.bp = window.bp || {};
 
 			// Reset editor.
 			if ( 'topic' === this.topic_reply_draft.object ) {
-				$medium_editor = window.forums_medium_forum_editor[editor_key];
+				$medium_editor = window.forums_medium_topic_editor[editor_key];
 
 				$editor = target.find( '#bbp_editor_topic_content_' + editor_key );
 				$editor.removeClass( 'error' );
