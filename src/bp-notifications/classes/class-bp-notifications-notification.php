@@ -757,7 +757,7 @@ class BP_Notifications_Notification {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.3
 		 *
 		 * @param string $where_sql Where SQL statement.
 		 * @param string $tbl_alias Table alias.

@@ -864,7 +864,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	/**
 	 * Filters the content of a comment.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.3
 	 *
 	 * @param string $content         Content for the posted comment.
 	 * @param int    $comment_id      The activity ID for the posted activity comment.

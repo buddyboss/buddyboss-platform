@@ -229,7 +229,7 @@ function bp_helper_plugins_loaded_callback() {
 		/**
 		 * Function to suppress "The Event Calendar" plugin's parse_query filter.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.3
 		 *
 		 * @param array $query default query variable.
 		 *

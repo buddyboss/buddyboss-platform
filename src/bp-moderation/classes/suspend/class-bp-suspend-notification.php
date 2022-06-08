@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Notification Classes
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.0.3
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.3
  */
 class BP_Suspend_Notification extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Notification extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Notification constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.3
 	 */
 	public function __construct() {
 
@@ -44,7 +44,7 @@ class BP_Suspend_Notification extends BP_Suspend_Abstract {
 	/**
 	 * Get Notification's comment ids
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.3
 	 *
 	 * @param int   $notification_id Notification id.
 	 * @param array $args            Parent args.
@@ -58,7 +58,7 @@ class BP_Suspend_Notification extends BP_Suspend_Abstract {
 	/**
 	 * Prepare notification Where SQL query to filter blocked users.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.3
 	 *
 	 * @param string $where_conditions Notification Where sql.
 	 * @param string $tbl_alias        Table alias.
@@ -85,7 +85,7 @@ class BP_Suspend_Notification extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden notification Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.3
 		 *
 		 * @param string $where_conditions Query to hide suspended user's notification.
 		 * @param array  $class            current class object.
