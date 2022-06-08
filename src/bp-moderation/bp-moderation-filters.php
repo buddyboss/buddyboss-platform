@@ -53,7 +53,7 @@ function bb_moderation_load() {
 	/**
 	 * Handle notification.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.3
 	 */
 	if ( bp_is_active( 'notifications' ) ) {
 		new BP_Moderation_Notification();
@@ -722,7 +722,7 @@ add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 
 /**
  * Check the user blocked/suspended or not?
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.3
  *
  * @param bool $retval  Default false.
  * @param int  $item_id Blocking User ID.
