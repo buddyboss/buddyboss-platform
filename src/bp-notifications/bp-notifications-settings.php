@@ -55,7 +55,7 @@ function bb_notification_get_settings_sections() {
 }
 
 /**
- * Link to Web Push Notification tutorial
+ * Link to Web Push Notification tutorial.
  *
  * @since BuddyBoss [BBVERSION]
  */

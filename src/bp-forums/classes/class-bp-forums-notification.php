@@ -273,4 +273,131 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		return $content;
 	}
+
+	/**
+	 * Format forums push notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $content      Notification content.
+	 * @param object $notification Notification object.
+	 *
+	 * @return array {
+	 *  'title'       => '',
+	 *  'description' => '',
+	 *  'link'        => '',
+	 *  'image'       => '',
+	 * }
+	 */
+	public function format_push_notification( $content, $notification ) {
+		if ( 'forums' === $notification->component_name && 'bb_forums_subscribed_reply' === $notification->component_action ) {
+			$topic_id    = bbp_get_reply_topic_id( $notification->item_id );
+			$topic_title = bbp_get_topic_title( $topic_id );
+			$topic_link  = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action'   => 'bbp_mark_read',
+						'topic_id' => $topic_id,
+						'reply_id' => $notification->item_id,
+					),
+					bbp_get_reply_url( $notification->item_id )
+				),
+				'bbp_mark_topic_' . $topic_id
+			);
+
+			$except = '"' . bbp_get_reply_excerpt( $notification->item_id, 50 ) . '"';
+			$except = str_replace( '&hellip;"', '&hellip;', $except );
+			if ( ! empty( $except ) && ! empty( $notification->secondary_item_id ) ) {
+				$text = sprintf(
+					/* translators: 1. Member display name. 2. excerpt. */
+					__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
+					bp_core_get_user_displayname( $notification->secondary_item_id ),
+					$except
+				);
+			} elseif ( ! empty( $notification->secondary_item_id ) && empty( $except ) ) {
+				$text = sprintf(
+					/* translators: Member display name. */
+					__( '%s replied to a discussion', 'buddyboss' ),
+					bp_core_get_user_displayname( $notification->secondary_item_id )
+				);
+			} else {
+				$text = sprintf(
+					/* translators: topic title. */
+					__( 'You have a new reply to %s', 'buddyboss' ),
+					$topic_title
+				);
+			}
+
+			$forum_id  = bbp_get_topic_forum_id( $topic_id );
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$title     = bp_get_site_name();
+
+			if ( bp_is_active( 'groups' ) && ! empty( $group_ids ) ) {
+				$title = bp_get_group_name( groups_get_group( current( $group_ids ) ) );
+			}
+
+			$content = array(
+				'title'       => $title,
+				'description' => $text,
+				'link'        => $topic_link,
+				'image'       => bb_notification_avatar_url( bp_notifications_get_notification( $notification->id ) ),
+			);
+		}
+
+		if ( 'forums' === $notification->component_name && 'bb_forums_subscribed_discussion' === $notification->component_action ) {
+			$topic_id    = bbp_get_topic_id( $notification->item_id );
+			$topic_title = '"' . bp_create_excerpt(
+				wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			) . '"';
+
+			$topic_title = str_replace( '&hellip;"', '&hellip;', $topic_title );
+
+			$topic_link = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action'   => 'bbp_mark_read',
+						'topic_id' => $topic_id,
+					),
+					bbp_get_topic_permalink( $topic_id )
+				),
+				'bbp_mark_topic_' . $topic_id
+			);
+
+			if ( ! empty( $notification->secondary_item_id ) ) {
+				$text = sprintf(
+					/* translators: 1.Member display name 2. discussions title. */
+					__( '%1$s started a discussion: %2$s', 'buddyboss' ),
+					bp_core_get_user_displayname( $notification->secondary_item_id ),
+					$topic_title
+				);
+			} else {
+				$text = sprintf(
+					/* translators: discussions title. */
+					__( 'You have a new discussion: %s', 'buddyboss' ),
+					$topic_title
+				);
+			}
+
+			$forum_id  = bbp_get_topic_forum_id( $topic_id );
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$title     = bp_get_site_name();
+
+			if ( bp_is_active( 'groups' ) && ! empty( $group_ids ) ) {
+				$title = bp_get_group_name( groups_get_group( current( $group_ids ) ) );
+			}
+
+			$content = array(
+				'title'       => $title,
+				'description' => $text,
+				'link'        => $topic_link,
+				'image'       => bb_notification_avatar_url( bp_notifications_get_notification( $notification->id ) ),
+			);
+		}
+
+		return $content;
+	}
 }
