@@ -462,7 +462,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
  *
  * @return string
  */
-function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
+function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
 
 	switch ( $action ) {
 		case 'new_membership_request':

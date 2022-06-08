@@ -34,7 +34,9 @@ function bp_members_prefetch_member_type( BP_User_Query $bp_user_query ) {
 			$keyed_member_types[ $member_type->object_id ] = array();
 		}
 
-		$keyed_member_types[ $member_type->object_id ][] = $member_type->name;
+		if ( bp_get_member_type_object( $member_type->name ) ) {
+			$keyed_member_types[ $member_type->object_id ][] = $member_type->name;
+		}
 	}
 
 	$cached_member_ids = array();

@@ -5002,7 +5002,15 @@ function bb_member_loop_set_member_id( $id ) {
 				return $id;
 			}
 		} else {
-			return $id;
+			if (
+				'friends' === bp_current_component() &&
+				( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() )
+			) {
+				// This will fix the issues in theme members directory page & members connections tab send message issue.
+				return bp_get_member_user_id();
+			} else {
+				return $id;
+			}
 		}
 	}
 
