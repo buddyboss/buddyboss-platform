@@ -631,6 +631,14 @@ function bp_attachments_delete_file( $args = array() ) {
 			$subdir    = 'groups/0/cover-image';
 		}
 
+		/**
+		 * Filter to update the subdirectory.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $subdir Subdirectory name.
+		 * @param array  $r      Arguments.
+		 */
 		$subdir = apply_filters( 'bb_attachments_delete_file_subdir', $subdir, $r );
 
 		$type_dir = trailingslashit( $upload_dir['basedir'] ) . $subdir;
@@ -1779,6 +1787,14 @@ function bp_attachments_cover_image_ajax_delete() {
 		$dir       = $component;
 	}
 
+	/**
+	 * Update directory name while deleting the cover image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $dir  Directory name.
+	 * @param array  $args Arguments.
+	 */
 	$dir = apply_filters( 'bp_attachments_cover_image_ajax_delete_dir', $dir, $args );
 
 	// Handle delete.

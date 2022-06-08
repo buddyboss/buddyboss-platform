@@ -496,13 +496,15 @@ function bp_the_notification_description() {
 	echo bp_get_the_notification_description();
 }
 
-	/**
-	 * Get full-text description for a specific notification.
-	 *
-	 * @since BuddyPress 1.9.0
-	 *
-	 * @return string
-	 */
+/**
+ * Get full-text description for a specific notification.
+ *
+ * @param object $notification Notification object.
+ *
+ * @since BuddyPress 1.9.0
+ *
+ * @return string
+ */
 function bp_get_the_notification_description( $notification = '' ) {
 	$bp = buddypress();
 
@@ -1083,7 +1085,7 @@ function bb_on_screen_notification_template() {
 	$enable                       = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
 
 	?>
-	<div class="bb-onscreen-notification-enable <?php echo '1' === $has_mobile_support ? 'bb-onscreen-notification-enable-mobile-support' : '';  ?>">
+	<div class="bb-onscreen-notification-enable <?php echo '1' === $has_mobile_support ? 'bb-onscreen-notification-enable-mobile-support' : ''; ?>">
 		<div
 			class="bb-onscreen-notification bb-position-<?php echo esc_attr( $position ); ?>"
 			style="display: none;"
