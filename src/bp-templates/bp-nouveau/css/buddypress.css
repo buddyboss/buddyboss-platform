@@ -10274,7 +10274,7 @@ body .bp-messages-user-threads {
     background: #fff;
     border: 1px solid #d7dce5;
     border-radius: 3px;
-    padding: 5px 10px;
+    padding: 3px 10px;
   }
   .main-notification-settings .bb-mobile-setting .bb-mobile-setting-anchor:after {
     content: "\e826";
@@ -10287,22 +10287,24 @@ body .bp-messages-user-threads {
   }
   .main-notification-settings .bb-mobile-setting ul {
     position: absolute;
-    top: 30px;
+    top: 35px;
     right: 0;
     display: none;
     margin: 0;
-    padding: 10px 4px 0;
+    padding: 15px 5px 0;
     width: 150px;
     list-style: none;
     background: #fff;
-    border: 1px solid #d3d4d6;
     box-sizing: border-box;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.05), 0 6px 10px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
   }
   .main-notification-settings .bb-mobile-setting ul li {
     width: 100%;
-    padding: 0 8px 10px;
+    padding: 0 10px 10px;
+  }
+  .main-notification-settings .bb-mobile-setting ul li:last-child {
+    padding-bottom: 15px;
   }
   .main-notification-settings .bb-mobile-setting.active ul {
     display: block;
