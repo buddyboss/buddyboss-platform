@@ -611,9 +611,9 @@ window.bp = window.bp || {};
 					// Check the querystring to eventually include the search terms.
 					if ( null !== self.querystring ) {
 						if ( undefined !== self.querystring[ object + '_search' ] ) {
-							search_terms = self.querystring[ object + '_search' ];
+							search_terms = decodeURI( self.querystring[ object + '_search' ] );
 						} else if ( undefined !== self.querystring.s ) {
-							search_terms = self.querystring.s;
+							search_terms = decodeURI( self.querystring.s );
 						}
 
 						if ( search_terms ) {
