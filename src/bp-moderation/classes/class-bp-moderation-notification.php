@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Notification Classes
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.0.3
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.3
  */
 class BP_Moderation_Notification extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Notification constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.3
 	 */
 	public function __construct() {
 
@@ -51,7 +51,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.3
 	 *
 	 * @param int $notification_id Notification id.
 	 *
@@ -64,7 +64,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.3
 	 *
 	 * @param integer $notification_id Notification id.
 	 *
@@ -77,7 +77,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 	/**
 	 * Remove hidden/blocked user's notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.3
 	 *
 	 * @param string $sql_where Notifications Where sql.
 	 * @param string $tbl_alias Table alias.
@@ -110,7 +110,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 		/**
 		 * Filters the hidden notification Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.3
 		 *
 		 * @param string $sql_where Query to hide moderation user's notification.
 		 * @param array  $class     current class object.
