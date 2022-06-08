@@ -405,16 +405,15 @@ window.bp = window.bp || {};
 				content_valid = false;
 			}
 
-
 			if ( content_valid ) {
 
 				if ( 'undefined' !== typeof meta.bbp_video && '' !== meta.bbp_video ) {
 					var new_videos = JSON.parse( meta.bbp_video );
 
 					var filtered_new_videos = new_videos.filter(
-						function( item ){
+						function ( item ) {
 							if ( 'undefined' !== typeof item.js_preview ) {
-								delete item['js_preview'];
+								delete item.js_preview;
 							}
 							return item;
 						}
@@ -949,7 +948,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.TopicReplyDraft.postTopicReplyDraft( false, true, true );
 			}
 		}
-	}
+	};
 
 	// Launch BP Nouveau Media.
 	bp.Nouveau.TopicReplyDraft.start();

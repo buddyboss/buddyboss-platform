@@ -55,7 +55,7 @@ jQuery( document ).ready(
 
 					window.forums_medium_forum_editor[key].subscribe(
 						'editableInput',
-						function ( event ) {
+						function () {
 							var bbp_forum_content = jQuery(element).closest('form').find( '#bbp_forum_content' );
 							var html = window.forums_medium_forum_editor[key].getContent();
 							var dummy_element = document.createElement( 'div' );
@@ -448,7 +448,7 @@ jQuery( document ).ready(
 
 							window.forums_medium_forum_editor[key].subscribe(
 								'editableInput',
-								function ( event ) {
+								function () {
 									var bbp_forum_content = jQuery(element).closest('form').find( '#bbp_forum_content' );
 									bbp_forum_content.val( window.forums_medium_forum_editor[key].getContent() );
 									var atwho_query = bbp_forum_content.find( 'span.atwho-query' );
