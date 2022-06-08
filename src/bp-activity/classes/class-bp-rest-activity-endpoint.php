@@ -2090,7 +2090,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function bp_rest_activity_content_validate( $request ) {
 		$toolbar_option = true;
 
-		if ( ! empty( $request['content'] ) ) {
+		if ( ! empty( trim( wp_strip_all_tags( $request['content'] ) ) ) ) {
 			return false;
 		}
 

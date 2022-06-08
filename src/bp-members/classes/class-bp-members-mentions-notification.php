@@ -119,6 +119,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'members',
 			'bb_new_mention',
 			'bb_new_mention',
+			'bb-icon-f bb-icon-activity'
 		);
 
 		$this->register_notification_filter(
