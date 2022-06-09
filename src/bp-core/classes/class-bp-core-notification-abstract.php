@@ -495,7 +495,9 @@ abstract class BP_Core_Notification_Abstract {
 	 *  'image'       => '',
 	 * }
 	 */
-	abstract public function format_push_notification( $content, $notification );
+	public function format_push_notification( $content, $notification ) {
+		return $content;
+	}
 
 	/**
 	 * Register the notification filters.
