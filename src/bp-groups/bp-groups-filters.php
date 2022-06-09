@@ -17,7 +17,6 @@ add_filter( 'bp_get_single_group_template', 'bp_add_template_locations' );
 add_filter( 'bp_get_group_description', 'wptexturize' );
 add_filter( 'bp_get_group_description_excerpt', 'wptexturize' );
 add_filter( 'bp_get_group_name', 'wptexturize' );
-add_filter( 'bp_get_group_name', 'html_entity_decode' );
 
 add_filter( 'bp_get_group_description', 'convert_smilies' );
 add_filter( 'bp_get_group_description_excerpt', 'convert_smilies' );

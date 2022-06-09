@@ -701,7 +701,7 @@ function bp_get_group_name( $group = false ) {
 	 * @param string $name  Name of the current group in the loop.
 	 * @param object $group Group object.
 	 */
-	return apply_filters( 'bp_get_group_name', wp_specialchars_decode( $group->name, ENT_QUOTES ), $group );
+	return apply_filters( 'bp_get_group_name', $group->name, $group );
 }
 
 /**
