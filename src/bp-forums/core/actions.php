@@ -544,10 +544,8 @@ function bb_post_topic_reply_draft() {
 					if ( isset( $existing_draft[ $data_key ] ) ) {
 						$existing_draft[ $data_key ]['data'] = $d_data;
 					}
-
 				}
 			}
-
 		}
 
 		update_user_meta( $user_id, $usermeta_key, $existing_draft );
