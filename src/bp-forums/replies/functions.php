@@ -1990,7 +1990,7 @@ function bbp_trashed_reply( $reply_id = 0 ) {
  * @uses bbp_is_reply() To check if the passed id is a reply
  * @uses do_action() Calls 'bbp_untrashed_reply' with the reply id
  */
-function bbp_untrashed_reply( $reply_id = 0, $previous_status ) {
+function bbp_untrashed_reply( $reply_id = 0, $previous_status = '' ) {
 	$reply_id = bbp_get_reply_id( $reply_id );
 
 	if ( empty( $reply_id ) || ! bbp_is_reply( $reply_id ) ) {

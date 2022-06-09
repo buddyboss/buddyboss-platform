@@ -693,9 +693,10 @@ function bp_nouveau_ajax_post_update() {
 
 		$activity_id = bp_activity_post_update(
 			array(
-				'id'      => $activity_id,
-				'content' => $content,
-				'privacy' => $privacy,
+				'id'         => $activity_id,
+				'content'    => $content,
+				'privacy'    => $privacy,
+				'error_type' => 'wp_error',
 			)
 		);
 
@@ -736,6 +737,14 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error(
 			array(
 				'message' => __( 'There was a problem posting your update. Please try again.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if ( is_wp_error( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => $activity_id->get_error_message(),
 			)
 		);
 	}

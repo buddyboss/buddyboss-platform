@@ -2655,7 +2655,7 @@ function bb_setup_template_for_media_preview( $template ) {
 /**
  * Embed gif in single activity content.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.2
  *
  * @param string $content  content.
  * @param object $activity Activity object.
