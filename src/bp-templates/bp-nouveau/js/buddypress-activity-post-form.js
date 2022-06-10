@@ -25,6 +25,7 @@ window.bp = window.bp || {};
 	bp.group_id              = 0;
 	bp.privacy               = 'public';
 	bp.draft_ajax_request    = null;
+	bp.old_draft_data        = false;
 	bp.draft_activity        = {
 		object: false,
 		data_key: false,
@@ -883,6 +884,7 @@ window.bp = window.bp || {};
 
 		syncDraftActivity: function() {
 			if ( ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) && ! _.isUndefined( BP_Nouveau.activity.params.draft_activity.data_key ) ) {
+				bp.old_draft_data = BP_Nouveau.activity.params.draft_activity.data;
 				bp.draft_activity = BP_Nouveau.activity.params.draft_activity;
 				localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
 			}
@@ -968,7 +970,7 @@ window.bp = window.bp || {};
 				]
 			);
 
-			if ( 0 < bp.draft_activity.data.item_id && 'group' === data.privacy && 0 === parseInt( data.item_id ) ) {
+			if ( 0 < bp.draft_activity.data.item_id && 'group' === data.privacy && ( 0 === parseInt( data.item_id ) || parseInt( bp.draft_activity.data.item_id ) === parseInt( data.item_id ) ) ) {
 				data.item_id          = parseInt( bp.draft_activity.data.item_id );
 				data.item_name        = bp.draft_activity.data.item_name;
 				data.group_image      = bp.draft_activity.data.group_image;
@@ -1005,13 +1007,17 @@ window.bp = window.bp || {};
 			}
 
 			// Set Draft activity data.
-			self.checkedTopicReplyDataChanged( bp.draft_activity.data, data );
+			self.checkedTopicReplyDataChanged( bp.old_draft_data, data );
 
 			bp.draft_activity.data = data;
 			localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
 		},
 
 		checkedTopicReplyDataChanged: function( old_data, new_data ) {
+
+			if ( bp.draft_content_changed ) {
+				return;
+			}
 
 			var draft_data_keys = [
 				'object',
@@ -1051,8 +1057,34 @@ window.bp = window.bp || {};
 							'gif_data',
 						],
 						pair
-					) && ! _.isUndefined( old_data[ pair ] ) && ! _.isUndefined( new_data[ pair ] ) && old_data[ pair ] !== new_data[ pair ] ) {
-						bp.draft_content_changed = true;
+					) && ! _.isUndefined( old_data[ pair ] ) && ! _.isUndefined( new_data[ pair ] ) ) {
+
+						if ( 'object' === pair ) {
+
+							if ( -1 !== _.indexOf( [ 'groups', 'group' ], new_data[ pair ] ) && -1 !== _.indexOf( [ 'groups', 'group' ], old_data[ pair ] ) ) {
+								bp.draft_content_changed = false;
+							} else if ( -1 !== _.indexOf( [ 'user' ], new_data[ pair ] ) && -1 !== _.indexOf( [ 'user' ], old_data[ pair ] ) ) {
+								bp.draft_content_changed = false;
+							} else {
+								bp.draft_content_changed = true;
+							}
+
+						} else if ( 'user_id' === pair || 'item_id' === pair ) {
+
+							if ( parseInt( old_data[ pair ] ) !== parseInt( new_data[ pair ] ) ) {
+								bp.draft_content_changed = true;
+							}
+
+						} else if ( 'link_embed' === pair ) {
+
+							if ( JSON.parse( old_data[ pair ] ) !== JSON.parse( new_data[ pair ] ) ) {
+								bp.draft_content_changed = true;
+							}
+
+						} else if ( old_data[ pair ] !== new_data[ pair ] ) {
+							bp.draft_content_changed = true;
+						}
+
 					}
 				}
 			);
@@ -1104,6 +1136,7 @@ window.bp = window.bp || {};
 				navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
 			}
 
+			bp.old_draft_data = bp.draft_activity.data;
 			bp.draft_content_changed = false;
 		},
 
@@ -1320,8 +1353,9 @@ window.bp = window.bp || {};
 			},
 
 			close: function ( e ) {
+
 				// Store data forcefully.
-				if ( this.$el.parent().hasClass( 'has-draft' ) ) {
+				if ( ! this.$el.parent().hasClass( 'bp-activity-edit' ) ) {
 					bp.Nouveau.Activity.postForm.clearDraftInterval();
 					bp.Nouveau.Activity.postForm.collectDraftActivity();
 					bp.Nouveau.Activity.postForm.postDraftActivity( false, false );
@@ -3401,6 +3435,23 @@ window.bp = window.bp || {};
 						this.$el.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).removeClass('group-privacy-point-icon').addClass('privacy-point-icon');
 					}
 				}
+
+				if ( ! _.isUndefined( bp.draft_activity ) && '' !== bp.draft_activity.data && 'group' === bp.draft_activity.data.object ) {
+					this.model.set( 'item_name', bp.draft_activity.data.item_name );
+					this.model.set( 'privacy', 'group' );
+
+					$( '#whats-new-form' ).find( '.bp-activity-privacy-status' ).text( bp.draft_activity.data.item_name );
+
+					this.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+					// display image of the group.
+					if ( bp.draft_activity.data.group_image && false === bp.draft_activity.data.group_image.includes( 'mystery-group' ) ) {
+						this.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' ).html( '<img src="' + bp.draft_activity.data.group_image + '" alt=""/>' );
+					} else {
+						this.$el.find( '#bp-activity-privacy-point span.group-privacy-point-icon img' ).remove();
+						this.$el.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).removeClass( 'group-privacy-point-icon' ).addClass( 'privacy-point-icon' );
+					}
+				}
+
 				return this;
 			},
 
@@ -3691,6 +3742,7 @@ window.bp = window.bp || {};
 					);
 					// Set the object type.
 					this.model.set( 'object', this.model.get( 'object' ) );
+					this.model.set( 'group_name', model.get( 'name' ) );
 					this.model.set( 'group_image', model.get( 'avatar_url' ) );
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
