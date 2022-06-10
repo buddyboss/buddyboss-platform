@@ -452,7 +452,7 @@ function bbp_new_topic_handler( $action = '' ) {
 		$draft_data_key = 'draft_discussion_' . $forum_id;
 		$usermeta_key   = 'bb_user_topic_reply_draft';
 		$user_id        = bp_loggedin_user_id();
-		$existing_draft = get_user_meta( $user_id, $usermeta_key, true );
+		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
 
 		if ( ! empty( $existing_draft ) && isset( $existing_draft[ $draft_data_key ] ) ) {
 			unset( $existing_draft[ $draft_data_key ] );
@@ -462,7 +462,7 @@ function bbp_new_topic_handler( $action = '' ) {
 			$existing_draft = array();
 		}
 
-		update_user_meta( $user_id, $usermeta_key, $existing_draft );
+		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 
 		/** Additional Actions (After Save) */
 
