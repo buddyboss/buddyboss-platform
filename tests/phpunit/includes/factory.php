@@ -182,7 +182,9 @@ class BP_UnitTest_Factory_For_Message extends WP_UnitTest_Factory_For_Thing {
 		$thread_id = messages_new_message( $args );
 		$thread = new BP_Messages_Thread( $thread_id );
 
-		return BP_Messages_Message::$last_inserted_id;
+		return isset( $thread->last_message_id ) ? $thread->last_message_id : ( ( ! empty( $thread->messages ) ? end( $thread->messages )->id : 0 ) );
+
+		// return BP_Messages_Message::$last_inserted_id;
 		// return end( $thread->messages )->id;
 	}
 

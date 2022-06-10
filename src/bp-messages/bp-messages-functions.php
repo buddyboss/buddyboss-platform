@@ -324,7 +324,7 @@ function messages_new_message( $args = '' ) {
 		}
 
 		if ( $previous_thread && $r['append_thread'] ) {
-			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
+			$message->thread_id = (int) $previous_thread;
 
 			// Set a default reply subject if none was sent.
 			if ( empty( $message->subject ) ) {
