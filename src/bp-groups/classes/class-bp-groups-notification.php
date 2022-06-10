@@ -736,7 +736,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 			$group_id          = $notification->item_id;
 			$group             = groups_get_group( $group_id );
-			$notification_link = bp_loggedin_user_domain() . bp_get_groups_slug() . '/invites/?n=1';
+			$notification_link = bp_core_get_user_domain( $notification->user_id ) . bp_get_groups_slug() . '/invites/?n=1';
 			$text              = __( 'You\'ve been invited to join this group.', 'buddyboss' );
 
 			$content = array(

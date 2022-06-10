@@ -340,7 +340,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'title'       => $title,
 				'description' => $text,
 				'link'        => $topic_link,
-				'image'       => bb_notification_avatar_url( bp_notifications_get_notification( $notification->id ) ),
+				'image'       => bb_notification_avatar_url( $notification ),
 			);
 		}
 
@@ -394,7 +394,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'title'       => $title,
 				'description' => $text,
 				'link'        => $topic_link,
-				'image'       => bb_notification_avatar_url( bp_notifications_get_notification( $notification->id ) ),
+				'image'       => bb_notification_avatar_url( $notification ),
 			);
 		}
 
