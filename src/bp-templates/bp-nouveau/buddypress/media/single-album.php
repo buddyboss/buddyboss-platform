@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Media Single Album
+ * The template for media single album
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/media/single-album.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 global $media_album_template;
@@ -35,8 +38,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					<?php endif; ?>
 					<p>
 						<span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span>
-						<span><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep">&middot;</span>
-						<span><?php printf( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<span><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep">&middot;</span>
+						<span><?php printf( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
 					</p>
 				</div>
 
@@ -70,7 +73,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							}
 						}
 
-						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bp_is_profile_video_support_enabled() && $can_edit ) {
+						if ( ( bp_is_my_profile() || bp_is_user_media() ) && bp_is_profile_video_support_enabled() && $can_edit && bb_user_can_create_video() ) {
 							?>
 							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
 							<?php

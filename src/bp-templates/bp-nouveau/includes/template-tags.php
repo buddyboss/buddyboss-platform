@@ -1274,7 +1274,7 @@ function bp_nouveau_nav_has_count() {
 	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
 		$count = $nav_item->count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
-		$count   = 0 !== (int) groups_get_current_group()->total_member_count;
+		$count = 0 !== (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
@@ -1305,7 +1305,7 @@ function bp_nouveau_nav_has_count() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_count() {
-	echo esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
+	echo esc_html( bp_core_number_format( bp_nouveau_get_nav_count() ) );
 }
 
 	/**
@@ -1323,7 +1323,7 @@ function bp_nouveau_get_nav_count() {
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = (int) str_replace( ',', '', $nav_item->count );
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
-		$count   = (int) groups_get_current_group()->total_member_count;
+		$count = (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 		// } elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
@@ -1349,12 +1349,6 @@ function bp_nouveau_get_nav_count() {
 			$count_start = strpos( $nav_item->name, '>', $span ) + 1;
 			$count_end   = strpos( $nav_item->name, '<', $count_start );
 			$count       = (int) substr( $nav_item->name, $count_start, $count_end - $count_start );
-		}
-		if( bp_is_active( 'media' ) ) {
-			$videos_count = BP_Video::total_video_count( bp_displayed_user_id() );
-			if( $nav_item->slug == 'videos' ) {
-				$count = $videos_count;
-			}
 		}
 	}
 
@@ -1617,7 +1611,7 @@ function bp_nouveau_single_item_nav_classes() {
 	 * @return string CSS classes
 	 */
 function bp_nouveau_get_single_item_nav_classes() {
-	$classes    = array( 'main-navs', 'no-ajax', 'bp-navs', 'single-screen-navs' );
+	$classes    = array( 'main-navs', 'no-ajax', 'bp-navs', 'single-screen-navs', 'bb-single-main-nav' );
 	$component  = bp_current_component();
 	$bp_nouveau = bp_nouveau();
 
@@ -1638,8 +1632,10 @@ function bp_nouveau_get_single_item_nav_classes() {
 
 	if ( 1 === $layout_prefs ) {
 		$classes[] = 'vertical';
+		$classes[] = 'bb-single-main-nav--vertical';
 	} else {
 		$classes[] = 'horizontal';
+		$classes[] = 'bb-single-main-nav--horizontal';
 	}
 
 	$classes[] = $menu_type;
@@ -2492,7 +2488,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
 					echo '<div class="bb-password-wrap">';
-					echo '<a href="#" class="bb-toggle-password"><i class="bb-icon-eye"></i></a>';
+					echo '<a href="#" class="bb-toggle-password"><i class="bb-icon-l bb-icon-eye"></i></a>';
 				}
 
 				print( $field_output );  // Constructed safely above.
@@ -2562,7 +2558,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
  */
 function bp_nouveau_signup_terms_privacy() {
 
-	$page_ids = bp_core_get_directory_page_ids();
+	$page_ids             = bp_core_get_directory_page_ids();
 	$show_legal_agreement = bb_register_legal_agreement();
 
 	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
@@ -2582,7 +2578,7 @@ function bp_nouveau_signup_terms_privacy() {
 		return false;
 	}
 
-	if ( ! empty( $terms )  && ! empty( $privacy ) ) {
+	if ( ! empty( $terms ) && ! empty( $privacy ) ) {
 		$terms_link   = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ) . '</a>';
 		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
 		?>
@@ -2615,7 +2611,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
 		<?php
-	} else if ( empty( $terms ) && ! empty ( $privacy ) ) {
+	} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
 		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
 		?>
 		<?php if ( $show_legal_agreement ) { ?>
@@ -2639,7 +2635,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
 		<?php
-	} else if ( ! empty ( $terms ) && empty ( $privacy ) ) {
+	} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
 		$terms_link = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ) . '</a>';
 		?>
 		<?php if ( $show_legal_agreement ) { ?>
@@ -2667,7 +2663,7 @@ function bp_nouveau_signup_terms_privacy() {
 	}
 
 	if ( $show_legal_agreement ) {
-	    do_action('bp_legal_agreement_errors' );
+		do_action( 'bp_legal_agreement_errors' );
 	}
 }
 
@@ -2754,4 +2750,41 @@ function nouveau_error_template( $message = '', $type = '' ) {
 	</div>
 
 	<?php
+}
+
+/**
+ * Displays the nav item link class.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bp_nouveau_nav_link_class() {
+	echo esc_attr( bp_nouveau_get_nav_link_class() );
+}
+
+/**
+ * Retrieve the class attribute of the link for the current nav item.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @return string The link class for the nav item.
+ */
+function bp_nouveau_get_nav_link_class() {
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
+	$link_class = '';
+
+	if ( ! empty( $nav_item->css_class ) ) {
+		$link_class = $nav_item->css_class;
+	}
+
+	/**
+	 * Filter to edit the link class attribute of the nav.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 *
+	 * @param string $link_class The link class attribute for the nav item.
+	 * @param object $nav_item   The current nav item object.
+	 * @param string $value      The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 */
+	return apply_filters( 'bp_nouveau_get_nav_link_class', $link_class, $nav_item, $bp_nouveau->displayed_nav );
 }

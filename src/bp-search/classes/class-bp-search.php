@@ -374,11 +374,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				// @todo give a settings screen for this field
 				$search_results[] = array(
 					'value' => '<div class="bp-search-ajax-item ui-state-disabled noresult">' .
-						sprintf(
-							/* translators: %s: search term */
-							__( "Nothing found for '%s'", 'buddyboss' ),
-							stripslashes( $this->search_args['search_term'] )
-						) .
+						esc_html__( 'No results found.', 'buddyboss' ) .
 					'</div>',
 					'label' => $this->search_args['search_term'],
 				);
@@ -513,8 +509,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
 					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
-					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " $limit ) ";
-					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'] );
+					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
+					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'], $search_type );
 				}
 
 				if ( empty( $sql_queries ) ) {
@@ -522,7 +518,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					return;
 				}
 
-				$pre_search_query = implode( ' UNION ', $sql_queries ) . ' ORDER BY relevance, type DESC, entry_date DESC ';
+				$pre_search_query = implode( ' UNION ', $sql_queries );
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
 					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
@@ -743,7 +739,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 					if ( ! isset( $total[ $search_type ] ) ) {
 						$obj               = $this->search_helpers[ $search_type ];
-						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'] );
+						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'], $search_type );
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total_match_count;
 					} else {
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total[ $search_type ];

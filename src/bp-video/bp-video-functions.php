@@ -829,8 +829,6 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
 		if ( ! empty( trim( $ffmpeg->error ) ) ) {
-			$bp_background_updater->cancel_process();
-
 			return;
 		}
 
@@ -923,14 +921,10 @@ function bp_video_background_create_thumbnail( $video ) {
 	global $bp_background_updater;
 
 	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
-		$bp_background_updater->cancel_process();
-
 		return;
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		if ( ! empty( trim( $ffmpeg->error ) ) ) {
-			$bp_background_updater->cancel_process();
-
 			return;
 		}
 	}
@@ -1019,7 +1013,7 @@ function bp_video_background_create_thumbnail( $video ) {
 					$file_name    = $image_name . '.jpg';
 					$thumb_ffmpeg = bb_video_check_is_ffmpeg_binary();
 					$video_thumb  = $thumb_ffmpeg->ffmpeg->open( get_attached_file( $video_attachment_id ) );
-					$thumb_frame  = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) )->addFilter( new FFMpeg\Filters\Frame\CustomFrameFilter( 'scale=1500x900' ) );
+					$thumb_frame  = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
 
 					$error = '';
 					try {
@@ -1118,7 +1112,6 @@ function bp_video_background_create_thumbnail( $video ) {
 
 		} catch ( Exception $ex ) {
 			update_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', 'no' );
-			$bp_background_updater->cancel_process();
 		}
 	} else {
 		update_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', 'no' );
@@ -1798,27 +1791,24 @@ function albums_check_video_album_access( $album_id ) {
  */
 function bp_video_delete_orphaned_attachments() {
 
-	$orphaned_attachment_args = array(
-		'post_type'      => 'attachment',
-		'post_status'    => 'inherit',
-		'fields'         => 'ids',
-		'posts_per_page' => - 1,
-		'meta_query'     => array(
-			array(
-				'key'     => 'bp_video_saved',
-				'value'   => '0',
-				'compare' => '=',
-			),
-		),
-	);
+	global $wpdb;
 
-	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
+	/**
+	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
+	 * pre_get_posts & ajax_query_attachments_args hook & filter and it's getting all the media ids and it will remove
+	 * all the media from Media Library.
+	 *
+	 * @since BuddyBoss 1.7.6
+	 */
+	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_video_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
+	$data  = $wpdb->get_col( $query );
 
-	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach ( $orphaned_attachment_query->posts as $a_id ) {
+	if ( ! empty( $data ) ) {
+		foreach ( $data as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
+
 }
 
 /**
@@ -2235,7 +2225,7 @@ function bp_video_download_url_file() {
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'album' !== $video_type ) {
-			$video_privacy    = bb_media_user_can_access( $video_file, 'video' ); // phpcs:ignore WordPress.Security.NonceVerification
+			$video_privacy    = bb_media_user_can_access( $video_file, 'video', $attachment_id ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = true === (bool) $video_privacy['can_download'];
 		}
 		if ( $can_download_btn ) {
@@ -2495,7 +2485,7 @@ function bp_video_svg_icon_list() {
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-default</title><path d="M13.728 0h-9.728c-2.208 0-4 1.792-4 4v24c0 2.208 1.792 4 4 4h16c2.208 0 4-1.792 4-4v-17.504c0-1.056-0.416-2.048-1.12-2.784l-6.272-6.496c-0.768-0.768-1.792-1.216-2.88-1.216zM4 1.984h9.728c0.544 0 1.056 0.224 1.44 0.64l6.272 6.464c0.352 0.384 0.576 0.896 0.576 1.408v17.504c0 1.12-0.896 2.016-2.016 2.016h-16c-1.088 0-1.984-0.896-1.984-2.016v-24c0-1.12 0.896-2.016 1.984-2.016z"></path></svg>',
 		),
 		'default_2'  => array(
-			'icon'  => 'bb-icon-file-zip',
+			'icon'  => 'bb-icon-file-archive',
 			'title' => __( 'Archive', 'buddyboss' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-zip</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h2.976v-1.984h2.016v-1.92h-2.016v-2.080h2.016v2.016h1.984v2.048h-1.984v1.92h11.008c1.056 0 1.92-0.832 1.984-1.856l0.032-0.16v-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM10.976 21.952v2.048h-1.984v-2.048h1.984zM11.008 16c0.544 0 0.992 0.448 0.992 0.992v3.008c0 0.544-0.448 0.992-0.992 0.992h-4c-0.544 0-0.992-0.448-0.992-0.992v-3.008c0-0.544 0.448-0.992 0.992-0.992h4zM10.592 16.992h-3.2c-0.192 0-0.352 0.128-0.384 0.32v1.28c0 0.192 0.128 0.352 0.32 0.384l0.064 0.032h3.2c0.192 0 0.352-0.16 0.416-0.32v-1.28c0-0.224-0.192-0.416-0.416-0.416z"></path></svg>',
 		),
@@ -2626,17 +2616,23 @@ function bp_video_user_video_album_tree_view_li_html( $user_id = 0, $group_id = 
 
 	$video_album_table = $bp->video->table_name_albums;
 
-	if ( 0 === $group_id ) {
-		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
-	}
+	$cache_key = 'bp_video_user_video_album_' . $user_id . '_' . $group_id;
+	$data      = wp_cache_get( $cache_key, 'bp_video_album' );
 
-	if ( $group_id > 0 ) {
-		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id ); // phpcs:ignore
-	} else {
-		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id ); // phpcs:ignore
-	}
+	if ( false === $data ) {
+		if ( 0 === $group_id ) {
+			$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
+		}
 
-	$data = $wpdb->get_results( $video_album_query, ARRAY_A ); // phpcs:ignore
+		if ( $group_id > 0 ) {
+			$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id ); // phpcs:ignore
+		} else {
+			$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id ); // phpcs:ignore
+		}
+
+		$data = $wpdb->get_results( $video_album_query, ARRAY_A ); // phpcs:ignore
+		wp_cache_set( $cache_key, $data, 'bp_video_album' );
+	}
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {
@@ -2781,7 +2777,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity video own.
-					$activity->hide_sitewide     = 0;
+					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 :$activity->hide_sitewide;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2854,7 +2851,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity video own.
-							$activity->hide_sitewide     = 0;
+							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -3368,10 +3366,11 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 	 * @param int    $video_id       video id
 	 * @param string $size           size
 	 * @param int    $attachment_id  attachment id
+	 * @param bool   $do_symlink     symlink used or not
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bb_video_get_thumb_url', $attachment_url, $video_id, $size, $attachment_id );
+	return apply_filters( 'bb_video_get_thumb_url', $attachment_url, $video_id, $size, $attachment_id, $do_symlink );
 }
 
 /**
@@ -3812,8 +3811,7 @@ function bb_video_get_symlink( $video, $generate = true ) {
 			$privacy             = $video->privacy;
 			$upload_directory    = wp_get_upload_dir();
 			$time                = time();
-			$ext                 = pathinfo( $attached_file, PATHINFO_EXTENSION );
-			$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $time ) . ( ! empty( $ext ) ? '.' . $ext : '' );
+			$attachment_path     = $video_symlinks_path . '/' . md5( $video->id . $attachment_id . $privacy . $time );
 
 			if ( $video->group_id > 0 && bp_is_active( 'groups' ) ) {
 				$group_object    = groups_get_group( $video->group_id );
@@ -3858,10 +3856,11 @@ function bb_video_get_symlink( $video, $generate = true ) {
 	 * @param string $attachment_url Attachment URL.
 	 * @param int    $video_id       Video id.
 	 * @param int    $attachment_id  Attachment id.
+	 * @param bool   $do_symlink     Symlink used or not.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bb_video_get_symlink', $attachment_url, $video_id, $attachment_id );
+	return apply_filters( 'bb_video_get_symlink', $attachment_url, $video_id, $attachment_id, $do_symlink );
 }
 
 /**
@@ -3880,7 +3879,7 @@ function bb_video_delete_older_symlinks() {
 
 	// Get videos previews symlink directory path.
 	$dir     = bb_video_symlink_path();
-	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$max_age = apply_filters( 'bb_video_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
 	$list    = array();
 	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
@@ -3910,17 +3909,19 @@ function bb_video_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	/**
-	 * Hook after delete older symlinks.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 */
-	do_action( 'bb_video_delete_older_symlinks' );
+	if ( ! empty( $list ) ) {
+		/**
+		 * Hook after delete older symlinks.
+		 *
+		 * @since BuddyBoss 1.7.0
+		 */
+		do_action( 'bb_video_delete_older_symlinks' );
+	}
 
 	return $list;
 
 }
-bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_symlinks' );
+bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_symlinks', 'bb_schedule_15days' );
 
 /**
  * Function to get video attachments symlinks.

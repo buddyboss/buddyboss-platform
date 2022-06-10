@@ -416,6 +416,23 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$report_links  = $this->prepare_report_link( $report->item_id, $report->item_type );
 		$request_links = $this->prepare_report_link( $request['item_id'], $request['item_type'] );
 
+		if ( 'media' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+			$media = new BP_Media( $request['item_id'] );
+			if ( ! empty( $media->activity_id ) ) {
+				$report_links = $this->prepare_report_link( $media->activity_id, BP_Suspend_Activity::$type );
+			}
+		} elseif ( 'document' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+			$document = new BP_Document( $request['item_id'] );
+			if ( ! empty( $document->activity_id ) ) {
+				$report_links = $this->prepare_report_link( $document->activity_id, BP_Suspend_Activity::$type );
+			}
+		} elseif ( 'video' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+			$video = new BP_Video( $request['item_id'] );
+			if ( ! empty( $video->activity_id ) ) {
+				$report_links = $this->prepare_report_link( $video->activity_id, BP_Suspend_Activity::$type );
+			}
+		}
+
 		$links = array_merge( (array) $report_links, (array) $request_links );
 
 		/**
@@ -497,6 +514,12 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			case BP_Suspend_Folder::$type:
 				$links['folder'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/document/folder/' . $item_id ),
+					'embeddable' => true,
+				);
+				break;
+			case BP_Suspend_Video::$type:
+				$links['video'] = array(
+					'href'       => rest_url( '/' . $this->namespace . '/video/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
