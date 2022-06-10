@@ -305,13 +305,13 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 			// Friends request accepted.
 			if ( 'bb_connections_request_accepted' === $notification->component_action ) {
-				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends' );
+				$notification_link = trailingslashit( bp_core_get_user_domain( $notification->user_id ) . bp_get_friends_slug() . '/my-friends' );
 				$text              = __( 'Has accepted your connection request', 'buddyboss' );
 			}
 
 			// Friends request sent.
 			if ( 'bb_connections_new_request' === $notification->component_action ) {
-				$notification_link = bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/?new';
+				$notification_link = bp_core_get_user_domain( $notification->user_id ) . bp_get_friends_slug() . '/requests/?new';
 				$text              = __( 'Sent you a connection request', 'buddyboss' );
 			}
 
