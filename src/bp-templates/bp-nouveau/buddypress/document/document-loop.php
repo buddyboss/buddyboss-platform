@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Loop
+ * The template for document loop
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/document-loop.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 bp_nouveau_before_loop();
@@ -44,13 +47,13 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
             <div class="data-head data-head-name <?php echo esc_attr( $active_title_class ); ?>" data-target="name">
 				<span>
 					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
             </div>
             <div class="data-head data-head-modified <?php echo esc_attr( $active_date_class ); ?>" data-target="modified">
 				<span>
 					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
             </div>
             <div class="data-head data-head-origin <?php echo esc_attr( $active_group_class ); ?>" data-target="group">
@@ -59,7 +62,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 					?>
                     <span>
 					<?php esc_html_e( 'Group', 'buddyboss' ); ?>
-						<i class="bb-icon-triangle-fill"></i>
+						<i class="bb-icon-f bb-icon-caret-down"></i>
 					</span>
 					<?php
 				}
@@ -69,7 +72,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
             <div class="data-head data-head-visibility <?php echo esc_attr( $active_privacy_class ); ?>" data-target="visibility">
 				<span>
 					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
             </div>
         </div><!-- .document-data-table-head -->

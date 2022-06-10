@@ -65,6 +65,55 @@ add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email
 
 add_filter( 'bp_get_activity_entry_css_class', 'bp_document_activity_entry_css_class' );
 
+// Delete symlinks for documents when before saved.
+add_action( 'bp_document_before_save', 'bp_document_delete_symlinks' );
+
+// Create symlinks for documents when saved.
+add_action( 'bp_document_after_save', 'bp_document_create_symlinks' );
+
+// Clear document symlinks on delete.
+add_action( 'bp_document_before_delete', 'bp_document_clear_document_symlinks_on_delete', 10 );
+
+add_filter( 'bb_ajax_activity_update_privacy', 'bb_document_update_video_symlink', 99, 2 );
+
+add_action( 'bp_add_rewrite_rules', 'bb_setup_document_preview' );
+add_filter( 'query_vars', 'bb_setup_query_document_preview' );
+add_action( 'template_include', 'bb_setup_template_for_document_preview', PHP_INT_MAX );
+
+/**
+ * Clear a user's symlinks document when attachment document delete.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param array $documents DB results of document items.
+ */
+function bp_document_clear_document_symlinks_on_delete( $documents ) {
+	if ( ! empty( $documents[0] ) ) {
+		foreach ( (array) $documents as $deleted_document ) {
+			if ( isset( $deleted_document->id ) ) {
+				bp_document_delete_symlinks( (int) $deleted_document->id );
+
+				// Remove symlinks that is created randomly.
+				$get_existing = get_post_meta( $deleted_document->attachment_id, 'bb_video_symlinks_arr', true );
+				if ( $get_existing ) {
+					foreach ( $get_existing as $symlink ) {
+						if ( file_exists( $symlink ) ) {
+							unlink( $symlink );
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Document search label.
+ *
+ * @param string $type Search label.
+ *
+ * @return mixed|string|void
+ */
 function bp_document_search_label_search( $type ) {
 
 	if ( 'folders' === $type ) {
@@ -143,9 +192,8 @@ function bp_document_activity_append_document( $content, $activity ) {
 			'sort'     => 'ASC',
 		)
 	) ) {
-
+		ob_start();
 		?>
-		<?php ob_start(); ?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php
 			bp_get_template_part( 'document/activity-document-move' );
@@ -173,14 +221,48 @@ function bp_document_activity_comment_entry( $comment_id ) {
 
 	$document_ids = bp_activity_get_meta( $comment_id, 'bp_document_ids', true );
 
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
+	if ( empty( $document_ids ) ) {
+		return;
+	}
 
+	$comment  = new BP_Activity_Activity( $comment_id );
+	$activity = new BP_Activity_Activity( $comment->item_id );
+
+	$args = array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+		'user_id'  => false,
+		'privacy'  => array(),
+	);
+
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bp_is_group_document_support_enabled() ) {
+			$args['privacy'][] = 'comment';
+			$args['privacy'][] = 'grouponly';
+			if ( ! bp_is_group_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-document';
+			}
+		} else {
+			$args['privacy']  = array( '0' );
+			$args['album_id'] = 'existing-document';
+		}
+	} else {
+		$args['privacy'] = bp_document_query_privacy( $activity->user_id, 0, $activity->component );
+		if ( ! bp_is_group_document_support_enabled() ) {
+			$args['user_id'] = 'null';
+		}
+		if ( ! bp_is_profile_document_support_enabled() ) {
+			$args['album_id'] = 'existing-document';
+		}
+	}
+
+	$args['privacy'][] = 'comment';
+	if ( ! isset( $args['album_id'] ) ) {
+		$args['album_id'] = 'existing-document';
+	}
+
+	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php
@@ -268,8 +350,23 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 
-	$documents = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	$actions   = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$documents           = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$documents           = ! empty( $documents ) ? $documents : array();
+	$actions             = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$moderated_documents = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+
+	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_documents ) ) {
+		$moderated_documents = explode( ',', $moderated_documents );
+		foreach ( $moderated_documents as $document_id ) {
+			if ( bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
+				$bp_document                = new BP_Document( $document_id );
+				$documents[]['document_id'] = $document_id;
+				$documents[]['folder_id']   = $bp_document->folder_id;
+				$documents[]['group_id']    = $bp_document->group_id;
+				$documents[]['menu_order']  = $bp_document->menu_order;
+			}
+		}
+	}
 
 	if ( ! isset( $documents ) || empty( $documents ) ) {
 
@@ -325,14 +422,17 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 			$old_document_ids = explode( ',', $old_document_ids );
 			if ( ! empty( $old_document_ids ) ) {
 
-				// This is hack to update/delete parent activity if new media added in edit.
-				bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', array_unique( array_merge( $document_ids, $old_document_ids ) ) ) );
-
 				foreach ( $old_document_ids as $document_id ) {
+					if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) && ! in_array( $document_id, $document_ids ) ) {
+						$document_ids[] = $document_id;
+					}
 					if ( ! in_array( $document_id, $document_ids ) ) {
 						bp_document_delete( array( 'id' => $document_id ) );
 					}
 				}
+
+				// This is hack to update/delete parent activity if new media added in edit.
+				bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', array_unique( array_merge( $document_ids, $old_document_ids ) ) ) );
 			}
 		}
 		bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $document_ids ) );
@@ -444,7 +544,7 @@ function bp_document_update_document_privacy( $folder ) {
 /**
  * Save document when new topic or reply is saved
  *
- * @param $post_id
+ * @param int $post_id post id of the topic or reply.
  *
  * @since BuddyBoss 1.4.0
  */
@@ -783,10 +883,10 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 function bp_document_download_url_file() {
 	if ( isset( $_GET['attachment'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['document_type'] ) {
-			$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+			$document_privacy = bb_media_user_can_access( $_GET['document_file'], 'document', $_GET['attachment']  ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 		} else {
-			$folder_privacy   = bp_document_user_can_manage_folder( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+			$folder_privacy   = bb_media_user_can_access( $_GET['document_file'], 'folder' ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 		}
 		if ( $can_download_btn ) {
@@ -833,7 +933,11 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		foreach ( $document_ids as $document_id ) {
 			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
+			if (
+				! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) &&
+				'comment' !== $document->privacy &&
+				! empty( $document->blog_id )
+			) {
 				$document->privacy = $activity->privacy;
 				$document->save();
 			}
@@ -876,9 +980,20 @@ function bp_document_check_download_folder_protection() {
 			array(
 					'base'    => $upload_dir['basedir'] . '/bb_documents',
 					'file'    => '.htaccess',
-					'content' => 'deny from all
+					'content' => '# Apache 2.2
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
 
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
 # BEGIN BuddyBoss code execution protection
+<IfModule mod_rewrite.c>
+RewriteRule ^.*$ - [F,L,NC]
+</IfModule>
 <IfModule mod_php5.c>
 php_flag engine 0
 </IfModule>
@@ -1390,7 +1505,7 @@ add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_lis
 /**
  * Add document repair list item.
  *
- * @param $repair_list
+ * @param array $repair_list Repair list.
  *
  * @since BuddyBoss 1.4.4
  * @return array Repair list items.
@@ -1398,11 +1513,12 @@ add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_lis
 function bp_document_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
-				'bp-repair-document',
-				__( 'Repair document on the site.', 'buddyboss' ),
-				'bp_document_admin_repair_document',
+			'bp-repair-document',
+			esc_html__( 'Repair documents', 'buddyboss' ),
+			'bp_document_admin_repair_document',
 		);
 	}
+
 	return $repair_list;
 }
 
@@ -1459,7 +1575,7 @@ function bp_document_admin_repair_document() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s document updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s documents updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 				'status'  => 'running',
@@ -1469,7 +1585,7 @@ function bp_document_admin_repair_document() {
 	} else {
 		return array(
 				'status'  => 1,
-				'message' => __( 'document update complete!', 'buddyboss' ),
+				'message' => __( 'Repairing documents &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1667,7 +1783,7 @@ function bp_document_activity_after_email_content( $activity ) {
 		$document_ids = explode( ',', $document_ids );
 		$document_text = sprintf(
 		        _n( '%s document', '%s documents', count( $document_ids) , 'buddyboss' ),
-                number_format_i18n( count( $document_ids ) )
+			bp_core_number_format( count( $document_ids ) )
         );
 		$content   = sprintf(
 	    	/* translator: 1. Activity link, 2. Activity document count */
@@ -1679,11 +1795,10 @@ function bp_document_activity_after_email_content( $activity ) {
 	}
 }
 
-
 /**
  * Adds activity document data for the edit activity
  *
- * @param $activity
+ * @param array $activity Activity data.
  *
  * @return array $activity Returns the activity with document if document saved otherwise no documents.
  *
@@ -1695,20 +1810,32 @@ function bp_document_get_edit_activity_data( $activity ) {
 
 		// Fetch document ids of activity.
 		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
+		$document_id  = bp_activity_get_meta( $activity['id'], 'bp_document_id', true );
+
+		if ( ! empty( $document_id ) && ! empty( $document_ids ) ) {
+			$document_ids = $document_ids . ',' . $document_id;
+		} elseif ( ! empty( $document_id ) && empty( $document_ids ) ) {
+			$document_ids = $document_id;
+		}
 
 		if ( ! empty( $document_ids ) ) {
 			$activity['document'] = array();
 
 			$document_ids = explode( ',', $document_ids );
+			$document_ids = array_unique( $document_ids );
+			$folder_id    = 0;
 
-			foreach( $document_ids as $document_id ) {
+			foreach ( $document_ids as $document_id ) {
+				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
+					continue;
+				}
 				$document = new BP_Document( $document_id );
 
 				$size = 0;
 				$file = get_attached_file( $document->attachment_id );
 				if ( $file && file_exists( $file ) ) {
-				    $size = filesize( $file );
-                }
+					$size = filesize( $file );
+				}
 
 				$activity['document'][] = array(
 					'id'          => $document_id,
@@ -1723,6 +1850,12 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
 				);
+
+				if ( 0 === $folder_id && $document->folder_id > 0 ) {
+					$folder_id                    = $document->folder_id;
+					$activity['can_edit_privacy'] = false;
+				}
+
 			}
 		}
 
@@ -1754,4 +1887,116 @@ function bp_document_activity_entry_css_class( $class ) {
 
 	return $class;
 
+}
+
+/**
+ * Added the video symlink data to update when privacy update.
+ *
+ * @param array $response  Response array.
+ * @param array $post_data The post data.
+ *
+ * @return array $response data.
+ */
+function bb_document_update_video_symlink( $response, $post_data ) {
+
+	if ( ! empty( $post_data['id'] ) ) {
+
+		// Fetch document ids of activity.
+		$document_ids = bp_activity_get_meta( $post_data['id'], 'bp_document_ids', true );
+
+		if ( ! empty( $document_ids ) ) {
+
+			$document_ids = explode( ',', $document_ids );
+			$count        = count( $document_ids );
+			if ( 1 === $count ) {
+				$document = new BP_Document( (int) current( $document_ids ) );
+				$file_url = wp_get_attachment_url( $document->attachment_id );
+				$filetype = wp_check_filetype( $file_url );
+				$ext      = $filetype['ext'];
+				if ( empty( $ext ) ) {
+					$path = wp_parse_url( $file_url, PHP_URL_PATH );
+					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
+				}
+
+				if ( ! empty( $filetype ) && strstr( $filetype['type'], 'video/' ) ) {
+					$response['video_symlink']     = bb_document_video_get_symlink( (int) current( $document_ids ) );
+					$response['video_extension']   = 'video/' . $ext;
+					$response['extension']         = $ext;
+					$response['video_id']          = (int) current( $document_ids );
+					$response['video_link_update'] = true;
+					$response['video_js_id']       = 'video-' . (int) current( $document_ids ) . '_html5_api';
+				}
+			}
+		}
+	}
+
+	return $response;
+
+}
+
+
+/**
+ * Add rewrite rule to setup document preview.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_document_preview() {
+	add_rewrite_rule( 'bb-document-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-document-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-document-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-document-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-document-player/([^/]+)/([^/]+)/?$', 'index.php?bb-document-player=$matches[1]&id1=$matches[2]', 'top' );
+}
+
+/**
+ * Setup query variable for document preview.
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_query_document_preview( $query_vars ) {
+	$query_vars[] = 'bb-document-preview';
+	$query_vars[] = 'bb-document-player';
+	$query_vars[] = 'id1';
+	$query_vars[] = 'size';
+
+	return $query_vars;
+}
+
+/**
+ * Setup template for the document preview.
+ *
+ * @param string $template Template path to include.
+ *
+ * @return string
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_template_for_document_preview( $template ) {
+	if ( ! empty( get_query_var( 'bb-document-preview' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss 1.7.2
+		 */
+		do_action( 'bb_setup_template_for_document_preview' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/document/preview.php';
+	}
+
+	if ( ! empty( get_query_var( 'bb-document-player' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss 1.7.2
+		 */
+		do_action( 'bb_setup_template_for_document_player' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/document/player.php';
+	}
+
+	return $template;
 }

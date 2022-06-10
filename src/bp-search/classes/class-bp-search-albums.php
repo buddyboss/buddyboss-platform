@@ -56,10 +56,12 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 		/**
 		 * Prepare SQL query for albums search.
 		 *
-		 * @param string $search_term Search terms.
+		 * @param string $search_term         Search terms.
 		 * @param false  $only_totalrow_count Total row count.
 		 *
 		 * @return mixed|void
+		 *
+		 * @since BuddyBoss 1.7.0
 		 */
 		public function sql( $search_term, $only_totalrow_count = false ) {
 

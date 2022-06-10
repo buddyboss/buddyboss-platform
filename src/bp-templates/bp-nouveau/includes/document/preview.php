@@ -1,38 +1,73 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	$parse_uri = explode( 'wp-content', $_SERVER[ 'SCRIPT_FILENAME' ] );
-	include_once $parse_uri[ 0 ] . '/wp-load.php';
-}
-
-define( 'WP_USE_THEMES', true );
-
-global $wpdb, $bp;
-
-if ( empty( $_REQUEST ) && empty( $_REQUEST[ 'id' ] ) && empty( $_REQUEST[ 'id1' ] ) ) {
+if ( empty( get_query_var( 'bb-document-preview' ) ) && empty( get_query_var( 'id1' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
 }
 
-$encode_id    = base64_decode( $_REQUEST[ 'id' ] );
-$encode_id1   = base64_decode( $_REQUEST[ 'id1' ] );
+$encode_id    = base64_decode( get_query_var( 'bb-document-preview' ) );
+$encode_id1   = base64_decode( get_query_var( 'id1' ) );
+$size         = ( ! empty( get_query_var( 'size' ) ) ? get_query_var( 'size' ) : '' );
 $explode_arr  = explode( 'forbidden_', $encode_id );
 $explode_arr1 = explode( 'forbidden_', $encode_id1 );
+$upload_dir   = wp_upload_dir();
+$upload_dir   = $upload_dir['basedir'];
 
-if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[ 1 ] ) && (int) $explode_arr[ 1 ] > 0 &&
-     isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[ 1 ] ) && (int) $explode_arr1[ 1 ] > 0 ) {
-	$id               = (int) $explode_arr[ 1 ];
-	$id1              = (int) $explode_arr1[ 1 ];
-	$document_privacy = ( function_exists( 'bp_document_user_can_manage_document' ) ) ? bp_document_user_can_manage_document( $id1, bp_loggedin_user_id() ) : true;
-	$can_view         = ( true === (bool) $document_privacy[ 'can_view' ] ) ? true : false;
-	if ( $can_view && wp_attachment_is_image( $id ) ) {
-		$type            = get_post_mime_type( $id );
-		$output_file_src = bp_document_scaled_image_path( $id );
+if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 &&
+     isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[1] ) && (int) $explode_arr1[1] > 0 ) {
+	$attachment_id    = (int) $explode_arr[1];
+	$id1              = (int) $explode_arr1[1];
+	$document_privacy = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'document' ) : true;
+	$can_view         = true === (bool) $document_privacy['can_view'];
+	if ( $can_view ) {
+
+		if ( '' !== $size ) {
+			$file               = image_get_intermediate_size( $attachment_id, $size );
+			$attached_file_info = pathinfo( get_attached_file( $attachment_id ) );
+			if ( $file && ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
+				$file_path       = $attached_file_info['dirname'];
+				$file_path       = $file_path . '/' . $file['file'];
+				$output_file_src = $file_path;
+			} else {
+				$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
+			}
+		} else {
+			$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
+		}
+
+		$type = '';
+		if ( function_exists( 'mime_content_type' ) ) {
+			$type = mime_content_type( $output_file_src );
+		} elseif ( class_exists( 'finfo' ) ) {
+			$finfo = new finfo();
+
+			if ( is_resource( $finfo ) === true ) {
+				$type = $finfo->file( $output_file_src, FILEINFO_MIME_TYPE );
+			}
+		} else {
+			$filetype = wp_check_filetype( $output_file_src );
+			$type     = $filetype['type'];
+		}
+
+		if ( ! file_exists( $output_file_src ) ) {
+			$file = image_get_intermediate_size( $attachment_id, 'full' );
+			if ( $file && ! empty( $file['path'] ) ) {
+				$output_file_src = $upload_dir . '/' . $file['path'];
+			} else {
+				$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
+			}
+		}
 
 		if ( ! file_exists( $output_file_src ) ) {
 			echo '// Silence is golden.';
 			exit();
 		}
+
+		// Clear all output buffer.
+		while ( ob_get_level() ) {
+			ob_end_clean();
+		}
+
 		header( "Content-Type: $type" );
 		readfile( "$output_file_src" );
 	} else {
@@ -43,4 +78,3 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[ 1 
 	echo '// Silence is golden.';
 	exit();
 }
-

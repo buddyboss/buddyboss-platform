@@ -19,6 +19,7 @@ use BuddyBoss\Performance\Integration\BB_Messages;
 use BuddyBoss\Performance\Integration\BB_Notifications;
 use BuddyBoss\Performance\Integration\BB_Replies;
 use BuddyBoss\Performance\Integration\BB_Topics;
+use BuddyBoss\Performance\Integration\BB_Videos;
 
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
@@ -158,6 +159,12 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 						require_once $documents_integration;
 						BB_Documents::instance();
 					}
+
+					$videos_integration = dirname( __FILE__ ) . '/integrations/class-bb-videos.php';
+					if ( self::mu_is_component_active( 'video' ) && file_exists( $videos_integration ) ) {
+						require_once $videos_integration;
+						BB_Videos::instance();
+					}
 				}
 
 				// Load platform or bbPress related cache integration.
@@ -234,20 +241,71 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 			$charset_collate = $wpdb->get_charset_collate();
 
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			if ( ! function_exists( 'dbDelta' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			}
 
-			$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
-	            id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	            user_id bigint(20) NOT NULL DEFAULT 0,
-	            blog_id bigint(20) NOT NULL DEFAULT 0,
-	            cache_name varchar(1000) NOT NULL,
-	            cache_group varchar(200) NOT NULL,
-	            cache_value mediumtext DEFAULT NULL,
-	            cache_expire datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-	            KEY cache_name (cache_name),
-	            KEY cache_group (cache_group),
-	            KEY cache_expire (cache_expire)
-	        ) $charset_collate;";
+			$mysql_server_info = '';
+			$mysql_version     = '';
+
+			if (
+				$wpdb->use_mysqli &&
+				function_exists( 'mysqli_get_server_info' ) &&
+				function_exists( 'mysqli_get_server_version' )
+			) {
+				$mysql_server_info = $wpdb->db_server_info();
+				$mysql_version     = mysqli_get_server_version( $wpdb->dbh ); // phpcs:ignore
+			} elseif (
+				function_exists( 'mysql_get_server_info' ) &&
+				function_exists( 'mysql_get_server_version' )
+			) {
+				$mysql_server_info = $wpdb->db_server_info();
+				$mysql_version     = mysql_get_server_version(); // phpcs:ignore
+			}
+
+			$is_mariadb = false;
+
+			// Check for the MariaDB.
+			if ( ! empty( $mysql_server_info ) && strpos( strtolower( $mysql_server_info ), 'maria' ) !== false ) {
+				$is_mariadb = true;
+			}
+
+			// Below 10.3 Mariadb or below 8.0 Mysql.
+			if (
+				! empty( $mysql_version ) &&
+				(
+					( $is_mariadb && $mysql_version < 100300 ) ||
+					( ! $is_mariadb && $mysql_version < 80000 )
+				)
+			) {
+				$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
+					id bigint(20) NOT NULL AUTO_INCREMENT,
+					user_id bigint(20) NOT NULL DEFAULT 0,
+					blog_id bigint(20) NOT NULL DEFAULT 0,
+					cache_name varchar(1000) NOT NULL,
+					cache_group varchar(200) NOT NULL,
+					cache_value mediumtext DEFAULT NULL,
+					cache_expire datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+					PRIMARY KEY  (id),
+					KEY cache_name (cache_name(191)),
+					KEY cache_group (cache_group(191)),
+					KEY cache_expire (cache_expire)
+				) $charset_collate;";
+			} else {
+				$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
+					id bigint(20) NOT NULL AUTO_INCREMENT,
+					user_id bigint(20) NOT NULL DEFAULT 0,
+					blog_id bigint(20) NOT NULL DEFAULT 0,
+					cache_name varchar(1000) NOT NULL,
+					cache_group varchar(200) NOT NULL,
+					cache_value mediumtext DEFAULT NULL,
+					cache_expire datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+					PRIMARY KEY  (id),
+					KEY cache_name (cache_name),
+					KEY cache_group (cache_group),
+					KEY cache_expire (cache_expire)
+				) $charset_collate;";
+			}
 
 			dbDelta( $sql );
 		}

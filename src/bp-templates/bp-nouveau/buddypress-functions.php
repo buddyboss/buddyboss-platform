@@ -371,8 +371,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'bp-nouveau' => array(
 				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
 			),
-			'bp-nouveau-icons' => array(
-				'file' => 'icons/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
+			'bp-nouveau-icons-map' => array(
+				'file' => 'icons/css/icons-map%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
+			),
+			'bp-nouveau-bb-icons' => array(
+				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
 			)
 		) );
 
@@ -465,8 +468,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		$scripts['bp-nouveau-magnific-popup'] = array(
 			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
-			'dependencies' => array(),
-			'footer'       => true,
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
 		);
 
 		if ( bp_is_active( 'media' ) ) {
@@ -775,6 +778,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$nav_items = bp_nouveau_get_media_directory_nav_items();
 		} elseif ( bp_is_document_directory() ) {
 			$nav_items = bp_nouveau_get_document_directory_nav_items();
+		} elseif ( bp_is_video_directory() ) {
+			$nav_items = bp_nouveau_get_video_directory_nav_items();
 		}
 
 		if ( empty( $nav_items ) ) {
