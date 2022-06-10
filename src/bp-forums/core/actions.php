@@ -428,7 +428,7 @@ function bb_post_topic_reply_draft() {
 
 	if ( is_array( $draft_topic_reply ) && isset( $draft_topic_reply['data_key'], $draft_topic_reply['object'] ) ) {
 
-		$existing_draft = get_user_meta( $user_id, $usermeta_key, true );
+		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
 
 		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
 			$removed_data = $existing_draft[ $draft_topic_reply['data_key'] ];
@@ -548,7 +548,7 @@ function bb_post_topic_reply_draft() {
 			}
 		}
 
-		update_user_meta( $user_id, $usermeta_key, $existing_draft );
+		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 	}
 
 	wp_send_json_success(

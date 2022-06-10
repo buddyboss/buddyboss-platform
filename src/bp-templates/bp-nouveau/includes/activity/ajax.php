@@ -838,9 +838,9 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
-			update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
+			bp_update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
 		} else {
-			delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
+			bp_delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
 
 			// Delete media when discard the activity.
 			if ( isset( $draft_activity['delete_media'] ) && 'true' === $draft_activity['delete_media'] && ! empty( $draft_activity['data'] ) ) {
