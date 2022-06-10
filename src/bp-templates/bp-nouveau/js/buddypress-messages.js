@@ -2704,6 +2704,9 @@ window.bp = window.bp || {};
 
 				target.addClass( 'current' );
 				target.parents( '.bp-messages-container' ).removeClass( 'bp-compose-message' ).addClass( 'bp-view-message' );
+
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 100 );
+
 			},
 
 			doAction: function( event ) {
@@ -3603,6 +3606,7 @@ window.bp = window.bp || {};
 				);
 
 				$( 'body' ).removeClass( 'compose' ).removeClass( 'inbox' ).addClass( 'view' );
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 100 );
 			},
 
 			starredView: function() {
