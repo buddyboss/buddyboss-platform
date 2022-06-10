@@ -1197,6 +1197,22 @@ function bp_private_network_template_redirect() {
 				}
 			}
 
+			// Allow the media preview when the Symbolic Links is disabled.
+			$request_url        = home_url( add_query_arg( array(), $wp->request ) );
+			$site_url           = get_site_url();
+			$media_preview_urls = array(
+				$site_url . '/bb-media-preview/',
+				$site_url . '/bb-document-preview/',
+				$site_url . '/bb-video-preview/',
+				$site_url . '/bb-video-thumb-preview/'
+			);
+
+			foreach ( $media_preview_urls as $preview_url ) {
+				if ( false !== strpos( $request_url, $preview_url ) ) {
+					return;
+				}
+			}
+
 			// Get excluded list from the settings
 			$exclude = bp_enable_private_network_public_content();
 			if ( '' !== $exclude ) {
@@ -1204,8 +1220,6 @@ function bp_private_network_template_redirect() {
 				$exclude_arr_url = preg_split( "/\r\n|\n|\r/", $exclude );
 
 				if ( ! empty( $exclude_arr_url ) && is_array( $exclude_arr_url ) ) {
-					$request_url = home_url( add_query_arg( array(), $wp->request ) );
-
 					foreach ( $exclude_arr_url as $url ) {
 						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
 						$un_trailing_slash_it_url = untrailingslashit( $url );
