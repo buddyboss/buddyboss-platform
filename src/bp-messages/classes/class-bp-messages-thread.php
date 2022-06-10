@@ -369,6 +369,10 @@ class BP_Messages_Thread {
 	public static function get_last_message( $thread_id ) {
 		global $wpdb;
 
+		if ( empty( $thread_id ) ) {
+			return null;
+		}
+
 		$bp = buddypress();
 
 		$is_group_thread = self::get_first_message( $thread_id );
@@ -424,7 +428,7 @@ class BP_Messages_Thread {
 		$blank_object     = new stdClass();
 		$blank_object->id = 0;
 
-		return ( ! empty( $messages['messages'] ) ? (object) current( $messages['messages'] ) : $blank_object );
+		return ( ! empty( $thread_id ) && ! empty( $messages['messages'] ) ? (object) current( $messages['messages'] ) : $blank_object );
 	}
 
 	/**
