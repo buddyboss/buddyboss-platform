@@ -122,6 +122,7 @@ window.bp = window.bp || {};
 				dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
 				dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 				// previewTemplate : document.getElementsByClassName( 'activity-post-media-template' )[0].innerHTML.
+				maxThumbnailFilesize: ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
 			};
 
 			// if defined, add custom dropzone options.
