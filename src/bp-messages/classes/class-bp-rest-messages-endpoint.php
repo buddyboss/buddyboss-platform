@@ -90,15 +90,21 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/search-thread',
 			array(
-				'args'   => array(
-					'user_id'      => array(
+				'args' => array(
+					'user_id'              => array(
 						'description' => __( 'Sender users ID.', 'buddyboss' ),
 						'type'        => 'integer',
 					),
-					'recipient_id' => array(
+					'recipient_id'         => array(
 						'description' => __( 'Thread recipient ID.', 'buddyboss' ),
 						'type'        => 'integer',
 						'required'    => true,
+					),
+					'include_group_thread' => array(
+						'description' => __( 'Include group thread or not.', 'buddyboss' ),
+						'type'        => 'boolean',
+						'required'    => false,
+						'default'     => false,
 					),
 				),
 				array(
@@ -764,10 +770,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Search Existing thread by user and recipient for the message.
 	 *
+	 * @since 0.1.0
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/messages/search-thread Search Thread
 	 * @apiName        SearchBBThread
@@ -777,10 +784,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {number} user_id Sender users ID.
 	 * @apiParam {number} recipient_id Thread recipient ID.
+	 * @apiParam {Boolean} include_group_thread Include group thread or not.
 	 */
 	public function search_thread_items( $request ) {
-		$user_id      = $request->get_param( 'user_id' );
-		$recipient_id = (array) $request->get_param( 'recipient_id' );
+		$user_id            = $request->get_param( 'user_id' );
+		$recipient_id       = (array) $request->get_param( 'recipient_id' );
+		$allow_group_thread = (bool) $request->get_param( 'include_group_thread' );
 
 		if ( empty( $user_id ) ) {
 			$user_id = bp_loggedin_user_id();
@@ -789,10 +798,20 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$retval = array();
 
 		if ( class_exists( 'BP_Messages_Message' ) && method_exists( 'BP_Messages_Message', 'get_existing_thread' ) ) {
-			$thread_id = BP_Messages_Message::get_existing_thread( $recipient_id, $user_id );
+			$threads = BP_Messages_Message::get_existing_threads( $recipient_id, $user_id );
 
-			if ( ! empty( $thread_id ) ) {
-				$thread = $this->get_thread_object( $thread_id, $request );
+			if ( ! empty( $threads ) && false === $allow_group_thread ) {
+				foreach ( $threads as $key => $thread ) {
+					$is_group_message_thread = bb_messages_is_group_thread( (int) $thread->thread_id );
+					if ( $is_group_message_thread ) {
+						unset( $threads[ $key ] );
+					}
+				}
+			}
+
+			if ( ! empty( $threads ) ) {
+				$thread_id = current( $threads )->thread_id;
+				$thread    = $this->get_thread_object( $thread_id, $request );
 
 				$retval = $this->prepare_response_for_collection(
 					$this->prepare_item_for_response( $thread, $request )
