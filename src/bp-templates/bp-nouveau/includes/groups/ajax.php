@@ -1079,18 +1079,30 @@ function bp_nouveau_ajax_groups_send_message() {
 	$video    = filter_input( INPUT_POST, 'video', FILTER_DEFAULT );
 	$message  = '';
 
+	if ( isset( $_POST['gif_data'] ) ) {
+		unset( $_POST['gif_data'] );
+	}
 	if ( isset( $gif_data ) && '' !== $gif_data ) {
 		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $gif_data ), true );
 	}
 
+	if ( isset( $_POST['media'] ) ) {
+		unset( $_POST['media'] );
+	}
 	if ( isset( $media ) && '' !== $media ) {
 		$_POST['media'] = json_decode( wp_kses_stripslashes( $media ), true );
 	}
 
+	if ( isset( $_POST['document'] ) ) {
+		unset( $_POST['document'] );
+	}
 	if ( isset( $document ) && '' !== $document ) {
 		$_POST['document'] = json_decode( wp_kses_stripslashes( $document ), true );
 	}
 
+	if ( isset( $_POST['video'] ) ) {
+		unset( $_POST['video'] );
+	}
 	if ( isset( $video ) && '' !== $video ) {
 		$_POST['video'] = json_decode( wp_kses_stripslashes( $video ), true );
 	}
