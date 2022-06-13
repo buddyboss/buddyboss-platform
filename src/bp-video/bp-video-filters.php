@@ -227,8 +227,8 @@ function bp_video_activity_append_video( $content, $activity ) {
 				( $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '' ),
 				( true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '' ),
 			);
+			ob_start();
 			?>
-			<?php ob_start(); ?>
 			<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
 				<?php
 				bp_get_template_part( 'video/add-video-thumbnail' );
