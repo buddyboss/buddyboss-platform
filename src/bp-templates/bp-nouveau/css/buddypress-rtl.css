@@ -14733,6 +14733,15 @@ fieldset div.avatar {
   background-color: #fafafa;
 }
 
+.activity-list li.blogs .activity-content .activity-inner .bb-video-wrapper .fluid-width-video-wrapper {
+  margin: 0;
+}
+
+.activity-list li.blogs .activity-content .activity-inner .bb-video-wrapper .fluid-width-video-wrapper iframe {
+  margin: 0;
+  border-radius: 4px;
+}
+
 .activity-list li.activity .activity-inner .gamipress-buddypress-user-details + .gamipress-buddypress-user-details {
   display: none;
 }
