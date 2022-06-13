@@ -85,8 +85,11 @@ add_filter( 'bp_get_activity_parent_content', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_latest_update', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_feed_item_description', 'stripslashes_deep', 5 );
-add_filter( 'bbp_activity_reply_create_excerpt', 'addslashes', 5 );
 add_filter( 'bp_activity_primary_link_before_save', 'esc_url_raw' );
+
+// Allow slash in topic reply.
+add_filter( 'bbp_activity_topic_create_excerpt', 'addslashes', 5 );
+add_filter( 'bbp_activity_reply_create_excerpt', 'addslashes', 5 );
 
 // Apply BuddyPress-defined filters.
 add_filter( 'bp_get_activity_content', 'bp_activity_make_nofollow_filter' );
