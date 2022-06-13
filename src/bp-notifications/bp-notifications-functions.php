@@ -1302,6 +1302,8 @@ function bb_notification_avatar_url( $notification = '' ) {
 
 	if ( isset( $item_id, $object ) ) {
 
+		add_filter( 'bp_core_gravatar_url_args', 'bb_notification_avatar_url_args' );
+
 		if ( 'notification' === $object ) {
 			$image_url = bb_get_notification_avatar_url( 'thumb' );
 		} else {
@@ -1313,6 +1315,8 @@ function bb_notification_avatar_url( $notification = '' ) {
 				)
 			);
 		}
+
+		remove_filter( 'bp_core_gravatar_url_args', 'bb_notification_avatar_url_args' );
 	}
 
 	return apply_filters( 'bb_notification_avatar_url', str_replace( '&#038;', '&', $image_url ), $notification );
@@ -1485,4 +1489,18 @@ function bb_get_notification_conditional_icon( $notification ) {
 
 	return apply_filters( 'bb_get_notification_conditional_icon', $icon_class, $notification );
 
+}
+
+/**
+ * Function to remove the size and rating to get the gravatar browser notification avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Array of arguments.
+ *
+ * @return mixed
+ */
+function bb_notification_avatar_url_args( $args ) {
+	unset( $args['s'], $args['r'] );
+	return $args;
 }

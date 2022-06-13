@@ -684,6 +684,9 @@ function bp_core_fetch_avatar( $args = '' ) {
 			$url_args['d'] = $default_grav;
 		}
 
+		// Filter the URL args to the Gravatar URL.
+		$url_args = apply_filters( 'bp_core_gravatar_url_args', $url_args, $params );
+
 		if ( isset( $url_args['d'] ) && 'blank' === $url_args['d'] ) {
 			$gravatar = apply_filters( 'bp_discussion_blank_option_default_avatar', bb_get_blank_profile_avatar() );
 		} elseif ( isset( $url_args['d'] ) && 'mm' === $url_args['d'] ) {
