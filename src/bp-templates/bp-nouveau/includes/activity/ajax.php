@@ -79,6 +79,12 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
+			array(
+				'post_draft_activity' => array(
+					'function' => 'bb_nouveau_ajax_post_draft_activity',
+					'nopriv'   => false,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -611,6 +617,8 @@ function bp_nouveau_ajax_post_update() {
 		$status  = groups_get_current_group()->status;
 	}
 
+	$draft_activity_meta_key = 'draft_' . $object;
+
 	if (
 		bp_is_active( 'media' ) &&
 		! empty( $_POST['media'] )
@@ -675,6 +683,12 @@ function bp_nouveau_ajax_post_update() {
 
 		if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && $_POST['user_id'] != bp_get_displayed_user()->id ) {
 			$content = sprintf( '@%s %s', bp_get_displayed_user_mentionname(), $content );
+
+			// Draft activity meta key.
+			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
+		} else if ( isset( $_POST['user_id'] ) ) {
+			// Draft activity meta key.
+			$draft_activity_meta_key .= '_' . $_POST['user_id'];
 		}
 
 		$activity_id = bp_activity_post_update(
@@ -713,6 +727,9 @@ function bp_nouveau_ajax_post_update() {
 					}
 					$is_private = 'public' !== $status;
 				}
+
+				// Draft activity meta key.
+				$draft_activity_meta_key .= '_' . $item_id;
 			} else {
 				wp_send_json_error(
 					array(
@@ -720,8 +737,7 @@ function bp_nouveau_ajax_post_update() {
 					)
 				);
 			}
-		}
-		else {
+		} else {
 			wp_send_json_error(
 				array(
 					'message' => __( 'There was a problem posting your update. Group component is disabled, it should be enabled.', 'buddyboss' ),
@@ -748,6 +764,9 @@ function bp_nouveau_ajax_post_update() {
 			)
 		);
 	}
+
+	// Delete draft activity.
+	delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
 
 	ob_start();
 	if ( bp_has_activities(
@@ -781,6 +800,107 @@ function bp_nouveau_ajax_post_update() {
 			'is_directory'            => bp_is_activity_directory(),
 			'is_user_activity'        => bp_is_user_activity(),
 			'is_active_activity_tabs' => bp_is_activity_tabs_active(),
+		)
+	);
+}
+
+/**
+ * Save activity draft data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_nouveau_ajax_post_draft_activity() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_activity = $_REQUEST['draft_activity'] ?? '';
+
+	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
+		$draft_activity = json_decode( stripslashes( $draft_activity ), true );
+	}
+
+	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
+
+		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
+
+			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
+				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
+					if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+						$draft_activity['data']['media'][ $media_key ]['bb_media_draft'] = 1;
+						update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
+					}
+				}
+			}
+
+			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_activity['data']['document'] ) && ! empty( $draft_activity['data']['document'] ) ) {
+				foreach ( $draft_activity['data']['document'] as $document_key => $new_document_attachment ) {
+					if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+						$draft_activity['data']['document'][ $document_key ]['bb_media_draft'] = 1;
+						update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
+					}
+				}
+			}
+
+			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_activity['data']['video'] ) && ! empty( $draft_activity['data']['video'] ) ) {
+				foreach ( $draft_activity['data']['video'] as $video_key => $new_video_attachment ) {
+					if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+						$draft_activity['data']['video'][ $video_key ]['bb_media_draft'] = 1;
+						update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
+					}
+				}
+			}
+
+			bp_update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
+		} else {
+			bp_delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
+
+			// Delete media when discard the activity.
+			if ( isset( $draft_activity['delete_media'] ) && 'true' === $draft_activity['delete_media'] && ! empty( $draft_activity['data'] ) ) {
+
+				$medias    = $draft_activity['data']['media'] ?? array();
+				$documents = $draft_activity['data']['document'] ?? array();
+				$videos    = $draft_activity['data']['video'] ?? array();
+
+				// Delete the medias.
+				if ( ! empty( $medias ) ) {
+					foreach ( $medias as $media ) {
+						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] ) {
+							wp_delete_attachment( $media['id'], true );
+						}
+					}
+				}
+
+				// Delete the documents.
+				if ( ! empty( $documents ) ) {
+					foreach ( $documents as $document ) {
+						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] ) {
+							wp_delete_attachment( $document['id'], true );
+						}
+					}
+				}
+
+				// Delete the videos.
+				if ( ! empty( $videos ) ) {
+					foreach ( $videos as $video ) {
+						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] ) {
+							wp_delete_attachment( $video['id'], true );
+						}
+					}
+				}
+
+			}
+
+			$draft_activity['data'] = false;
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'draft_activity' => $draft_activity,
 		)
 	);
 }

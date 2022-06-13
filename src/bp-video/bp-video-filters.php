@@ -71,6 +71,11 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
 add_filter( 'query_vars', 'bb_setup_query_video_preview' );
 add_action( 'template_include', 'bb_setup_template_for_video_preview', PHP_INT_MAX );
 
+// Setup rewrite rule to access attachment video.
+add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_video_preview' );
+add_filter( 'query_vars', 'bb_setup_attachment_video_preview_query' );
+add_action( 'template_include', 'bb_setup_attachment_video_preview_template', PHP_INT_MAX );
+
 /**
  * Add video theatre template for activity pages.
  *
@@ -1809,6 +1814,56 @@ function bb_setup_template_for_video_preview( $template ) {
 		do_action( 'bb_setup_template_for_video_thumb_preview' );
 
 		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/preview.php';
+	}
+
+	return $template;
+}
+
+/**
+ * Add rewrite rule to setup attachment video preview.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_setup_attachment_video_preview() {
+	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]', 'top' );
+}
+
+/**
+ * Setup query variable for attachment video preview.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ */
+function bb_setup_attachment_video_preview_query( $query_vars ) {
+	$query_vars[] = 'video-attachment-id';
+
+	return $query_vars;
+}
+
+/**
+ * Setup template for the attachment video play.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $template Template path to include.
+ *
+ * @return string
+ */
+function bb_setup_attachment_video_preview_template( $template ) {
+
+	if ( ! empty( get_query_var( 'video-attachment-id' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bb_setup_attachment_video_preview_template' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/attachment.php';
 	}
 
 	return $template;
