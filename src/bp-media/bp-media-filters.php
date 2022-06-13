@@ -85,6 +85,11 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_media_preview' );
 add_filter( 'query_vars', 'bb_setup_query_media_preview' );
 add_action( 'template_include', 'bb_setup_template_for_media_preview', PHP_INT_MAX );
 
+// Setup rewrite rule to access attachment media.
+add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_media_preview' );
+add_filter( 'query_vars', 'bb_setup_attachment_media_preview_query' );
+add_action( 'template_include', 'bb_setup_attachment_media_preview_template', PHP_INT_MAX );
+
 /**
  * Add Media items for search
  */
@@ -2667,3 +2672,54 @@ function bp_media_activity_append_gif( $content, $activity ) {
 	return $content . bp_media_activity_embed_gif_content( $activity->id );
 }
 
+
+/**
+ * Add rewrite rule to setup attachment media preview.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_setup_attachment_media_preview() {
+	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]', 'top' );
+	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]&size=$matches[2]', 'top' );
+}
+
+/**
+ * Setup query variable for attachment media preview.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ */
+function bb_setup_attachment_media_preview_query( $query_vars ) {
+	$query_vars[] = 'media-attachment-id';
+	$query_vars[] = 'size';
+
+	return $query_vars;
+}
+
+/**
+ * Setup template for the attachment media preview.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $template Template path to include.
+ *
+ * @return string
+ */
+function bb_setup_attachment_media_preview_template( $template ) {
+
+	if ( ! empty( get_query_var( 'media-attachment-id' ) ) ) {
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bb_setup_attachment_media_preview_template' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/attachment.php';
+	}
+
+	return $template;
+}

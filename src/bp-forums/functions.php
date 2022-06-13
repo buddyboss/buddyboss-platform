@@ -933,8 +933,8 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
  *
  * @since BuddyBoss 1.7.8
  *
- * @param array $terms terms name.
- * @param int $topic_id topic id.
+ * @param array  $terms terms name.
+ * @param int    $topic_id topic id.
  * @param string $taxonomy taxonomy name.
  * @param string $existing_terms comma separated existing terms name.
  *
@@ -943,25 +943,31 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' ) {
 	if ( ! empty( $existing_terms ) ) {
 		$existing_terms = explode( ',', $existing_terms );
-		$existing_terms = array_map( function ( $single ) {
-			return trim( $single );
-		}, $existing_terms );
+		$existing_terms = array_map(
+			function ( $single ) {
+				return trim( $single );
+			},
+			$existing_terms
+		);
 
 		$deleted_terms = array_diff( $existing_terms, $terms );
 
 		if ( ! empty( $deleted_terms ) ) {
-			$deleted_terms = array_map( function ( $single ) use ( $taxonomy ) {
-				$get_term = get_term_by( 'name', $single, $taxonomy );
-				if ( ! empty( $get_term->slug ) ) {
-					return $get_term->slug;
-				}
-			}, $deleted_terms );
+			$deleted_terms = array_map(
+				function ( $single ) use ( $taxonomy ) {
+					$get_term = get_term_by( 'name', $single, $taxonomy );
+					if ( ! empty( $get_term->slug ) ) {
+						  return $get_term->slug;
+					}
+				},
+				$deleted_terms
+			);
 			wp_remove_object_terms( $topic_id, $deleted_terms, $taxonomy );
 		}
 	}
 
 	// update tags.
-	if ( ! empty ( $terms ) ) {
+	if ( ! empty( $terms ) ) {
 		$term_ids = array();
 
 		foreach ( $terms as $term_name ) {
@@ -986,3 +992,46 @@ function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' )
 	return $terms;
 }
 
+/**
+ * Localize the strings needed for the Forum/Topic UI
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $params Associative array containing the JS Strings needed by scripts.
+ *
+ * @return array The same array with specific strings for the Forum/Topic UI if needed.
+ */
+function bb_nouveau_forum_localize_scripts( $params = array() ) {
+
+	if ( function_exists( 'bp_is_active' ) && ! bp_is_active( 'forums' ) ) {
+		return $params;
+	}
+
+	$user_id    = bp_loggedin_user_id();
+	$draft_data = get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+	$params['forums'] = array(
+		'params'  => array(
+			'bb_current_user_id' => $user_id
+		),
+		'nonces'  => array(
+			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' )
+		),
+		'strings' => array(
+			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss' ),
+		)
+	);
+
+	$params['forums']['draft'] = array();
+	if ( ! empty( $draft_data ) ) {
+		foreach ( $draft_data as $data ) {
+
+			if ( isset( $data['data_key'] ) ) {
+				$params['forums']['draft'][ $data['data_key'] ] = $data;
+			}
+		}
+	}
+
+	return $params;
+}
+add_filter( 'bp_core_get_js_strings', 'bb_nouveau_forum_localize_scripts', 10, 1 );
