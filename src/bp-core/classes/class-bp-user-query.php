@@ -661,7 +661,7 @@ class BP_User_Query {
 		foreach ( $this->user_ids as $key => $uid ) {
 			if ( isset( $r[ $uid ] ) ) {
 				$r[ $uid ]->ID          = (int) $uid;
-				$r[ $uid ]->user_status = (int) $r[ $uid ]->user_status;
+				$r[ $uid ]->user_status = isset( $r[ $uid ]->user_status ) ? (int) $r[ $uid ]->user_status : 0;
 
 				$this->results[ $uid ] = $r[ $uid ];
 
