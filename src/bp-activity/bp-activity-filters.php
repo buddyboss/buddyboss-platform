@@ -100,6 +100,7 @@ add_filter( 'bp_activity_new_at_mention_permalink', 'bp_activity_new_at_mention_
 add_filter( 'pre_comment_content', 'bp_activity_at_name_filter' );
 add_filter( 'the_content', 'bp_activity_at_name_filter' );
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_at_name_filter' );
+add_filter( 'bp_activity_comment_content', 'bp_activity_at_name_filter' );
 
 add_filter( 'bp_get_activity_parent_content', 'bp_create_excerpt' );
 
@@ -247,6 +248,11 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_save_link_data( $activity ) {
 
+	// bail if the request is for privacy update.
+	if ( isset( $_POST['action'] ) && $_POST['action'] === 'activity_update_privacy' ) {
+		return;
+	}
+	
 	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
@@ -803,6 +809,10 @@ add_filter( 'bp_get_activity_css_class', 'bp_activity_timestamp_class', 9, 1 );
  */
 function bp_activity_heartbeat_last_recorded( $response = array(), $data = array() ) {
 	if ( empty( $data['bp_activity_last_recorded'] ) ) {
+		return $response;
+	}
+
+	if ( ! bp_is_activity_heartbeat_active() ) {
 		return $response;
 	}
 
@@ -3191,6 +3201,12 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 				true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
 			)
 		) {
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $comment_user_id ) ) {
+				continue;
+			}
+
 			// Poster name.
 			$reply_author_name = bp_core_get_user_displayname( $comment_user_id );
 			$author_id         = $comment_user_id;
