@@ -1315,7 +1315,7 @@ function bb_notification_avatar_url( $notification = '' ) {
 		}
 	}
 
-	return $image_url;
+	return apply_filters( 'bb_notification_avatar_url', str_replace( '&#038;', '&', $image_url ), $notification );
 }
 
 /**
