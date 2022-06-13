@@ -59,7 +59,6 @@
 				clear: none; // some WP themes state clear:both
 
 				@include responsive-font(26);
-				font-weight: 400;
 				line-height: 1.1;
 				margin: 0 auto;
 			}
@@ -518,7 +517,7 @@
 				display: block;
 			}
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				height: 28px;
 				width: 28px;
 				font-size: 16px;
@@ -559,6 +558,14 @@
 				float: left;
 			}
 
+		}
+
+	}
+
+	@media screen and (max-width: 375px) {
+
+		> li {
+			min-width: 280px;
 		}
 
 	}
@@ -636,7 +643,7 @@
 	clear: both;
 	padding-top: $pad-med;
 
-	.bb-sort-by-date .notifications-order-actions a .bb-icon {
+	.bb-sort-by-date .notifications-order-actions a [class*=" bb-icon-"] {
 		width: 20px;
 		text-align: center;
 	}
