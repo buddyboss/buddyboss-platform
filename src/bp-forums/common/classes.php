@@ -250,6 +250,20 @@ if ( class_exists( 'Walker' ) ) :
 				$output .= ' value="' . (int) $object->ID . '"' . selected( $args['selected'], $object->ID, false );
 			}
 
+			/**
+			 * Add extra attributes for dropdown options.
+			 * Default value empty.
+			 *
+			 * @since BuddyBoss 1.7.8
+			 *
+			 * @param string $attribute Option attribute.
+			 * @param object $object    Post data.
+			 * @param array  $args      Dropdown arguments.
+			 * @param int    $depth     Depth of post in reference to parent posts.
+			 * @param string $output    Used to append additional content.
+			 */
+			$output .= apply_filters( 'bb_walker_dropdown_option_attr', '', $object, $args, $depth, $output );
+
 			$output .= '>';
 			$title   = apply_filters( 'bbp_walker_dropdown_post_title', $object->post_title, $output, $object, $depth, $args );
 			$output .= $pad . esc_html( $title );
@@ -284,6 +298,8 @@ if ( class_exists( 'Walker' ) ) :
 			'parent' => 'reply_to',
 			'id'     => 'ID',
 		);
+
+		var $total_items_per_page = 0;
 
 		/**
 		 * @see Walker::start_lvl()
@@ -344,11 +360,13 @@ if ( class_exists( 'Walker' ) ) :
 				return;
 			}
 
-			// Get element's id
+			$this->total_items_per_page++;
+
+			// Get element's id.
 			$id_field = $this->db_fields['id'];
 			$id       = $element->$id_field;
 
-			// Display element
+			// Display element.
 			parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
 
 			// If we're at the max depth and the current element still has children, loop over those
@@ -368,19 +386,19 @@ if ( class_exists( 'Walker' ) ) :
 		 */
 		public function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
 
-			// Set up reply
+			// Set up reply.
 			$depth++;
 			bbpress()->reply_query->reply_depth = $depth;
 			bbpress()->reply_query->post        = $object;
 			bbpress()->current_reply_id         = $object->ID;
 
-			// Check for a callback and use it if specified
+			// Check for a callback and use it if specified.
 			if ( ! empty( $args['callback'] ) ) {
 				call_user_func( $args['callback'], $object, $args, $depth );
 				return;
 			}
 
-			// Style for div or list element
+			// Style for div or list element.
 			if ( ! empty( $args['style'] ) && ( 'div' === $args['style'] ) ) {
 				echo "<div class='depth-$depth' data-depth='$depth'>\n";
 			} else {
@@ -395,13 +413,13 @@ if ( class_exists( 'Walker' ) ) :
 		 */
 		public function end_el( &$output = '', $object = false, $depth = 0, $args = array() ) {
 
-			// Check for a callback and use it if specified
+			// Check for a callback and use it if specified.
 			if ( ! empty( $args['end-callback'] ) ) {
 				call_user_func( $args['end-callback'], $object, $args, $depth );
 				return;
 			}
 
-			// Style for div or list element
+			// Style for div or list element.
 			if ( ! empty( $args['style'] ) && ( 'div' === $args['style'] ) ) {
 				echo "</div>\n";
 			} else {
@@ -409,4 +427,4 @@ if ( class_exists( 'Walker' ) ) :
 			}
 		}
 	}
-endif; // class_exists check
+endif; // class_exists check.

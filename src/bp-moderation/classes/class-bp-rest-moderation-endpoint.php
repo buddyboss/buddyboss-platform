@@ -405,9 +405,18 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $moderation->id ) ) {
 
-			$friend_status = bp_is_friend( $item_id );
-			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
-				friends_remove_friend( bp_loggedin_user_id(), $item_id );
+			if ( bp_is_active( 'friends' ) ) {
+				$friend_status = bp_is_friend( $item_id );
+				if (
+					! empty( $friend_status ) &&
+					in_array(
+						$friend_status,
+						array( 'is_friend', 'pending', 'awaiting_response' ),
+						true
+					)
+				) {
+					friends_remove_friend( bp_loggedin_user_id(), $item_id );
+				}
 			}
 
 			if ( bp_is_following(
@@ -1071,18 +1080,30 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
 	public function bp_rest_activity_can_report( $activity ) {
-		$activity_id = $activity['id'];
+		$item_id   = $activity['id'];
+		$item_type = BP_Suspend_Activity::$type;
 
-		if ( empty( $activity_id ) ) {
+		if ( empty( $item_id ) ) {
 			return false;
 		}
 
-		$type = BP_Suspend_Activity::$type;
 		if ( 'activity_comment' === $activity['type'] ) {
-			$type = BP_Suspend_Activity_Comment::$type;
+			$activity_comment_data = new BP_Moderation_Activity_Comment();
+			$item_data             = $activity_comment_data->update_button_sub_items( $item_id );
+			$item_id               = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type             = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+		} else {
+			$activity_data = new BP_Moderation_Activity();
+			$item_data     = $activity_data->update_button_sub_items( $item_id );
+			$item_id       = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $activity_id, $type ) ) {
+		if ( ! empty( $activity['user_id'] ) && ( bp_moderation_is_user_suspended( $activity['user_id'] ) || bp_moderation_is_user_blocked( $activity['user_id'] ) ) ) {
+			return false;
+		}
+
+		if ( is_user_logged_in() && bp_moderation_user_can( $item_id, $item_type ) ) {
 			return true;
 		}
 
@@ -1097,18 +1118,26 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
 	public function bp_rest_activity_is_reported( $activity ) {
-		$activity_id = $activity['id'];
+		$item_id   = $activity['id'];
+		$item_type = BP_Suspend_Activity::$type;
 
-		if ( empty( $activity_id ) ) {
+		if ( empty( $item_id ) ) {
 			return false;
 		}
 
-		$type = BP_Suspend_Activity::$type;
 		if ( 'activity_comment' === $activity['type'] ) {
-			$type = BP_Suspend_Activity_Comment::$type;
+			$activity_comment_data = new BP_Moderation_Activity_Comment();
+			$item_data             = $activity_comment_data->update_button_sub_items( $item_id );
+			$item_id               = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type             = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+		} else {
+			$activity_data = new BP_Moderation_Activity();
+			$item_data     = $activity_data->update_button_sub_items( $item_id );
+			$item_id       = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $activity_id, $type ) ) {
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $item_id, $item_type ) ) {
 			return true;
 		}
 
@@ -1123,18 +1152,26 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return false|mixed|void
 	 */
 	public function bp_rest_activity_report_button_text( $activity ) {
-		$activity_id = $activity['id'];
+		$item_id   = $activity['id'];
+		$item_type = BP_Suspend_Activity::$type;
 
-		if ( empty( $activity_id ) ) {
+		if ( empty( $item_id ) ) {
 			return false;
 		}
 
-		$type = BP_Suspend_Activity::$type;
 		if ( 'activity_comment' === $activity['type'] ) {
-			$type = BP_Suspend_Activity_Comment::$type;
+			$activity_comment_data = new BP_Moderation_Activity_Comment();
+			$item_data             = $activity_comment_data->update_button_sub_items( $item_id );
+			$item_id               = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type             = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+		} else {
+			$activity_data = new BP_Moderation_Activity();
+			$item_data     = $activity_data->update_button_sub_items( $item_id );
+			$item_id       = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		return bp_moderation_get_report_button_text( $type, $activity_id );
+		return bp_moderation_get_report_button_text( $item_type, $item_id );
 	}
 
 	/**
@@ -1145,18 +1182,26 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return false|mixed|void
 	 */
 	public function bp_rest_activity_report_type( $activity ) {
-		$activity_id = $activity['id'];
+		$item_id   = $activity['id'];
+		$item_type = BP_Suspend_Activity::$type;
 
-		if ( empty( $activity_id ) ) {
+		if ( empty( $item_id ) ) {
 			return false;
 		}
 
-		$type = BP_Suspend_Activity::$type;
 		if ( 'activity_comment' === $activity['type'] ) {
-			$type = BP_Suspend_Activity_Comment::$type;
+			$activity_comment_data = new BP_Moderation_Activity_Comment();
+			$item_data             = $activity_comment_data->update_button_sub_items( $item_id );
+			$item_id               = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type             = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+		} else {
+			$activity_data = new BP_Moderation_Activity();
+			$item_data     = $activity_data->update_button_sub_items( $item_id );
+			$item_id       = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		return bp_moderation_get_report_type( $type, $activity_id );
+		return bp_moderation_get_report_type( $item_type, $item_id );
 	}
 
 	/**
@@ -1317,6 +1362,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
+		if ( ! empty( $group['creator_id'] ) && ( bp_moderation_is_user_suspended( $group['creator_id'] ) || bp_moderation_is_user_blocked( $group['creator_id'] ) ) ) {
+			return false;
+		}
+
 		if ( is_user_logged_in() && bp_moderation_user_can( $group_id, BP_Suspend_Group::$type ) ) {
 			return true;
 		}
@@ -1454,6 +1503,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$forum_id = $forum['id'];
 
 		if ( empty( $forum_id ) || ! empty( $forum['group'] ) ) {
+			return false;
+		}
+
+		if ( ! empty( $forum['author'] ) && ( bp_moderation_is_user_suspended( $forum['author'] ) || bp_moderation_is_user_blocked( $forum['author'] ) ) ) {
 			return false;
 		}
 
@@ -1597,6 +1650,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
+		if ( ! empty( $topic['author'] ) && ( bp_moderation_is_user_suspended( $topic['author'] ) || bp_moderation_is_user_blocked( $topic['author'] ) ) ) {
+			return false;
+		}
+
 		if ( is_user_logged_in() && bp_moderation_user_can( $topic_id, BP_Suspend_Forum_Topic::$type ) ) {
 			return true;
 		}
@@ -1736,6 +1793,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$reply_id = $reply['id'];
 
 		if ( empty( $reply_id ) ) {
+			return false;
+		}
+
+		if ( ! empty( $reply['author'] ) && ( bp_moderation_is_user_suspended( $reply['author'] ) || bp_moderation_is_user_blocked( $reply['author'] ) ) ) {
 			return false;
 		}
 
@@ -1910,6 +1971,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$user_id = $user['id'];
 
 		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		if ( ! empty( $user_id ) && ( bp_moderation_is_user_suspended( $user_id ) || bp_moderation_is_user_blocked( $user_id ) ) ) {
 			return false;
 		}
 
@@ -2131,6 +2196,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			$type = BP_Suspend_Media::$type;
 		}
 
+		if ( ! empty( $media['user_id'] ) && ( bp_moderation_is_user_suspended( $media['user_id'] ) || bp_moderation_is_user_blocked( $media['user_id'] ) ) ) {
+			return false;
+		}
+
 		if ( is_user_logged_in() && bp_moderation_user_can( $media_id, $type ) ) {
 			return true;
 		}
@@ -2322,6 +2391,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
+		if ( ! empty( $document['user_id'] ) && ( bp_moderation_is_user_suspended( $document['user_id'] ) || bp_moderation_is_user_blocked( $document['user_id'] ) ) ) {
+			return false;
+		}
+
 		if ( is_user_logged_in() && bp_moderation_user_can( $document_id, $type ) ) {
 			return true;
 		}
@@ -2416,6 +2489,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		$is_user_suspended = bp_moderation_is_user_suspended( $recipient->user_id );
 		$is_user_blocked   = bp_moderation_is_user_blocked( $recipient->user_id );
+
+		if ( ! empty( $recipient->user_id ) && ( bp_moderation_is_user_suspended( $recipient->user_id ) || bp_moderation_is_user_blocked( $recipient->user_id ) ) ) {
+			$data['current_user_permissions']['can_report'] = false;
+		}
 
 		if ( is_user_logged_in() && bp_moderation_user_can( $recipient->user_id, BP_Suspend_Member::$type ) ) {
 			$data['current_user_permissions']['can_report'] = true;
@@ -2620,6 +2697,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$comment_id = $post['id'];
 
 		if ( empty( $comment_id ) ) {
+			return false;
+		}
+
+		if ( ! empty( $post['author'] ) && ( bp_moderation_is_user_suspended( $post['author'] ) || bp_moderation_is_user_blocked( $post['author'] ) ) ) {
 			return false;
 		}
 

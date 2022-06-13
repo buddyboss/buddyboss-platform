@@ -144,7 +144,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
 	 * @apiParam {String=asc,desc} [order=desc] Order sort attribute ascending or descending.
-	 * @apiParam {String=date_created,menu_order} [orderby=date_created] Order by a specific parameter.
+	 * @apiParam {String=date_created,menu_order,id,include} [orderby=date_created] Order by a specific parameter.
 	 * @apiParam {Number} [user_id] Limit result set to items created by a specific user (ID).
 	 * @apiParam {Number} [max] Maximum number of results to return.
 	 * @apiParam {Number} [album_id] A unique numeric ID for the Album.
@@ -204,6 +204,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['include'] ) ) {
 			$args['media_ids'] = $request['include'];
+			if (
+				! empty( $args['order_by'] )
+				&& 'include' === $args['order_by']
+			) {
+				$args['order_by'] = 'in';
+			}
 		}
 
 		$args['scope'] = $this->bp_rest_media_default_scope( $args['scope'], $args );
@@ -1309,18 +1315,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$args = array();
 		$key  = 'create';
 
-		if ( WP_REST_Server::EDITABLE === $method ) {
-			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the media.', 'buddyboss' ),
-				'type'              => 'integer',
-				'required'          => true,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
-			);
-
-			$key = 'update';
-		}
-
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['upload_ids'] = array(
 				'description'       => __( 'Media specific IDs.', 'buddyboss' ),
@@ -1363,6 +1357,20 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
+		if ( WP_REST_Server::EDITABLE === $method ) {
+			$args['id'] = array(
+				'description'       => __( 'A unique numeric ID for the media.', 'buddyboss' ),
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
+			unset( $args['privacy']['default'] );
+
+			$key = 'update';
+		}
+
 		/**
 		 * Filters the method query arguments.
 		 *
@@ -1385,29 +1393,47 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $media, $request ) {
 		$data = array(
-			'id'               => $media->id,
-			'blog_id'          => $media->blog_id,
-			'attachment_id'    => $media->attachment_id,
-			'user_id'          => $media->user_id,
-			'title'            => $media->title,
-			'description'      => get_post_field( 'post_content', $media->attachment_id ),
-			'album_id'         => $media->album_id,
-			'group_id'         => $media->group_id,
-			'activity_id'      => $media->activity_id,
-			'privacy'          => $media->privacy,
-			'menu_order'       => $media->menu_order,
-			'date_created'     => $media->date_created,
-			'attachment_data'  => $media->attachment_data,
-			'group_name'       => ( isset( $media->group_name ) ? $media->group_name : '' ),
-			'visibility'       => ( isset( $media->visibility ) ? $media->visibility : '' ),
-			'user_nicename'    => $media->user_nicename,
-			'user_login'       => $media->user_login,
-			'display_name'     => $media->display_name,
-			'url'              => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' ),
-			'download_url'     => bp_media_download_link( $media->attachment_id, $media->id ),
-			'user_permissions' => $this->get_media_current_user_permissions( $media ),
-			'type'             => $media->type,
+			'id'                    => $media->id,
+			'blog_id'               => $media->blog_id,
+			'attachment_id'         => $media->attachment_id,
+			'user_id'               => $media->user_id,
+			'title'                 => $media->title,
+			'description'           => get_post_field( 'post_content', $media->attachment_id ),
+			'album_id'              => $media->album_id,
+			'group_id'              => $media->group_id,
+			'activity_id'           => $media->activity_id,
+			'hide_activity_actions' => false,
+			'privacy'               => $media->privacy,
+			'menu_order'            => $media->menu_order,
+			'date_created'          => $media->date_created,
+			'attachment_data'       => $media->attachment_data,
+			'group_name'            => ( isset( $media->group_name ) ? $media->group_name : '' ),
+			'visibility'            => ( isset( $media->visibility ) ? $media->visibility : '' ),
+			'user_nicename'         => get_the_author_meta( 'user_nicename', $media->user_id ),
+			'user_login'            => get_the_author_meta( 'user_login', $media->user_id ),
+			'display_name'          => bp_core_get_user_displayname( $media->user_id ),
+			'url'                   => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' ),
+			'download_url'          => bp_media_download_link( $media->attachment_id, $media->id ),
+			'user_permissions'      => $this->get_media_current_user_permissions( $media ),
+			'type'                  => $media->type,
 		);
+
+		// Below condition will check if media has comments then like/comment button will not visible for that particular media.
+		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
+			$activity = new BP_Activity_Activity( $data['activity_id'] );
+			if ( isset( $activity->secondary_item_id ) ) {
+				$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+				if (
+					! empty( $get_activity->id ) &&
+					(
+						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
+						|| 'public' === $activity->privacy && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
+					)
+				) {
+					$data['hide_activity_actions'] = true;
+				}
+			}
+		}
 
 		if ( 'video' === $media->type ) {
 			add_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
@@ -1505,81 +1531,87 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'title'      => 'bp_media',
 			'type'       => 'object',
 			'properties' => array(
-				'id'               => array(
+				'id'                    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the Media.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'blog_id'          => array(
+				'blog_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Current Site ID.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'attachment_id'    => array(
+				'attachment_id'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Unique identifier for the media object.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'user_id'          => array(
+				'user_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The ID for the author of the media.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'title'            => array(
+				'title'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The Media title.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'description'      => array(
+				'description'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The Media description.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'album_id'         => array(
+				'album_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the Album.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'group_id'         => array(
+				'group_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'activity_id'      => array(
+				'activity_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'privacy'          => array(
+				'hide_activity_actions' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Based on this hide like/comment button for media activity comments.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'boolean',
+				),
+				'privacy'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Privacy of the media.', 'buddyboss' ),
 					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'menu_order'       => array(
+				'menu_order'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Order of the item.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'date_created'     => array(
+				'date_created'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The date the media was created, in the site\'s timezone.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
-				'attachment_data'  => array(
+				'attachment_data'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Wordpress Media Data.', 'buddyboss' ),
 					'readonly'    => true,
@@ -1611,55 +1643,55 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'group_name'       => array(
+				'group_name'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Group name associate with the media.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'visibility'       => array(
+				'visibility'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Visibility of the media.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'user_nicename'    => array(
+				'user_nicename'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The User\'s nice name to create a media.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'user_login'       => array(
+				'user_login'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The User\'s login name to create a media.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'display_name'     => array(
+				'display_name'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The User\'s display name to create a media.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'url'              => array(
+				'url'                   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Media file URL.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'download_url'     => array(
+				'download_url'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Download Media file URL.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'user_permissions' => array(
+				'user_permissions'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Current user\'s permission with the media.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'object',
 				),
-				'type'             => array(
+				'type'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Current media type, photo or video.', 'buddyboss' ),
 					'readonly'    => true,
@@ -1698,7 +1730,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order media by which attribute.', 'buddyboss' ),
 			'default'           => 'date_created',
 			'type'              => 'string',
-			'enum'              => array( 'date_created', 'menu_order' ),
+			'enum'              => array( 'date_created', 'menu_order', 'id', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -2192,14 +2224,26 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+		$media_id  = bp_activity_get_meta( $activity_id, 'bp_media_id', true );
+
 		$media_ids = trim( $media_ids );
 		$media_ids = explode( ',', $media_ids );
+
+		if ( ! empty( $media_id ) ) {
+			$media_ids[] = $media_id;
+			$media_ids   = array_filter( array_unique( $media_ids ) );
+		}
 
 		if ( empty( $media_ids ) ) {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data(
+			array(
+				'media_ids' => $media_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -2208,7 +2252,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$retval = array();
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array() )
+				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
 			);
 		}
 
@@ -2334,7 +2378,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$bp_video_upload_count = count( $new_medias );
+		$bp_media_upload_count = count( $new_medias );
 
 		remove_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
 		remove_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
@@ -2721,14 +2765,25 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$media_ids = get_post_meta( $p_id, 'bp_media_ids', true );
+		$media_id  = get_post_meta( $p_id, 'bp_media_id', true );
 		$media_ids = trim( $media_ids );
 		$media_ids = explode( ',', $media_ids );
+
+		if ( ! empty( $media_id ) ) {
+			$media_ids[] = $media_id;
+			$media_ids   = array_filter( array_unique( $media_ids ) );
+		}
 
 		if ( empty( $media_ids ) ) {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data(
+			array(
+				'media_ids' => $media_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -3087,14 +3142,25 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+		$media_id  = bp_messages_get_meta( $message_id, 'bp_media_id', true );
 		$media_ids = trim( $media_ids );
 		$media_ids = explode( ',', $media_ids );
+
+		if ( ! empty( $media_id ) ) {
+			$media_ids[] = $media_id;
+			$media_ids   = array_filter( array_unique( $media_ids ) );
+		}
 
 		if ( empty( $media_ids ) ) {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data(
+			array(
+				'media_ids' => $media_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -3467,6 +3533,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 							$retval['edit_post_privacy'] = $parent_activity_id;
 						} else {
 							$retval['edit_post_privacy'] = $media->activity_id;
+						}
+
+						$activity = new BP_Activity_Activity( (int) $retval['edit_post_privacy'] );
+						if ( ! empty( $activity->id ) && ! empty( $activity->type ) && 'activity_comment' === $activity->type ) {
+							$retval['edit_post_privacy'] = 0;
 						}
 					} else {
 						$retval['edit_privacy'] = 1;

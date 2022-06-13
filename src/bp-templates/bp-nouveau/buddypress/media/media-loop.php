@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Media Loop
+ * The template for media loop
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/media/media-loop.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 bp_nouveau_before_loop();
