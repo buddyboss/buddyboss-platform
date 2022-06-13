@@ -100,6 +100,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			'messages',
 			'bb_messages_new',
 			'bb_messages_new',
+			'bb-icon-f bb-icon-comment'
 		);
 
 		$filter_types = array( 'bb_messages_new' );

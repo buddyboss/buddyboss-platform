@@ -2822,6 +2822,10 @@ function bp_nav_menu_get_loggedin_pages() {
 		// Remove <span>number</span>.
 		$item_name = _bp_strip_spans_from_title( $bp_item['name'] );
 
+		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+			$bp_item['link'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $bp_item['link'] );
+		}
+
 		$page_args[ $bp_item['slug'] ] = (object) array(
 			'ID'             => $nav_counter,
 			'post_title'     => $item_name,
@@ -2946,11 +2950,17 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
-					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+					$course_label = is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ? LearnDash_Custom_Label::get_label( 'courses' ) : __( 'Course', 'buddyboss' );
+					/* translators: My Course, e.g. "My Course". */
+					$sub_name = sprintf( __( 'My %s', 'buddyboss' ), $course_label );
 				}
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
 					$key = 'group-invites-settings';
+				}
+
+				if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+					$s_nav['link'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $s_nav['link'] );
 				}
 
 				$link                  = $s_nav['link'];

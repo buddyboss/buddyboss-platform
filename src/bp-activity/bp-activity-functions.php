@@ -2871,6 +2871,29 @@ add_action( 'comment_post', 'bp_activity_post_type_comment', 10, 2 );
 add_action( 'edit_comment', 'bp_activity_post_type_comment', 10 );
 
 /**
+ * Create an activity item for a newly posted post type comment from REST API.
+ *
+ * @since BuddyBoss 2.0.1
+ *
+ * @param WP_Comment $comment WP_Comment class object.
+ *
+ * @return void
+ */
+function bb_rest_activity_post_type_comment( $comment ) {
+	// Bail if not a comment.
+	if (
+		empty( $comment )
+		|| ! $comment instanceof WP_Comment
+	) {
+		return;
+	}
+
+	bp_activity_post_type_comment( $comment->comment_ID, $comment->comment_approved );
+}
+
+add_action( 'rest_after_insert_comment', 'bb_rest_activity_post_type_comment', 10, 1 );
+
+/**
  * Remove an activity item when a comment about a post type is deleted.
  *
  * @since BuddyPress 2.5.0
@@ -4091,6 +4114,12 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 
 	// Now email the user with the contents of the message (if they have enabled email notifications).
 	if ( true === bb_is_notification_enabled( $receiver_user_id, $type_key ) ) {
+
+		// Check the sender is blocked by recipient or not.
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $receiver_user_id, get_current_user_id() ) ) {
+			return;
+		}
+
 		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 			$email_type = 'groups-at-message';
 			$group_name = bp_get_current_group_name();
@@ -4201,7 +4230,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $original_activity->user_id != $commenter_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
+		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $original_activity->user_id, $commenter_id ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4249,7 +4278,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
+		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $commenter_id )  ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,
