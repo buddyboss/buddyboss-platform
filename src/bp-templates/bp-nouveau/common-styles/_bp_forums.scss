@@ -862,6 +862,10 @@ p.form-allowed-tags {
 			margin-top: 15px;
 		}
 
+		[dir="rtl"] & [dir="ltr"] {
+			text-align: right;
+		}
+
 	}
 
 }
