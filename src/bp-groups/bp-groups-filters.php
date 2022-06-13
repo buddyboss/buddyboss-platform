@@ -87,6 +87,10 @@ add_filter( 'bp_get_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_new_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 99 );
 
+// setup backward compatibilty to retrieve the encoded value from db.
+add_filter( 'bp_get_group_name', 'html_entity_decode' );
+add_filter( 'bp_get_group_description', 'html_entity_decode' );
+
 // Load Group Notifications.
 add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
 
