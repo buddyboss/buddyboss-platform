@@ -35,7 +35,7 @@ function bb_notification_get_settings_sections() {
 				false === bb_enabled_legacy_email_preference() ?
 				sprintf(
 					wp_kses_post(
-							/* translators: Tutorial link. */
+					/* translators: Tutorial link. */
 						__( 'You can register your own notifications types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' )
 					),
 					'<a href="' .
@@ -44,9 +44,45 @@ function bb_notification_get_settings_sections() {
 				) : ''
 			),
 		),
+		'bp_web_push_notification_settings'  => array(
+			'page'              => 'notifications',
+			'title'             => esc_html__( 'Web Push Notifications', 'buddyboss' ),
+			'tutorial_callback' => 'bb_web_push_notifications_tutorial',
+		),
 	);
 
 	return (array) apply_filters( 'bb_notification_get_settings_sections', $settings );
+}
+
+/**
+ * Link to Web Push Notification tutorial.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_web_push_notifications_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => '',
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		">
+			<?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?>
+		</a>
+	</p>
+
+	<?php
 }
 
 /**
@@ -168,6 +204,42 @@ function bb_notification_get_settings_fields() {
 			'args'              => array( 'class' => 'notes-hidden-header' ),
 		);
 	}
+
+	$fields['bp_web_push_notification_settings'] = array();
+
+	if ( ! function_exists( 'bb_platform_pro' ) ) {
+		$fields['bp_web_push_notification_settings']['infos'] = array(
+			'title'             => esc_html__( 'Notes', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_push_notification_bbp_pro_not_installed',
+			'sanitize_callback' => 'string',
+			'args'              => array( 'class' => 'notes-hidden-header' ),
+		);
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' )
+	) {
+		$fields['bp_web_push_notification_settings']['infos'] = array(
+			'title'             => esc_html__( 'Notes', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_push_notification_bbp_pro_older_version_installed',
+			'sanitize_callback' => 'string',
+			'args'              => array( 'class' => 'notes-hidden-header' ),
+		);
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		(
+			function_exists( 'bb_enabled_legacy_email_preference' ) &&
+			bb_enabled_legacy_email_preference()
+		)
+	) {
+		$fields['bp_web_push_notification_settings']['infos'] = array(
+			'title'             => esc_html__( 'Notes', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_push_notification_lab_notification_preferences',
+			'sanitize_callback' => 'string',
+			'args'              => array( 'class' => 'notes-hidden-header' ),
+		);
+	} else {
+		$fields['bp_web_push_notification_settings'] = apply_filters( 'bb_notification_web_push_notification_settings', $fields['bp_web_push_notification_settings'] );
+    }
 
 	return (array) apply_filters( 'bb_notification_get_settings_fields', $fields );
 }
@@ -390,4 +462,68 @@ function bb_activate_notification( $field, $checked ) {
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 
 	<?php
+}
+
+/**
+ * Callback fields for the push notification platform pro not installed warning.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_push_notification_bbp_pro_not_installed() {
+	echo '<p class="description notification-information bb-lab-notice">' .
+		sprintf(
+			wp_kses_post(
+				/* translators: BuddyBoss Pro purchase link */
+				__( 'Please install %1$s to use web push notification on your site.', 'buddyboss' )
+			),
+			'<a href="' . esc_url( 'https://www.buddyboss.com/pro' ) . '" target="_blank">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+		) .
+	'</p>';
+}
+
+/**
+ * Callback fields for the push notification platform pro older version installed warning.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_push_notification_bbp_pro_older_version_installed() {
+	echo '<p class="description notification-information bb-lab-notice">' .
+		sprintf(
+			wp_kses_post(
+				/* translators: BuddyBoss Pro purchase link */
+				__( 'Please update %1$s to version 1.1.9.2 to use web push notifications on your site.', 'buddyboss' )
+			),
+			'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/pro' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+		) .
+	'</p>';
+}
+
+/**
+ * Callback fields for the push notification lab preference warning.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_push_notification_lab_notification_preferences() {
+	echo '<p class="description notification-information bb-lab-notice">' .
+		sprintf(
+			wp_kses_post(
+				/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
+				__( 'Enable the %1$s feature in %2$s to use web push notifications on your site.', 'buddyboss' )
+			),
+			'<strong>' . esc_html__( 'Notification Preferences', 'buddyboss' ) . '</strong>',
+			'<a href="' .
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-settings',
+							'tab'  => 'bp-labs',
+						),
+						admin_url( 'admin.php' )
+					)
+				) .
+			'">' .
+				esc_html__( 'BuddyBoss Labs', 'buddyboss' ) .
+			'</a>'
+		) .
+	'</p>';
 }

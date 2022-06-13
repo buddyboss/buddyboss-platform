@@ -616,7 +616,7 @@ function bp_attachments_delete_file( $args = array() ) {
 			'type'       => 'cover-image',
 			'file'       => '',
 		),
-		'bp_attachments_delete_file_agrs'
+		'bp_attachments_delete_file_args'
 	);
 
 	$attachment_path = '';
@@ -630,6 +630,16 @@ function bp_attachments_delete_file( $args = array() ) {
 			$cover_url = bb_get_default_custom_upload_group_cover();
 			$subdir    = 'groups/0/cover-image';
 		}
+
+		/**
+		 * Filter to update the subdirectory.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $subdir Subdirectory name.
+		 * @param array  $r      Arguments.
+		 */
+		$subdir = apply_filters( 'bb_attachments_delete_file_subdir', $subdir, $r );
 
 		$type_dir = trailingslashit( $upload_dir['basedir'] ) . $subdir;
 
@@ -1242,7 +1252,17 @@ function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
 	$settings = bp_attachments_get_cover_image_settings( $component );
 
 	if ( empty( $settings ) ) {
-		return false;
+
+		/**
+		 * Filter here to edit the cover photo dimensions if needed.
+		 *
+		 * @since BuddyPress 2.4.0
+		 *
+		 * @param bool  false      Setting not found for the given component.
+		 * @param array  $settings An associative array containing all the feature settings.
+		 * @param string $compnent The requested component.
+		 */
+		return apply_filters( 'bp_attachments_get_cover_image_dimensions', false, $settings, $component );
 	}
 
 	// Get width and height.
@@ -1766,6 +1786,16 @@ function bp_attachments_cover_image_ajax_delete() {
 		$component = $args['object'] . 's';
 		$dir       = $component;
 	}
+
+	/**
+	 * Update directory name while deleting the cover image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $dir  Directory name.
+	 * @param array  $args Arguments.
+	 */
+	$dir = apply_filters( 'bp_attachments_cover_image_ajax_delete_dir', $dir, $args );
 
 	// Handle delete.
 	if ( bp_attachments_delete_file(

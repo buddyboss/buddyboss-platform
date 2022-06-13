@@ -6723,7 +6723,12 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 	$notification_type = array_filter(
 		array_map(
 			function ( $n ) use ( $component_name, $component_action ) {
-				if ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
+				if (
+					'bb_new_mention' === $component_action &&
+					in_array( $component_name, array( 'activity', 'forums', 'members' ), true )
+				) {
+					return $n['notification_type'];
+				} elseif ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
 					return $n['notification_type'];
 				}
 			},
@@ -7621,10 +7626,13 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
+		case 'bp_web_push_notification_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
+			break;
 		default:
 			$meta_icon = '';
 	}
 
-	return apply_filters( 'bb_admin_icons', $meta_icon );
+	return apply_filters( 'bb_admin_icons', $meta_icon, $id );
 }
 
