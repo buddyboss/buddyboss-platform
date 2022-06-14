@@ -1198,8 +1198,19 @@ function bp_private_network_template_redirect() {
 			}
 
 			// Allow the media preview when the Symbolic Links is disabled.
-			$request_url        = home_url( add_query_arg( array(), $wp->request ) );
-			$site_url           = get_site_url();
+			$site_url    = get_site_url();
+			$request_url = home_url( add_query_arg( array(), $wp->request ) );
+
+			// Actual URL like https://example.com?abc=1.
+			$actual_url         = home_url( add_query_arg( array( $_GET ), $wp->request ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$explode_actual_url = explode( '?', $actual_url );
+
+			// Actual URL with slash like https://example.com/?abc=1.
+			$actual_slash_url = $actual_url;
+			if ( ! empty( $explode_actual_url ) && isset( $explode_actual_url[0], $explode_actual_url[1] ) ) {
+				$actual_slash_url = trailingslashit( $explode_actual_url[0] ) . '?' . $explode_actual_url[1];
+			}
+
 			$media_preview_urls = array(
 				'bb-media-preview',
 				'bb-document-preview',
@@ -1238,6 +1249,11 @@ function bp_private_network_template_redirect() {
 					foreach ( $exclude_arr_url as $url ) {
 						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
 						$un_trailing_slash_it_url = untrailingslashit( $url );
+
+						// Match request URL(actual/actual with slash) to public URL.
+						if ( ! empty( $actual_url ) && ! empty( $actual_slash_url ) && ! empty( $un_trailing_slash_it_url ) && ( ( $actual_url === $un_trailing_slash_it_url ) || ( $actual_slash_url === $un_trailing_slash_it_url ) ) ) {
+							return;
+						}
 
 						// Check if embed.
 						if ( $request_url === $un_trailing_slash_it_url . '/embed' ) {
