@@ -2932,7 +2932,7 @@ window.bp = window.bp || {};
 							video.muted       = true;
 							video.playsInline = true;
 							if ( videoDuration != null ) {
-								video.currentTime = Math.floor( Math.random() * Math.floor( videoDuration ) ); // Seek random second before capturing thumbnail.
+								video.currentTime = Math.floor( videoDuration ); // Seek fixed second before capturing thumbnail.
 							}
 							video.play();
 							clearInterval( timer );
