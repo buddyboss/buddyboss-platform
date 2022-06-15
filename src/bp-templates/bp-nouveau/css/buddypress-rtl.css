@@ -14478,6 +14478,13 @@ p.form-allowed-tags {
   text-align: left;
 }
 
+[dir="rtl"] #bbpress-forums .replies-content [dir="ltr"], [dir="rtl"]
+#bbpress-forums .bbp-topic-content [dir="ltr"], [dir="rtl"]
+#bbpress-forums .bbp-reply-content [dir="ltr"], [dir="rtl"]
+#bbpress-forums .bbp-reply-content [dir="ltr"] {
+  text-align: left;
+}
+
 #bbpress-forums .bbp-topic-content ul.bbp-topic-revision-log li,
 #bbpress-forums .bbp-reply-content ul.bbp-topic-revision-log li,
 #bbpress-forums .bbp-reply-content ul.bbp-reply-revision-log li {

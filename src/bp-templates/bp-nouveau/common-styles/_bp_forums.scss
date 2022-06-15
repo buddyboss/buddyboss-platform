@@ -866,6 +866,19 @@ p.form-allowed-tags {
 
 }
 
+#bbpress-forums {
+
+	.replies-content,
+	.bbp-topic-content,
+	.bbp-reply-content,
+	.bbp-reply-content {
+
+		[dir="rtl"] & [dir="ltr"] {
+			text-align: right;
+		}
+	}
+}
+
 #bbpress-forums .bbp-topic-content ul.bbp-topic-revision-log li,
 #bbpress-forums .bbp-reply-content ul.bbp-topic-revision-log li,
 #bbpress-forums .bbp-reply-content ul.bbp-reply-revision-log li {
