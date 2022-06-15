@@ -14491,12 +14491,6 @@ p.form-allowed-tags {
   margin-top: 15px;
 }
 
-[dir="rtl"] #bbpress-forums .bbp-topic-content [dir="ltr"], [dir="rtl"]
-#bbpress-forums .bbp-reply-content [dir="ltr"], [dir="rtl"]
-#bbpress-forums .bbp-reply-content [dir="ltr"] {
-  text-align: right;
-}
-
 [dir="rtl"] #bbpress-forums .replies-content [dir="ltr"], [dir="rtl"]
 #bbpress-forums .bbp-topic-content [dir="ltr"], [dir="rtl"]
 #bbpress-forums .bbp-reply-content [dir="ltr"], [dir="rtl"]
