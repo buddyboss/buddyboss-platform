@@ -41,16 +41,17 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_media_enqueue_scripts() {
 
-	wp_enqueue_script( 'bp-nouveau-media-document-data-table' );
-
 	if ( bp_is_user_media() ||
 		 bp_is_single_album() ||
 		 bp_is_media_directory() ||
+		 bp_is_document_directory() ||
+		 bp_is_video_directory() ||
 		 bp_is_activity_component() ||
 		 bp_is_group_activity() ||
 		 bp_is_group_media() ||
 		 bp_is_group_albums() ||
 		 bp_is_group_document() ||
+		 bp_is_group_video() ||
 		 bp_is_group_folders() ||
 		 bp_is_group_messages() ||
 		 bp_is_messages_component()
@@ -122,18 +123,19 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 	// initialize media vars because it is used globally.
 	$params['media'] = array(
 		'max_upload_size'                    => bp_media_file_upload_max_size(),
-		'profile_media'                      => bp_is_profile_media_support_enabled() && bp_media_user_can_upload( bp_loggedin_user_id(), 0 ),
+		'profile_media'                      => bp_is_profile_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), 0 ),
 		'profile_album'                      => bp_is_profile_albums_support_enabled(),
-		'group_media'                        => bp_is_group_media_support_enabled() && ( bp_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
+		'group_media'                        => bp_is_group_media_support_enabled() && ( bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
 		'group_album'                        => bp_is_group_albums_support_enabled(),
-		'messages_media'                     => bp_is_messages_media_support_enabled() && bp_user_can_create_media(),
-		'dropzone_media_message'             => __( 'Drop images here to upload', 'buddyboss' ),
+		'messages_media'                     => bp_is_messages_media_support_enabled() && bb_user_can_create_media(),
+		'messages_media_active'              => bp_is_messages_media_support_enabled(),
+		'dropzone_media_message'             => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Photos', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
 		'media_select_error'                 => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
 		'empty_media_type'                   => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
 		'invalid_media_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
 		'media_size_error_header'            => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description'       => __( 'This file type is too large.', 'buddyboss' ),
-		'dictFileTooBig'                     => __( 'File is too large ({{filesize}} MB). Max file size: {{maxFilesize}} MB.', 'buddyboss' ),
+		'dictFileTooBig'                     => __( 'File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB.', 'buddyboss' ),
 		'cover_photo_size_error_header'      => __( 'Unable to reposition the image ', 'buddyboss' ),
 		'cover_photo_size_error_description' => __( 'To reposition your cover photo, please upload a larger image and then try again.', 'buddyboss' ),
 		'maxFiles'                           => bp_media_allowed_upload_media_per_batch(),
@@ -142,7 +144,10 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
-		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), number_format_i18n( bp_media_allowed_upload_media_per_batch() ) ),
+		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
+		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
+		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
+		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -180,7 +185,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'unselect'             => __( 'Unselect', 'buddyboss' ),
 		'selectall'            => __( 'Select All', 'buddyboss' ),
 		'unselectall'          => __( 'Unselect All', 'buddyboss' ),
-		'no_photos_found'      => __( 'Sorry, no photos were found', 'buddyboss' ),
+		'no_photos_found'      => ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? __( 'Sorry, no photos & videos were found', 'buddyboss' ) : __( 'Sorry, no photos were found', 'buddyboss' ),
 		'upload'               => __( 'Upload', 'buddyboss' ),
 		'uploading'            => __( 'Uploading', 'buddyboss' ),
 		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
@@ -224,12 +229,12 @@ function bp_nouveau_get_media_directory_nav_items() {
 		);
 	}
 
-	if ( is_user_logged_in() && bp_is_group_media_support_enabled() ) {
+	if ( is_user_logged_in() && bp_is_group_media_support_enabled() && bp_is_active( 'groups' ) ) {
 		$nav_items['group'] = array(
 			'component' => 'media',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
-			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-media/',
+			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/groups-media/',
 			'text'      => __( 'My Groups', 'buddyboss' ),
 			'count'     => bp_media_get_user_total_group_media_count(),
 			'position'  => 15,
@@ -246,30 +251,6 @@ function bp_nouveau_get_media_directory_nav_items() {
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
 }
 
-function bp_media_download_file( $attachment_id, $type = 'media' ) {
-
-	// Add action to prevent issues in IE.
-	add_action( 'nocache_headers', 'bp_media_ie_nocache_headers_fix' );
-
-	if ( 'media' === $type ) {
-
-		$the_file = wp_get_attachment_url( $attachment_id );
-
-		if ( ! $the_file ) {
-			return;
-		}
-
-		// clean the file url.
-		$file_url = stripslashes( trim( $the_file ) );
-
-		// get filename.
-		$file_name = basename( $the_file );
-
-		bp_media_download_file_force( $the_file, strtok( $file_name, '?' ) );
-	}
-
-}
-
 /**
  * Edit button alter when media activity other than activity page.
  *
@@ -280,7 +261,18 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
  * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && ( bp_is_media_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) {
+	if (
+		isset( $buttons['activity_edit'] ) &&
+		(
+			bp_is_media_component() ||
+			! bp_is_activity_component()
+		) &&
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		(
+			'media_get_activity' === $_REQUEST['action'] || // phpcs:ignore
+			'media_get_media_description' === $_REQUEST['action'] // phpcs:ignore
+		)
+	) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'media' !== $activity->privacy ) {

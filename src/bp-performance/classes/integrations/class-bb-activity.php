@@ -7,8 +7,8 @@
 
 namespace BuddyBoss\Performance\Integration;
 
-use BuddyBoss\Performance\Helper;
 use BuddyBoss\Performance\Cache;
+use BuddyBoss\Performance\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Activity Integration Class.
  *
- * @package AppBoss\Performance
+ * @package BuddyBossApp\Performance
  */
 class BB_Activity extends Integration_Abstract {
 
@@ -29,8 +29,6 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function set_up() {
 		$this->register( 'bp-activity' );
-
-		$event_groups = array( 'buddypress', 'buddypress-activity' );
 
 		$purge_events = array(
 			'bp_activity_add',              // Any Activity add.
@@ -45,11 +43,8 @@ class BB_Activity extends Integration_Abstract {
 			'bp_suspend_activity_comment_unsuspended', // Any Activity Comment Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge activities endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bp_activity', $purge_events );
 		$this->purge_event( 'bp-activity', $purge_events );
+		$this->purge_event( 'bbapp-deeplinking', $purge_events );
 
 		/**
 		 * Support for single items purge
@@ -81,11 +76,7 @@ class BB_Activity extends Integration_Abstract {
 			'bp_core_delete_existing_avatar'          => 1, // User avatar photo deleted.
 		);
 
-		/**
-		 * Add Custom events to purge single activity endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bp_activity_single', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bp-activity_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_activity_feeds', 'buddyboss-app' );
@@ -96,11 +87,8 @@ class BB_Activity extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/activity',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -108,8 +96,6 @@ class BB_Activity extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/activity/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);
@@ -124,10 +110,10 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function event_bp_activity_add( $r ) {
 		if ( ! empty( $r['id'] ) ) {
-			Cache::instance()->purge_by_group( 'bp-activity_' . $r['id'] );
+			$this->purge_item_cache_by_item_id( $r['id'] );
 		}
 		if ( 'activity_comment' === $r['type'] && ! empty( $r['item_id'] ) ) {
-			Cache::instance()->purge_by_group( 'bp-activity_' . $r['item_id'] );
+			$this->purge_item_cache_by_item_id( $r['item_id'] );
 		}
 	}
 
@@ -138,7 +124,7 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function event_bp_activity_delete( $args ) {
 		if ( ! empty( $r['id'] ) ) {
-			Cache::instance()->purge_by_group( 'bp-activity_' . $args['id'] );
+			$this->purge_item_cache_by_item_id( $args['id'] );
 		}
 	}
 
@@ -148,7 +134,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $activity_id Activity id.
 	 */
 	public function event_bp_activity_delete_comment( $activity_id ) {
-		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 
 	/**
@@ -158,7 +144,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $activity_id Activity id.
 	 */
 	public function event_updated_activity_meta( $meta_id, $activity_id ) {
-		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 
 	/**
@@ -167,7 +153,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $activity_id Activity id.
 	 */
 	public function event_bp_activity_add_user_favorite( $activity_id ) {
-		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 
 	/**
@@ -176,7 +162,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $activity_id Activity id.
 	 */
 	public function event_bp_activity_remove_user_favorite( $activity_id ) {
-		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 
 	/******************************* Moderation Support ******************************/
@@ -186,7 +172,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $activity_id Activity ID.
 	 */
 	public function event_bp_suspend_activity_suspended( $activity_id ) {
-		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 
 	/**
@@ -195,7 +181,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $activity_id Activity ID.
 	 */
 	public function event_bp_suspend_activity_comment_suspended( $activity_id ) {
-		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 
 	/**
@@ -204,7 +190,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $activity_id Activity ID.
 	 */
 	public function event_bp_suspend_activity_unsuspended( $activity_id ) {
-		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 
 	/**
@@ -213,7 +199,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $activity_id Activity ID.
 	 */
 	public function event_bp_suspend_activity_comment_unsuspended( $activity_id ) {
-		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+		$this->purge_item_cache_by_item_id( $activity_id );
 	}
 
 	/****************************** Author Embed Support *****************************/
@@ -226,7 +212,7 @@ class BB_Activity extends Integration_Abstract {
 		$activity_ids = $this->get_activity_ids_by_userid( $user_id );
 		if ( ! empty( $activity_ids ) ) {
 			foreach ( $activity_ids as $activity_id ) {
-				Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+				$this->purge_item_cache_by_item_id( $activity_id );
 			}
 		}
 	}
@@ -240,7 +226,7 @@ class BB_Activity extends Integration_Abstract {
 		$activity_ids = $this->get_activity_ids_by_userid( $user_id );
 		if ( ! empty( $activity_ids ) ) {
 			foreach ( $activity_ids as $activity_id ) {
-				Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+				$this->purge_item_cache_by_item_id( $activity_id );
 			}
 		}
 	}
@@ -254,7 +240,7 @@ class BB_Activity extends Integration_Abstract {
 		$activity_ids = $this->get_activity_ids_by_userid( $user_id );
 		if ( ! empty( $activity_ids ) ) {
 			foreach ( $activity_ids as $activity_id ) {
-				Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+				$this->purge_item_cache_by_item_id( $activity_id );
 			}
 		}
 	}
@@ -271,7 +257,7 @@ class BB_Activity extends Integration_Abstract {
 				$activity_ids = $this->get_activity_ids_by_userid( $user_id );
 				if ( ! empty( $activity_ids ) ) {
 					foreach ( $activity_ids as $activity_id ) {
-						Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+						$this->purge_item_cache_by_item_id( $activity_id );
 					}
 				}
 			}
@@ -294,5 +280,15 @@ class BB_Activity extends Integration_Abstract {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_col( $sql );
+	}
+
+	/**
+	 * Purge item cache by item id.
+	 *
+	 * @param $activity_id
+	 */
+	private function purge_item_cache_by_item_id( $activity_id ) {
+		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) ) );
 	}
 }

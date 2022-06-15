@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Media ALbums Integration Class.
  *
- * @package AppBoss\Performance
+ * @package BuddyBossApp\Performance
  */
 class BB_Media_Albums extends Integration_Abstract {
 
@@ -30,11 +30,11 @@ class BB_Media_Albums extends Integration_Abstract {
 	public function set_up() {
 		$this->register( 'bp-media-albums' );
 
-		$event_groups = array( 'buddypress', 'buddypress-media-albums' );
-
 		$purge_events = array(
 			'bp_media_album_after_save',   // Any Media Album add.
 			'bp_media_album_after_delete', // Any Media Album deleted.
+			'bp_video_album_after_save',   // Any Video Album add.
+			'bp_video_album_after_delete', // Any Video Album deleted.
 
 			// Added moderation support.
 			'bp_suspend_media_suspended',         // Any Media Suspended.
@@ -43,22 +43,24 @@ class BB_Media_Albums extends Integration_Abstract {
 			'bp_suspend_media_album_unsuspended', // Any Media Album Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge media albums endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bp_media_albums', $purge_events );
 		$this->purge_event( 'bp-media-albums', $purge_events );
 
 		/**
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'bp_media_album_after_save'          => 1, // Any Media Album add.
-			'bp_media_album_after_delete'        => 1, // Any Media Album deleted.
+			'bp_media_album_after_save'   => 1, // Any Media Album add.
+			'bp_media_album_after_delete' => 1, // Any Media Album deleted.
+			'bp_video_album_after_save'   => 1, // Any Video Album add.
+			'bp_video_album_after_delete' => 1, // Any Video Album deleted.
 
 			'bp_media_add'                       => 1, // Any Media Photo add.
 			'bp_media_after_save'                => 1, // Any Media Photo updated.
 			'bp_media_before_delete'             => 1, // Any Media Photos deleted.
+
+			'bp_video_add'           => 1, // Any Video File add.
+			'bp_video_after_save'    => 1, // Any Video File updated.
+			'bp_video_before_delete' => 1, // Any Video File deleted.
 
 			// Media group information update support.
 			'groups_update_group'                => 1,   // When Group Details updated.
@@ -78,11 +80,7 @@ class BB_Media_Albums extends Integration_Abstract {
 			'bp_core_delete_existing_avatar'     => 1, // User avatar photo deleted.
 		);
 
-		/**
-		 * Add Custom events to purge single album endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bp_media_albums_single', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bp-media_albums_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_media', 'buddyboss-app' );
@@ -93,11 +91,8 @@ class BB_Media_Albums extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/media/albums',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -105,8 +100,6 @@ class BB_Media_Albums extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/media/albums/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);
@@ -177,6 +170,70 @@ class BB_Media_Albums extends Integration_Abstract {
 		}
 	}
 
+	/****************************** Video Album Events *****************************/
+	/**
+	 * Any Video Album.
+	 *
+	 * @param BP_Video_Album $album Video Album object.
+	 */
+	public function event_bp_video_album_after_save( $album ) {
+		if ( ! empty( $album->id ) ) {
+			Cache::instance()->purge_by_group( 'bp-media-albums_' . $album->id );
+		}
+	}
+
+	/**
+	 * Any Video Album.
+	 *
+	 * @param array $albums Array of video albums.
+	 */
+	public function event_bp_video_album_after_delete( $albums ) {
+		if ( ! empty( $albums ) ) {
+			foreach ( $albums as $album ) {
+				if ( ! empty( $album->id ) ) {
+					Cache::instance()->purge_by_group( 'bp-media-albums_' . $album->id );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Any Video Photos add
+	 *
+	 * @param BP_Video $video Video object.
+	 */
+	public function event_bp_video_add( $video ) {
+		if ( ! empty( $video->album_id ) ) {
+			Cache::instance()->purge_by_group( 'bp-media-albums_' . $video->album_id );
+		}
+	}
+
+	/**
+	 * Any Video Photos after save
+	 *
+	 * @param BP_Video $video Current instance of video item being saved. Passed by reference.
+	 */
+	public function event_bp_video_after_save( $video ) {
+		if ( ! empty( $video->album_id ) ) {
+			Cache::instance()->purge_by_group( 'bp-media-albums_' . $video->album_id );
+		}
+	}
+
+	/**
+	 * Any Videos before delete
+	 *
+	 * @param array $videos Array of video.
+	 */
+	public function event_bp_video_before_delete( $videos ) {
+		if ( ! empty( $videos ) ) {
+			foreach ( $videos as $video ) {
+				if ( ! empty( $video->album_id ) ) {
+					Cache::instance()->purge_by_group( 'bp-media-albums_' . $video->album_id );
+				}
+			}
+		}
+	}
+
 	/****************************** Group Embed Support *****************************/
 	/**
 	 * When Group Details updated.
@@ -229,7 +286,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	 * @param int $media_id Media ID.
 	 */
 	public function event_bp_suspend_media_suspended( $media_id ) {
-		$album_ids = get_album_id_by_media_id( $media_id );
+		$album_ids = $this->get_album_id_by_media_id( $media_id );
 		if ( ! empty( $album_ids ) ) {
 			foreach ( $album_ids as $album_id ) {
 				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
@@ -243,7 +300,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	 * @param int $media_id Media ID.
 	 */
 	public function event_bp_suspend_media_unsuspended( $media_id ) {
-		$album_ids = get_album_id_by_media_id( $media_id );
+		$album_ids = $this->get_album_id_by_media_id( $media_id );
 		if ( ! empty( $album_ids ) ) {
 			foreach ( $album_ids as $album_id ) {
 				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );

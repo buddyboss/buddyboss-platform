@@ -140,7 +140,7 @@ $admins            = array_map( 'intval', get_users(
 											<td>
 												<?php
 												/* translators: accessibility text */
-												printf( esc_html( number_format_i18n( $moderation_request_data->count ) ) );
+												printf( esc_html( bp_core_number_format( $moderation_request_data->count ) ) );
 												?>
 											</td>
 										</tr>
@@ -172,7 +172,7 @@ $admins            = array_map( 'intval', get_users(
 											<td>
 												<?php
 												/* translators: accessibility text */
-												printf( esc_html( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ) ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
+												printf( esc_html( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ) ), esc_html( bp_core_number_format( $moderation_request_data->count ) ) );
 												?>
 											</td>
 										</tr>
@@ -195,7 +195,7 @@ $admins            = array_map( 'intval', get_users(
 									if ( $is_content_screen ) {
 
 										$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-										
+
 										if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
 											?>
                                             <a href="javascript:void(0);"

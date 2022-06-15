@@ -22,11 +22,13 @@ function bp_moderation_get_settings_sections() {
 	$settings = array(
 		'bp_moderation_settings_blocking'  => array(
 			'page'  => 'moderation',
-			'title' => __( 'Blocking', 'buddyboss' ),
+			'title' => esc_html__( 'Member Blocking', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_moderation_block_setting_tutorial',
 		),
 		'bp_moderation_settings_reporting' => array(
 			'page'  => 'moderation',
-			'title' => __( 'Reporting', 'buddyboss' ),
+			'title' => esc_html__( 'Content Reporting', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_moderation_report_setting_tutorial',
 		),
 	);
 

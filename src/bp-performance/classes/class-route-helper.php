@@ -52,7 +52,7 @@ class Route_Helper {
 
 		// STEP-1) Capture group for ":parameter".
 		$param_chars         = '[a-zA-Z\_\-]+';
-		$allowed_value_chars = '[0-9\_\-]+';
+		$allowed_value_chars = '[a-zA-Z0-9-]+';
 		$pattern             = preg_replace(
 			'/<(' . $param_chars . ')>/', // Replace "<parameter>".
 			'(?<$1>' . $allowed_value_chars . ')', // with "(?<parameter>[a-zA-Z0-9\_\-]+)".
@@ -69,7 +69,7 @@ class Route_Helper {
 	 * Fetch parameters passed into the endpoint.
 	 *
 	 * @param string $endpoint_pattern "bbpress/v1/topic/<id>".
-	 * @param string $full_url         "http://localhost/wp-json/appboss/bbpress/v1/topic/488".
+	 * @param string $full_url         "http://localhost/wp-json/buddyboss-app/bbpress/v1/topic/488".
 	 * @param string $parameter        "id".
 	 *
 	 * @return mixed|null
@@ -94,16 +94,17 @@ class Route_Helper {
 	 *
 	 * @param string $endpoint_pattern "bbpress/v1/topic/<param>".
 	 * @param string $current_endpoint "bbpress/v1/topic/488".
+	 * @param string $request_method "GET|POST"
 	 *
 	 * @return boolean
 	 */
-	public static function is_matched_from_route( $endpoint_pattern, $current_endpoint ) {
+	public static function is_matched_from_route( $endpoint_pattern, $current_endpoint, $request_method = 'GET' ) {
 
 		$pattern_as_regex = self::get_route_regex( $endpoint_pattern );
 		$success          = preg_match( $pattern_as_regex, $current_endpoint, $matches );
 		if ( $success ) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-			if ( is_array( $matches ) && 'GET' === $_SERVER['REQUEST_METHOD'] ) {
+			if ( is_array( $matches ) && $request_method === $_SERVER['REQUEST_METHOD'] ) {
 				return true;
 			} else {
 				return false;

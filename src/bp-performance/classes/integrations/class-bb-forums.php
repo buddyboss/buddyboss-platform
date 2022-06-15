@@ -7,8 +7,8 @@
 
 namespace BuddyBoss\Performance\Integration;
 
-use BuddyBoss\Performance\Helper;
 use BuddyBoss\Performance\Cache;
+use BuddyBoss\Performance\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Forums Integration Class.
  *
- * @package AppBoss\Performance
+ * @package BuddyBossApp\Performance
  */
 class BB_Forums extends Integration_Abstract {
 
@@ -59,62 +59,63 @@ class BB_Forums extends Integration_Abstract {
 			'bp_suspend_forum_reply_unsuspended', // Any Forum Reply Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge forums endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bbp_forums', $purge_events );
 		$this->purge_event( 'bbp-forums', $purge_events );
+		$this->purge_event( 'bbapp-deeplinking', $purge_events );
 
 		/**
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'save_post_forum'                       => 1, // When forum created.
-			'edit_post_forum'                       => 1, // When forum updated.
-			'trashed_post'                          => 1, // When forum trashed.
-			'untrashed_post'                        => 1, // When forum untrashed.
-			'deleted_post'                          => 1, // When forum deleted.
-			'bbp_add_user_subscription'             => 2, // When user subscribe forum.
-			'bbp_remove_user_subscription'          => 2, // When user remove forum's subscribe.
-			'bbp_new_topic'                         => 2, // When new topic created, update count and last topic id and author id.
-			'bbp_edit_topic'                        => 2, // When topic updated, update count and last topic id and author id.
-			'bbp_new_reply'                         => 3, // When new reply created, update count and last reply id and author id.
-			'bbp_edit_reply'                        => 3, // When reply updated, update count and last reply id and author id.
-			'bbp_merged_topic'                      => 3, // When topic merged, update count and last reply id and author id.
-			'bbp_post_move_reply'                   => 3, // When reply moved, update count and last reply id and author id.
-			'bbp_post_split_topic'                  => 3, // When split topic, update count and last reply id and author id.
+			'save_post_forum'                                    => 1, // When forum created.
+			'edit_post_forum'                                    => 1, // When forum updated.
+			'trashed_post'                                       => 1, // When forum trashed.
+			'untrashed_post'                                     => 1, // When forum untrashed.
+			'deleted_post'                                       => 1, // When forum deleted.
+			'bbp_add_user_subscription'                          => 2, // When user subscribe forum.
+			'bbp_remove_user_subscription'                       => 2, // When user remove forum's subscribe.
+			'bbp_new_topic'                                      => 2, // When new topic created, update count and last topic id and author id.
+			'bbp_edit_topic'                                     => 2, // When topic updated, update count and last topic id and author id.
+			'bbp_new_reply'                                      => 3, // When new reply created, update count and last reply id and author id.
+			'bbp_edit_reply'                                     => 3, // When reply updated, update count and last reply id and author id.
+			'bbp_merged_topic'                                   => 3, // When topic merged, update count and last reply id and author id.
+			'bbp_post_move_reply'                                => 3, // When reply moved, update count and last reply id and author id.
+			'bbp_post_split_topic'                               => 3, // When split topic, update count and last reply id and author id.
 
 			// Group Embed data.
-			'bp_group_admin_edit_after'             => 1, // When forum Group change form admin.
-			'groups_group_details_edited'           => 1, // When forum Group Details updated form Manage.
-			'groups_group_settings_edited'          => 1, // When forum Group setting updated form Manage.
-			'bp_group_admin_after_edit_screen_save' => 1, // When Group forums setting Manage.
-			'groups_avatar_uploaded'                => 1, // When forum Group avarar updated form Manage.
-			'groups_cover_image_uploaded'           => 1, // When forum Group cover photo uploaded form Manage.
-			'groups_cover_image_deleted'            => 1, // When forum Group cover photo deleted form Manage.
+			'bp_group_admin_edit_after'                          => 1, // When forum Group change form admin.
+			'groups_group_details_edited'                        => 1, // When forum Group Details updated form Manage.
+			'groups_group_settings_edited'                       => 1, // When forum Group setting updated form Manage.
+			'bp_group_admin_after_edit_screen_save'              => 1, // When Group forums setting Manage.
+			'groups_avatar_uploaded'                             => 1, // When forum Group avarar updated form Manage.
+			'groups_cover_image_uploaded'                        => 1, // When forum Group cover photo uploaded form Manage.
+			'groups_cover_image_deleted'                         => 1, // When forum Group cover photo deleted form Manage.
 
 			// Added moderation support.
-			'bp_suspend_groups_suspended'           => 1, // Any Group Suspended.
-			'bp_suspend_groups_unsuspended'         => 1, // Any Group Unsuspended.
-			'bp_suspend_forum_suspended'            => 1, // Any Forum Suspended.
-			'bp_suspend_forum_unsuspended'          => 1, // Any Forum Unsuspended.
-			'bp_suspend_forum_topic_suspended'      => 1, // Any Forum Topic Suspended.
-			'bp_suspend_forum_topic_unsuspended'    => 1, // Any Forum Topic Unsuspended.
-			'bp_suspend_forum_reply_suspended'      => 1, // Any Forum Reply Suspended.
-			'bp_suspend_forum_reply_unsuspended'    => 1, // Any Forum Reply Unsuspended.
+			'bp_suspend_groups_suspended'                        => 1, // Any Group Suspended.
+			'bp_suspend_groups_unsuspended'                      => 1, // Any Group Unsuspended.
+			'bp_suspend_forum_suspended'                         => 1, // Any Forum Suspended.
+			'bp_suspend_forum_unsuspended'                       => 1, // Any Forum Unsuspended.
+			'bp_suspend_forum_topic_suspended'                   => 1, // Any Forum Topic Suspended.
+			'bp_suspend_forum_topic_unsuspended'                 => 1, // Any Forum Topic Unsuspended.
+			'bp_suspend_forum_reply_suspended'                   => 1, // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended'                 => 1, // Any Forum Reply Unsuspended.
 
 			// Add Author Embed Support.
-			'profile_update'                        => 1, // User updated on site.
-			'deleted_user'                          => 1, // User deleted on site.
-			'xprofile_avatar_uploaded'              => 1, // User avatar photo updated.
-			'bp_core_delete_existing_avatar'        => 1, // User avatar photo deleted.
+			'profile_update'                                     => 1, // User updated on site.
+			'deleted_user'                                       => 1, // User deleted on site.
+			'xprofile_avatar_uploaded'                           => 1, // User avatar photo updated.
+			'bp_core_delete_existing_avatar'                     => 1, // User avatar photo deleted.
+
+			// When change/update the group avatar and cover options.
+			'update_option_bp-disable-group-avatar-uploads'      => 3,
+			'update_option_bp-default-group-avatar-type'         => 3,
+			'update_option_bp-default-custom-group-avatar'       => 3,
+			'update_option_bp-disable-group-cover-image-uploads' => 3,
+			'update_option_bp-default-group-cover-type'          => 3,
+			'update_option_bp-default-custom-group-cover'        => 3,
 		);
 
-		/**
-		 * Add Custom events to purge single activity endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bbp_forums_single', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bbp-forums_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_forum_discussions', 'buddyboss-app' );
@@ -125,11 +126,8 @@ class BB_Forums extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/forums',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
-					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
+					'unique_id' => 'id',
 				),
 				true
 			);
@@ -137,8 +135,6 @@ class BB_Forums extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/forums/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);
@@ -152,7 +148,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_save_post_forum( $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -161,7 +157,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_edit_post_forum( $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -170,7 +166,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_trashed_post( $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -179,7 +175,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_untrashed_post( $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -188,7 +184,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_deleted_post( $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -198,7 +194,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_bbp_add_user_subscription( $user_id, $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -208,7 +204,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_bbp_remove_user_subscription( $user_id, $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -218,7 +214,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_bbp_new_topic( $topic_id, $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -228,7 +224,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_bbp_edit_topic( $topic_id, $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -239,7 +235,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_bbp_new_reply( $reply_id, $topic_id, $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -250,7 +246,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum post ID.
 	 */
 	public function event_bbp_edit_reply( $reply_id, $topic_id, $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -261,7 +257,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $source_topic_forum_id Source Topic Forum ID.
 	 */
 	public function event_bbp_merged_topic( $destination_topic_id, $source_topic_id, $source_topic_forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $source_topic_forum_id );
+		$this->purge_item_cache_by_item_id( $source_topic_forum_id );
 	}
 
 	/**
@@ -273,7 +269,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bbp_post_move_reply( $move_reply_id, $source_topic_id, $destination_topic_id ) {
 		$destination_forum_id = bbp_get_topic_forum_id( $destination_topic_id );
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $destination_forum_id );
+		$this->purge_item_cache_by_item_id( $destination_forum_id );
 	}
 
 	/**
@@ -285,7 +281,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bbp_post_split_topic( $from_reply_id, $source_topic_id, $destination_topic_id ) {
 		$destination_forum_id = bbp_get_topic_forum_id( $destination_topic_id );
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $destination_forum_id );
+		$this->purge_item_cache_by_item_id( $destination_forum_id );
 	}
 
 	/****************************** Group Embed Support *****************************/
@@ -298,7 +294,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 
@@ -313,7 +309,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -327,7 +323,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -341,7 +337,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -355,7 +351,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -369,7 +365,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -383,7 +379,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -398,7 +394,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -412,7 +408,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = bbp_get_group_forum_ids( $group_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -423,7 +419,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum ID.
 	 */
 	public function event_bp_suspend_forum_suspended( $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -432,7 +428,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $forum_id Forum ID.
 	 */
 	public function event_bp_suspend_forum_unsuspended( $forum_id ) {
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -442,7 +438,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_forum_topic_suspended( $topic_id ) {
 		$forum_id = bbp_get_topic_forum_id( $topic_id );
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -452,7 +448,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_forum_topic_unsuspended( $topic_id ) {
 		$forum_id = bbp_get_topic_forum_id( $topic_id );
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -462,7 +458,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_forum_reply_suspended( $reply_id ) {
 		$forum_id = bbp_get_reply_forum_id( $reply_id );
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
@@ -472,7 +468,7 @@ class BB_Forums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
 		$forum_id = bbp_get_reply_forum_id( $reply_id );
-		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/****************************** Author Embed Support *****************************/
@@ -485,7 +481,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = $this->get_forum_ids_by_userid( $user_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -499,7 +495,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = $this->get_forum_ids_by_userid( $user_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -513,7 +509,7 @@ class BB_Forums extends Integration_Abstract {
 		$forum_ids = $this->get_forum_ids_by_userid( $user_id );
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+				$this->purge_item_cache_by_item_id( $forum_id );
 			}
 		}
 	}
@@ -530,7 +526,7 @@ class BB_Forums extends Integration_Abstract {
 				$forum_ids = $this->get_forum_ids_by_userid( $user_id );
 				if ( ! empty( $forum_ids ) ) {
 					foreach ( $forum_ids as $forum_id ) {
-						Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+						$this->purge_item_cache_by_item_id( $forum_id );
 					}
 				}
 			}
@@ -551,5 +547,87 @@ class BB_Forums extends Integration_Abstract {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_col( $sql );
+	}
+
+	/**
+	 * Purge item cache by item id.
+	 *
+	 * @param $forum_id
+	 */
+	private function purge_item_cache_by_item_id( $forum_id ) {
+		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( get_permalink( $forum_id ) ) );
+	}
+
+	/**
+	 * When Group Avatars option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_disable_group_avatar_uploads( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Default Group Avatar option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_group_avatar_type( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Upload Custom Avatar option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_custom_group_avatar( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Group Cover Images option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_disable_group_cover_image_uploads( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Default Group Cover Image option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_group_cover_type( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Upload Custom Cover Image option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_custom_group_cover( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
 	}
 }

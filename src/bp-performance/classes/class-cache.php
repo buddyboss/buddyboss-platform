@@ -117,15 +117,12 @@ class Cache {
 	 * @param string $cache_name   Cache name.
 	 * @param string $cache_value  Cache value.
 	 * @param string $cache_expire Time until expiration in seconds from now.
-	 * @param array  $purge_events Array of events.
-	 * @param array  $event_groups Array of cache groups.
 	 * @param string $cache_group  Cache group name.
+	 * @param array  $user_id      user Id
 	 *
 	 * @return bool
 	 */
-	public function set( $cache_name, $cache_value, $cache_expire, $purge_events, $event_groups, $cache_group = 'buddyboss-api' ) {
-
-		$value = false;
+	public function set( $cache_name, $cache_value, $cache_expire, $cache_group = 'buddyboss-api', $user_id  = 0  ) {
 
 		// If the memcache based are available.
 		// Currently we bypass this condition as we not support purge with memcache.
@@ -138,21 +135,19 @@ class Cache {
 			$cache_expire = gmdate( 'Y-m-d H:i:s', time() + $cache_expire );
 
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$get = $wpdb->get_row( $wpdb->prepare( "SELECT *FROM {$this->cache_table} WHERE cache_name=%s AND user_id=%s AND cache_group=%s", $cache_name, get_current_user_id(), $cache_group ) );
+			$get = $wpdb->get_row( $wpdb->prepare( "SELECT *FROM {$this->cache_table} WHERE cache_name=%s AND user_id=%s AND cache_group=%s", $cache_name, $user_id, $cache_group ) );
 
 			if ( empty( $get ) ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$value = $wpdb->insert(
 					$this->cache_table,
 					array(
-						'user_id'      => get_current_user_id(),
+						'user_id'      => $user_id,
 						'blog_id'      => get_current_blog_id(),
 						'cache_name'   => $cache_name,
 						'cache_group'  => $cache_group,
 						'cache_value'  => base64_encode( gzcompress( maybe_serialize( $cache_value ) ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 						'cache_expire' => $cache_expire,
-						'purge_events' => maybe_unserialize( $purge_events ),
-						'event_groups' => maybe_unserialize( $event_groups ),
 					)
 				);
 			} else {
@@ -162,11 +157,9 @@ class Cache {
 					array(
 						'cache_value'  => base64_encode( gzcompress( maybe_serialize( $cache_value ) ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 						'cache_expire' => $cache_expire,
-						'purge_events' => maybe_unserialize( $purge_events ),
-						'event_groups' => maybe_unserialize( $event_groups ),
 					),
 					array(
-						'user_id'     => get_current_user_id(),
+						'user_id'     => $user_id,
 						'blog_id'     => get_current_blog_id(),
 						'cache_name'  => $cache_name,
 						'cache_group' => $cache_group,
@@ -189,7 +182,7 @@ class Cache {
 	 *
 	 * @return bool|mixed
 	 */
-	public function get( $cache_name, $user_id, $blog_id, $cache_group = 'buddyboss-api' ) {
+	public function get( $cache_name, $user_id, $blog_id, $cache_group = 'buddyboss-api', $current_endpoint = '' ) {
 
 		$value = false;
 
@@ -225,6 +218,15 @@ class Cache {
 			}
 		}
 
+		/**
+		 * After Prepare rest cache data.
+		 *
+		 * @param mixed  $value            Value of cache data.
+		 * @param int    $user_id          Current user ID.
+		 * @param string $current_endpoint Current Endpoint URL.
+		 */
+		$value = apply_filters( 'rest_get_cache', $value, $user_id, $current_endpoint );
+
 		return $value;
 	}
 
@@ -234,15 +236,41 @@ class Cache {
 	 * @param string $group_name Cache group name.
 	 */
 	public function purge_by_group( $group_name ) {
+		static $bp_purge_by_group_cache = array();
 		global $wpdb;
+		$cache_key = 'purge_by_group_' . sanitize_title( $group_name );
+		if ( ! isset( $bp_purge_by_group_cache[ $cache_key ] ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$caches                                = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table} where cache_group=%s", $group_name ) );
+			$bp_purge_by_group_cache[ $cache_key ] = $caches;
+		} else {
+			$caches = $bp_purge_by_group_cache[ $cache_key ];
+		}
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$caches = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table} where cache_group=%s", $group_name ) );
 		if ( ! empty( $caches ) ) {
 			foreach ( $caches as $key => $cache ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_name=%s AND cache_group=%s", $cache->cache_name, $group_name ) );
 			}
+		}
+	}
+
+	/**
+	 * Purge cache by user id
+	 *
+	 * @param integer $user_id Cache user id.
+	 * @param string  $group_name Cache group name.
+	 */
+	public function purge_by_user_id( $user_id, $group_name = '' ) {
+		global $wpdb;
+
+		if ( ! empty( $group_name ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE  user_id=%s AND cache_group  LIKE %s", $user_id, '%' . $group_name . '%' ) );
+
+		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE  user_id=%s", $user_id ) );
 		}
 	}
 
@@ -266,43 +294,6 @@ class Cache {
 		}
 	}
 
-
-	/**
-	 * Set cache to be purged by events
-	 * Set or Modify
-	 *
-	 * @param string $cache_name Cache name.
-	 * @param array  $events     Cache events.
-	 */
-	public function set_purge_by_events( $cache_name, $events ) {
-
-	}
-
-
-	/**
-	 * Purge cache by events
-	 */
-	public function purge_by_events() {
-		global $wpdb;
-
-		$action_name = current_filter();
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$caches = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table}" ) );
-		if ( ! empty( $caches ) ) {
-			foreach ( $caches as $key => $cache ) {
-
-				$events = maybe_unserialize( $cache->purge_events );
-
-				if ( in_array( $action_name, array_values( $events ), true ) ) {
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_name=%s", $cache->cache_name ) );
-				}
-			}
-		}
-
-	}
-
 	/**
 	 * Purge cache by Component for setting screen
 	 *
@@ -312,7 +303,7 @@ class Cache {
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql  = $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_group like " );
+		$sql  = "DELETE FROM {$this->cache_table} WHERE cache_group like ";
 		$sql .= "'%" . $component . "%'";
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -327,20 +318,12 @@ class Cache {
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$status = $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table}" ) );
+		$status = $wpdb->query( "DELETE FROM {$this->cache_table}" );
 
 		if ( $status ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 			// Operation succeeded.
 		} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
 			// Operation failed.
 		}
-	}
-
-
-	/**
-	 * Pre Build Cache
-	 */
-	public function pre_build_cache() {
-
 	}
 }

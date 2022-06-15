@@ -1,7 +1,17 @@
-<script type="text/html" id="tmpl-bp-messages-single-header">
-	<#    var other_recipients = _.reject(data.recipients, function(item) {    return item.is_you;    });
+<?php
+/**
+ * BP Nouveau messages single header template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-single-header.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
 
-	var current_user = _.find(data.recipients, function(item) {    return item.is_you == true;    });
+<script type="text/html" id="tmpl-bp-messages-single-header">
+	<#    var other_recipients = _.reject(data.recipients.members, function(item) {    return item.is_you;    });
+	var current_user = _.find(data.recipients.members, function(item) {    return item.is_you == true;    });
 
 	var include_you = other_recipients.length >= 2;
 
@@ -27,9 +37,19 @@
                                 <# if( other_recipients[i].user_link ) { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# } else { #>{{other_recipients[i].user_name}}<# } #><# } #><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 ) && data.toOthers ) { #><?php _e( ',', 'buddyboss' ); ?><# } #>
                         </span>
                     <# } #>
+					<# if ( ! data.is_group_thread && data.recipients.count > data.recipients.current_count ) { #>
+						<a href="javascript:void(0);" id="view_more_members" class="view_more_members view_more_members_cls"
+							data-thread-id="{{data.id}}"
+							data-tp="{{data.recipients.total_pages}}"
+							data-tc="{{data.recipients.count}}"
+							data-pp="{{data.recipients.per_page}}"
+							data-cp="2"
+							data-action="bp_view_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<# } #>
 
 				<# } #>
 			</dt>
+
 			<dd>
 				<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
 			</dd>
@@ -40,7 +60,7 @@
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
+					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 					<div class="message_action__list">
 						<ul>
 							<li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread',
@@ -50,9 +70,9 @@
 											'buddyboss' ); ?></a>
 							</li>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-								<# if ( other_recipients.length > 1 ) { #>
+								<# if ( data.recipients.count > 1 ) { #>
 	                                <li class="report_thread">
-	                                    <a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+	                                    <a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 	                                </li>
 								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_blocked ) { #>
 	                                <li class="reported_thread">
@@ -82,7 +102,7 @@
 				}
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
+					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 					<div class="message_action__list">
 						<ul>
 							<li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread',
@@ -92,9 +112,9 @@
 											'buddyboss' ); ?></a>
 							</li>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-								<# if ( other_recipients.length > 1 ) { #>
+								<# if ( data.recipients.count > 1 ) { #>
 								<li class="report_thread">
-									<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+									<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 								</li>
 								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_blocked ) { #>
 	                                <li class="reported_thread">
@@ -134,36 +154,13 @@
 								<h4><?php esc_html_e( 'Block a Member?', 'buddyboss' ); ?></h4>
 								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 							</header>
-							<div class="bb-report-type-wrp">
-								<# _.reject(other_recipients, function(item) {
-	                            if( false == item.can_be_blocked ) {
-	                                return false;
-	                            } #>
-								<div class="user-item-wrp">
-									<div class="user-avatar">
-										<img src="{{{item.avatar}}}" alt="{{item.user_name}}">
-									</div>
-									<div class="user-name">
-										{{item.user_name}}
-									</div>
-									<div class="user-actions">
-	                                    <# if ( true === item.is_blocked ) { #>
-	                                        <a id="reported-user" class="blocked-member button small disabled">
-	                                            <?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
-	                                        </a>
-	                                    <# } else{ #>
-	                                        <a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ) ?>-{{item.id}}" href="#block-member" class="block-member button small" data-bp-content-id="{{item.id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
-	                                            <?php esc_html_e( 'Block', 'buddyboss' ); ?>
-	                                        </a>
-	                                    <# } #>
-									</div>
-								</div>
-								<# }); #>
-							</div>
+							<div id="moderated_user_list"></div>
 						</div>
 					</div>
 				</div>
 			</div>
-		<?php } ?>
+			<?php
+		}
+		?>
 	</header>
 </script>

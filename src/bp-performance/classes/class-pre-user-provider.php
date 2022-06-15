@@ -39,17 +39,17 @@ class Pre_User_Provider {
 	 */
 	public function load() {
 		add_filter( 'rest_cache_pre_current_user_id', array( $this, 'cookie_support' ), 1 );
-		add_filter( 'rest_cache_pre_current_user_id', array( $this, 'appboss_auth' ), 2 );
+		add_filter( 'rest_cache_pre_current_user_id', array( $this, 'bbapp_auth' ), 2 );
 	}
 
 	/**
-	 * Get the Pre User ID from AppBoss JWT Token.
+	 * Get the Pre User ID from BuddyBoss APP JWT Token.
 	 *
 	 * @param int $user_id User ID.
 	 *
 	 * @return int|void
 	 */
-	public function appboss_auth( $user_id ) {
+	public function bbapp_auth( $user_id ) {
 
 		$header = $this->get_all_headers();
 
@@ -73,7 +73,7 @@ class Pre_User_Provider {
 				$user_id = $token['data']->user->id;
 
 				// Check if there is any switch user.
-				$switch_data = get_user_meta( $user_id, '_appboss_jwt_switch_user', true );
+				$switch_data = get_user_meta( $user_id, '_bbapp_jwt_switch_user', true );
 				$switch_data = ( ! is_array( $switch_data ) ) ? array() : $switch_data;
 				$jti         = ( isset( $token['jti'] ) ) ? $token['jti'] : false;
 

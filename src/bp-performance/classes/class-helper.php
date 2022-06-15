@@ -7,8 +7,6 @@
 
 namespace BuddyBoss\Performance;
 
-use AppBoss\Admin\Settings;
-
 /**
  * Cache Helper class.
  */
@@ -45,18 +43,18 @@ class Helper {
 	/**
 	 * Get the settings.
 	 *
-	 * @param string $setting_key Key name of settings.
+	 * @param null   $setting_key Key name of settings.
 	 * @param string $group       setting groups.
+	 * @param bool   $default_value default value.
 	 *
 	 * @return mixed|null
 	 */
-	public function get_app_settings( $setting_key = null, $group = 'default' ) {
-
-		// Currently we supporting only Appboss Settings.
+	public function get_app_settings( $setting_key = null, $group = 'default', $default_value = true ) {
+		// Currently we supporting only BuddyBoss App Settings.
 		$settings = \BuddyBoss\Performance\Settings::get_settings( $group );
 
 		if ( ! empty( $setting_key ) ) {
-			return isset( $settings[ $setting_key ] ) ? $settings[ $setting_key ] : null;
+			return isset( $settings[ $setting_key ] ) ? $settings[ $setting_key ] : $default_value;
 		} else {
 			return $settings;
 		}

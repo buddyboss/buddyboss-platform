@@ -127,7 +127,7 @@ final class BP_Group_Export extends BP_Export {
 
 			$metas2export                       = array();
 			$metas2export['total_member_count'] = __( 'Total Members', 'buddyboss' );
-			$metas2export['last_activity']      = __( 'ast Activity', 'buddyboss' );
+			$metas2export['last_activity']      = __( 'Last Activity', 'buddyboss' );
 
 			/**
 			 * Filter allow to add additional metas without issues.

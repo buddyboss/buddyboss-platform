@@ -25,8 +25,8 @@ function bp_forums_add_admin_menu() {
 		// Add our screen.
 		add_submenu_page(
 			'buddyboss-platform',
-			'Forums',
-			'Forums',
+			__( 'Forums', 'buddyboss' ),
+			__( 'Forums', 'buddyboss' ),
 			'bbp_forums_admin',
 			$forum_url
 		);

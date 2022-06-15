@@ -117,7 +117,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [include] An array of topic IDs to retrieve.
 	 * @apiParam {Number} [offset] The number of topics to offset before retrieval.
 	 * @apiParam {String=asc,desc} [order=asc] Designates ascending or descending order of topics.
-	 * @apiParam {Array=meta_value,date,ID,author,title,modified,parent,rand,popular,activity} [orderby] Sort retrieved topics by parameter.
+	 * @apiParam {Array=meta_value,date,ID,author,title,modified,parent,rand,popular,activity,include} [orderby] Sort retrieved topics by parameter.
 	 * @apiParam {Array=publish,private,hidden} [status=publish private] Limit result set to topic assigned a specific status.
 	 * @apiParam {Number} [parent] Forum ID to retrieve all the topics.
 	 * @apiParam {Boolean} [subscriptions] Retrieve subscribed topics by user.
@@ -189,6 +189,14 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		if ( is_array( $args['orderby'] ) ) {
 			$args['orderby'] = implode( ' ', $args['orderby'] );
+		}
+
+		if (
+			! empty( $request['include'] )
+			&& ! empty( $args['orderby'] )
+			&& 'include' === $args['orderby']
+		) {
+			$bbp_t['orderby'] = 'post__in';
 		}
 
 		/**
@@ -544,7 +552,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$topic = bbp_get_topic( $request['id'] );
+		$topic = bbp_get_topic( $request->get_param( 'id' ) );
 
 		if ( true === $retval && empty( $topic->ID ) ) {
 			$retval = new WP_Error(
@@ -664,10 +672,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Remove kses filters from title and content for capable users and if the nonce is verified.
-		if ( current_user_can( 'unfiltered_html' ) ) {
-			remove_filter( 'bbp_new_topic_pre_title', 'wp_filter_kses' );
-			remove_filter( 'bbp_new_topic_pre_content', 'bbp_encode_bad', 10 );
-		}
+		remove_filter( 'bbp_new_topic_pre_title', 'wp_filter_kses' );
+		remove_filter( 'bbp_new_topic_pre_content', 'bbp_encode_bad', 10 );
 
 		/** Discussion Title */
 		if ( ! empty( $topic->bbp_topic_title ) ) {
@@ -705,6 +711,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				(
 					! empty( $request['bbp_media_gif']['url'] ) &&
 					! empty( $request['bbp_media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_video_support_enabled' )
+					&& false !== bp_is_forums_video_support_enabled()
+					&& ! empty( $request['bbp_videos'] )
 				)
 			)
 		) {
@@ -864,8 +875,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		$topic_forum = ! empty( $forum_id ) ? $forum_id : 0;
-		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bp_user_has_access_upload_media' ) ) {
-			$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
@@ -877,8 +888,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bp_user_has_access_upload_document' ) ) {
-			$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
@@ -890,8 +901,21 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bp_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_video ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
@@ -999,7 +1023,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				'post_status'    => $topic_status,
 				'post_parent'    => $forum_id,
 				'post_type'      => bbp_get_topic_post_type(),
-				'tax_input'      => $terms,
 				'comment_status' => 'closed',
 			)
 		);
@@ -1021,6 +1044,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		}
+
+		// update tags.
+		if ( function_exists( 'bb_add_topic_tags' ) ) {
+			bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id() );
 		}
 
 		/** Trash Check */
@@ -1148,16 +1176,16 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() && ! bbp_allow_anonymous() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() || bbp_allow_anonymous() ) {
+			$retval = true;
 		}
 
 		/**
@@ -1273,11 +1301,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Remove kses filters from title and content for capable users.
-		if ( current_user_can( 'unfiltered_html' ) ) {
-			remove_filter( 'bbp_edit_topic_pre_title', 'wp_filter_kses' );
-			remove_filter( 'bbp_edit_topic_pre_content', 'bbp_encode_bad', 10 );
-			remove_filter( 'bbp_edit_topic_pre_content', 'bbp_filter_kses', 30 );
-		}
+		remove_filter( 'bbp_new_topic_pre_title', 'wp_filter_kses' );
+		remove_filter( 'bbp_new_topic_pre_content', 'bbp_encode_bad', 10 );
 
 		/** Topic Forum */
 		// Forum id was not passed.
@@ -1415,6 +1440,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					! empty( $request['bbp_media_gif']['url'] ) &&
 					! empty( $request['bbp_media_gif']['mp4'] )
 				)
+				|| (
+					function_exists( 'bp_is_forums_video_support_enabled' )
+					&& false !== bp_is_forums_video_support_enabled()
+					&& ! empty( $request['bbp_videos'] )
+				)
 			)
 		) {
 			return new WP_Error(
@@ -1427,8 +1457,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		$topic_forum = ! empty( $forum_id ) ? $forum_id : 0;
-		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bp_user_has_access_upload_media' ) ) {
-			$can_send_media = bp_user_has_access_upload_media( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
@@ -1440,8 +1470,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bp_user_has_access_upload_document' ) ) {
-			$can_send_document = bp_user_has_access_upload_document( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
@@ -1453,8 +1483,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bp_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bp_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
@@ -1541,7 +1571,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				'post_parent'  => $forum_id,
 				'post_author'  => $topic_author,
 				'post_type'    => bbp_get_topic_post_type(),
-				'tax_input'    => $terms,
 			)
 		);
 
@@ -1590,6 +1619,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		}
+
+		// update tags.
+		if ( function_exists( 'bb_add_topic_tags' ) ) {
+			bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 		}
 
 		// Update counts, etc...
@@ -1707,25 +1741,21 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() && ! bbp_allow_anonymous() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update a topic.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval ) {
+		if ( is_user_logged_in() || bbp_allow_anonymous() ) {
 			$retval = $this->get_item_permissions_check( $request );
 		}
 
 		if ( true === $retval ) {
-			$topic = bbp_get_topic( $request['id'] );
-			if ( bbp_get_user_id( 0, true, true ) !== $topic->post_author && ! current_user_can( 'delete_topic', $request['id'] ) ) {
+			$topic = bbp_get_topic( $request->get_param( 'id' ) );
+			if ( bbp_get_user_id( 0, true, true ) !== $topic->post_author && ! current_user_can( 'edit_topic', $request->get_param( 'id' ) ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to update this topic.', 'buddyboss' ),
@@ -1805,30 +1835,26 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval ) {
+		if ( is_user_logged_in() ) {
 			$retval = $this->get_item_permissions_check( $request );
-		}
 
-		if ( true === $retval && ! current_user_can( 'delete_topic', $request['id'] ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this topic.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( ! current_user_can( 'delete_topic', $request->get_param( 'id' ) ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this topic.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -2017,6 +2043,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		remove_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
@@ -2026,6 +2053,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
 		add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
@@ -2467,6 +2495,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'rand',
 					'popular',
 					'activity',
+					'include'
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -2475,7 +2504,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$params['status'] = array(
 			'description'       => __( 'Limit result set to topic assigned a specific status.', 'buddyboss' ),
-			'default'           => array( 'publish', 'private' ),
 			'type'              => 'array',
 			'items'             => array(
 				'type' => 'string',
@@ -2647,7 +2675,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				)
 			),
 			'moderate'     => ! empty( $topic ) && current_user_can( 'moderate', $topic_id ),
-			'reply'        => ! empty( $topic ) && bbp_current_user_can_publish_replies() && $this->forum_endpoint->can_access_content( $form_id, true ),
+			'reply'        => $this->can_reply( $topic->ID, $form_id ),
 			'trash'        => ! empty( $topic ) && current_user_can( 'delete_topic', $topic->ID ),
 		);
 	}
@@ -2829,5 +2857,30 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		// Filter & return.
 		return apply_filters( 'bbp_sanitize_search_request', $retval, $query_arg );
+	}
+
+	/**
+	 * Verify if user is able to add topic reply or not.
+	 *
+	 * @param int $topic_id Topic ID.
+	 * @param int $forum_id Forum ID.
+	 *
+	 * @return bool
+	 */
+	public function can_reply( $topic_id, $forum_id ) {
+
+		if ( empty( $topic_id ) || empty( $forum_id ) ) {
+			return false;
+		}
+
+		if ( bbp_is_user_keymaster() ) {
+			return true;
+		}
+
+		if ( ! bbp_is_topic_closed( $topic_id ) && ! bbp_is_forum_closed( $forum_id ) && bbp_current_user_can_publish_replies() && $this->forum_endpoint->can_access_content( $forum_id, true ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }

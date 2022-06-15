@@ -134,7 +134,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [exclude] Ensure result set excludes specific member IDs.
 	 * @apiParam {Boolean} [exclude_admins=true] Whether results should exclude group admins and mods.
 	 * @apiParam {Boolean} [exclude_banned=true] Whether results should exclude banned group members.
-	 * @apiParam {String=invite,invite-friends,invited} [scope] Limit result set to items with a specific scope.
+	 * @apiParam {String=invite,invite-friends,invited,message} [scope] Limit result set to items with a specific scope.
 	 */
 	public function get_items( $request ) {
 		$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
@@ -171,7 +171,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 
-		if ( ! empty( $request['scope'] ) ) {
+		if ( ! empty( $request['scope'] ) && 'message' !== $request['scope'] ) {
 
 			$group_potential_invites = $this->bp_rest_get_group_potential_invites( $group, $request );
 
@@ -201,6 +201,13 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			$response = bp_rest_response_add_total_headers( $response, $member_query->total_users, $args['per_page'] );
 
 		} else {
+
+			if ( ! empty( $request['scope'] ) && 'message' === $request['scope'] ) {
+				/**
+				 * Action to apply hook for the member list based on group access.
+				 */
+				do_action( 'bb_rest_before_get_group_members', $args, $request );
+			}
 
 			// Get our members.
 			$members = groups_get_group_members( $args );
@@ -355,62 +362,54 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to join a group.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to join a group.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		$user = bp_rest_get_user( $request['user_id'] );
-
-		if ( true === $retval && ! $user instanceof WP_User ) {
-			$retval = new WP_Error(
-				'bp_rest_group_member_invalid_id',
-				__( 'Invalid group member ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
-		if ( true === $retval && ! $group instanceof BP_Groups_Group ) {
-			$retval = new WP_Error(
-				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		// Site administrators can do anything.
-		if ( true === $retval && bp_current_user_can( 'bp_moderate' ) ) {
+		if ( is_user_logged_in() || bp_current_user_can( 'bp_moderate' ) ) {
 			$retval = true;
-		} else {
+			$user   = bp_rest_get_user( $request['user_id'] );
+			$group  = $this->groups_endpoint->get_group_object( $request['group_id'] );
 
-			$loggedin_user_id = bp_loggedin_user_id();
+			if ( ! $user instanceof WP_User ) {
+				$retval = new WP_Error(
+					'bp_rest_group_member_invalid_id',
+					__( 'Invalid group member ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! $group instanceof BP_Groups_Group ) {
+				$retval = new WP_Error(
+					'bp_rest_group_invalid_id',
+					__( 'Invalid group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_current_user_can( 'bp_moderate' ) ) {
 
-			// Users may only freely join public groups.
-			if ( true === $retval && (
+				$loggedin_user_id = bp_loggedin_user_id();
+
+				// Users may only freely join public groups.
+				if (
 					! bp_current_user_can( 'groups_join_group', array( 'group_id' => $group->id ) )
 					|| groups_is_user_member( $loggedin_user_id, $group->id ) // As soon as they are not already members.
 					|| groups_is_user_banned( $loggedin_user_id, $group->id ) // And as soon as they are not banned from it.
 					|| $loggedin_user_id !== $user->ID // You can only add yourself to a group.
-				) ) {
-				$retval = new WP_Error(
-					'bp_rest_group_member_failed_to_join',
-					__( 'Could not join the group.', 'buddyboss' ),
-					array(
-						'status' => 500,
-					)
-				);
+				) {
+					$retval = new WP_Error(
+						'bp_rest_group_member_failed_to_join',
+						__( 'Could not join the group.', 'buddyboss' ),
+						array(
+							'status' => 500,
+						)
+					);
+				}
 			}
 		}
 
@@ -548,7 +547,15 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+
+		$retval = $error;
 
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
@@ -558,55 +565,60 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
-		}
-
-		$user = bp_rest_get_user( $request['user_id'] );
-
-		if ( true === $retval && ! $user instanceof WP_User ) {
-			$retval = new WP_Error(
-				'bp_rest_group_member_invalid_id',
-				__( 'Invalid group member ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
-		if ( true === $retval && ! $group instanceof BP_Groups_Group ) {
-			$retval = new WP_Error(
-				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		// Site administrators can do anything.
-		if ( true === $retval && bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = true;
 		} else {
-
+			$user             = bp_rest_get_user( $request['user_id'] );
 			$loggedin_user_id = bp_loggedin_user_id();
-			if ( true === $retval && in_array( $request['action'], array( 'ban', 'unban', 'promote', 'demote' ), true ) ) {
-				if ( ! groups_is_user_admin( $loggedin_user_id, $group->id ) && ! groups_is_user_mod( $loggedin_user_id, $group->id ) ) {
-					$messages = array(
-						'ban'     => __( 'Sorry, you are not allowed to ban this group member.', 'buddyboss' ),
-						'unban'   => __( 'Sorry, you are not allowed to unban this group member.', 'buddyboss' ),
-						'promote' => __( 'Sorry, you are not allowed to promote this group member.', 'buddyboss' ),
-						'demote'  => __( 'Sorry, you are not allowed to demote this group member.', 'buddyboss' ),
-					);
 
+			if ( ! $user instanceof WP_User ) {
+				$retval = new WP_Error(
+					'bp_rest_group_member_invalid_id',
+					__( 'Invalid group member ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} else {
+				$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
+
+				if ( ! $group instanceof BP_Groups_Group ) {
 					$retval = new WP_Error(
-						'bp_rest_group_member_cannot_' . $request['action'],
-						$messages[ $request['action'] ],
+						'bp_rest_group_invalid_id',
+						__( 'Invalid group ID.', 'buddyboss' ),
 						array(
-							'status' => rest_authorization_required_code(),
+							'status' => 404,
 						)
 					);
-				} else {
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 					$retval = true;
+				} elseif ( in_array( $request['action'], array( 'ban', 'unban', 'promote', 'demote' ), true ) ) {
+					if ( groups_is_user_admin( $loggedin_user_id, $group->id ) || groups_is_user_mod( $loggedin_user_id, $group->id ) ) {
+						if ( $loggedin_user_id !== $user->ID ) {
+							$retval = true;
+						} else {
+							$group_admins = groups_get_group_admins( $group->id );
+
+							if ( 1 !== count( $group_admins ) ) {
+								$retval = true;
+							} else {
+								$retval = $error;
+							}
+						}
+					} else {
+						$messages = array(
+							'ban'     => __( 'Sorry, you are not allowed to ban this group member.', 'buddyboss' ),
+							'unban'   => __( 'Sorry, you are not allowed to unban this group member.', 'buddyboss' ),
+							'promote' => __( 'Sorry, you are not allowed to promote this group member.', 'buddyboss' ),
+							'demote'  => __( 'Sorry, you are not allowed to demote this group member.', 'buddyboss' ),
+						);
+
+						$retval = new WP_Error(
+							'bp_rest_group_member_cannot_' . $request['action'],
+							$messages[ $request['action'] ],
+							array(
+								'status' => rest_authorization_required_code(),
+							)
+						);
+					}
 				}
 			}
 		}
@@ -710,7 +722,14 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$error  = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+		$retval = $error;
 
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
@@ -720,63 +739,44 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
-		}
-
-		$user = bp_rest_get_user( $request['user_id'] );
-
-		if ( true === $retval && ! $user instanceof WP_User ) {
-			return new WP_Error(
-				'bp_rest_group_member_invalid_id',
-				__( 'Invalid group member ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
-		if ( true === $retval && ! $group instanceof BP_Groups_Group ) {
-			$retval = new WP_Error(
-				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		// Site administrators can do anything.
-		if ( true === $retval && bp_current_user_can( 'bp_moderate' ) ) {
-			$retval = true;
-		} elseif ( true === $retval ) {
-
+		} else {
+			$user             = bp_rest_get_user( $request['user_id'] );
 			$loggedin_user_id = bp_loggedin_user_id();
 
-			if ( $user->ID !== $loggedin_user_id ) {
-				if ( true === $retval && ! groups_is_user_admin( $loggedin_user_id, $group->id ) && ! groups_is_user_mod( $loggedin_user_id, $group->id ) ) {
-					$retval = new WP_Error(
-						'bp_rest_authorization_required',
-						__( 'Sorry, you need to be logged in to view a group membership.', 'buddyboss' ),
-						array(
-							'status' => rest_authorization_required_code(),
-						)
-					);
-				}
+			if ( ! $user instanceof WP_User ) {
+				return new WP_Error(
+					'bp_rest_group_member_invalid_id',
+					__( 'Invalid group member ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
 			} else {
-				// Special case for self-removal: don't allow if it'd leave a group with no admins.
-				$user             = bp_rest_get_user( $request['user_id'] );
-				$group            = $this->groups_endpoint->get_group_object( $request['group_id'] );
-				$loggedin_user_id = bp_loggedin_user_id();
+				$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
 
-				$group_admins = groups_get_group_admins( $group->id );
-				if ( true === $retval && 1 === count( $group_admins ) && $loggedin_user_id === $group_admins[0]->user_id && $user->ID === $loggedin_user_id ) {
+				if ( ! $group instanceof BP_Groups_Group ) {
 					$retval = new WP_Error(
-						'bp_rest_authorization_required',
-						__( 'Sorry, you need to be logged in to view a group membership.', 'buddyboss' ),
+						'bp_rest_group_invalid_id',
+						__( 'Invalid group ID.', 'buddyboss' ),
 						array(
-							'status' => rest_authorization_required_code(),
+							'status' => 404,
 						)
 					);
+				} elseif ( bp_current_user_can( 'bp_moderate' ) || ( $user->ID !== $loggedin_user_id && groups_is_user_admin( $loggedin_user_id, $group->id ) ) ) {
+					$retval = true;
+				} elseif ( $user->ID === $loggedin_user_id && ! groups_is_user_banned( $user->ID, $group->id ) ) {
+					$group_admins = groups_get_group_admins( $group->id );
+
+					// Special case for self-removal: don't allow if it'd leave a group with no admins.
+					if ( in_array( $loggedin_user_id, wp_list_pluck( $group_admins, 'user_id' ), true ) ) {
+						if ( 1 !== count( $group_admins ) ) {
+							$retval = true;
+						} else {
+							$retval = $error;
+						}
+					} else {
+						$retval = true;
+					}
 				}
 			}
 		}
@@ -806,6 +806,11 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		$context     = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$member_data = $this->members_endpoint->user_data( $user, $context );
 
+		$is_friends_connection = true;
+		if ( bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message() && ! friends_check_friendship( bp_loggedin_user_id(), $group_member->user_id ) ) {
+			$is_friends_connection = false;
+		}
+
 		// Merge both info.
 		$data = array_merge(
 			$member_data,
@@ -817,7 +822,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				'date_modified'      => bp_rest_prepare_date_response( $group_member->date_modified ),
 				'role'               => '',
 				'plural_role'        => '',
-				'send_group_message' => ( bp_is_active( 'messages' ) && bp_loggedin_user_id() && apply_filters( 'bp_user_can_send_group_message', true, $group_member->user_id, bp_loggedin_user_id() ) ),
+				'send_group_message' => ( bp_is_active( 'messages' ) && bp_loggedin_user_id() && apply_filters( 'bb_user_can_send_group_message', true, $group_member->user_id, bp_loggedin_user_id() ) && $is_friends_connection ),
 			)
 		);
 
@@ -1117,7 +1122,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss' ),
 			'type'              => 'string',
 			'context'           => array( 'view' ),
-			'enum'              => array( 'invite', 'invite-friends', 'invited' ),
+			'enum'              => array( 'invite', 'invite-friends', 'invited', 'message' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);

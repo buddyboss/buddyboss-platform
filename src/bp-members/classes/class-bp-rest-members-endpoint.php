@@ -149,7 +149,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
-	 * @apiParam {String=active,newest,alphabetical,random,online,popular} [type=newest] Shorthand for certain orderby/order combinations.
+	 * @apiParam {String=active,newest,alphabetical,random,online,popular,include} [type=newest] Shorthand for certain orderby/order combinations.
 	 * @apiParam {Number} [user_id] Limit results to friends of a user.
 	 * @apiParam {Arrays} [user_ids] Pass IDs of users to limit result set.
 	 * @apiParam {Array} [include] Ensure result set includes specific IDs.
@@ -241,14 +241,16 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				$users           = apply_filters( 'bp_ps_search_results', $users );
 				$args['include'] = implode( ',', $users );
 			}
+		} else if ( ! empty( $args['include'] ) ) {
+			$args['type'] = 'in';
 		}
 
 		if (
 			(
 				empty( $request['scope'] )
 				|| ( isset( $request['scope'] ) && 'all' === $request['scope'] )
-				|| empty( $request['bp_ps_search'] )
 			)
+			&& empty( $request['bp_ps_search'] )
 			&& function_exists( 'bp_get_users_of_removed_member_types' )
 			&& ! empty( bp_get_users_of_removed_member_types() )
 		) {
@@ -390,16 +392,16 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! ( is_user_logged_in() && current_user_can( 'bp_moderate' ) ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( ( is_user_logged_in() && current_user_can( 'bp_moderate' ) ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -422,8 +424,17 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
-		$user   = bp_rest_get_user( $request['id'] );
+		$error  = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+		$retval = $error;
+
+		$user             = bp_rest_get_user( $request['id'] );
+		$member_type_edit = isset( $request['member_type'] );
 
 		if ( ! $user instanceof WP_User ) {
 			$retval = new WP_Error(
@@ -433,21 +444,30 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'status' => 404,
 				)
 			);
-		}
+		} else {
+			$action = 'delete';
 
-		$action = 'delete';
-		if ( 'DELETE' !== $request->get_method() ) {
-			$action = 'update';
-		}
+			if ( 'DELETE' !== $request->get_method() ) {
+				$action = 'update';
+			}
 
-		if ( true === $retval && ! $this->can_manage_member( $user, $action ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( get_current_user_id() === $user->ID ) {
+				if ( $member_type_edit && ! bp_current_user_can( 'bp_moderate' ) ) {
+					$retval = $error;
+				} else {
+					$retval = parent::update_item_permissions_check( $request );
+				}
+			} elseif ( ! $this->can_manage_member( $user, $action ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} else {
+				$retval = true;
+			}
 		}
 
 		/**
@@ -543,41 +563,38 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval  = true;
+			$user_id = (int) $request['id'];
+			if ( empty( $user_id ) ) {
+				$user_id = bp_loggedin_user_id();
+			}
 
-		$user_id = (int) $request['id'];
-		if ( empty( $user_id ) ) {
-			$user_id = bp_loggedin_user_id();
-		}
-
-		if ( true === $retval && bp_loggedin_user_id() !== absint( $user_id ) && ! bp_current_user_can( 'delete_users' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_user_cannot_delete',
-				__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && function_exists( 'bp_disable_account_deletion' ) && bp_disable_account_deletion() ) {
-			$retval = new WP_Error(
-				'bp_rest_user_cannot_delete',
-				__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( bp_loggedin_user_id() !== absint( $user_id ) && ! bp_current_user_can( 'delete_users' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_user_cannot_delete',
+					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif ( function_exists( 'bp_disable_account_deletion' ) && bp_disable_account_deletion() ) {
+				$retval = new WP_Error(
+					'bp_rest_user_cannot_delete',
+					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -680,7 +697,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function user_data( $user, $context = 'view' ) {
-		$data = array(
+		$user_data = get_userdata( $user->ID );
+		$data      = array(
 			'id'                 => $user->ID,
 			'name'               => $user->display_name,
 			'user_login'         => $user->user_login,
@@ -689,13 +707,26 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'roles'              => array(),
 			'capabilities'       => array(),
 			'extra_capabilities' => array(),
-			'registered_date'    => bp_rest_prepare_date_response( get_userdata( $user->ID )->user_registered ),
+			'registered_date'    => bp_rest_prepare_date_response( $user_data->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
-			'xprofile'           => $this->xprofile_data( $user->ID ),
+			'xprofile'           => array(),
 			'followers'          => count( $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) ) ),
 			'following'          => count( $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) ) ),
+			'is_wp_admin'        => false,
 		);
+
+		// Fetch user roles.
+		$user_roles = ! empty( $user->ID ) ? $user_data->roles : '';
+		if ( ! empty( $user_roles ) ) {
+			// If user is admin then set true, otherwise it should be false.
+			$data['is_wp_admin'] = in_array( 'administrator', $user_roles, true ) ? true : false;
+		}
+
+		// Load xprofile data when required.
+		if ( 'embed' !== $context ) {
+			$data['xprofile'] = $this->xprofile_data( $user->ID );
+		}
 
 		$data['friendship_status'] = (
 			(
@@ -729,7 +760,6 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		if ( 'edit' === $context ) {
-			$user_data                  = get_userdata( $user->ID );
 			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
 			$data['roles']              = (array) array_values( $user_data->roles );
 			$data['capabilities']       = (array) array_keys( $user_data->allcaps );
@@ -765,7 +795,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		// Cover Image.
-		$data['cover_url'] = (
+		$data['cover_url']        = (
 			empty( bp_disable_cover_image_uploads() )
 			? bp_attachments_get_attachment(
 				'url',
@@ -776,6 +806,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			)
 			: false
 		);
+		$data['cover_is_default'] = ! bp_attachments_get_user_has_cover_image( $user->ID );
 
 		// Fallback.
 		if ( false === $data['member_types'] ) {
@@ -790,6 +821,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$member_types = array();
 			foreach ( $data['member_types'] as $name ) {
 				$member_types[ $name ] = bp_get_member_type_object( $name );
+
+				// Member type's label background and text color.
+				$label_color_data = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $name ) : '';
+				if ( ! empty( $label_color_data ) ) {
+					$member_types[ $name ]->label_colors = $label_color_data;
+				}
 			}
 			$data['member_types'] = $member_types;
 		}
@@ -882,12 +919,14 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					 * --Added support for display name format support from platform.
 					 */
 
+					$field_value = $item->data->value;
+
 					$data['groups'][ $group->id ]['fields'][ $item->id ] = array(
 						'name'  => $item->name,
 						'value' => array(
-							'raw'          => $fields_endpoint->get_profile_field_raw_value( $item->data->value, $item ),
-							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $item->data->value, $item ),
-							'rendered'     => $fields_endpoint->get_profile_field_rendered_value( $item->data->value, $item ),
+							'raw'          => $fields_endpoint->get_profile_field_raw_value( $field_value, $item ),
+							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $field_value, $item ),
+							'rendered'     => $fields_endpoint->get_profile_field_rendered_value( $field_value, $item ),
 						),
 					);
 				}
@@ -1157,6 +1196,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
+				'is_wp_admin'        => array(
+					'description' => __( 'Whether the member is an administrator.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
 			),
 		);
 
@@ -1166,7 +1211,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['full'] = array(
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -1174,7 +1219,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['thumb'] = array(
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -1198,6 +1243,13 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$schema['properties']['cover_url'] = array(
 			'description' => __( 'Cover images URL for the member.', 'buddyboss' ),
 			'type'        => 'string',
+			'context'     => array( 'embed', 'view', 'edit' ),
+			'readonly'    => true,
+		);
+
+		$schema['properties']['cover_is_default'] = array(
+			'description' => __( 'Whether to check member has default cover image or not.', 'buddyboss' ),
+			'type'        => 'boolean',
 			'context'     => array( 'embed', 'view', 'edit' ),
 			'readonly'    => true,
 		);
@@ -1231,7 +1283,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'description'       => __( 'Shorthand for certain orderby/order combinations.', 'buddyboss' ),
 			'default'           => 'newest',
 			'type'              => 'string',
-			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'online', 'popular' ),
+			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'online', 'popular', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -1331,6 +1383,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$copied_arr = array();
 
 		foreach ( $fields as $f ) {
+			// Disable search for some individual field.
+			if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
+				continue;
+			}
+
 			if ( ! isset( $f->filter ) ) {
 				continue;
 			}
