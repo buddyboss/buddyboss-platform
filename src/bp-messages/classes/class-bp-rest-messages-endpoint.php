@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Current Message ID.
+	 *
+	 * @var integer
+	 */
+	protected $message_id;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -23,6 +30,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base = buddypress()->messages->id;
+
+		$this->message_id = 0;
 
 		add_filter( 'rest_post_dispatch', array( $this, 'bp_rest_post_dispatch' ), 10, 3 );
 	}
@@ -81,15 +90,21 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/search-thread',
 			array(
-				'args'   => array(
-					'user_id'      => array(
+				'args' => array(
+					'user_id'              => array(
 						'description' => __( 'Sender users ID.', 'buddyboss' ),
 						'type'        => 'integer',
 					),
-					'recipient_id' => array(
+					'recipient_id'         => array(
 						'description' => __( 'Thread recipient ID.', 'buddyboss' ),
 						'type'        => 'integer',
 						'required'    => true,
+					),
+					'include_group_thread' => array(
+						'description' => __( 'Include group thread or not.', 'buddyboss' ),
+						'type'        => 'boolean',
+						'required'    => false,
+						'default'     => false,
 					),
 				),
 				array(
@@ -551,8 +566,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$unread_query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, $thread_id, $message_object->sender_id ); // phpcs:ignore
 		$wpdb->query( $unread_query ); // phpcs:ignore
 
-		$cache_key = "{$thread_id}99999999";
-		wp_cache_delete( $cache_key, 'bp_messages_threads' );
+		// Delete thread cache.
+		if ( function_exists( 'bp_messages_delete_thread_paginated_messages_cache' ) ) {
+			bp_messages_delete_thread_paginated_messages_cache( $thread_id );
+		} else {
+			$cache_key = "{$thread_id}99999999";
+			wp_cache_delete( $cache_key, 'bp_messages_threads' );
+		}
 
 		// Make sure to get the newest message to update REST Additional fields.
 		$thread        = $this->get_thread_object( $thread_id, $request );
@@ -750,10 +770,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Search Existing thread by user and recipient for the message.
 	 *
+	 * @since 0.1.0
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/messages/search-thread Search Thread
 	 * @apiName        SearchBBThread
@@ -763,10 +784,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {number} user_id Sender users ID.
 	 * @apiParam {number} recipient_id Thread recipient ID.
+	 * @apiParam {Boolean} include_group_thread Include group thread or not.
 	 */
 	public function search_thread_items( $request ) {
-		$user_id      = $request->get_param( 'user_id' );
-		$recipient_id = (array) $request->get_param( 'recipient_id' );
+		$user_id            = $request->get_param( 'user_id' );
+		$recipient_id       = (array) $request->get_param( 'recipient_id' );
+		$allow_group_thread = (bool) $request->get_param( 'include_group_thread' );
 
 		if ( empty( $user_id ) ) {
 			$user_id = bp_loggedin_user_id();
@@ -775,10 +798,20 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$retval = array();
 
 		if ( class_exists( 'BP_Messages_Message' ) && method_exists( 'BP_Messages_Message', 'get_existing_thread' ) ) {
-			$thread_id = BP_Messages_Message::get_existing_thread( $recipient_id, $user_id );
+			$threads = BP_Messages_Message::get_existing_threads( $recipient_id, $user_id );
 
-			if ( ! empty( $thread_id ) ) {
-				$thread = $this->get_thread_object( $thread_id, $request );
+			if ( ! empty( $threads ) && false === $allow_group_thread ) {
+				foreach ( $threads as $key => $thread ) {
+					$is_group_message_thread = bb_messages_is_group_thread( (int) $thread->thread_id );
+					if ( $is_group_message_thread ) {
+						unset( $threads[ $key ] );
+					}
+				}
+			}
+
+			if ( ! empty( $threads ) ) {
+				$thread_id = current( $threads )->thread_id;
+				$thread    = $this->get_thread_object( $thread_id, $request );
 
 				$retval = $this->prepare_response_for_collection(
 					$this->prepare_item_for_response( $thread, $request )
@@ -1434,6 +1467,10 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$message->message = $message->message;
 		}
 
+		$this->message_id = (int) $message->id;
+
+		add_filter( 'embed_post_id', array( $this, 'bb_get_the_thread_message_id' ) );
+
 		$data = array(
 			'id'                        => (int) $message->id,
 			'thread_id'                 => (int) $message->thread_id,
@@ -1457,6 +1494,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'group_message_fresh'       => $group_message_fresh,
 			'message_from'              => $message_from,
 		);
+
+		remove_filter( 'embed_post_id', array( $this, 'bb_get_the_thread_message_id' ) );
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$user_id = bp_loggedin_user_id();
@@ -1781,7 +1820,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
 
-		$response->add_links( $this->prepare_links( $thread ) );
+		$response->add_links( $this->prepare_links( $thread, $response ) );
 
 		/**
 		 * Filter a thread value returned from the API.
@@ -1798,12 +1837,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_Messages_Thread $thread Thread object.
+	 * @param BP_Messages_Thread $thread   Thread object.
+	 * @param WP_REST_Response   $response Rest response.
 	 *
 	 * @return array Links for the given thread.
 	 * @since 0.1.0
 	 */
-	protected function prepare_links( $thread ) {
+	protected function prepare_links( $thread, $response ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 
 		// Entity meta.
@@ -1825,6 +1865,14 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					'href' => rest_url( $starred_base . $message->id ),
 				);
 			}
+		}
+
+		$data = $response->get_data();
+		if ( ! empty( $data ) && ! empty( $data['is_group'] ) && bp_is_active( 'groups' ) ) {
+			$links['group'] = array(
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, buddypress()->groups->id, $data['is_group'] ) ),
+				'embeddable' => true,
+			);
 		}
 
 		/**
@@ -2011,24 +2059,24 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'title'      => 'bp_messages',
 			'type'       => 'object',
 			'properties' => array(
-				'id'                     => array(
+				'id'                      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the Thread.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'message_id'             => array(
+				'message_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The ID of the latest message of the Thread.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'last_sender_id'         => array(
+				'last_sender_id'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The ID of latest sender of the Thread.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'subject'                => array(
+				'subject'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Title of the latest message of the Thread.', 'buddyboss' ),
 					'type'        => 'object',
@@ -2052,7 +2100,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'excerpt'                => array(
+				'excerpt'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Summary of the latest message of the Thread.', 'buddyboss' ),
 					'type'        => 'object',
@@ -2074,7 +2122,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'message'                => array(
+				'message'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Content of the latest message of the Thread.', 'buddyboss' ),
 					'type'        => 'object',
@@ -2097,27 +2145,27 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'date'                   => array(
+				'date'                    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( "The date the latest message of the Thread, in the site's timezone.", 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
-				'start_date'             => array(
+				'start_date'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( "The date the first message of the Thread, in the site's timezone.", 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
-				'unread_count'           => array(
+				'unread_count'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Total count of unread messages into the Thread for the requested user.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'sender_ids'             => array(
+				'sender_ids'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The list of user IDs for all messages in the Thread.', 'buddyboss' ),
 					'readonly'    => true,
@@ -2126,13 +2174,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						'type' => 'integer',
 					),
 				),
-				'current_user'           => array(
+				'current_user'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Current Logged in user\'s ID.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'avatar'                 => array(
+				'avatar'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Avatar URLs for the author of the activity.', 'buddyboss' ),
 					'type'        => 'object',
@@ -2141,75 +2189,75 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						'full'  => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
 							/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-							'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
+							'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 							'type'        => 'string',
 							'format'      => 'uri',
 						),
 						'thumb' => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
 							/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-							'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
+							'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 							'type'        => 'string',
 							'format'      => 'uri',
 						),
 					),
 				),
-				'is_group'               => array(
+				'is_group'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Group ID if message sent from group.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'is_group_thread'        => array(
+				'is_group_thread'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether is a group thread or not.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
-				'group_name'             => array(
+				'group_name'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Group name if thread created from group.  ', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'group_link'             => array(
+				'group_link'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The permalink to the Group on the site.', 'buddyboss' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'readonly'    => true,
 				),
-				'group_message_users'    => array(
+				'group_message_users'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Thread for all group users or selected one.', 'buddyboss' ),
 					'type'        => 'string',
 				),
-				'group_message_type'     => array(
+				'group_message_type'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Thread type its from all or private one.', 'buddyboss' ),
 					'type'        => 'string',
 				),
-				'group_message_from'     => array(
+				'group_message_from'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Message from group or not.', 'buddyboss' ),
 					'type'        => 'string',
 				),
-				'recipients_count'       => array(
+				'recipients_count'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Recipient users count.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'recipients_per_page'    => array(
+				'recipients_per_page'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Number of recipient loading per page.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'recipients_total_pages' => array(
+				'recipients_total_pages'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Total number of pages for the recipients.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'recipients'             => array(
+				'recipients'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The list of recipient User Objects involved into the Thread.', 'buddyboss' ),
 					'type'        => 'array',
@@ -2245,7 +2293,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						'type' => 'object',
 					),
 				),
-				'starred_message_ids'    => array(
+				'starred_message_ids'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'List of starred message IDs.', 'buddyboss' ),
 					'readonly'    => true,
@@ -2541,40 +2589,54 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private.
 
 			if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
+
+				$group_avatar = array(
+					'thumb' => '',
+					'full'  => '',
+				);
+
 				if ( bp_is_active( 'groups' ) ) {
-					$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
-					$group_avatar = array(
-						'thumb' => bp_core_fetch_avatar(
-							array(
-								'html'    => false,
-								'object'  => 'group',
-								'item_id' => $group_id,
-								'type'    => 'thumb',
-							)
-						),
-						'full'  => bp_core_fetch_avatar(
-							array(
-								'html'    => false,
-								'object'  => 'group',
-								'item_id' => $group_id,
-								'type'    => 'full',
-							)
-						),
-					);
+					$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+
+					if ( ! bp_disable_group_avatar_uploads() ) {
+						$group_avatar = array(
+							'thumb' => bp_core_fetch_avatar(
+								array(
+									'html'    => false,
+									'object'  => 'group',
+									'item_id' => $group_id,
+									'type'    => 'thumb',
+								)
+							),
+							'full'  => bp_core_fetch_avatar(
+								array(
+									'html'    => false,
+									'object'  => 'group',
+									'item_id' => $group_id,
+									'type'    => 'full',
+								)
+							),
+						);
+					} else {
+						$group_avatar = array(
+							'thumb' => function_exists( 'bb_get_buddyboss_group_avatar' ) ? bb_get_buddyboss_group_avatar( 'thumb' ) : buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss-50.png',
+							'full'  => function_exists( 'bb_get_buddyboss_group_avatar' ) ? bb_get_buddyboss_group_avatar() : buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png',
+						);
+					}
+
 				} else {
 					$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 					$groups_table = $prefix . 'bp_groups';
 					// phpcs:ignore
-					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
-					$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
-					$legacy_group_avatar_name = '-groupavatar-full';
-					$legacy_user_avatar_name  = '-avatar2';
+					$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 
-					if ( ! empty( $group_name ) ) {
-						$directory         = 'group-avatars';
-						$avatar_size       = '-bpfull';
-						$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
-						$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+					if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
+						$directory                = 'group-avatars';
+						$avatar_size              = '-bpfull';
+						$legacy_group_avatar_name = '-groupavatar-full';
+						$legacy_user_avatar_name  = '-avatar2';
+						$avatar_folder_dir        = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+						$avatar_folder_url        = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
 
 						$avatar = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
 						if ( '' !== $avatar ) {
@@ -2583,6 +2645,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 								'full'  => $avatar,
 							);
 						}
+					} elseif ( function_exists( 'bb_attachments_get_default_profile_group_avatar_image' ) ) {
+						$group_avatar = array(
+							'thumb' => bb_attachments_get_default_profile_group_avatar_image(
+								array(
+									'object' => 'group',
+									'type'   => 'thumb',
+								)
+							),
+							'full'  => bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ),
+						);
 					}
 				}
 
@@ -2593,5 +2665,20 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		return apply_filters( 'bp_rest_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
+	}
+
+	/**
+	 * Update the current message ID.
+	 *
+	 * @param int $message_id Message ID.
+	 *
+	 * @return int
+	 */
+	public function bb_get_the_thread_message_id( $message_id ) {
+		if ( 0 === $this->message_id ) {
+			return $message_id;
+		}
+
+		return $this->message_id;
 	}
 }

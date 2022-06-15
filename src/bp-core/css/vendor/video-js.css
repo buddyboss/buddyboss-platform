@@ -1126,7 +1126,7 @@ body.vjs-full-window {
   vertical-align: middle;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: cover;
+  background-size: contain;
   background-color: transparent;
   cursor: pointer;
   margin: 0;

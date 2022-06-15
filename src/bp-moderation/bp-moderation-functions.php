@@ -316,16 +316,17 @@ function bp_moderation_get_report_button( $args, $html = true ) {
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int    $item_id   Item id.
- * @param string $item_type Item type.
+ * @param int    $item_id          Item id.
+ * @param string $item_type        Item type.
+ * @param int    $blocking_user_id The ID for the user who blocked user.
  *
  * @return bool
  */
-function bp_moderation_report_exist( $item_id, $item_type ) {
+function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
 	$response = false;
 
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
-		$moderation = new BP_Moderation( $item_id, $item_type );
+		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
 	}
 
@@ -337,16 +338,17 @@ function bp_moderation_report_exist( $item_id, $item_type ) {
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int $user_id The ID for the user.
+ * @param int $user_id          The ID for the user.
+ * @param int $blocking_user_id The ID for the user who blocked user.
  *
  * @return bool True if suspended, otherwise false.
  */
-function bp_moderation_is_user_blocked( $user_id ) {
+function bp_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
 	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 		return false;
 	}
 
-	return bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type );
+	return bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type, $blocking_user_id );
 }
 
 /**
@@ -1009,7 +1011,6 @@ function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type
  * @return bool|BP_Email|WP_Error
  */
 function bp_moderation_member_suspend_email( $email, $tokens ) {
-
 	return bp_send_email(
 		'user-moderation-email',
 		$email,
@@ -1040,11 +1041,11 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
 		$email,
 		array(
 			'tokens' => array(
-				'content.type'    => $tokens['content_type'],
-				'content.owner'   => $tokens['content_owner'],
-				'timesreported'   => $tokens['content_timesreported'],
-				'content.link'    => $tokens['content_link'],
-				'reportlink'      => $tokens['content_reportlink'],
+				'content.type'  => $tokens['content_type'],
+				'content.owner' => $tokens['content_owner'],
+				'timesreported' => $tokens['content_timesreported'],
+				'content.link'  => $tokens['content_link'],
+				'reportlink'    => $tokens['content_reportlink'],
 			),
 		)
 	);

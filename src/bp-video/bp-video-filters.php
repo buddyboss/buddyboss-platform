@@ -227,8 +227,8 @@ function bp_video_activity_append_video( $content, $activity ) {
 				( $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '' ),
 				( true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '' ),
 			);
+			ob_start();
 			?>
-			<?php ob_start(); ?>
 			<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
 				<?php
 				bp_get_template_part( 'video/add-video-thumbnail' );
@@ -883,12 +883,12 @@ function bp_video_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-video',
-			__( 'Repair video on the site.', 'buddyboss' ),
+			esc_html__( 'Repair videos', 'buddyboss' ),
 			'bp_video_admin_repair_video',
 		);
 		$repair_list[] = array(
 			'bp-video-forum-privacy-repair',
-			__( 'Repair forum video privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum video privacy', 'buddyboss' ),
 			'bp_video_forum_privacy_repair',
 		);
 	}
@@ -942,7 +942,7 @@ function bp_video_admin_repair_video() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );  // phpcs:ignore
+		$records_updated = sprintf( __( '%s videos updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );  // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -952,7 +952,7 @@ function bp_video_admin_repair_video() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Video update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing videos &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -981,7 +981,7 @@ function bp_video_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) ); // phpcs:ignore
+		$records_updated = sprintf( __( '%s forums video privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ); // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -989,7 +989,7 @@ function bp_video_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Forums video privacy updated %s', 'buddyboss' ); // phpcs:ignore
+		$statement = __( 'Repairing forum video privacy &hellip; %s', 'buddyboss' ); // phpcs:ignore
 
 		return array(
 			'status'  => 1,
@@ -1487,7 +1487,7 @@ function bp_video_activity_after_email_content( $activity ) {
 		$video_ids  = explode( ',', $video_ids );
 		$video_text = sprintf(
 			_n( '%s video', '%s videos', count( $video_ids ), 'buddyboss' ), // phpcs:ignore
-			number_format_i18n( count( $video_ids ) )
+			bp_core_number_format( count( $video_ids ) )
 		);
 		$content    = sprintf(
 			/* translator: 1. Activity link, 2. Activity video count */
@@ -1517,27 +1517,35 @@ function bp_video_get_edit_activity_data( $activity ) {
 
 		// Fetch video ids of activity.
 		$video_ids = bp_activity_get_meta( $activity['id'], 'bp_video_ids', true );
+		$video_id  = bp_activity_get_meta( $activity['id'], 'bp_video_id', true );
+
+		if ( ! empty( $video_ids ) && ! empty( $video_id ) ) {
+			$video_ids = $video_ids . ',' . $video_id;
+		} elseif ( ! empty( $video_id ) && empty( $video_ids ) ) {
+			$video_ids = $video_id;
+		}
 
 		if ( ! empty( $video_ids ) ) {
 			$activity['video'] = array();
 
 			$video_ids = explode( ',', $video_ids );
+			$video_ids = array_unique( $video_ids );
+			$album_id  = 0;
 
 			foreach ( $video_ids as $video_id ) {
 
-			    if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
+				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
 					continue;
 				}
 
-				$video        = new BP_Video( $video_id );
-				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
-				$thumb        = '';
-
+				$video               = new BP_Video( $video_id );
+				$get_existing        = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
+				$thumb               = '';
 				$attachment_thumb_id = bb_get_video_thumb_id( $video->attachment_id );
 
 				if ( $get_existing && $attachment_thumb_id ) {
 					$thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-poster-popup-image' );
-                }
+				}
 
 				if ( $get_existing && '' === $thumb ) {
 					$file = get_attached_file( $get_existing );
@@ -1546,7 +1554,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 						$data  = file_get_contents( $file ); // phpcs:ignore
 						$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
 					}
-                }
+				}
 
 				$activity['video'][] = array(
 					'id'          => $video_id,
@@ -1563,6 +1571,12 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'menu_order'  => $video->menu_order,
 					'video_count' => count( $video_ids ),
 				);
+
+				if ( 0 === $album_id && (int) $video->album_id > 0 ) {
+					$album_id                     = $video->album_id;
+					$activity['can_edit_privacy'] = false;
+				}
+
 			}
 		}
 	}
