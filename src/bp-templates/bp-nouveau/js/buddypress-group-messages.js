@@ -947,11 +947,6 @@ window.bp = window.bp || {};
 									$( '#group_message_content' )[0].emojioneArea.hidePicker();
 									window.group_messages_editor.checkContentChanged();
 								},
-								search_keypress: function() {
-									var _this = this;
-									var small = _this.search.val().toLowerCase();
-									_this.search.val(small);
-								},
 							}
 						}
 					);
