@@ -837,6 +837,49 @@ function bp_moderation_auto_suspend_threshold( $default = 5 ) {
 }
 
 /**
+ * Checks if Moderation Member reporting feature is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is member reporting enabled or not
+ * @uses  get_option() To get the bpm_blocking_member_reporting option
+ */
+function bp_is_moderation_member_reporting_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_moderation_member_reporting_enable', (bool) get_option( 'bpm_blocking_member_reporting', $default ) );
+}
+
+/**
+ * Checks if Moderation Member auto suspend report feature is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is auto suspend report enabled or not
+ * @uses  get_option() To get the bpm_reporting_auto_suspend option
+ */
+function bp_is_moderation_auto_suspend_report_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bpm_blocking_auto_suspend_report', $default ) );
+}
+
+/**
+ * Checks if Moderation Member auto suspend report feature is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is search autocomplete enabled or not
+ * @uses  bp_moderation_get_setting() To get the bpm_reporting_auto_suspend_threshold option
+ */
+function bp_moderation_auto_suspend_report_threshold( $default = 5 ) {
+
+	return apply_filters( 'bp_moderation_auto_suspend_threshold', (int) bp_moderation_get_setting( 'bpm_blocking_auto_suspend_report_threshold', $default ) );
+}
+
+/**
  * Checks if Moderation Member auto suspend email notification feature is enabled.
  *
  * @since BuddyBoss 1.5.6
