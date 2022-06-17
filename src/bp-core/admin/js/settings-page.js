@@ -155,7 +155,7 @@ window.bp = window.bp || {};
 			);
 
 			/**
-			 * Function for suspend/unsuspend user from backend listing.
+			 * Function for hide/show auto suspend fields on member blocking enable/disabled.
 			 */
 			$( '#bpm_blocking_auto_suspend_threshold' ).attr('disabled', ! $( '#bpm_blocking_member_blocking' ).prop( 'checked' ));
 			$( '#bpm_blocking_auto_suspend' ).attr('disabled', ! $( '#bpm_blocking_member_blocking' ).prop( 'checked' ));
@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 			);
 		
 			/**
-			 * Function for suspend/unsuspend user from backend listing.
+			 * Function for hide/show auto suspend fields on member reporting enable/disabled.
 			 */
 			$( '#bpm_blocking_auto_suspend_report_threshold' ).attr('disabled', ! $( '#bpm_blocking_member_reporting' ).prop( 'checked' ));
 			$( '#bpm_blocking_auto_suspend_report' ).attr('disabled', ! $( '#bpm_blocking_member_reporting' ).prop( 'checked' ));
