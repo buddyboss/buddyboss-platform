@@ -279,6 +279,12 @@ window.bp = window.bp || {};
 				$editor.removeClass( 'error' );
 				$medium_editor.setContent( '' );
 				target.find( '#bbp_reply_content' ).val( '' );
+				setTimeout(
+					function () {
+						$editor.removeClass( 'error' );
+					},
+					300
+				);
 			}
 
 			// Reset topic subscription.
@@ -300,7 +306,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Media.resetForumsMediaComponent( media_dropzone_obj_key );
 
 				if ( target.find( '#forums-media-button' ) ) {
-					target.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+					target.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 				}
 			}
 
@@ -311,7 +317,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Media.resetForumsDocumentComponent( document_dropzone_obj_key );
 
 				if ( target.find( '#forums-document-button' ) ) {
-					target.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+					target.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 				}
 			}
 
@@ -322,7 +328,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Media.resetForumsVideoComponent( video_dropzone_obj_key );
 
 				if ( target.find( '#forums-video-button' ) ) {
-					target.find( '#forums-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+					target.find( '#forums-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 				}
 			}
 
@@ -334,6 +340,7 @@ window.bp = window.bp || {};
 					gif_attached_container.addClass( 'closed' );
 					gif_attached_container.find( '.gif-image-container img' ).attr( 'src', '' );
 					gif_attached_container[ 0 ].style = '';
+					target.find( '#forums-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 				}
 
 				if ( target.find( '#bbp_media_gif' ).length ) {
@@ -385,17 +392,18 @@ window.bp = window.bp || {};
 				meta.bbp_topic_subscription = '';
 			}
 
-			var media_valid = true;
-			if ( 'undefined' !== typeof meta.bbp_media && '' === meta.bbp_media ) {
-				media_valid = false;
-			} else if ( 'undefined' !== typeof meta.bbp_document && '' === meta.bbp_document ) {
-				media_valid = false;
-			} else if ( 'undefined' !== typeof meta.bbp_document && '' === meta.bbp_document ) {
-				media_valid = false;
-			} else if ( 'undefined' !== typeof meta.bbp_video && '' === meta.bbp_video ) {
-				media_valid = false;
-			} else if ( 'undefined' !== typeof meta.bbp_media_gif && '' === meta.bbp_media_gif ) {
-				media_valid = false;
+			var media_valid = false;
+			if ( 'undefined' !== typeof meta.bbp_media && ( '' !== meta.bbp_media && '[]' !== meta.bbp_media ) ) {
+				media_valid = true;
+			}
+			if ( 'undefined' !== typeof meta.bbp_document && ( '' !== meta.bbp_document && '[]' !== meta.bbp_document ) ) {
+				media_valid = true;
+			}
+			if ( 'undefined' !== typeof meta.bbp_video && ( '' !== meta.bbp_video && '[]' !== meta.bbp_video ) ) {
+				media_valid = true;
+			}
+			if ( 'undefined' !== typeof meta.bbp_media_gif && ( '' !== meta.bbp_media_gif && '[]' !== meta.bbp_media_gif ) ) {
+				media_valid = true;
 			}
 
 			var content_valid = true;
