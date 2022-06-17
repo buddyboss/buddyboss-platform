@@ -1740,6 +1740,11 @@ a.layout-grid-view {
   width: 100%;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-form.activity-form + #message-feedabck,
+.activity-update-form #whats-new-form.activity-form + #message-feedabck {
+  margin-top: 15px;
+}
+
 .bp-nouveau-activity-form-placeholder- .whats-new-form-header,
 .activity-update-form .whats-new-form-header {
   display: flex;

@@ -3930,6 +3930,7 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+				$( self.views.view.$el[0] ).next( '#message-feedabck' ).remove();
 
 				_.each(
 					this.views._views[ '' ],
@@ -4390,14 +4391,8 @@ window.bp = window.bp || {};
 
 						// Display a successful feedback if the acticity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
-							self.views.add(
-								new bp.Views.activityFeedback(
-									{
-										value: response.message,
-										type: 'updated'
-									}
-								)
-							);
+
+							$( '<div id="message-feedabck" class="bp-messages bp-feedback updated"><span class="bp-icon" aria-hidden="true"></span><p>'+ response.message +'</p></div>' ).insertAfter( self.views.view.$el[0] );
 
 							// Edit activity.
 						} else if ( edit ) {
