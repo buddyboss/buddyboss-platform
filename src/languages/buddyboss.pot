@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.3.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-06-15 08:56:23+00:00\n"
+"POT-Creation-Date: 2022-06-16 18:30:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3243,7 +3243,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3309
 #: bp-moderation/bp-moderation-admin.php:573
-#: bp-moderation/bp-moderation-settings.php:104
+#: bp-moderation/bp-moderation-settings.php:121
 #: bp-moderation/classes/class-bp-moderation-component.php:189
 msgid "Reporting Categories"
 msgstr ""
@@ -15375,7 +15375,7 @@ msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-reply.php:155
 #: bp-forums/templates/default/bbpress/form-topic.php:212
-#: bp-moderation/bp-moderation-functions.php:1099
+#: bp-moderation/bp-moderation-functions.php:1142
 #: bp-moderation/classes/class-bp-moderation-activity.php:486
 #: bp-moderation/classes/class-bp-moderation-activity.php:503
 #: bp-moderation/classes/class-bp-moderation-activity.php:517
@@ -24191,76 +24191,98 @@ msgstr ""
 msgid "Repairing moderation data &hellip; Complete!"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1125
+#: bp-moderation/bp-moderation-functions.php:1168
 #: bp-moderation/screens/content-report-form.php:16
 #: bp-moderation/screens/content-report-form.php:63
 #: bp-moderation/screens/reported-content-popup.php:17
 msgid "Report"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1151
+#: bp-moderation/bp-moderation-functions.php:1194
 #: bp-moderation/classes/class-bp-moderation-list-table.php:294
 msgid "Reported"
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:25
+msgid "Member Moderation"
+msgstr ""
+
+#: bp-moderation/bp-moderation-settings.php:30
+#: bp-moderation/bp-moderation-settings.php:96
+msgid "Content Reporting"
+msgstr ""
+
 #: bp-moderation/bp-moderation-settings.php:51
 msgid "Member Blocking"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:30
-#: bp-moderation/bp-moderation-settings.php:79
-msgid "Content Reporting"
+#: bp-moderation/bp-moderation-settings.php:58
+msgid "Member Reporting"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:58
+#: bp-moderation/bp-moderation-settings.php:65
 msgid "Auto Suspend"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:70
-#: bp-moderation/bp-moderation-settings.php:97
+#: bp-moderation/bp-moderation-settings.php:87
+#: bp-moderation/bp-moderation-settings.php:114
 msgid "Email Notification"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:86
+#: bp-moderation/bp-moderation-settings.php:103
 msgid "Auto Hide"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:187
-msgid "Allow members to block each other."
+#: bp-moderation/bp-moderation-settings.php:204
+msgid "Allow members to block other members."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:189
+#: bp-moderation/bp-moderation-settings.php:206
 msgid ""
 "When a member is blocked, their profile and all of their content is hidden "
 "from the member who blocked them."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:211
-#. translators: html for threshold fields.
-msgid ""
-"Automatically suspend members after they have been blocked at least %s "
-"times."
+#: bp-moderation/bp-moderation-settings.php:222
+msgid "Allow members to report other members."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:242
+#: bp-moderation/bp-moderation-settings.php:230
+#. translators: Reporting category link.
+msgid ""
+"If a member observes another member is in violation of one of your <a "
+"href=\"%s\">reporting categories</a>, they can report them to site "
+"administrators."
+msgstr ""
+
+#: bp-moderation/bp-moderation-settings.php:266
+#. translators: html for threshold fields.
+msgid "Automatically suspend members after %s blocks."
+msgstr ""
+
+#: bp-moderation/bp-moderation-settings.php:275
+#. translators: html for report threshold fields.
+msgid "Automatically suspend members after %s reports."
+msgstr ""
+
+#: bp-moderation/bp-moderation-settings.php:319
 msgid "Notify administrators when members have been automatically suspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:262
+#: bp-moderation/bp-moderation-settings.php:339
 msgid "Allow the following content types to be reported:"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:287
+#: bp-moderation/bp-moderation-settings.php:364
 #. translators: html for threshold fields.
 msgid "Auto hide %s after %s reports."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:324
+#: bp-moderation/bp-moderation-settings.php:401
 msgid "Notify administrators when content has been automatically hidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:338
+#: bp-moderation/bp-moderation-settings.php:415
 msgid ""
 "<a href=\"%s\">Manage</a> the categories members see when reporting content "
 "in the frontend."
