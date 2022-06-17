@@ -1668,11 +1668,11 @@ window.bp = window.bp || {};
 			var is_confirmed_show = false;
 
 			if ( $( '#bp_member_avatar_settings .image-width-height' ).length ) {
-				var bpCoverProfileWidth  = $( 'select[id="bb-cover-profile-width"] option:selected' ).val();
-				var bpCoverProfileHeight = $( 'select[id="bb-cover-profile-height"] option:selected' ).val();
+				var bpCoverProfileWidth  = $( 'select#bb-cover-profile-width' ).find( 'option:selected' ).val();
+				var bpCoverProfileHeight = $( 'select#bb-cover-profile-height' ).find( 'option:selected' ).val();
 				$( '#bp_member_avatar_settings' ).on(
 					'change',
-					'select[id="bb-cover-profile-width"], select[id="bb-cover-profile-height"]',
+					'select#bb-cover-profile-width, select#bb-cover-profile-height',
 					function(e) {
 						e.preventDefault();
 
@@ -1696,11 +1696,11 @@ window.bp = window.bp || {};
 			}
 
 			if ( $( '#bp_groups_avatar_settings .image-width-height' ).length ) {
-				var bpCoverGroupWidth  = $( 'select[id="bb-cover-group-width"] option:selected' ).val();
-				var bpCoverGroupHeight = $( 'select[id="bb-cover-group-height"] option:selected' ).val();
+				var bpCoverGroupWidth  = $( 'select#bb-cover-group-width' ).find( 'option:selected' ).val();
+				var bpCoverGroupHeight = $( 'select#bb-cover-group-height' ).find( 'option:selected' ).val();
 				$( '#bp_groups_avatar_settings' ).on(
 					'change',
-					'select[id="bb-cover-group-width"], select[id="bb-cover-group-height"]',
+					'select#bb-cover-group-width, select#bb-cover-group-height',
 					function(e) {
 						e.preventDefault();
 
