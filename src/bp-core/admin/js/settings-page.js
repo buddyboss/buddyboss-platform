@@ -153,6 +153,38 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			/**
+			 * Function for suspend/unsuspend user from backend listing.
+			 */
+			//$( 'label[for="bpm_blocking_auto_suspend"' ).toggleClass('is_disabled');
+			$( '#bpm_blocking_auto_suspend_threshold' ).attr('disabled', ! $( '#bpm_blocking_member_blocking' ).prop( 'checked' ));
+			$( '#bpm_blocking_auto_suspend' ).attr('disabled', ! $( '#bpm_blocking_member_blocking' ).prop( 'checked' ));
+			$( document ).on(
+				'change',
+				'#bpm_blocking_member_blocking',
+				function () {
+					$( 'label[for="bpm_blocking_auto_suspend"' ).toggleClass('is_disabled');
+					$( '#bpm_blocking_auto_suspend_threshold' ).attr('disabled', ! $( this ).prop( 'checked' ));
+					$( '#bpm_blocking_auto_suspend' ).attr('disabled', ! $( this ).prop( 'checked' ));
+				}
+			);
+		
+			/**
+			 * Function for suspend/unsuspend user from backend listing.
+			 */
+			//$( 'label[for="bpm_blocking_auto_suspend_report"' ).toggleClass('is_disabled');
+			$( '#bpm_blocking_auto_suspend_report_threshold' ).attr('disabled', ! $( '#bpm_blocking_member_reporting' ).prop( 'checked' ));
+			$( '#bpm_blocking_auto_suspend_report' ).attr('disabled', ! $( '#bpm_blocking_member_reporting' ).prop( 'checked' ));
+			$( document ).on(
+				'change',
+				'#bpm_blocking_member_reporting',
+				function () {
+					$( 'label[for="bpm_blocking_auto_suspend_report"' ).toggleClass('is_disabled');
+					$( '#bpm_blocking_auto_suspend_report_threshold' ).attr('disabled', ! $( this ).prop( 'checked' ));
+					$( '#bpm_blocking_auto_suspend_report' ).attr('disabled', ! $( this ).prop( 'checked' ));
+				}
+			);
 		}
 	);
 
