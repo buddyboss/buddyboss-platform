@@ -3216,6 +3216,13 @@ window.bp = window.bp || {};
 							}
 					)
 				);
+
+				this.listenTo( Backbone, 'onSentMessage', this.triggerPusherMessage );
+			},
+
+			triggerPusherMessage: function ( messagePusherData ) {
+				// use sent messageData here
+				this.collection.add( _.first( messagePusherData ) );
 			},
 
 			events: {
