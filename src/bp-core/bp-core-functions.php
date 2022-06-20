@@ -6729,6 +6729,11 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 					in_array( $component_name, array( 'activity', 'forums', 'members' ), true )
 				) {
 					return $n['notification_type'];
+				} elseif (
+					'bb_groups_new_message' === $component_action &&
+					in_array( $component_name, array( 'messages', 'groups' ), true )
+				) {
+					return $n['notification_type'];
 				} elseif ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
 					return $n['notification_type'];
 				}
@@ -7016,6 +7021,15 @@ function bb_render_notification( $notification_group ) {
 		}
 	);
 
+	$column_count = 2;
+	if ( bb_web_notification_enabled() ) {
+		$column_count += 1;
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$column_count += 1;
+	}
+
 	if ( ! empty( $options['fields'] ) ) {
 		?>
 
@@ -7024,7 +7038,7 @@ function bb_render_notification( $notification_group ) {
 
 			<?php if ( ! empty( $options['label'] ) ) { ?>
 				<tr class="notification_heading">
-					<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
+					<td class="title" colspan="<?php echo esc_attr( $column_count ); ?>"><?php echo esc_html( $options['label'] ); ?></td>
 				</tr>
 				<?php
 			}
