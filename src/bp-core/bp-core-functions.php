@@ -2950,7 +2950,9 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
-					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+					$course_label = is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ? LearnDash_Custom_Label::get_label( 'courses' ) : __( 'Course', 'buddyboss' );
+					/* translators: My Course, e.g. "My Course". */
+					$sub_name = sprintf( __( 'My %s', 'buddyboss' ), $course_label );
 				}
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
