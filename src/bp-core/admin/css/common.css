@@ -2335,6 +2335,25 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   content: "\e855";
 }
 
+/* Errors / Waring Styling*/
+.bb-error-section {
+  padding: 10px;
+  margin-left: -210px;
+  background: #ffdcdc;
+  color: #d42929;
+  border: 1px solid #ffc5ca;
+  border-radius: 4px;
+}
+
+.bb-warning-section {
+  padding: 10px;
+  margin-left: -210px;
+  background: #fff3c8;
+  color: #8b6300;
+  border: 1px solid #ffeeb3;
+  border-radius: 4px;
+}
+
 /*------------------------------------------------------------------------------
  * 12.0 Profile Photo UI
  *----------------------------------------------------------------------------*/

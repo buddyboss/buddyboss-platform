@@ -293,7 +293,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 							if ( ! empty( $excerpt ) ) {
 								$text = sprintf(
 									/* translators: 1. user display name 2. group name 3. excerpt */
-									esc_html__( '%1$s sent a message to %2$s: %3$s', 'buddyboss' ),
+									__( '%1$s sent a message to %2$s: %3$s', 'buddyboss' ),
 									bp_core_get_user_displayname( $secondary_item_id ),
 									$group_name,
 									$excerpt
@@ -303,7 +303,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 								if ( count( $media_ids ) > 1 ) {
 									$text = sprintf(
 										/* translators: 1. user display name 2. photos text 3. group name */
-										esc_html__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+										__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
 										bp_core_get_user_displayname( $secondary_item_id ),
 										esc_html__( 'some photos', 'buddyboss' ),
 										$group_name
@@ -311,7 +311,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 								} else {
 									$text = sprintf(
 										/* translators: 1. user display name 2. photo text 3. group name */
-										esc_html__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+										__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
 										bp_core_get_user_displayname( $secondary_item_id ),
 										esc_html__( 'a photo', 'buddyboss' ),
 										$group_name
@@ -322,7 +322,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 								if ( count( $document_ids ) > 1 ) {
 									$text = sprintf(
 										/* translators: 1. user display name 2. documents text 3. group name */
-										esc_html__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+										__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
 										bp_core_get_user_displayname( $secondary_item_id ),
 										esc_html__( 'some documents', 'buddyboss' ),
 										$group_name
@@ -330,7 +330,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 								} else {
 									$text = sprintf(
 										/* translators: 1. user display name 2. document text 3. group name */
-										esc_html__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+										__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
 										bp_core_get_user_displayname( $secondary_item_id ),
 										esc_html__( 'a document', 'buddyboss' ),
 										$group_name
@@ -341,7 +341,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 								if ( count( $video_ids ) > 1 ) {
 									$text = sprintf(
 										/* translators: 1. user display name 2. videos text 3. group name */
-										esc_html__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+										__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
 										bp_core_get_user_displayname( $secondary_item_id ),
 										esc_html__( 'some videos', 'buddyboss' ),
 										$group_name
@@ -349,7 +349,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 								} else {
 									$text = sprintf(
 										/* translators: 1. user display name 2. video text 3. group name */
-										esc_html__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+										__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
 										bp_core_get_user_displayname( $secondary_item_id ),
 										esc_html__( 'a video', 'buddyboss' ),
 										$group_name
@@ -358,7 +358,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 							} elseif ( ! empty( $gif_data ) ) {
 								$text = sprintf(
 									/* translators: 1. user display name 2. gif text 3. group name */
-									esc_html__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+									__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
 									bp_core_get_user_displayname( $secondary_item_id ),
 									esc_html__( 'a gif', 'buddyboss' ),
 									$group_name
@@ -366,7 +366,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 							} else {
 								$text = sprintf(
 									/* translators: 1. user display name 2. group name */
-									esc_html__( '%1$s sent a message to %2$s', 'buddyboss' ),
+									__( '%1$s sent a message to %2$s', 'buddyboss' ),
 									bp_core_get_user_displayname( $secondary_item_id ),
 									$group_name
 								);
