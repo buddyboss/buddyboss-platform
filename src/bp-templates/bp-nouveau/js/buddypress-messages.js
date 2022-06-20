@@ -3223,6 +3223,7 @@ window.bp = window.bp || {};
 			triggerPusherMessage: function ( messagePusherData ) {
 				// use sent messageData here
 				this.collection.add( _.first( messagePusherData ) );
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 			},
 
 			events: {
