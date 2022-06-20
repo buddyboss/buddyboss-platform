@@ -16,9 +16,8 @@
 	<?php
 	bp_get_template_part( 'media/theatre' );
 
-	if ( bp_is_profile_video_support_enabled() ) {
-		bp_get_template_part( 'video/theatre' );
-	}
+	bp_get_template_part( 'video/theatre' );
+	
 	if ( bp_is_profile_document_support_enabled() ) {
 		bp_get_template_part( 'document/theatre' );
 	}
