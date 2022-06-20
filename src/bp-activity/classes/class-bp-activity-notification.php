@@ -245,7 +245,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
-								__( '%1$s replied to your %2$s: some photo', 'buddyboss' ),
+								__( '%1$s replied to your %2$s: some photos', 'buddyboss' ),
 								$user_fullname,
 								$notification_type_html
 							);
@@ -262,7 +262,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
-								__( '%1$s replied to your %2$s: some document', 'buddyboss' ),
+								__( '%1$s replied to your %2$s: some documents', 'buddyboss' ),
 								$user_fullname,
 								$notification_type_html
 							);
@@ -319,7 +319,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 								/* translators: User full name. */
-								__( '%1$s replied: some photo', 'buddyboss' ),
+								__( '%1$s replied: some photos', 'buddyboss' ),
 								$user_fullname
 							);
 						} else {
@@ -334,7 +334,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 								/* translators: User full name. */
-								__( '%1$s replied: some document', 'buddyboss' ),
+								__( '%1$s replied: some documents', 'buddyboss' ),
 								$user_fullname
 							);
 						} else {
@@ -355,7 +355,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						} else {
 							$text = sprintf(
 								/* translators: User full name. */
-								__( '%1$s replied: a videos', 'buddyboss' ),
+								__( '%1$s replied: a video', 'buddyboss' ),
 								$user_fullname
 							);
 						}
@@ -494,7 +494,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					if ( count( $media_ids ) > 1 ) {
 						$text = sprintf(
 							/* translators: Activity type. */
-							__( 'Replied to your %s: some photo', 'buddyboss' ),
+							__( 'Replied to your %s: some photos', 'buddyboss' ),
 							$notification_type_html
 						);
 					} else {
@@ -509,7 +509,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					if ( count( $document_ids ) > 1 ) {
 						$text = sprintf(
 							/* translators: Activity type. */
-							__( 'Replied to your %s: some document', 'buddyboss' ),
+							__( 'Replied to your %s: some documents', 'buddyboss' ),
 							$notification_type_html
 						);
 					} else {
@@ -530,7 +530,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					} else {
 						$text = sprintf(
 							/* translators: Activity type. */
-							__( 'Replied to your %s: a videos', 'buddyboss' ),
+							__( 'Replied to your %s: a video', 'buddyboss' ),
 							$notification_type_html
 						);
 					}
@@ -557,14 +557,14 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				} elseif ( $media_ids ) {
 					$media_ids = array_filter( explode( ',', $media_ids ) );
 					if ( count( $media_ids ) > 1 ) {
-						$text = __( 'Replied: some photo', 'buddyboss' );
+						$text = __( 'Replied: some photos', 'buddyboss' );
 					} else {
 						$text = __( 'Replied: a photo', 'buddyboss' );
 					}
 				} elseif ( $document_ids ) {
 					$document_ids = array_filter( explode( ',', $document_ids ) );
 					if ( count( $document_ids ) > 1 ) {
-						$text = __( 'Replied: some document', 'buddyboss' );
+						$text = __( 'Replied: some documents', 'buddyboss' );
 					} else {
 						$text = __( 'Replied: a document', 'buddyboss' );
 					}
@@ -573,7 +573,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					if ( count( $video_ids ) > 1 ) {
 						$text = __( 'Replied: some videos', 'buddyboss' );
 					} else {
-						$text = __( 'Replied: a videos', 'buddyboss' );
+						$text = __( 'Replied: a video', 'buddyboss' );
 					}
 				} elseif ( ! empty( $gif_data ) ) {
 					$text = __( 'Replied: a gif', 'buddyboss' );
