@@ -1740,9 +1740,15 @@ a.layout-grid-view {
   width: 100%;
 }
 
-.bp-nouveau-activity-form-placeholder- #whats-new-form.activity-form + #message-feedabck,
-.activity-update-form #whats-new-form.activity-form + #message-feedabck {
-  margin-top: 15px;
+.bp-nouveau-activity-form-placeholder- #whats-new-form.bottom-notice,
+.activity-update-form #whats-new-form.bottom-notice {
+  margin-bottom: 60px;
+}
+
+.bp-nouveau-activity-form-placeholder- #whats-new-form.bottom-notice #message-feedabck.updated,
+.activity-update-form #whats-new-form.bottom-notice #message-feedabck.updated {
+  position: absolute;
+  bottom: -60px;
 }
 
 .bp-nouveau-activity-form-placeholder- .whats-new-form-header,

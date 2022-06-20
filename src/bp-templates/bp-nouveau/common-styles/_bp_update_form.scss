@@ -378,8 +378,13 @@
 		width: 100%;
 	}
 
-	#whats-new-form.activity-form + #message-feedabck {
-		margin-top: 15px;
+	#whats-new-form.bottom-notice {
+		margin-bottom: 60px;
+
+		#message-feedabck.updated {
+			position: absolute;
+			bottom: -60px;
+		}
 	}
 
 	.whats-new-form-header {
