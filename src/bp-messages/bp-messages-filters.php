@@ -95,6 +95,9 @@ add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_
 add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 add_filter( 'bp_recipients_recipient_get_where_conditions', 'bp_recipients_recipient_get_where_conditions_callback', 10, 2 );
+
+add_filter( 'bp_messages_message_validated_content', 'bb_check_is_message_content_empty', 10, 3 );
+
 add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
 
 // Load Messages Notifications.
@@ -761,6 +764,26 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 		$where_conditions['exclude_active_users'] = 'user_id NOT IN ( ' . implode( ', ', $r['exclude_admin_user'] ) . ' )';
 	}
 	return $where_conditions;
+}
+
+/**
+ * Function will check content is empty or not for the media, document and gif.
+ * Return true if content is empty with the media, document and gif object and allow empty content in DB for the media, document and gif.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool         $validated_content True if message is valid, false otherwise.
+ * @param string       $content           Message content.
+ * @param array|object $post              Request object.
+ *
+ * @return bool
+ */
+function bb_check_is_message_content_empty( $validated_content, $content, $post ) {
+	if ( ! empty( $post['content'] ) || ! empty( $post['message_content'] ) || ! empty( $content ) ) {
+		return true;
+	}
+
+	return false;
 }
 
 /**
