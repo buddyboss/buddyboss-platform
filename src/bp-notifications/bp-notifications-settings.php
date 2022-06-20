@@ -476,7 +476,7 @@ function bb_admin_setting_callback_push_notification_bbp_pro_not_installed() {
 				/* translators: BuddyBoss Pro purchase link */
 				__( 'Please install %1$s to use web push notification on your site.', 'buddyboss' )
 			),
-			'<a href="' . esc_url( 'https://www.buddyboss.com/pro' ) . '" target="_blank">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+			'<a href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '" target="_blank">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
 		) .
 	'</p>';
 }
@@ -493,7 +493,7 @@ function bb_admin_setting_callback_push_notification_bbp_pro_older_version_insta
 				/* translators: BuddyBoss Pro purchase link */
 				__( 'Please update %1$s to version 2.0.3 to use web push notifications on your site.', 'buddyboss' )
 			),
-			'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/pro' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+			'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
 		) .
 	'</p>';
 }
