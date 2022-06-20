@@ -42,7 +42,7 @@ add_filter( 'bp_notifications_get_registered_components', 'bbp_filter_notificati
  *
  * @package BuddyBoss
  */
-function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name, $name, $id, $screen ) {
+function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name = '', $name = '', $id = 0, $screen = 'web' ) {
 
 	// New reply notifications.
 	if ( 'bbp_new_reply' === $action_name ) {
@@ -368,6 +368,12 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
+					continue;
+				}
+
 				$reply_id = bbp_get_reply_id( $reply_id );
 				$topic_id = bbp_get_topic_id( $topic_id );
 				$forum_id = bbp_get_forum_id( $forum_id );
@@ -498,6 +504,12 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
+					continue;
+				}
+
 				$topic_id = bbp_get_topic_id( $topic_id );
 				$forum_id = bbp_get_forum_id( $forum_id );
 
