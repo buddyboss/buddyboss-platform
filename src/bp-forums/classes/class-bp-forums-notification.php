@@ -369,10 +369,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			$except = str_replace( '&hellip;"', '&hellip;', $except );
 			$except = str_replace( '""', '', $except );
 
-			$media_ids    = get_post_meta( $notification->item_id, 'bp_media_ids', true );
-			$document_ids = get_post_meta( $notification->item_id, 'bp_document_ids', true );
-			$video_ids    = get_post_meta( $notification->item_id, 'bp_video_ids', true );
-			$gif_data     = get_post_meta( $notification->item_id, '_gif_data', true );
+			$media_ids    = get_post_meta( (int) $notification->item_id, 'bp_media_ids', true );
+			$document_ids = get_post_meta( (int) $notification->item_id, 'bp_document_ids', true );
+			$video_ids    = get_post_meta( (int) $notification->item_id, 'bp_video_ids', true );
+			$gif_data     = get_post_meta( (int) $notification->item_id, '_gif_data', true );
 
 			if ( ! empty( $notification->secondary_item_id ) ) {
 				if ( ! empty( $except ) ) {
@@ -382,7 +382,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						bp_core_get_user_displayname( $notification->secondary_item_id ),
 						$except
 					);
-				} elseif ( $media_ids ) {
+				} elseif ( ! empty( $media_ids ) ) {
 					$media_ids = array_filter( explode( ',', $media_ids ) );
 					if ( count( $media_ids ) > 1 ) {
 						$text = sprintf(
@@ -397,7 +397,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							bp_core_get_user_displayname( $notification->secondary_item_id )
 						);
 					}
-				} elseif ( $document_ids ) {
+				} elseif ( ! empty( $document_ids ) ) {
 					$document_ids = array_filter( explode( ',', $document_ids ) );
 					if ( count( $document_ids ) > 1 ) {
 						$text = sprintf(
@@ -412,7 +412,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							bp_core_get_user_displayname( $notification->secondary_item_id )
 						);
 					}
-				} elseif ( $video_ids ) {
+				} elseif ( ! empty( $video_ids ) ) {
 					$video_ids = array_filter( explode( ',', $video_ids ) );
 					if ( count( $video_ids ) > 1 ) {
 						$text = sprintf(
