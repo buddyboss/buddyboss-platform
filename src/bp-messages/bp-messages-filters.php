@@ -779,7 +779,7 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
  * @return bool
  */
 function bb_check_is_message_content_empty( $validated_content, $content, $post ) {
-	if ( ! empty( $post['content'] ) || ! empty( $post['message_content'] ) ) {
+	if ( ! empty( $post['content'] ) || ! empty( $post['message_content'] ) || ! empty( $content ) ) {
 		return true;
 	}
 
