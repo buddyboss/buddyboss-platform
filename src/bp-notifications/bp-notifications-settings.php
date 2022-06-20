@@ -216,7 +216,7 @@ function bb_notification_get_settings_fields() {
 		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' )
+		version_compare( bb_platform_pro()->version, '2.0.2', '<=' )
 	) {
 		$fields['bp_web_push_notification_settings']['infos'] = array(
 			'title'             => esc_html__( 'Notes', 'buddyboss' ),
@@ -491,7 +491,7 @@ function bb_admin_setting_callback_push_notification_bbp_pro_older_version_insta
 		sprintf(
 			wp_kses_post(
 				/* translators: BuddyBoss Pro purchase link */
-				__( 'Please update %1$s to version 1.1.9.2 to use web push notifications on your site.', 'buddyboss' )
+				__( 'Please update %1$s to version 2.0.3 to use web push notifications on your site.', 'buddyboss' )
 			),
 			'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/pro' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
 		) .
