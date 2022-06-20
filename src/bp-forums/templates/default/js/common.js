@@ -21,7 +21,7 @@ jQuery( document ).ready(
 					language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
 					dropdownCssClass: 'bb-select-dropdown',
 					containerCssClass: 'bb-select-container',
-					tokenSeparators: [ ',', ' ' ],
+					tokenSeparators: [ ',' ],
 					ajax: {
 						url: bbpCommonJsData.ajax_url,
 						dataType: 'json',
@@ -168,7 +168,7 @@ jQuery( document ).ready(
 						language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
 						dropdownCssClass: 'bb-select-dropdown',
 						containerCssClass: 'bb-select-container',
-						tokenSeparators: [ ',', ' ' ],
+						tokenSeparators: [ ',' ],
 						ajax: {
 							url: bbpCommonJsData.ajax_url,
 							dataType: 'json',
