@@ -791,3 +791,23 @@ function bpm_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
 	<?php
 }
 add_action( 'bpm_category_edit_form_fields', 'bpm_category_edit_term_fields_show_when_reporting', 10, 2 );
+
+/**
+ * Save show when reporting field in reporting categories.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $term_id  Show when reporting field term ID.
+ */
+function bpm_category_save_term_fields_show_when_reporting( $term_id ) {
+
+	if ( isset( $_POST['bpm_category_show_when_reporting'] ) ) { // phpcs:ignore
+		update_term_meta(
+			$term_id,
+			'bpm_category_show_when_reporting',
+			sanitize_text_field( wp_unslash( $_POST['bpm_category_show_when_reporting'] ) ) // phpcs:ignore
+		);
+	}
+}
+add_action( 'created_bpm_category', 'bpm_category_save_term_fields_show_when_reporting' );
+add_action( 'edited_bpm_category', 'bpm_category_save_term_fields_show_when_reporting' );
