@@ -401,6 +401,15 @@
 		width: 100%;
 	}
 
+	#whats-new-form.bottom-notice {
+		margin-bottom: 60px;
+
+		#message-feedabck.updated {
+			position: absolute;
+			bottom: -60px;
+		}
+	}
+
 	.whats-new-form-header {
 		display: flex;
 	}
