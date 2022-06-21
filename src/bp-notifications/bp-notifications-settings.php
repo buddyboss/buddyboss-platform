@@ -474,7 +474,7 @@ function bb_admin_setting_callback_push_notification_bbp_pro_not_installed() {
 		sprintf(
 			wp_kses_post(
 				/* translators: BuddyBoss Pro purchase link */
-				__( 'Please install %1$s to use web push notification on your site.', 'buddyboss' )
+				__( 'Please install %1$s to use web push notifications on your site.', 'buddyboss' )
 			),
 			'<a href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '" target="_blank">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
 		) .
