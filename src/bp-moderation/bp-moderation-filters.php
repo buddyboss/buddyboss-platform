@@ -839,7 +839,15 @@ add_filter( 'manage_edit-bpm_category_columns', 'bpm_category_show_when_reportin
  * @return mixed Term meta data
  */
 function bpm_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
-	return get_term_meta( $term_id, $column_name, true );
+	$value = get_term_meta( $term_id, $column_name, true );
+	switch( $value ) {
+		case 'members' :
+			return esc_html__( 'Members', 'buddyboss' );
+		case 'content_members' :
+			return esc_html__( 'Content & Members', 'buddyboss' );
+		default :
+			return esc_html__( 'Content', 'buddyboss' );
+	}
 }
 add_filter( 'manage_bpm_category_custom_column', 'bpm_category_show_when_reporting_column_display', 10, 3 );
 
@@ -902,7 +910,9 @@ function bb_quickedit_bpm_category_show_when_reporting_javascript() {
 				var val = $tr.find('td.bpm_category_show_when_reporting').text();
 				if( val != '') {
 					$('tr.inline-edit-row select[name="bpm_category_show_when_reporting"] option').removeAttr('selected');
-					$('tr.inline-edit-row select[name="bpm_category_show_when_reporting"] option[value=' + val + ']').attr('selected', 'selected');
+					$('tr.inline-edit-row select[name="bpm_category_show_when_reporting"] option').filter(function() {
+						return this.text == val; 
+					}).attr('selected', 'selected');
 				}
 			});
 		});
