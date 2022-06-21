@@ -811,3 +811,34 @@ function bpm_category_save_term_fields_show_when_reporting( $term_id ) {
 }
 add_action( 'created_bpm_category', 'bpm_category_save_term_fields_show_when_reporting' );
 add_action( 'edited_bpm_category', 'bpm_category_save_term_fields_show_when_reporting' );
+
+/**
+ * Register columns for our taxonomy.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $columns List of columns for Reporting categort taxonomy.
+ *
+ * @return array $columns List of columns for Reporting categort taxonomy
+ */
+function bpm_category_show_when_reporting_columns( $columns ) {
+	$columns['bpm_category_show_when_reporting'] = __( 'Show When Reporting', 'buddyboss' );
+	return $columns;
+}
+add_filter( 'manage_edit-bpm_category_columns', 'bpm_category_show_when_reporting_columns' );
+
+/**
+ * Retrieve value for our custom column
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $string      Blank string.
+ * @param string $column_name Name of the column.
+ * @param int    $term_id     Term ID.
+ *
+ * @return mixed Term meta data
+ */
+function bpm_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
+	return get_term_meta( $term_id, $column_name, true );
+}
+add_filter( 'manage_bpm_category_custom_column', 'bpm_category_show_when_reporting_column_display', 10, 3 );
