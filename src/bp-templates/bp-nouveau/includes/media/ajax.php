@@ -1038,7 +1038,7 @@ function bp_nouveau_object_template_results_albums_existing_media_query( $querys
 	$caller = filter_input( INPUT_POST, 'caller', FILTER_SANITIZE_STRING );
 
 	if ( ! empty( $caller ) && 'bp-existing-media' === $caller ) {
-		$querystring['album_id'] = 0;
+		$querystring['album_id'] = 'existing-media';
 	}
 
 	return http_build_query( $querystring );
