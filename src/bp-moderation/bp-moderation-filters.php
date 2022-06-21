@@ -840,12 +840,12 @@ add_filter( 'manage_edit-bpm_category_columns', 'bpm_category_show_when_reportin
  */
 function bpm_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
 	$value = get_term_meta( $term_id, $column_name, true );
-	switch( $value ) {
-		case 'members' :
+	switch ( $value ) {
+		case 'members':
 			return esc_html__( 'Members', 'buddyboss' );
-		case 'content_members' :
+		case 'content_members':
 			return esc_html__( 'Content & Members', 'buddyboss' );
-		default :
+		default:
 			return esc_html__( 'Content', 'buddyboss' );
 	}
 }
