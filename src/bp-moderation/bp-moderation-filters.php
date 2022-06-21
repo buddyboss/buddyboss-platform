@@ -732,10 +732,62 @@ add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 
 function bb_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) {
 	if ( bp_moderation_is_user_blocked( $user_id, $item_id ) ) {
 		return true;
-	} else if ( bp_moderation_is_user_suspended( $item_id ) ) {
+	} elseif ( bp_moderation_is_user_suspended( $item_id ) ) {
 		return true;
 	}
 
 	return (bool) $retval;
 }
 add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated', 10, 3 );
+
+/**
+ * Add show when reporting field in reporting categories add page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $taxonomy  Reporting category taxonomy.
+ *
+ * @return mixed Show when Reporting field.
+ */
+function bpm_category_add_term_fields_show_when_reporting( $taxonomy ) {
+	?>
+	<div class="form-field">
+		<label for="bpm_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></label>
+		<select name="bpm_category_show_when_reporting" id="bpm_category_show_when_reporting">
+			<option value="content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
+			<option value="members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
+			<option value="content_members"><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+		</select>
+	</div>
+	<?php
+}
+add_action( 'bpm_category_add_form_fields', 'bpm_category_add_term_fields_show_when_reporting' );
+
+/**
+ * Add show when reporting field in reporting categories edit page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $term  Reporting category object.
+ * @param string $taxonomy  Reporting category taxonomy.
+ *
+ * @return mixed Show when Reporting field.
+ */
+function bpm_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
+	$value = get_term_meta( $term->term_id, 'bpm_category_show_when_reporting', true );
+	?>
+	<tr class="form-field">
+		<th>
+			<label for="bpm_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></label>
+		</th>
+		<td>
+			<select name="bpm_category_show_when_reporting" id="bpm_category_show_when_reporting">
+				<option value="content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
+				<option value="members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
+				<option value="content_members"><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+			</select>
+		</td>
+	</tr>
+	<?php
+}
+add_action( 'bpm_category_edit_form_fields', 'bpm_category_edit_term_fields_show_when_reporting', 10, 2 );
