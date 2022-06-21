@@ -4321,6 +4321,15 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 15px;
 }
 
+@media screen and (max-width: 767px) {
+  #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
+  #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
+  #buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item,
+  #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
+    min-height: auto;
+  }
+}
+
 .activity-media-description,
 .activity-video-description {
   margin-bottom: 10px;
@@ -7349,6 +7358,7 @@ body.no-js .single-item-header .js-self-profile-button {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
+  font-weight: 300;
   line-height: 1;
   margin-right: 10px;
   text-align: center;
@@ -8179,7 +8189,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.awaiting_response_friend:before,
 .bb_more_options .bb_more_options_list button.awaiting_response_friend:before,
 .bb_more_options .bb_more_options_list a.awaiting_response_friend:before {
-  content: "\e94e";
+  content: "\ef57";
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
@@ -25426,6 +25436,7 @@ span.icons:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
+  font-weight: 300;
   line-height: 1;
   margin-right: 10px;
   text-align: center;
