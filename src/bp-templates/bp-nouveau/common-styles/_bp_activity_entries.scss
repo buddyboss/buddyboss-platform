@@ -1186,6 +1186,13 @@ span.dashicons.dashicons-admin-file:before {
 			font-size: 15px;
 		}
 
+		@media screen and (max-width: 767px) {
+
+			.activity-item {
+				min-height: auto;
+			}
+		}
+
 	}
 }
 
