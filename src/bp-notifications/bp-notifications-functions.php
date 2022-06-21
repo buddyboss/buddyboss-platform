@@ -1387,6 +1387,10 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 		return;
 	}
 
+	if ( ! isset( $notification_item->total_count ) ) {
+		$notification_item->total_count = 1;
+	}
+
 	$component_name = $notification_item->component_name;
 	// We prefer that extended profile component-related notifications use
 	// the component_name of 'xprofile'. However, the extended profile child
@@ -1429,6 +1433,8 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 			} else {
 				$notification_object->content = ( isset( $content ) && isset( $content['text'] ) ? $content['text'] : '' );
 				$notification_object->href    = ( isset( $content ) && isset( $content['link'] ) ? $content['link'] : '' );
+				$notification_object->title   = ( isset( $content ) && isset( $content['title'] ) ? $content['title'] : '' );
+				$notification_object->image   = ( isset( $content ) && isset( $content['image'] ) ? $content['image'] : '' );
 			}
 
 			$renderable = $notification_object;
@@ -1513,6 +1519,8 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 			} else {
 				$notification_object->content = $content['text'];
 				$notification_object->href    = $content['link'];
+				$notification_object->title   = ( isset( $content['title'] ) ? $content['title'] : '' );
+				$notification_object->image   = ( isset( $content['image'] ) ? $content['image'] : '' );
 			}
 
 			$renderable = $notification_object;
