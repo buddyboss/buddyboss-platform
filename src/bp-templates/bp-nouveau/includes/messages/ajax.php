@@ -781,6 +781,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			'messages'  => array( $reply ),
 			'thread_id' => $thread_id,
 			'feedback'  => __( 'Your reply was sent successfully', 'buddyboss' ),
+			'hash'      =>  ! empty( $_POST['hash'] ) ? $_POST['hash'] : '',
 			'type'      => 'success',
 		)
 	);

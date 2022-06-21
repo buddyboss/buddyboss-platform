@@ -784,7 +784,8 @@ window.bp = window.bp || {};
 						options.data,
 						{
 							action : 'messages_send_reply',
-							nonce  : BP_Nouveau.messages.nonces.send
+							nonce  : BP_Nouveau.messages.nonces.send,
+							hash   :  Math.round((new Date()).getTime() / 1000)
 							},
 						model || {}
 					);
@@ -3139,20 +3140,30 @@ window.bp = window.bp || {};
 
 	bp.Views.userMessagesEntry = bp.Views.userMessagesHeader.extend(
 		{
-			tagName  : 'li',
-			template : bp.template( 'bp-messages-single-list' ),
+			tagName     : 'li',
+			template    : bp.template( 'bp-messages-single-list' ),
 
 			events: {
 				'click [data-bp-action]' : 'doAction'
 			},
 
 			initialize: function() {
+
+				this.el.className = ' ';
+
+				if ( this.options.model.attributes.className ) {
+					this.el.className += ' ' + this.options.model.attributes.className;
+				}
 				this.model.on( 'change', this.updateMessage, this );
 			},
 
 			updateMessage: function( model ) {
 				if ( this.model.get( 'id' ) !== model.get( 'id' ) ) {
 					return;
+				}
+
+				if ( this.options.className ) {
+					this.el.className += ' ' + this.options.className;
 				}
 
 				this.render();
@@ -3198,6 +3209,7 @@ window.bp = window.bp || {};
 				this.model = new bp.Models.messageThread();
 
 				this.collection.on( 'add', this.addMessage, this );
+				this.collection.on( 'update', this.updateMessage, this );
 
 				// Add the editor view.
 				this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
@@ -3218,9 +3230,16 @@ window.bp = window.bp || {};
 				);
 
 				this.listenTo( Backbone, 'onSentMessage', this.triggerPusherMessage );
+				this.listenTo( Backbone, 'onReplySentSuccess', this.triggerPusherUpdateMessage );
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
+				// use sent messageData here
+				this.collection.add( _.first( messagePusherData ) );
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+			},
+
+			triggerPusherUpdateMessage: function ( messagePusherData ) {
 				// use sent messageData here
 				this.collection.add( _.first( messagePusherData ) );
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
@@ -3370,6 +3389,12 @@ window.bp = window.bp || {};
 				jQuery( window ).scroll();
 			},
 
+			updateMessage: function( message ) {
+				console.log( 'message' );
+				console.log( message );
+				//this.views.update( '#bp-message-thread-list li' , new bp.Views.userMessagesEntry( { model: message } ) );
+			},
+
 			addEditor: function() {
 				// Load the Editor.
 				this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
@@ -3499,10 +3524,12 @@ window.bp = window.bp || {};
 					this.messageAttachments.onClose();
 				}
 
-				this.collection.add( _.first( reply ) );
+
+
+				// this.collection.add( _.first( reply ) );
 
 				bp.Nouveau.Messages.removeFeedback();
-				$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
 
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 			},
