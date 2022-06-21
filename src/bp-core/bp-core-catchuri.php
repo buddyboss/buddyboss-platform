@@ -1212,31 +1212,19 @@ function bp_private_network_template_redirect() {
 			}
 
 			$media_preview_urls = array(
-				'bb-media-preview',
-				'bb-document-preview',
-				'bb-video-preview',
-				'bb-video-thumb-preview'
+				'bb-media-preview'               => 'bb-media-preview',
+				'bb-document-preview'            => 'bb-document-preview',
+				'bb-video-preview'               => 'bb-video-preview',
+				'bb-video-thumb-preview'         => 'bb-video-thumb-preview',
+				'bb-attachment-media-preview'    => 'media-attachment-id',
+				'bb-attachment-document-preview' => 'document-attachment-id',
+				'bb-attachment-video-preview'    => 'video-attachment-id',
 			);
 
-			foreach ( $media_preview_urls as $preview_slug ) {
-				if ( false !== strpos( $request_url, trailingslashit( $site_url ) . trailingslashit( $preview_slug ) ) && ! empty( get_query_var( $preview_slug ) ) ) {
+			foreach ( $media_preview_urls as $preview_slug => $preview_query_var ) {
+				if ( false !== strpos( $request_url, trailingslashit( $site_url ) . trailingslashit( $preview_slug ) ) && ! empty( get_query_var( $preview_query_var ) ) ) {
 					return;
 				}
-			}
-
-			// Allow draft media preview URL.
-			if ( false !== strpos( $request_url, trailingslashit( $site_url ) . trailingslashit( 'bb-attachment-media-preview' ) ) && ! empty( get_query_var( 'media-attachment-id' ) ) ) {
-				return;
-			}
-
-			// Allow draft document preview URL.
-			if ( false !== strpos( $request_url, trailingslashit( $site_url ) . trailingslashit( 'bb-attachment-document-preview' ) ) && ! empty( get_query_var( 'document-attachment-id' ) ) ) {
-				return;
-			}
-
-			// Allow draft video preview URL.
-			if ( false !== strpos( $request_url, trailingslashit( $site_url ) . trailingslashit( 'bb-attachment-video-preview' ) ) && ! empty( get_query_var( 'video-attachment-id' ) ) ) {
-				return;
 			}
 
 			// Get excluded list from the settings.
