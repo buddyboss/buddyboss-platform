@@ -212,12 +212,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$activity_excerpt = str_replace( '&hellip;"', '&hellip;', $activity_excerpt );
+			$activity_excerpt = str_replace( '&#8203;', '', $activity_excerpt );
 			$activity_excerpt = str_replace( '""', '', $activity_excerpt );
 
 			$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-			$document_ids = bp_messages_get_meta( $activity->id, 'bp_document_ids', true );
-			$video_ids    = bp_messages_get_meta( $activity->id, 'bp_video_ids', true );
-			$gif_data     = bp_messages_get_meta( $activity->id, '_gif_data', true );
+			$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+			$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+			$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
 
 			if ( (int) $total_items > 1 ) {
 				$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
@@ -240,7 +241,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							$notification_type_html,
 							$activity_excerpt
 						);
-					} elseif ( $media_ids ) {
+					} elseif ( ! empty( $media_ids ) ) {
 						$media_ids = array_filter( explode( ',', $media_ids ) );
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
@@ -257,7 +258,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 								$notification_type_html
 							);
 						}
-					} elseif ( $document_ids ) {
+					} elseif ( ! empty( $document_ids ) ) {
 						$document_ids = array_filter( explode( ',', $document_ids ) );
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
@@ -274,7 +275,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 								$notification_type_html
 							);
 						}
-					} elseif ( $video_ids ) {
+					} elseif ( ! empty( $video_ids ) ) {
 						$video_ids = array_filter( explode( ',', $video_ids ) );
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
@@ -473,13 +474,14 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$activity_excerpt  = str_replace( '&hellip;"', '&hellip;', $activity_excerpt );
+			$activity_excerpt  = str_replace( '&#8203;', '', $activity_excerpt );
 			$activity_excerpt  = str_replace( '""', '', $activity_excerpt );
 			$notification_link = add_query_arg( 'rid', (int) $notification->id, bp_activity_get_permalink( $notification->item_id ) );
 
 			$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-			$document_ids = bp_messages_get_meta( $activity->id, 'bp_document_ids', true );
-			$video_ids    = bp_messages_get_meta( $activity->id, 'bp_video_ids', true );
-			$gif_data     = bp_messages_get_meta( $activity->id, '_gif_data', true );
+			$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+			$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+			$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
 
 			if ( ! empty( $notification_type_html ) ) {
 				if ( ! empty( $activity_excerpt ) ) {
@@ -489,7 +491,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						$notification_type_html,
 						$activity_excerpt
 					);
-				} elseif ( $media_ids ) {
+				} elseif ( ! empty( $media_ids ) ) {
 					$media_ids = array_filter( explode( ',', $media_ids ) );
 					if ( count( $media_ids ) > 1 ) {
 						$text = sprintf(
@@ -504,7 +506,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							$notification_type_html
 						);
 					}
-				} elseif ( $document_ids ) {
+				} elseif ( ! empty( $document_ids ) ) {
 					$document_ids = array_filter( explode( ',', $document_ids ) );
 					if ( count( $document_ids ) > 1 ) {
 						$text = sprintf(
@@ -519,7 +521,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							$notification_type_html
 						);
 					}
-				} elseif ( $video_ids ) {
+				} elseif ( ! empty( $video_ids ) ) {
 					$video_ids = array_filter( explode( ',', $video_ids ) );
 					if ( count( $video_ids ) > 1 ) {
 						$text = sprintf(
@@ -554,21 +556,21 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						__( 'Replied: %s', 'buddyboss' ),
 						$activity_excerpt
 					);
-				} elseif ( $media_ids ) {
+				} elseif ( ! empty( $media_ids ) ) {
 					$media_ids = array_filter( explode( ',', $media_ids ) );
 					if ( count( $media_ids ) > 1 ) {
 						$text = __( 'Replied: some photos', 'buddyboss' );
 					} else {
 						$text = __( 'Replied: a photo', 'buddyboss' );
 					}
-				} elseif ( $document_ids ) {
+				} elseif ( ! empty( $document_ids ) ) {
 					$document_ids = array_filter( explode( ',', $document_ids ) );
 					if ( count( $document_ids ) > 1 ) {
 						$text = __( 'Replied: some documents', 'buddyboss' );
 					} else {
 						$text = __( 'Replied: a document', 'buddyboss' );
 					}
-				} elseif ( $video_ids ) {
+				} elseif ( ! empty( $video_ids ) ) {
 					$video_ids = array_filter( explode( ',', $video_ids ) );
 					if ( count( $video_ids ) > 1 ) {
 						$text = __( 'Replied: some videos', 'buddyboss' );
