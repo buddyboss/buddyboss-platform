@@ -53,8 +53,6 @@ class BB_AS3CF_Plugin_Compatibility {
 	 */
 	public function compatibility_init() {
 
-		add_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
-
 		add_filter( 'bb_media_do_symlink', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
 		add_filter( 'bb_document_do_symlink', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
 		add_filter( 'bb_video_do_symlink', array( $this, 'bb_offload_do_symlink' ), PHP_INT_MAX, 4 );
@@ -66,6 +64,9 @@ class BB_AS3CF_Plugin_Compatibility {
 		add_filter( 'bb_video_get_symlink', array( $this, 'bp_video_offload_get_video_url' ), PHP_INT_MAX, 4 );
 		add_filter( 'bb_media_settings_callback_symlink_direct_access', array( $this, 'bb_media_directory_callback_check_access' ), PHP_INT_MAX, 2 );
 		add_filter( 'bb_media_check_default_access', array( $this, 'bb_media_check_default_access_access' ), PHP_INT_MAX, 1 );
+
+		add_action( 'bp_core_before_regenerate_attachment_thumbnails', array( $this, 'bb_offload_download_add_back_to_local' ) );
+		add_action( 'bp_core_after_regenerate_attachment_thumbnails', array( $this, 'bb_offload_download_remove_back_to_local' ) );
 
 	}
 
@@ -173,7 +174,7 @@ class BB_AS3CF_Plugin_Compatibility {
 				$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
 			}
 
-			$image_array = @getimagesize( $attachment_url );
+			$image_array = ( false !== $attachment_url ? @getimagesize( $attachment_url ) : array() );
 
 			if ( ! $attachment_url || empty( $image_array ) ) {
 
@@ -263,6 +264,24 @@ class BB_AS3CF_Plugin_Compatibility {
 		}
 
 		return $attachment_url;
+	}
+
+	/**
+	 * Copy file to local when thumbnail is not available.
+	 *
+	 * @since BuddyBoss 1.8.7
+	 */
+	public function bb_offload_download_add_back_to_local() {
+		add_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
+	}
+
+	/**
+	 * Remove the filter to copy file to local when thumbnail is not available.
+	 *
+	 * @since BuddyBoss 1.8.7
+	 */
+	public function bb_offload_download_remove_back_to_local() {
+		remove_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
 	}
 
 }

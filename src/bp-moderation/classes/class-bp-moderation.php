@@ -137,15 +137,16 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param bool $item_id   Moderation item id.
-	 * @param bool $item_type Moderation item type.
+	 * @param bool $item_id          Moderation item id.
+	 * @param bool $item_type        Moderation item type.
+	 * @param bool $blocking_user_id Moderation user id.
 	 */
-	public function __construct( $item_id = false, $item_type = false ) {
+	public function __construct( $item_id = false, $item_type = false, $blocking_user_id = false ) {
 		// Instantiate errors object.
 		$this->id            = 0;
 		$this->hide_sitewide = 0;
 		$this->errors        = new WP_Error();
-		$this->user_id       = get_current_user_id();
+		$this->user_id       = ! empty( $blocking_user_id ) ? $blocking_user_id : get_current_user_id();
 		$this->blog_id       = get_current_blog_id();
 		$this->report_id     = 0;
 		$this->category_id   = 0;
@@ -178,11 +179,11 @@ class BP_Moderation {
 
 		$bp        = buddypress();
 		$cache_key = 'bb_check_moderation_' . $item_type . '_' . $item_id;
-		$result    = wp_cache_get( $cache_key, 'bb' );
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result || true === $force_check ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
-			wp_cache_set( $cache_key, $result, 'bb' );
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
 		return is_numeric( $result ) ? (int) $result : false;
@@ -194,14 +195,15 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function populate() {
+		static $bb_report_row_query = array();
 		global $wpdb;
 
-		$row = wp_cache_get( $this->id, 'bb_moderation' );
+		$row = wp_cache_get( $this->id, 'bp_moderation' );
 		if ( false === $row ) {
 			$bp  = buddypress();
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} WHERE id = %d", $this->id ) ); // phpcs:ignore
 
-			wp_cache_set( $this->id, $row, 'bb_moderation' );
+			wp_cache_set( $this->id, $row, 'bp_moderation' );
 		}
 
 		if ( empty( $row ) ) {
@@ -219,8 +221,14 @@ class BP_Moderation {
 		/**
 		 * Fetch User Report data
 		 */
-		$bp         = buddypress();
-		$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
+		$bp        = buddypress();
+		$cache_key = 'bp_moderation_populate_' . $this->id . '_' . $this->user_id;
+		if ( ! isset( $bb_report_row_query[ $cache_key ] ) ) {
+			$report_row                        = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
+			$bb_report_row_query[ $cache_key ] = ! empty( $report_row ) ? $report_row : false;
+		} else {
+			$report_row = $bb_report_row_query[ $cache_key ];
+		}
 		if ( empty( $report_row ) ) {
 			return;
 		}
@@ -913,7 +921,13 @@ class BP_Moderation {
 
 		$bp = buddypress();
 
-		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
+		$cache_key = 'bb_get_specific_moderation_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
+
+		if ( false === $result ) {
+			$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
+		}
 
 		return ! empty( $result ) ? $result : false;
 	}
@@ -1208,7 +1222,6 @@ class BP_Moderation {
 				foreach ( $admins as $admin ) {
 					bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
 				}
-
 			} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
 
 				$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
@@ -1244,7 +1257,6 @@ class BP_Moderation {
 				foreach ( $admins as $admin ) {
 					bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
 				}
-
 			}
 
 			unset( $_GET['username_visible'] );

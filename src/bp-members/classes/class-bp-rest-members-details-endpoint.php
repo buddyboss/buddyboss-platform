@@ -229,6 +229,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
+		add_filter( 'bp_core_create_nav_link', array( $this, 'bp_rest_core_create_nav_link' ), 999 );
 
 		remove_action( 'bp_init', 'bb_moderation_load', 1 );
 		remove_action( 'bp_init', 'bp_register_taxonomies', 2 );
@@ -241,6 +242,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		remove_action( 'bp_init', 'bp_init_background_updater', 50 );
 		if ( function_exists( 'bb_init_email_background_updater' ) ) {
 			remove_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			remove_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 		}
 		remove_all_actions( 'bp_actions' );
 
@@ -262,6 +266,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		add_action( 'bp_init', 'bp_init_background_updater', 50 );
 		if ( function_exists( 'bb_init_email_background_updater' ) ) {
 			add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 		}
 
 		$_SERVER['REQUEST_URI'] = $tempurl;
@@ -358,6 +365,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$retval['tabs'] = array_values( $profile_tabs );
 
+		remove_filter( 'bp_core_create_nav_link', array( $this, 'bp_rest_core_create_nav_link' ), 999 );
 		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
@@ -860,9 +868,14 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			);
 
 			if ( has_action( 'bp_notification_settings' ) ) {
+				$title = esc_html__( 'Email Preferences', 'buddyboss' );
+				if ( function_exists( 'bb_core_notification_preferences_data' ) ) {
+					$data  = bb_core_notification_preferences_data();
+					$title = esc_html( $data['menu_title'] );
+				}
 				$item_settings['children'][] = array(
 					'ID'    => 'notifications',
-					'title' => __( 'Email Preferences', 'buddyboss' ),
+					'title' => $title,
 					'url'   => esc_url( trailingslashit( $settings_link . 'notifications' ) ),
 					'count' => '',
 				);
@@ -1308,6 +1321,30 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			return $is_current_component;
 		}
 		return false;
+	}
+
+	/**
+	 * Function to change the user domain for profile tabs.
+	 *
+	 * @param array $menu_args Menu arguments
+	 *
+	 * @return mixed
+	 */
+	public function bp_rest_core_create_nav_link( $menu_args ) {
+
+		$user_domain = '';
+
+		if ( bp_displayed_user_domain() ) {
+			$user_domain = bp_displayed_user_domain();
+		} elseif ( bp_loggedin_user_domain() ) {
+			$user_domain = bp_loggedin_user_domain();
+		}
+
+		if ( ! empty( $user_domain ) ) {
+			$menu_args['link'] = trailingslashit( $user_domain . $menu_args['slug'] );
+		}
+
+		return $menu_args;
 	}
 
 }

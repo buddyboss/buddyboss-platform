@@ -1,12 +1,14 @@
 <?php
 /**
- * BuddyBoss - Activity Feed (Single Item)
+ * The template for BuddyBoss - Activity Feed (Single Item)
  *
  * This template is used by activity-loop.php and AJAX functions to show
  * each activity.
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/activity/entry.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 bp_nouveau_activity_hook( 'before', 'entry' ); ?>

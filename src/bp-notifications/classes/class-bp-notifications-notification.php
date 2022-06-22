@@ -85,6 +85,14 @@ class BP_Notifications_Notification {
 	public $is_new;
 
 	/**
+	 * Is the notification newly inserted.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var bool
+	 */
+	public $inserted = false;
+
+	/**
 	 * Columns in the notifications table.
 	 */
 	public static $columns = array(
@@ -164,6 +172,11 @@ class BP_Notifications_Notification {
 
 			if ( empty( $this->id ) ) {
 				$this->id = $wpdb->insert_id;
+
+				// Set the notification type.
+				bp_notifications_update_meta( $this->id, 'is_modern', ! bb_enabled_legacy_email_preference() );
+
+				$this->inserted = true;
 			}
 			$retval = $this->id;
 		}
@@ -196,7 +209,12 @@ class BP_Notifications_Notification {
 		$bp = buddypress();
 
 		// Look for a notification.
-		$notification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->notifications->table_name} WHERE id = %d", $this->id ) );
+		$notification = wp_cache_get( $this->id, 'bp_notifications' );
+
+		if ( false === $notification ) {
+			$notification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->notifications->table_name} WHERE id = %d", $this->id ) );
+			wp_cache_set( $this->id, $notification, 'bp_notifications' );
+		}
 
 		// Setup the notification data.
 		if ( ! empty( $notification ) && ! is_wp_error( $notification ) ) {
@@ -273,7 +291,19 @@ class BP_Notifications_Notification {
 	 */
 	protected static function _delete( $where = array(), $where_format = array() ) {
 		global $wpdb;
-		return $wpdb->delete( buddypress()->notifications->table_name, $where, $where_format );
+
+		$bp        = buddypress();
+		$where_sql = self::get_where_sql( $where );
+
+		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		if ( ! empty( $notifications ) ) {
+			foreach ( $notifications as $notification ) {
+				bp_notifications_delete_meta( $notification->id );
+			}
+		}
+
+		return $wpdb->delete( $bp->notifications->table_name, $where, $where_format );
 	}
 
 	/**
@@ -356,6 +386,23 @@ class BP_Notifications_Notification {
 			$where_conditions['component_action'] = "component_action IN ({$ca_in})";
 		}
 
+		// Excluded component_action.
+		if ( ! empty( $args['excluded_action'] ) ) {
+			if ( ! is_array( $args['excluded_action'] ) ) {
+				$excluded_action = explode( ',', $args['excluded_action'] );
+			} else {
+				$excluded_action = $args['excluded_action'];
+			}
+
+			$ca_clean = array();
+			foreach ( $excluded_action as $ca ) {
+				$ca_clean[] = $wpdb->prepare( '%s', $ca );
+			}
+
+			$ca_not_in                           = implode( ',', $ca_clean );
+			$where_conditions['excluded_action'] = "component_action NOT IN ({$ca_not_in})";
+		}
+
 		// If is_new.
 		if ( ! empty( $args['is_new'] ) && 'both' !== $args['is_new'] ) {
 			$where_conditions['is_new'] = 'is_new = 1';
@@ -432,12 +479,20 @@ class BP_Notifications_Notification {
 				$order_by               = implode( ', ', $order_by_clean );
 				$conditions['order_by'] = "{$order_by}";
 			}
+
+			if ( ! empty( $args['id'] ) && 'in' === $args['order_by'] ) {
+				$in                     = implode( ',', wp_parse_id_list( $args['id'] ) );
+				$conditions['order_by'] = "FIELD(id, {$in})";
+			}
 		}
 
 		// Sort order direction.
 		if ( ! empty( $args['sort_order'] ) && in_array( $args['sort_order'], array( 'ASC', 'DESC' ) ) ) {
 			$sort_order               = $args['sort_order'];
 			$conditions['sort_order'] = "{$sort_order}";
+			if ( ! empty( $args['id'] ) && 'include' === $args['order_by'] ) {
+				$conditions['sort_order'] = '';
+			}
 		}
 
 		// Custom ORDER BY.
@@ -585,7 +640,14 @@ class BP_Notifications_Notification {
 
 		$bp = buddypress();
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->core->table_name_notifications} WHERE id = %d AND user_id = %d", $notification_id, $user_id ) );
+		$cache_key = 'bp_notifications_check_access_' . $user_id . '_' . $notification_id;
+		$record    = wp_cache_get( $cache_key, 'bp_notifications' );
+
+		if ( false === $record ) {
+			$record = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->core->table_name_notifications} WHERE id = %d AND user_id = %d", $notification_id, $user_id ) );
+			wp_cache_set( $cache_key, $record, 'bp_notifications' );
+		}
+		return $record;
 	}
 
 	/**
@@ -606,6 +668,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => false,
 				'component_name'    => bp_notifications_get_registered_components(),
 				'component_action'  => false,
+				'excluded_action'   => false,
 				'is_new'            => true,
 				'search_terms'      => '',
 				'order_by'          => false,
@@ -690,6 +753,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => $r['secondary_item_id'],
 				'component_name'    => $r['component_name'],
 				'component_action'  => $r['component_action'],
+				'excluded_action'   => $r['excluded_action'],
 				'is_new'            => $r['is_new'],
 				'search_terms'      => $r['search_terms'],
 				'date_query'        => $r['date_query'],
@@ -700,11 +764,23 @@ class BP_Notifications_Notification {
 			$meta_query_sql
 		);
 
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.3
+		 *
+		 * @param string $where_sql Where SQL statement.
+		 * @param string $tbl_alias Table alias.
+		 * @param array  $r         Array of parsed arguments for the get method.
+		 */
+		$where_sql = apply_filters( 'bb_notifications_get_where_conditions', $where_sql, 'n', $r );
+
 		// ORDER BY.
 		$order_sql = self::get_order_by_sql(
 			array(
 				'order_by'   => $r['order_by'],
 				'sort_order' => $r['sort_order'],
+				'id'         => $r['id'],
 			)
 		);
 
@@ -778,6 +854,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => $r['secondary_item_id'],
 				'component_name'    => $r['component_name'],
 				'component_action'  => $r['component_action'],
+				'excluded_action'   => $r['excluded_action'],
 				'is_new'            => $r['is_new'],
 				'search_terms'      => $r['search_terms'],
 				'date_query'        => $r['date_query'],
