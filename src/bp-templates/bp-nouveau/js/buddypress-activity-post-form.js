@@ -947,6 +947,10 @@ window.bp = window.bp || {};
 			var self = this,
 				meta = {};
 
+			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+				return;
+			}
+
 			// Set the content and meta.
 			_.each(
 				self.postForm.$el.serializeArray(),
@@ -1159,6 +1163,11 @@ window.bp = window.bp || {};
 		},
 
 		postDraftActivity: function( is_force_saved, is_reload_window ) {
+
+			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+				return;
+			}
+
 			if ( ! is_force_saved && ( _.isUndefined( bp.draft_activity ) || ( ! _.isUndefined( bp.draft_activity ) && ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) ) ) ) {
 				return;
 			}
@@ -5337,8 +5346,6 @@ window.bp = window.bp || {};
 						}
 
 						/**
-						 * In the Activity directory, we also need to check the active scope.
-						 * eg: An update posted in a private group should only show when the
 						 * "My Groups" tab is active.
 						 */
 						if ( toPrepend && response.is_directory ) {

@@ -696,9 +696,6 @@ function bp_nouveau_ajax_post_update() {
 
 			// Draft activity meta key.
 			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
-		} else if ( isset( $_POST['user_id'] ) ) {
-			// Draft activity meta key.
-			$draft_activity_meta_key .= '_' . $_POST['user_id'];
 		}
 
 		$activity_id = bp_activity_post_update(
