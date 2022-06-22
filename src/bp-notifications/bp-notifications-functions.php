@@ -1242,6 +1242,87 @@ function bb_notification_avatar() {
 }
 
 /**
+ * Get avatar url for notification user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $notification Notification object.
+ *
+ * @return false|mixed|string|void
+ */
+function bb_notification_avatar_url( $notification = '' ) {
+	if ( empty( $notification ) ) {
+		$notification = buddypress()->notifications->query_loop->notification;
+	}
+
+	$component        = $notification->component_name;
+	$component_action = $notification->component_action;
+
+	switch ( $component ) {
+		case 'groups':
+			if ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'group';
+			}
+			break;
+		case 'follow':
+		case 'friends':
+			if ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'user';
+			}
+			break;
+		case has_action( 'bb_notification_avatar_' . $component ):
+			do_action( 'bb_notification_avatar_' . $component );
+			break;
+		default:
+			if ( ! empty( $notification->secondary_item_id ) ) {
+				$item_id = $notification->secondary_item_id;
+				$object  = 'user';
+			} elseif ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'user';
+			} else {
+				$item_id = 0;
+				$object  = 'notification';
+			}
+			break;
+	}
+
+	switch ( $component_action ) {
+		case 'bb_groups_new_request':
+			if ( ! empty( $notification->secondary_item_id ) ) {
+				$item_id = $notification->secondary_item_id;
+				$object  = 'user';
+			}
+			break;
+	}
+
+	$image_url = '';
+
+	if ( isset( $item_id, $object ) ) {
+
+		add_filter( 'bp_core_gravatar_url_args', 'bb_notification_avatar_url_args' );
+
+		if ( 'notification' === $object ) {
+			$image_url = bb_get_notification_avatar_url( 'thumb' );
+		} else {
+			$image_url = bp_core_fetch_avatar(
+				array(
+					'item_id' => $item_id,
+					'object'  => $object,
+					'html'    => false,
+				)
+			);
+		}
+
+		remove_filter( 'bp_core_gravatar_url_args', 'bb_notification_avatar_url_args' );
+	}
+
+	return apply_filters( 'bb_notification_avatar_url', str_replace( '&#038;', '&', $image_url ), $notification );
+}
+
+/**
  * Get Default Avatar for notification.
  *
  * @since BuddyBoss 2.0.2
@@ -1263,7 +1344,7 @@ function bb_get_default_notification_avatar( $size = 'full', $notification ) {
 		esc_url( $image_url ),
 		esc_attr( ( 'thumb' === $size ? 'avatar-150' : 'avatar-300 ' ) ),
 		esc_attr( ( 'thumb' === $size ? '150' : '300 ' ) ),
-		esc_attr__( 'Notification Icon', 'buddyboss' ),
+		esc_attr__( 'Notification Icon', 'buddyboss' )
 	);
 }
 
@@ -1408,4 +1489,18 @@ function bb_get_notification_conditional_icon( $notification ) {
 
 	return apply_filters( 'bb_get_notification_conditional_icon', $icon_class, $notification );
 
+}
+
+/**
+ * Function to remove the size and rating to get the gravatar browser notification avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Array of arguments.
+ *
+ * @return mixed
+ */
+function bb_notification_avatar_url_args( $args ) {
+	unset( $args['s'], $args['r'] );
+	return $args;
 }
