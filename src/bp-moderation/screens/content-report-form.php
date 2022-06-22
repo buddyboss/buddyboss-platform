@@ -56,7 +56,9 @@
 						</div>
 						<div class="form-item bp-hide">
 							<label for="report-note">
-								<textarea id="report-note" type="text" name="note" class="bp-other-report-cat"></textarea> </label>
+								<span class="screen-reader-text"><?php esc_html_e( 'Report note', 'buddyboss' ); ?></span>
+								<textarea id="report-note" name="note" class="bp-other-report-cat"></textarea>
+							</label>
 						</div>
 						<footer class="bb-model-footer">
 							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
