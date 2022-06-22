@@ -3209,7 +3209,6 @@ window.bp = window.bp || {};
 				this.model = new bp.Models.messageThread();
 
 				this.collection.on( 'add', this.addMessage, this );
-				this.collection.on( 'update', this.updateMessage, this );
 
 				// Add the editor view.
 				this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
@@ -3240,9 +3239,11 @@ window.bp = window.bp || {};
 			},
 
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
-				// use sent messageData here
-				this.collection.add( _.first( messagePusherData ) );
-				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+				var model = this.collection.get( messagePusherData.hash );
+				messagePusherData.message.sender_is_you = false;
+				messagePusherData.message.date = new Date( messagePusherData.message.date );
+				model.set( messagePusherData.message );
+				//this.collection.set( { model }, { remove: false } );
 			},
 
 			events: {
@@ -3389,12 +3390,6 @@ window.bp = window.bp || {};
 				jQuery( window ).scroll();
 			},
 
-			updateMessage: function( message ) {
-				console.log( 'message' );
-				console.log( message );
-				//this.views.update( '#bp-message-thread-list li' , new bp.Views.userMessagesEntry( { model: message } ) );
-			},
-
 			addEditor: function() {
 				// Load the Editor.
 				this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
@@ -3524,12 +3519,10 @@ window.bp = window.bp || {};
 					this.messageAttachments.onClose();
 				}
 
-
-
-				// this.collection.add( _.first( reply ) );
+				 this.collection.add( _.first( reply ) );
 
 				bp.Nouveau.Messages.removeFeedback();
-				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				 $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
 
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 			},
