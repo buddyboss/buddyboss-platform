@@ -331,10 +331,9 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						__( 'You have %1$d new replies', 'buddyboss' ),
 						(int) $total_items
 					);
-					$amount            = 'multiple';
+					$amount = 'multiple';
 				} else {
 					$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
-					$amount            = 'single';
 
 					if ( ! empty( $notification_type_html ) ) {
 						if ( ! empty( $activity_excerpt ) ) {
