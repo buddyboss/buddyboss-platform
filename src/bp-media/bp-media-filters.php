@@ -262,6 +262,10 @@ function bp_media_activity_append_media( $content, $activity ) {
 			$args['privacy'][] = 'forums';
 		}
 
+		if ( in_array( $activity->type, array( 'activity_comment', 'new_blog_comment' ), true ) ) {
+			$args['privacy'][] = 'comment';
+		}
+
 		if ( bp_has_media( $args ) ) {
 
 			ob_start();

@@ -221,6 +221,10 @@ function bp_video_activity_append_video( $content, $activity ) {
 			$args['privacy'][] = 'forums';
 		}
 
+		if ( in_array( $activity->type, array( 'activity_comment', 'new_blog_comment' ), true ) ) {
+			$args['privacy'][] = 'comment';
+		}
+
 		if ( bp_has_video( $args ) ) {
 			$classes = array(
 				esc_attr( 'bb-video-length-' . $video_template->video_count ),
