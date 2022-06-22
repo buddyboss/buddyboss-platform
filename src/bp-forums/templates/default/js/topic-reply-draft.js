@@ -19,19 +19,6 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Clear the local storage if the data is not available in the DB.
-			var reply_key = 'draft_reply_';
-			Object.keys( localStorage ).forEach(
-				function( key) {
-					if ( key.substring( 0, reply_key.length ) === reply_key ) {
-						if ( 'undefined' === typeof BP_Nouveau.forums.draft || 'undefined' === typeof BP_Nouveau.forums.draft[key] ) {
-							localStorage.removeItem( key );
-						}
-
-					}
-				}
-			);
-
 			this.setupGlobals();
 			this.addListeners();
 		},
@@ -56,6 +43,7 @@ window.bp = window.bp || {};
 			this.is_topic_reply_form_submit = false;
 			this.draft_content_changed      = false;
 			this.all_draft_data             = {};
+			this.bp_nouveau_forums_data     = ( 'undefined' !== typeof BP_Nouveau.forums.draft ) ? BP_Nouveau.forums.draft : {};
 			this.topic_reply_draft          = {
 				object: false,
 				data_key: false,
@@ -114,6 +102,7 @@ window.bp = window.bp || {};
 
 		setupOnOpenTopicReplyModal: function() {
 			bp.Nouveau.TopicReplyDraft.setupTopicReplyDraftKeys();
+			bp.Nouveau.TopicReplyDraft.getTopicReplyDraftData();
 			bp.Nouveau.TopicReplyDraft.syncTopicReplyDraftData();
 			bp.Nouveau.TopicReplyDraft.setupTopicReplyDraftIntervals();
 			bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
@@ -161,9 +150,9 @@ window.bp = window.bp || {};
 		},
 
 		syncTopicReplyDraftData: function() {
-			if ( 'undefined' === typeof this.all_draft_data[this.topic_reply_draft.data_key] && 'undefined' !== typeof BP_Nouveau.forums.draft && 'undefined' !== typeof BP_Nouveau.forums.draft[this.topic_reply_draft.data_key] ) {
-				this.topic_reply_draft                               = BP_Nouveau.forums.draft[this.topic_reply_draft.data_key];
-				this.all_draft_data[this.topic_reply_draft.data_key] = BP_Nouveau.forums.draft[this.topic_reply_draft.data_key].data;
+			if ( 'undefined' === typeof this.all_draft_data[this.topic_reply_draft.data_key] && 'undefined' !== typeof this.bp_nouveau_forums_data && 'undefined' !== typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key] ) {
+				this.topic_reply_draft                               = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
+				this.all_draft_data[this.topic_reply_draft.data_key] = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key].data;
 				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
 			}
 		},
@@ -245,6 +234,10 @@ window.bp = window.bp || {};
 			if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
 				delete this.all_draft_data[this.topic_reply_draft.data_key];
 			}
+			if ( 'undefined' !== typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key] ) {
+				delete this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
+			}
+
 			this.topic_reply_draft.data = false;
 			localStorage.removeItem( this.topic_reply_draft.data_key );
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
