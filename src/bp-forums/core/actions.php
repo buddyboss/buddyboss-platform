@@ -218,8 +218,8 @@ add_action( 'bbp_trash_topic', 'bbp_remove_topic_from_all_subscriptions' );
 add_action( 'bbp_delete_topic', 'bbp_remove_topic_from_all_subscriptions' );
 add_action( 'bbp_trash_forum', 'bbp_remove_forum_from_all_subscriptions' );
 add_action( 'bbp_delete_forum', 'bbp_remove_forum_from_all_subscriptions' );
-add_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 11, 5 );
-add_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 11, 4 );
+add_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 9999, 5 );
+add_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );
 
 // Sticky.
 add_action( 'bbp_trash_topic', 'bbp_unstick_topic' );

@@ -44,7 +44,7 @@ add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 
 add_action( 'messages_message_sent', 'bp_video_attach_video_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_video_messages_delete_attached_video', 10, 2 ); // Delete thread videos.
 add_action( 'bp_messages_thread_messages_after_update', 'bp_video_user_messages_delete_attached_video', 10, 4 ); // Delete messages videos.
-add_filter( 'bp_messages_message_validated_content', 'bp_video_message_validated_content', 10, 3 );
+add_filter( 'bp_messages_message_validated_content', 'bp_video_message_validated_content', 20, 3 );
 
 // Core tools.
 add_filter( 'bp_repair_list', 'bp_video_add_admin_repair_items' );
@@ -422,8 +422,8 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 			if ( ! empty( $old_video_ids ) ) {
 
 				foreach ( $old_video_ids as $video_id ) {
-				    if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) && ! in_array( $video_id, $video_ids ) ) {
-					    $video_ids[] = $video_id;
+					if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) && ! in_array( $video_id, $video_ids ) ) {
+						$video_ids[] = $video_id;
 					}
 				    if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
 						bp_video_delete( array( 'id' => $video_id ) );
@@ -783,20 +783,20 @@ function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids,
 /**
  * Validate message if video is not empty.
  *
- * @param bool         $validated_content Boolean from filter.
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool         $validated_content True if message is valid, false otherwise.
  * @param string       $content           Message content.
  * @param array|object $post              Request object.
  *
  * @return bool
- *
- * @since BuddyBoss 1.7.0
  */
 function bp_video_message_validated_content( $validated_content, $content, $post ) {
-	// check if video is enabled in messages or not and empty video in object request or not.
-	if ( bp_is_messages_video_support_enabled() && ! empty( $post['video'] ) ) {
-		$validated_content = true;
+	if ( ! bp_is_messages_video_support_enabled() || ! isset( $post['video'] ) ) {
+		return (bool) $validated_content;
 	}
-	return $validated_content;
+
+	return (bool) ! empty( $post['video'] );
 }
 
 /**
