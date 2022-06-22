@@ -512,8 +512,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				$content = array(
 					'text'  => $content['text'],
 					'link'  => $content['link'],
-					'title' => $content['title'],
-					'image' => $content['image'],
+					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
+					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
 				);
 			}
 		}

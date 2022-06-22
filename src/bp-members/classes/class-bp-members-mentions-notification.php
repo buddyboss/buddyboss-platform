@@ -276,8 +276,10 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				}
 			} else {
 				$content = array(
-					'text' => $content['text'],
-					'link' => $content['link'],
+					'text'  => $content['text'],
+					'link'  => $content['link'],
+					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
+					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
 				);
 			}
 		}
