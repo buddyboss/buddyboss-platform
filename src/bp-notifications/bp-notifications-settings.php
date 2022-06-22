@@ -70,7 +70,7 @@ function bb_web_push_notifications_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => '',
+						'article' => '125638',
 					),
 					'admin.php'
 				)
