@@ -782,9 +782,9 @@ function bpm_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
 		</th>
 		<td>
 			<select name="bpm_category_show_when_reporting" id="bpm_category_show_when_reporting">
-				<option value="content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
-				<option value="members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
-				<option value="content_members"><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+				<option value="content" <?php echo 'content' === $value ? 'selected' : ''; ?>><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
+				<option value="members" <?php echo 'members' === $value ? 'selected' : ''; ?>><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
+				<option value="content_members" <?php echo 'content_members' === $value ? 'selected' : ''; ?>><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
 			</select>
 		</td>
 	</tr>
@@ -822,6 +822,8 @@ add_action( 'edited_bpm_category', 'bpm_category_save_term_fields_show_when_repo
  * @return array $columns List of columns for Reporting categort taxonomy
  */
 function bpm_category_show_when_reporting_columns( $columns ) {
+	unset($columns['slug']);
+	unset($columns['posts']);
 	$columns['bpm_category_show_when_reporting'] = __( 'Show When Reporting', 'buddyboss' );
 	return $columns;
 }
@@ -904,6 +906,9 @@ function bb_quickedit_bpm_category_show_when_reporting_javascript() {
 	<script type="text/javascript">
 		/*global jQuery*/
 		jQuery(function($) {
+			$('span:contains("Slug")').each(function (i) {
+                $(this).parent().remove();
+            });
 			$('#the-list').on('click', 'button.editinline', function(e) {
 				e.preventDefault();
 				var $tr = $(this).closest('tr');
@@ -920,3 +925,24 @@ function bb_quickedit_bpm_category_show_when_reporting_javascript() {
 	<?php
 }
 add_action( 'admin_print_footer_scripts-edit-tags.php', 'bb_quickedit_bpm_category_show_when_reporting_javascript' );
+
+/**
+ * Added style to hide slug field from add/edit forms.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_quickedit_bpm_category_hide_slug_style() {
+	$current_screen = get_current_screen();
+
+	error_log(print_r($current_screen, true));
+	if ( 'edit-bpm_category' !== $current_screen->id && 'bpm_category' !== $current_screen->taxonomy ) {
+		return;
+	}
+	?>
+	<style type="text/css">
+		.term-slug-wrap { display: none;}
+	</style>
+	<?php
+}
+add_action( 'admin_print_footer_scripts-edit-tags.php', 'bb_quickedit_bpm_category_hide_slug_style' );
+add_action( 'admin_print_footer_scripts-term.php', 'bb_quickedit_bpm_category_hide_slug_style' );
