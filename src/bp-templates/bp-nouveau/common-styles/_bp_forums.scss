@@ -1123,6 +1123,15 @@ fieldset div.avatar {
 			background-color: #fafafa;
 		}
 
+		.bb-video-wrapper .fluid-width-video-wrapper {
+			margin: 0;
+
+			iframe {
+				margin: 0;
+				border-radius: 4px;
+			}
+		}
+
 	}
 
 }
