@@ -6571,7 +6571,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
  * @return string
  */
 function bb_core_remove_unfiltered_html( $content ) {
-	return esc_html( wp_strip_all_tags( wp_specialchars_decode( $content ) ) );
+	return wp_strip_all_tags( $content );
 }
 
 /**
@@ -6721,7 +6721,17 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 	$notification_type = array_filter(
 		array_map(
 			function ( $n ) use ( $component_name, $component_action ) {
-				if ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
+				if (
+					'bb_new_mention' === $component_action &&
+					in_array( $component_name, array( 'activity', 'forums', 'members' ), true )
+				) {
+					return $n['notification_type'];
+				} elseif (
+					'bb_groups_new_message' === $component_action &&
+					in_array( $component_name, array( 'messages', 'groups' ), true )
+				) {
+					return $n['notification_type'];
+				} elseif ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
 					return $n['notification_type'];
 				}
 			},
@@ -7008,6 +7018,15 @@ function bb_render_notification( $notification_group ) {
 		}
 	);
 
+	$column_count = 2;
+	if ( bb_web_notification_enabled() ) {
+		$column_count += 1;
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$column_count += 1;
+	}
+
 	if ( ! empty( $options['fields'] ) ) {
 		?>
 
@@ -7016,7 +7035,7 @@ function bb_render_notification( $notification_group ) {
 
 			<?php if ( ! empty( $options['label'] ) ) { ?>
 				<tr class="notification_heading">
-					<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
+					<td class="title" colspan="<?php echo esc_attr( $column_count ); ?>"><?php echo esc_html( $options['label'] ); ?></td>
 				</tr>
 				<?php
 			}
@@ -7619,10 +7638,13 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
+		case 'bp_web_push_notification_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
+			break;
 		default:
 			$meta_icon = '';
 	}
 
-	return apply_filters( 'bb_admin_icons', $meta_icon );
+	return apply_filters( 'bb_admin_icons', $meta_icon, $id );
 }
 

@@ -2217,6 +2217,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_activitiy_edit_data( $activity ) {
 		global $activities_template;
+		if ( ! is_object( $activities_template ) ) {
+			$activities_template = new stdClass();
+		}
+
+		if ( ! isset( $activities_template->activity ) ) {
+			$activities_template->activity = $activity;
+		}
+
 		$activity_temp = $activities_template->activity;
 
 		if ( empty( $activity->id ) ) {
