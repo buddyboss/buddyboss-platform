@@ -1330,6 +1330,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 				) . '"';
 
 				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+				$excerpt = str_replace( '""', '', $excerpt );
 			}
 
 			if ( ! empty( $excerpt ) ) {

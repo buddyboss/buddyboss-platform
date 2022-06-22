@@ -198,6 +198,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 				) . '"';
 
 				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+				$excerpt = str_replace( '""', '', $excerpt );
 			}
 
 			if ( 'web_push' === $screen ) {
