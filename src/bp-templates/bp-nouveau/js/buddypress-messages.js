@@ -3233,14 +3233,7 @@ window.bp = window.bp || {};
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
-
-				if ( parseInt( messagePusherData[0].sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
-					messagePusherData[0].sender_is_you = true;
-				} else {
-					messagePusherData[0].sender_is_you = false;
-				}
-
-				// use sent messageData here
+				// use sent messageData here.
 				this.collection.add( _.first( messagePusherData ) );
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 			},
