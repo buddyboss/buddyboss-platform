@@ -4684,3 +4684,73 @@ function bb_get_group_type_label_colors( $type ) {
 
 	return apply_filters( 'bb_get_group_type_label_colors', $bp_group_type_label_color );
 }
+
+/**
+ * Function will fetch all members.
+ * If groups_ids pass in args then return that group related to members.
+ * Also, if pass per_page and page in args then it will return members list based on that.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param array $args      {
+ * Array of optional arguments.
+ *
+ * @type array  $group_ids Group ids.
+ * @type int    $page      Page of members being requested. Default 1.
+ * @type int    $per_page  Members to return per page. Default 20.
+ * }
+ *
+ * @return array
+ */
+function bb_get_all_members_for_groups( $args = array() ) {
+	static $cache;
+	global $wpdb;
+	$bp = buddypress();
+	$r  = array_merge(
+		array(
+			'page'     => 1,
+			'per_page' => 20,
+		),
+		$args
+	);
+
+	$cache_key = md5( maybe_serialize( $r ) );
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		$results = $cache[ $cache_key ];
+	} else {
+		$sql['select'] = "SELECT DISTINCT user_id FROM {$bp->groups->table_name_members}";
+		$sql['where']  = array(
+			'is_confirmed = 1',
+			'is_banned = 0',
+		);
+
+		if ( ! empty( $r['group_ids'] ) ) {
+			$sql['where'][] = 'group_id IN ( ' . implode( ',', wp_parse_id_list( $r['group_ids'] ) ) . ' )';
+		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.4
+		 *
+		 * @param string $sql         From SQL statement.
+		 * @param string $column_name Column name.
+		 */
+		$sql['where'] = apply_filters( 'bb_get_all_members_for_groups_where_sql', $sql['where'], 'user_id' );
+
+		// Concatenate where statement.
+		$sql['where'] = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : '';
+
+		// Set limit query.
+		$sql['limit'] = '';
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) ) {
+			$sql['limit'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+		}
+
+		// Get the specific user ids.
+		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" );
+	}
+
+	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
+}

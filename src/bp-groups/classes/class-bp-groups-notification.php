@@ -676,7 +676,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format groups push notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 *
 	 * @param array  $content      Notification content.
 	 * @param object $notification Notification object.
