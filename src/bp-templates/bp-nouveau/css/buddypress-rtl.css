@@ -3891,7 +3891,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   margin: 12px 0 10px;
 }
 
-.activity-url-scrapper-loading .bb-icon-loader {
+.activity-url-scrapper-loading > i {
   font-size: 18px;
   margin-left: 10px;
   vertical-align: middle;
