@@ -1394,7 +1394,7 @@ span.dashicons.dashicons-admin-file:before {
 					a {
 						padding: 10px 14px;
 						display: block;
-						font-size: 14px;
+						font-size: 13px;
 						line-height: 1;
 						color: #7f868f;
 
@@ -1405,8 +1405,9 @@ span.dashicons.dashicons-admin-file:before {
 
 						&:before {
 							font-family: "bb-icons";/* stylelint-disable-line */
-							font-size: 16px;
+							font-size: 18px;
 							display: inline-block;
+							vertical-align: middle;
 							margin-right: 10px;
 							width: 20px;
 							text-align: center;
@@ -1428,23 +1429,16 @@ span.dashicons.dashicons-admin-file:before {
 						}
 
 						a:before {
-							content: "\ee9f";
-							font-size: 13px;
+							content: "\eea1";
 						}
 					}
 
 					&.delete_file a:before {
 						content: "\ef48";
-						font-size: 20px;
 					}
 
 					&.edit_thumbnail_video a:before {
 						content: "\eeb4";
-						font-size: 20px;
-						display: inline-block;
-						vertical-align: middle;
-						max-height: 15px;
-						margin-top: -8px;
 					}
 
 					&.report_file a {
@@ -1458,7 +1452,6 @@ span.dashicons.dashicons-admin-file:before {
 						&:before {
 							content: "\ee9c";
 							font-size: 15px;
-							vertical-align: middle;
 						}
 
 						&:hover {
@@ -1480,7 +1473,6 @@ span.dashicons.dashicons-admin-file:before {
 
 					&.privacy_file a:before {
 						content: "\eecc";
-						font-size: 15px;
 					}
 
 					&.copy_download_file_url a:before {
@@ -1631,7 +1623,6 @@ span.dashicons.dashicons-admin-file:before {
 
 				i {
 					border-radius: 50%;
-					filter: drop-shadow(2px 2px 5px #000);
 
 					&:before {
 						content: "\ee5c";
@@ -1669,7 +1660,7 @@ span.dashicons.dashicons-admin-file:before {
 					a {
 						padding: 10px 14px;
 						display: block;
-						font-size: 14px;
+						font-size: 13px;
 						line-height: 1;
 						color: #7f868f;
 
@@ -1680,8 +1671,9 @@ span.dashicons.dashicons-admin-file:before {
 
 						&:before {
 							font-family: "bb-icons";/* stylelint-disable-line */
-							font-size: 16px;
+							font-size: 18px;
 							display: inline-block;
+							vertical-align: middle;
 							margin-right: 10px;
 							width: 20px;
 							text-align: center;
@@ -1703,22 +1695,12 @@ span.dashicons.dashicons-admin-file:before {
 						}
 
 						a:before {
-							content: "\eeb8";
-							vertical-align: middle;
-							font-size: 20px;
-							max-height: 15px;
-							margin-top: -8px;
-							display: inline-block;
+							content: "\eea1";
 						}
 					}
 
 					&.edit_thumbnail_video a:before {
 						content: "\eeb4";
-						font-size: 20px;
-						display: inline-block;
-						vertical-align: middle;
-						max-height: 15px;
-						margin-top: -8px;
 					}
 
 					&.report_file a {
@@ -1731,8 +1713,6 @@ span.dashicons.dashicons-admin-file:before {
 
 						&:before {
 							content: "\ee9c";
-							font-size: 15px;
-							vertical-align: middle;
 						}
 
 						&:hover {
@@ -1754,7 +1734,6 @@ span.dashicons.dashicons-admin-file:before {
 
 					&.delete_file a:before {
 						content: "\ef48";
-						font-size: 20px;
 					}
 
 					&.edit_video a:before {
