@@ -86,7 +86,8 @@
 			<# if ( data.media ) { #>
 			<div class="bb-activity-media-wrap bb-media-length-{{data.media.length}}">
 				<# for ( i in data.media ) { #>
-				<div class="bb-activity-media-elem">
+			    <div class="bb-activity-media-elem">
+				   <# if ( data.media[i].id ) { #>
 					<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
 					   data-id="{{data.media[i].id}}"
 					   data-attachment-id="{{data.media[i].attachment_id}}"
@@ -95,6 +96,9 @@
 					   href="#">
 						<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
 					</a>
+				   <# } else { #>
+					<span class="bb-photo-cover-wrap bb-item-cover-wrap bb-icon bb-icon-loader" data-id="{{ i }}"></span>
+				   <# } #>
 				</div>
 				<# } #>
 			</div>
@@ -103,7 +107,8 @@
 			<# if ( data.video ) { #>
 			<div class="bb-activity-video-wrap bb-video-length-{{data.video.length}}">
 				<# for ( i in data.video ) { #>
-				<div class="bb-activity-video-elem">
+			    <div class="bb-activity-video-elem">
+				   <# if ( data.video[i].id ) { #>
 					<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 					   data-id="{{data.video[i].id}}"
 					   data-attachment-id="{{data.video[i].attachment_id}}"
@@ -112,6 +117,9 @@
 					   href="#">
 						<img src="{{data.video[i].thumbnail}}" alt="{{data.video[i].title}}"/>
 					</a>
+					<# } else { #>
+						<span class="bb-video-cover-wrap bb-item-cover-wrap bb-icon bb-icon-loader" data-id="{{ i }}"></span>
+					<# } #>
 				</div>
 				<# } #>
 			</div>
