@@ -793,6 +793,8 @@ function bb_check_is_message_content_empty( $validated_content, $content, $post 
  */
 function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
+	$params['current']['message_user_id']           = bp_loggedin_user_id();
+
 	return $params;
 }
 
