@@ -257,7 +257,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	// Get draft activity.
-	$draft_activity                    = bp_get_user_meta( bbp_get_current_user_id(), $draft_activity_meta_key, true );
+	$draft_activity                    = bp_get_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key, true );
 	$activity_params['draft_activity'] = $draft_activity;
 
 	$activity_params['access_control_settings'] = array(
