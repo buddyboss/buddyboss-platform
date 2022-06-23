@@ -1301,25 +1301,30 @@ span.dashicons.dashicons-admin-file:before {
 
 		> a {
 			float: left;
+			background-color: #fff;
+			border-radius: 50%;
+			height: 25px;
+			width: 25px;
+			text-align: center;
 			-webkit-transition: all 0.3s ease;
 			-o-transition: all 0.3s ease;
 			transition: all 0.3s ease;
 
 			i {
-				font-size: 25px;
-				padding: 0;
-				background-color: transparent;
-				color: #fff;
+				font-size: 18px;
+				color: #1e2132;
+				font-weight: 300;
 				display: inline-block;
-				width: 25px;
-				height: 25px;
-				line-height: 25px;
-				text-align: center;
+				opacity: 0.4;
+				margin-right: -1px;
 			}
 
 			&:hover {
 				color: #461212;
 
+				i {
+					opacity: 1;
+				}
 			}
 
 			&[data-balloon]:after {

@@ -4455,6 +4455,11 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a {
   float: right;
+  background-color: #fff;
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
+  text-align: center;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -4466,15 +4471,12 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a i {
-  font-size: 25px;
-  padding: 0;
-  background-color: transparent;
-  color: #fff;
+  font-size: 18px;
+  color: #1e2132;
+  font-weight: 300;
   display: inline-block;
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  text-align: center;
+  opacity: 0.4;
+  margin-left: -1px;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a:hover,
@@ -4484,6 +4486,15 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a:hover,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a:hover {
   color: #461212;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap > a:hover i,
+#media-stream.media .bb-photo-thumb .video-action-wrap > a:hover i,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a:hover i,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a:hover i,
+.bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a:hover i,
+.bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a:hover i {
+  opacity: 1;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a[data-balloon]:after,
