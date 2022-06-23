@@ -1087,7 +1087,7 @@ window.bp = window.bp || {};
 									emojibtn_click: function () {
 										$( '#message_content' )[0].emojioneArea.hidePicker();
 										bp.Nouveau.Messages.mediumEditor.checkContentChanged();
-									}
+									},
 								}
 							}
 						);
@@ -2436,7 +2436,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( this.model.get( 'message_content' ) === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'video' ) !== 'undefined' && this.model.get( 'video' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
-					this.model.set( 'message_content', '&nbsp;', { silent: true } );
+					this.model.set( 'message_content', '', { silent: true } );
 				}
 
 				// Set meta.
@@ -3452,7 +3452,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( content === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'video' ) !== 'undefined' && this.model.get( 'video' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
-					content = '&nbsp;';
+					content = '';
 				}
 
 				this.model.set(
