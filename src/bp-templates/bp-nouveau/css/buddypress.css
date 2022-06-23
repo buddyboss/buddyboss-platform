@@ -4431,6 +4431,15 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
+#media-stream.media .bb-photo-thumb.is-visible .media-action-wrap > a i,
+#media-stream.media .bb-photo-thumb.is-visible .video-action-wrap > a i,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .media-action-wrap > a i,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .video-action-wrap > a i,
+.bb-activity-media-wrap .bb-activity-video-elem.is-visible .media-action-wrap > a i,
+.bb-activity-media-wrap .bb-activity-video-elem.is-visible .video-action-wrap > a i {
+  opacity: 1;
+}
+
 #media-stream.media .bb-photo-thumb .media-action-wrap,
 #media-stream.media .bb-photo-thumb .video-action-wrap,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap,
@@ -4980,6 +4989,12 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
+#video-stream.video .bb-item-thumb.is-visible .item-action-wrap > a i,
+#media-stream.media .bb-video-thumb.is-visible .item-action-wrap > a i,
+.bb-activity-video-wrap .bb-activity-video-elem.is-visible .item-action-wrap > a i {
+  opacity: 1;
+}
+
 #video-stream.video .bb-item-thumb .item-action-wrap,
 #media-stream.media .bb-video-thumb .item-action-wrap,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap {
@@ -4998,6 +5013,11 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap > a,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a {
   float: left;
+  background-color: #fff;
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
+  text-align: center;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -5006,21 +5026,24 @@ span.dashicons.dashicons-admin-file:before {
 #video-stream.video .bb-item-thumb .item-action-wrap > a i,
 #media-stream.media .bb-video-thumb .item-action-wrap > a i,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a i {
-  font-size: 25px;
-  padding: 0;
-  background-color: transparent;
-  color: #fff;
+  font-size: 18px;
+  color: #1e2132;
+  font-weight: 300;
   display: inline-block;
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  text-align: center;
+  opacity: 0.4;
+  margin-right: -1px;
 }
 
 #video-stream.video .bb-item-thumb .item-action-wrap > a:hover,
 #media-stream.media .bb-video-thumb .item-action-wrap > a:hover,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a:hover {
   color: #461212;
+}
+
+#video-stream.video .bb-item-thumb .item-action-wrap > a:hover i,
+#media-stream.media .bb-video-thumb .item-action-wrap > a:hover i,
+.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a:hover i {
+  opacity: 1;
 }
 
 #video-stream.video .bb-item-thumb .item-action-wrap > a[data-balloon]:after,
