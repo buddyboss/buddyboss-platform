@@ -271,7 +271,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format mentioned push notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 *
 	 * @param array  $content      Notification content.
 	 * @param object $notification Notification object.

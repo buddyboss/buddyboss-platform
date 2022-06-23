@@ -636,7 +636,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format messages push notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 *
 	 * @param array  $content      Notification content.
 	 * @param object $notification Notification object.

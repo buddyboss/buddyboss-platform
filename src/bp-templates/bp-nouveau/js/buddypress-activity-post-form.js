@@ -4843,11 +4843,6 @@ window.bp = window.bp || {};
 										// Enable post submit button
 										$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
 									},
-									search_keypress: function() {
-										var _this = this;
-										var small = _this.search.val().toLowerCase();
-										_this.search.val(small);
-									},
 								}
 							}
 						);

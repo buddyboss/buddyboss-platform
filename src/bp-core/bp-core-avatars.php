@@ -1394,7 +1394,7 @@ function bp_core_avatar_handle_crop( $args = '' ) {
 	 *
 	 * If you want to override this function, make sure you return false.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 *
 	 * @param bool  $value Whether to do crop.
 	 * @param array $r     Array of parsed arguments for function.
@@ -1531,7 +1531,7 @@ function bp_avatar_ajax_set() {
 	/**
 	 * Update avatar directory based on avatar data conditionally.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 *
 	 * @param string $avatar_dir  Avatar Directory
 	 * @param array  $avatar_data Avatar Data.

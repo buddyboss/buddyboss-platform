@@ -972,7 +972,8 @@ function bbp_update_topic( $topic_id = 0, $forum_id = 0, $anonymous_data = false
 	}
 
 	// Handle Subscription Checkbox.
-	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) ) {
+	// Make sure the form is being submitted from frontend.
+	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) && ( ! isset( $_POST['action'] ) || 'editpost' !== $_POST['action'] ) ) {
 		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 

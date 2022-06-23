@@ -634,7 +634,7 @@ function bp_attachments_delete_file( $args = array() ) {
 		/**
 		 * Filter to update the subdirectory.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.4
 		 *
 		 * @param string $subdir Subdirectory name.
 		 * @param array  $r      Arguments.
@@ -1790,7 +1790,7 @@ function bp_attachments_cover_image_ajax_delete() {
 	/**
 	 * Update directory name while deleting the cover image.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 *
 	 * @param string $dir  Directory name.
 	 * @param array  $args Arguments.

@@ -1403,7 +1403,7 @@ function bp_get_group_description_editable( $group = false ) {
 /**
  * Output the name for the current group in the loop, for use in a textbox.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1419,7 +1419,7 @@ function bp_group_name_editable( $group = false ) {
  * filters that 'bp_get_group_name' has, which makes it
  * appropriate for "raw" editing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1435,7 +1435,7 @@ function bp_get_group_name_editable( $group = false ) {
 	/**
 	 * Filters the name of the current group in the loop.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 *
 	 * @param string $name  Name of the current group in the loop.
 	 * @param object $group Group object.
