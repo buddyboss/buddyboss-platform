@@ -786,7 +786,7 @@ window.bp = window.bp || {};
 							action : 'messages_send_reply',
 							nonce  : BP_Nouveau.messages.nonces.send,
 							hash   :  Math.round((new Date()).getTime() / 1000)
-							},
+						},
 						model || {}
 					);
 
@@ -3459,11 +3459,11 @@ window.bp = window.bp || {};
 					{
 						thread_id : this.options.thread.get( 'id' ),
 						content   : content,
-						sending   : true
+						sending   : false
 					}
 				);
 
-				$( '#send_reply_button' ).prop( 'disabled',true ).addClass( 'loading' );
+				// $( '#send_reply_button' ).prop( 'disabled',true ).addClass( 'loading' );
 
 				this.collection.sync(
 					'create',
@@ -3471,13 +3471,10 @@ window.bp = window.bp || {};
 					{
 						success : _.bind( this.replySent, this ),
 						error   : _.bind( this.replyError, this )
-						}
+					}
 				);
-			},
 
-			replySent: function( response ) {
-				var reply = this.collection.parse( response );
-
+				/* - RESET FORM - */
 				// Reset the form.
 				if ( typeof tinyMCE !== 'undefined' ) {
 					tinyMCE.activeEditor.setContent( '' );
@@ -3518,11 +3515,19 @@ window.bp = window.bp || {};
 				if (this.messageAttachments.onClose) {
 					this.messageAttachments.onClose();
 				}
+				/* - RESET FORM - */
+			},
 
-				 this.collection.add( _.first( reply ) );
+			replySent: function( response ) {
+				var reply = this.collection.parse( response );
+
+
+
+				this.collection.add( _.first( reply ) );
 
 				bp.Nouveau.Messages.removeFeedback();
-				 $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+
+				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
 
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 			},
@@ -3532,7 +3537,7 @@ window.bp = window.bp || {};
 				if ( response.feedback && response.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 				}
-				$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
 			}
 		}
 	);
