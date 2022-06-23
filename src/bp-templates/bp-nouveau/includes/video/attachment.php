@@ -2,7 +2,7 @@
 /**
  * Video Attachment.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.0.4
  * @package BuddyBoss\Core
  */
 

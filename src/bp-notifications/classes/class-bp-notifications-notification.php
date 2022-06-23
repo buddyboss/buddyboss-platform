@@ -87,7 +87,7 @@ class BP_Notifications_Notification {
 	/**
 	 * Is the notification newly inserted.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 * @var bool
 	 */
 	public $inserted = false;

@@ -1107,7 +1107,7 @@ function bb_notification_avatar() {
 /**
  * Get avatar url for notification user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param object $notification Notification object.
  *
@@ -1358,7 +1358,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 /**
  * Function to remove the size and rating to get the gravatar browser notification avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param array $args Array of arguments.
  *

@@ -217,7 +217,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		/**
 		 * Update avatar directory based on argument conditionally.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.4
 		 *
 		 * @param string $avatar_dir Avatar Directory.
 		 * @param array  $args       Avatar Data.

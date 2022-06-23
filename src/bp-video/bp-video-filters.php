@@ -783,7 +783,7 @@ function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids,
 /**
  * Validate message if video is not empty.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param bool         $validated_content True if message is valid, false otherwise.
  * @param string       $content           Message content.
@@ -1822,7 +1822,7 @@ function bb_setup_template_for_video_preview( $template ) {
 /**
  * Add rewrite rule to setup attachment video preview.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  */
 function bb_setup_attachment_video_preview() {
 	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]', 'top' );
@@ -1831,7 +1831,7 @@ function bb_setup_attachment_video_preview() {
 /**
  * Setup query variable for attachment video preview.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param array $query_vars Array of query variables.
  *
@@ -1846,7 +1846,7 @@ function bb_setup_attachment_video_preview_query( $query_vars ) {
 /**
  * Setup template for the attachment video play.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param string $template Template path to include.
  *
@@ -1859,7 +1859,7 @@ function bb_setup_attachment_video_preview_template( $template ) {
 		/**
 		 * Hooks to perform any action before the template load.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.4
 		 */
 		do_action( 'bb_setup_attachment_video_preview_template' );
 

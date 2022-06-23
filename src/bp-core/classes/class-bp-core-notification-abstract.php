@@ -514,4 +514,3 @@ abstract class BP_Core_Notification_Abstract {
 	}
 
 }
-

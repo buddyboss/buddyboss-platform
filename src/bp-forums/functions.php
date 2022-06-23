@@ -995,7 +995,7 @@ function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' )
 /**
  * Localize the strings needed for the Forum/Topic UI
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param array $params Associative array containing the JS Strings needed by scripts.
  *

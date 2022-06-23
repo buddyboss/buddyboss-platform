@@ -200,7 +200,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				if ( ! empty( $notification->secondary_item_id ) ) {
 					if ( ! empty( $except ) ) {
 						$text = sprintf(
-							/* translators: 1. Member display name. 2. excerpt. */
+						/* translators: 1. Member display name. 2. excerpt. */
 							__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
 							bp_core_get_user_displayname( $notification->secondary_item_id ),
 							$except
@@ -209,13 +209,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						$media_ids = array_filter( explode( ',', $media_ids ) );
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
-								/* translators: Member display name. */
+							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: some photos', 'buddyboss' ),
 								bp_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
-								/* translators: Member display name. */
+							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: a photo', 'buddyboss' ),
 								bp_core_get_user_displayname( $notification->secondary_item_id )
 							);
@@ -224,13 +224,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						$document_ids = array_filter( explode( ',', $document_ids ) );
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
-								/* translators: Member display name. */
+							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: some documents', 'buddyboss' ),
 								bp_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
-								/* translators: Member display name. */
+							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: a document', 'buddyboss' ),
 								bp_core_get_user_displayname( $notification->secondary_item_id )
 							);
@@ -239,33 +239,33 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						$video_ids = array_filter( explode( ',', $video_ids ) );
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
-								/* translators: Member display name. */
+							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: some videos', 'buddyboss' ),
 								bp_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
-								/* translators: Member display name. */
+							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: a video', 'buddyboss' ),
 								bp_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						}
 					} elseif ( ! empty( $gif_data ) ) {
 						$text = sprintf(
-							/* translators: Member display name. */
+						/* translators: Member display name. */
 							esc_html__( '%s replied to a discussion: a gif', 'buddyboss' ),
 							bp_core_get_user_displayname( $notification->secondary_item_id )
 						);
 					} else {
 						$text = sprintf(
-							/* translators: Member display name. */
+						/* translators: Member display name. */
 							__( '%s replied to a discussion', 'buddyboss' ),
 							bp_core_get_user_displayname( $notification->secondary_item_id )
 						);
 					}
 				} else {
 					$text = sprintf(
-						/* translators: topic title. */
+					/* translators: topic title. */
 						__( 'You have a new reply to %s', 'buddyboss' ),
 						$topic_title
 					);
@@ -280,7 +280,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
-						/* translators: replies count. */
+					/* translators: replies count. */
 						esc_html__( 'You have %d new replies', 'buddyboss' ),
 						(int) $total_items
 					);
@@ -373,12 +373,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			$notification = bp_notifications_get_notification( $notification_id );
 			$topic_id     = bbp_get_topic_id( $item_id );
 			$topic_title  = '"' . bp_create_excerpt(
-				wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
-				50,
-				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
-				)
-			) . '"';
+					wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				) . '"';
 
 			$topic_title = str_replace( '&hellip;"', '&hellip;', $topic_title );
 
