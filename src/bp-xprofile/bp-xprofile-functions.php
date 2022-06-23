@@ -1456,7 +1456,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	// Never allow the Nickname field to be excluded.
 	$nickname_field_id = bp_xprofile_nickname_field_id();
 	if ( in_array( $nickname_field_id, $field_ids ) ) {
-		$key = array_search( 1, $field_ids );
+		$key = array_search( $nickname_field_id, $field_ids );
 		unset( $field_ids[ $key ] );
 	}
 
