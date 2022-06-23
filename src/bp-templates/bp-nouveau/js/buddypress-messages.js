@@ -3459,7 +3459,7 @@ window.bp = window.bp || {};
 					{
 						thread_id : this.options.thread.get( 'id' ),
 						content   : content,
-						sending   : false
+						sending   : true
 					}
 				);
 
