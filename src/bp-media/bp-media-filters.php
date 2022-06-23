@@ -1105,7 +1105,7 @@ function bp_media_messages_save_gif_data( &$message ) {
 /**
  * Validate message if media is not empty.
  *
- * @param bool         $validated_content Boolean from filter.
+ * @param bool         $validated_content True if message is valid, false otherwise.
  * @param string       $content           Message content.
  * @param array|object $post              Request object.
  *
@@ -1124,7 +1124,7 @@ function bp_media_message_validated_content( $validated_content, $content, $post
 /**
  * Validate message if media is not empty.
  *
- * @param bool         $validated_content Boolean from filter.
+ * @param bool         $validated_content True if message is valid, false otherwise.
  * @param string       $content           Message content.
  * @param array|object $post              Request object.
  *
@@ -2674,7 +2674,7 @@ function bp_media_activity_append_gif( $content, $activity ) {
 /**
  * Add rewrite rule to setup attachment media preview.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  */
 function bb_setup_attachment_media_preview() {
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]', 'top' );
@@ -2684,7 +2684,7 @@ function bb_setup_attachment_media_preview() {
 /**
  * Setup query variable for attachment media preview.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param array $query_vars Array of query variables.
  *
@@ -2700,7 +2700,7 @@ function bb_setup_attachment_media_preview_query( $query_vars ) {
 /**
  * Setup template for the attachment media preview.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param string $template Template path to include.
  *
@@ -2712,7 +2712,7 @@ function bb_setup_attachment_media_preview_template( $template ) {
 		/**
 		 * Hooks to perform any action before the template load.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.4
 		 */
 		do_action( 'bb_setup_attachment_media_preview_template' );
 

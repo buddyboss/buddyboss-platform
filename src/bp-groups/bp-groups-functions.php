@@ -4690,7 +4690,7 @@ function bb_get_group_type_label_colors( $type ) {
  * If groups_ids pass in args then return that group related to members.
  * Also, if pass per_page and page in args then it will return members list based on that.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param array $args      {
  * Array of optional arguments.
@@ -4732,7 +4732,7 @@ function bb_get_all_members_for_groups( $args = array() ) {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.4
 		 *
 		 * @param string $sql         From SQL statement.
 		 * @param string $column_name Column name.

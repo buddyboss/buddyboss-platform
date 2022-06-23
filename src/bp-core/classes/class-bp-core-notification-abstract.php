@@ -314,7 +314,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Filters the notification content for Push notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 *
 	 * @param array  $content      Component action.
 	 * @param object $notification Notification object.
@@ -483,7 +483,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Format Push the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.4
 	 *
 	 * @param array  $content      Notification content.
 	 * @param object $notification Notification object.

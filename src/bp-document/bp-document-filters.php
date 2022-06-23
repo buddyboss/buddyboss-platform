@@ -841,7 +841,9 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
 /**
  * Validate message if document is not empty.
  *
- * @param bool         $validated_content Boolean from filter.
+ * @since BuddyBoss 2.0.4
+ *
+ * @param bool         $validated_content True if message is valid, false otherwise.
  * @param string       $content           Message content.
  * @param array|object $post              Request object.
  *
@@ -2009,7 +2011,7 @@ function bb_setup_template_for_document_preview( $template ) {
 /**
  * Add rewrite rule to setup attachment document preview.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  */
 function bb_setup_attachment_document_preview() {
 	add_rewrite_rule( 'bb-attachment-document-preview/([^/]+)/?$', 'index.php?document-attachment-id=$matches[1]', 'top' );
@@ -2018,7 +2020,7 @@ function bb_setup_attachment_document_preview() {
 /**
  * Setup query variable for attachment document preview.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param array $query_vars Array of query variables.
  *
@@ -2033,7 +2035,7 @@ function bb_setup_attachment_document_preview_query( $query_vars ) {
 /**
  * Setup template for the attachment document preview.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.4
  *
  * @param string $template Template path to include.
  *
@@ -2046,7 +2048,7 @@ function bb_setup_attachment_document_preview_template( $template ) {
 		/**
 		 * Hooks to perform any action before the template load.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.4
 		 */
 		do_action( 'bb_setup_attachment_document_preview_template' );
 
