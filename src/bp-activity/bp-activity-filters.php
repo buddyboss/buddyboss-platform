@@ -2595,11 +2595,15 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
-				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-				if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
-					$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
-					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+				if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
+					$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+					if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+						$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
+						$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+						$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+					}
+				} else {
+					$content = html_entity_decode( $comment->comment_content );
 				}
 			}
 		}
