@@ -1679,6 +1679,9 @@ window.bp = window.bp || {};
 								// File accepted but error on file.
 								file.error = true;
 								$( file.previewElement ).find( '.dz-error-message span' ).html( response );
+								if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								}
 							}
 						} else {
 							file.error = true;
@@ -2003,8 +2006,11 @@ window.bp = window.bp || {};
 								// File accepted but error on file.
 								file.error = true;
 								$( file.previewElement ).find( '.dz-error-message span' ).html( response );
+								if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								}
 							}
-					} else {
+						} else {
 							file.error = true;
 							$( file.previewElement ).find( '.dz-error-message span' ).html( BP_Nouveau.media.invalid_file_type + ' ' + ( response ? response : '' ) );
 						}
@@ -2338,6 +2344,9 @@ window.bp = window.bp || {};
 								// File accepted but error on file.
 								file.error = true;
 								$( file.previewElement ).find( '.dz-error-message span' ).html( response );
+								if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								}
 							}
 						} else {
 							file.error = true;

@@ -149,6 +149,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 		'multipleErrorOnFile'                => sprintf( '%s<br>%s', esc_html__( 'There was a problem uploading some of your files.', 'buddyboss' ), esc_html__( 'Click on a file to see the error.', 'buddyboss' ) ),
+		'connection_lost_error'              => __( 'Connection lost with the server.', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {
