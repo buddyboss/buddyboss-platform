@@ -9894,6 +9894,28 @@ input#send-to-input {
   transform: rotate(-137deg);
 }
 
+.bp-single-message-content .bb-item-cover-wrap.bb-icon-loader {
+  background-color: #ddd;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  padding-top: 100%;
+}
+
+.bp-single-message-content .bb-item-cover-wrap.bb-icon-loader:before {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: spin 2s infinite linear;
+  height: auto;
+  background-color: transparent !important;
+  right: inherit;
+}
+
+.bp-single-message-content .bb-activity-media-wrap .document-detail-wrap.bb-icon-loader:before {
+  animation: spin 2s infinite linear;
+}
+
 .bp-messages-content-wrapper {
   position: relative;
   display: flex;
