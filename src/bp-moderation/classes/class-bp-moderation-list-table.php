@@ -149,6 +149,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			} elseif ( 'unsuspended' === $moderation_status ) {
 				$this->view                        = 'unsuspended';
 				$moderation_request_args['hidden'] = 0;
+			} elseif ( 'reported' === $moderation_status ) {
+				$this->view                        = 'reported';
+				$moderation_request_args['hidden'] = 0;
 			} else {
 				$this->view = 'all';
 			}
@@ -228,8 +231,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		} else {
 			$columns = array(
 				'cb'             => '<input name type="checkbox" />',
-				'blocked_member' => esc_html__( 'Blocked Member', 'buddyboss' ),
-				'blocked'        => esc_html__( 'Times Blocked', 'buddyboss' ),
+				'member'         => esc_html__( 'Member', 'buddyboss' ),
+				'blocked'        => esc_html__( 'Blocks', 'buddyboss' ),
+				'reported'       => esc_html__( 'Reports', 'buddyboss' ),
+				'suspend'        => esc_html__( 'Suspended', 'buddyboss' ),
 			);
 		}
 
@@ -278,6 +283,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 					),
 					'unsuspended' => array(
 						'name' => esc_html__( 'Blocked', 'buddyboss' ),
+						'link' => add_query_arg( array( 'moderation_status' => 'unsuspended' ), $blocked_members_url_base ),
+					),
+					'reported' => array(
+						'name' => esc_html__( 'Reported', 'buddyboss' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'unsuspended' ), $blocked_members_url_base ),
 					),
 					'suspended'   => array(
@@ -561,13 +570,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Function to blocked member
+	 * Function to member
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $item loop ite.
 	 */
-	public function column_blocked_member( $item = array() ) {
+	public function column_member( $item = array() ) {
 		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
@@ -588,12 +597,12 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		}
 
 		$user_action_type = ( 1 === (int) $item['hide_sitewide'] ) ? 'unsuspend' : 'suspend';
-		$action_label     = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend', 'buddyboss' ) : esc_html__( 'Suspend', 'buddyboss' );
+		$action_label     = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
 
 		// Build actions URL.
 		$view_url = add_query_arg( $moderation_args, bp_get_admin_url( 'admin.php' ) );
 
-		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ), esc_html__( 'View Reports', 'buddyboss' ) );
+		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ), esc_html__( 'View Report', 'buddyboss' ) );
 		$actions['suspend']     = sprintf( '<a href="" class="bp-block-user" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>', esc_attr( $item['item_id'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $action_label ), esc_html( $action_label ) );
 		printf( '%s <strong><a href="%s">%s</a></strong> %s', get_avatar( $item['item_id'], '32' ), esc_url( BP_Moderation_Members::get_permalink( $item['item_id'] ) ), esc_html( bp_core_get_userlink( $item['item_id'], true ) ), wp_kses_post( $this->row_actions( $actions ) ) );
 	}
@@ -624,8 +633,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_reported( $item = array() ) {
-		/* translators: accessibility text */
-		printf( esc_html( _n( '%s time', '%s times', $item['count'], 'buddyboss' ) ), esc_html( bp_core_number_format( $item['count'] ) ) );
+		printf( esc_html( bp_core_number_format( $item['count'] ) ) );
 	}
 
 	/**
@@ -636,8 +644,20 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_blocked( $item = array() ) {
-		/* translators: accessibility text */
-		printf( esc_html( _n( '%s time', '%s times', $item['count'], 'buddyboss' ) ), esc_html( bp_core_number_format( $item['count'] ) ) );
+		printf( esc_html( bp_core_number_format( $item['count'] ) ) );
+	}
+
+	/**
+	 * Function to suspend
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $item loop item.
+	 */
+	public function column_suspend( $item = array() ) {
+		if ( 1 === (int) $item['hide_sitewide'] ) {
+			printf ('<i class="bb-icon bb-icon-check"></i>');
+		}
 	}
 
 	/**

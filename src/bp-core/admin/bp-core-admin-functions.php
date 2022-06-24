@@ -3280,7 +3280,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 					'admin.php'
 				)
 			),
-			'name'  => esc_html__( 'Blocked Members', 'buddyboss' ),
+			'name'  => esc_html__( 'Flagged Members', 'buddyboss' ),
 			'class' => 'bp-blocked-members',
 		);
 	}
