@@ -224,9 +224,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		if ( 'reported-content' === $current_tab ) {
 			$columns = array(
 				'cb'            => '<input name type="checkbox" />',
-				'content_type'  => esc_html__( 'Content Type', 'buddyboss' ),
-				'content_owner' => esc_html__( 'Content Owner', 'buddyboss' ),
-				'reported'      => esc_html__( 'Times Reported', 'buddyboss' ),
+				'content_type'  => esc_html__( 'Content', 'buddyboss' ),
+				'content_owner' => esc_html__( 'Owner', 'buddyboss' ),
+				'reported'      => esc_html__( 'Reports', 'buddyboss' ),
+				'is_hidden'     => esc_html__( 'Hidden', 'buddyboss' ),
 			);
 		} else {
 			$columns = array(
@@ -300,7 +301,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 						'link' => $reported_content_url_base,
 					),
 					'active' => array(
-						'name' => esc_html__( 'Reported', 'buddyboss' ),
+						'name' => esc_html__( 'Unhidden', 'buddyboss' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'active' ), $reported_content_url_base ),
 					),
 					'hidden' => array(
@@ -655,6 +656,19 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_suspend( $item = array() ) {
+		if ( 1 === (int) $item['hide_sitewide'] ) {
+			printf ('<i class="bb-icon bb-icon-check"></i>');
+		}
+	}
+
+	/**
+	 * Function to hideen
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $item loop item.
+	 */
+	public function column_is_hidden( $item = array() ) {
 		if ( 1 === (int) $item['hide_sitewide'] ) {
 			printf ('<i class="bb-icon bb-icon-check"></i>');
 		}
