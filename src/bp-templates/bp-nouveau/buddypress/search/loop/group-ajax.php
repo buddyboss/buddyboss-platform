@@ -20,10 +20,11 @@
 				<?php
 				echo bp_create_excerpt(
 					bp_get_group_description(),
-					255, 
+					255,
 					array(
 						'html'       => false,
-						'strip_tags' => true
+						'strip_tags' => true,
+						'ending'     => '&hellip;',
 					)
 				);
 				?>
