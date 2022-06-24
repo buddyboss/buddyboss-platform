@@ -252,6 +252,8 @@ add_filter( 'bbp_make_clickable', 'bbp_make_ftps_clickable', 4 ); // ftps://bbpr
 add_filter( 'bbp_make_clickable', 'bbp_make_emails_clickable', 6 ); // jjj@bbpress.org
 add_filter( 'bbp_make_clickable', 'bbp_make_mentions_clickable', 8 ); // @jjj
 
+// Search forum discussion with tags.
+add_filter( 'posts_where', 'bb_forum_search_by_topic_tags', 10, 2 );
 
 /** Deprecated ****************************************************************/
 
@@ -318,3 +320,37 @@ function _bbp_has_replies_query( $args = array() ) {
 	return apply_filters( 'bbp_has_replies_query', $args );
 }
 add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
+
+/**
+ * Search forum discussion by tag when enabled the 'Discussion Tags' from the Network search.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $where    Where statement query.
+ * @param object $wp_query WP_Query object.
+ *
+ * @return mixed|string
+ */
+function bb_forum_search_by_topic_tags( $where, $wp_query ) {
+	global $wpdb;
+
+	// Get query post types array .
+	$post_types      = (array) $wp_query->get( 'post_type' );
+	$topic_post_type = bbp_get_topic_post_type();
+	$topic_taxonomy  = bbp_get_topic_tag_tax_id();
+
+	if ( ! is_admin() && array_intersect( array( $topic_post_type, bbp_get_reply_post_type() ), $post_types ) && ! empty( $wp_query->get( 's' ) ) && bp_is_search_post_type_taxonomy_enable( $topic_taxonomy, $topic_post_type ) ) {
+
+		$matching_terms = get_terms(
+			array(
+				'taxonomy'   => $topic_taxonomy,
+				'fields'     => 'ids',
+				'name__like' => $wp_query->get( 's' ),
+			)
+		);
+
+		$where .= " OR $wpdb->posts.ID IN (SELECT DISTINCT $wpdb->posts.ID FROM $wpdb->posts LEFT JOIN $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id ) WHERE $wpdb->term_relationships.term_taxonomy_id IN (" . implode( ',', $matching_terms ) . ')) ';
+	}
+
+	return $where;
+}
