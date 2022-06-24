@@ -26447,6 +26447,10 @@ span.icons:before {
   max-width: 36px;
 }
 
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar > a > i {
+  display: none;
+}
+
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-content {
   float: left;
   width: calc(100% - 60px);
