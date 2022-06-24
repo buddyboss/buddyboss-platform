@@ -16522,7 +16522,7 @@ body.login .login-popup .mfp-close:hover {
 
 .bb-media-length-1 .bb-activity-media-elem.media-activity {
   flex: none;
-  min-width: 230px;
+  min-width: 190px;
 }
 
 .bb-media-length-1 .bb-activity-media-elem .entry-img img {
