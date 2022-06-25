@@ -554,6 +554,8 @@ function bb_activity_add_notification_metas( $notification ) {
 			$parent_activity = new BP_Activity_Activity( $activity->item_id );
 			if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
 				bp_notifications_update_meta( $notification->id, 'type', 'post_comment' );
+			} elseif ($activity->secondary_item_id == $parent_activity->id) {
+				bp_notifications_update_meta($notification->id, 'type', 'post_comment');
 			} else {
 				bp_notifications_update_meta( $notification->id, 'type', 'activity_comment' );
 			}
