@@ -2273,18 +2273,21 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   padding: 0;
 }
 
+#bp_web_push_notification_settings .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback,
 #bp_privacy .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
+#bp_web_push_notification_settings .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon,
 #bp_privacy .bp-feedback .bp-icon {
   border-radius: 0 4px 4px 0;
   margin: 0;
 }
 
+#bp_web_push_notification_settings .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p,
 #bp_privacy .bp-feedback > p {
   color: #666 !important;
@@ -2297,18 +2300,21 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 }
 
 .admin-notice .bp-feedback,
+#bp_web_push_notification_settings .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
 .admin-notice .bp-feedback .bp-icon,
+#bp_web_push_notification_settings .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon {
   border-radius: 0 4px 4px 0;
   margin: 0;
 }
 
 .admin-notice .bp-feedback > p,
+#bp_web_push_notification_settings .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p {
   color: #666 !important;
   margin-top: 0 !important;
@@ -2327,6 +2333,25 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\e855";
+}
+
+/* Errors / Waring Styling*/
+.bb-error-section {
+  padding: 10px;
+  margin-right: -210px;
+  background: #ffdcdc;
+  color: #d42929;
+  border: 1px solid #ffc5ca;
+  border-radius: 4px;
+}
+
+.bb-warning-section {
+  padding: 10px;
+  margin-right: -210px;
+  background: #fff3c8;
+  color: #8b6300;
+  border: 1px solid #ffeeb3;
+  border-radius: 4px;
 }
 
 /*------------------------------------------------------------------------------
@@ -3200,4 +3225,17 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
   line-height: 1.4;
+}
+
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th + td {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+#bp_web_push_notification_settings table.form-table .no-padding {
+  padding: 0;
 }
