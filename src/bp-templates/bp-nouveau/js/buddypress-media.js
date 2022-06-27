@@ -2233,6 +2233,8 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
 								if ( !jQuery( '.forum-document-error-popup' ).length ) {
@@ -2437,6 +2439,8 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
 								if ( !jQuery( '.group-media-error-popup' ).length ) {
@@ -2582,6 +2586,8 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
 								if ( !jQuery( '.group-document-error-popup' ).length ) {
@@ -2723,6 +2729,8 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
 								$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button open-popup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
@@ -2943,6 +2951,8 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
 								if ( !jQuery( '.forum-document-error-popup' ).length ) {
@@ -3167,6 +3177,8 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
 								if ( !jQuery( '.forum-video-error-popup' ).length ) {
@@ -3593,6 +3605,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							if ( !jQuery( '.media-error-popup' ).length ) {
@@ -3857,6 +3871,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							if ( !jQuery( '.document-error-popup' ).length ) {
