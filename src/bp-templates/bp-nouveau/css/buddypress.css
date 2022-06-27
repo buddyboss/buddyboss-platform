@@ -4584,8 +4584,8 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list {
   position: absolute;
-  top: 20px;
-  right: -5px;
+  top: 26px;
+  right: 1px;
   opacity: 0;
   visibility: hidden;
   background: #fff;
@@ -4608,7 +4608,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list ul,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul {
   list-style: none;
-  margin: 0;
+  margin: 5px 0;
   padding: 0;
 }
 
@@ -5070,8 +5070,8 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap .item-action_list,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list {
   position: absolute;
-  top: 20px;
-  right: -5px;
+  top: 26px;
+  right: 1px;
   opacity: 0;
   visibility: hidden;
   background: #fff;
@@ -5085,7 +5085,7 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul {
   list-style: none;
-  margin: 0;
+  margin: 5px 0;
   padding: 0;
 }
 
