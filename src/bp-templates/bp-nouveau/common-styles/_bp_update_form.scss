@@ -443,6 +443,11 @@
 			display: block;
 			padding: 0 25px 10px;
 			min-height: 95px;
+
+			font[color] {
+				color: inherit; //Fix font tag dictating color
+			}
+
 		}
 
 		#activity-form-submit-wrapper {
