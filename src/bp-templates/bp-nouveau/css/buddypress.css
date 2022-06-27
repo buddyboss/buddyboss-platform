@@ -25665,7 +25665,7 @@ span.icons:before {
 }
 
 .message-lists .thread-item {
-  position: relative;
+  transform: translate3d(0, 0, 0);
 }
 
 .message-lists .thread-item .close-conversation {
@@ -25674,13 +25674,11 @@ span.icons:before {
   right: 22px;
   bottom: 0;
   opacity: 0;
-  visibility: hidden;
   transition: all ease 0.3s;
 }
 
 .message-lists .thread-item:hover .close-conversation {
   opacity: 1;
-  visibility: visible;
 }
 
 /* Rounded sliders */
