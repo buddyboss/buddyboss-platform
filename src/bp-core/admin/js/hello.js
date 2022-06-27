@@ -1,4 +1,4 @@
-/* global BP_HELP */
+/* global BP_HELLO */
 /**
  * Loads for Hello BuddyBoss/App in wp-admin for query string `hello=buddyboss` and `hello=buddyboss-app`.
  *
@@ -18,8 +18,8 @@
 		
 		if (
 			modal.classList.contains( 'bb-update-modal' ) &&
-			'undefined' !== typeof BP_HELP &&
-			'1' !== BP_HELP.bb_display_auto_popup &&
+			'undefined' !== typeof BP_HELLO &&
+			'1' !== BP_HELLO.bb_display_auto_popup &&
 			'click' !== event.type
 		) {
 			return;
