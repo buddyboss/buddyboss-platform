@@ -17833,7 +17833,7 @@ ul.bb-albums-list .load-more {
   margin-bottom: 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1025px) {
   .bb-media-model-inner {
     max-height: 90vh;
     min-height: 90vh;
@@ -17848,7 +17848,7 @@ ul.bb-albums-list .load-more {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   a.bb-close-model {
     top: 10px;
     left: 10px;
@@ -17861,6 +17861,7 @@ ul.bb-albums-list .load-more {
     min-width: initial;
     margin: 0 30px;
     height: 100%;
+    max-width: 100%;
   }
   #buddypress .bb-document-theater .bb-media-model-inner {
     height: 100%;
@@ -17873,6 +17874,7 @@ ul.bb-albums-list .load-more {
     width: 100%;
     margin-right: 0;
     max-height: calc(50vh - 40px);
+    border-radius: 0 0 4px 4px;
   }
   #buddypress .bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-list.bp-list {
     min-height: calc(50vh - 40px);
@@ -19207,7 +19209,7 @@ div.dropzone .dz-preview .dz-filename {
   border-radius: 0 0 4px 0;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1025px) {
   .bb-document-theater .bb-media-section {
     border-left: 1px solid #ecedee;
   }
@@ -23236,7 +23238,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   cursor: auto;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1024px) {
   .bb-media-model-wrapper.video .bb-media-section figure {
     max-height: 50vh;
     min-height: 50vh;
