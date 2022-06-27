@@ -1714,7 +1714,7 @@ function bp_activity_media_add( $media ) {
 					/* translators: 1. User Link. 2. Group link. */
 						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
 						bp_core_get_userlink( $media->user_id ),
-						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>'
 					);
 					$activity_id = groups_record_activity( $args );
 				} else {
@@ -1915,7 +1915,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 						$args['item_id'] = $old_media->group_id;
 						$args['type']    = 'activity_update';
 						$current_group   = groups_get_group( $old_media->group_id );
-						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_media->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_media->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>' );
 						$activity_id     = groups_record_activity( $args );
 					} else {
 						$activity_id = bp_activity_post_update( $args );
@@ -2085,7 +2085,7 @@ function bp_activity_document_add( $document ) {
 					/* translators: 1. User Link. 2. Group link. */
 						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
 						bp_core_get_userlink( $document->user_id ),
-						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>'
 					);
 					$activity_id = groups_record_activity( $args );
 				} else {
@@ -2286,7 +2286,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 						$args['item_id'] = $old_document->group_id;
 						$args['type']    = 'activity_update';
 						$current_group   = groups_get_group( $old_document->group_id );
-						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>' );
 						$activity_id     = groups_record_activity( $args );
 					} else {
 						$activity_id = bp_activity_post_update( $args );
@@ -2431,6 +2431,11 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 			$content_img = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', '', $blog_post->ID );
 			$post_title  = sprintf( '<a class="bb-post-title-link" href="%s"><span class="bb-post-title">%s</span></a>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( $blog_post->post_title ) );
 			$content     = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( get_the_excerpt( $blog_post->ID ) ) ) );
+
+			if ( empty( $content ) ) {
+				$content = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
+			}
+
 			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
@@ -2695,7 +2700,7 @@ function bp_activity_video_add( $video ) {
 						/* translators: 1. User Link. 2. Group link. */
 						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
 						bp_core_get_userlink( $video->user_id ),
-						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>'
 					);
 					$activity_id = groups_record_activity( $args );
 				} else {
@@ -2901,7 +2906,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 							/* translators: 1. User Link. 2. Group link. */
 							__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
 							bp_core_get_userlink( $old_video->user_id ),
-							'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+							'<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>'
 						);
 
 						$activity_id = groups_record_activity( $args );

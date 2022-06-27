@@ -684,6 +684,9 @@ function bp_core_fetch_avatar( $args = '' ) {
 			$url_args['d'] = $default_grav;
 		}
 
+		// Filter the URL args to the Gravatar URL.
+		$url_args = apply_filters( 'bp_core_gravatar_url_args', $url_args, $params );
+
 		if ( isset( $url_args['d'] ) && 'blank' === $url_args['d'] ) {
 			$gravatar = apply_filters( 'bp_discussion_blank_option_default_avatar', bb_get_blank_profile_avatar() );
 		} elseif ( isset( $url_args['d'] ) && 'mm' === $url_args['d'] ) {
@@ -766,7 +769,13 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 		if ( ! $gravatar || empty( $gravatar ) ) {
 			remove_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
-			$gravatar = get_avatar_url( $params['email'], array( 'force_default' => true, 'size' => $params['width'] ) );
+			$gravatar = get_avatar_url(
+				$params['email'],
+				array(
+					'force_default' => true,
+					'size'          => $params['width'],
+				)
+			);
 			add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
 		}
 
@@ -1381,17 +1390,30 @@ function bp_core_avatar_handle_crop( $args = '' ) {
 	);
 
 	/**
-	 * Filters whether or not to handle cropping.
+	 * Filters whether to do cropping.
 	 *
 	 * If you want to override this function, make sure you return false.
 	 *
-	 * @since BuddyPress 1.2.4
+	 * @since BuddyBoss 2.0.4
 	 *
-	 * @param bool  $value Whether or not to crop.
+	 * @param bool  $value Whether to do crop.
 	 * @param array $r     Array of parsed arguments for function.
 	 */
-	if ( ! apply_filters( 'bp_core_pre_avatar_handle_crop', true, $r ) ) {
-		return true;
+	if ( apply_filters( 'bp_core_do_avatar_handle_crop', true, $r ) ) {
+
+		/**
+		 * Filters whether or not to handle cropping.
+		 *
+		 * If you want to override this function, make sure you return false.
+		 *
+		 * @since BuddyPress 1.2.4
+		 *
+		 * @param bool  $value Whether or not to crop.
+		 * @param array $r     Array of parsed arguments for function.
+		 */
+		if ( ! apply_filters( 'bp_core_pre_avatar_handle_crop', true, $r ) ) {
+			return true;
+		}
 	}
 
 	// Crop the file.
@@ -1506,6 +1528,16 @@ function bp_avatar_ajax_set() {
 		$avatar_dir = sanitize_key( $avatar_data['object'] ) . '-avatars';
 	}
 
+	/**
+	 * Update avatar directory based on avatar data conditionally.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param string $avatar_dir  Avatar Directory
+	 * @param array  $avatar_data Avatar Data.
+	 */
+	$avatar_dir = apply_filters( 'bb_avatar_ajax_set_avatar_dir', $avatar_dir, $avatar_data );
+
 	// Crop args.
 	$r = array(
 		'item_id'       => $avatar_data['item_id'],
@@ -1545,6 +1577,9 @@ function bp_avatar_ajax_set() {
 		} elseif ( 'group' === $avatar_data['object'] ) {
 			/** This action is documented in bp-groups/bp-groups-screens.php */
 			do_action( 'groups_avatar_uploaded', (int) $avatar_data['item_id'], $avatar_data['type'], $r );
+		} else {
+			/** action to used for other component. **/
+			do_action( sanitize_title( $avatar_data['object'] ) . '_avatar_uploaded', (int) $avatar_data['item_id'], $avatar_data['type'], $r );
 		}
 
 		wp_send_json_success( $return );
