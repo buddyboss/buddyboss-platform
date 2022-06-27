@@ -282,4 +282,47 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 		return $content;
 	}
 
+	/**
+	 * Format friends push notifications.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param array  $content      Notification content.
+	 * @param object $notification Notification object.
+	 *
+	 * @return array {
+	 *  'title'       => '',
+	 *  'description' => '',
+	 *  'link'        => '',
+	 *  'image'       => '',
+	 * }
+	 */
+	public function format_push_notification( $content, $notification ) {
+
+		if ( ! empty( $notification ) && 'friends' === $notification->component_name ) {
+			$text              = '';
+			$notification_link = '';
+
+			// Friends request accepted.
+			if ( 'bb_connections_request_accepted' === $notification->component_action ) {
+				$notification_link = trailingslashit( bp_core_get_user_domain( $notification->user_id ) . bp_get_friends_slug() . '/my-friends' );
+				$text              = __( 'Has accepted your connection request', 'buddyboss' );
+			}
+
+			// Friends request sent.
+			if ( 'bb_connections_new_request' === $notification->component_action ) {
+				$notification_link = bp_core_get_user_domain( $notification->user_id ) . bp_get_friends_slug() . '/requests/?new';
+				$text              = __( 'Sent you a connection request', 'buddyboss' );
+			}
+
+			$content = array(
+				'title'       => bp_core_get_user_displayname( $notification->item_id ),
+				'description' => $text,
+				'link'        => $notification_link,
+				'image'       => bb_notification_avatar_url( $notification ),
+			);
+		}
+
+		return $content;
+	}
 }
