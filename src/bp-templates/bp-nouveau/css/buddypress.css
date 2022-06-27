@@ -1757,6 +1757,17 @@ a.layout-grid-view {
   width: 100%;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-form.bottom-notice,
+.activity-update-form #whats-new-form.bottom-notice {
+  margin-bottom: 60px;
+}
+
+.bp-nouveau-activity-form-placeholder- #whats-new-form.bottom-notice #message-feedabck.updated,
+.activity-update-form #whats-new-form.bottom-notice #message-feedabck.updated {
+  position: absolute;
+  bottom: -60px;
+}
+
 .bp-nouveau-activity-form-placeholder- .whats-new-form-header,
 .activity-update-form .whats-new-form-header {
   display: flex;
