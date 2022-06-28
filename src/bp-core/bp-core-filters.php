@@ -2090,3 +2090,32 @@ function bb_filter_admin_emails( $query ) {
 	}
 }
 add_action( 'pre_get_posts', 'bb_filter_admin_emails' );
+
+/**
+ * Filter to change the display user URLs and current user URLs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array    $atts {
+ *        The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
+ *
+ *     @type string $title  Title attribute.
+ *     @type string $target Target attribute.
+ *     @type string $rel    The rel attribute.
+ *     @type string $href   The href attribute.
+ * }
+ * @param WP_Post  $item  The current menu item.
+ * @param stdClass $args  An object of wp_nav_menu() arguments.
+ * @param int      $depth Depth of menu item. Used for padding.
+ */
+function bb_change_nav_menu_links( $atts, $item, $args, $depth ) {
+
+	if ( isset( $item->type_label ) && 'BuddyBoss' === $item->type_label && isset( $atts['href'] ) ) {
+		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+			$atts['href'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $atts['href'] );
+		}
+	}
+
+	return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
