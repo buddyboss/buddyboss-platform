@@ -48,7 +48,54 @@ $admins            = array_map( 'intval', get_users(
 									<p></p>
 								</div>
 
-								<table class="form-table report-table">
+								<!-- Report Header -->
+
+								<?php if ( $is_content_screen ) { ?>
+
+								<div class="report-header">
+									<div class="report-header_details">
+										<div class="report-header_content_id">
+											Activity Post <a href="#">#1128</a>
+										</div>
+										<div class="report-header_user">
+											<img src="https://picsum.photos/300" />
+											<strong><a href="#">John Smith</a></strong>
+										</div>
+									</div>
+									<div class="report-header_content">
+										<strong class="report-header_number">10</strong>Reports
+									</div>
+									<div class="report-header_action">
+										<a href="#" class="button report-header_button">Hide Content</a>
+										<a href="#" class="button report-header_button green">Unsuspend Owner</a>
+									</div>
+								</div>
+
+								<?php } else { ?>
+									
+								<div class="report-header">
+									<div class="report-header_user">
+										<img src="https://picsum.photos/300" />
+										<strong><a href="#">John Smith</a></strong>
+									</div>
+									<div class="report-header_content">
+										<strong class="report-header_number">10</strong>Blocks
+									</div>
+									<div class="report-header_content">
+										<strong class="report-header_number">7</strong>Reports
+									</div>
+									<div class="report-header_action">
+										<a href="#" class="button report-header_button">Hide Content</a>
+										<a href="#" class="button report-header_button green">Unsuspend Owner</a>
+									</div>
+								</div>
+
+								<?php } ?>
+
+
+
+
+								<table class="form-table report-table" style="display:none;">
 									<tbody>
 									<?php if ( $is_content_screen ) { ?>
 										<tr>
