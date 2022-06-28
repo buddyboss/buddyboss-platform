@@ -2119,3 +2119,25 @@ function bb_change_nav_menu_links( $atts, $item, $args, $depth ) {
 	return $atts;
 }
 add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
+
+/**
+ * Filters to update the active classes for display user URLs and current user URLs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array    $classes The CSS classes that are applied to the menu item's `<li>` element.
+ * @param WP_Post  $item    The current menu item.
+ * @param stdClass $args    An object of wp_nav_menu() arguments.
+ * @param int      $depth   Depth of menu item. Used for padding.
+ */
+function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
+
+	if ( isset( $item->type_label ) && 'BuddyBoss' === $item->type_label ) {
+		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+			$classes = array_diff( $classes, array( 'current-menu-item', 'current_page_item' ) );
+		}
+	}
+
+	return $classes;
+}
+add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
