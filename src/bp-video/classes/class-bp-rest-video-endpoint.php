@@ -1047,7 +1047,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$status = bp_video_delete( array( 'id' => $id ), true );
+		$status = bp_video_delete( array( 'id' => $id ) );
 
 		// Build the response.
 		$response = new WP_REST_Response();
@@ -1777,6 +1777,35 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		// Added param to main activity to check the comment has access to upload video or not.
+		bp_rest_register_field(
+			'activity',
+			'comment_upload_video',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_video' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload video or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
+
+		// Added param to comment activity to check the child comment has access to upload video or not.
+		register_rest_field(
+			'activity_comments',
+			'comment_upload_video',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_video' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload video or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -2384,6 +2413,61 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			);
 
 		return $bool;
+	}
+
+
+	/**
+	 * The function to use to set `comment_upload_video`
+	 *
+	 * @param BP_Activity_Activity $activity  Activity Array.
+	 * @param string               $attribute The REST Field key used into the REST response.
+	 *
+	 * @return string            The value of the REST Field to include into the REST response.
+	 */
+	protected function bp_rest_user_can_comment_upload_video( $activity, $attribute ) {
+		$activity_id = $activity['id'];
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		$component = $activity['component'];
+		$type      = 'activity_comment' === $activity['type'];
+		$item_id   = $activity['primary_item_id'];
+
+		if ( ! empty( $item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( $item_id );
+			if ( true === $type ) {
+				if ( 'groups' === $parent_activity->component ) {
+					$item_id   = $parent_activity->item_id;
+					$component = 'groups';
+				}
+			}
+			if ( 'blogs' === $parent_activity->component ||
+			     (
+				     ! empty( $activity['component'] ) &&
+				     'blogs' === $activity['component']
+			     )
+			) {
+				return false;
+			}
+		}
+
+		$user_id = bp_loggedin_user_id();
+		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		$group_id = 0;
+		if ( bp_is_active( 'groups' ) && 'groups' === $component && ! empty( $item_id ) ) {
+			$group_id = $item_id;
+		}
+
+		if ( function_exists( 'bb_user_has_access_upload_video' ) ) {
+			return bb_user_has_access_upload_video( $group_id, $user_id, 0, 0, 'profile' );
+		}
+
+		return false;
 	}
 
 }
