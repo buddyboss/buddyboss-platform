@@ -210,6 +210,27 @@ TABLE OF CONTENTS:
   border-bottom: 1px solid #555;
 }
 
+#adminmenu li.toplevel_page_buddyboss-platform .wp-menu-image:before {
+  content: "\edc8";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-style: normal;
+  font-weight: 300;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-left: 0.2em;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 20px;
+  margin-right: 0.2em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 23px;
+}
+
 /*
  * 2.2 Settings - Components
  */
@@ -348,6 +369,8 @@ tr.bp-search-parent-field label {
   font-weight: 700;
   color: #333;
   border-bottom: 1px solid #eaeaea;
+  align-items: center;
+  display: flex;
 }
 
 .bp-admin-card h2 span {
@@ -358,18 +381,30 @@ tr.bp-search-parent-field label {
   text-decoration: none;
 }
 
-.bp-admin-card h2:before {
-  display: inline-block;
-  content: " ";
-  background-size: 18px 18px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #f6f6f6;
-  height: 38px;
-  width: 38px;
-  border-radius: 50px;
+.bp-admin-card h2 [class*=" bb-icon-"] {
+  font-size: 36px;
+  width: 36px;
+  margin-left: 16px;
   vertical-align: middle;
-  margin-left: 15px;
+  position: relative;
+}
+
+.bp-admin-card h2 [class*=" bb-icon-"]:before {
+  margin: 0;
+  color: #f6f6f6;
+  position: relative;
+  z-index: 2;
+}
+
+.bp-admin-card h2 [class*=" bb-icon-"]:after {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  z-index: 1;
+  content: " ";
+  width: 28px;
+  height: 28px;
+  background: #333;
 }
 
 .bp-admin-card h3 {
@@ -394,100 +429,6 @@ tr.bp-search-parent-field label {
   color: #0073aa;
 }
 
-/* General Settings */
-.bp-admin-card.section-bp_main h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
-}
-
-.bp-admin-card.section-bp_registration h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/page-registration.svg);
-  background-size: 22px 22px;
-  background-position-x: 11px;
-}
-
-.bp-admin-card.section-bp_privacy h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/user-secret.svg);
-}
-
-/* Profiles */
-.bp-admin-card.section-bp_xprofile h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
-}
-
-.bp-admin-card.section-bp_member_avatar_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/camera.svg);
-}
-
-.bp-admin-card.section-bp_member_type_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/tag.svg);
-  background-position: 11px 11px;
-}
-
-.bp-admin-card.section-bp_profile_search_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
-}
-
-.bp-admin-card.section-bp_profile_list_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/list-alt.svg);
-}
-
-.section-bp_profile_headers_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/regular/window-maximize.svg);
-}
-
-/* Groups */
-.bp-admin-card.section-bp_groups_avatar_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/camera.svg);
-}
-
-.bp-admin-card.section-bp_groups h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
-}
-
-.bp-admin-card.section-bp_groups_headers_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/regular/window-maximize.svg);
-}
-
-.bp-admin-card.section-bp_groups_types h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/cubes.svg);
-  background-size: 20px 20px;
-}
-
-.bp-admin-card.section-bp_groups_hierarchies h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/layer-group.svg);
-}
-
-.bp-admin-card.section-bp_group_list_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/list-alt.svg);
-}
-
-/* Forums */
-.bp-admin-card.section-bbp_settings_users h2:before,
-.bp-admin-card.section-bbp_settings_features h2:before,
-.bp-admin-card.section-bbp_settings_per_page h2:before,
-.bp-admin-card.section-bbp_settings_per_rss_page h2:before,
-.bp-admin-card.section-bbp_settings_root_slugs h2:before,
-.bp-admin-card.section-bbp_settings_single_slugs h2:before,
-.bp-admin-card.section-bbp_settings_user_slugs h2:before,
-.bp-admin-card.section-bbp_settings_buddypress h2:before,
-.bp-admin-card.section-bbp_settings_akismet h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/forums.svg);
-  background-size: 21px 21px;
-}
-
-/* Activity */
-.bp-admin-card.section-bp_activity h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/activity.svg);
-  background-size: 23px 23px;
-}
-
-.buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/thumbtack.svg);
-  -webkit-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-  background-position-y: 11px;
-}
-
 .buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none td {
   background: #f0f0f1;
   margin: 10px 10px 0 0;
@@ -497,15 +438,15 @@ tr.bp-search-parent-field label {
   border-radius: 4px;
 }
 
+.buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none td p {
+  margin: 0;
+}
+
+.buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none.child-custom-post-type td {
+  margin: 10px 10px 10px 0;
+}
+
 /* Media */
-.bp-admin-card.section-bp_media_settings_photos h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
-}
-
-.bp-admin-card.section-bp_media_settings_documents h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/folder-open.svg);
-}
-
 .section-bp_video_settings_extensions table.form-table tbody tr.video-extensions-listing > th,
 .bp-admin-card.section-bp_video_settings_extensions h2:before,
 .bp-admin-card.section-bp_document_settings_extensions h2:before {
@@ -516,63 +457,71 @@ tr.bp-search-parent-field label {
   padding: 0;
 }
 
-.bp-admin-card.section-bp_media_settings_emoji h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/laugh.svg);
-}
-
-.bp-admin-card.section-bp_media_settings_gifs h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/image.svg);
-}
-
 .bp-admin-card.section-bp_media_settings_symlinks {
   display: block !important;
 }
 
+/*
 .bp-admin-card.section-bp_media_settings_symlinks h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/server.svg);
-}
 
+	background-image: url(../../images/admin/icons/fontawesome/solid/server.svg);
+}
+*/
 /* Connections */
+/*
 .bp-admin-card.section-bp_friends h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/user-friends.svg);
-  background-size: 21px 21px;
-}
 
+	background-image: url(../../images/admin/icons/fontawesome/solid/user-friends.svg);
+	background-size: 21px 21px;
+}
+*/
 /* Invites */
+/*
 .bp-admin-card.section-bp_invites h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/envelope.svg);
-}
 
+	background-image: url(../../images/admin/icons/fontawesome/solid/envelope.svg);
+}
+*/
 /* Moderation */
+/*
 .bp-admin-card.section-bp_moderation_settings_blocking h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/ban.svg);
-  background-size: 20px 20px;
+
+	background-image: url(../../images/admin/icons/fontawesome/solid/ban.svg);
+	background-size: 20px 20px;
 }
 
 .bp-admin-card.section-bp_moderation_settings_reporting h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/flag.svg);
-}
 
+	background-image: url(../../images/admin/icons/fontawesome/solid/flag.svg);
+}
+*/
 /* Search */
+/*
 .bp-admin-card.section-bp_search_settings_community h2:before,
 .bp-admin-card.section-bp_search_settings_post_types h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
+
+	background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_general h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/caret-square-down.svg);
-}
 
+	background-image: url(../../images/admin/icons/fontawesome/solid/caret-square-down.svg);
+}
+*/
 /* Notification */
+/*
 .bp-admin-card.section-bp_notification_settings_automatic h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/bell.svg);
-}
 
+	background-image: url(../../images/admin/icons/fontawesome/solid/bell.svg);
+}
+*/
 /* Labs */
+/*
 .bp-admin-card.section-bp_labs_settings_notifications h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/flask.svg);
-}
 
+	background-image: url(../../images/admin/icons/fontawesome/solid/flask.svg);
+}
+*/
 .bp-admin-card.section-bp_search_settings_community table,
 .bp-admin-card.section-bp_search_settings_post_types table {
   margin-bottom: 20px;
@@ -581,67 +530,6 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bp_search_settings_community th[scope="row"],
 .bp-admin-card.section-bp_search_settings_post_types th[scope="row"] {
   width: 1px;
-}
-
-/* Video */
-.bp-admin-card.section-bp_media_settings_videos h2:before,
-.bp-admin-card.section-bp_video_settings_extensions h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/video.svg);
-}
-
-/* Pages */
-.bp-admin-card.section-bp_pages h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/page.svg);
-  background-size: 22px 22px;
-}
-
-.bp-admin-card.section-bp_registration_pages h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/page-registration.svg);
-  background-size: 22px 22px;
-  background-position-x: 11px;
-}
-
-/* Tools */
-.bp-admin-card.section-default_data h2:before,
-.bp-admin-card.section-repair_community h2:before,
-.bp-admin-card.section-repair_forums h2:before,
-body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
-.bp-admin-card.section-bp-member-type-import h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/wrench.svg);
-}
-
-/* Integrations - BuddyBoss App */
-.bp-admin-card.section-bp_buddyboss_app-integration h2:before {
-  background-image: url(../../images/admin/icons/logos/buddyboss.png);
-  background-size: 100% 100%;
-}
-
-/* Integrations - LearnDash */
-.bp-admin-card.section-bp_ld-integration h2:before,
-.bp-admin-card.section-bp_ld_sync-buddypress h2:before,
-.bp-admin-card.section-bp_ld_sync-learndash h2:before,
-.bp-admin-card.section-bp_ld_sync-reports h2:before,
-.bp-admin-card.section-bp_ld_course_tab-buddypress h2:before {
-  background-image: url(../../images/admin/icons/logos/learndash.png);
-  background-size: 100% 100%;
-}
-
-/* Integrations - MemberPress */
-.bp-admin-card.section-bp-memberpress-integration h2:before {
-  background-image: url(../../images/admin/icons/logos/memberpress.png);
-  background-size: 100% 100%;
-}
-
-/* Integrations - WooCommerce */
-.bp-admin-card.section-bp-woocommerce-integration h2:before {
-  background-image: url(../../images/admin/icons/logos/woocommerce.png);
-  background-size: 100% 100%;
-}
-
-/* Integrations - BuddyPress Plugins */
-.bp-admin-card.section-bp_compatibility-integration h2:before {
-  background-image: url(../../images/admin/icons/logos/buddypress.png);
-  background-size: 100% 100%;
 }
 
 /*
@@ -692,7 +580,7 @@ table.extension-listing tbody td {
   padding: 10px;
 }
 
-table.extension-listing tbody td i.bb-icon {
+table.extension-listing tbody td [class*=" bb-icon-"] {
   font-size: 33px;
   color: #999;
   margin-right: 8px;
@@ -1234,7 +1122,47 @@ body.post-type-reply #edit-slug-box {
  */
 body.post-type-bp-member-type .postbox .inside,
 body.post-type-bp-group-type .postbox .inside {
-  padding: 0 22px 22px;
+  padding: 0 12px 12px;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-meta-box-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-meta-box-colorpicker {
+  display: flex;
+  flex-direction: row;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one {
+  display: flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: -webkit-match-parent;
+  flex-basis: auto;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one:not(:first-child),
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one:not(:first-child) {
+  margin-right: 15px;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one .bb-colorpicker-label,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one .bb-colorpicker-label {
+  margin-bottom: 10px;
+  color: #686868;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bp-member-type-hide-colorpicker,
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bp-group-type-hide-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bp-member-type-hide-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bp-group-type-hide-colorpicker {
+  display: none;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bp-member-type-show-colorpicker,
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bp-group-type-show-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bp-member-type-show-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bp-group-type-show-colorpicker {
+  display: block;
 }
 
 body.post-type-bp-member-type #member-type-shortcode,
@@ -2170,7 +2098,6 @@ body .section-repair_community .settings fieldset .checkbox label code {
 }
 
 #bp_moderation_settings_reporting label[for="bpm_reporting_content_reporting"] {
-  font-size: 16px;
   margin-top: 5px;
   display: block;
 }
@@ -2272,11 +2199,6 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 /*------------------------------------------------------------------------------
  * 10.0 On-screen Notifications
  *----------------------------------------------------------------------------*/
-.bp-admin-card.section-bp_notifications h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/regular/bells.svg);
-  background-size: auto;
-}
-
 .bb-screen-position-outer {
   display: flex;
   width: 180px;
@@ -2351,18 +2273,21 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   padding: 0;
 }
 
+#bp_web_push_notification_settings .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback,
 #bp_privacy .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
+#bp_web_push_notification_settings .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon,
 #bp_privacy .bp-feedback .bp-icon {
   border-radius: 0 4px 4px 0;
   margin: 0;
 }
 
+#bp_web_push_notification_settings .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p,
 #bp_privacy .bp-feedback > p {
   color: #666 !important;
@@ -2375,18 +2300,21 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 }
 
 .admin-notice .bp-feedback,
+#bp_web_push_notification_settings .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
 .admin-notice .bp-feedback .bp-icon,
+#bp_web_push_notification_settings .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon {
   border-radius: 0 4px 4px 0;
   margin: 0;
 }
 
 .admin-notice .bp-feedback > p,
+#bp_web_push_notification_settings .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p {
   color: #666 !important;
   margin-top: 0 !important;
@@ -2405,6 +2333,25 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\e855";
+}
+
+/* Errors / Waring Styling*/
+.bb-error-section {
+  padding: 10px;
+  margin-right: -210px;
+  background: #ffdcdc;
+  color: #d42929;
+  border: 1px solid #ffc5ca;
+  border-radius: 4px;
+}
+
+.bb-warning-section {
+  padding: 10px;
+  margin-right: -210px;
+  background: #fff3c8;
+  color: #8b6300;
+  border: 1px solid #ffeeb3;
+  border-radius: 4px;
 }
 
 /*------------------------------------------------------------------------------
@@ -3210,11 +3157,12 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 }
 
 .bb-lab-notice.notification-information:before {
-  content: "\e8c2";
+  content: "\eebc";
   display: inline-block;
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
+  font-weight: 100;
   margin-left: 10px;
   line-height: 1;
 }
@@ -3277,4 +3225,17 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
   line-height: 1.4;
+}
+
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th + td {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+#bp_web_push_notification_settings table.form-table .no-padding {
+  padding: 0;
 }
