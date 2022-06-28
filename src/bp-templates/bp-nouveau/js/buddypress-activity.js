@@ -455,12 +455,22 @@ window.bp = window.bp || {};
 					comment_items.each(
 						function( i, item ) {
 							if ( i < comment_items.length - 4 ) {
-								$( item ).addClass( 'bp-hidden' ).hide();
-
+								
 								// Prepend a link to display all.
 								if ( ! i ) {
 									$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
 								}
+
+								//stop hiding elements if the id from hash url for specific comment matches.
+								if ( window.location.hash && '#' + $( item ).attr( 'id' ) === window.location.hash ) {
+
+									//in case it's a reply from comment, show hidden parent elements for it to show.
+									$( item ).parents( 'li.comment-item' ).show();
+
+									return false;
+								}
+
+								$( item ).addClass( 'bp-hidden' ).hide();
 							}
 						}
 					);
@@ -572,6 +582,9 @@ window.bp = window.bp || {};
 
 			// Edit Activity Loader.
 			this.openEditActivityPopup();
+
+			// Navigate to specific comment when there's e.g. #acomment123 in url.
+			this.navigateToSpecificComment();
 
 			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout(
@@ -2220,6 +2233,21 @@ window.bp = window.bp || {};
 				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
 			}
 		},
+
+		navigateToSpecificComment: function () {
+
+			setTimeout( function () {
+
+				if ( window.location.hash ) {
+
+					var id = window.location.hash;
+					if ( $( id ).length > 0 ) {
+						$( 'html, body' ).animate( { scrollTop: parseInt( $( id ).offset().top ) - 50 }, 0 );
+					}
+				}
+
+			}, 200 );
+		}
 
 	};
 
