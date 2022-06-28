@@ -488,12 +488,6 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
-	$album_privacy = 'public';
-	$album         = new BP_Media_Album( $album_id );
-	if ( ! empty( $album ) ) {
-		$album_privacy = $album->privacy;
-	}
-
 	// Save media.
 	$media_ids = array();
 	foreach ( $medias as $media_id ) {
