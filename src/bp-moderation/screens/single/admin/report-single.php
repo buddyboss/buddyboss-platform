@@ -48,7 +48,7 @@ $admins            = array_map( 'intval', get_users(
 									<p></p>
 								</div>
 
-								<table class="form-table">
+								<table class="form-table report-table">
 									<tbody>
 									<?php if ( $is_content_screen ) { ?>
 										<tr>

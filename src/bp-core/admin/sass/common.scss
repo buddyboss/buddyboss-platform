@@ -3472,3 +3472,21 @@ table.moderations {
 		}
 	}
 }
+
+#bp_moderation_action .report-table {
+	display: block;
+
+	tbody {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	tr,
+	td {
+		display: block;
+	}
+
+	tr td:first-child {
+		display: none;
+	}
+}

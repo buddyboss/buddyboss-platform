@@ -3216,3 +3216,21 @@ table.moderations .column-member img {
 table.moderations .column-member a[data-action="unsuspend"] {
   color: #5f9a22;
 }
+
+#bp_moderation_action .report-table {
+  display: block;
+}
+
+#bp_moderation_action .report-table tbody {
+  display: flex;
+  justify-content: space-between;
+}
+
+#bp_moderation_action .report-table tr,
+#bp_moderation_action .report-table td {
+  display: block;
+}
+
+#bp_moderation_action .report-table tr td:first-child {
+  display: none;
+}
