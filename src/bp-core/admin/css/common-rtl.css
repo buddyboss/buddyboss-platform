@@ -39,6 +39,7 @@ TABLE OF CONTENTS:
 13.0 Group Directories Enhancement
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
+16.0 Moderation
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -3201,4 +3202,17 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
   line-height: 1.4;
+}
+
+/*------------------------------------------------------------------------------
+ * 16.0 Moderation
+ *----------------------------------------------------------------------------*/
+table.moderations .column-member img {
+  vertical-align: middle;
+  margin-left: 5px;
+  border-radius: 50%;
+}
+
+table.moderations .column-member a[data-action="unsuspend"] {
+  color: #5f9a22;
 }

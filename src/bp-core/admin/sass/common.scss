@@ -38,6 +38,7 @@ TABLE OF CONTENTS:
 13.0 Group Directories Enhancement
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
+16.0 Moderation
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -3452,3 +3453,22 @@ table tbody td .bb-description {
 
 }
 
+/*------------------------------------------------------------------------------
+ * 16.0 Moderation
+ *----------------------------------------------------------------------------*/
+
+table.moderations {
+
+	.column-member {
+
+		img {
+			vertical-align: middle;
+			margin-right: 5px;
+			border-radius: 50%;
+		}
+
+		a[data-action="unsuspend"] {
+			color: #5f9a22;
+		}
+	}
+}
