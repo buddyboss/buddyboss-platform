@@ -498,12 +498,9 @@ function bp_nouveau_ajax_media_move_to_album() {
 	$media_ids = array();
 	foreach ( $medias as $media_id ) {
 
-		$media_obj           = new BP_Media( $media_id );
-		$media_obj->album_id = $album_id;
-		$media_obj->group_id = ! empty( $group_id ) ? $group_id : false;
-		$media_obj->privacy  = $media_obj->group_id ? 'grouponly' : $album_privacy;
+		$media    = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
 
-		if ( ! $media_obj->save() ) {
+		if ( ! $media ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'There was a problem when trying to move the media.', 'buddyboss' )
