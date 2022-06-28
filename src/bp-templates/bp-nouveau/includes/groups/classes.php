@@ -39,7 +39,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function build_exclude_args() {
-		$this->query_vars = wp_parse_args( $this->query_vars, array(
+		$this->query_vars = bp_parse_args( $this->query_vars, array(
 			'group_id'     => 0,
 			'is_confirmed' => true,
 		) );

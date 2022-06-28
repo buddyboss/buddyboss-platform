@@ -767,7 +767,7 @@ function bp_nouveau_avatar_args() {
 function bp_nouveau_has_nav( $args = array() ) {
 	$bp_nouveau = bp_nouveau();
 
-	$n = wp_parse_args(
+	$n = bp_parse_args(
 		$args,
 		array(
 			'type'                    => 'primary',
