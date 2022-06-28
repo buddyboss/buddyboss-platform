@@ -98,7 +98,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 
 					$field['args'] = isset( $field['args'] ) ? $field['args'] : array();
 
-					if ( ! empty( $field['callback'] ) && ! empty( $field['title'] ) ) {
+					if ( ! empty( $field['callback'] ) ) {
 						$sanitize_callback = isset( $field['sanitize_callback'] ) ? $field['sanitize_callback'] : array();
 						$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $field['args'] );
 					}

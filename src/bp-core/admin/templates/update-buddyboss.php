@@ -29,7 +29,7 @@ if ( false === $bb_changelog ) {
 }
 
 // If you have any video then add url here.
-$video_url = 'https://player.vimeo.com/video/683811854?h=ee740ce122';
+$video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 ?>
 <div id="bp-hello-backdrop" style="display: none;"></div>
 
@@ -67,44 +67,27 @@ $video_url = 'https://player.vimeo.com/video/683811854?h=ee740ce122';
 			if ( true === $show_overview ) {
 				?>
 				<div id="bb-release-overview" class="bb-hello-tabs_content is_active">
-					<p><?php esc_html_e( 'In this release, we have implemented a number of changes to the templates of profile and group headers and directories.', 'buddyboss' ); ?></p>
-					<p><?php esc_html_e( 'By doing so, we are now able to offer:', 'buddyboss' ); ?></p>
-					<ul class="bp-hello-list">
-						<li><?php esc_html_e( 'New layout options', 'buddyboss' ); ?></li>
-						<li><?php esc_html_e( 'The ability to select which elements show', 'buddyboss' ); ?></li>
-						<li><?php esc_html_e( 'Numerous visual improvements suggested by customers', 'buddyboss' ); ?></li>
-					</ul>
-					<p><?php esc_html_e( 'To make use of these new customization options:', 'buddyboss' ); ?></p>
-					<ul class="bp-hello-list">
-						<li>
-							<?php
-							echo sprintf(
-							/* translators: 1. BuddyBoss platform pro with link. 2. BuddyBoss account with link. */
-								esc_html__( 'You\'ll need to install %1$s, which you can download from your %2$s', 'buddyboss' ),
-								sprintf(
-								/* translators: 1. BuddyBoss platform pro link. 2. BuddyBoss platform pro text. */
-									'<a href="%1$s" target="_blank">%2$s</a>',
-									esc_url( 'https://www.buddyboss.com/platform' ),
-									esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' )
-								),
-								sprintf(
-								/* translators: 1. BuddyBoss account link. 2. BuddyBoss account text. */
-									'<a href="%1$s" target="_blank">%2$s</a>',
-									esc_url( 'https://my.buddyboss.com' ),
-									esc_html__( 'BuddyBoss account', 'buddyboss' )
-								)
-							);
-							?>
-						</li>
-						<li><?php esc_html_e( 'Update any template overrides in your child theme to use our new templates', 'buddyboss' ); ?></li>
-					</ul>
+					<h3><?php esc_html_e( 'Welcome to BuddyBoss Theme 2.0 🥳', 'buddyboss' ); ?></h3>
+					<p><?php esc_html_e( 'Check out the video below for a full walkthrough of all the new features and updates available to you in this release.', 'buddyboss' ); ?></p>
+					<p>
+						<?php
+						echo sprintf(
+							esc_html__( 'As this update contains a number of improvements to the theme’s colors, layouts and styling, we recommend you reconfigure your Theme Options and review any custom CSS you may have.  For more information on how to update, %1$s.', 'buddyboss' ),
+							sprintf(
+								'<a href="%1$s" target="_blank">%2$s</a>',
+								esc_url( 'https://www.buddyboss.com/resources/docs/buddyboss-theme/getting-started/updating-to-buddyboss-theme-2-0' ),
+								esc_html__( 'check out this tutorial', 'buddyboss' )
+							)
+						);
+						?>
+					</p>
 					<?php
 					if ( ! empty( $video_url ) ) {
 						?>
 						<p><?php esc_html_e( 'For more information, please watch the video below:', 'buddyboss' ); ?></p>
 						<div class="video-wrapper">
 							<div class="video-container">
-								<iframe src="<?php echo esc_url( $video_url ); ?>" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+								<iframe width="560" height="315" src="<?php echo esc_url( $video_url ); ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 							</div>
 						</div>
 						<?php

@@ -1566,6 +1566,8 @@ function bp_nouveau_get_container_classes() {
 		if ( $layout_prefs && (int) $layout_prefs === 1 && ( bp_is_user() || bp_is_group() ) ) {
 			$classes[] = 'bp-single-vert-nav';
 			$classes[] = 'bp-vertical-navs';
+		} else {
+			$classes[] = 'bp-single-plain-nav';
 		}
 
 		if ( $layout_prefs && bp_is_directory() ) {
@@ -1611,7 +1613,7 @@ function bp_nouveau_single_item_nav_classes() {
 	 * @return string CSS classes
 	 */
 function bp_nouveau_get_single_item_nav_classes() {
-	$classes    = array( 'main-navs', 'no-ajax', 'bp-navs', 'single-screen-navs' );
+	$classes    = array( 'main-navs', 'no-ajax', 'bp-navs', 'single-screen-navs', 'bb-single-main-nav' );
 	$component  = bp_current_component();
 	$bp_nouveau = bp_nouveau();
 
@@ -1632,8 +1634,10 @@ function bp_nouveau_get_single_item_nav_classes() {
 
 	if ( 1 === $layout_prefs ) {
 		$classes[] = 'vertical';
+		$classes[] = 'bb-single-main-nav--vertical';
 	} else {
 		$classes[] = 'horizontal';
+		$classes[] = 'bb-single-main-nav--horizontal';
 	}
 
 	$classes[] = $menu_type;
@@ -1671,7 +1675,9 @@ function bp_nouveau_single_item_subnav_classes() {
 	 * @return string CSS classes
 	 */
 function bp_nouveau_get_single_item_subnav_classes() {
-	$classes = array( 'bp-navs', 'bp-subnavs', 'no-ajax' );
+	$customizer_option = ( bp_is_user() ) ? 'user_nav_display' : 'group_nav_display';
+	$layout_prefs      = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+	$classes           = array( 'bp-navs', 'bp-subnavs', 'no-ajax' );
 
 	// Set user or group class string
 	if ( bp_is_user() ) {
@@ -1688,6 +1694,12 @@ function bp_nouveau_get_single_item_subnav_classes() {
 
 	if ( ( bp_is_group() && 'messages' === bp_current_action() ) ) {
 		$classes[] = 'bp-messages-nav';
+	}
+
+	if ( $layout_prefs && 1 === (int) $layout_prefs && ( bp_is_user() || bp_is_group() ) ) {
+		$classes[] = 'bb-subnav-vert';
+	} else {
+		$classes[] = 'bb-subnav-plain';
 	}
 
 	$class = array_map( 'sanitize_html_class', $classes );
@@ -2486,7 +2498,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
 					echo '<div class="bb-password-wrap">';
-					echo '<a href="#" class="bb-toggle-password"><i class="bb-icon-eye"></i></a>';
+					echo '<a href="#" class="bb-toggle-password"><i class="bb-icon-l bb-icon-eye"></i></a>';
 				}
 
 				print( $field_output );  // Constructed safely above.

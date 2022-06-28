@@ -50,16 +50,15 @@ function bp_media_upload() {
 
 	$name = $attachment->post_title;
 
-	$thumb_nfo = wp_get_attachment_image_src( $attachment->ID );
-	$url_nfo   = wp_get_attachment_image_src( $attachment->ID, 'full' );
-
-	$url       = is_array( $url_nfo ) && ! empty( $url_nfo ) ? $url_nfo[0] : null;
-	$thumb_nfo = is_array( $thumb_nfo ) && ! empty( $thumb_nfo ) ? $thumb_nfo[0] : null;
+	// Generate document attachment preview link.
+	$attachment_id        = base64_encode( 'forbidden_' . $attachment->ID );
+	$attachment_url       = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
+	$attachment_thumb_url = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
 
 	$result = array(
 		'id'    => (int) $attachment->ID,
-		'thumb' => esc_url( $thumb_nfo ),
-		'url'   => esc_url( $url ),
+		'thumb' => $attachment_thumb_url,
+		'url'   => $attachment_url,
 		'name'  => esc_attr( $name ),
 	);
 
@@ -102,6 +101,7 @@ function bp_media_remove_default_image_sizes( $sizes ) {
 			'bb-media-photos-album-directory-image'        => $sizes['bb-media-photos-album-directory-image'],
 			'bb-media-photos-album-directory-image-medium' => $sizes['bb-media-photos-album-directory-image-medium'],
 			'bb-media-photos-popup-image'                  => $sizes['bb-media-photos-popup-image'],
+			'thumbnail'                                    => $sizes['thumbnail'],
 		);
 	}
 
@@ -1251,7 +1251,8 @@ function albums_check_album_access( $album_id ) {
  */
 function bp_media_delete_orphaned_attachments() {
 
-	global $wpdb;
+	remove_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10 );
+	remove_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10 );
 
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
@@ -1260,15 +1261,37 @@ function bp_media_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_media_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
-	$data  = $wpdb->get_col( $query );
+	$args = array(
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+		'post_status'    => 'inherit',
+		'post_type'      => 'attachment',
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'   => 'bp_media_saved',
+				'value' => '0'
+			),
+			array(
+				'key'     => 'bb_media_draft',
+				'compare' => 'NOT EXISTS',
+				'value'   => ''
+			)
+		)
+	);
 
-	if ( ! empty( $data ) ) {
-		foreach ( $data as $a_id ) {
-			wp_delete_attachment( $a_id, true );
+	$media_wp_query = new WP_query( $args );
+	if ( 0 < $media_wp_query->found_posts ) {
+		foreach ( $media_wp_query->posts as $post_id ) {
+			wp_delete_attachment( $post_id, true );
 		}
 	}
 
+	wp_reset_postdata();
+	wp_reset_query();
+
+	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
+	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
 }
 
 /**
@@ -3532,7 +3555,7 @@ function bp_media_register_image_sizes() {
 	if ( ! empty( $image_sizes ) ) {
 		foreach ( $image_sizes as $name => $image_size ) {
 			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
-				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'] );
+				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'], ( isset( $image_size['crop'] ) ? $image_size['crop'] : false ) );
 			}
 		}
 	}
