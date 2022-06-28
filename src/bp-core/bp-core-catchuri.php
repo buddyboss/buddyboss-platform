@@ -1201,6 +1201,7 @@ function bp_private_network_template_redirect() {
 			$exclude = bp_enable_private_network_public_content();
 			if ( '' !== $exclude ) {
 
+				// If account activate url then it should return.
 				if ( $activate ) {
 					return;
 				}
