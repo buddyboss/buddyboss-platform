@@ -1205,7 +1205,6 @@ function bp_private_network_template_redirect() {
 			// Get excluded list from the settings
 			$exclude = bp_enable_private_network_public_content();
 			if ( '' !== $exclude ) {
-
 				// Convert string to URL array
 				$exclude_arr_url = preg_split( "/\r\n|\n|\r/", $exclude );
 
