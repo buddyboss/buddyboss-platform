@@ -492,7 +492,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 	$media_ids = array();
 	foreach ( $medias as $media_id ) {
 
-		$media    = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
+		$media = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
 
 		if ( ! $media ) {
 			$response['feedback'] = sprintf(
