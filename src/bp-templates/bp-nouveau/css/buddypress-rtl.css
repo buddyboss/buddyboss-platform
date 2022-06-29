@@ -3386,6 +3386,7 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-header .activity-to:before {
+  display: inline-block;
   font-family: dashicons;
   vertical-align: middle;
   content: "\f344";
@@ -21453,6 +21454,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   -webkit-box-shadow: none;
   box-shadow: none;
   left: 20px;
+  right: inherit;
 }
 
 .moderation-popup .modal-container .bb-model-footer {
