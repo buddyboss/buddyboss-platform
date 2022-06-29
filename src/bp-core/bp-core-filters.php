@@ -718,6 +718,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 
 	if ( isset( $menu_item->classes ) && is_array( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
 		$menu_item->type_label = __( 'BuddyBoss', 'buddyboss' );
+		$menu_item->menu_type  = 'buddyboss';
 	}
 
 	if ( is_admin() ) {
@@ -2110,7 +2111,7 @@ add_action( 'pre_get_posts', 'bb_filter_admin_emails' );
  */
 function bb_change_nav_menu_links( $atts, $item, $args, $depth ) {
 
-	if ( isset( $item->type_label ) && 'BuddyBoss' === $item->type_label && isset( $atts['href'] ) ) {
+	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type && isset( $atts['href'] ) ) {
 		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
 			$atts['href'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $atts['href'] );
 		}
@@ -2132,7 +2133,7 @@ add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
  */
 function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 
-	if ( isset( $item->type_label ) && 'BuddyBoss' === $item->type_label ) {
+	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type ) {
 		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
 			$classes = array_diff( $classes, array( 'current-menu-item', 'current_page_item' ) );
 		}
