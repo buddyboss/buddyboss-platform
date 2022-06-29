@@ -1,0 +1,298 @@
+#bb_pusher_settings_section .bb-pusher-status {
+  margin-left: 15px;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line {
+  display: inline-block;
+  font-size: 14px;
+  padding: 10px 15px;
+  background: #f0f0f1;
+  border-radius: 5px;
+  color: #808080;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line:before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #808080;
+  margin-right: 10px;
+  vertical-align: baseline;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.error-connected {
+  color: #ce1010;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.error-connected:before {
+  background: #ce1010;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.connected {
+  color: #858585;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.connected:before {
+  background: #8fd14f;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.warn-connected {
+  color: #858585;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.warn-connected:before {
+  background: #fac710;
+}
+
+#bb_pusher_settings_section .notes-hidden-header > th {
+  display: none;
+}
+
+#bb_pusher_settings_section .notes-hidden-header > th + td {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#bb_pusher_settings_section .hidden-header > th {
+  opacity: 0;
+  visibility: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+#bb_pusher_settings_section .hidden-header > td {
+  padding: 0;
+  margin: 0;
+}
+
+#bb_pusher_settings_section input[type="text"],
+#bb_pusher_settings_section input[type="email"],
+#bb_pusher_settings_section input[type="password"] {
+  width: 50%;
+}
+
+@media (max-width: 782px) {
+  #bb_pusher_settings_section input[type="text"],
+  #bb_pusher_settings_section input[type="email"],
+  #bb_pusher_settings_section input[type="password"] {
+    width: 100%;
+  }
+}
+
+#bb_pusher_settings_section #bb-pusher-create-new-app,
+#bb_pusher_settings_section #bb-pusher-connected-app {
+  margin-right: 10px;
+}
+
+#bb_pusher_settings_section .bb-pusher-new-app-wrap {
+  margin-top: 15px;
+}
+
+#bb_pusher_settings_section .bb-pusher-new-app-wrap #bb-pusher-create-new-app:before {
+  content: "\eef9";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  margin-right: 10px;
+  display: inline-block;
+}
+
+#bb_pusher_settings_section .bb-pusher-new-app-wrap #bb-pusher-create-new-app.loading {
+  color: #a7aaad !important;
+  border-color: #dcdcde !important;
+  background: #f6f7f7 !important;
+  box-shadow: none !important;
+  cursor: default;
+  transform: none !important;
+  pointer-events: none;
+}
+
+#bb_pusher_settings_section .bb-pusher-new-app-wrap #bb-pusher-create-new-app.loading:before {
+  content: "\ef31";
+  -webkit-animation: spin 1s infinite linear;
+  animation: spin 1s infinite linear;
+}
+
+#bb_pusher_settings_section .bbpro-pusher-app-link {
+  margin-top: 0;
+}
+
+@media (max-width: 782px) {
+  #bb_pusher_settings_section #bb-pusher-connected-app {
+    margin-bottom: 10px;
+  }
+}
+
+#bp_web_push_notification_settings .bp-hide {
+  display: none !important;
+}
+
+#bp_web_push_notification_settings .soft_prompt_label_header {
+  color: #3c434a;
+  margin-bottom: 10px;
+}
+
+#bp_web_push_notification_settings .prompt-box-preview-title {
+  font-weight: 600;
+}
+
+#bp_web_push_notification_settings .soft-prompt-box-wrapper-preview {
+  background-color: #fff;
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid #ccd0d4;
+  padding: 15px;
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+#bp_web_push_notification_settings .soft-prompt-box-wrapper-preview .soft-prompt-image {
+  width: 100px;
+}
+
+#bp_web_push_notification_settings .soft-prompt-box-wrapper-preview .soft-prompt-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+#bp_web_push_notification_settings .soft-prompt-box-wrapper-preview .soft-prompt-text {
+  width: calc(100% - 120px);
+  padding-left: 20px;
+  box-sizing: border-box;
+}
+
+#bp_web_push_notification_settings .soft-prompt-box-wrapper-preview .soft-prompt-btn {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  align-items: center;
+}
+
+#bp_web_push_notification_settings .soft-prompt-box-wrapper-preview .soft-prompt-btn .cancel-soft-prompt-button {
+  margin: 0 15px;
+}
+
+#bp_web_push_notification_settings #bb-pusher-enable-soft-prompt-image-file {
+  border: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#bp_web_push_notification_settings label.soft-prompt-uploader-label {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+#bp_web_push_notification_settings .bb-soft-prompt-img-remove-button {
+  border-color: #d33;
+  color: #d33;
+  margin-left: 5px;
+}
+
+#bp_web_push_notification_settings .bbpro-attachment-status {
+  clear: both;
+  margin: 1em 0;
+}
+
+#bp_web_push_notification_settings .bbpro-attachment-status p.updated {
+  display: block;
+  padding: 10px 15px;
+}
+
+#bp_web_push_notification_settings .bbpro-attachment-status p.success {
+  background-color: #efc;
+  border: 1px solid #591;
+  color: #250;
+}
+
+#bp_web_push_notification_settings .bbpro-attachment-status p.error {
+  background-color: #fdc;
+  border: 1px solid #a00;
+  color: #800;
+}
+
+#bp_web_push_notification_settings #bb-pusher-enable-soft-prompt-message {
+  padding: 10px;
+}
+
+#bp_web_push_notification_settings .bb-pusher-default-notification-icon.group-field td,
+#bp_web_push_notification_settings .bb-pusher-enable-soft-prompt-extra-fields.group-field td {
+  padding-bottom: 0;
+}
+
+#bp_web_push_notification_settings .bb-pusher-default-notification-icon.group-field td .button-wrap,
+#bp_web_push_notification_settings .bb-pusher-enable-soft-prompt-extra-fields.group-field td .button-wrap {
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 15px;
+  margin-right: 15px;
+}
+
+#bp_web_push_notification_settings .bb-pusher-default-notification-icon .bbpro-attachment-upload-container > img,
+#bp_web_push_notification_settings .bb-pusher-enable-soft-prompt-extra-fields .bbpro-attachment-upload-container > img {
+  width: 150px;
+  margin-bottom: 10px;
+}
+
+#bp_web_push_notification_settings .bb-pusher-default-notification-icon .bb-img-button-wrap .bbpro-img-remove-button,
+#bp_web_push_notification_settings .bb-pusher-enable-soft-prompt-extra-fields .bb-img-button-wrap .bbpro-img-remove-button {
+  border-color: #e68787;
+  color: #ce1110;
+  margin-left: 5px;
+}
+
+@-moz-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+@-o-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+@-ms-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
