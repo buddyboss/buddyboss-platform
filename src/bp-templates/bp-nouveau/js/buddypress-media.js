@@ -1124,8 +1124,6 @@ window.bp = window.bp || {};
 							} else {
 								if ( parseInt( BP_Nouveau.media.current_album ) > 0 ) {
 									$( '#media-stream ul.media-list li[data-id="' + media_id + '"]' ).remove();
-								} else if ( $( '#media-stream ul.media-list li.bb-photo-li[data-id="' + media_id + '"]' ).length ) {
-									$( '#media-stream ul.media-list li.bb-photo-li[data-id="' + media_id + '"]' ).remove();
 								} else if ( $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]' ).length && !$( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]' ).parent().hasClass( 'bb-media-length-1' ) ) {
 									$( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]' ).remove();
 									if ( activityId && activityId.length ) {
