@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8.3
+Tested up to: 6.0
 Requires PHP: 5.6.20
-Stable tag: 1.9.0.1
+Stable tag: 2.0.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,180 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.0.4.1 =
+* Activity - Fixed critical issue when ‘Forum Discussions’ component is not active
+
+= 2.0.4 =
+* Notifications - Provided support for Web Push Notification from BuddyBoss Platform Pro
+* Forums - Added support to save forum Discussion and replies content in the draft on accidental close or refresh
+* Forums - Handled member unsubscribed automatically issue when discussion edited from admin Dashboard
+* Forums - Handled discussion alignment formatting for RTL language site
+* Activity - Added support to save Post activity content in the draft on accidental close or refresh
+* Activity - Provided draft support for activity directory, profile timeline, members profile timeline, and groups timeline
+* Activity - Small improvement to show embed preview for blog auto-generated activity
+* Profiles - Handled profile repeater field issue not getting saved properly
+* Groups - Handled group name with apostrophe not showing correctly across the network
+* Groups - Handled group URL not working issue in the email
+* Media - Handled video not playing issue in the popup on other member's timeline
+* Media - Fixed issue to search emoji with uppercase string in messaging, activity, forums, etc
+* Messages - Handled critical issue of sharing same thread when multiple members create thread at the same time
+* Messages - Small code refactoring to not save entity code in the DB for empty messages with just media
+* Coding Standards - Menu and sub-navigation CSS Code refactoring
+* REST API - Provided raw group name parameter in the group API
+* REST API - Handled edit activity critical issue in the activity API
+* REST API - Provided create album parameter for a specific group in the group API
+* REST API - Small improvement to send message thread sender details in the message thread API
+* REST API - Handled emojis inconsistent response issue
+* REST API - Handled critical issue of sharing same thread in the API
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issues
+* Documentation - Small code refactoring to stop sending resources documentation requests on every page load
+
+= 2.0.3.1 =
+* Compatibility - Fixed 'WP Offload Media' plugin critical topics issue attached with documents
+
+= 2.0.3 =
+* Profiles - Handled repeater set title issue showing dropdown value instead of text
+* Profiles - Handled wrong date value for empty date Profile fields
+* Groups - Small improvement in groups directory filter dropdown to show Group types in alphabetical order
+* Forums - Handled single discussion display name privacy issue
+* Activity - Handled @mention not working issue in activity comments for blog post activities
+* Activity - Small improvement to redirect to specific activity comment from notification
+* Activity - Small improvement to allow searching Unicode characters in directory screen
+* Activity - Handled URL embed not working issue with the space
+* Activity - Handled link preview getting deleted issue when updating privacy
+* Activity - Small improvement to show a relevant error when not allowed to edit activity after a specified duration
+* Activity - Handled disabled auto-refresh option not working issue
+* Media - Handled document upload in a folder not showing without refresh issue in the Profile
+* Media - Small improvement to show uploaded portrait media in the right size across the network
+* Media - Small improvement to hide action buttons when no videos are found
+* Messages - Handled gif not playing issue in the message thread
+* Moderation - Small improvement to not receive an email notification from blocked members
+* REST API - Handled wrong date value for empty Profile fields in the API
+* REST API - Handled members directory send message action not taking to a right thread issue
+* LifterLMS - Handled critical issue in the profile screen
+* Events Calendar Pro - Handled past events not showing issue in search results
+* Yoast SEO - Handled update profile critical conflict in the admin dashboard and API
+* Compatibility - Code refactoring to fix a bunch of PHP 8 compatibility issues
+
+= 2.0.2 =
+* Notifications - Added icon support for notification avatar based on the notification type
+* Profiles - Handled members profile takes to wrong recipient issue when clicking on send message
+* Forums - Handled @mention dropdown not showing issue for Forum discussion and reply editor
+* Forums - Handled profile subscription tab members profile link issue
+* Activity - Handled activity comment empty content validation issue
+* Activity - Handled activity comment enter new line lag UX issue
+* Activity - Handled hidden gif issue on read more click
+* Activity - Handled read more not working issue for specific server
+* Activity - Handled documents performance issue when symlink disabled
+* Activity - Handled gif deletion issue when post edited
+* Media - Handled temporary junk files issue on the server when folder downloaded
+* Messages - Handled multiple-member thread, all members not showing issue
+* Moderation - Handled critical issue on block user action when connection component is disabled
+* Network Search - Handled discussion search issue when media attached
+* Registration - Handled small UI issues
+* BuddyPanel - Handled small UI issues when BuddyPanel disabled and group type shortcode added
+* BuddyPanel - Handled 'my group' menu wrong link issue
+* Coding Standards - Code refactoring to update all icon images with a new icon pack in the dashboard
+* Coding Standards - Small code refactoring to fix hook and added icon CSS file version query string
+* REST API - Handled activity comment empty content validation issue in the API
+* REST API - Handled member type issue for certain members in the API
+* REST API - Handled hidden group activity media privacy issue
+* REST API - Handled block member action critical issue when connections component disabled in the API
+* REST API - Handled activity end-point media issue in the response
+
+= 2.0.1.1 =
+* Messages - Fixed send message critical security issue
+
+= 2.0.1 =
+* Profiles - Small code refactoring to stop triggering multiple hooks
+* Profiles - Handled profile header social network links issue when Profile type not enabled
+* Forums - Fixed PHBB import issues
+* Moderation - Handled single forum report modal not working issue
+* REST API - Handled blog comments count issue in the API
+* REST API - Handled newly created Group caching issue
+* REST API - Provided is_admin user parameter in the API
+
+= 2.0.0 =
+* BuddyBoss Theme - Provided Theme 2.0 style new options support
+* BuddyBoss Theme - Provided Theme 2.0 overall styling support
+* BuddyBoss Theme - Provided Theme 2.0 with new color support
+* BuddyBoss Theme - Provided Theme 2.0 new icons pack support
+* BuddyBoss Theme - Provided Theme 2.0 new header style support
+* Profiles - Provided option to select a custom color for Profile type label
+* Profiles - Restructured the profile data in multiple sections for each profile fieldsets
+* Groups - Provided option to select a custom color for Group type label
+* Forums - Provided 'BuddyBoss Theme' 2.0 style support
+* Forums - Provided support for the featured image in the forum header
+* Forums - Converted Forum discussion and reply post forms into modals
+* Forums - Improved cover image logic for Forums directory screen
+* Forums - Handled discussion reply count issue
+* Activity - Handled embed link preview issue when privacy changed
+* Activity - Handled 'Latest Activities' widget privacy issue
+* Messages - Handled multiple recipients message performance issue
+* Messages - Handled wrong message count issue for Group messages
+* Network Search - Provided template and markup support for the search results screen
+* Network Search - Improved search logic for Blog posts
+* Widgets - Provided template and markup support for widgets
+* Coding Standards - Code refactoring to handle warnings and notices
+* REST API - Provided Profile type custom color API support
+* REST API - Handled media rendering issue when file not directly accessible
+* REST API - Handled API issue to post activity with just video
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issues
+
+= 1.9.3 =
+* Notifications - Provided notification updates as a Lab feature
+* Notifications - Provided options for members to manage all Notification Preferences for all devices in one place
+* Notifications - Provided options in the admin to disable a specific notification type
+* Notifications - Provided options in the admin to manage default notification preferences for new members
+* Notifications - Provided options in the admin to hide Messages notifications from notification dropdown
+* Notifications - Refactored notifications types for Lab feature enabled
+* Notifications - Refactored emails for Lab feature enabled
+* Notifications - Improved code to allow to register new notification types easily
+* Profiles - Handled profile field type paragraph formatting issue to allow HTML target attribute
+* Profiles - Small improvement to show confirm popup before deleting profile field in the admin
+* Groups - Handled add user issue in admin edit group screen when username and nickname are different
+* Groups - Handled my group nav issue in the menu for logged-in member
+* Forums - Handled forum merge discussions and reply split issue
+* Activity - Handled attached GIF issue in Activity Form
+* Activity - Handled activity comment duplicate string issue on paste
+* Messages - Handled last message hidden issue when new member join/left group
+* Network Search - Handled sub-forums search compatibility issue with MariaDB
+* Emails - Provided option to install missing emails templates
+* Documentation - Handled tutorial articles images layout issue
+* REST API - Provided notification updates API support
+* REST API - Handled forum discussions merge and reply split issues in the APIs
+* Compatibility - Handled WP 5.9 compatibility issue causing false alerts on post types edit screen
+
+= 1.9.2 =
+* Profiles - Handled critical issue in Profile when forum component not enabled
+* Groups - Handled group invitation screen UI issue in profile
+* Groups - Handled memory issue for a non-logged-in member for group with a large number of invitations
+* Groups - Handled hidden group activity privacy issue
+* Activity - Handled activity form, privacy selection issue
+* Media - Handled photo and document update privacy issue in the popup
+* Performance - Improved @mention performance to query for right usernames on page and post
+* REST API - Small improvement in group details API endpoint
+* REST API - Handled message API caching issue
+* Compatibility - Handled WordPress 5.8 compatibility issue on save profile action
+
+= 1.9.1.1 =
+* Private Network - Handled private site ‘Public Website Content’ not working critical issue
+
+= 1.9.1 =
+* Profiles - Provided support to customize Profile header and directory layouts on settings enabled with BuddyBoss Platform Pro
+* Profiles - Provided support to change Profile cover image sizes on settings enabled with BuddyBoss Platform Pro
+* Groups - Provided support to customize Group header and directory layouts on settings enabled with BuddyBoss Platform Pro
+* Groups - Provided support to change Profile cover image sizes on settings enabled with BuddyBoss Platform Pro
+* Groups - Handled Group type direct URL issue when Group type and its label name is same
+* Forums - Handled forum discussion js error for non-English language
+* Activity - Handled activity formatting issue for auto-generated discussion replies
+* Activity - Improved responsiveness of activity form
+* Coding Standards - Refactored since time output across all components
+* Updater - Provided 'Release Notes' modal to show information about the release
+* REST API - Handled API performance table column size issue for specific server
+* REST API - Handled Forum APIs wrong permissions issue
+* REST API - Update to send activity with embed in the API as a separate object
 
 = 1.9.0.1 =
 * Media - Fixed critical API caching purge issue on symlink delete cron

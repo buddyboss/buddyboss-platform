@@ -64,18 +64,35 @@ function messages_new_message( $args = '' ) {
 	);
 
 	// Bail if no sender or no content.
-	if ( empty( $r['sender_id'] ) || empty( $r['content'] ) ) {
+	if ( empty( $r['sender_id'] ) ) {
 		if ( 'wp_error' === $r['error_type'] ) {
-			if ( empty( $r['sender_id'] ) ) {
-				$error_code = 'messages_empty_sender';
-				$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddyboss' );
-			} else {
-				$error_code = 'messages_empty_content';
-				$feedback   = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
-			}
+			$error_code = 'messages_empty_sender';
+			$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddyboss' );
 
 			return new WP_Error( $error_code, $feedback );
+		} else {
+			return false;
+		}
+	}
 
+	/**
+	 * Filter to validate message content.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param bool   $validated_content True if message is valid, false otherwise.
+	 * @param string $content           Content of the message.
+	 * @param array  $_POST             POST Request Object.
+	 *
+	 * @return bool True if message is valid, false otherwise.
+	 */
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $r['content'] ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $r['content'] ) ) ) ), $r['content'], $_POST );
+
+	if ( ! $validated_content ) {
+		if ( 'wp_error' === $r['error_type'] ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
 		} else {
 			return false;
 		}
@@ -306,7 +323,7 @@ function messages_new_message( $args = '' ) {
 		}
 
 		if ( $previous_thread && $r['append_thread'] ) {
-			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
+			$message->thread_id = (int) $previous_thread;
 
 			// Set a default reply subject if none was sent.
 			if ( empty( $message->subject ) ) {
@@ -623,6 +640,38 @@ function messages_get_unread_count( $user_id = 0 ) {
 }
 
 /**
+ * Get the thread unread messages count for a user.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int $thread_id Thread ID of the message.
+ * @param int $user_id   Optional. ID of the user. Default: ID of the logged-in user.
+ *
+ * @return int
+ */
+function bb_get_thread_messages_unread_count( $thread_id, $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	if ( empty( $user_id ) || empty( $thread_id ) ) {
+		return;
+	}
+
+	$cache_key    = 'bb_thread_message_unread_count_' . $user_id . '_' . $thread_id;
+	$unread_count = wp_cache_get( $cache_key, 'bp_messages_unread_count' );
+
+	if ( false === $unread_count ) {
+		global $wpdb;
+		$bp           = buddypress();
+		$unread_count = (int) $wpdb->get_col( $wpdb->prepare( "SELECT unread_count from {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d AND unread_count > 0", $user_id, $thread_id ) );
+		wp_cache_set( $cache_key, $unread_count, 'bp_messages_unread_count' );
+	}
+	return $unread_count;
+}
+
+/**
  * Check whether a user is the sender of a message.
  *
  * @param int $user_id    ID of the user.
@@ -850,10 +899,20 @@ function messages_notification_new_message( $raw_args = array() ) {
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
 
+	$type_key = 'notification_messages_new_message';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	// Email each recipient.
 	foreach ( $recipients as $recipient ) {
 
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
+		if ( $sender_id == $recipient->user_id || false === bb_is_notification_enabled( $recipient->user_id, $type_key ) ) {
+			continue;
+		}
+
+		// Check the sender is blocked by recipient or not.
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, get_current_user_id() ) ) {
 			continue;
 		}
 
@@ -974,6 +1033,12 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		$chunk_recipients = array_chunk( $recipients, 10 );
 		if ( ! empty( $chunk_recipients ) ) {
 			foreach ( $chunk_recipients as $key => $data_recipients ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $data_recipients->user_id, $sender_id ) ) {
+					continue;
+				}
+
 				$bb_email_background_updater->data(
 					array(
 						array(
@@ -990,7 +1055,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 									'message'     => stripslashes( $message ),
 									'sender.name' => $sender_name,
 									'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-									'group.name'  => $group_name
+									'group.name'  => $group_name,
 								),
 							),
 						),
@@ -1000,18 +1065,31 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			}
 			$bb_email_background_updater->dispatch();
 		}
-
 	} else {
 		// Send an email to each recipient.
+
+		$type_key = 'notification_group_messages_new_message';
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		}
+
 		foreach ( $recipients as $recipient ) {
 
-			if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
+			if (
+				(int) $sender_id === (int) $recipient->user_id ||
+				false === bb_is_notification_enabled( $recipient->user_id, $type_key )
+			) {
 				continue;
 			}
 
 			// User data and links.
 			$ud = get_userdata( $recipient->user_id );
 			if ( empty( $ud ) ) {
+				continue;
+			}
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $sender_id ) ) {
 				continue;
 			}
 
@@ -1318,7 +1396,9 @@ function bb_messages_recipients_per_page() {
 function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '', $is_background = false ) {
 
 	// setup post data into $_POST.
-	$_POST        = $post_data;
+	if ( is_array( $post_data ) ) {
+		$_POST = $post_data;
+	}
 	$message_args = array();
 	$message      = '';
 
@@ -1454,9 +1534,18 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 	}
 
 	// Send an email to all recipient.
+
+	$type_key = 'notification_group_messages_new_message';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	foreach ( $recipients as $recipient ) {
 
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
+		if (
+			(int) $sender_id === (int) $recipient->user_id ||
+			false === bb_is_notification_enabled( $recipient->user_id, $type_key )
+		) {
 			continue;
 		}
 

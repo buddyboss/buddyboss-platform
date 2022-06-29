@@ -59,10 +59,14 @@ function bp_video_upload() {
 
 	$name = $attachment->post_title;
 
+	// Generate video attachment preview link.
+	$attachment_id  = 'forbidden_' . $attachment->ID;
+	$attachment_url = home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id );
+
 	$result = array(
 		'id'    => (int) $attachment->ID,
 		'thumb' => '',
-		'url'   => '',
+		'url'   => esc_url( $attachment_url ),
 		'name'  => esc_attr( $name ),
 	);
 
@@ -1791,7 +1795,8 @@ function albums_check_video_album_access( $album_id ) {
  */
 function bp_video_delete_orphaned_attachments() {
 
-	global $wpdb;
+	remove_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10 );
+	remove_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10 );
 
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
@@ -1800,15 +1805,37 @@ function bp_video_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_video_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
-	$data  = $wpdb->get_col( $query );
+	$args = array(
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+		'post_status'    => 'inherit',
+		'post_type'      => 'attachment',
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'   => 'bp_video_saved',
+				'value' => '0'
+			),
+			array(
+				'key'     => 'bb_media_draft',
+				'compare' => 'NOT EXISTS',
+				'value'   => ''
+			)
+		)
+	);
 
-	if ( ! empty( $data ) ) {
-		foreach ( $data as $a_id ) {
-			wp_delete_attachment( $a_id, true );
+	$video_wp_query = new WP_query( $args );
+	if ( 0 < $video_wp_query->found_posts ) {
+		foreach ( $video_wp_query->posts as $post_id ) {
+			wp_delete_attachment( $post_id, true );
 		}
 	}
 
+	wp_reset_postdata();
+	wp_reset_query();
+
+	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
+	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
 }
 
 /**
@@ -2485,7 +2512,7 @@ function bp_video_svg_icon_list() {
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-default</title><path d="M13.728 0h-9.728c-2.208 0-4 1.792-4 4v24c0 2.208 1.792 4 4 4h16c2.208 0 4-1.792 4-4v-17.504c0-1.056-0.416-2.048-1.12-2.784l-6.272-6.496c-0.768-0.768-1.792-1.216-2.88-1.216zM4 1.984h9.728c0.544 0 1.056 0.224 1.44 0.64l6.272 6.464c0.352 0.384 0.576 0.896 0.576 1.408v17.504c0 1.12-0.896 2.016-2.016 2.016h-16c-1.088 0-1.984-0.896-1.984-2.016v-24c0-1.12 0.896-2.016 1.984-2.016z"></path></svg>',
 		),
 		'default_2'  => array(
-			'icon'  => 'bb-icon-file-zip',
+			'icon'  => 'bb-icon-file-archive',
 			'title' => __( 'Archive', 'buddyboss' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-zip</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h2.976v-1.984h2.016v-1.92h-2.016v-2.080h2.016v2.016h1.984v2.048h-1.984v1.92h11.008c1.056 0 1.92-0.832 1.984-1.856l0.032-0.16v-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM10.976 21.952v2.048h-1.984v-2.048h1.984zM11.008 16c0.544 0 0.992 0.448 0.992 0.992v3.008c0 0.544-0.448 0.992-0.992 0.992h-4c-0.544 0-0.992-0.448-0.992-0.992v-3.008c0-0.544 0.448-0.992 0.992-0.992h4zM10.592 16.992h-3.2c-0.192 0-0.352 0.128-0.384 0.32v1.28c0 0.192 0.128 0.352 0.32 0.384l0.064 0.032h3.2c0.192 0 0.352-0.16 0.416-0.32v-1.28c0-0.224-0.192-0.416-0.416-0.416z"></path></svg>',
 		),
@@ -2777,7 +2804,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity video own.
-					$activity->hide_sitewide     = 0;
+					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 :$activity->hide_sitewide;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2850,7 +2878,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity video own.
-							$activity->hide_sitewide     = 0;
+							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();

@@ -38,7 +38,7 @@ jQuery( document ).ready(
 					nonce: nonce,
 				};
 
-				$( event.currentTarget ).append( ' <i class="bb-icon bb-icon-loader animate-spin"></i>' );
+				$( event.currentTarget ).append( ' <i class="bb-icon-l bb-icon-spinner animate-spin"></i>' );
 
 				$.post(
 					ajaxurl,
@@ -119,7 +119,7 @@ jQuery( document ).ready(
 					nonce: nonce,
 				};
 
-				$( event.currentTarget ).append( ' <i class="bb-icon bb-icon-loader animate-spin"></i>' );
+				$( event.currentTarget ).append( ' <i class="bb-icon-l bb-icon-spinner animate-spin"></i>' );
 
 				$.post(
 					ajaxurl,

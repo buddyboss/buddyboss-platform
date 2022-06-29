@@ -149,11 +149,11 @@ function bp_nouveau_ajax_messages_send_message() {
 	/**
 	 * Filter to validate message content.
 	 *
-	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param bool   $validated_content True if message is valid, false otherwise.
 	 * @param string $content           Content of the message.
 	 * @param array  $_POST             POST Request Object.
 	 *
-	 * @return bool True if message is not valid, false otherwise.
+	 * @return bool True if message is valid, false otherwise.
 	 */
 	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
 
@@ -401,11 +401,11 @@ function bp_nouveau_ajax_messages_send_reply() {
 	/**
 	 * Filter to validate message content.
 	 *
-	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param bool   $validated_content True if message is valid, false otherwise.
 	 * @param string $content           Content of the message.
 	 * @param array  $_POST             POST Request Object.
 	 *
-	 * @return bool True if message is not valid, false otherwise.
+	 * @return bool True if message is valid, false otherwise.
 	 */
 	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
 
@@ -550,7 +550,6 @@ function bp_nouveau_ajax_messages_send_reply() {
 		if ( ! empty( $media_ids ) && bp_has_media(
 			array(
 				'include'  => $media_ids,
-				'user_id'  => false,
 				'privacy'  => array( 'message' ),
 				'order_by' => 'menu_order',
 				'sort'     => 'ASC',
@@ -567,7 +566,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'thread_id'     => bp_get_the_thread_id(),
 					'attachment_id' => bp_get_media_attachment_id(),
 					'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
-					'full'          => bp_get_media_attachment_image(),
+					'full'          => bb_get_media_photos_theatre_popup_image(),
 					'meta'          => $media_template->media->attachment_data->meta,
 					'privacy'       => bp_get_media_privacy(),
 				);
@@ -583,7 +582,6 @@ function bp_nouveau_ajax_messages_send_reply() {
 			bp_has_video(
 				array(
 					'include'  => $video_ids,
-					'user_id'  => false,
 					'privacy'  => array( 'message' ),
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
@@ -615,7 +613,6 @@ function bp_nouveau_ajax_messages_send_reply() {
 		if ( ! empty( $document_ids ) && bp_has_document(
 			array(
 				'include'  => $document_ids,
-				'user_id'  => false,
 				'order_by' => 'menu_order',
 				'sort'     => 'ASC',
 			)
@@ -688,7 +685,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 							</div>
 							<div class="document-expand">
 								<a href="#" class="document-expand-anchor"><i
-											class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+											class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
 								</a>
 							</div>
 						</div> <!-- .document-text-wrap -->
@@ -855,38 +852,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		bp_message_thread();
 
 		$bp_get_message_thread_id = bp_get_message_thread_id();
-
-		if ( '' === trim( wp_strip_all_tags( do_shortcode( bp_get_message_thread_content() ) ) ) ) {
-			foreach ( $messages_template->thread->messages as $message ) {
-				$content = trim( wp_strip_all_tags( do_shortcode( $message->message ) ) );
-				if ( '' !== $content ) {
-
-					$messages_template->thread->last_message_id      = $message->id;
-					$messages_template->thread->thread_id            = $message->thread_id;
-					$messages_template->thread->last_message_subject = $message->subject;
-					$messages_template->thread->last_message_content = $message->message;
-					$messages_template->thread->last_sender_id       = $message->sender_id;
-					$messages_template->thread->last_message_date    = $message->date_sent;
-
-					break;
-				}
-			}
-			if ( '' === $content ) {
-				$thread_messages = BP_Messages_Thread::get_messages( $bp_get_message_thread_id, null, 99999999 );
-				foreach ( $thread_messages as $thread_message ) {
-					$content = trim( wp_strip_all_tags( do_shortcode( $thread_message->message ) ) );
-					if ( '' !== $content ) {
-						$messages_template->thread->last_message_id      = $thread_message->id;
-						$messages_template->thread->thread_id            = $thread_message->thread_id;
-						$messages_template->thread->last_message_subject = $thread_message->subject;
-						$messages_template->thread->last_message_content = $thread_message->message;
-						$messages_template->thread->last_sender_id       = $thread_message->sender_id;
-						$messages_template->thread->last_message_date    = $thread_message->date_sent;
-						break;
-					}
-				}
-			}
-		}
 
 		$last_message_id           = (int) $messages_template->thread->last_message_id;
 		$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
@@ -1292,12 +1257,9 @@ function bp_nouveau_ajax_messages_thread_read() {
 
 	// Mark latest message as read.
 	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_mark_notifications_by_item_id(
-			bp_loggedin_user_id(),
-			(int) $message_id,
-			buddypress()->messages->id,
-			'new_message'
-		);
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'new_message' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_messages_new' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_groups_new_message' );
 	}
 
 	wp_send_json_success();
@@ -2529,7 +2491,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 								</div>
 								<div class="document-expand">
 									<a href="#" class="document-expand-anchor"><i
-												class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+												class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
 									</a>
 								</div>
 							</div> <!-- .document-text-wrap -->
@@ -2654,6 +2616,15 @@ function bp_nouveau_ajax_hide_thread() {
 
 	foreach ( $thread_ids as $thread_id ) {
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+
+		/**
+		 * Fires when messages thread was marked as read.
+		 *
+		 * @since BuddyBoss 1.9.3
+		 *
+		 * @param int $thread_id The message thread ID.
+		 */
+		do_action( 'messages_thread_mark_as_read', $thread_id );
 	}
 
 	// Mark each notification for each PM message as read when hide the thread.
@@ -2664,7 +2635,7 @@ function bp_nouveau_ajax_hide_thread() {
 			array(
 				'user_id'          => bp_loggedin_user_id(),
 				'component_name'   => buddypress()->messages->id,
-				'component_action' => 'new_message',
+				'component_action' => array( 'new_message', 'bb_groups_new_message', 'bb_messages_new' ),
 				'is_new'           => 1,
 			)
 		);
@@ -2676,7 +2647,10 @@ function bp_nouveau_ajax_hide_thread() {
 			// Mark each notification for each PM message as read.
 			foreach ( $unread_message_ids as $message_id ) {
 				bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'new_message' );
+				bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_messages_new' );
+				bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_groups_new_message' );
 			}
+
 		}
 	}
 
@@ -2711,7 +2685,9 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 	$args['exclude_moderated_members'] = filter_var( $post_data['exclude_moderated_members'], FILTER_VALIDATE_BOOLEAN );
 	$args['exclude_current_user']      = filter_var( $post_data['exclude_current_user'], FILTER_VALIDATE_BOOLEAN );
 	$args['page']                      = (int) $post_data['page_no'];
-	$args['exclude_admin_user']        = $administrator_ids;
+	if ( $args['exclude_moderated_members'] ) {
+		$args['exclude_admin_user'] = $administrator_ids;
+	}
 	$thread                            = new BP_Messages_Thread( false );
 	$results                           = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
 	if ( is_array( $results ) ) {
@@ -2859,7 +2835,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 						data-tp="<?php echo esc_attr( ceil( (int) $thread->total_recipients_count / (int) bb_messages_recipients_per_page() ) ); ?>"
 						data-tc="<?php echo esc_attr( $thread->total_recipients_count ); ?>"
 						data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>" data-cp="2"
-						data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?>
+						data-action="bp_load_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?>
 					</a>
 				</p>
 			</div>
