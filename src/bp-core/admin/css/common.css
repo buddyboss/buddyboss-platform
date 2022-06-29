@@ -3207,14 +3207,16 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 /*------------------------------------------------------------------------------
  * 16.0 Moderation
  *----------------------------------------------------------------------------*/
+table.moderations .column-member a[data-action="unsuspend"] {
+  color: #5f9a22;
+}
+
+table.moderations .content_owner img,
+table.reports .column-reporter img,
 table.moderations .column-member img {
   vertical-align: middle;
   margin-right: 5px;
   border-radius: 50%;
-}
-
-table.moderations .column-member a[data-action="unsuspend"] {
-  color: #5f9a22;
 }
 
 #bp_moderation_action .report-header {
@@ -3234,8 +3236,15 @@ table.moderations .column-member a[data-action="unsuspend"] {
 }
 
 #bp_moderation_action .report-header_content_id a {
-  color: #808080;
   text-decoration: none;
+}
+
+#bp_moderation_action .report-header_content_id a span {
+  color: #808080;
+}
+
+#bp_moderation_action .report-header_content_id a i {
+  font-weight: 300;
 }
 
 #bp_moderation_action .report-header_user {

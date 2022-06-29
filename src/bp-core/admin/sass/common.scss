@@ -3461,16 +3461,23 @@ table.moderations {
 
 	.column-member {
 
-		img {
-			vertical-align: middle;
-			margin-right: 5px;
-			border-radius: 50%;
-		}
-
 		a[data-action="unsuspend"] {
 			color: #5f9a22;
 		}
 	}
+
+}
+
+table.moderations .content_owner,
+table.reports .column-reporter,
+table.moderations .column-member {
+
+	img {
+		vertical-align: middle;
+		margin-right: 5px;
+		border-radius: 50%;
+	}
+
 }
 
 #bp_moderation_action {
@@ -3491,8 +3498,15 @@ table.moderations {
 		margin-bottom: 10px;
 
 		a {
-			color: #808080;
 			text-decoration: none;
+
+			span {
+				color: #808080;
+			}
+
+			i {
+				font-weight: 300;
+			}
 		}
 	}
 

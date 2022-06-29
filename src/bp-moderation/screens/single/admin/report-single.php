@@ -69,7 +69,7 @@ $admins            = array_map( 'intval', get_users(
 											$view_content_url = bp_moderation_get_permalink($moderation_request_data->item_id, $moderation_request_data->item_type);
 											if (!empty($view_content_url)) {
 												printf(
-													'<a target="_blank" href="%s" title="%s"> #%s <i class="bb-icon-external-link bb-icon-l"></i> </a> ',
+													'<a target="_blank" href="%s" title="%s"> <span>#%s</span> <i class="bb-icon-external-link bb-icon-l"></i> </a> ',
 													esc_url($view_content_url),
 													esc_attr__('View', 'buddyboss'),
 													esc_html( $moderation_request_data->item_id )
