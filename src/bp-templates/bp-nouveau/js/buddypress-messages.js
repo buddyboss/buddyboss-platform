@@ -3524,8 +3524,8 @@ window.bp = window.bp || {};
 				/* - RESET FORM - */
 			},
 
-			replySent: function( response ) {
-				var reply = this.collection.parse( response );
+			replySent: function() {
+				// var reply = this.collection.parse( response );
 
 				// this.collection.add( _.first( reply ) );
 

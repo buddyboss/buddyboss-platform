@@ -2,8 +2,9 @@
 /**
  * BuddyBoss Pusher Integration Class.
  *
- * @package BuddyBossPro/Integration
- * @since [BBVERSION]
+ * @package BuddyBoss/Pusher
+ *
+ * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -12,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Setup the BB Pusher class.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 class BB_Pusher_Integration extends BP_Integration {
 
@@ -22,7 +23,7 @@ class BB_Pusher_Integration extends BP_Integration {
 	public function __construct() {
 		$this->start(
 			'pusher',
-			__( 'Pusher', 'buddyboss-pro' ),
+			__( 'Pusher', 'buddyboss' ),
 			'pusher',
 			array(
 				'required_plugin' => array(),
@@ -34,52 +35,17 @@ class BB_Pusher_Integration extends BP_Integration {
 	}
 
 	/**
-	 * Setup actions for integration.
-	 *
-	 * @since [BBVERSION]
-	 */
-	public function setup_actions() {
-		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
-
-		parent::setup_actions();
-
-		add_action( 'bp_rest_api_init', array( $this, 'rest_api_init' ), 10 );
-	}
-
-	/**
-	 * Enqueue admin related scripts and styles.
-	 *
-	 * @since [BBVERSION]
-	 */
-	public function enqueue_scripts_styles() {
-
-	}
-
-	/**
-	 * Register template path for BB.
-	 *
-	 * @since [BBVERSION]
-	 * @return string template path
-	 */
-	public function register_template() {
-		return bb_pusher_integration_path( '/templates' );
-	}
-
-	/**
 	 * Includes.
 	 *
 	 * @param array $includes Array of file paths to include.
-	 * @since [BBVERSION]
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function includes( $includes = array() ) {
 		$slashed_path = trailingslashit( buddypress()->integration_dir ) . $this->id . '/';
 
 		$includes = array(
 			'functions',
-			'actions',
-			'filters',
-			'cache',
-			'template',
 		);
 
 		// Loop through files to be included.
@@ -110,7 +76,7 @@ class BB_Pusher_Integration extends BP_Integration {
 	/**
 	 * Register Pusher setting tab.
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function setup_admin_integration_tab() {
 
@@ -126,34 +92,4 @@ class BB_Pusher_Integration extends BP_Integration {
 			)
 		);
 	}
-
-	/**
-	 * Init the BuddyBoss REST API.
-	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
-	 *
-	 * @since [BBVERSION]
-	 */
-	public function rest_api_init( $controllers = array() ) {
-		if ( ! class_exists( 'BB_REST_Pusher_Endpoint' ) ) {
-
-			$file_path = bb_pusher_integration_path( '/includes/class-bb-rest-pusher-endpoint.php' );
-			if ( file_exists( $file_path ) ) {
-				require_once $file_path;
-			}
-
-			parent::rest_api_init(
-				array(
-					'BB_REST_Pusher_Endpoint',
-				)
-			);
-		} elseif ( class_exists( 'BB_REST_Pusher_Endpoint' ) ) {
-			parent::rest_api_init(
-				array(
-					'BB_REST_Pusher_Endpoint',
-				)
-			);
-		}
-	}
-
 }

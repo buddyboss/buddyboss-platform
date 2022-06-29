@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BB Pusher integration.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_register_pusher_integration() {
 

@@ -123,7 +123,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'bb_pusher_settings_section' => array(
 				'page'              => 'Pusher',
 				'title'             => __( 'Pusher', 'buddyboss' ) . $html,
-				'tutorial_callback' => 'bb_pusher_settings_tutorial',
+				'tutorial_callback' => array( $this, 'setting_callback_pusher_tutorial' ),
 			),
 		);
 
@@ -195,6 +195,33 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	/**
+	 * Link to Pusher Settings tutorial.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function setting_callback_pusher_tutorial() {
+		?>
+		<p>
+			<a class="button" href="
+			<?php
+				echo esc_url(
+					bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page'    => 'bp-help',
+								'article' => '',
+							),
+							'admin.php'
+						)
+					)
+				);
+			?>
+			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+		<?php
+	}
+
+	/**
 	 * Callback fields for pusher information.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -205,7 +232,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		printf(
 			/* translators: pusher channels link */
 			esc_html__( 'The BuddyBoss Platform has an integration with %s, a WebSocket service which can power realtime features on your BuddyBoss community such as live messaging.', 'buddyboss' ),
-			'<a href="#" target="_blank">' . esc_html__( 'Pusher Channels', 'buddybpss' ) . '</a>'
+			'<a href="https://pusher.com/" target="_blank">' . esc_html__( 'Pusher Channels', 'buddybpss' ) . '</a>'
 		);
 	}
 
