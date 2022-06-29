@@ -357,6 +357,7 @@ module.exports = function (grunt) {
 						'!**/*.min.css',
 						'!**/admin/**/*.css',
 						'!**/emojionearea-edited.css',
+						'!**/pusher/**/*.css',
 						'!**/endpoints/**/*.css'
 						]
 					)

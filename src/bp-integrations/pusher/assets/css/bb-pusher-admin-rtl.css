@@ -1,5 +1,5 @@
 #bb_pusher_settings_section .bb-pusher-status {
-  margin-left: 15px;
+  margin-right: 15px;
 }
 
 #bb_pusher_settings_section .bb-pusher-status .status-line {
@@ -18,7 +18,7 @@
   height: 10px;
   border-radius: 100%;
   background: #808080;
-  margin-right: 10px;
+  margin-left: 10px;
   vertical-align: baseline;
 }
 
@@ -51,8 +51,8 @@
 }
 
 #bb_pusher_settings_section .notes-hidden-header > th + td {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 
 #bb_pusher_settings_section .hidden-header > th {

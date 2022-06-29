@@ -232,7 +232,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		printf(
 			/* translators: pusher channels link */
 			esc_html__( 'The BuddyBoss Platform has an integration with %s, a WebSocket service which can power realtime features on your BuddyBoss community such as live messaging.', 'buddyboss' ),
-			'<a href="https://pusher.com/" target="_blank">' . esc_html__( 'Pusher Channels', 'buddybpss' ) . '</a>'
+			'<a href="https://pusher.com/" target="_blank">' . esc_html__( 'Pusher Channels', 'buddyboss' ) . '</a>'
 		);
 	}
 
