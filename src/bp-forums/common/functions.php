@@ -2287,7 +2287,7 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
  *
  * @return bool|mixed|void
  */
-function bbp_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
+function bb_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
 	global $wpdb;
 
 	// Bail if nothing passed
@@ -2296,7 +2296,7 @@ function bbp_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
 	}
 
 	// The ID of the cached query
-	$cache_id = 'bbp_parent_all_' . $topic_id . '_type_' . $post_type . '_child_ids';
+	$cache_id = 'bb_parent_all_' . $topic_id . '_type_' . $post_type . '_parent_ids';
 
 	// Check for cache and set if needed
 	$parent_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
@@ -2307,7 +2307,7 @@ function bbp_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
 		// SQL statement.
 		$sql['select'] = "SELECT DISTINCT ID";
 		$sql['from'] = "FROM {$wpdb->posts}";
-		$sql['from'] = apply_filters( 'bbp_get_all_parent_ids_join_sql', $sql['from'] );
+		$sql['from'] = apply_filters( 'bb_get_all_parent_ids_join_sql', $sql['from'] );
 
 		// Where statement.
 		$where_conditions[] = $wpdb->prepare( "post_parent = %d", $topic_id );
@@ -2324,7 +2324,7 @@ function bbp_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
 		 *
 		 * @param array $where_conditions Current conditions for MySQL WHERE statement.
 		 */
-		$where_conditions = apply_filters( 'bbp_get_all_parent_ids_where_sql', $where_conditions );
+		$where_conditions = apply_filters( 'bb_get_all_parent_ids_where_sql', $where_conditions );
 
 		// Join the where conditions together.
 		$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
@@ -2332,7 +2332,7 @@ function bbp_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
 		// Orderby for the sql.
 		$sql['orderby'] = 'ORDER BY ID DESC';
 
-		$topic_reply_sql = apply_filters( 'bbp_get_all_parent_ids_sql', "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['orderby']}" );
+		$topic_reply_sql = apply_filters( 'bb_get_all_parent_ids_sql', "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['orderby']}" );
 
 		$parent_ids = $wpdb->get_col( $topic_reply_sql );
 
@@ -2340,5 +2340,5 @@ function bbp_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
 	}
 
 	// Filter and return
-	return apply_filters( 'bbp_get_all_parent_ids', $parent_ids, (int) $topic_id, $post_type );
+	return apply_filters( 'bb_get_all_parent_ids', $parent_ids, (int) $topic_id, $post_type );
 }
