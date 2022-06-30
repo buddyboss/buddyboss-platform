@@ -124,7 +124,7 @@ function bp_groups_filter_kses( $content = '' ) {
 	$allowed_tags['ol']          = array();
 	$allowed_tags['ul']          = array();
 	$allowed_tags['li']          = array();
-	$allowed_tags['pre']         = array();
+	$allowed_tags['code']        = array();
 
 	/**
 	 * Filters the HTML elements allowed for a given context.
@@ -134,6 +134,9 @@ function bp_groups_filter_kses( $content = '' ) {
 	 * @param string $allowed_tags Allowed tags, attributes, and/or entities.
 	 */
 	$tags = apply_filters( 'bp_groups_filter_kses', $allowed_tags );
+
+	// Convert HTML entities to their corresponding characters.
+	$content = html_entity_decode( $content );
 
 	// Return KSES'ed content, allowing the above tags.
 	return wp_kses( $content, $tags );
