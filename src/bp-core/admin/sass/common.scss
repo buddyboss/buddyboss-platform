@@ -3459,8 +3459,10 @@ table tbody td .bb-description {
 
 table.moderations {
 
+	.column-content_type,
 	.column-member {
 
+		a[data-action="unhide"],
 		a[data-action="unsuspend"] {
 			color: #5f9a22;
 		}
