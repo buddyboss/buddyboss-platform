@@ -2287,7 +2287,7 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
  *
  * @return bool|mixed|void
  */
-function bb_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
+function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 	global $wpdb;
 
 	// Bail if nothing passed
@@ -2340,5 +2340,5 @@ function bb_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
 	}
 
 	// Filter and return
-	return apply_filters( 'bb_get_all_parent_ids', $parent_ids, (int) $topic_id, $post_type );
+	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
 }
