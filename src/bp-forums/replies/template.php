@@ -2846,17 +2846,17 @@ function bbp_get_total_parent_reply( $topic_id ) {
 }
 
 /**
- * Return the numeric position of a parent reply within a topic
+ * Return the numeric position of a parent reply within a topic.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $reply_id Optional. Reply id
- * @param int $topic_id Optional. Topic id
+ * @param int $reply_id Optional. Reply id.
+ * @param int $topic_id Optional. Topic id.
  *
- * @uses  bbp_get_reply_ancestor_id() To get the reply id
- * @uses  bb_get_parent_replies_ids() Get the topic id of the reply id
+ * @uses  bbp_get_reply_ancestor_id() To get the reply id.
+ * @uses  bb_get_parent_replies_ids() Get the topic id of the reply id.
  *
- * @return int Reply position
+ * @return int Reply position.
  */
 function bb_get_parent_reply_position( $reply_id = 0, $topic_id = 0 ) {
 

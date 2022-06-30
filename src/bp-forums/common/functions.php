@@ -2285,7 +2285,7 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
  * @param int    $topic_id  Topic ID.
  * @param string $post_type Post type.
  *
- * @return bool|mixed|void
+ * @return array Array of topic parent reply ids.
  */
 function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 	global $wpdb;
