@@ -2306,8 +2306,8 @@ function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 
 		// SQL statement.
 		$sql['select'] = "SELECT DISTINCT ID";
-		$sql['from'] = "FROM {$wpdb->posts}";
-		$sql['from'] = apply_filters( 'bb_get_all_parent_ids_join_sql', $sql['from'] );
+		$sql['from']   = "FROM {$wpdb->posts}";
+		$sql['from']   = apply_filters( 'bb_get_all_parent_ids_join_sql', $sql['from'] );
 
 		// Where statement.
 		$where_conditions[] = $wpdb->prepare( "post_parent = %d", $topic_id );
