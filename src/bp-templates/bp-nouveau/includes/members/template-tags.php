@@ -217,7 +217,7 @@ function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
 		);
 	}
 
-	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-menu-dots-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
+	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -776,7 +776,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 	uksort(
 		$return,
 		function ( $key1, $key2 ) use ( $order ) {
-			return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
+			return ( array_search( $key1, $order ) <=> array_search( $key2, $order ) );
 		}
 	);
 
@@ -1208,5 +1208,5 @@ function bb_get_member_joined_date( $user_id = 0 ) {
 	 * @param string The user registered date meta.
 	 * @param string The user registered date.
 	 */
-	return apply_filters( 'bp_nouveau_get_member_meta', $user_registered_date, $register_date );
+	return apply_filters( 'bb_get_member_joined_date', $user_registered_date, $register_date );
 }
