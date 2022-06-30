@@ -142,10 +142,10 @@ $admins            = array_map( 'intval', get_users(
 										?>
 									</div>
 									<div class="report-header_content">
-										<strong class="report-header_number"><?php esc_html_e( bp_core_number_format( $moderation_request_data->count ) ); ?></strong><?php esc_html_e('Blocks', 'buddyboss')?>
+										<strong class="report-header_number"><?php printf ( esc_html( bp_core_number_format( $moderation_request_data->count ) ) ); ?></strong><?php esc_html_e('Blocks', 'buddyboss')?>
 									</div>
 									<div class="report-header_content">
-										<strong class="report-header_number"><?php esc_html_e( bp_core_number_format( $moderation_request_data->count ) ); ?></strong><?php esc_html_e('Reports', 'buddyboss')?>
+										<strong class="report-header_number"><?php printf ( esc_html( bp_core_number_format( $moderation_request_data->count ) ) ); ?></strong><?php esc_html_e('Reports', 'buddyboss')?>
 									</div>
 									<div class="report-header_action">
 										<?php
@@ -226,64 +226,6 @@ $admins            = array_map( 'intval', get_users(
 								$action_type  = ( 1 === (int) $moderation_request_data->hide_sitewide ) ? 'unhide' : 'hide';
 								$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss' ) : esc_html__( 'Hide Content', 'buddyboss' );
 								?>
-								<div class="bp-moderation-actions">
-									<?php
-									if ( $is_content_screen ) {
-
-										$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-
-										if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
-											?>
-                                            <a href="javascript:void(0);"
-                                               class="button button-primary bp-hide-request single-report-btn"
-                                               data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
-                                               data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>"
-                                               data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-                                               data-action="<?php echo esc_attr( $action_type ); ?>"
-                                               title="<?php echo esc_html( $action_label ); ?>">
-												<?php
-												echo esc_html( $action_label );
-												?>
-                                            </a>
-											<?php
-										}
-										if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
-											$user_action_type = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
-											$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
-											?>
-											<a href="javascript:void(0);"
-												class="button button-primary bp-block-user single-report-btn content-author"
-												data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user"
-												data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-												data-action="<?php echo esc_attr( $user_action_type ); ?>"
-												title="<?php echo esc_attr( $user_action_text ); ?>">
-												<?php
-												echo esc_html( $user_action_text );
-												?>
-											</a>
-											<?php
-										}
-									} else {
-										if ( ! in_array( $moderation_request_data->item_id, $admins, true ) ) {
-											$action_type        = ( 'unhide' === $action_type ) ? 'unsuspend' : 'suspend';
-											$member_action_text = ( 'unsuspend' === $action_type ) ? esc_html__( 'Unsuspend', 'buddyboss' ) : esc_html__( 'Suspend', 'buddyboss' );
-											?>
-											<a href="javascript:void(0);"
-												class="button button-primary bp-block-user single-report-btn"
-												data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>"
-                                                data-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>"
-												data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
-												data-action="<?php echo esc_attr( $action_type ); ?>"
-												title="<?php echo esc_attr( $action_label ); ?>">
-												<?php
-												echo esc_html( $member_action_text );
-												?>
-											</a>
-											<?php
-										}
-									}
-									?>
-								</div>
 							</div>
 						</div>
 					</div>
