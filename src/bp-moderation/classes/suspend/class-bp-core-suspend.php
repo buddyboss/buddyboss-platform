@@ -70,6 +70,15 @@ class BP_Core_Suspend {
 		if ( bp_is_active( 'messages' ) ) {
 			new BP_Suspend_Message();
 		}
+
+		/**
+		 * Handle notification.
+		 *
+		 * @since BuddyBoss 2.0.3
+		 */
+		if ( bp_is_active( 'notifications' ) ) {
+			new BP_Suspend_Notification();
+		}
 	}
 
 	/**
