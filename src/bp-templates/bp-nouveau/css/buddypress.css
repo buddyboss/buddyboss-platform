@@ -5570,9 +5570,10 @@ span.dashicons.dashicons-admin-file:before {
   background-color: #122b46 !important;
   color: #fff;
   border-radius: 30px;
-  padding: 5px 10px !important;
+  padding: 8px 15px !important;
   z-index: 11;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 500;
   opacity: 0;
   visibility: hidden;
   margin-top: 25px;
@@ -5607,11 +5608,15 @@ span.dashicons.dashicons-admin-file:before {
   margin-top: 0;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor i.document-icon-plus {
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor > i {
+  margin-right: 5px;
+  font-weight: 300;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor > span,
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor > i {
+  display: inline-block;
   vertical-align: middle;
-  /*&:before {
-						content: "\f132";
-					}*/
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible {

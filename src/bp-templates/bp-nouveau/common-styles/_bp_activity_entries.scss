@@ -2122,9 +2122,10 @@ span.dashicons.dashicons-admin-file:before {
 				background-color: #122b46 !important;
 				color: #fff;
 				border-radius: 30px;
-				padding: 5px 10px !important;
+				padding: 8px 15px !important;
 				z-index: 11;
-				font-size: 12px;
+				font-size: 14px;
+				font-weight: 500;
 				opacity: 0;
 				visibility: hidden;
 				margin-top: 25px;
@@ -2164,13 +2165,15 @@ span.dashicons.dashicons-admin-file:before {
 				visibility: visible;
 				margin-top: 0;
 
-				i.document-icon-plus {
-					//font-family: dashicons;
-					vertical-align: middle;
+				> i {
+					margin-right: 5px;
+					font-weight: 300;
+				}
 
-					/*&:before {
-						content: "\f132";
-					}*/
+				> span,
+				> i {
+					display: inline-block;
+					vertical-align: middle;
 				}
 			}
 		}
