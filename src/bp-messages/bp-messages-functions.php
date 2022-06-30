@@ -1253,6 +1253,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					)
 				),
 				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
+				'id'   => esc_attr( $avatar_user_id ),
 			);
 		}
 	}
@@ -1290,6 +1291,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$group_avatar = array(
 					'url'  => $group_avatar_url,
 					'name' => $group_name,
+					'id'   => $group_id,
 				);
 
 			} else {
@@ -1322,6 +1324,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$group_avatar = array(
 					'url'  => ! empty( $group_avatar_url ) ? $group_avatar_url : $default_group_avatar_url,
 					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
+					'id'   => $group_id,
 				);
 			}
 
@@ -1498,7 +1501,7 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 			$message_args = array(
 				'sender_id'           => $current_user_id,
 				'thread_id'           => $member_thread_id,
-				'subject'             => wp_trim_words( $content, messages_get_default_subject_length() ),
+				'subject'             => false,
 				'content'             => $content,
 				'mark_visible'        => true,
 				'message_thread_type' => 'reply',

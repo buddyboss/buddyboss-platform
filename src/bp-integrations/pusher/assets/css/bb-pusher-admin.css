@@ -1,0 +1,68 @@
+#bb_pusher_settings_section .bb-pusher-status {
+  margin-left: 15px;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line {
+  display: inline-block;
+  font-size: 14px;
+  padding: 10px 15px;
+  background: #f0f0f1;
+  border-radius: 5px;
+  color: #808080;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line:before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #808080;
+  margin-right: 10px;
+  vertical-align: baseline;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.error-connected {
+  color: #ce1010;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.error-connected:before {
+  background: #ce1010;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.connected {
+  color: #858585;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.connected:before {
+  background: #8fd14f;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.warn-connected {
+  color: #858585;
+}
+
+#bb_pusher_settings_section .bb-pusher-status .status-line.warn-connected:before {
+  background: #fac710;
+}
+
+#bb_pusher_settings_section .notes-hidden-header > th {
+  display: none;
+}
+
+#bb_pusher_settings_section .notes-hidden-header > th + td {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#bb_pusher_settings_section .hidden-header > th {
+  opacity: 0;
+  visibility: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+#bb_pusher_settings_section .hidden-header > td {
+  padding: 0;
+  margin: 0;
+}

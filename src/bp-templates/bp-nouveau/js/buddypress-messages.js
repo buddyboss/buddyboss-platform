@@ -791,8 +791,9 @@ window.bp = window.bp || {};
 						options.data,
 						{
 							action : 'messages_send_reply',
-							nonce  : BP_Nouveau.messages.nonces.send
-							},
+							nonce  : BP_Nouveau.messages.nonces.send,
+							hash   :  Math.round((new Date()).getTime() / 1000)
+						},
 						model || {}
 					);
 
@@ -3142,20 +3143,30 @@ window.bp = window.bp || {};
 
 	bp.Views.userMessagesEntry = bp.Views.userMessagesHeader.extend(
 		{
-			tagName  : 'li',
-			template : bp.template( 'bp-messages-single-list' ),
+			tagName     : 'li',
+			template    : bp.template( 'bp-messages-single-list' ),
 
 			events: {
 				'click [data-bp-action]' : 'doAction'
 			},
 
 			initialize: function() {
+
+				this.el.className = ' ';
+
+				if ( this.options.model.attributes.className ) {
+					this.el.className += ' ' + this.options.model.attributes.className;
+				}
 				this.model.on( 'change', this.updateMessage, this );
 			},
 
 			updateMessage: function( model ) {
 				if ( this.model.get( 'id' ) !== model.get( 'id' ) ) {
 					return;
+				}
+
+				if ( this.options.className ) {
+					this.el.className += ' ' + this.options.className;
 				}
 
 				this.render();
@@ -3219,6 +3230,29 @@ window.bp = window.bp || {};
 							}
 					)
 				);
+
+				this.listenTo( Backbone, 'onSentMessage', this.triggerPusherMessage );
+				this.listenTo( Backbone, 'onReplySentSuccess', this.triggerPusherUpdateMessage );
+			},
+
+			triggerPusherMessage: function ( messagePusherData ) {
+				// use sent messageData here.
+				this.collection.add( _.first( messagePusherData ) );
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+			},
+
+			triggerPusherUpdateMessage: function ( messagePusherData ) {
+				var model = this.collection.get( messagePusherData.hash );
+
+				if ( parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
+					messagePusherData.message.sender_is_you = true;
+				} else {
+					messagePusherData.message.sender_is_you = false;
+				}
+
+				messagePusherData.message.date = new Date( messagePusherData.message.date );
+				model.set( messagePusherData.message );
+				//this.collection.set( { model }, { remove: false } );
 			},
 
 			events: {
@@ -3438,7 +3472,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( '#send_reply_button' ).prop( 'disabled',true ).addClass( 'loading' );
+				// $( '#send_reply_button' ).prop( 'disabled',true ).addClass( 'loading' );
 
 				this.collection.sync(
 					'create',
@@ -3446,13 +3480,10 @@ window.bp = window.bp || {};
 					{
 						success : _.bind( this.replySent, this ),
 						error   : _.bind( this.replyError, this )
-						}
+					}
 				);
-			},
 
-			replySent: function( response ) {
-				var reply = this.collection.parse( response );
-
+				/* - RESET FORM - */
 				// Reset the form.
 				if ( typeof tinyMCE !== 'undefined' ) {
 					tinyMCE.activeEditor.setContent( '' );
@@ -3493,11 +3524,17 @@ window.bp = window.bp || {};
 				if (this.messageAttachments.onClose) {
 					this.messageAttachments.onClose();
 				}
+				/* - RESET FORM - */
+			},
 
-				this.collection.add( _.first( reply ) );
+			replySent: function() {
+				// var reply = this.collection.parse( response );
+
+				// this.collection.add( _.first( reply ) );
 
 				bp.Nouveau.Messages.removeFeedback();
-				$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+
+				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
 
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 			},
@@ -3507,7 +3544,7 @@ window.bp = window.bp || {};
 				if ( response.feedback && response.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 				}
-				$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
 			}
 		}
 	);

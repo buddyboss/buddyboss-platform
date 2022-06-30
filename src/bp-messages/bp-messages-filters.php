@@ -190,7 +190,7 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 
 		$first_message = BP_Messages_Thread::get_first_message( $group_thread );
 
-		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
+		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list.
 		$message_users_ids = explode( ',', $message_users_ids );
 		array_push( $message_users_ids, $user_id );
 		$group_name = bp_get_group_name( groups_get_group( $group_id ) );
@@ -206,7 +206,7 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 			array(
 				'thread_id'  => $group_thread,
 				'sender_id'  => $user_id,
-				'subject'    => '',
+				'subject'    => false,
 				'content'    => '<p> </p>',
 				'date_sent'  => $date_sent = bp_core_current_time(),
 				'error_type' => 'wp_error',
@@ -269,7 +269,6 @@ function bp_media_messages_save_group_data( &$message ) {
 		bp_messages_update_meta( $message->id, 'group_message_fresh', 'yes' );
 		bp_messages_update_meta( $message->id, $thread_key, $group );
 		bp_messages_update_meta( $message->id, 'message_from', 'group' );
-		bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
 		bp_messages_update_meta( $message->id, 'message_users_ids', $message_meta_users_list );
 		bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
 	} else {
@@ -296,7 +295,6 @@ function bp_media_messages_save_group_data( &$message ) {
 			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
 			bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
 			bp_messages_update_meta( $message->id, $thread_key, $group );
-			bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
 			bp_messages_update_meta( $message->id, 'message_from', 'personal' );
 			bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
 		}
@@ -333,7 +331,7 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 			array(
 				'thread_id'  => $group_thread,
 				'sender_id'  => $user_id,
-				'subject'    => '',
+				'subject'    => false,
 				'content'    => '<p> </p>',
 				'date_sent'  => bp_core_current_time(),
 				'error_type' => 'wp_error',
@@ -379,7 +377,7 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 			array(
 				'sender_id'  => $user_id,
 				'thread_id'  => $group_thread,
-				'subject'    => '',
+				'subject'    => false,
 				'content'    => '<p> </p>',
 				'date_sent'  => bp_core_current_time(),
 				'error_type' => 'wp_error',
@@ -429,7 +427,7 @@ function bp_group_messages_accept_new_member( $user_id, $group_id ) {
 			array(
 				'thread_id'  => $group_thread,
 				'sender_id'  => $user_id,
-				'subject'    => '',
+				'subject'    => false,
 				'content'    => '<p> </p>',
 				'date_sent'  => $date_sent = bp_core_current_time(),
 				'error_type' => 'wp_error',
@@ -477,7 +475,7 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 			array(
 				'sender_id'  => $user_id,
 				'thread_id'  => $group_thread,
-				'subject'    => '',
+				'subject'    => false,
 				'content'    => '<p> </p>',
 				'date_sent'  => bp_core_current_time(),
 				'error_type' => 'wp_error',
@@ -528,7 +526,7 @@ function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
 			array(
 				'sender_id'  => $user_id,
 				'thread_id'  => $group_thread,
-				'subject'    => '',
+				'subject'    => false,
 				'content'    => '<p> </p>',
 				'date_sent'  => bp_core_current_time(),
 				'error_type' => 'wp_error',
@@ -576,7 +574,7 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 			array(
 				'thread_id'  => $group_thread,
 				'sender_id'  => $user_id,
-				'subject'    => '',
+				'subject'    => false,
 				'content'    => '<p> </p>',
 				'date_sent'  => bp_core_current_time(),
 				'error_type' => 'wp_error',
@@ -627,7 +625,7 @@ function bp_messages_add_user_to_group_message_thread( $group_id, $user_id ) {
 				array(
 					'thread_id'  => $group_thread,
 					'sender_id'  => $user_id,
-					'subject'    => '',
+					'subject'    => false,
 					'content'    => '<p> </p>',
 					'date_sent'  => bp_core_current_time(),
 					'error_type' => 'wp_error',
@@ -679,7 +677,7 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
 				array(
 					'sender_id'  => $user_id,
 					'thread_id'  => $group_thread,
-					'subject'    => '',
+					'subject'    => false,
 					'content'    => '<p> </p>',
 					'date_sent'  => bp_core_current_time(),
 					'error_type' => 'wp_error',
@@ -795,6 +793,8 @@ function bb_check_is_message_content_empty( $validated_content, $content, $post 
  */
 function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
+	$params['current']['message_user_id']           = bp_loggedin_user_id();
+
 	return $params;
 }
 
