@@ -1248,6 +1248,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					)
 				),
 				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
+				'id'   => esc_attr( $avatar_user_id ),
 			);
 		}
 	}
@@ -1285,6 +1286,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$group_avatar = array(
 					'url'  => $group_avatar_url,
 					'name' => $group_name,
+					'id'   => $group_id,
 				);
 
 			} else {
@@ -1317,6 +1319,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$group_avatar = array(
 					'url'  => ! empty( $group_avatar_url ) ? $group_avatar_url : $default_group_avatar_url,
 					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
+					'id'   => $group_id,
 				);
 			}
 
