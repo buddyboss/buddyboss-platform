@@ -2305,14 +2305,14 @@ function bbp_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
 		$post_status     = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
 
 		// SQL statement.
-		$sql['select'] = "SELECT DISTINCT {$wpdb->posts}.ID";
+		$sql['select'] = "SELECT DISTINCT ID";
 		$sql['from'] = "FROM {$wpdb->posts}";
 		$sql['from'] = apply_filters( 'bbp_get_all_parent_ids_join_sql', $sql['from'] );
 
 		// Where statement.
-		$where_conditions[] = $wpdb->prepare( "{$wpdb->posts}.post_parent = %d", $topic_id );
-		$where_conditions[] = "{$wpdb->posts}.post_status IN ( {$post_status} ) ";
-		$where_conditions[] = $wpdb->prepare( "{$wpdb->posts}.ID NOT IN( 
+		$where_conditions[] = $wpdb->prepare( "post_parent = %d", $topic_id );
+		$where_conditions[] = "post_status IN ( {$post_status} ) ";
+		$where_conditions[] = $wpdb->prepare( "ID NOT IN(
 				SELECT p.ID FROM {$wpdb->posts} as p 
 				LEFT JOIN {$wpdb->postmeta} as pm ON pm.post_id=p.ID WHERE p.post_parent = %d AND pm.meta_key='_bbp_reply_to'
 				)", $topic_id );
