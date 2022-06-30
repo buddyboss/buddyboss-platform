@@ -2115,6 +2115,8 @@ span.dashicons.dashicons-admin-file:before {
 			opacity: 0;
 
 			.document-expand-anchor {
+
+				@include center-vert();
 				position: absolute;
 				top: 50%;
 				transform: translate(-50%, -50%);
@@ -2130,6 +2132,16 @@ span.dashicons.dashicons-admin-file:before {
 				visibility: hidden;
 				margin-top: 25px;
 				transition: all ease 0.3s;
+
+				> i {
+					margin-right: 5px;
+					font-weight: 300;
+				}
+
+				> span,
+				> i {
+					line-height: 1;
+				}
 			}
 		}
 
@@ -2164,17 +2176,6 @@ span.dashicons.dashicons-admin-file:before {
 				opacity: 1;
 				visibility: visible;
 				margin-top: 0;
-
-				> i {
-					margin-right: 5px;
-					font-weight: 300;
-				}
-
-				> span,
-				> i {
-					display: inline-block;
-					vertical-align: middle;
-				}
 			}
 		}
 

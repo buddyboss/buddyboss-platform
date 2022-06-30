@@ -5563,6 +5563,14 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-expand .document-expand-anchor {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
   position: absolute;
   top: 50%;
   transform: translate(50%, -50%);
@@ -5578,6 +5586,16 @@ span.dashicons.dashicons-admin-file:before {
   visibility: hidden;
   margin-top: 25px;
   transition: all ease 0.3s;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-expand .document-expand-anchor > i {
+  margin-left: 5px;
+  font-weight: 300;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-expand .document-expand-anchor > span,
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-expand .document-expand-anchor > i {
+  line-height: 1;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-action-wrap {
@@ -5606,17 +5624,6 @@ span.dashicons.dashicons-admin-file:before {
   opacity: 1;
   visibility: visible;
   margin-top: 0;
-}
-
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor > i {
-  margin-left: 5px;
-  font-weight: 300;
-}
-
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor > span,
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor > i {
-  display: inline-block;
-  vertical-align: middle;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible {
