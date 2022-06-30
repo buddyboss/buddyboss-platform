@@ -3207,6 +3207,9 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 /*------------------------------------------------------------------------------
  * 16.0 Moderation
  *----------------------------------------------------------------------------*/
+table.moderations .column-content_type a[data-action="unhide"],
+table.moderations .column-content_type a[data-action="unsuspend"],
+table.moderations .column-member a[data-action="unhide"],
 table.moderations .column-member a[data-action="unsuspend"] {
   color: #5f9a22;
 }
