@@ -103,30 +103,27 @@ add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
  */
 function bp_groups_filter_kses( $content = '' ) {
 
+	$allowed_tags = array();
 	/**
 	 * Note that we don't immediately bail if $content is empty. This is because
 	 * WordPress's KSES API calls several other filters that might be relevant
 	 * to someone's workflow (like `pre_kses`)
 	 */
 
-	// Get allowed tags using core WordPress API allowing third party plugins
-	// to target the specific `buddypress-groups` context.
-	$allowed_tags = wp_kses_allowed_html( 'buddypress-groups' );
-
 	// Add our own tags allowed in group descriptions.
-	$allowed_tags['a']['class']    = array();
-	$allowed_tags['img']           = array();
-	$allowed_tags['img']['src']    = array();
-	$allowed_tags['img']['alt']    = array();
-	$allowed_tags['img']['width']  = array();
-	$allowed_tags['img']['height'] = array();
-	$allowed_tags['img']['class']  = array();
-	$allowed_tags['img']['id']     = array();
-	$allowed_tags['code']          = array();
-	$allowed_tags['ol']            = array();
-	$allowed_tags['ul']            = array();
-	$allowed_tags['li']            = array();
-	$allowed_tags['a']['target']   = array();
+	$allowed_tags['a']           = array();
+	$allowed_tags['a']['href']   = true;
+	$allowed_tags['a']['title']  = true;
+	$allowed_tags['a']['class']  = array();
+	$allowed_tags['a']['target'] = array();
+	$allowed_tags['i']           = array();
+	$allowed_tags['b']           = array();
+	$allowed_tags['strong']      = array();
+	$allowed_tags['blockquote']  = array();
+	$allowed_tags['ol']          = array();
+	$allowed_tags['ul']          = array();
+	$allowed_tags['li']          = array();
+	$allowed_tags['code']        = array();
 
 	/**
 	 * Filters the HTML elements allowed for a given context.
@@ -136,6 +133,9 @@ function bp_groups_filter_kses( $content = '' ) {
 	 * @param string $allowed_tags Allowed tags, attributes, and/or entities.
 	 */
 	$tags = apply_filters( 'bp_groups_filter_kses', $allowed_tags );
+
+	// Convert HTML entities to their corresponding characters.
+	$content = html_entity_decode( $content );
 
 	// Return KSES'ed content, allowing the above tags.
 	return wp_kses( $content, $tags );
