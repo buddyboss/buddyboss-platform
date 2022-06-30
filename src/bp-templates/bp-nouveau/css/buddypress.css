@@ -1807,11 +1807,6 @@ a.layout-grid-view {
   min-height: 95px;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new font[color],
-.activity-update-form .activity-form.focus-in #whats-new font[color] {
-  color: inherit;
-}
-
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #activity-form-submit-wrapper,
 .activity-update-form .activity-form.focus-in #activity-form-submit-wrapper {
   padding: 0 25px 0 15px;
@@ -3211,6 +3206,11 @@ input.search-query-input {
 
 #content .toolbar-button {
   box-shadow: none;
+}
+
+.ac-input font[color],
+.medium-editor-element font[color] {
+  color: inherit;
 }
 
 @media screen and (max-width: 768px) {
