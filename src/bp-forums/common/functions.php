@@ -2295,49 +2295,27 @@ function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 		return false;
 	}
 
-	// The ID of the cached query
-	$cache_id = 'bb_parent_all_' . $topic_id . '_type_' . $post_type . '_parent_ids';
+	$post_status = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
+	// WP_Query arguments
+	$args = array(
+		'fields'         => 'ids',
+		'post_parent'    => $topic_id,
+		'posts_per_page' => - 1,
+		'post_type'      => $post_type,
+		'post_status'    => $post_status,
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'     => '_bbp_reply_to',
+				'compare' => 'NOT EXISTS',
+			),
+		),
+	);
 
-	// Check for cache and set if needed
-	$parent_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
-	if ( false === $parent_ids ) {
-		// Join post statuses to specifically exclude together
-		$post_status     = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
+	// The Query.
+	$get_replies_parent = new WP_Query( $args );
 
-		// SQL statement.
-		$sql['select'] = "SELECT DISTINCT ID";
-		$sql['from']   = "FROM {$wpdb->posts}";
-		$sql['from']   = apply_filters( 'bb_get_all_parent_ids_join_sql', $sql['from'] );
-
-		// Where statement.
-		$where_conditions[] = $wpdb->prepare( "post_parent = %d", $topic_id );
-		$where_conditions[] = "post_status IN ( {$post_status} ) ";
-		$where_conditions[] = $wpdb->prepare( "ID NOT IN(
-				SELECT p.ID FROM {$wpdb->posts} as p 
-				LEFT JOIN {$wpdb->postmeta} as pm ON pm.post_id=p.ID WHERE p.post_parent = %d AND pm.meta_key='_bbp_reply_to'
-				)", $topic_id );
-
-		/**
-		 * Filters the MySQL WHERE conditions for the topic parent replies id.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $where_conditions Current conditions for MySQL WHERE statement.
-		 */
-		$where_conditions = apply_filters( 'bb_get_all_parent_ids_where_sql', $where_conditions );
-
-		// Join the where conditions together.
-		$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
-
-		// Orderby for the sql.
-		$sql['orderby'] = 'ORDER BY ID DESC';
-
-		$topic_reply_sql = apply_filters( 'bb_get_all_parent_ids_sql', "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['orderby']}" );
-
-		$parent_ids = $wpdb->get_col( $topic_reply_sql );
-
-		wp_cache_set( $cache_id, $parent_ids, 'bbpress_posts' );
-	}
+	$parent_ids = ! empty( $get_replies_parent->posts ) ? $get_replies_parent->posts : array();
 
 	// Filter and return
 	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
