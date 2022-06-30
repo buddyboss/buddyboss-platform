@@ -5728,6 +5728,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.code-full-view .document-action-wrap .document-action_collapse i {
   border-right-width: 0;
   border-left-width: 1px;
+  border-radius: 3px 0 0 3px;
   color: #461212;
 }
 
