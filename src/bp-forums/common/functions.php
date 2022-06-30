@@ -2303,16 +2303,39 @@ function bbp_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
 	if ( false === $parent_ids ) {
 		// Join post statuses to specifically exclude together
 		$post_status     = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
-		$topic_reply_sql = $wpdb->prepare(
-			"SELECT {$wpdb->posts}.ID FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_parent = %d
-				AND {$wpdb->posts}.post_status IN ( {$post_status} ) 
-				AND {$wpdb->posts}.ID NOT IN( 
+
+		// SQL statement.
+		$sql['select'] = "SELECT DISTINCT {$wpdb->posts}.ID";
+		$sql['from'] = "FROM {$wpdb->posts}";
+		$sql['from'] = apply_filters( 'bbp_get_all_parent_ids_join_sql', $sql['from'] );
+
+		// Where statement.
+		$where_conditions[] = $wpdb->prepare( "{$wpdb->posts}.post_parent = %d", $topic_id );
+		$where_conditions[] = "{$wpdb->posts}.post_status IN ( {$post_status} ) ";
+		$where_conditions[] = $wpdb->prepare( "{$wpdb->posts}.ID NOT IN( 
 				SELECT p.ID FROM {$wpdb->posts} as p 
-				LEFT JOIN {$wpdb->postmeta} as pm ON pm.post_id=p.ID WHERE p.`post_parent` = $topic_id AND pm.meta_key='_bbp_reply_to'
-				) ORDER BY `ID` DESC;",
-			$topic_id
-		);
+				LEFT JOIN {$wpdb->postmeta} as pm ON pm.post_id=p.ID WHERE p.post_parent = %d AND pm.meta_key='_bbp_reply_to'
+				)", $topic_id );
+
+		/**
+		 * Filters the MySQL WHERE conditions for the topic parent replies id.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $where_conditions Current conditions for MySQL WHERE statement.
+		 */
+		$where_conditions = apply_filters( 'bbp_get_all_parent_ids_where_sql', $where_conditions );
+
+		// Join the where conditions together.
+		$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
+
+		// Orderby for the sql.
+		$sql['orderby'] = 'ORDER BY ID DESC';
+
+		$topic_reply_sql = apply_filters( 'bbp_get_all_parent_ids_sql', "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['orderby']}" );
+
 		$parent_ids = $wpdb->get_col( $topic_reply_sql );
+
 		wp_cache_set( $cache_id, $parent_ids, 'bbpress_posts' );
 	}
 
