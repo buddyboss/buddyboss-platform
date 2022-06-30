@@ -2276,3 +2276,46 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 		bp_send_email( $email_type, (int) $user_id, $args );
 	}
 }
+
+/**
+ * Function will get all prent ids of the topic replies.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $topic_id  Topic ID.
+ * @param string $post_type Post type.
+ *
+ * @return bool|mixed|void
+ */
+function bbp_get_all_parent_ids( $topic_id, $post_type = 'post' ) {
+	global $wpdb;
+
+	// Bail if nothing passed
+	if ( empty( $topic_id ) ) {
+		return false;
+	}
+
+	// The ID of the cached query
+	$cache_id = 'bbp_parent_all_' . $topic_id . '_type_' . $post_type . '_child_ids';
+
+	// Check for cache and set if needed
+	$parent_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
+	if ( false === $parent_ids ) {
+		// Join post statuses to specifically exclude together
+		$post_status     = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
+		$topic_reply_sql = $wpdb->prepare(
+			"SELECT {$wpdb->posts}.ID FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_parent = %d
+				AND {$wpdb->posts}.post_status IN ( {$post_status} ) 
+				AND {$wpdb->posts}.ID NOT IN( 
+				SELECT p.ID FROM {$wpdb->posts} as p 
+				LEFT JOIN {$wpdb->postmeta} as pm ON pm.post_id=p.ID WHERE p.`post_parent` = $topic_id AND pm.meta_key='_bbp_reply_to'
+				) ORDER BY `ID` DESC;",
+			$topic_id
+		);
+		$parent_ids = $wpdb->get_col( $topic_reply_sql );
+		wp_cache_set( $cache_id, $parent_ids, 'bbpress_posts' );
+	}
+
+	// Filter and return
+	return apply_filters( 'bbp_get_all_parent_ids', $parent_ids, (int) $topic_id, $post_type );
+}

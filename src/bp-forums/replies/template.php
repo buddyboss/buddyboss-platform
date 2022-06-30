@@ -511,7 +511,10 @@ function bbp_get_reply_url( $reply_id = 0, $redirect_to = '' ) {
 
 	// Hierarchical reply page
 	if ( bbp_thread_replies() ) {
-		$reply_page = ceil( (int) bbp_get_total_parent_reply( $topic_id ) / (int) bbp_get_replies_per_page() );
+		$reply_page = ceil( (int) bb_get_parent_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
+		if ( 0 === (int) $reply_page ) {
+			$reply_page = 1;
+		}
 		// Standard reply page
 	} else {
 		$reply_page = ceil( (int) bbp_get_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
@@ -2840,4 +2843,40 @@ function bbp_get_total_parent_reply( $topic_id ) {
 		$parent_reply_count = get_post_meta( $topic_id, '_bbp_parent_reply_count', true );
 		return $parent_reply_count;
 	}
+}
+
+/**
+ * Return the numeric position of a parent reply within a topic
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $reply_id Optional. Reply id
+ * @param int $topic_id Optional. Topic id
+ *
+ * @uses  bbp_get_reply_ancestor_id() To get the reply id
+ * @uses  bbp_get_all_parent_ids() Get the topic id of the reply id
+ *
+ * @return int Reply position
+ */
+function bb_get_parent_reply_position( $reply_id = 0, $topic_id = 0 ) {
+
+	// Bail if nothing passed
+	if ( empty( $reply_id ) ) {
+		return false;
+	}
+
+	$topic_id = ! empty( $topic_id ) ? bbp_get_topic_id( $topic_id ) : bbp_get_reply_topic_id( $reply_id );
+
+	$reply_position     = get_post_field( 'menu_order', $reply_id );
+	$top_level_reply_id = bbp_get_reply_ancestor_id( $reply_id );
+	$parent_replies_ids = bbp_get_all_parent_ids( $topic_id, bbp_get_reply_post_type() );
+	if ( ! empty( $parent_replies_ids ) ) {
+		$topic_replies = array_reverse( $parent_replies_ids );
+		// Reverse replies array and search for current reply position
+		$reply_position = array_search( (string) $top_level_reply_id, $topic_replies );
+		// Bump the position to compensate for the lead topic post
+		$reply_position ++;
+	}
+
+	return (int) apply_filters( 'bbp_get_parent_reply_position', $reply_position, $reply_id, $topic_id );
 }
