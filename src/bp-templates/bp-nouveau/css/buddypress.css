@@ -5333,20 +5333,19 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .entry-img {
-  -ms-flex-preferred-size: 30px;
-  flex-basis: 30px;
-  width: 30px;
+  -ms-flex-preferred-size: 38px;
+  flex-basis: 38px;
+  width: 38px;
   text-align: center;
-  padding: 5px 0 !important;
+  padding: 1px 0 !important;
   display: inline-block;
   vertical-align: middle;
   position: relative;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .entry-img > i {
-  font-size: 35px;
+  font-size: 38px;
   color: #9ca8b4;
-  margin-top: 3px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap {
@@ -5355,7 +5354,7 @@ span.dashicons.dashicons-admin-file:before {
   width: calc(100% - 40px);
   display: inline-block !important;
   vertical-align: middle;
-  padding: 10px 0 10px 15px !important;
+  padding: 10px 0 10px 10px !important;
   color: #122b46;
 }
 
@@ -5366,7 +5365,7 @@ span.dashicons.dashicons-admin-file:before {
   width: calc(100% - 70px);
   display: block;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description,
