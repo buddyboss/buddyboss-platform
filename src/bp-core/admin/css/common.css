@@ -3214,6 +3214,32 @@ table.moderations .column-member a[data-action="unsuspend"] {
   color: #5f9a22;
 }
 
+table.moderations thead tr th,
+table.moderations tfoot tr th {
+  font-weight: 600;
+}
+
+table.moderations tbody tr .column-suspend .dashicons {
+  color: #000;
+  font-size: 24px;
+}
+
+.buddyboss_page_bp-moderation .dashicons {
+  font-weight: 700;
+}
+
+.buddyboss_page_bp-moderation .bb-back .dashicons {
+  text-decoration: none;
+  margin-right: 5px;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.buddyboss_page_bp-moderation table.reports thead tr th,
+.buddyboss_page_bp-moderation table.reports tfoot tr th {
+  font-weight: 600;
+}
+
 table.moderations .content_owner img,
 table.reports .column-reporter img,
 table.moderations .column-member img {

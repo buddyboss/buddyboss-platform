@@ -22,13 +22,13 @@ $admins            = array_map( 'intval', get_users(
 		<?php
 		if ($is_content_screen) {
 			printf(
-				'<a href="%1$s"><i class="bb-icon bb-icon-arrow-left"></i> %2$s</a>',
+				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i> %2$s</a>',
 				esc_url(bp_get_admin_url('admin.php?page=bp-moderation&tab=reported-content')),
 				esc_html__('Back to Reported Content', 'buddyboss'),
 			);
 		} else {
 			printf(
-				'<a href="%1$s"><i class="bb-icon bb-icon-arrow-left"></i> %2$s</a>',
+				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i> %2$s</a>',
 				esc_url(bp_get_admin_url('admin.php?page=bp-moderation')),
 				esc_html__('Back to Flagged Members', 'buddyboss'),
 			);

@@ -657,7 +657,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_suspend( $item = array() ) {
 		if ( 1 === (int) $item['hide_sitewide'] ) {
-			printf ('<i class="bb-icon bb-icon-check"></i>');
+			printf ('<i class="dashicons dashicons-saved"></i>');
 		}
 	}
 
@@ -670,7 +670,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_is_hidden( $item = array() ) {
 		if ( 1 === (int) $item['hide_sitewide'] ) {
-			printf ('<i class="bb-icon bb-icon-check"></i>');
+			printf ('<i class="dashicons dashicons-saved"></i>');
 		}
 	}
 

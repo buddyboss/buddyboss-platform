@@ -3468,6 +3468,52 @@ table.moderations {
 		}
 	}
 
+	thead tr th,
+	tfoot tr th {
+		font-weight: 600;
+	}
+
+	tbody {
+
+		tr {
+
+			.column-suspend {
+
+				.dashicons {
+					color: #000;
+					font-size: 24px;
+				}
+
+			}
+
+		}
+
+	}
+}
+
+.buddyboss_page_bp-moderation {
+
+	.dashicons {
+		font-weight: 700;
+	}
+
+	.bb-back {
+
+		.dashicons {
+			text-decoration: none;
+			margin-right: 5px;
+			font-size: 18px;
+			margin-top: 2px;
+		}
+	}
+
+	table.reports {
+
+		thead tr th,
+		tfoot tr th {
+			font-weight: 600;
+		}
+	}
 }
 
 table.moderations .content_owner,
