@@ -12995,6 +12995,10 @@ button[data-bp-tooltip] {
   width: 100%;
 }
 
+.bp-tooltip.active[data-bp-tooltip]:after, .bp-tooltip.active[data-bp-tooltip]:before {
+  display: none;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 9.0 - Layout classes
