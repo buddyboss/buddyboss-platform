@@ -105,16 +105,17 @@
 		align-items: center;
 		flex-flow: row wrap;
 		justify-content: center;
-		background: rgba(0, 0, 0, 0.4);
+		background: rgba(0, 0, 0, 0.5);
 		color: #fff;
 		font-size: 16px;
+		line-height: 1.31;
 
 		strong {
 			color: inherit;
 			display: block;
-			font-size: 28px;
+			font-size: 24px;
 			font-weight: 400;
-			margin-bottom: 10px;
+			line-height: 1.33;
 		}
 	}
 
@@ -123,7 +124,7 @@
 		.entry-img:before {
 			content: " ";
 			position: absolute;
-			background: rgba(0, 0, 0, 0.35);
+			background: rgba(0, 0, 0, 0.25);
 			border-radius: 3px;
 			width: 100%;
 			height: 100%;

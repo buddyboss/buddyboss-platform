@@ -16291,23 +16291,24 @@ body.login .login-popup .mfp-close:hover {
   align-items: center;
   flex-flow: row wrap;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   color: #fff;
   font-size: 16px;
+  line-height: 1.31;
 }
 
 .bb-activity-media-elem .bb-photos-length strong {
   color: inherit;
   display: block;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 400;
-  margin-bottom: 10px;
+  line-height: 1.33;
 }
 
 .bb-activity-media-elem.media-activity .entry-img:before {
   content: " ";
   position: absolute;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 3px;
   width: 100%;
   height: 100%;
@@ -21946,8 +21947,17 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .bb-video-cover-wrap:before {
-  content: "";
-  background: url(../images/video-play.svg) !important;
+  content: "\eef7";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-indent: 3px;
+  font-weight: 300;
+  font-style: normal;
+  color: rgba(0, 0, 0, 0.8);
   background-color: #fff !important;
   height: 52px;
   width: 52px;
@@ -21956,7 +21966,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   top: 50%;
   transform: translate(50%, -50%);
   z-index: 11;
-  opacity: 0.8;
+  opacity: 0.85;
   border: 0;
   transition: all ease 0.3s !important;
   border-radius: 50%;
@@ -21966,12 +21976,13 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .bb-video-duration,
 .bb-media-section .bb-video-duration {
   font-size: 13px;
+  line-height: 20px;
   margin: 0 !important;
-  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.9);
   color: #fff;
   display: inline-block;
   padding: 1px 8px;
-  border-radius: 4px;
+  border-radius: 3px;
   position: absolute;
   right: 10px;
   bottom: 10px;
@@ -22589,15 +22600,17 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   background: rgba(0, 0, 0, 0.4);
   color: #fff;
   font-size: 16px;
+  font-weight: 500;
+  line-height: 1.31;
 }
 
 .forums-video-wrap .bb-activity-video-elem .bb-videos-length strong,
 .bb-activity-video-wrap .bb-activity-video-elem .bb-videos-length strong {
   color: inherit;
   display: block;
-  font-size: 28px;
-  font-weight: 400;
-  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.33;
 }
 
 .forums-video-wrap .bb-activity-video-elem.act-grid-1-2 .bb-item-cover-wrap,
