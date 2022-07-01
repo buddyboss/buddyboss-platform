@@ -238,6 +238,9 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		$button_text          = __( 'Block', 'buddyboss' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
+	} else if( BP_Moderation_Members::$moderation_type_report === $item_type) {
+		$button_text          = __( 'Report Member', 'buddyboss' );
+		$reported_button_text = __( 'Reported Member', 'buddyboss' );
 	} else {
 		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
 		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
@@ -501,6 +504,10 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return false;
+		}
+	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+		if ( ! bp_is_moderation_member_reporting_enable( 0 ) ) {
 			return false;
 		}
 	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {

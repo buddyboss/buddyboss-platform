@@ -727,6 +727,18 @@ function bp_nouveau_get_members_buttons( $args ) {
 				'position'       => 29,
 			)
 		);
+		$buttons['member_block'] = bp_member_get_report_link(
+			array(
+				'parent_element' => $parent_element,
+				'parent_attr'    => array(
+					'id'    => $button_args['wrapper_id'],
+					'class' => $parent_class,
+				),
+				'button_element' => $button_element,
+				'position'       => 30,
+				'report_user'    => true
+			)
+		);
 	}
 
 	/**
