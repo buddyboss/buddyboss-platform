@@ -5694,21 +5694,28 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-preview-wrap {
-  height: 200px;
-  overflow: hidden;
-  margin: 0 15px 15px;
-  border: 1px solid #e7e9ec;
-  border-radius: 4px;
   display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px 4px 0 0;
+  height: 200px;
+  overflow: hidden;
   text-align: center;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-audio-wrap ~ .document-action-wrap,
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-preview-wrap ~ .document-action-wrap {
+  bottom: 21px;
+  top: inherit;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text-wrap .CodeMirror {

@@ -2261,21 +2261,23 @@ span.dashicons.dashicons-admin-file:before {
 		}
 
 		.document-preview-wrap {
+
+			@include center-horizontal-vert();
+			background-color: rgba(0, 0, 0, 0.05);
+			border-radius: 4px 4px 0 0;
 			height: 200px;
 			overflow: hidden;
-			margin: 0 15px 15px;
-			border: 1px solid #e7e9ec;
-			border-radius: 4px;
-			display: -webkit-box;
-			display: -ms-flexbox;
-			display: flex;
-			-webkit-box-align: center;
-			-ms-flex-align: center;
-			align-items: center;
-			-webkit-box-pack: center;
-			-ms-flex-pack: center;
-			justify-content: center;
 			text-align: center;
+		}
+
+		.document-audio-wrap,
+		.document-preview-wrap {
+
+			~ .document-action-wrap {
+				bottom: 21px;
+				top: inherit;
+			}
+
 		}
 
 		.document-text-wrap {
