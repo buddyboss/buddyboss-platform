@@ -3069,6 +3069,7 @@ div[class*="attached-gif-container"] .gif-player {
 div[class*="attached-gif-container"] .gif-player video {
   margin: 0;
   max-width: 100%;
+  border-radius: 4px;
 }
 
 div[class*="attached-gif-container"] .gif-play-button {
