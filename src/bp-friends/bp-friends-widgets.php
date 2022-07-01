@@ -90,7 +90,7 @@ function bp_core_ajax_widget_friends() {
 			bp_the_member();
 			?>
 			<li class="vcard">
-				<div class="item-avatar">
+				<div class="item-avatar bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
 					<a href="<?php bp_member_permalink(); ?>">
 						<?php bp_member_avatar(); ?>
 						<?php

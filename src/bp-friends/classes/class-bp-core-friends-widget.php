@@ -148,30 +148,18 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 		<?php if ( bp_has_members( $members_args ) ) : ?>
 			<div class="item-options" id="friends-list-options">
-				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends"
-																 <?php
-																	if ( 'newest' === $instance['friend_default'] ) :
-																		?>
-					class="selected"<?php endif; ?>><?php _e( 'Newest', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends"
-																   <?php
-																	if ( $instance['friend_default'] == 'active' ) :
-																		?>
-					class="selected"<?php endif; ?>><?php _e( 'Active', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends"
-																   <?php
-																	if ( $instance['friend_default'] == 'popular' ) :
-																		?>
-					class="selected"<?php endif; ?>><?php _e( 'Popular', 'buddyboss' ); ?></a>
+				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends" class="<?php echo ( 'newest' === $instance['friend_default'] ? 'selected' : '' ); ?>"><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends" class="<?php echo ( 'active' === $instance['friend_default'] ? 'selected' : '' ); ?>"><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends" class="<?php echo ( 'popular' === $instance['friend_default'] ? 'selected' : '' ); ?>"><?php esc_html_e( 'Popular', 'buddyboss' ); ?></a>
 			</div>
 
-			<ul id="friends-list" class="item-list">
+			<ul id="friends-list" class="item-list bb-friends-list-widget">
 				<?php
 				while ( bp_members() ) :
 					bp_the_member();
 					?>
 					<li class="vcard">
-						<div class="item-avatar">
+						<div class="item-avatar bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
 							<a href="<?php bp_member_permalink(); ?>">
 								<?php bp_member_avatar(); ?>
 								<?php
