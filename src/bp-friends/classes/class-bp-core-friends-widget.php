@@ -159,8 +159,8 @@ class BP_Core_Friends_Widget extends WP_Widget {
 					bp_the_member();
 					?>
 					<li class="vcard">
-						<div class="item-avatar bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-							<a href="<?php bp_member_permalink(); ?>">
+						<div class="item-avatar">
+							<a href="<?php bp_member_permalink(); ?>" class="bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
 								<?php bp_member_avatar(); ?>
 								<?php
 								$current_time = current_time( 'mysql', 1 );
