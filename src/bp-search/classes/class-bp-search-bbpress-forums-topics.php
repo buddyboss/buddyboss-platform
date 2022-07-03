@@ -32,7 +32,9 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$columns             = " DISTINCT p.id , '{$this->type}' as type, p.post_title LIKE %s AS relevance, p.post_date as entry_date  ";
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
-
+			
+			$from = "{$wpdb->posts} p ";
+			
 			/**
 			 * Filter the MySQL JOIN clause for the topic Search query.
 			 *
