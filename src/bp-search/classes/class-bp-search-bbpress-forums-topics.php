@@ -33,8 +33,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
-			$from = "{$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_bbp_forum_id'";
-
 			/**
 			 * Filter the MySQL JOIN clause for the topic Search query.
 			 *
@@ -195,7 +193,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			if ( ! empty( $forum_ids ) ) {
 				$forum_id_in = implode( ',', $forum_ids );
-				$where[]     = " pm.meta_value IN ( $forum_id_in ) ";
+				$where[]     = " p.post_parent IN ( $forum_id_in ) ";
 			}
 
 			$query_placeholder[] = '%' . $search_term . '%';
