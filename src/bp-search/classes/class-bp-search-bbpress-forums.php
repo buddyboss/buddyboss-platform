@@ -57,7 +57,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			$in = '0';
 
-			if ( ! bp_is_search_groups_enable() ) {
+			if ( bp_is_search_groups_enable() ) {
 				$group_memberships = '';
 				if ( bp_is_active( 'groups' ) ) {
 					$group_memberships = bp_get_user_groups(
