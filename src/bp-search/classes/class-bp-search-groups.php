@@ -132,15 +132,15 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 					// get all hidden groups where i am a member of
 					$hidden_groups_sql = $wpdb->prepare( "SELECT DISTINCT gm.group_id FROM {$bp->groups->table_name_members} gm JOIN {$bp->groups->table_name} g ON gm.group_id = g.id WHERE gm.user_id = %d AND gm.is_confirmed = 1 AND gm.is_banned = 0 AND g.status='hidden' ", bp_loggedin_user_id() );
 					$hidden_groups_ids = $wpdb->get_col( $hidden_groups_sql );
-					if ( empty( $hidden_groups_ids ) ) {
-						$hidden_groups_ids = array( 99999999 );// arbitrarily large number
-					}
-
-					$hidden_groups_ids_csv = implode( ',', $hidden_groups_ids );
-
-					// either gruops which are not hidden,
+					
+					// either groups which are not hidden,
 					// or if hidden, only those where i am a member.
-					$where_conditions['search_query'] .= " AND ( g.status != 'hidden' OR g.id IN ( {$hidden_groups_ids_csv} ) ) ";
+					
+					if ( !empty( $hidden_groups_ids ) ) {
+						$hidden_groups_csv = implode( ',', $hidden_groups_ids );
+						$hidden_groups_condition = " OR g.id IN ( {$hidden_groups_csv} )";
+					} 
+					$where_conditions['search_query'] .= " AND ( g.status != 'hidden' {$hidden_groups_condition} ) ";
 				}
 			} else {
 				$where_conditions['search_query'] .= "AND g.status != 'hidden' ";
