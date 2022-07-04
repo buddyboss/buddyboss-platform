@@ -2860,7 +2860,7 @@ function bbp_get_total_parent_reply( $topic_id ) {
  */
 function bb_get_parent_reply_position( $reply_id = 0, $topic_id = 0 ) {
 
-	// Bail if nothing passed
+	// Bail if nothing passed.
 	if ( empty( $reply_id ) ) {
 		return false;
 	}
@@ -2873,9 +2873,9 @@ function bb_get_parent_reply_position( $reply_id = 0, $topic_id = 0 ) {
 	$parent_replies_ids = bb_get_parent_replies_ids( $topic_id, bbp_get_reply_post_type() );
 	if ( ! empty( $parent_replies_ids ) ) {
 		$topic_replies = array_reverse( $parent_replies_ids );
-		// Reverse replies array and search for current reply position
+		// Reverse replies array and search for current reply position.
 		$reply_position = array_search( (string) $top_level_reply_id, $topic_replies );
-		// Bump the position to compensate for the lead topic post
+		// Bump the position to compensate for the lead topic post.
 		$reply_position ++;
 	}
 

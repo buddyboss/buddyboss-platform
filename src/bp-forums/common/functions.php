@@ -2278,7 +2278,7 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 }
 
 /**
- * Function will get all prent ids of the topic replies.
+ * Function will get all parent ids of the topic replies.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2290,7 +2290,7 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 	global $wpdb;
 
-	// Bail if nothing passed
+	// Bail if nothing passed.
 	if ( empty( $topic_id ) ) {
 		return false;
 	}
@@ -2300,7 +2300,7 @@ function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 	// If nothing is found, build the object.
 	if ( false === $parent_ids ) {
 		$post_status = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
-		// WP_Query arguments
+		// WP_Query arguments.
 		$args               = array(
 			'fields'         => 'ids',
 			'post_parent'    => $topic_id,
@@ -2324,6 +2324,6 @@ function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 		}
 	}
 
-	// Filter and return
+	// Filter and return.
 	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
 }
