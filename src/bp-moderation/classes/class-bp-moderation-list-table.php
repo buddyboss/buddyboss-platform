@@ -234,7 +234,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				'cb'             => '<input name type="checkbox" />',
 				'member'         => esc_html__( 'Member', 'buddyboss' ),
 				'blocked'        => esc_html__( 'Blocks', 'buddyboss' ),
-				'reported'       => esc_html__( 'Reports', 'buddyboss' ),
+				'user_reported'  => esc_html__( 'Reports', 'buddyboss' ),
 				'suspend'        => esc_html__( 'Suspended', 'buddyboss' ),
 			);
 		}
@@ -635,6 +635,17 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_reported( $item = array() ) {
 		printf( esc_html( bp_core_number_format( $item['count'] ) ) );
+	}
+
+	/**
+	 * Function to show reported count
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param array $item loop item.
+	 */
+	public function column_user_reported( $item = array() ) {
+		printf( esc_html( bp_core_number_format( $item['user_reported'] ) ) );
 	}
 
 	/**
