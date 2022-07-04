@@ -228,6 +228,10 @@ function bp_moderation_block_member() {
 	$nonce   = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
+	// Member Report only
+	$reported  = filter_input( INPUT_POST, 'reported', FILTER_SANITIZE_NUMBER_INT );
+	$category  = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
+
 	if ( empty( $item_id ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
 		wp_send_json_error( $response );
@@ -258,7 +262,8 @@ function bp_moderation_block_member() {
 			array(
 				'content_id'   => $item_id,
 				'content_type' => BP_Moderation_Members::$moderation_type,
-				'note'         => esc_html__( 'Member block', 'buddyboss' ),
+				'note'         => !empty( $reported ) ? esc_html__( 'Member report', 'buddyboss' ) : esc_html__( 'Member block', 'buddyboss' ),
+				'category_id'  => !empty( $category ) ? $category : 0,
 			)
 		);
 
@@ -946,3 +951,20 @@ function bb_quickedit_bpm_category_hide_slug_style() {
 }
 add_action( 'admin_print_footer_scripts-edit-tags.php', 'bb_quickedit_bpm_category_hide_slug_style' );
 add_action( 'admin_print_footer_scripts-term.php', 'bb_quickedit_bpm_category_hide_slug_style' );
+
+
+add_action( 'bp_moderation_user_report_report_content_type', 'bp_moderation_user_report_content_type', 10, 2 );
+
+/**
+ * Function to change member report type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content_type Button text.
+ * @param int    $item_id     Item id.
+ *
+ * @return string
+ */
+function bp_moderation_user_report_content_type( $content_type, $item_id ) {
+	return esc_html__( 'Member', 'buddyboss' );
+}
