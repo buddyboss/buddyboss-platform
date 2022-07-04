@@ -675,6 +675,12 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 		$group = $bp->groups->current_group;
 	}
 
+	// Tracking join a public group.
+	if ( 'public' === $group->status ) {
+		groups_update_membermeta( $user_id, 'joined_date', bp_core_current_time() );
+		groups_update_membermeta( $user_id, 'joined_group_id', $group_id );
+	}
+
 	// Record this in activity feeds.
 	if ( bp_is_active( 'activity' ) ) {
 		groups_record_activity(
@@ -1912,9 +1918,14 @@ function groups_invite_user( $args = '' ) {
 		'send_invite'   => $r['send_invite'],
 	);
 
-	// Create the unsent invitataion.
+	// Create the unsent invitation.
 	$invites_class = new BP_Groups_Invitation_Manager();
 	$created       = $invites_class->add_invitation( $inv_args );
+
+	// Tracking group invite.
+	groups_add_membermeta( $r['inviter_id'], 'invited_date', bp_core_current_time() );
+	groups_add_membermeta( $r['inviter_id'], 'invited_group_id', $r['group_id'] );
+	groups_add_membermeta( $r['inviter_id'], 'invited_user_id', $r['user_id'] );
 
 	/**
 	 * Fires after the creation of a new group invite.
@@ -1992,7 +2003,14 @@ function groups_accept_invite( $user_id, $group_id ) {
 		'invite_sent' => 'sent',
 	);
 
-	return $invites_class->accept_invitation( $args );
+	$accept_request = $invites_class->accept_request( $args );
+	// Tracking group invitation accept.
+	if ( $accept_request ) {
+		groups_add_membermeta( $user_id, 'membership_accepted_date', bp_core_current_time() );
+		groups_add_membermeta( $user_id, 'membership_accepted_group_id', $group_id );
+	}
+
+	return $accept_request;
 }
 
 /**
@@ -2508,6 +2526,10 @@ function groups_send_membership_request( $args = array() ) {
 		$invites_class->send_request_notification_by_id( $request_id );
 		$admins = groups_get_group_admins( $r['group_id'] );
 
+		// Tracking group invite.
+		groups_add_membermeta( $r['user_id'], 'membership_request_date', bp_core_current_time() );
+		groups_add_membermeta( $r['user_id'], 'membership_request_group_id', $r['group_id'] );
+
 		/**
 		 * Fires after the creation of a new membership request.
 		 *
@@ -2557,7 +2579,15 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
 		'item_id' => $group_id,
 	);
 
-	return $invites_class->accept_request( $args );
+	$accept_request = $invites_class->accept_request( $args );
+
+	// Tracking group invitation accept.
+	if ( $accept_request ) {
+		groups_add_membermeta( $user_id, 'membership_accepted_date', bp_core_current_time() );
+		groups_add_membermeta( $user_id, 'membership_accepted_group_id', $group_id );
+	}
+
+	return $accept_request;
 }
 
 /**
