@@ -145,7 +145,7 @@ $admins            = array_map( 'intval', get_users(
 										<strong class="report-header_number"><?php printf ( esc_html( bp_core_number_format( $moderation_request_data->count ) ) ); ?></strong><?php esc_html_e('Blocks', 'buddyboss')?>
 									</div>
 									<div class="report-header_content">
-										<strong class="report-header_number"><?php printf ( esc_html( bp_core_number_format( $moderation_request_data->count ) ) ); ?></strong><?php esc_html_e('Reports', 'buddyboss')?>
+										<strong class="report-header_number"><?php printf ( esc_html( bp_core_number_format( $moderation_request_data->user_reported ) ) ); ?></strong><?php esc_html_e('Reports', 'buddyboss')?>
 									</div>
 									<div class="report-header_action">
 										<?php
