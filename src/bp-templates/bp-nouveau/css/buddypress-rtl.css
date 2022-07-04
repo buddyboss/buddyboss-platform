@@ -23603,7 +23603,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   line-height: 2.5;
   border-radius: 0 0 4px 4px;
   text-align: center;
-  text-indent: -20px;
+  text-indent: -10px;
 }
 
 .dropzone.video-dropzone .dz-preview {
@@ -23630,8 +23630,10 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove:after {
-  font-size: 24px;
-  line-height: 1;
+  font-size: 18px;
+  line-height: 26px;
+  opacity: 0.5;
+  font-weight: 300;
 }
 
 .dropzone.video-dropzone .dz-preview .dz-filename {
@@ -24513,10 +24515,6 @@ body > .open-popup.video-error-popup {
   color: #fff;
   z-index: 11;
   font-size: 24px;
-}
-
-.bb-template-v1 .dropzone .dz-preview .dz-progress-ring-wrap [class*=" bb-icon-"] {
-  font-weight: 400;
 }
 
 .dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap {

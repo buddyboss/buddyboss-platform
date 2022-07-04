@@ -1731,7 +1731,7 @@ div.dropzone.dz-started {
 		line-height: 2.5;
 		border-radius: 0 0 4px 4px;
 		text-align: center;
-		text-indent: -20px;
+		text-indent: -10px;
 	}
 
 	.dz-preview {
@@ -1757,8 +1757,10 @@ div.dropzone.dz-started {
 		box-shadow: none;
 
 		&:after {
-			font-size: 24px;
-			line-height: 1;
+			font-size: 18px;
+			line-height: 26px;
+			opacity: 0.5;
+			font-weight: 300;
 		}
 	}
 
