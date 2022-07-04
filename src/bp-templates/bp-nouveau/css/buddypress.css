@@ -22078,6 +22078,21 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-top: 20px;
 }
 
+@media screen and (max-width: 544px) {
+  .bb-activity-video-elem .video-js.vjs-error .vjs-error-display.vjs-modal-dialog .vjs-modal-dialog-content,
+  .bb-video-thumb .video-js.vjs-error .vjs-error-display.vjs-modal-dialog .vjs-modal-dialog-content,
+  .bb-media-section .video-js.vjs-error .vjs-error-display.vjs-modal-dialog .vjs-modal-dialog-content {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .bb-activity-video-elem .video-js.vjs-error .vjs-error-display.vjs-modal-dialog:before,
+  .bb-video-thumb .video-js.vjs-error .vjs-error-display.vjs-modal-dialog:before,
+  .bb-media-section .video-js.vjs-error .vjs-error-display.vjs-modal-dialog:before {
+    font-size: 40px;
+    margin-top: -40px;
+  }
+}
+
 .bb-activity-video-elem .vjs-menu-button-popup .vjs-menu-content,
 .bb-video-thumb .vjs-menu-button-popup .vjs-menu-content,
 .bb-media-section .vjs-menu-button-popup .vjs-menu-content {
@@ -22478,6 +22493,61 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-js .vjs-control-bar button.enlarge_button .vjs-icon-placeholder:before {
   content: "\ee67";
   font-size: 22px;
+}
+
+.video-js .pcture-in-picture-notice {
+  display: none;
+}
+
+.video-js.vjs-picture-in-picture {
+  pointer-events: none;
+}
+
+.video-js.vjs-picture-in-picture:after {
+  display: none;
+}
+
+.video-js.vjs-picture-in-picture video,
+.video-js.vjs-picture-in-picture .vjs-control-bar,
+.video-js.vjs-picture-in-picture .vjs-big-play-button {
+  display: none;
+}
+
+.video-js.vjs-picture-in-picture .pcture-in-picture-notice {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.24px;
+  line-height: 24px;
+  text-align: center;
+  margin-top: 40px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+}
+
+.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
+  content: "\ef66";
+  color: #fff;
+  display: block;
+  font-size: 80px;
+  font-weight: 300;
+  font-family: "bb-icons";
+  text-shadow: none;
+  margin-top: -65px;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 544px) {
+  .video-js.vjs-picture-in-picture .pcture-in-picture-notice {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
 }
 
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap {

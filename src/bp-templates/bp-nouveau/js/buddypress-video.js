@@ -2893,6 +2893,9 @@ window.bp = window.bp || {};
 						Enter_fullscreen_btn.attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_fullscreen_text );
 					}
 
+					// Add video Picture in Picture notice
+					$( self ).parent().find('.video-js').append('<div class="pcture-in-picture-notice">' + BP_Nouveau.video.i18n_strings.video_picture_in_text + '</div>');
+
 					// Add Tooltips to control buttons
 					var vjsallControlsButton = $( self ).parent().find( '.vjs-control-bar > button, .vjs-control-bar > div' );
 					vjsallControlsButton.attr( 'data-balloon-pos', 'up' );

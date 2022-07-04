@@ -166,6 +166,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_speed_text'        => __( 'Speed', 'buddyboss' ),
 		'video_skip_back_text'    => __( 'Step Back (5)', 'buddyboss' ),
 		'video_skip_forward_text' => __( 'Step Forward (5)', 'buddyboss' ),
+		'video_picture_in_text'   => __( 'This video is playing in the miniplayer.', 'buddyboss' ),
 	);
 
 	return $params;
