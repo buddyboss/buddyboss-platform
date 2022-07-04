@@ -918,6 +918,7 @@ window.bp = window.bp || {};
 			this.topic_reply_draft.post_action = 'delete';
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
+			this.resetTopicReplyDraftPostForm();
 		},
 
 		discardTopicReplyDraftForm: function() {
