@@ -328,7 +328,7 @@ function bp_nouveau_ajax_messages_send_message() {
 					$star_link_data         = explode( '/', $star_link );
 					$response['is_starred'] = array_search( 'unstar', $star_link_data );
 
-					// Defaults to last
+					// Defaults to last.
 					$sm_id = $last_message_id;
 
 					if ( $response['is_starred'] ) {

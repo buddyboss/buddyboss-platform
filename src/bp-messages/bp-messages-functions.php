@@ -1249,6 +1249,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				),
 				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
 				'id'   => esc_attr( $avatar_user_id ),
+				'type' => 'user',
 			);
 		}
 	}
@@ -1257,9 +1258,9 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	$first_message_id = ( ! empty( $first_message ) ? $first_message->id : false );
 	$group_id         = ( isset( $first_message_id ) ) ? (int) bp_messages_get_meta( $first_message_id, 'group_id', true ) : 0;
 	if ( ! empty( $first_message_id ) && ! empty( $group_id ) ) {
-		$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group
-		$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual
-		$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private
+		$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group.
+		$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual.
+		$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private.
 
 		if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
 			if ( bp_is_active( 'groups' ) ) {
@@ -1287,6 +1288,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					'url'  => $group_avatar_url,
 					'name' => $group_name,
 					'id'   => $group_id,
+					'type' => 'group',
 				);
 
 			} else {
@@ -1320,6 +1322,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					'url'  => ! empty( $group_avatar_url ) ? $group_avatar_url : $default_group_avatar_url,
 					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
 					'id'   => $group_id,
+					'type' => 'group',
 				);
 			}
 
