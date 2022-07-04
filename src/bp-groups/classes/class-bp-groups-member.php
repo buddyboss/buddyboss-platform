@@ -542,17 +542,20 @@ class BP_Groups_Member {
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 * @param int      $user_id ID of the user.
-	 * @param int|bool $limit   Optional. Max number of results to return.
-	 *                          Default: false (no limit).
-	 * @param int|bool $page    Optional. Page offset of results to return.
-	 *                          Default: false (no limit).
+	 * @param int      $user_id   ID of the user.
+	 * @param int|bool $limit     Optional. Max number of results to return.
+	 *                            Default: false (no limit).
+	 * @param int|bool $page      Optional. Page offset of results to return.
+	 *                            Default: false (no limit).
+	 * @param bool     $force_all Optional. Force tag to return all user groups.
+	 *                            Default: false.
+	 *
 	 * @return array {
 	 *     @type array $groups Array of groups returned by paginated query.
 	 *     @type int   $total  Count of groups matching query.
 	 * }
 	 */
-	public static function get_group_ids( $user_id, $limit = false, $page = false ) {
+	public static function get_group_ids( $user_id, $limit = false, $page = false, $force_all = false ) {
 		global $wpdb;
 		static $cache = array();
 
@@ -560,7 +563,7 @@ class BP_Groups_Member {
 
 		$cache_key = 'bp_group_ids_for_user_' . $user_id . '_' . bp_loggedin_user_id();
 		if ( ! empty( $limit ) && ! empty( $page ) ) {
-			$pag_sql = $wpdb->prepare( ' LIMIT %d, %d', intval( ( $page - 1 ) * $limit ), intval( $limit ) );
+			$pag_sql   = $wpdb->prepare( ' LIMIT %d, %d', intval( ( $page - 1 ) * $limit ), intval( $limit ) );
 			$cache_key = 'bp_group_ids_for_user_' . $user_id . '_' . bp_loggedin_user_id() . '_' . $limit . '_' . $page;
 		}
 
@@ -568,9 +571,15 @@ class BP_Groups_Member {
 
 		if ( ! isset( $cache[ $cache_key ] ) ) {
 			// If the user is logged in and viewing their own groups, we can show hidden and private groups.
-			if ( $user_id != bp_loggedin_user_id() ) {
-				$group_sql    = $wpdb->prepare( "SELECT DISTINCT m.group_id FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0{$pag_sql}", $user_id );
-				$total_groups = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id ) );
+			if ( bp_loggedin_user_id() != $user_id ) {
+
+				$where_sql = $wpdb->prepare( "g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id );
+				if ( $force_all ) {
+					$where_sql = $wpdb->prepare( 'm.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0', $user_id );
+				}
+
+				$group_sql    = "SELECT DISTINCT m.group_id FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE {$where_sql}{$pag_sql}";
+				$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE {$where_sql}" );
 			} else {
 				$group_sql    = $wpdb->prepare( "SELECT DISTINCT group_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0{$pag_sql}", $user_id );
 				$total_groups = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT group_id) FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0", $user_id ) );
@@ -1497,7 +1506,7 @@ class BP_Groups_Member {
 	 * @return bool
 	 */
 	public static function delete_all_for_user( $user_id ) {
-		$group_ids = BP_Groups_Member::get_group_ids( $user_id );
+		$group_ids = BP_Groups_Member::get_group_ids( $user_id, false, false, true );
 
 		foreach ( $group_ids['groups'] as $group_id ) {
 			if ( groups_is_user_admin( $user_id, $group_id ) ) {
