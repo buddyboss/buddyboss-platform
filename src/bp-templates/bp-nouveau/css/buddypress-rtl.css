@@ -22196,7 +22196,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-slider,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-slider,
 .bb-media-section .video-js .vjs-control-bar .vjs-slider {
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-time-tooltip,
@@ -22280,11 +22281,15 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   content: attr(data-balloon-pause);
 }
 
-.bb-activity-video-elem .video-js .vjs-control-bar > [data-balloon]:after, .bb-activity-video-elem .video-js .vjs-control-bar > [data-balloon]:before,
-.bb-video-thumb .video-js .vjs-control-bar > [data-balloon]:after,
+.bb-activity-video-elem .video-js .vjs-control-bar > [data-balloon]:before,
 .bb-video-thumb .video-js .vjs-control-bar > [data-balloon]:before,
-.bb-media-section .video-js .vjs-control-bar > [data-balloon]:after,
 .bb-media-section .video-js .vjs-control-bar > [data-balloon]:before {
+  display: none;
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar > [data-balloon]:after,
+.bb-video-thumb .video-js .vjs-control-bar > [data-balloon]:after,
+.bb-media-section .video-js .vjs-control-bar > [data-balloon]:after {
   transition: none;
   display: block;
 }
