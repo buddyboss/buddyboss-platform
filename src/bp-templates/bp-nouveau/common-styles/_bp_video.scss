@@ -111,24 +111,28 @@
 		}
 
 		.vjs-error-display.vjs-modal-dialog {
-			background: rgba(0, 0, 0, 0.8);
+			background: rgba(0, 0, 0, 0.75);
 			cursor: pointer;
 
 			&:before {
 				color: #fff;
-				content: "\f534";
-				font-size: 25px;
-				font-family: "dashicons";/* stylelint-disable-line */
+				content: "\ef66";
+				font-size: 80px;
+				font-weight: 300;
+				font-family: "bb-icons";/* stylelint-disable-line */
 				text-shadow: none;
-				margin-top: -45px;
+				margin-top: -65px;
 			}
 
 			.vjs-modal-dialog-content {
-				font-size: 14px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				letter-spacing: 0.2px;
+				font-size: 18px;
+				line-height: 24px;
+				font-weight: 600;
+				letter-spacing: -0.24px;
+				top: 50%;
+				transform: translateY(-50%);
+				height: auto;
+				margin-top: 20px;
 			}
 		}
 
