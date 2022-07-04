@@ -24512,7 +24512,11 @@ body > .open-popup.video-error-popup {
   transform: translate(50%, -50%);
   color: #fff;
   z-index: 11;
-  font-size: 20px;
+  font-size: 24px;
+}
+
+.bb-template-v1 .dropzone .dz-preview .dz-progress-ring-wrap [class*=" bb-icon-"] {
+  font-weight: 400;
 }
 
 .dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap {
