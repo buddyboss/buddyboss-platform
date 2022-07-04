@@ -715,7 +715,7 @@
 			.dz-filename {
 				position: static;
 				padding-right: 0;
-				margin-top: 8px;
+				margin-top: 11px;
 			}
 
 			.dz-size {
@@ -760,6 +760,7 @@
 				left: 10px;
 				right: 0;
 				font-size: 13px;
+				line-height: 19.5px;
 				color: rgba(18, 43, 70, 0.5);
 				padding-right: 20px;
 			}
@@ -767,8 +768,9 @@
 			.dz-size {
 				display: none;
 				font-size: 13px;
+				font-weight: 500;
+				line-height: 19.5px;
 				color: rgba(18, 43, 70, 0.5);
-				font-weight: 300;
 			}
 
 		}

@@ -22534,6 +22534,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-size: 80px;
   font-weight: 300;
   font-family: "bb-icons";
+  /* stylelint-disable-line */
   text-shadow: none;
   margin-top: -65px;
   margin-bottom: 20px;
@@ -24552,7 +24553,7 @@ body > .open-popup.video-error-popup {
 .dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-filename {
   position: static;
   padding-left: 0;
-  margin-top: 8px;
+  margin-top: 11px;
 }
 
 .dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-size {
@@ -24595,6 +24596,7 @@ body > .open-popup.video-error-popup {
   right: 10px;
   left: 0;
   font-size: 13px;
+  line-height: 19.5px;
   color: rgba(18, 43, 70, 0.5);
   padding-left: 20px;
 }
@@ -24602,8 +24604,9 @@ body > .open-popup.video-error-popup {
 .dropzone.document-dropzone .dz-preview .dz-details .dz-size {
   display: none;
   font-size: 13px;
+  font-weight: 500;
+  line-height: 19.5px;
   color: rgba(18, 43, 70, 0.5);
-  font-weight: 300;
 }
 
 /*
