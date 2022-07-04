@@ -369,6 +369,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18701 ) {
 			bb_update_to_1_9_3();
 		}
+
+		if ( $raw_db_version < 18751 ) {
+			bb_update_to_2_0_5();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1877,3 +1881,11 @@ function migrate_notification_preferences( $user_ids ) {
 	}
 }
 
+/**
+ * Migrate group member meta table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_0_5() {
+	bp_core_install_groups();
+}

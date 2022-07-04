@@ -319,6 +319,16 @@ function bp_core_install_groups() {
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_groups_membermeta (
+				id bigint(20) NOT NULL AUTO_INCREMENT,
+				member_id bigint(20) NOT NULL,
+				meta_key varchar(255) DEFAULT NULL,
+				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
+				KEY member_id (member_id),
+				KEY meta_key (meta_key(191))
+			) {$charset_collate};";
+
 	dbDelta( $sql );
 }
 
