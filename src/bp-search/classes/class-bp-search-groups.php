@@ -75,10 +75,10 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			if ( $only_totalrow_count ) {
 				$sql['select'] .= ' COUNT( DISTINCT g.id ) ';
 			} else {
-				$sql['select'] .= $wpdb->prepare( " DISTINCT g.id, 'groups' as type, g.name LIKE %s AS relevance, gm2.meta_value as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT g.id, 'groups' as type, g.name LIKE %s AS relevance, gm.meta_value as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql['from'] = "FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name} g";
+			$sql['from'] = " FROM {$bp->groups->table_name} g LEFT JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id ";
 
 			/**
 			 * Filter the MySQL JOIN clause for the group Search query.
@@ -90,10 +90,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			$sql['from'] = apply_filters( 'bp_group_search_join_sql', $sql['from'] );
 
 			$where_conditions                 = array( '1=1' );
-			$where_conditions['search_query'] = "g.id = gm1.group_id 
-						AND g.id = gm2.group_id 
-						AND gm2.meta_key = 'last_activity' 
-						AND gm1.meta_key = 'total_member_count' 
+			$where_conditions['search_query'] = "gm.meta_key = 'last_activity' 						
 						AND ( g.name LIKE %s OR g.description LIKE %s )
 				";
 
