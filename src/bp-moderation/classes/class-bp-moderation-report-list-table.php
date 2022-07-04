@@ -34,7 +34,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
-	public function __construct($view = 'reported') {
+	public function __construct( $view = 'reported' ) {
 
 		// Define singular and plural labels, as well as whether we support AJAX.
 		parent::__construct(
@@ -118,7 +118,11 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		// Set per page from the screen options.
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 
-		$reporters = BP_Moderation::get_moderation_reporters( $moderation_request_data->id );
+		$args = array ( 'user_repoted' => true );
+		if('blocked' === $this->view) {
+			$args = array ( 'user_repoted' => false );
+		}
+		$reporters = BP_Moderation::get_moderation_reporters( $moderation_request_data->id, $args );
 
 		$total_item  = ( ! empty( $reporters ) ) ? count( $reporters ) : 0;
 		$total_pages = ceil( $total_item / $per_page );
