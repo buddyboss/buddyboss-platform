@@ -2319,7 +2319,7 @@ function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 
 		if ( ! is_wp_error( $get_replies_parent ) && $get_replies_parent->have_posts() ) {
 			$parent_ids = $get_replies_parent->posts;
-			// Cache the whole WP_Query object in the cache and store it for 5 minutes (300 secs).
+			// Cache the whole WP_Query object in the cache.
 			wp_cache_set( $cache_id, $parent_ids, 'bbpress_posts' );
 		}
 	}
