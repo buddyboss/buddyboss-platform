@@ -4852,6 +4852,14 @@ window.bp = window.bp || {};
 										// Enable post submit button
 										$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
 									},
+
+									picker_show: function () {
+										$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+									},
+
+									picker_hide: function () {
+										$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+									},
 								}
 							}
 						);

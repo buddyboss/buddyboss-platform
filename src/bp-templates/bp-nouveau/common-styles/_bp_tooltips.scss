@@ -458,3 +458,14 @@ button[data-bp-tooltip] {
 		}
 	}
 }
+
+.bp-tooltip.active {
+
+	&[data-bp-tooltip] {
+
+		&:after,
+		&:before {
+			display: none;
+		}
+	}
+}
