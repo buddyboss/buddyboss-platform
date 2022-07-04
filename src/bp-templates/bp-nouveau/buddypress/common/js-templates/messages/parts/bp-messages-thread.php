@@ -74,6 +74,7 @@
 				<# } #>
 			</div>
 
+            <div class="typing-indicator bp-hide"></div>
 			<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 			<div class="thread-subject">
 				<span class="last-message-sender">
