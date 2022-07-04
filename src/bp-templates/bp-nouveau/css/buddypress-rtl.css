@@ -2422,7 +2422,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-action-more .medium-editor-action-more-button.active b:before {
-  color: var(--bb-headings-color);
+  color: #000;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul {
@@ -2432,7 +2432,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   right: 10px;
   transform: translateX(50%);
   background: #fff;
-  border: 1px solid var(--bb-content-border-color);
+  border: 1px solid #e1e3e6;
   box-sizing: border-box;
   box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.13);
   border-radius: 4px;
