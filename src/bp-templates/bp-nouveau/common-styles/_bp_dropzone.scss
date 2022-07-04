@@ -724,13 +724,13 @@
 
 			.dz-icon {
 				display: block;
-				height: 28px;
+				height: 38px;
 				margin-top: 25px;
 				position: relative;
 
 				&:before {
 					content: "\ee6e";
-					font-size: 28px;
+					font-size: 38px;
 					color: #92949d;
 					font-family: "bb-icons";/* stylelint-disable-line */
 					display: inline-block;
@@ -742,7 +742,7 @@
 				}
 
 				[class*="bb-icons"] {
-					font-size: 28px;
+					font-size: 38px;
 					color: rgba(18, 43, 70, 0.5);
 					left: 50%;
 					display: block;

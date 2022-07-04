@@ -24561,14 +24561,14 @@ body > .open-popup.video-error-popup {
 
 .dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon {
   display: block;
-  height: 28px;
+  height: 38px;
   margin-top: 25px;
   position: relative;
 }
 
 .dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon:before {
   content: "\ee6e";
-  font-size: 28px;
+  font-size: 38px;
   color: #92949d;
   font-family: "bb-icons";
   /* stylelint-disable-line */
@@ -24581,7 +24581,7 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icons"] {
-  font-size: 28px;
+  font-size: 38px;
   color: rgba(18, 43, 70, 0.5);
   right: 50%;
   display: block;
