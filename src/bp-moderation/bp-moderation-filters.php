@@ -264,6 +264,7 @@ function bp_moderation_block_member() {
 				'content_type' => BP_Moderation_Members::$moderation_type,
 				'note'         => !empty( $reported ) ? esc_html__( 'Member report', 'buddyboss' ) : esc_html__( 'Member block', 'buddyboss' ),
 				'category_id'  => !empty( $category ) ? $category : 0,
+				'user_report'  => !empty( $reported ) ? 1 : 0,
 			)
 		);
 
