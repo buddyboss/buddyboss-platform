@@ -6440,10 +6440,6 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   padding: 0;
 }
 
-form.ac-form .ac-reply-content input {
-  margin-top: 10px;
-}
-
 .bp-ac-form-cotainer {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -13058,6 +13054,7 @@ button[data-bp-tooltip] {
 [data-bp-tooltip] {
   position: relative;
   cursor: pointer;
+  display: block;
 }
 
 [data-bp-tooltip]:after {
@@ -13343,7 +13340,7 @@ button[data-bp-tooltip] {
   width: 100%;
 }
 
-.bp-tooltip.active[data-bp-tooltip]:after, .bp-tooltip.active[data-bp-tooltip]:before {
+.post-emoji.bp-tooltip.active[data-bp-tooltip]:after, .post-emoji.bp-tooltip.active[data-bp-tooltip]:before {
   display: none;
 }
 
