@@ -18199,6 +18199,7 @@ img.emojioneemoji {
 .dropzone .dz-preview.dz-error .dz-error-title {
   display: block;
   font-size: 13px;
+  font-weight: 500;
   color: #ef3e46;
   text-align: center;
   position: absolute;
@@ -18272,6 +18273,11 @@ img.emojioneemoji {
   text-align: center;
 }
 
+.dropzone.document-dropzone .dz-preview.dz-error .dz-error-title {
+  top: inherit;
+  bottom: 8px;
+}
+
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details {
   border-color: #ef3e46;
   background-color: transparent;
@@ -18286,7 +18292,7 @@ img.emojioneemoji {
   content: "\e980";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  margin-top: 34px;
+  margin-top: 15px;
   font-weight: 300;
 }
 
