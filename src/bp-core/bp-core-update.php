@@ -1888,4 +1888,5 @@ function migrate_notification_preferences( $user_ids ) {
  */
 function bb_update_to_2_0_5() {
 	bp_core_install_groups();
+	bp_core_install_invitations();
 }

@@ -1139,6 +1139,17 @@ function bp_core_install_invitations() {
 		KEY invite_sent (invite_sent),
 		KEY accepted (accepted)
 		) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_invitations_invitemeta (
+		id bigint(20) NOT NULL AUTO_INCREMENT,
+		invite_id bigint(20) NOT NULL,
+		meta_key varchar(255) DEFAULT NULL,
+		meta_value longtext DEFAULT NULL,
+		PRIMARY KEY  (id),
+		KEY invite_id (invite_id),
+		KEY meta_key (meta_key(191))
+	) {$charset_collate};";
+
 	dbDelta( $sql );
 
 	/**
