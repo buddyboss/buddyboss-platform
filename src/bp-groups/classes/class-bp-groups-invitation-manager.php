@@ -88,6 +88,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 		}
 
 		// Get the invitation.
+		$r['type']      = $type;
 		$invites        = groups_get_invites( $r );
 		$current_invite = new stdClass();
 		if ( $invites ) {

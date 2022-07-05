@@ -2568,15 +2568,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
 		'item_id' => $group_id,
 	);
 
-	$accept_request = $invites_class->accept_request( $args );
-
-	// Tracking group invitation accept.
-	if ( $accept_request ) {
-		groups_add_membermeta( $user_id, 'membership_accepted_date', bp_core_current_time() );
-		groups_add_membermeta( $user_id, 'membership_accepted_group_id', $group_id );
-	}
-
-	return $accept_request;
+	return $invites_class->accept_request( $args );
 }
 
 /**
