@@ -18527,7 +18527,7 @@ img.emojioneemoji {
 }
 
 div.dropzone .dz-preview {
-  min-width: 139px;
+  min-width: 130px;
 }
 
 div.dropzone .dz-preview .dz-success-mark,
@@ -18541,11 +18541,11 @@ div.dropzone .dz-preview .dz-filename {
 }
 
 .dz-preview .dz-image {
-  height: 139px;
+  height: 130px;
 }
 
 .dz-preview .dz-image img {
-  max-width: 139px;
+  max-width: 130px;
   object-fit: cover;
 }
 
@@ -23572,8 +23572,8 @@ div.dropzone.dz-started {
 
 div.dropzone.dz-started .dz-default.dz-message {
   flex-basis: 100%;
-  max-width: 139px !important;
-  min-height: 139px !important;
+  max-width: 130px !important;
+  min-height: 130px !important;
   margin: 0 4px 10px;
   padding: 0 5px;
 }
@@ -23724,7 +23724,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   visibility: visible;
   position: absolute;
   right: 0;
-  bottom: 15px;
+  bottom: 8px;
 }
 
 .dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-remove {
@@ -23763,7 +23763,8 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone .dz-preview.dz-file-preview .dz-details {
-  min-height: 165px;
+  min-height: 130px;
+  height: 130px;
 }
 
 .dropzone.video-dropzone .dz-preview.dz-file-preview .dz-details .dz-size {
@@ -23782,8 +23783,7 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone .dz-preview.dz-file-preview {
-  width: 240px;
-  min-height: 165px;
+  width: 175px;
 }
 
 .dropzone.video-dropzone .dz-preview.dz-file-preview .dz-details {
@@ -23817,9 +23817,10 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone.dz-started .dz-default.dz-message {
-  max-width: 240px !important;
-  width: 240px;
-  min-height: 165px !important;
+  max-width: 175px !important;
+  width: 175px;
+  min-height: 130px !important;
+  height: 130px;
 }
 
 @media screen and (max-width: 768px) {
@@ -24458,8 +24459,8 @@ body > .open-popup.video-error-popup {
 .dropzone.dz-started .dz-default.dz-message {
   display: flex;
   min-height: 1px;
-  max-width: 139px;
-  height: 139px;
+  max-width: 130px;
+  height: 130px;
   font-size: 12px;
   text-align: center;
   line-height: 1.3;
@@ -24479,7 +24480,7 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone .dz-preview .dz-image img {
-  width: 139px;
+  width: 130px;
 }
 
 .dropzone .dz-preview .dz-progress-ring-wrap {

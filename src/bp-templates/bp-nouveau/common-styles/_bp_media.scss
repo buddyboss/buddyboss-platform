@@ -2603,7 +2603,7 @@ img.emojioneemoji {
 }
 
 div.dropzone .dz-preview {
-	min-width: 139px;
+	min-width: 130px;
 
 	.dz-success-mark,
 	.dz-progress,
@@ -2618,10 +2618,10 @@ div.dropzone .dz-preview {
 }
 
 .dz-preview .dz-image {
-	height: 139px;
+	height: 130px;
 
 	img {
-		max-width: 139px;
+		max-width: 130px;
 		object-fit: cover;
 	}
 }

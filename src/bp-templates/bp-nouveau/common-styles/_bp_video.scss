@@ -1694,8 +1694,8 @@ div.dropzone.dz-started {
 
 	.dz-default.dz-message {
 		flex-basis: 100%;
-		max-width: 139px !important;
-		min-height: 139px !important;
+		max-width: 130px !important;
+		min-height: 130px !important;
 		margin: 0 4px 10px;
 		padding: 0 5px;
 	}
@@ -1857,7 +1857,7 @@ div.dropzone.dz-started {
 			visibility: visible;
 			position: absolute;
 			left: 0;
-			bottom: 15px;
+			bottom: 8px;
 		}
 
 		.dz-remove {
@@ -1903,7 +1903,8 @@ div.dropzone.dz-started {
 	}
 
 	.dz-preview.dz-file-preview .dz-details {
-		min-height: 165px;
+		min-height: 130px;
+		height: 130px;
 
 		.dz-size {
 			display: none !important;
@@ -1923,8 +1924,7 @@ div.dropzone.dz-started {
 	}
 
 	.dz-preview.dz-file-preview {
-		width: 240px;
-		min-height: 165px;
+		width: 175px;
 
 		.dz-details {
 			width: 100%;
@@ -1960,9 +1960,10 @@ div.dropzone.dz-started {
 	}
 
 	&.dz-started .dz-default.dz-message {
-		max-width: 240px !important;
-		width: 240px;
-		min-height: 165px !important;
+		max-width: 175px !important;
+		width: 175px;
+		min-height: 130px !important;
+		height: 130px;
 	}
 
 	@media screen and (max-width: 768px ) {
