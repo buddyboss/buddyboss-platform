@@ -123,6 +123,14 @@ class BP_Moderation {
 	public $user_reported = 0;
 
 	/**
+	 * Report flag for members Moderation report.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var int
+	 */
+	public $user_report = 0;
+
+	/**
 	 * Error holder.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -226,6 +234,7 @@ class BP_Moderation {
 		$this->blog_id       = (int) $row->blog_id;
 		$this->count         = (int) bp_moderation_get_meta( $this->id, '_count' );
 		$this->user_reported = (int) bp_moderation_get_meta( $this->id, '_count_user_reported' );
+		$this->user_report   = $row->user_report;
 
 		/**
 		 * Fetch User Report data
@@ -331,6 +340,10 @@ class BP_Moderation {
 		// Exclude report list for backend.
 		if ( ! isset( $r['reported'] ) ) {
 			$where_conditions['reported'] = 'reported=1';
+		}
+
+		if ( isset( $r['user_report'] ) ) {
+			$where_conditions['user_report'] = 'user_report=1';
 		}
 
 		// Scope takes precedence.
@@ -773,6 +786,7 @@ class BP_Moderation {
 				$moderation->blog_id       = (int) $moderation->blog_id;
 				$moderation->count         = (int) bp_moderation_get_meta( $moderation->id, '_count' );
 				$moderation->user_reported = (int) bp_moderation_get_meta( $moderation->id, '_count_user_reported' );
+				$moderation->user_report   = $moderation->user_report;
 			}
 			$moderations[] = $moderation;
 		}
@@ -995,6 +1009,7 @@ class BP_Moderation {
 		$this->date_created = empty( $this->date_created ) ? current_time( 'mysql' ) : $this->date_created;
 		$this->last_updated = empty( $this->last_updated ) ? current_time( 'mysql' ) : $this->last_updated;
 		$this->category_id  = isset( $this->category_id ) && 'other' !== $this->category_id ? $this->category_id : 0;
+		$this->user_report  = isset( $this->user_report ) ? $this->user_report : 0;
 
 		/**
 		 * Fires before the current moderation report item gets saved.
@@ -1148,6 +1163,7 @@ class BP_Moderation {
 					'item_id'      => $this->item_id,
 					'item_type'    => $this->item_type,
 					'reported'     => 1,
+					'user_report'  => $this->user_report,
 					'last_updated' => $this->last_updated,
 				)
 			);
@@ -1157,6 +1173,7 @@ class BP_Moderation {
 					'item_id'      => $this->item_id,
 					'item_type'    => $this->item_type,
 					'reported'     => 1,
+					'user_report'  => $this->user_report,
 					'last_updated' => $this->last_updated,
 					'blog_id'      => $this->blog_id,
 				)

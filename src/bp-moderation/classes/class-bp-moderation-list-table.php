@@ -146,12 +146,11 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			if ( 'suspended' === $moderation_status ) {
 				$this->view                        = 'suspended';
 				$moderation_request_args['hidden'] = 1;
-			} elseif ( 'unsuspended' === $moderation_status ) {
-				$this->view                        = 'unsuspended';
-				$moderation_request_args['hidden'] = 0;
+			} elseif ( 'blocked' === $moderation_status ) {
+				$this->view = 'blocked';
 			} elseif ( 'reported' === $moderation_status ) {
-				$this->view                        = 'reported';
-				$moderation_request_args['hidden'] = 0;
+				$this->view                             = 'reported';
+				$moderation_request_args['user_report'] = 1;
 			} else {
 				$this->view = 'all';
 			}
@@ -282,13 +281,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 						'name' => esc_html__( 'All', 'buddyboss' ),
 						'link' => $blocked_members_url_base,
 					),
-					'unsuspended' => array(
+					'blocked' => array(
 						'name' => esc_html__( 'Blocked', 'buddyboss' ),
-						'link' => add_query_arg( array( 'moderation_status' => 'unsuspended' ), $blocked_members_url_base ),
+						'link' => add_query_arg( array( 'moderation_status' => 'blocked' ), $blocked_members_url_base ),
 					),
 					'reported' => array(
 						'name' => esc_html__( 'Reported', 'buddyboss' ),
-						'link' => add_query_arg( array( 'moderation_status' => 'unsuspended' ), $blocked_members_url_base ),
+						'link' => add_query_arg( array( 'moderation_status' => 'reported' ), $blocked_members_url_base ),
 					),
 					'suspended'   => array(
 						'name' => esc_html__( 'Suspended', 'buddyboss' ),
@@ -359,8 +358,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 						'reported' => false,
 					);
 
-					if ( 'all' !== $key ) {
-						$moderation_args['hidden'] = ( 'unsuspended' === $key ) ? 0 : 1;
+					if ( 'suspended' === $key ) {
+						$moderation_args['hidden'] =  1;
+					} else if( 'reported' === $key ) {
+						$moderation_args['user_report'] =  1;
 					}
 
 					$record_count = bp_moderation_item_count( $moderation_args );
