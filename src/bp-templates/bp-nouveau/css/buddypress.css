@@ -18192,10 +18192,6 @@ img.emojioneemoji {
   transform: translate(-50%, -50%);
 }
 
-.dropzone .dz-preview.dz-error {
-  background-color: #f8f8f8;
-}
-
 .dropzone .dz-preview.dz-error .dz-error-title {
   display: block;
   font-size: 13px;
@@ -18210,7 +18206,7 @@ img.emojioneemoji {
 }
 
 .dropzone .dz-preview.dz-error .dz-details:before {
-  content: "\eeb4";
+  content: "\ee06";
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 22px;

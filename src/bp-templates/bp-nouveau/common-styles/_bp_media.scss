@@ -2200,7 +2200,6 @@ img.emojioneemoji {
 
 // Dropzone Error
 .dropzone .dz-preview.dz-error {
-	background-color: #f8f8f8;
 
 	.dz-error-title {
 		display: block;
@@ -2218,7 +2217,7 @@ img.emojioneemoji {
 	.dz-details {
 
 		&:before {
-			content: "\eeb4";
+			content: "\ee06";
 			font-family: "bb-icons"; /* stylelint-disable-line */
 			font-size: 22px;
 			font-weight: 300;
