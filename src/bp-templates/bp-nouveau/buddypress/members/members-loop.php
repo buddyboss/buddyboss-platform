@@ -65,6 +65,25 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			// Member switch button.
 			$member_switch_button = bp_get_add_switch_button( bp_get_member_user_id() );
 
+			// Member report button.
+			$report_button = bp_member_get_report_link(
+				array(
+					'button_element' => 'a',
+					'position'       => 30,
+					'report_user'    => true,
+					'parent_attr'    => array(
+						'id'    => 'user-report-' . bp_get_member_user_id(),
+						'class' => '',
+					),
+					'button_attr'       => array(
+						'data-bp-content-id'   => bp_get_member_user_id(),
+						'data-bp-content-type' => BP_Moderation_Members::$moderation_type_report
+					),
+					
+				)
+			);
+			$member_report_button = bp_get_button( $report_button );
+
 			// Get Primary action.
 			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
 			?>
@@ -167,13 +186,14 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						</div>
 					</div>
 
-					<?php if ( ! empty( $member_switch_button ) ) { ?>
+					<?php if ( ! empty( $member_switch_button ) || ! empty( $member_report_button ) ) { ?>
 					<div class="bb_more_options member-dropdown">
 						<a href="#" class="bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 							<i class="bb-icon-menu-dots-h"></i>
 						</a>
 						<div class="bb_more_options_list">
 							<?php echo wp_kses_post( $member_switch_button ); ?>
+							<?php echo wp_kses_post( $member_report_button ); ?>
 						</div>
 					</div><!-- .bb_more_options -->
 					<?php } ?>
