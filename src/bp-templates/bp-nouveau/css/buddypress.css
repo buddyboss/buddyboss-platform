@@ -18249,6 +18249,7 @@ img.emojioneemoji {
 
 .dropzone .dz-preview.dz-error .dz-remove {
   background-color: transparent;
+  box-shadow: none;
   color: #92949d;
 }
 
@@ -18276,7 +18277,6 @@ img.emojioneemoji {
 
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details {
   border-color: #ef3e46;
-  background-color: transparent;
 }
 
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-size,
@@ -23998,7 +23998,6 @@ body > .open-popup.video-error-popup {
 
 .dropzone .dz-remove {
   color: #9ea8b3;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   background: #e7e7ea;
 }
 

@@ -2261,6 +2261,7 @@ img.emojioneemoji {
 
 	.dz-remove {
 		background-color: transparent;
+		box-shadow: none;
 		color: #92949d;
 	}
 
@@ -2300,7 +2301,6 @@ img.emojioneemoji {
 
 	&.dz-preview .dz-details {
 		border-color: #ef3e46;
-		background-color: transparent;
 
 		.dz-size,
 		.dz-icon {
