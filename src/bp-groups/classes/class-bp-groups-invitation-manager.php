@@ -87,6 +87,9 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 			return false;
 		}
 
+		// Tracking group invitation accept.
+		groups_update_membermeta( $member->id, 'membership_accept_date', bp_core_current_time() );
+
 		if ( 'request' === $type ) {
 			/**
 			 * Fires after a group membership request has been accepted.

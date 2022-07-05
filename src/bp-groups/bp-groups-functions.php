@@ -677,8 +677,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 
 	// Tracking join a public group.
 	if ( 'public' === $group->status ) {
-		groups_update_membermeta( $user_id, 'joined_date', bp_core_current_time() );
-		groups_update_membermeta( $user_id, 'joined_group_id', $group_id );
+		groups_update_membermeta( $new_member->id, 'joined_date', bp_core_current_time() );
 	}
 
 	// Record this in activity feeds.
