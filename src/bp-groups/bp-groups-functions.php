@@ -1922,9 +1922,7 @@ function groups_invite_user( $args = '' ) {
 	$created       = $invites_class->add_invitation( $inv_args );
 
 	// Tracking group invite.
-	groups_add_membermeta( $r['inviter_id'], 'invited_date', bp_core_current_time() );
-	groups_add_membermeta( $r['inviter_id'], 'invited_group_id', $r['group_id'] );
-	groups_add_membermeta( $r['inviter_id'], 'invited_user_id', $r['user_id'] );
+	invitation_add_invitemeta( $created, 'invited_date', bp_core_current_time() );
 
 	/**
 	 * Fires after the creation of a new group invite.
@@ -2526,8 +2524,7 @@ function groups_send_membership_request( $args = array() ) {
 		$admins = groups_get_group_admins( $r['group_id'] );
 
 		// Tracking group invite.
-		groups_add_membermeta( $r['user_id'], 'membership_request_date', bp_core_current_time() );
-		groups_add_membermeta( $r['user_id'], 'membership_request_group_id', $r['group_id'] );
+		invitation_add_invitemeta( $request_id, 'requested_date', bp_core_current_time() );
 
 		/**
 		 * Fires after the creation of a new membership request.
