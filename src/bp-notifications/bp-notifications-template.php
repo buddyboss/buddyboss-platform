@@ -907,7 +907,7 @@ function bp_get_the_notification_action_links( $args = '' ) {
 	$user_id = isset( $args['user_id'] ) ? $args['user_id'] : bp_displayed_user_id();
 
 	// Parse.
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'before' => '',

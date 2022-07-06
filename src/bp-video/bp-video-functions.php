@@ -1413,7 +1413,7 @@ function bp_get_total_video_count() {
  * @return string
  */
 function bp_video_object_results_video_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'all';
 	$querystring['page']        = 1;
@@ -1435,7 +1435,7 @@ function bp_video_object_results_video_all_scope( $querystring ) {
  * @return string
  */
 function bp_video_object_template_results_video_personal_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'personal';
 	$querystring['page']        = 1;
@@ -1456,7 +1456,7 @@ function bp_video_object_template_results_video_personal_scope( $querystring ) {
  * @return string
  */
 function bp_video_object_template_results_video_groups_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'groups';
 	$querystring['page']        = 1;
