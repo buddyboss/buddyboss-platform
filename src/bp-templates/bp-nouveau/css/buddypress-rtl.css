@@ -23634,6 +23634,10 @@ div.dropzone.dz-started .dz-default.dz-message {
   font-weight: 300;
 }
 
+.dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove:hover:after {
+  opacity: 1;
+}
+
 .dropzone.video-dropzone .dz-preview .dz-filename {
   opacity: 0;
   visibility: hidden;

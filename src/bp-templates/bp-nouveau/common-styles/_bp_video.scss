@@ -1762,6 +1762,10 @@ div.dropzone.dz-started {
 			opacity: 0.5;
 			font-weight: 300;
 		}
+
+		&:hover:after {
+			opacity: 1;
+		}
 	}
 
 	.dz-preview .dz-filename {
