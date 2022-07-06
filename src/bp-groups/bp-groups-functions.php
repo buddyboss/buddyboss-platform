@@ -2293,7 +2293,8 @@ function groups_promote_member( $user_id, $group_id, $status ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	// Don't use this action. It's deprecated as of BuddyPress 1.6.
 	do_action( 'groups_premote_member', $group_id, $user_id, $status );
@@ -2309,7 +2310,14 @@ function groups_promote_member( $user_id, $group_id, $status ) {
 	 */
 	do_action( 'groups_promote_member', $group_id, $user_id, $status );
 
-	return $member->promote( $status );
+	$status_updated = $member->promote( $status );
+
+	if ( $status_updated ) {
+		// Track promoted time.
+		groups_add_membermeta( $member_id, 'promoted_' . $status . '_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /**
@@ -2327,7 +2335,8 @@ function groups_demote_member( $user_id, $group_id ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	/**
 	 * Fires before the demotion of a user to 'member'.
@@ -2339,7 +2348,14 @@ function groups_demote_member( $user_id, $group_id ) {
 	 */
 	do_action( 'groups_demote_member', $group_id, $user_id );
 
-	return $member->demote();
+	$status_updated = $member->demote();
+
+	if ( $status_updated ) {
+		// Track demoted time.
+		groups_add_membermeta( $member_id, 'demoted_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /**
@@ -2357,7 +2373,8 @@ function groups_ban_member( $user_id, $group_id ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	/**
 	 * Fires before the banning of a member from a group.
@@ -2369,7 +2386,14 @@ function groups_ban_member( $user_id, $group_id ) {
 	 */
 	do_action( 'groups_ban_member', $group_id, $user_id );
 
-	return $member->ban();
+	$status_updated = $member->ban();
+
+	if ( $status_updated ) {
+		// Track banned time.
+		groups_add_membermeta( $member_id, 'banned_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /**
@@ -2387,7 +2411,8 @@ function groups_unban_member( $user_id, $group_id ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	/**
 	 * Fires before the unbanning of a member from a group.
@@ -2399,7 +2424,14 @@ function groups_unban_member( $user_id, $group_id ) {
 	 */
 	do_action( 'groups_unban_member', $group_id, $user_id );
 
-	return $member->unban();
+	$status_updated = $member->unban();
+
+	if ( $status_updated ) {
+		// Track unbanned time.
+		groups_add_membermeta( $member_id, 'unbanned_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /** Group Removal *************************************************************/
