@@ -506,9 +506,9 @@ function bp_nouveau_ajax_get_activity_objects() {
 		$exclude_groups_args['user_id']     = bp_loggedin_user_id();
 		$exclude_groups_args['show_hidden'] = true;
 		$exclude_groups_args['fields']      = 'ids';
+		$exclude_groups_args['per_page']    = - 1;
 		if ( isset( $_POST['search'] ) ) {
 			$exclude_groups_args['search_terms'] = $_POST['search'];
-			$exclude_groups_args['per_page']     = - 1;
 		}
 
 		$exclude_groups_query = groups_get_groups( $exclude_groups_args );
@@ -531,7 +531,9 @@ function bp_nouveau_ajax_get_activity_objects() {
 		}
 		if ( isset( $_POST['search'] ) ) {
 			$args['search_terms'] = $_POST['search'];
-			$args['exclude']      = $exclude_groups;
+		}
+		if ( ! empty( $exclude_groups ) ){
+			$args['exclude'] = $exclude_groups;
 		}
 
 		$groups = groups_get_groups( $args );

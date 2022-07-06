@@ -4560,9 +4560,17 @@ window.bp = window.bp || {};
 			},
 
 			displayFull: function ( event ) {
+
+				// Remove post update notice before opening a modal
+				if ( 6 !== this.views._views[ '' ].length && $( this.views._views[ '' ][6].$el ).hasClass('updated') ) {
+					this.cleanFeedback();
+					$( '#whats-new-form' ).removeClass( 'bottom-notice' );
+				}
+
 				if ( 6 !== this.views._views[ '' ].length ) {
 					return;
 				}
+
 				if ( 'focusin' === event.type ) {
 					$( '#whats-new-form' ).closest( 'body' ).removeClass( 'initial-post-form-open' ).addClass( event.type + '-post-form-open' );
 				}
@@ -5074,6 +5082,7 @@ window.bp = window.bp || {};
 
 						// Display a successful feedback if the acticity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
+
 							self.views.add(
 								new bp.Views.activityFeedback(
 									{
@@ -5082,6 +5091,7 @@ window.bp = window.bp || {};
 									}
 								)
 							);
+							$( '#whats-new-form' ).addClass( 'bottom-notice' );
 
 							// Edit activity.
 						} else if ( edit ) {
