@@ -314,7 +314,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			$cache_key              = 'bb_search_term_total_match_count_' . $this->pt_name . '_' . sanitize_title( $search_term );
 
 			if ( ! empty( $search_type ) ) {
-				$cache_key .= sanitize_title( $search_type );
+				$cache_key .= '_' . sanitize_title( $search_type );
 			}
 			if ( ! isset( $bbp_search_term[ $cache_key ] ) ) {
 				$sql    = $this->sql( $search_term, true );
