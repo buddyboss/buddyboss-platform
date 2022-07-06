@@ -228,9 +228,9 @@ function bp_moderation_block_member() {
 	$nonce   = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
-	// Member Report only
-	$reported  = filter_input( INPUT_POST, 'reported', FILTER_SANITIZE_NUMBER_INT );
-	$category  = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
+	// Member Report only.
+	$reported = filter_input( INPUT_POST, 'reported', FILTER_SANITIZE_NUMBER_INT );
+	$category = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
 
 	if ( empty( $item_id ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
@@ -262,9 +262,9 @@ function bp_moderation_block_member() {
 			array(
 				'content_id'   => $item_id,
 				'content_type' => BP_Moderation_Members::$moderation_type,
-				'note'         => !empty( $reported ) ? esc_html__( 'Member report', 'buddyboss' ) : esc_html__( 'Member block', 'buddyboss' ),
-				'category_id'  => !empty( $category ) ? $category : 0,
-				'user_report'  => !empty( $reported ) ? 1 : 0,
+				'note'         => ! empty( $reported ) ? esc_html__( 'Member report', 'buddyboss' ) : esc_html__( 'Member block', 'buddyboss' ),
+				'category_id'  => ! empty( $category ) ? $category : 0,
+				'user_report'  => ! empty( $reported ) ? 1 : 0,
 			)
 		);
 
@@ -828,8 +828,8 @@ add_action( 'edited_bpm_category', 'bpm_category_save_term_fields_show_when_repo
  * @return array $columns List of columns for Reporting categort taxonomy
  */
 function bpm_category_show_when_reporting_columns( $columns ) {
-	unset($columns['slug']);
-	unset($columns['posts']);
+	unset( $columns['slug'] );
+	unset( $columns['posts'] );
 	$columns['bpm_category_show_when_reporting'] = __( 'Show When Reporting', 'buddyboss' );
 	return $columns;
 }
@@ -913,8 +913,8 @@ function bb_quickedit_bpm_category_show_when_reporting_javascript() {
 		/*global jQuery*/
 		jQuery(function($) {
 			$('span:contains("Slug")').each(function (i) {
-                $(this).parent().remove();
-            });
+				$(this).parent().remove();
+			});
 			$('#the-list').on('click', 'button.editinline', function(e) {
 				e.preventDefault();
 				var $tr = $(this).closest('tr');
@@ -940,7 +940,6 @@ add_action( 'admin_print_footer_scripts-edit-tags.php', 'bb_quickedit_bpm_catego
 function bb_quickedit_bpm_category_hide_slug_style() {
 	$current_screen = get_current_screen();
 
-	error_log(print_r($current_screen, true));
 	if ( 'edit-bpm_category' !== $current_screen->id && 'bpm_category' !== $current_screen->taxonomy ) {
 		return;
 	}
