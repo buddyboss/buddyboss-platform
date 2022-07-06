@@ -2547,7 +2547,7 @@ window.bp = window.bp || {};
 					if( 'user_report' === $( '#bb-report-content' ).find( 'input[name="content_type"]' ).val() ) {
 						data.reported = 1;
 						data.action   = 'bp_moderation_block_member';
-						_this.memberReportAjax( data );
+						_this.memberReportAjax( data, e );
 						return;
 					}
 
@@ -2586,17 +2586,17 @@ window.bp = window.bp || {};
 						}
 					);
 
-					_this.memberReportAjax( data );
+					_this.memberReportAjax( data, e );
 				}
 			);
 		},
-		memberReportAjax: function ( data ) {
+		memberReportAjax: function ( data, element ) {
 			var _this = this;
 			$.post(
 				BP_Nouveau.ajaxurl,
 				data,
 				function ( response ) {
-					if ( response.success ) {
+					if ( true === response.success ) {
 						_this.resetReportPopup();
 						_this.changeReportButtonStatus( response.data );
 						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
@@ -2606,10 +2606,13 @@ window.bp = window.bp || {};
 						}
 					} else {
 						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
-						_this.handleReportError( response.data.message.errors, e.currentTarget );
+						$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
+						_this.handleReportError( response.data.message.errors, element.currentTarget );
 					}
 				}
-			);
+			).fail(function(response) {
+				location.href = window.href;
+			});;
 		},
 		resetReportPopup: function () {
 			$( 'form#bb-report-content' ).trigger( 'reset' );

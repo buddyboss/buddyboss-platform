@@ -170,7 +170,7 @@ function bp_moderation_content_report() {
 	if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_already_reported',
-			esc_html__( 'Content already reported.', 'buddyboss' )
+			esc_html__( 'You have already reported this ', 'buddyboss' ) . esc_attr__( $item_sub_type )
 		);
 		wp_send_json_error( $response );
 	}
@@ -238,7 +238,7 @@ function bp_moderation_block_member() {
 	}
 
 	if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'Content already reported.', 'buddyboss' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'You have already reported this Member', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 
