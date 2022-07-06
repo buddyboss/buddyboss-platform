@@ -24565,6 +24565,7 @@ body > .open-popup.video-error-popup {
 .dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon {
   display: block;
   height: 38px;
+  line-height: 1;
   margin-top: 25px;
   position: relative;
 }
