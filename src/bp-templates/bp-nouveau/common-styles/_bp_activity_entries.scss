@@ -2128,6 +2128,7 @@ span.dashicons.dashicons-admin-file:before {
 				padding: 8px 15px !important;
 				z-index: 11;
 				font-size: 14px;
+				line-height: 1;
 				font-weight: 500;
 				opacity: 0;
 				visibility: hidden;
@@ -2347,6 +2348,40 @@ span.dashicons.dashicons-admin-file:before {
 
 	}
 
+	.document-activity.is_large {
+
+		.document-action-wrap .document-action_collapse {
+			opacity: 1;
+			visibility: visible;
+
+			i {
+				border-left-width: 1px;
+				border-radius: 3px 0 0 3px;
+
+				&:before {
+					content: "\ee67";
+				}
+			}
+
+			+ .document-action_download i {
+				border-left-width: 0;
+				border-radius: 0;
+			}
+		}
+
+		&.code-full-view .document-action-wrap .document-action_collapse {
+
+			&:after {
+				content: attr(data-tooltip-collapse);
+			}
+
+			i:before {
+				content: "\eed5";
+			}
+		}
+
+	}
+
 	.document-text-wrap {
 		border: 1px solid #e7e9ec;
 		border-width: 1px;
@@ -2425,7 +2460,7 @@ span.dashicons.dashicons-admin-file:before {
 		border-width: 0 1px 1px;
 		border-radius: 0 0 4px 4px;
 		position: relative;
-		z-index: 112;
+		z-index: 11;
 	}
 
 }
