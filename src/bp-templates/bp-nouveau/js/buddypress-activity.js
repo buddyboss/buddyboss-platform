@@ -82,6 +82,7 @@ window.bp = window.bp || {};
 					maxFilesize         		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
 					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
+					maxThumbnailFilesize    : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 				};
 
 				// if defined, add custom dropzone options.
@@ -1493,9 +1494,12 @@ window.bp = window.bp || {};
 						uploadMultiple      		: false,
 						maxFiles            		: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 						maxFilesize         		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						thumbnailWidth				: 140,
+						thumbnailHeight				: 140,
 						dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
 						previewTemplate		 		: acCommentDefaultTemplate,
 						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
+						maxThumbnailFilesize    : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					};
 
 					// init dropzone.

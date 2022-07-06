@@ -275,7 +275,7 @@ class BP_XProfile_Group {
 		global $wpdb;
 
 		// Parse arguments.
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'profile_group_id'               => false,

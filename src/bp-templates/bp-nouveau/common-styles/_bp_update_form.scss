@@ -242,6 +242,29 @@
 	}
 }
 
+#whats-new-form.activity-form {
+
+	#discard-draft-activity {
+		display: none;
+	}
+}
+
+#whats-new-form.activity-form.has-draft {
+
+	#discard-draft-activity {
+		display: block;
+	}
+}
+
+#discard-draft-activity {
+	background-color: transparent !important;
+	border: 0 !important;
+	font-size: 15px !important;
+	line-height: 1 !important;
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
 #whats-new-form:not(.focus-in--group) #privacy-status-group-back {
 	display: none !important;
 }
@@ -376,6 +399,15 @@
 		position: relative;
 		display: inline-block;
 		width: 100%;
+	}
+
+	#whats-new-form.bottom-notice {
+		margin-bottom: 60px;
+
+		#message-feedabck.updated {
+			position: absolute;
+			bottom: -60px;
+		}
 	}
 
 	.whats-new-form-header {
@@ -1764,6 +1796,15 @@ input.search-query-input {
 
 #content .toolbar-button {
 	box-shadow: none;
+}
+
+.ac-input,
+.medium-editor-element {
+
+	font[color] {
+		color: inherit; //Fix font tag dictating color
+	}
+
 }
 
 @media screen and (max-width: 768px) {
