@@ -2610,7 +2610,7 @@ window.bp = window.bp || {};
 						_this.handleReportError( response.data.message.errors, element.currentTarget );
 					}
 				}
-			).fail(function(response) {
+			).fail(function() {
 				location.href = window.href;
 			});;
 		},
