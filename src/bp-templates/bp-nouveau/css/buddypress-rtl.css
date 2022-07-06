@@ -4480,6 +4480,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a i {
   font-size: 18px;
+  line-height: 25px;
   color: #1e2132;
   font-weight: 300;
   display: inline-block;
@@ -5018,6 +5019,7 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap > a i,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a i {
   font-size: 18px;
+  line-height: 25px;
   color: #1e2132;
   font-weight: 300;
   display: inline-block;
