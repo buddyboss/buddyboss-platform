@@ -960,7 +960,7 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
-	$querystring            = wp_parse_args( $querystring );
+	$querystring            = bp_parse_args( $querystring );
 	$querystring['is_new']  = 1;
 	$querystring['user_id'] = get_current_user_id();
 
@@ -1071,7 +1071,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 		}
 	}
 
-	$notifications          = wp_parse_args( $default_by_admin, $all_notifications );
+	$notifications          = bp_parse_args( $default_by_admin, $all_notifications );
 	$excluded_actions       = array();
 	$notifications_type_key = 'enable_notification';
 	if ( in_array( $type, array( 'web', 'app' ), true ) ) {

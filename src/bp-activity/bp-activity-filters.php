@@ -599,7 +599,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 
 	$excerpt_length = bp_activity_get_excerpt_length();
 
-	$args = wp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
+	$args = bp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
 	$excerpt = bp_create_excerpt( $text, $excerpt_length, $args );
@@ -1353,7 +1353,7 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 
 	// members directory
 	if ( ! bp_is_user() && bp_is_members_directory() ) {
-		$qs_args = wp_parse_args( $qs );
+		$qs_args = bp_parse_args( $qs );
 		// check if members scope is following before manipulating.
 		if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
 			$qs .= '&include=' . bp_get_following_ids(
