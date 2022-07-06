@@ -3247,11 +3247,10 @@ window.bp = window.bp || {};
 					messagePusherData.message.sender_is_you = false;
 				}
 
-				//messagePusherData.message.date = new Date( messagePusherData.message.date );
+				messagePusherData.message.date = new Date( messagePusherData.message.date );
 
-				console.log( messagePusherData.message );
 				model.set( messagePusherData.message );
-				this.collection.set( { model }, { remove: false } );
+				//this.collection.set( { model }, { remove: false } );
 			},
 
 			events: {
