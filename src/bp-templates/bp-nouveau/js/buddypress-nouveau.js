@@ -2612,7 +2612,7 @@ window.bp = window.bp || {};
 				}
 			).fail(function() {
 				location.href = window.href;
-			});;
+			});
 		},
 		resetReportPopup: function () {
 			$( 'form#bb-report-content' ).trigger( 'reset' );
