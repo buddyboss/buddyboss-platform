@@ -3241,16 +3241,19 @@ window.bp = window.bp || {};
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
 				var model = this.collection.get( messagePusherData.hash );
 
-				if ( parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
-					messagePusherData.message.sender_is_you = true;
-				} else {
-					messagePusherData.message.sender_is_you = false;
+				if ( model ) {
+
+					if ( parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
+						messagePusherData.message.sender_is_you = true;
+					} else {
+						messagePusherData.message.sender_is_you = false;
+					}
+
+					messagePusherData.message.date = new Date( messagePusherData.message.date );
+
+					model.set( messagePusherData.message );
+					//this.collection.set( { model }, { remove: false } );
 				}
-
-				messagePusherData.message.date = new Date( messagePusherData.message.date );
-
-				model.set( messagePusherData.message );
-				//this.collection.set( { model }, { remove: false } );
 			},
 
 			events: {
