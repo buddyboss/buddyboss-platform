@@ -1798,6 +1798,15 @@ input.search-query-input {
 	box-shadow: none;
 }
 
+.ac-input,
+.medium-editor-element {
+
+	font[color] {
+		color: inherit; //Fix font tag dictating color
+	}
+
+}
+
 @media screen and (max-width: 768px) {
 
 	.bbp-topic-form #whats-new-toolbar {

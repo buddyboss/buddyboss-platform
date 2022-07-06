@@ -3208,6 +3208,11 @@ input.search-query-input {
   box-shadow: none;
 }
 
+.ac-input font[color],
+.medium-editor-element font[color] {
+  color: inherit;
+}
+
 @media screen and (max-width: 768px) {
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0 10px 5px;
