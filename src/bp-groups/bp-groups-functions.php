@@ -317,10 +317,10 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	if ( $r['notify_members'] ) {
 		groups_notification_group_updated( $group->id, $old_group );
-	}
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		bb_groups_notification_groups_updated( $group->id );
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			bb_groups_notification_groups_updated( $group->id );
+		}
 	}
 
 	/**
