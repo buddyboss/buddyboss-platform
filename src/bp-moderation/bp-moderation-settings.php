@@ -21,13 +21,13 @@ function bp_moderation_get_settings_sections() {
 
 	$settings = array(
 		'bp_moderation_settings_blocking'  => array(
-			'page'  => 'moderation',
-			'title' => esc_html__( 'Member Moderation', 'buddyboss' ),
+			'page'              => 'moderation',
+			'title'             => esc_html__( 'Member Moderation', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_moderation_block_setting_tutorial',
 		),
 		'bp_moderation_settings_reporting' => array(
-			'page'  => 'moderation',
-			'title' => esc_html__( 'Content Reporting', 'buddyboss' ),
+			'page'              => 'moderation',
+			'title'             => esc_html__( 'Content Reporting', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_moderation_report_setting_tutorial',
 		),
 	);
@@ -47,28 +47,28 @@ function bp_moderation_get_settings_fields() {
 
 	$fields['bp_moderation_settings_blocking'] = array(
 
-		'bpm_blocking_member_blocking'        => array(
+		'bpm_blocking_member_blocking'               => array(
 			'title'             => __( 'Member Blocking', 'buddyboss' ),
 			'callback'          => 'bpm_blocking_settings_callback_member_blocking',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 
-		'bpm_blocking_member_reporting'        => array(
+		'bpm_blocking_member_reporting'              => array(
 			'title'             => __( 'Member Reporting', 'buddyboss' ),
 			'callback'          => 'bpm_blocking_settings_callback_member_reporting',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 
-		'bpm_blocking_auto_suspend'           => array(
+		'bpm_blocking_auto_suspend'                  => array(
 			'title'             => __( 'Auto Suspend', 'buddyboss' ),
 			'callback'          => 'bpm_blocking_settings_callback_auto_suspend',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 
-		'bpm_blocking_auto_suspend_threshold' => array(
+		'bpm_blocking_auto_suspend_threshold'        => array(
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
@@ -83,7 +83,7 @@ function bp_moderation_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bpm_blocking_email_notification'     => array(
+		'bpm_blocking_email_notification'            => array(
 			'title'             => __( 'Email Notification', 'buddyboss' ),
 			'callback'          => 'bpm_blocking_settings_callback_email_notification',
 			'sanitize_callback' => 'intval',
@@ -117,7 +117,7 @@ function bp_moderation_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bpm_reporting_categories'  => array(
+		'bpm_reporting_categories'          => array(
 			'title'             => __( 'Reporting Categories', 'buddyboss' ),
 			'callback'          => 'bpm_reporting_settings_callback_categories',
 			'sanitize_callback' => '',
@@ -233,7 +233,7 @@ function bpm_blocking_settings_callback_member_reporting() {
 					add_query_arg(
 						array(
 							'taxonomy' => 'bpm_category',
-							'tab'  => 'report-categories',
+							'tab'      => 'report-categories',
 						),
 						admin_url( 'edit-tags.php' )
 					)
@@ -258,7 +258,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 	$threshold_report = ob_get_clean();
 	?>
 
-	<label for="bpm_blocking_auto_suspend" class="<?php echo bp_is_moderation_member_blocking_enable( false ) ? '' : 'is_disabled';?>">
+	<label for="bpm_blocking_auto_suspend" class="<?php echo bp_is_moderation_member_blocking_enable( false ) ? '' : 'is_disabled'; ?>">
 		<input name="bpm_blocking_auto_suspend" id="bpm_blocking_auto_suspend" type="checkbox" value="1"
 				<?php checked( bp_is_moderation_auto_suspend_enable( false ) ); ?> />
 		<?php
@@ -267,7 +267,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 		?>
 	</label>
 	<br/><br/>
-	<label for="bpm_blocking_auto_suspend_report" class="<?php echo bp_is_moderation_member_reporting_enable( false ) ? '' : 'is_disabled';?>">
+	<label for="bpm_blocking_auto_suspend_report" class="<?php echo bp_is_moderation_member_reporting_enable( false ) ? '' : 'is_disabled'; ?>">
 		<input name="bpm_blocking_auto_suspend_report" id="bpm_blocking_auto_suspend_report" type="checkbox" value="1"
 				<?php checked( bp_is_moderation_auto_suspend_report_enable( false ) ); ?> />
 		<?php
@@ -361,7 +361,7 @@ function bpm_reporting_settings_callback_content_reporting() {
 					<?php checked( bp_is_moderation_auto_hide_enable( false, $slug ) ); ?> />
 			<?php
 			// translators: html for threshold fields.
-			printf( esc_html__( 'Auto hide %s after %s reports.', 'buddyboss' ), strtolower($type), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf( esc_html__( 'Auto hide %1$s after %2$s reports.', 'buddyboss' ), strtolower( $type ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</label>
 		<br/>

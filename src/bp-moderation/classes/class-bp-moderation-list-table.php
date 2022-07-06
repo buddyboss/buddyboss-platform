@@ -230,11 +230,11 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			);
 		} else {
 			$columns = array(
-				'cb'             => '<input name type="checkbox" />',
-				'member'         => esc_html__( 'Member', 'buddyboss' ),
-				'blocked'        => esc_html__( 'Blocks', 'buddyboss' ),
-				'user_reported'  => esc_html__( 'Reports', 'buddyboss' ),
-				'suspend'        => esc_html__( 'Suspended', 'buddyboss' ),
+				'cb'            => '<input name type="checkbox" />',
+				'member'        => esc_html__( 'Member', 'buddyboss' ),
+				'blocked'       => esc_html__( 'Blocks', 'buddyboss' ),
+				'user_reported' => esc_html__( 'Reports', 'buddyboss' ),
+				'suspend'       => esc_html__( 'Suspended', 'buddyboss' ),
 			);
 		}
 
@@ -277,19 +277,19 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			'bp_moderation_get_views',
 			array(
 				'blocked-members'  => array(
-					'all'         => array(
+					'all'       => array(
 						'name' => esc_html__( 'All', 'buddyboss' ),
 						'link' => $blocked_members_url_base,
 					),
-					'blocked' => array(
+					'blocked'   => array(
 						'name' => esc_html__( 'Blocked', 'buddyboss' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'blocked' ), $blocked_members_url_base ),
 					),
-					'reported' => array(
+					'reported'  => array(
 						'name' => esc_html__( 'Reported', 'buddyboss' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'reported' ), $blocked_members_url_base ),
 					),
-					'suspended'   => array(
+					'suspended' => array(
 						'name' => esc_html__( 'Suspended', 'buddyboss' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'suspended' ), $blocked_members_url_base ),
 					),
@@ -359,9 +359,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 					);
 
 					if ( 'suspended' === $key ) {
-						$moderation_args['hidden'] =  1;
-					} else if( 'reported' === $key ) {
-						$moderation_args['user_report'] =  1;
+						$moderation_args['hidden'] = 1;
+					} elseif ( 'reported' === $key ) {
+						$moderation_args['user_report'] = 1;
 					}
 
 					$record_count = bp_moderation_item_count( $moderation_args );
@@ -669,7 +669,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_suspend( $item = array() ) {
 		if ( 1 === (int) $item['hide_sitewide'] ) {
-			printf ('<i class="dashicons dashicons-saved"></i>');
+			printf( '<i class="dashicons dashicons-saved"></i>' );
 		}
 	}
 
@@ -682,7 +682,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_is_hidden( $item = array() ) {
 		if ( 1 === (int) $item['hide_sitewide'] ) {
-			printf ('<i class="dashicons dashicons-saved"></i>');
+			printf( '<i class="dashicons dashicons-saved"></i>' );
 		}
 	}
 
