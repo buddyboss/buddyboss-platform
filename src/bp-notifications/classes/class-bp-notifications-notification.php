@@ -85,6 +85,14 @@ class BP_Notifications_Notification {
 	public $is_new;
 
 	/**
+	 * Is the notification newly inserted.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 * @var bool
+	 */
+	public $inserted = false;
+
+	/**
 	 * Columns in the notifications table.
 	 */
 	public static $columns = array(
@@ -167,6 +175,8 @@ class BP_Notifications_Notification {
 
 				// Set the notification type.
 				bp_notifications_update_meta( $this->id, 'is_modern', ! bb_enabled_legacy_email_preference() );
+
+				$this->inserted = true;
 			}
 			$retval = $this->id;
 		}
@@ -649,7 +659,7 @@ class BP_Notifications_Notification {
 	 * @return array
 	 */
 	public static function parse_args( $args = '' ) {
-		return wp_parse_args(
+		return bp_parse_args(
 			$args,
 			array(
 				'id'                => false,
@@ -1101,7 +1111,7 @@ class BP_Notifications_Notification {
 	 * }
 	 */
 	public static function get_current_notifications_for_user( $args = array() ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'user_id'      => bp_loggedin_user_id(),

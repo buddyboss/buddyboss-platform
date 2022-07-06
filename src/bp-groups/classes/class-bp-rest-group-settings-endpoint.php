@@ -535,7 +535,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'name'        => 'group-name',
 			'description' => '',
 			'field'       => 'text',
-			'value'       => bp_get_group_name( $group ),
+			'value'       => ( function_exists( 'bp_get_group_name_editable' ) ? bp_get_group_name_editable( $group ) : bp_get_group_name( $group ) ),
 			'options'     => array(),
 		);
 
