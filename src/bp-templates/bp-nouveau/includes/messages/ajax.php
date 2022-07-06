@@ -525,6 +525,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 		'display_date'  => bp_get_the_thread_message_time_since(),
 	);
 
+	$get_thread_recipients = $thread_template->thread->recipients;
+
 	if ( bp_is_active( 'moderation' ) ) {
 		$reply['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
 		$reply['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
@@ -770,16 +772,18 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
 
-	// set a flag
-	$reply['is_new'] = true;
+	// set a flag.
+	$reply['is_new']  = true;
+	$inbox_unread_cnt = apply_filters( 'thread_recipient_inbox_unread_counts', array(), $get_thread_recipients );
 
 	wp_send_json_success(
 		array(
-			'messages'  => array( $reply ),
-			'thread_id' => $thread_id,
-			'feedback'  => __( 'Your reply was sent successfully', 'buddyboss' ),
-			'hash'      => ! empty( $_POST['hash'] ) ? $_POST['hash'] : '',
-			'type'      => 'success',
+			'messages'                      => array( $reply ),
+			'thread_id'                     => $thread_id,
+			'feedback'                      => __( 'Your reply was sent successfully', 'buddyboss' ),
+			'hash'                          => ! empty( $_POST['hash'] ) ? $_POST['hash'] : '',
+			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
+			'type'                          => 'success',
 		)
 	);
 
@@ -2048,7 +2052,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'group_message_fresh'       => $group_message_fresh,
 		'message_from'              => $message_from,
 		'is_participated'           => empty( $is_participated ) ? 0 : 1,
-		'avatars'                   => bp_messages_get_avatars( $bp_get_the_thread_id, bp_loggedin_user_id() )
+		'avatars'                   => bp_messages_get_avatars( $bp_get_the_thread_id, bp_loggedin_user_id() ),
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
