@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.3.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-06-29 18:09:00+00:00\n"
+"POT-Creation-Date: 2022-07-06 10:45:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -355,11 +355,11 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:754
 #: bp-messages/classes/class-bp-messages-notices-admin.php:211
 #: bp-messages/classes/class-bp-messages-notices-list-table.php:84
-#: bp-moderation/bp-moderation-filters.php:759
-#: bp-moderation/bp-moderation-filters.php:787
-#: bp-moderation/bp-moderation-filters.php:853
-#: bp-moderation/bp-moderation-filters.php:880
-#: bp-moderation/classes/class-bp-moderation-list-table.php:227
+#: bp-moderation/bp-moderation-filters.php:763
+#: bp-moderation/bp-moderation-filters.php:791
+#: bp-moderation/bp-moderation-filters.php:857
+#: bp-moderation/bp-moderation-filters.php:884
+#: bp-moderation/classes/class-bp-moderation-list-table.php:226
 msgid "Content"
 msgstr ""
 
@@ -374,7 +374,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-admin.php:802 bp-groups/bp-groups-admin.php:841
 #: bp-members/classes/class-bp-members-admin.php:1184
-#: bp-moderation/screens/single/admin/report-single.php:300
+#: bp-moderation/screens/single/admin/report-single.php:242
 msgid "Go back and try again."
 msgstr ""
 
@@ -551,7 +551,7 @@ msgstr ""
 #: bp-forums/replies/template.php:1847 bp-groups/bp-groups-admin.php:1069
 #: bp-members/classes/class-bp-members-admin.php:2532
 #: bp-moderation/screens/block-member-form.php:75
-#: bp-moderation/screens/content-report-form.php:62
+#: bp-moderation/screens/content-report-form.php:63
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:173
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:18
@@ -568,7 +568,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/media-create-album.php:26
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:27
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:37
-#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:223
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:243
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:90
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:278
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:220
@@ -1142,9 +1142,9 @@ msgstr ""
 #: bp-invites/bp-invites-admin.php:273
 #: bp-members/classes/class-bp-members-component.php:379
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:819
-#: bp-moderation/classes/class-bp-moderation-list-table.php:526
-#: bp-moderation/classes/class-bp-moderation-list-table.php:535
-#: bp-moderation/classes/class-bp-moderation-list-table.php:606
+#: bp-moderation/classes/class-bp-moderation-list-table.php:527
+#: bp-moderation/classes/class-bp-moderation-list-table.php:536
+#: bp-moderation/classes/class-bp-moderation-list-table.php:607
 #: bp-moderation/screens/single/admin/report-single.php:74
 #: bp-templates/bp-nouveau/includes/document/functions.php:106
 #: bp-templates/bp-nouveau/includes/members/functions.php:229
@@ -1351,8 +1351,8 @@ msgstr ""
 #: bp-core/bp-core-functions.php:7167
 #: bp-groups/classes/class-bp-groups-list-table.php:354
 #: bp-messages/bp-messages-template.php:1023
-#: bp-moderation/classes/class-bp-moderation-list-table.php:282
-#: bp-moderation/classes/class-bp-moderation-list-table.php:300
+#: bp-moderation/classes/class-bp-moderation-list-table.php:281
+#: bp-moderation/classes/class-bp-moderation-list-table.php:299
 msgid "All"
 msgstr ""
 
@@ -2912,17 +2912,15 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1556
-#: bp-moderation/classes/class-bp-moderation-list-table.php:417
-#: bp-moderation/classes/class-bp-moderation-list-table.php:422
-#: bp-moderation/screens/single/admin/report-single.php:269
+#: bp-moderation/classes/class-bp-moderation-list-table.php:418
+#: bp-moderation/classes/class-bp-moderation-list-table.php:423
 msgid "Unsuspend"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1572
 #: bp-members/classes/class-bp-members-admin.php:1251
-#: bp-moderation/classes/class-bp-moderation-list-table.php:419
-#: bp-moderation/classes/class-bp-moderation-list-table.php:421
-#: bp-moderation/screens/single/admin/report-single.php:269
+#: bp-moderation/classes/class-bp-moderation-list-table.php:420
+#: bp-moderation/classes/class-bp-moderation-list-table.php:422
 msgid "Suspend"
 msgstr ""
 
@@ -4382,10 +4380,10 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:495
 #: bp-members/classes/class-bp-core-members-widget.php:307
 #: bp-members/classes/class-bp-members-component.php:37
-#: bp-moderation/bp-moderation-filters.php:760
-#: bp-moderation/bp-moderation-filters.php:788
-#: bp-moderation/bp-moderation-filters.php:849
-#: bp-moderation/bp-moderation-filters.php:881
+#: bp-moderation/bp-moderation-filters.php:764
+#: bp-moderation/bp-moderation-filters.php:792
+#: bp-moderation/bp-moderation-filters.php:853
+#: bp-moderation/bp-moderation-filters.php:885
 #: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:516
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:22
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1037
@@ -8169,9 +8167,9 @@ msgstr ""
 #: bp-core/classes/class-bp-core-notification-abstract.php:159
 #: bp-core/profile-search/bps-xprofile.php:319
 #: bp-core/profile-search/bps-xprofile.php:616
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:259
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:263
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:102
-#: bp-moderation/screens/content-report-form.php:54
+#: bp-moderation/screens/content-report-form.php:55
 #: bp-xprofile/bp-xprofile-admin.php:967
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:377
 msgid "Other"
@@ -8257,8 +8255,8 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:749 bp-groups/bp-groups-template.php:764
 #: bp-groups/classes/class-bp-groups-list-table.php:652
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:336
-#: bp-moderation/classes/class-bp-moderation-list-table.php:230
-#: bp-moderation/classes/class-bp-moderation-list-table.php:308
+#: bp-moderation/classes/class-bp-moderation-list-table.php:229
+#: bp-moderation/classes/class-bp-moderation-list-table.php:307
 msgid "Hidden"
 msgstr ""
 
@@ -11006,7 +11004,7 @@ msgstr ""
 #: bp-forums/admin/metaboxes.php:139
 #: bp-integrations/learndash/buddypress/Reports.php:442
 #: bp-integrations/learndash/library/ReportsGenerator.php:354
-#: bp-moderation/classes/class-bp-moderation-members.php:109
+#: bp-moderation/classes/class-bp-moderation-members.php:110
 msgid "User"
 msgid_plural "Users"
 msgstr[0] ""
@@ -14148,7 +14146,7 @@ msgid "Spectator"
 msgstr ""
 
 #: bp-forums/common/locale.php:55 bp-moderation/bp-moderation-functions.php:240
-#: bp-moderation/classes/class-bp-moderation-list-table.php:286
+#: bp-moderation/classes/class-bp-moderation-list-table.php:285
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:79
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:121
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:32
@@ -14547,8 +14545,8 @@ msgid "<strong>ERROR</strong>: Your forum cannot be edited at this time."
 msgstr ""
 
 #: bp-forums/forums/functions.php:1680
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:196
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:208
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:200
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:212
 msgid "Category"
 msgstr ""
 
@@ -14932,8 +14930,9 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-members/bp-members-functions.php:3887
 #: bp-members/classes/class-bp-members-admin.php:971
-#: bp-moderation/classes/class-bp-moderation-list-table.php:235
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:202
+#: bp-moderation/bp-moderation-filters.php:970
+#: bp-moderation/classes/class-bp-moderation-list-table.php:234
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:206
 msgid "Member"
 msgstr ""
 
@@ -15379,7 +15378,7 @@ msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-reply.php:155
 #: bp-forums/templates/default/bbpress/form-topic.php:212
-#: bp-moderation/bp-moderation-functions.php:1142
+#: bp-moderation/bp-moderation-functions.php:1149
 #: bp-moderation/classes/class-bp-moderation-activity.php:486
 #: bp-moderation/classes/class-bp-moderation-activity.php:503
 #: bp-moderation/classes/class-bp-moderation-activity.php:517
@@ -16350,7 +16349,7 @@ msgstr ""
 
 #: bp-friends/bp-friends-template.php:458
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:201
-#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:206
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:226
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:261
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:203
 msgid "Remove Connection"
@@ -17268,8 +17267,8 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:2341 bp-groups/bp-groups-admin.php:2348
 #: bp-members/bp-members-functions.php:3642
 #: bp-members/bp-members-functions.php:3649
-#: bp-moderation/classes/class-bp-moderation-list-table.php:408
-#: bp-moderation/classes/class-bp-moderation-list-table.php:412
+#: bp-moderation/classes/class-bp-moderation-list-table.php:409
+#: bp-moderation/classes/class-bp-moderation-list-table.php:413
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:149
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:154
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:183
@@ -17524,8 +17523,8 @@ msgid "This is a hidden group. You must be invited to join."
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:5215
-#: bp-templates/bp-nouveau/includes/members/template-tags.php:837
-#: bp-templates/bp-nouveau/includes/members/template-tags.php:1199
+#: bp-templates/bp-nouveau/includes/members/template-tags.php:849
+#: bp-templates/bp-nouveau/includes/members/template-tags.php:1211
 #. translators: %s: Last joined date of member in the group.
 #. translators: %s: Member joined date.
 #. translators: 1: User registered date.
@@ -19644,8 +19643,8 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/Core.php:139
 #: bp-integrations/learndash/buddypress/components/BpGroupReports.php:73
-#: bp-moderation/classes/class-bp-moderation-list-table.php:229
-#: bp-moderation/classes/class-bp-moderation-list-table.php:237
+#: bp-moderation/classes/class-bp-moderation-list-table.php:228
+#: bp-moderation/classes/class-bp-moderation-list-table.php:236
 #: bp-moderation/screens/single/admin/report-single.php:95
 #: bp-moderation/screens/single/admin/report-single.php:148
 #: bp-templates/bp-nouveau/includes/groups/classes.php:349
@@ -22161,7 +22160,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:224
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:151
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:219
-#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:224
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:244
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:279
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:221
 msgid "Confirm"
@@ -24022,42 +24021,40 @@ msgid ""
 msgstr ""
 
 #: bp-moderation/bp-moderation-admin.php:46
-#: bp-moderation/classes/class-bp-moderation-list-table.php:518
+#: bp-moderation/classes/class-bp-moderation-list-table.php:519
 #: bp-moderation/screens/single/admin/report-single.php:100
 #: bp-moderation/screens/single/admin/report-single.php:227
 msgid "Hide Content"
 msgstr ""
 
 #: bp-moderation/bp-moderation-admin.php:47
-#: bp-moderation/classes/class-bp-moderation-list-table.php:518
+#: bp-moderation/classes/class-bp-moderation-list-table.php:519
 #: bp-moderation/screens/single/admin/report-single.php:100
 #: bp-moderation/screens/single/admin/report-single.php:227
 msgid "Unhide Content"
 msgstr ""
 
 #: bp-moderation/bp-moderation-admin.php:48
-#: bp-moderation/classes/class-bp-moderation-list-table.php:601
+#: bp-moderation/classes/class-bp-moderation-list-table.php:602
 #: bp-moderation/screens/single/admin/report-single.php:154
 msgid "Suspend Member"
 msgstr ""
 
 #: bp-moderation/bp-moderation-admin.php:49
-#: bp-moderation/classes/class-bp-moderation-list-table.php:601
+#: bp-moderation/classes/class-bp-moderation-list-table.php:602
 #: bp-moderation/screens/single/admin/report-single.php:154
 msgid "Unsuspend Member"
 msgstr ""
 
 #: bp-moderation/bp-moderation-admin.php:50
-#: bp-moderation/classes/class-bp-moderation-list-table.php:556
+#: bp-moderation/classes/class-bp-moderation-list-table.php:557
 #: bp-moderation/screens/single/admin/report-single.php:119
-#: bp-moderation/screens/single/admin/report-single.php:252
 msgid "Suspend Owner"
 msgstr ""
 
 #: bp-moderation/bp-moderation-admin.php:51
-#: bp-moderation/classes/class-bp-moderation-list-table.php:556
+#: bp-moderation/classes/class-bp-moderation-list-table.php:557
 #: bp-moderation/screens/single/admin/report-single.php:119
-#: bp-moderation/screens/single/admin/report-single.php:252
 msgid "Unsuspend Owner"
 msgstr ""
 
@@ -24125,10 +24122,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-moderation/bp-moderation-filters.php:128
-#: bp-moderation/bp-moderation-filters.php:233
-#: bp-moderation/bp-moderation-filters.php:332
-#: bp-moderation/bp-moderation-filters.php:391
-#: bp-moderation/bp-moderation-filters.php:457
+#: bp-moderation/bp-moderation-filters.php:236
+#: bp-moderation/bp-moderation-filters.php:336
+#: bp-moderation/bp-moderation-filters.php:395
+#: bp-moderation/bp-moderation-filters.php:461
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:371
 msgid "Required field missing."
 msgstr ""
@@ -24138,106 +24135,121 @@ msgid "Please specify reason to report this content."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:157
-#: bp-moderation/bp-moderation-filters.php:398
-#: bp-moderation/bp-moderation-filters.php:464
+#: bp-moderation/bp-moderation-filters.php:402
+#: bp-moderation/bp-moderation-filters.php:468
 msgid "Sorry, you are not allowed to report this content."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:173
-#: bp-moderation/bp-moderation-filters.php:238
-msgid "Content already reported."
+msgid "You have already reported this "
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:205
-#: bp-moderation/bp-moderation-filters.php:305
-#: bp-moderation/bp-moderation-filters.php:363
-#: bp-moderation/bp-moderation-filters.php:429
-#: bp-moderation/bp-moderation-filters.php:482
+#: bp-moderation/bp-moderation-filters.php:309
+#: bp-moderation/bp-moderation-filters.php:367
+#: bp-moderation/bp-moderation-filters.php:433
+#: bp-moderation/bp-moderation-filters.php:486
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:243
+#: bp-moderation/bp-moderation-filters.php:241
+msgid "You have already reported this Member"
+msgstr ""
+
+#: bp-moderation/bp-moderation-filters.php:246
 msgid "Sorry, you can not allowed to block yourself."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:252
+#: bp-moderation/bp-moderation-filters.php:255
 msgid "Sorry, you are not allowed to block this member."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:262
+#: bp-moderation/bp-moderation-filters.php:265
+msgid "Member report"
+msgstr ""
+
+#: bp-moderation/bp-moderation-filters.php:265
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:392
 msgid "Member block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:337
+#: bp-moderation/bp-moderation-filters.php:341
 msgid "Reported content was not found."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:344
+#: bp-moderation/bp-moderation-filters.php:348
 msgid "Sorry, you cannot unblock suspended member."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:358
+#: bp-moderation/bp-moderation-filters.php:362
 msgid "User unblocked successfully"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:412
+#: bp-moderation/bp-moderation-filters.php:416
 msgid "Content has been successfully hidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:423
+#: bp-moderation/bp-moderation-filters.php:427
 msgid "Content has been successfully unhidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:473
+#: bp-moderation/bp-moderation-filters.php:477
 msgid "Member has been successfully suspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:477
+#: bp-moderation/bp-moderation-filters.php:481
 msgid "Member has been successfully unsuspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:525
+#: bp-moderation/bp-moderation-filters.php:529
 #: bp-moderation/bp-moderation-functions.php:239
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2847
 msgid "Block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:665
+#: bp-moderation/bp-moderation-filters.php:669
 msgid "Repair moderation data"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:691
+#: bp-moderation/bp-moderation-filters.php:695
 msgid "%s moderation item updated successfully."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:701
+#: bp-moderation/bp-moderation-filters.php:705
 msgid "Repairing moderation data &hellip; Complete!"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:757
-#: bp-moderation/bp-moderation-filters.php:783
-#: bp-moderation/bp-moderation-filters.php:829
-#: bp-moderation/bp-moderation-filters.php:877
+#: bp-moderation/bp-moderation-filters.php:761
+#: bp-moderation/bp-moderation-filters.php:787
+#: bp-moderation/bp-moderation-filters.php:833
+#: bp-moderation/bp-moderation-filters.php:881
 msgid "Show When Reporting"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:761
-#: bp-moderation/bp-moderation-filters.php:789
-#: bp-moderation/bp-moderation-filters.php:851
-#: bp-moderation/bp-moderation-filters.php:882
+#: bp-moderation/bp-moderation-filters.php:765
+#: bp-moderation/bp-moderation-filters.php:793
+#: bp-moderation/bp-moderation-filters.php:855
+#: bp-moderation/bp-moderation-filters.php:886
 msgid "Content & Members"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1168
+#: bp-moderation/bp-moderation-functions.php:242
+msgid "Report Member"
+msgstr ""
+
+#: bp-moderation/bp-moderation-functions.php:243
+msgid "Reported Member"
+msgstr ""
+
+#: bp-moderation/bp-moderation-functions.php:1175
 #: bp-moderation/screens/content-report-form.php:16
-#: bp-moderation/screens/content-report-form.php:63
+#: bp-moderation/screens/content-report-form.php:64
 #: bp-moderation/screens/reported-content-popup.php:17
 msgid "Report"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1194
-#: bp-moderation/classes/class-bp-moderation-list-table.php:290
+#: bp-moderation/bp-moderation-functions.php:1201
+#: bp-moderation/classes/class-bp-moderation-list-table.php:289
 msgid "Reported"
 msgstr ""
 
@@ -24380,7 +24392,7 @@ msgid "Blog Comments"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-comment.php:148
-#: bp-moderation/classes/class-bp-moderation-members.php:226
+#: bp-moderation/classes/class-bp-moderation-members.php:227
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1237
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1892
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2037
@@ -24390,7 +24402,7 @@ msgid "Blocked Member"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-comment.php:316
-#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:172
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:191
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1564
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1854
 msgid "More Options"
@@ -24510,55 +24522,55 @@ msgstr ""
 msgid "No blocked members found."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:186
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:156
+#: bp-moderation/classes/class-bp-moderation-list-table.php:185
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:160
 #. translators: accessibility text
 msgid "Moderation Request list"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:228
+#: bp-moderation/classes/class-bp-moderation-list-table.php:227
 msgid "Owner"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:236
+#: bp-moderation/classes/class-bp-moderation-list-table.php:235
 #: bp-moderation/screens/single/admin/report-single.php:145
 msgid "Blocks"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:238
-#: bp-moderation/classes/class-bp-moderation-list-table.php:294
+#: bp-moderation/classes/class-bp-moderation-list-table.php:237
+#: bp-moderation/classes/class-bp-moderation-list-table.php:293
 msgid "Suspended"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:304
+#: bp-moderation/classes/class-bp-moderation-list-table.php:303
 msgid "Unhidden"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:337
-#: bp-moderation/classes/class-bp-moderation-list-table.php:373
+#: bp-moderation/classes/class-bp-moderation-list-table.php:336
+#: bp-moderation/classes/class-bp-moderation-list-table.php:374
 #. translators: Count.
 msgid "%1$s <span class=\"count\">(%2$s)</span>"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:410
-#: bp-moderation/classes/class-bp-moderation-list-table.php:413
+#: bp-moderation/classes/class-bp-moderation-list-table.php:411
+#: bp-moderation/classes/class-bp-moderation-list-table.php:414
 msgid "Unhide"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:480
+#: bp-moderation/classes/class-bp-moderation-list-table.php:481
 #. translators: accessibility text
 msgid "Select moderation item %1$d"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:527
+#: bp-moderation/classes/class-bp-moderation-list-table.php:528
 msgid "View Reports"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:536
+#: bp-moderation/classes/class-bp-moderation-list-table.php:537
 msgid "View Content"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-list-table.php:606
+#: bp-moderation/classes/class-bp-moderation-list-table.php:607
 #: bp-moderation/screens/single/admin/report-single.php:38
 msgid "View Report"
 msgstr ""
@@ -24572,25 +24584,25 @@ msgstr ""
 msgid "This member has not been blocked by any members."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:195
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:207
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:199
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:211
 msgid "Reporter"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:197
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:209
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:201
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:213
 msgid "Date Reported"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:203
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:207
 msgid "Date Blocked"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation.php:1017
+#: bp-moderation/classes/class-bp-moderation.php:1030
 msgid "Item ID field missing."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation.php:1019
+#: bp-moderation/classes/class-bp-moderation.php:1032
 msgid "Item type field missing."
 msgstr ""
 
@@ -24991,7 +25003,7 @@ msgstr ""
 msgid "Reported By"
 msgstr ""
 
-#: bp-moderation/screens/single/admin/report-single.php:298
+#: bp-moderation/screens/single/admin/report-single.php:240
 msgid "No moderation found with this ID."
 msgstr ""
 
@@ -26609,7 +26621,7 @@ msgid "Customize the message of your invite."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:211
-#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:216
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:236
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:271
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:213
 #. translators: %s: The member name with HTML tags
