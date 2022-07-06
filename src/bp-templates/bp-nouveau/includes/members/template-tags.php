@@ -727,7 +727,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 				'position'       => 29,
 			)
 		);
-		$buttons['member_block'] = bp_member_get_report_link(
+		$buttons['member_block']  = bp_member_get_report_link(
 			array(
 				'parent_element' => $parent_element,
 				'parent_attr'    => array(
@@ -736,7 +736,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 				),
 				'button_element' => $button_element,
 				'position'       => 30,
-				'report_user'    => true
+				'report_user'    => true,
 			)
 		);
 	}
