@@ -75,11 +75,11 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						'id'    => 'user-report-' . bp_get_member_user_id(),
 						'class' => '',
 					),
-					'button_attr'       => array(
+					'button_attr'    => array(
 						'data-bp-content-id'   => bp_get_member_user_id(),
-						'data-bp-content-type' => BP_Moderation_Members::$moderation_type_report
+						'data-bp-content-type' => BP_Moderation_Members::$moderation_type_report,
 					),
-					
+
 				)
 			);
 			$member_report_button = bp_get_button( $report_button );
