@@ -170,7 +170,7 @@ function bp_moderation_content_report() {
 	if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_already_reported',
-			esc_html__( 'You have already reported this ', 'buddyboss' ) . esc_attr__( $item_sub_type )
+			esc_html__( 'You have already reported this ', 'buddyboss' ) . esc_attr( $item_sub_type )
 		);
 		wp_send_json_error( $response );
 	}
