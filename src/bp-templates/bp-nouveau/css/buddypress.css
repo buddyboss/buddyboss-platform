@@ -26110,11 +26110,6 @@ span.icons:before {
 .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .actions a .bb-icon {
   font-size: 24px;
   color: #000;
-  opacity: 0.5;
-}
-
-.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .actions a:hover .bb-icon {
-  opacity: 1;
   transition: all linear 0.2s;
 }
 
@@ -26182,6 +26177,8 @@ span.icons:before {
     display: flex;
     justify-content: space-between;
     right: 15px;
+    bottom: inherit;
+    top: 85px;
   }
   .bb-toast-messages-enable .bb-toast-messages.bb-position-right {
     right: 15px;
@@ -26193,8 +26190,8 @@ span.icons:before {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 0 10px 0 0;
-    flex: 0 0 calc(100% - 80px);
+    margin: 0 0 0 0;
+    flex: 100%;
   }
   .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item {
     margin: 0;
