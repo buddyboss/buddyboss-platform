@@ -532,7 +532,7 @@
 
 						&:before {
 							font-family: "bb-icons";/* stylelint-disable-line */
-							font-size: 20px;
+							font-size: 18px;
 							display: inline-block;
 							margin-right: 10px;
 							vertical-align: middle;
@@ -548,7 +548,6 @@
 						&.delete:before,
 						&.delete-activity:before {
 							content: "\ef48";
-							font-size: 20px;
 						}
 
 						&.ac-video-thumbnail-edit:before {
@@ -557,7 +556,6 @@
 
 						&.edit-activity:before {
 							content: "\ee5a";
-							font-size: 20px;
 						}
 
 						span:not(.bp-screen-reader-text) {

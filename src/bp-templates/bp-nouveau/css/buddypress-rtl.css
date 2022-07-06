@@ -3696,7 +3696,7 @@ input.search-query-input {
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 20px;
+  font-size: 18px;
   display: inline-block;
   margin-left: 10px;
   vertical-align: middle;
@@ -3710,7 +3710,6 @@ input.search-query-input {
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete:before, #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete-activity:before {
   content: "\ef48";
-  font-size: 20px;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.ac-video-thumbnail-edit:before {
@@ -3719,7 +3718,6 @@ input.search-query-input {
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.edit-activity:before {
   content: "\ee5a";
-  font-size: 20px;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a span:not(.bp-screen-reader-text) {
@@ -7824,7 +7822,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 20px;
+  font-size: 18px;
   display: inline-block;
   margin-left: 10px;
   vertical-align: middle;
@@ -7862,8 +7860,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.view-as:before,
 .bb_more_options .bb_more_options_list a.view-as:before {
   content: "\ee69";
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
@@ -7873,7 +7869,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.send-message:before,
 .bb_more_options .bb_more_options_list a.send-message:before {
   content: "\ee62";
-  color: inherit !important;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.block-member:before,
