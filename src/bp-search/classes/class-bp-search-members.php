@@ -205,8 +205,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					if ( ! empty( $selected_xprofile_fields ) ) {
 
 						$cache_key = maybe_serialize( $selected_xprofile_fields['char_search'] );
-						$cache_key .= $search_term;
-						$cache_key .= maybe_serialize( $selected_xprofile_fields['word_search'] );
+						$cache_key .= '_' . $search_term;
+						$cache_key .= '_' . maybe_serialize( $selected_xprofile_fields['word_search'] );
 						$cache_key = md5( $cache_key );
 						$user_ids = array();
 						if ( ! isset( $selected_xprofile_fields_cache[ $cache_key ] ) ) {
