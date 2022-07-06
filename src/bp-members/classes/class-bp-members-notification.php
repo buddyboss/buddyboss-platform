@@ -101,6 +101,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 			'members',
 			'bb_account_password',
 			'bb_account_password',
+			'bb-icon-f bb-icon-key'
 		);
 
 		$this->register_notification_filter(
@@ -154,6 +155,39 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 				$notification,
 				$text,
 				$settings_link
+			);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Format members push notifications.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param array  $content      Notification content.
+	 * @param object $notification Notification object.
+	 *
+	 * @return array {
+	 *  'title'       => '',
+	 *  'description' => '',
+	 *  'link'        => '',
+	 *  'image'       => '',
+	 * }
+	 */
+	public function format_push_notification( $content, $notification ) {
+
+		if ( 'bb_account_password' === $notification->component_action ) {
+
+			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+			$settings_link = add_query_arg( 'rid', (int) $notification->id, $settings_link );
+
+			$content = array(
+				'title'       => bp_get_site_name(),
+				'description' => __( 'Your password was changed. If you didn\'t make this change, please reset your password.', 'buddyboss' ),
+				'link'        => $settings_link,
+				'image'       => '',
 			);
 		}
 

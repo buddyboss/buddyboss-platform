@@ -369,6 +369,10 @@ class BP_Messages_Thread {
 	public static function get_last_message( $thread_id ) {
 		global $wpdb;
 
+		if ( empty( $thread_id ) ) {
+			return null;
+		}
+
 		$bp = buddypress();
 
 		$is_group_thread = self::get_first_message( $thread_id );
@@ -424,7 +428,7 @@ class BP_Messages_Thread {
 		$blank_object     = new stdClass();
 		$blank_object->id = 0;
 
-		return ( ! empty( $messages['messages'] ) ? (object) current( $messages['messages'] ) : $blank_object );
+		return ( ! empty( $thread_id ) && ! empty( $messages['messages'] ) ? (object) current( $messages['messages'] ) : $blank_object );
 	}
 
 	/**
@@ -928,10 +932,6 @@ class BP_Messages_Thread {
 			}
 		}
 
-		if ( ! empty( $r['having_sql'] ) ) {
-			$additional_where[] = 'r.user_id in (' . implode( ',', $r['having_sql'] ) . ')';
-		}
-
 		$group_thread_in = array();
 		if ( ! empty( $r['search_terms'] ) ) {
 
@@ -1098,14 +1098,14 @@ class BP_Messages_Thread {
 		$sql = array();
 
 		if ( ! empty( $r['having_sql'] ) ) {
-			$sql['select'] = 'SELECT r.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';
+			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';
 		} else {
 			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
 		}
 
 		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
 		$sql['where'] = "WHERE {$where_sql} {$meta_query_sql['where']}";
-		$sql['misc'] = "GROUP BY m.thread_id ORDER BY date_sent DESC";
+		$sql['misc']  = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
 		/**
 		 * Filters the Where SQL statement.
@@ -1128,13 +1128,6 @@ class BP_Messages_Thread {
 		$sql['from'] = apply_filters( 'bp_messages_recipient_get_join_sql', $sql['from'], $r );
 
 		$qq = implode( ' ', $sql );
-
-		if ( ! empty( $r['having_sql'] ) ) {
-			$having_sql = $wpdb->prepare( 'recipient_list = %s', implode( ',', $r['having_sql'] ) );
-			$qq         = "SELECT * from ({$qq}) as miq WHERE miq.{$having_sql}";
-		}
-
-		$qq .= " {$pag_sql}";
 
 		$thread_ids_cached = bp_core_get_incremented_cache( $qq, 'bp_messages' );
 

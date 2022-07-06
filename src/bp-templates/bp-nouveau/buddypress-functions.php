@@ -372,10 +372,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
 			),
 			'bp-nouveau-icons-map' => array(
-				'file' => 'icons/css/icons-map.css', 'dependencies' => array(), 'version' => $this->version,
+				'file' => 'icons/css/icons-map%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
 			),
 			'bp-nouveau-bb-icons' => array(
-				'file' => 'icons/css/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
+				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
 			)
 		) );
 
