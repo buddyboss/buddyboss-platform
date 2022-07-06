@@ -838,7 +838,7 @@ class BP_Moderation {
 		global $wpdb;
 
 		$reporters = wp_cache_get( $moderation_id, 'bp_moderation_reporters' );
-		if ( empty( $reporters ) || ! empty ( $args ) ) {
+		if ( empty( $reporters ) || ! empty( $args ) ) {
 			$bp = buddypress();
 
 			$select_sql = "SELECT * FROM {$bp->moderation->table_name_reports} mr";
@@ -850,8 +850,8 @@ class BP_Moderation {
 				$where_conditions[] = $wpdb->prepare( "mr.user_id = %d", $args['user_id'] ); // phpcs:ignore
 			}
 
-			if( isset( $args['user_repoted'] ) ) {
-				$where_conditions[] = ! empty( $args['user_repoted'] ) ? "category_id<>0" : 'category_id=0';
+			if ( isset( $args['user_repoted'] ) ) {
+				$where_conditions[] = ! empty( $args['user_repoted'] ) ? 'category_id<>0' : 'category_id=0';
 			}
 
 			// Join the where conditions together.
@@ -1068,9 +1068,9 @@ class BP_Moderation {
 			$this->last_updated = current_time( 'mysql' );
 
 			// Update count and check $threshold for auto hide/suspended and send email notification if auto hide/suspended.
-			$this->count          = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
-			$this->user_reported  = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
-			if( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->category_id ) ) {
+			$this->count         = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
+			$this->user_reported = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
+			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->category_id ) ) {
 				$this->user_reported += 1;
 			} else {
 				$this->count += 1;
@@ -1248,11 +1248,11 @@ class BP_Moderation {
 			if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
 
 				$tokens = array(
-					'user_name'     => bp_core_get_user_displayname( $this->item_id ),
-					'times_blocked' => $this->count,
-					'times_reported'=> $this->user_reported,
-					'member_link'   => BP_Moderation_Members::get_permalink( $this->item_id ),
-					'report_link'   => add_query_arg(
+					'user_name'      => bp_core_get_user_displayname( $this->item_id ),
+					'times_blocked'  => $this->count,
+					'times_reported' => $this->user_reported,
+					'member_link'    => BP_Moderation_Members::get_permalink( $this->item_id ),
+					'report_link'    => add_query_arg(
 						array(
 							'page'         => 'bp-moderation',
 							'mid'          => $this->item_id,
@@ -1413,7 +1413,7 @@ class BP_Moderation {
 
 		if ( ! empty( $updated_row ) ) {
 			$this->report_id = null;
-			if( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->category_id ) ) {
+			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->category_id ) ) {
 				$this->user_reported -= 1;
 			} else {
 				$this->count -= 1;
