@@ -17,7 +17,17 @@
 		<div class="item">
 			<div class="item-title"><?php bp_group_link(); ?></div>
 			<div class="item-meta group-details">
-				<?php bp_group_description(); ?>
+				<?php
+				echo bp_create_excerpt(
+					bp_get_group_description(),
+					255,
+					array(
+						'html'       => false,
+						'strip_tags' => true,
+						'ending'     => '&hellip;',
+					)
+				);
+				?>
 			</div><!-- //.group_description -->
 			<span class="item-meta">
 				<?php bp_group_type(); ?>
