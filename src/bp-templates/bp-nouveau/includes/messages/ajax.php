@@ -1407,6 +1407,8 @@ function bp_nouveau_ajax_delete_thread() {
 			bp_messages_message_delete_notifications( $thread_id, $message_ids );
 		}
 
+		$thread_recipients = BP_Messages_Thread::get_recipients_for_thread( (int) $thread_id );
+
 		// Delete thread messages.
 		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -1427,7 +1429,7 @@ function bp_nouveau_ajax_delete_thread() {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 */
-		do_action( 'bp_messages_message_delete_thread', $thread_id );
+		do_action( 'bp_messages_message_delete_thread', $thread_id, $thread_recipients );
 	}
 
 	wp_send_json_success(
