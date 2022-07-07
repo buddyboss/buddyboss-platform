@@ -2588,7 +2588,7 @@ function bb_remove_discussion_comment_reply_button( $buttons, $activity_comment_
 
 	// Comment is disabled for discussion and reply discussion.
 	if ( ! empty( $buttons['activity_comment_reply'] ) && in_array( $action_name, $disabled_actions, true ) ) {
-		unset( $buttons['activity_comment_reply'] );
+		$buttons['activity_comment_reply'] = '';
 	}
 
 	return $buttons;

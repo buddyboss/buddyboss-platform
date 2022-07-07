@@ -872,7 +872,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 	$buttons_group = apply_filters( 'bp_nouveau_get_activity_comment_buttons', $buttons, $activity_comment_id, $activity_id );
 
 	if ( ! $buttons_group ) {
-		return array();
+		return $buttons;
 	}
 
 	// It's the first comment of the loop, so build the Group and sort it.
