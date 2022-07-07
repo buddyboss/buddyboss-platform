@@ -70,6 +70,9 @@ window.bp = window.bp || {};
 			// Profile Notification setting
 			this.profileNotificationSetting();
 
+			// Toast Message
+			this.toastMessage();
+
 			// Check for lazy images and load them also register scroll event to load on scroll.
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -78,6 +81,89 @@ window.bp = window.bp || {};
 					bp.Nouveau.lazyLoad( '.lazy' );
 				}
 			);
+		},
+
+		/*
+		 *	Toast Message 
+		 */
+		toastMessage: function( event, data ) {
+
+			if ( jQuery('.toast-messages-list').length ) {
+				data = [{
+						bp_id: '1',
+						bp_type: 'info',
+						bp_title: 'Info',
+						bp_description: 'Info Message.',
+						bp_url: 'link',
+						bp_autohide: 'autohide'
+					},
+					{
+						bp_id: '2',
+						bp_type: 'success',
+						bp_title: 'Success',
+						bp_description: '',
+						bp_url: 'link',
+						bp_autohide: 'autohide'
+					},
+					{
+						bp_id: '3',
+						bp_type: 'warning',
+						bp_title: '',
+						bp_description: 'Warning Message.',
+						bp_url: 'link',
+						bp_autohide: 'autohide'
+					},
+					{
+						bp_id: '4',
+						bp_type: 'error',
+						bp_title: 'Error',
+						bp_description: 'Error Message.',
+						bp_url: 'link',
+						bp_autohide: 'autohide'
+					}
+				];			
+
+				var sub_ul = jQuery('.toast-messages-list');							
+
+				jQuery.each(data, function (index) {							
+					var html = '';
+					var bp_msg_id = '';
+					var bp_msg_type = '';
+					var bp_icon_type = '';				
+
+					if( data[index].bp_id ) {
+						bp_msg_id = data[index].bp_id;
+					}
+
+					if( data[index].bp_type ) {
+						bp_msg_type = data[index].bp_type;
+						if (bp_msg_type === 'success') {
+							bp_icon_type = 'check';
+						} else if (bp_msg_type === 'warning') {
+							bp_icon_type = 'exclamation-triangle';
+						} else {
+							bp_icon_type = 'info';
+						}
+					}
+
+					html += '<div class="toast-messages-icon"><i class="bb-icon bb-icon-' + bp_icon_type + '"></i></div>';					
+					html += '<div class="toast-messages-content">';
+					if( data[index].bp_title ) {
+						html += '<span class="toast-messages-title">' + data[index].bp_title + '</span>';					
+					}
+					if( data[index].bp_description ) {
+						html += '<span class="toast-messages-content">' + data[index].bp_description + '</span>';					
+					}					
+					html += '</div>';					
+					html += '<div class="actions"><a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="Close" data-notification-id="' + bp_msg_id + '"><i class="bb-icon bb-icon-times" aria-hidden="true"></i></a></div>';
+					
+					var sub_li = jQuery('<li class="read-item recent-item bp-message-' + bp_msg_type + '" />').html(html);
+					sub_ul.append(sub_li);
+
+				}); 
+				
+			}
+
 		},
 
 		/**
