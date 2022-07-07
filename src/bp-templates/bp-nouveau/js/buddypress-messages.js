@@ -2529,6 +2529,8 @@ window.bp = window.bp || {};
 					new bp.Nouveau.Messages.View( { tagName: 'ul', id: 'message-threads', className: 'message-lists' } )
 				];
 
+				this.listenTo( Backbone, 'relistelements', this.updateThreadsList );
+
 				_.each(
 					Views,
 					function( view ) {
@@ -2561,6 +2563,10 @@ window.bp = window.bp || {};
 						error   : _.bind( this.threadsFetchError, this )
 						}
 				);
+			},
+
+			updateThreadsList: function() {
+				//threadsView();
 			},
 
 			threadsFetched: function() {
