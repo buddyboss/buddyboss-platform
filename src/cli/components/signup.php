@@ -52,7 +52,7 @@ class Signup extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$assoc_args,
 			array(
 				'user-login'     => '',
@@ -310,7 +310,7 @@ class Signup extends BuddypressCommand {
 	 */
 	public function _list( $_, $assoc_args ) {
 		$formatter  = $this->get_formatter( $assoc_args );
-		$assoc_args = wp_parse_args(
+		$assoc_args = bp_parse_args(
 			$assoc_args,
 			array(
 				'number' => 20,
