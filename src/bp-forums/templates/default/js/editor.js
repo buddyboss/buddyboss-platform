@@ -24,6 +24,11 @@ jQuery( document ).ready(
 						return;
 					}
 
+					var toolbarElement = jQuery( element ).closest( '.bbp-form' ).find( '#whats-new-toolbar' );
+					if ( 'undefined' !== typeof toolbarElement.length && 0 < toolbarElement.length ) {
+						toolbarOptions.relativeContainer = toolbarElement.get( 0 );
+					}
+
 					var key = jQuery(element).data('key');
 					window.forums_medium_forum_editor[key] = new window.MediumEditor(
 						element,
@@ -127,6 +132,11 @@ jQuery( document ).ready(
 						return;
 					}
 
+					var toolbarElement = jQuery( element ).closest( '.bbp-form' ).find( '#whats-new-toolbar' );
+					if ( 'undefined' !== typeof toolbarElement.length && 0 < toolbarElement.length ) {
+						toolbarOptions.relativeContainer = toolbarElement.get( 0 );
+					}
+
 					var key = jQuery(element).data('key');
 					window.forums_medium_reply_editor[key] = new window.MediumEditor(
 						element,
@@ -228,6 +238,11 @@ jQuery( document ).ready(
 					// added support for shortcode in elementor popup.
 					if ( jQuery( element ).parents( '.elementor-location-popup' ).length > 0 ) {
 						return;
+					}
+
+					var toolbarElement = jQuery( element ).closest( '.bbp-form' ).find( '#whats-new-toolbar' );
+					if ( 'undefined' !== typeof toolbarElement.length && 0 < toolbarElement.length ) {
+						toolbarOptions.relativeContainer = toolbarElement.get( 0 );
 					}
 
 					var key = jQuery(element).data('key');
@@ -417,6 +432,11 @@ jQuery( document ).ready(
 								return;
 							}
 
+							var toolbarElement = jQuery( element ).closest( '.bbp-form' ).find( '#whats-new-toolbar' );
+							if ( 'undefined' !== typeof toolbarElement.length && 0 < toolbarElement.length ) {
+								toolbarOptions.relativeContainer = toolbarElement.get( 0 );
+							}
+
 							var key = jQuery(element).data('key');
 							window.forums_medium_forum_editor[key] = new window.MediumEditor(
 								element,
@@ -468,6 +488,11 @@ jQuery( document ).ready(
 								return;
 							}
 
+							var toolbarElement = jQuery( element ).closest( '.bbp-form' ).find( '#whats-new-toolbar' );
+							if ( 'undefined' !== typeof toolbarElement.length && 0 < toolbarElement.length ) {
+								toolbarOptions.relativeContainer = toolbarElement.get( 0 );
+							}
+
 							var key = jQuery(element).data('key');
 							window.forums_medium_reply_editor[key] = new window.MediumEditor(
 								element,
@@ -517,6 +542,11 @@ jQuery( document ).ready(
 							// added support for shortcode in elementor popup.
 							if ( jQuery( element ).parents( '.elementor-location-popup' ).length < 1 ) {
 								return;
+							}
+
+							var toolbarElement = jQuery( element ).closest( '.bbp-form' ).find( '#whats-new-toolbar' );
+							if ( 'undefined' !== typeof toolbarElement.length && 0 < toolbarElement.length ) {
+								toolbarOptions.relativeContainer = toolbarElement.get( 0 );
 							}
 
 							var key = jQuery(element).data('key');
