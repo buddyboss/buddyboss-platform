@@ -103,7 +103,7 @@
 			<# if ( data.video ) { #>
 			<div class="bb-activity-video-wrap bb-video-length-{{data.video.length}}">
 				<# for ( i in data.video ) { #>
-				<div class="bb-activity-video-elem">
+				<div class="bb-activity-video-elem <# if ( -1 !== data.video[i].thumbnail.toLowerCase().indexOf( 'video-placeholder.jpg' ) ) { #>has-no-thumbnail<# } #>">
 					<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 					   data-id="{{data.video[i].id}}"
 					   data-attachment-id="{{data.video[i].attachment_id}}"
