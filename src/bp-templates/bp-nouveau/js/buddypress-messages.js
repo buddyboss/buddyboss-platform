@@ -2566,7 +2566,10 @@ window.bp = window.bp || {};
 			},
 
 			updateThreadsList: function() {
-				//threadsView();
+				$( document.body ).find('#user_messages_search').val(' ');
+				$( document.body ).find('#user_messages_search_form').trigger('submit');
+				$( document.body ).find('#user_messages_search').val('');
+				$( document.body ).find('#user_messages_search_form').trigger('submit');
 			},
 
 			threadsFetched: function() {
