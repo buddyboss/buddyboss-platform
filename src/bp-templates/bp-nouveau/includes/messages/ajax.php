@@ -328,7 +328,7 @@ function bp_nouveau_ajax_messages_send_message() {
 					$star_link_data         = explode( '/', $star_link );
 					$response['is_starred'] = array_search( 'unstar', $star_link_data );
 
-					// Defaults to last
+					// Defaults to last.
 					$sm_id = $last_message_id;
 
 					if ( $response['is_starred'] ) {
@@ -524,6 +524,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 		'date'          => bp_get_the_thread_message_date_sent() * 1000,
 		'display_date'  => bp_get_the_thread_message_time_since(),
 	);
+
+	$get_thread_recipients = $thread_template->thread->recipients;
 
 	if ( bp_is_active( 'moderation' ) ) {
 		$reply['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
@@ -773,16 +775,18 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
 
-	// set a flag
-	$reply['is_new'] = true;
+	// set a flag.
+	$reply['is_new']  = true;
+	$inbox_unread_cnt = apply_filters( 'thread_recipient_inbox_unread_counts', array(), $get_thread_recipients );
 
 	wp_send_json_success(
 		array(
-			'messages'  => array( $reply ),
-			'thread_id' => $thread_id,
-			'feedback'  => __( 'Your reply was sent successfully', 'buddyboss' ),
-			'hash'      =>  ! empty( $_POST['hash'] ) ? $_POST['hash'] : '',
-			'type'      => 'success',
+			'messages'                      => array( $reply ),
+			'thread_id'                     => $thread_id,
+			'feedback'                      => __( 'Your reply was sent successfully', 'buddyboss' ),
+			'hash'                          => ! empty( $_POST['hash'] ) ? $_POST['hash'] : '',
+			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
+			'type'                          => 'success',
 		)
 	);
 
@@ -936,7 +940,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				$group_avatar = '';
 
 				if ( bp_is_active( 'groups' ) ) {
-					$group        = empty( $group ) ? groups_get_group( $group_id ) : $group;
+					$group      = empty( $group ) ? groups_get_group( $group_id ) : $group;
 					$group_name = bp_get_group_name( $group );
 					$group_link = bp_get_group_permalink( $group );
 
@@ -2051,6 +2055,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'group_message_fresh'       => $group_message_fresh,
 		'message_from'              => $message_from,
 		'is_participated'           => empty( $is_participated ) ? 0 : 1,
+		'avatars'                   => bp_messages_get_avatars( $bp_get_the_thread_id, bp_loggedin_user_id() ),
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
@@ -2346,7 +2351,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			$thread->messages[ $i ]['star_link']  = $star_link;
 			$thread->messages[ $i ]['is_starred'] = array_search( 'unstar', explode( '/', $star_link ) );
-			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' .$bp_get_the_thread_message_id );
+			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . $bp_get_the_thread_message_id );
 		}
 
 		$is_group_thread = bb_messages_is_group_thread( $thread_id );
@@ -2691,8 +2696,8 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 	if ( $args['exclude_moderated_members'] ) {
 		$args['exclude_admin_user'] = $administrator_ids;
 	}
-	$thread                            = new BP_Messages_Thread( false );
-	$results                           = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+	$thread  = new BP_Messages_Thread( false );
+	$results = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
 	if ( is_array( $results ) ) {
 		$count          = 1;
 		$recipients_arr = array();

@@ -29,7 +29,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function initialize() {
-		$this->tab_order       = 50;
+		$this->tab_order       = 48;
 		$this->current_section = 'bb_pusher-integration';
 		$this->intro_template  = $this->root_path . '/templates/admin/integration-tab-intro.php';
 

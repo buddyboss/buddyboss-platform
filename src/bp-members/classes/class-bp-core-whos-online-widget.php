@@ -172,8 +172,8 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		$separator = apply_filters( 'bp_members_online_widget_separator', '|' );
 
 		?>
-		<div class="item-options" id="who-online-members-list-options">
-			<a href="javascript:void(0);" id="online-members" data-content="boss_whos_online_widget_heartbeat">
+		<div class="item-options bb-online-members-tabs" id="who-online-members-list-options">
+			<a href="javascript:void(0);" id="online-members" data-content="boss_whos_online_widget_heartbeat" class="online-members-count">
 				<?php esc_html_e( 'Online', 'buddyboss' ); ?>
 				<span class="widget-num-count"><?php echo esc_html( $online_count ); ?></span>
 			</a>
@@ -181,7 +181,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			if ( is_user_logged_in() && bp_is_active( 'friends' ) ) :
 				?>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections">
+				<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections" class="online-friends-count">
 					<?php esc_html_e( 'Connections', 'buddyboss' ); ?>
 					<span class="widget-num-count"><?php echo esc_html( $connection_count ); ?></span>
 				</a>
@@ -189,14 +189,14 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			endif;
 			?>
 		</div>
-		<div class="widget-content" id="boss_whos_online_widget_heartbeat" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>">
+		<div class="widget-content bb-online-status-who-is-online-members-tab" id="boss_whos_online_widget_heartbeat" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>">
 			<?php echo wp_kses_post( $online_html ); ?>
 		</div>
 
 		<?php
 		if ( is_user_logged_in() && bp_is_active( 'friends' ) ) {
 			?>
-			<div class="widget-content" id="boss_whos_online_widget_connections" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>">
+			<div class="widget-content bb-online-status-who-is-online-connection-tab" id="boss_whos_online_widget_connections" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>">
 				<?php echo wp_kses_post( $connection_html ); ?>
 			</div>
 			<?php
