@@ -5928,7 +5928,7 @@ span.dashicons.dashicons-admin-file:before {
     overflow: visible;
   }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text-wrap {
-    margin: 0 10px;
+    margin: 0 10px 10px;
   }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap {
     left: 13px;
@@ -5940,7 +5940,6 @@ span.dashicons.dashicons-admin-file:before {
   }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-expand .document-expand-anchor {
     padding: 5px 6px;
-    min-width: 130px;
   }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text {
     font-size: 12px;
