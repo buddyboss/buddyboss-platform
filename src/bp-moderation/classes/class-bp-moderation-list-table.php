@@ -641,7 +641,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Function to show reported count
 	 *
-	 * @since BuddyBoss 1.5.6
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $item loop item.
 	 */
