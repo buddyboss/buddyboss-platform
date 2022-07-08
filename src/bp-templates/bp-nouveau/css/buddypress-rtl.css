@@ -22135,6 +22135,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   .bb-video-thumb .video-js.vjs-error .vjs-error-display.vjs-modal-dialog .vjs-modal-dialog-content,
   .bb-media-section .video-js.vjs-error .vjs-error-display.vjs-modal-dialog .vjs-modal-dialog-content {
     font-size: 14px;
+    line-height: 1.4;
     font-weight: 500;
   }
   .bb-activity-video-elem .video-js.vjs-error .vjs-error-display.vjs-modal-dialog:before,
