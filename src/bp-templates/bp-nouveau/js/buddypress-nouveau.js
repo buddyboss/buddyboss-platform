@@ -148,19 +148,32 @@ window.bp = window.bp || {};
 
 					html += '<div class="toast-messages-icon"><i class="bb-icon bb-icon-' + bp_icon_type + '"></i></div>';					
 					html += '<div class="toast-messages-content">';
-					if( data[index].bp_title ) {
-						html += '<span class="toast-messages-title">' + data[index].bp_title + '</span>';					
-					}
-					if( data[index].bp_description ) {
-						html += '<span class="toast-messages-content">' + data[index].bp_description + '</span>';					
-					}					
+						if( data[index].bp_title ) {
+							html += '<span class="toast-messages-title">' + data[index].bp_title + '</span>';					
+						}
+						if( data[index].bp_description ) {
+							html += '<span class="toast-messages-content">' + data[index].bp_description + '</span>';					
+						}					
 					html += '</div>';					
 					html += '<div class="actions"><a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="Close" data-notification-id="' + bp_msg_id + '"><i class="bb-icon bb-icon-times" aria-hidden="true"></i></a></div>';
 					
-					var sub_li = jQuery('<li class="read-item recent-item bp-message-' + bp_msg_type + '" />').html(html);
+					var sub_li = jQuery('<li id="' + bp_msg_id + '" class="item-list read-item pull-animation bp-message-' + bp_msg_type + '" />').html(html);
 					sub_ul.append(sub_li);
 
 				}); 
+
+				jQuery('.toast-messages-list .read-item .actions .action-close').on('click', function() {
+					
+					$(this).parents('li').removeClass('pull-animation').addClass('close-item');
+					
+					setTimeout(
+						function() {
+							$('.close-item').hide();
+						},
+						500
+					);
+
+				});
 				
 			}
 
