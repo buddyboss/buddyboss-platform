@@ -38,6 +38,7 @@ TABLE OF CONTENTS:
 13.0 Group Directories Enhancement
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
+16.0 Moderation
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -2242,6 +2243,7 @@ body .section-repair_community .settings fieldset .checkbox label code {
 	margin-bottom: 30px;
 }
 
+#bp_moderation_settings_blocking label.is_disabled,
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled {
 	pointer-events: none;
 	opacity: 0.5;
@@ -3539,4 +3541,156 @@ table tbody td .bb-description {
 			padding: 0;
 		}
 	}
+/*------------------------------------------------------------------------------
+ * 16.0 Moderation
+ *----------------------------------------------------------------------------*/
+
+table.moderations {
+
+	.column-content_type,
+	.column-member {
+
+		a[data-action="unhide"],
+		a[data-action="unsuspend"] {
+			color: #5f9a22;
+		}
+	}
+
+	thead tr th,
+	tfoot tr th {
+		font-weight: 600;
+	}
+
+	tbody {
+
+		tr {
+
+			.column-suspend {
+
+				.dashicons {
+					color: #000;
+					font-size: 24px;
+				}
+
+			}
+
+		}
+
+	}
 }
+
+.buddyboss_page_bp-moderation {
+
+	.dashicons {
+		font-weight: 700;
+	}
+
+	.bb-back {
+
+		.dashicons {
+			text-decoration: none;
+			margin-right: 5px;
+			font-size: 18px;
+			margin-top: 2px;
+		}
+	}
+
+	table.reports {
+
+		thead tr th,
+		tfoot tr th {
+			font-weight: 600;
+		}
+	}
+}
+
+table.moderations .content_owner,
+table.reports .column-reporter,
+table.moderations .column-member {
+
+	img {
+		vertical-align: middle;
+		margin-right: 5px;
+		border-radius: 50%;
+	}
+
+}
+
+#bp_moderation_action {
+
+	.report-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid #dfdfdf;
+		margin: 0 -12px;
+		padding: 25px;
+	}
+
+	.report-header_content_id {
+		font-size: 20px;
+		font-weight: 600;
+		color: #1d2327;
+		margin-bottom: 10px;
+
+		a {
+			text-decoration: none;
+
+			span {
+				color: #808080;
+			}
+
+			i {
+				font-weight: 300;
+			}
+		}
+	}
+
+	.report-header_user {
+		display: flex;
+		align-items: center;
+
+		strong a {
+			text-decoration: none;
+			font-size: 14px;
+		}
+
+		img {
+			border-radius: 50%;
+			max-width: 35px;
+			height: auto;
+			margin-right: 10px;
+		}
+	}
+
+	.report-header_content {
+		text-align: center;
+		font-weight: 600;
+
+		strong {
+			display: block;
+			font-size: 24px;
+		}
+	}
+
+	.report-header_action {
+
+		.report-header_button {
+			color: #b32d2e;
+			border-color: #b32d2e;
+
+			&.green {
+				color: #5f9a22;
+				border-color: #afcc90;
+			}
+
+			+ .report-header_button {
+				margin-left: 15px;
+			}
+
+		}
+
+	}
+
+}
+

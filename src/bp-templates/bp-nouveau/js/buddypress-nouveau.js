@@ -2495,6 +2495,13 @@ window.bp = window.bp || {};
 								var contentType = this.currItem.el.data( 'bp-content-type' );
 								var nonce       = this.currItem.el.data( 'bp-nonce' );
 								var reportType  = this.currItem.el.attr( 'reported_type' );
+								$( '#bb-report-content .form-item-category' ).show();
+								if ( 'user_report' === contentType ) {
+									$( '#bb-report-content .form-item-category.content' ).hide();
+								} else {
+									$( '#bb-report-content .form-item-category.members' ).hide();
+								}
+								$( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' ).attr( 'checked', true );
 								if ( 'undefined' !== typeof reportType ) {
 									var mf_content = $( '#content-report' );
 									mf_content.find( '.bp-reported-type' ).text( reportType );
@@ -2553,6 +2560,13 @@ window.bp = window.bp || {};
 						}
 					);
 
+					if ( 'user_report' === $( '#bb-report-content' ).find( 'input[name="content_type"]' ).val() ) {
+						data.reported = 1;
+						data.action   = 'bp_moderation_block_member';
+						_this.memberReportAjax( data, e );
+						return;
+					}
+
 					$.post(
 						BP_Nouveau.ajaxurl,
 						data,
@@ -2588,24 +2602,33 @@ window.bp = window.bp || {};
 						}
 					);
 
-					$.post(
-						BP_Nouveau.ajaxurl,
-						data,
-						function ( response ) {
-							if ( response.success ) {
-								_this.resetReportPopup();
-								_this.changeReportButtonStatus( response.data );
-								$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
-								$( '.mfp-close' ).trigger( 'click' );
-								if ( response.data.redirect ) {
-									location.href = response.data.redirect;
-								}
-							} else {
-								$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
-								_this.handleReportError( response.data.message.errors, e.currentTarget );
-							}
+					_this.memberReportAjax( data, e );
+				}
+			);
+		},
+		memberReportAjax: function ( data, element ) {
+			var _this = this;
+			$.post(
+				BP_Nouveau.ajaxurl,
+				data,
+				function ( response ) {
+					if ( true === response.success ) {
+						_this.resetReportPopup();
+						_this.changeReportButtonStatus( response.data );
+						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
+						$( '.mfp-close' ).trigger( 'click' );
+						if ( response.data.redirect ) {
+							location.href = response.data.redirect;
 						}
-					);
+					} else {
+						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
+						$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
+						_this.handleReportError( response.data.message.errors, element.currentTarget );
+					}
+				}
+			).fail(
+				function() {
+					location.href = window.href;
 				}
 			);
 		},

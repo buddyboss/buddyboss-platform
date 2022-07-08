@@ -139,6 +139,7 @@ abstract class BP_Moderation_Abstract {
 		}
 
 		$moderation->category_id  = isset( $args['category_id'] ) ? $args['category_id'] : 0;
+		$moderation->user_report  = isset( $args['user_report'] ) ? $args['user_report'] : 0;
 		$moderation->content      = ! empty( $args['note'] ) ? $args['note'] : '';
 		$moderation->last_updated = current_time( 'mysql' );
 

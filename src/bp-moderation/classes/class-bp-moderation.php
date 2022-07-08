@@ -115,6 +115,22 @@ class BP_Moderation {
 	public $count = 0;
 
 	/**
+	 * Reported count for members Moderation report.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var int
+	 */
+	public $user_reported = 0;
+
+	/**
+	 * Report flag for members Moderation report.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var int
+	 */
+	public $user_report = 0;
+
+	/**
 	 * Error holder.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -217,6 +233,8 @@ class BP_Moderation {
 		$this->last_updated  = $row->last_updated;
 		$this->blog_id       = (int) $row->blog_id;
 		$this->count         = (int) bp_moderation_get_meta( $this->id, '_count' );
+		$this->user_reported = (int) bp_moderation_get_meta( $this->id, '_count_user_reported' );
+		$this->user_report   = $row->user_report;
 
 		/**
 		 * Fetch User Report data
@@ -322,6 +340,10 @@ class BP_Moderation {
 		// Exclude report list for backend.
 		if ( ! isset( $r['reported'] ) ) {
 			$where_conditions['reported'] = 'reported=1';
+		}
+
+		if ( isset( $r['user_report'] ) ) {
+			$where_conditions['user_report'] = 'user_report=1';
 		}
 
 		// Scope takes precedence.
@@ -763,6 +785,8 @@ class BP_Moderation {
 				$moderation->hide_sitewide = (int) $moderation->hide_sitewide;
 				$moderation->blog_id       = (int) $moderation->blog_id;
 				$moderation->count         = (int) bp_moderation_get_meta( $moderation->id, '_count' );
+				$moderation->user_reported = (int) bp_moderation_get_meta( $moderation->id, '_count_user_reported' );
+				$moderation->user_report   = $moderation->user_report;
 			}
 			$moderations[] = $moderation;
 		}
@@ -814,7 +838,7 @@ class BP_Moderation {
 		global $wpdb;
 
 		$reporters = wp_cache_get( $moderation_id, 'bp_moderation_reporters' );
-		if ( empty( $reporters ) ) {
+		if ( empty( $reporters ) || ! empty( $args ) ) {
 			$bp = buddypress();
 
 			$select_sql = "SELECT * FROM {$bp->moderation->table_name_reports} mr";
@@ -824,6 +848,10 @@ class BP_Moderation {
 
 			if ( ! empty( $args['user_id'] ) ) {
 				$where_conditions[] = $wpdb->prepare( "mr.user_id = %d", $args['user_id'] ); // phpcs:ignore
+			}
+
+			if ( isset( $args['user_repoted'] ) ) {
+				$where_conditions[] = ! empty( $args['user_repoted'] ) ? 'category_id<>0' : 'category_id=0';
 			}
 
 			// Join the where conditions together.
@@ -943,7 +971,7 @@ class BP_Moderation {
 
 		$this->hide_sitewide = 1;
 
-		if ( $this->count <= 0 ) {
+		if ( $this->count <= 0 && $this->user_reported <= 0 ) {
 			$this->save();
 		}
 
@@ -981,6 +1009,7 @@ class BP_Moderation {
 		$this->date_created = empty( $this->date_created ) ? current_time( 'mysql' ) : $this->date_created;
 		$this->last_updated = empty( $this->last_updated ) ? current_time( 'mysql' ) : $this->last_updated;
 		$this->category_id  = isset( $this->category_id ) && 'other' !== $this->category_id ? $this->category_id : 0;
+		$this->user_report  = isset( $this->user_report ) ? $this->user_report : 0;
 
 		/**
 		 * Fires before the current moderation report item gets saved.
@@ -1011,11 +1040,13 @@ class BP_Moderation {
 
 		// Get Moderation settings.
 		$threshold          = false;
+		$user_threshold     = false;
 		$email_notification = false;
 		$auto_hide          = false;
 
-		if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
+		if ( BP_Moderation_Members::$moderation_type === $this->item_type && ( bp_is_moderation_auto_suspend_enable() || bp_is_moderation_auto_suspend_report_enable() ) ) {
 			$threshold          = bp_moderation_auto_suspend_threshold( 5 );
+			$user_threshold     = bp_moderation_auto_suspend_report_threshold( 5 );
 			$email_notification = bp_is_moderation_blocking_email_notification_enable();
 		} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
 			$threshold          = bp_moderation_reporting_auto_hide_threshold( '5', $this->item_type );
@@ -1037,10 +1068,19 @@ class BP_Moderation {
 			$this->last_updated = current_time( 'mysql' );
 
 			// Update count and check $threshold for auto hide/suspended and send email notification if auto hide/suspended.
-			$this->count  = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
-			$this->count += 1;
+			$this->count         = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
+			$this->user_reported = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
+			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->category_id ) ) {
+				$this->user_reported += 1;
+			} else {
+				$this->count += 1;
+			}
 			if ( ! empty( $threshold ) ) {
 				if ( $this->count >= $threshold && empty( $this->hide_sitewide ) ) {
+					$this->hide_sitewide = 1;
+					$auto_hide           = true;
+				}
+				if ( BP_Moderation_Members::$moderation_type === $this->item_type && $this->user_reported >= $user_threshold && empty( $this->hide_sitewide ) ) {
 					$this->hide_sitewide = 1;
 					$auto_hide           = true;
 				}
@@ -1123,6 +1163,7 @@ class BP_Moderation {
 					'item_id'      => $this->item_id,
 					'item_type'    => $this->item_type,
 					'reported'     => 1,
+					'user_report'  => $this->user_report,
 					'last_updated' => $this->last_updated,
 				)
 			);
@@ -1132,6 +1173,7 @@ class BP_Moderation {
 					'item_id'      => $this->item_id,
 					'item_type'    => $this->item_type,
 					'reported'     => 1,
+					'user_report'  => $this->user_report,
 					'last_updated' => $this->last_updated,
 					'blog_id'      => $this->blog_id,
 				)
@@ -1168,6 +1210,7 @@ class BP_Moderation {
 			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id ) VALUES ( %d, %d, %s, %s, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id ); // phpcs:ignore
 
 			bp_moderation_update_meta( $this->id, '_count', $this->count );
+			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
 		}
 
 		if ( false === $wpdb->query( $q_report ) ) { // phpcs:ignore
@@ -1205,10 +1248,11 @@ class BP_Moderation {
 			if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
 
 				$tokens = array(
-					'user_name'     => bp_core_get_user_displayname( $this->item_id ),
-					'times_blocked' => $this->count,
-					'member_link'   => BP_Moderation_Members::get_permalink( $this->item_id ),
-					'report_link'   => add_query_arg(
+					'user_name'      => bp_core_get_user_displayname( $this->item_id ),
+					'times_blocked'  => $this->count,
+					'times_reported' => $this->user_reported,
+					'member_link'    => BP_Moderation_Members::get_permalink( $this->item_id ),
+					'report_link'    => add_query_arg(
 						array(
 							'page'         => 'bp-moderation',
 							'mid'          => $this->item_id,
@@ -1369,10 +1413,17 @@ class BP_Moderation {
 
 		if ( ! empty( $updated_row ) ) {
 			$this->report_id = null;
-			$this->count    -= 1;
+			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->category_id ) ) {
+				$this->user_reported -= 1;
+			} else {
+				$this->count -= 1;
+			}
 
 			if ( 1 <= $this->count ) {
 				bp_moderation_update_meta( $this->id, '_count', $this->count );
+			}
+			if ( 1 <= $this->user_reported ) {
+				bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
 			}
 		}
 

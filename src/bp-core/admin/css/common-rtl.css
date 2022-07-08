@@ -39,6 +39,7 @@ TABLE OF CONTENTS:
 13.0 Group Directories Enhancement
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
+16.0 Moderation
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -2114,6 +2115,7 @@ body .section-repair_community .settings fieldset .checkbox label code {
   margin-bottom: 30px;
 }
 
+#bp_moderation_settings_blocking label.is_disabled,
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled {
   pointer-events: none;
   opacity: 0.5;
@@ -2273,21 +2275,18 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   padding: 0;
 }
 
-#bp_web_push_notification_settings .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback,
 #bp_privacy .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
-#bp_web_push_notification_settings .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon,
 #bp_privacy .bp-feedback .bp-icon {
   border-radius: 0 4px 4px 0;
   margin: 0;
 }
 
-#bp_web_push_notification_settings .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p,
 #bp_privacy .bp-feedback > p {
   color: #666 !important;
@@ -2300,21 +2299,18 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 }
 
 .admin-notice .bp-feedback,
-#bp_web_push_notification_settings .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
 .admin-notice .bp-feedback .bp-icon,
-#bp_web_push_notification_settings .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon {
   border-radius: 0 4px 4px 0;
   margin: 0;
 }
 
 .admin-notice .bp-feedback > p,
-#bp_web_push_notification_settings .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p {
   color: #666 !important;
   margin-top: 0 !important;
@@ -2333,70 +2329,6 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\e855";
-}
-
-/* Errors / Waring Styling*/
-.bb-error-section {
-  padding: 10px;
-  margin-right: -210px;
-  background: #ffdcdc;
-  color: #d42929;
-  border: 1px solid #ffc5ca;
-  border-radius: 4px;
-}
-
-.bb-warning-section {
-  padding: 10px;
-  margin-right: -210px;
-  background: #fff3c8;
-  color: #8b6300;
-  border: 1px solid #ffeeb3;
-  border-radius: 4px;
-}
-
-/* Status Block */
-.status-line {
-  display: inline-block;
-  font-size: 14px;
-  padding: 10px 15px;
-  background: #f0f0f1;
-  border-radius: 5px;
-  color: #808080;
-}
-
-.status-line:before {
-  content: "";
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 100%;
-  background: #808080;
-  margin-left: 10px;
-  vertical-align: baseline;
-}
-
-.status-line.error-connected {
-  color: #ce1010;
-}
-
-.status-line.error-connected:before {
-  background: #ce1010;
-}
-
-.status-line.connected {
-  color: #858585;
-}
-
-.status-line.connected:before {
-  background: #8fd14f;
-}
-
-.status-line.warn-connected {
-  color: #858585;
-}
-
-.status-line.warn-connected:before {
-  background: #fac710;
 }
 
 /*------------------------------------------------------------------------------
@@ -3272,15 +3204,115 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   line-height: 1.4;
 }
 
-#bp_web_push_notification_settings table.form-table .notes-hidden-header > th {
-  display: none;
+/*------------------------------------------------------------------------------
+ * 16.0 Moderation
+ *----------------------------------------------------------------------------*/
+table.moderations .column-content_type a[data-action="unhide"],
+table.moderations .column-content_type a[data-action="unsuspend"],
+table.moderations .column-member a[data-action="unhide"],
+table.moderations .column-member a[data-action="unsuspend"] {
+  color: #5f9a22;
 }
 
-#bp_web_push_notification_settings table.form-table .notes-hidden-header > th + td {
-  padding-right: 0;
-  padding-left: 0;
+table.moderations thead tr th,
+table.moderations tfoot tr th {
+  font-weight: 600;
 }
 
-#bp_web_push_notification_settings table.form-table .no-padding {
-  padding: 0;
+table.moderations tbody tr .column-suspend .dashicons {
+  color: #000;
+  font-size: 24px;
+}
+
+.buddyboss_page_bp-moderation .dashicons {
+  font-weight: 700;
+}
+
+.buddyboss_page_bp-moderation .bb-back .dashicons {
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.buddyboss_page_bp-moderation table.reports thead tr th,
+.buddyboss_page_bp-moderation table.reports tfoot tr th {
+  font-weight: 600;
+}
+
+table.moderations .content_owner img,
+table.reports .column-reporter img,
+table.moderations .column-member img {
+  vertical-align: middle;
+  margin-left: 5px;
+  border-radius: 50%;
+}
+
+#bp_moderation_action .report-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #dfdfdf;
+  margin: 0 -12px;
+  padding: 25px;
+}
+
+#bp_moderation_action .report-header_content_id {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1d2327;
+  margin-bottom: 10px;
+}
+
+#bp_moderation_action .report-header_content_id a {
+  text-decoration: none;
+}
+
+#bp_moderation_action .report-header_content_id a span {
+  color: #808080;
+}
+
+#bp_moderation_action .report-header_content_id a i {
+  font-weight: 300;
+}
+
+#bp_moderation_action .report-header_user {
+  display: flex;
+  align-items: center;
+}
+
+#bp_moderation_action .report-header_user strong a {
+  text-decoration: none;
+  font-size: 14px;
+}
+
+#bp_moderation_action .report-header_user img {
+  border-radius: 50%;
+  max-width: 35px;
+  height: auto;
+  margin-left: 10px;
+}
+
+#bp_moderation_action .report-header_content {
+  text-align: center;
+  font-weight: 600;
+}
+
+#bp_moderation_action .report-header_content strong {
+  display: block;
+  font-size: 24px;
+}
+
+#bp_moderation_action .report-header_action .report-header_button {
+  color: #b32d2e;
+  border-color: #b32d2e;
+}
+
+#bp_moderation_action .report-header_action .report-header_button.green {
+  color: #5f9a22;
+  border-color: #afcc90;
+}
+
+#bp_moderation_action .report-header_action .report-header_button + .report-header_button {
+  margin-right: 15px;
 }
