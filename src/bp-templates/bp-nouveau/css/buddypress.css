@@ -22091,6 +22091,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: none;
 }
 
+.bb-activity-video-elem .video-js.vjs-error ~ .bb-video-duration,
+.bb-video-thumb .video-js.vjs-error ~ .bb-video-duration,
+.bb-media-section .video-js.vjs-error ~ .bb-video-duration {
+  display: none;
+}
+
 .bb-activity-video-elem .video-js.vjs-error .vjs-error-display.vjs-modal-dialog,
 .bb-video-thumb .video-js.vjs-error .vjs-error-display.vjs-modal-dialog,
 .bb-media-section .video-js.vjs-error .vjs-error-display.vjs-modal-dialog {
@@ -22121,7 +22127,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   top: 50%;
   transform: translateY(-50%);
   height: auto;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 @media screen and (max-width: 544px) {
@@ -22589,16 +22595,16 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice {
 }
 
 div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
-  content: "\ef66";
+  content: "\e9f0";
+  font-weight: 400;
   color: #fff;
   display: block;
   font-size: 80px;
-  font-weight: 300;
   font-family: "bb-icons";
   /* stylelint-disable-line */
   text-shadow: none;
   margin-top: -65px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 @media screen and (max-width: 544px) {

@@ -102,6 +102,10 @@
 			display: none;
 		}
 
+		~ .bb-video-duration {
+			display: none;
+		}
+
 		.vjs-error-display.vjs-modal-dialog {
 			background: rgba(0, 0, 0, 0.75);
 			cursor: pointer;
@@ -124,7 +128,7 @@
 				top: 50%;
 				transform: translateY(-50%);
 				height: auto;
-				margin-top: 20px;
+				margin-top: 30px;
 			}
 
 			@media screen and (max-width: 544px) {
@@ -544,15 +548,15 @@ div.video-js {
 			right: 0;
 
 			&:before {
-				content: "\ef66";
+				content: "\e9f0";
+				font-weight: 400;
 				color: #fff;
 				display: block;
 				font-size: 80px;
-				font-weight: 300;
 				font-family: "bb-icons";/* stylelint-disable-line */;
 				text-shadow: none;
 				margin-top: -65px;
-				margin-bottom: 20px;
+				margin-bottom: 30px;
 			}
 
 			@media screen and (max-width: 544px) {
