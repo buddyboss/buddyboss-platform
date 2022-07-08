@@ -157,7 +157,7 @@ window.bp = window.bp || {};
 			/**
 			 * Function for hide/show auto suspend fields on member blocking enable/disabled.
 			 */
-			$( '#bpm_blocking_auto_suspend_threshold' ).attr('disabled', ! $( '#bpm_blocking_member_blocking' ).prop( 'checked' ));
+			$( '#bpm_blocking_auto_suspend_threshold' ).attr( 'disabled', ! $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) );
 			$( '#bpm_blocking_auto_suspend' ).attr('disabled', ! $( '#bpm_blocking_member_blocking' ).prop( 'checked' ));
 			$( document ).on(
 				'change',
