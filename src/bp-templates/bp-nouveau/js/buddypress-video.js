@@ -2302,6 +2302,21 @@ window.bp = window.bp || {};
 			$( '.bb-media-model-wrapper.video' ).show();
 			self.is_open_video = true;
 
+			// Add class to video theatre for the activity directory.
+			if ( $( target ).closest( '.bb-activity-video-wrap' ).find( '.bb-activity-video-elem' ).hasClass( 'has-no-thumbnail' ) ) {
+				$( '.bb-media-model-wrapper.video' ).find( 'figure' ).addClass( 'has-no-thumbnail' );
+			}
+
+			// Add class to video theatre for the forum topic and reply.
+			if ( $( target ).closest( '.forums-video-wrap' ).find( '.bb-activity-video-elem' ).hasClass( 'has-no-thumbnail' ) ) {
+				$( '.bb-media-model-wrapper.video' ).find( 'figure' ).addClass( 'has-no-thumbnail' );
+			}
+
+			// Add class to video theatre for the video directory.
+			if ( $( target ).closest( '.bb-video-thumb' ).hasClass( 'has-no-thumbnail' ) ) {
+				$( '.bb-media-model-wrapper.video' ).find( 'figure' ).addClass( 'has-no-thumbnail' );
+			}
+
 			// document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
 
@@ -2324,6 +2339,9 @@ window.bp = window.bp || {};
 			self.is_open_video = false;
 
 			self.resetRemoveActivityCommentsData();
+
+			// Remove class from video theatre for the activity directory, forum topic and reply, video directory.
+			$( target ).closest( '.bb-media-model-wrapper' ).find( 'figure' ).removeClass( 'has-no-thumbnail' );
 
 			self.current_video = false;
 		},
