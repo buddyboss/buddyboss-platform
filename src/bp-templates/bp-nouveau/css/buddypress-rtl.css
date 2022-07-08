@@ -5127,7 +5127,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul,
 .bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul {
   list-style: none;
-  margin: 5px 0;
+  margin: 0;
   padding: 0;
 }
 
@@ -5751,12 +5751,13 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-audio-wrap {
-  padding: 10px 15px;
+  padding: 0;
   width: 100%;
   float: right;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-audio-wrap audio {
+  border-radius: 4px;
   width: 100%;
   float: right;
   outline: 0;

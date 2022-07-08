@@ -1657,7 +1657,7 @@ span.dashicons.dashicons-admin-file:before {
 
 			ul {
 				list-style: none;
-				margin: 5px 0;
+				margin: 0;
 				padding: 0;
 
 				li {
@@ -2261,11 +2261,12 @@ span.dashicons.dashicons-admin-file:before {
 		}
 
 		.document-audio-wrap {
-			padding: 10px 15px;
+			padding: 0;
 			width: 100%;
 			float: left;
 
 			audio {
+				border-radius: 4px;
 				width: 100%;
 				float: left;
 				outline: 0;
