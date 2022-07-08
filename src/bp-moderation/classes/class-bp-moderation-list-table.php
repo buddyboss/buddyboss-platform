@@ -661,7 +661,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Function to suspend
+	 * Function to suspend.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
