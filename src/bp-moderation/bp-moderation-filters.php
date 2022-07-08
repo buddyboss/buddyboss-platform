@@ -769,7 +769,7 @@ add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated',
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $taxonomy  Reporting category taxonomy.
+ * @param string $taxonomy Reporting category taxonomy.
  *
  * @return mixed Show when Reporting field.
  */
