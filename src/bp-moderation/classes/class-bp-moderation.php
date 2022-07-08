@@ -1321,7 +1321,7 @@ class BP_Moderation {
 		 * @param int $item_id       item id
 		 * @param int $hide_sitewide item hidden sitewide or user specific
 		 */
-		do_action( "bp_suspend_hide_{$this->item_type}", $this->item_id, $this->hide_sitewide );
+		do_action( "bp_suspend_hide_{$this->item_type}", $this->item_id, $this->hide_sitewide, array() );
 	}
 
 	/**

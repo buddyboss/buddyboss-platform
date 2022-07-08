@@ -641,7 +641,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Function to show reported count
 	 *
-	 * @since BuddyBoss 1.5.6
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $item loop item.
 	 */
@@ -661,7 +661,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Function to suspend
+	 * Function to suspend.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -674,7 +674,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Function to hideen
+	 * Function to hidden.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

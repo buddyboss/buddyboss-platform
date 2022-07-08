@@ -292,7 +292,7 @@ function bpm_blocking_settings_callback_auto_suspend_threshold() {
 }
 
 /**
- * Moderation blocking auto suspend report threshold setting field
+ * Moderation blocking auto suspend report threshold setting field.
  *
  * @since BuddyBoss [BBVERSION]
  *
