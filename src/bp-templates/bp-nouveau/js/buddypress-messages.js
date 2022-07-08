@@ -2566,10 +2566,10 @@ window.bp = window.bp || {};
 			},
 
 			updateThreadsList: function() {
-				$( document.body ).find('#user_messages_search').val(' ');
-				$( document.body ).find('#user_messages_search_form').trigger('submit');
-				$( document.body ).find('#user_messages_search').val('');
-				$( document.body ).find('#user_messages_search_form').trigger('submit');
+				$( document.body ).find( '#user_messages_search' ).val( ' ' );
+				$( document.body ).find( '#user_messages_search_form' ).trigger( 'submit' );
+				$( document.body ).find( '#user_messages_search' ).val( '' );
+				$( document.body ).find( '#user_messages_search_form' ).trigger( 'submit' );
 			},
 
 			threadsFetched: function() {
@@ -2928,7 +2928,7 @@ window.bp = window.bp || {};
 					{
 						'search_terms': $( event.target ).find( 'input[type=search]' ).val() || '',
 						page: 1
-						}
+					}
 				);
 			},
 
