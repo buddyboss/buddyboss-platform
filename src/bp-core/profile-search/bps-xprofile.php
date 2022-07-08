@@ -638,7 +638,7 @@ function bp_ps_search_dummy_fields( $f ) {
 /**
  * Registers Email Address field in frontend and backend in advance search.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.5
  *
  * @param array $fields Fields array.
  *
@@ -667,7 +667,7 @@ add_filter( 'bp_ps_add_fields', 'bb_ps_email_setup' );
 /**
  * Fetch the users based on selected value in advance search.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.5
  *
  * @param object $f Field object.
  *

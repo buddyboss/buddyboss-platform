@@ -1372,7 +1372,7 @@ function bb_notification_avatar_url_args( $args ) {
 /**
  * Notification renderable.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.5
  *
  * @param object $notification_item Notification item.
  * @param string $format            Format of the notification.
