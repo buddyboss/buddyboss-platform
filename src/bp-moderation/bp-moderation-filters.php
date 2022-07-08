@@ -229,6 +229,7 @@ function bp_moderation_block_member() {
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
 	// Member Report only.
+	$note     = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
 	$reported = filter_input( INPUT_POST, 'reported', FILTER_SANITIZE_NUMBER_INT );
 	$category = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
 
@@ -247,6 +248,23 @@ function bp_moderation_block_member() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! empty( $reported ) ) {
+		$reports_terms = get_terms(
+			'bpm_category',
+			array(
+				'hide_empty' => false,
+				'fields'     => 'ids',
+			)
+		);
+		if ( ( 'other' === $category && empty( $note ) ) || ( 'other' !== $category && ! in_array( (int) $category, $reports_terms, true ) ) ) {
+			$response['message'] = new WP_Error(
+				'bp_moderation_missing_data',
+				esc_html__( 'Please specify reason to report this member.', 'buddyboss' )
+			);
+			wp_send_json_error( $response );
+		}
+	}
+
 	// Check the current has access to report the item ot not.
 	$user_can = bp_moderation_user_can( $item_id, BP_Moderation_Members::$moderation_type );
 	if ( false === (bool) $user_can ) {
@@ -262,7 +280,7 @@ function bp_moderation_block_member() {
 			array(
 				'content_id'   => $item_id,
 				'content_type' => BP_Moderation_Members::$moderation_type,
-				'note'         => ! empty( $reported ) ? esc_html__( 'Member report', 'buddyboss' ) : esc_html__( 'Member block', 'buddyboss' ),
+				'note'         => ( ! empty( $note ) ? $note : ( ! empty( $reported ) ? esc_html__( 'Member report', 'buddyboss' ) : esc_html__( 'Member block', 'buddyboss' ) ) ),
 				'category_id'  => ! empty( $category ) ? $category : 0,
 				'user_report'  => ! empty( $reported ) ? 1 : 0,
 			)
