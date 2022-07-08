@@ -2302,21 +2302,6 @@ window.bp = window.bp || {};
 			$( '.bb-media-model-wrapper.video' ).show();
 			self.is_open_video = true;
 
-			// Add class to video theatre for the activity directory.
-			if ( $( target ).closest( '.bb-activity-video-wrap' ).find( '.bb-activity-video-elem' ).hasClass( 'has-no-thumbnail' ) ) {
-				$( '.bb-media-model-wrapper.video' ).find( 'figure' ).addClass( 'has-no-thumbnail' );
-			}
-
-			// Add class to video theatre for the forum topic and reply.
-			if ( $( target ).closest( '.forums-video-wrap' ).find( '.bb-activity-video-elem' ).hasClass( 'has-no-thumbnail' ) ) {
-				$( '.bb-media-model-wrapper.video' ).find( 'figure' ).addClass( 'has-no-thumbnail' );
-			}
-
-			// Add class to video theatre for the video directory.
-			if ( $( target ).closest( '.bb-video-thumb' ).hasClass( 'has-no-thumbnail' ) ) {
-				$( '.bb-media-model-wrapper.video' ).find( 'figure' ).addClass( 'has-no-thumbnail' );
-			}
-
 			// document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
 
@@ -2425,6 +2410,16 @@ window.bp = window.bp || {};
 							m.is_message = false;
 						}
 
+						m.thumbnail_class = '';
+						// Add class to video theatre for the activity directory, Message, and forum topic and reply .
+						if ( video_element.closest( '.bb-activity-video-elem' ).hasClass( 'has-no-thumbnail' ) ) {
+							m.thumbnail_class = 'has-no-thumbnail';
+
+						// Add class to video theatre for the video directory.
+						} else if ( video_element.closest( '.bb-video-thumb' ).hasClass( 'has-no-thumbnail' ) ) {
+							m.thumbnail_class = 'has-no-thumbnail';
+						}
+
 						self.videos.push( m );
 					}
 				}
@@ -2473,6 +2468,8 @@ window.bp = window.bp || {};
 					video_privacy_wrap.hide();
 				}
 			}
+
+			$( '.bb-media-model-wrapper.video' ).find( 'figure' ).removeClass( 'has-no-thumbnail' ).addClass( self.current_video.thumbnail_class );
 
 			// update navigation.
 			self.navigationCommands();
