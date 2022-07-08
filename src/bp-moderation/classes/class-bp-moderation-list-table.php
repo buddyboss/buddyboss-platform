@@ -674,7 +674,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Function to hideen
+	 * Function to hidden.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
