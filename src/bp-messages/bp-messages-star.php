@@ -253,7 +253,7 @@ function bp_get_the_message_star_action_link( $args = array() ) {
  * @return bool
  */
 function bp_messages_star_set_action( $args = array() ) {
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'action'     => 'star',

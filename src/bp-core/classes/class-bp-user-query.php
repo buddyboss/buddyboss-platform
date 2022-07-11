@@ -157,7 +157,7 @@ class BP_User_Query {
 		$this->setup_hooks();
 
 		if ( ! empty( $this->query_vars_raw ) ) {
-			$this->query_vars = wp_parse_args(
+			$this->query_vars = bp_parse_args(
 				$this->query_vars_raw,
 				array(
 					'type'                => 'newest',

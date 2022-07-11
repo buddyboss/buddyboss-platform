@@ -247,7 +247,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
-	$args['button_attr'] = wp_parse_args(
+	$args['button_attr'] = bp_parse_args(
 		$args['button_attr'],
 		array(
 			'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
@@ -259,7 +259,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
-	$button = wp_parse_args(
+	$button = bp_parse_args(
 		$args,
 		array(
 			'link_text' => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $button_text ), esc_html( $button_text ) ),
@@ -1066,7 +1066,7 @@ function bp_moderation_item_count( $args = array() ) {
 		'count_total' => true,
 	);
 
-	$moderation_request_args = wp_parse_args( $args, $moderation_request_args );
+	$moderation_request_args = bp_parse_args( $args, $moderation_request_args );
 
 	$result = BP_Moderation::get( $moderation_request_args );
 

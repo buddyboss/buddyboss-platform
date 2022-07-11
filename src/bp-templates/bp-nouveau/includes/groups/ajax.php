@@ -347,7 +347,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		wp_send_json_error( $response );
 	}
 
-	$request = wp_parse_args(
+	$request = bp_parse_args(
 		$_POST,
 		array(
 			'scope' => 'members',

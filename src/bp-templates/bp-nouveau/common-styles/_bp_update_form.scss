@@ -401,6 +401,15 @@
 		width: 100%;
 	}
 
+	#whats-new-form.bottom-notice {
+		margin-bottom: 60px;
+
+		#message-feedabck.updated {
+			position: absolute;
+			bottom: -60px;
+		}
+	}
+
 	.whats-new-form-header {
 		display: flex;
 	}
@@ -1787,6 +1796,15 @@ input.search-query-input {
 
 #content .toolbar-button {
 	box-shadow: none;
+}
+
+.ac-input,
+.medium-editor-element {
+
+	font[color] {
+		color: inherit; //Fix font tag dictating color
+	}
+
 }
 
 @media screen and (max-width: 768px) {
