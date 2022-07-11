@@ -270,7 +270,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $forum_id,
@@ -320,7 +320,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $forum_id,

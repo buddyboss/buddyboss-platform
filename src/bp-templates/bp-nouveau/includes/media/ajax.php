@@ -1024,7 +1024,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
  * @return string
  */
 function bp_nouveau_object_template_results_albums_existing_media_query( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$caller = filter_input( INPUT_POST, 'caller', FILTER_SANITIZE_STRING );
 
