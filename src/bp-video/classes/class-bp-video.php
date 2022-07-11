@@ -294,7 +294,7 @@ class BP_Video {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'scope'        => '',              // Scope - Groups, friends etc.
@@ -937,7 +937,7 @@ class BP_Video {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'id'            => false,
