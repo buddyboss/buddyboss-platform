@@ -2570,6 +2570,7 @@ window.bp = window.bp || {};
 				$( document.body ).find( '#user_messages_search_form' ).trigger( 'submit' );
 				$( document.body ).find( '#user_messages_search' ).val( '' );
 				$( document.body ).find( '#user_messages_search_form' ).trigger( 'submit' );
+				bp.Nouveau.Messages.removeFeedback();
 			},
 
 			threadsFetched: function() {
