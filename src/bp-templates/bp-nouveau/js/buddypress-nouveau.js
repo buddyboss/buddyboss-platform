@@ -71,7 +71,34 @@ window.bp = window.bp || {};
 			this.profileNotificationSetting();
 
 			// Toast Message
-			this.toastMessage();
+			this.toastMessage([{
+				bp_type: 'info',
+				bp_title: 'Info',
+				bp_description: 'Info Message.',
+				bp_url: '',
+				bp_autohide: true
+			},
+			{
+				bp_type: 'success',
+				bp_title: 'Success',
+				bp_description: '',
+				bp_url: '',
+				bp_autohide: false
+			},
+			{
+				bp_type: 'warning',
+				bp_title: '',
+				bp_description: 'Warning Message.',
+				bp_url: '',
+				bp_autohide: false
+			},
+			{
+				bp_type: 'error',
+				bp_title: 'Error',
+				bp_description: 'Error Message.',
+				bp_url: '',
+				bp_autohide: true
+			}]);
 
 			// Check for lazy images and load them also register scroll event to load on scroll.
 			bp.Nouveau.lazyLoad( '.lazy' );
@@ -86,54 +113,25 @@ window.bp = window.bp || {};
 		/*
 		 *	Toast Message 
 		 */
-		toastMessage: function( event, data ) {
+		toastMessage: function( data ) {
 
-			if ( jQuery('.toast-messages-list').length ) {
-				data = [{
-						bp_id: '1',
-						bp_type: 'info',
-						bp_title: 'Info',
-						bp_description: 'Info Message.',
-						bp_url: 'link',
-						bp_autohide: 'autohide'
-					},
-					{
-						bp_id: '2',
-						bp_type: 'success',
-						bp_title: 'Success',
-						bp_description: '',
-						bp_url: 'link',
-						bp_autohide: 'autohide'
-					},
-					{
-						bp_id: '3',
-						bp_type: 'warning',
-						bp_title: '',
-						bp_description: 'Warning Message.',
-						bp_url: 'link',
-						bp_autohide: 'autohide'
-					},
-					{
-						bp_id: '4',
-						bp_type: 'error',
-						bp_title: 'Error',
-						bp_description: 'Error Message.',
-						bp_url: 'link',
-						bp_autohide: 'autohide'
-					}
-				];			
+			if ( jQuery('.toast-messages-list').length ) {				
 
 				var sub_ul = jQuery('.toast-messages-list');							
 
-				jQuery.each(data, function (index) {							
-					var html = '';
-					var bp_msg_id = '';
-					var bp_msg_type = '';
-					var bp_icon_type = '';				
+				data.forEach(
+					function ( item ) {
+						if ( ( bp_type in item && bp_title in item && bp_description in item && bp_url in item ) ) {
+							console.log(item);
+						}
+				});
 
-					if( data[index].bp_id ) {
-						bp_msg_id = data[index].bp_id;
-					}
+				jQuery.each(data, function (index) {
+					
+					var html = '';					
+					var bp_msg_type = '';
+					var bp_icon_type = '';								
+					var bp_msg_hide = '';
 
 					if( data[index].bp_type ) {
 						bp_msg_type = data[index].bp_type;
@@ -146,6 +144,10 @@ window.bp = window.bp || {};
 						}
 					}
 
+					if( data[index].bp_autohide === true ) {
+						bp_msg_hide = 'bb-autoHide';
+					}
+
 					html += '<div class="toast-messages-icon"><i class="bb-icon bb-icon-' + bp_icon_type + '"></i></div>';					
 					html += '<div class="toast-messages-content">';
 						if( data[index].bp_title ) {
@@ -155,24 +157,36 @@ window.bp = window.bp || {};
 							html += '<span class="toast-messages-content">' + data[index].bp_description + '</span>';					
 						}					
 					html += '</div>';					
-					html += '<div class="actions"><a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="Close" data-notification-id="' + bp_msg_id + '"><i class="bb-icon bb-icon-times" aria-hidden="true"></i></a></div>';
+					html += '<div class="actions"><a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="Close"><i class="bb-icon bb-icon-times" aria-hidden="true"></i></a></div>';
 					
-					var sub_li = jQuery('<li id="' + bp_msg_id + '" class="item-list read-item pull-animation bp-message-' + bp_msg_type + '" />').html(html);
+					var sub_li = jQuery('<li class="item-list read-item pull-animation bp-message-' + bp_msg_type + ' ' + bp_msg_hide + ' " />').html(html);
 					sub_ul.append(sub_li);
-
+					
+					// AutoHide Element
+					if( jQuery('.toast-messages-list .read-item').hasClass('bb-autoHide') ) {							
+						setTimeout(							
+							function() {
+								$('.toast-messages-list .read-item.bb-autoHide').addClass('close-item');
+								setTimeout(
+									function() {
+										jQuery('.toast-messages-list .read-item.bb-autoHide').remove();
+									},
+									500
+								);
+							},
+							30000
+						);
+					}
 				}); 
 
-				jQuery('.toast-messages-list .read-item .actions .action-close').on('click', function() {
-					
-					$(this).parents('li').removeClass('pull-animation').addClass('close-item');
-					
+				jQuery('.toast-messages-list .read-item .actions .action-close').on('click', function() {					
+					$(this).parents('li').removeClass('pull-animation').addClass('close-item');					
 					setTimeout(
 						function() {
-							$('.close-item').hide();
+							$('.close-item').remove();
 						},
 						500
 					);
-
 				});
 				
 			}
