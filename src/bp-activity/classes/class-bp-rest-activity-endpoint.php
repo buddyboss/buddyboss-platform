@@ -1146,7 +1146,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_activity_maybe_truncate_entry', '__return_false' );
 
 		if ( 'activity_comment' === $activity->type ) {
+			add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
 			$rendered = apply_filters( 'bp_get_activity_content', $activity->content, $activity );
+			remove_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
 		} else {
 			$activities_template = null;
 

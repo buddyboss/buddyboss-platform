@@ -526,7 +526,7 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 		'fields' => 'ID',
 	);
 
-	$query_args = wp_parse_args( $query_args, $defaults );
+	$query_args = bp_parse_args( $query_args, $defaults );
 
 	if ( $exclude_admin == true ) {
 		$query_args['role__not_in'] = array( 'administrator' );
@@ -633,4 +633,72 @@ function bp_ps_heading_field_setup( $fields ) {
  */
 function bp_ps_search_dummy_fields( $f ) {
 	return array();
+}
+
+/**
+ * Registers Email Address field in frontend and backend in advance search.
+ *
+ * @since BuddyBoss 2.0.5
+ *
+ * @param array $fields Fields array.
+ *
+ * @return array
+ */
+function bb_ps_email_setup( $fields ) {
+
+	$f              = new stdClass();
+	$f->group       = __( 'General Information', 'buddyboss' );
+	$f->id          = 'xprofile_email';
+	$f->code        = 'field_xprofile_email';
+	$f->name        = __( 'Email Address', 'buddyboss' );
+	$f->description = __( 'Email Address', 'buddyboss' );
+	$f->type        = 'textbox';
+	$f->format      = bp_ps_xprofile_format( 'textbox', 'xprofile_email' );
+	$f->search      = 'bb_ps_xprofile_email_users_search';
+
+	$fields[] = $f;
+
+	return $fields;
+}
+
+// Hook for registering a Gender field in frontend and backend in advance search.
+add_filter( 'bp_ps_add_fields', 'bb_ps_email_setup' );
+
+/**
+ * Fetch the users based on selected value in advance search.
+ *
+ * @since BuddyBoss 2.0.5
+ *
+ * @param object $f Field object.
+ *
+ * @return array
+ */
+function bb_ps_xprofile_email_users_search( $f ) {
+	global $wpdb;
+
+	$value  = $f->value;
+	$value  = str_replace( '&', '&amp;', $value );
+	$filter = $f->format . '_' . ( '' === trim( $f->filter ) ? 'is' : $f->filter );
+
+	$sql_query = "SELECT ID FROM {$wpdb->users} WHERE ";
+
+	switch ( $filter ) {
+		case 'text_contains':
+			$escaped    = '%' . bp_ps_esc_like( $value ) . '%';
+			$sql_query .= $wpdb->prepare( 'user_email LIKE %s', $escaped );
+			break;
+
+		case 'text_like':
+			$value      = str_replace( '\\\\%', '\\%', $value );
+			$value      = str_replace( '\\\\_', '\\_', $value );
+			$sql_query .= $wpdb->prepare( 'user_email LIKE %s', $value );
+			break;
+
+		case 'text_is':
+		default:
+			$sql_query .= $wpdb->prepare( 'user_email = %s', $value );
+			break;
+	}
+
+	return $wpdb->get_col( $sql_query );
 }

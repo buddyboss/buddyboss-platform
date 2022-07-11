@@ -599,7 +599,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 
 	$excerpt_length = bp_activity_get_excerpt_length();
 
-	$args = wp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
+	$args = bp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
 	$excerpt = bp_create_excerpt( $text, $excerpt_length, $args );
@@ -1353,7 +1353,7 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 
 	// members directory
 	if ( ! bp_is_user() && bp_is_members_directory() ) {
-		$qs_args = wp_parse_args( $qs );
+		$qs_args = bp_parse_args( $qs );
 		// check if members scope is following before manipulating.
 		if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
 			$qs .= '&include=' . bp_get_following_ids(
@@ -2492,11 +2492,15 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
-				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-				if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
-					$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
-					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+				if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
+					$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+					if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+						$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
+						$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+						$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+					}
+				} else {
+					$content = html_entity_decode( $comment->comment_content );
 				}
 			}
 		}
