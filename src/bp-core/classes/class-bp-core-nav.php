@@ -175,7 +175,7 @@ class BP_Core_Nav {
 			}
 
 			$nav_item                               = reset( $nav_items );
-			$this->nav[ $this->object_id ][ $slug ] = new BP_Core_Nav_Item( wp_parse_args( $args, (array) $nav_item ) );
+			$this->nav[ $this->object_id ][ $slug ] = new BP_Core_Nav_Item( bp_parse_args( $args, (array) $nav_item ) );
 
 			// Return the edited object.
 			return $this->nav[ $this->object_id ][ $slug ];
@@ -196,7 +196,7 @@ class BP_Core_Nav {
 
 			$sub_item = reset( $sub_items );
 
-			$params = wp_parse_args( $args, (array) $sub_item );
+			$params = bp_parse_args( $args, (array) $sub_item );
 
 			// When we have parents, it's for life, we can't change them!
 			if ( empty( $params['parent_slug'] ) || $parent_slug !== $params['parent_slug'] ) {
@@ -336,7 +336,7 @@ class BP_Core_Nav {
 	 * @return array The list of primary objects nav
 	 */
 	public function get_primary( $args = array(), $sort = true ) {
-		$params = wp_parse_args( $args, array( 'primary' => true ) );
+		$params = bp_parse_args( $args, array( 'primary' => true ) );
 
 		// This parameter is not overridable.
 		if ( empty( $params['primary'] ) ) {
@@ -366,7 +366,7 @@ class BP_Core_Nav {
 	 * @return bool|array The list of secondary objects nav, or false if none set.
 	 */
 	public function get_secondary( $args = array(), $sort = true ) {
-		$params = wp_parse_args( $args, array( 'parent_slug' => '' ) );
+		$params = bp_parse_args( $args, array( 'parent_slug' => '' ) );
 
 		// No need to search children if the parent is not set.
 		if ( empty( $params['parent_slug'] ) && empty( $params['secondary'] ) ) {

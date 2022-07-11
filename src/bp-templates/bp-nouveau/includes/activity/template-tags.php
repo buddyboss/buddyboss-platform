@@ -1307,7 +1307,7 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
-			<span class="bb-icon-edit-thin"></span>
+			<span class="bb-icon-l bb-icon-edit "></span>
 			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
@@ -1379,7 +1379,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
-			<span class="bb-icon-edit-thin"></span>
+			<span class="bb-icon-l bb-icon-edit"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
@@ -1453,7 +1453,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
 		   href="#">
-			   <span class="bb-icon-edit-thin"></span>
+			   <span class="bb-icon-l bb-icon-edit"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
@@ -1561,7 +1561,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
-	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
+	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -1662,7 +1662,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 			}
 		}
 
-		$delete_args = wp_parse_args(
+		$delete_args = bp_parse_args(
 			$delete_args,
 			array(
 				'link_text'   => '',
@@ -1851,7 +1851,7 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
-	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
+	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
