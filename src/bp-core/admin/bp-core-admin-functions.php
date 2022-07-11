@@ -379,7 +379,7 @@ function bp_core_activation_notice() {
 
 	// If there are duplicates, post a message about them.
 	if ( ! empty( $dupe_names ) ) {
-		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-page-settings' ), 'admin.php' ) );
+		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 		if ( isset( $_GET['page'] ) && 'bp-pages' === $_GET['page'] ) {
 			$notice = sprintf(
 				'%1$s',
@@ -736,7 +736,7 @@ function bp_core_get_admin_active_tab_object() {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_setting_url( $tab, $args = array() ) {
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'page' => 'bp-settings',
@@ -897,7 +897,7 @@ function bp_core_get_admin_integration_active_tab_object() {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_integrations_url( $tab, $args = array() ) {
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'page' => 'bp-integrations',

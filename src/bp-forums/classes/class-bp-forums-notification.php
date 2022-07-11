@@ -170,9 +170,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
 		if ( 'forums' === $component_name && 'bb_forums_subscribed_reply' === $component_action_name ) {
-			$topic_id    = bbp_get_reply_topic_id( $item_id );
-			$topic_title = bbp_get_topic_title( $topic_id );
-			$topic_link  = wp_nonce_url(
+			$notification = bp_notifications_get_notification( $notification_id );
+			$topic_id     = bbp_get_reply_topic_id( $item_id );
+			$topic_title  = bbp_get_topic_title( $topic_id );
+			$topic_link   = wp_nonce_url(
 				add_query_arg(
 					array(
 						'action'   => 'bbp_mark_read',
@@ -184,52 +185,200 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'bbp_mark_topic_' . $topic_id
 			);
 
-			if ( (int) $total_items > 1 ) {
-				$text = sprintf(
-					/* translators: replies count. */
-					esc_html__( 'You have %d new replies', 'buddyboss' ),
-					(int) $total_items
-				);
-			} else {
-				$except = '"' . bbp_get_reply_excerpt( $item_id, 50 ) . '"';
-				$except = str_replace( '&hellip;"', '&hellip;', $except );
-				if ( ! empty( $except ) && ! empty( $secondary_item_id ) ) {
-					$text = sprintf(
+			$except = '"' . bbp_get_reply_excerpt( $item_id, 50 ) . '"';
+			$except = str_replace( '&hellip;"', '&hellip;', $except );
+			$except = str_replace( '""', '', $except );
+
+			$media_ids    = get_post_meta( $item_id, 'bp_media_ids', true );
+			$document_ids = get_post_meta( $item_id, 'bp_document_ids', true );
+			$video_ids    = get_post_meta( $item_id, 'bp_video_ids', true );
+			$gif_data     = get_post_meta( $item_id, '_gif_data', true );
+
+			$title = bp_get_site_name();
+
+			if ( 'web_push' === $screen ) {
+				if ( ! empty( $notification->secondary_item_id ) ) {
+					if ( ! empty( $except ) ) {
+						$text = sprintf(
 						/* translators: 1. Member display name. 2. excerpt. */
-						esc_html__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
-						bp_core_get_user_displayname( $secondary_item_id ),
-						$except
-					);
-				} elseif ( ! empty( $secondary_item_id ) && empty( $except ) ) {
-					$text = sprintf(
+							__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $notification->secondary_item_id ),
+							$except
+						);
+					} elseif ( ! empty( $media_ids ) ) {
+						$media_ids = array_filter( explode( ',', $media_ids ) );
+						if ( count( $media_ids ) > 1 ) {
+							$text = sprintf(
+							/* translators: Member display name. */
+								esc_html__( '%s replied to a discussion: some photos', 'buddyboss' ),
+								bp_core_get_user_displayname( $notification->secondary_item_id )
+							);
+						} else {
+							$text = sprintf(
+							/* translators: Member display name. */
+								esc_html__( '%s replied to a discussion: a photo', 'buddyboss' ),
+								bp_core_get_user_displayname( $notification->secondary_item_id )
+							);
+						}
+					} elseif ( ! empty( $document_ids ) ) {
+						$document_ids = array_filter( explode( ',', $document_ids ) );
+						if ( count( $document_ids ) > 1 ) {
+							$text = sprintf(
+							/* translators: Member display name. */
+								esc_html__( '%s replied to a discussion: some documents', 'buddyboss' ),
+								bp_core_get_user_displayname( $notification->secondary_item_id )
+							);
+						} else {
+							$text = sprintf(
+							/* translators: Member display name. */
+								esc_html__( '%s replied to a discussion: a document', 'buddyboss' ),
+								bp_core_get_user_displayname( $notification->secondary_item_id )
+							);
+						}
+					} elseif ( ! empty( $video_ids ) ) {
+						$video_ids = array_filter( explode( ',', $video_ids ) );
+						if ( count( $video_ids ) > 1 ) {
+							$text = sprintf(
+							/* translators: Member display name. */
+								esc_html__( '%s replied to a discussion: some videos', 'buddyboss' ),
+								bp_core_get_user_displayname( $notification->secondary_item_id )
+							);
+						} else {
+							$text = sprintf(
+							/* translators: Member display name. */
+								esc_html__( '%s replied to a discussion: a video', 'buddyboss' ),
+								bp_core_get_user_displayname( $notification->secondary_item_id )
+							);
+						}
+					} elseif ( ! empty( $gif_data ) ) {
+						$text = sprintf(
 						/* translators: Member display name. */
-						esc_html__( '%s replied to a discussion', 'buddyboss' ),
-						bp_core_get_user_displayname( $secondary_item_id )
-					);
+							esc_html__( '%s replied to a discussion: a gif', 'buddyboss' ),
+							bp_core_get_user_displayname( $notification->secondary_item_id )
+						);
+					} else {
+						$text = sprintf(
+						/* translators: Member display name. */
+							__( '%s replied to a discussion', 'buddyboss' ),
+							bp_core_get_user_displayname( $notification->secondary_item_id )
+						);
+					}
 				} else {
 					$text = sprintf(
-						/* translators: topic title. */
-						esc_html__( 'You have a new reply to %s', 'buddyboss' ),
+					/* translators: topic title. */
+						__( 'You have a new reply to %s', 'buddyboss' ),
 						$topic_title
 					);
+				}
+
+				$forum_id  = bbp_get_topic_forum_id( $topic_id );
+				$group_ids = bbp_get_forum_group_ids( $forum_id );
+
+				if ( bp_is_active( 'groups' ) && ! empty( $group_ids ) ) {
+					$title = bp_get_group_name( groups_get_group( current( $group_ids ) ) );
+				}
+			} else {
+				if ( (int) $total_items > 1 ) {
+					$text = sprintf(
+					/* translators: replies count. */
+						esc_html__( 'You have %d new replies', 'buddyboss' ),
+						(int) $total_items
+					);
+				} else {
+					if ( ! empty( $secondary_item_id ) ) {
+						if ( ! empty( $except ) ) {
+							$text = sprintf(
+								/* translators: 1. Member display name. 2. excerpt. */
+								esc_html__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								$except
+							);
+						} elseif ( $media_ids ) {
+							$media_ids = array_filter( explode( ',', $media_ids ) );
+							if ( count( $media_ids ) > 1 ) {
+								$text = sprintf(
+								/* translators: Member display name. */
+									esc_html__( '%s replied to a discussion: some photos', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id )
+								);
+							} else {
+								$text = sprintf(
+								/* translators: Member display name. */
+									esc_html__( '%s replied to a discussion: a photo', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id )
+								);
+							}
+						} elseif ( $document_ids ) {
+							$document_ids = array_filter( explode( ',', $document_ids ) );
+							if ( count( $document_ids ) > 1 ) {
+								$text = sprintf(
+								/* translators: Member display name. */
+									esc_html__( '%s replied to a discussion: some documents', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id )
+								);
+							} else {
+								$text = sprintf(
+								/* translators: Member display name. */
+									esc_html__( '%s replied to a discussion: a document', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id )
+								);
+							}
+						} elseif ( $video_ids ) {
+							$video_ids = array_filter( explode( ',', $video_ids ) );
+							if ( count( $video_ids ) > 1 ) {
+								$text = sprintf(
+								/* translators: Member display name. */
+									esc_html__( '%s replied to a discussion: some videos', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id )
+								);
+							} else {
+								$text = sprintf(
+								/* translators: Member display name. */
+									esc_html__( '%s replied to a discussion: a video', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id )
+								);
+							}
+						} elseif ( ! empty( $gif_data ) ) {
+							$text = sprintf(
+							/* translators: Member display name. */
+								esc_html__( '%s replied to a discussion: a gif', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id )
+							);
+						} else {
+							$text = sprintf(
+							/* translators: Member display name. */
+								esc_html__( '%s replied to a discussion', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id )
+							);
+						}
+					} else {
+						$text = sprintf(
+							/* translators: topic title. */
+							esc_html__( 'You have a new reply to %s', 'buddyboss' ),
+							$topic_title
+						);
+					}
 				}
 			}
 
 			$content = array(
-				'text' => $text,
-				'link' => $topic_link,
+				'text'  => $text,
+				'link'  => $topic_link,
+				'title' => $title,
+				'image' => bb_notification_avatar_url( $notification ),
 			);
 		}
 
 		if ( 'forums' === $component_name && 'bb_forums_subscribed_discussion' === $component_action_name ) {
-			$topic_id    = bbp_get_topic_id( $item_id );
-			$topic_title = '"' . bp_create_excerpt(
-				wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
-				50,
-				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
-				)
-			) . '"';
+			$notification = bp_notifications_get_notification( $notification_id );
+			$topic_id     = bbp_get_topic_id( $item_id );
+			$topic_title  = '"' . bp_create_excerpt(
+					wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				) . '"';
 
 			$topic_title = str_replace( '&hellip;"', '&hellip;', $topic_title );
 
@@ -244,30 +393,58 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'bbp_mark_topic_' . $topic_id
 			);
 
-			if ( (int) $total_items > 1 ) {
-				/* translators: discussions count. */
-				$text = sprintf( __( 'You have %d new discussion', 'buddyboss' ), (int) $total_items );
-			} else {
+			$title = bp_get_site_name();
 
-				if ( ! empty( $secondary_item_id ) ) {
+			if ( 'web_push' === $screen ) {
+				if ( ! empty( $notification->secondary_item_id ) ) {
 					$text = sprintf(
-						/* translators: 1.Member display name 2. discussions title. */
-						esc_html__( '%1$s started a discussion: %2$s', 'buddyboss' ),
-						bp_core_get_user_displayname( $secondary_item_id ),
+					/* translators: 1.Member display name 2. discussions title. */
+						__( '%1$s started a discussion: %2$s', 'buddyboss' ),
+						bp_core_get_user_displayname( $notification->secondary_item_id ),
 						$topic_title
 					);
 				} else {
 					$text = sprintf(
-						/* translators: discussions title. */
-						esc_html__( 'You have a new discussion: %s', 'buddyboss' ),
+					/* translators: discussions title. */
+						__( 'You have a new discussion: %s', 'buddyboss' ),
 						$topic_title
 					);
+				}
+
+				$forum_id  = bbp_get_topic_forum_id( $topic_id );
+				$group_ids = bbp_get_forum_group_ids( $forum_id );
+
+				if ( bp_is_active( 'groups' ) && ! empty( $group_ids ) ) {
+					$title = bp_get_group_name( groups_get_group( current( $group_ids ) ) );
+				}
+			} else {
+				if ( (int) $total_items > 1 ) {
+					/* translators: discussions count. */
+					$text = sprintf( __( 'You have %d new discussion', 'buddyboss' ), (int) $total_items );
+				} else {
+
+					if ( ! empty( $secondary_item_id ) ) {
+						$text = sprintf(
+						/* translators: 1.Member display name 2. discussions title. */
+							esc_html__( '%1$s started a discussion: %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							$topic_title
+						);
+					} else {
+						$text = sprintf(
+						/* translators: discussions title. */
+							esc_html__( 'You have a new discussion: %s', 'buddyboss' ),
+							$topic_title
+						);
+					}
 				}
 			}
 
 			$content = array(
-				'text' => $text,
-				'link' => $topic_link,
+				'text'  => $text,
+				'link'  => $topic_link,
+				'title' => $title,
+				'image' => bb_notification_avatar_url( $notification ),
 			);
 		}
 

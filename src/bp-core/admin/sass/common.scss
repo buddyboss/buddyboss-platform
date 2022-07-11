@@ -2425,6 +2425,7 @@ h2.has_tutorial_btn {
 	padding: 0;
 }
 
+#bp_web_push_notification_settings,
 #bp_media_settings_symlinks,
 #bp_privacy {
 
@@ -2450,18 +2451,21 @@ h2.has_tutorial_btn {
 }
 
 .admin-notice .bp-feedback,
+#bp_web_push_notification_settings .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback {
 	box-shadow: none;
 	padding-top: 0;
 }
 
 .admin-notice .bp-feedback .bp-icon,
+#bp_web_push_notification_settings .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon {
 	border-radius: 4px 0 0 4px;
 	margin: 0;
 }
 
 .admin-notice .bp-feedback > p,
+#bp_web_push_notification_settings .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p {
 	color: #666 !important;
 	margin-top: 0 !important;
@@ -2480,6 +2484,25 @@ h2.has_tutorial_btn {
 		content: "\e855";
 	}
 
+}
+
+/* Errors / Waring Styling*/
+.bb-error-section {
+	padding: 10px;
+	margin-left: -210px;
+	background: rgb(255, 220, 220);
+	color: rgb(212, 41, 41);
+	border: 1px solid rgb(255, 197, 202);
+	border-radius: 4px;
+}
+
+.bb-warning-section {
+	padding: 10px;
+	margin-left: -210px;
+	background: #fff3c8;
+	color: #8b6300;
+	border: 1px solid #ffeeb3;
+	border-radius: 4px;
 }
 
 
@@ -3428,6 +3451,10 @@ table tbody td .bb-description {
 				max-width: 36px;
 			}
 
+			> i {
+				display: none;
+			}
+
 		}
 
 	}
@@ -3603,5 +3630,27 @@ table.moderations .column-member {
 		}
 
 	}
-
 }
+
+#bp_web_push_notification_settings {
+
+	table.form-table {
+
+		.notes-hidden-header {
+
+			> th {
+				display: none;
+
+				+ td {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+		}
+
+		.no-padding {
+			padding: 0;
+		}
+	}
+}
+

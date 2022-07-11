@@ -448,6 +448,22 @@ function bbp_new_topic_handler( $action = '' ) {
 			}
 		}
 
+		// Delete draft data from the database.
+		$draft_data_key = 'draft_discussion_' . $forum_id;
+		$usermeta_key   = 'bb_user_topic_reply_draft';
+		$user_id        = bp_loggedin_user_id();
+		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+
+		if ( ! empty( $existing_draft ) && isset( $existing_draft[ $draft_data_key ] ) ) {
+			unset( $existing_draft[ $draft_data_key ] );
+		}
+
+		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
+			$existing_draft = array();
+		}
+
+		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+
 		/** Additional Actions (After Save) */
 
 		do_action( 'bbp_new_topic_post_extras', $topic_id );
@@ -956,7 +972,8 @@ function bbp_update_topic( $topic_id = 0, $forum_id = 0, $anonymous_data = false
 	}
 
 	// Handle Subscription Checkbox.
-	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) ) {
+	// Make sure the form is being submitted from frontend.
+	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) && ( ! isset( $_POST['action'] ) || 'editpost' !== $_POST['action'] ) ) {
 		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 
