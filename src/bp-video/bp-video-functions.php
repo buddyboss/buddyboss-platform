@@ -59,10 +59,14 @@ function bp_video_upload() {
 
 	$name = $attachment->post_title;
 
+	// Generate video attachment preview link.
+	$attachment_id  = 'forbidden_' . $attachment->ID;
+	$attachment_url = home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id );
+
 	$result = array(
 		'id'    => (int) $attachment->ID,
 		'thumb' => '',
-		'url'   => '',
+		'url'   => esc_url( $attachment_url ),
 		'name'  => esc_attr( $name ),
 	);
 
@@ -1409,7 +1413,7 @@ function bp_get_total_video_count() {
  * @return string
  */
 function bp_video_object_results_video_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'all';
 	$querystring['page']        = 1;
@@ -1431,7 +1435,7 @@ function bp_video_object_results_video_all_scope( $querystring ) {
  * @return string
  */
 function bp_video_object_template_results_video_personal_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'personal';
 	$querystring['page']        = 1;
@@ -1452,7 +1456,7 @@ function bp_video_object_template_results_video_personal_scope( $querystring ) {
  * @return string
  */
 function bp_video_object_template_results_video_groups_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'groups';
 	$querystring['page']        = 1;
@@ -1791,7 +1795,8 @@ function albums_check_video_album_access( $album_id ) {
  */
 function bp_video_delete_orphaned_attachments() {
 
-	global $wpdb;
+	remove_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10 );
+	remove_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10 );
 
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
@@ -1800,15 +1805,37 @@ function bp_video_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_video_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
-	$data  = $wpdb->get_col( $query );
+	$args = array(
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+		'post_status'    => 'inherit',
+		'post_type'      => 'attachment',
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'   => 'bp_video_saved',
+				'value' => '0'
+			),
+			array(
+				'key'     => 'bb_media_draft',
+				'compare' => 'NOT EXISTS',
+				'value'   => ''
+			)
+		)
+	);
 
-	if ( ! empty( $data ) ) {
-		foreach ( $data as $a_id ) {
-			wp_delete_attachment( $a_id, true );
+	$video_wp_query = new WP_query( $args );
+	if ( 0 < $video_wp_query->found_posts ) {
+		foreach ( $video_wp_query->posts as $post_id ) {
+			wp_delete_attachment( $post_id, true );
 		}
 	}
 
+	wp_reset_postdata();
+	wp_reset_query();
+
+	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
+	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
 }
 
 /**

@@ -1099,7 +1099,7 @@ window.bp = window.bp || {};
 									emojibtn_click: function () {
 										$( '#message_content' )[0].emojioneArea.hidePicker();
 										bp.Nouveau.Messages.mediumEditor.checkContentChanged();
-									}
+									},
 								}
 							}
 						);
@@ -1234,6 +1234,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							if ( ! jQuery( '.message-media-error-popup' ).length) {
@@ -1425,6 +1427,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							if ( ! jQuery( '.document-error-popup' ).length) {
@@ -1635,6 +1639,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button closeModalErrorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
@@ -2448,7 +2454,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( this.model.get( 'message_content' ) === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'video' ) !== 'undefined' && this.model.get( 'video' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
-					this.model.set( 'message_content', '&nbsp;', { silent: true } );
+					this.model.set( 'message_content', '', { silent: true } );
 				}
 
 				// Set meta.
@@ -3437,7 +3443,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( content === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'video' ) !== 'undefined' && this.model.get( 'video' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
-					content = '&nbsp;';
+					content = '';
 				}
 
 				this.model.set(
