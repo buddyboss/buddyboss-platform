@@ -119,7 +119,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function form( $instance ) {
 
-		$instance = wp_parse_args(
+		$instance = bp_parse_args(
 				(array) $instance,
 				array(
 						'title' => __( 'Complete Your Profile', 'buddyboss' ),
