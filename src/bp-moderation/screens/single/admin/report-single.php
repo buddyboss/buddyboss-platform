@@ -42,14 +42,14 @@ $admins            = array_map(
 
 	<?php if ( ! empty( $moderation_request_data ) ) : ?>
 		<div id="poststuff">
-			<div id="post-body" class="metabox-holder columns-<?php echo 1 === (int) get_current_screen()->get_columns() ? '1' : '2'; ?>">
+			<div id="post-body" class="metabox-holder columns-<?php echo 1 === (int) get_current_screen()->get_columns() ? esc_attr( '1' ) : esc_attr( '2' ); ?>">
 				<div id="post-body-content">
 					<div id="postdiv">
 						<div id="bp_moderation_action" class="postbox">
 							<div class="inside">
 
 								<?php if ( ! empty( $messages ) ) : ?>
-									<div id="moderation" class="<?php echo ( ! empty( $error ) ) ? 'error' : 'updated'; ?>">
+									<div id="moderation" class="<?php echo ( ! empty( $error ) ) ? esc_attr( 'error' ) : esc_attr( 'updated' ); ?>">
 										<p><?php echo wp_kses_post( implode( "<br/>\n", $messages ) ); ?></p>
 									</div>
 								<?php endif; ?>
@@ -101,7 +101,7 @@ $admins            = array_map(
 
 											if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
 												?>
-												<a href="javascript:void(0);" class="button report-header_button bp-hide-request single-report-btn <?php echo ( 'unhide' === $action_type ) ? 'green' : ''; ?>" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_html( $action_label ); ?>">
+												<a href="javascript:void(0);" class="button report-header_button bp-hide-request single-report-btn <?php echo ( 'unhide' === $action_type ) ? esc_attr( 'green' ) : ''; ?>" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_html( $action_label ); ?>">
 													<?php
 													echo esc_html( $action_label );
 													?>
@@ -112,7 +112,7 @@ $admins            = array_map(
 												$user_action_type = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
 												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
 												?>
-												<a href="javascript:void(0);" class="button report-header_button bp-block-user single-report-btn content-author <?php echo ( 'unsuspend' === $user_action_type ) ? 'green' : ''; ?>" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>">
+												<a href="javascript:void(0);" class="button report-header_button bp-block-user single-report-btn content-author <?php echo ( 'unsuspend' === $user_action_type ) ? esc_attr( 'green' ) : ''; ?>" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>">
 													<?php
 													echo esc_html( $user_action_text );
 													?>

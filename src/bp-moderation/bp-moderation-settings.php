@@ -258,7 +258,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 	$threshold_report = ob_get_clean();
 	?>
 
-	<label for="bpm_blocking_auto_suspend" class="<?php echo bp_is_moderation_member_blocking_enable( false ) ? '' : 'is_disabled'; ?>">
+	<label for="bpm_blocking_auto_suspend" class="<?php echo bp_is_moderation_member_blocking_enable( false ) ? '' : esc_attr( 'is_disabled' ); ?>">
 		<input name="bpm_blocking_auto_suspend" id="bpm_blocking_auto_suspend" type="checkbox" value="1"
 				<?php checked( bp_is_moderation_auto_suspend_enable( false ) ); ?> />
 		<?php
@@ -267,7 +267,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 		?>
 	</label>
 	<br/><br/>
-	<label for="bb_reporting_auto_suspend_" class="<?php echo bb_is_moderation_member_reporting_enable( false ) ? '' : 'is_disabled'; ?>">
+	<label for="bb_reporting_auto_suspend_" class="<?php echo bb_is_moderation_member_reporting_enable( false ) ? '' : esc_attr( 'is_disabled' ); ?>">
 		<input name="bb_reporting_auto_suspend_" id="bb_reporting_auto_suspend_" type="checkbox" value="1"
 				<?php checked( bb_is_moderation_auto_suspend_report_enable( false ) ); ?> />
 		<?php

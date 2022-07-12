@@ -806,9 +806,9 @@ function bb_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
 		</th>
 		<td>
 			<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
-				<option value="content" <?php echo 'content' === $value ? 'selected' : ''; ?>><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
-				<option value="members" <?php echo 'members' === $value ? 'selected' : ''; ?>><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
-				<option value="content_members" <?php echo 'content_members' === $value ? 'selected' : ''; ?>><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+				<option value="content" <?php echo 'content' === $value ? esc_attr( 'selected' ) : ''; ?>><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
+				<option value="members" <?php echo 'members' === $value ? esc_attr( 'selected' ) : ''; ?>><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
+				<option value="content_members" <?php echo 'content_members' === $value ? esc_attr( 'selected' ) : ''; ?>><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
 			</select>
 		</td>
 	</tr>
@@ -924,8 +924,6 @@ function bb_quickedit_bb_category_show_when_reporting_javascript() {
 		return;
 	}
 
-	// Ensure jQuery library is loaded.
-	wp_enqueue_script( 'jquery' );
 	?>
 	<script type="text/javascript">
 		/*global jQuery*/
