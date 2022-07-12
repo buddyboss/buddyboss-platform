@@ -183,6 +183,22 @@ window.bp = window.bp || {};
 					$( '#bb_reporting_auto_suspend_' ).attr('disabled', ! $( this ).prop( 'checked' ));
 				}
 			);
+
+			$( 'span:contains("Slug")' ).each(function () {
+				$( this ).parent().remove();
+			});
+
+			$( '.taxonomy-bpm_category #the-list' ).on( 'click', 'button.editinline', function ( e ) {
+				e.preventDefault();
+				var $tr = $( this ).closest('tr');
+				var val = $tr.find( 'td.bb_category_show_when_reporting' ).text();
+				if ( val !== '' ) {
+					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' ).removeAttr( 'selected' );
+					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' ).filter(function () {
+						return this.text === val;
+					}).attr( 'selected', 'selected');
+				}
+			});
 		}
 	);
 

@@ -911,43 +911,6 @@ function bb_quick_edit_bb_category_show_when_reporting_field( $column_name, $scr
 }
 add_action( 'quick_edit_custom_box', 'bb_quick_edit_bb_category_show_when_reporting_field', 10, 2 );
 
-
-/**
- * Front-end stuff for pulling in user-input values dynamically into our input field.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_quickedit_bb_category_show_when_reporting_javascript() {
-	$current_screen = get_current_screen();
-
-	if ( 'edit-bpm_category' !== $current_screen->id || 'bpm_category' !== $current_screen->taxonomy ) {
-		return;
-	}
-
-	?>
-	<script type="text/javascript">
-		/*global jQuery*/
-		jQuery(function($) {
-			$('span:contains("Slug")').each(function (i) {
-				$(this).parent().remove();
-			});
-			$('#the-list').on('click', 'button.editinline', function(e) {
-				e.preventDefault();
-				var $tr = $(this).closest('tr');
-				var val = $tr.find('td.bb_category_show_when_reporting').text();
-				if( val != '') {
-					$('tr.inline-edit-row select[name="bb_category_show_when_reporting"] option').removeAttr('selected');
-					$('tr.inline-edit-row select[name="bb_category_show_when_reporting"] option').filter(function() {
-						return this.text == val; 
-					}).attr('selected', 'selected');
-				}
-			});
-		});
-	</script>
-	<?php
-}
-add_action( 'admin_print_footer_scripts-edit-tags.php', 'bb_quickedit_bb_category_show_when_reporting_javascript' );
-
 add_action( 'bp_moderation_user_report_report_content_type', 'bp_moderation_user_report_content_type', 10, 2 );
 
 /**
