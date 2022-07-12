@@ -168,17 +168,17 @@ function bp_helper_plugins_loaded_callback() {
 	}
 
 	if ( in_array( 'geodirectory/geodirectory.php', $bp_plugins, true ) ) {
-		
+
 		/**
 		 * Function to deregister some scripts and styles from bp component pages
-		 * 
+		 *
 		 * @since 1.8.0
 		 *
 		 * @return void
 		 */
 		function bp_exclude_geodirectory_scripts() {
 			$bp_current_component = bp_current_component();
-			
+
 			// deregister geodirectory select2 script and styles from all component pages
 			if ( $bp_current_component && 'listings' !== $bp_current_component ) {
 				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
@@ -190,7 +190,7 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Deregister and dequeue select2 script from all component pages.
-		 * 
+		 *
 		 * @since 1.8.0
 		 *
 		 * @return void
@@ -204,7 +204,7 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Deregister and dequeue styles from all component pages.
-		 * 
+		 *
 		 * @since 1.8.0
 		 *
 		 * @return void
@@ -223,7 +223,38 @@ function bp_helper_plugins_loaded_callback() {
 	if ( class_exists( 'WooCommerce' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
 	}
+
+	if ( in_array( 'the-events-calendar/the-events-calendar.php', $bp_plugins, true ) ) {
+
+		/**
+		 * Function to suppress "The Event Calendar" plugin's parse_query filter.
+		 *
+		 * @since BuddyBoss 2.0.3
+		 *
+		 * @param array $query default query variable.
+		 *
+		 * @return array|mixed
+		 */
+		function bb_core_tribe_events_parse_query( $query ) {
+
+			if ( true === is_search() ||
+			     (
+				     true === (bool) defined( 'DOING_AJAX' ) &&
+				     true === (bool) DOING_AJAX &&
+				     isset( $_REQUEST['action'] ) &&
+				     'bp_search_ajax' === $_REQUEST['action']
+			     )
+			) {
+				$query->set( 'tribe_suppress_query_filters', true );
+			}
+
+			return $query;
+		}
+
+		add_filter( 'parse_query', 'bb_core_tribe_events_parse_query' );
+	}
 }
+
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 
 /**
@@ -236,7 +267,7 @@ function bb_wp_offload_media_compatibility_helper() {
 	}
 
 }
-add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
+add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 10 );
 
 /**
  * Fix the media, video & document display compatibility issue.
@@ -750,6 +781,8 @@ function bb_get_elementor_maintenance_mode_template() {
 		return;
 	}
 
+	static $user = null;
+
 	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
 		return;
 	}
@@ -760,7 +793,10 @@ function bb_get_elementor_maintenance_mode_template() {
 		return;
 	}
 
-	$user         = wp_get_current_user();
+	if ( null === $user ) {
+		$user = wp_get_current_user();
+	}
+
 	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
 
 	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {

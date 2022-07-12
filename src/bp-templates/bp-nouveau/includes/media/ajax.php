@@ -1033,7 +1033,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
  * @return string
  */
 function bp_nouveau_object_template_results_albums_existing_media_query( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$caller = filter_input( INPUT_POST, 'caller', FILTER_SANITIZE_STRING );
 
@@ -1163,7 +1163,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 					</div>
 
 					<div class="activity-header">
-						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php echo esc_html_e( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
 						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 					</div>
 				</div>
@@ -1173,7 +1173,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 					if ( $can_edit_btn ) {
 						?>
 						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
-							<span class="bb-icon-edit-thin"></span>
+							<span class="bb-icon-l bb-icon-edit"></span>
 							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 						</a>

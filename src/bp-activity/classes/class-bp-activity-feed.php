@@ -107,7 +107,7 @@ class BP_Activity_Feed {
 		}
 
 		// Setup data.
-		$this->data = wp_parse_args(
+		$this->data = bp_parse_args(
 			$args,
 			array(
 				// Internal identifier for the RSS feed - should be alphanumeric only.
@@ -198,7 +198,7 @@ class BP_Activity_Feed {
 		$this->update_period    = strip_tags( $this->update_period );
 		$this->update_frequency = (int) $this->update_frequency;
 
-		$this->activity_args = wp_parse_args(
+		$this->activity_args = bp_parse_args(
 			$this->activity_args,
 			array(
 				'max'              => $this->max,

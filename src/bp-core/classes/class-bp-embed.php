@@ -79,7 +79,7 @@ class BP_Embed extends WP_Embed {
 		}
 
 		$rawattr = $attr;
-		$attr    = wp_parse_args( $attr, wp_embed_defaults() );
+		$attr    = bp_parse_args( $attr, wp_embed_defaults() );
 
 		// Use kses to convert & into &amp; and we need to undo this
 		// See https://core.trac.wordpress.org/ticket/11311.
@@ -138,10 +138,10 @@ class BP_Embed extends WP_Embed {
 
 		// Set up a new WP oEmbed object to check URL with registered oEmbed providers.
 		if ( file_exists( ABSPATH . WPINC . '/class-wp-oembed.php' ) ) {
-			require_once( ABSPATH . WPINC . '/class-wp-oembed.php' );
+			require_once ABSPATH . WPINC . '/class-wp-oembed.php';
 		} else {
 			// class-oembed.php is deprecated in WordPress 5.3.0.
-			require_once( ABSPATH . WPINC . '/class-oembed.php' );
+			require_once ABSPATH . WPINC . '/class-oembed.php';
 		}
 
 		$oembed_obj = _wp_oembed_get_object();
@@ -265,7 +265,7 @@ class BP_Embed extends WP_Embed {
 
 		if ( $is_activity ) {
 
-			if ( !empty( $content ) && false !== strpos( '<iframe', $content ) ) {
+			if ( ! empty( $content ) && false !== strpos( '<iframe', $content ) ) {
 				return apply_filters( 'bp_embeds', $content );
 			}
 
@@ -273,7 +273,7 @@ class BP_Embed extends WP_Embed {
 			$link_embed = bp_activity_get_meta( $type->id, '_link_embed', true );
 			if ( '0' === $link_embed ) {
 				return $content;
-			} else if ( ! empty( $link_embed ) ) {
+			} elseif ( ! empty( $link_embed ) ) {
 				$embed_data = bp_core_parse_url( $link_embed );
 
 				if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
@@ -289,14 +289,24 @@ class BP_Embed extends WP_Embed {
 							'error'       => '',
 							'wp_embed'    => true,
 						);
-						$cache_key = 'bp_activity_oembed_' . md5( serialize( $link_embed ) );
+						$cache_key       = 'bp_activity_oembed_' . md5( maybe_serialize( $link_embed ) );
 						// set the transient.
 						set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
 					}
 				}
 
 				if ( ! empty( $embed_code ) ) {
-					$content .= $embed_code;
+
+					if ( ! empty( $content ) ) {
+						preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+						preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+						if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+							$content = sprintf( '<p>%s</p>', $content );
+						}
+					}
+
+					$content   .= $embed_code;
 					$link_embed = true;
 				}
 			} else {

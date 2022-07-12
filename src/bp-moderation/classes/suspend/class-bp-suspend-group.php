@@ -187,7 +187,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type, true ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type ) ) {
 			return false;
 		}
 
@@ -206,7 +206,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	public function manage_hidden_group( $group_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $group_id,
@@ -253,7 +253,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $group_id,

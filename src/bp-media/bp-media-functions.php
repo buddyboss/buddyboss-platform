@@ -50,16 +50,15 @@ function bp_media_upload() {
 
 	$name = $attachment->post_title;
 
-	$thumb_nfo = wp_get_attachment_image_src( $attachment->ID );
-	$url_nfo   = wp_get_attachment_image_src( $attachment->ID, 'full' );
-
-	$url       = is_array( $url_nfo ) && ! empty( $url_nfo ) ? $url_nfo[0] : null;
-	$thumb_nfo = is_array( $thumb_nfo ) && ! empty( $thumb_nfo ) ? $thumb_nfo[0] : null;
+	// Generate document attachment preview link.
+	$attachment_id        = base64_encode( 'forbidden_' . $attachment->ID );
+	$attachment_url       = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
+	$attachment_thumb_url = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
 
 	$result = array(
 		'id'    => (int) $attachment->ID,
-		'thumb' => esc_url( $thumb_nfo ),
-		'url'   => esc_url( $url ),
+		'thumb' => $attachment_thumb_url,
+		'url'   => $attachment_url,
 		'name'  => esc_attr( $name ),
 	);
 
@@ -102,6 +101,7 @@ function bp_media_remove_default_image_sizes( $sizes ) {
 			'bb-media-photos-album-directory-image'        => $sizes['bb-media-photos-album-directory-image'],
 			'bb-media-photos-album-directory-image-medium' => $sizes['bb-media-photos-album-directory-image-medium'],
 			'bb-media-photos-popup-image'                  => $sizes['bb-media-photos-popup-image'],
+			'thumbnail'                                    => $sizes['thumbnail'],
 		);
 	}
 
@@ -883,7 +883,7 @@ function bp_get_total_media_count() {
  * @since BuddyBoss 1.1.9
  */
 function bp_media_object_results_media_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope'] = 'all';
 
@@ -902,7 +902,7 @@ function bp_media_object_results_media_all_scope( $querystring ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_object_template_results_media_personal_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'personal';
 	$querystring['page']        = 1;
@@ -919,7 +919,7 @@ function bp_media_object_template_results_media_personal_scope( $querystring ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_object_template_results_media_groups_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'groups';
 	$querystring['page']        = 1;
@@ -1251,7 +1251,8 @@ function albums_check_album_access( $album_id ) {
  */
 function bp_media_delete_orphaned_attachments() {
 
-	global $wpdb;
+	remove_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10 );
+	remove_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10 );
 
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
@@ -1260,15 +1261,37 @@ function bp_media_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_media_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
-	$data  = $wpdb->get_col( $query );
+	$args = array(
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+		'post_status'    => 'inherit',
+		'post_type'      => 'attachment',
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'   => 'bp_media_saved',
+				'value' => '0'
+			),
+			array(
+				'key'     => 'bb_media_draft',
+				'compare' => 'NOT EXISTS',
+				'value'   => ''
+			)
+		)
+	);
 
-	if ( ! empty( $data ) ) {
-		foreach ( $data as $a_id ) {
-			wp_delete_attachment( $a_id, true );
+	$media_wp_query = new WP_query( $args );
+	if ( 0 < $media_wp_query->found_posts ) {
+		foreach ( $media_wp_query->posts as $post_id ) {
+			wp_delete_attachment( $post_id, true );
 		}
 	}
 
+	wp_reset_postdata();
+	wp_reset_query();
+
+	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
+	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
 }
 
 /**
@@ -2231,7 +2254,13 @@ function bp_get_attachment_media_id( $attachment_id = 0 ) {
 		return false;
 	}
 
-	$attachment_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = {$attachment_id}" );
+	$cache_key           = 'bp_attachment_media_id_' . $attachment_id;
+	$attachment_media_id = wp_cache_get( $cache_key, 'bp_media' );
+
+	if ( false === $attachment_media_id ) {
+		$attachment_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = {$attachment_id}" );
+		wp_cache_set( $cache_key, $attachment_media_id, 'bp_media' );
+	}
 
 	return $attachment_media_id;
 }
@@ -2762,7 +2791,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity media own.
-					$activity->hide_sitewide     = 0;
+					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2835,7 +2865,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity media own.
-							$activity->hide_sitewide     = 0;
+							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -3524,7 +3555,7 @@ function bp_media_register_image_sizes() {
 	if ( ! empty( $image_sizes ) ) {
 		foreach ( $image_sizes as $name => $image_size ) {
 			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
-				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'] );
+				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'], ( isset( $image_size['crop'] ) ? $image_size['crop'] : false ) );
 			}
 		}
 	}
@@ -3900,9 +3931,9 @@ function bb_media_delete_older_symlinks() {
 		return;
 	}
 
-	// Get documents previews symlink directory path.
+	// Get media previews symlink directory path.
 	$dir     = bp_media_symlink_path();
-	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$max_age = apply_filters( 'bb_media_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
 	$list    = array();
 	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
@@ -3932,10 +3963,12 @@ function bb_media_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	do_action( 'bb_media_delete_older_symlinks' );
+	if ( ! empty( $list ) ) {
+		do_action( 'bb_media_delete_older_symlinks' );
+	}
 
 	return $list;
 
 }
-bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks' );
+bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 

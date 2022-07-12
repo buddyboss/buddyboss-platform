@@ -2,10 +2,13 @@
 /**
  * BuddyBoss - Video Uploader
  *
- * @package BuddyBoss\Core
- *
- * @since BuddyBoss 1.7.0
- */
+	 * This template can be overridden by copying it to yourtheme/buddypress/video/uploader.php.
+	 *
+	 * @package BuddyBoss\Core
+	 *
+	 * @since   BuddyBoss 1.7.0
+	 * @version 1.7.0
+	 */
 
 ?>
 <div id="bp-video-uploader" style="display: none;" class="bp-video-uploader open-popup">
@@ -20,7 +23,7 @@
 						<span id="bp-video-uploader-modal-status-text" style="display: none;"></span>
 
 						<a class="bb-model-close-button" id="bp-video-uploader-close" href="#">
-							<span class="bb-icon bb-icon-close"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 
@@ -34,16 +37,16 @@
 									</div>
 								<?php endif; ?>
 								<div class="video-uploader-wrapper">
-									<div class="dropzone" id="video-uploader"></div>
+									<div class="dropzone video-dropzone" id="video-uploader"></div>
 									<div class="uploader-post-video-template" style="display:none;">
 										<div class="dz-preview dz-file-preview well" id="dz-preview-template">
 											<div class="dz-details">
 												<div class="dz-filename"><span data-dz-name></span></div>
 											</div>
 											<div class="dz-progress-ring-wrap">
-												<i class="bb-icon bb-icon-video-fill"></i>
-												<svg class="dz-progress-ring" width="62" height="62">
-													<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182" />
+												<i class="bb-icon-f bb-icon-video"></i>
+												<svg class="dz-progress-ring" width="54" height="54">
+													<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 												</svg>
 											</div>
 											<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
@@ -73,14 +76,14 @@
 								if ( bp_is_active( 'groups' ) && bp_is_group_single() && bp_is_group_albums_support_enabled() ) {
 									?>
 									<a id="bp-video-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
-										<i class="bb-icon-folder"></i>
+										<i class="bb-icon-l bb-icon-folder"></i>
 										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
 									</a>
 									<?php
 								} elseif ( bp_is_profile_albums_support_enabled() ) {
 									?>
 									<a id="bp-video-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
-										<i class="bb-icon-folder"></i>
+										<i class="bb-icon-l bb-icon-folder"></i>
 										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
 									</a>
 									<?php
@@ -100,7 +103,7 @@
 
 					<footer class="bb-model-footer video-uploader-footer">
 						<a href="#" class="bp-video-open-create-popup-album" style="display: none;">
-							<i class="bb-icon-plus"></i>
+							<i class="bb-icon-l bb-icon-plus"></i>
 							Create new album
 						</a>
 

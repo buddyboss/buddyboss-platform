@@ -681,7 +681,7 @@ function bp_core_no_access( $args = '' ) {
 		'message'  => __( 'Please login to access this website.', 'buddyboss' ),
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	/**
 	 * Filters the arguments used for user redirecting when visiting access controlled areas.
@@ -923,7 +923,7 @@ function bp_get_canonical_url( $args = array() ) {
 	$defaults = array(
 		'include_query_args' => false, // Include URL arguments, eg ?foo=bar&foo2=bar2.
 	);
-	$r        = wp_parse_args( $args, $defaults );
+	$r        = bp_parse_args( $args, $defaults );
 	extract( $r );
 
 	// Special case: when a BuddyPress directory (eg example.com/members)
@@ -1155,8 +1155,14 @@ function bp_private_network_template_redirect() {
 		$current_page_object = $wp_query->get_queried_object();
 		$id                  = isset( $current_page_object->ID ) ? $current_page_object->ID : get_the_ID();
 		$id                  = ( ! empty( $id ) ) ? $id : 0;
-		$activate            = ( bp_is_activation_page() && ( '' !== bp_get_current_activation_key() || isset( $_GET['activated'] ) ) ) ? true : false;
-
+		$activate            = ( bp_is_activation_page() && ( '' !== bp_get_current_activation_key() || isset( $_GET['activated'] ) ) ) ? true : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$server_http_host    = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$server_request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$actual_link         = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
+		// If feed then return.
+		if ( strpos( $actual_link, '/feed/' ) !== false || strpos( $actual_link, 'feed=' ) !== false ) { // if permalink has ? then need to check with feed=.
+			return;
+		}
 		/**
 		 * Filter to check custom registration is enable or not.
 		 *
@@ -1176,12 +1182,10 @@ function bp_private_network_template_redirect() {
 			}
 
 			$allow_custom_registration = bp_allow_custom_registration();
-			$actual_link               = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 			if ( $allow_custom_registration ) {
 				if ( untrailingslashit( $actual_link ) === untrailingslashit( bp_custom_register_page_url() ) ) {
 					return;
 				}
-
 			}
 
 			// Redirect to MemberPress custom login page.
@@ -1193,18 +1197,51 @@ function bp_private_network_template_redirect() {
 				}
 			}
 
-			// Get excluded list from the settings
+			// Allow the media preview when the Symbolic Links is disabled.
+			$site_url    = get_site_url();
+			$request_url = home_url( add_query_arg( array(), $wp->request ) );
+
+			// Actual URL like https://example.com?abc=1.
+			$actual_url         = home_url( add_query_arg( array( $_GET ), $wp->request ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$explode_actual_url = explode( '?', $actual_url );
+
+			// Actual URL with slash like https://example.com/?abc=1.
+			$actual_slash_url = $actual_url;
+			if ( ! empty( $explode_actual_url ) && isset( $explode_actual_url[0], $explode_actual_url[1] ) ) {
+				$actual_slash_url = trailingslashit( $explode_actual_url[0] ) . '?' . $explode_actual_url[1];
+			}
+
+			$media_preview_urls = array(
+				'bb-media-preview'               => 'bb-media-preview',
+				'bb-document-preview'            => 'bb-document-preview',
+				'bb-video-preview'               => 'bb-video-preview',
+				'bb-video-thumb-preview'         => 'bb-video-thumb-preview',
+				'bb-attachment-media-preview'    => 'media-attachment-id',
+				'bb-attachment-document-preview' => 'document-attachment-id',
+				'bb-attachment-video-preview'    => 'video-attachment-id',
+			);
+
+			foreach ( $media_preview_urls as $preview_slug => $preview_query_var ) {
+				if ( false !== strpos( $request_url, trailingslashit( $site_url ) . trailingslashit( $preview_slug ) ) && ! empty( get_query_var( $preview_query_var ) ) ) {
+					return;
+				}
+			}
+
+			// Get excluded list from the settings.
 			$exclude = bp_enable_private_network_public_content();
 			if ( '' !== $exclude ) {
-				// Convert string to URL array
+				// Convert string to URL array.
 				$exclude_arr_url = preg_split( "/\r\n|\n|\r/", $exclude );
 
 				if ( ! empty( $exclude_arr_url ) && is_array( $exclude_arr_url ) ) {
-					$request_url = home_url( add_query_arg( array(), $wp->request ) );
-
 					foreach ( $exclude_arr_url as $url ) {
 						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
 						$un_trailing_slash_it_url = untrailingslashit( $url );
+
+						// Match request URL(actual/actual with slash) to public URL.
+						if ( ! empty( $actual_url ) && ! empty( $actual_slash_url ) && ! empty( $un_trailing_slash_it_url ) && ( ( $actual_url === $un_trailing_slash_it_url ) || ( $actual_slash_url === $un_trailing_slash_it_url ) ) ) {
+							return;
+						}
 
 						// Check if embed.
 						if ( $request_url === $un_trailing_slash_it_url . '/embed' ) {
@@ -1216,14 +1253,14 @@ function bp_private_network_template_redirect() {
 
 							// Allow to view if fragment matched.
 							foreach ( $fragments as $fragment ) {
-								if ( $fragment === trim( $url, '/' ) ) {
+								if ( trim( $url, '/' ) === $fragment ) {
 									return;
 								}
 							}
 
 							// Allow to view if fragment matched with the trailing slash.
-							$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
-							if( $is_matched_fragment === $url ) {
+							$is_matched_fragment = substr( $server_request_uri, 0, strrpos( $server_request_uri, '/' ) );
+							if ( $is_matched_fragment === $url ) {
 								return;
 							}
 
@@ -1232,7 +1269,7 @@ function bp_private_network_template_redirect() {
 								return;
 							}
 
-						// Check URL is fully matched without remove trailing slash.
+							// Check URL is fully matched without remove trailing slash.
 						} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
 							return;
 						}
@@ -1246,14 +1283,10 @@ function bp_private_network_template_redirect() {
 
 						if ( class_exists( 'woocommerce' ) ) {
 
-							$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-							if ( $actual_link !== wc_lostpassword_url() ) {
+							if ( wc_lostpassword_url() !== $actual_link ) {
 								if ( $is_enable_custom_registration ) {
 
-									$redirect_url  = is_ssl() ? 'https://' : 'http://';
-									$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-									$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+									$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
 									$defaults = array(
 										'mode'     => 2,
@@ -1267,9 +1300,7 @@ function bp_private_network_template_redirect() {
 								}
 							}
 						} else {
-							$redirect_url  = is_ssl() ? 'https://' : 'http://';
-							$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-							$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+							$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
 							$defaults = array(
 								'mode'     => 2,
@@ -1283,9 +1314,7 @@ function bp_private_network_template_redirect() {
 						}
 						// 404 redirect
 					} elseif ( is_404() ) {
-						$redirect_url  = is_ssl() ? 'https://' : 'http://';
-						$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-						$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+						$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
 						$defaults = array(
 							'mode'     => 2,
@@ -1300,13 +1329,10 @@ function bp_private_network_template_redirect() {
 				} else {
 					if ( class_exists( 'woocommerce' ) ) {
 
-						$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-						if ( $actual_link !== wc_lostpassword_url() ) {
+						if ( wc_lostpassword_url() !== $actual_link ) {
 							if ( $is_enable_custom_registration ) {
 
-								$redirect_url  = is_ssl() ? 'https://' : 'http://';
-								$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-								$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+								$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
 								$defaults = array(
 									'mode'     => 2,
@@ -1321,9 +1347,7 @@ function bp_private_network_template_redirect() {
 							}
 						}
 					} else {
-						$redirect_url  = is_ssl() ? 'https://' : 'http://';
-						$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-						$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+						$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
 						$defaults = array(
 							'mode'     => 2,
@@ -1340,14 +1364,10 @@ function bp_private_network_template_redirect() {
 
 				if ( class_exists( 'woocommerce' ) ) {
 
-					$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
+					if ( wc_lostpassword_url() !== $actual_link && ! bp_is_activation_page() ) {
 						if ( $is_enable_custom_registration ) {
 
-							$redirect_url  = is_ssl() ? 'https://' : 'http://';
-							$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-							$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+							$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
 							$defaults = array(
 								'mode'     => 2,
@@ -1362,9 +1382,7 @@ function bp_private_network_template_redirect() {
 					}
 				} else {
 
-					$redirect_url  = is_ssl() ? 'https://' : 'http://';
-					$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-					$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+					$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
 					$defaults = array(
 						'mode'     => 2,

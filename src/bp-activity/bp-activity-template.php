@@ -822,9 +822,9 @@ function bp_get_activity_member_display_name() {
 	return apply_filters( 'bp_get_activity_member_display_name', $retval );
 }
 add_filter( 'bp_get_activity_member_display_name', 'wp_filter_kses' );
-add_filter( 'bp_get_activity_member_display_name', 'stripslashes'   );
-add_filter( 'bp_get_activity_member_display_name', 'strip_tags'     );
-add_filter( 'bp_get_activity_member_display_name', 'esc_html'       );
+add_filter( 'bp_get_activity_member_display_name', 'stripslashes' );
+add_filter( 'bp_get_activity_member_display_name', 'strip_tags' );
+add_filter( 'bp_get_activity_member_display_name', 'esc_html' );
 
 /**
  * Output the activity object name.
@@ -1046,7 +1046,7 @@ function bp_get_activity_avatar( $args = '' ) {
 		'user_id' => false,
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	if ( ! isset( $height ) && ! isset( $width ) ) {
@@ -1154,7 +1154,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 function bp_get_activity_secondary_avatar( $args = '' ) {
 	global $activities_template;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'alt'        => '',
@@ -1331,7 +1331,7 @@ function bp_activity_action( $args = array() ) {
 function bp_get_activity_action( $args = array() ) {
 	global $activities_template;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'no_timestamp' => false,
@@ -2935,7 +2935,7 @@ function bp_activity_filter_links( $args = false ) {
  */
 function bp_get_activity_filter_links( $args = false ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'style' => 'list',
@@ -4011,7 +4011,7 @@ function bp_follower_ids( $args = '' ) {
  */
 function bp_get_follower_ids( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
@@ -4051,7 +4051,7 @@ function bp_following_ids( $args = '' ) {
  */
 function bp_get_following_ids( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
@@ -4107,10 +4107,10 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 		)
 	);
 
-	$button_args = wp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+	$button_args = bp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
 
 	if ( $is_following ) {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_follow',
 				'component'         => 'members',
@@ -4119,20 +4119,22 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 				'wrapper_class'     => 'follow-button following',
 				'wrapper_id'        => 'follow-button-' . $leader_id,
 				'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
-				'link_text'         => __( 'Following', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Following', 'buddyboss' ),
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'stop',
 				'link_class'        => 'follow-button following stop bp-toggle-action-button',
+				'data-balloon'      => esc_html__( 'Stop Following', 'buddyboss' ),
 				'button_attr'       => array(
-					'data-title'           => __( 'Unfollow', 'buddyboss' ),
-					'data-title-displayed' => __( 'Following', 'buddyboss' ),
 					'data-bp-nonce'        => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
+					'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
+					'data-title'           => esc_html__( 'Unfollow', 'buddyboss' ),
+					'data-title-displayed' => esc_html__( 'Following', 'buddyboss' ),
 				),
 			),
 			$button_args
 		);
 	} else {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_follow',
 				'component'         => 'members',
@@ -4141,12 +4143,15 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 				'wrapper_class'     => 'follow-button not_following',
 				'wrapper_id'        => 'follow-button-' . $leader_id,
 				'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
-				'link_text'         => __( 'Follow', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Follow', 'buddyboss' ),
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'start',
 				'link_class'        => 'follow-button not_following start',
 				'button_attr'       => array(
-					'data-bp-nonce' => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
+					'data-bp-nonce'        => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
+					'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
+					'data-title'           => '',
+					'data-title-displayed' => '',
 				),
 			),
 			$button_args
@@ -4195,3 +4200,4 @@ function bp_get_activity_entry_css_class() {
 	 */
 	return apply_filters( 'bp_get_activity_entry_css_class', $class );
 }
+

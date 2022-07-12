@@ -1,10 +1,14 @@
 <?php
 /**
- * BuddyBoss - Document Uploader
+ * The template for document uploader
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/document-uploader.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.8.6
  */
+
 ?>
 
 <div id="bp-media-uploader" class="bp-media-document-uploader" style="display: none;">
@@ -16,7 +20,7 @@
 						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 						<span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 						<a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
-							<span class="bb-icon bb-icon-close"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-field-steps bb-field-steps-1">
@@ -28,17 +32,19 @@
 								</div>
 								<?php endif; ?>
 								<div class="media-uploader-wrapper">
-									<div class="dropzone" id="media-uploader"></div>
+									<div class="dropzone document-dropzone" id="media-uploader"></div>
 									<div class="uploader-post-document-template" style="display:none;">
 										<div class="dz-preview dz-file-preview">
+											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 											<div class="dz-details">
+												<div class="dz-icon"><span class="bb-icon-l bb-icon-file"></span></div>
 												<div class="dz-filename"><span data-dz-name></span></div>
 												<div class="dz-size" data-dz-size></div>
 											</div>
 											<div class="dz-progress-ring-wrap">
-												<i class="bb-icon bb-icon-attach-fill"></i>
-												<svg class="dz-progress-ring" width="62" height="62">
-													<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+												<i class="bb-icon-f bb-icon-file-attach"></i>
+												<svg class="dz-progress-ring" width="54" height="54">
+													<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 												</svg>
 											</div>
 											<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -55,7 +61,7 @@
 									</div>
 								</div>
 								<a id="bp-media-document-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
-									<i class="bb-icon-folder"></i>
+									<i class="bb-icon-l bb-icon-folder"></i>
 									<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>
 								</a>
 							</div>
@@ -69,7 +75,7 @@
 					</div>
 					<footer class="bb-model-footer document-uploader-footer">
 						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" >
-							<i class="bb-icon-plus"></i>
+							<i class="bb-icon-l bb-icon-plus"></i>
 							<?php esc_html_e( 'Create new folder', 'buddyboss' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
