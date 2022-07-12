@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-11 09:10:43+00:00\n"
+"POT-Creation-Date: 2022-07-12 13:48:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15151,7 +15151,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-members/bp-members-functions.php:3887
 #: bp-members/classes/class-bp-members-admin.php:971
-#: bp-moderation/bp-moderation-filters.php:987
+#: bp-moderation/bp-moderation-filters.php:985
 #: bp-moderation/classes/class-bp-moderation-list-table.php:234
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:206
 msgid "Member"
@@ -15599,7 +15599,7 @@ msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-reply.php:157
 #: bp-forums/templates/default/bbpress/form-topic.php:214
-#: bp-moderation/bp-moderation-functions.php:1149
+#: bp-moderation/bp-moderation-functions.php:1148
 #: bp-moderation/classes/class-bp-moderation-activity.php:486
 #: bp-moderation/classes/class-bp-moderation-activity.php:503
 #: bp-moderation/classes/class-bp-moderation-activity.php:517
@@ -24609,14 +24609,14 @@ msgstr ""
 msgid "Reported Member"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1175
+#: bp-moderation/bp-moderation-functions.php:1174
 #: bp-moderation/screens/content-report-form.php:16
 #: bp-moderation/screens/content-report-form.php:64
 #: bp-moderation/screens/reported-content-popup.php:17
 msgid "Report"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1201
+#: bp-moderation/bp-moderation-functions.php:1200
 #: bp-moderation/classes/class-bp-moderation-list-table.php:289
 msgid "Reported"
 msgstr ""
