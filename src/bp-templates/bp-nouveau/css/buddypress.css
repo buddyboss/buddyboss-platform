@@ -9360,6 +9360,16 @@ div.profile_completion_wrap .progress_text_wrap {
   align-items: center;
 }
 
+.bp-messages-content .single-message-thread-header .thread-avatar {
+  margin-right: 12px;
+}
+
+.bp-messages-content .single-message-thread-header .thread-avatar > img {
+  height: 52px;
+  width: 52px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */

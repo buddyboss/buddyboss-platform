@@ -374,6 +374,17 @@
 		-ms-flex-align: center;
 		align-items: center;
 
+		.thread-avatar {
+			margin-right: 12px;
+
+			> img {
+				height: 52px;
+				width: 52px;
+				box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+			}
+
+		}
+
 		.message_actions .message_action__list {
 
 			li a:before {
