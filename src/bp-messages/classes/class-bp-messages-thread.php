@@ -780,8 +780,12 @@ class BP_Messages_Thread {
 			 */
 			do_action( 'bp_messages_thread_before_delete', $thread_id, $message_ids, $thread_delete );
 
-			// Delete Message Notifications.
-			bp_messages_message_delete_notifications( $thread_id, $message_ids );
+			if ( bp_is_active( 'notifications' ) ) {
+				// Delete Message Notifications.
+				bp_messages_message_delete_notifications( $thread_id, $message_ids );
+			}
+
+			$recipients = self::get_recipients_for_thread( (int) $thread_id );
 
 			// Delete thread messages.
 			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -797,6 +801,13 @@ class BP_Messages_Thread {
 			$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query_recipients ); // db call ok; no-cache ok.
+
+			/**
+			 * Fires after message thread deleted.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 */
+			do_action( 'bp_messages_message_delete_thread', $thread_id, $recipients );
 
 			/**
 			 * Fires before an entire message thread is deleted.
@@ -1148,7 +1159,7 @@ class BP_Messages_Thread {
 		$sql['select'] = 'SELECT COUNT( DISTINCT m.thread_id )';
 		unset( $sql['misc'] );
 
-		$total_threads_query = implode( ' ', $sql );
+		$total_threads_query  = implode( ' ', $sql );
 		$total_threads_cached = bp_core_get_incremented_cache( $total_threads_query, 'bp_messages' );
 
 		if ( false === $total_threads_cached ) {
