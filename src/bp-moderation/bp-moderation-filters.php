@@ -948,27 +948,6 @@ function bb_quickedit_bb_category_show_when_reporting_javascript() {
 }
 add_action( 'admin_print_footer_scripts-edit-tags.php', 'bb_quickedit_bb_category_show_when_reporting_javascript' );
 
-/**
- * Added style to hide slug field from add/edit forms.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_quickedit_bpm_category_hide_slug_style() {
-	$current_screen = get_current_screen();
-
-	if ( 'edit-bpm_category' !== $current_screen->id && 'bpm_category' !== $current_screen->taxonomy ) {
-		return;
-	}
-	?>
-	<style type="text/css">
-		.term-slug-wrap { display: none;}
-	</style>
-	<?php
-}
-add_action( 'admin_print_footer_scripts-edit-tags.php', 'bb_quickedit_bpm_category_hide_slug_style' );
-add_action( 'admin_print_footer_scripts-term.php', 'bb_quickedit_bpm_category_hide_slug_style' );
-
-
 add_action( 'bp_moderation_user_report_report_content_type', 'bp_moderation_user_report_content_type', 10, 2 );
 
 /**
