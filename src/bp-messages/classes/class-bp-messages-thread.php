@@ -752,7 +752,21 @@ class BP_Messages_Thread {
 			}
 		}
 
-		if ( $thread_delete ) {
+		// Group thread will delete only when group is deleted.
+		$is_group_thread = false;
+		if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+			// Get the group id from the first message.
+			$first_message    = self::get_first_message( (int) $thread_id );
+			$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
+			if ( $message_group_id > 0 ) {
+				$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
+				if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
+					$is_group_thread = true;
+				}
+			}
+		}
+
+		if ( $thread_delete && ! $is_group_thread ) {
 
 			/**
 			 * Fires before an entire message thread is deleted.
@@ -765,19 +779,6 @@ class BP_Messages_Thread {
 			 * @param int   $thread_id     ID of the thread being deleted.
 			 */
 			do_action( 'bp_messages_thread_before_delete', $thread_id, $message_ids, $thread_delete );
-
-			// Removed the thread id from the group meta.
-			if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
-				// Get the group id from the first message.
-				$first_message    = self::get_first_message( (int) $thread_id );
-				$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
-				if ( $message_group_id > 0 ) {
-					$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
-					if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
-						groups_update_groupmeta( $message_group_id, 'group_message_thread', '' );
-					}
-				}
-			}
 
 			// Delete Message Notifications.
 			bp_messages_message_delete_notifications( $thread_id, $message_ids );
