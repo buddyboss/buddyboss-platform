@@ -172,15 +172,15 @@ window.bp = window.bp || {};
 			/**
 			 * Function for hide/show auto suspend fields on member reporting enable/disabled.
 			 */
-			$( '#bpm_blocking_auto_suspend_report_threshold' ).attr('disabled', ! $( '#bpm_blocking_member_reporting' ).prop( 'checked' ));
-			$( '#bpm_blocking_auto_suspend_report' ).attr('disabled', ! $( '#bpm_blocking_member_reporting' ).prop( 'checked' ));
+			$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ));
+			$( '#bb_reporting_auto_suspend_' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ));
 			$( document ).on(
 				'change',
-				'#bpm_blocking_member_reporting',
+				'#bb_blocking_member_reporting',
 				function () {
-					$( 'label[for="bpm_blocking_auto_suspend_report"' ).toggleClass('is_disabled');
-					$( '#bpm_blocking_auto_suspend_report_threshold' ).attr('disabled', ! $( this ).prop( 'checked' ));
-					$( '#bpm_blocking_auto_suspend_report' ).attr('disabled', ! $( this ).prop( 'checked' ));
+					$( 'label[for="bb_reporting_auto_suspend_"' ).toggleClass('is_disabled');
+					$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( this ).prop( 'checked' ));
+					$( '#bb_reporting_auto_suspend_' ).attr('disabled', ! $( this ).prop( 'checked' ));
 				}
 			);
 		}

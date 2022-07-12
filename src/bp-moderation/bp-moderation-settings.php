@@ -54,9 +54,9 @@ function bp_moderation_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bpm_blocking_member_reporting'              => array(
+		'bb_blocking_member_reporting'              => array(
 			'title'             => __( 'Member Reporting', 'buddyboss' ),
-			'callback'          => 'bpm_blocking_settings_callback_member_reporting',
+			'callback'          => 'bb_blocking_settings_callback_member_reporting',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
@@ -73,12 +73,12 @@ function bp_moderation_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bpm_blocking_auto_suspend_report'           => array(
+		'bb_reporting_auto_suspend_'           => array(
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 
-		'bpm_blocking_auto_suspend_report_threshold' => array(
+		'bb_reporting_auto_suspend_threshold' => array(
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
@@ -214,11 +214,11 @@ function bpm_blocking_settings_callback_member_blocking() {
  *
  * @uses  checked() To display the checked attribute
  */
-function bpm_blocking_settings_callback_member_reporting() {
+function bb_blocking_settings_callback_member_reporting() {
 	?>
-	<label for="bpm_blocking_member_reporting">
-		<input name="bpm_blocking_member_reporting" id="bpm_blocking_member_reporting" type="checkbox" value="1"
-			<?php checked( bp_is_moderation_member_reporting_enable( false ) ); ?> />
+	<label for="bb_blocking_member_reporting">
+		<input name="bb_blocking_member_reporting" id="bb_blocking_member_reporting" type="checkbox" value="1"
+			<?php checked( bb_is_moderation_member_reporting_enable( false ) ); ?> />
 		<?php esc_html_e( 'Allow members to report other members.', 'buddyboss' ); ?>
 	</label>
 	<?php
@@ -254,7 +254,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 	bpm_blocking_settings_callback_auto_suspend_threshold();
 	$threshold = ob_get_clean();
 	ob_start();
-	bpm_blocking_settings_callback_auto_suspend_report_threshold();
+	bb_blocking_settings_callback_auto_suspend_report_threshold();
 	$threshold_report = ob_get_clean();
 	?>
 
@@ -267,9 +267,9 @@ function bpm_blocking_settings_callback_auto_suspend() {
 		?>
 	</label>
 	<br/><br/>
-	<label for="bpm_blocking_auto_suspend_report" class="<?php echo bp_is_moderation_member_reporting_enable( false ) ? '' : 'is_disabled'; ?>">
-		<input name="bpm_blocking_auto_suspend_report" id="bpm_blocking_auto_suspend_report" type="checkbox" value="1"
-				<?php checked( bp_is_moderation_auto_suspend_report_enable( false ) ); ?> />
+	<label for="bb_reporting_auto_suspend_" class="<?php echo bb_is_moderation_member_reporting_enable( false ) ? '' : 'is_disabled'; ?>">
+		<input name="bb_reporting_auto_suspend_" id="bb_reporting_auto_suspend_" type="checkbox" value="1"
+				<?php checked( bb_is_moderation_auto_suspend_report_enable( false ) ); ?> />
 		<?php
 		// translators: html for report threshold fields.
 		printf( esc_html__( 'Automatically suspend members after %s reports.', 'buddyboss' ), $threshold_report ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -298,9 +298,9 @@ function bpm_blocking_settings_callback_auto_suspend_threshold() {
  *
  * @uses  checked() To display the checked attribute
  */
-function bpm_blocking_settings_callback_auto_suspend_report_threshold() {
+function bb_blocking_settings_callback_auto_suspend_report_threshold() {
 	?>
-	<input name="bpm_blocking_auto_suspend_report_threshold" id="bpm_blocking_auto_suspend_report_threshold" type="number" min="1" step="1" value="<?php echo esc_attr( bp_moderation_auto_suspend_report_threshold( 5 ) ); ?>" class="small-text"/>
+	<input name="bb_reporting_auto_suspend_threshold" id="bb_reporting_auto_suspend_threshold" type="number" min="1" step="1" value="<?php echo esc_attr( bb_moderation_auto_suspend_report_threshold( 5 ) ); ?>" class="small-text"/>
 	<?php
 }
 

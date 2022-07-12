@@ -507,7 +507,7 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 			return false;
 		}
 	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
-		if ( ! bp_is_moderation_member_reporting_enable( 0 ) ) {
+		if ( ! bb_is_moderation_member_reporting_enable( 0 ) ) {
 			return false;
 		}
 	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
@@ -851,10 +851,10 @@ function bp_moderation_auto_suspend_threshold( $default = 5 ) {
  * @param int $default bool Optional.Default value true.
  *
  * @return bool Is member reporting enabled or not
- * @uses  get_option() To get the bpm_blocking_member_reporting option
+ * @uses  get_option() To get the bb_blocking_member_reporting option
  */
-function bp_is_moderation_member_reporting_enable( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_moderation_member_reporting_enable', (bool) get_option( 'bpm_blocking_member_reporting', $default ) );
+function bb_is_moderation_member_reporting_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bb_is_moderation_member_reporting_enable', (bool) get_option( 'bb_blocking_member_reporting', $default ) );
 }
 
 /**
@@ -865,10 +865,10 @@ function bp_is_moderation_member_reporting_enable( $default = 0 ) {
  * @param int $default bool Optional.Default value true.
  *
  * @return bool Is auto suspend report enabled or not
- * @uses  get_option() To get the bpm_reporting_auto_suspend option
+ * @uses  get_option() To get the bb_reporting_auto_suspend_ option
  */
-function bp_is_moderation_auto_suspend_report_enable( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bpm_blocking_auto_suspend_report', $default ) );
+function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend_', $default ) );
 }
 
 /**
@@ -879,11 +879,10 @@ function bp_is_moderation_auto_suspend_report_enable( $default = 0 ) {
  * @param int $default bool Optional.Default value true.
  *
  * @return bool Is search autocomplete enabled or not
- * @uses  bp_moderation_get_setting() To get the bpm_reporting_auto_suspend_threshold option
+ * @uses  bp_moderation_get_setting() To get the bb_reporting_auto_suspend_threshold option
  */
-function bp_moderation_auto_suspend_report_threshold( $default = 5 ) {
-
-	return apply_filters( 'bp_moderation_auto_suspend_threshold', (int) bp_moderation_get_setting( 'bpm_blocking_auto_suspend_report_threshold', $default ) );
+function bb_moderation_auto_suspend_report_threshold( $default = 5 ) {
+	return apply_filters( 'bb_moderation_auto_suspend_report_threshold', (int) bp_moderation_get_setting( 'bb_reporting_auto_suspend_threshold', $default ) );
 }
 
 /**

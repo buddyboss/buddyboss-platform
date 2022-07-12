@@ -773,11 +773,11 @@ add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated',
  *
  * @return mixed Show when Reporting field.
  */
-function bpm_category_add_term_fields_show_when_reporting( $taxonomy ) {
+function bb_category_add_term_fields_show_when_reporting( $taxonomy ) {
 	?>
 	<div class="form-field">
-		<label for="bpm_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></label>
-		<select name="bpm_category_show_when_reporting" id="bpm_category_show_when_reporting">
+		<label for="bb_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></label>
+		<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
 			<option value="content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
 			<option value="members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
 			<option value="content_members"><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
@@ -785,7 +785,7 @@ function bpm_category_add_term_fields_show_when_reporting( $taxonomy ) {
 	</div>
 	<?php
 }
-add_action( 'bpm_category_add_form_fields', 'bpm_category_add_term_fields_show_when_reporting' );
+add_action( 'bpm_category_add_form_fields', 'bb_category_add_term_fields_show_when_reporting' );
 
 /**
  * Add show when reporting field in reporting categories edit page.
@@ -797,15 +797,15 @@ add_action( 'bpm_category_add_form_fields', 'bpm_category_add_term_fields_show_w
  *
  * @return mixed Show when Reporting field.
  */
-function bpm_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
-	$value = get_term_meta( $term->term_id, 'bpm_category_show_when_reporting', true );
+function bb_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
+	$value = get_term_meta( $term->term_id, 'bb_category_show_when_reporting', true );
 	?>
 	<tr class="form-field">
 		<th>
-			<label for="bpm_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></label>
+			<label for="bb_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></label>
 		</th>
 		<td>
-			<select name="bpm_category_show_when_reporting" id="bpm_category_show_when_reporting">
+			<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
 				<option value="content" <?php echo 'content' === $value ? 'selected' : ''; ?>><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
 				<option value="members" <?php echo 'members' === $value ? 'selected' : ''; ?>><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
 				<option value="content_members" <?php echo 'content_members' === $value ? 'selected' : ''; ?>><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
@@ -814,7 +814,7 @@ function bpm_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
 	</tr>
 	<?php
 }
-add_action( 'bpm_category_edit_form_fields', 'bpm_category_edit_term_fields_show_when_reporting', 10, 2 );
+add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_when_reporting', 10, 2 );
 
 /**
  * Save show when reporting field in reporting categories.
@@ -823,18 +823,18 @@ add_action( 'bpm_category_edit_form_fields', 'bpm_category_edit_term_fields_show
  *
  * @param int $term_id  Show when reporting field term ID.
  */
-function bpm_category_save_term_fields_show_when_reporting( $term_id ) {
+function bb_category_save_term_fields_show_when_reporting( $term_id ) {
 
-	if ( isset( $_POST['bpm_category_show_when_reporting'] ) ) { // phpcs:ignore
+	if ( isset( $_POST['bb_category_show_when_reporting'] ) ) { // phpcs:ignore
 		update_term_meta(
 			$term_id,
-			'bpm_category_show_when_reporting',
-			sanitize_text_field( wp_unslash( $_POST['bpm_category_show_when_reporting'] ) ) // phpcs:ignore
+			'bb_category_show_when_reporting',
+			sanitize_text_field( wp_unslash( $_POST['bb_category_show_when_reporting'] ) ) // phpcs:ignore
 		);
 	}
 }
-add_action( 'created_bpm_category', 'bpm_category_save_term_fields_show_when_reporting' );
-add_action( 'edited_bpm_category', 'bpm_category_save_term_fields_show_when_reporting' );
+add_action( 'created_bpm_category', 'bb_category_save_term_fields_show_when_reporting' );
+add_action( 'edited_bpm_category', 'bb_category_save_term_fields_show_when_reporting' );
 
 /**
  * Register columns for our taxonomy.
@@ -845,13 +845,13 @@ add_action( 'edited_bpm_category', 'bpm_category_save_term_fields_show_when_repo
  *
  * @return array $columns List of columns for Reporting categort taxonomy
  */
-function bpm_category_show_when_reporting_columns( $columns ) {
+function bb_category_show_when_reporting_columns( $columns ) {
 	unset( $columns['slug'] );
 	unset( $columns['posts'] );
-	$columns['bpm_category_show_when_reporting'] = __( 'Show When Reporting', 'buddyboss' );
+	$columns['bb_category_show_when_reporting'] = __( 'Show When Reporting', 'buddyboss' );
 	return $columns;
 }
-add_filter( 'manage_edit-bpm_category_columns', 'bpm_category_show_when_reporting_columns' );
+add_filter( 'manage_edit-bpm_category_columns', 'bb_category_show_when_reporting_columns' );
 
 /**
  * Retrieve value for our custom column
@@ -864,7 +864,7 @@ add_filter( 'manage_edit-bpm_category_columns', 'bpm_category_show_when_reportin
  *
  * @return mixed Term meta data
  */
-function bpm_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
+function bb_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
 	$value = get_term_meta( $term_id, $column_name, true );
 	switch ( $value ) {
 		case 'members':
@@ -875,7 +875,7 @@ function bpm_category_show_when_reporting_column_display( $string = '', $column_
 			return esc_html__( 'Content', 'buddyboss' );
 	}
 }
-add_filter( 'manage_bpm_category_custom_column', 'bpm_category_show_when_reporting_column_display', 10, 3 );
+add_filter( 'manage_bpm_category_custom_column', 'bb_category_show_when_reporting_column_display', 10, 3 );
 
 /**
  * Display markup or template for custom field
@@ -887,18 +887,18 @@ add_filter( 'manage_bpm_category_custom_column', 'bpm_category_show_when_reporti
  *
  * @return mixed
  */
-function bb_quick_edit_bpm_category_show_when_reporting_field( $column_name, $screen ) {
+function bb_quick_edit_bb_category_show_when_reporting_field( $column_name, $screen ) {
 	// If we're not iterating over our custom column, then skip.
-	if ( 'bpm_category' !== $screen && 'bpm_category_show_when_reporting' !== $column_name ) {
+	if ( 'bpm_category' !== $screen && 'bb_category_show_when_reporting' !== $column_name ) {
 		return false;
 	}
 	?>
 	<fieldset>
-		<div id="bpm_category_show_when_reporting" class="inline-edit-col">
+		<div id="bb_category_show_when_reporting" class="inline-edit-col">
 			<label>
 				<span class="title"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></span>
 				<span class="input-text-wrap">
-					<select name="bpm_category_show_when_reporting" id="bpm_category_show_when_reporting">
+					<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
 						<option value="content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
 						<option value="members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
 						<option value="content_members"><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
@@ -909,7 +909,7 @@ function bb_quick_edit_bpm_category_show_when_reporting_field( $column_name, $sc
 	</fieldset>
 	<?php
 }
-add_action( 'quick_edit_custom_box', 'bb_quick_edit_bpm_category_show_when_reporting_field', 10, 2 );
+add_action( 'quick_edit_custom_box', 'bb_quick_edit_bb_category_show_when_reporting_field', 10, 2 );
 
 
 /**
@@ -917,7 +917,7 @@ add_action( 'quick_edit_custom_box', 'bb_quick_edit_bpm_category_show_when_repor
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_quickedit_bpm_category_show_when_reporting_javascript() {
+function bb_quickedit_bb_category_show_when_reporting_javascript() {
 	$current_screen = get_current_screen();
 
 	if ( 'edit-bpm_category' !== $current_screen->id || 'bpm_category' !== $current_screen->taxonomy ) {
@@ -936,10 +936,10 @@ function bb_quickedit_bpm_category_show_when_reporting_javascript() {
 			$('#the-list').on('click', 'button.editinline', function(e) {
 				e.preventDefault();
 				var $tr = $(this).closest('tr');
-				var val = $tr.find('td.bpm_category_show_when_reporting').text();
+				var val = $tr.find('td.bb_category_show_when_reporting').text();
 				if( val != '') {
-					$('tr.inline-edit-row select[name="bpm_category_show_when_reporting"] option').removeAttr('selected');
-					$('tr.inline-edit-row select[name="bpm_category_show_when_reporting"] option').filter(function() {
+					$('tr.inline-edit-row select[name="bb_category_show_when_reporting"] option').removeAttr('selected');
+					$('tr.inline-edit-row select[name="bb_category_show_when_reporting"] option').filter(function() {
 						return this.text == val; 
 					}).attr('selected', 'selected');
 				}
@@ -948,7 +948,7 @@ function bb_quickedit_bpm_category_show_when_reporting_javascript() {
 	</script>
 	<?php
 }
-add_action( 'admin_print_footer_scripts-edit-tags.php', 'bb_quickedit_bpm_category_show_when_reporting_javascript' );
+add_action( 'admin_print_footer_scripts-edit-tags.php', 'bb_quickedit_bb_category_show_when_reporting_javascript' );
 
 /**
  * Added style to hide slug field from add/edit forms.
