@@ -9812,7 +9812,6 @@ input#send-to-input {
 
 .bp-messages-nav-panel.loading .message-header-loading .message-header-loading_title,
 .bp-messages-nav-panel.loading .message-header-loading .message-header-loading_description {
-  background-color: #f2f4f5;
   width: 151px;
   height: 30px;
   border-radius: 100px;
@@ -9824,7 +9823,6 @@ input#send-to-input {
 }
 
 .bp-messages-nav-panel.loading .message-header-loading .message-header-loading_option {
-  background-color: #f2f4f5;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -9906,7 +9904,6 @@ input#send-to-input {
   height: 53px;
   width: 53px;
   border-radius: 50%;
-  background-color: #f2f4f5;
   margin-left: 15px;
 }
 
@@ -9919,7 +9916,6 @@ input#send-to-input {
 
 .bp-user-messages-loading.loading .message-user-loading_details .message-user-loading_title,
 .bp-user-messages-loading.loading .message-user-loading_details .message-user-loading_description {
-  background-color: #f2f4f5;
   width: 107px;
   height: 14px;
   border-radius: 15px;
@@ -12038,6 +12034,10 @@ button[data-bp-close]:hover {
   bottom: 0;
   filter: blur(10px);
   animation: backgroundColor 2s ease-in infinite;
+}
+
+.bb-loading-bg {
+  background-color: #f2f4f5;
 }
 
 @keyframes backgroundColor {
