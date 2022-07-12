@@ -2664,7 +2664,7 @@ function bp_nouveau_ajax_hide_thread() {
 	wp_send_json_success(
 		array(
 			'type'     => 'success',
-			'messages' => 'Thread removed successfully.',
+			'messages' => __( 'Thread removed successfully.', 'buddyboss' ),
 		)
 	);
 }
