@@ -9790,6 +9790,46 @@ input#send-to-input {
   }
 }
 
+.bp-messages-nav-panel .message-header-loading {
+  display: none;
+}
+
+.bp-messages-nav-panel.loading .bp-subnavs {
+  display: none;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading {
+  display: block;
+  padding: 20px 15px 15px;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_title,
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_description {
+  background-color: #f2f4f5;
+  width: 151px;
+  height: 30px;
+  border-radius: 100px;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_description {
+  width: 100%;
+  height: 36px;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_option {
+  background-color: #f2f4f5;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
 .messages-wrapper #subnav #compose-personal-li {
   margin-right: auto;
   margin-left: 10px;
@@ -9854,6 +9894,41 @@ input#send-to-input {
   border: 0;
   padding: 15px;
   text-align: center;
+}
+
+.bp-user-messages-loading.loading .message-user-loading {
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+}
+
+.bp-user-messages-loading.loading .message-user-loading_avatar {
+  height: 53px;
+  width: 53px;
+  border-radius: 50%;
+  background-color: #f2f4f5;
+  margin-left: 15px;
+}
+
+.bp-user-messages-loading.loading .message-user-loading_details {
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  flex: 1;
+}
+
+.bp-user-messages-loading.loading .message-user-loading_details .message-user-loading_title,
+.bp-user-messages-loading.loading .message-user-loading_details .message-user-loading_description {
+  background-color: #f2f4f5;
+  width: 107px;
+  height: 14px;
+  border-radius: 15px;
+  margin-bottom: 6px;
+  max-width: 100%;
+}
+
+.bp-user-messages-loading.loading .message-user-loading_details .message-user-loading_description {
+  width: 202px;
 }
 
 .bp-single-message-wrap {
@@ -11944,6 +12019,33 @@ button[data-bp-close]:hover {
   }
   100% {
     transform: rotate(-359deg);
+  }
+}
+
+.bb-bg-animation {
+  position: relative;
+  overflow: hidden;
+}
+
+.bb-bg-animation:after {
+  content: "";
+  width: 200%;
+  background-color: rgba(0, 0, 0, 0.03);
+  display: block;
+  position: absolute;
+  right: 20px;
+  top: 0;
+  bottom: 0;
+  filter: blur(10px);
+  animation: backgroundColor 2s ease-in infinite;
+}
+
+@keyframes backgroundColor {
+  0% {
+    right: -250%;
+  }
+  100% {
+    right: 250%;
   }
 }
 

@@ -3263,6 +3263,7 @@ window.bp = window.bp || {};
 				}
 
 				this.loadingFeedback.remove();
+				$( this.$el ).closest( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 
 				if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
