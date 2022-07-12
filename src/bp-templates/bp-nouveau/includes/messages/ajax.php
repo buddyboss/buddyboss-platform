@@ -2022,7 +2022,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 
-	$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
+	$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', __( 'Deleted', 'buddyboss' ) );
 	$participated         = BP_Messages_Message::get(
 		array(
 			'fields'          => 'ids',

@@ -346,7 +346,7 @@ class BP_Messages_Thread {
 		}
 
 		foreach ( $deleted_recipients as $recipient ) {
-			// use add to allow multiple values
+			// use add to allow multiple values.
 			bp_messages_add_meta( $last_message->id, 'deleted_by', $recipient->user_id );
 		}
 
@@ -367,29 +367,45 @@ class BP_Messages_Thread {
 	 * @return object|null
 	 */
 	public static function get_last_message( $thread_id ) {
-		global $wpdb;
 
 		if ( empty( $thread_id ) ) {
 			return null;
 		}
 
-		$bp = buddypress();
-
-		$is_group_thread = self::get_first_message( $thread_id );
-		if ( $is_group_thread->id > 0 ) {
+		$is_group_thread  = self::get_first_message( $thread_id );
+		$message_group_id = (int) bp_messages_get_meta( $is_group_thread->id, 'group_id', true ); // group id.
+		if ( $message_group_id > 0 ) {
 			$args = array(
-				'include_threads'  => $thread_id,
-				'meta_key__not_in' => array(
-					'group_message_group_joined',
-					'group_message_group_left',
+				'include_threads' => $thread_id,
+				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'relation' => 'AND',
+					array(
+						'key'     => 'group_message_group_joined',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => 'group_message_group_left',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => 'bp_messages_deleted',
+						'compare' => 'NOT EXISTS',
+					),
 				),
-				'per_page'         => 1,
-				'page'             => 1,
-				'count_total'      => false,
+				'per_page'        => 1,
+				'page'            => 1,
+				'count_total'     => false,
 			);
 		} else {
 			$args = array(
 				'include_threads' => $thread_id,
+				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'relation' => 'AND',
+					array(
+						'key'     => 'bp_messages_deleted',
+						'compare' => 'NOT EXISTS',
+					),
+				),
 				'per_page'        => 1,
 				'page'            => 1,
 				'count_total'     => false,
