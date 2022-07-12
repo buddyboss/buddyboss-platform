@@ -1302,6 +1302,11 @@ span.dashicons.dashicons-admin-file:before {
 			visibility: visible;
 		}
 
+		.media-action-wrap > a i,
+		.video-action-wrap > a i {
+			opacity: 1;
+		}
+
 	}
 
 	.media-action-wrap,
@@ -1318,25 +1323,31 @@ span.dashicons.dashicons-admin-file:before {
 
 		> a {
 			float: left;
+			background-color: #fff;
+			border-radius: 50%;
+			height: 25px;
+			width: 25px;
+			text-align: center;
 			-webkit-transition: all 0.3s ease;
 			-o-transition: all 0.3s ease;
 			transition: all 0.3s ease;
 
 			i {
-				font-size: 25px;
-				padding: 0;
-				background-color: transparent;
-				color: #fff;
-				display: inline-block;
-				width: 25px;
-				height: 25px;
+				font-size: 18px;
 				line-height: 25px;
-				text-align: center;
+				color: #1e2132;
+				font-weight: 300;
+				display: inline-block;
+				opacity: 0.4;
+				margin-right: -1px;
 			}
 
 			&:hover {
 				color: #461212;
 
+				i {
+					opacity: 1;
+				}
 			}
 
 			&[data-balloon]:after {
@@ -1412,7 +1423,7 @@ span.dashicons.dashicons-admin-file:before {
 					a {
 						padding: 10px 14px;
 						display: block;
-						font-size: 14px;
+						font-size: 13px;
 						line-height: 1;
 						color: #7f868f;
 
@@ -1423,8 +1434,9 @@ span.dashicons.dashicons-admin-file:before {
 
 						&:before {
 							font-family: "bb-icons";/* stylelint-disable-line */
-							font-size: 16px;
+							font-size: 18px;
 							display: inline-block;
+							vertical-align: middle;
 							margin-right: 10px;
 							width: 20px;
 							text-align: center;
@@ -1446,23 +1458,16 @@ span.dashicons.dashicons-admin-file:before {
 						}
 
 						a:before {
-							content: "\ee9f";
-							font-size: 13px;
+							content: "\eea1";
 						}
 					}
 
 					&.delete_file a:before {
 						content: "\ef48";
-						font-size: 20px;
 					}
 
 					&.edit_thumbnail_video a:before {
 						content: "\eeb4";
-						font-size: 20px;
-						display: inline-block;
-						vertical-align: middle;
-						max-height: 15px;
-						margin-top: -8px;
 					}
 
 					&.report_file a {
@@ -1476,7 +1481,6 @@ span.dashicons.dashicons-admin-file:before {
 						&:before {
 							content: "\ee9c";
 							font-size: 15px;
-							vertical-align: middle;
 						}
 
 						&:hover {
@@ -1498,7 +1502,6 @@ span.dashicons.dashicons-admin-file:before {
 
 					&.privacy_file a:before {
 						content: "\eecc";
-						font-size: 15px;
 					}
 
 					&.copy_download_file_url a:before {
@@ -1570,7 +1573,8 @@ span.dashicons.dashicons-admin-file:before {
 
 #video-stream.video .bb-item-thumb,
 #media-stream.media .bb-video-thumb,
-.bb-activity-video-wrap .bb-activity-video-elem {
+.bb-activity-video-wrap .bb-activity-video-elem,
+.bb-activity-media-wrap .bb-activity-video-elem {
 	position: relative;
 
 	&.is-visible,
@@ -1590,6 +1594,10 @@ span.dashicons.dashicons-admin-file:before {
 			visibility: visible;
 		}
 
+		.item-action-wrap > a i {
+			opacity: 1;
+		}
+
 	}
 
 	.item-action-wrap {
@@ -1605,25 +1613,31 @@ span.dashicons.dashicons-admin-file:before {
 
 		> a {
 			float: left;
+			background-color: #fff;
+			border-radius: 50%;
+			height: 25px;
+			width: 25px;
+			text-align: center;
 			-webkit-transition: all 0.3s ease;
 			-o-transition: all 0.3s ease;
 			transition: all 0.3s ease;
 
 			i {
-				font-size: 25px;
-				padding: 0;
-				background-color: transparent;
-				color: #fff;
-				display: inline-block;
-				width: 25px;
-				height: 25px;
+				font-size: 18px;
 				line-height: 25px;
-				text-align: center;
+				color: #1e2132;
+				font-weight: 300;
+				display: inline-block;
+				opacity: 0.4;
+				margin-right: -1px;
 			}
 
 			&:hover {
 				color: #461212;
 
+				i {
+					opacity: 1;
+				}
 			}
 
 			&[data-balloon]:after {
@@ -1640,7 +1654,6 @@ span.dashicons.dashicons-admin-file:before {
 
 				i {
 					border-radius: 50%;
-					filter: drop-shadow(2px 2px 5px #000);
 
 					&:before {
 						content: "\ee5c";
@@ -1677,7 +1690,7 @@ span.dashicons.dashicons-admin-file:before {
 
 			ul {
 				list-style: none;
-				margin: 5px 0;
+				margin: 0;
 				padding: 0;
 
 				li {
@@ -1688,7 +1701,7 @@ span.dashicons.dashicons-admin-file:before {
 					a {
 						padding: 10px 14px;
 						display: block;
-						font-size: 14px;
+						font-size: 13px;
 						line-height: 1;
 						color: #7f868f;
 
@@ -1699,8 +1712,9 @@ span.dashicons.dashicons-admin-file:before {
 
 						&:before {
 							font-family: "bb-icons";/* stylelint-disable-line */
-							font-size: 16px;
+							font-size: 18px;
 							display: inline-block;
+							vertical-align: middle;
 							margin-right: 10px;
 							width: 20px;
 							text-align: center;
@@ -1722,22 +1736,12 @@ span.dashicons.dashicons-admin-file:before {
 						}
 
 						a:before {
-							content: "\eeb8";
-							vertical-align: middle;
-							font-size: 20px;
-							max-height: 15px;
-							margin-top: -8px;
-							display: inline-block;
+							content: "\eea1";
 						}
 					}
 
 					&.edit_thumbnail_video a:before {
 						content: "\eeb4";
-						font-size: 20px;
-						display: inline-block;
-						vertical-align: middle;
-						max-height: 15px;
-						margin-top: -8px;
 					}
 
 					&.report_file a {
@@ -1750,8 +1754,6 @@ span.dashicons.dashicons-admin-file:before {
 
 						&:before {
 							content: "\ee9c";
-							font-size: 15px;
-							vertical-align: middle;
 						}
 
 						&:hover {
@@ -1773,7 +1775,6 @@ span.dashicons.dashicons-admin-file:before {
 
 					&.delete_file a:before {
 						content: "\ef48";
-						font-size: 20px;
 					}
 
 					&.edit_video a:before {
@@ -1876,7 +1877,7 @@ span.dashicons.dashicons-admin-file:before {
 	.bb-activity-media-elem.document-activity {
 		background-color: #fff;
 		border: 1px solid #e7e9ec;
-		border-radius: 5px;
+		border-radius: 4px;
 		display: inline-block;
 		width: 100%;
 		margin: 3px 0;
@@ -1894,6 +1895,10 @@ span.dashicons.dashicons-admin-file:before {
 				background-color: transparent;
 			}
 
+		}
+
+		.document-audio-wrap audio::-webkit-media-controls-enclosure {
+			border-radius: 4px;
 		}
 
 		.document-text:not(.loaded):after {
@@ -1916,22 +1921,21 @@ span.dashicons.dashicons-admin-file:before {
 			flex-direction: row;
 			padding: 5px 15px;
 			background-color: #fff;
-			border-radius: 5px;
+			border-radius: 4px;
 
 			.entry-img {
-				-ms-flex-preferred-size: 30px;
-				flex-basis: 30px;
-				width: 30px;
+				-ms-flex-preferred-size: 38px;
+				flex-basis: 38px;
+				width: 38px;
 				text-align: center;
-				padding: 5px 0 !important;
+				padding: 1px 0 !important;
 				display: inline-block;
 				vertical-align: middle;
 				position: relative;
 
 				> i {
-					font-size: 35px;
+					font-size: 38px;
 					color: #9ca8b4;
-					margin-top: 3px;
 				}
 			}
 
@@ -1941,7 +1945,7 @@ span.dashicons.dashicons-admin-file:before {
 				width: calc(100% - 40px);
 				display: inline-block !important;
 				vertical-align: middle;
-				padding: 10px 0 10px 15px !important;
+				padding: 10px 0 10px 10px !important;
 				color: #122b46;
 
 				.document-title {
@@ -1951,7 +1955,7 @@ span.dashicons.dashicons-admin-file:before {
 					width: calc(100% - 70px);
 					display: block;
 					font-weight: 500;
-					font-size: 16px;
+					font-size: 14px;
 				}
 
 				.document-description,
@@ -2072,7 +2076,7 @@ span.dashicons.dashicons-admin-file:before {
 						a {
 							padding: 10px 14px !important;
 							display: block !important;
-							font-size: 14px;
+							font-size: 13px;
 							line-height: 1;
 							color: #7f868f;
 
@@ -2161,6 +2165,8 @@ span.dashicons.dashicons-admin-file:before {
 			opacity: 0;
 
 			.document-expand-anchor {
+
+				@include center-vert();
 				position: absolute;
 				top: 50%;
 				transform: translate(-50%, -50%);
@@ -2168,13 +2174,25 @@ span.dashicons.dashicons-admin-file:before {
 				background-color: #122b46 !important;
 				color: #fff;
 				border-radius: 30px;
-				padding: 5px 10px !important;
+				padding: 8px 15px !important;
 				z-index: 11;
-				font-size: 12px;
+				font-size: 14px;
+				line-height: 1;
+				font-weight: 500;
 				opacity: 0;
 				visibility: hidden;
 				margin-top: 25px;
 				transition: all ease 0.3s;
+
+				> i {
+					margin-right: 5px;
+					font-weight: 300;
+				}
+
+				> span,
+				> i {
+					line-height: 1;
+				}
 			}
 		}
 
@@ -2209,15 +2227,6 @@ span.dashicons.dashicons-admin-file:before {
 				opacity: 1;
 				visibility: visible;
 				margin-top: 0;
-
-				i.document-icon-plus {
-					//font-family: dashicons;
-					vertical-align: middle;
-
-					/*&:before {
-						content: "\f132";
-					}*/
-				}
 			}
 		}
 
@@ -2291,34 +2300,36 @@ span.dashicons.dashicons-admin-file:before {
 		}
 
 		.document-audio-wrap {
-			padding: 10px 15px;
+			padding: 0;
 			width: 100%;
 			float: left;
 
 			audio {
+				border-radius: 4px;
 				width: 100%;
 				float: left;
 				outline: 0;
-				border-radius: 35px;
 			}
 		}
 
 		.document-preview-wrap {
+
+			@include center-horizontal-vert();
+			background-color: rgba(0, 0, 0, 0.05);
+			border-radius: 4px 4px 0 0;
 			height: 200px;
 			overflow: hidden;
-			margin: 0 15px 15px;
-			border: 1px solid #e7e9ec;
-			border-radius: 4px;
-			display: -webkit-box;
-			display: -ms-flexbox;
-			display: flex;
-			-webkit-box-align: center;
-			-ms-flex-align: center;
-			align-items: center;
-			-webkit-box-pack: center;
-			-ms-flex-pack: center;
-			justify-content: center;
 			text-align: center;
+		}
+
+		.document-audio-wrap,
+		.document-preview-wrap {
+
+			~ .document-action-wrap {
+				bottom: 21px;
+				top: inherit;
+			}
+
 		}
 
 		.document-text-wrap {
@@ -2351,6 +2362,7 @@ span.dashicons.dashicons-admin-file:before {
 					i {
 						border-right-width: 0;
 						border-left-width: 1px;
+						border-radius: 3px 0 0 3px;
 						color: #461212;
 					}
 
@@ -2382,6 +2394,40 @@ span.dashicons.dashicons-admin-file:before {
 		.document-action_collapse {
 			opacity: 0;
 			visibility: hidden;
+		}
+
+	}
+
+	.document-activity.is_large {
+
+		.document-action-wrap .document-action_collapse {
+			opacity: 1;
+			visibility: visible;
+
+			i {
+				border-left-width: 1px;
+				border-radius: 3px 0 0 3px;
+
+				&:before {
+					content: "\ee67";
+				}
+			}
+
+			+ .document-action_download i {
+				border-left-width: 0;
+				border-radius: 0;
+			}
+		}
+
+		&.code-full-view .document-action-wrap .document-action_collapse {
+
+			&:after {
+				content: attr(data-tooltip-collapse);
+			}
+
+			i:before {
+				content: "\eed5";
+			}
 		}
 
 	}
@@ -2454,6 +2500,8 @@ span.dashicons.dashicons-admin-file:before {
 	}
 
 	.more_text_view {
+		font-size: 13px;
+		font-weight: 500;
 		padding: 7px 15px;
 		background-color: #e7e9ec;
 		word-break: break-word;
@@ -2462,7 +2510,7 @@ span.dashicons.dashicons-admin-file:before {
 		border-width: 0 1px 1px;
 		border-radius: 0 0 4px 4px;
 		position: relative;
-		z-index: 112;
+		z-index: 11;
 	}
 
 }
@@ -2505,7 +2553,7 @@ span.dashicons.dashicons-admin-file:before {
 		}
 
 		.document-text-wrap {
-			margin: 0 10px;
+			margin: 0 10px 10px;
 		}
 
 		.document-action-wrap {
@@ -2520,7 +2568,6 @@ span.dashicons.dashicons-admin-file:before {
 
 		.document-expand .document-expand-anchor {
 			padding: 5px 6px;
-			min-width: 130px;
 		}
 
 		.document-text {

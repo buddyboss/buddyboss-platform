@@ -105,16 +105,17 @@
 		align-items: center;
 		flex-flow: row wrap;
 		justify-content: center;
-		background: rgba(0, 0, 0, 0.4);
+		background: rgba(0, 0, 0, 0.5);
 		color: #fff;
 		font-size: 16px;
+		line-height: 1.31;
 
 		strong {
 			color: inherit;
 			display: block;
-			font-size: 28px;
+			font-size: 24px;
 			font-weight: 400;
-			margin-bottom: 10px;
+			line-height: 1.33;
 		}
 	}
 
@@ -123,7 +124,7 @@
 		.entry-img:before {
 			content: " ";
 			position: absolute;
-			background: rgba(0, 0, 0, 0.35);
+			background: rgba(0, 0, 0, 0.25);
 			border-radius: 3px;
 			width: 100%;
 			height: 100%;
@@ -2135,8 +2136,8 @@ img.emojioneemoji {
 		border: 1px solid #e7e9eb;
 		text-align: center;
 		height: 100%;
-		min-height: 140px;
-		width: 140px;
+		min-height: 130px;
+		width: 130px;
 		flex-flow: column;
 		align-items: center;
 		justify-content: center;
@@ -2201,11 +2202,11 @@ img.emojioneemoji {
 
 // Dropzone Error
 .dropzone .dz-preview.dz-error {
-	background-color: #f8f8f8;
 
 	.dz-error-title {
 		display: block;
 		font-size: 13px;
+		font-weight: 500;
 		color: #ef3e46;
 		text-align: center;
 		position: absolute;
@@ -2218,7 +2219,7 @@ img.emojioneemoji {
 	.dz-details {
 
 		&:before {
-			content: "\eeb4";
+			content: "\ee06";
 			font-family: "bb-icons"; /* stylelint-disable-line */
 			font-size: 22px;
 			font-weight: 300;
@@ -2262,6 +2263,7 @@ img.emojioneemoji {
 
 	.dz-remove {
 		background-color: transparent;
+		box-shadow: none;
 		color: #92949d;
 	}
 
@@ -2308,9 +2310,13 @@ img.emojioneemoji {
 		}
 	}
 
+	.dz-error-title {
+		top: inherit;
+		bottom: 8px;
+	}
+
 	&.dz-preview .dz-details {
 		border-color: #ef3e46;
-		background-color: transparent;
 
 		.dz-size,
 		.dz-icon {
@@ -2320,7 +2326,7 @@ img.emojioneemoji {
 		&:before {
 			content: "\e980";
 			font-family: "bb-icons";/* stylelint-disable-line */
-			margin-top: 34px;
+			margin-top: 15px;
 			font-weight: 300;
 		}
 
@@ -2625,7 +2631,7 @@ img.emojioneemoji {
 }
 
 div.dropzone .dz-preview {
-	min-width: 139px;
+	min-width: 130px;
 
 	.dz-success-mark,
 	.dz-progress,
@@ -2640,10 +2646,10 @@ div.dropzone .dz-preview {
 }
 
 .dz-preview .dz-image {
-	height: 139px;
+	height: 130px;
 
 	img {
-		max-width: 139px;
+		max-width: 130px;
 		object-fit: cover;
 	}
 }

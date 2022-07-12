@@ -115,7 +115,6 @@
 
 .dropzone .dz-remove {
 	color: #9ea8b3;
-	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 	background: #e7e7ea;
 }
 
@@ -603,8 +602,8 @@
 	.dz-default.dz-message {
 		display: flex;
 		min-height: 1px;
-		max-width: 139px;
-		height: 139px;
+		max-width: 130px;
+		height: 130px;
 		font-size: 12px;
 		text-align: center;
 		line-height: 1.3;
@@ -628,7 +627,7 @@
 	}
 
 	.dz-image img {
-		width: 139px;
+		width: 130px;
 	}
 
 	.dz-progress-ring-wrap {
@@ -664,7 +663,7 @@
 			transform: translate(-50%, -50%);
 			color: #fff;
 			z-index: 11;
-			font-size: 20px;
+			font-size: 24px;
 		}
 
 	}
@@ -715,7 +714,7 @@
 			.dz-filename {
 				position: static;
 				padding-right: 0;
-				margin-top: 8px;
+				margin-top: 11px;
 			}
 
 			.dz-size {
@@ -724,13 +723,14 @@
 
 			.dz-icon {
 				display: block;
-				height: 28px;
+				height: 38px;
+				line-height: 1;
 				margin-top: 25px;
 				position: relative;
 
 				&:before {
 					content: "\ee6e";
-					font-size: 28px;
+					font-size: 38px;
 					color: #92949d;
 					font-family: "bb-icons";/* stylelint-disable-line */
 					display: inline-block;
@@ -742,7 +742,7 @@
 				}
 
 				[class*="bb-icons"] {
-					font-size: 28px;
+					font-size: 38px;
 					color: rgba(18, 43, 70, 0.5);
 					left: 50%;
 					display: block;
@@ -760,6 +760,7 @@
 				left: 10px;
 				right: 0;
 				font-size: 13px;
+				line-height: 19.5px;
 				color: rgba(18, 43, 70, 0.5);
 				padding-right: 20px;
 			}
@@ -767,8 +768,9 @@
 			.dz-size {
 				display: none;
 				font-size: 13px;
+				font-weight: 500;
+				line-height: 19.5px;
 				color: rgba(18, 43, 70, 0.5);
-				font-weight: 300;
 			}
 
 		}

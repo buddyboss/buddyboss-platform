@@ -41,6 +41,7 @@ $video_url     = bb_document_video_get_symlink( bp_get_document_id() );
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
+	<?php bp_get_template_part( 'document/activity-document-preview' ); ?> <!-- .bb-code-extension-files-preview. -->
 	<div class="document-description-wrap">
 		<a
 				href="<?php echo esc_url( $download_url ); ?>"
@@ -97,6 +98,9 @@ $video_url     = bb_document_video_get_symlink( bp_get_document_id() );
 
 	<?php bp_get_template_part( 'document/activity-document-actions' ); ?> <!-- .bb-activity-document-actions. -->
 
-	<?php bp_get_template_part( 'document/activity-document-preview' ); ?> <!-- .bb-code-extension-files-preview. -->
+	<?php
+		// Code extension files preview.
+		bp_get_template_part( 'document/code-preview' );
+	?>
 
 </div> <!-- .bb-activity-media-elem -->

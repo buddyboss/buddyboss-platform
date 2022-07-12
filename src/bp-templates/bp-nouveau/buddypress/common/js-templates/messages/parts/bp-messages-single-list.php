@@ -103,7 +103,7 @@
 			<# if ( data.video ) { #>
 			<div class="bb-activity-video-wrap bb-video-length-{{data.video.length}}">
 				<# for ( i in data.video ) { #>
-				<div class="bb-activity-video-elem">
+				<div class="bb-activity-video-elem <# if ( -1 !== data.video[i].thumbnail.toLowerCase().indexOf( 'video-placeholder.jpg' ) ) { #>has-no-thumbnail<# } #>">
 					<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 					   data-id="{{data.video[i].id}}"
 					   data-attachment-id="{{data.video[i].attachment_id}}"
@@ -148,7 +148,7 @@
 							</a>
 						</div>
 						<div class="document-action-wrap">
-							<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="{{data.document[i].collapse}}"><i class="bb-icon-arrow-up bb-icon-l document-icon-collapse"></i></a>
+							<a href="#" class="document-action_collapse" data-balloon-pos="up" data-tooltip-collapse="{{data.document[i].collapse}}" data-balloon="{{data.document[i].expand}}"><i class="bb-icon-merge bb-icon-l document-icon-collapse"></i></a>
 							<a href="{{data.document[i].url}}" class="document-action_download" data-balloon-pos="up" data-balloon="{{data.document[i].download}}">
 								<i class="bb-icon-l bb-icon-download"></i>
 							</a>
