@@ -208,11 +208,11 @@ function bpm_blocking_settings_callback_member_blocking() {
 }
 
 /**
- * Moderation blocking Member reporting setting field
+ * Moderation blocking Member reporting setting field.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @uses  checked() To display the checked attribute
+ * @uses  checked() To display the checked attribute.
  */
 function bb_blocking_settings_callback_member_reporting() {
 	?>

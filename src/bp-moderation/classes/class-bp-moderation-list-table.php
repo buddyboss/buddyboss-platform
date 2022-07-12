@@ -639,7 +639,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Function to show reported count
+	 * Function to show reported count.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

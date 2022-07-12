@@ -792,7 +792,7 @@ add_action( 'bpm_category_add_form_fields', 'bb_category_add_term_fields_show_wh
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object $term  Reporting category object.
+ * @param object $term  	Reporting category object.
  * @param string $taxonomy  Reporting category taxonomy.
  *
  * @return mixed Show when Reporting field.
