@@ -3165,6 +3165,7 @@ window.bp = window.bp || {};
 					this.el.className += ' ' + this.options.model.attributes.className;
 				}
 				this.model.on( 'change', this.updateMessage, this );
+				this.model.on( 'remove', this.removeMessage, this );
 			},
 
 			updateMessage: function( model ) {
@@ -3176,6 +3177,10 @@ window.bp = window.bp || {};
 					this.el.className += ' ' + this.options.className;
 				}
 
+				this.render();
+			},
+
+			removeMessage: function( model ) {
 				this.render();
 			}
 		}
@@ -3264,8 +3269,6 @@ window.bp = window.bp || {};
 
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
 
-				console.log( messagePusherData );
-				console.log( messagePusherData.message.id );
 				var model = this.collection.get( messagePusherData.hash );
 
 				if ( model ) {
@@ -3282,29 +3285,14 @@ window.bp = window.bp || {};
 					//this.collection.set( { model }, { remove: false } );
 				}
 
-				console.log( this.collection );
-				var deletem = this.collection.get( messagePusherData.message.id );
-
-				if ( deletem ) {
-					console.log( 'deletem' );
-					console.log( deletem );
-					this.collection.remove( deletem );
-					console.log( this.collection );
-					var models = this.collection.models;
-					this.collection.set( { models }, { merge: true } );
-				}
-
-
-
-
 			},
 
 			triggerAjaxFailMessage: function ( messagePusherData ) {
 				var model = this.collection.get( messagePusherData.hash );
 
 				if ( model ) {
-					//this.collection.remove( model );
-					model.remove([{ cid: messagePusherData.hash }]);
+					this.collection.remove( model );
+					$( '#bp-message-thread-list li.' + messagePusherData.hash ).remove();
 				}
 			},
 
