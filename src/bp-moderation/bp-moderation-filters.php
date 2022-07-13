@@ -841,9 +841,9 @@ add_action( 'edited_bpm_category', 'bb_category_save_term_fields_show_when_repor
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $columns List of columns for Reporting categort taxonomy.
+ * @param array $columns List of columns for Reporting category taxonomy.
  *
- * @return array $columns List of columns for Reporting categort taxonomy
+ * @return array $columns List of columns for Reporting category taxonomy.
  */
 function bb_category_show_when_reporting_columns( $columns ) {
 	unset( $columns['slug'] );
@@ -854,7 +854,7 @@ function bb_category_show_when_reporting_columns( $columns ) {
 add_filter( 'manage_edit-bpm_category_columns', 'bb_category_show_when_reporting_columns' );
 
 /**
- * Retrieve value for our custom column
+ * Retrieve value for our custom column.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -862,7 +862,7 @@ add_filter( 'manage_edit-bpm_category_columns', 'bb_category_show_when_reporting
  * @param string $column_name Name of the column.
  * @param int    $term_id     Term ID.
  *
- * @return mixed Term meta data
+ * @return mixed Term meta data.
  */
 function bb_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
 	$value = get_term_meta( $term_id, $column_name, true );
@@ -878,7 +878,7 @@ function bb_category_show_when_reporting_column_display( $string = '', $column_n
 add_filter( 'manage_bpm_category_custom_column', 'bb_category_show_when_reporting_column_display', 10, 3 );
 
 /**
- * Display markup or template for custom field
+ * Display markup or template for custom field.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -911,8 +911,6 @@ function bb_quick_edit_bb_category_show_when_reporting_field( $column_name, $scr
 }
 add_action( 'quick_edit_custom_box', 'bb_quick_edit_bb_category_show_when_reporting_field', 10, 2 );
 
-add_action( 'bp_moderation_user_report_report_content_type', 'bp_moderation_user_report_content_type', 10, 2 );
-
 /**
  * Function to change member report type.
  *
@@ -921,8 +919,9 @@ add_action( 'bp_moderation_user_report_report_content_type', 'bp_moderation_user
  * @param string $content_type Button text.
  * @param int    $item_id     Item id.
  *
- * @return string
+ * @return string user report content type text.
  */
 function bp_moderation_user_report_content_type( $content_type, $item_id ) {
 	return esc_html__( 'Member', 'buddyboss' );
 }
+add_action( 'bp_moderation_user_report_report_content_type', 'bp_moderation_user_report_content_type', 10, 2 );

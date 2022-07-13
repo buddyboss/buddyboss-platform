@@ -212,7 +212,7 @@ function bpm_blocking_settings_callback_member_blocking() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @uses  checked() To display the checked attribute.
+ * @uses checked() To display the checked attribute.
  */
 function bb_blocking_settings_callback_member_reporting() {
 	?>
@@ -296,7 +296,7 @@ function bpm_blocking_settings_callback_auto_suspend_threshold() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @uses  checked() To display the checked attribute
+ * @uses checked() To display the checked attribute
  */
 function bb_blocking_settings_callback_auto_suspend_report_threshold() {
 	?>

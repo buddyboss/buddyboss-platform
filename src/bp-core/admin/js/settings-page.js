@@ -172,15 +172,15 @@ window.bp = window.bp || {};
 			/**
 			 * Function for hide/show auto suspend fields on member reporting enable/disabled.
 			 */
-			$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ));
-			$( '#bb_reporting_auto_suspend_' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ));
+			$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ) );
+			$( '#bb_reporting_auto_suspend_' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ) );
 			$( document ).on(
 				'change',
 				'#bb_blocking_member_reporting',
 				function () {
 					$( 'label[for="bb_reporting_auto_suspend_"' ).toggleClass('is_disabled');
-					$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( this ).prop( 'checked' ));
-					$( '#bb_reporting_auto_suspend_' ).attr('disabled', ! $( this ).prop( 'checked' ));
+					$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( this ).prop( 'checked' ) );
+					$( '#bb_reporting_auto_suspend_' ).attr('disabled', ! $( this ).prop( 'checked' ) );
 				}
 			);
 

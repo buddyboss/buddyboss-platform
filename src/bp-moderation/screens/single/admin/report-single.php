@@ -166,12 +166,11 @@ $admins            = array_map(
 										<?php } else { ?>
 											<tr>
 												<td scope="row" style="width: 20%;">
-													<strong><label>
-															<?php
-															/* translators: accessibility text */
-															esc_html_e( 'Blocked By', 'buddyboss' );
-															?>
-														</label></strong>
+													<strong>
+														<label>
+															<?php esc_html_e('Blocked By', 'buddyboss'); ?>
+														</label>
+													</strong>
 												</td>
 											</tr>
 										<?php } ?>
@@ -190,12 +189,11 @@ $admins            = array_map(
 										<tbody>
 											<tr>
 												<td scope="row" style="width: 20%;">
-													<strong><label>
-															<?php
-															/* translators: accessibility text */
-															esc_html_e( 'Reported By', 'buddyboss' );
-															?>
-														</label></strong>
+													<strong>
+														<label>
+															<?php esc_html_e('Reported By', 'buddyboss'); ?>
+														</label>
+													</strong>
 												</td>
 											</tr>
 										</tbody>

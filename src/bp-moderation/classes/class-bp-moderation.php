@@ -1318,8 +1318,9 @@ class BP_Moderation {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param int $item_id       item id
-		 * @param int $hide_sitewide item hidden sitewide or user specific
+		 * @param int 	$item_id  item id.
+		 * @param int 	$hide_sitewide item hidden sitewide or user specific.
+		 * @param array	$args hide arguments.
 		 */
 		do_action( "bp_suspend_hide_{$this->item_type}", $this->item_id, $this->hide_sitewide, array() );
 	}

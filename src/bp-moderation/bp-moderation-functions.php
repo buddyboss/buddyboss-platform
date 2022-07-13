@@ -850,8 +850,8 @@ function bp_moderation_auto_suspend_threshold( $default = 5 ) {
  *
  * @param int $default bool Optional.Default value true.
  *
- * @return bool Is member reporting enabled or not
- * @uses  get_option() To get the bb_blocking_member_reporting option
+ * @return bool Is member reporting enabled or not.
+ * @uses get_option() To get the bb_blocking_member_reporting option.
  */
 function bb_is_moderation_member_reporting_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bb_is_moderation_member_reporting_enable', (bool) get_option( 'bb_blocking_member_reporting', $default ) );
@@ -864,8 +864,8 @@ function bb_is_moderation_member_reporting_enable( $default = 0 ) {
  *
  * @param int $default bool Optional.Default value true.
  *
- * @return bool Is auto suspend report enabled or not
- * @uses  get_option() To get the bb_reporting_auto_suspend_ option
+ * @return bool Is auto suspend report enabled or not.
+ * @uses get_option() To get the bb_reporting_auto_suspend_ option.
  */
 function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend_', $default ) );
@@ -878,8 +878,8 @@ function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
  *
  * @param int $default bool Optional.Default value true.
  *
- * @return bool Is search autocomplete enabled or not
- * @uses  bp_moderation_get_setting() To get the bb_reporting_auto_suspend_threshold option
+ * @return bool Is search autocomplete enabled or not.
+ * @uses bp_moderation_get_setting() To get the bb_reporting_auto_suspend_threshold option.
  */
 function bb_moderation_auto_suspend_report_threshold( $default = 5 ) {
 	return apply_filters( 'bb_moderation_auto_suspend_report_threshold', (int) bp_moderation_get_setting( 'bb_reporting_auto_suspend_threshold', $default ) );
