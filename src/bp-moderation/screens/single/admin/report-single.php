@@ -25,14 +25,14 @@ $admins            = array_map(
 		<?php
 		if ( $is_content_screen ) {
 			printf(
-			/* translators: 1: URL, 2: Title */
+				/* translators: 1: URL, 2: Title */
 				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i> %2$s</a>',
 				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation&tab=reported-content' ) ),
 				esc_html__( 'Back to Reported Content', 'buddyboss' )
 			);
 		} else {
 			printf(
-			/* translators: 1: URL, 2: Title */
+				/* translators: 1: URL, 2: Title */
 				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i> %2$s</a>',
 				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
 				esc_html__( 'Back to Flagged Members', 'buddyboss' )
@@ -89,7 +89,12 @@ $admins            = array_map(
 												}
 
 												foreach ( $user_ids as $user_id ) {
-													printf( '%s <strong>%s</strong> <br/>', get_avatar( $user_id, '32' ), wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+													printf(
+														/* translators: 1: Avtar, 2: Title with link */
+														'%s <strong>%s</strong> <br/>',
+														get_avatar( $user_id, '32' ),
+														wp_kses_post( bp_core_get_userlink( $user_id ) )
+													);
 												}
 												?>
 											</div>
@@ -135,7 +140,7 @@ $admins            = array_map(
 										<div class="report-header_user">
 											<?php
 											printf(
-											/* translators: 1: Member avtar, 2: Member avtar URL, 3: Member Name */
+												/* translators: 1: Member avtar, 2: Member avtar URL, 3: Member Name */
 												'%s <strong><a href="%s">%s</a></strong>',
 												get_avatar( $moderation_request_data->item_id, '32' ),
 												esc_url( BP_Moderation_Members::get_permalink( $moderation_request_data->item_id ) ),
@@ -237,6 +242,7 @@ $admins            = array_map(
 		<p>
 			<?php
 			printf(
+				/* translators: 1: Text, 2: Link, 3: Text */
 				'%1$s <a href="%2$s">%3$s</a>',
 				esc_html__( 'No moderation found with this ID.', 'buddyboss' ),
 				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
