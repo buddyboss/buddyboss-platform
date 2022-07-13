@@ -1336,12 +1336,18 @@ function bp_nouveau_ajax_delete_thread_messages() {
 		messages_delete_thread( $thread_id );
 	}
 
+	$inbox_unread_cnt = array(
+		'user_id'            => bp_loggedin_user_id(),
+		'inbox_unread_count' => messages_get_unread_count( bp_loggedin_user_id() ),
+	);
+
 	wp_send_json_success(
 		array(
-			'id'             => $thread_id,
-			'type'           => 'success',
-			'messages'       => __( 'Messages successfully deleted.', 'buddyboss' ),
-			'messages_count' => bp_get_message_thread_total_count( $thread_id ),
+			'id'                            => $thread_id,
+			'type'                          => 'success',
+			'messages'                      => __( 'Messages successfully deleted.', 'buddyboss' ),
+			'messages_count'                => bp_get_message_thread_total_count( $thread_id ),
+			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 		)
 	);
 
@@ -2662,15 +2668,15 @@ function bp_nouveau_ajax_hide_thread() {
 	}
 
 	$inbox_unread_cnt = array(
-		'user_id'             => bp_loggedin_user_id(),
-		'inbox_unread_count'  =>  messages_get_unread_count( bp_loggedin_user_id() ),
+		'user_id'            => bp_loggedin_user_id(),
+		'inbox_unread_count' => messages_get_unread_count( bp_loggedin_user_id() ),
 	);
 
 	wp_send_json_success(
 		array(
 			'type'                          => 'success',
 			'messages'                      => __( 'Thread removed successfully.', 'buddyboss' ),
-			'recipient_inbox_unread_counts' => $inbox_unread_cnt
+			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 		)
 	);
 }

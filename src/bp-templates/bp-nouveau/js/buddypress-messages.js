@@ -3240,12 +3240,25 @@ window.bp = window.bp || {};
 
 				this.listenTo( Backbone, 'onSentMessage', this.triggerPusherMessage );
 				this.listenTo( Backbone, 'onReplySentSuccess', this.triggerPusherUpdateMessage );
+				this.listenTo( Backbone, 'onMessageDeleteSuccess', this.triggerDeleteUpdateMessage );
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
 				// use sent messageData here.
 				this.collection.add( _.first( messagePusherData ) );
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+			},
+
+			triggerDeleteUpdateMessage: function ( thread_id ) {
+				if (
+					'undefined' !== typeof bp.Nouveau.Messages.threads.get( thread_id ) &&
+					'undefined' !== typeof bp.Nouveau.Messages.threads.get( thread_id ).attributes.active &&
+					true === bp.Nouveau.Messages.threads.get( thread_id ).attributes.active ) {
+					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?refresh=1', { trigger: true } );
+					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/', { trigger: true } );
+					window.Backbone.trigger( 'relistelements' );
+				}
+
 			},
 
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
