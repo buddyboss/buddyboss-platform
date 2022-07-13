@@ -9,18 +9,14 @@
  */
 
 ?>
-<script type="text/html" id="tmpl-activity-link-preview">
+<script type="text/html" id="tmpl-activity-link-preview">	
 	<# if ( data.link_scrapping ) { #>
 	<# if ( data.link_loading ) { #>
 	<span class="activity-url-scrapper-loading activity-ajax-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><?php esc_html_e( 'Loading preview...', 'buddyboss' ) ?></span>
 	<# } #>
 	<# if ( data.link_success || data.link_error ) { #>
 	<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion"><?php esc_html_e( 'Remove Preview', 'buddyboss' ); ?></i></a>
-	<div class="activity-link-preview-container">
-
-		<# if ( data.link_success && ! data.link_error ) { #>
-		<p class="activity-link-preview-title">{{{data.link_title}}}</p>
-		<# } #>
+	<div class="activity-link-preview-container">		
 
 		<# if ( data.link_images && data.link_images.length && data.link_success && ! data.link_error ) { #>
 		<div id="activity-url-scrapper-img-holder">
@@ -41,10 +37,18 @@
 			<# } #>
 		</div>
 		<# } #>
+		
+		<div class="activity-link-preview-info">		
+			<p class="activity-link-preview-link-name">buddyboss.com</p>
 
-		<# if ( data.link_success && ! data.link_error ) { #>
-		<div class="activity-link-preview-excerpt"><p>{{{data.link_description}}}</p></div>
-		<# } #>
+			<# if ( data.link_success && ! data.link_error ) { #>
+			<p class="activity-link-preview-title">{{{data.link_title}}}</p>
+			<# } #>
+
+			<# if ( data.link_success && ! data.link_error ) { #>
+			<div class="activity-link-preview-excerpt"><p>{{{data.link_description}}}</p></div>
+			<# } #>
+		</div>
 
 		<# if ( data.link_error && ! data.link_success ) { #>
 		<div id="activity-url-error" class="activity-url-error">{{data.link_error_msg}}</div>
