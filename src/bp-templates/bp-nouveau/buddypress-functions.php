@@ -603,6 +603,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'unsaved_changes'     	=> __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 			'object_nav_parent'   	=> '#buddypress',
 			'empty_field' 			=> __( 'New Field', 'buddyboss' ),
+			'close'					=> __( 'Close', 'buddyboss' ),
 		);
 
 		// If the Object/Item nav are in the sidebar

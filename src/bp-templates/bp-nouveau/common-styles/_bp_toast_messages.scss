@@ -26,6 +26,14 @@
 		width: 100%;
 		z-index: 1099;
 
+		@media screen and (min-width: 501px) {
+
+			.bb-onscreen-notification-enable & {
+				position: static; // Don't position if Toast messages are appended into on screen notification
+			}
+
+		}
+
 		.toast-messages-list {
 			margin: 0;
 			padding: 0;
@@ -56,7 +64,7 @@
 					border-radius: 4px 0 0 4px;
 				}
 
-				&:hover {
+				&.has-url:hover {
 					background: #f7fafe;
 				}
 
@@ -120,11 +128,13 @@
 				}
 
 				.actions {
+
+					@include center-vert();
 					align-self: center;
-					display: flex;
-					align-items: center;
 					height: 24px;
 					width: 24px;
+					position: relative;
+					z-index: 1;
 
 					a {
 						transition: all linear 0.2s;
@@ -137,6 +147,14 @@
 
 					}
 
+				}
+
+				.toast-messages-url {
+					position: absolute;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					top: 0;
 				}
 
 			}
@@ -185,6 +203,11 @@
 					width: 100%;
 					left: 0;
 					top: 0;
+					display: none;
+
+					&:last-child {
+						display: flex;
+					}
 
 					.toast-messages-icon {
 						margin-right: 10px;

@@ -25621,10 +25621,10 @@ span.icons:before {
 }
 
 @media screen and (max-width: 500px) {
-  .bb-onscreen-notification-enable {
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list {
     display: none;
   }
-  .bb-onscreen-notification-enable.bb-onscreen-notification-enable-mobile-support {
+  .bb-onscreen-notification-enable.bb-onscreen-notification-enable-mobile-support .bb-onscreen-notification .notification-list {
     display: block;
   }
 }
@@ -26032,6 +26032,12 @@ span.icons:before {
   z-index: 1099;
 }
 
+@media screen and (min-width: 501px) {
+  .bb-onscreen-notification-enable .bb-toast-messages-enable .bb-toast-messages {
+    position: static;
+  }
+}
+
 .bb-toast-messages-enable .bb-toast-messages .toast-messages-list {
   margin: 0;
   padding: 0;
@@ -26064,7 +26070,7 @@ span.icons:before {
   border-radius: 0 4px 4px 0;
 }
 
-.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item:hover {
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item.has-url:hover {
   background: #f7fafe;
 }
 
@@ -26124,11 +26130,19 @@ span.icons:before {
 }
 
 .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .actions {
-  align-self: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
   align-items: center;
+  align-self: center;
   height: 24px;
   width: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .actions a {
@@ -26139,6 +26153,14 @@ span.icons:before {
   font-size: 24px;
   color: #000;
   transition: all linear 0.2s;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-url {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0;
 }
 
 .bb-toast-messages-enable .bb-toast-messages.bb-position-right {
@@ -26178,6 +26200,10 @@ span.icons:before {
     width: 100%;
     right: 0;
     top: 0;
+    display: none;
+  }
+  .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item:last-child {
+    display: flex;
   }
   .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-icon {
     margin-left: 10px;
