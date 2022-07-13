@@ -9362,6 +9362,7 @@ div.profile_completion_wrap .progress_text_wrap {
 
 .bp-messages-content .single-message-thread-header .thread-avatar {
   margin-left: 12px;
+  position: relative;
 }
 
 .bp-messages-content .single-message-thread-header .thread-avatar > img {
