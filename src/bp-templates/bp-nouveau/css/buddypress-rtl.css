@@ -9598,14 +9598,12 @@ input#send-to-input {
 }
 
 #bp-message-load-more {
-  background: rgba(255, 255, 255, 0.7);
   position: absolute;
   top: 60px;
   text-align: center;
   width: 100%;
   right: 0;
-  padding: 20px 0;
-  margin: 6px 0 0;
+  margin-top: 16px;
 }
 
 #bp-message-load-more .button {
@@ -9623,6 +9621,21 @@ input#send-to-input {
   text-decoration: none;
   color: inherit;
   box-shadow: none;
+}
+
+#bp-message-load-more .button .dashicons-update {
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 25px;
+  height: 25px;
+  width: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#bp-message-load-more .button .dashicons-update:before {
+  content: "\ef30";
 }
 
 #send_message_form .select2-selection--multiple {
