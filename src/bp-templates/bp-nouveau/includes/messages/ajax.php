@@ -380,9 +380,14 @@ function bp_nouveau_ajax_messages_send_message() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_send_reply() {
+
+	$hash    = ! empty( $_POST['hash'] ) ? wp_unslash( $_POST['hash'] ) : '';
+	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
+
 	$response = array(
 		'feedback' => __( 'There was a problem sending your reply. Please try again.', 'buddyboss' ),
 		'type'     => 'error',
+		'hash'     => $hash,
 	);
 
 	// Verify nonce.
@@ -392,11 +397,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	if ( empty( $_POST['thread_id'] ) ) {
 		$response['feedback'] = __( 'Please provide thread id.', 'buddyboss' );
+		$response['hash']     = $hash;
 
 		wp_send_json_error( $response );
 	}
-
-	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
 
 	/**
 	 * Filter to validate message content.
@@ -411,6 +415,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Please add some content to your message.', 'buddyboss' );
+		$response['hash']     = $hash;
 
 		wp_send_json_error( $response );
 	}
@@ -425,6 +430,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_media ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			$response['hash']     = $hash;
 			wp_send_json_error( $response );
 		}
 	}
@@ -433,6 +439,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_document ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			$response['hash']     = $hash;
 			wp_send_json_error( $response );
 		}
 	}
@@ -441,6 +448,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_video ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			$response['hash']     = $hash;
 			wp_send_json_error( $response );
 		}
 	}
@@ -449,6 +457,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$can_send_document = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_document ) {
 			$response['feedback'] = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
+			$response['hash']     = $hash;
 			wp_send_json_error( $response );
 		}
 	}
@@ -781,7 +790,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			'messages'                      => array( $reply ),
 			'thread_id'                     => $thread_id,
 			'feedback'                      => __( 'Your reply was sent successfully', 'buddyboss' ),
-			'hash'                          => ! empty( $_POST['hash'] ) ? $_POST['hash'] : '',
+			'hash'                          => $hash,
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 			'type'                          => 'success',
 		)

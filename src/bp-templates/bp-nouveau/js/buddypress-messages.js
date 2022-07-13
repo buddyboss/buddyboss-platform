@@ -3241,6 +3241,7 @@ window.bp = window.bp || {};
 				this.listenTo( Backbone, 'onSentMessage', this.triggerPusherMessage );
 				this.listenTo( Backbone, 'onReplySentSuccess', this.triggerPusherUpdateMessage );
 				this.listenTo( Backbone, 'onMessageDeleteSuccess', this.triggerDeleteUpdateMessage );
+				this.listenTo( Backbone, 'onMessageAjaxFail', this.triggerAjaxFailMessage );
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
@@ -3262,6 +3263,9 @@ window.bp = window.bp || {};
 			},
 
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
+
+				console.log( messagePusherData );
+				console.log( messagePusherData.message.id );
 				var model = this.collection.get( messagePusherData.hash );
 
 				if ( model ) {
@@ -3276,6 +3280,31 @@ window.bp = window.bp || {};
 
 					model.set( messagePusherData.message );
 					//this.collection.set( { model }, { remove: false } );
+				}
+
+				console.log( this.collection );
+				var deletem = this.collection.get( messagePusherData.message.id );
+
+				if ( deletem ) {
+					console.log( 'deletem' );
+					console.log( deletem );
+					this.collection.remove( deletem );
+					console.log( this.collection );
+					var models = this.collection.models;
+					this.collection.set( { models }, { merge: true } );
+				}
+
+
+
+
+			},
+
+			triggerAjaxFailMessage: function ( messagePusherData ) {
+				var model = this.collection.get( messagePusherData.hash );
+
+				if ( model ) {
+					//this.collection.remove( model );
+					model.remove([{ cid: messagePusherData.hash }]);
 				}
 			},
 
