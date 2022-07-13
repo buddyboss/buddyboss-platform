@@ -821,7 +821,7 @@ add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $term_id  Show when reporting field term ID.
+ * @param int $term_id Show when reporting field term ID.
  */
 function bb_category_save_term_fields_show_when_reporting( $term_id ) {
 
@@ -917,7 +917,7 @@ add_action( 'quick_edit_custom_box', 'bb_quick_edit_bb_category_show_when_report
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $content_type Button text.
- * @param int    $item_id     Item id.
+ * @param int    $item_id      Item id.
  *
  * @return string user report content type text.
  */
