@@ -95,12 +95,13 @@ window.bp = window.bp || {};
 					return '.bb-toast-messages-enable .toast-messages-list';
 				}
 
-				var toastMessageWrap = $('<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-right single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>');
-
 				if( $( '.bb-onscreen-notification-enable ul.notification-list' ).length ) {
+					var toastPosition = $( '.bb-onscreen-notification' ).hasClass( 'bb-position-left' ) ? 'left' : 'right';
+					var toastMessageWrap = $('<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-'+ toastPosition +' single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>');
 					$( '.bb-onscreen-notification' ).show();
 					$( toastMessageWrap ).insertBefore( '.bb-onscreen-notification-enable ul.notification-list' );
 				} else {
+					var toastMessageWrap = $('<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-right single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>');
 					$( 'body' ).append( toastMessageWrap );
 				}
 				return '.bb-toast-messages-enable .toast-messages-list';
@@ -149,7 +150,7 @@ window.bp = window.bp || {};
 			if( autoHide ) {
 				setInterval(function() {
 					hideMessage();
-				},1000);
+				},30000);
 			}
 
 			$( currentEl + ' .actions .action-close' ).on( 'click', function() {
@@ -1182,7 +1183,9 @@ window.bp = window.bp || {};
 					bp.Nouveau.browserTabCountNotification();
 					bp.Nouveau.visibilityOnScreenClearButton();
 					list.closest( '.bb-onscreen-notification' ).addClass( 'close-all-items' );
-					$( '.bb-onscreen-notification' ).fadeOut( 200 );
+					$( '.toast-messages-list > li' ).each( function() {
+						$(this).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay(500).remove();
+					});
 					list.removeClass( 'bb-more-than-3' );
 				}
 			);
