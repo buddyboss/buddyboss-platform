@@ -25,15 +25,17 @@ $admins            = array_map(
 		<?php
 		if ( $is_content_screen ) {
 			printf(
+			/* translators: 1: URL, 2: Title */
 				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i> %2$s</a>',
 				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation&tab=reported-content' ) ),
-				esc_html__( 'Back to Reported Content', 'buddyboss' ),
+				esc_html__( 'Back to Reported Content', 'buddyboss' )
 			);
 		} else {
 			printf(
+			/* translators: 1: URL, 2: Title */
 				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i> %2$s</a>',
 				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
-				esc_html__( 'Back to Flagged Members', 'buddyboss' ),
+				esc_html__( 'Back to Flagged Members', 'buddyboss' )
 			);
 		}
 		?>
@@ -70,7 +72,7 @@ $admins            = array_map(
 												$view_content_url = bp_moderation_get_permalink( $moderation_request_data->item_id, $moderation_request_data->item_type );
 												if ( ! empty( $view_content_url ) ) {
 													printf(
-														/* translators: 1: View content URL, 2: Attribute title, 3: Title */
+													/* translators: 1: View content URL, 2: Attribute title, 3: Title */
 													'<a target="_blank" href="%s" title="%s"> <span>#%s</span> <i class="bb-icon-external-link bb-icon-l"></i> </a> ',
 														esc_url( $view_content_url ),
 														esc_attr__( 'View', 'buddyboss' ),
@@ -133,7 +135,7 @@ $admins            = array_map(
 										<div class="report-header_user">
 											<?php
 											printf(
-												/* translators: 1: Member avtar, 2: Member avtar URL, 3: Member Name */
+											/* translators: 1: Member avtar, 2: Member avtar URL, 3: Member Name */
 												'%s <strong><a href="%s">%s</a></strong>',
 												get_avatar( $moderation_request_data->item_id, '32' ),
 												esc_url( BP_Moderation_Members::get_permalink( $moderation_request_data->item_id ) ),
