@@ -39,6 +39,7 @@ TABLE OF CONTENTS:
 13.0 Group Directories Enhancement
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
+16.0 Moderation
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -2114,6 +2115,7 @@ body .section-repair_community .settings fieldset .checkbox label code {
   margin-bottom: 30px;
 }
 
+#bp_moderation_settings_blocking label.is_disabled,
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled {
   pointer-events: none;
   opacity: 0.5;
@@ -3229,6 +3231,123 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
   line-height: 1.4;
+}
+
+/*------------------------------------------------------------------------------
+ * 16.0 Moderation
+ *----------------------------------------------------------------------------*/
+table.moderations .column-content_type a[data-action="unhide"],
+table.moderations .column-content_type a[data-action="unsuspend"],
+table.moderations .column-member a[data-action="unhide"],
+table.moderations .column-member a[data-action="unsuspend"] {
+  color: #5f9a22;
+}
+
+table.moderations thead tr th,
+table.moderations tfoot tr th {
+  font-weight: 600;
+}
+
+table.moderations tbody tr .column-suspend .dashicons {
+  color: #000;
+  font-size: 24px;
+}
+
+.buddyboss_page_bp-moderation .dashicons {
+  font-weight: 700;
+}
+
+.buddyboss_page_bp-moderation .bb-back .dashicons {
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.buddyboss_page_bp-moderation table.reports thead tr th,
+.buddyboss_page_bp-moderation table.reports tfoot tr th {
+  font-weight: 600;
+}
+
+table.moderations .content_owner img,
+table.reports .column-reporter img,
+table.moderations .column-member img {
+  vertical-align: middle;
+  margin-left: 5px;
+  border-radius: 50%;
+}
+
+#bp_moderation_action .report-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #dfdfdf;
+  margin: 0 -12px;
+  padding: 25px;
+}
+
+#bp_moderation_action .report-header_content_id {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1d2327;
+  margin-bottom: 10px;
+}
+
+#bp_moderation_action .report-header_content_id a {
+  text-decoration: none;
+}
+
+#bp_moderation_action .report-header_content_id a span {
+  color: #808080;
+}
+
+#bp_moderation_action .report-header_content_id a i {
+  font-weight: 300;
+}
+
+#bp_moderation_action .report-header_user {
+  display: flex;
+  align-items: center;
+}
+
+#bp_moderation_action .report-header_user strong a {
+  text-decoration: none;
+  font-size: 14px;
+}
+
+#bp_moderation_action .report-header_user img {
+  border-radius: 50%;
+  max-width: 35px;
+  height: auto;
+  margin-left: 10px;
+}
+
+#bp_moderation_action .report-header_content {
+  text-align: center;
+  font-weight: 600;
+}
+
+#bp_moderation_action .report-header_content strong {
+  display: block;
+  font-size: 24px;
+}
+
+#bp_moderation_action .report-header_action .report-header_button {
+  color: #b32d2e;
+  border-color: #b32d2e;
+}
+
+#bp_moderation_action .report-header_action .report-header_button.green {
+  color: #5f9a22;
+  border-color: #afcc90;
+}
+
+#bp_moderation_action .report-header_action .report-header_button + .report-header_button {
+  margin-right: 15px;
+}
+
+.taxonomy-bpm_category .form-field.term-slug-wrap {
+  display: none;
 }
 
 #bp_web_push_notification_settings table.form-table .notes-hidden-header > th {

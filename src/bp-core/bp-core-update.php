@@ -369,6 +369,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18701 ) {
 			bb_update_to_1_9_3();
 		}
+
+		if ( $raw_db_version < 18751 ) {
+			bb_update_to_1_9_5();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1876,4 +1880,17 @@ function migrate_notification_preferences( $user_ids ) {
 		}
 	}
 }
+
+/**
+ * Update moderation tables.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_1_9_5() {
+
+	global $wpdb;
+	$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_moderation ADD `user_report` TINYINT NULL DEFAULT '0'" );
+	$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_suspend ADD `user_report` TINYINT NULL DEFAULT '0' AFTER `reported`; " );
+}
+
 
