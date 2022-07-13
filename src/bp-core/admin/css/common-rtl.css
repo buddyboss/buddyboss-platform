@@ -3403,3 +3403,20 @@ table.moderations .column-member img {
 #bp_moderation_action .report-header_action .report-header_button + .report-header_button {
   margin-right: 15px;
 }
+
+.taxonomy-bpm_category .form-field.term-slug-wrap {
+  display: none;
+}
+
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th + td {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+#bp_web_push_notification_settings table.form-table .no-padding {
+  padding: 0;
+}

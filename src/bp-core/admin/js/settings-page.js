@@ -172,17 +172,33 @@ window.bp = window.bp || {};
 			/**
 			 * Function for hide/show auto suspend fields on member reporting enable/disabled.
 			 */
-			$( '#bpm_blocking_auto_suspend_report_threshold' ).attr('disabled', ! $( '#bpm_blocking_member_reporting' ).prop( 'checked' ));
-			$( '#bpm_blocking_auto_suspend_report' ).attr('disabled', ! $( '#bpm_blocking_member_reporting' ).prop( 'checked' ));
+			$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ) );
+			$( '#bb_reporting_auto_suspend_' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ) );
 			$( document ).on(
 				'change',
-				'#bpm_blocking_member_reporting',
+				'#bb_blocking_member_reporting',
 				function () {
-					$( 'label[for="bpm_blocking_auto_suspend_report"' ).toggleClass('is_disabled');
-					$( '#bpm_blocking_auto_suspend_report_threshold' ).attr('disabled', ! $( this ).prop( 'checked' ));
-					$( '#bpm_blocking_auto_suspend_report' ).attr('disabled', ! $( this ).prop( 'checked' ));
+					$( 'label[for="bb_reporting_auto_suspend_"' ).toggleClass('is_disabled');
+					$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( this ).prop( 'checked' ) );
+					$( '#bb_reporting_auto_suspend_' ).attr('disabled', ! $( this ).prop( 'checked' ) );
 				}
 			);
+
+			$( 'span:contains("Slug")' ).each(function () {
+				$( this ).parent().remove();
+			});
+
+			$( '.taxonomy-bpm_category #the-list' ).on( 'click', 'button.editinline', function ( e ) {
+				e.preventDefault();
+				var $tr = $( this ).closest('tr');
+				var val = $tr.find( 'td.bb_category_show_when_reporting' ).text();
+				if ( val !== '' ) {
+					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' ).removeAttr( 'selected' );
+					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' ).filter(function () {
+						return this.text === val;
+					}).attr( 'selected', 'selected');
+				}
+			});
 		}
 	);
 

@@ -851,7 +851,7 @@ class BP_Moderation {
 			}
 
 			if ( isset( $args['user_repoted'] ) ) {
-				$where_conditions[] = ! empty( $args['user_repoted'] ) ? 'category_id<>0' : 'category_id=0';
+				$where_conditions[] = ! empty( $args['user_repoted'] ) ? 'user_report=1' : 'user_report=0';
 			}
 
 			// Join the where conditions together.
@@ -1044,9 +1044,9 @@ class BP_Moderation {
 		$email_notification = false;
 		$auto_hide          = false;
 
-		if ( BP_Moderation_Members::$moderation_type === $this->item_type && ( bp_is_moderation_auto_suspend_enable() || bp_is_moderation_auto_suspend_report_enable() ) ) {
+		if ( BP_Moderation_Members::$moderation_type === $this->item_type && ( bp_is_moderation_auto_suspend_enable() || bb_is_moderation_auto_suspend_report_enable() ) ) {
 			$threshold          = bp_moderation_auto_suspend_threshold( 5 );
-			$user_threshold     = bp_moderation_auto_suspend_report_threshold( 5 );
+			$user_threshold     = bb_moderation_auto_suspend_report_threshold( 5 );
 			$email_notification = bp_is_moderation_blocking_email_notification_enable();
 		} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
 			$threshold          = bp_moderation_reporting_auto_hide_threshold( '5', $this->item_type );
@@ -1070,7 +1070,7 @@ class BP_Moderation {
 			// Update count and check $threshold for auto hide/suspended and send email notification if auto hide/suspended.
 			$this->count         = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
 			$this->user_reported = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
-			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->category_id ) ) {
+			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->user_report ) ) {
 				$this->user_reported += 1;
 			} else {
 				$this->count += 1;
@@ -1205,9 +1205,9 @@ class BP_Moderation {
 		$bp = buddypress();
 
 		if ( ! empty( $this->report_id ) ) {
-			$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
+			$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d, user_report = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->user_report, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
 		} else {
-			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id ) VALUES ( %d, %d, %s, %s, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id ); // phpcs:ignore
+			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id, user_report ) VALUES ( %d, %d, %s, %s, %d, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id, $this->user_report ); // phpcs:ignore
 
 			bp_moderation_update_meta( $this->id, '_count', $this->count );
 			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
@@ -1318,8 +1318,9 @@ class BP_Moderation {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param int $item_id       item id
-		 * @param int $hide_sitewide item hidden sitewide or user specific
+		 * @param int 	$item_id  item id.
+		 * @param int 	$hide_sitewide item hidden sitewide or user specific.
+		 * @param array	$args hide arguments.
 		 */
 		do_action( "bp_suspend_hide_{$this->item_type}", $this->item_id, $this->hide_sitewide, array() );
 	}
@@ -1413,7 +1414,7 @@ class BP_Moderation {
 
 		if ( ! empty( $updated_row ) ) {
 			$this->report_id = null;
-			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->category_id ) ) {
+			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->user_report ) ) {
 				$this->user_reported -= 1;
 			} else {
 				$this->count -= 1;
