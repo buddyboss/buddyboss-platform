@@ -60,7 +60,7 @@
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
+					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
 					<div class="message_action__list">
 						<ul>
 							<li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread',
@@ -102,7 +102,7 @@
 				}
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
+					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
 					<div class="message_action__list">
 						<ul>
 							<li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread',
