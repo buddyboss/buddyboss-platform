@@ -1065,6 +1065,60 @@ input#send-to-input {
 	-ms-flex-align: center;
 	align-items: center;
 	margin-bottom: 10px;
+
+	.compose & {
+		position: absolute;
+		border: 0;
+		top: 18px;
+		right: 20px;
+
+		.bp-new-message-heading {
+			display: none;
+		}
+
+		.bp-close-compose-form {
+			display: block;
+
+			[class*="bb-icon"] {
+				font-size: 24px;
+			}
+		}
+
+	}
+
+}
+
+.compose .bp-messages-recipient {
+	display: flex;
+	padding: 0 40px 22px 22px;
+	margin: 0 -20px;
+
+	> span:first-child {
+		margin-right: 10px;
+		font-size: 14px;
+		line-height: 30px;
+	}
+
+	.select2-container {
+		display: flex;
+		font-size: 14px;
+
+		> .selection {
+			width: 100%;
+		}
+	}
+}
+
+.compose #buddypress #send_message_form {
+
+	.select2-search__field {
+		font-size: 14px;
+		padding-bottom: 0;
+	}
+
+	.select2-container--default .select2-selection--multiple .select2-selection__choice {
+		margin-bottom: 0;
+	}
 }
 
 .bp-back-to-thread-list {

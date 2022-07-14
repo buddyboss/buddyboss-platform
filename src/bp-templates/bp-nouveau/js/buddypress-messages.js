@@ -2237,7 +2237,7 @@ window.bp = window.bp || {};
 					{
 						placeholder: $input.attr( 'placeholder' ),
 						minimumInputLength: 1,
-						dropdownCssClass: 'bb-select-dropdown',
+						dropdownCssClass: 'bb-select-dropdown bb-compose-input',
 						containerCssClass: 'bb-select-container',
 						language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
 						ajax: {

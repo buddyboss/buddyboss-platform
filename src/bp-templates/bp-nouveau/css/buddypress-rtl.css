@@ -10020,6 +10020,55 @@ input#send-to-input {
   margin-bottom: 10px;
 }
 
+.compose .bp-messages-form-header {
+  position: absolute;
+  border: 0;
+  top: 18px;
+  left: 20px;
+}
+
+.compose .bp-messages-form-header .bp-new-message-heading {
+  display: none;
+}
+
+.compose .bp-messages-form-header .bp-close-compose-form {
+  display: block;
+}
+
+.compose .bp-messages-form-header .bp-close-compose-form [class*="bb-icon"] {
+  font-size: 24px;
+}
+
+.compose .bp-messages-recipient {
+  display: flex;
+  padding: 0 22px 22px 40px;
+  margin: 0 -20px;
+}
+
+.compose .bp-messages-recipient > span:first-child {
+  margin-left: 10px;
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.compose .bp-messages-recipient .select2-container {
+  display: flex;
+  font-size: 14px;
+}
+
+.compose .bp-messages-recipient .select2-container > .selection {
+  width: 100%;
+}
+
+.compose #buddypress #send_message_form .select2-search__field {
+  font-size: 14px;
+  padding-bottom: 0;
+}
+
+.compose #buddypress #send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  margin-bottom: 0;
+}
+
 .bp-back-to-thread-list {
   margin-left: 10px;
 }
