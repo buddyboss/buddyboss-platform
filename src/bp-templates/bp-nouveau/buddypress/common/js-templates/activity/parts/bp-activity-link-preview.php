@@ -43,8 +43,14 @@
 				var dataLinkSplit = data.link_url.toString().split("/"); #>
 				<# if ( dataLinkSplit ) {
 					dataLinkSplit = dataLinkSplit.filter( function( v ){ return '' !== v } );
-					var domainName = dataLinkSplit && dataLinkSplit[1] ? dataLinkSplit[1] : ''; #>
+					var domainName = dataLinkSplit && dataLinkSplit[1] ? dataLinkSplit[1] : '';
+					#>
 						<# if ( domainName ) { #>
+							<# if ( domainName.indexOf("www") > -1 ) {
+								var domainNameSplit = domainName.toString().split("www.");
+								domainNameSplit = domainNameSplit.filter( function( v ){ return '' !== v } );
+								domainName = domainNameSplit && domainNameSplit[0] ? domainNameSplit[0] : '';
+							} #>
 							<p class="activity-link-preview-link-name">{{domainName}}</p>
 						<# } #>
 				<# } #>
