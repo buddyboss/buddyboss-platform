@@ -118,7 +118,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 
 			// Migrate the invited date from invite meta to group member meta.
 			$invited_date = invitation_get_invitemeta( $current_invite->id, 'invited_date' );
-			groups_update_membermeta( $member->id, 'membership_requested_date', $invited_date );
+			groups_update_membermeta( $member->id, 'membership_invited_date', $invited_date );
 
 			/**
 			 * Fires after a user has accepted a group invite.
