@@ -3152,9 +3152,14 @@ window.bp = window.bp || {};
 		{
 			tagName     : 'li',
 			template    : bp.template( 'bp-messages-single-list' ),
+			attributes  : {
+				'data-view-action' : ''
+			},
 
 			events: {
-				'click [data-bp-action]' : 'doAction'
+				'click [data-bp-action]' : 'doAction',
+				'click .remove-message' : 'removeMessage',
+				'click .retry-message' : 'retryMessage'
 			},
 
 			initialize: function() {
@@ -3165,7 +3170,9 @@ window.bp = window.bp || {};
 					this.el.className += ' ' + this.options.model.attributes.className;
 				}
 				this.model.on( 'change', this.updateMessage, this );
-				this.model.on( 'remove', this.removeMessage, this );
+				this.model.on( 'change', this.updateMessageClass, this );
+				this.model.on( 'change', this.updateMessagedataAction, this );
+				// this.model.on( 'remove', this.removeMessage, this );
 			},
 
 			updateMessage: function( model ) {
@@ -3180,8 +3187,21 @@ window.bp = window.bp || {};
 				this.render();
 			},
 
-			removeMessage: function( model ) {
-				this.render();
+			updateMessageClass: function( model ) {
+				this.$el.addClass( model.attributes.className );
+			},
+
+			updateMessagedataAction: function( model ) {
+				this.$el.data( 'view-action',' model.attributes.ajaxaction' );
+			},
+
+			removeMessage: function() {
+				bp.Nouveau.Messages.messages.remove(bp.Nouveau.Messages.messages.findWhere().collection.get(this.model.id));
+				this.$el.remove();
+			},
+
+			retryMessage: function( model ) {
+				console.log( 'retryMessage' );
 			}
 		}
 	);
@@ -3244,6 +3264,7 @@ window.bp = window.bp || {};
 				);
 
 				this.listenTo( Backbone, 'onSentMessage', this.triggerPusherMessage );
+				this.listenTo( Backbone, 'onSentMessageError', this.triggerPusherUpdateErrorMessage );
 				this.listenTo( Backbone, 'onReplySentSuccess', this.triggerPusherUpdateMessage );
 				this.listenTo( Backbone, 'onMessageDeleteSuccess', this.triggerDeleteUpdateMessage );
 				this.listenTo( Backbone, 'onMessageAjaxFail', this.triggerAjaxFailMessage );
@@ -3253,6 +3274,17 @@ window.bp = window.bp || {};
 				// use sent messageData here.
 				this.collection.add( _.first( messagePusherData ) );
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+			},
+
+			triggerPusherUpdateErrorMessage: function ( messagePusherData ) {
+				var model = this.collection.get( messagePusherData.hash );
+				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-hash="'+messagePusherData.hash+'" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="'+messagePusherData.hash+'"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
+				if ( model ) {
+					model.set( 'className', model.attributes.className + ' error' );
+					model.set( 'content', model.attributes.content + ' ' + errorHtml );
+					model.set( 'ajaxaction', messagePusherData.actions );
+					this.collection.sync( 'update' );
+				}
 			},
 
 			triggerDeleteUpdateMessage: function ( thread_id ) {
