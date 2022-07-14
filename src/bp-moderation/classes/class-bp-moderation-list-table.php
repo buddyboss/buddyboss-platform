@@ -528,7 +528,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			'<a href="%s" title="%s"> %s </a>',
 			esc_url( $view_url ),
 			esc_attr__( 'View', 'buddyboss' ),
-			esc_html__( 'View Reports', 'buddyboss' )
+			esc_html__( 'View Report', 'buddyboss' )
 		);
 
 		$view_content_url = bp_moderation_get_permalink( $item['item_id'], $item['item_type'] );
