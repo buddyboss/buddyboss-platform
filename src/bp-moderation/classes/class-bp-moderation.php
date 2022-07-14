@@ -361,7 +361,7 @@ class BP_Moderation {
 		}
 
 		if ( ! empty( $r['blocked_only'] ) ) {
-			if ( empty( $join_sql ) ) {
+			if ( empty( $join_sql ) && empty( $r['user_id'] ) ) {
 				$join_sql .= " LEFT JOIN {$bp->moderation->table_name_reports} mr ON ms.id = mr.moderation_id ";
 			}
 			$where_conditions['user_report'] = 'mr.user_report=0';
