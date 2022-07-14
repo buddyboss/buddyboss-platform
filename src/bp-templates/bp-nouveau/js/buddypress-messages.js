@@ -3600,14 +3600,6 @@ window.bp = window.bp || {};
 				''        : 'inboxView'
 			},
 
-			initialize: function() {
-				this.listenTo( Backbone, 'refreshCurrentThread', this.triggerPusherUpdateCurrentThread );
-			},
-
-			triggerPusherUpdateCurrentThread: function ( data ) {
-				this.viewMessage( data.thread_id );
-			},
-
 			composeMessage: function() {
 				bp.Nouveau.Messages.composeView();
 
