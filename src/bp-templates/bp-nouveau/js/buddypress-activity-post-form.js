@@ -1759,7 +1759,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'addedfile',
 					function ( file ) {
-						console.log(file);
 						if ( file.document_edit_data ) {
 							self.document.push( file.document_edit_data );
 							self.model.set( 'document', self.document );
