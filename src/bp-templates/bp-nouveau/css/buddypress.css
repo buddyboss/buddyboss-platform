@@ -3943,6 +3943,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   zoom: 1;
   display: flex;
   flex-direction: column;
+  transition: all linear 0.2s;
 }
 
 .activity-link-preview-container + .bb-activity-media-wrap {
@@ -3959,17 +3960,18 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 }
 
 .activity-link-preview-container:hover .activity-link-preview-info,
-.activity-link-preview-container:hover #activity-url-scrapper-img-holder {
+.activity-link-preview-container:hover .activity-link-preview-image {
   position: relative;
 }
 
 .activity-link-preview-container:hover .activity-link-preview-info:before,
-.activity-link-preview-container:hover #activity-url-scrapper-img-holder:before {
+.activity-link-preview-container:hover .activity-link-preview-image:before {
   content: "";
   background-color: rgba(0, 0, 0, 0.05);
   position: absolute;
   inset: 0;
   z-index: 1;
+  transition: all linear 0.2s;
 }
 
 .activity-link-preview-container:hover .activity-link-preview-info p,
@@ -3978,6 +3980,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   z-index: 2;
 }
 
+.activity-link-preview-container:hover #activity-url-scrapper-img-holder #activity-link-preview-close-image,
 .activity-link-preview-container:hover #activity-url-scrapper-img-holder .activity-url-thumb-nav {
   z-index: 2;
 }
@@ -3997,7 +4000,11 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   display: flex;
   flex-flow: column;
   max-width: 100%;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image {
   position: relative;
+  transition: all linear 0.2s;
 }
 
 .activity-url-scrapper-container .activity-link-preview-info {
@@ -4005,6 +4012,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   background-color: #e1e3e5;
   flex-flow: column;
   padding: 10px 15px;
+  transition: all linear 0.2s;
 }
 
 .activity-url-scrapper-container .activity-link-preview-info .activity-link-preview-link-name {
@@ -4197,19 +4205,31 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 
 #activity-link-preview-close-image {
   border: 0;
-  color: #92949d;
-  background-color: #fbfaf9;
-  font-size: 16px;
+  color: rgba(0, 0, 0, 0.25);
+  background-color: #f2f4f5;
+  font-size: 35px;
   line-height: 1;
   position: absolute;
   right: 5px;
   top: 8px;
   border-radius: 50%;
   text-decoration: none;
+  transition: all linear 0.2s;
+}
+
+#activity-link-preview-close-image:hover {
+  color: black;
+  transition: all linear 0.2s;
 }
 
 #activity-link-preview-close-image .bb-icons.bb-icon-close {
   font-size: 20px;
+}
+
+@media screen and (max-width: 767px) {
+  #activity-link-preview-close-image {
+    font-size: 24px;
+  }
 }
 
 #activity-close-link-suggestion:focus,

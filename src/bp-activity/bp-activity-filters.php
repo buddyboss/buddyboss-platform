@@ -639,8 +639,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 function bp_activity_link_preview( $content, $activity ) {
 
 	$activity_id = $activity->id;
-
-	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );	
 
 	if ( empty( $preview_data['url'] ) ) {
 		return $content;
@@ -660,8 +659,7 @@ function bp_activity_link_preview( $content, $activity ) {
 
 	$content = make_clickable( $content );
 
-	$content .= '<div class="activity-link-preview-container">';
-	$content .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
+	$content .= '<div class="activity-link-preview-container">';	
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
 		$content  .= '<div class="activity-link-preview-image">';
@@ -672,7 +670,11 @@ function bp_activity_link_preview( $content, $activity ) {
 		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
 		$content .= '</div>';
 	}
+	$content .= '<div class="activity-link-preview-info">';
+	$content .= '<p class="activity-link-preview-link-name">' . $preview_data['url'] . '</p>';	
+	$content .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
 	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
+	$content .= '</div>';
 	$content .= '</div>';
 
 	return $content;
