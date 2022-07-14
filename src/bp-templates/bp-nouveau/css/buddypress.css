@@ -10041,7 +10041,7 @@ input#send-to-input {
 
 .compose .bp-messages-recipient {
   display: flex;
-  padding: 0 40px 22px 22px;
+  padding: 0 45px 22px 22px;
   margin: 0 -20px;
 }
 
@@ -10063,6 +10063,7 @@ input#send-to-input {
 .compose #buddypress #send_message_form .select2-search__field {
   font-size: 14px;
   padding-bottom: 0;
+  padding-right: 0;
 }
 
 .compose #buddypress #send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice {

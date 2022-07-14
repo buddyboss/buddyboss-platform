@@ -2211,7 +2211,7 @@ window.bp = window.bp || {};
 					var form = bp.Nouveau.Messages.views.get( 'compose' );
 					form.get( 'view' ).remove();
 					bp.Nouveau.Messages.views.remove( { id: 'compose', view: form } );
-					bp.Nouveau.Messages.router.navigate( '/' );
+					bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
 					$( '.bp-messages-container' ).removeClass( 'bp-compose-message' );
 			},
 
