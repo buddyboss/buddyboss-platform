@@ -71,7 +71,7 @@ window.bp = window.bp || {};
 			this.profileNotificationSetting();
 
 			var _this = this;
-			$( document ).on( "bb_trigger_toast_message", function( event, title, message, type, url, autoHide ) {
+			$( document ).on( 'bb_trigger_toast_message', function( event, title, message, type, url, autoHide ) {
 				_this.bbToastMessage( title, message, type, url, autoHide );
 			});
 
@@ -90,6 +90,10 @@ window.bp = window.bp || {};
 		 */
 		bbToastMessage: function( title, message, type, url, autoHide ) {
 
+			if(!message || message.trim() == '') { // Toast Message can't be triggered without content.
+				return;
+			}
+
 			function getTarget() {
 				if( $( '.bb-toast-messages-enable' ).length ) {
 					return '.bb-toast-messages-enable .toast-messages-list';
@@ -97,9 +101,9 @@ window.bp = window.bp || {};
 
 				if( $( '.bb-onscreen-notification-enable ul.notification-list' ).length ) {
 					var toastPosition = $( '.bb-onscreen-notification' ).hasClass( 'bb-position-left' ) ? 'left' : 'right';
-					var toastMessageWrap = $('<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-'+ toastPosition +' single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>');
+					var toastMessageWrapPosition = $('<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-'+ toastPosition +' single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>');
 					$( '.bb-onscreen-notification' ).show();
-					$( toastMessageWrap ).insertBefore( '.bb-onscreen-notification-enable ul.notification-list' );
+					$( toastMessageWrapPosition ).insertBefore( '.bb-onscreen-notification-enable ul.notification-list' );
 				} else {
 					var toastMessageWrap = $('<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-right single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>');
 					$( 'body' ).append( toastMessageWrap );
@@ -115,6 +119,9 @@ window.bp = window.bp || {};
 			var unique_id = 'unique-' + Math.floor( Math.random() * 1000000 );
 			var currentEl = '.' + unique_id;
 			var urlClass = '';
+			var bp_msg_type = '';
+			var bp_icon_type = '';
+
 			if( type ) {
 				bp_msg_type = type;
 				if (bp_msg_type === 'success') {
