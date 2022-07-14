@@ -148,6 +148,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$moderation_request_args['hidden'] = 1;
 			} elseif ( 'blocked' === $moderation_status ) {
 				$this->view = 'blocked';
+				$moderation_request_args['blocked_only'] = true;
 			} elseif ( 'reported' === $moderation_status ) {
 				$this->view                             = 'reported';
 				$moderation_request_args['user_report'] = 1;
@@ -360,6 +361,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 					if ( 'suspended' === $key ) {
 						$moderation_args['hidden'] = 1;
+					} elseif ( 'blocked' === $key ) {
+						$moderation_args['blocked_only'] = true;
 					} elseif ( 'reported' === $key ) {
 						$moderation_args['user_report'] = 1;
 					}

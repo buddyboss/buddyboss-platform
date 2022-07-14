@@ -360,6 +360,13 @@ class BP_Moderation {
 			}
 		}
 
+		if ( ! empty( $r['blocked_only'] ) ) {
+			if ( empty( $join_sql ) ) {
+				$join_sql .= " LEFT JOIN {$bp->moderation->table_name_reports} mr ON ms.id = mr.moderation_id ";
+			}
+			$where_conditions['user_report'] = 'mr.user_report=0';
+		}
+
 		// Regular filtering.
 		$filter_sql = self::get_filter_sql( $r['filter'] );
 		if ( $r['filter'] && $filter_sql ) {
