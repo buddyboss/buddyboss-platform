@@ -38,8 +38,17 @@
 		</div>
 		<# } #>
 		
-		<div class="activity-link-preview-info">		
-			<p class="activity-link-preview-link-name">buddyboss.com</p>
+		<div class="activity-link-preview-info">
+			<# if ( data.link_success && ! data.link_error && data.link_url ) {
+				var dataLinkSplit = data.link_url.toString().split("/"); #>
+				<# if ( dataLinkSplit ) {
+					dataLinkSplit = dataLinkSplit.filter( function( v ){ return '' !== v } );
+					var domainName = dataLinkSplit && dataLinkSplit[1] ? dataLinkSplit[1] : ''; #>
+						<# if ( domainName ) { #>
+							<p class="activity-link-preview-link-name">{{domainName}}</p>
+						<# } #>
+				<# } #>
+			<# } #>
 
 			<# if ( data.link_success && ! data.link_error ) { #>
 			<p class="activity-link-preview-title">{{{data.link_title}}}</p>
