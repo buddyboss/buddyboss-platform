@@ -11,11 +11,9 @@
 
 	@media screen and (max-width: 500px) {
 
-		.bb-onscreen-notification .notification-list {
-			display: none;
-		}
+		display: none;
 
-		&.bb-onscreen-notification-enable-mobile-support .bb-onscreen-notification .notification-list {
+		&.bb-onscreen-notification-enable-mobile-support {			
 			display: block;
 		}
 
