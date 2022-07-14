@@ -760,6 +760,7 @@ window.bp = window.bp || {};
 								'id': draft_documents[ d ].id,
 								'document_id': 0,
 								'name': draft_documents[ d ].name,
+								'full_name': draft_documents[ d ].full_name,
 								'type': 'document',
 								'title': draft_documents[ d ].name,
 								'size': draft_documents[ d ].size,
@@ -778,7 +779,7 @@ window.bp = window.bp || {};
 							upload: {
 								name: draft_documents[ d ].name,
 								title: draft_documents[ d ].name,
-								filename: draft_documents[ d ].name,
+								filename: draft_documents[ d ].full_name,
 								size: draft_documents[ d ].size,
 								uuid: draft_documents[ d ].uuid
 							},

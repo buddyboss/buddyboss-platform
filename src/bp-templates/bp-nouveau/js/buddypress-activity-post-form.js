@@ -504,6 +504,7 @@ window.bp = window.bp || {};
 						document_edit_data = {
 							'id': activity_data.document[ doci ].doc_id,
 							'name': activity_data.document[ doci ].name,
+							'full_name': activity_data.document[ doci ].full_name,
 							'type': 'document',
 							'url': activity_data.document[ doci ].url,
 							'size': activity_data.document[ doci ].size,
@@ -518,6 +519,7 @@ window.bp = window.bp || {};
 						document_edit_data = {
 							'id': activity_data.document[ doci ].id,
 							'name': activity_data.document[ doci ].name,
+							'full_name': activity_data.document[ doci ].full_name,
 							'type': 'document',
 							'url': activity_data.document[ doci ].url,
 							'size': activity_data.document[ doci ].size,
@@ -535,7 +537,7 @@ window.bp = window.bp || {};
 						accepted: true,
 						kind: 'file',
 						upload: {
-							filename: activity_data.document[ doci ].name,
+							filename: activity_data.document[ doci ].full_name,
 							uuid: activity_data.document[ doci ].doc_id
 						},
 						dataURL: activity_data.document[ doci ].url,
@@ -1757,6 +1759,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'addedfile',
 					function ( file ) {
+						console.log(file);
 						if ( file.document_edit_data ) {
 							self.document.push( file.document_edit_data );
 							self.model.set( 'document', self.document );
