@@ -3171,8 +3171,6 @@ window.bp = window.bp || {};
 				}
 				this.model.on( 'change', this.updateMessage, this );
 				this.model.on( 'change', this.updateMessageClass, this );
-				this.model.on( 'change', this.updateMessagedataAction, this );
-				// this.model.on( 'remove', this.removeMessage, this );
 			},
 
 			updateMessage: function( model ) {
@@ -3191,17 +3189,20 @@ window.bp = window.bp || {};
 				this.$el.addClass( model.attributes.className );
 			},
 
-			updateMessagedataAction: function( model ) {
-				this.$el.data( 'view-action',' model.attributes.ajaxaction' );
-			},
-
 			removeMessage: function() {
 				bp.Nouveau.Messages.messages.remove(bp.Nouveau.Messages.messages.findWhere().collection.get(this.model.id));
 				this.$el.remove();
 			},
 
 			retryMessage: function( model ) {
-				console.log( 'retryMessage' );
+				var action = $( model.currentTarget ).data( 'action' );
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: action,
+					success: function(data) {
+					}
+				});
 			}
 		}
 	);
@@ -3278,11 +3279,10 @@ window.bp = window.bp || {};
 
 			triggerPusherUpdateErrorMessage: function ( messagePusherData ) {
 				var model = this.collection.get( messagePusherData.hash );
-				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-hash="'+messagePusherData.hash+'" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="'+messagePusherData.hash+'"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
+				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-action="'+messagePusherData.actions+'" data-hash="'+messagePusherData.hash+'" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="'+messagePusherData.hash+'"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
 				if ( model ) {
 					model.set( 'className', model.attributes.className + ' error' );
 					model.set( 'content', model.attributes.content + ' ' + errorHtml );
-					model.set( 'ajaxaction', messagePusherData.actions );
 					this.collection.sync( 'update' );
 				}
 			},
