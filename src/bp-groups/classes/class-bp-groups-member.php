@@ -449,6 +449,9 @@ class BP_Groups_Member {
 			return false;
 		}
 
+		// Delete group member metas.
+		groups_delete_membermeta( $this->id );
+
 		// Update the user's group count.
 		self::refresh_total_group_count_for_user( $this->user_id );
 
@@ -514,6 +517,10 @@ class BP_Groups_Member {
 		 * @param int $group_id ID of the group.
 		 */
 		do_action( 'bp_groups_member_before_delete', $user_id, $group_id );
+
+		// Delete group member metas.
+		$member = new BP_Groups_Member( $user_id, $group_id );
+		groups_delete_membermeta( $member->id );
 
 		$bp     = buddypress();
 		$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d", $user_id, $group_id ) );
