@@ -373,6 +373,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18751 ) {
 			bb_update_to_1_9_5();
 		}
+
+		if ( $raw_db_version < 18751 ) {
+			bb_update_to_2_0_5();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1344,7 +1348,6 @@ function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
  * @return void
  */
 function bb_update_to_1_7_8() {
-
 	// Return, when group or forum component deactive.
 	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
 		return;
@@ -1895,3 +1898,12 @@ function bb_update_to_1_9_5() {
 }
 
 
+/**
+ * Migrate group member meta table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_0_5() {
+	bp_core_install_groups();
+	bp_core_install_invitations();
+}
