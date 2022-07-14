@@ -2905,6 +2905,12 @@ window.bp = window.bp || {};
 				}
 
 				if ( response.error === '' ) {
+					if ( response.title.length > 150 ) {
+						response.title = response.title.substring( 0, 150 ) + '...';
+					}
+					if ( response.description.length > 100 ) {
+						response.description = response.description.substring( 0, 100 ) + '...';
+					}
 					self.options.activity.set(
 						{
 							link_success: true,
