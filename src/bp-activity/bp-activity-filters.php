@@ -653,6 +653,17 @@ function bp_activity_link_preview( $content, $activity ) {
 		)
 	);
 
+	$parse_url   = parse_url( $preview_data['url'] );
+	$domain_name = '';
+	if ( ! empty( $parse_url['host'] ) ) {
+		if ( strpos( $parse_url['host'], 'www' ) !== false ) {
+			$parse_url_explode = explode( 'www.', $parse_url['host'] );
+			$domain_name       = $parse_url_explode && $parse_url_explode[1] ? $parse_url_explode[1] : '';
+		} else {
+			$domain_name = $parse_url['host'];
+		}
+	}
+
 	$description = $preview_data['description'];
 	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
 	$description = wp_trim_words( $description, 40, $read_more );
@@ -671,7 +682,7 @@ function bp_activity_link_preview( $content, $activity ) {
 		$content .= '</div>';
 	}
 	$content .= '<div class="activity-link-preview-info">';
-	$content .= '<p class="activity-link-preview-link-name">' . $preview_data['url'] . '</p>';	
+	$content .= '<p class="activity-link-preview-link-name">' . esc_html( $domain_name ) . '</p>';
 	$content .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
 	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
 	$content .= '</div>';

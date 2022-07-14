@@ -40,20 +40,15 @@
 		
 		<div class="activity-link-preview-info">
 			<# if ( data.link_success && ! data.link_error && data.link_url ) {
-				var dataLinkSplit = data.link_url.toString().split("/"); #>
-				<# if ( dataLinkSplit ) {
-					dataLinkSplit = dataLinkSplit.filter( function( v ){ return '' !== v } );
-					var domainName = dataLinkSplit && dataLinkSplit[1] ? dataLinkSplit[1] : '';
-					#>
-						<# if ( domainName ) { #>
-							<# if ( domainName.indexOf("www") > -1 ) {
-								var domainNameSplit = domainName.toString().split("www.");
-								domainNameSplit = domainNameSplit.filter( function( v ){ return '' !== v } );
-								domainName = domainNameSplit && domainNameSplit[0] ? domainNameSplit[0] : '';
-							} #>
-							<p class="activity-link-preview-link-name">{{domainName}}</p>
-						<# } #>
-				<# } #>
+				var domainName = '';
+				var hostname   = $( '<a>' ).prop( 'href', data.link_url ).prop( 'hostname' ); #>
+				<# if ( hostname.indexOf( 'www' ) > -1 ) {
+					var hostnameSplit = hostname.toString().split( 'www.' );
+					domainName = hostnameSplit && hostnameSplit[1] ? hostnameSplit[1] : ''; #>
+			    <# } else {
+					domainName = hostname;
+			    }  #>
+				<p class="activity-link-preview-link-name">{{domainName}}</p>
 			<# } #>
 
 			<# if ( data.link_success && ! data.link_error ) { #>
