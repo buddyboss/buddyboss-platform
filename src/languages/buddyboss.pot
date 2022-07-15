@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-14 14:27:16+00:00\n"
+"POT-Creation-Date: 2022-07-15 10:01:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24677,12 +24677,12 @@ msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:266
 #. translators: html for threshold fields.
-msgid "Automatically suspend members after %s blocks."
+msgid "Auto suspend members after %s blocks."
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:275
 #. translators: html for report threshold fields.
-msgid "Automatically suspend members after %s reports."
+msgid "Auto suspend members after %s reports."
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:319

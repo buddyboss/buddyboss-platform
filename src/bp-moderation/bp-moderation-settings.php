@@ -263,7 +263,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 				<?php checked( bp_is_moderation_auto_suspend_enable( false ) ); ?> />
 		<?php
 		// translators: html for threshold fields.
-		printf( esc_html__( 'Automatically suspend members after %s blocks.', 'buddyboss' ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		printf( esc_html__( 'Auto suspend members after %s blocks.', 'buddyboss' ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
 	</label>
 	<br/><br/>
@@ -272,7 +272,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 				<?php checked( bb_is_moderation_auto_suspend_report_enable( false ) ); ?> />
 		<?php
 		// translators: html for report threshold fields.
-		printf( esc_html__( 'Automatically suspend members after %s reports.', 'buddyboss' ), $threshold_report ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		printf( esc_html__( 'Auto suspend members after %s reports.', 'buddyboss' ), $threshold_report ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
 	</label>
 	<?php
