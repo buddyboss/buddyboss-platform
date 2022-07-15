@@ -783,10 +783,13 @@ window.bp = window.bp || {};
 
 				var draft_data = localStorage.getItem( bp.draft_activity.data_key );
 				if ( ! _.isUndefined( draft_data ) && null !== draft_data && 0 < draft_data.length ) {
-
-					// Parse data with JSON.
-					var draft_activity_local_data = JSON.parse( draft_data );
-					bp.draft_activity.data        = draft_activity_local_data.data;
+					if ( 'deleted' !== $.cookie( bp.draft_activity.data_key ) ) {
+				 		// Parse data with JSON.
+						var draft_activity_local_data = JSON.parse( draft_data );
+						bp.draft_activity.data        = draft_activity_local_data.data;
+					} else {
+						$.removeCookie( bp.draft_activity.data_key );
+					}
 				}
 			}
 
@@ -804,6 +807,8 @@ window.bp = window.bp || {};
 		displayDraftActivity: function () {
 			var activity_data = bp.draft_activity.data,
 				$this         = this;
+
+			bp.draft_activity.allow_delete_media = true;
 
 			// Checked the draft is available or doesn't edit activity.
 			if ( ! activity_data || $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
@@ -879,15 +884,23 @@ window.bp = window.bp || {};
 				},
 				0
 			);
-
-			bp.draft_activity.allow_delete_media = true;
 		},
 
 		syncDraftActivity: function() {
 			if ( ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) && ! _.isUndefined( BP_Nouveau.activity.params.draft_activity.data_key ) ) {
-				bp.old_draft_data = BP_Nouveau.activity.params.draft_activity.data;
-				bp.draft_activity = BP_Nouveau.activity.params.draft_activity;
-				localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+
+				var draft_data = localStorage.getItem( bp.draft_activity.data_key );
+				if ( ! _.isUndefined( draft_data ) && 'deleted' === $.cookie( bp.draft_activity.data_key ) ) {
+					bp.draft_activity.data                    = false;
+					BP_Nouveau.activity.params.draft_activity = '';
+					localStorage.removeItem( bp.draft_activity.data_key );
+					$.removeCookie( bp.draft_activity.data_key );
+				} else {
+					bp.old_draft_data = BP_Nouveau.activity.params.draft_activity.data;
+					bp.draft_activity = BP_Nouveau.activity.params.draft_activity;
+					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+				}
+
 			}
 		},
 
@@ -958,8 +971,15 @@ window.bp = window.bp || {};
 
 			// validation for content editor.
 			if ( '' === filtered_content && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
-				bp.draft_activity.data = false;
-				localStorage.removeItem( bp.draft_activity.data_key );
+				if ( bp.draft_content_changed ) {
+					localStorage.removeItem( bp.draft_activity.data_key );
+					localStorage.setItem( bp.draft_activity.data_key, 'deleted' );
+					bp.Nouveau.Activity.postForm.resetDraftActivity( true );
+				} else {
+					bp.draft_activity.data = false;
+					localStorage.removeItem( bp.draft_activity.data_key );
+				}
+
 				return false;
 			}
 
@@ -1017,13 +1037,13 @@ window.bp = window.bp || {};
 			}
 
 			// Set Draft activity data.
-			self.checkedTopicReplyDataChanged( bp.old_draft_data, data );
+			self.checkedActivityDataChanged( bp.old_draft_data, data );
 
 			bp.draft_activity.data = data;
 			localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
 		},
 
-		checkedTopicReplyDataChanged: function( old_data, new_data ) {
+		checkedActivityDataChanged: function( old_data, new_data ) {
 
 			if ( bp.draft_content_changed ) {
 				return;
@@ -1151,7 +1171,7 @@ window.bp = window.bp || {};
 				navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
 			}
 
-			bp.old_draft_data = bp.draft_activity.data;
+			bp.old_draft_data        = bp.draft_activity.data;
 			bp.draft_content_changed = false;
 		},
 
@@ -1159,16 +1179,17 @@ window.bp = window.bp || {};
 			var self = this;
 
 			// Delete the activity from the database.
+			$.cookie( bp.draft_activity.data_key, 'deleted' );
 			bp.draft_activity.post_action = 'delete';
 			if ( is_send_server ) {
-				bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
+				bp.Nouveau.Activity.postForm.postDraftActivity( true, true );
 			}
 			bp.draft_activity.data = false;
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
-			bp.draft_activity.post_action = 'update';
+			bp.draft_activity.post_action        = 'update';
 			bp.draft_activity.allow_delete_media = false;
-			bp.draft_activity.display_post  = '';
+			bp.draft_activity.display_post       = '';
 		},
 
 		reloadWindow: function() {
@@ -1643,6 +1664,7 @@ window.bp = window.bp || {};
 											if ( attachment_id === self.media[i].id ) {
 												self.media.splice( i, 1 );
 												self.model.set( 'media', self.media );
+												bp.Nouveau.Media.removeAttachment( attachment_id );
 											}
 										}
 									}
@@ -1885,6 +1907,7 @@ window.bp = window.bp || {};
 											if ( attachment_id === self.document[i].id ) {
 												self.document.splice( i, 1 );
 												self.model.set( 'document', self.document );
+												bp.Nouveau.Media.removeAttachment( attachment_id );
 											}
 										}
 									}
@@ -2141,6 +2164,7 @@ window.bp = window.bp || {};
 											if ( attachment_id === self.video[i].id ) {
 												self.video.splice( i, 1 );
 												self.model.set( 'video', self.video );
+												bp.Nouveau.Media.removeAttachment( attachment_id );
 											}
 										}
 									}
