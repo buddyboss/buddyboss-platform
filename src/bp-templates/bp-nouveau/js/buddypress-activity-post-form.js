@@ -503,7 +503,7 @@ window.bp = window.bp || {};
 					if ( 0 < parseInt( activity_data.id ) ) {
 						document_edit_data = {
 							'id': activity_data.document[ doci ].doc_id,
-							'name': activity_data.document[ doci ].name,
+							'name': activity_data.document[ doci ].full_name,
 							'full_name': activity_data.document[ doci ].full_name,
 							'type': 'document',
 							'url': activity_data.document[ doci ].url,
@@ -518,7 +518,7 @@ window.bp = window.bp || {};
 					} else {
 						document_edit_data = {
 							'id': activity_data.document[ doci ].id,
-							'name': activity_data.document[ doci ].name,
+							'name': activity_data.document[ doci ].full_name,
 							'full_name': activity_data.document[ doci ].full_name,
 							'type': 'document',
 							'url': activity_data.document[ doci ].url,
@@ -532,7 +532,7 @@ window.bp = window.bp || {};
 					}
 
 					doc_file = {
-						name: activity_data.document[ doci ].name,
+						name: activity_data.document[ doci ].full_name,
 						size: activity_data.document[ doci ].size,
 						accepted: true,
 						kind: 'file',

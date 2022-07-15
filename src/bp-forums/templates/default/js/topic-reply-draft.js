@@ -759,7 +759,7 @@ window.bp = window.bp || {};
 							{
 								'id': draft_documents[ d ].id,
 								'document_id': 0,
-								'name': draft_documents[ d ].name,
+								'name': draft_documents[ d ].full_name,
 								'full_name': draft_documents[ d ].full_name,
 								'type': 'document',
 								'title': draft_documents[ d ].name,
@@ -772,12 +772,12 @@ window.bp = window.bp || {};
 						);
 
 						d_mock_file = {
-							name: draft_documents[ d ].name,
+							name: draft_documents[ d ].full_name,
 							size: draft_documents[ d ].size,
 							accepted: true,
 							kind: 'document',
 							upload: {
-								name: draft_documents[ d ].name,
+								name: draft_documents[ d ].full_name,
 								title: draft_documents[ d ].name,
 								filename: draft_documents[ d ].full_name,
 								size: draft_documents[ d ].size,
