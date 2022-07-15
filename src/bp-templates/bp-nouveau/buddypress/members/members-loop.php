@@ -78,6 +78,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 					'button_attr'    => array(
 						'data-bp-content-id'   => bp_get_member_user_id(),
 						'data-bp-content-type' => BP_Moderation_Members::$moderation_type_report,
+						'data-reported_type'   => bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, bp_get_member_user_id() ),
 					),
 
 				)
