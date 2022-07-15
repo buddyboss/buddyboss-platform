@@ -2228,8 +2228,8 @@ window.bp = window.bp || {};
 				this.$el.html( this.template( this.model.toJSON() ) );
 				// Show/Hide Preview Link image button.
 				if (
-					'undefined' !== typeof this.model.get( 'show_hide_button' ) &&
-					1 === this.model.get( 'show_hide_button' )
+					'undefined' !== typeof this.model.get( 'link_swap_image_button' ) &&
+					1 === this.model.get( 'link_swap_image_button' )
 				) {
 					this.displayNextPrevButtonView();
 				}
@@ -2302,7 +2302,8 @@ window.bp = window.bp || {};
 						link_title: '',
 						link_description: '',
 						link_url: '',
-						link_embed: false
+						link_embed: false,
+						link_swap_image_button: 0
 					}
 				);
 				document.removeEventListener( 'activity_link_preview_open', this.open.bind( this ) );
@@ -2312,7 +2313,7 @@ window.bp = window.bp || {};
 			},
 			
 			displayPrevNextButton: function () {
-				this.model.set( 'show_hide_button', 1 );
+				this.model.set( 'link_swap_image_button', 1 );
 				this.displayNextPrevButtonView();
 			},
 			
