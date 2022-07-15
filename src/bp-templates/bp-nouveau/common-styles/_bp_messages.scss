@@ -780,6 +780,26 @@ input#send-to-input {
 
 }
 
+.bp-messages-content .bp-message-content_foot_note {
+	font-size: 12px;
+	color: #767676;
+	text-align: right;
+	margin: 8px 0 0;
+	line-height: 1.5;
+
+	.space_note {
+		margin-right: 15px;
+	}
+
+	strong {
+		font-weight: 500;
+	}
+}
+
+.bp-message-content-wrap .bp-message-content_foot_note {
+	margin: -10px 20px 20px 0;
+}
+
 .bbpress #bbpress-forums .medium-editor-toolbar,
 .buddypress #buddypress.buddypress-wrap .medium-editor-toolbar {
 

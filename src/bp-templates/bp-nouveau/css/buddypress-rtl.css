@@ -9744,6 +9744,26 @@ input#send-to-input {
   width: 100%;
 }
 
+.bp-messages-content .bp-message-content_foot_note {
+  font-size: 12px;
+  color: #767676;
+  text-align: left;
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+
+.bp-messages-content .bp-message-content_foot_note .space_note {
+  margin-left: 15px;
+}
+
+.bp-messages-content .bp-message-content_foot_note strong {
+  font-weight: 500;
+}
+
+.bp-message-content-wrap .bp-message-content_foot_note {
+  margin: -10px 0 20px 20px;
+}
+
 .bbpress #bbpress-forums .medium-editor-toolbar .medium-editor-toolbar-actions,
 .buddypress #buddypress.buddypress-wrap .medium-editor-toolbar .medium-editor-toolbar-actions {
   opacity: 0;
