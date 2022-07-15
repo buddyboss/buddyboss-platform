@@ -889,8 +889,7 @@ window.bp = window.bp || {};
 		syncDraftActivity: function() {
 			if ( ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) && ! _.isUndefined( BP_Nouveau.activity.params.draft_activity.data_key ) ) {
 
-				var draft_data = localStorage.getItem( bp.draft_activity.data_key );
-				if ( ! _.isUndefined( draft_data ) && 'deleted' === $.cookie( bp.draft_activity.data_key ) ) {
+				if ( 'deleted' === $.cookie( bp.draft_activity.data_key ) ) {
 					bp.draft_activity.data                    = false;
 					BP_Nouveau.activity.params.draft_activity = '';
 					localStorage.removeItem( bp.draft_activity.data_key );
@@ -973,7 +972,6 @@ window.bp = window.bp || {};
 			if ( '' === filtered_content && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
 				if ( bp.draft_content_changed ) {
 					localStorage.removeItem( bp.draft_activity.data_key );
-					localStorage.setItem( bp.draft_activity.data_key, 'deleted' );
 					bp.Nouveau.Activity.postForm.resetDraftActivity( true );
 				} else {
 					bp.draft_activity.data = false;
