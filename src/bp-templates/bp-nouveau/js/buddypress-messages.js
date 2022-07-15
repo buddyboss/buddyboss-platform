@@ -3200,7 +3200,7 @@ window.bp = window.bp || {};
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
 					data: action,
-					success: function(data) {
+					success: function() {
 					}
 				});
 			}
