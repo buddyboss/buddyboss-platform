@@ -132,8 +132,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			// searching only activity updates, others don't make sense
 			$where_conditions   = array( '1=1' );
 			$where_conditions[] = "is_spam = 0
-						AND ExtractValue(a.content, '//text()') LIKE %s
-						AND a.hide_sitewide = 0
+						AND ExtractValue(a.content, '//text()') LIKE %s						
 						AND a.type = 'activity_update'
 						AND
 						(
