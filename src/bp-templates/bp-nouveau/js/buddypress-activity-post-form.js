@@ -350,6 +350,7 @@ window.bp = window.bp || {};
 				}
 
 				self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
+				self.postForm.model.set( 'link_image_index', activity_data.link_image_index );
 			} else {
 				activity_data.gif          = activity_data.gif_data;
 				activity_data.group_name   = activity_data.item_name;
@@ -2204,8 +2205,10 @@ window.bp = window.bp || {};
 				'click #activity-link-preview-button': 'toggleURLInput',
 				'click #activity-url-prevPicButton': 'prev',
 				'click #activity-url-nextPicButton': 'next',
-				'click #activity-link-preview-close-image': 'close',
-				'click #activity-close-link-suggestion': 'destroy'
+				'click #activity-link-preview-remove-image': 'close',
+				'click #activity-close-link-suggestion': 'destroy',
+				'click .icon-exchange': 'displayPrevNextButton',
+				'click #activity-link-preview-select-image': 'selectImageForPreview'
 			},
 
 			initialize: function () {
@@ -2223,6 +2226,13 @@ window.bp = window.bp || {};
 				}
 
 				this.$el.html( this.template( this.model.toJSON() ) );
+				// Show/Hide Preview Link image button.
+				if (
+					'undefined' !== typeof this.model.get( 'show_hide_button' ) &&
+					1 === this.model.get( 'show_hide_button' )
+				) {
+					this.displayNextPrevButtonView();
+				}
 
 				// if link embed is used then add class to container.
 				if ( this.model.get( 'link_embed' ) == true ) {
@@ -2299,6 +2309,27 @@ window.bp = window.bp || {};
 				document.removeEventListener( 'activity_link_preview_close', this.destroy.bind( this ) );
 
 				$( '#whats-new-attachments' ).addClass( 'empty' ).closest( '#whats-new-form' ).removeClass( 'focus-in--attm' );
+			},
+			
+			displayPrevNextButton: function () {
+				this.model.set( 'show_hide_button', 1 );
+				this.displayNextPrevButtonView();
+			},
+			
+			displayNextPrevButtonView: function () {
+				$('#activity-url-prevPicButton').show();
+				$('#activity-url-nextPicButton').show();
+				$('#activity-link-preview-select-image').show();
+				$('#icon-exchange').hide();
+				$('#activity-link-preview-remove-image').hide();
+			},
+			
+			selectImageForPreview: function () {
+				var imageIndex = this.model.get( 'link_image_index' );
+				this.model.set( 'link_image_index', imageIndex );
+				$('#icon-exchange').show();
+				$('#activity-link-preview-remove-image').show();
+				$('#activity-link-preview-select-image').hide();
 			}
 		}
 	);
@@ -2917,7 +2948,7 @@ window.bp = window.bp || {};
 							link_title: response.title,
 							link_description: response.description,
 							link_images: response.images,
-							link_image_index: 0,
+							link_image_index: parseInt( '' !== self.options.activity.get('link_image_index') ? self.options.activity.get('link_image_index') : 0 ),
 							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
 						}
 					);
@@ -4980,7 +5011,8 @@ window.bp = window.bp || {};
 						data = _.extend(
 							data,
 							{
-								'link_image': images[ index ]
+								'link_image': images[ index ],
+								'link_image_index' : index
 							}
 						);
 					}

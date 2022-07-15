@@ -22,18 +22,24 @@
 		<div id="activity-url-scrapper-img-holder">
 			<div class="activity-link-preview-image">
 				<img src="{{{data.link_images[data.link_image_index]}}}"/>
-				<a title="Cancel Preview Image" href="#" id="activity-link-preview-close-image">
+				<!-- <a title="Cancel Preview Image" href="#" id="activity-link-preview-close-image">
 					<i class="bb-icon-l bb-icon-times"></i>
-				</a>
+				</a>-->
 				<div class="activity-link-preview-icons">
-					<a href="#" class="icon-exchange"><i class="bb-icon-l bb-icon-exchange"></i></a>
-					<a href="#" class="icon-image-slash"><i class="bb-icon-l bb-icon-image-slash"></i></a>
+					<#
+					if ( data.link_images.length > 1 ) { #>
+						<a title="Change image" href="#" class="icon-exchange" id="icon-exchange"><i class="bb-icon-l bb-icon-exchange"></i></a>
+					<# } #>
+					<a title="Remove image" href="#" class="icon-image-slash" id="activity-link-preview-remove-image"><i class="bb-icon-l bb-icon-image-slash"></i></a>
+					<a title="Confirm" href="#" id="activity-link-preview-select-image" style="display: none;">
+						<i class="bb-icon-check bb-icon-l"></i>
+					</a>
 				</div>
 			</div>
 			<# if ( data.link_images.length > 1 ) { #>
 			<div class="activity-url-thumb-nav">
-				<button type="button" id="activity-url-prevPicButton"><span class="bb-icon-l bb-icon-angle-left"></span></button>
-				<button type="button" id="activity-url-nextPicButton"><span class="bb-icon-l bb-icon-angle-right"></span></button>
+				<button type="button" id="activity-url-prevPicButton" style="display:none;"><span class="bb-icon-l bb-icon-angle-left"></span></button>
+				<button type="button" id="activity-url-nextPicButton" style="display:none;"><span class="bb-icon-l bb-icon-angle-right"></span></button>
 				<div id="activity-url-scrapper-img-count">
 					<?php esc_html_e( 'Image', 'buddyboss' ) ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
 				</div>
