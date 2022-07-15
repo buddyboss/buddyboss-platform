@@ -4014,6 +4014,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   top: 10px;
   display: flex;
   flex-direction: row;
+  width: calc(100% - 20px);
 }
 
 .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons a {
@@ -4046,6 +4047,25 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons a {
     font-size: 24px;
   }
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons #activity-link-preview-select-image {
+  display: none;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons #activity-link-preview-select-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  text-align: center;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons #activity-link-preview-select-image .bb-icon-l {
+  height: 35px;
+  width: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .activity-url-scrapper-container.activity-link-preview .activity-link-preview-info {
@@ -4181,6 +4201,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   top: 0;
   right: 0;
   background-color: transparent;
+  display: none;
 }
 
 #buddypress .activity-url-thumb-nav button .bb-icon-l {

@@ -891,6 +891,7 @@ ul.medium-editor-toolbar-actions {
 				top: 10px;
 				display: flex;
 				flex-direction: row;
+				width: calc(100% - 20px);
 
 				a {
 					border: 0;
@@ -919,6 +920,26 @@ ul.medium-editor-toolbar-actions {
 
 					@media screen and (max-width: 767px) {
 						font-size: 24px;
+					}
+
+				}
+
+				#activity-link-preview-select-image {
+					display: none;
+				}
+
+				#activity-link-preview-select-image {
+					position: absolute;
+					right: 0;
+					top: 0;
+					text-align: center;
+
+					.bb-icon-l {
+						height: 35px;
+						width: 35px;
+						display: flex;
+						justify-content: center;
+						align-items: center;
 					}
 
 				}
@@ -1081,6 +1102,7 @@ ul.medium-editor-toolbar-actions {
 	top: 0;
 	left: 0;
 	background-color: transparent;
+	display: none;
 
 	.bb-icon-l {
 		display: block;

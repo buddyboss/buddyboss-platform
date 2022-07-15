@@ -31,15 +31,15 @@
 						<a title="Change image" href="#" class="icon-exchange" id="icon-exchange"><i class="bb-icon-l bb-icon-exchange"></i></a>
 					<# } #>
 					<a title="Remove image" href="#" class="icon-image-slash" id="activity-link-preview-remove-image"><i class="bb-icon-l bb-icon-image-slash"></i></a>
-					<a title="Confirm" href="#" id="activity-link-preview-select-image" style="display: none;">
+					<a title="Confirm" href="#" id="activity-link-preview-select-image">
 						<i class="bb-icon-check bb-icon-l"></i>
 					</a>
 				</div>
 			</div>
 			<# if ( data.link_images.length > 1 ) { #>
 			<div class="activity-url-thumb-nav">
-				<button type="button" id="activity-url-prevPicButton" style="display:none;"><span class="bb-icon-l bb-icon-angle-left"></span></button>
-				<button type="button" id="activity-url-nextPicButton" style="display:none;"><span class="bb-icon-l bb-icon-angle-right"></span></button>
+				<button type="button" id="activity-url-prevPicButton"><span class="bb-icon-l bb-icon-angle-left"></span></button>
+				<button type="button" id="activity-url-nextPicButton"><span class="bb-icon-l bb-icon-angle-right"></span></button>
 				<div id="activity-url-scrapper-img-count">
 					<?php esc_html_e( 'Image', 'buddyboss' ) ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
 				</div>
