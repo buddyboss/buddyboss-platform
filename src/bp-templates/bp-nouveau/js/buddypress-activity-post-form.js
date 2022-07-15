@@ -2330,6 +2330,8 @@ window.bp = window.bp || {};
 				$('#icon-exchange').show();
 				$('#activity-link-preview-remove-image').show();
 				$('#activity-link-preview-select-image').hide();
+				$('#activity-url-prevPicButton').hide();
+				$('#activity-url-nextPicButton').hide();
 			}
 		}
 	);
