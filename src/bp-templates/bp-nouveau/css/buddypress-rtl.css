@@ -23745,7 +23745,7 @@ div.dropzone.dz-started .dz-default.dz-message {
 .dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove:after {
   font-size: 18px;
   line-height: 26px;
-  opacity: 0.5;
+  opacity: 0.4;
   font-weight: 300;
 }
 
