@@ -300,8 +300,10 @@ abstract class BP_Core_Notification_Abstract {
 				}
 			} else {
 				$content = array(
-					'text' => $custom_content['text'],
-					'link' => $custom_content['link'],
+					'text'  => $custom_content['text'],
+					'link'  => $custom_content['link'],
+					'title' => ( isset( $custom_content['title'] ) ? $custom_content['title'] : '' ),
+					'image' => ( isset( $custom_content['image'] ) ? $custom_content['image'] : '' ),
 				);
 			}
 		}
@@ -512,4 +514,3 @@ abstract class BP_Core_Notification_Abstract {
 	}
 
 }
-

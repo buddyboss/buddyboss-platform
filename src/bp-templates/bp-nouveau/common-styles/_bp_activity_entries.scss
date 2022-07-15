@@ -778,7 +778,7 @@ ul.medium-editor-toolbar-actions {
 	letter-spacing: -0.24px;
 	margin: 12px 0 10px;
 
-	.bb-icon-loader {
+	> i {
 		font-size: 18px;
 		margin-right: 10px;
 		vertical-align: middle;
@@ -1179,6 +1179,13 @@ span.dashicons.dashicons-admin-file:before {
 			background-color: #fff;
 			line-height: 1.5;
 			font-size: 15px;
+		}
+
+		@media screen and (max-width: 767px) {
+
+			.activity-item {
+				min-height: auto;
+			}
 		}
 
 	}
