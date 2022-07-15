@@ -28,10 +28,10 @@
 				<div class="activity-link-preview-icons">
 					<#
 					if ( data.link_images.length > 1 ) { #>
-						<a title="Change image" href="#" class="icon-exchange" id="icon-exchange"><i class="bb-icon-l bb-icon-exchange"></i></a>
+						<a data-bp-tooltip-pos="up" data-bp-tooltip="Change image" href="#" class="icon-exchange toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icon-l bb-icon-exchange"></i></a>
 					<# } #>
-					<a title="Remove image" href="#" class="icon-image-slash" id="activity-link-preview-remove-image"><i class="bb-icon-l bb-icon-image-slash"></i></a>
-					<a title="Confirm" href="#" id="activity-link-preview-select-image">
+					<a data-bp-tooltip-pos="up" data-bp-tooltip="Remove image" href="#" class="icon-image-slash toolbar-button bp-tooltip" id="activity-link-preview-remove-image"><i class="bb-icon-l bb-icon-image-slash"></i></a>
+					<a data-bp-tooltip-pos="up" data-bp-tooltip="Confirm" class="toolbar-button bp-tooltip" href="#" id="activity-link-preview-select-image">
 						<i class="bb-icon-check bb-icon-l"></i>
 					</a>
 				</div>

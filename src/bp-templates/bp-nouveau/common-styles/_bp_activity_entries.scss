@@ -795,7 +795,9 @@ ul.medium-editor-toolbar-actions {
 	border-radius: 4px;
 	position: relative;
 	width: 100%;
-	overflow: auto;
+
+	/*overflow: auto;*/
+
 	zoom: 1;
 	display: flex;
 	flex-direction: column;
@@ -887,11 +889,11 @@ ul.medium-editor-toolbar-actions {
 
 			.activity-link-preview-icons {
 				position: absolute;
-				left: 10px;
-				top: 10px;
+				left: 15px;
+				top: 15px;
 				display: flex;
 				flex-direction: row;
-				width: calc(100% - 20px);
+				width: calc(100% - 30px);
 
 				a {
 					border: 0;
