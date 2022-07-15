@@ -2585,8 +2585,9 @@ window.bp = window.bp || {};
 									$( '#bb-report-content .form-item-category.members' ).hide();
 								}
 								$( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' ).attr( 'checked', true );
+								var mf_content = $( '#content-report' );
+								mf_content.find( '.bp-reported-type' ).text( this.currItem.el.data( 'reported_type' ) );
 								if ( 'undefined' !== typeof reportType ) {
-									var mf_content = $( '#content-report' );
 									mf_content.find( '.bp-reported-type' ).text( reportType );
 								}
 								if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {

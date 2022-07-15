@@ -119,7 +119,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		// Set per page from the screen options.
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 
-		$args = array( 'user_repoted' => true );
+		$args = ( 'user' === $moderation_content_type ) ? array( 'user_repoted' => true ) : array() ;
 		if ( 'blocked' === $this->view ) {
 			$args = array( 'user_repoted' => false );
 		}

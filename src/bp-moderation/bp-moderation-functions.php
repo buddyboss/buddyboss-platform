@@ -105,6 +105,7 @@ function bp_moderation_get( $args = '' ) {
 			'update_meta_cache' => true,
 			'display_reporters' => false,
 			'count_total'       => false,
+			'blocked_only'      => false,
 
 			/**
 			 * Pass filters as an array -- all filter items can be multiple values comma separated:
@@ -139,6 +140,7 @@ function bp_moderation_get( $args = '' ) {
 			'display_reporters' => $r['display_reporters'],
 			'count_total'       => $r['count_total'],
 			'fields'            => $r['fields'],
+			'blocked_only'      => $r['blocked_only'],
 		)
 	);
 
