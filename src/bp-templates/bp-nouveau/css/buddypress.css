@@ -3980,6 +3980,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   z-index: 2;
 }
 
+.activity-link-preview .activity-link-preview-container:hover #activity-url-scrapper-img-holder .activity-link-preview-icons,
 .activity-link-preview .activity-link-preview-container:hover #activity-url-scrapper-img-holder #activity-link-preview-close-image,
 .activity-link-preview .activity-link-preview-container:hover #activity-url-scrapper-img-holder .activity-url-thumb-nav {
   z-index: 2;
@@ -4005,6 +4006,46 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image {
   position: relative;
   transition: all linear 0.2s;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons a {
+  border: 0;
+  color: rgba(0, 0, 0, 0.25);
+  background-color: #f2f4f5;
+  font-size: 28px;
+  line-height: 1;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all linear 0.2s;
+  box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08) !important;
+  display: flex;
+  height: 35px;
+  width: 35px;
+  justify-content: center;
+  align-items: center;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons a:not(:last-child) {
+  margin-right: 5px;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons a:hover {
+  color: black;
+  transition: all linear 0.2s;
+}
+
+@media screen and (max-width: 767px) {
+  .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons a {
+    font-size: 24px;
+  }
 }
 
 .activity-url-scrapper-container.activity-link-preview .activity-link-preview-info {
@@ -4210,12 +4251,17 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   font-size: 35px;
   line-height: 1;
   position: absolute;
-  right: 5px;
-  top: 8px;
+  right: 10px;
+  top: 10px;
   border-radius: 50%;
   text-decoration: none;
   transition: all linear 0.2s;
-  box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08) !important;
+  height: 35px;
+  width: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #activity-link-preview-close-image:hover {

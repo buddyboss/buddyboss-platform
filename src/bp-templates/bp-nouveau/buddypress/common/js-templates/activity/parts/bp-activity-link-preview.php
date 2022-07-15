@@ -25,6 +25,10 @@
 				<a title="Cancel Preview Image" href="#" id="activity-link-preview-close-image">
 					<i class="bb-icon-l bb-icon-times"></i>
 				</a>
+				<div class="activity-link-preview-icons">
+					<a href="#" class="icon-exchange"><i class="bb-icon-l bb-icon-exchange"></i></a>
+					<a href="#" class="icon-image-slash"><i class="bb-icon-l bb-icon-image-slash"></i></a>
+				</div>
 			</div>
 			<# if ( data.link_images.length > 1 ) { #>
 			<div class="activity-url-thumb-nav">

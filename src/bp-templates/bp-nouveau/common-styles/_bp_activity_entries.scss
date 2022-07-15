@@ -849,6 +849,7 @@ ul.medium-editor-toolbar-actions {
 
 			#activity-url-scrapper-img-holder {
 
+				.activity-link-preview-icons,
 				#activity-link-preview-close-image,
 				.activity-url-thumb-nav {
 					z-index: 2;
@@ -883,6 +884,47 @@ ul.medium-editor-toolbar-actions {
 		.activity-link-preview-image {
 			position: relative;
 			transition: all linear 0.2s;
+
+			.activity-link-preview-icons {
+				position: absolute;
+				left: 10px;
+				top: 10px;
+				display: flex;
+				flex-direction: row;
+
+				a {
+					border: 0;
+					color: rgba(0, 0, 0, 0.25);
+					background-color: #f2f4f5;
+					font-size: 28px;
+					line-height: 1;
+					border-radius: 50%;
+					text-decoration: none;
+					transition: all linear 0.2s;
+					box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08) !important;
+					display: flex;
+					height: 35px;
+					width: 35px;
+					justify-content: center;
+					align-items: center;
+
+					&:not(:last-child) {
+						margin-right: 5px;
+					}
+
+					&:hover {
+						color: rgba(0, 0, 0, 1);
+						transition: all linear 0.2s;
+					}
+
+					@media screen and (max-width: 767px) {
+						font-size: 24px;
+					}
+
+				}
+
+			}
+
 		}
 
 	}
@@ -1109,12 +1151,17 @@ ul.medium-editor-toolbar-actions {
 	font-size: 35px;
 	line-height: 1;
 	position: absolute;
-	right: 5px;
-	top: 8px;
+	right: 10px;
+	top: 10px;
 	border-radius: 50%;
 	text-decoration: none;
 	transition: all linear 0.2s;
-	box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.08) !important;
+	height: 35px;
+	width: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
 	&:hover {
 		color: rgba(0, 0, 0, 1);
