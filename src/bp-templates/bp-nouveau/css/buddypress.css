@@ -5486,6 +5486,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a i {
   font-size: 19px;
+  font-weight: 300;
   color: #9ca8b4;
   background-color: #fff;
   padding: 7px;

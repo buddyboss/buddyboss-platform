@@ -36,7 +36,7 @@ if ( $group_id > 0 ) {
 	</a>
 
 	<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
-		<i class="bb-icon-f bb-icon-ellipsis-v"></i>
+		<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 	</a>
 	<div class="document-action_list">
 		<ul class="conflict-activity-ul-li-comment">
