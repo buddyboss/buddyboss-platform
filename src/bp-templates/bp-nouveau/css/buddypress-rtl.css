@@ -18306,7 +18306,7 @@ img.emojioneemoji {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 22px;
-  font-weight: 300;
+  font-weight: 400;
   height: 50px;
   width: 50px;
   display: inline-block;
@@ -18385,7 +18385,7 @@ img.emojioneemoji {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   margin-top: 15px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-filename {
@@ -18406,6 +18406,10 @@ img.emojioneemoji {
   background-color: transparent;
 }
 
+.dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details:before {
+  display: none;
+}
+
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-size,
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-icon {
   display: none;
@@ -18416,7 +18420,7 @@ img.emojioneemoji {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
-  font-weight: 300;
+  font-weight: 400;
   position: absolute;
   top: 50%;
   right: 50%;

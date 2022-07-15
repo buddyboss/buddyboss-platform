@@ -2222,7 +2222,7 @@ img.emojioneemoji {
 			content: "\ee06";
 			font-family: "bb-icons"; /* stylelint-disable-line */
 			font-size: 22px;
-			font-weight: 300;
+			font-weight: 400;
 			height: 50px;
 			width: 50px;
 			display: inline-block;
@@ -2313,7 +2313,7 @@ img.emojioneemoji {
 			content: "\e980";
 			font-family: "bb-icons";/* stylelint-disable-line */
 			margin-top: 15px;
-			font-weight: 300;
+			font-weight: 400;
 		}
 
 		.dz-filename {
@@ -2340,6 +2340,10 @@ img.emojioneemoji {
 		border-color: #ef3e46;
 		background-color: transparent;
 
+		&:before {
+			display: none;
+		}
+
 		.dz-size,
 		.dz-icon {
 			display: none;
@@ -2349,7 +2353,7 @@ img.emojioneemoji {
 			content: "\ef65";
 			font-family: "bb-icons";/* stylelint-disable-line */
 			font-size: 16px;
-			font-weight: 300;
+			font-weight: 400;
 			position: absolute;
 			top: 50%;
 			left: 50%;
