@@ -9745,7 +9745,7 @@ input#send-to-input {
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
   padding: 5px 0 0 15px;
-  width: 100%;
+  width: auto;
 }
 
 .bp-messages-content .bp-message-content_foot_note {
@@ -10108,6 +10108,42 @@ body .bp-messages-user-threads {
   overflow: auto;
 }
 
+#message-new-submit,
+#message-reply-new-submit {
+  background-color: #5087e5;
+  border-radius: 50%;
+  text-align: center;
+  height: 30px;
+  width: 30px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+#message-new-submit:before,
+#message-reply-new-submit:before {
+  display: block;
+  content: "\eee7";
+  color: #fff;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 30px;
+}
+
+#message-new-submit #bp-messages-send,
+#message-reply-new-submit #send_reply_button {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 @media screen and (min-width: 1080px) {
   .bp-back-to-thread-list,
   .bp-close-compose-form {
@@ -10149,28 +10185,15 @@ body .bp-messages-user-threads {
 }
 
 @media screen and (max-width: 560px) {
-  .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-box-align: end;
-    -ms-flex-align: end;
-    align-items: flex-end;
-    margin: 0 -20px;
-  }
-  .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper #whats-new-messages-toolbar {
-    padding: 0 20px 0 15px;
-  }
   .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper #message-reply-new-submit {
-    padding: 20px 20px 0;
-    text-align: left;
-    border-top: 1px solid #ebe9e6;
-    width: 100%;
-    margin-top: 10px;
+    padding: 0;
+    width: 30px;
   }
   .bp-messages-content #bp-message-content .medium-editor-toolbar {
-    right: 45px;
+    right: 30px;
+  }
+  .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions {
+    padding: 0;
   }
   .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
