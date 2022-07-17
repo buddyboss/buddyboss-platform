@@ -9827,6 +9827,47 @@ input#send-to-input {
   }
 }
 
+.bp-messages-nav-panel .message-header-loading {
+  display: none;
+}
+
+.bp-messages-nav-panel.loading .bp-subnavs {
+  display: none;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading {
+  display: block;
+  padding: 20px 15px 15px;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_title,
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_description {
+  width: 151px;
+  height: 30px;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_title {
+  border-radius: 100px;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_description {
+  width: 100%;
+  height: 36px;
+}
+
+.bp-messages-nav-panel.loading .message-header-loading .message-header-loading_option {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
 .messages-wrapper #subnav #compose-personal-li {
   margin-right: auto;
   margin-left: 10px;

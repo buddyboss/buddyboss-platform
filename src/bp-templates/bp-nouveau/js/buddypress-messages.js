@@ -2601,6 +2601,7 @@ window.bp = window.bp || {};
 
 				if ( ! collection.length ) {
 					$( '.bp-messages-threads-list' ).addClass( 'bp-no-messages' );
+					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 					this.views.add( new bp.Views.MessagesNoThreads() );
 				}
 			},
