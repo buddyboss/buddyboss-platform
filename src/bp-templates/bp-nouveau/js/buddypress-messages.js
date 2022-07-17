@@ -3314,6 +3314,15 @@ window.bp = window.bp || {};
 					}
 				);
 
+				//Add class for message form shadow when messages are scrollable
+				var scrollViewScrollHeight = this.$el.find( '#bp-message-thread-list' ).prop('scrollHeight');
+				var scrollViewClientHeight = this.$el.find( '#bp-message-thread-list' ).prop('clientHeight');
+				if ( scrollViewScrollHeight > scrollViewClientHeight ) {
+					this.$el.addClass( 'focus-in--scroll' );
+				} else {
+					this.$el.removeClass( 'focus-in--scroll' );
+				}
+
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
 
@@ -3504,6 +3513,15 @@ window.bp = window.bp || {};
 				$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
 
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+
+				//Add class for message form shadow when messages are scrollable
+				var scrollViewScrollHeight = this.$el.find( '#bp-message-thread-list' ).prop('scrollHeight');
+				var scrollViewClientHeight = this.$el.find( '#bp-message-thread-list' ).prop('clientHeight');
+				if ( scrollViewScrollHeight > scrollViewClientHeight ) {
+					this.$el.addClass( 'focus-in--scroll' );
+				} else {
+					this.$el.removeClass( 'focus-in--scroll' );
+				}
 			},
 
 			replyError: function( response ) {
