@@ -2582,7 +2582,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( this.collection.length ) {
-					$( '.bp-messages-threads-list' ).removeClass( 'bp-no-messages' );
+					$( '.bp-messages-threads-list' ).removeClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).removeClass( 'bp-no-messages' );
 
 					bp.Nouveau.Messages.displayFilters( this.collection );
 				}
@@ -2600,7 +2600,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( ! collection.length ) {
-					$( '.bp-messages-threads-list' ).addClass( 'bp-no-messages' );
+					$( '.bp-messages-threads-list' ).addClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).addClass( 'bp-no-messages' );
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 					this.views.add( new bp.Views.MessagesNoThreads() );
 				}
