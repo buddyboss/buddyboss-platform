@@ -804,7 +804,7 @@ input#send-to-input {
 }
 
 .bp-message-content-wrap .bp-message-content_foot_note {
-	margin: -10px 20px 20px 0;
+	margin: -10px 20px 20px;
 }
 
 .bbpress #bbpress-forums .medium-editor-toolbar,
@@ -933,6 +933,7 @@ input#send-to-input {
 		display: flex;
 		justify-content: center;
 		padding: 15px 0;
+		max-width: 100%;
 	}
 
 	.message-user-loading_avatar {
@@ -947,6 +948,7 @@ input#send-to-input {
 		justify-content: center;
 		flex-flow: column;
 		flex: 1;
+		width: calc(100% - 68px);
 
 		.message-user-loading_title,
 		.message-user-loading_description {
@@ -1150,7 +1152,7 @@ input#send-to-input {
 }
 
 .bp-back-to-thread-list {
-	margin-right: 10px;
+	margin-right: 15px;
 }
 
 body .bp-messages-user-threads {

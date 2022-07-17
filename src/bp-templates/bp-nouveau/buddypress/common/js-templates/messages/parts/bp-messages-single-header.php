@@ -18,7 +18,7 @@
 	if (other_recipients.length == 0) {    include_you = true;    }    #>
 
 	<header class="single-message-thread-header">
-		<a href="#" class="bp-back-to-thread-list"><span class="dashicons dashicons-arrow-left-alt2"></span></a> <# if ( undefined !== other_recipients ) { #>
+		<a href="#" class="bp-back-to-thread-list"><span class="bb-icon-f bb-icon-arrow-left"></span></a> <# if ( undefined !== other_recipients ) { #>
 		<dl class="thread-participants">
 			<dt>
 				<# if ( data.group_name.length > 1 && data.is_group_thread ) { #> <span class="participants-name">
