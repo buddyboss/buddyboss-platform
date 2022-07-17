@@ -9605,6 +9605,10 @@ input#send-to-input {
   display: none !important;
 }
 
+.bp-messages-content #bp-message-load-more.loading ~ #bp-message-thread-list {
+  padding-top: 35px;
+}
+
 #bp-message-load-more {
   position: absolute;
   top: 60px;
