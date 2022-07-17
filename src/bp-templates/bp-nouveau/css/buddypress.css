@@ -9284,6 +9284,32 @@ div.profile_completion_wrap .progress_text_wrap {
   border-color: #f5f6f7;
 }
 
+#message-threads .thread-item.optionsOpen {
+  position: relative;
+  z-index: 1;
+}
+
+#message-threads .message-thread-options {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+}
+
+#message-threads .message-thread-options .bb_more_options_action {
+  padding: 4px;
+}
+
+#message-threads .message-thread-options .bb_more_options_action i {
+  font-size: 16px;
+  line-height: 1;
+}
+
+#message-threads .message-thread-options .bb_more_options_list {
+  list-style: none;
+}
+
 #message-form-submit-wrapper,
 #message-reply-form-submit-wrapper {
   display: flex;
@@ -9326,7 +9352,7 @@ div.profile_completion_wrap .progress_text_wrap {
   border-radius: 4px;
   padding: 5px 0;
   min-width: 165px;
-  right: -20px;
+  right: -10px;
   top: 35px;
   z-index: 119;
   list-style: none;
@@ -9363,7 +9389,7 @@ div.profile_completion_wrap .progress_text_wrap {
   width: 0;
   height: 0;
   top: 0;
-  right: 27px;
+  right: 17px;
   border: 6px solid #000;
   border-color: #fff #fff transparent transparent;
   -webkit-transform-origin: 0 0;
@@ -9388,47 +9414,6 @@ div.profile_completion_wrap .progress_text_wrap {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-}
-
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li a:before {
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  font-size: 15px;
-  display: inline-block;
-  margin-right: 10px;
-  width: 20px;
-  text-align: center;
-}
-
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.unread a:before {
-  content: "\eeba";
-}
-
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.hide_thread a:before {
-  content: "\e828";
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-}
-
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.delete_messages a:before {
-  content: "\ef48";
-}
-
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.delete_thread a:before {
-  content: "\ef48";
-}
-
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported-content a:before,
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported_thread a:before,
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a:before {
-  content: "\ee08";
-  vertical-align: middle;
-}
-
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported-content,
-.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.reported_thread {
-  pointer-events: none;
-  opacity: 0.9;
 }
 
 .bp-messages-content .single-thread-title {
@@ -9492,6 +9477,48 @@ div.profile_completion_wrap .progress_text_wrap {
     white-space: normal;
     min-width: 200px;
   }
+}
+
+#buddypress .bp-messages-container .message_action__list {
+  min-width: 205px;
+}
+
+#buddypress .bp-messages-container .message_action__list li a:before {
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+#buddypress .bp-messages-container .message_action__list li.unread a:before {
+  content: "\eeba";
+}
+
+#buddypress .bp-messages-container .message_action__list li.hide_thread a:before {
+  content: "\e828";
+}
+
+#buddypress .bp-messages-container .message_action__list li.delete_messages a:before {
+  content: "\ef48";
+}
+
+#buddypress .bp-messages-container .message_action__list li.delete_thread a:before {
+  content: "\ef48";
+}
+
+#buddypress .bp-messages-container .message_action__list li.reported-content a:before,
+#buddypress .bp-messages-container .message_action__list li.reported_thread a:before,
+#buddypress .bp-messages-container .message_action__list li.report_thread a:before {
+  content: "\ee08";
+  vertical-align: middle;
+}
+
+#buddypress .bp-messages-container .message_action__list li.reported-content,
+#buddypress .bp-messages-container .message_action__list li.reported_thread {
+  pointer-events: none;
+  opacity: 0.9;
 }
 
 #bp-message-thread-list {

@@ -257,6 +257,33 @@
 		}
 	}
 
+	// more options dropdown
+	.thread-item.optionsOpen {
+		position: relative;
+		z-index: 1;
+	}
+
+	.message-thread-options {
+		position: absolute;
+		right: 15px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+
+		.bb_more_options_action {
+			padding: 4px;
+
+			i {
+				font-size: 16px;
+				line-height: 1;
+			}
+		}
+
+		.bb_more_options_list {
+			list-style: none;
+		}
+	}
+
 	// close li
 
 }
@@ -309,7 +336,7 @@
 				border-radius: 4px;
 				padding: 5px 0;
 				min-width: 165px;
-				right: -20px;
+				right: -10px;
 				top: 35px;
 				z-index: 119;
 				list-style: none;
@@ -345,7 +372,7 @@
 					width: 0;
 					height: 0;
 					top: 0;
-					right: 27px;
+					right: 17px;
 					border: 6px solid #000;
 					border-color: #fff #fff transparent transparent;
 					-webkit-transform-origin: 0 0;
@@ -380,53 +407,6 @@
 		-webkit-box-align: center;
 		-ms-flex-align: center;
 		align-items: center;
-
-		.message_actions .message_action__list {
-
-			li a:before {
-				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 15px;
-				display: inline-block;
-				margin-right: 10px;
-				width: 20px;
-				text-align: center;
-			}
-
-			li.unread a:before {
-				content: "\eeba";
-			}
-
-			li.hide_thread a:before {
-				content: "\e828";
-				font-family: "bb-icons";/* stylelint-disable-line */
-			}
-
-			li.delete_messages a:before {
-				content: "\ef48";
-			}
-
-			li.delete_thread a:before {
-				content: "\ef48";
-			}
-
-			li.reported-content a,
-			li.reported_thread a,
-			li.report_thread a {
-
-				&:before {
-					content: "\ee08";
-					vertical-align: middle;
-				}
-
-			}
-
-			li.reported-content,
-			li.reported_thread {
-				pointer-events: none;
-				opacity: 0.9;
-			}
-
-		}
 	}
 
 	.single-thread-title {
@@ -503,6 +483,53 @@
 	}
 
 } // close .bp-messages-content
+
+// Message options
+#buddypress .bp-messages-container .message_action__list {
+	min-width: 205px;
+
+	li a:before {
+		font-family: "bb-icons";/* stylelint-disable-line */
+		font-size: 18px;
+		display: inline-block;
+		vertical-align: middle;
+		margin-right: 5px;
+	}
+
+	li.unread a:before {
+		content: "\eeba";
+	}
+
+	li.hide_thread a:before {
+		content: "\e828";
+	}
+
+	li.delete_messages a:before {
+		content: "\ef48";
+	}
+
+	li.delete_thread a:before {
+		content: "\ef48";
+	}
+
+	li.reported-content a,
+	li.reported_thread a,
+	li.report_thread a {
+
+		&:before {
+			content: "\ee08";
+			vertical-align: middle;
+		}
+
+	}
+
+	li.reported-content,
+	li.reported_thread {
+		pointer-events: none;
+		opacity: 0.9;
+	}
+
+}
 
 // The single view of messages in a conversation thread
 #bp-message-thread-list {

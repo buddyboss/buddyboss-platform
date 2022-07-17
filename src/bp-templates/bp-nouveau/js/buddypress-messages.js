@@ -2526,7 +2526,8 @@ window.bp = window.bp || {};
 			events: {
 				'click .bp-message-link' : 'changePreview',
 				'scroll' : 'scrolled',
-				'click .close-conversation' : 'doAction'
+				'click .close-conversation' : 'doAction',
+				'click .message-thread-options > .bb_more_options_action' : 'ToggleOptions'
 			},
 
 			initialize: function() {
@@ -2742,6 +2743,10 @@ window.bp = window.bp || {};
 							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 					}
 				);
+			},
+
+			ToggleOptions: function( event ) {
+				$( event.currentTarget ).closest( '.thread-item' ).toggleClass( 'optionsOpen' ).siblings().removeClass( 'optionsOpen' );
 			},
 		}
 	);
@@ -3001,7 +3006,7 @@ window.bp = window.bp || {};
 						if ( $( event.target ).hasClass( 'message_action__anchor' ) || $( event.target ).parent().hasClass( 'message_action__anchor' ) ) {
 							return event;
 						} else {
-							$( '.message_action__list.open' ).removeClass( 'open' );
+							$( '.message_action__list.open' ).removeClass( 'open' ).closest( '.message_actions').removeClass( 'open' );
 						}
 
 					}
@@ -3019,7 +3024,7 @@ window.bp = window.bp || {};
 				var action = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},
 				feedback   = BP_Nouveau.messages.doingAction;
 
-				$( event.currentTarget ).closest( '.message_action__list' ).removeClass( 'open' );
+				$( event.currentTarget ).closest( '.message_action__list' ).removeClass( 'open' ).closest( '.message_actions').removeClass( 'open' );
 
 				if ( ! action ) {
 					return event;
@@ -3138,7 +3143,7 @@ window.bp = window.bp || {};
 			showOptions: function( event ) {
 				event.preventDefault();
 				var currentTarget = event.currentTarget;
-				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' );
+				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' ).closest( '.message_actions').toggleClass( 'open' );;
 			},
 
 		}
