@@ -45,8 +45,8 @@ function bp_moderation_admin_scripts( $hook ) {
 					'unhide_confirm_msg'     => esc_js( __( 'Please confirm you want to unhide this content. It will be open for all members in your network.', 'buddyboss' ) ),
 					'hide_label'             => esc_js( __( 'Hide Content', 'buddyboss' ) ),
 					'unhide_label'           => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
-					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),
-					'unsuspend_label'        => esc_js( __( 'Unsuspend', 'buddyboss' ) ),
+					'suspend_label'          => esc_js( __( 'Suspend Member', 'buddyboss' ) ),
+					'unsuspend_label'        => esc_js( __( 'Unsuspend Member', 'buddyboss' ) ),
 					'suspend_author_label'   => esc_js( __( 'Suspend Owner', 'buddyboss' ) ),
 					'unsuspend_author_label' => esc_js( __( 'Unsuspend Owner', 'buddyboss' ) ),
 				),
@@ -381,7 +381,7 @@ function bp_moderation_admin() {
 				if ( 'reported-content' === $current_tab ) {
 					bp_core_admin_moderation_tabs( esc_html__( 'Reported Content', 'buddyboss' ) );
 				} else {
-					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
+					bp_core_admin_moderation_tabs( esc_html__( 'Flagged Members', 'buddyboss' ) );
 				}
 				?>
 			</h2>
@@ -457,7 +457,7 @@ function bp_moderation_admin_index() {
 			if ( 'reported-content' === $current_tab ) {
 				esc_html_e( 'Reported Content', 'buddyboss' );
 			} else {
-				esc_html_e( 'Blocked Members', 'buddyboss' );
+				esc_html_e( 'Flagged Members', 'buddyboss' );
 			}
 			?>
 		</h1>

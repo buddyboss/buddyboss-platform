@@ -26390,6 +26390,25 @@ span.icons:before {
   pointer-events: none;
 }
 
+.taxonomy-bpm_category .table-view-list.tags tbody tr td .inline-edit-wrapper .inline-edit-col .title {
+  width: 140px;
+}
+
+.taxonomy-bpm_category .table-view-list.tags tbody tr td .inline-edit-wrapper .inline-edit-col .input-text-wrap {
+  margin-right: 20px;
+  width: calc(100% - 160px);
+  float: right;
+}
+
+@media screen and (max-width: 1460px) {
+  .buddyboss_page_bp-moderation .fixed .column-date {
+    width: 150px;
+  }
+  .buddyboss_page_bp-moderation .fixed .column-reporter {
+    width: calc(100% - 150px);
+  }
+}
+
 /*
 *-----------------------------------------
 * @section 18.0 - Admin bar Notification dropdown

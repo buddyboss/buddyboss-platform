@@ -20,11 +20,22 @@ defined( 'ABSPATH' ) || exit;
 class BP_Moderation_Report_List_Table extends WP_List_Table {
 
 	/**
+	 * What type of view is being displayed?
+	 *
+	 * E.g. "Blocked", "Reported"
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var string $view
+	 */
+	public $view = 'reported';
+
+	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.5.6
+	 * @param strring $view type of view.
 	 */
-	public function __construct() {
+	public function __construct( $view = 'reported' ) {
 
 		// Define singular and plural labels, as well as whether we support AJAX.
 		parent::__construct(
@@ -34,6 +45,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 				'singular' => 'report',
 			)
 		);
+		$this->view = $view;
 	}
 
 	/**
@@ -78,9 +90,13 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	public function no_items() {
 		$tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
-			esc_html_e( 'Sorry, no reported content found.', 'buddyboss' );
+			esc_html_e( 'This member has not been reported by any members.', 'buddyboss' );
 		} else {
-			esc_html_e( 'Sorry, no blocked members found.', 'buddyboss' );
+			if ( 'blocked' === $this->view ) {
+				esc_html_e( 'This member has not been blocked by any members.', 'buddyboss' );
+			} else {
+				esc_html_e( 'This member has not been reported by any members.', 'buddyboss' );
+			}
 		}
 	}
 
@@ -103,7 +119,11 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		// Set per page from the screen options.
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 
-		$reporters = BP_Moderation::get_moderation_reporters( $moderation_request_data->id );
+		$args = ( 'user' === $moderation_content_type ) ? array( 'user_repoted' => true ) : array() ;
+		if ( 'blocked' === $this->view ) {
+			$args = array( 'user_repoted' => false );
+		}
+		$reporters = BP_Moderation::get_moderation_reporters( $moderation_request_data->id, $args );
 
 		$total_item  = ( ! empty( $reporters ) ) ? count( $reporters ) : 0;
 		$total_pages = ceil( $total_item / $per_page );
@@ -133,8 +153,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function display() {
-		$this->display_tablenav( 'top' ); ?>
-
+		?>
 		<h2 class="screen-reader-text">
 			<?php
 			/* translators: accessibility text */
@@ -179,13 +198,21 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 			$columns = array(
 				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
 				'category' => esc_html__( 'Category', 'buddyboss' ),
-				'date'     => esc_html__( 'Date', 'buddyboss' ),
+				'date'     => esc_html__( 'Date Reported', 'buddyboss' ),
 			);
 		} else {
-			$columns = array(
-				'reporter' => esc_html__( 'Blocking Member', 'buddyboss' ),
-				'date'     => esc_html__( 'Date', 'buddyboss' ),
-			);
+			if ( 'blocked' === $this->view ) {
+				$columns = array(
+					'reporter' => esc_html__( 'Member', 'buddyboss' ),
+					'date'     => esc_html__( 'Date Blocked', 'buddyboss' ),
+				);
+			} else {
+				$columns = array(
+					'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
+					'category' => esc_html__( 'Category', 'buddyboss' ),
+					'date'     => esc_html__( 'Date Reported', 'buddyboss' ),
+				);
+			}
 		}
 
 		/**
@@ -220,7 +247,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_reporter( $item = array() ) {
-		printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $item['user_id'] ) ) );
+		printf( '%s <strong>%s</strong>', get_avatar( $item['user_id'], '32' ), wp_kses_post( bp_core_get_userlink( $item['user_id'] ) ) );
 	}
 
 	/**

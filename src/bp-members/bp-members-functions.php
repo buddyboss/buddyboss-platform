@@ -4729,13 +4729,13 @@ function bp_member_get_report_link( $args = array() ) {
 	$args = bp_parse_args(
 		$args,
 		array(
-			'id'                => 'member_report',
+			'id'                => isset( $args['report_user'] ) ? 'member_block' : 'member_report',
 			'component'         => 'moderation',
 			'position'          => 50,
 			'must_be_logged_in' => true,
 			'button_attr'       => array(
 				'data-bp-content-id'   => bp_displayed_user_id(),
-				'data-bp-content-type' => BP_Moderation_Members::$moderation_type,
+				'data-bp-content-type' => isset( $args['report_user'] ) ? BP_Moderation_Members::$moderation_type_report : BP_Moderation_Members::$moderation_type,
 			),
 		)
 	);
