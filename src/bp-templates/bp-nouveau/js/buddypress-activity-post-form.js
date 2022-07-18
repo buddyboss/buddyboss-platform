@@ -351,6 +351,7 @@ window.bp = window.bp || {};
 
 				self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
 				self.postForm.model.set( 'link_image_index', activity_data.link_image_index );
+				self.postForm.model.set( 'link_image_index_confirm', activity_data.link_image_index );
 			} else {
 				activity_data.gif          = activity_data.gif_data;
 				activity_data.group_name   = activity_data.item_name;
@@ -2303,7 +2304,8 @@ window.bp = window.bp || {};
 						link_description: '',
 						link_url: '',
 						link_embed: false,
-						link_swap_image_button: 0
+						link_swap_image_button: 0,
+						link_image_index_confirm: '',
 					}
 				);
 				document.removeEventListener( 'activity_link_preview_open', this.open.bind( this ) );
@@ -2327,7 +2329,7 @@ window.bp = window.bp || {};
 			
 			selectImageForPreview: function () {
 				var imageIndex = this.model.get( 'link_image_index' );
-				this.model.set( 'link_image_index', imageIndex );
+				this.model.set( 'link_image_index_confirm', imageIndex );
 				$('#icon-exchange').show();
 				$('#activity-link-preview-remove-image').show();
 				$('#activity-link-preview-select-image').hide();
@@ -2945,13 +2947,22 @@ window.bp = window.bp || {};
 					if ( response.description.length > 100 ) {
 						response.description = response.description.substring( 0, 100 ) + '...';
 					}
+					var urlImages = response.images;
+					if (
+						true === self.options.activity.get( 'edit_activity' )
+						&& 'undefined' === typeof self.options.activity.get( 'link_image_index_confirm' )
+						&& '' === self.options.activity.get( 'link_image_index_confirm' )
+					) {
+						urlImages = '';
+					}
 					self.options.activity.set(
 						{
 							link_success: true,
 							link_title: response.title,
 							link_description: response.description,
-							link_images: response.images,
-							link_image_index: parseInt( '' !== self.options.activity.get('link_image_index') ? self.options.activity.get('link_image_index') : 0 ),
+							link_images: urlImages, //response.images,
+							link_image_index: parseInt( self.options.activity.get( 'link_image_index' ) ),
+							link_image_index_confirm: self.options.activity.get( 'link_image_index_confirm' ),
 							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
 						}
 					);
@@ -4997,6 +5008,7 @@ window.bp = window.bp || {};
 					[
 						'link_images',
 						'link_image_index',
+						'link_image_index_confirm',
 						'link_success',
 						'link_error',
 						'link_error_msg',
@@ -5009,13 +5021,15 @@ window.bp = window.bp || {};
 				// Form link preview data to pass in request if available.
 				if ( self.model.get( 'link_success' ) ) {
 					var images = self.model.get( 'link_images' ),
-						index  = self.model.get( 'link_image_index' );
+						index  = self.model.get( 'link_image_index' ),
+					indexConfirm  = self.model.get( 'link_image_index_confirm' );
 					if ( images && images.length ) {
 						data = _.extend(
 							data,
 							{
-								'link_image': images[ index ],
-								'link_image_index' : index
+								'link_image': images[ indexConfirm ],
+								'link_image_index': index,
+								'link_image_index_confirm' : indexConfirm
 							}
 						);
 					}
