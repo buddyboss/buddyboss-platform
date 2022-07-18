@@ -3315,6 +3315,14 @@ window.bp = window.bp || {};
 
 					model.set( messagePusherData.message );
 					//this.collection.set( { model }, { remove: false } );
+
+					if ( $( this.$el ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( this.$el ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'sending' ) ) {
+						$( this.$el ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'sending' );
+					}
+
+					if ( $( this.$el ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( this.$el ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
+						$( this.$el ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
+					}
 				}
 
 			},
