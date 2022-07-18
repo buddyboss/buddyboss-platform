@@ -3960,12 +3960,12 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 }
 
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-info,
-.activity-link-preview .activity-link-preview-container:hover .activity-link-preview-image {
+.activity-link-preview .activity-link-preview-container:hover .activity-link-preview-image-cover {
   position: relative;
 }
 
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-info:before,
-.activity-link-preview .activity-link-preview-container:hover .activity-link-preview-image:before {
+.activity-link-preview .activity-link-preview-container:hover .activity-link-preview-image-cover:before {
   content: "";
   background-color: rgba(0, 0, 0, 0.05);
   position: absolute;
@@ -3986,26 +3986,44 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   z-index: 2;
 }
 
-.activity-link-preview-image {
-  position: relative;
-}
-
 .activity-link-preview-image img {
-  width: 100%;
+  width: auto;
   height: auto;
   border: none;
   border-radius: 4px 4px 0 0;
+  object-fit: cover;
+  object-position: center;
 }
 
 .activity-url-scrapper-container #activity-url-scrapper-img-holder {
   display: flex;
   flex-flow: column;
   max-width: 100%;
+  position: relative;
 }
 
 .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image {
-  position: relative;
   transition: all linear 0.2s;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-image-cover {
+  height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 900px) {
+  .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-image-cover {
+    height: 30vh;
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-image-cover {
+    height: 200px;
+  }
 }
 
 .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons {
@@ -4021,7 +4039,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   border: 0;
   color: rgba(0, 0, 0, 0.25);
   background-color: #f2f4f5;
-  font-size: 28px;
+  font-size: 22px;
   line-height: 1;
   border-radius: 50%;
   text-decoration: none;
@@ -4187,6 +4205,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   position: absolute;
   width: 100%;
   top: 50%;
+  height: 40px;
   transform: translate(0, -50%);
 }
 
@@ -4269,7 +4288,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   border: 0;
   color: rgba(0, 0, 0, 0.25);
   background-color: #f2f4f5;
-  font-size: 35px;
+  font-size: 20px;
   line-height: 1;
   position: absolute;
   left: 10px;

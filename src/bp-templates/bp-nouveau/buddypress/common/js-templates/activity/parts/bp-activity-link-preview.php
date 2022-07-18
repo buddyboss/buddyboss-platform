@@ -21,7 +21,9 @@
 		<# if ( data.link_images && data.link_images.length && data.link_success && ! data.link_error ) { #>
 		<div id="activity-url-scrapper-img-holder">
 			<div class="activity-link-preview-image">
-				<img src="{{{data.link_images[data.link_image_index]}}}"/>
+				<div class="activity-link-preview-image-cover">
+					<img src="{{{data.link_images[data.link_image_index]}}}"/>
+				</div>
 				<!-- <a title="Cancel Preview Image" href="#" id="activity-link-preview-close-image">
 					<i class="bb-icon-l bb-icon-times"></i>
 				</a>-->

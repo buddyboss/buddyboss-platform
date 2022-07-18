@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-15 10:16:41+00:00\n"
+"POT-Creation-Date: 2022-07-18 07:59:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -9710,7 +9710,7 @@ msgid "Collapsible Form"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:129
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:44
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:46
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:262
 msgid "of"
 msgstr ""
@@ -9821,7 +9821,7 @@ msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2005
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:44
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:46
 #: bp-video/bp-video-functions.php:2536
 msgid "Image"
 msgstr ""
