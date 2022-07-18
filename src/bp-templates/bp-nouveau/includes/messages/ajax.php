@@ -2146,7 +2146,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		true === bp_disable_group_messages() &&
 		$is_group_thread &&
 		$group_id &&
-		! groups_can_user_manage_messages( bp_loggedin_user_id(), $group_id )
+		(
+			(
+				bp_is_active( 'groups' ) &&
+				! groups_can_user_manage_messages( bp_loggedin_user_id(), $group_id )
+			) ||
+			! bp_is_active( 'groups' )
+		)
 	) {
 		$status = bp_group_get_message_status( $group_id );
 		$notice = __( 'Only group organizers can send messages to this group.', 'buddyboss' );
