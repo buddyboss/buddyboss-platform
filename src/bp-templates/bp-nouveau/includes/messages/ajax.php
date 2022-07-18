@@ -1855,22 +1855,32 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	// Check recipients if connected or not.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 
+		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 		foreach ( $recipients as $recipient ) {
 			if ( $login_user_id !== $recipient->user_id && ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
 				if ( count( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
-						'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
-						'type'     => 'info',
+						'feedback' => sprintf(
+							'%1$s %2$s',
+							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
+							bp_get_add_friend_button( $recipient->user_id ),
+						),
+						'type'     => 'notice',
 					);
 				} else {
 					$thread->feedback_error = array(
-						'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ),
-						'type'     => 'info',
+						'feedback' => sprintf(
+							'%1$s %2$s',
+							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
+							bp_get_add_friend_button( $recipient->user_id ),
+						),
+						'type'     => 'notice',
 					);
 				}
 				break;
 			}
 		}
+		remove_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 	}
 
 	// Check moderation if user blocked or not for single user thread.
@@ -1879,13 +1889,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 			$thread->feedback_error = array(
-				'feedback' => __( "You can't message suspended member.", 'buddyboss' ),
-				'type'     => 'info',
+				'feedback' => __( 'Unable to send new messages at this time.', 'buddyboss' ),
+				'type'     => 'notice',
 			);
 		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
 			$thread->feedback_error = array(
-				'feedback' => __( "You can't message a blocked member.", 'buddyboss' ),
-				'type'     => 'info',
+				'feedback' => sprintf(
+					'%1$s %2$s',
+					__( "You can't send messages to this members you have blocked.", 'buddyboss' ),
+					sprintf(
+						'<div class="blocked-button blocked generic-button"><a href="' . esc_url( trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . 'blocked-members' ) . '" class="blocked-button blocked add">%s</a></div>',
+						__( 'View Blocked Members.', 'buddyboss' )
+					)
+				),
+				'type'     => 'notice',
 			);
 		}
 	}
@@ -1906,6 +1923,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	if ( ! $is_group_message_thread ) {
 		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
+
+		if ( isset( $thread->feedback_error, $thread->feedback_error['from'] ) && ! empty( $thread->feedback_error['from'] ) ) {
+			$thread->feedback_error['type'] = 'notice';
+		}
 	}
 
 	$is_deleted_group = 0;
@@ -2168,7 +2189,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		$thread->feedback_error = array(
 			'feedback' => $notice,
-			'type'     => 'info',
+			'type'     => 'notice',
 		);
 
 		$thread->thread['can_user_send_message_in_thread'] = false;

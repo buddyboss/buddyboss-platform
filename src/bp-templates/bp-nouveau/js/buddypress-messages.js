@@ -247,7 +247,12 @@ window.bp = window.bp || {};
 
 			this.views.add( { id: 'feedback', view: feedback } );
 
-			feedback.inject( '.bp-messages-feedback' );
+			if ( 'notice' === type ) {
+				feedback.inject( '.bp-messages-notice' );
+			} else {
+				feedback.inject( '.bp-messages-feedback' );
+			}
+
 			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
 		},
 
@@ -941,7 +946,7 @@ window.bp = window.bp || {};
 					{
 						type: this.options.type || 'info',
 						message: this.options.value
-						}
+					}
 				);
 			}
 		}

@@ -24,6 +24,7 @@
 
 	<?php bp_nouveau_messages_hook( 'before', 'thread_reply' ); ?>
 
+	<div class="bp-messages-notice"></div>
 	<form id="send-reply" class="standard-form send-reply">
 		<div class="message-box">
 			<div class="message-metadata">
