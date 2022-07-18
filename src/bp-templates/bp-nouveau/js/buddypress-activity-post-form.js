@@ -2955,13 +2955,17 @@ window.bp = window.bp || {};
 					) {
 						urlImages = '';
 					}
+					var urlImagesIndex = '';
+					if ( '' !== self.options.activity.get( 'link_image_index' ) ) {
+						urlImagesIndex =  parseInt( self.options.activity.get( 'link_image_index' ) );
+					}
 					self.options.activity.set(
 						{
 							link_success: true,
 							link_title: response.title,
 							link_description: response.description,
 							link_images: urlImages, //response.images,
-							link_image_index: parseInt( self.options.activity.get( 'link_image_index' ) ),
+							link_image_index: urlImagesIndex, //parseInt( self.options.activity.get( 'link_image_index' ) ),
 							link_image_index_confirm: self.options.activity.get( 'link_image_index_confirm' ),
 							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
 						}
