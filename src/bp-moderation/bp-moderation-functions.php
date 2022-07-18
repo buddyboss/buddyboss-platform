@@ -1163,12 +1163,13 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
  */
 function bb_check_current_member_is_blocked_by_recipient( $recipient_id, $current_user_id ) {
 	global $bp, $wpdb;
-	$sql           = array();
-	$sql['select'] = 'SELECT DISTINCT s.item_id, DISTINCT m.user_id';
-	$sql['from']   = "FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->messages->table_name_reports} m ON m.moderation_id = s.id";
-	$where_sql     = " s.item_id=" . $current_user_id;
-	$sql['where']  = "WHERE {$where_sql} ";
-	$data          = $wpdb->get_row( $sql );
+	$sql            = array();
+	$sql['select']  = 'SELECT DISTINCT m.user_id';
+	$sql['from']    = "FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id";
+	$where_sql      = "s.item_id=" . $current_user_id;
+	$sql['where']   = "WHERE {$where_sql} ";
+	$moderation_sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
+	$data           = $wpdb->get_row( $moderation_sql );
 	if ( ! empty( $data ) && (int) $recipient_id === (int) $data->user_id ) {
 		return true;
 	}
