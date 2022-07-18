@@ -248,7 +248,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			'friend_default' => 'active',
 			'link_title'     => false,
 		);
-		$instance = wp_parse_args( (array) $instance, $defaults );
+		$instance = bp_parse_args( (array) $instance, $defaults );
 
 		$max_friends    = $instance['max_friends'];
 		$friend_default = $instance['friend_default'];

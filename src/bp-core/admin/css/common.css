@@ -3254,6 +3254,10 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   max-width: 36px;
 }
 
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar > a > i {
+  display: none;
+}
+
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-content {
   float: right;
   width: calc(100% - 60px);
