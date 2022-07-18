@@ -5280,7 +5280,7 @@ function bb_get_member_type_label_colors( $type ) {
  *
  * @return string The username of the matched user or an empty string if no user is found.
  */
-function bp_members_get_user_firstname( $user_id ) {
+function bb_members_get_user_firstname( $user_id ) {
 	/**
 	 * Filters the user_firstname based on originally provided user ID.
 	 *
@@ -5288,5 +5288,5 @@ function bp_members_get_user_firstname( $user_id ) {
 	 *
 	 * @param string $username User first name determined by user ID.
 	 */
-	return apply_filters( 'bp_members_get_user_firstname', get_the_author_meta( 'first_name', $user_id ) );
+	return apply_filters( 'bb_members_get_user_firstname', get_the_author_meta( 'first_name', $user_id ) );
 }
