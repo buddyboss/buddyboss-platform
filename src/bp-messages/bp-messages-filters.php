@@ -873,3 +873,31 @@ function messages_screen_notification_settings() {
 	<?php
 
 }
+
+/**
+ * Validate the thread is group thread or not.
+ *
+ * @since [BBVERSION]
+ *
+ * @param int $thread_id Thread ID.
+ *
+ * @return int
+ */
+function bb_messages_validate_groups_thread( $thread_id ) {
+
+	if ( false === bp_disable_group_messages() ) {
+		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
+		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
+		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
+		if ( 'group' === $message_from && $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+			$thread_id = 0;
+		}
+	}
+
+	return $thread_id;
+}
+
+add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' );

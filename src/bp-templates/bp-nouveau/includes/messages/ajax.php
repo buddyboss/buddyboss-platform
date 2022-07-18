@@ -1310,8 +1310,14 @@ function bp_nouveau_ajax_get_thread_messages() {
 	// Mark thread active if it's in hidden mode.
 	$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, $thread_id, bp_loggedin_user_id() ) );
 
-	$post   = $_POST;
-	$thread = bp_nouveau_get_thread_messages( $thread_id, $post );
+	$post = $_POST;
+
+	$thread_id = apply_filters( 'bb_messages_validate_thread', $thread_id );
+	if ( empty( $thread_id ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$thread    = bp_nouveau_get_thread_messages( $thread_id, $post );
 
 	wp_send_json_success( $thread );
 }
