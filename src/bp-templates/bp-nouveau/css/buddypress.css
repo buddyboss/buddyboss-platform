@@ -9521,6 +9521,23 @@ div.profile_completion_wrap .progress_text_wrap {
   opacity: 0.9;
 }
 
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(2) .message_action__list,
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(3) .message_action__list,
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:last-child .message_action__list {
+  top: initial;
+  bottom: 0;
+  right: -8px;
+}
+
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(2) .message_action__list:after,
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(3) .message_action__list:after,
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:last-child .message_action__list:after {
+  top: initial;
+  bottom: -12px;
+  transform: rotate(140deg);
+  right: 0;
+}
+
 #bp-message-thread-list {
   background: #fafafa;
   border-top: 1px solid #eaeaea;

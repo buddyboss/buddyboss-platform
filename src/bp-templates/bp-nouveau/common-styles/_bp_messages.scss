@@ -531,6 +531,25 @@
 
 }
 
+#buddypress .bp-messages-container .thread-item:nth-child(3) {
+
+	~ .thread-item:nth-last-child(2) .message_action__list,
+	~ .thread-item:nth-last-child(3) .message_action__list,
+	~ .thread-item:last-child .message_action__list {
+		top: initial;
+		bottom: 0;
+		right: -8px;
+
+		&:after {
+			top: initial;
+			bottom: -12px;
+			transform: rotate(140deg);
+			right: 0;
+		}
+	}
+
+}
+
 // The single view of messages in a conversation thread
 #bp-message-thread-list {
 	background: #fafafa;
