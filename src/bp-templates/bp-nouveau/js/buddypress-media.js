@@ -74,7 +74,7 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
 				maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-				dictInvalidFileType: 'qwqwqwqwqw', //BP_Nouveau.document.dictInvalidFileType,
+				dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 				previewTemplate: ForumDocumentTemplates,
 				dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -93,7 +93,7 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFiles: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-				dictInvalidFileType: 'fdgfdgdfgfdg', //BP_Nouveau.video.dictInvalidFileType,
+				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
 				previewTemplate: ForumVideoTemplate,
 				dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
@@ -3633,7 +3633,6 @@ window.bp = window.bp || {};
 				self.dropzone_obj.on(
 					'error',
 					function ( file, response ) {
-						console.log( response );
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
