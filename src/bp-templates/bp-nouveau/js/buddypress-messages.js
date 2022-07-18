@@ -3582,6 +3582,7 @@ window.bp = window.bp || {};
 				}
 
 				$( 'body' ).removeClass( 'view' ).removeClass( 'inbox' ).addClass( 'compose' );
+				$( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 			},
 
 			viewMessage: function( thread_id ) {
