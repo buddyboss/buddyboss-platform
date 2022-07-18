@@ -3372,10 +3372,10 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
 					// hide reply form.
 					this.$( '#send-reply' ).hide().parent().addClass( 'is_restricted' );
-					if ( ! _.isUndefined( response.thread.is_group_thread ) && response.thread.is_group_thread === 1 ) {
-						this.$( '#send-reply' ).show().parent().removeClass( 'is_restricted' );
-						$( '#send-reply' ).find( '.message-box' ).show();
-					}
+					// if ( ! _.isUndefined( response.thread.is_group_thread ) && response.thread.is_group_thread === 1 ) {
+					// 	this.$( '#send-reply' ).show().parent().removeClass( 'is_restricted' );
+					// 	$( '#send-reply' ).find( '.message-box' ).show();
+					// }
 				} else {
 					$( '#send-reply' ).find( '.message-box' ).show();
 				}

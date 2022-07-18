@@ -2141,6 +2141,27 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$thread->thread['can_user_send_message_in_thread'] = $can_message;
 
+	// Check the user has ability to send message into group thread or not.
+	if (
+		true === bp_disable_group_messages() &&
+		$is_group_thread &&
+		$group_id &&
+		! groups_can_user_manage_messages( bp_loggedin_user_id(), $group_id )
+	) {
+		$status = bp_group_get_message_status( $group_id );
+		$notice = __( 'Only group organizers can send messages to this group.', 'buddyboss' );
+		if ( 'mods' === $status ) {
+			$notice = __( 'Only group organizers and moderators can send messages to this group.', 'buddyboss' );
+		}
+
+		$thread->feedback_error = array(
+			'feedback' => $notice,
+			'type'     => 'info',
+		);
+
+		$thread->thread['can_user_send_message_in_thread'] = false;
+	}
+
 	$thread->messages = array();
 	$i                = 0;
 
