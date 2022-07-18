@@ -1150,3 +1150,28 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
 	 */
 	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss' ), $item_id );
 }
+
+/**
+ * Function will check current member is blocked by any recipients.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $recipient_id    Recipient id of the message.
+ * @param int $current_user_id Current user id.
+ *
+ * @return bool
+ */
+function bb_check_current_member_is_blocked_by_recipient( $recipient_id, $current_user_id ) {
+	global $bp, $wpdb;
+	$sql           = array();
+	$sql['select'] = 'SELECT DISTINCT s.item_id, DISTINCT m.user_id';
+	$sql['from']   = "FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->messages->table_name_reports} m ON m.moderation_id = s.id";
+	$where_sql     = " s.item_id=" . $current_user_id;
+	$sql['where']  = "WHERE {$where_sql} ";
+	$data          = $wpdb->get_row( $sql );
+	if ( ! empty( $data ) && (int) $recipient_id === (int) $data->user_id ) {
+		return true;
+	}
+
+	return false;
+}

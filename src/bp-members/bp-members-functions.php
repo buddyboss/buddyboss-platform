@@ -5267,3 +5267,26 @@ function bb_get_member_type_label_colors( $type ) {
 
 	return apply_filters( 'bb_get_member_type_label_colors', $bp_member_type_label_color );
 }
+
+/**
+ * Return the user_firstname for a user based on their user_id.
+ *
+ * This should be used for linking to user profiles and anywhere else a
+ * sanitized and unique slug to a user is needed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID to check.
+ *
+ * @return string The username of the matched user or an empty string if no user is found.
+ */
+function bp_members_get_user_firstname( $user_id ) {
+	/**
+	 * Filters the user_firstname based on originally provided user ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $username User first name determined by user ID.
+	 */
+	return apply_filters( 'bp_members_get_user_firstname', get_the_author_meta( 'first_name', $user_id ) );
+}

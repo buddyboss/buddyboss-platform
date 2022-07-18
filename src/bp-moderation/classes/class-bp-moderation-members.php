@@ -290,7 +290,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
-					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
+					$avatar_url = buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png';
 				}
 			}
 		}
