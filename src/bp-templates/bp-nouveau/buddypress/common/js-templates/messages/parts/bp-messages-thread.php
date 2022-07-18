@@ -50,8 +50,14 @@
 					<span class="recipients-count">{{other_recipients.length}}</span>
 					<img class="avatar" src="{{{data.sender_avatar}}}" alt="{{data.sender_name}}" />
 				<# } else { #>
+		            <# if ( true === data.is_user_blocked ) { #>
+						<span class="lock"></span>
+		            <# } #>
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
+                    <# if ( true === recipient.blocked_by_recipient ) { #>
+						<span class="cancel"></span>
+                    <# } #>
 						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
 					<# } #>
 				<# } #>
