@@ -2993,7 +2993,6 @@ window.bp = window.bp || {};
 				'click .actions a' : 'doAction',
 				'click .actions button' : 'doAction',
 				'click .bp-back-to-thread-list' : 'navigateToList',
-				'click .message_actions .message_action__anchor' : 'showOptions',
 			},
 
 			initialize: function() {
@@ -3138,12 +3137,6 @@ window.bp = window.bp || {};
 							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 					}
 				);
-			},
-
-			showOptions: function( event ) {
-				event.preventDefault();
-				var currentTarget = event.currentTarget;
-				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' ).closest( '.message_actions').toggleClass( 'open' );;
 			},
 
 		}
