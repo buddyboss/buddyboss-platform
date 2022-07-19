@@ -870,11 +870,11 @@ window.bp = window.bp || {};
 				}
 
 				// Access Control Emoji Support.
-				if ( ! _.isUndefined( resp.user_can_upload_emoji ) && $( '#whats-new-messages-toolbar .post-media-emoji-support' ).length ) {
+				if ( ! _.isUndefined( resp.user_can_upload_emoji ) && $( '#whats-new-formatting-toolbar .post-media-emoji-support' ).length ) {
 					if ( resp.user_can_upload_emoji ) {
-						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).show();
+						$( '#whats-new-formatting-toolbar .post-media-emoji-support' ).show();
 					} else {
-						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).hide();
+						$( '#whats-new-formatting-toolbar .post-media-emoji-support' ).hide();
 					}
 
 				}
@@ -1077,7 +1077,7 @@ window.bp = window.bp || {};
 							{
 								standalone: true,
 								hideSource: false,
-								container: $( '#whats-new-messages-toolbar > .post-emoji' ),
+								container: $( '#whats-new-formatting-toolbar > .post-emoji' ),
 								autocomplete: false,
 								pickerPosition: 'bottom',
 								hidePickerOnBlur: true,
@@ -1944,7 +1944,6 @@ window.bp = window.bp || {};
 				'click #messages-document-button': 'toggleDocumentSelector',
 				'click #messages-video-button': 'toggleVideoSelector',
 				'click #messages-gif-button': 'toggleGifSelector',
-				'click #show-toolbar-button': 'toggleToolbarSelector',
 				'click .medium-editor-toolbar-actions': 'focusEditor'
 			},
 
@@ -2028,31 +2027,6 @@ window.bp = window.bp || {};
 				this.$gifPickerEl.toggleClass( 'open' );
 			},
 
-			toggleToolbarSelector: function( e ) {
-				e.preventDefault();
-				$( e.currentTarget ).toggleClass( 'active' );
-				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
-				if ( $( e.currentTarget ).hasClass( 'active' ) ) {
-					$( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-hide' ) );
-					if ( bp.Nouveau.Messages.mediumEditor.exportSelection() != null ) {
-						medium_editor_toolbar.addClass( 'medium-editor-toolbar-active' );
-					}
-				} else {
-					$( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
-					if ( bp.Nouveau.Messages.mediumEditor.exportSelection() === null ) {
-						medium_editor_toolbar.removeClass( 'medium-editor-toolbar-active' );
-					}
-				}
-
-				$( bp.Nouveau.Messages.mediumEditor.elements[0] ).focus();
-				medium_editor_toolbar.toggleClass( 'active' );
-
-				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
-				if ( gif_box.length && $.trim( gif_box.html() ) == '' ) {
-					this.$self.removeClass( 'open active' );
-				}
-			},
-
 			focusEditor: function ( e ) {
 				if ( bp.Nouveau.Messages.mediumEditor.exportSelection() === null ) {
 					$( e.currentTarget ).closest( '.bp-message-content-wrap' ).find( '#bp-message-content #message_content' ).focus();
@@ -2088,6 +2062,48 @@ window.bp = window.bp || {};
 						this.$self.removeClass( 'open active' );
 					}
 					this.$gifPickerEl.removeClass( 'open' );
+				}
+			}
+
+		}
+	);
+
+	bp.Views.FormattingToolbar = bp.Nouveau.Messages.View.extend(
+		{
+			tagName: 'div',
+			id: 'whats-new-formatting-toolbar',
+			template: bp.template( 'whats-new-formatting-toolbar' ),
+			events: {
+				'click #show-toolbar-button': 'toggleToolbarSelector',
+			},
+
+			render: function() {
+				this.$el.html( this.template( this.model.toJSON() ) );
+				return this;
+			},
+
+			toggleToolbarSelector: function( e ) {
+				e.preventDefault();
+				$( e.currentTarget ).toggleClass( 'active' );
+				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
+				if ( $( e.currentTarget ).hasClass( 'active' ) ) {
+					$( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-hide' ) );
+					if ( bp.Nouveau.Messages.mediumEditor.exportSelection() != null ) {
+						medium_editor_toolbar.addClass( 'medium-editor-toolbar-active' );
+					}
+				} else {
+					$( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
+					if ( bp.Nouveau.Messages.mediumEditor.exportSelection() === null ) {
+						medium_editor_toolbar.removeClass( 'medium-editor-toolbar-active' );
+					}
+				}
+
+				$( bp.Nouveau.Messages.mediumEditor.elements[0] ).focus();
+				medium_editor_toolbar.toggleClass( 'active' );
+
+				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
+				if ( gif_box.length && $.trim( gif_box.html() ) == '' ) {
+					this.$self.removeClass( 'open active' );
 				}
 			}
 
@@ -2172,6 +2188,7 @@ window.bp = window.bp || {};
 			id: 'message-form-submit-wrapper',
 			initialize: function() {
 				this.views.add( new bp.Views.MessagesToolbar( { model: this.model } ) );
+				this.views.add( new bp.Views.FormattingToolbar( { model: this.model } ) );
 				this.views.add( new bp.Views.MessageFormSubmit( { model: this.model } ) );
 			}
 		}
@@ -3182,6 +3199,7 @@ window.bp = window.bp || {};
 			id: 'message-reply-form-submit-wrapper',
 			initialize: function() {
 				this.views.add( new bp.Views.MessagesToolbar( { model: this.model } ) );
+				this.views.add( new bp.Views.FormattingToolbar( { model: this.model } ) );
 				this.views.add( new bp.Views.MessageReplyFormSubmit( { model: this.model } ) );
 			}
 		}
@@ -3577,9 +3595,9 @@ window.bp = window.bp || {};
 
 					// Membership Emoji Support.
 					if ( BP_Nouveau.media.emoji.messages === false ) {
-						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).hide();
+						$( '#whats-new-formatting-toolbar .post-media-emoji-support' ).hide();
 					} else {
-						$( '#whats-new-messages-toolbar .post-media-emoji-support' ).show();
+						$( '#whats-new-formatting-toolbar .post-media-emoji-support' ).show();
 					}
 				}
 

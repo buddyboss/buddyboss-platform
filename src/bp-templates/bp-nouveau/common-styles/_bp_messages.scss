@@ -731,6 +731,7 @@ input#send-to-input {
 		-webkit-box-pack: start;
 		-ms-flex-pack: start;
 		justify-content: flex-start;
+		flex: 1;
 	}
 
 	.medium-editor-toolbar {
@@ -791,6 +792,11 @@ input#send-to-input {
 	#whats-new-messages-toolbar {
 		padding: 5px 15px 0 0;
 		width: auto;
+	}
+
+	#whats-new-formatting-toolbar {
+		display: flex;
+		margin: 5px 5px 0 0;
 	}
 
 }

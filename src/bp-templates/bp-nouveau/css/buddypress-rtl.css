@@ -2284,7 +2284,8 @@ a.layout-grid-view {
 }
 
 #whats-new-toolbar,
-#whats-new-messages-toolbar {
+#whats-new-messages-toolbar,
+#whats-new-formatting-toolbar {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2295,7 +2296,8 @@ a.layout-grid-view {
 }
 
 #whats-new-toolbar .post-elements-buttons-item,
-#whats-new-messages-toolbar .post-elements-buttons-item {
+#whats-new-messages-toolbar .post-elements-buttons-item,
+#whats-new-formatting-toolbar .post-elements-buttons-item {
   margin-left: 10px;
   position: relative;
 }
@@ -3878,7 +3880,9 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 #whats-new-toolbar .bb-icon,
 #whats-new-toolbar [class*=" bb-icon-"],
 #whats-new-messages-toolbar .bb-icon,
-#whats-new-messages-toolbar [class*=" bb-icon-"] {
+#whats-new-messages-toolbar [class*=" bb-icon-"],
+#whats-new-formatting-toolbar .bb-icon,
+#whats-new-formatting-toolbar [class*=" bb-icon-"] {
   color: rgba(18, 43, 70, 0.5);
   transition: all linear 0.2s;
   font-size: 24px;
@@ -3888,7 +3892,8 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
 #whats-new-toolbar .emojionearea .emojionearea-button:before,
-#whats-new-messages-toolbar .emojionearea .emojionearea-button:before {
+#whats-new-messages-toolbar .emojionearea .emojionearea-button:before,
+#whats-new-formatting-toolbar .emojionearea .emojionearea-button:before {
   content: "\ee5f";
   font: normal 400 normal 24px/1 "bb-icons";
   /* stylelint-disable-line */
@@ -3905,14 +3910,17 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 #whats-new-toolbar .post-elements-buttons-item.disable,
 #whats-new-toolbar .post-elements-buttons-item.disable.active,
 #whats-new-messages-toolbar .post-elements-buttons-item.disable,
-#whats-new-messages-toolbar .post-elements-buttons-item.disable.active {
+#whats-new-messages-toolbar .post-elements-buttons-item.disable.active,
+#whats-new-formatting-toolbar .post-elements-buttons-item.disable,
+#whats-new-formatting-toolbar .post-elements-buttons-item.disable.active {
   pointer-events: none;
   opacity: 0.4;
 }
 
 .ac-reply-toolbar .post-elements-buttons-item.no-click,
 #whats-new-toolbar .post-elements-buttons-item.no-click,
-#whats-new-messages-toolbar .post-elements-buttons-item.no-click {
+#whats-new-messages-toolbar .post-elements-buttons-item.no-click,
+#whats-new-formatting-toolbar .post-elements-buttons-item.no-click {
   pointer-events: none;
 }
 
@@ -9698,6 +9706,7 @@ input#send-to-input {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+  flex: 1;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar {
@@ -9755,6 +9764,11 @@ input#send-to-input {
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
   padding: 5px 0 0 15px;
   width: auto;
+}
+
+.bp-messages-content #bp-message-content #whats-new-formatting-toolbar {
+  display: flex;
+  margin: 5px 0 0 5px;
 }
 
 .bp-messages-content .bp-message-content_foot_note {
