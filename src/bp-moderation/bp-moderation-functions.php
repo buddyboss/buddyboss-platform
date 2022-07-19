@@ -1170,8 +1170,9 @@ function bb_check_current_member_is_blocked_by_recipient( $recipient_id, $curren
 	$where_sql      .= " AND s.item_type='user'";
 	$sql['where']   = "WHERE {$where_sql} ";
 	$moderation_sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
-	$data           = $wpdb->get_row( $moderation_sql );
-	if ( ! empty( $data ) && (int) $recipient_id === (int) $data->user_id ) {
+	$data           = $wpdb->get_col( $moderation_sql );
+	$data           = ! empty( $data ) ? array_map( 'intval', $data ) : array();
+	if ( ! empty( $data ) && in_array( (int) $recipient_id, $data, true ) ) {
 		return true;
 	}
 
