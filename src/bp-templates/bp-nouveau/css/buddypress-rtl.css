@@ -10199,6 +10199,7 @@ body .bp-messages-user-threads {
   position: absolute;
   top: 0;
   right: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media screen and (min-width: 1080px) {
