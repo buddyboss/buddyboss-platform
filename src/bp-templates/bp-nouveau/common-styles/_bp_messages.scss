@@ -744,7 +744,7 @@ input#send-to-input {
 		height: 0;
 		right: 0;
 		overflow: hidden;
-		left: 25px;
+		left: 0;
 
 		&.active {
 			display: block;
@@ -1331,7 +1331,6 @@ body .bp-messages-user-threads {
 		}
 
 		.medium-editor-toolbar {
-			left: 30px;
 
 			.medium-editor-toolbar-actions {
 				padding: 0;
