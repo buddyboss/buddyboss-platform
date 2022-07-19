@@ -982,6 +982,8 @@ window.bp = window.bp || {};
 			template  : bp.template( 'bp-messages-editor' ),
 			events: {
 				'input #message_content': 'focusEditorOnChange',
+				'input #message_content': 'postValidate',
+				'change .medium-editor-toolbar-input': 'mediumLink',
 				'paste': 'handlePaste',
 			},
 
@@ -994,6 +996,27 @@ window.bp = window.bp || {};
 					},
 					0
 				);
+			},
+
+			postValidate: function() {
+				// Enable submit button if content is available
+				var $message_content = this.$el.find( '#message_content' );
+				var content = $.trim( $message_content[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+				content = content.replace( /&nbsp;/g, ' ' );
+
+				if ( $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.views.parent.model.get( 'video' ) ) && 0 !== this.views.parent.model.get('video').length ) || ( ! _.isUndefined( this.views.parent.model.get( 'document' ) ) && 0 !== this.views.parent.model.get('document').length ) || ( ! _.isUndefined( this.views.parent.model.get( 'media' ) ) && 0 !== this.views.parent.model.get('media').length ) || ( ! _.isUndefined( this.views.parent.model.get( 'gif_data' ) ) && ! _.isEmpty( this.views.parent.model.get( 'gif_data' ) ) ) ) {
+					this.$el.closest( '#bp-message-content' ).addClass( 'focus-in--content' );
+				} else {
+					this.$el.closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+				}
+			},
+
+			mediumLink: function () {
+				var value = $( '.medium-editor-toolbar-input' ).val();
+
+				if ( value !== '' ) {
+					$( '#bp-message-content' ).addClass( 'focus-in--content' );
+				}
 			},
 
 			handlePaste: function ( event ) {
@@ -1010,6 +1033,7 @@ window.bp = window.bp || {};
 
 			initialize: function() {
 				this.on( 'ready', this.activateTinyMce, this );
+				this.on( 'ready', this.listenToUploader, this );
 			},
 
 			activateTinyMce: function() {
@@ -1086,6 +1110,9 @@ window.bp = window.bp || {};
 									emojibtn_click: function () {
 										$( '#message_content' )[0].emojioneArea.hidePicker();
 										bp.Nouveau.Messages.mediumEditor.checkContentChanged();
+
+										// Enable submit button
+										$( '#bp-message-content' ).addClass( 'focus-in--content' );
 									},
 								}
 							}
@@ -1103,6 +1130,10 @@ window.bp = window.bp || {};
 				} else if ( typeof tinymce !== 'undefined' ) {
 					tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'message_content' );
 				}
+			},
+
+			listenToUploader: function() {
+				this.views.parent.model.on( 'change:video change:document change:media change:gif_data', this.postValidate, this );
 			}
 		}
 	);

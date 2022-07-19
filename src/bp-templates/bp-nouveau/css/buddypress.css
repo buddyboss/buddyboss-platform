@@ -10179,6 +10179,14 @@ body .bp-messages-user-threads {
   align-items: center;
   justify-content: center;
   padding: 0;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+#bp-message-content.focus-in--content #message-new-submit, #bp-message-content.focus-in--content
+#message-reply-new-submit {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 #message-new-submit:before,
