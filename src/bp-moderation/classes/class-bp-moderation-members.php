@@ -223,7 +223,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( ! bp_moderation_is_user_suspended( $user_id ) && bp_moderation_is_user_blocked( $user_id ) ) {
-			return esc_html__( 'Blocked Member', 'buddyboss' );
+			//return esc_html__( 'Blocked Member', 'buddyboss' );
 		}
 
 		return $value;
@@ -289,7 +289,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
-				if ( bp_moderation_is_user_blocked( $item_id ) ) {
+//				if ( bp_moderation_is_user_blocked( $item_id ) ) {
+//					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg'; //profile-avatar-buddyboss.png
+//				} else
+				if ( function_exists( 'bb_check_current_member_is_blocked_by_recipient' ) ? bb_check_current_member_is_blocked_by_recipient( $item_id, bp_loggedin_user_id() ) : '' ) {
 					$avatar_url = buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png';
 				}
 			}

@@ -657,7 +657,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			return esc_html__( 'Suspended Member', 'buddyboss' );
+			//return esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 
 		return $value;
@@ -724,9 +724,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
-				if ( bp_moderation_is_user_suspended( $item_id ) ) {
-					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
-				}
+//				if ( bp_moderation_is_user_suspended( $item_id ) ) {
+//					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
+//				}
 			}
 		}
 

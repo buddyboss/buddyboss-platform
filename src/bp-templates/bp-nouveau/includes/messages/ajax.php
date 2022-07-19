@@ -1082,6 +1082,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			);
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
+					$blocked_by_recipient = function_exists( 'bb_check_current_member_is_blocked_by_recipient' ) ? bb_check_current_member_is_blocked_by_recipient( $recipient->user_id, bp_loggedin_user_id() ) : '';
 					$threads->threads[ $i ]['recipients'][ $count ] = array(
 						'avatar'     => esc_url(
 							bp_core_fetch_avatar(
@@ -1096,7 +1097,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 							)
 						),
 						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						//'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						'user_name'  => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : bp_core_get_user_displayname( $recipient->user_id ),
 						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 						'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
 					);
