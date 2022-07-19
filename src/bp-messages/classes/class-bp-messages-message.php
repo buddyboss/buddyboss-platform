@@ -191,6 +191,16 @@ class BP_Messages_Message {
 			if ( true === $this->is_hidden ) {
 				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, $this->thread_id, $this->sender_id ) );
 			}
+
+			/**
+			 * Fires after the new thread current message item has been saved.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param BP_Messages_Message $this Current instance of the message item being saved. Passed by reference.
+			 */
+			do_action_ref_array( 'messages_message_new_thread_save', array( &$this ) );
+
 		} else {
 			// Update the unread count for all recipients.
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
