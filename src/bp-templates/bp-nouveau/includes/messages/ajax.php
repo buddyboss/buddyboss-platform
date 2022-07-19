@@ -1317,7 +1317,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		wp_send_json_error( $response );
 	}
 
-	$thread    = bp_nouveau_get_thread_messages( $thread_id, $post );
+	$thread = bp_nouveau_get_thread_messages( $thread_id, $post );
 
 	wp_send_json_success( $thread );
 }
@@ -1863,7 +1863,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'feedback' => sprintf(
 							'%1$s %2$s',
 							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
-							bp_get_add_friend_button( $recipient->user_id ),
+							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="members">' . bp_get_add_friend_button( $recipient->user_id ) . '</div>',
 						),
 						'type'     => 'notice',
 					);
@@ -1872,7 +1872,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'feedback' => sprintf(
 							'%1$s %2$s',
 							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
-							bp_get_add_friend_button( $recipient->user_id ),
+							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="members">' . bp_get_add_friend_button( $recipient->user_id ) . '</div>',
 						),
 						'type'     => 'notice',
 					);
