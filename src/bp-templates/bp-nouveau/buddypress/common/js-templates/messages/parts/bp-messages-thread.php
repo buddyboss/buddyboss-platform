@@ -84,7 +84,7 @@
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 					<span class="thread-excerpt {{ '' === data.sender_name ? 'content-unavailable' : '' }}">
 						<span class="last-message-sender">
-						<# if ( data.sender_is_you ) { #>
+						<# if ( data.sender_is_you && data.sender_name ) { #>
 							<?php _e( 'You', 'buddyboss' ); ?>:
 						<# } else { #>
 							<# if ( data.sender_name ) { #>
