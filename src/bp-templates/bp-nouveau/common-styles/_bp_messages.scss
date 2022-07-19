@@ -80,11 +80,16 @@
 		background-color: $light-text;
 		font-size: 18px;
 		line-height: 1;
-		padding: 6px;
+		padding: 3.5px;
 		border-radius: 50%;
 		position: absolute;
 		right: -5px;
 		bottom: -5px;
+
+		&.bb-icon-lock {
+			font-size: 17px;
+			padding: 4px;
+		}
 	}
 
 	// The primary list elements
