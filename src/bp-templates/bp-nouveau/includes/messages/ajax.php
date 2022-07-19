@@ -2084,7 +2084,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 							)
 						)
 					),
-					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+					'user_link'  => ! empty( $blocked_by_recipient ) ? '' : bp_core_get_userlink( $recipient->user_id, false, true ),
 //					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
 					'user_name'  => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : bp_core_get_user_displayname( $recipient->user_id ),
 					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
@@ -2309,7 +2309,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'sender_name'   => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : esc_html( bp_get_the_thread_message_sender_name() ),
 //				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
 				'is_deleted'    => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
-				'sender_link'   => bp_get_the_thread_message_sender_link(),
+				'sender_link'   =>  ! empty( $blocked_by_recipient ) ? '' :  bp_get_the_thread_message_sender_link(),
 				'sender_is_you' => $bp_get_the_thread_message_sender_id === $login_user_id,
 				'sender_avatar' => esc_url(
 					bp_core_fetch_avatar(
