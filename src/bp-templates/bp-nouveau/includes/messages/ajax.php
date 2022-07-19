@@ -1854,17 +1854,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	// Check recipients if connected or not.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-
 		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 		foreach ( $recipients as $recipient ) {
 			if ( $login_user_id !== $recipient->user_id && ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
 				if ( count( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
-						'feedback' => sprintf(
-							'%1$s %2$s',
-							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
-							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="members">' . bp_get_add_friend_button( $recipient->user_id ) . '</div>',
-						),
+						'feedback' => __( 'You must be connected to this member to send them a message.', 'buddyboss' ),
 						'type'     => 'notice',
 					);
 				} else {
@@ -1872,7 +1867,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'feedback' => sprintf(
 							'%1$s %2$s',
 							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
-							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="members">' . bp_get_add_friend_button( $recipient->user_id ) . '</div>',
+							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="friends" data-bp-used-to-component="messages">' . bp_get_add_friend_button( $recipient->user_id, false, array( 'block_self' => false, 'link_text' => __( 'Send Connection Request', 'buddyboss' ) ) ) . '</div>',
 						),
 						'type'     => 'notice',
 					);

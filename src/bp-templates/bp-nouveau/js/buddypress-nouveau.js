@@ -1854,7 +1854,7 @@ window.bp = window.bp || {};
 				nonceUrl   = target.data( 'bp-nonce' ),
 				item       = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
 				item_inner = target.closest( '.list-wrap' ),
-				object     = item.data( 'bp-item-component' ), nonce = '';
+				object     = item.data( 'bp-item-component' ), nonce = '', component = item.data( 'bp-used-to-component' );
 
 			// Simply let the event fire if we don't have needed values.
 			if ( ! action || ! item_id || ! object ) {
@@ -1986,12 +1986,15 @@ window.bp = window.bp || {};
 				button_clicked = 'secondary';
 			}
 
+			component = 'undefined' === typeof component ? object : component;
+
 			self.ajax(
 				{
 					action: object + '_' + action,
 					item_id: item_id,
 					current_page: current_page,
 					button_clicked: button_clicked,
+					component: component,
 					_wpnonce: nonce
 				},
 				object,
