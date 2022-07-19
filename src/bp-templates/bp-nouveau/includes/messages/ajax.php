@@ -1029,11 +1029,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
 				$can_message = false;
 			}
-			$blocked_by_recipient = function_exists( 'bb_check_current_member_is_blocked_by_recipient' ) ? bb_check_current_member_is_blocked_by_recipient( $recipient_id, bp_loggedin_user_id() ) : false;
+			$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $recipient_id, bp_loggedin_user_id() );
 		}
 		$sender_first_name = function_exists( 'bb_members_get_user_firstname' ) ? bb_members_get_user_firstname( $messages_template->thread->last_sender_id ) : get_the_author_meta( 'first_name', $messages_template->thread->last_sender_id );
 		if ( ! $is_group_thread && ( count( $check_recipients ) > 1 ) ) {
-			$blocked_by_recipient = function_exists( 'bb_check_current_member_is_blocked_by_recipient' ) ? bb_check_current_member_is_blocked_by_recipient( $messages_template->thread->last_sender_id, bp_loggedin_user_id() ) : false;
+			$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $messages_template->thread->last_sender_id, bp_loggedin_user_id() );
 		}
 		$threads->threads[ $i ] = array(
 			'id'                              => $bp_get_message_thread_id,
@@ -2076,7 +2076,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			if ( empty( $recipient->is_deleted ) ) {
 				$blocked_by_recipient = false;
 				if ( ! $is_group_thread ) {
-					$blocked_by_recipient = function_exists( 'bb_check_current_member_is_blocked_by_recipient' ) ? bb_check_current_member_is_blocked_by_recipient( $recipient->user_id, bp_loggedin_user_id() ) : '';
+					$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $recipient->user_id, bp_loggedin_user_id() );
 				}
 				$thread->thread['recipients']['members'][ $count ] = array(
 					'avatar'     => esc_url(
@@ -2309,7 +2309,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 			$blocked_by_recipient = false;
 			if ( ! $is_group_thread ) {
-				$blocked_by_recipient = function_exists( 'bb_check_current_member_is_blocked_by_recipient' ) ? bb_check_current_member_is_blocked_by_recipient( $bp_get_the_thread_message_sender_id, bp_loggedin_user_id() ) : '';
+				$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $bp_get_the_thread_message_sender_id, bp_loggedin_user_id() );
 			}
 			$thread->messages[ $i ] = array(
 				'id'            => $bp_get_the_thread_message_id,
