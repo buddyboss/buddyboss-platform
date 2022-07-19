@@ -52,9 +52,9 @@
 				<# } else { #>
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-	                    <# if ( true === recipient.is_user_blocked ) { #>
+			            <# if ( true === recipient.is_user_blocked ) { #>
 							<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
-	                    <# } #>
+			            <# } #>
 			            <# if ( true === recipient.is_user_suspended ) { #>
 							<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 			            <# } #>

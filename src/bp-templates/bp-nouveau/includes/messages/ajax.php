@@ -1031,7 +1031,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			}
 			$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $recipient_id, bp_loggedin_user_id() );
 		}
-		$sender_first_name = function_exists( 'bb_members_get_user_firstname' ) ? bb_members_get_user_firstname( $messages_template->thread->last_sender_id ) : get_the_author_meta( 'first_name', $messages_template->thread->last_sender_id );
+		$sender_first_name = bb_members_get_user_firstname( $messages_template->thread->last_sender_id );
 		if ( ! $is_group_thread && ( count( $check_recipients ) > 1 ) ) {
 			$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $messages_template->thread->last_sender_id, bp_loggedin_user_id() );
 		}
@@ -1087,7 +1087,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			);
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
-					$blocked_by_recipient = function_exists( 'bb_check_current_member_is_blocked_by_recipient' ) ? bb_check_current_member_is_blocked_by_recipient( $recipient->user_id, bp_loggedin_user_id() ) : false;
+					$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $recipient->user_id, bp_loggedin_user_id() );
 					$threads->threads[ $i ]['recipients'][ $count ] = array(
 						'avatar'     => esc_url(
 							bp_core_fetch_avatar(
@@ -1109,9 +1109,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					);
 
 					if ( bp_is_active( 'moderation' ) ) {
-						$threads->threads[ $i ]['recipients'][ $count ]['is_user_suspended']       = bp_moderation_is_user_suspended( $recipient->user_id );
-						$threads->threads[ $i ]['recipients'][ $count ]['is_user_blocked']         = bp_moderation_is_user_blocked( $recipient->user_id );
-						$threads->threads[ $i ]['recipients'][ $count ]['can_be_blocked']          = ( ! in_array( $recipient->user_id, $admins, true ) ) ? true : false;
+						$threads->threads[ $i ]['recipients'][ $count ]['is_user_suspended'] = bp_moderation_is_user_suspended( $recipient->user_id );
+						$threads->threads[ $i ]['recipients'][ $count ]['is_user_blocked']   = bp_moderation_is_user_blocked( $recipient->user_id );
+						$threads->threads[ $i ]['recipients'][ $count ]['can_be_blocked']    = ( ! in_array( $recipient->user_id, $admins, true ) ) ? true : false;
 					}
 
 					$count ++;
@@ -2092,7 +2092,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						)
 					),
 					'user_link'  => ! empty( $blocked_by_recipient ) ? '' : bp_core_get_userlink( $recipient->user_id, false, true ),
-//					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
 					'user_name'  => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : bp_core_get_user_displayname( $recipient->user_id ),
 					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 					'is_you'     => $login_user_id === $recipient->user_id,
@@ -2313,11 +2312,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 			$thread->messages[ $i ] = array(
 				'id'            => $bp_get_the_thread_message_id,
-//				'content'       => $content,
 				'content'       => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss-theme' ) : $content,
 				'sender_id'     => $bp_get_the_thread_message_sender_id,
 				'sender_name'   => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : esc_html( bp_get_the_thread_message_sender_name() ),
-//				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
 				'is_deleted'    => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
 				'sender_link'   =>  ! empty( $blocked_by_recipient ) ? '' :  bp_get_the_thread_message_sender_link(),
 				'sender_is_you' => $bp_get_the_thread_message_sender_id === $login_user_id,
