@@ -1030,7 +1030,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			}
 		}
 		$blocked_by_recipient = function_exists( 'bb_check_current_member_is_blocked_by_recipient' ) ? bb_check_current_member_is_blocked_by_recipient( $messages_template->thread->last_sender_id, bp_loggedin_user_id() ) : '';
-
+		$sender_first_name    = function_exists( 'bb_members_get_user_firstname' ) ? bb_members_get_user_firstname( $messages_template->thread->last_sender_id ) : get_the_author_meta( 'first_name', $messages_template->thread->last_sender_id );
 		$threads->threads[ $i ] = array(
 			'id'                              => $bp_get_message_thread_id,
 			'message_id'                      => (int) $last_message_id,
@@ -1049,7 +1049,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'excerpt'                         => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss-theme' ) : wp_strip_all_tags( bp_get_message_thread_excerpt() ),
 			'content'                         => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss-theme' ) : do_shortcode( bp_get_message_thread_content() ),
 			'unread'                          => bp_message_thread_has_unread(),
-			'sender_name'                     => ! empty( $blocked_by_recipient ) ? '' : bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
+			'sender_name'                     => ! empty( $blocked_by_recipient ) ? '' : $sender_first_name,
 			'sender_is_you'                   => $messages_template->thread->last_sender_id === bp_loggedin_user_id(),
 			'sender_link'                     => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
 			'sender_avatar'                   => esc_url(
