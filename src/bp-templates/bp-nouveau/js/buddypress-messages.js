@@ -2147,6 +2147,7 @@ window.bp = window.bp || {};
 	bp.Views.MessagesNoThreads = bp.Nouveau.Messages.View.extend(
 		{
 			tagName: 'div',
+			className: 'bb-messages-no-thread-found',
 			template  : bp.template( 'bp-messages-no-threads' ),
 			events: {
 				'click #bp-new-message'  : 'openComposeMessage'
@@ -2564,6 +2565,9 @@ window.bp = window.bp || {};
 			requestThreads: function() {
 				this.collection.reset();
 
+				$( '.bp-messages.bp-user-messages-loading' ).remove();
+				$( '.bb-messages-no-thread-found' ).remove();
+
 				this.loadingFeedback = new bp.Views.MessagesLoading();
 				this.views.add( this.loadingFeedback );
 
@@ -2572,7 +2576,7 @@ window.bp = window.bp || {};
 						data    : _.pick( this.options, 'box' ),
 						success : _.bind( this.threadsFetched, this ),
 						error   : _.bind( this.threadsFetchError, this )
-						}
+					}
 				);
 			},
 
@@ -2984,7 +2988,7 @@ window.bp = window.bp || {};
 						data: data,
 						success: _.bind( this.options.userMessage.messagesFetched, this.options.userMessage ),
 						error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
-						}
+					}
 				);
 
 			}
@@ -3372,7 +3376,7 @@ window.bp = window.bp || {};
 						data: data,
 						success : _.bind( this.messagesFetched, this ),
 						error: _.bind( this.messagesFetchError, this )
-						}
+					}
 				);
 			},
 
