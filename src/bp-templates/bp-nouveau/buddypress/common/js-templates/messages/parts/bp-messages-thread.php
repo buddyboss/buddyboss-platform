@@ -53,10 +53,10 @@
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
 	                    <# if ( true === recipient.is_user_blocked ) { #>
-							<span class="cancel"></span>
+							<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
 	                    <# } #>
 			            <# if ( true === recipient.is_user_suspended ) { #>
-							<span class="lock"></span>
+							<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 			            <# } #>
 						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
 					<# } #>

@@ -9098,35 +9098,16 @@ div.profile_completion_wrap .progress_text_wrap {
   display: none;
 }
 
-#message-threads .can-not-send-msg {
-  opacity: 0.5;
-}
-
-#message-threads .can-not-send-msg .bp-message-link .thread-content.bp-suspended-content,
-#message-threads .can-not-send-msg .bp-message-link .thread-avatar.bp-suspended-avatar {
-  opacity: 1;
-}
-
-#message-threads .can-not-send-msg.unread .thread-to:after {
-  opacity: 0.85;
-}
-
-#message-threads .can-not-send-msg .thread-to:after {
-  content: "\ee08";
-  font-size: 14px;
-  color: #122b46;
+#message-threads .thread-avatar .user-status-icon {
+  color: #fff;
+  background-color: #767676;
+  font-size: 18px;
   line-height: 1;
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  display: inline-block;
-  vertical-align: middle;
+  padding: 6px;
+  border-radius: 50%;
   position: absolute;
-  right: 36px;
-  bottom: 10px;
-}
-
-#message-threads .can-not-send-msg:hover .thread-to:after {
-  display: none;
+  right: -5px;
+  bottom: -5px;
 }
 
 #message-threads .bp-message-link {
