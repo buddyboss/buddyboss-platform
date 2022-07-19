@@ -551,7 +551,7 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 
 	$user_data = get_userdata( $user_id );
 	if ( empty( $full_name ) && empty( $user_data ) ) {
-		$full_name = __( 'Deleted User', 'buddyboss' );
+		$full_name = __( 'Unknown Member', 'buddyboss' );
 	}
 
 	/**

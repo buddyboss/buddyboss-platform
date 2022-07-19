@@ -2168,6 +2168,19 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$thread->thread['can_user_send_message_in_thread'] = $can_message;
 
+	// Check user is deleted.
+	if ( ! $is_group_thread && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
+		$recipient_id = current( array_keys( $check_recipients ) );
+		$is_deleted   = get_user_by( 'id', $recipient_id );
+
+		if ( ! $is_deleted ) {
+			$thread->feedback_error = array(
+				'feedback' => __( 'Unable to send new messages at this time.', 'buddyboss' ),
+				'type'     => 'notice',
+			);
+		}
+	}
+
 	// Check the user has ability to send message into group thread or not.
 	if (
 		true === bp_disable_group_messages() &&
