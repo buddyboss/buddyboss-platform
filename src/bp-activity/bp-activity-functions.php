@@ -5506,7 +5506,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	$group_name              = '';
 	$album_activity_id       = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
 	$album_video_activity_id = bp_activity_get_meta( $activity_id, 'bp_video_album_activity', true );
-	$link_image_index        = '';
+	$link_image_index_save   = '';
 
 	if ( ! empty( $album_activity_id ) || ! empty( $album_video_activity_id ) ) {
 		$album_id = $album_activity_id;
@@ -5531,8 +5531,8 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	$group_avatar = bp_is_active( 'groups' ) ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
 
 	$link_preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
-	if ( ! empty( $link_preview_data['link_image_index'] ) ) {
-		$link_image_index = $link_preview_data['link_image_index'];
+	if ( ! empty( $link_preview_data['link_image_index_save'] ) ) {
+		$link_image_index_save = $link_preview_data['link_image_index_save'];
 	}
 	/**
 	 * Filter here to edit the activity edit data.
@@ -5544,18 +5544,18 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	return apply_filters(
 		'bp_activity_get_edit_data',
 		array(
-			'id'               => $activity_id,
-			'can_edit_privacy' => $can_edit_privacy,
-			'album_id'         => $album_id,
-			'group_id'         => $group_id,
-			'group_name'       => $group_name,
-			'folder_id'        => $folder_id,
-			'content'          => stripslashes( $activity->content ),
-			'item_id'          => $activity->item_id,
-			'object'           => $activity->component,
-			'privacy'          => $activity->privacy,
-			'group_avatar'     => $group_avatar,
-			'link_image_index' => $link_image_index,
+			'id'                    => $activity_id,
+			'can_edit_privacy'      => $can_edit_privacy,
+			'album_id'              => $album_id,
+			'group_id'              => $group_id,
+			'group_name'            => $group_name,
+			'folder_id'             => $folder_id,
+			'content'               => stripslashes( $activity->content ),
+			'item_id'               => $activity->item_id,
+			'object'                => $activity->component,
+			'privacy'               => $activity->privacy,
+			'group_avatar'          => $group_avatar,
+			'link_image_index_save' => $link_image_index_save,
 		)
 	);
 }

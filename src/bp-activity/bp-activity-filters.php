@@ -295,7 +295,7 @@ function bp_activity_save_link_data( $activity ) {
 		}
 	}
 
-	$preview_data['link_image_index'] = ! empty( $_POST['link_image_index_confirm'] ) ? filter_var( $_POST['link_image_index_confirm'] ) : '';
+	$preview_data['link_image_index_save'] = ! empty( $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
 
 	if ( ! empty( $link_title ) ) {
 		$preview_data['title'] = $link_title;
