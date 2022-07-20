@@ -1011,6 +1011,10 @@ window.bp = window.bp || {};
 				}
 			},
 
+			DisableSubmit: function () {
+				this.$el.closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+			},
+
 			mediumLink: function () {
 				var value = $( '.medium-editor-toolbar-input' ).val();
 
@@ -1034,6 +1038,8 @@ window.bp = window.bp || {};
 			initialize: function() {
 				this.on( 'ready', this.activateTinyMce, this );
 				this.on( 'ready', this.listenToUploader, this );
+				this.listenTo(Backbone, 'triggerMediaChange', this.postValidate);
+				this.listenTo(Backbone, 'triggerMediaInProgress', this.DisableSubmit);
 			},
 
 			activateTinyMce: function() {
@@ -1130,10 +1136,6 @@ window.bp = window.bp || {};
 				} else if ( typeof tinymce !== 'undefined' ) {
 					tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'message_content' );
 				}
-			},
-
-			listenToUploader: function() {
-				this.views.parent.model.on( 'change:video change:document change:media change:gif_data', this.postValidate, this );
 			}
 		}
 	);
@@ -1223,6 +1225,7 @@ window.bp = window.bp || {};
 						circle.style.strokeDashoffset = circumference;
 						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 						circle.style.strokeDashoffset = offset;
+						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
 
@@ -1243,6 +1246,7 @@ window.bp = window.bp || {};
 							}
 							this.removeFile( file );
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1261,6 +1265,7 @@ window.bp = window.bp || {};
 							}
 							this.removeFile( file );
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1294,6 +1299,7 @@ window.bp = window.bp || {};
 								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 							}
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1398,6 +1404,7 @@ window.bp = window.bp || {};
 							response.data.privacy 	 = 'message';
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
+							Backbone.trigger( 'triggerMediaChange' );
 							return file.previewElement.classList.add( 'dz-success' );
 						} else {
 							var node, _i, _len, _ref, _results;
@@ -1425,6 +1432,7 @@ window.bp = window.bp || {};
 						circle.style.strokeDashoffset = circumference;
 						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 						circle.style.strokeDashoffset = offset;
+						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
 
@@ -1436,6 +1444,7 @@ window.bp = window.bp || {};
 						} else {
 							done();
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1454,6 +1463,7 @@ window.bp = window.bp || {};
 							}
 							this.removeFile( file );
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1487,6 +1497,7 @@ window.bp = window.bp || {};
 								tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 							}
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1584,6 +1595,7 @@ window.bp = window.bp || {};
 							}
 
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1603,6 +1615,7 @@ window.bp = window.bp || {};
 							circle.style.strokeDashoffset = circumference - 0.99 * circumference;
 							$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 						}
+						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
 
@@ -1637,6 +1650,7 @@ window.bp = window.bp || {};
 							}
 							return _results;
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1648,6 +1662,7 @@ window.bp = window.bp || {};
 						} else {
 							done();
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1664,6 +1679,7 @@ window.bp = window.bp || {};
 							$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button closeModalErrorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							this.removeFile( file );
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1697,6 +1713,7 @@ window.bp = window.bp || {};
 								tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 							}
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1760,6 +1777,7 @@ window.bp = window.bp || {};
 				if ( tool_box.find( '#messages-gif-button' ) ) {
 					tool_box.find( '#messages-gif-button' ).removeClass( 'open active' );
 				}
+				Backbone.trigger( 'triggerMediaChange' );
 			}
 		}
 	);
@@ -1846,6 +1864,7 @@ window.bp = window.bp || {};
 				this.$el.parent().removeClass( 'open' );
 				var model = this.gifDataItems.findWhere( {id: e.currentTarget.dataset.id} );
 				this.model.set( 'gif_data', model.attributes );
+				Backbone.trigger( 'triggerMediaChange' );
 
 				var tool_box = this.$el.parents( '#bp-message-content' );
 				if ( tool_box.find( '#messages-media-button' ) ) {
