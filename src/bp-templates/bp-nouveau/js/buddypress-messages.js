@@ -222,9 +222,13 @@ window.bp = window.bp || {};
 
 			if ( ! _.isUndefined( this.views.get( 'feedback' ) ) ) {
 				feedback = this.views.get( 'feedback' );
-				feedback.get( 'view' ).remove();
 				this.views.remove( { id: 'feedback', view: feedback } );
-				$( '.bp-messages-content-wrapper' ).removeClass( 'has_info' );
+
+				// Not remove 'notice' feedback.
+				if ( _.isUndefined( feedback.get( 'view' ).model.attributes.type ) || 'notice' !== feedback.get( 'view' ).model.attributes.type ) {
+					feedback.get( 'view' ).remove();
+					$( '.bp-messages-content-wrapper' ).removeClass( 'has_info' );
+				}
 			}
 		},
 
@@ -2912,7 +2916,7 @@ window.bp = window.bp || {};
 						data    : _.pick( this.model.attributes, ['box', 'search_terms', 'page'] ),
 						success : this.threadsFiltered,
 						error   : this.threadsFilterError
-						}
+					}
 				);
 			},
 
