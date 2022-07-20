@@ -1449,14 +1449,34 @@ class BP_Messages_Thread {
 		$unread_count = wp_cache_get( $user_id, 'bp_messages_unread_count' );
 
 		if ( false === $unread_count ) {
-
-			$unread_counts = self::get(
-				array(
-					'user_id'    => $user_id,
-					'per_page'   => - 1,
-					'is_deleted' => 0,
-				)
+			$args = array(
+				'user_id'    => $user_id,
+				'per_page'   => - 1,
+				'is_deleted' => 0,
 			);
+
+			if ( false === bp_disable_group_messages() ) {
+				$threads = BP_Messages_Thread::get_current_threads_for_user(
+					array(
+						'user_id'    => $user_id,
+						'limit'      => - 1,
+						'meta_query' => array(
+							'relation' => 'AND',
+							array(
+								'key'     => 'group_message_thread_id',
+								'compare' => 'EXISTS',
+							),
+						),
+						'fields'     => 'ids',
+					)
+				);
+
+				if ( ! empty( $threads['threads'] ) ) {
+					$args['exclude_threads'] = $threads['threads'];
+				}
+			}
+
+			$unread_counts = self::get($args);
 
 			$unread_count = 0;
 			if ( ! empty( $unread_counts['recipients'] ) ) {
