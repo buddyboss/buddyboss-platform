@@ -1162,6 +1162,9 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
  * @return bool
  */
 function bb_check_current_member_is_blocked_by_recipient( $recipient_id, $current_user_id ) {
+	if ( empty( $current_user_id ) ) {
+		$current_user_id = bp_loggedin_user_id();
+	}
 	static $cache = array();
 	$cache_key = 'bb_check_current_member_is_blocked_by_recipient';
 	if ( ! isset( $cache[ $cache_key ] ) ) {
@@ -1180,7 +1183,7 @@ function bb_check_current_member_is_blocked_by_recipient( $recipient_id, $curren
 		$data = $cache[ $cache_key ];
 	}
 
-	if ( ! empty( $data ) && in_array( (int) $recipient_id, $data, true ) ) {
+	if ( ! empty( $data ) && ! empty( $recipient_id ) && in_array( (int) $recipient_id, $data, true ) ) {
 		return true;
 	}
 
