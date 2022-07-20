@@ -59,9 +59,9 @@
 				<# if ( hostname.indexOf( 'www' ) > -1 ) {
 					var hostnameSplit = hostname.toString().split( 'www.' );
 					domainName = hostnameSplit && hostnameSplit[1] ? hostnameSplit[1] : ''; #>
-			    <# } else {
-					domainName = hostname;
-			    }  #>
+				<# } else {
+				    domainName = hostname;
+				}  #>
 				<p class="activity-link-preview-link-name">{{domainName}}</p>
 			<# } #>
 
