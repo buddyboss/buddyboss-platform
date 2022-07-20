@@ -1166,15 +1166,15 @@ function bb_check_current_member_is_blocked_by_recipient( $recipient_id, $curren
 	$cache_key = 'bb_check_current_member_is_blocked_by_recipient';
 	if ( ! isset( $cache[ $cache_key ] ) ) {
 		global $bp, $wpdb;
-		$sql            = array();
-		$sql['select']  = 'SELECT DISTINCT m.user_id';
-		$sql['from']    = "FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id";
-		$where_sql      = "s.item_id=" . $current_user_id;
-		$where_sql      .= " AND s.item_type='user'";
-		$sql['where']   = "WHERE {$where_sql} ";
-		$moderation_sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
-		$data           = $wpdb->get_col( $moderation_sql );
-		$data           = ! empty( $data ) ? array_map( 'intval', $data ) : array();
+		$sql                 = array();
+		$sql['select']       = 'SELECT DISTINCT m.user_id';
+		$sql['from']         = "FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id";
+		$where_sql           = "s.item_id=" . $current_user_id;
+		$where_sql           .= " AND s.item_type='user'";
+		$sql['where']        = "WHERE {$where_sql} ";
+		$moderation_sql      = "{$sql['select']} {$sql['from']} {$sql['where']}";
+		$data                = $wpdb->get_col( $moderation_sql );
+		$data                = ! empty( $data ) ? array_map( 'intval', $data ) : array();
 		$cache[ $cache_key ] = $data;
 	} else {
 		$data = $cache[ $cache_key ];
