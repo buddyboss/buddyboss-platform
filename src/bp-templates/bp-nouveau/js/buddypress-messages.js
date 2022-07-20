@@ -3352,7 +3352,8 @@ window.bp = window.bp || {};
 			},
 
 			events: {
-				'click #send_reply_button' : 'sendReply'
+				'click #send_reply_button' : 'sendReply',
+				'click .bp-messages-notice [data-bp-action]' : 'unhideConversation',
 			},
 
 			requestMessages: function() {
@@ -3641,6 +3642,41 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 				}
 				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+			},
+
+			unhideConversation: function( event ) {
+				var action   = $( event.currentTarget ).data( 'bp-action' ), options = {},
+					id		 = $( event.currentTarget ).data( 'bp-thread-id' ),
+					feedback = BP_Nouveau.messages.doingAction;
+
+				if ( ! action ) {
+					return event;
+				}
+
+				event.preventDefault();
+
+				if ( ! _.isUndefined( feedback[ action ] ) ) {
+					bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
+				}
+
+				bp.Nouveau.Messages.threads.doAction( action, id, options ).done(
+					function() {
+
+						// Remove previous feedback.
+						bp.Nouveau.Messages.removeFeedback();
+
+						// Refresh the current thread.
+						var hash = Math.round( (new Date()).getTime() / 1000 );
+						bp.Nouveau.Messages.router.navigate( 'view/' + id + '/?hash=' + hash, { trigger: true } );
+					}
+				).fail(
+					function( response ) {
+						// Remove previous feedback.
+						bp.Nouveau.Messages.removeFeedback();
+
+						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+					}
+				);
 			}
 		}
 	);
