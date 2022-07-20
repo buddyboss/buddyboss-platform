@@ -1085,6 +1085,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					)
 				)
 			);
+			add_filter( 'get_the_author_name_moderation_member', 'bb_get_the_author_name_suspend_member', 10, 3 );
+			add_filter( 'get_the_author_name_suspend_member', 'bb_get_the_author_name_suspend_member', 10, 3 );
+			add_filter( 'bp_fetch_suspend_avatar_url', 'bp_fetch_suspend_avatar_url_callback', 10, 3 );
+			add_filter( 'bp_fetch_moderation_avatar_url', 'bp_fetch_suspend_avatar_url_callback', 10, 3 );
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $recipient->user_id, bp_loggedin_user_id() );
@@ -1117,6 +1121,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$count ++;
 				}
 			}
+			remove_filter( 'get_the_author_name_moderation_member', 'bb_get_the_author_name_suspend_member', 10, 3 );
+			remove_filter( 'get_the_author_name_suspend_member', 'bb_get_the_author_name_suspend_member', 10, 3 );
+			remove_filter( 'bp_fetch_suspend_avatar_url', 'bp_fetch_suspend_avatar_url_callback', 10, 3 );
+			remove_filter( 'bp_fetch_moderation_avatar_url', 'bp_fetch_suspend_avatar_url_callback', 10, 3 );
 		}
 
 		if ( bp_is_active( 'messages', 'star' ) ) {

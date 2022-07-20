@@ -1189,3 +1189,43 @@ function bb_check_current_member_is_blocked_by_recipient( $recipient_id, $curren
 
 	return false;
 }
+
+/**
+ * Function will return original name for member on message screen
+ * when member is blocked or suspended.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $new_name New name for member if member is blocked or suspend then new name will
+ *                         be Blocked Member/Suspend Member.
+ * @param string $old_name Members display name.
+ * @param int    $user_id  Member id.
+ *
+ * @return string $old_name
+ */
+function bb_get_the_author_name_suspend_member( $new_name, $old_name, $user_id ) {
+	return $old_name;
+}
+
+/**
+ * Function will return original avatar for member on message screen
+ * when member is blocked or suspended. If current member is blocked by
+ * recipient then default avatar will display.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $new_avatar_url Suspend/blocked avatar url will display for member
+ *                               if member is blocked or suspend.
+ * @param string $old_avatar_url Default member avatar will display.
+ * @param array  $params         Array of params will contain item_id, avatar_dir.
+ *
+ * @return string $old_avatar_url Default member avatar will display.
+ */
+function bp_fetch_suspend_avatar_url_callback( $new_avatar_url, $old_avatar_url, $params ) {
+	$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
+	if ( bb_check_current_member_is_blocked_by_recipient( $item_id, bp_loggedin_user_id() ) ) {
+		$old_avatar_url = buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png';
+	}
+
+	return $old_avatar_url;
+}
