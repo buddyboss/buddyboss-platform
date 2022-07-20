@@ -2966,8 +2966,8 @@ window.bp = window.bp || {};
 							link_success: true,
 							link_title: response.title,
 							link_description: response.description,
-							link_images: urlImages, //response.images,
-							link_image_index: urlImagesIndex, //parseInt( self.options.activity.get( 'link_image_index' ) ),
+							link_images: urlImages,
+							link_image_index: urlImagesIndex,
 							link_image_index_save: self.options.activity.get( 'link_image_index_save' ),
 							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
 						}
@@ -5028,7 +5028,7 @@ window.bp = window.bp || {};
 				if ( self.model.get( 'link_success' ) ) {
 					var images = self.model.get( 'link_images' ),
 						index  = self.model.get( 'link_image_index' ),
-					indexConfirm  = self.model.get( 'link_image_index_save' );
+						indexConfirm  = self.model.get( 'link_image_index_save' );
 					if ( images && images.length ) {
 						data = _.extend(
 							data,
