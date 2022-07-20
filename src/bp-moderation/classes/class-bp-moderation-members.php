@@ -218,7 +218,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public function get_the_author_name( $value, $user_id ) {
 
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
-		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
+		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) || bp_is_user_messages() ) {
 			return $value;
 		}
 
@@ -289,9 +289,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
-				if ( bb_check_current_member_is_blocked_by_recipient( $item_id, bp_loggedin_user_id() ) && bp_is_user_messages() ) {
-					return buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png';
-				}
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
 					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 				}
