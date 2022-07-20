@@ -5531,7 +5531,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	$group_avatar = bp_is_active( 'groups' ) ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
 
 	$link_preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
-	if ( ! empty( $link_preview_data['link_image_index_save'] ) ) {
+	if ( isset( $link_preview_data['link_image_index_save'] ) ) {
 		$link_image_index_save = $link_preview_data['link_image_index_save'];
 	}
 	/**

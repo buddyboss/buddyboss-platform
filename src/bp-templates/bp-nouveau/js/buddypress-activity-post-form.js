@@ -1257,6 +1257,7 @@ window.bp = window.bp || {};
 				privacy_modal: 'general',
 				edit_activity: false,
 				group_image: '',
+				link_image_index_save: '0',
 			}
 		}
 	);
@@ -2282,7 +2283,8 @@ window.bp = window.bp || {};
 				this.model.set(
 					{
 						link_images: [],
-						link_image_index: 0
+						link_image_index: 0,
+						link_image_index_save: '0',
 					}
 				);
 			},
@@ -2305,7 +2307,7 @@ window.bp = window.bp || {};
 						link_url: '',
 						link_embed: false,
 						link_swap_image_button: 0,
-						link_image_index_save: '',
+						link_image_index_save: '0',
 					}
 				);
 				document.removeEventListener( 'activity_link_preview_open', this.open.bind( this ) );
