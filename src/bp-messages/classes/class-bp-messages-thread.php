@@ -1456,7 +1456,7 @@ class BP_Messages_Thread {
 			);
 
 			if ( false === bp_disable_group_messages() ) {
-				$threads = BP_Messages_Thread::get_current_threads_for_user(
+				$threads = self::get_current_threads_for_user(
 					array(
 						'user_id'    => $user_id,
 						'limit'      => - 1,
@@ -1476,7 +1476,7 @@ class BP_Messages_Thread {
 				}
 			}
 
-			$unread_counts = self::get($args);
+			$unread_counts = self::get( $args );
 
 			$unread_count = 0;
 			if ( ! empty( $unread_counts['recipients'] ) ) {
