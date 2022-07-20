@@ -218,7 +218,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public function get_the_author_name( $value, $user_id ) {
 		$new_value        = $value;
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
-		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) || bp_is_user_messages() ) {
+		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
 			return $new_value;
 		}
 
