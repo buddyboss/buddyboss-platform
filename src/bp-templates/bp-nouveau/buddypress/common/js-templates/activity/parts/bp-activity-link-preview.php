@@ -18,7 +18,7 @@
 	<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion"><?php esc_html_e( 'Remove Preview', 'buddyboss' ); ?></i></a>
 	<div class="activity-link-preview-container">		
 
-		<# if ( data.link_images && data.link_images.length && data.link_success && ! data.link_error ) { #>
+		<# if ( data.link_images && data.link_images.length && data.link_success && ! data.link_error && '' !== data.link_image_index ) { #>
 		<div id="activity-url-scrapper-img-holder">
 			<div class="activity-link-preview-image">
 				<div class="activity-link-preview-image-cover">
