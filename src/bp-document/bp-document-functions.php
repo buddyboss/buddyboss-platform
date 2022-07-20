@@ -1414,11 +1414,12 @@ function bp_document_upload() {
 	$attachment_size    = $file_system_direct->size( $attachment_file );
 
 	$result = array(
-		'id'   => (int) $attachment->ID,
-		'url'  => esc_url( $attachment_url ),
-		'name' => esc_attr( basename( $attachment_file ) ),
-		'type' => esc_attr( 'document' ),
-		'size' => $attachment_size,
+		'id'        => (int) $attachment->ID,
+		'url'       => esc_url( $attachment_url ),
+		'name'      => esc_attr( pathinfo( basename( get_attached_file( (int) $attachment->ID ) ), PATHINFO_FILENAME ) ),
+		'full_name' => esc_attr( basename( $attachment_file ) ),
+		'type'      => esc_attr( 'document' ),
+		'size'      => $attachment_size,
 	);
 
 	return $result;
