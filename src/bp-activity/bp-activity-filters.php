@@ -660,7 +660,7 @@ function bp_activity_link_preview( $content, $activity ) {
 	if ( ! empty( $parse_url['host'] ) ) {
 		if ( strpos( $parse_url['host'], 'www' ) !== false ) {
 			$parse_url_explode = explode( 'www.', $parse_url['host'] );
-			$domain_name       = $parse_url_explode && $parse_url_explode[1] ? $parse_url_explode[1] : '';
+			$domain_name       = ! empty( $parse_url_explode[1] ) ? $parse_url_explode[1] : '';
 		} else {
 			$domain_name = $parse_url['host'];
 		}
