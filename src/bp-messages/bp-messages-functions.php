@@ -1583,3 +1583,27 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 		);
 	}
 }
+
+/**
+ * Change friend button arguments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Button arguments.
+ *
+ * @return array Button arguments with updated.
+ */
+function bb_messaged_set_friend_button_args( $args = array() ) {
+
+	if ( isset( $args['block_self'] ) ) {
+		$args['block_self'] = false;
+	}
+
+	if ( isset( $args['id'] ) && 'not_friends' === $args['id'] ) {
+		$args['link_text'] = __( 'Send Connection Request', 'buddyboss' );
+	} else if ( isset( $args['id'] ) && 'pending' === $args['id'] ) {
+		$args['link_href'] = '';
+	}
+
+	return $args;
+}

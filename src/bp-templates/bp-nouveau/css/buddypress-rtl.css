@@ -9678,6 +9678,46 @@ div.profile_completion_wrap .progress_text_wrap {
   align-items: center;
 }
 
+.bp-messages-content .single-message-thread-header .thread-avatar {
+  margin-left: 12px;
+  position: relative;
+}
+
+.bp-messages-content .single-message-thread-header .thread-avatar > img {
+  height: 52px;
+  width: 52px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.bp-messages-content .single-message-thread-header .thread-avatar .thread-multiple-avatar {
+  height: 52px;
+  width: 52px;
+  position: relative;
+}
+
+.bp-messages-content .single-message-thread-header .thread-avatar .thread-multiple-avatar:after {
+  content: "";
+  height: 37px;
+  width: 37px;
+  background-color: #fff;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  border-radius: 50%;
+}
+
+.bp-messages-content .single-message-thread-header .thread-avatar .thread-multiple-avatar img {
+  height: 35px;
+  width: 35px;
+}
+
+.bp-messages-content .single-message-thread-header .thread-avatar .thread-multiple-avatar img + img {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  z-index: 1;
+}
+
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */

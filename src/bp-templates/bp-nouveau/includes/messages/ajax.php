@@ -380,9 +380,14 @@ function bp_nouveau_ajax_messages_send_message() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_send_reply() {
+
+	$hash    = ! empty( $_POST['hash'] ) ? wp_unslash( $_POST['hash'] ) : '';
+	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
+
 	$response = array(
 		'feedback' => __( 'There was a problem sending your reply. Please try again.', 'buddyboss' ),
 		'type'     => 'error',
+		'hash'     => $hash,
 	);
 
 	// Verify nonce.
@@ -392,11 +397,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	if ( empty( $_POST['thread_id'] ) ) {
 		$response['feedback'] = __( 'Please provide thread id.', 'buddyboss' );
+		$response['hash']     = $hash;
 
 		wp_send_json_error( $response );
 	}
-
-	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
 
 	/**
 	 * Filter to validate message content.
@@ -411,6 +415,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Please add some content to your message.', 'buddyboss' );
+		$response['hash']     = $hash;
 
 		wp_send_json_error( $response );
 	}
@@ -425,6 +430,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_media ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			$response['hash']     = $hash;
 			wp_send_json_error( $response );
 		}
 	}
@@ -433,6 +439,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_document ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			$response['hash']     = $hash;
 			wp_send_json_error( $response );
 		}
 	}
@@ -441,6 +448,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_video ) {
 			$response['feedback'] = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			$response['hash']     = $hash;
 			wp_send_json_error( $response );
 		}
 	}
@@ -449,6 +457,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$can_send_document = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_document ) {
 			$response['feedback'] = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
+			$response['hash']     = $hash;
 			wp_send_json_error( $response );
 		}
 	}
@@ -784,7 +793,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			'messages'                      => array( $reply ),
 			'thread_id'                     => $thread_id,
 			'feedback'                      => __( 'Your reply was sent successfully', 'buddyboss' ),
-			'hash'                          => ! empty( $_POST['hash'] ) ? $_POST['hash'] : '',
+			'hash'                          => $hash,
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 			'type'                          => 'success',
 		)
@@ -1304,7 +1313,13 @@ function bp_nouveau_ajax_get_thread_messages() {
 	// Mark thread active if it's in hidden mode.
 	$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, $thread_id, bp_loggedin_user_id() ) );
 
-	$post   = $_POST;
+	$post = $_POST;
+
+	$thread_id = apply_filters( 'bb_messages_validate_thread', $thread_id );
+	if ( empty( $thread_id ) ) {
+		wp_send_json_error( $response );
+	}
+
 	$thread = bp_nouveau_get_thread_messages( $thread_id, $post );
 
 	wp_send_json_success( $thread );
@@ -1339,12 +1354,18 @@ function bp_nouveau_ajax_delete_thread_messages() {
 		messages_delete_thread( $thread_id );
 	}
 
+	$inbox_unread_cnt = array(
+		'user_id'            => bp_loggedin_user_id(),
+		'inbox_unread_count' => messages_get_unread_count( bp_loggedin_user_id() ),
+	);
+
 	wp_send_json_success(
 		array(
-			'id'             => $thread_id,
-			'type'           => 'success',
-			'messages'       => 'Messages successfully deleted.',
-			'messages_count' => bp_get_message_thread_total_count( $thread_id ),
+			'id'                            => $thread_id,
+			'type'                          => 'success',
+			'messages'                      => __( 'Messages successfully deleted.', 'buddyboss' ),
+			'messages_count'                => bp_get_message_thread_total_count( $thread_id ),
+			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 		)
 	);
 
@@ -1410,6 +1431,8 @@ function bp_nouveau_ajax_delete_thread() {
 			bp_messages_message_delete_notifications( $thread_id, $message_ids );
 		}
 
+		$thread_recipients = BP_Messages_Thread::get_recipients_for_thread( (int) $thread_id );
+
 		// Delete thread messages.
 		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -1430,7 +1453,7 @@ function bp_nouveau_ajax_delete_thread() {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 */
-		do_action( 'bp_messages_message_delete_thread', $thread_id );
+		do_action( 'bp_messages_message_delete_thread', $thread_id, $thread_recipients );
 	}
 
 	wp_send_json_success(
@@ -1834,23 +1857,28 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	// Check recipients if connected or not.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-
+		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 		foreach ( $recipients as $recipient ) {
 			if ( $login_user_id !== $recipient->user_id && ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
 				if ( count( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
-						'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
-						'type'     => 'info',
+						'feedback' => __( 'You must be connected to this member to send them a message.', 'buddyboss' ),
+						'type'     => 'notice',
 					);
 				} else {
 					$thread->feedback_error = array(
-						'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ),
-						'type'     => 'info',
+						'feedback' => sprintf(
+							'%1$s %2$s',
+							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
+							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="friends" data-bp-used-to-component="messages">' . bp_get_add_friend_button( $recipient->user_id, false, array( 'block_self' => false, 'link_text' => __( 'Send Connection Request', 'buddyboss' ) ) ) . '</div>',
+						),
+						'type'     => 'notice',
 					);
 				}
 				break;
 			}
 		}
+		remove_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 	}
 
 	// Check moderation if user blocked or not for single user thread.
@@ -1859,13 +1887,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 			$thread->feedback_error = array(
-				'feedback' => __( "You can't message suspended member.", 'buddyboss' ),
-				'type'     => 'info',
+				'feedback' => __( 'Unable to send new messages at this time.', 'buddyboss' ),
+				'type'     => 'notice',
 			);
 		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
 			$thread->feedback_error = array(
-				'feedback' => __( "You can't message a blocked member.", 'buddyboss' ),
-				'type'     => 'info',
+				'feedback' => sprintf(
+					'%1$s %2$s',
+					__( "You can't send messages to this members you have blocked.", 'buddyboss' ),
+					sprintf(
+						'<div class="blocked-button blocked generic-button"><a href="' . esc_url( trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . 'blocked-members' ) . '" class="blocked-button blocked add">%s</a></div>',
+						__( 'View Blocked Members.', 'buddyboss' )
+					)
+				),
+				'type'     => 'notice',
 			);
 		}
 	}
@@ -1886,6 +1921,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	if ( ! $is_group_message_thread ) {
 		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
+
+		if ( isset( $thread->feedback_error, $thread->feedback_error['from'] ) && ! empty( $thread->feedback_error['from'] ) ) {
+			$thread->feedback_error['type'] = 'notice';
+		}
 	}
 
 	$is_deleted_group = 0;
@@ -2023,7 +2062,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 
-	$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
+	$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', __( 'Deleted', 'buddyboss' ) );
 	$participated         = BP_Messages_Message::get(
 		array(
 			'fields'          => 'ids',
@@ -2126,6 +2165,46 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	$thread->thread['can_user_send_message_in_thread'] = $can_message;
+
+	// Check user is deleted.
+	if ( ! $is_group_thread && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
+		$recipient_id = current( array_keys( $check_recipients ) );
+		$is_deleted   = get_user_by( 'id', $recipient_id );
+
+		if ( ! $is_deleted ) {
+			$thread->feedback_error = array(
+				'feedback' => __( 'Unable to send new messages at this time.', 'buddyboss' ),
+				'type'     => 'notice',
+			);
+		}
+	}
+
+	// Check the user has ability to send message into group thread or not.
+	if (
+		true === bp_disable_group_messages() &&
+		$is_group_thread &&
+		$group_id &&
+		(
+			(
+				bp_is_active( 'groups' ) &&
+				! groups_can_user_manage_messages( bp_loggedin_user_id(), $group_id )
+			) ||
+			! bp_is_active( 'groups' )
+		)
+	) {
+		$status = bp_group_get_message_status( $group_id );
+		$notice = __( 'Only group organizers can send messages to this group.', 'buddyboss' );
+		if ( 'mods' === $status ) {
+			$notice = __( 'Only group organizers and moderators can send messages to this group.', 'buddyboss' );
+		}
+
+		$thread->feedback_error = array(
+			'feedback' => $notice,
+			'type'     => 'notice',
+		);
+
+		$thread->thread['can_user_send_message_in_thread'] = false;
+	}
 
 	$thread->messages = array();
 	$i                = 0;
@@ -2662,10 +2741,16 @@ function bp_nouveau_ajax_hide_thread() {
 		}
 	}
 
+	$inbox_unread_cnt = array(
+		'user_id'            => bp_loggedin_user_id(),
+		'inbox_unread_count' => messages_get_unread_count( bp_loggedin_user_id() ),
+	);
+
 	wp_send_json_success(
 		array(
-			'type'     => 'success',
-			'messages' => 'Thread removed successfully.',
+			'type'                          => 'success',
+			'messages'                      => __( 'Thread removed successfully.', 'buddyboss' ),
+			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 		)
 	);
 }

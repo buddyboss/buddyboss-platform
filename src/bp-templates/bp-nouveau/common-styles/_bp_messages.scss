@@ -374,6 +374,47 @@
 		-ms-flex-align: center;
 		align-items: center;
 
+		.thread-avatar {
+			margin-right: 12px;
+			position: relative;
+
+			> img {
+				height: 52px;
+				width: 52px;
+				box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+			}
+
+			.thread-multiple-avatar {
+				height: 52px;
+				width: 52px;
+				position: relative;
+
+				&:after {
+					content: "";
+					height: 37px;
+					width: 37px;
+					background-color: #fff;
+					position: absolute;
+					top: 15px;
+					left: 15px;
+					border-radius: 50%;
+				}
+
+				img {
+					height: 35px;
+					width: 35px;
+
+					+ img {
+						position: absolute;
+						top: 17px;
+						left: 17px;
+						z-index: 1;
+					}
+				}
+			}
+
+		}
+
 		.message_actions .message_action__list {
 
 			li a:before {

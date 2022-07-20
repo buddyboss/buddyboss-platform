@@ -247,7 +247,12 @@ window.bp = window.bp || {};
 
 			this.views.add( { id: 'feedback', view: feedback } );
 
-			feedback.inject( '.bp-messages-feedback' );
+			if ( 'notice' === type ) {
+				feedback.inject( '.bp-messages-notice' );
+			} else {
+				feedback.inject( '.bp-messages-feedback' );
+			}
+
 			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
 		},
 
@@ -954,7 +959,7 @@ window.bp = window.bp || {};
 					{
 						type: this.options.type || 'info',
 						message: this.options.value
-						}
+					}
 				);
 			}
 		}
@@ -2150,6 +2155,7 @@ window.bp = window.bp || {};
 	bp.Views.MessagesNoThreads = bp.Nouveau.Messages.View.extend(
 		{
 			tagName: 'div',
+			className: 'bb-messages-no-thread-found',
 			template  : bp.template( 'bp-messages-no-threads' ),
 			events: {
 				'click #bp-new-message'  : 'openComposeMessage'
@@ -2543,6 +2549,8 @@ window.bp = window.bp || {};
 					new bp.Nouveau.Messages.View( { tagName: 'ul', id: 'message-threads', className: 'message-lists' } )
 				];
 
+				this.listenTo( Backbone, 'relistelements', this.updateThreadsList );
+
 				_.each(
 					Views,
 					function( view ) {
@@ -2565,6 +2573,9 @@ window.bp = window.bp || {};
 			requestThreads: function() {
 				this.collection.reset();
 
+				$( '.bp-messages.bp-user-messages-loading' ).remove();
+				$( '.bb-messages-no-thread-found' ).remove();
+
 				this.loadingFeedback = new bp.Views.MessagesLoading();
 				this.views.add( this.loadingFeedback );
 
@@ -2573,8 +2584,13 @@ window.bp = window.bp || {};
 						data    : _.pick( this.options, 'box' ),
 						success : _.bind( this.threadsFetched, this ),
 						error   : _.bind( this.threadsFetchError, this )
-						}
+					}
 				);
+			},
+
+			updateThreadsList: function() {
+				this.requestThreads();
+				bp.Nouveau.Messages.removeFeedback();
 			},
 
 			threadsFetched: function() {
@@ -2933,7 +2949,7 @@ window.bp = window.bp || {};
 					{
 						'search_terms': $( event.target ).find( 'input[type=search]' ).val() || '',
 						page: 1
-						}
+					}
 				);
 			},
 
@@ -2980,7 +2996,7 @@ window.bp = window.bp || {};
 						data: data,
 						success: _.bind( this.options.userMessage.messagesFetched, this.options.userMessage ),
 						error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
-						}
+					}
 				);
 
 			}
@@ -3159,9 +3175,14 @@ window.bp = window.bp || {};
 		{
 			tagName     : 'li',
 			template    : bp.template( 'bp-messages-single-list' ),
+			attributes  : {
+				'data-view-action' : ''
+			},
 
 			events: {
-				'click [data-bp-action]' : 'doAction'
+				'click [data-bp-action]' : 'doAction',
+				'click .remove-message' : 'removeMessage',
+				'click .retry-message' : 'retryMessage'
 			},
 
 			initialize: function() {
@@ -3172,6 +3193,7 @@ window.bp = window.bp || {};
 					this.el.className += ' ' + this.options.model.attributes.className;
 				}
 				this.model.on( 'change', this.updateMessage, this );
+				this.model.on( 'change', this.updateMessageClass, this );
 			},
 
 			updateMessage: function( model ) {
@@ -3184,6 +3206,26 @@ window.bp = window.bp || {};
 				}
 
 				this.render();
+			},
+
+			updateMessageClass: function( model ) {
+				this.$el.addClass( model.attributes.className );
+			},
+
+			removeMessage: function() {
+				bp.Nouveau.Messages.messages.remove(bp.Nouveau.Messages.messages.findWhere().collection.get(this.model.id));
+				this.$el.remove();
+			},
+
+			retryMessage: function( model ) {
+				var action = $( model.currentTarget ).data( 'action' );
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: action,
+					success: function() {
+					}
+				});
 			}
 		}
 	);
@@ -3246,7 +3288,10 @@ window.bp = window.bp || {};
 				);
 
 				this.listenTo( Backbone, 'onSentMessage', this.triggerPusherMessage );
+				this.listenTo( Backbone, 'onSentMessageError', this.triggerPusherUpdateErrorMessage );
 				this.listenTo( Backbone, 'onReplySentSuccess', this.triggerPusherUpdateMessage );
+				this.listenTo( Backbone, 'onMessageDeleteSuccess', this.triggerDeleteUpdateMessage );
+				this.listenTo( Backbone, 'onMessageAjaxFail', this.triggerAjaxFailMessage );
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
@@ -3255,7 +3300,32 @@ window.bp = window.bp || {};
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 			},
 
+			triggerPusherUpdateErrorMessage: function ( messagePusherData ) {
+				var model = this.collection.get( messagePusherData.hash );
+				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-action="'+messagePusherData.actions+'" data-hash="'+messagePusherData.hash+'" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="'+messagePusherData.hash+'"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
+				if ( model ) {
+					var content = model.attributes.content;
+					var $s = $(content).find('.message_send_sending').remove().end();
+					model.set( 'className', model.attributes.className + ' error' );
+					model.set( 'content', $s.html() + ' ' + errorHtml );
+					this.collection.sync( 'update' );
+				}
+			},
+
+			triggerDeleteUpdateMessage: function ( thread_id ) {
+				if (
+					'undefined' !== typeof bp.Nouveau.Messages.threads.get( thread_id ) &&
+					'undefined' !== typeof bp.Nouveau.Messages.threads.get( thread_id ).attributes.active &&
+					true === bp.Nouveau.Messages.threads.get( thread_id ).attributes.active ) {
+					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?refresh=1', { trigger: true } );
+					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/', { trigger: true } );
+					window.Backbone.trigger( 'relistelements' );
+				}
+
+			},
+
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
+
 				var model = this.collection.get( messagePusherData.hash );
 
 				if ( model ) {
@@ -3270,6 +3340,25 @@ window.bp = window.bp || {};
 
 					model.set( messagePusherData.message );
 					//this.collection.set( { model }, { remove: false } );
+
+					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'sending' ) ) {
+						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'sending' );
+
+					}
+
+					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
+						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
+					}
+				}
+
+			},
+
+			triggerAjaxFailMessage: function ( messagePusherData ) {
+				var model = this.collection.get( messagePusherData.hash );
+
+				if ( model ) {
+					this.collection.remove( model );
+					$( '#bp-message-thread-list li.' + messagePusherData.hash ).remove();
 				}
 			},
 
@@ -3299,7 +3388,7 @@ window.bp = window.bp || {};
 						data: data,
 						success : _.bind( this.messagesFetched, this ),
 						error: _.bind( this.messagesFetchError, this )
-						}
+					}
 				);
 			},
 
@@ -3317,10 +3406,10 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
 					// hide reply form.
 					this.$( '#send-reply' ).hide().parent().addClass( 'is_restricted' );
-					if ( ! _.isUndefined( response.thread.is_group_thread ) && response.thread.is_group_thread === 1 ) {
-						this.$( '#send-reply' ).show().parent().removeClass( 'is_restricted' );
-						$( '#send-reply' ).find( '.message-box' ).show();
-					}
+					// if ( ! _.isUndefined( response.thread.is_group_thread ) && response.thread.is_group_thread === 1 ) {
+					// 	this.$( '#send-reply' ).show().parent().removeClass( 'is_restricted' );
+					// 	$( '#send-reply' ).find( '.message-box' ).show();
+					// }
 				} else {
 					$( '#send-reply' ).find( '.message-box' ).show();
 				}

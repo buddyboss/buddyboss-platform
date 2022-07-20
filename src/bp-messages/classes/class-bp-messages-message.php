@@ -191,6 +191,16 @@ class BP_Messages_Message {
 			if ( true === $this->is_hidden ) {
 				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, $this->thread_id, $this->sender_id ) );
 			}
+
+			/**
+			 * Fires after the new thread current message item has been saved.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param BP_Messages_Message $this Current instance of the message item being saved. Passed by reference.
+			 */
+			do_action_ref_array( 'messages_message_new_thread_save', array( &$this ) );
+
 		} else {
 			// Update the unread count for all recipients.
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
@@ -443,7 +453,7 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
-		$results = BP_Messages_Thread::get_threads_for_user(
+		$results    = BP_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'     => 'ids',
 				'having_sql' => $having_sql,
@@ -770,7 +780,7 @@ class BP_Messages_Message {
 			$total_messages_sql_cached = bp_core_get_incremented_cache( $total_messages_sql, 'bp_messages' );
 
 			if ( false === $total_messages_sql_cached ) {
-				$total_messages  = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				$total_messages = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 				bp_core_set_incremented_cache( $total_messages_sql, 'bp_messages', $total_messages );
 			} else {
 				$total_messages = $total_messages_sql_cached;
