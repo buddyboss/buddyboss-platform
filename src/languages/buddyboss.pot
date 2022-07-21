@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-15 10:04:02+00:00\n"
+"POT-Creation-Date: 2022-07-21 11:06:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24998,7 +24998,7 @@ msgid "Sorry, you need to be logged in to view the block member."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:381
-msgid "Already reported this item."
+msgid "You have already reported this Member."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
