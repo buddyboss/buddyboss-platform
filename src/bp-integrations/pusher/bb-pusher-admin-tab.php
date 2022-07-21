@@ -287,4 +287,14 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		return $meta_icon;
 	}
+
+	/**
+	 * Output the form html on the setting page (not including submit button).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function form_html() {
+		settings_fields( $this->tab_name );
+		$this->bp_custom_do_settings_sections( $this->tab_name );
+	}
 }
