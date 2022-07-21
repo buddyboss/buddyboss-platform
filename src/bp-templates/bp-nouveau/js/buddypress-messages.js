@@ -3679,7 +3679,9 @@ window.bp = window.bp || {};
 				if ( response.feedback && response.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 				}
-				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				if ( 'off' === BP_Nouveau.messages.is_live_message_enabled ) {
+					$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				}
 			},
 
 			unhideConversation: function( event ) {
