@@ -1874,7 +1874,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'feedback' => sprintf(
 							'%1$s %2$s',
 							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
-							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="friends" data-bp-used-to-component="messages">' . bp_get_add_friend_button(
+							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="members" data-bp-used-to-component="messages">' . bp_get_add_friend_button(
 								$recipient->user_id,
 								false,
 								array(
