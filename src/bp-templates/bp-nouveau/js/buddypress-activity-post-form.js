@@ -895,7 +895,7 @@ window.bp = window.bp || {};
 			var self = this,
 				meta = {};
 
-			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+			if ( _.isUndefined( this.postForm ) || this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 				return;
 			}
 
@@ -1112,7 +1112,7 @@ window.bp = window.bp || {};
 
 		postDraftActivity: function( is_force_saved, is_reload_window ) {
 
-			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+			if ( _.isUndefined( this.postForm ) || this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 				return;
 			}
 
@@ -5411,13 +5411,6 @@ window.bp = window.bp || {};
 
 				// Delete the activity from the database.
 				bp.Nouveau.Activity.postForm.resetDraftActivity( true );
-
-				setTimeout(
-					function() {
-						$( '#whats-new-form #aw-whats-new-reset' ).trigger( 'click' );
-					},
-					0
-				);
 			},
 		}
 	);
