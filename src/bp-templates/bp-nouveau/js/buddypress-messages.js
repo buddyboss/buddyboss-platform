@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2 */
+/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2, bb_pusher_vars */
 /* jshint devel: true */
 /* @version 3.1.0 */
 window.wp = window.wp || {};
@@ -73,7 +73,7 @@ window.bp = window.bp || {};
 				autoProcessQueue    		 : true,
 				addRemoveLinks      		 : true,
 				uploadMultiple      		 : false,
-				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles 		 : 10,
+				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
 				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -126,8 +126,8 @@ window.bp = window.bp || {};
 				autoProcessQueue     		 : true,
 				addRemoveLinks       		 : true,
 				uploadMultiple       		 : false,
-				maxFiles             		 : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles 		 : 10,
-				maxFilesize          		 : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size 		 : 2,
+				maxFiles             		 : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+				maxFilesize          		 : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictInvalidFileType  		 : BP_Nouveau.video.dictInvalidFileType,
 				dictMaxFilesExceeded 		 : BP_Nouveau.video.video_dict_file_exceeded,
 				dictCancelUploadConfirmation : BP_Nouveau.video.dictCancelUploadConfirmation,
@@ -506,9 +506,10 @@ window.bp = window.bp || {};
 			var contentType  = $( this ).data( 'bp-content-type' );
 			var nonce        = $( this ).data( 'bp-nonce' );
 			var currentHref  = $( this ).attr( 'href' );
+
 			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 				$( document ).find( '.bp-report-form-err' ).empty();
-				var mf_content   = $( currentHref );
+				var mf_content = $( currentHref );
 				mf_content.find( '.bp-content-id' ).val( contentId );
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
@@ -794,7 +795,7 @@ window.bp = window.bp || {};
 						{
 							action : 'messages_send_reply',
 							nonce  : BP_Nouveau.messages.nonces.send,
-							hash   :  Math.round((new Date()).getTime() / 1000)
+							hash   : Math.round( (new Date()).getTime() / 1000 )
 						},
 						model || {}
 					);
@@ -1058,17 +1059,16 @@ window.bp = window.bp || {};
 						}
 					);
 
-					$( document ).on ( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function( event ) {
+					$( document ).on( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function ( event ) {
 
 						var URL = event.target.value;
 
 						if ( bp.Nouveau.isURL( URL ) ) {
-							$( event.target ).removeClass('isNotValid').addClass('isValid');
+							$( event.target ).removeClass( 'isNotValid' ).addClass( 'isValid' );
 						} else {
-							$( event.target ).removeClass('isValid').addClass('isNotValid');
+							$( event.target ).removeClass( 'isValid' ).addClass( 'isNotValid' );
 						}
-
-					});
+					} );
 
 					if ( ! _.isUndefined( BP_Nouveau.media ) &&
 						! _.isUndefined( BP_Nouveau.media.emoji ) &&
@@ -1231,7 +1231,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -3242,13 +3242,14 @@ window.bp = window.bp || {};
 
 			retryMessage: function ( model ) {
 				var action = $( model.currentTarget ).data( 'action' );
-				$.ajax( {
-					type: 'POST',
-					url: BP_Nouveau.ajaxurl,
-					data: action,
-					success: function () {
+				$.ajax(
+					{
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						data: action,
+						success: function () {}
 					}
-				} );
+				);
 			}
 		}
 	);
