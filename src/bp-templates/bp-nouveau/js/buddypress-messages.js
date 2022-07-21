@@ -3229,24 +3229,24 @@ window.bp = window.bp || {};
 				this.render();
 			},
 
-			updateMessageClass: function( model ) {
+			updateMessageClass: function ( model ) {
 				this.$el.addClass( model.attributes.className );
 			},
 
-			removeMessage: function() {
-				bp.Nouveau.Messages.messages.remove(bp.Nouveau.Messages.messages.findWhere().collection.get(this.model.id));
+			removeMessage: function () {
+				bp.Nouveau.Messages.messages.remove( bp.Nouveau.Messages.messages.findWhere().collection.get( this.model.id ) );
 				this.$el.remove();
 			},
 
-			retryMessage: function( model ) {
+			retryMessage: function ( model ) {
 				var action = $( model.currentTarget ).data( 'action' );
-				$.ajax({
+				$.ajax( {
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
 					data: action,
-					success: function() {
+					success: function () {
 					}
-				});
+				} );
 			}
 		}
 	);
@@ -3318,15 +3318,15 @@ window.bp = window.bp || {};
 			triggerPusherMessage: function ( messagePusherData ) {
 				// use sent messageData here.
 				this.collection.add( _.first( messagePusherData ) );
-				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
 			},
 
 			triggerPusherUpdateErrorMessage: function ( messagePusherData ) {
 				var model = this.collection.get( messagePusherData.hash );
-				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-action="'+messagePusherData.actions+'" data-hash="'+messagePusherData.hash+'" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="'+messagePusherData.hash+'"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
+				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-action="' + messagePusherData.actions + '" data-hash="' + messagePusherData.hash + '" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="' + messagePusherData.hash + '"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
 				if ( model ) {
 					var content = model.attributes.content;
-					var $s = $(content).find('.message_send_sending').remove().end();
+					var $s = $( content ).find( '.message_send_sending' ).remove().end();
 					model.set( 'className', model.attributes.className + ' error' );
 					model.set( 'content', $s.html() + ' ' + errorHtml );
 					this.collection.sync( 'update' );
@@ -3348,25 +3348,19 @@ window.bp = window.bp || {};
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
 
 				var model = this.collection.get( messagePusherData.hash );
-
 				if ( model ) {
-
 					if ( parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
 						messagePusherData.message.sender_is_you = true;
 					} else {
 						messagePusherData.message.sender_is_you = false;
 					}
-
 					messagePusherData.message.date = new Date( messagePusherData.message.date );
-
 					model.set( messagePusherData.message );
-					//this.collection.set( { model }, { remove: false } );
 
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'sending' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'sending' );
 
 					}
-
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
@@ -3376,7 +3370,6 @@ window.bp = window.bp || {};
 
 			triggerAjaxFailMessage: function ( messagePusherData ) {
 				var model = this.collection.get( messagePusherData.hash );
-
 				if ( model ) {
 					this.collection.remove( model );
 					$( '#bp-message-thread-list li.' + messagePusherData.hash ).remove();
