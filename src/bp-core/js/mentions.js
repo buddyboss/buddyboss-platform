@@ -245,6 +245,15 @@ window.bp = window.bp || {};
 									render_view( data );
 								}
 							);
+					},
+					beforeReposition: function(offset) {
+						// suggesstions left position when RTL
+						if( $('body.rtl').length > 0 ){
+							let $at_view = this.$el.find('.atwho-view');
+							if( $at_view.length > 0 ){
+								offset.left = this.rect().left - $at_view.width();
+							}
+						}
 					}
 				},
 

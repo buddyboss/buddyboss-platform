@@ -2276,3 +2276,54 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 		bp_send_email( $email_type, (int) $user_id, $args );
 	}
 }
+
+/**
+ * Function will get all parent ids of the topic replies.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $topic_id  Topic ID.
+ * @param string $post_type Post type.
+ *
+ * @return array Array of topic parent reply ids.
+ */
+function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
+	global $wpdb;
+
+	// Bail if nothing passed.
+	if ( empty( $topic_id ) ) {
+		return false;
+	}
+	$cache_id   = 'bb_parent_all_' . $topic_id . '_type_' . $post_type . '_parent_ids';
+	$parent_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
+
+	// If nothing is found, build the object.
+	if ( false === $parent_ids ) {
+		$post_status = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
+		// WP_Query arguments.
+		$args               = array(
+			'fields'         => 'ids',
+			'post_parent'    => $topic_id,
+			'posts_per_page' => - 1,
+			'post_type'      => $post_type,
+			'post_status'    => $post_status,
+			'meta_query'     => array(
+				array(
+					'key'     => '_bbp_reply_to',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		);
+
+		$get_replies_parent = new WP_Query( $args );
+
+		if ( ! is_wp_error( $get_replies_parent ) && $get_replies_parent->have_posts() ) {
+			$parent_ids = $get_replies_parent->posts;
+			// Cache the whole WP_Query object in the cache.
+			wp_cache_set( $cache_id, $parent_ids, 'bbpress_posts' );
+		}
+	}
+
+	// Filter and return.
+	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
+}
