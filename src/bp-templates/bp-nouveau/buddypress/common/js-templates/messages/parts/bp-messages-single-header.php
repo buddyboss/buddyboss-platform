@@ -93,24 +93,40 @@
 							<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
 						</div>
 						<ul>
-							<li class="unread"><a data-bp-action="unread" href="#">
-							<?php
-							esc_html_e(
-								'Mark unread',
-								'buddyboss'
-							);
-							?>
-											</a></li>
-							<li class="hide_thread">
-								<a data-bp-action="hide_thread" href="#">
-								<?php
-								esc_html_e(
-									'Hide conversation',
-									'buddyboss'
-								);
-								?>
-											</a>
+							<li class="unread">
+								<a data-bp-action="unread" href="#">
+									<?php
+									esc_html_e(
+										'Mark unread',
+										'buddyboss'
+									);
+									?>
+								</a>
 							</li>
+							<# console.log( data.is_thread_archived ); #>
+							<# if ( data.is_thread_archived ) { #>
+								<li class="unhide_thread">
+									<a data-bp-action="unhide_thread" href="#">
+										<?php
+										esc_html_e(
+											'Unarchive Conversation',
+											'buddyboss'
+										);
+										?>
+									</a>
+								</li>
+							<# } else { #>
+								<li class="hide_thread">
+									<a data-bp-action="hide_thread" href="#">
+										<?php
+										esc_html_e(
+											'Hide conversation',
+											'buddyboss'
+										);
+										?>
+									</a>
+								</li>
+							<# } #>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
 								<# if ( data.recipients.count > 1 ) { #>
 									<li class="report_thread">
@@ -152,24 +168,39 @@
 							<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
 						</div>
 						<ul>
-							<li class="unread"><a data-bp-action="unread" href="#">
-							<?php
-							esc_html_e(
-								'Mark unread',
-								'buddyboss'
-							);
-							?>
-											</a></li>
-							<li class="hide_thread">
-								<a data-bp-action="hide_thread" href="#">
-								<?php
-								esc_html_e(
-									'Hide conversation',
-									'buddyboss'
-								);
-								?>
-											</a>
+							<li class="unread">
+								<a data-bp-action="unread" href="#">
+									<?php
+									esc_html_e(
+										'Mark unread',
+										'buddyboss'
+									);
+									?>
+								</a>
 							</li>
+							<# if ( data.is_thread_archived ) { #>
+								<li class="unhide_thread">
+									<a data-bp-action="unhide_thread" href="#">
+										<?php
+										esc_html_e(
+											'Unarchive Conversation',
+											'buddyboss'
+										);
+										?>
+									</a>
+								</li>
+							<# } else { #>
+								<li class="hide_thread">
+									<a data-bp-action="hide_thread" href="#">
+										<?php
+										esc_html_e(
+											'Hide conversation',
+											'buddyboss'
+										);
+										?>
+									</a>
+								</li>
+							<# } #>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
 								<# if ( data.recipients.count > 1 ) { #>
 								<li class="report_thread">

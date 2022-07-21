@@ -2753,8 +2753,8 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.threads.doAction( action, id, options ).done(
 					function() {
 
-							// Remove previous feedback.
-							bp.Nouveau.Messages.removeFeedback();
+						// Remove previous feedback.
+						bp.Nouveau.Messages.removeFeedback();
 
 						if ( 'hide_thread' === action ) {
 							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( id ) );
@@ -2764,10 +2764,10 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function( response ) {
-							// Remove previous feedback.
-							bp.Nouveau.Messages.removeFeedback();
+						// Remove previous feedback.
+						bp.Nouveau.Messages.removeFeedback();
 
-							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 					}
 				);
 			},
@@ -3103,10 +3103,10 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.threads.doAction( action, this.model.get( 'id' ), options ).done(
 					function( response ) {
 
-							// Remove previous feedback.
-							bp.Nouveau.Messages.removeFeedback();
+						// Remove previous feedback.
+						bp.Nouveau.Messages.removeFeedback();
 
-							// Remove all views.
+						// Remove all views.
 						if ( 'delete_thread' === action || 'hide_thread' === action ) {
 							if ( bp.Nouveau.Messages.threads.length > 1 ) {
 								// bp.Nouveau.Messages.clearViews();
@@ -3117,6 +3117,12 @@ window.bp = window.bp || {};
 								BP_Nouveau.messages.hasThreads = false;
 								bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
 							}
+						} else if ( 'unhide_thread' === action ) {
+							// Remove previous feedback.
+							bp.Nouveau.Messages.removeFeedback();
+							// Refresh the current thread.
+							var hash = Math.round( (new Date()).getTime() / 1000 );
+							bp.Nouveau.Messages.router.navigate( 'view/' + self.model.get( 'id' ) + '/?hash=' + hash, { trigger: true } );
 						} else if ( response.id ) {
 							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 							if ( undefined !== response.messages_count && 0 === response.messages_count ) {
@@ -3151,9 +3157,7 @@ window.bp = window.bp || {};
 							}
 
 							bp.Nouveau.Messages.removeFeedback();
-
 						}
-
 					}
 				).fail(
 					function( response ) {

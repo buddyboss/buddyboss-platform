@@ -1092,6 +1092,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 		);
 
+		$is_thread_archived = false;
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			$count  = 1;
 			$admins = array_map(
@@ -1132,8 +1133,15 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 					$count ++;
 				}
+
+				// Check the thread is hidden or not.
+				if ( $recipient->is_hidden ) {
+					$is_thread_archived = true;
+				}
 			}
 		}
+
+		$threads->threads[ $i ]['is_thread_archived'] = $is_thread_archived;
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$star_link = bp_get_the_message_star_action_link(
@@ -1877,7 +1885,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'feedback' => sprintf(
 							'%1$s %2$s',
 							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
-							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="friends" data-bp-used-to-component="messages">' . bp_get_add_friend_button(
+							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="members" data-bp-used-to-component="messages">' . bp_get_add_friend_button(
 								$recipient->user_id,
 								false,
 								array(
@@ -2130,6 +2138,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'message_from'              => $message_from,
 		'is_participated'           => empty( $is_participated ) ? 0 : 1,
 		'avatars'                   => bp_messages_get_avatars( $bp_get_the_thread_id, bp_loggedin_user_id() ),
+		'is_thread_archived'        => $is_thread_archived,
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
@@ -2714,6 +2723,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->user_can_upload_video           = bb_user_has_access_upload_video( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_gif             = bb_user_has_access_upload_gif( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_emoji           = bb_user_has_access_upload_emoji( 0, $login_user_id, 0, $thread_id, 'message' );
+	$thread->is_thread_archived              = ( 0 < $is_thread_archived ) ? true : false;
 
 	return $thread;
 }
@@ -2736,6 +2746,36 @@ function bp_nouveau_ajax_hide_thread() {
 	}
 
 	$thread_ids = wp_parse_id_list( $_POST['id'] );
+
+	$is_group_message_thread = bb_messages_is_group_thread( (int) current( $thread_ids ) );
+	if ( $is_group_message_thread ) {
+		$thread_id     = current( $thread_ids );
+		$first_message = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$group_name    = bp_get_group_name( groups_get_group( $group_id ) );
+		if ( empty( $group_name ) ) {
+			$group_name = __( 'Deleted Group', 'buddyboss' );
+		}
+
+		$toast_message = sprintf(
+			__( 'Messages for "%s" have been archived.', 'buddyboss' ),
+			$group_name
+		);
+
+	} else {
+		$thread_recipients = BP_Messages_Thread::get_recipients_for_thread( (int) current( $thread_ids ) );
+		$recipients = array();
+		if ( ! empty( $thread_recipients ) ) {
+			foreach ( $thread_recipients as $recepient ) {
+				$recipients[] = bp_core_get_user_displayname( $recepient->user_id );
+			}
+		}
+
+		$toast_message = sprintf(
+			__( 'The conversation with %s has been archived.', 'buddyboss' ),
+			implode( ', ', $recipients )
+		);
+	}
 
 	foreach ( $thread_ids as $thread_id ) {
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
@@ -2786,7 +2826,7 @@ function bp_nouveau_ajax_hide_thread() {
 			'type'                          => 'success',
 			'messages'                      => __( 'Thread removed successfully.', 'buddyboss' ),
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
-			'thread_ids'                    => $thread_ids,
+			'toast_message'                 => $toast_message,
 		)
 	);
 }
