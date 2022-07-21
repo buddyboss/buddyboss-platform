@@ -3658,7 +3658,7 @@ window.bp = window.bp || {};
 				/* - RESET FORM - */
 			},
 
-			replySent: function() {
+			replySent: function( response ) {
 
 				if ( 'off' === BP_Nouveau.messages.is_live_message_enabled ) {
 					var reply = this.collection.parse( response );
