@@ -263,7 +263,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public function manage_hidden_document( $document_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $document_id,
@@ -307,7 +307,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public function manage_unhidden_document( $document_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $document_id,

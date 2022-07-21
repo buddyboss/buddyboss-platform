@@ -157,6 +157,7 @@ window.bp = window.bp || {};
 				dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
 				dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 				// previewTemplate : document.getElementsByClassName( 'activity-post-media-template' )[0].innerHTML.
+				maxThumbnailFilesize: ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
 			};
 
 			// if defined, add custom dropzone options.
@@ -894,7 +895,7 @@ window.bp = window.bp || {};
 			var self = this,
 				meta = {};
 
-			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+			if ( _.isUndefined( this.postForm ) || this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 				return;
 			}
 
@@ -1111,7 +1112,7 @@ window.bp = window.bp || {};
 
 		postDraftActivity: function( is_force_saved, is_reload_window ) {
 
-			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+			if ( _.isUndefined( this.postForm ) || this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 				return;
 			}
 
@@ -1505,6 +1506,7 @@ window.bp = window.bp || {};
 					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 					previewTemplate : document.getElementsByClassName( 'activity-post-default-template' )[0].innerHTML,
 					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
+					maxThumbnailFilesize: ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-media-uploader', this.dropzone_options );
@@ -1613,6 +1615,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) + '</div>' ) );
@@ -1853,6 +1857,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_file_type + '. ' + ( response ? response : '' ) + '<div>' ) );
@@ -2107,6 +2113,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.video.invalid_video_type + '. ' + ( response ? response : '' ) + '<div>' ) );
@@ -4566,9 +4574,17 @@ window.bp = window.bp || {};
 			},
 
 			displayFull: function ( event ) {
+
+				// Remove post update notice before opening a modal
+				if ( 6 !== this.views._views[ '' ].length && $( this.views._views[ '' ][6].$el ).hasClass('updated') ) {
+					this.cleanFeedback();
+					$( '#whats-new-form' ).removeClass( 'bottom-notice' );
+				}
+
 				if ( 6 !== this.views._views[ '' ].length ) {
 					return;
 				}
+
 				if ( 'focusin' === event.type ) {
 					$( '#whats-new-form' ).closest( 'body' ).removeClass( 'initial-post-form-open' ).addClass( event.type + '-post-form-open' );
 				}
@@ -5080,6 +5096,7 @@ window.bp = window.bp || {};
 
 						// Display a successful feedback if the acticity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
+
 							self.views.add(
 								new bp.Views.activityFeedback(
 									{
@@ -5088,6 +5105,7 @@ window.bp = window.bp || {};
 									}
 								)
 							);
+							$( '#whats-new-form' ).addClass( 'bottom-notice' );
 
 							// Edit activity.
 						} else if ( edit ) {
@@ -5401,13 +5419,6 @@ window.bp = window.bp || {};
 
 				// Delete the activity from the database.
 				bp.Nouveau.Activity.postForm.resetDraftActivity( true );
-
-				setTimeout(
-					function() {
-						$( '#whats-new-form #aw-whats-new-reset' ).trigger( 'click' );
-					},
-					0
-				);
 			},
 		}
 	);

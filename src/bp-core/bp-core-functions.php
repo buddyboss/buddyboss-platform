@@ -219,7 +219,7 @@ function bp_core_number_format( $number = 0, $decimals = false ) {
  *           'arg3' => array(),
  *           'arg4' => false,
  *       );
- *       $r = wp_parse_args( $args, $defaults ); // ...
+ *       $r = bp_parse_args( $args, $defaults ); // ...
  *
  * The first argument, $old_args_keys, is an array that matches the parameter positions (keys) to
  * the new $args keys (values):
@@ -2822,10 +2822,6 @@ function bp_nav_menu_get_loggedin_pages() {
 		// Remove <span>number</span>.
 		$item_name = _bp_strip_spans_from_title( $bp_item['name'] );
 
-		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
-			$bp_item['link'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $bp_item['link'] );
-		}
-
 		$page_args[ $bp_item['slug'] ] = (object) array(
 			'ID'             => $nav_counter,
 			'post_title'     => $item_name,
@@ -2957,10 +2953,6 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
 					$key = 'group-invites-settings';
-				}
-
-				if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
-					$s_nav['link'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $s_nav['link'] );
 				}
 
 				$link                  = $s_nav['link'];
@@ -6651,7 +6643,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		return false;
 	}
 
-	$notifications     = wp_parse_args( $all_notifications, $default_by_admin );
+	$notifications     = bp_parse_args( $all_notifications, $default_by_admin );
 	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
 	$enable_type_key   = in_array( $type, array( 'web', 'app' ), true ) ? 'enable_notification_' . $type : 'enable_notification';
 
