@@ -2584,22 +2584,22 @@ window.bp = window.bp || {};
 				);
 			},
 
-			updateThreadsList: function( response ) {
+			updateThreadsList: function ( response ) {
 				var updatedThread = '';
 				if ( 'undefined' !== typeof response && 'undefined' !== typeof response.thread_id ) {
 					this.collection.models.forEach(
-						function ( thread, i ) {
+						function ( thread ) {
 							var thread_id = parseInt( thread.id );
 							if ( thread_id === parseInt( response.thread_id ) ) {
 
 								if ( $( document.body ).find( '#message-threads li.' + thread_id ).hasClass( 'current' ) ) {
-									thread.set( { unread: false });
+									thread.set( { unread: false } );
 								} else {
-									thread.set( { unread: true });
+									thread.set( { unread: true } );
 								}
 
-								thread.set( { excerpt: response.message.excerpt });
-								thread.set( { sender_name: response.message.sender_name });
+								thread.set( { excerpt: response.message.excerpt } );
+								thread.set( { sender_name: response.message.sender_name } );
 								updatedThread = thread;
 								bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
 								return;
@@ -2607,12 +2607,14 @@ window.bp = window.bp || {};
 						}
 					);
 				}
+
 				if ( '' !== updatedThread ) {
-					var threads = bp.Nouveau.Messages.threads.parse( { threads : [ updatedThread ] } );
+					var threads = bp.Nouveau.Messages.threads.parse( { threads: [ updatedThread ] } );
 					bp.Nouveau.Messages.threads.unshift( _.first( threads ) );
 				} else {
 					this.requestThreads();
 				}
+
 				bp.Nouveau.Messages.removeFeedback();
 			},
 
@@ -3675,9 +3677,9 @@ window.bp = window.bp || {};
 				}
 			},
 
-			unhideConversation: function( event ) {
-				var action   = $( event.currentTarget ).data( 'bp-action' ), options = {},
-					id		 = $( event.currentTarget ).data( 'bp-thread-id' ),
+			unhideConversation: function ( event ) {
+				var action = $( event.currentTarget ).data( 'bp-action' ), options = {},
+					id = $( event.currentTarget ).data( 'bp-thread-id' ),
 					feedback = BP_Nouveau.messages.doingAction;
 
 				if ( ! action ) {
@@ -3691,7 +3693,7 @@ window.bp = window.bp || {};
 				}
 
 				bp.Nouveau.Messages.threads.doAction( action, id, options ).done(
-					function() {
+					function () {
 
 						// Remove previous feedback.
 						bp.Nouveau.Messages.removeFeedback();
@@ -3701,7 +3703,7 @@ window.bp = window.bp || {};
 						bp.Nouveau.Messages.router.navigate( 'view/' + id + '/?hash=' + hash, { trigger: true } );
 					}
 				).fail(
-					function( response ) {
+					function ( response ) {
 						// Remove previous feedback.
 						bp.Nouveau.Messages.removeFeedback();
 
