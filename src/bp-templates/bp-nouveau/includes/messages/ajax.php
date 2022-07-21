@@ -1089,6 +1089,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 		);
 
+		$is_thread_archived = false;
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			$count  = 1;
 			$admins = array_map(
@@ -1129,8 +1130,15 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 					$count ++;
 				}
+
+				// Check the thread is hidden or not.
+				if ( $recipient->is_hidden ) {
+					$is_thread_archived = true;
+				}
 			}
 		}
+
+		$threads->threads[ $i ]['is_thread_archived'] = $is_thread_archived;
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$star_link = bp_get_the_message_star_action_link(
@@ -2127,6 +2135,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'message_from'              => $message_from,
 		'is_participated'           => empty( $is_participated ) ? 0 : 1,
 		'avatars'                   => bp_messages_get_avatars( $bp_get_the_thread_id, bp_loggedin_user_id() ),
+		'is_thread_archived'        => $is_thread_archived,
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
@@ -2711,6 +2720,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->user_can_upload_video           = bb_user_has_access_upload_video( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_gif             = bb_user_has_access_upload_gif( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_emoji           = bb_user_has_access_upload_emoji( 0, $login_user_id, 0, $thread_id, 'message' );
+	$thread->is_thread_archived              = ( 0 < $is_thread_archived ) ? true : false;
 
 	return $thread;
 }
