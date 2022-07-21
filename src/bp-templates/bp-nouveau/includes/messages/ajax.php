@@ -209,7 +209,8 @@ function bp_nouveau_ajax_messages_send_message() {
 
 	// Send the message.
 	if ( true === is_int( $send ) ) {
-		$response = array();
+		$response              = array();
+		$get_thread_recipients = array();
 
 		if ( bp_has_message_threads( array( 'include' => $send ) ) ) {
 
@@ -357,6 +358,8 @@ function bp_nouveau_ajax_messages_send_message() {
 				}
 
 				$response['avatars'] = bp_messages_get_avatars( bp_get_message_thread_id(), bp_loggedin_user_id() );
+
+				$get_thread_recipients = $messages_template->thread->recipients;
 			}
 		}
 
@@ -364,11 +367,14 @@ function bp_nouveau_ajax_messages_send_message() {
 			$response = array( 'id' => $send );
 		}
 
+		$inbox_unread_cnt = apply_filters( 'thread_recipient_inbox_unread_counts', array(), $get_thread_recipients );
+
 		wp_send_json_success(
 			array(
-				'feedback' => __( 'Message successfully sent.', 'buddyboss' ),
-				'type'     => 'success',
-				'thread'   => $response,
+				'feedback'                      => __( 'Message successfully sent.', 'buddyboss' ),
+				'type'                          => 'success',
+				'thread'                        => $response,
+				'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 			)
 		);
 
@@ -515,6 +521,56 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// this is needed because we're not at the beginning of the loop.
 	bp_messages_embed();
 
+	$excerpt = wp_strip_all_tags( bp_get_the_thread_message_excerpt() );
+	if ( empty( $excerpt ) ) {
+		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
+
+			if ( ! empty( $media_ids ) ) {
+				$media_ids = explode( ',', $media_ids );
+				if ( count( $media_ids ) < 2 ) {
+					$excerpt = __( 'sent a photo', 'buddyboss' );
+				} else {
+					$excerpt = __( 'sent some photos', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+			$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
+
+			if ( ! empty( $video_ids ) ) {
+				$video_ids = explode( ',', $video_ids );
+				if ( sizeof( $video_ids ) < 2 ) {
+					$excerpt = __( 'sent a video', 'buddyboss' );
+				} else {
+					$excerpt = __( 'sent some videos', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
+
+			if ( ! empty( $document_ids ) ) {
+				$document_ids = explode( ',', $document_ids );
+				if ( count( $document_ids ) < 2 ) {
+					$excerpt = __( 'sent a document', 'buddyboss' );
+				} else {
+					$excerpt = __( 'sent some documents', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
+
+			if ( ! empty( $gif_data ) ) {
+				$excerpt = __( 'sent a gif', 'buddyboss' );
+			}
+		}
+	}
+
 	// Output single message template part.
 	$reply = array(
 		'id'            => bp_get_the_thread_message_id(),
@@ -538,6 +594,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		),
 		'date'          => bp_get_the_thread_message_date_sent() * 1000,
 		'display_date'  => bp_get_the_thread_message_time_since(),
+		'excerpt'       => $excerpt,
 	);
 
 	$get_thread_recipients = $thread_template->thread->recipients;

@@ -2584,8 +2584,35 @@ window.bp = window.bp || {};
 				);
 			},
 
-			updateThreadsList: function() {
-				this.requestThreads();
+			updateThreadsList: function( response ) {
+				var updatedThread = '';
+				if ( 'undefined' !== typeof response ) {
+					this.collection.models.forEach(
+						function ( thread, i ) {
+							var thread_id = thread.id;
+							if ( thread_id == response.thread_id ) {
+
+								if ( $( document.body ).find( '#message-threads li.' + response.thread_id ).hasClass( 'current' ) ) {
+									thread.set( { unread: false });
+								} else {
+									thread.set( { unread: true });
+								}
+
+								thread.set( { excerpt: response.message.excerpt });
+								thread.set( { sender_name: response.message.sender_name });
+								updatedThread = thread;
+								bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( response.thread_id ) );
+								return;
+							}
+						}
+					);
+				}
+				if ( '' === updatedThread ) {
+					this.requestThreads();
+				} else {
+					var threads = bp.Nouveau.Messages.threads.parse( { threads : [ updatedThread ] } );
+					bp.Nouveau.Messages.threads.unshift( _.first( threads ) );
+				}
 				bp.Nouveau.Messages.removeFeedback();
 			},
 

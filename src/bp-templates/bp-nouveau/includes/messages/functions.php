@@ -23,13 +23,16 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 		return $styles;
 	}
 
-	return array_merge( $styles, array(
-		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-core/css/mentions%1$s%2$s.css',
-			'dependencies' => array( 'bp-nouveau' ),
-			'version'      => bp_get_version(),
-		),
-	) );
+	return array_merge(
+		$styles,
+		array(
+			'bp-nouveau-messages-at' => array(
+				'file'         => buddypress()->plugin_url . 'bp-core/css/mentions%1$s%2$s.css',
+				'dependencies' => array( 'bp-nouveau' ),
+				'version'      => bp_get_version(),
+			),
+		)
+	);
 }
 
 /**
@@ -46,19 +49,22 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-core/js/mentions%s.js',
-			'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
-			'version'      => bp_get_version(),
-			'footer'       => true,
-		),
-		'bp-nouveau-messages' => array(
-			'file'         => 'js/buddypress-messages%s.js',
-			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-messages-at' => array(
+				'file'         => buddypress()->plugin_url . 'bp-core/js/mentions%s.js',
+				'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
+				'version'      => bp_get_version(),
+				'footer'       => true,
+			),
+			'bp-nouveau-messages'    => array(
+				'file'         => 'js/buddypress-messages%s.js',
+				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
@@ -127,24 +133,28 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'more' => __( '%d others', 'buddyboss' ),
 		),
 		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ) ),
-		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) )
+		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) ),
+		'is_live_message_enabled'    => ( function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ? 'on' : 'off' ),
 	);
 
 	// Star private messages.
 	if ( bp_is_active( 'messages', 'star' ) ) {
-		$params['messages'] = array_merge( $params['messages'], array(
-			'strings'          => array(
-				'text_unstar'         => __( 'Unstar', 'buddyboss' ),
-				'text_star'           => __( 'Star', 'buddyboss' ),
-				'title_unstar'        => __( 'Starred', 'buddyboss' ),
-				'title_star'          => __( 'Not starred', 'buddyboss' ),
-				'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
-				'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
-			),
-			'is_single_thread' => (int) bp_is_messages_conversation(),
-			'star_counter'     => 0,
-			'unstar_counter'   => 0
-		) );
+		$params['messages'] = array_merge(
+			$params['messages'],
+			array(
+				'strings'          => array(
+					'text_unstar'         => __( 'Unstar', 'buddyboss' ),
+					'text_star'           => __( 'Star', 'buddyboss' ),
+					'title_unstar'        => __( 'Starred', 'buddyboss' ),
+					'title_star'          => __( 'Not starred', 'buddyboss' ),
+					'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
+					'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
+				),
+				'is_single_thread' => (int) bp_is_messages_conversation(),
+				'star_counter'     => 0,
+				'unstar_counter'   => 0,
+			)
+		);
 	}
 
 	return $params;
@@ -172,9 +182,13 @@ function bp_nouveau_messages_adjust_nav() {
 		if ( 'notices' === $secondary_nav_item->slug ) {
 			bp_core_remove_subnav_item( bp_get_messages_slug(), $secondary_nav_item->slug, 'members' );
 		} elseif ( 'compose' === $secondary_nav_item->slug ) {
-			$bp->members->nav->edit_nav( array(
-				'user_has_access' => bp_is_my_profile()
-			), $secondary_nav_item->slug, bp_get_messages_slug() );
+			$bp->members->nav->edit_nav(
+				array(
+					'user_has_access' => bp_is_my_profile(),
+				),
+				$secondary_nav_item->slug,
+				bp_get_messages_slug()
+			);
 		}
 	}
 }
@@ -195,9 +209,14 @@ function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
 		$nav_id = str_replace( 'my-account-messages-', '', $nav['id'] );
 
 		if ( 'notices' === $nav_id ) {
-			$admin_nav[ $nav_iterator ]['href'] = esc_url( add_query_arg( array(
-				'page' => 'bp-notices'
-			), bp_get_admin_url( 'admin.php' ) ) );
+			$admin_nav[ $nav_iterator ]['href'] = esc_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-notices',
+					),
+					bp_get_admin_url( 'admin.php' )
+				)
+			);
 		}
 	}
 
@@ -228,7 +247,7 @@ function bp_nouveau_add_notice_notification_for_user( $notifications, $user_id )
 		return $notifications;
 	}
 
-	$notice_notification                    = new stdClass;
+	$notice_notification                    = new stdClass();
 	$notice_notification->id                = 0;
 	$notice_notification->user_id           = $user_id;
 	$notice_notification->item_id           = $notice->id;
@@ -294,7 +313,7 @@ function bp_nouveau_push_sitewide_notices() {
 		$bp = buddypress();
 
 		if ( empty( $bp->template_message ) ) {
-			$message = sprintf(
+			$message                   = sprintf(
 				'<strong class="subject">%s</strong>
 				%s',
 				stripslashes( $notice->subject ),
@@ -312,7 +331,8 @@ function bp_nouveau_push_sitewide_notices() {
  * @since BuddyBoss 1.0.0
  *
  * @param array $buttons The WP Editor buttons list.
- * @param array          The filtered WP Editor buttons list.
+ *
+ * @return array          The filtered WP Editor buttons list.
  */
 function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
 	$remove_buttons = array(
@@ -326,11 +346,11 @@ function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
 		'formatselect',
 	);
 
-	// Remove unused buttons
+	// Remove unused buttons.
 	$buttons = array_diff( $buttons, $remove_buttons );
 
 	// Add the image button
-	//array_push( $buttons, 'image' );
+	// array_push( $buttons, 'image' );
 
 	return $buttons;
 }
@@ -340,7 +360,7 @@ function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $buttons The WP Editor buttons list.
+ * @param array                                              $buttons The WP Editor buttons list.
  * @param array          The filtered WP Editor buttons list.
  */
 function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
@@ -359,7 +379,7 @@ function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
 	$buttons = array_diff( $buttons, $remove_buttons );
 
 	// Add the image button
-	//array_push( $buttons, 'image' );
+	// array_push( $buttons, 'image' );
 
 	return $buttons;
 }
@@ -387,9 +407,9 @@ function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 	$now  = bp_core_current_time( true, 'timestamp' );
 	$date = strtotime( $date );
 
-	$now_date    = getdate( $now );
-	$date_date   = getdate( $date );
-	$compare     = array_diff( $date_date, $now_date );
+	$now_date  = getdate( $now );
+	$date_date = getdate( $date );
+	$compare   = array_diff( $date_date, $now_date );
 	// $date_format = 'Y/m/d';
 
 	// Use Timezone string if set.
@@ -404,7 +424,7 @@ function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 			$timezone_offset = bp_get_option( 'gmt_offset' );
 		}
 
-	// Fall back on less reliable gmt_offset
+		// Fall back on less reliable gmt_offset
 	} else {
 		$timezone_offset = bp_get_option( 'gmt_offset' );
 	}
@@ -414,10 +434,10 @@ function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 
 	// use M j for all, will revisit this later
 	// if ( empty( $compare['mday'] ) && empty( $compare['mon'] ) && empty( $compare['year'] ) ) {
-	// 	$date_format = 'H:i';
+	// $date_format = 'H:i';
 
 	// } elseif ( empty( $compare['mon'] ) || empty( $compare['year'] ) ) {
-	// 	$date_format = 'M j';
+	// $date_format = 'M j';
 	// }
 
 	if ( empty( $date_format ) ) {
