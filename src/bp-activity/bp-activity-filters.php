@@ -682,7 +682,9 @@ function bp_activity_link_preview( $content, $activity ) {
 		$content  .= '</div>';
 	} elseif ( ! empty( $preview_data['image_url'] ) ) {
 		$content .= '<div class="activity-link-preview-image">';
+		$content  .= '<div class="activity-link-preview-image-cover">';
 		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
+		$content .= '</div>';
 		$content .= '</div>';
 	}
 	$content .= '<div class="activity-link-preview-info">';
