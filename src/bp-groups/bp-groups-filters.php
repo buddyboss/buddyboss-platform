@@ -556,6 +556,10 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
+	if ( bp_is_group() ) {
+		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	}
+
 	$args = array(
 		'relation' => 'AND',
 		array(
@@ -648,6 +652,10 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	if ( empty( $group_ids ) ) {
 		$group_ids = array( 'groups' => 0 );
+	}
+
+	if ( bp_is_group() ) {
+		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
 	}
 
 	$args = array(
