@@ -1044,6 +1044,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		}
 
 		// Check moderation if user blocked or not for single user thread.
+		$blocked_by_recipient = false;
 		if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
 			$recipient_id = current( array_keys( $check_recipients ) );
 			if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
@@ -1051,8 +1052,12 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
 				$can_message = false;
 			}
+			$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $recipient_id, bp_loggedin_user_id() );
 		}
-
+		$sender_first_name = bb_members_get_user_firstname( $messages_template->thread->last_sender_id );
+		if ( ! $is_group_thread && ( count( $check_recipients ) > 1 ) ) {
+			$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $messages_template->thread->last_sender_id, bp_loggedin_user_id() );
+		}
 		$threads->threads[ $i ] = array(
 			'id'                              => $bp_get_message_thread_id,
 			'message_id'                      => (int) $last_message_id,
@@ -1068,10 +1073,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'can_user_send_message_in_thread' => $can_message,
 			'group_message_thread_type'       => $group_message_thread_type,
 			'group_message_fresh'             => $group_message_fresh,
-			'excerpt'                         => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
-			'content'                         => do_shortcode( bp_get_message_thread_content() ),
+			'excerpt'                         => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss-theme' ) : wp_strip_all_tags( bp_get_message_thread_excerpt() ),
+			'content'                         => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss-theme' ) : do_shortcode( bp_get_message_thread_content() ),
 			'unread'                          => bp_message_thread_has_unread(),
-			'sender_name'                     => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
+			'sender_name'                     => ! empty( $blocked_by_recipient ) ? '' : $sender_first_name,
 			'sender_is_you'                   => $messages_template->thread->last_sender_id === bp_loggedin_user_id(),
 			'sender_link'                     => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
 			'sender_avatar'                   => esc_url(
@@ -1104,8 +1109,13 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					)
 				)
 			);
+			add_filter( 'get_the_author_name_moderation_member', 'bb_get_the_author_name_suspend_member', 10, 3 );
+			add_filter( 'get_the_author_name_suspend_member', 'bb_get_the_author_name_suspend_member', 10, 3 );
+			add_filter( 'bp_fetch_suspend_avatar_url', 'bp_fetch_suspend_avatar_url_callback', 10, 3 );
+			add_filter( 'bp_fetch_moderation_avatar_url', 'bp_fetch_suspend_avatar_url_callback', 10, 3 );
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
+					$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $recipient->user_id, bp_loggedin_user_id() );
 					$threads->threads[ $i ]['recipients'][ $count ] = array(
 						'avatar'     => esc_url(
 							bp_core_fetch_avatar(
@@ -1120,7 +1130,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 							)
 						),
 						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						//'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						'user_name'  => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : bp_core_get_user_displayname( $recipient->user_id ),
 						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 						'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
 					);
@@ -1139,6 +1150,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$is_thread_archived = true;
 				}
 			}
+			remove_filter( 'get_the_author_name_moderation_member', 'bb_get_the_author_name_suspend_member', 10, 3 );
+			remove_filter( 'get_the_author_name_suspend_member', 'bb_get_the_author_name_suspend_member', 10, 3 );
+			remove_filter( 'bp_fetch_suspend_avatar_url', 'bp_fetch_suspend_avatar_url_callback', 10, 3 );
+			remove_filter( 'bp_fetch_moderation_avatar_url', 'bp_fetch_suspend_avatar_url_callback', 10, 3 );
 		}
 
 		$threads->threads[ $i ]['is_thread_archived'] = $is_thread_archived;
@@ -2159,6 +2174,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 
 			if ( empty( $recipient->is_deleted ) ) {
+				$blocked_by_recipient = false;
+				if ( ! $is_group_thread ) {
+					$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $recipient->user_id, bp_loggedin_user_id() );
+				}
 				$thread->thread['recipients']['members'][ $count ] = array(
 					'avatar'     => esc_url(
 						bp_core_fetch_avatar(
@@ -2172,8 +2191,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 							)
 						)
 					),
-					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+					'user_link'  => ! empty( $blocked_by_recipient ) ? '' : bp_core_get_userlink( $recipient->user_id, false, true ),
+					'user_name'  => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : bp_core_get_user_displayname( $recipient->user_id ),
 					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 					'is_you'     => $login_user_id === $recipient->user_id,
 					'id'         => $recipient->user_id,
@@ -2427,14 +2446,17 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			} else {
 				$content = do_shortcode( bp_get_the_thread_message_content() );
 			}
-
+			$blocked_by_recipient = false;
+			if ( ! $is_group_thread ) {
+				$blocked_by_recipient = bb_check_current_member_is_blocked_by_recipient( $bp_get_the_thread_message_sender_id, bp_loggedin_user_id() );
+			}
 			$thread->messages[ $i ] = array(
 				'id'            => $bp_get_the_thread_message_id,
-				'content'       => $content,
+				'content'       => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss-theme' ) : $content,
 				'sender_id'     => $bp_get_the_thread_message_sender_id,
-				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
+				'sender_name'   => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : esc_html( bp_get_the_thread_message_sender_name() ),
 				'is_deleted'    => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
-				'sender_link'   => bp_get_the_thread_message_sender_link(),
+				'sender_link'   =>  ! empty( $blocked_by_recipient ) ? '' :  bp_get_the_thread_message_sender_link(),
 				'sender_is_you' => $bp_get_the_thread_message_sender_id === $login_user_id,
 				'sender_avatar' => esc_url(
 					bp_core_fetch_avatar(

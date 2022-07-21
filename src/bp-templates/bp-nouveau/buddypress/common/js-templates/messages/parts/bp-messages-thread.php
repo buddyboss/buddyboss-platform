@@ -52,6 +52,12 @@
 				<# } else { #>
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
+			            <# if ( true === recipient.is_user_blocked ) { #>
+							<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
+			            <# } #>
+			            <# if ( true === recipient.is_user_suspended ) { #>
+							<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
+			            <# } #>
 						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
 					<# } #>
 				<# } #>
@@ -74,24 +80,28 @@
 				<# } #>
 			</div>
 
-            <div class="typing-indicator bp-hide"></div>
-			<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
+			<div class="typing-indicator bp-hide"></div>
 			<div class="thread-subject">
-				<span class="last-message-sender">
-				  <# if ( data.sender_is_you ) { #>
-					<?php esc_html_e( 'You', 'buddyboss' ); ?>:
-				  <# } else { #>
-					{{ data.sender_name }}:
-				  <# } #>
-				</span>
-				{{{data.excerpt}}}
+				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
+					<span class="thread-excerpt {{ '' === data.sender_name ? 'content-unavailable' : '' }}">
+						<span class="last-message-sender">
+						<# if ( data.sender_is_you && data.sender_name ) { #>
+							<?php _e( 'You', 'buddyboss' ); ?>:
+						<# } else { #>
+							<# if ( data.sender_name ) { #>
+								{{ data.sender_name }}:
+							<# } #>
+						<# } #>
+						</span>
+						{{{data.excerpt}}}
+					</span>
+				<# } #>
+				<div class="thread-date">
+					<time datetime="{{data.date.toISOString()}}">{{data.display_date}}</time>
+				</div>
 			</div>
-			<# } #>
 
-		</div>
-
-		<div class="thread-date">
-			<time datetime="{{data.date.toISOString()}}">{{data.display_date}}</time>
 		</div>
 	</a>
+
 </script>
