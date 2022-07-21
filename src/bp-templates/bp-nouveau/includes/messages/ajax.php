@@ -1073,8 +1073,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'can_user_send_message_in_thread' => $can_message,
 			'group_message_thread_type'       => $group_message_thread_type,
 			'group_message_fresh'             => $group_message_fresh,
-			'excerpt'                         => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss-theme' ) : wp_strip_all_tags( bp_get_message_thread_excerpt() ),
-			'content'                         => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss-theme' ) : do_shortcode( bp_get_message_thread_content() ),
+			'excerpt'                         => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss' ) : wp_strip_all_tags( bp_get_message_thread_excerpt() ),
+			'content'                         => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss' ) : do_shortcode( bp_get_message_thread_content() ),
 			'unread'                          => bp_message_thread_has_unread(),
 			'sender_name'                     => ! empty( $blocked_by_recipient ) ? '' : $sender_first_name,
 			'sender_is_you'                   => $messages_template->thread->last_sender_id === bp_loggedin_user_id(),
@@ -1131,7 +1131,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 						),
 						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
 						//'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
-						'user_name'  => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : bp_core_get_user_displayname( $recipient->user_id ),
+						'user_name'  => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss' ) : bp_core_get_user_displayname( $recipient->user_id ),
 						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 						'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
 					);
@@ -2192,7 +2192,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						)
 					),
 					'user_link'  => ! empty( $blocked_by_recipient ) ? '' : bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name'  => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : bp_core_get_user_displayname( $recipient->user_id ),
+					'user_name'  => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss' ) : bp_core_get_user_displayname( $recipient->user_id ),
 					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 					'is_you'     => $login_user_id === $recipient->user_id,
 					'id'         => $recipient->user_id,
@@ -2452,9 +2452,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 			$thread->messages[ $i ] = array(
 				'id'            => $bp_get_the_thread_message_id,
-				'content'       => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss-theme' ) : $content,
+				'content'       => ! empty( $blocked_by_recipient ) ? esc_html__( 'This message is unavailable', 'buddyboss' ) : $content,
 				'sender_id'     => $bp_get_the_thread_message_sender_id,
-				'sender_name'   => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss-theme' ) : esc_html( bp_get_the_thread_message_sender_name() ),
+				'sender_name'   => ! empty( $blocked_by_recipient ) ? esc_html__( 'Unknown Member', 'buddyboss' ) : esc_html( bp_get_the_thread_message_sender_name() ),
 				'is_deleted'    => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
 				'sender_link'   =>  ! empty( $blocked_by_recipient ) ? '' :  bp_get_the_thread_message_sender_link(),
 				'sender_is_you' => $bp_get_the_thread_message_sender_id === $login_user_id,

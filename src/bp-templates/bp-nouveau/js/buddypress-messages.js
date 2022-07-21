@@ -1005,7 +1005,7 @@ window.bp = window.bp || {};
 			template  : bp.template( 'bp-messages-editor' ),
 			events: {
 				'input #message_content': 'focusEditorOnChange',
-				'input #message_content': 'postValidate',
+				'input #message_content': 'postValidate',// jshint ignore:line
 				'change .medium-editor-toolbar-input': 'mediumLink',
 				'paste': 'handlePaste',
 			},
