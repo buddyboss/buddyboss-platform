@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-15 11:07:55+00:00\n"
+"POT-Creation-Date: 2022-07-21 11:36:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3436,7 +3436,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:3437
 #: bp-core/admin/bp-core-admin-settings.php:745
 #: bp-core/admin/bp-core-admin-settings.php:1112
-#: bp-document/bp-document-functions.php:1982
+#: bp-document/bp-document-functions.php:1983
 #: bp-groups/bp-groups-admin.php:2636 bp-video/bp-video-functions.php:2511
 msgid "Default"
 msgstr ""
@@ -4468,8 +4468,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:785
 #: bp-document/bp-document-filters.php:127
-#: bp-document/bp-document-functions.php:2163
-#: bp-document/bp-document-functions.php:2166
+#: bp-document/bp-document-functions.php:2164
+#: bp-document/bp-document-functions.php:2167
 #: bp-document/classes/class-bp-document-component.php:69
 #: bp-document/classes/class-bp-document-component.php:260
 #: bp-document/classes/class-bp-document-component.php:262
@@ -5316,7 +5316,7 @@ msgid "Registration Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
-#: bp-document/bp-document-functions.php:2027
+#: bp-document/bp-document-functions.php:2028
 #: bp-moderation/classes/class-bp-moderation-activity.php:526
 #: bp-moderation/classes/class-bp-moderation-activity.php:533
 #: bp-moderation/classes/class-bp-moderation-video.php:215
@@ -7954,7 +7954,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:279
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-document/bp-document-functions.php:1467
+#: bp-document/bp-document-functions.php:1468
 #: bp-media/bp-media-functions.php:150 bp-video/bp-video-functions.php:123
 #: bp-video/bp-video-functions.php:271
 msgid "No file was uploaded."
@@ -8118,28 +8118,28 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-document/bp-document-functions.php:1466
+#: bp-document/bp-document-functions.php:1467
 #: bp-media/bp-media-functions.php:149 bp-video/bp-video-functions.php:122
 #: bp-video/bp-video-functions.php:270
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-document/bp-document-functions.php:1469
+#: bp-document/bp-document-functions.php:1470
 #: bp-media/bp-media-functions.php:152 bp-video/bp-video-functions.php:125
 #: bp-video/bp-video-functions.php:273
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-document/bp-document-functions.php:1470
+#: bp-document/bp-document-functions.php:1471
 #: bp-media/bp-media-functions.php:153 bp-video/bp-video-functions.php:126
 #: bp-video/bp-video-functions.php:274
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-document/bp-document-functions.php:1471
+#: bp-document/bp-document-functions.php:1472
 #: bp-media/bp-media-functions.php:154 bp-video/bp-video-functions.php:127
 #: bp-video/bp-video-functions.php:275
 msgid "File upload stopped by extension."
@@ -9818,77 +9818,77 @@ msgstr ""
 msgid "Please login in order to upload file document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1465
+#: bp-document/bp-document-functions.php:1466
 #: bp-video/bp-video-functions.php:121 bp-video/bp-video-functions.php:269
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1496
+#: bp-document/bp-document-functions.php:1497
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1987
+#: bp-document/bp-document-functions.php:1988
 #: bp-video/bp-video-functions.php:2516
 msgid "Archive"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1992
+#: bp-document/bp-document-functions.php:1993
 #: bp-video/bp-video-functions.php:2521
 msgid "Audio"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1997
+#: bp-document/bp-document-functions.php:1998
 #: bp-video/bp-video-functions.php:2526
 msgid "Code"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2002
+#: bp-document/bp-document-functions.php:2003
 #: bp-video/bp-video-functions.php:2531
 msgid "Design"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2007
+#: bp-document/bp-document-functions.php:2008
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:38
 #: bp-video/bp-video-functions.php:2536
 msgid "Image"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2012
+#: bp-document/bp-document-functions.php:2013
 #: bp-video/bp-video-functions.php:2541
 msgid "Presentation"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2017
+#: bp-document/bp-document-functions.php:2018
 #: bp-video/bp-video-functions.php:2546
 msgid "Spreadsheet"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2022
+#: bp-document/bp-document-functions.php:2023
 #: bp-video/bp-video-functions.php:2551
 msgid "Text"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2170
+#: bp-document/bp-document-functions.php:2171
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2559
+#: bp-document/bp-document-functions.php:2560
 msgid "The document name is empty!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2562
+#: bp-document/bp-document-functions.php:2563
 msgid "Bad characters or invalid document name!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2565
+#: bp-document/bp-document-functions.php:2566
 msgid "A file with that name already exists in the containing folder!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2568
+#: bp-document/bp-document-functions.php:2569
 msgid "The document containing directory is not writable!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2587
+#: bp-document/bp-document-functions.php:2588
 msgid "File renaming error!"
 msgstr ""
 
@@ -25034,7 +25034,7 @@ msgid "Sorry, you need to be logged in to view the block member."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:381
-msgid "Already reported this item."
+msgid "You have already reported this Member."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
@@ -31480,32 +31480,32 @@ msgctxt "member latest update in member directory"
 msgid "- &quot;%s&quot;"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3374
+#: bp-document/bp-document-functions.php:3375
 #. translators: Memory unit for terabyte.
 msgctxt "memory unit"
 msgid "TB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3376
+#: bp-document/bp-document-functions.php:3377
 #. translators: Memory unit for gigabyte.
 msgctxt "memory unit"
 msgid "GB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3378
+#: bp-document/bp-document-functions.php:3379
 #. translators: Memory unit for megabyte.
 msgctxt "memory unit"
 msgid "MB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3380
+#: bp-document/bp-document-functions.php:3381
 #. translators: Memory unit for kilobyte.
 msgctxt "memory unit"
 msgid "KB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3382
-#: bp-document/bp-document-functions.php:3387
+#: bp-document/bp-document-functions.php:3383
+#: bp-document/bp-document-functions.php:3388
 #. translators: Memory unit for byte.
 msgctxt "memory unit"
 msgid "B"
