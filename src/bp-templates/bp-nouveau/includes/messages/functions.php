@@ -134,7 +134,6 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		),
 		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ) ),
 		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) ),
-		'is_live_message_enabled'    => ( function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ? 'on' : 'off' ),
 	);
 
 	// Star private messages.
