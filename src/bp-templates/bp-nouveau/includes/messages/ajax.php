@@ -63,6 +63,12 @@ add_action(
 				),
 			),
 			array(
+				'messages_unhide_thread' => array(
+					'function' => 'bp_nouveau_ajax_unhide_thread',
+					'nopriv'   => false,
+				),
+			),
+			array(
 				'messages_unstar' => array(
 					'function' => 'bp_nouveau_ajax_star_thread_messages',
 					'nopriv'   => false,
@@ -1310,8 +1316,9 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	$thread_id = (int) $_POST['id'];
 
+	// This is removed because if we hide the conversation and search the messages from the search then it will automatically unhide and notice will be removed.
 	// Mark thread active if it's in hidden mode.
-	$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, $thread_id, bp_loggedin_user_id() ) );
+	// $result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, $thread_id, bp_loggedin_user_id() ) );
 
 	$post = $_POST;
 
@@ -1870,7 +1877,17 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'feedback' => sprintf(
 							'%1$s %2$s',
 							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
-							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="friends" data-bp-used-to-component="messages">' . bp_get_add_friend_button( $recipient->user_id, false, array( 'block_self' => false, 'link_text' => __( 'Send Connection Request', 'buddyboss' ) ) ) . '</div>',
+							'<div class="button-wrapper" data-bp-item-id="' . $recipient->user_id . '" data-bp-item-component="friends" data-bp-used-to-component="messages">' . bp_get_add_friend_button(
+								$recipient->user_id,
+								false,
+								array(
+									'block_self' => false,
+									'link_text'  => __(
+										'Send Connection Request',
+										'buddyboss'
+									),
+								)
+							) . '</div>',
 						),
 						'type'     => 'notice',
 					);
@@ -1879,6 +1896,24 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 		}
 		remove_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
+	}
+
+	// Check the thread is hide/archived or not.
+	$is_thread_archived = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $login_user_id ) );
+
+	if ( 0 < $is_thread_archived ) {
+		$thread->feedback_error = array(
+			'feedback' => __( "You can't send messages in conversations you've archived.", 'buddyboss' ),
+			'feedback' => sprintf(
+				'%1$s %2$s',
+				__( "You can't send messages in conversations you've archived.", 'buddyboss' ),
+				sprintf(
+					'<div class="button-wrapper" data-bp-item-id="' . $thread_id . '" data-bp-item-component="messages" data-bp-used-to-component="messages"><div class="archive-button archived generic-button"><a href="#" class="archive-button archived unhide" rel="unhide" data-bp-action="unhide_thread" data-bp-thread-id="' . $thread_id . '">%s</a></div></div>',
+					__( 'Unarchive Conversation', 'buddyboss' )
+				)
+			),
+			'type'     => 'notice',
+		);
 	}
 
 	// Check moderation if user blocked or not for single user thread.
@@ -2751,6 +2786,7 @@ function bp_nouveau_ajax_hide_thread() {
 			'type'                          => 'success',
 			'messages'                      => __( 'Thread removed successfully.', 'buddyboss' ),
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
+			'thread_ids'                    => $thread_ids,
 		)
 	);
 }
@@ -2956,4 +2992,46 @@ function bb_nouveau_ajax_moderated_recipient_list() {
  */
 function bb_get_user_message_recipients() {
 	return 5;
+}
+
+/**
+ * Unhide the conversation.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_nouveau_ajax_unhide_thread() {
+	global $bp, $wpdb;
+
+	$response = array(
+		'feedback' => __( 'There was a problem un-archiving your messages. Please try again.', 'buddyboss' ),
+		'type'     => 'error',
+	);
+
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$thread_ids = wp_parse_id_list( $_POST['id'] );
+
+	foreach ( $thread_ids as $thread_id ) {
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 0, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+	}
+
+	$inbox_unread_cnt = array(
+		'user_id'            => bp_loggedin_user_id(),
+		'inbox_unread_count' => messages_get_unread_count( bp_loggedin_user_id() ),
+	);
+
+	wp_send_json_success(
+		array(
+			'type'                          => 'success',
+			'messages'                      => __( 'Thread un-archived successfully.', 'buddyboss' ),
+			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
+			'thread_ids'                    => $thread_ids,
+		)
+	);
 }
