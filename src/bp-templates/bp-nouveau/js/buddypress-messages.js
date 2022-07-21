@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2 */
+/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2, bb_pusher_vars */
 /* jshint devel: true */
 /* @version 3.1.0 */
 window.wp = window.wp || {};
@@ -73,7 +73,7 @@ window.bp = window.bp || {};
 				autoProcessQueue    		 : true,
 				addRemoveLinks      		 : true,
 				uploadMultiple      		 : false,
-				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles 		 : 10,
+				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
 				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -126,8 +126,8 @@ window.bp = window.bp || {};
 				autoProcessQueue     		 : true,
 				addRemoveLinks       		 : true,
 				uploadMultiple       		 : false,
-				maxFiles             		 : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles 		 : 10,
-				maxFilesize          		 : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size 		 : 2,
+				maxFiles             		 : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+				maxFilesize          		 : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictInvalidFileType  		 : BP_Nouveau.video.dictInvalidFileType,
 				dictMaxFilesExceeded 		 : BP_Nouveau.video.video_dict_file_exceeded,
 				dictCancelUploadConfirmation : BP_Nouveau.video.dictCancelUploadConfirmation,
@@ -506,9 +506,10 @@ window.bp = window.bp || {};
 			var contentType  = $( this ).data( 'bp-content-type' );
 			var nonce        = $( this ).data( 'bp-nonce' );
 			var currentHref  = $( this ).attr( 'href' );
+
 			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 				$( document ).find( '.bp-report-form-err' ).empty();
-				var mf_content   = $( currentHref );
+				var mf_content = $( currentHref );
 				mf_content.find( '.bp-content-id' ).val( contentId );
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
@@ -801,7 +802,7 @@ window.bp = window.bp || {};
 						{
 							action : 'messages_send_reply',
 							nonce  : BP_Nouveau.messages.nonces.send,
-							hash   :  Math.round((new Date()).getTime() / 1000)
+							hash   : Math.round( (new Date()).getTime() / 1000 )
 						},
 						model || {}
 					);
@@ -1101,17 +1102,16 @@ window.bp = window.bp || {};
 						}
 					);
 
-					$( document ).on ( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function( event ) {
+					$( document ).on( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function ( event ) {
 
 						var URL = event.target.value;
 
 						if ( bp.Nouveau.isURL( URL ) ) {
-							$( event.target ).removeClass('isNotValid').addClass('isValid');
+							$( event.target ).removeClass( 'isNotValid' ).addClass( 'isValid' );
 						} else {
-							$( event.target ).removeClass('isValid').addClass('isNotValid');
+							$( event.target ).removeClass( 'isValid' ).addClass( 'isNotValid' );
 						}
-
-					});
+					} );
 
 					if ( ! _.isUndefined( BP_Nouveau.media ) &&
 						! _.isUndefined( BP_Nouveau.media.emoji ) &&
@@ -1147,7 +1147,7 @@ window.bp = window.bp || {};
 									picker_show: function () {
 										$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
 									},
-	
+
 									picker_hide: function () {
 										$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
 									},
@@ -1287,7 +1287,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -2673,8 +2673,37 @@ window.bp = window.bp || {};
 				);
 			},
 
-			updateThreadsList: function() {
-				this.requestThreads();
+			updateThreadsList: function ( response ) {
+				var updatedThread = '';
+				if ( 'undefined' !== typeof response && 'undefined' !== typeof response.thread_id ) {
+					this.collection.models.forEach(
+						function ( thread ) {
+							var thread_id = parseInt( thread.id );
+							if ( thread_id === parseInt( response.thread_id ) ) {
+
+								if ( $( document.body ).find( '#message-threads li.' + thread_id ).hasClass( 'current' ) ) {
+									thread.set( { unread: false } );
+								} else {
+									thread.set( { unread: true } );
+								}
+
+								thread.set( { excerpt: response.message.excerpt } );
+								thread.set( { sender_name: response.message.sender_name } );
+								updatedThread = thread;
+								bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
+								return;
+							}
+						}
+					);
+				}
+
+				if ( '' !== updatedThread ) {
+					var threads = bp.Nouveau.Messages.threads.parse( { threads: [ updatedThread ] } );
+					bp.Nouveau.Messages.threads.unshift( _.first( threads ) );
+				} else {
+					this.requestThreads();
+				}
+
 				bp.Nouveau.Messages.removeFeedback();
 			},
 
@@ -3271,9 +3300,6 @@ window.bp = window.bp || {};
 		{
 			tagName     : 'li',
 			template    : bp.template( 'bp-messages-single-list' ),
-			attributes  : {
-				'data-view-action' : ''
-			},
 
 			events: {
 				'click [data-bp-action]' : 'doAction',
@@ -3304,24 +3330,25 @@ window.bp = window.bp || {};
 				this.render();
 			},
 
-			updateMessageClass: function( model ) {
+			updateMessageClass: function ( model ) {
 				this.$el.addClass( model.attributes.className );
 			},
 
-			removeMessage: function() {
-				bp.Nouveau.Messages.messages.remove(bp.Nouveau.Messages.messages.findWhere().collection.get(this.model.id));
+			removeMessage: function () {
+				bp.Nouveau.Messages.messages.remove( bp.Nouveau.Messages.messages.findWhere().collection.get( this.model.id ) );
 				this.$el.remove();
 			},
 
-			retryMessage: function( model ) {
+			retryMessage: function ( model ) {
 				var action = $( model.currentTarget ).data( 'action' );
-				$.ajax({
-					type: 'POST',
-					url: BP_Nouveau.ajaxurl,
-					data: action,
-					success: function() {
+				$.ajax(
+					{
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						data: action,
+						success: function () {}
 					}
-				});
+				);
 			}
 		}
 	);
@@ -3394,15 +3421,15 @@ window.bp = window.bp || {};
 			triggerPusherMessage: function ( messagePusherData ) {
 				// use sent messageData here.
 				this.collection.add( _.first( messagePusherData ) );
-				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
 			},
 
 			triggerPusherUpdateErrorMessage: function ( messagePusherData ) {
 				var model = this.collection.get( messagePusherData.hash );
-				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-action="'+messagePusherData.actions+'" data-hash="'+messagePusherData.hash+'" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="'+messagePusherData.hash+'"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
+				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-action="' + messagePusherData.actions + '" data-hash="' + messagePusherData.hash + '" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="' + messagePusherData.hash + '"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
 				if ( model ) {
 					var content = model.attributes.content;
-					var $s = $(content).find('.message_send_sending').remove().end();
+					var $s = $( content ).find( '.message_send_sending' ).remove().end();
 					model.set( 'className', model.attributes.className + ' error' );
 					model.set( 'content', $s.html() + ' ' + errorHtml );
 					this.collection.sync( 'update' );
@@ -3424,25 +3451,19 @@ window.bp = window.bp || {};
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
 
 				var model = this.collection.get( messagePusherData.hash );
-
 				if ( model ) {
-
 					if ( parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
 						messagePusherData.message.sender_is_you = true;
 					} else {
 						messagePusherData.message.sender_is_you = false;
 					}
-
 					messagePusherData.message.date = new Date( messagePusherData.message.date );
-
 					model.set( messagePusherData.message );
-					//this.collection.set( { model }, { remove: false } );
 
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'sending' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'sending' );
 
 					}
-
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
@@ -3452,7 +3473,6 @@ window.bp = window.bp || {};
 
 			triggerAjaxFailMessage: function ( messagePusherData ) {
 				var model = this.collection.get( messagePusherData.hash );
-
 				if ( model ) {
 					this.collection.remove( model );
 					$( '#bp-message-thread-list li.' + messagePusherData.hash ).remove();
@@ -3687,7 +3707,9 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( '#send_reply_button' ).closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
+					$( '#send_reply_button' ).prop( 'disabled', true ).addClass( 'loading' );
+				}
 
 				this.collection.sync(
 					'create',
@@ -3698,7 +3720,6 @@ window.bp = window.bp || {};
 					}
 				);
 
-				/* - RESET FORM - */
 				// Reset the form.
 				if ( typeof tinyMCE !== 'undefined' ) {
 					tinyMCE.activeEditor.setContent( '' );
@@ -3739,17 +3760,20 @@ window.bp = window.bp || {};
 				if (this.messageAttachments.onClose) {
 					this.messageAttachments.onClose();
 				}
-				/* - RESET FORM - */
 			},
 
-			replySent: function() {
-				// var reply = this.collection.parse( response );
+			replySent: function( response ) {
 
-				// this.collection.add( _.first( reply ) );
+				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
+					var reply = this.collection.parse( response );
+					this.collection.add( _.first( reply ) );
+				}
 
 				bp.Nouveau.Messages.removeFeedback();
 
-				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
+					$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				}
 
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 
@@ -3768,13 +3792,14 @@ window.bp = window.bp || {};
 				if ( response.feedback && response.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 				}
-				// $( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
-				$( '#send_reply_button' ).closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
+					$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				}
 			},
 
-			unhideConversation: function( event ) {
-				var action   = $( event.currentTarget ).data( 'bp-action' ), options = {},
-					id		 = $( event.currentTarget ).data( 'bp-thread-id' ),
+			unhideConversation: function ( event ) {
+				var action = $( event.currentTarget ).data( 'bp-action' ), options = {},
+					id = $( event.currentTarget ).data( 'bp-thread-id' ),
 					feedback = BP_Nouveau.messages.doingAction;
 
 				if ( ! action ) {
@@ -3788,7 +3813,7 @@ window.bp = window.bp || {};
 				}
 
 				bp.Nouveau.Messages.threads.doAction( action, id, options ).done(
-					function() {
+					function () {
 
 						// Remove previous feedback.
 						bp.Nouveau.Messages.removeFeedback();
@@ -3798,7 +3823,7 @@ window.bp = window.bp || {};
 						bp.Nouveau.Messages.router.navigate( 'view/' + id + '/?hash=' + hash, { trigger: true } );
 					}
 				).fail(
-					function( response ) {
+					function ( response ) {
 						// Remove previous feedback.
 						bp.Nouveau.Messages.removeFeedback();
 
