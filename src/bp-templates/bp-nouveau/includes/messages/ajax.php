@@ -2744,6 +2744,36 @@ function bp_nouveau_ajax_hide_thread() {
 
 	$thread_ids = wp_parse_id_list( $_POST['id'] );
 
+	$is_group_message_thread = bb_messages_is_group_thread( (int) current( $thread_ids ) );
+	if ( $is_group_message_thread ) {
+		$thread_id     = current( $thread_ids );
+		$first_message = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$group_name    = bp_get_group_name( groups_get_group( $group_id ) );
+		if ( empty( $group_name ) ) {
+			$group_name = __( 'Deleted Group', 'buddyboss' );
+		}
+
+		$toast_message = sprintf(
+			__( 'Messages for "%s" have been archived.', 'buddyboss' ),
+			$group_name
+		);
+
+	} else {
+		$thread_recipients = BP_Messages_Thread::get_recipients_for_thread( (int) current( $thread_ids ) );
+		$recipients = array();
+		if ( ! empty( $thread_recipients ) ) {
+			foreach ( $thread_recipients as $recepient ) {
+				$recipients[] = bp_core_get_user_displayname( $recepient->user_id );
+			}
+		}
+
+		$toast_message = sprintf(
+			__( 'The conversation with %s has been archived.', 'buddyboss' ),
+			implode( ', ', $recipients )
+		);
+	}
+
 	foreach ( $thread_ids as $thread_id ) {
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
 
@@ -2793,7 +2823,7 @@ function bp_nouveau_ajax_hide_thread() {
 			'type'                          => 'success',
 			'messages'                      => __( 'Thread removed successfully.', 'buddyboss' ),
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
-			'thread_ids'                    => $thread_ids,
+			'toast_message'                 => $toast_message,
 		)
 	);
 }
