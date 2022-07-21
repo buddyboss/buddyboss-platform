@@ -40,7 +40,7 @@
 
 	&.media-activity {
 		flex: none;
-		min-width: 230px;
+		min-width: 190px;
 	}
 
 	.entry-img {
@@ -1451,7 +1451,7 @@ ul.bb-albums-list {
 
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1025px) {
 
 	.bb-media-model-inner {
 		max-height: 90vh;
@@ -1469,7 +1469,7 @@ ul.bb-albums-list {
 	}
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
 
 	a.bb-close-model {
 		top: 10px;
@@ -1485,6 +1485,7 @@ ul.bb-albums-list {
 		min-width: initial;
 		margin: 0 30px;
 		height: 100%;
+		max-width: 100%;
 
 		.bb-media-model-inner {
 			height: 100%;
@@ -1497,6 +1498,7 @@ ul.bb-albums-list {
 				width: 100%;
 				margin-left: 0;
 				max-height: calc(50vh - 40px);
+				border-radius: 0 0 4px 4px;
 
 				.activity-list.bp-list {
 					min-height: calc(50vh - 40px);
@@ -3035,7 +3037,7 @@ div.dropzone .dz-preview {
 		border-radius: 0 0 0 4px;
 	}
 
-	@media screen and (min-width: 768px) {
+	@media screen and (min-width: 1025px) {
 
 		.bb-media-section {
 			border-right: 1px solid #ecedee;
