@@ -995,7 +995,7 @@ window.bp = window.bp || {};
 			template  : bp.template( 'bp-messages-editor' ),
 			events: {
 				'input #message_content': 'focusEditorOnChange',
-				'input #message_content': 'postValidate',
+				'input #message_content': 'postValidate',// jshint ignore:line
 				'change .medium-editor-toolbar-input': 'mediumLink',
 				'paste': 'handlePaste',
 			},
@@ -3233,7 +3233,7 @@ window.bp = window.bp || {};
 			showOptions: function( event ) {
 				event.preventDefault();
 				var currentTarget = event.currentTarget;
-				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' ).closest( '.message_actions').toggleClass( 'open' );;
+				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' ).closest( '.message_actions').toggleClass( 'open' );
 			},
 
 		}
