@@ -1619,7 +1619,7 @@ function bb_messaged_set_friend_button_args( $args = array() ) {
  * @return array|mixed
  */
 function bb_messages_update_unread_count( $meta_query, $r ) {
-	if ( false === bp_disable_group_messages() ) {
+	if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
 		$meta_query = array(
 			'relation' => 'AND',
 			array(
@@ -1640,22 +1640,15 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
 
 		$group_ids  = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
 		$meta_query = array(
-			'relation' => 'OR',
+			'relation' => 'AND',
 			array(
 				'key'     => 'group_message_thread_id',
-				'compare' => 'NOT EXISTS',
+				'compare' => 'EXISTS',
 			),
 			array(
-				'relation' => 'AND',
-				array(
-					'key'     => 'group_message_thread_id',
-					'compare' => 'EXISTS',
-				),
-				array(
-					'key'     => 'group_id',
-					'compare' => 'IN',
-					'value'   => $group_ids,
-				),
+				'key'     => 'group_id',
+				'compare' => 'NOT IN',
+				'value'   => $group_ids,
 			),
 		);
 	}
