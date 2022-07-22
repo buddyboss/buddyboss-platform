@@ -93,7 +93,7 @@
 								<a data-bp-action="unread" href="#">
 									<?php
 									esc_html_e(
-										'Mark unread',
+										'Mark as unread',
 										'buddyboss'
 									);
 									?>
