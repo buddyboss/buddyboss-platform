@@ -2095,7 +2095,7 @@ add_action( 'pre_get_posts', 'bb_filter_admin_emails' );
 /**
  * Filter to change the display user URLs and current user URLs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.6
  *
  * @param array    $atts {
  *        The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
@@ -2124,7 +2124,7 @@ add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
 /**
  * Filters to update the active classes for display user URLs and current user URLs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.6
  *
  * @param array    $classes The CSS classes that are applied to the menu item's `<li>` element.
  * @param WP_Post  $item    The current menu item.
