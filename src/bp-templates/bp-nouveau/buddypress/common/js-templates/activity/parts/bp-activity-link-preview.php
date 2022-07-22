@@ -54,14 +54,16 @@
 		
 		<div class="activity-link-preview-info">
 			<# if ( data.link_success && ! data.link_error && data.link_url ) {
-				var domainName = '';
-				var hostname   = $( '<a>' ).prop( 'href', data.link_url ).prop( 'hostname' ); #>
+				var a = document.createElement('a');
+				a.href = data.link_url;
+				var hostname = a.hostname; #>
 				<# if ( hostname.indexOf( 'www' ) > -1 ) {
 					var hostnameSplit = hostname.toString().split( 'www.' );
 					domainName = hostnameSplit && hostnameSplit[1] ? hostnameSplit[1] : ''; #>
 				<# } else {
 				    domainName = hostname;
-				}  #>
+				}
+				#>
 				<p class="activity-link-preview-link-name">{{domainName}}</p>
 			<# } #>
 
