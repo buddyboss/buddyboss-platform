@@ -927,6 +927,85 @@ class BP_Messages_Thread {
 			)
 		);
 
+		if ( false === bp_disable_group_messages() ) {
+			if ( empty( $r['meta_query'] ) ) {
+				$r['meta_query'] = array(
+					'relation' => 'AND',
+					array(
+						'key'     => 'group_message_thread_id',
+						'compare' => 'NOT EXISTS',
+					),
+				);
+			} else {
+				$meta_query             = $r['meta_query'];
+				$meta_query[]           = array(
+					'key'     => 'group_message_thread_id',
+					'compare' => 'NOT EXISTS',
+				);
+				$meta_query['relation'] = 'AND';
+				$r['meta_query']        = $meta_query;
+			}
+		} elseif ( bp_is_active( 'groups' ) ) {
+			// Determine groups of user.
+			$groups = groups_get_groups(
+				array(
+					'fields'      => 'ids',
+					'per_page'    => - 1,
+					'user_id'     => $r['user_id'],
+					'show_hidden' => true,
+				)
+			);
+
+			$group_ids = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+
+			if ( empty( $r['meta_query'] ) ) {
+				$r['meta_query'] = array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'group_message_thread_id',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'group_message_thread_id',
+							'compare' => 'EXISTS',
+						),
+						array(
+							'key'     => 'group_id',
+							'compare' => 'IN',
+							'value'   => $group_ids,
+						),
+					),
+				);
+			} else {
+				$meta_query             = $r['meta_query'];
+				$meta_query[]           = array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'group_message_thread_id',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'group_message_thread_id',
+							'compare' => 'EXISTS',
+						),
+						array(
+							'key'     => 'group_id',
+							'compare' => 'IN',
+							'value'   => $group_ids,
+						),
+					),
+				);
+				$meta_query['relation'] = 'AND';
+				$r['meta_query']        = $meta_query;
+			}
+		}
+
+		$r['meta_query'] = apply_filters( 'bb_messages_meta_query_threads_for_user', $r['meta_query'], $r );
+
 		$pag_sql     = '';
 		$type_sql    = '';
 		$search_sql  = '';
@@ -1455,25 +1534,20 @@ class BP_Messages_Thread {
 				'is_deleted' => 0,
 			);
 
-			if ( false === bp_disable_group_messages() ) {
-				$threads = self::get_current_threads_for_user(
-					array(
-						'user_id'    => $user_id,
-						'limit'      => - 1,
-						'meta_query' => array(
-							'relation' => 'AND',
-							array(
-								'key'     => 'group_message_thread_id',
-								'compare' => 'EXISTS',
-							),
-						),
-						'fields'     => 'ids',
-					)
-				);
+			add_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 1 );
 
-				if ( ! empty( $threads['threads'] ) ) {
-					$args['exclude_threads'] = $threads['threads'];
-				}
+			$threads = self::get_current_threads_for_user(
+				array(
+					'user_id' => $user_id,
+					'limit'   => - 1,
+					'fields'  => 'ids',
+				)
+			);
+
+			remove_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 1 );
+
+			if ( ! empty( $threads['threads'] ) ) {
+				$args['exclude_threads'] = $threads['threads'];
 			}
 
 			$unread_counts = self::get( $args );

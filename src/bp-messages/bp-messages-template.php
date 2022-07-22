@@ -78,26 +78,6 @@ function bp_has_message_threads( $args = array() ) {
 		'has_message_threads'
 	);
 
-	if ( false === bp_disable_group_messages() ) {
-		if ( empty( $r['meta_query'] ) ) {
-			$r['meta_query'] = array(
-				'relation' => 'AND',
-				array(
-					'key'     => 'group_message_thread_id',
-					'compare' => 'NOT EXISTS',
-				),
-			);
-		} else {
-			$meta_query             = $r['meta_query'];
-			$meta_query[]           = array(
-				'key'     => 'group_message_thread_id',
-				'compare' => 'NOT EXISTS',
-			);
-			$meta_query['relation'] = 'AND';
-			$r['meta_query']        = $meta_query;
-		}
-	}
-
 	// Load the messages loop global up with messages.
 	$messages_template = new BP_Messages_Box_Template( $r );
 
