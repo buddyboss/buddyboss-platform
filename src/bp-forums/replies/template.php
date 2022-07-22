@@ -2848,7 +2848,7 @@ function bbp_get_total_parent_reply( $topic_id ) {
 /**
  * Return the numeric position of a parent reply within a topic.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.6
  *
  * @param int $reply_id Optional. Reply id.
  * @param int $topic_id Optional. Topic id.

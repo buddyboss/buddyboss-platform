@@ -2280,7 +2280,7 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 /**
  * Function will get all parent ids of the topic replies.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.6
  *
  * @param int    $topic_id  Topic ID.
  * @param string $post_type Post type.
