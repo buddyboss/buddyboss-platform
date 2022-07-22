@@ -1534,7 +1534,7 @@ class BP_Messages_Thread {
 				'is_deleted' => 0,
 			);
 
-			add_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 1 );
+			add_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 2 );
 
 			$threads = self::get_current_threads_for_user(
 				array(
@@ -1544,7 +1544,7 @@ class BP_Messages_Thread {
 				)
 			);
 
-			remove_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 1 );
+			remove_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 2 );
 
 			if ( ! empty( $threads['threads'] ) ) {
 				$args['exclude_threads'] = $threads['threads'];

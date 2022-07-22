@@ -1603,7 +1603,17 @@ function bb_messaged_set_friend_button_args( $args = array() ) {
 	return $args;
 }
 
-function bb_messages_update_unread_count( $meta_query ) {
+/**
+ * Update meta query when fetching the threads for user unread count.
+ *
+ * @since [BBVERSION]
+ *
+ * @param array $meta_query Array of meta query arguments.
+ * @param array $r          Array of arguments.
+ *
+ * @return array|mixed
+ */
+function bb_messages_update_unread_count( $meta_query, $r ) {
 	if ( false === bp_disable_group_messages() ) {
 		$meta_query = array(
 			'relation' => 'AND',
