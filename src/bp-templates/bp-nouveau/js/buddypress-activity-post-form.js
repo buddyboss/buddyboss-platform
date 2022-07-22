@@ -2951,9 +2951,7 @@ window.bp = window.bp || {};
 					}
 					var urlImages = response.images;
 					if (
-						true === self.options.activity.get( 'edit_activity' )
-						&& 'undefined' === typeof self.options.activity.get( 'link_image_index_save' )
-						&& '' === self.options.activity.get( 'link_image_index_save' )
+						true === self.options.activity.get( 'edit_activity' ) && 'undefined' === typeof self.options.activity.get( 'link_image_index_save' ) && '' === self.options.activity.get( 'link_image_index_save' )
 					) {
 						urlImages = '';
 					}
