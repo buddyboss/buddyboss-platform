@@ -51,10 +51,10 @@
 			<# } #>
 		</div>
 		<# } #>
-		
+
+		<# if ( data.link_success && ! data.link_error && data.link_url ) {#>
 		<div class="activity-link-preview-info">
-			<# if ( data.link_success && ! data.link_error && data.link_url ) {
-				var a = document.createElement('a');
+			<# var a = document.createElement('a');
 				a.href = data.link_url;
 				var hostname = a.hostname; #>
 				<# if ( hostname.indexOf( 'www' ) > -1 ) {
@@ -64,8 +64,7 @@
 				    domainName = hostname;
 				}
 				#>
-				<p class="activity-link-preview-link-name">{{domainName}}</p>
-			<# } #>
+			<p class="activity-link-preview-link-name">{{domainName}}</p>
 
 			<# if ( data.link_success && ! data.link_error ) { #>
 			<p class="activity-link-preview-title">{{{data.link_title}}}</p>
@@ -75,11 +74,11 @@
 			<div class="activity-link-preview-excerpt"><p>{{{data.link_description}}}</p></div>
 			<# } #>
 		</div>
-
-		<# if ( data.link_error && ! data.link_success ) { #>
-		<div id="activity-url-error" class="activity-url-error">{{data.link_error_msg}}</div>
-		<# } #>
 	</div>
+	<# } #>
+	<# if ( data.link_error && ! data.link_success ) { #>
+		<div id="activity-url-error" class="activity-url-error">{{data.link_error_msg}}</div>
+	<# } #>
 	<# } #>
 	<# } #>
 </script>
