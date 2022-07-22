@@ -62,9 +62,11 @@
 					domainName = hostnameSplit && hostnameSplit[1] ? hostnameSplit[1] : ''; #>
 				<# } else {
 				    domainName = hostname;
-				}
-				#>
-			<p class="activity-link-preview-link-name">{{domainName}}</p>
+				} #>
+
+			<# if ( -1 === data.link_description.indexOf( 'iframe' ) ) { #>
+				<p class="activity-link-preview-link-name">{{domainName}}</p>
+			<# } #>
 
 			<# if ( data.link_success && ! data.link_error ) { #>
 			<p class="activity-link-preview-title">{{{data.link_title}}}</p>

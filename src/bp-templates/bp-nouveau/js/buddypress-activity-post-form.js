@@ -2946,7 +2946,7 @@ window.bp = window.bp || {};
 					if ( response.title.length > 150 ) {
 						response.title = response.title.substring( 0, 150 ) + '...';
 					}
-					if ( response.description.length > 100 ) {
+					if ( -1 === response.description.indexOf( 'iframe' ) && response.description.length > 100 ) {
 						response.description = response.description.substring( 0, 100 ) + '...';
 					}
 					var urlImages = response.images;
