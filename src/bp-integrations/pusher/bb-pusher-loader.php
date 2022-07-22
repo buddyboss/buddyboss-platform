@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Pusher Integration Loader.
  *
- * @package BuddyBoss/Pusher
+ * @package BuddyBoss\Pusher
  *
  * @since BuddyBoss [BBVERSION]
  */

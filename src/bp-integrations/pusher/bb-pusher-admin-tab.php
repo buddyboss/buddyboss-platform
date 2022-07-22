@@ -3,7 +3,7 @@
  * Pusher integration admin tab
  *
  * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss/Pusher
+ * @package BuddyBoss\Pusher
  */
 
 // Exit if accessed directly.

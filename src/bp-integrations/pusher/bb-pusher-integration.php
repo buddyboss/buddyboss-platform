@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Pusher Integration Class.
  *
- * @package BuddyBoss/Pusher
+ * @package BuddyBoss\Pusher
  *
  * @since BuddyBoss [BBVERSION]
  */
