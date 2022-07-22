@@ -3710,6 +3710,7 @@ window.bp = window.bp || {};
 				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
 					$( '#send_reply_button' ).prop( 'disabled', true ).addClass( 'loading' );
 				}
+				$( '#send_reply_button' ).closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
 
 				this.collection.sync(
 					'create',
@@ -3795,6 +3796,7 @@ window.bp = window.bp || {};
 				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
 					$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
 				}
+				$( '#send_reply_button' ).closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
 			},
 
 			unhideConversation: function ( event ) {

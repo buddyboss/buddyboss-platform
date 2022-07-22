@@ -1601,9 +1601,64 @@ function bb_messaged_set_friend_button_args( $args = array() ) {
 
 	if ( isset( $args['id'] ) && 'not_friends' === $args['id'] ) {
 		$args['link_text'] = __( 'Send Connection Request', 'buddyboss' );
-	} else if ( isset( $args['id'] ) && 'pending' === $args['id'] ) {
+	} elseif ( isset( $args['id'] ) && 'pending' === $args['id'] ) {
 		$args['link_href'] = '';
 	}
 
 	return $args;
+}
+
+/**
+ * Update meta query when fetching the threads for user unread count.
+ *
+ * @since [BBVERSION]
+ *
+ * @param array $meta_query Array of meta query arguments.
+ * @param array $r          Array of arguments.
+ *
+ * @return array|mixed
+ */
+function bb_messages_update_unread_count( $meta_query, $r ) {
+	if ( false === bp_disable_group_messages() ) {
+		$meta_query = array(
+			'relation' => 'AND',
+			array(
+				'key'     => 'group_message_thread_id',
+				'compare' => 'EXISTS',
+			),
+		);
+	} elseif ( bp_is_active( 'groups' ) ) {
+		// Determine groups of user.
+		$groups = groups_get_groups(
+			array(
+				'fields'      => 'ids',
+				'per_page'    => - 1,
+				'user_id'     => $r['user_id'],
+				'show_hidden' => true,
+			)
+		);
+
+		$group_ids  = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+		$meta_query = array(
+			'relation' => 'OR',
+			array(
+				'key'     => 'group_message_thread_id',
+				'compare' => 'NOT EXISTS',
+			),
+			array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'group_message_thread_id',
+					'compare' => 'EXISTS',
+				),
+				array(
+					'key'     => 'group_id',
+					'compare' => 'IN',
+					'value'   => $group_ids,
+				),
+			),
+		);
+	}
+
+	return $meta_query;
 }

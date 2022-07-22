@@ -75,6 +75,37 @@
 		display: none;
 	}
 
+	.can-not-send-msg {
+		opacity: 0.5;
+
+		.bp-message-link .thread-content.bp-suspended-content,
+		.bp-message-link .thread-avatar.bp-suspended-avatar {
+			opacity: 1;
+		}
+
+		&.unread .thread-to:after {
+			opacity: 0.85;
+		}
+
+		.thread-to:after {
+			content: "\ee08";
+			font-size: 14px;
+			font-weight: 300;
+			color: #122b46;
+			line-height: 1;
+			font-family: "bb-icons";/* stylelint-disable-line */
+			display: inline-block;
+			vertical-align: middle;
+			position: absolute;
+			right: 36px;
+			bottom: 10px;
+		}
+
+		&:hover .thread-to:after {
+			display: none;
+		}
+	}
+
 	.thread-avatar .user-status-icon {
 		color: $white;
 		background-color: $light-text;
