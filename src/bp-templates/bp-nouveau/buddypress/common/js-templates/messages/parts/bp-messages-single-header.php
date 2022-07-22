@@ -99,7 +99,6 @@
 									?>
 								</a>
 							</li>
-							<# console.log( data.is_thread_archived ); #>
 							<# if ( data.is_thread_archived ) { #>
 								<li class="unhide_thread">
 									<a data-bp-action="unhide_thread" href="#">
