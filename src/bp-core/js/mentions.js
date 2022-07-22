@@ -247,11 +247,11 @@ window.bp = window.bp || {};
 							);
 					},
 					beforeReposition: function(offset) {
-						// suggesstions left position when RTL
-						if( $('body.rtl').length > 0 ){
-							let $at_view = this.$el.find('.atwho-view');
-							if( $at_view.length > 0 ){
-								offset.left = this.rect().left - $at_view.width();
+						// suggestions left position when RTL.
+						if ( $( 'body.rtl' ).length > 0 ) {
+							var at_view = this.$el.find( '.atwho-view' );
+							if ( at_view.length > 0 ) {
+								offset.left = this.rect().left - at_view.width();
 							}
 						}
 					}
