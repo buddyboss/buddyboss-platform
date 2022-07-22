@@ -9537,7 +9537,7 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 #buddypress .bp-messages-container .message_action__list li.unread a:before {
-  content: "\eeba";
+  content: "\ee6a";
 }
 
 #buddypress .bp-messages-container .message_action__list li.hide_thread a:before {
