@@ -2332,7 +2332,7 @@ function bb_get_forum_paged() {
 /**
  * Function will get all parent ids of the topic replies.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.6
  *
  * @param int    $topic_id  Topic ID.
  * @param string $post_type Post type.

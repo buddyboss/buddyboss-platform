@@ -73,6 +73,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 			'user_id'         => 0,
 			'type'            => 'active',
 			'per_page'        => $settings['max_members'],
+			'max'             => $settings['max_members'],
 			'populate_extras' => true,
 			'search_terms'    => false,
 			'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
@@ -104,7 +105,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 						<?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i>
 					</a>
 				</div>
-	
+
 			<?php else : ?>
 
 				<div class="widget-error">
