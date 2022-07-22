@@ -81,9 +81,7 @@
 						<# if ( data.sender_is_you ) { #>
 							<?php _e( 'You', 'buddyboss' ); ?>:
 						<# } else { #>
-							<# if ( data.sender_name ) { #>
-								{{ data.sender_name }}:
-							<# } #>
+							{{ data.sender_name }}:
 						<# } #>
 						</span>
 						{{{data.excerpt}}}
