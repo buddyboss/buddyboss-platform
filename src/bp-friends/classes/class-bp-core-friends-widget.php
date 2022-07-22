@@ -148,9 +148,9 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 		<?php if ( bp_has_members( $members_args ) ) : ?>
 			<div class="item-options" id="friends-list-options">
-				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends" class="<?php echo ( 'newest' === $instance['friend_default'] ? 'selected' : '' ); ?>"><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends" class="<?php echo ( 'active' === $instance['friend_default'] ? 'selected' : '' ); ?>"><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends" class="<?php echo ( 'popular' === $instance['friend_default'] ? 'selected' : '' ); ?>"><?php esc_html_e( 'Popular', 'buddyboss' ); ?></a>
+				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends" class="<?php echo ( 'newest' === $instance['friend_default'] ? esc_attr( 'selected' ) : '' ); // phpcs:ignore ?>"><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends" class="<?php echo ( 'active' === $instance['friend_default'] ? esc_attr( 'selected' ) : '' ); // phpcs:ignore ?>"><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends" class="<?php echo ( 'popular' === $instance['friend_default'] ? esc_attr( 'selected' ) : '' ); // phpcs:ignore ?>"><?php esc_html_e( 'Popular', 'buddyboss' ); ?></a>
 			</div>
 
 			<ul id="friends-list" class="item-list bb-friends-list-widget">
