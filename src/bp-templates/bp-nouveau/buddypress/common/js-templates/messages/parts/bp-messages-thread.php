@@ -74,24 +74,26 @@
 				<# } #>
 			</div>
 
-            <div class="typing-indicator bp-hide"></div>
-			<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
+			<div class="typing-indicator bp-hide"></div>
 			<div class="thread-subject">
-				<span class="last-message-sender">
-				  <# if ( data.sender_is_you ) { #>
-					<?php esc_html_e( 'You', 'buddyboss' ); ?>:
-				  <# } else { #>
-					{{ data.sender_name }}:
-				  <# } #>
-				</span>
-				{{{data.excerpt}}}
+				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
+					<span class="thread-excerpt">
+						<span class="last-message-sender">
+						<# if ( data.sender_is_you ) { #>
+							<?php _e( 'You', 'buddyboss' ); ?>:
+						<# } else { #>
+							{{ data.sender_name }}:
+						<# } #>
+						</span>
+						{{{data.excerpt}}}
+					</span>
+				<# } #>
+				<div class="thread-date">
+					<time datetime="{{data.date.toISOString()}}">{{data.display_date}}</time>
+				</div>
 			</div>
-			<# } #>
 
-		</div>
-
-		<div class="thread-date">
-			<time datetime="{{data.date.toISOString()}}">{{data.display_date}}</time>
 		</div>
 	</a>
+
 </script>

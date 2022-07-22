@@ -1106,7 +1106,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				$can_message = false;
 			}
 		}
-
 		$threads->threads[ $i ] = array(
 			'id'                              => $bp_get_message_thread_id,
 			'message_id'                      => (int) $last_message_id,
@@ -1125,7 +1124,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'excerpt'                         => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
 			'content'                         => do_shortcode( bp_get_message_thread_content() ),
 			'unread'                          => bp_message_thread_has_unread(),
-			'sender_name'                     => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
+			'sender_name'                     => bb_members_get_user_firstname( $messages_template->thread->last_sender_id ),
 			'sender_is_you'                   => $messages_template->thread->last_sender_id === bp_loggedin_user_id(),
 			'sender_link'                     => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
 			'sender_avatar'                   => esc_url(

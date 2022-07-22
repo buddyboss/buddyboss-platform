@@ -44,7 +44,7 @@
 			<# } #>
 			<# } #>
 		</div>
-		<a href="#" class="bp-back-to-thread-list"><span class="dashicons dashicons-arrow-left-alt2"></span></a> <# if ( undefined !== other_recipients ) { #>
+		<a href="#" class="bp-back-to-thread-list"><span class="bb-icon-f bb-icon-arrow-left"></span></a> <# if ( undefined !== other_recipients ) { #>
 		<dl class="thread-participants">
 			<dt>
 				<# if ( data.group_name.length > 1 && data.is_group_thread ) { #> <span class="participants-name">
@@ -86,7 +86,7 @@
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
+					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
 					<div class="message_action__list">
 						<ul>
 							<li class="unread">
@@ -155,7 +155,7 @@
 				}
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
+					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
 					<div class="message_action__list">
 						<ul>
 							<li class="unread">

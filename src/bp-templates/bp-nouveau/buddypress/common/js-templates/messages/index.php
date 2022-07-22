@@ -12,7 +12,14 @@
 
 <input type="hidden" id="thread-id" value="" />
 <div class="bp-messages-container">
-	<div class="bp-messages-nav-panel">
+	<div class="bp-messages-nav-panel loading">
+        <div class="message-header-loading">
+            <div class="message-header-loading_top">
+                <div class="message-header-loading_title bb-bg-animation bb-loading-bg"></div>
+                <div class="message-header-loading_option bb-bg-animation bb-loading-bg"></div>
+            </div>
+            <div class="message-header-loading_description bb-bg-animation bb-loading-bg bb-loading-input"></div>
+        </div>
 		<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
 		<div class="bp-messages-threads-list bp-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bp-messages-threads-list"></div>
@@ -56,6 +63,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
 			'parts/bp-messages-single-list',
 			'parts/bp-messages-single',
 			'parts/bp-messages-editor-toolbar',
+			'parts/bp-messages-formatting-toolbar',
 			'parts/bp-messages-media',
 			'parts/bp-messages-document',
 			'parts/bp-messages-video',
