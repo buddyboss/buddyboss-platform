@@ -1830,7 +1830,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $video_id ) ) {
 			$video_ids[] = $video_id;
-			$video_ids   = array_filter( array_unique( $video_ids ) );
+			$video_ids   = array_filter( array_unique( $video_id ) );
 		}
 
 		if ( empty( $video_ids ) ) {

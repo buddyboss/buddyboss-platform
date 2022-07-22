@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.6
  */
 
 // Exit if accessed directly.
@@ -66,7 +66,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * So we will loop $wp_filters and remove it from there and only for the Group & Member profile page.
 		 * This filter is added inside this class: WPML_Fix_Links_In_Display_As_Translated_Content and mothod name: fix_fallback_links.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.6
 		 */
 		public function remove_filter_for_the_content() {
 			global $wp_filter;
