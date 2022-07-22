@@ -650,17 +650,17 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return string
 	 */
 	public function get_the_author_name( $value, $user_id ) {
-		$new_value        = $value;
+
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
-			return $new_value;
+			return $value;
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			$new_value = esc_html__( 'Suspended Member', 'buddyboss' );
+			return esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 
-		return apply_filters( 'get_the_author_name_suspend_member', $new_value, $value, $user_id );
+		return $value;
 	}
 
 	/**
@@ -718,18 +718,18 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return string $avatar_url
 	 */
 	public function bp_fetch_avatar_url( $avatar_url, $params ) {
-		$new_avatar_url = $avatar_url;
+
 		$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
 		if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_suspended( $item_id ) ) {
-					$new_avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
+					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 				}
 			}
 		}
 
-		return apply_filters( 'bp_fetch_suspend_avatar_url', $new_avatar_url, $avatar_url, $params );
+		return $avatar_url;
 	}
 }

@@ -52,12 +52,6 @@
 				<# } else { #>
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-			            <# if ( true === recipient.is_user_blocked ) { #>
-							<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
-			            <# } #>
-			            <# if ( true === recipient.is_user_suspended ) { #>
-							<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
-			            <# } #>
 						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
 					<# } #>
 				<# } #>
@@ -82,7 +76,7 @@
 
 			<div class="thread-subject">
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
-					<span class="thread-excerpt {{ '' === data.sender_name ? 'content-unavailable' : '' }}">
+					<span class="thread-excerpt">
 						<span class="last-message-sender">
 						<# if ( data.sender_is_you && data.sender_name ) { #>
 							<?php _e( 'You', 'buddyboss' ); ?>:
