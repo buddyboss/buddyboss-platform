@@ -927,7 +927,7 @@ class BP_Messages_Thread {
 			)
 		);
 
-		if ( false === bp_disable_group_messages() ) {
+		if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
 			if ( empty( $r['meta_query'] ) ) {
 				$r['meta_query'] = array(
 					'relation' => 'AND',

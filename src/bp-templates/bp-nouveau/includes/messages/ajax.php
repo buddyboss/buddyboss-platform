@@ -2289,7 +2289,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			! bp_is_active( 'groups' )
 		)
 	) {
-		$status = bp_group_get_message_status( $group_id );
+		$status = ( bp_is_active( 'groups' ) ? bp_group_get_message_status( $group_id ) : '' );
 		$notice = __( 'Only group organizers can send messages to this group.', 'buddyboss' );
 		if ( 'mods' === $status ) {
 			$notice = __( 'Only group organizers and moderators can send messages to this group.', 'buddyboss' );
