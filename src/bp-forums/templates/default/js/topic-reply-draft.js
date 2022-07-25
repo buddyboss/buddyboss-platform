@@ -933,8 +933,9 @@ window.bp = window.bp || {};
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
 			this.resetTopicReplyDraftPostForm();
-			$( 'body .js-modal-close' ).trigger( 'click' );
 			this.topic_reply_draft.post_action = 'update';
+			bp.Nouveau.TopicReplyDraft.setupTopicReplyDraftIntervals();
+			bp.Nouveau.TopicReplyDraft.is_topic_reply_form_submit = false;
 
 			forum_topic.css( 'pointer-events', '' );
 			forum_reply.css( 'pointer-events', '' );
