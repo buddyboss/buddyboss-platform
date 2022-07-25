@@ -57,13 +57,8 @@
 			<# var a = document.createElement('a');
 				a.href = data.link_url;
 				var hostname = a.hostname;
+				var domainName = hostname.replace('www.', '' );
 			#>
-			<# if ( hostname.indexOf( 'www' ) > -1 ) {
-				var hostnameSplit = hostname.toString().split( 'www.' );
-				domainName = hostnameSplit && hostnameSplit[1] ? hostnameSplit[1] : ''; #>
-			<# } else {
-				domainName = hostname;
-			} #>
 
 			<# if ( -1 === data.link_description.indexOf( 'iframe' ) ) { #>
 				<p class="activity-link-preview-link-name">{{domainName}}</p>
