@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-25 03:58:44+00:00\n"
+"POT-Creation-Date: 2022-07-25 17:06:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1069,11 +1069,14 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:920
 #: bp-groups/classes/class-bp-groups-list-table.php:598
 #: bp-messages/bp-messages-functions.php:1283
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:970
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1026
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2052
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2117
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2346
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:971
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1031
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2059
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2124
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2353
+#. translators: group name.
+#. translators: %s: Group Name
+#. translators: %s: Group Name
 #. translators: %s: Group Name
 msgid "Group logo of %s"
 msgstr ""
@@ -8868,13 +8871,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -9770,8 +9773,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
 #: bp-templates/bp-nouveau/includes/document/functions.php:105
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1212
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:800
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2717
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:799
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2723
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1246
 msgid "Download"
 msgstr ""
@@ -10150,14 +10153,14 @@ msgstr ""
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1388
 #: bp-templates/bp-nouveau/buddypress/document/audio-preview.php:23
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:735
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2652
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2659
 msgid "Your browser does not support the audio element."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1417
 #: bp-templates/bp-nouveau/buddypress/document/code-preview.php:37
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:765
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2682
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:764
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2688
 msgid "Click to expand"
 msgstr ""
 
@@ -14383,10 +14386,10 @@ msgstr ""
 
 #: bp-forums/common/locale.php:55 bp-moderation/bp-moderation-functions.php:242
 #: bp-moderation/classes/class-bp-moderation-list-table.php:286
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:132
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:202
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:136
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:206
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:32
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3027
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3033
 #. translators: user role
 msgid "Blocked"
 msgstr ""
@@ -15839,7 +15842,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2803
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:215
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:46
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2517
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2524
 msgid "This content has been hidden as the member is suspended."
 msgstr ""
 
@@ -15851,8 +15854,8 @@ msgstr ""
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2577
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2805
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:48
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1280
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2519
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1287
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2526
 msgid "This content has been hidden as you have blocked this member."
 msgstr ""
 
@@ -23273,7 +23276,7 @@ msgid "Messages marked as read"
 msgstr ""
 
 #: bp-messages/actions/bulk-manage.php:67
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1689
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1696
 msgid "Messages marked as unread."
 msgstr ""
 
@@ -23347,7 +23350,7 @@ msgid "Message marked unread."
 msgstr ""
 
 #: bp-messages/actions/view.php:42
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:858
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:857
 msgid "Your reply was sent successfully"
 msgstr ""
 
@@ -23448,17 +23451,17 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:1328
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1379
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1670
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1001
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1058
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2082
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2146
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2376
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2813
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1004
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1065
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2089
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2153
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2383
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2819
 msgid "Deleted Group"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:1603
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1949
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1956
 msgid "Send Connection Request"
 msgstr ""
 
@@ -23597,7 +23600,7 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1056
 #: bp-notifications/bp-notifications-template.php:1054
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:165
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:169
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:112
 msgid "Mark unread"
 msgstr ""
@@ -23621,8 +23624,8 @@ msgstr ""
 #: bp-messages/bp-messages-template.php:2208
 #: bp-messages/bp-messages-template.php:2243
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1445
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2410
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2471
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2417
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2478
 msgid "This message was deleted."
 msgstr ""
 
@@ -23804,7 +23807,7 @@ msgstr ""
 
 #: bp-messages/classes/class-bp-messages-notification.php:302
 #. translators: user display name
-msgid "%s sent a gif"
+msgid "%s sent a GIF"
 msgstr ""
 
 #: bp-messages/classes/class-bp-messages-notification.php:308
@@ -24172,42 +24175,42 @@ msgid "Sorry, you are not allowed to delete this thread messages."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1383
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2379
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2386
 #. translators: %s: Group name
 #. translators: %s: Group Name
 msgid "Sent from group %s to all group members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1389
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2382
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2389
 #. translators: %s: Group name
 #. translators: %s: Group Name
 msgid "Sent from group %s to the people in this conversation."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1395
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2385
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2392
 #. translators: %s: Group name
 #. translators: %s: Group Name
 msgid "Sent from group %s individually to all group members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1401
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2388
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2395
 #. translators: %s: Group name
 #. translators: %s: Group Name
 msgid "Sent from group %s to individual members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1409
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2393
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2400
 #. translators: 1: Group link. 2: Group name.
 #. translators: 1: Group Link 2: Group Name
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> to all group members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1416
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2396
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2403
 #. translators: 1: Group link. 2: Group name.
 #. translators: 1: Group Link 2: Group Name
 msgid ""
@@ -24216,14 +24219,14 @@ msgid ""
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1423
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2399
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2406
 #. translators: 1: Group link. 2: Group name.
 #. translators: 1: Group Link 2: Group Name
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> individually to all group members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1430
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2402
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2409
 #. translators: 1: Group link. 2: Group name.
 #. translators: 1: Group Link 2: Group Name
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> to individual members."
@@ -24650,7 +24653,7 @@ msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:551
 #: bp-moderation/bp-moderation-functions.php:241
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3038
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3044
 msgid "Block"
 msgstr ""
 
@@ -25400,7 +25403,7 @@ msgstr ""
 #: bp-moderation/screens/block-member-form.php:17
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-moderation/screens/reported-content-popup.php:19
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:237
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:241
 #: bp-templates/bp-nouveau/includes/template-tags.php:2636
 #: bp-templates/bp-nouveau/includes/template-tags.php:2644
 #: bp-templates/bp-nouveau/includes/template-tags.php:2668
@@ -26220,7 +26223,7 @@ msgid "Capabilities"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:31
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:73
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:77
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:93
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:62
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:64
@@ -26233,7 +26236,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1270
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1428
 #: bp-templates/bp-nouveau/includes/media/ajax.php:164
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3063
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3069
 #: bp-templates/bp-nouveau/includes/video/ajax.php:187
 msgid "Load More"
 msgstr ""
@@ -26442,7 +26445,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:15
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1318
-#: bp-templates/bp-nouveau/includes/messages/functions.php:126
 msgid "Type message"
 msgstr ""
 
@@ -26548,51 +26550,51 @@ msgstr ""
 msgid "When you have new messages, they will appear here."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:63
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:67
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:68
 msgid ","
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:80
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:84
 msgid "Started"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:95
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:99
 msgid "Mark as unread"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:106
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:176
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1976
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:110
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:180
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1983
 msgid "Unarchive Conversation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:117
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:187
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:121
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:191
 msgid "Hide conversation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:128
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:198
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:132
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:202
 msgid "Block a member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:136
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:206
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:140
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:210
 msgid "Block member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:141
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:211
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:145
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:215
 msgid "Delete your messages"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:144
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:217
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:148
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:221
 msgid "Delete conversation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:236
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:240
 msgid "Block a Member?"
 msgstr ""
 
@@ -26719,8 +26721,8 @@ msgid "Please add fields to search members."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:33
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:801
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2718
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:800
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2724
 msgid "Collapse"
 msgstr ""
 
@@ -26730,15 +26732,15 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:159
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:70
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:45
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:803
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2720
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:802
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2726
 msgid "More actions"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:51
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:259
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:802
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2719
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:801
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2725
 msgid "Copy Download Link"
 msgstr ""
 
@@ -29017,7 +29019,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:871
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1063
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1789
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1796
 msgid "There was a problem loading recipients. Please try again."
 msgstr ""
 
@@ -29441,198 +29443,198 @@ msgid "Please provide thread id."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:532
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1232
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1239
 msgid "sent a photo"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:534
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1234
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1241
 msgid "sent some photos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:545
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1245
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1252
 msgid "sent a video"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:547
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1247
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1254
 msgid "sent some videos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:558
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1258
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1265
 msgid "sent a document"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:560
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1260
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1267
 msgid "sent some documents"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:569
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1269
-msgid "sent a gif"
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1276
+msgid "sent a GIF"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:798
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2715
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:797
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2721
 #. translators: %s: download url
 msgid "Click to view"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:878
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1366
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:877
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1373
 msgid "Unauthorized request."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:908
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1373
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1902
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:907
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1380
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1909
 #: bp-templates/bp-nouveau/includes/messages/functions.php:110
 msgid "Sorry, no messages were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1278
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1285
 msgid "Hidden content from suspended member."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1406
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1455
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2792
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1413
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1462
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2798
 msgid "There was a problem deleting your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1437
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1444
 msgid "Messages successfully deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1552
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1559
 msgid "There was a problem starring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1554
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1561
 msgid "There was a problem unstarring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1638
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1645
 msgid "Messages successfully starred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1640
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1647
 msgid "Messages successfully unstarred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1665
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1672
 msgid "There was a problem marking your messages as read. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1671
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1678
 msgid "There was a problem marking your messages as unread. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1691
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1698
 msgid "Messages marked as read."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1729
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1736
 msgid "There was a problem dismissing the notice. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1768
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1775
 msgid "Sitewide notice dismissed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1907
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1914
 msgid "Sorry, no more messages can be loaded."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1936
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1943
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1950
 msgid "You must be connected to this member to send them a message."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1970
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1973
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1977
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1980
 msgid "You can't send messages in conversations you've archived."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1989
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2276
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1996
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2283
 msgid "Unable to send new messages at this time."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1996
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2003
 msgid "You can't send messages to this members you have blocked."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1999
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2006
 msgid "View Blocked Members."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2164
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2171
 msgid "Deleted"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2296
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2303
 msgid "Only group organizers can send messages to this group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2298
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2305
 msgid "Only group organizers and moderators can send messages to this group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2408
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2469
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2415
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2476
 #. translators: %s: Group Name
 msgid "<p class=\"joined\">Left <strong>%s</strong></p>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2413
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2474
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2420
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2481
 #. translators: %s: Group Name
 msgid "<p class=\"joined\">Removed Ban %s</p>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2416
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2477
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2423
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2484
 #. translators: %s: Group Name
 msgid "<p class=\"joined\">Ban %s</p>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2419
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2480
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2426
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2487
 #. translators: %s: Group Name
 msgid "<p class=\"joined\">Joined <strong>%s</strong></p>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2817
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2823
 msgid "Messages for \"%s\" have been archived."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2831
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2837
 msgid "The conversation with %s has been archived."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2883
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2889
 msgid "Thread removed successfully."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2898
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2974
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2904
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2980
 msgid "Missing thread id."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2903
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2978
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2909
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2984
 msgid "Invalid page number."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3102
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3108
 msgid "There was a problem un-archiving your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3128
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3134
 msgid "Thread un-archived successfully."
 msgstr ""
 
@@ -29666,6 +29668,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/functions.php:124
 msgid "Unhiding conversation."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/messages/functions.php:126
+msgid "Write a message..."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/functions.php:127
@@ -31737,15 +31743,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
