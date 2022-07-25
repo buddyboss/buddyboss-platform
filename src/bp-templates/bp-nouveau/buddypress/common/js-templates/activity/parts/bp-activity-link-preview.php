@@ -16,7 +16,7 @@
 	<# } #>
 	<# if ( data.link_success || data.link_error ) { #>
 	<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion"><?php esc_html_e( 'Remove Preview', 'buddyboss' ); ?></i></a>
-	<div class="activity-link-preview-container">		
+	<div class="activity-link-preview-container">
 
 		<# if ( data.link_images && data.link_images.length && data.link_success && ! data.link_error && '' !== data.link_image_index ) { #>
 		<div id="activity-url-scrapper-img-holder">
@@ -56,13 +56,14 @@
 		<div class="activity-link-preview-info">
 			<# var a = document.createElement('a');
 				a.href = data.link_url;
-				var hostname = a.hostname; #>
-				<# if ( hostname.indexOf( 'www' ) > -1 ) {
-					var hostnameSplit = hostname.toString().split( 'www.' );
-					domainName = hostnameSplit && hostnameSplit[1] ? hostnameSplit[1] : ''; #>
-				<# } else {
-				    domainName = hostname;
-				} #>
+				var hostname = a.hostname;
+			#>
+			<# if ( hostname.indexOf( 'www' ) > -1 ) {
+				var hostnameSplit = hostname.toString().split( 'www.' );
+				domainName = hostnameSplit && hostnameSplit[1] ? hostnameSplit[1] : ''; #>
+			<# } else {
+				domainName = hostname;
+			} #>
 
 			<# if ( -1 === data.link_description.indexOf( 'iframe' ) ) { #>
 				<p class="activity-link-preview-link-name">{{domainName}}</p>

@@ -640,7 +640,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
  */
 function bp_activity_link_preview( $content, $activity ) {
 
-	$activity_id = $activity->id;
+	$activity_id  = $activity->id;
 	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );	
 
 	if ( empty( $preview_data['url'] ) ) {
@@ -655,12 +655,11 @@ function bp_activity_link_preview( $content, $activity ) {
 		)
 	);
 
-	$parse_url   = parse_url( $preview_data['url'] );
+	$parse_url   = wp_parse_url( $preview_data['url'] );
 	$domain_name = '';
 	if ( ! empty( $parse_url['host'] ) ) {
 		if ( strpos( $parse_url['host'], 'www' ) !== false ) {
-			$parse_url_explode = explode( 'www.', $parse_url['host'] );
-			$domain_name       = ! empty( $parse_url_explode[1] ) ? $parse_url_explode[1] : '';
+			$domain_name = str_replace( 'www.', '', $parse_url['host'] );
 		} else {
 			$domain_name = $parse_url['host'];
 		}
