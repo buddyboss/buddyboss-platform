@@ -768,7 +768,6 @@ window.bp = window.bp || {};
 			before: null,
 			model: bp.Models.messageThread,
 			options: {},
-			thread_messages: null,
 
 			sync: function( method, model, options ) {
 				options         = options || {};
@@ -787,13 +786,7 @@ window.bp = window.bp || {};
 							}
 					);
 
-					if ( this.thread_messages ) {
-						this.thread_messages.abort();
-					}
-
-					this.thread_messages = bp.ajax.send( options );
-
-					return this.thread_messages;
+					return bp.ajax.send( options );
 				}
 
 				if ( 'create' === method ) {
@@ -807,13 +800,7 @@ window.bp = window.bp || {};
 						model || {}
 					);
 
-					if ( this.thread_messages ) {
-						this.thread_messages.abort();
-					}
-
-					this.thread_messages = bp.ajax.send( options );
-
-					return this.thread_messages;
+					return bp.ajax.send( options );
 				}
 			},
 
@@ -3340,7 +3327,7 @@ window.bp = window.bp || {};
 			},
 
 			retryMessage: function ( model ) {
-				var action = $( model.currentTarget ).data( 'action' );
+				var action = $( model.currentTarget ).data( 'action' ) + '&resend=true';
 				$.ajax(
 					{
 						type: 'POST',
@@ -3414,6 +3401,7 @@ window.bp = window.bp || {};
 				this.listenTo( Backbone, 'onSentMessage', this.triggerPusherMessage );
 				this.listenTo( Backbone, 'onSentMessageError', this.triggerPusherUpdateErrorMessage );
 				this.listenTo( Backbone, 'onReplySentSuccess', this.triggerPusherUpdateMessage );
+				this.listenTo( Backbone, 'onReplyReSend', this.triggerPusherUpdateReSendMessage );
 				this.listenTo( Backbone, 'onMessageDeleteSuccess', this.triggerDeleteUpdateMessage );
 				this.listenTo( Backbone, 'onMessageAjaxFail', this.triggerAjaxFailMessage );
 			},
@@ -3462,6 +3450,24 @@ window.bp = window.bp || {};
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'sending' );
 
 					}
+					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
+						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
+					}
+				}
+			},
+
+			triggerPusherUpdateReSendMessage: function ( messagePusherData ) {
+				messagePusherData = messagePusherData[0];
+				var model = this.collection.get( messagePusherData.hash );
+				if ( model ) {
+					if ( parseInt( messagePusherData.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
+						messagePusherData.sender_is_you = true;
+					} else {
+						messagePusherData.sender_is_you = false;
+					}
+					messagePusherData.date = new Date( messagePusherData.date );
+					model.set( messagePusherData );
+
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
