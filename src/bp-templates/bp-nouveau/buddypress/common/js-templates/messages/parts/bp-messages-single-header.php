@@ -10,12 +10,16 @@
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-single-header">
-	<#    var other_recipients = _.reject(data.recipients.members, function(item) {    return item.is_you;    });
+	<#
+	var other_recipients = _.reject(data.recipients.members, function(item) {    return item.is_you;    });
 	var current_user = _.find(data.recipients.members, function(item) {    return item.is_you == true;    });
 
 	var include_you = other_recipients.length >= 2;
 
-	if (other_recipients.length == 0) {    include_you = true;    } #>
+	if ( other_recipients.length == 0 ) {
+		include_you = true;
+	}
+	#>
 
 	<header class="single-message-thread-header">
 		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }}">
