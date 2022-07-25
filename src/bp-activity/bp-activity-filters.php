@@ -658,11 +658,7 @@ function bp_activity_link_preview( $content, $activity ) {
 	$parse_url   = wp_parse_url( $preview_data['url'] );
 	$domain_name = '';
 	if ( ! empty( $parse_url['host'] ) ) {
-		if ( strpos( $parse_url['host'], 'www' ) !== false ) {
-			$domain_name = str_replace( 'www.', '', $parse_url['host'] );
-		} else {
-			$domain_name = $parse_url['host'];
-		}
+		$domain_name = str_replace( 'www.', '', $parse_url['host'] );
 	}
 
 	$description = $preview_data['description'];
