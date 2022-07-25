@@ -105,7 +105,8 @@
 				width: 12px;
 				height: 12px;
 				right: 12px;
-				top: 12px;
+				bottom: 12px;
+				top: inherit;
 			}
 
 		} // close li
@@ -131,7 +132,7 @@
 
 				.member-status.online {
 					right: 4px;
-					top: 4px;
+					bottom: 4px;
 				}
 
 			}
