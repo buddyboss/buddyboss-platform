@@ -39,6 +39,7 @@ class BP_Suspend_Notification extends BP_Suspend_Abstract {
 		}
 
 		add_filter( 'bb_notifications_get_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
+		add_filter( 'bb_notifications_get_total_count_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
 	}
 
 	/**

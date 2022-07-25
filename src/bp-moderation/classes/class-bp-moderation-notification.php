@@ -45,6 +45,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
 		add_filter( 'bb_notifications_get_where_conditions', array( $this, 'update_where_sql' ), 9999, 3 );
+		add_filter( 'bb_notifications_get_total_count_where_conditions', array( $this, 'update_where_sql' ), 9999, 3 );
 
 	}
 
