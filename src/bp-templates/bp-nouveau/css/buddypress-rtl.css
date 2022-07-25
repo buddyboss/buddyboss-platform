@@ -10533,8 +10533,13 @@ input#send-to-input {
   padding-left: 0;
 }
 
+.compose #buddypress #send_message_form .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+  margin-top: -5px;
+}
+
 .compose #buddypress #send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
   margin-bottom: 0;
+  margin-top: 5px;
 }
 
 .bp-back-to-thread-list {

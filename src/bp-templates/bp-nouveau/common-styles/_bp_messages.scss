@@ -1288,8 +1288,16 @@ input#send-to-input {
 		padding-right: 0;
 	}
 
-	.select2-container--default .select2-selection--multiple .select2-selection__choice {
-		margin-bottom: 0;
+	.select2-container--default .select2-selection--multiple {
+
+		.select2-selection__rendered {
+			margin-top: -5px;
+		}
+
+		.select2-selection__choice {
+			margin-bottom: 0;
+			margin-top: 5px;
+		}
 	}
 }
 
