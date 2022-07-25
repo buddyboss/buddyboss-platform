@@ -272,7 +272,7 @@ function bp_nouveau_ajax_messages_send_message() {
 					'content'                         => do_shortcode( bp_get_message_thread_content() ),
 					'unread'                          => bp_message_thread_has_unread(),
 					'sender_name'                     => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
-					'sender_is_you'                   => $messages_template->thread->last_sender_id == bp_loggedin_user_id(),
+					'sender_is_you'                   => (int) bp_loggedin_user_id() === (int) $messages_template->thread->last_sender_id,
 					'sender_link'                     => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
 					'sender_avatar'                   => esc_url(
 						bp_core_fetch_avatar(
@@ -311,7 +311,7 @@ function bp_nouveau_ajax_messages_send_message() {
 								'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
 								'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
 								'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-								'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
+								'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
 							);
 						}
 					}
@@ -333,7 +333,7 @@ function bp_nouveau_ajax_messages_send_message() {
 					$response['star_link'] = $star_link;
 
 					$star_link_data         = explode( '/', $star_link );
-					$response['is_starred'] = array_search( 'unstar', $star_link_data );
+					$response['is_starred'] = array_search( 'unstar', $star_link_data, true );
 
 					// Defaults to last.
 					$sm_id = $last_message_id;
@@ -541,7 +541,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 			if ( ! empty( $video_ids ) ) {
 				$video_ids = explode( ',', $video_ids );
-				if ( sizeof( $video_ids ) < 2 ) {
+				if ( count( $video_ids ) < 2 ) {
 					$excerpt = __( 'sent a video', 'buddyboss' );
 				} else {
 					$excerpt = __( 'sent some videos', 'buddyboss' );
@@ -614,7 +614,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		);
 
 		$reply['star_link']  = $star_link;
-		$reply['is_starred'] = array_search( 'unstar', explode( '/', $star_link ) );
+		$reply['is_starred'] = array_search( 'unstar', explode( '/', $star_link ), true );
 
 	}
 
@@ -754,12 +754,11 @@ function bp_nouveau_ajax_messages_send_reply() {
 						?>
 						<div class="document-text-wrap">
 							<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
-								<textarea class="document-text-file-data-hidden"
-										  style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
+								<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
 							</div>
 							<div class="document-expand">
-								<a href="#" class="document-expand-anchor"><i
-											class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+								<a href="#" class="document-expand-anchor">
+									<i class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
 								</a>
 							</div>
 						</div> <!-- .document-text-wrap -->
@@ -964,7 +963,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 							'object'     => 'group',
 							'type'       => 'full',
 							'avatar_dir' => 'group-avatars',
-							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+							'alt'        => sprintf(
+								/* translators: group name. */
+								__( 'Group logo of %s', 'buddyboss' ),
+								$group_name
+							),
 							'title'      => $group_name,
 							'html'       => false,
 						)
@@ -976,7 +979,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
-				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
 				$group_link               = 'javascript:void(0);';
 				$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
 				$legacy_group_avatar_name = '-groupavatar-full';
@@ -1020,7 +1023,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 								'object'     => 'group',
 								'type'       => 'full',
 								'avatar_dir' => 'group-avatars',
-								'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+								'alt'        => sprintf(
+									/* translators: group name. */
+									__( 'Group logo of %s', 'buddyboss' ),
+									$group_name
+								),
 								'title'      => $group_name,
 								'html'       => false,
 							)
@@ -1032,7 +1039,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 					$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 					$groups_table             = $prefix . 'bp_groups';
-					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
 					$group_link               = 'javascript:void(0);';
 					$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
 					$legacy_group_avatar_name = '-groupavatar-full';
@@ -1125,7 +1132,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'content'                         => do_shortcode( bp_get_message_thread_content() ),
 			'unread'                          => bp_message_thread_has_unread(),
 			'sender_name'                     => bb_members_get_user_firstname( $messages_template->thread->last_sender_id ),
-			'sender_is_you'                   => $messages_template->thread->last_sender_id === bp_loggedin_user_id(),
+			'sender_is_you'                   => bp_loggedin_user_id() === $messages_template->thread->last_sender_id,
 			'sender_link'                     => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
 			'sender_avatar'                   => esc_url(
 				bp_core_fetch_avatar(
@@ -1175,7 +1182,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
 						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
 						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-						'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
+						'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
 					);
 
 					if ( bp_is_active( 'moderation' ) ) {
@@ -1207,7 +1214,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ]['star_link'] = $star_link;
 
 			$star_link_data                       = explode( '/', $star_link );
-			$threads->threads[ $i ]['is_starred'] = array_search( 'unstar', $star_link_data );
+			$threads->threads[ $i ]['is_starred'] = array_search( 'unstar', $star_link_data, true );
 
 			// Defaults to last.
 			$sm_id = $last_message_id;
@@ -1238,7 +1245,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 			if ( ! empty( $video_ids ) ) {
 				$video_ids = explode( ',', $video_ids );
-				if ( sizeof( $video_ids ) < 2 ) {
+				if ( count( $video_ids ) < 2 ) {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent a video', 'buddyboss' );
 				} else {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent some videos', 'buddyboss' );
@@ -1305,7 +1312,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	);
 
 	if ( array_filter( $extra_content ) ) {
-		$threads->extraContent = $extra_content;
+		$threads->extraContent = $extra_content; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 	}
 
 	// Remove the bp_current_action() override.
@@ -1568,7 +1575,7 @@ function bp_nouveau_ajax_star_thread_messages() {
 	$ids      = wp_parse_id_list( $_POST['id'] );
 	$messages = array();
 
-	// Use global nonce for bulk actions involving more than one id
+	// Use global nonce for bulk actions involving more than one id.
 	if ( 1 !== count( $ids ) ) {
 		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
 			wp_send_json_error( $response );
@@ -1694,10 +1701,10 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 		}
 
 		if ( 'unread' === $action ) {
-			// Mark unread
+			// Mark unread.
 			messages_mark_thread_unread( $thread_id );
 		} else {
-			// Mark read
+			// Mark read.
 			messages_mark_thread_read( $thread_id );
 		}
 
@@ -1948,7 +1955,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 										'buddyboss'
 									),
 								)
-							) . '</div>',
+							) . '</div>'
 						),
 						'type'     => 'notice',
 					);
@@ -2526,7 +2533,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			);
 
 			$thread->messages[ $i ]['star_link']  = $star_link;
-			$thread->messages[ $i ]['is_starred'] = array_search( 'unstar', explode( '/', $star_link ) );
+			$thread->messages[ $i ]['is_starred'] = array_search( 'unstar', explode( '/', $star_link ), true );
 			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . $bp_get_the_thread_message_id );
 		}
 
@@ -2671,12 +2678,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 							?>
 							<div class="document-text-wrap">
 								<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
-									<textarea class="document-text-file-data-hidden"
-											  style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
+									<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
 								</div>
 								<div class="document-expand">
-									<a href="#" class="document-expand-anchor"><i
-												class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+									<a href="#" class="document-expand-anchor">
+                                        <i class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
 									</a>
 								</div>
 							</div> <!-- .document-text-wrap -->
@@ -2817,7 +2823,7 @@ function bp_nouveau_ajax_hide_thread() {
 
 	} else {
 		$thread_recipients = BP_Messages_Thread::get_recipients_for_thread( (int) current( $thread_ids ) );
-		$recipients = array();
+		$recipients        = array();
 		if ( ! empty( $thread_recipients ) ) {
 			foreach ( $thread_recipients as $recepient ) {
 				$recipients[] = bp_core_get_user_displayname( $recepient->user_id );
