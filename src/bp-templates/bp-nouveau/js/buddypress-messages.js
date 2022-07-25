@@ -2748,7 +2748,7 @@ window.bp = window.bp || {};
 			scrolled: function( event ) {
 				var target = $( event.currentTarget );
 
-				if( target.scrollTop() > 5 ) {
+				if ( target.scrollTop() > 5 ) {
 					target.closest( '.bp-messages-nav-panel' ).addClass( 'threads-scrolled' );
 				} else {
 					target.closest( '.bp-messages-nav-panel' ).removeClass( 'threads-scrolled' );
@@ -3442,11 +3442,9 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/', { trigger: true } );
 					window.Backbone.trigger( 'relistelements' );
 				}
-
 			},
 
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
-
 				var model = this.collection.get( messagePusherData.hash );
 				if ( model ) {
 					if ( parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
@@ -3465,7 +3463,6 @@ window.bp = window.bp || {};
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
 				}
-
 			},
 
 			triggerAjaxFailMessage: function ( messagePusherData ) {
@@ -3567,7 +3564,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				//Add class for message form shadow when messages are scrollable
+				// Add class for message form shadow when messages are scrollable.
 				var scrollViewScrollHeight = this.$el.find( '#bp-message-thread-list' ).prop('scrollHeight');
 				var scrollViewClientHeight = this.$el.find( '#bp-message-thread-list' ).prop('clientHeight');
 				if ( scrollViewScrollHeight > scrollViewClientHeight ) {
