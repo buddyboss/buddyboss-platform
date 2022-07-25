@@ -10508,7 +10508,7 @@ input#send-to-input {
 
 .compose .bp-messages-recipient {
   display: flex;
-  padding: 0 45px 22px 22px;
+  padding: 0 45px 17px 22px;
   margin: 0 -20px;
 }
 
@@ -10533,13 +10533,8 @@ input#send-to-input {
   padding-right: 0;
 }
 
-.compose #buddypress #send_message_form .select2-container--default .select2-selection--multiple .select2-selection__rendered {
-  margin-top: -5px;
-}
-
 .compose #buddypress #send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  margin-bottom: 0;
-  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .bp-back-to-thread-list {
