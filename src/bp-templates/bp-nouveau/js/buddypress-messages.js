@@ -2334,7 +2334,7 @@ window.bp = window.bp || {};
 
 				$input.select2(
 					{
-						placeholder: $input.attr( 'placeholder' ),
+						placeholder: '',
 						minimumInputLength: 1,
 						dropdownCssClass: 'bb-select-dropdown bb-compose-input',
 						containerCssClass: 'bb-select-container',
