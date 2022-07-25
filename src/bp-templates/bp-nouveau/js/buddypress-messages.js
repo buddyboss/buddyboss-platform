@@ -3337,7 +3337,7 @@ window.bp = window.bp || {};
 			},
 
 			retryMessage: function ( model ) {
-				var action = $( model.currentTarget ).data( 'action' );
+				var action = $( model.currentTarget ).data( 'action' ) + '&resend=true';
 				$.ajax(
 					{
 						type: 'POST',
