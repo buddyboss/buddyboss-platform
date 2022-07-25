@@ -566,7 +566,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
-				$excerpt = __( 'sent a gif', 'buddyboss' );
+				$excerpt = __( 'sent a GIF', 'buddyboss' );
 			}
 		}
 	}
@@ -1273,7 +1273,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
-				$threads->threads[ $i ]['excerpt'] = __( 'sent a gif', 'buddyboss' );
+				$threads->threads[ $i ]['excerpt'] = __( 'sent a GIF', 'buddyboss' );
 			}
 		}
 
