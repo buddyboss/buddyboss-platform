@@ -123,7 +123,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'hide_thread'   => __( 'Hiding conversation.', 'buddyboss' ),
 			'unhide_thread' => __( 'Unhiding conversation.', 'buddyboss' ),
 		),
-		'type_message'               => __( 'Type message', 'buddyboss' ),
+		'type_message'               => __( 'Write a message...', 'buddyboss' ),
 		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss' ),
 		'delete_thread_confirmation' => __( 'As a site admin you are able to delete conversations. Are you sure you want to permanently delete this conversation and all of its messages? This cannot be undone.', 'buddyboss' ),
 		'bulk_actions'               => bp_nouveau_messages_get_bulk_actions(),
