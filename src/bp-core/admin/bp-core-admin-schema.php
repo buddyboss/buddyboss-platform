@@ -83,16 +83,18 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_blog_tracking();
 	}
 
-	// Discussion forums
+	// Discussion forums.
 	if ( ! empty( $active_components['forums'] ) ) {
 		bp_core_install_discussion_forums();
 	}
 
-	// Media
+	// Media.
 	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 		bp_core_install_document();
-		bp_update_option( 'bp_media_symlink_support', 1 );
+		if ( false === bp_get_option( 'bp_media_symlink_support', false ) ) {
+			bp_update_option( 'bp_media_symlink_support', 1 );
+		}
 	}
 
 	if ( ! empty( $active_components['moderation'] ) ) {
