@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-26 13:45:47+00:00\n"
+"POT-Creation-Date: 2022-07-26 13:52:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3613,13 +3613,13 @@ msgstr ""
 msgid "Create Page"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:481
+#: bp-core/admin/bp-core-admin-schema.php:483
 #: bp-core/admin/settings/bp-admin-setting-general.php:21
 #: bp-forums/core/update.php:188
 msgid "General"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:485
+#: bp-core/admin/bp-core-admin-schema.php:487
 #: bp-core/admin/bp-core-admin-settings.php:1970
 #: bp-core/admin/bp-core-admin-settings.php:1998
 #: bp-core/admin/bp-core-admin-settings.php:2026
@@ -3628,14 +3628,14 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:489
+#: bp-core/admin/bp-core-admin-schema.php:491
 #: bp-core/admin/bp-core-admin-settings.php:1975
 #: bp-core/admin/bp-core-admin-settings.php:2003
 #: bp-core/admin/bp-core-admin-settings.php:2040 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:493
+#: bp-core/admin/bp-core-admin-schema.php:495
 #: bp-core/admin/bp-core-admin-settings.php:1980
 #: bp-core/admin/bp-core-admin-settings.php:2008
 #: bp-core/admin/bp-core-admin-settings.php:2045
