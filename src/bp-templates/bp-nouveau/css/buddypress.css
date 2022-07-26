@@ -9534,7 +9534,7 @@ div.profile_completion_wrap .progress_text_wrap {
   font-size: 18px;
   display: inline-block;
   vertical-align: middle;
-  margin-right: 5px;
+  margin-right: 7px;
 }
 
 #buddypress .bp-messages-container .message_action__list li.unread a:before {
@@ -9542,7 +9542,7 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 #buddypress .bp-messages-container .message_action__list li.hide_thread a:before {
-  content: "\e828";
+  content: "\ee57";
 }
 
 #buddypress .bp-messages-container .message_action__list li.delete_messages a:before {

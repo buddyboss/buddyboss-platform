@@ -94,35 +94,16 @@
 					<div class="message_action__list">
 						<ul>
 							<li class="unread">
-								<a data-bp-action="unread" href="#">
-									<?php
-									esc_html_e(
-										'Mark as unread',
-										'buddyboss'
-									);
-									?>
-								</a>
+								<a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?></a>
 							</li>
 							<# if ( data.is_thread_archived ) { #>
 								<li class="unhide_thread">
-									<a data-bp-action="unhide_thread" href="#">
-										<?php
-										esc_html_e(
-											'Unarchive Conversation',
-											'buddyboss'
-										);
-										?>
+									<a data-bp-action="unhide_thread" href="#"><?php esc_html_e( 'Unarchive Conversation', 'buddyboss' ); ?>
 									</a>
 								</li>
 							<# } else { #>
 								<li class="hide_thread">
-									<a data-bp-action="hide_thread" href="#">
-										<?php
-										esc_html_e(
-											'Archive',
-											'buddyboss'
-										);
-										?>
+									<a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Archive', 'buddyboss' ); ?>
 									</a>
 								</li>
 							<# } #>
