@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 function bb_register_pusher_integration() {
 
 	if (
-		( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '2.0.5', '>=' ) ) ||
+		( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '2.1.0', '>=' ) ) ||
 		class_exists( 'BB_Pusher_Integration' )
 	) {
 		return;
