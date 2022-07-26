@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-25 05:44:29+00:00\n"
+"POT-Creation-Date: 2022-07-26 03:04:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8854,13 +8854,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -23773,7 +23773,7 @@ msgstr ""
 
 #: bp-messages/classes/class-bp-messages-notification.php:302
 #. translators: user display name
-msgid "%s sent a gif"
+msgid "%s sent a GIF"
 msgstr ""
 
 #: bp-messages/classes/class-bp-messages-notification.php:308
@@ -26352,7 +26352,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:15
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1318
-#: bp-templates/bp-nouveau/includes/messages/functions.php:126
 msgid "Type message"
 msgstr ""
 
@@ -29361,7 +29360,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:569
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1273
-msgid "sent a gif"
+msgid "sent a GIF"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:794
@@ -29555,6 +29554,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/functions.php:124
 msgid "Unhiding conversation."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/messages/functions.php:126
+msgid "Write a message..."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/functions.php:127
@@ -31620,15 +31623,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
