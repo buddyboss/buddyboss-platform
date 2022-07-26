@@ -3599,6 +3599,13 @@ window.bp = window.bp || {};
 						button.trigger( 'click' );
 					}
 				}
+
+				if ( target.prop( 'scrollHeight' ) - target.scrollTop() <= target.outerHeight() ) {
+					$( '.bp-messages-content-wrapper' ).removeClass( 'scrolled--up' );
+				} else {
+					$( '.bp-messages-content-wrapper' ).addClass( 'scrolled--up' );
+				}
+
 			},
 
 			messagesFetchError: function( collection, response ) {
