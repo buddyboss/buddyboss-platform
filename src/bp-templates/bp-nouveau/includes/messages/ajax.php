@@ -1097,6 +1097,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			}
 		}
 
+		$sender_name      = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
 		$check_recipients = (array) $messages_template->thread->recipients;
 		// Strip the sender from the recipient list, and unset them if they are
 		// not alone. If they are alone, let them talk to themselves.
@@ -1105,12 +1106,16 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		}
 
 		// Check moderation if user blocked or not for single user thread.
-		if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
+		if ( $can_message && ! $is_group_thread && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
 			$recipient_id = current( array_keys( $check_recipients ) );
-			if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
-				$can_message = false;
-			} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
-				$can_message = false;
+			// For conversations with a single recipient - Don’t include the name of the last person to message before the message content.
+			$sender_name  = '';
+			if ( bp_is_active( 'moderation' ) ) {
+				if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
+					$can_message = false;
+				} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
+					$can_message = false;
+				}
 			}
 		}
 		$threads->threads[ $i ] = array(
@@ -1131,8 +1136,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'excerpt'                         => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
 			'content'                         => do_shortcode( bp_get_message_thread_content() ),
 			'unread'                          => bp_message_thread_has_unread(),
-			'sender_name'                     => bb_members_get_user_firstname( $messages_template->thread->last_sender_id ),
-			'sender_is_you'                   => bp_loggedin_user_id() === $messages_template->thread->last_sender_id,
+			'sender_name'                     => $sender_name,
+			'sender_is_you'                   => (int) bp_loggedin_user_id() === (int) $messages_template->thread->last_sender_id,
 			'sender_link'                     => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
 			'sender_avatar'                   => esc_url(
 				bp_core_fetch_avatar(
