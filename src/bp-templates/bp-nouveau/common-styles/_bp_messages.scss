@@ -524,7 +524,7 @@
 		font-size: 18px;
 		display: inline-block;
 		vertical-align: middle;
-		margin-right: 5px;
+		margin-right: 7px;
 	}
 
 	li.unread a:before {
@@ -532,7 +532,7 @@
 	}
 
 	li.hide_thread a:before {
-		content: "\e828";
+		content: "\ee57";
 	}
 
 	li.delete_messages a:before {
@@ -848,13 +848,18 @@ input#send-to-input {
 	}
 
 	#whats-new-messages-toolbar {
-		padding: 5px 15px 0 0;
+		padding: 0 15px 0 0;
 		width: auto;
 	}
 
 	#whats-new-formatting-toolbar {
 		display: flex;
-		margin: 5px 5px 0 0;
+		margin: 0 5px 0 0;
+
+		.toolbar-button,
+		.post-elements-buttons-item {
+			display: flex;
+		}
 	}
 
 }
@@ -865,6 +870,7 @@ input#send-to-input {
 	text-align: right;
 	margin: 8px 0 0;
 	line-height: 1.5;
+	display: none;
 
 	.space_note {
 		margin-right: 15px;

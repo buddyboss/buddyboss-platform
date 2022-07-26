@@ -79,11 +79,13 @@
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 					<span class="thread-excerpt">
 						<span class="last-message-sender">
-						<# if ( data.sender_is_you ) { #>
-							<?php _e( 'You', 'buddyboss' ); ?>:
-						<# } else { #>
-							{{ data.sender_name }}:
-						<# } #>
+							<# if ( data.sender_name ) { #>
+								<# if ( data.sender_is_you ) { #>
+									<?php _e( 'You', 'buddyboss' ); ?>:
+								<# } else { #>
+									{{ data.sender_name }}:
+								<# } #>
+							<# } #>
 						</span>
 						{{{data.excerpt}}}
 					</span>

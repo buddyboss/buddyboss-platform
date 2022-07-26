@@ -9973,7 +9973,7 @@ div.profile_completion_wrap .progress_text_wrap {
   font-size: 18px;
   display: inline-block;
   vertical-align: middle;
-  margin-left: 5px;
+  margin-left: 7px;
 }
 
 #buddypress .bp-messages-container .message_action__list li.unread a:before {
@@ -9981,7 +9981,7 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 #buddypress .bp-messages-container .message_action__list li.hide_thread a:before {
-  content: "\e828";
+  content: "\ee57";
 }
 
 #buddypress .bp-messages-container .message_action__list li.delete_messages a:before {
@@ -10264,13 +10264,18 @@ input#send-to-input {
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
-  padding: 5px 0 0 15px;
+  padding: 0 0 0 15px;
   width: auto;
 }
 
 .bp-messages-content #bp-message-content #whats-new-formatting-toolbar {
   display: flex;
-  margin: 5px 0 0 5px;
+  margin: 0 0 0 5px;
+}
+
+.bp-messages-content #bp-message-content #whats-new-formatting-toolbar .toolbar-button,
+.bp-messages-content #bp-message-content #whats-new-formatting-toolbar .post-elements-buttons-item {
+  display: flex;
 }
 
 .bp-messages-content .bp-message-content_foot_note {
@@ -10279,6 +10284,7 @@ input#send-to-input {
   text-align: left;
   margin: 8px 0 0;
   line-height: 1.5;
+  display: none;
 }
 
 .bp-messages-content .bp-message-content_foot_note .space_note {

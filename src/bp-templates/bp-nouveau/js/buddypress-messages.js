@@ -768,6 +768,7 @@ window.bp = window.bp || {};
 			before: null,
 			model: bp.Models.messageThread,
 			options: {},
+			thread_messages: null,
 
 			sync: function( method, model, options ) {
 				options         = options || {};
@@ -786,7 +787,13 @@ window.bp = window.bp || {};
 							}
 					);
 
-					return bp.ajax.send( options );
+					if ( this.thread_messages ) {
+						this.thread_messages.abort();
+					}
+
+					this.thread_messages = bp.ajax.send( options );
+
+					return this.thread_messages;
 				}
 
 				if ( 'create' === method ) {
@@ -3595,6 +3602,13 @@ window.bp = window.bp || {};
 						button.trigger( 'click' );
 					}
 				}
+
+				if ( target.prop( 'scrollHeight' ) - target.scrollTop() <= target.outerHeight() ) {
+					$( '.bp-messages-content-wrapper' ).removeClass( 'scrolled--up' );
+				} else {
+					$( '.bp-messages-content-wrapper' ).addClass( 'scrolled--up' );
+				}
+
 			},
 
 			messagesFetchError: function( collection, response ) {
