@@ -848,13 +848,18 @@ input#send-to-input {
 	}
 
 	#whats-new-messages-toolbar {
-		padding: 5px 15px 0 0;
+		padding: 0 15px 0 0;
 		width: auto;
 	}
 
 	#whats-new-formatting-toolbar {
 		display: flex;
-		margin: 5px 5px 0 0;
+		margin: 0 5px 0 0;
+
+		.toolbar-button,
+		.post-elements-buttons-item {
+			display: flex;
+		}
 	}
 
 }

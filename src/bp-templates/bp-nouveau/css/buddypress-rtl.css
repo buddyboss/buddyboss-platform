@@ -9825,13 +9825,18 @@ input#send-to-input {
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
-  padding: 5px 0 0 15px;
+  padding: 0 0 0 15px;
   width: auto;
 }
 
 .bp-messages-content #bp-message-content #whats-new-formatting-toolbar {
   display: flex;
-  margin: 5px 0 0 5px;
+  margin: 0 0 0 5px;
+}
+
+.bp-messages-content #bp-message-content #whats-new-formatting-toolbar .toolbar-button,
+.bp-messages-content #bp-message-content #whats-new-formatting-toolbar .post-elements-buttons-item {
+  display: flex;
 }
 
 .bp-messages-content .bp-message-content_foot_note {
