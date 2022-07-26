@@ -7640,3 +7640,92 @@ function bb_admin_icons( $id ) {
 	return apply_filters( 'bb_admin_icons', $meta_icon, $id );
 }
 
+/** Function to get the client machine os.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_core_get_os() {
+
+	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+	$os_platform = '';
+	$os_array    = array(
+		'/windows nt 10/i'      => 'Windows 10',
+		'/windows nt 6.3/i'     => 'Windows 8.1',
+		'/windows nt 6.2/i'     => 'Windows 8',
+		'/windows nt 6.1/i'     => 'Windows 7',
+		'/windows nt 6.0/i'     => 'Windows Vista',
+		'/windows nt 5.2/i'     => 'Windows Server 2003/XP x64',
+		'/windows nt 5.1/i'     => 'Windows XP',
+		'/windows xp/i'         => 'Windows XP',
+		'/windows nt 5.0/i'     => 'Windows 2000',
+		'/windows me/i'         => 'Windows ME',
+		'/win98/i'              => 'Windows 98',
+		'/win95/i'              => 'Windows 95',
+		'/win16/i'              => 'Windows 3.11',
+		'/macintosh|mac os x/i' => 'Mac OS X',
+		'/mac_powerpc/i'        => 'Mac OS 9',
+		'/linux/i'              => 'Linux',
+		'/ubuntu/i'             => 'Ubuntu',
+		'/iphone/i'             => 'iPhone',
+		'/ipod/i'               => 'iPod',
+		'/ipad/i'               => 'iPad',
+		'/android/i'            => 'Android',
+		'/blackberry/i'         => 'BlackBerry',
+		'/webos/i'              => 'Mobile',
+	);
+
+	foreach ( $os_array as $regex => $value ) {
+		if ( preg_match( $regex, $user_agent ) ) {
+			$os_platform = $value;
+		}
+	}
+
+	switch ( $os_platform ) {
+		case 'Windows 10':
+		case 'Windows 8.1':
+		case 'Windows 8':
+		case 'Windows 7':
+		case 'Windows Vista':
+		case 'Windows Server 2003/XP x64':
+		case 'Windows XP':
+		case 'Windows 2000':
+		case 'Windows ME':
+		case 'Windows 98':
+		case 'Windows 3.11':
+		case 'Windows 95':
+			$os_platform = 'window';
+			break;
+		case 'Mac OS X':
+		case 'Mac OS 9':
+			$os_platform = 'mac';
+			break;
+		case 'Linux':
+		case 'Ubuntu':
+			$os_platform = 'ubuntu';
+			break;
+		case 'iPhone':
+		case 'iPod':
+		case 'iPad':
+			$os_platform = 'ios_device';
+			break;
+		case 'Android':
+			$os_platform = 'android_device';
+			break;
+		case 'BlackBerry':
+			$os_platform = 'BlackBerry';
+			break;
+		case 'Mobile':
+			$os_platform = 'Mobile';
+			break;
+		default:
+			$os_platform = 'window';
+
+			break;
+	}
+
+	return $os_platform;
+
+}
