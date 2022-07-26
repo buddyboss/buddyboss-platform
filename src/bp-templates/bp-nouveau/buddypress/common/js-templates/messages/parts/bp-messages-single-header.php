@@ -119,7 +119,7 @@
 									<a data-bp-action="hide_thread" href="#">
 										<?php
 										esc_html_e(
-											'Hide conversation',
+											'Archive',
 											'buddyboss'
 										);
 										?>
@@ -188,7 +188,7 @@
 									<a data-bp-action="hide_thread" href="#">
 										<?php
 										esc_html_e(
-											'Hide conversation',
+											'Archive',
 											'buddyboss'
 										);
 										?>
