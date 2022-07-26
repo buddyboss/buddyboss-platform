@@ -6431,8 +6431,7 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   width: 12px;
   height: 12px;
   left: 12px;
-  bottom: 12px;
-  top: inherit;
+  top: 12px;
 }
 
 .buddypress-wrap .members-list.grid li .only-list-view {
@@ -6450,7 +6449,7 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
 }
 
 .buddypress-wrap .members-list:not(.grid) li .member-status.online {
-  left: 4px;
+  top: 4px;
   bottom: 4px;
 }
 
