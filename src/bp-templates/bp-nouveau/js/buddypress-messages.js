@@ -1263,6 +1263,7 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							response.data.saved 	 = false;
 							response.data.privacy 	 = 'message';
+							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						} else {
