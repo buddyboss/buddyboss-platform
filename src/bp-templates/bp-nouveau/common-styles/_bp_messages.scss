@@ -1207,23 +1207,14 @@ input#send-to-input {
 	#messages-post-document-uploader.open,
 	#messages-post-video-uploader.open,
 	#messages-post-media-uploader.open {
+
+		@include center-vert();
 		position: absolute;
 		top: 0;
 		z-index: 11;
 		background: rgba(255, 255, 255, 0.99);
 		height: calc(100% - 245px);
 		width: 100%;
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-align: center;
-		-ms-flex-align: center;
-		align-items: center;
-		-ms-flex-line-pack: center;
-		align-content: center;
-		-webkit-box-pack: center;
-		-ms-flex-pack: center;
-		justify-content: center;
 		left: 0;
 		border-radius: 4px;
 		padding: 20px;
