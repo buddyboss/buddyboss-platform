@@ -392,6 +392,8 @@ function bp_activity_save_link_data( $activity ) {
 		}
 	}
 
+	$preview_data['link_image_index_save'] = isset(  $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
+
 	if ( ! empty( $link_title ) ) {
 		$preview_data['title'] = $link_title;
 	}
@@ -735,9 +737,8 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
  */
 function bp_activity_link_preview( $content, $activity ) {
 
-	$activity_id = $activity->id;
-
-	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+	$activity_id  = $activity->id;
+	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );	
 
 	if ( empty( $preview_data['url'] ) ) {
 		return $content;
@@ -751,25 +752,38 @@ function bp_activity_link_preview( $content, $activity ) {
 		)
 	);
 
+	$parse_url   = wp_parse_url( $preview_data['url'] );
+	$domain_name = '';
+	if ( ! empty( $parse_url['host'] ) ) {
+		$domain_name = str_replace( 'www.', '', $parse_url['host'] );
+	}
+
 	$description = $preview_data['description'];
 	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
 	$description = wp_trim_words( $description, 40, $read_more );
 
 	$content = make_clickable( $content );
 
-	$content .= '<div class="activity-link-preview-container">';
-	$content .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
+	$content .= '<div class="activity-link-preview-container">';	
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
 		$content  .= '<div class="activity-link-preview-image">';
+		$content  .= '<div class="activity-link-preview-image-cover">';
 		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
+		$content  .= '</div>';
 		$content  .= '</div>';
 	} elseif ( ! empty( $preview_data['image_url'] ) ) {
 		$content .= '<div class="activity-link-preview-image">';
+		$content  .= '<div class="activity-link-preview-image-cover">';
 		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
 		$content .= '</div>';
+		$content .= '</div>';
 	}
+	$content .= '<div class="activity-link-preview-info">';
+	$content .= '<p class="activity-link-preview-link-name">' . esc_html( $domain_name ) . '</p>';
+	$content .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
 	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
+	$content .= '</div>';
 	$content .= '</div>';
 
 	return $content;
