@@ -1153,7 +1153,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			),
 			'count'                           => bp_get_message_thread_total_count(),
 			'date'                            => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
-			'display_date'                    => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
+			'display_date'                    => bb_get_thread_sent_date(),
 			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 		);
 
@@ -2462,7 +2462,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'              => bp_get_the_thread_message_time_since(),
+				'display_date'              => bb_get_thread_message_sent_date(),
 			);
 
 		} else {
@@ -2514,7 +2514,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => bp_get_the_thread_message_time_since(),
+				'display_date'  => bb_get_thread_message_sent_date(),
 			);
 		}
 
