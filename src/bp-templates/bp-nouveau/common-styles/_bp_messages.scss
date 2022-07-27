@@ -274,6 +274,39 @@
 		}
 	}
 
+	// more options dropdown
+	.thread-item.optionsOpen {
+		position: relative;
+		z-index: 1;
+	}
+
+	.message-thread-options {
+		position: absolute;
+		right: 15px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		display: none;
+
+		.bb_more_options_action {
+			padding: 4px;
+
+			i {
+				font-size: 16px;
+				line-height: 1;
+			}
+		}
+
+		.bb_more_options_list {
+			list-style: none;
+		}
+	}
+
+	.thread-item.optionsOpen .message-thread-options,
+	.thread-item:hover .message-thread-options {
+		display: block;
+	}
+
 	// close li
 
 }
@@ -560,6 +593,24 @@
 		opacity: 0.9;
 	}
 
+}
+
+#buddypress .bp-messages-container .thread-item:nth-child(3) {
+
+	~ .thread-item:nth-last-child(2) .message_action__list,
+	~ .thread-item:nth-last-child(3) .message_action__list,
+	~ .thread-item:last-child .message_action__list {
+		top: initial;
+		bottom: 0;
+		right: -8px;
+
+		&:after {
+			top: initial;
+			bottom: -12px;
+			transform: rotate(140deg);
+			right: 0;
+		}
+	}
 }
 
 // The single view of messages in a conversation thread

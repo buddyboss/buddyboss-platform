@@ -27,6 +27,31 @@
 	}
 	#>
 
+	<div class="bb_more_options message-thread-options">
+		<a href="#" class="bb_more_options_action bp-tooltip">
+			<i class="bb-icon-menu-dots-h"></i>
+		</a>
+		<ul class="bb_more_options_list message_action__list">
+			<li class="unread">
+				<a data-bp-action="unread" href="#">Mark unread</a>
+			</li>
+			<li class="hide_thread">
+				<a data-bp-action="hide_thread" href="#">Hide conversation</a>
+			</li>
+
+			<li class="report_thread">
+				<a id="report-content-user-21" href="#block-member" class="block-member" data-bp-content-id="21" data-bp-content-type="user" data-bp-nonce="ebaadd531f">Block member</a>
+			</li>
+
+			<li class="delete_messages">
+				<a data-bp-action="delete" href="#">Delete your messages</a>
+			</li>
+			<li class="delete_thread">
+				<a data-bp-action="delete_thread" href="#">Delete conversation</a>
+			</li>
+		</ul>
+	</div>
+
 	<# if ( ! data.is_search ) { #>
 	<a href="javascript:void(0);" data-bp-thread-id="{{data.id}}" data-bp-action="hide_thread" class="close-conversation"> <i class="dashicons dashicons-no-alt"></i> </a>
 	<# } #>

@@ -2622,6 +2622,7 @@ window.bp = window.bp || {};
 				'click .bp-message-link' : 'changePreview',
 				'scroll' : 'scrolled',
 				'click .close-conversation' : 'doAction',
+				'click .message-thread-options > .bb_more_options_action' : 'ToggleOptions'
 			},
 
 			initialize: function() {
@@ -2883,6 +2884,10 @@ window.bp = window.bp || {};
 						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 					}
 				);
+			},
+
+			ToggleOptions: function( event ) {
+				$( event.currentTarget ).closest( '.thread-item' ).toggleClass( 'optionsOpen' ).siblings().removeClass( 'optionsOpen' );
 			},
 		}
 	);
