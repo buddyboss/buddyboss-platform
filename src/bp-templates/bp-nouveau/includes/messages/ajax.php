@@ -2834,7 +2834,9 @@ function bp_nouveau_ajax_hide_thread() {
 		$recipients        = array();
 		if ( ! empty( $thread_recipients ) ) {
 			foreach ( $thread_recipients as $recepient ) {
-				$recipients[] = bp_core_get_user_displayname( $recepient->user_id );
+				if ( bp_loggedin_user_id() !== $recepient->user_id ) {
+					$recipients[] = bp_core_get_user_displayname( $recepient->user_id );
+				}
 			}
 		}
 
