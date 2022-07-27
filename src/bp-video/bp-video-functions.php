@@ -2106,7 +2106,7 @@ function bp_video_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
  * @return string
  * @since BuddyBoss 1.7.0
  */
-function bp_video_default_scope( $scope ) {
+function bp_video_default_scope( $scope = 'all' ) {
 
 	$new_scope = array();
 
