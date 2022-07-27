@@ -375,6 +375,8 @@ function bp_nouveau_ajax_messages_send_message() {
 				'type'                          => 'success',
 				'thread'                        => $response,
 				'recipient_inbox_unread_counts' => $inbox_unread_cnt,
+				'thread_id'                     => $response['id'],
+				'hash'                          => $response['message_id'],
 			)
 		);
 
@@ -1112,7 +1114,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		if ( $can_message && ! $is_group_thread && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
 			$recipient_id = current( array_keys( $check_recipients ) );
 			// For conversations with a single recipient - Don’t include the name of the last person to message before the message content.
-			$sender_name  = '';
+			$sender_name = '';
 			if ( bp_is_active( 'moderation' ) ) {
 				if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 					$can_message = false;
@@ -2690,7 +2692,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 								</div>
 								<div class="document-expand">
 									<a href="#" class="document-expand-anchor">
-                                        <i class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+										<i class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
 									</a>
 								</div>
 							</div> <!-- .document-text-wrap -->
