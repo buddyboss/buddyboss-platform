@@ -1097,23 +1097,21 @@ class BP_Messages_Thread {
 
 			$current_user_thread_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'thread_id' ) );
 
+			$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+			$groups_table = $prefix . 'bp_groups';
 			if ( bp_is_active( 'groups' ) ) {
 				$groups_table = $bp->groups->table_name;
-			} else {
-				$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-				$groups_table = $prefix . 'bp_groups';
-			}
+				// Search Group Thread via Group Name via search_terms.
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$groups           = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT(r.thread_id) FROM {$bp->messages->table_name_recipients} r LEFT JOIN {$groups_table} g ON r.user_id = g.creator_id LEFT JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id LEFT JOIN {$bp->messages->table_name_meta} mt ON m.id = mt.message_id WHERE g.name LIKE %s AND r.is_deleted = 0 AND mt.meta_key = 'group_id' AND mt.meta_value = g.id", $search_terms_like ) );
+				$group_thread_ids = array_map( 'intval', wp_list_pluck( $groups, 'thread_id' ) );
 
-			// Search Group Thread via Group Name via search_terms.
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$groups           = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT(r.thread_id) FROM {$bp->messages->table_name_recipients} r LEFT JOIN {$groups_table} g ON r.user_id = g.creator_id LEFT JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id LEFT JOIN {$bp->messages->table_name_meta} mt ON m.id = mt.message_id WHERE g.name LIKE %s AND r.is_deleted = 0 AND mt.meta_key = 'group_id' AND mt.meta_value = g.id", $search_terms_like ) );
-			$group_thread_ids = array_map( 'intval', wp_list_pluck( $groups, 'thread_id' ) );
-
-			if ( ! empty( $group_thread_ids ) ) {
-				if ( is_array( $current_user_thread_ids ) ) {
-					$current_user_thread_ids = array_merge( $current_user_thread_ids, $group_thread_ids );
-				} else {
-					$current_user_thread_ids = $group_thread_ids;
+				if ( ! empty( $group_thread_ids ) ) {
+					if ( is_array( $current_user_thread_ids ) ) {
+						$current_user_thread_ids = array_merge( $current_user_thread_ids, $group_thread_ids );
+					} else {
+						$current_user_thread_ids = $group_thread_ids;
+					}
 				}
 			}
 
@@ -1190,8 +1188,7 @@ class BP_Messages_Thread {
 
 			if ( ! empty( $search_where ) ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$where_sql  = '( ' . $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
-				$where_sql .= $search_where . ' )';
+				$where_sql = '( ' . $wpdb->prepare( 'm.message LIKE %s', $search_terms_like ) . $search_where . ' )';
 			}
 		}
 
