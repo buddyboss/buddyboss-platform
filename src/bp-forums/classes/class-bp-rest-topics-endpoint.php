@@ -2663,6 +2663,9 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$topic   = bbp_get_topic( bbp_get_topic_id( (int) $topic_id ) );
 		$form_id = bbp_get_topic_forum_id( $topic_id );
+		if ( empty( $form_id ) && ! empty( $topic_id ) ) {
+			$form_id = $topic->ID;
+		}
 
 		return array(
 			'show_replies' => $this->forum_endpoint->can_access_content( $form_id ),

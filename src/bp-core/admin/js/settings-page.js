@@ -1713,57 +1713,61 @@ window.bp = window.bp || {};
 			// Confirmed box appears when change profile sizes options.
 			var is_confirmed_show = false;
 
-			var bpCoverProfileWidth  = $( 'select[id="bb-cover-profile-width"] option:selected' ).val();
-			var bpCoverProfileHeight = $( 'select[id="bb-cover-profile-height"] option:selected' ).val();
-			$( '#bp_member_avatar_settings' ).on(
-				'change',
-				'select[id="bb-cover-profile-width"], select[id="bb-cover-profile-height"]',
-				function(e) {
-					e.preventDefault();
+			if ( $( '#bp_member_avatar_settings .image-width-height' ).length ) {
+				var bpCoverProfileWidth  = $( 'select#bb-cover-profile-width' ).find( 'option:selected' ).val();
+				var bpCoverProfileHeight = $( 'select#bb-cover-profile-height' ).find( 'option:selected' ).val();
+				$( '#bp_member_avatar_settings' ).on(
+					'change',
+					'select#bb-cover-profile-width, select#bb-cover-profile-height',
+					function(e) {
+						e.preventDefault();
 
-					is_confirmed_show = true;
-					if ( 'bb-cover-profile-width' === $( this ).attr( 'id' ) && bpCoverProfileWidth === $( this ).val() ) {
-						is_confirmed_show = false;
-					} else if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) && bpCoverProfileHeight === $( this ).val() ) {
-						is_confirmed_show = false;
-					}
+						is_confirmed_show = true;
+						if ( 'bb-cover-profile-width' === $( this ).attr( 'id' ) && bpCoverProfileWidth === $( this ).val() ) {
+							is_confirmed_show = false;
+						} else if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) && bpCoverProfileHeight === $( this ).val() ) {
+							is_confirmed_show = false;
+						}
 
-					// Add class to preview section for browser only.
-					if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) ) {
-						if ( 'small' === $( this ).val() ) {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
-						} else {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						// Add class to preview section for browser only.
+						if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) ) {
+							if ( 'small' === $( this ).val() ) {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+							} else {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+							}
 						}
 					}
-				}
-			);
+				);
+			}
 
-			var bpCoverGroupWidth  = $( 'select[id="bb-cover-group-width"] option:selected' ).val();
-			var bpCoverGroupHeight = $( 'select[id="bb-cover-group-height"] option:selected' ).val();
-			$( '#bp_groups_avatar_settings' ).on(
-				'change',
-				'select[id="bb-cover-group-width"], select[id="bb-cover-group-height"]',
-				function(e) {
-					e.preventDefault();
+			if ( $( '#bp_groups_avatar_settings .image-width-height' ).length ) {
+				var bpCoverGroupWidth  = $( 'select#bb-cover-group-width' ).find( 'option:selected' ).val();
+				var bpCoverGroupHeight = $( 'select#bb-cover-group-height' ).find( 'option:selected' ).val();
+				$( '#bp_groups_avatar_settings' ).on(
+					'change',
+					'select#bb-cover-group-width, select#bb-cover-group-height',
+					function(e) {
+						e.preventDefault();
 
-					is_confirmed_show = true;
-					if ( 'bb-cover-group-width' === $( this ).attr( 'id' ) && bpCoverGroupWidth === $( this ).val() ) {
-						is_confirmed_show = false;
-					} else if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) && bpCoverGroupHeight === $( this ).val() ) {
-						is_confirmed_show = false;
-					}
+						is_confirmed_show = true;
+						if ( 'bb-cover-group-width' === $( this ).attr( 'id' ) && bpCoverGroupWidth === $( this ).val() ) {
+							is_confirmed_show = false;
+						} else if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) && bpCoverGroupHeight === $( this ).val() ) {
+							is_confirmed_show = false;
+						}
 
-					// Add class to preview section for browser only.
-					if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) ) {
-						if ( 'small' === $( this ).val() ) {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
-						} else {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						// Add class to preview section for browser only.
+						if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) ) {
+							if ( 'small' === $( this ).val() ) {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+							} else {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+							}
 						}
 					}
-				}
-			);
+				);
+			}
 
 			$( 'body.buddyboss_page_bp-settings' ).on(
 				'click',

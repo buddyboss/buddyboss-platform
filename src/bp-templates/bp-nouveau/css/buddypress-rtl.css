@@ -2429,6 +2429,11 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   content: "\ee5c";
   font-family: 'bb-icons';
   /* stylelint-disable-line */
+  font-weight: 300;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more .medium-editor-action-more-button.active b:before {
+  color: #000;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul {
@@ -2438,10 +2443,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   right: 10px;
   transform: translateX(50%);
   background: #fff;
-  border: 1px solid #e7e9eb;
+  border: 1px solid #e1e3e6;
   box-sizing: border-box;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1), 0 6px 14px rgba(0, 0, 0, 0.16);
-  border-radius: 3px;
+  box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.13);
+  border-radius: 4px;
   display: none;
 }
 
@@ -2464,6 +2469,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   -webkit-transition: all linear 0.2s;
   transition: all linear 0.2s;
   z-index: 101;
+  display: none;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul button {
@@ -3386,6 +3392,7 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-header .activity-to:before {
+  display: inline-block;
   font-family: dashicons;
   vertical-align: middle;
   content: "\f344";
@@ -6142,10 +6149,6 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-results-list {
 
 form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-results ul li {
   padding: 0;
-}
-
-form.ac-form .ac-reply-content input {
-  margin-top: 10px;
 }
 
 .bp-ac-form-cotainer {
@@ -12736,6 +12739,7 @@ button[data-bp-tooltip] {
 [data-bp-tooltip] {
   position: relative;
   cursor: pointer;
+  display: block;
 }
 
 [data-bp-tooltip]:after {
@@ -13019,6 +13023,10 @@ button[data-bp-tooltip] {
 [data-bp-tooltip][data-bp-tooltip-length="fit"]:after {
   white-space: normal;
   width: 100%;
+}
+
+.post-emoji.bp-tooltip.active[data-bp-tooltip]:after, .post-emoji.bp-tooltip.active[data-bp-tooltip]:before {
+  display: none;
 }
 
 /**
@@ -21136,6 +21144,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   -webkit-box-shadow: none;
   box-shadow: none;
   left: 20px;
+  right: inherit;
 }
 
 .moderation-popup .modal-container .bb-model-footer {
@@ -26021,4 +26030,70 @@ span.icons:before {
 
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
   line-height: 1.4;
+}
+
+/*
+*-----------------------------------------
+* @section 19.0 - Emojione Area custom Override
+*-----------------------------------------
+*/
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter img {
+  display: none;
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter::before {
+  font-family: bb-icons;
+  font-style: normal;
+  speak: never;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 24px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.active::before {
+  font-weight: 300;
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.emojionearea-filter-recent::before {
+  content: "\e884";
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.emojionearea-filter-smileys_people::before {
+  content: "\ee5f";
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.emojionearea-filter-animals_nature::before {
+  content: "\eea5";
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.emojionearea-filter-food_drink::before {
+  content: "\eef6";
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.emojionearea-filter-activity::before {
+  content: "\e801";
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.emojionearea-filter-travel_places::before {
+  content: "\e806";
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.emojionearea-filter-objects::before {
+  content: "\ee05";
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.emojionearea-filter-symbols::before {
+  content: "\eeb2";
+}
+
+.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.emojionearea-filter-flags::before {
+  content: "\ee9c";
 }
