@@ -3090,13 +3090,14 @@ div[class*="attached-gif-container"] .gif-player video {
 }
 
 div[class*="attached-gif-container"] .gif-play-button {
-  height: 80px;
-  width: 80px;
+  height: 60px;
+  width: 60px;
+  font-size: 60px;
   position: absolute;
   right: 50%;
-  margin-right: -40px;
+  margin-right: -30px;
   top: 50%;
-  margin-top: -40px;
+  margin-top: -30px;
 }
 
 div[class*="attached-gif-container"] .gif-play-button .bb-icon-play-thin {
