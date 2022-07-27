@@ -6965,14 +6965,7 @@ function bb_check_email_type_registered( string $notification_type ) {
  * @return bool Is media profile media support enabled or not.
  */
 function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
-	global $bp;
-
-	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bp_labs_notification_preferences_enabled'] ) ) {
-		$val = (bool) $bp->site_options['bp_labs_notification_preferences_enabled'];
-	} else {
-		$val = (bool) bp_get_option( 'bp_labs_notification_preferences_enabled', $default );
-	}
-	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) $val );
+	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) bp_get_option( 'bp_labs_notification_preferences_enabled', $default ) );
 }
 
 /**
