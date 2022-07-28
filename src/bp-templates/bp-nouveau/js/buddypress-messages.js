@@ -2365,11 +2365,6 @@ window.bp = window.bp || {};
 						dropdownCssClass: 'bb-select-dropdown bb-compose-input',
 						containerCssClass: 'bb-select-container',
 						language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
-						language: {
-							inputTooShort: function() {
-								return BP_Nouveau.compose_message_typing_string;
-							}
-						},
 						ajax: {
 							url: bp.ajax.settings.url,
 							dataType: 'json',
@@ -2380,12 +2375,13 @@ window.bp = window.bp || {};
 									params,
 									{
 										nonce: BP_Nouveau.messages.nonces.load_recipient,
-										action: 'messages_search_recipients'
+										action: 'messages_search_recipients',
+										page: ( 'undefined' === typeof params.page ) ? 1 : params.page
 									}
 								);
 							},
 							cache: true,
-							processResults: function( data ) {
+							processResults: function( data, params ) {
 								var cval = $( this.container.$container ).find( '.select2-search__field' ).val();
 								if ( cval.length < 1 ) {
 									return {
@@ -2406,8 +2402,13 @@ window.bp = window.bp || {};
 									);
 								}
 
+								params.page = params.page || 1;
+
 								return {
-									results: data && data.success ? data.data.results : []
+									results: data && data.success ? data.data.results : [],
+									pagination: {
+										more: params.page < data.data.total_pages
+									}
 								};
 							}
 						},

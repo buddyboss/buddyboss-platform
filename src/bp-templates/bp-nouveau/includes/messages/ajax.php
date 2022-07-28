@@ -1816,17 +1816,22 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	$results = bp_core_get_suggestions(
 		array(
-			'term'         => sanitize_text_field( $_GET['term'] ),
-			'type'         => 'members',
-			'only_friends' => bp_is_active( 'friends' ) && bp_force_friendship_to_message(),
+			'term'            => sanitize_text_field( $_GET['term'] ),
+			'type'            => 'members',
+			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message(),
+			'count_total'     => 'count_query',
+			'page'            => $_GET['page'],
+			'limit'           => 200,
+			'populate_extras' => true,
 		)
 	);
 
-	$results = apply_filters( 'bp_members_suggestions_results', $results );
+	$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
+	$results       = apply_filters( 'bp_members_suggestions_results', $results['members'] );
 
 	wp_send_json_success(
 		array(
-			'results' => array_map(
+			'results'     => array_map(
 				function ( $result ) {
 					return array(
 						'id'    => "@{$result->ID}",
@@ -1837,6 +1842,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 				},
 				$results
 			),
+			'total_pages' => ceil( $results_total / 200 ),
 		)
 	);
 }
