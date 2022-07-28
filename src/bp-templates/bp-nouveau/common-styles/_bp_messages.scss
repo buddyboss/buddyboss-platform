@@ -535,6 +535,10 @@
 		content: "\ee57";
 	}
 
+	li.unhide_thread a:before {
+		content: "\e9e8";
+	}
+
 	li.delete_messages a:before {
 		content: "\ef48";
 	}
