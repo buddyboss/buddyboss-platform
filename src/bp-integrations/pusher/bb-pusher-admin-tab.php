@@ -2,7 +2,7 @@
 /**
  * Pusher integration admin tab
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.1.0
  * @package BuddyBoss\Pusher
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Setup Pusher integration admin tab class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
@@ -26,7 +26,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Initialize
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 */
 	public function initialize() {
 		$this->tab_order       = 48;
@@ -39,7 +39,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Pusher Integration is active?
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 *
 	 * @return bool
 	 */
@@ -50,7 +50,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Pusher integration tab scripts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 */
 	public function register_admin_script() {
 
@@ -69,7 +69,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Register setting fields for pusher integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 */
 	public function register_fields() {
 
@@ -107,7 +107,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Get setting sections for pusher integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 *
 	 * @return array $settings Settings sections for pusher integration.
 	 */
@@ -133,7 +133,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Get setting fields for section in pusher integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 *
 	 * @param string $section_id Section ID.
 	 *
@@ -155,7 +155,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Register setting fields for pusher integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 *
 	 * @return array $fields setting fields for pusher integration.
 	 */
@@ -197,7 +197,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Link to Pusher Settings tutorial.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 */
 	public function setting_callback_pusher_tutorial() {
 		?>
@@ -224,7 +224,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for pusher information.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 *
 	 * @return void
 	 */
@@ -239,7 +239,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for platform pro not installed warning.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 */
 	public function setting_callback_pusher_bbp_pro_not_installed() {
 		echo '<p class="description notification-information bb-lab-notice">' .
@@ -256,7 +256,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Callback fields for the platform pro older version installed warning.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 */
 	public function setting_callback_pusher_bbp_pro_older_version_installed() {
 		echo '<p class="description notification-information bb-lab-notice">' .
@@ -273,7 +273,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Added icon for the pusher admin settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 *
 	 * @param string $meta_icon Icon class.
 	 * @param string $id        Section ID.
@@ -291,7 +291,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Output the form html on the setting page (not including submit button).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 */
 	public function form_html() {
 		settings_fields( $this->tab_name );

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Pusher
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Setup the BB Pusher class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 class BB_Pusher_Integration extends BP_Integration {
 
@@ -39,7 +39,7 @@ class BB_Pusher_Integration extends BP_Integration {
 	 *
 	 * @param array $includes Array of file paths to include.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 */
 	public function includes( $includes = array() ) {
 		$slashed_path = trailingslashit( buddypress()->integration_dir ) . $this->id . '/';
@@ -76,7 +76,7 @@ class BB_Pusher_Integration extends BP_Integration {
 	/**
 	 * Register Pusher setting tab.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 */
 	public function setup_admin_integration_tab() {
 

@@ -1582,7 +1582,7 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 /**
  * Change friend button arguments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param array $args Button arguments.
  *
@@ -1606,7 +1606,7 @@ function bb_messaged_set_friend_button_args( $args = array() ) {
 /**
  * Update meta query when fetching the threads for user unread count.
  *
- * @since [BBVERSION]
+ * @since 2.1.0
  *
  * @param array $meta_query Array of meta query arguments.
  * @param array $r          Array of arguments.

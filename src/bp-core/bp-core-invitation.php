@@ -2,7 +2,7 @@
 /**
  * Set up invite meta table to global variable.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 function bb_invite_setup_globals() {
 	global $wpdb;
@@ -14,7 +14,7 @@ add_action( 'bp_setup_globals', 'bb_invite_setup_globals', 10 );
 /**
  * Delete metadata for an invitation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param int         $invite_id  ID of the invitation.
  * @param string|bool $meta_key   The key of the row to delete.
@@ -58,7 +58,7 @@ function invitation_delete_invitemeta( $invite_id, $meta_key = false, $meta_valu
 /**
  * Get a piece of invitation metadata.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param int    $invite_id ID of the invitation.
  * @param string $meta_key  Metadata key.
@@ -79,7 +79,7 @@ function invitation_get_invitemeta( $invite_id, $meta_key = '', $single = true )
 /**
  * Update a piece of invitation metadata.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param int    $invite_id  ID of the invitation.
  * @param string $meta_key   Metadata key.
@@ -103,7 +103,7 @@ function invitation_update_invitemeta( $invite_id, $meta_key, $meta_value, $prev
 /**
  * Add a piece of invitation metadata.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param int    $invite_id  ID of the invitation.
  * @param string $meta_key   Metadata key.

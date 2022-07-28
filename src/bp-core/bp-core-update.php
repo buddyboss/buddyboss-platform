@@ -1884,7 +1884,7 @@ function migrate_notification_preferences( $user_ids ) {
 /**
  * Migrate group member meta table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 function bb_update_to_2_0_6() {
 	if ( bp_is_active( 'groups' ) ) {

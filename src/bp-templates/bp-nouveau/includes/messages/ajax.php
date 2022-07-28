@@ -3105,7 +3105,7 @@ function bb_get_user_message_recipients() {
 /**
  * Unhide the conversation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 function bp_nouveau_ajax_unhide_thread() {
 	global $bp, $wpdb;

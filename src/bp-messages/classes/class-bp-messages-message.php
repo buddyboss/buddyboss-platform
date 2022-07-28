@@ -195,7 +195,7 @@ class BP_Messages_Message {
 			/**
 			 * Fires after the new thread current message item has been saved.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.1.0
 			 *
 			 * @param BP_Messages_Message $this Current instance of the message item being saved. Passed by reference.
 			 */

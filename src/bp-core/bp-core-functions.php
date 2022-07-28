@@ -7642,7 +7642,7 @@ function bb_admin_icons( $id ) {
 
 /** Function to get the client machine os.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @return string
  */

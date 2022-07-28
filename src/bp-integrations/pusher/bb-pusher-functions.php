@@ -2,7 +2,7 @@
 /**
  * Pusher integration helpers
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.1.0
  *
  * @package BuddyBoss\Pusher
  */
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Returns Pusher Integration url.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param string $path Path to pusher integration.
  */

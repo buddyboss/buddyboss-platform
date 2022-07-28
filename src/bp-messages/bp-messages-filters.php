@@ -877,7 +877,7 @@ function messages_screen_notification_settings() {
 /**
  * Validate the thread is group thread or not.
  *
- * @since [BBVERSION]
+ * @since 2.1.0
  *
  * @param int $thread_id Thread ID.
  *

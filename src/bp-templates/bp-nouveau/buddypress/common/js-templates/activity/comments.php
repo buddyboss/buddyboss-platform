@@ -11,7 +11,7 @@
 /**
  * Fires before the activity comments template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 do_action( 'bb_nouveau_activity_comments_before_js_template' );
 ?>
@@ -23,6 +23,6 @@ do_action( 'bb_nouveau_activity_comments_before_js_template' );
 /**
  * Fires after the activity comments template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 do_action( 'bb_nouveau_activity_comments_after_js_template' );

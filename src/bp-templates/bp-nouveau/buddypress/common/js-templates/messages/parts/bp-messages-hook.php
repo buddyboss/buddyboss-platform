@@ -11,7 +11,7 @@
 /**
  * Fires before the message hook template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 do_action( 'bp_nouveau_messages_hook_before_js_template' );
 ?>
@@ -24,6 +24,6 @@ do_action( 'bp_nouveau_messages_hook_before_js_template' );
 /**
  * Fires after the message hook template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 do_action( 'bp_nouveau_messages_hook_after_js_template' );

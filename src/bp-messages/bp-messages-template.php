@@ -2221,7 +2221,7 @@ function bp_get_the_thread_message_content() {
 /**
  * Output the excerpt of the current message in the loop.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 function bp_the_thread_message_excerpt() {
 	echo bp_get_the_thread_message_excerpt();
@@ -2229,7 +2229,7 @@ function bp_the_thread_message_excerpt() {
 /**
  * Get the excerpt of the current message in the loop.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @return string
  */
@@ -2246,7 +2246,7 @@ function bp_get_the_thread_message_excerpt() {
 	/**
 	 * Filters the excerpt of the current message in the loop.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0
 	 *
 	 * @param string $message The excerpt of the current message in the loop.
 	 */

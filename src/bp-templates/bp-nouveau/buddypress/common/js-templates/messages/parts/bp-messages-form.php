@@ -14,7 +14,7 @@ $os = bb_core_get_os();
 /**
  * Fires before the message form template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 do_action( 'bp_nouveau_messages_form_before_js_template' );
 ?>
@@ -80,6 +80,6 @@ do_action( 'bp_nouveau_messages_form_before_js_template' );
 /**
  * Fires after the message form template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 do_action( 'bp_nouveau_messages_form_after_js_template' );

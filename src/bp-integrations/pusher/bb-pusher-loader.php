@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Pusher
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BB Pusher integration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 function bb_register_pusher_integration() {
 

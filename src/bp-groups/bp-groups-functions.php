@@ -2950,7 +2950,7 @@ function groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique = fals
 /**
  * Delete metadata for a member.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param int         $member_id  ID of the member.
  * @param string|bool $meta_key   The key of the row to delete.
@@ -2994,7 +2994,7 @@ function groups_delete_membermeta( $member_id, $meta_key = false, $meta_value = 
 /**
  * Get a piece of member metadata.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param int    $member_id ID of the member.
  * @param string $meta_key  Metadata key.
@@ -3015,7 +3015,7 @@ function groups_get_membermeta( $member_id, $meta_key = '', $single = true ) {
 /**
  * Update a piece of member metadata.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param int    $member_id  ID of the member.
  * @param string $meta_key   Metadata key.
@@ -3039,7 +3039,7 @@ function groups_update_membermeta( $member_id, $meta_key, $meta_value, $prev_val
 /**
  * Add a piece of member metadata.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param int    $member_id  ID of the member.
  * @param string $meta_key   Metadata key.
