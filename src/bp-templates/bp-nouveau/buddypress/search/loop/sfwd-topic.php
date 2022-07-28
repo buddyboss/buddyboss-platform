@@ -15,16 +15,16 @@ $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">
 			<?php
-				if ( get_the_post_thumbnail_url() ) {
+			if ( get_the_post_thumbnail_url() ) {
 				?>
-					<img src="<?php echo get_the_post_thumbnail_url(); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title(); ?>" />
+					<img src="<?php echo esc_url( get_the_post_thumbnail_url() ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php echo esc_attr( get_the_title() ); ?>" />
 				<?php
-				} else {
-					?>
+			} else {
+				?>
 					<i class="bb-icon-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
 				<?php
-				}
-				?>
+			}
+			?>
 			</a>
 		</div>
 

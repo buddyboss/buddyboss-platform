@@ -25,7 +25,7 @@ $result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), '
 					<?php
 				} else {
 					?>
-					<i class=" <?php echo esc_attr( $result['post_thumbnail'] ); ?>"></i>
+					<i class="bb-icon-f <?php echo esc_attr( $result['post_thumbnail'] ); ?>"></i>
 					<?php
 				}
 				?>
@@ -67,8 +67,8 @@ $result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), '
 					<span class="middot">&middot;</span>
 					<span class="freshness">
 						<?php
-							esc_html_e( 'Last active ', 'buddyboss' );
-							echo wp_kses_post( $last_active );
+						esc_html_e( 'Last active ', 'buddyboss' );
+						echo wp_kses_post( $last_active );
 						?>
 					</span>
 					<?php

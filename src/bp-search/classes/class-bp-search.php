@@ -426,7 +426,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'number'        => 3,
 			);
 
-			$args = wp_parse_args( $args, $defaults );
+			$args = bp_parse_args( $args, $defaults );
 
 			if ( true === $args['forum_search'] ) {
 				$this->searchable_items = array( 'forum', 'topic', 'reply' );
@@ -510,7 +510,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$obj                   = $this->search_helpers[ $search_type ];
 					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
 					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
-					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'] );
+					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'], $search_type );
 				}
 
 				if ( empty( $sql_queries ) ) {
@@ -739,7 +739,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 					if ( ! isset( $total[ $search_type ] ) ) {
 						$obj               = $this->search_helpers[ $search_type ];
-						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'] );
+						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'], $search_type );
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total_match_count;
 					} else {
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total[ $search_type ];
@@ -784,7 +784,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @return array
 		 */
 		public function sanitize_args( $args = '' ) {
-			$args = wp_parse_args( $args, array() );
+			$args = bp_parse_args( $args, array() );
 
 			if ( isset( $args['search_term'] ) ) {
 				$args['search_term'] = sanitize_text_field( $args['search_term'] );

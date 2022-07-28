@@ -37,7 +37,7 @@ $is_enabled_joined_date      = bb_enabled_profile_header_layout_element( 'joined
 $is_enabled_last_active      = bb_enabled_profile_header_layout_element( 'last-active' );
 $is_enabled_followers        = bb_enabled_profile_header_layout_element( 'followers' );
 $is_enabled_following        = bb_enabled_profile_header_layout_element( 'following' );
-$is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && bp_member_type_enable_disable() && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+$is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
 
 $my_profile                     = '';
 $user_social_networks_urls      = '';
@@ -64,7 +64,14 @@ if ( bp_is_my_profile() ) {
 			<?php
 			if ( ! empty( $cover_image_url ) ) {
 				?>
-				<img class="header-cover-img" src="<?php echo esc_url( $cover_image_url ); ?>" <?php echo ( '' !== $cover_image_position ) ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : ''; ?><?php echo ( '' !== $cover_image_position ) ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : ''; ?>alt=""/>
+				<img class="header-cover-img"
+					  src="<?php echo esc_url( $cover_image_url ); ?>"
+					 <?php
+						echo ( '' !== $cover_image_position ) ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : '';
+						echo ( '' !== $cover_image_position ) ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : '';
+						?>
+					  alt=""
+				/>
 				<?php
 			}
 			if ( bp_is_my_profile() ) {
@@ -156,7 +163,6 @@ if ( bp_is_my_profile() ) {
 									<?php
 								endif;
 								bp_nouveau_member_hook( 'before', 'in_header_meta' );
-								bp_nouveau_member_hook( 'before', 'header_meta' );
 								if ( bp_get_last_activity() && $is_enabled_last_active ) :
 									echo wp_kses_post( bp_get_last_activity() );
 								endif;

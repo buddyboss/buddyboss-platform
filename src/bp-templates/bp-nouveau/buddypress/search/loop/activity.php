@@ -28,7 +28,7 @@
 			<div class="item-meta">
 				<a href="<?php bp_activity_thread_permalink(); ?>">
 					<time>
-						<?php echo wp_kses_post( human_time_diff( bp_nouveau_get_activity_timestamp() ) . '&nbsp;' ) . esc_html__( 'ago', 'buddyboss' ); ?>
+						<?php echo wp_kses_post( human_time_diff( bp_nouveau_get_activity_timestamp() ) ) . '&nbsp;' . esc_html__( 'ago', 'buddyboss' ); ?>
 					</time>
 				</a>
 			</div>

@@ -14,16 +14,16 @@ $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), get_permalink() ) ); ?>">
 		<div class="item-avatar">
 			<?php
-				if ( get_the_post_thumbnail_url() ) {
+			if ( get_the_post_thumbnail_url() ) {
 				?>
-					<img src="<?php echo get_the_post_thumbnail_url(); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title(); ?>" />
+					<img src="<?php echo esc_url( get_the_post_thumbnail_url() ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php echo esc_attr( get_the_title() ); ?>" />
 				<?php
-				} else {
-					?>
+			} else {
+				?>
 					<i class="bb-icon-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
 				<?php
-				}
-				?>
+			}
+			?>
 		</div>
 
 		<div class="item">
@@ -48,7 +48,7 @@ $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
 						)
 					);
 				}
-             	?>
+				?>
 			</div>
 
 			<div class="item-meta">

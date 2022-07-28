@@ -1401,6 +1401,49 @@ function bp_get_group_description_editable( $group = false ) {
 }
 
 /**
+ * Output the name for the current group in the loop, for use in a textbox.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ */
+function bp_group_name_editable( $group = false ) {
+	echo bp_get_group_name_editable( $group );
+}
+
+/**
+ * Return the permalink for the current group in the loop, for use in a textarea.
+ *
+ * 'bp_get_group_name_editable' does not have the formatting
+ * filters that 'bp_get_group_name' has, which makes it
+ * appropriate for "raw" editing.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ * @return string
+ */
+function bp_get_group_name_editable( $group = false ) {
+	global $groups_template;
+
+	if ( empty( $group ) ) {
+		$group =& $groups_template->group;
+	}
+
+	/**
+	 * Filters the name of the current group in the loop.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param string $name  Name of the current group in the loop.
+	 * @param object $group Group object.
+	 */
+	return apply_filters( 'bp_get_group_name_editable', $group->name, $group );
+}
+
+/**
  * Output an excerpt of the group description.
  *
  * @since BuddyPress 1.0.0
@@ -1899,7 +1942,8 @@ function bp_group_list_admins( $group = false ) {
 						<?php
 						$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
 						printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
-						?>">
+						?>
+						">
 						<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 					</a>
 				</li>
@@ -2899,6 +2943,10 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 			// If we can't resolve the user_id, don't proceed with a zero value.
 			return array();
 		}
+	}
+
+	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+		$user_id = false;
 	}
 
 	// First, get a list of descendants (don't pass a user id--we want them all).
@@ -5616,29 +5664,31 @@ function bp_group_creation_tabs() {
 		$is_enabled = bp_are_previous_group_creation_steps_complete( $slug );
 		?>
 
-		<li
-		<?php
-		if ( bp_get_groups_current_create_step() == $slug ) :
-			?>
-			 class="current"<?php endif; ?>>
+		<li <?php echo ( ( bp_get_groups_current_create_step() == $slug ) ? 'class="current"' : '' ); ?>>
 			<?php
-			if ( $is_enabled ) :
+			if ( $is_enabled ) {
 				?>
-			<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo $slug; ?>/">
-															<?php
-else :
-	?>
-	<span><?php endif; ?><?php echo $counter; ?>. <?php echo $step['name']; ?>
-					 <?php
-						if ( $is_enabled ) :
-							?>
-	</a>
-							<?php
-else :
-	?>
-	</span><?php endif ?></li>
-					<?php
-					$counter++;
+				<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo $slug; ?>/">
+				<?php
+			} else {
+				?>
+				<span>
+				<?php
+			}
+
+				echo $counter . '. ' . $step['name'];
+
+			if ( $is_enabled ) {
+				?>
+				</a>
+				<?php
+			} else {
+				?>
+				</span>
+			<?php } ?>
+		</li>
+		<?php
+		$counter++;
 	}
 
 	unset( $is_enabled );

@@ -165,6 +165,7 @@
 			}
 
 			.activity-to:before {
+				display: inline-block;
 				font-family: dashicons;
 				vertical-align: middle;
 				content: "\f344";
@@ -553,11 +554,6 @@
 
 						&.ac-video-thumbnail-edit:before {
 							content: "\eeb4";
-							font-size: 20px;
-							display: inline-block;
-							vertical-align: middle;
-							max-height: 15px;
-							margin-top: -6px;
 						}
 
 						&.edit-activity:before {
@@ -783,7 +779,7 @@ ul.medium-editor-toolbar-actions {
 	letter-spacing: -0.24px;
 	margin: 12px 0 10px;
 
-	.bb-icon-loader {
+	> i {
 		font-size: 18px;
 		margin-right: 10px;
 		vertical-align: middle;
@@ -1184,6 +1180,13 @@ span.dashicons.dashicons-admin-file:before {
 			background-color: #fff;
 			line-height: 1.5;
 			font-size: 15px;
+		}
+
+		@media screen and (max-width: 767px) {
+
+			.activity-item {
+				min-height: auto;
+			}
 		}
 
 	}
@@ -1884,13 +1887,13 @@ span.dashicons.dashicons-admin-file:before {
 				flex-basis: 30px;
 				width: 30px;
 				text-align: center;
-				padding: 10px 0 !important;
+				padding: 5px 0 !important;
 				display: inline-block;
 				vertical-align: middle;
 				position: relative;
 
 				> i {
-					font-size: 30px;
+					font-size: 35px;
 					color: #9ca8b4;
 					margin-top: 3px;
 				}

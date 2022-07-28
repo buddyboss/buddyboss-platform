@@ -540,7 +540,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_input_field( $name, $label, $callback_args = array(), $field_args = 'sanitize_text_field', $id = null ) {
 			$callback = array( $this, 'render_input_field_html' );
 
-			$callback_args = wp_parse_args(
+			$callback_args = bp_parse_args(
 				$callback_args,
 				array(
 					'input_type'        => 'text',
@@ -563,7 +563,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_checkbox_field( $name, $label, $callback_args = array(), $field_args = 'intval', $id = null ) {
 			$callback = array( $this, 'render_checkbox_field_html' );
 
-			$callback_args = wp_parse_args(
+			$callback_args = bp_parse_args(
 				$callback_args,
 				array(
 					'input_name'        => $this->get_input_name( $name ),
@@ -587,7 +587,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_select_field( $name, $label, $callback_args = array(), $field_args = 'sanitize_text_field', $id = null ) {
 			$callback = array( $this, 'render_select_field_html' );
 
-			$callback_args = wp_parse_args(
+			$callback_args = bp_parse_args(
 				$callback_args,
 				array(
 					'input_name'        => $this->get_input_name( $name ),
@@ -710,18 +710,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
-				$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="' . $section['icon'] . '"></i>' : '';
+				$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="' . esc_attr( $section['icon'] ) . '"></i>' : '';
 				if ( $section['title'] ) {
 					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . $has_icon .
-						wp_kses(
-							$section['title'],
-							array(
-								'a' => array(
-									'href' => array(),
-									'rel'  => array(),
-								),
-							)
-						);
+						wp_kses_post( $section['title'] );
 
 						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
 						?>

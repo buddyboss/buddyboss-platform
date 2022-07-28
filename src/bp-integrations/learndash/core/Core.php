@@ -68,6 +68,8 @@ class Core {
 			 * Load third
 			 */
 			add_action( 'buddyboss_theme_after_bb_groups_menu', array( $this, 'setup_user_profile_bar' ), 10 );
+
+			add_filter( 'nav_menu_css_class', array( $this, 'bb_ld_active_class' ), PHP_INT_MAX, 2 );
 		}
 	}
 
@@ -93,7 +95,7 @@ class Core {
 					if ( $this->certificates_enables ) {
 						?>
 						<li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->certificates_tab_slug ); ?>">
-							<a class="ab-item" href="<?php echo esc_url( $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_certificates_tab_name ); ?></a>
+							<a class="ab-item" href="<?php echo esc_url( $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ) ); ?>"><?php echo esc_html( $this->my_certificates_tab_name ); ?></a>
 						</li>
 						<?php
 					}
@@ -187,6 +189,36 @@ class Core {
 			bp_core_new_subnav_item( $all_subnav_item );
 		}
 
+	}
+
+	/**
+	 * Remove the active class on course & my course page when user is on certificate page.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $classes List of classes.
+	 * @param array $item    Menu item array.
+	 *
+	 * @return array List of classes.
+	 */
+	public function bb_ld_active_class( $classes, $item ) {
+
+		if (
+			bp_current_action() === $this->certificates_tab_slug &&
+			in_array( $item->post_name, array( $this->course_slug, $this->my_courses_slug ), true )
+		) {
+			$key = array_search( 'current_page_item', $classes, true );
+			if ( false !== $key ) {
+				unset( $classes[ $key ] );
+			}
+
+			$key = array_search( 'current-menu-item', $classes, true );
+			if ( false !== $key ) {
+				unset( $classes[ $key ] );
+			}
+		}
+
+		return $classes;
 	}
 
 	/**
@@ -400,12 +432,12 @@ class Core {
 		spl_autoload_register(
 			function ( $class ) {
 				$psr4 = array(
-					'Buddyboss\LearndashIntegration\Core' => 'core',
-					'Buddyboss\LearndashIntegration\Library' => 'library',
-					'Buddyboss\LearndashIntegration\Buddypress' => 'buddypress',
+					'Buddyboss\LearndashIntegration\Core'                  => 'core',
+					'Buddyboss\LearndashIntegration\Library'               => 'library',
+					'Buddyboss\LearndashIntegration\Buddypress'            => 'buddypress',
 					'Buddyboss\LearndashIntegration\Buddypress\Generators' => 'buddypress/generators',
 					'Buddyboss\LearndashIntegration\Buddypress\Components' => 'buddypress/components',
-					'Buddyboss\LearndashIntegration\Learndash' => 'learndash',
+					'Buddyboss\LearndashIntegration\Learndash'             => 'learndash',
 				);
 
 				$segments  = explode( '\\', $class );

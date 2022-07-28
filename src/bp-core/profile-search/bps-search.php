@@ -291,7 +291,7 @@ function bp_ps_filter_members( $qs, $object ) {
 
 	$results = bp_ps_search( $request );
 	if ( $results['validated'] ) {
-		$args  = wp_parse_args( $qs );
+		$args  = bp_parse_args( $qs );
 		$users = $results['users'];
 
 		if ( isset( $args['include'] ) ) {
@@ -330,7 +330,7 @@ function bp_ps_search( $request, $users = null ) {
 		if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
 			continue;
 		}
-		
+
 		if ( ! isset( $f->filter ) ) {
 			continue;
 		}

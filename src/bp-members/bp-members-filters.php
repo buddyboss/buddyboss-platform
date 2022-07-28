@@ -541,10 +541,6 @@ function bb_core_prime_mentions_results() {
 		return;
 	}
 
-	if ( bp_is_active( 'activity' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
-		return;
-	}
-
 	// Bail out if the site has a ton of users.
 	if ( bp_is_large_install() ) {
 		return;
@@ -730,7 +726,7 @@ function bb_load_members_account_settings_notifications() {
 /**
  * Function will add custom css for all member type's label. ( i.e - Background color, Text color)
  *
- * @since BuddyBoss 2.0.0.1
+ * @since BuddyBoss 2.0.0
  */
 function bb_load_member_type_label_custom_css() {
 	if ( true === bp_member_type_enable_disable() ) {

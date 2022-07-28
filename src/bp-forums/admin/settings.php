@@ -824,7 +824,7 @@ function bbp_admin_setting_callback_root_slug_section() {
 		'<p>%s</p>',
 		sprintf(
 		/* translators: Description with link. */
-			esc_html__( 'Customize your Forums directory. Use %s for more flexibility.', 'buddyboss' ),
+			__( 'Customize your Forums directory. Use %s for more flexibility.', 'buddyboss' ),
 			sprintf(
 			/* translators: 1: Link, 2: Text. */
 				'<a href="%1$s">%2$s</a>',

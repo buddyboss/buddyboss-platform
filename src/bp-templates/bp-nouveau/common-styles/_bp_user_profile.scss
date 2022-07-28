@@ -346,6 +346,21 @@ body.register .buddypress-wrap .page ul {
 	opacity: 1;
 }
 
+.users-header #social-networks-popup {
+	display: none;
+
+	.bb-action-popup-content {
+		padding: 26px 30px 35px;
+		text-align: left;
+
+		.social {
+			margin-top: 7px;
+		}
+
+	}
+
+}
+
 .users-header #item-header-avatar {
 
 	a.link-change-profile-image {
@@ -373,6 +388,11 @@ body.register .buddypress-wrap .page ul {
 		display: inline-block;
 		width: 20px;
 		margin-right: 10px;
+
+		&:last-of-type {
+			margin-right: 0;
+		}
+
 	}
 
 	a i {

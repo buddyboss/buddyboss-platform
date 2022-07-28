@@ -26,7 +26,7 @@ $total    = bbp_get_topic_reply_count( $topic_id ) ?>
 					echo wp_kses_post( $avatar );
 				} else {
 					?>
-					<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+					<i class="bb-icon-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
 					<?php
 				}
 				?>
@@ -41,7 +41,7 @@ $total    = bbp_get_topic_reply_count( $topic_id ) ?>
 				<?php echo wp_kses_post( wp_trim_words( bbp_get_topic_content( $topic_id ), 30, '...' ) ); ?>
 			</div>
 			<div class="entry-meta">
-				<span><?php esc_html_e( 'By ', 'buddyboss' ); ?><?php echo esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
+				<span><?php echo esc_html__( 'By ', 'buddyboss' ) . esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
 				<span class="middot">&middot;</span>
 				<span class="reply-count">
 					<?php printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>

@@ -1146,7 +1146,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_activity_maybe_truncate_entry', '__return_false' );
 
 		if ( 'activity_comment' === $activity->type ) {
+			add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
 			$rendered = apply_filters( 'bp_get_activity_content', $activity->content, $activity );
+			remove_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
 		} else {
 			$activities_template = null;
 
@@ -2090,7 +2092,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function bp_rest_activity_content_validate( $request ) {
 		$toolbar_option = true;
 
-		if ( ! empty( $request['content'] ) ) {
+		if ( ! empty( trim( wp_strip_all_tags( $request['content'] ) ) ) ) {
 			return false;
 		}
 
@@ -2106,6 +2108,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					)
 				)
 				&& empty( $request['bp_documents'] )
+				&& empty( $request['bp_videos'] )
 			)
 		);
 
@@ -2216,6 +2219,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_activitiy_edit_data( $activity ) {
 		global $activities_template;
+		if ( ! is_object( $activities_template ) ) {
+			$activities_template = new stdClass();
+		}
+
+		if ( ! isset( $activities_template->activity ) ) {
+			$activities_template->activity = $activity;
+		}
+
 		$activity_temp = $activities_template->activity;
 
 		if ( empty( $activity->id ) ) {

@@ -27,7 +27,7 @@ $topic_id = bbp_get_reply_topic_id( $reply_id );
 					echo wp_kses_post( $avatar );
 				} else {
 					?>
-					<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+					<i class="bb-icon-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
 					<?php
 				}
 				?>

@@ -683,7 +683,7 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 		return $querystring;
 	}
 
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && isset( $querystring['scope'] ) && 'following' === $querystring['scope'] ) {
 		$counts = bp_total_follow_counts();
@@ -4733,7 +4733,7 @@ function bp_member_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'id'                => 'member_report',
@@ -5002,7 +5002,15 @@ function bb_member_loop_set_member_id( $id ) {
 				return $id;
 			}
 		} else {
-			return $id;
+			if (
+				'friends' === bp_current_component() &&
+				( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() )
+			) {
+				// This will fix the issues in theme members directory page & members connections tab send message issue.
+				return bp_get_member_user_id();
+			} else {
+				return $id;
+			}
 		}
 	}
 
@@ -5200,7 +5208,7 @@ function bb_core_sync_user_notification_settings( $user_id ) {
 	}
 
 	$all_notifications_keys = array_column( $all_notifications, 'default', 'key' );
-	$notifications          = wp_parse_args( $main, $all_notifications_keys );
+	$notifications          = bp_parse_args( $main, $all_notifications_keys );
 
 	foreach ( $notifications as $k => $v ) {
 		if ( ( ! isset( $default_by_admin[ $k ] ) || ( array_key_exists( $k, $default_by_admin ) && 'no' !== $default_by_admin[ $k ] ) ) && 'no' !== $v ) {
@@ -5224,7 +5232,7 @@ add_action( 'user_register', 'bb_core_sync_user_notification_settings' );
 /**
  * Function will return label background and text color's for specific member type.
  *
- * @since BuddyBoss 2.0.0.1
+ * @since BuddyBoss 2.0.0
  *
  * @param $type Type of the member
  *
