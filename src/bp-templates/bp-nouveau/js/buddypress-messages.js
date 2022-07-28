@@ -230,6 +230,7 @@ window.bp = window.bp || {};
 				if ( _.isUndefined( feedback.get( 'view' ).model.attributes.type ) || 'notice' !== feedback.get( 'view' ).model.attributes.type ) {
 					feedback.get( 'view' ).remove();
 					$( '.bp-messages-content-wrapper' ).removeClass( 'has_info' );
+					$( '.bp-messages-nav-panel' ).removeClass( 'has_info' );
 				}
 			}
 		},
@@ -260,6 +261,30 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
+		},
+
+		displaySearchFeedback: function( message, type ) {
+			var feedback;
+
+			// Make sure to remove the feedbacks.
+			this.removeFeedback();
+
+			if ( ! message ) {
+				return;
+			}
+
+			feedback = new bp.Views.Feedback(
+				{
+					value: message,
+					type:  type || 'info'
+				}
+			);
+
+			this.views.add( { id: 'feedback', view: feedback } );
+
+			feedback.inject( '.bp-messages-search-feedback' );
+
+			$( '.bp-messages-nav-panel' ).addClass( 'has_info' );
 		},
 
 		clearViews: function() {
@@ -1143,7 +1168,7 @@ window.bp = window.bp || {};
 									picker_show: function () {
 										$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
 									},
-	
+
 									picker_hide: function () {
 										$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
 									},
@@ -3034,7 +3059,7 @@ window.bp = window.bp || {};
 			},
 
 			filterThreads: function() {
-				bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
+				bp.Nouveau.Messages.displaySearchFeedback( BP_Nouveau.messages.loading, 'loading' );
 
 				this.options.threads.reset();
 				_.extend( this.options.threads.options, _.pick( this.model.attributes, ['box', 'search_terms'] ) );
@@ -3053,7 +3078,7 @@ window.bp = window.bp || {};
 			},
 
 			threadsFilterError: function( collection, response ) {
-				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+				bp.Nouveau.Messages.displaySearchFeedback( response.feedback, response.type );
 			},
 
 			resetSearchTerms: function( event ) {
