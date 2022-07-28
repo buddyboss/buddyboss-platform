@@ -1261,7 +1261,7 @@ window.bp = window.bp || {};
 							tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#messages-media-button' ) ) {
-							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 						}
 					}
 				);
@@ -1349,15 +1349,16 @@ window.bp = window.bp || {};
 								tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
 							if ( tool_box.find( '#messages-media-button' ) ) {
-								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 							}
 						}
 						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
-				self.$el.find( '#messages-post-media-uploader' ).addClass( 'open' ).removeClass( 'closed' );
+				// self.$el.find( '#messages-post-media-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
+				$( '#messages-post-media-uploader' ).trigger( 'click' );
 			}
 
 		}
@@ -1441,7 +1442,7 @@ window.bp = window.bp || {};
 							tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#messages-document-button' ) ) {
-							tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 						}
 					}
 				);
@@ -1547,7 +1548,7 @@ window.bp = window.bp || {};
 								tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
 							if ( tool_box.find( '#messages-document-button' ) ) {
-								tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+								tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 							}
 						}
 						Backbone.trigger( 'triggerMediaChange' );
@@ -1556,6 +1557,7 @@ window.bp = window.bp || {};
 
 				self.$el.find( '#messages-post-document-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
+				$( '#messages-post-document-uploader' ).trigger( 'click' );
 			}
 
 		}
@@ -1630,7 +1632,7 @@ window.bp = window.bp || {};
 							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#messages-video-button' ) ) {
-							tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 						}
 					}
 				);
@@ -1763,7 +1765,7 @@ window.bp = window.bp || {};
 								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
 							if ( tool_box.find( '#messages-video-button' ) ) {
-								tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+								tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 							}
 						}
 						Backbone.trigger( 'triggerMediaChange' );
@@ -1772,6 +1774,7 @@ window.bp = window.bp || {};
 
 				self.$el.find( '#messages-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
+				$( '#messages-post-video-uploader' ).trigger( 'click' );
 			}
 
 		}
@@ -2069,7 +2072,7 @@ window.bp = window.bp || {};
 				this.closeVideoSelector();
 				var event = new Event( 'messages_media_toggle' );
 				document.dispatchEvent( event );
-				$( e.currentTarget ).toggleClass( 'active' );
+				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
 			toggleDocumentSelector: function( e ) {
@@ -2079,7 +2082,7 @@ window.bp = window.bp || {};
 				this.closeVideoSelector();
 				var documentEvent = new Event( 'messages_document_toggle' );
 				document.dispatchEvent( documentEvent );
-				$( e.currentTarget ).toggleClass( 'active' );
+				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
 			toggleVideoSelector: function( e ) {
@@ -2089,7 +2092,7 @@ window.bp = window.bp || {};
 				this.closeDocumentSelector();
 				var event = new Event( 'messages_video_toggle' );
 				document.dispatchEvent( event );
-				$( e.currentTarget ).toggleClass( 'active' );
+				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
 			closeMediaSelector: function() {

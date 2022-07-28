@@ -1251,17 +1251,17 @@ input#send-to-input {
 	padding: 0 20px;
 	height: calc(69vh + 130px);
 
-	#messages-post-document-uploader.open,
-	#messages-post-video-uploader.open,
-	#messages-post-media-uploader.open {
+	#messages-post-document-uploader,
+	#messages-post-video-uploader,
+	#messages-post-media-uploader {
 		height: calc(100% - 145px);
 		left: 0;
 		margin: 0;
 	}
 
-	#messages-post-document-uploader.open,
-	#messages-post-video-uploader.open,
-	#messages-post-media-uploader.open {
+	#messages-post-document-uploader,
+	#messages-post-video-uploader,
+	#messages-post-media-uploader {
 
 		@include center-vert();
 		position: absolute;
@@ -1274,6 +1274,15 @@ input#send-to-input {
 		border-radius: 4px;
 		padding: 20px;
 		overflow: auto;
+
+		.dz-default.dz-message {
+			display: none;
+		}
+
+		&.dz-started .dz-default.dz-message {
+			display: flex;
+		}
+
 	}
 }
 
