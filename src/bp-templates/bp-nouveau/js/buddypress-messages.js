@@ -75,6 +75,8 @@ window.bp = window.bp || {};
 				uploadMultiple      		 : false,
 				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				thumbnailWidth				 : 140,
+				thumbnailHeight				 : 140,
 				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
 				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
@@ -1288,6 +1290,7 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							response.data.saved 	 = false;
 							response.data.privacy 	 = 'message';
+							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						} else {
@@ -2646,6 +2649,7 @@ window.bp = window.bp || {};
 				'click .bp-message-link' : 'changePreview',
 				'scroll' : 'scrolled',
 				'click .close-conversation' : 'doAction',
+				'click .message-thread-options > .bb_more_options_action' : 'ToggleOptions'
 			},
 
 			initialize: function() {
@@ -2741,6 +2745,7 @@ window.bp = window.bp || {};
 
 				if ( this.collection.length ) {
 					$( '.bp-messages-threads-list' ).removeClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).removeClass( 'bp-no-messages' );
+					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 
 					bp.Nouveau.Messages.displayFilters( this.collection );
 				}
@@ -2906,6 +2911,10 @@ window.bp = window.bp || {};
 						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 					}
 				);
+			},
+
+			ToggleOptions: function( event ) {
+				$( event.currentTarget ).closest( '.thread-item' ).toggleClass( 'optionsOpen' ).siblings().removeClass( 'optionsOpen' );
 			},
 		}
 	);
@@ -3551,7 +3560,6 @@ window.bp = window.bp || {};
 				}
 
 				this.loadingFeedback.remove();
-				$( this.$el ).closest( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 
 				if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );

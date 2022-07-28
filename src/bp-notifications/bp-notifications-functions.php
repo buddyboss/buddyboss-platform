@@ -1084,7 +1084,7 @@ function bb_notification_avatar() {
 				$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
 			}
 
-			$class = ( isset( $user ) ? 'bb-member-status-' . $user->ID . ' notification-avatar' : '' )
+			$class = ( isset( $user ) ? 'bb-member-status-' . $user->ID : '' )
 
 			?>
 			<a href="<?php echo esc_url( $link ); ?>" class="bb-member-status-<?php echo esc_attr( $class ); ?>">

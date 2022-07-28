@@ -274,6 +274,39 @@
 		}
 	}
 
+	// more options dropdown
+	.thread-item.optionsOpen {
+		position: relative;
+		z-index: 1;
+	}
+
+	.message-thread-options {
+		position: absolute;
+		right: 15px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		display: none;
+
+		.bb_more_options_action {
+			padding: 4px;
+
+			i {
+				font-size: 16px;
+				line-height: 1;
+			}
+		}
+
+		.bb_more_options_list {
+			list-style: none;
+		}
+	}
+
+	.thread-item.optionsOpen .message-thread-options,
+	.thread-item:hover .message-thread-options {
+		display: block;
+	}
+
 	// close li
 
 }
@@ -535,6 +568,10 @@
 		content: "\ee57";
 	}
 
+	li.unhide_thread a:before {
+		content: "\e9e8";
+	}
+
 	li.delete_messages a:before {
 		content: "\ef48";
 	}
@@ -560,6 +597,24 @@
 		opacity: 0.9;
 	}
 
+}
+
+#buddypress .bp-messages-container .thread-item:nth-child(3) {
+
+	~ .thread-item:nth-last-child(2) .message_action__list,
+	~ .thread-item:nth-last-child(3) .message_action__list,
+	~ .thread-item:last-child .message_action__list {
+		top: initial;
+		bottom: 0;
+		right: -8px;
+
+		&:after {
+			top: initial;
+			bottom: -12px;
+			transform: rotate(140deg);
+			right: 0;
+		}
+	}
 }
 
 // The single view of messages in a conversation thread
@@ -870,6 +925,7 @@ input#send-to-input {
 	text-align: right;
 	margin: 8px 0 0;
 	line-height: 1.5;
+	display: none;
 
 	.space_note {
 		margin-right: 15px;
@@ -932,8 +988,8 @@ input#send-to-input {
 .bp-messages-nav-panel {
 	display: block;
 	-webkit-box-flex: 0;
-	-ms-flex: 0 0 360px;
-	flex: 0 0 360px;
+	-ms-flex: 0 0 375px;
+	flex: 0 0 375px;
 	min-width: 0;
 
 	@include medium-max() {
@@ -1206,23 +1262,14 @@ input#send-to-input {
 	#messages-post-document-uploader.open,
 	#messages-post-video-uploader.open,
 	#messages-post-media-uploader.open {
+
+		@include center-vert();
 		position: absolute;
 		top: 0;
 		z-index: 11;
 		background: rgba(255, 255, 255, 0.99);
 		height: calc(100% - 245px);
 		width: 100%;
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-align: center;
-		-ms-flex-align: center;
-		align-items: center;
-		-ms-flex-line-pack: center;
-		align-content: center;
-		-webkit-box-pack: center;
-		-ms-flex-pack: center;
-		justify-content: center;
 		left: 0;
 		border-radius: 4px;
 		padding: 20px;

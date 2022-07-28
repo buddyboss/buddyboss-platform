@@ -2947,6 +2947,7 @@ window.bp = window.bp || {};
 
 			} else {
 				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+				$( '.thread-item' ).removeClass( 'optionsOpen' );
 			}
 		},
 

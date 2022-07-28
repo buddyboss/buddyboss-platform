@@ -6431,8 +6431,7 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   width: 12px;
   height: 12px;
   left: 12px;
-  bottom: 12px;
-  top: inherit;
+  top: 12px;
 }
 
 .buddypress-wrap .members-list.grid li .only-list-view {
@@ -6450,7 +6449,7 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
 }
 
 .buddypress-wrap .members-list:not(.grid) li .member-status.online {
-  left: 4px;
+  top: 4px;
   bottom: 4px;
 }
 
@@ -9315,6 +9314,38 @@ div.profile_completion_wrap .progress_text_wrap {
   border-color: #f5f6f7;
 }
 
+#message-threads .thread-item.optionsOpen {
+  position: relative;
+  z-index: 1;
+}
+
+#message-threads .message-thread-options {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  display: none;
+}
+
+#message-threads .message-thread-options .bb_more_options_action {
+  padding: 4px;
+}
+
+#message-threads .message-thread-options .bb_more_options_action i {
+  font-size: 16px;
+  line-height: 1;
+}
+
+#message-threads .message-thread-options .bb_more_options_list {
+  list-style: none;
+}
+
+#message-threads .thread-item.optionsOpen .message-thread-options,
+#message-threads .thread-item:hover .message-thread-options {
+  display: block;
+}
+
 #message-form-submit-wrapper,
 #message-reply-form-submit-wrapper {
   display: flex;
@@ -9545,6 +9576,10 @@ div.profile_completion_wrap .progress_text_wrap {
   content: "\ee57";
 }
 
+#buddypress .bp-messages-container .message_action__list li.unhide_thread a:before {
+  content: "\e9e8";
+}
+
 #buddypress .bp-messages-container .message_action__list li.delete_messages a:before {
   content: "\ef48";
 }
@@ -9564,6 +9599,23 @@ div.profile_completion_wrap .progress_text_wrap {
 #buddypress .bp-messages-container .message_action__list li.reported_thread {
   pointer-events: none;
   opacity: 0.9;
+}
+
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(2) .message_action__list,
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(3) .message_action__list,
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:last-child .message_action__list {
+  top: initial;
+  bottom: 0;
+  left: -8px;
+}
+
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(2) .message_action__list:after,
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(3) .message_action__list:after,
+#buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:last-child .message_action__list:after {
+  top: initial;
+  bottom: -12px;
+  transform: rotate(-140deg);
+  left: 0;
 }
 
 #bp-message-thread-list {
@@ -9845,6 +9897,7 @@ input#send-to-input {
   text-align: left;
   margin: 8px 0 0;
   line-height: 1.5;
+  display: none;
 }
 
 .bp-messages-content .bp-message-content_foot_note .space_note {
@@ -9905,8 +9958,8 @@ input#send-to-input {
 .bp-messages-nav-panel {
   display: block;
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 360px;
-  flex: 0 0 360px;
+  -ms-flex: 0 0 375px;
+  flex: 0 0 375px;
   min-width: 0;
 }
 
@@ -10168,23 +10221,20 @@ input#send-to-input {
 .bp-messages-content-wrapper #messages-post-document-uploader.open,
 .bp-messages-content-wrapper #messages-post-video-uploader.open,
 .bp-messages-content-wrapper #messages-post-media-uploader.open {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
   position: absolute;
   top: 0;
   z-index: 11;
   background: rgba(255, 255, 255, 0.99);
   height: calc(100% - 245px);
   width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -ms-flex-line-pack: center;
-  align-content: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
   right: 0;
   border-radius: 4px;
   padding: 20px;

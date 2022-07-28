@@ -375,6 +375,8 @@ function bp_nouveau_ajax_messages_send_message() {
 				'type'                          => 'success',
 				'thread'                        => $response,
 				'recipient_inbox_unread_counts' => $inbox_unread_cnt,
+				'thread_id'                     => $response['id'],
+				'hash'                          => $response['message_id'],
 			)
 		);
 
@@ -1109,7 +1111,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		if ( $can_message && ! $is_group_thread && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
 			$recipient_id = current( array_keys( $check_recipients ) );
 			// For conversations with a single recipient - Don’t include the name of the last person to message before the message content.
-			$sender_name  = '';
+			$sender_name = '';
 			if ( bp_is_active( 'moderation' ) ) {
 				if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 					$can_message = false;
@@ -1153,7 +1155,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			),
 			'count'                           => bp_get_message_thread_total_count(),
 			'date'                            => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
-			'display_date'                    => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
+			'display_date'                    => bb_get_thread_sent_date(),
 			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 		);
 
@@ -2462,7 +2464,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'              => bp_get_the_thread_message_time_since(),
+				'display_date'              => bb_get_thread_message_sent_date(),
 			);
 
 		} else {
@@ -2514,7 +2516,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => bp_get_the_thread_message_time_since(),
+				'display_date'  => bb_get_thread_message_sent_date(),
 			);
 		}
 
@@ -2687,7 +2689,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 								</div>
 								<div class="document-expand">
 									<a href="#" class="document-expand-anchor">
-                                        <i class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+										<i class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
 									</a>
 								</div>
 							</div> <!-- .document-text-wrap -->
@@ -2831,7 +2833,9 @@ function bp_nouveau_ajax_hide_thread() {
 		$recipients        = array();
 		if ( ! empty( $thread_recipients ) ) {
 			foreach ( $thread_recipients as $recepient ) {
-				$recipients[] = bp_core_get_user_displayname( $recepient->user_id );
+				if ( bp_loggedin_user_id() !== $recepient->user_id ) {
+					$recipients[] = bp_core_get_user_displayname( $recepient->user_id );
+				}
 			}
 		}
 
