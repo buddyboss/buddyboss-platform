@@ -2409,6 +2409,12 @@ window.bp = window.bp || {};
 									results: data && data.success ? data.data.results : []
 								};
 							}
+						},
+						templateResult: function ( data ) {
+							return ( data.html ? data.html : data.text );
+						},
+						escapeMarkup: function ( markup ) {
+							return markup;
 						}
 					}
 				);

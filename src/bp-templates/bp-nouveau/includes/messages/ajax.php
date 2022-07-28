@@ -1829,8 +1829,10 @@ function bp_nouveau_ajax_dsearch_recipients() {
 			'results' => array_map(
 				function ( $result ) {
 					return array(
-						'id'   => "@{$result->ID}",
-						'text' => $result->name,
+						'id'    => "@{$result->ID}",
+						'text'  => $result->name,
+						'image' => $result->image,
+						'html'  => '<div class="cur"><img src="' . esc_url( $result->image ) . '"><span class="username"><strong>' . $result->name . '</strong></div>',
 					);
 				},
 				$results
