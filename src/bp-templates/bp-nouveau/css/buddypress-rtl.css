@@ -9984,6 +9984,10 @@ div.profile_completion_wrap .progress_text_wrap {
   content: "\ee57";
 }
 
+#buddypress .bp-messages-container .message_action__list li.unhide_thread a:before {
+  content: "\e9e8";
+}
+
 #buddypress .bp-messages-container .message_action__list li.delete_messages a:before {
   content: "\ef48";
 }
