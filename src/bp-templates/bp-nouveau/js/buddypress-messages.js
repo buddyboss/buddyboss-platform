@@ -2364,6 +2364,11 @@ window.bp = window.bp || {};
 						dropdownCssClass: 'bb-select-dropdown bb-compose-input',
 						containerCssClass: 'bb-select-container',
 						language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
+						language: {
+							inputTooShort: function() {
+								return BP_Nouveau.compose_message_typing_string;
+							}
+						},
 						ajax: {
 							url: bp.ajax.settings.url,
 							dataType: 'json',
