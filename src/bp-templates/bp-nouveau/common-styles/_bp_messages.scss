@@ -1251,17 +1251,13 @@ input#send-to-input {
 	padding: 0 20px;
 	height: calc(69vh + 130px);
 
-	#messages-post-document-uploader,
-	#messages-post-video-uploader,
-	#messages-post-media-uploader {
+	.dropzone {
 		height: calc(100% - 145px);
 		left: 0;
 		margin: 0;
 	}
 
-	#messages-post-document-uploader,
-	#messages-post-video-uploader,
-	#messages-post-media-uploader {
+	.dropzone {
 
 		@include center-vert();
 		position: absolute;

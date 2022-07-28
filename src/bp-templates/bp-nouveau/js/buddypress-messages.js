@@ -2220,6 +2220,7 @@ window.bp = window.bp || {};
 		{
 			tagName: 'div',
 			id: 'whats-new-messages-attachments',
+			className: 'attachments--small',
 			messagesMedia: null,
 			messagesDocument: null,
 			messagesVideo: null,
