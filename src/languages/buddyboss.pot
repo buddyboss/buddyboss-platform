@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.0.6\n"
+"Project-Id-Version: BuddyBoss Platform (Beta) 2.0.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-22 05:24:58+00:00\n"
+"POT-Creation-Date: 2022-07-28 06:45:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1933,7 +1933,7 @@ msgstr ""
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1125
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1517
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1330
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1584
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1601
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1169
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1286
 msgid "A unique numeric ID for the activity."
@@ -2213,7 +2213,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1935
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:531
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1202
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1797
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1814
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1311
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:1492
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:842
@@ -2228,7 +2228,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1563
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:622
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1153
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1721
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1738
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:1501
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:806
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:815
@@ -4993,7 +4993,10 @@ msgstr ""
 msgid "Posts in Activity Feeds"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
+#: bp-core/admin/settings/bp-admin-setting-activity.php:120
+#: bp-core/admin/templates/about-buddyboss.php:26
+#: bp-performance/classes/class-settings.php:87
+#: bp-templates/bp-nouveau/includes/customizer.php:29
 msgid "BuddyBoss Platform"
 msgstr ""
 
@@ -10108,8 +10111,8 @@ msgstr ""
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1186
 #: bp-media/classes/class-bp-rest-media-details-endpoint.php:337
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1338
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1578
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1761
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1595
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1778
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:924
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1177
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1280
@@ -10146,7 +10149,7 @@ msgid "A unique numeric ID for the Document."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1469
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1542
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1559
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:900
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:694
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1244
@@ -10183,7 +10186,7 @@ msgid "Based on this hide like/comment button for document activity comments."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1536
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1603
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1620
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1305
 msgid "Order of the item."
 msgstr ""
@@ -10279,7 +10282,7 @@ msgstr ""
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1709
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1151
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1171
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1747
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1764
 msgid "Maximum number of results to return"
 msgstr ""
 
@@ -10315,7 +10318,7 @@ msgstr ""
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1785
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1209
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1220
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1815
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1832
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1517
 msgid "Show total count or not."
 msgstr ""
@@ -21381,22 +21384,22 @@ msgstr ""
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:953
 #: bp-media/classes/class-bp-rest-media-details-endpoint.php:327
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1320
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2676
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2718
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2760
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2693
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2735
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2777
 msgid "Media specific IDs."
 msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1050
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1572
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1754
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1589
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1771
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1274
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1456
 msgid "A unique numeric ID for the Album."
 msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1068
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1609
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1626
 msgid "The date the media was created, in the site's timezone."
 msgstr ""
 
@@ -21406,8 +21409,8 @@ msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1081
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1352
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1596
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1775
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1613
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1792
 msgid "Privacy of the media."
 msgstr ""
 
@@ -21428,17 +21431,17 @@ msgid "Visibility of the Album."
 msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1114
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1660
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1677
 msgid "The User's nice name to create a media."
 msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1120
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1666
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1683
 msgid "The User's login name to create a media."
 msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1126
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1672
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1689
 msgid "The User's display name to create a media."
 msgstr ""
 
@@ -21447,7 +21450,7 @@ msgid "Order albums by which attribute."
 msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1178
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1739
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1756
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1294
 msgid "Limit results to friends of a user."
 msgstr ""
@@ -21575,113 +21578,113 @@ msgstr ""
 msgid "Sorry, you are not allowed to upload media."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1536
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1553
 msgid "A unique numeric ID for the Media."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1548
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1565
 msgid "Unique identifier for the media object."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1554
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1571
 msgid "The ID for the author of the media."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1560
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1577
 msgid "The Media title."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1566
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1583
 msgid "The Media description."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1590
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1607
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1292
 msgid "Based on this hide like/comment button for media activity comments."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1616
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1633
 msgid "Wordpress Media Data."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1622
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1639
 msgid "Media URL with full image size."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1628
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1645
 msgid "Media URL with thumbnail image size."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1634
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1651
 msgid "Media URL for the activity image size."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1640
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1657
 msgid "Meta items for the media."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1648
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1665
 msgid "Group name associate with the media."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1654
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1671
 msgid "Visibility of the media."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1678
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1695
 msgid "Media file URL."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1684
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1701
 msgid "Download Media file URL."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1690
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1707
 msgid "Current user's permission with the media."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1696
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1713
 msgid "Current media type, photo or video."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1730
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1747
 msgid "Order media by which attribute."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1768
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1785
 msgid "A unique numeric ID for the Media's Activity."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1786
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1803
 msgid "Scope of the media."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1806
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1823
 msgid "Ensure result set excludes specific media IDs."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:1969
+#: bp-media/classes/class-bp-rest-media-endpoint.php:1986
 msgid "Error creating media, please try again."
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2684
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2701
 msgid "Save gif data into activity"
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2689
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2731
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2773
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2706
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2748
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2790
 msgid "URL for the gif media from object `480w_still->url`"
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2696
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2738
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2780
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2713
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2755
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2797
 msgid "Gif file URL from object `original_mp4->mp4`"
 msgstr ""
 
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2726
-#: bp-media/classes/class-bp-rest-media-endpoint.php:2768
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2743
+#: bp-media/classes/class-bp-rest-media-endpoint.php:2785
 msgid "Save gif data into topic."
 msgstr ""
 
@@ -31201,6 +31204,10 @@ msgstr ""
 
 #: cli/components/activity.php:977
 msgid "%1$s changed %2$s profile photo"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "BuddyBoss Platform (Beta)"
 msgstr ""
 
 #. Author URI of the plugin/theme
