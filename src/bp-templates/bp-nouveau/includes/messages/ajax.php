@@ -1821,7 +1821,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message(),
 			'count_total'     => 'count_query',
 			'page'            => $_GET['page'],
-			'limit'           => 200,
+			'limit'           => 10,
 			'populate_extras' => true,
 		)
 	);
@@ -1842,7 +1842,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 				},
 				$results
 			),
-			'total_pages' => ceil( $results_total / 200 ),
+			'total_pages' => ceil( $results_total / 10 ),
 		)
 	);
 }
