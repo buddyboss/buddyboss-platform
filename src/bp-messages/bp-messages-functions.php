@@ -1248,6 +1248,8 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					)
 				),
 				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
+				'id'   => esc_attr( $avatar_user_id ),
+				'type' => 'user',
 			);
 		}
 	}
@@ -1256,9 +1258,9 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	$first_message_id = ( ! empty( $first_message ) ? $first_message->id : false );
 	$group_id         = ( isset( $first_message_id ) ) ? (int) bp_messages_get_meta( $first_message_id, 'group_id', true ) : 0;
 	if ( ! empty( $first_message_id ) && ! empty( $group_id ) ) {
-		$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group
-		$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual
-		$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private
+		$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group.
+		$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual.
+		$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private.
 
 		if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
 			if ( bp_is_active( 'groups' ) ) {
@@ -1285,6 +1287,8 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$group_avatar = array(
 					'url'  => $group_avatar_url,
 					'name' => $group_name,
+					'id'   => $group_id,
+					'type' => 'group',
 				);
 
 			} else {
@@ -1317,6 +1321,8 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$group_avatar = array(
 					'url'  => ! empty( $group_avatar_url ) ? $group_avatar_url : $default_group_avatar_url,
 					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
+					'id'   => $group_id,
+					'type' => 'group',
 				);
 			}
 
@@ -1493,7 +1499,7 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 			$message_args = array(
 				'sender_id'           => $current_user_id,
 				'thread_id'           => $member_thread_id,
-				'subject'             => wp_trim_words( $content, messages_get_default_subject_length() ),
+				'subject'             => false,
 				'content'             => $content,
 				'mark_visible'        => true,
 				'message_thread_type' => 'reply',
@@ -1571,4 +1577,76 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 			)
 		);
 	}
+}
+
+/**
+ * Change friend button arguments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Button arguments.
+ *
+ * @return array Button arguments with updated.
+ */
+function bb_messaged_set_friend_button_args( $args = array() ) {
+
+	if ( isset( $args['block_self'] ) ) {
+		$args['block_self'] = false;
+	}
+
+	if ( isset( $args['id'] ) && 'not_friends' === $args['id'] ) {
+		$args['link_text'] = __( 'Send Connection Request', 'buddyboss' );
+	} elseif ( isset( $args['id'] ) && 'pending' === $args['id'] ) {
+		$args['link_href'] = '';
+	}
+
+	return $args;
+}
+
+/**
+ * Update meta query when fetching the threads for user unread count.
+ *
+ * @since [BBVERSION]
+ *
+ * @param array $meta_query Array of meta query arguments.
+ * @param array $r          Array of arguments.
+ *
+ * @return array|mixed
+ */
+function bb_messages_update_unread_count( $meta_query, $r ) {
+	if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
+		$meta_query = array(
+			'relation' => 'AND',
+			array(
+				'key'     => 'group_message_thread_id',
+				'compare' => 'EXISTS',
+			),
+		);
+	} elseif ( bp_is_active( 'groups' ) ) {
+		// Determine groups of user.
+		$groups = groups_get_groups(
+			array(
+				'fields'      => 'ids',
+				'per_page'    => - 1,
+				'user_id'     => $r['user_id'],
+				'show_hidden' => true,
+			)
+		);
+
+		$group_ids  = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+		$meta_query = array(
+			'relation' => 'AND',
+			array(
+				'key'     => 'group_message_thread_id',
+				'compare' => 'EXISTS',
+			),
+			array(
+				'key'     => 'group_id',
+				'compare' => 'NOT IN',
+				'value'   => $group_ids,
+			),
+		);
+	}
+
+	return $meta_query;
 }

@@ -209,9 +209,9 @@ class BP_Messages_Component extends BP_Component {
 
 		// Only grab count if we're on a user page and current user has access.
 		if ( bp_is_user() && bp_user_has_access() ) {
-			$count    = bp_get_total_unread_messages_count( bp_displayed_user_id() );
-			$class    = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name = __( 'Messages', 'buddyboss' );
+			$count     = bp_get_total_unread_messages_count( bp_displayed_user_id() );
+			$class     = ( 0 === $count ) ? 'no-count' : 'count';
+			$nav_name  = __( 'Messages', 'buddyboss' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
@@ -402,10 +402,12 @@ class BP_Messages_Component extends BP_Component {
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
-		parent::rest_api_init( array(
-			'BP_REST_Messages_Endpoint',
-			'BP_REST_Group_Messages_Endpoint',
-			'BP_REST_Messages_Actions_Endpoint'
-		) );
+		parent::rest_api_init(
+			array(
+				'BP_REST_Messages_Endpoint',
+				'BP_REST_Group_Messages_Endpoint',
+				'BP_REST_Messages_Actions_Endpoint',
+			)
+		);
 	}
 }

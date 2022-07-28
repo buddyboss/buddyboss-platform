@@ -182,7 +182,7 @@ function bp_get_message_thread_excerpt() {
 	 *
 	 * @param string $value Excerpt of the current thread in the loop.
 	 */
-	return apply_filters( 'bp_get_message_thread_excerpt', strip_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 75 ) ) );
+	return apply_filters( 'bp_get_message_thread_excerpt', wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 75 ) ) );
 }
 
 /**
@@ -2216,6 +2216,41 @@ function bp_get_the_thread_message_content() {
 	 * @param string $message The content of the current message in the loop.
 	 */
 	return apply_filters( 'bp_get_the_thread_message_content', $content );
+}
+
+/**
+ * Output the excerpt of the current message in the loop.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_the_thread_message_excerpt() {
+	echo bp_get_the_thread_message_excerpt();
+}
+/**
+ * Get the excerpt of the current message in the loop.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bp_get_the_thread_message_excerpt() {
+	global $thread_template;
+
+	$content = $thread_template->message->message;
+
+	// If user was deleted, mark content as deleted.
+	if ( false === bp_core_get_core_userdata( bp_get_the_thread_message_sender_id() ) ) {
+		$content = esc_html__( 'This message was deleted.', 'buddyboss' );
+	}
+
+	/**
+	 * Filters the excerpt of the current message in the loop.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $message The excerpt of the current message in the loop.
+	 */
+	return apply_filters( 'bp_get_the_thread_message_excerpt', $content );
 }
 
 /** Embeds *******************************************************************/

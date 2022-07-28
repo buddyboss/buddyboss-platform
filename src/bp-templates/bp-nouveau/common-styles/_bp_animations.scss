@@ -143,3 +143,39 @@
 		transform: rotate(359deg);
 	}
 }
+
+// Background loading color
+.bb-bg-animation {
+	position: relative;
+	overflow: hidden;
+
+	&:after {
+		content: "";
+		width: 200%;
+		background-color: rgba(0, 0, 0, 0.03);
+		display: block;
+		position: absolute;
+		left: 20px;
+		top: 0;
+		bottom: 0;
+		filter: blur(10px);
+		animation: backgroundColor 2s ease-in infinite;
+	}
+
+}
+
+.bb-loading-bg {
+	background-color: #f2f4f5;
+}
+
+@keyframes backgroundColor {
+
+	0% {
+		left: -250%;
+	}
+
+	100% {
+		left: 250%;
+	}
+
+}

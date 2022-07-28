@@ -40,11 +40,11 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 	}
 	?>
 
-	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?>">
+	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?> bb-cover-image-container">
 
 		<div id="item-header-cover-image" class="<?php echo esc_attr( bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
-			<div id="item-header-avatar">
+			<div id="item-header-avatar" class="bb-member-status-<?php echo esc_attr( bp_displayed_user_id() ); ?>">
 				<?php
 				if ( $is_enabled_online_status && function_exists( 'bb_current_user_status' ) ) {
 					bb_current_user_status( bp_displayed_user_id() );

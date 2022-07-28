@@ -346,7 +346,7 @@ class BP_Messages_Thread {
 		}
 
 		foreach ( $deleted_recipients as $recipient ) {
-			// use add to allow multiple values
+			// use add to allow multiple values.
 			bp_messages_add_meta( $last_message->id, 'deleted_by', $recipient->user_id );
 		}
 
@@ -367,29 +367,45 @@ class BP_Messages_Thread {
 	 * @return object|null
 	 */
 	public static function get_last_message( $thread_id ) {
-		global $wpdb;
 
 		if ( empty( $thread_id ) ) {
 			return null;
 		}
 
-		$bp = buddypress();
-
-		$is_group_thread = self::get_first_message( $thread_id );
-		if ( $is_group_thread->id > 0 ) {
+		$is_group_thread  = self::get_first_message( $thread_id );
+		$message_group_id = (int) bp_messages_get_meta( $is_group_thread->id, 'group_id', true ); // group id.
+		if ( $message_group_id > 0 ) {
 			$args = array(
-				'include_threads'  => $thread_id,
-				'meta_key__not_in' => array(
-					'group_message_group_joined',
-					'group_message_group_left',
+				'include_threads' => $thread_id,
+				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'relation' => 'AND',
+					array(
+						'key'     => 'group_message_group_joined',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => 'group_message_group_left',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => 'bp_messages_deleted',
+						'compare' => 'NOT EXISTS',
+					),
 				),
-				'per_page'         => 1,
-				'page'             => 1,
-				'count_total'      => false,
+				'per_page'        => 1,
+				'page'            => 1,
+				'count_total'     => false,
 			);
 		} else {
 			$args = array(
 				'include_threads' => $thread_id,
+				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'relation' => 'AND',
+					array(
+						'key'     => 'bp_messages_deleted',
+						'compare' => 'NOT EXISTS',
+					),
+				),
 				'per_page'        => 1,
 				'page'            => 1,
 				'count_total'     => false,
@@ -752,7 +768,21 @@ class BP_Messages_Thread {
 			}
 		}
 
-		if ( $thread_delete ) {
+		// Group thread will delete only when group is deleted.
+		$is_group_thread = false;
+		if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+			// Get the group id from the first message.
+			$first_message    = self::get_first_message( (int) $thread_id );
+			$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
+			if ( $message_group_id > 0 ) {
+				$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
+				if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
+					$is_group_thread = true;
+				}
+			}
+		}
+
+		if ( $thread_delete && ! $is_group_thread ) {
 
 			/**
 			 * Fires before an entire message thread is deleted.
@@ -766,21 +796,12 @@ class BP_Messages_Thread {
 			 */
 			do_action( 'bp_messages_thread_before_delete', $thread_id, $message_ids, $thread_delete );
 
-			// Removed the thread id from the group meta.
-			if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
-				// Get the group id from the first message.
-				$first_message    = self::get_first_message( (int) $thread_id );
-				$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
-				if ( $message_group_id > 0 ) {
-					$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
-					if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
-						groups_update_groupmeta( $message_group_id, 'group_message_thread', '' );
-					}
-				}
+			if ( bp_is_active( 'notifications' ) ) {
+				// Delete Message Notifications.
+				bp_messages_message_delete_notifications( $thread_id, $message_ids );
 			}
 
-			// Delete Message Notifications.
-			bp_messages_message_delete_notifications( $thread_id, $message_ids );
+			$recipients = self::get_recipients_for_thread( (int) $thread_id );
 
 			// Delete thread messages.
 			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -796,6 +817,13 @@ class BP_Messages_Thread {
 			$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query_recipients ); // db call ok; no-cache ok.
+
+			/**
+			 * Fires after message thread deleted.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 */
+			do_action( 'bp_messages_message_delete_thread', $thread_id, $recipients );
 
 			/**
 			 * Fires before an entire message thread is deleted.
@@ -898,6 +926,85 @@ class BP_Messages_Thread {
 				'having_sql'   => false,
 			)
 		);
+
+		if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
+			if ( empty( $r['meta_query'] ) ) {
+				$r['meta_query'] = array(
+					'relation' => 'AND',
+					array(
+						'key'     => 'group_message_thread_id',
+						'compare' => 'NOT EXISTS',
+					),
+				);
+			} else {
+				$meta_query             = $r['meta_query'];
+				$meta_query[]           = array(
+					'key'     => 'group_message_thread_id',
+					'compare' => 'NOT EXISTS',
+				);
+				$meta_query['relation'] = 'AND';
+				$r['meta_query']        = $meta_query;
+			}
+		} elseif ( bp_is_active( 'groups' ) ) {
+			// Determine groups of user.
+			$groups = groups_get_groups(
+				array(
+					'fields'      => 'ids',
+					'per_page'    => - 1,
+					'user_id'     => $r['user_id'],
+					'show_hidden' => true,
+				)
+			);
+
+			$group_ids = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+
+			if ( empty( $r['meta_query'] ) ) {
+				$r['meta_query'] = array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'group_message_thread_id',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'group_message_thread_id',
+							'compare' => 'EXISTS',
+						),
+						array(
+							'key'     => 'group_id',
+							'compare' => 'IN',
+							'value'   => $group_ids,
+						),
+					),
+				);
+			} else {
+				$meta_query             = $r['meta_query'];
+				$meta_query[]           = array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'group_message_thread_id',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'group_message_thread_id',
+							'compare' => 'EXISTS',
+						),
+						array(
+							'key'     => 'group_id',
+							'compare' => 'IN',
+							'value'   => $group_ids,
+						),
+					),
+				);
+				$meta_query['relation'] = 'AND';
+				$r['meta_query']        = $meta_query;
+			}
+		}
+
+		$r['meta_query'] = apply_filters( 'bb_messages_meta_query_threads_for_user', $r['meta_query'], $r );
 
 		$pag_sql     = '';
 		$type_sql    = '';
@@ -1147,7 +1254,7 @@ class BP_Messages_Thread {
 		$sql['select'] = 'SELECT COUNT( DISTINCT m.thread_id )';
 		unset( $sql['misc'] );
 
-		$total_threads_query = implode( ' ', $sql );
+		$total_threads_query  = implode( ' ', $sql );
 		$total_threads_cached = bp_core_get_incremented_cache( $total_threads_query, 'bp_messages' );
 
 		if ( false === $total_threads_cached ) {
@@ -1421,14 +1528,29 @@ class BP_Messages_Thread {
 		$unread_count = wp_cache_get( $user_id, 'bp_messages_unread_count' );
 
 		if ( false === $unread_count ) {
+			$args = array(
+				'user_id'    => $user_id,
+				'per_page'   => - 1,
+				'is_deleted' => 0,
+			);
 
-			$unread_counts = self::get(
+			add_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 2 );
+
+			$threads = self::get_current_threads_for_user(
 				array(
-					'user_id'    => $user_id,
-					'per_page'   => - 1,
-					'is_deleted' => 0,
+					'user_id' => $user_id,
+					'limit'   => - 1,
+					'fields'  => 'ids',
 				)
 			);
+
+			remove_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 2 );
+
+			if ( ! empty( $threads['threads'] ) ) {
+				$args['exclude_threads'] = $threads['threads'];
+			}
+
+			$unread_counts = self::get( $args );
 
 			$unread_count = 0;
 			if ( ! empty( $unread_counts['recipients'] ) ) {

@@ -992,11 +992,14 @@ class BP_Invitation {
 		do_action( 'bp_invitation_before_delete', $args );
 
 		// Clear matching items from the cache.
-		$cache_args = $args;
+		$cache_args           = $args;
 		$cache_args['fields'] = 'ids';
-		$maybe_cached_ids = self::get( $cache_args );
+		$maybe_cached_ids     = self::get( $cache_args );
 		foreach ( $maybe_cached_ids as $invite_id ) {
 			wp_cache_delete( $invite_id, 'bp_invitations' );
+
+			// Delete invite metas.
+			invitation_delete_invitemeta( $invite_id );
 		}
 
 		$retval = self::_delete( $where['data'], $where['format'] );
