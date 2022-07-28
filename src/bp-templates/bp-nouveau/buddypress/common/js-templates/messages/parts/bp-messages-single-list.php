@@ -83,7 +83,7 @@
 				<div class="bp-message-content-wrap">{{{data.content}}}</div>
 			<# } #>
 
-			<# if ( data.media ) { #>
+			<# if ( data.media && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
 			<div class="bb-activity-media-wrap bb-media-length-{{data.media.length}}">
 				<# for ( i in data.media ) { #>
 				<div class="bb-activity-media-elem">
@@ -104,7 +104,7 @@
 			</div>
 			<# } #>
 
-			<# if ( data.video ) { #>
+			<# if ( data.video && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
 			<div class="bb-activity-video-wrap bb-video-length-{{data.video.length}}">
 				<# for ( i in data.video ) { #>
 				<div class="bb-activity-video-elem">
@@ -125,7 +125,7 @@
 			</div>
 			<# } #>
 
-			<# if ( data.document ) { #>
+			<# if ( data.document && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
 			<div class="bb-activity-media-wrap bb-media-length-{{data.document.length}}">
 				<# for ( i in data.document ) { #>
 					<div class="bb-activity-media-elem document-activity " data-id="">
@@ -188,7 +188,7 @@
 
 			<# } #>
 
-			<# if ( data.gif ) { #>
+			<# if ( data.gif && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
 			<div class="activity-attached-gif-container">
 				<div class="gif-image-container">
 					<div class="gif-player">

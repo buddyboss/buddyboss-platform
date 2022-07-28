@@ -568,6 +568,10 @@
 		content: "\ee57";
 	}
 
+	li.unhide_thread a:before {
+		content: "\e9e8";
+	}
+
 	li.delete_messages a:before {
 		content: "\ef48";
 	}
@@ -984,8 +988,8 @@ input#send-to-input {
 .bp-messages-nav-panel {
 	display: block;
 	-webkit-box-flex: 0;
-	-ms-flex: 0 0 360px;
-	flex: 0 0 360px;
+	-ms-flex: 0 0 375px;
+	flex: 0 0 375px;
 	min-width: 0;
 
 	@include medium-max() {
