@@ -1555,7 +1555,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				self.$el.find( '#messages-post-document-uploader' ).addClass( 'open' ).removeClass( 'closed' );
+				// self.$el.find( '#messages-post-document-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
 				$( '#messages-post-document-uploader' ).trigger( 'click' );
 			}
