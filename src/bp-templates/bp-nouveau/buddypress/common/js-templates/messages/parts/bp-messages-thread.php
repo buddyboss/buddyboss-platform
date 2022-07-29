@@ -12,42 +12,42 @@
 <script type="text/html" id="tmpl-bp-messages-thread">
 	<#
 	var other_recipients = _.reject(data.recipients, function(item) {
-	return item.is_you;
+		return item.is_you;
 	});
 
 	var current_user = _.find(data.recipients, function(item) {
-	return item.is_you;
+		return item.is_you;
 	});
 
 	var include_you = other_recipients.length >= 2;
 	var first_three = _.first(other_recipients, 3);
 
 	if (first_three.length == 0) {
-	include_you = true;
+		include_you = true;
 	}
 
 
-    var action_other_recipients = _.reject(data.action_recipients, function(item) {
-    return item.is_you;
-    });
+	var action_other_recipients = _.reject(data.action_recipients, function(item) {
+		return item.is_you;
+	});
 
-    var action_current_user = _.find(data.action_recipients, function(item) {
-    return item.is_you;
-    });
+	var action_current_user = _.find(data.action_recipients, function(item) {
+		return item.is_you;
+	});
 
-    var action_include_you = action_other_recipients.length >= 2;
-    var action_first_three = _.first(action_other_recipients, 3);
+	var action_include_you = action_other_recipients.length >= 2;
+	var action_first_three = _.first(action_other_recipients, 3);
 
-    if (action_first_three.length == 0) {
-        action_include_you = true;
-    }
+	if (action_first_three.length == 0) {
+		action_include_you = true;
+	}
 	#>
 
 	<div class="bb_more_options message-thread-options">
 		<a href="#" class="bb_more_options_action bp-tooltip">
 			<i class="bb-icon-menu-dots-h"></i>
 		</a>
-		<ul class="bb_more_options_list message_action__list" databp-thread-id="{{ data.id }}">
+		<ul class="bb_more_options_list message_action__list" data-bp-thread-id="{{ data.id }}">
 			<li class="unread">
 				<a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?></a>
 			</li>
@@ -80,12 +80,26 @@
 				<# } #>
 			<?php } ?>
 
-			<li class="delete_messages">
+			<li class="delete_messages" data-bp-action="delete">
 				<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 			</li>
-			<li class="delete_thread">
-				<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
-			</li>
+			<?php
+			$can_delete_conversation = false;
+			if ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_delete_conversation = true;
+			} elseif ( class_exists( 'BP_Core_Members_Switching' ) ) {
+				$old_user = BP_Core_Members_Switching::get_old_user();
+				if ( ! empty( $old_user ) ) {
+					$can_delete_conversation = true;
+				}
+			}
+
+			if ( $can_delete_conversation ) {
+				?>
+				<li class="delete_thread">
+					<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
+				</li>
+			<?php } ?>
 		</ul>
 	</div>
 

@@ -182,7 +182,7 @@ window.bp = window.bp || {};
 			 */
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
 			$( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
-			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member', this.messageModeratorMemberList );
+			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member, .bb_more_options_list .mass-block-member', this.messageModeratorMemberList );
 			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
 			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 
@@ -933,7 +933,7 @@ window.bp = window.bp || {};
 						action: 'messages_' + action,
 						nonce : BP_Nouveau.nonces.messages,
 						id    : ids
-						}
+					}
 				);
 
 				return bp.ajax.send( options );
@@ -3136,7 +3136,7 @@ window.bp = window.bp || {};
 					{
 						recipientsCount: recipientsCount,
 						toOthers: toOthers
-						},
+					},
 					{ silent: true }
 				);
 
