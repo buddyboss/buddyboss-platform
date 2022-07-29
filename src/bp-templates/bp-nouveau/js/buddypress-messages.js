@@ -3212,7 +3212,8 @@ window.bp = window.bp || {};
 				'search #user_messages_search'      : 'resetSearchTerms',
 				'submit #user_messages_search_form' : 'setSearchTerms',
 				'click #bp-messages-next-page'      : 'nextPage',
-				'click #bp-messages-prev-page'      : 'prevPage'
+				'click #bp-messages-prev-page'      : 'prevPage',
+				'click #user_messages_search_reset' : 'resetSearchForm'
 			},
 
 			initialize: function() {
@@ -3263,6 +3264,10 @@ window.bp = window.bp || {};
 				} else {
 					$( event.target ).closest( 'form' ).find( '[type=submit]' ).addClass( 'bp-show' ).removeClass( 'bp-hide' );
 				}
+
+				if ( '' !== $( event.target ).val() ) {
+					$( event.target ).closest( 'form' ).find( '#user_messages_search_reset' ).removeClass( 'bp-hide' );
+				}
 			},
 
 			setSearchTerms: function( event ) {
@@ -3274,6 +3279,10 @@ window.bp = window.bp || {};
 						page: 1
 					}
 				);
+
+				if ( '' !== $( event.target ).find( 'input[type=search]' ).val() ) {
+					$( event.target ).closest( 'form' ).find( '#user_messages_search_reset' ).removeClass( 'bp-hide' );
+				}
 			},
 
 			nextPage: function( event ) {
@@ -3286,7 +3295,26 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				this.model.set( 'page', this.model.get( 'page' ) - 1 );
-			}
+			},
+
+			resetSearchForm: function( event ) {
+				event.preventDefault();
+
+				var form = $( event.target ).closest( '#user_messages_search_form' );
+
+				if ( '' !== form.find( '#user_messages_search' ).val() ) {
+					this.model.set(
+						{
+							'search_terms': '',
+							page: 1
+						}
+					);
+
+					form.trigger( 'reset' );
+					form.find( '#user_messages_search_reset' ).addClass( 'bp-hide' );
+				}
+
+			},
 		}
 	);
 
