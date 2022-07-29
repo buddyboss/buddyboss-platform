@@ -42,10 +42,7 @@
 		action_include_you = true;
 	}
 
-	var total_action_member_count = data.action_recipients.count;
-	if ( ! _.isUndefined( action_current_user.id ) && 0 < action_current_user.id ) {
-		total_action_member_count = total_action_member_count - 1;
-	}
+	var total_action_member_count = data.action_recipients.count - 1;
 	#>
 
 	<div class="bb_more_options message-thread-options">
