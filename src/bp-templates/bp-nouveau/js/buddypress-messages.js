@@ -2557,7 +2557,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				window.select2form = $input.select2(
+				$input.select2(
 					{
 						placeholder: '',
 						minimumInputLength: 1,
