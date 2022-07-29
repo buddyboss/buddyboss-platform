@@ -1517,8 +1517,19 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#messages-media-button' ) ) {
 								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 							}
+							self.$el.children( '.dropzone' ).removeClass( 'files-uploaded' );
 						}
 						Backbone.trigger( 'triggerMediaChange' );
+					}
+				);
+
+				// Show add more button when all files are uploaded
+				bp.Nouveau.Messages.dropzone.on(
+					'complete',
+					function(file) {
+						if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+							this.element.classList.add( 'files-uploaded' );
+						}
 					}
 				);
 
@@ -1716,8 +1727,19 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#messages-document-button' ) ) {
 								tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 							}
+							self.$el.children( '.dropzone' ).removeClass( 'files-uploaded' );
 						}
 						Backbone.trigger( 'triggerMediaChange' );
+					}
+				);
+
+				// Show add more button when all files are uploaded
+				bp.Nouveau.Messages.dropzone.on(
+					'complete',
+					function(file) {
+						if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+							this.element.classList.add( 'files-uploaded' );
+						}
 					}
 				);
 
@@ -1933,8 +1955,19 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#messages-video-button' ) ) {
 								tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 							}
+							self.$el.children( '.dropzone' ).removeClass( 'files-uploaded' );
 						}
 						Backbone.trigger( 'triggerMediaChange' );
+					}
+				);
+
+				// Show add more button when all files are uploaded
+				bp.Nouveau.Messages.dropzone.on(
+					'complete',
+					function(file) {
+						if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+							this.element.classList.add( 'files-uploaded' );
+						}
 					}
 				);
 
@@ -2524,7 +2557,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				$input.select2(
+				window.select2form = $input.select2(
 					{
 						placeholder: '',
 						minimumInputLength: 1,
