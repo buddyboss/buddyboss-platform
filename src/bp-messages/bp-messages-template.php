@@ -2473,23 +2473,3 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 	 */
 	return apply_filters( 'bb_get_thread_sent_date', $output );
 }
-
-/**
- * Generate the 'h:i A' string for the current message.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_get_thread_message_sent_date() {
-	global $thread_template;
-
-	/**
-	 * Filters the date sent value for the current message as a timestamp.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $value Timestamp of the date sent value for the current message.
-	 */
-	return apply_filters( 'bb_get_thread_message_sent_date', bp_core_get_format_date( $thread_template->message->date_sent, 'h:i A' ) );
-}

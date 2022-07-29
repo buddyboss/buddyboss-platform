@@ -2506,7 +2506,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'              => bb_get_thread_message_sent_date(),
+				'display_date'              => bp_get_the_thread_message_time_since(),
 			);
 
 		} else {
@@ -2558,7 +2558,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => bb_get_thread_message_sent_date(),
+				'display_date'  => bp_get_the_thread_message_time_since(),
 			);
 		}
 
