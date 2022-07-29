@@ -605,7 +605,8 @@ window.bp = window.bp || {};
 				options   = {},
 				attribute = {},
 				feedback  = BP_Nouveau.messages.doingAction,
-				thread_id = 0;
+				thread_id = 0,
+				model;
 
 			if ( ! action ) {
 				return event;
@@ -627,7 +628,7 @@ window.bp = window.bp || {};
 
 				attribute = _.first( attribute );
 
-				var model = new bp.Models.messageThread( attribute.attributes );
+				model = new bp.Models.messageThread( attribute.attributes );
 				model.set( attribute.attributes );
 
 			} else {

@@ -27,11 +27,11 @@
 	}
 
 
-	var action_other_recipients = _.reject(data.action_recipients, function(item) {
+	var action_other_recipients = _.reject(data.action_recipients.members, function(item) {
 		return item.is_you;
 	});
 
-	var action_current_user = _.find(data.action_recipients, function(item) {
+	var action_current_user = _.find(data.action_recipients.members, function(item) {
 		return item.is_you;
 	});
 
@@ -40,6 +40,11 @@
 
 	if (action_first_three.length == 0) {
 		action_include_you = true;
+	}
+
+	var total_action_member_count = data.action_recipients.count;
+	if ( ! _.isUndefined( action_current_user.id ) && 0 < action_current_user.id ) {
+		total_action_member_count = total_action_member_count - 1;
 	}
 	#>
 
@@ -65,18 +70,18 @@
 			<# } #>
 
 			<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-				<# if ( data.action_recipients.count > 1 ) { #>
-				<li class="report_thread">
-					<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
-				</li>
-				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_user_blocked ) { #>
-				<li class="reported_thread">
-					<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
-				</li>
+				<# if ( total_action_member_count > 1 ) { #>
+					<li class="report_thread">
+						<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+					</li>
+				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_blocked ) { #>
+					<li class="reported_thread">
+						<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
+					</li>
 				<# } else if( action_other_recipients.length == 1 && true == action_other_recipients[0].can_be_blocked ) { #>
-				<li class="report_thread">
-					<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
-				</li>
+					<li class="report_thread">
+						<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
+					</li>
 				<# } #>
 			<?php } ?>
 
