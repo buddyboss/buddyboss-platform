@@ -1772,7 +1772,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				self.$el.find( '#messages-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
+				// self.$el.find( '#messages-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
 				$( '#messages-post-video-uploader' ).trigger( 'click' );
 			}
