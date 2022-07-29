@@ -33,21 +33,44 @@
 		</a>
 		<ul class="bb_more_options_list message_action__list">
 			<li class="unread">
-				<a data-bp-action="unread" href="#">Mark unread</a>
-			</li>
-			<li class="hide_thread">
-				<a data-bp-action="hide_thread" href="#">Hide conversation</a>
+				<a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?></a>
 			</li>
 
-			<li class="report_thread">
-				<a id="report-content-user-21" href="#block-member" class="block-member" data-bp-content-id="21" data-bp-content-type="user" data-bp-nonce="ebaadd531f">Block member</a>
+			<# if ( data.is_thread_archived ) { #>
+			<li class="unhide_thread">
+				<a data-bp-action="unhide_thread" href="#"><?php esc_html_e( 'Unarchive Conversation', 'buddyboss' ); ?>
+				</a>
 			</li>
+			<# } else { #>
+			<li class="hide_thread">
+				<a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Archive', 'buddyboss' ); ?>
+				</a>
+			</li>
+			<# } #>
+
+			<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
+				<# if ( data.recipients.count > 1 ) { #>
+				<li class="report_thread">
+					<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+				</li>
+				<# } else if ( other_recipients.length == 1 && other_recipients[0].is_blocked ) { #>
+				<li class="reported_thread">
+					<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
+				</li>
+				<# } else if( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
+				<li class="report_thread">
+					<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
+				</li>
+				<# } #>
+			<?php } ?>
+
+
 
 			<li class="delete_messages">
-				<a data-bp-action="delete" href="#">Delete your messages</a>
+				<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 			</li>
 			<li class="delete_thread">
-				<a data-bp-action="delete_thread" href="#">Delete conversation</a>
+				<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
 			</li>
 		</ul>
 	</div>
