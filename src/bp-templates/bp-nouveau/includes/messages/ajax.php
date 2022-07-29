@@ -1837,7 +1837,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 						'id'    => "@{$result->ID}",
 						'text'  => $result->name,
 						'image' => $result->image,
-						'html'  => '<div class="cur"><img src="' . esc_url( $result->image ) . '"><span class="username"><strong>' . $result->name . '</strong></div>',
+						'html'  => '<div class="cur"><img class="avatar" src="' . esc_url( $result->image ) . '"><span class="username"><strong>' . $result->name . '</strong></div>',
 					);
 				},
 				$results
