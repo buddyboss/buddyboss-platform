@@ -1174,6 +1174,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][ $count ] = array(
+						'id'         => $recipient->user_id,
 						'avatar'     => esc_url(
 							bp_core_fetch_avatar(
 								array(
@@ -1198,11 +1199,13 @@ function bp_nouveau_ajax_get_user_message_threads() {
 						$threads->threads[ $i ]['recipients'][ $count ]['can_be_blocked']    = ( ! in_array( $recipient->user_id, $admins, true ) ) ? true : false;
 					}
 
+					$threads->threads[ $i ]['recipients'][ $count ]['is_thread_archived'] = 0 < $recipient->is_hidden;
+
 					$count ++;
 				}
 
 				// Check the thread is hidden or not.
-				if ( $recipient->is_hidden ) {
+				if ( $recipient->is_hidden && bp_loggedin_user_id() === $recipient->user_id ) {
 					$is_thread_archived = true;
 				}
 			}

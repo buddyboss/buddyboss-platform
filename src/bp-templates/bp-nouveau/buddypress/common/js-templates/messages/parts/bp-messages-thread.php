@@ -31,7 +31,7 @@
 		<a href="#" class="bb_more_options_action bp-tooltip">
 			<i class="bb-icon-menu-dots-h"></i>
 		</a>
-		<ul class="bb_more_options_list message_action__list">
+		<ul class="bb_more_options_list message_action__list" databp-thread-id="{{ data.id }}">
 			<li class="unread">
 				<a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?></a>
 			</li>
