@@ -25,6 +25,22 @@
 	if (first_three.length == 0) {
 	include_you = true;
 	}
+
+
+    var action_other_recipients = _.reject(data.action_recipients, function(item) {
+    return item.is_you;
+    });
+
+    var action_current_user = _.find(data.action_recipients, function(item) {
+    return item.is_you;
+    });
+
+    var action_include_you = action_other_recipients.length >= 2;
+    var action_first_three = _.first(action_other_recipients, 3);
+
+    if (action_first_three.length == 0) {
+        action_include_you = true;
+    }
 	#>
 
 	<div class="bb_more_options message-thread-options">
@@ -49,17 +65,17 @@
 			<# } #>
 
 			<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-				<# if ( data.recipients.count > 1 ) { #>
+				<# if ( data.action_recipients.count > 1 ) { #>
 				<li class="report_thread">
 					<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 				</li>
-				<# } else if ( other_recipients.length == 1 && other_recipients[0].is_user_blocked ) { #>
+				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_user_blocked ) { #>
 				<li class="reported_thread">
 					<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 				</li>
-				<# } else if( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
+				<# } else if( action_other_recipients.length == 1 && true == action_other_recipients[0].can_be_blocked ) { #>
 				<li class="report_thread">
-					<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
+					<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
 				</li>
 				<# } #>
 			<?php } ?>
