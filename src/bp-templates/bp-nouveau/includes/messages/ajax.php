@@ -1861,7 +1861,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	);
 
 	$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
-	$results       = apply_filters( 'bp_members_suggestions_results', $results['members'] );
+	$results       = apply_filters( 'bp_members_suggestions_results', isset(  $results['members'] ) ? $results['members'] : array() );
 
 	wp_send_json_success(
 		array(
