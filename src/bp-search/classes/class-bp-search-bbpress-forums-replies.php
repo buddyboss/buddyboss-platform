@@ -102,7 +102,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			$where[] = '(' . $group_query . '
 			pm.meta_value IN ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' )
 			)';
-			$where_standalone = "post_status IN (' . join( ',', $post_status ) . ')";
+			$where_standalone = 'post_status IN (' . join( ',', $post_status ) . ')';
 
 			/**
 			 * Filters the MySQL WHERE conditions for the forum's reply Search query.
