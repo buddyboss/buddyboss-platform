@@ -94,7 +94,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 				$post_status = array( "'publish'" );
 			}
 
-			$where[]   = array();
+			$where   = array();
 			$where[] = '1=1';
 			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
