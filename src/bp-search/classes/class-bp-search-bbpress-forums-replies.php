@@ -83,7 +83,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 				$in = implode( '', $in );
 
-				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' INNER JOIN '. $wpdb->posts .' ON ID = post_id WHERE ( meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ')  OR  meta_key != \'_bbp_group_ids\' ) AND post_type = \'forum\' ) AND ';
+				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' INNER JOIN '. $wpdb->posts .' ON ID = post_id WHERE ( meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ')  OR  meta_key != \'_bbp_group_ids\' ) AND post_type = \'forum\' ) OR ';
 			}
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
@@ -100,9 +100,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			$where[] = "post_type = '{$this->type}'";
 
 			$where[] = '(' . $group_query . '
-			pm.meta_value IN ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' )
-			OR post_status IN (' . join( ',', $post_status ) . ') ) ';
-			
+			pm.meta_value IN ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' AND post_status IN (' . join( ',', $post_status ) . ') )
+			)';
 
 			/**
 			 * Filters the MySQL WHERE conditions for the forum's reply Search query.
