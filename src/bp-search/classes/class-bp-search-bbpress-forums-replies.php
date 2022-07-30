@@ -101,8 +101,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 			$where[] = '(' . $group_query . '
 			pm.meta_value IN ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' )
-			)';
-			$where_standalone = 'post_status IN (' . join( ',', $post_status ) . ')';
+			OR post_status IN (' . join( ',', $post_status ) . ') ) ';
+			
 
 			/**
 			 * Filters the MySQL WHERE conditions for the forum's reply Search query.
@@ -116,7 +116,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 
-			$sql   = 'SELECT ' . $columns . ' FROM ' . $from . ' WHERE ' . implode( ' AND ', $where ) . 'OR ' . $where_standalone;
+			$sql   = 'SELECT ' . $columns . ' FROM ' . $from . ' WHERE ' . implode( ' AND ', $where );
 			$query = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 			return apply_filters(
