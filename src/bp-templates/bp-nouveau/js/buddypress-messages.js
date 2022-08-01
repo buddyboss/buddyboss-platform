@@ -1479,10 +1479,14 @@ window.bp = window.bp || {};
 							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
+							bp.Nouveau.Messages.removeFeedback();
 						} else {
-							if ( ! jQuery( '.message-media-error-popup' ).length) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
-							}
+							// if ( ! jQuery( '.message-media-error-popup' ).length) {
+							// 	$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
+							// }
+
+							bp.Nouveau.Messages.displaySendMessageFeedback( BP_Nouveau.media.invalid_media_type + '</br>' + response.data.feedback, 'error' );
+
 							this.removeFile( file );
 						}
 						Backbone.trigger( 'triggerMediaChange' );
@@ -1499,9 +1503,11 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
-							if ( ! jQuery( '.message-media-error-popup' ).length) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							}
+							// if ( ! jQuery( '.message-media-error-popup' ).length) {
+							// 	$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							// }
+
+							bp.Nouveau.Messages.displaySendMessageFeedback( BP_Nouveau.media.invalid_media_type + '</br>' + response, 'error' );
 							this.removeFile( file );
 						}
 						Backbone.trigger( 'triggerMediaChange' );
@@ -1521,6 +1527,7 @@ window.bp = window.bp || {};
 									self.model.set( 'media', self.media );
 								}
 							}
+							bp.Nouveau.Messages.removeFeedback();
 						}
 
 						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
@@ -1657,6 +1664,7 @@ window.bp = window.bp || {};
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
 							Backbone.trigger( 'triggerMediaChange' );
+							bp.Nouveau.Messages.removeFeedback();
 							return file.previewElement.classList.add( 'dz-success' );
 						} else {
 							var node, _i, _len, _ref, _results;
@@ -1686,6 +1694,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.on(
 					'accept',
 					function( file, done ) {
+						bp.Nouveau.Messages.removeFeedback();
 						if (file.size == 0) {
 							done( BP_Nouveau.media.empty_document_type );
 						} else {
@@ -1705,9 +1714,10 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
-							if ( ! jQuery( '.document-error-popup' ).length) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							}
+							// if ( ! jQuery( '.document-error-popup' ).length) {
+							// 	$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							// }
+							bp.Nouveau.Messages.displaySendMessageFeedback( BP_Nouveau.media.invalid_file_type + '</br>' + response, 'error' );
 							this.removeFile( file );
 						}
 						Backbone.trigger( 'triggerMediaChange' );
@@ -1888,6 +1898,7 @@ window.bp = window.bp || {};
 							response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 							self.video.push( response.data );
 							self.model.set( 'video', self.video );
+							bp.Nouveau.Messages.removeFeedback();
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -1907,6 +1918,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.on(
 					'accept',
 					function( file, done ) {
+						bp.Nouveau.Messages.removeFeedback();
 						if (file.size == 0) {
 							done( BP_Nouveau.media.empty_video_type );
 						} else {
@@ -1926,7 +1938,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button closeModalErrorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							// $( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button closeModalErrorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							bp.Nouveau.Messages.displaySendMessageFeedback( BP_Nouveau.media.invalid_media_type + '</br>' + response, 'error' );
 							this.removeFile( file );
 						}
 						Backbone.trigger( 'triggerMediaChange' );
