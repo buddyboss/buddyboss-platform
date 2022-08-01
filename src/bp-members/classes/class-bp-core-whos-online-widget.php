@@ -397,7 +397,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 	);
 
 	ob_start();
-	if ( bp_has_members( $connection_args ) ) {
+	if ( bp_has_members( $connection_args ) && apply_filters( 'bb_show_online_users', true ) ) {
 		?>
 
 		<div class="avatar-block who-is-online-widget-parent-connection">
