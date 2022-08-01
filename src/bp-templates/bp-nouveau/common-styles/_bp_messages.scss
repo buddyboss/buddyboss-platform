@@ -1281,6 +1281,22 @@ input#send-to-input {
 	}
 }
 
+.bp-messages-search-form #user_messages_search_reset {
+	color: $light-text;
+	background-color: transparent;
+	border: 0;
+	padding: 0;
+	position: absolute;
+	top: 7px;
+	right: 12px;
+	opacity: 0.4;
+
+	&:hover {
+		opacity: 1;
+	}
+
+}
+
 .bp-messages-form-header {
 	display: -webkit-box;
 	display: -ms-flexbox;

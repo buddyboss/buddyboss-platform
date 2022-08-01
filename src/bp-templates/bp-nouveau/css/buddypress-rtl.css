@@ -10244,6 +10244,21 @@ input#send-to-input {
   display: flex;
 }
 
+.bp-messages-search-form #user_messages_search_reset {
+  color: #767676;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  position: absolute;
+  top: 7px;
+  left: 12px;
+  opacity: 0.4;
+}
+
+.bp-messages-search-form #user_messages_search_reset:hover {
+  opacity: 1;
+}
+
 .bp-messages-form-header {
   display: -webkit-box;
   display: -ms-flexbox;
