@@ -80,7 +80,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		);
 
 		ob_start();
-		if ( bp_has_members( $online_args ) ) {
+		if ( bp_has_members( $online_args ) && apply_filters( 'bb_show_online_users', true ) ) {
 			?>
 
 			<div class="avatar-block who-is-online-widget-parent-users">
@@ -91,7 +91,10 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 					?>
 
 					<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+							<?php bp_member_avatar(); ?>
+							<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>' ) ); ?>
+						</a>
 					</div>
 
 				<?php endwhile; ?>
@@ -128,7 +131,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		);
 
 		ob_start();
-		if ( bp_has_members( $connection_args ) ) {
+		if ( bp_has_members( $connection_args ) && apply_filters( 'bb_show_online_users', true ) ) {
 
 			?>
 
@@ -140,7 +143,10 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 					?>
 
 					<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+							<?php bp_member_avatar(); ?>
+							<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>' ) ); ?>
+						</a>
 					</div>
 
 				<?php endwhile; ?>
@@ -351,7 +357,10 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 				?>
 
 				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+                        <?php bp_member_avatar(); ?>
+						<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>' ) ); ?>
+					</a>
 				</div>
 
 			<?php endwhile; ?>
@@ -399,7 +408,10 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 				?>
 
 				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+						<?php bp_member_avatar(); ?>
+						<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>' ) ); ?>
+					</a>
 				</div>
 
 			<?php endwhile; ?>

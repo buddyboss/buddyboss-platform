@@ -2329,7 +2329,7 @@ function bb_get_thread_total_recipients_count() {
  * @param int|string $last_message_date The earlier time from which you're calculating
  *                                      the time elapsed. Enter either as an integer Unix timestamp,
  *                                      or as a date string of the format 'Y-m-d h:i:s'.
- * @param int|bool   $newer_date        Optional. Unix timestamp of date to compare older
+ * @param int|bool   $newer_date        Optional. Date string of the format 'Y-m-d h:i:s' to compare older
  *                                      date to. Default: false (current time).
  *
  * @return string
@@ -2364,6 +2364,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 		YEAR_IN_SECONDS,
 		WEEK_IN_SECONDS,
 		DAY_IN_SECONDS,
+		HOUR_IN_SECONDS,
 		MINUTE_IN_SECONDS,
 		1,
 	);
@@ -2376,90 +2377,106 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 		$last_message_date = gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
 	}
 
-	/**
-	 * $newer_date will equal false if we want to know the time elapsed between
-	 * a date and the today end time. $newer_date will have a value if we want to
-	 * work out time elapsed between two known dates.
-	 */
-	$today      = date_i18n( 'Y-m-d' ) . ' 23:59:59';
-	$newer_date = ( ! $newer_date ) ? strtotime( $today ) : $newer_date;
+	// Calculate the different with current time for past 5 mins.
+	$newer_current_date = ( ! $newer_date ) ? bp_core_current_time( true, 'timestamp' ) : $newer_date;
+	$current_since      = $newer_current_date - $last_message_date;
+	$five_seconds       = ( 5 * MINUTE_IN_SECONDS );
 
-	// Difference in seconds.
-	$since = $newer_date - $last_message_date;
-	if ( 0 > $since ) {
-		$output = $unknown_text;
-
-		/**
-		 * We only want to output only one chunk of time here, eg:
-		 * Dec 20, 2021
-		 * May 26
-		 * Wednesday
-		 * Yesterday
-		 * 1:00PM
-		 * Now
-		 * so there's only one bit of calculation below:
-		 */
+	if ( 0 < $current_since && $five_seconds >= $current_since ) {
+		$output = $right_now_text;
 	} else {
 
 		/**
-		 * Initializing the count variable to avoid undefined notice
+		 * $newer_date will equal false if we want to know the time elapsed between
+		 * a date and the today end time. $newer_date will have a value if we want to
+		 * work out time elapsed between two known dates.
 		 */
-		$count   = 0;
-		$seconds = 0;
+		$today             = date_i18n( 'Y-m-d' ) . ' 23:59:59';
+		$newer_date        = ( ! $newer_date ) ? $today : $newer_date;
+		$newer_time_chunks = explode( ':', str_replace( ' ', ':', $newer_date ) );
+		$newer_date_chunks = explode( '-', str_replace( ' ', '-', $newer_date ) );
+		$newer_date        = gmmktime( (int) $newer_time_chunks[1], (int) $newer_time_chunks[2], (int) $newer_time_chunks[3], (int) $newer_date_chunks[1], (int) $newer_date_chunks[2], (int) $newer_date_chunks[0] );
 
-		for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
-			$seconds = $chunks[ $i ];
+		// Difference in seconds.
+		$since = $newer_date - $last_message_date;
+		if ( 0 > $since ) {
+			$output = $unknown_text;
 
-			// Finding the biggest chunk (if the chunk fits, break).
-			$count = floor( $since / $seconds );
-			if ( 0 != $count ) {
-				break;
-			}
-		}
-
-		// If $i iterates all the way to $j, then the event happened 0 seconds ago.
-		if ( ! isset( $chunks[ $i ] ) ) {
-			$output = $right_now_text;
-
+			/**
+			 * We only want to output only one chunk of time here, eg:
+			 * Dec 20, 2021
+			 * May 26
+			 * Wednesday
+			 * Yesterday
+			 * 1:00PM
+			 * Now
+			 * so there's only one bit of calculation below:
+			 */
 		} else {
 
-			// Set output var.
-			switch ( $seconds ) {
-				case YEAR_IN_SECONDS:
-					$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M d' ) : bp_core_get_format_date( $old_last_date, 'M d, Y' );
-					break;
-				case WEEK_IN_SECONDS:
-					$start_week = strtotime( 'monday this week' );
-					$end_week   = strtotime( 'sunday this week' );
+			/**
+			 * Initializing the count variable to avoid undefined notice
+			 */
+			$count   = 0;
+			$seconds = 0;
 
-					if ( $start_week <= $since && $end_week >= $since ) {
-						$output = bp_core_get_format_date( $old_last_date, 'l' );
-					} else {
-						$output = bp_core_get_format_date( $old_last_date, 'M d' );
-					}
-					break;
-				case DAY_IN_SECONDS:
-					$start_week = strtotime( 'monday this week' );
-					$end_week   = strtotime( 'sunday this week' );
+			for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
+				$seconds = $chunks[ $i ];
 
-					if ( 1 == $count ) {
-						$output = __( 'Yesterday', 'buddyboss' );
-					} elseif ( $start_week <= $since && $end_week >= $since ) {
-						$output = bp_core_get_format_date( $old_last_date, 'l' );
-					} else {
-						$output = bp_core_get_format_date( $old_last_date, 'M d' );
-					}
+				// Finding the biggest chunk (if the chunk fits, break).
+				$count = floor( $since / $seconds );
+				if ( 0 != $count ) {
 					break;
-				case MINUTE_IN_SECONDS:
-					$output = $count < 5 ? $right_now_text : bp_core_get_format_date( $old_last_date, 'g:iA' );
-					break;
-				default:
-					$output = $right_now_text;
+				}
 			}
 
-			// No output, so happened right now.
-			if ( ! (int) $count ) {
+			// If $i iterates all the way to $j, then the event happened 0 seconds ago.
+			if ( ! isset( $chunks[ $i ] ) ) {
 				$output = $right_now_text;
+
+			} else {
+
+				// Set output var.
+				switch ( $seconds ) {
+					case YEAR_IN_SECONDS:
+						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M d' ) : bp_core_get_format_date( $old_last_date, 'M d, Y' );
+						break;
+					case WEEK_IN_SECONDS:
+						$start_week = strtotime( 'monday this week' );
+						$end_week   = strtotime( 'sunday this week' );
+
+						if ( $start_week <= $since && $end_week >= $since ) {
+							$output = bp_core_get_format_date( $old_last_date, 'l' );
+						} else {
+							$output = bp_core_get_format_date( $old_last_date, 'M d' );
+						}
+						break;
+					case DAY_IN_SECONDS:
+						$start_week = strtotime( 'monday this week' );
+						$end_week   = strtotime( 'sunday this week' );
+
+						if ( 1 == $count ) {
+							$output = __( 'Yesterday', 'buddyboss' );
+						} elseif ( $start_week <= $since && $end_week >= $since ) {
+							$output = bp_core_get_format_date( $old_last_date, 'l' );
+						} else {
+							$output = bp_core_get_format_date( $old_last_date, 'M d' );
+						}
+						break;
+					case HOUR_IN_SECONDS:
+						$output = bp_core_get_format_date( $old_last_date, 'g:iA' );
+						break;
+					case 5 * MINUTE_IN_SECONDS:
+						$output = $count < 5 ? $right_now_text : bp_core_get_format_date( $old_last_date, 'g:iA' );
+						break;
+					default:
+						$output = $right_now_text;
+				}
+
+				// No output, so happened right now.
+				if ( ! (int) $count ) {
+					$output = $right_now_text;
+				}
 			}
 		}
 	}
