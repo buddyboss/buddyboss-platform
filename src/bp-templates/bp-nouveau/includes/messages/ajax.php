@@ -1120,6 +1120,13 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				}
 			}
 		}
+
+		// Check the thread is private or group.
+		$is_private_thread = true;
+		if ( 2 < $messages_template->thread->total_recipients_count ) {
+			$is_private_thread = false;
+		}
+
 		$threads->threads[ $i ] = array(
 			'id'                              => $bp_get_message_thread_id,
 			'message_id'                      => (int) $last_message_id,
@@ -1157,6 +1164,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'date'                            => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
 			'display_date'                    => bb_get_thread_sent_date(),
 			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
+			'is_private_thread'               => $is_private_thread,
 		);
 
 		$is_thread_archived = false;
@@ -1234,7 +1242,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$is_thread_archived = true;
 				}
 			}
-
 
 			$threads->threads[ $i ]['action_recipients']['count']         = $messages_template->thread->total_recipients_count;
 			$threads->threads[ $i ]['action_recipients']['current_count'] = (int) bb_messages_recipients_per_page();
