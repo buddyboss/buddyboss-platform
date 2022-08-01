@@ -157,7 +157,7 @@
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 					<span class="thread-excerpt">
 						<# if ( ! data.is_private_thread ) { #>
-							<span class="last-message-sender 123">
+							<span class="last-message-sender">
 								<# if ( data.sender_is_you ) { #>
 									<?php _e( 'You', 'buddyboss' ); ?>:
 								<# } else { #>

@@ -2337,7 +2337,7 @@ function bb_get_thread_total_recipients_count() {
 function bb_get_thread_sent_date( $last_message_date = false, $newer_date = false ) {
 	global $messages_template;
 
-	if ( empty( $last_message_date ) ) {
+	if ( empty( $last_message_date ) && isset( $messages_template->thread->last_message_date ) ) {
 		$last_message_date = $messages_template->thread->last_message_date;
 	}
 
@@ -2349,6 +2349,10 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 	 * @param string $value String representing the time since the older date.
 	 */
 	$unknown_text = apply_filters( 'bb_get_thread_sent_date_unknown_text', __( 'Sometime', 'buddyboss' ) );
+
+	if ( empty( $last_message_date ) ) {
+		return $unknown_text;
+	}
 
 	/**
 	 * Filters the value to use if the time since is right now.
@@ -2442,8 +2446,8 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M d' ) : bp_core_get_format_date( $old_last_date, 'M d, Y' );
 						break;
 					case WEEK_IN_SECONDS:
-						$start_week = strtotime( 'monday this week' );
-						$end_week   = strtotime( 'sunday this week' );
+						$start_week = bb_get_week_start_timestamp();
+						$end_week   = bb_get_week_end_timestamp();
 
 						if ( $start_week <= $since && $end_week >= $since ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
@@ -2452,8 +2456,8 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 						}
 						break;
 					case DAY_IN_SECONDS:
-						$start_week = strtotime( 'monday this week' );
-						$end_week   = strtotime( 'sunday this week' );
+						$start_week = bb_get_week_start_timestamp();
+						$end_week   = bb_get_week_end_timestamp();
 
 						if ( 1 == $count ) {
 							$output = __( 'Yesterday', 'buddyboss' );
@@ -2489,4 +2493,156 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 	 * @param string $value Timestamp of the date sent value for the current message.
 	 */
 	return apply_filters( 'bb_get_thread_sent_date', $output );
+}
+
+/**
+ * Generate the human readable string for the current thread start date.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|string $thread_start_date The earlier time from which you're calculating
+ *                                      the time elapsed. Enter either as an integer Unix timestamp,
+ *                                      or as a date string of the format 'Y-m-d h:i:s'.
+ * @param int|bool   $newer_date        Optional. Date string of the format 'Y-m-d h:i:s' to compare older
+ *                                      date to. Default: false (current time).
+ *
+ * @return string
+ */
+function bb_get_thread_start_date( $thread_start_date = false, $newer_date = false ) {
+	global $thread_template;
+
+	if ( empty( $thread_start_date ) && isset( $thread_template->thread->first_message_date ) ) {
+		$thread_start_date = $thread_template->thread->first_message_date;
+	}
+
+	/**
+	 * Filters the value to use if the time since is unknown.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value String representing the time since the older date.
+	 */
+	$unknown_text = apply_filters( 'bb_get_thread_start_date_unknown_text', __( 'Sometime', 'buddyboss' ) );
+
+	if ( empty( $thread_start_date ) ) {
+		return $unknown_text;
+	}
+
+	/**
+	 * Filters the value to use if the time since is right now.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value String representing the time since the older date.
+	 */
+	$today_text = apply_filters( 'bb_get_thread_start_date_today_text', __( 'Today', 'buddyboss' ) );
+
+	// Array of time period chunks.
+	$chunks = array(
+		YEAR_IN_SECONDS,
+		WEEK_IN_SECONDS,
+		DAY_IN_SECONDS,
+		1,
+	);
+
+	$old_start_date = $thread_start_date;
+
+	if ( ! empty( $thread_start_date ) && ! is_numeric( $thread_start_date ) ) {
+		$time_chunks       = explode( ':', str_replace( ' ', ':', $thread_start_date ) );
+		$date_chunks       = explode( '-', str_replace( ' ', '-', $thread_start_date ) );
+		$thread_start_date = gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
+	}
+
+	/**
+	 * $newer_date will equal false if we want to know the time elapsed between
+	 * a date and the today end time. $newer_date will have a value if we want to
+	 * work out time elapsed between two known dates.
+	 */
+	$today             = date_i18n( 'Y-m-d' ) . ' 23:59:59';
+	$newer_date        = ( ! $newer_date ) ? $today : $newer_date;
+	$newer_time_chunks = explode( ':', str_replace( ' ', ':', $newer_date ) );
+	$newer_date_chunks = explode( '-', str_replace( ' ', '-', $newer_date ) );
+	$newer_date        = gmmktime( (int) $newer_time_chunks[1], (int) $newer_time_chunks[2], (int) $newer_time_chunks[3], (int) $newer_date_chunks[1], (int) $newer_date_chunks[2], (int) $newer_date_chunks[0] );
+
+	$start_week = bb_get_week_start_timestamp();
+	$end_week   = bb_get_week_end_timestamp();
+
+	// Difference in seconds.
+	$since = $newer_date - $thread_start_date;
+	if ( 0 > $since ) {
+		$output = $unknown_text;
+
+		/**
+		 * We only want to output only one chunk of time here, eg:
+		 * Dec 20, 2021
+		 * May 26
+		 * Wednesday
+		 * Yesterday
+		 * Today
+		 * so there's only one bit of calculation below:
+		 */
+	} else {
+
+		/**
+		 * Initializing the count variable to avoid undefined notice
+		 */
+		$count   = 0;
+		$seconds = 0;
+
+		for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
+			$seconds = $chunks[ $i ];
+
+			// Finding the biggest chunk (if the chunk fits, break).
+			$count = floor( $since / $seconds );
+			if ( 0 != $count ) {
+				break;
+			}
+		}
+
+		// If $i iterates all the way to $j, then the event happened 0 seconds ago.
+		if ( ! isset( $chunks[ $i ] ) ) {
+			$output = $today_text;
+
+		} else {
+
+			// Set output var.
+			switch ( $seconds ) {
+				case YEAR_IN_SECONDS:
+					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, 'M d' ) : bp_core_get_format_date( $old_start_date, 'M d, Y' );
+					break;
+				case WEEK_IN_SECONDS:
+					if ( $end_week >= $since ) {
+						$output = bp_core_get_format_date( $old_start_date, 'l' );
+					} else {
+						$output = bp_core_get_format_date( $old_start_date, 'M d' );
+					}
+					break;
+				case DAY_IN_SECONDS:
+					if ( 1 == $count ) {
+						$output = __( 'Yesterday', 'buddyboss' );
+					} elseif ( $end_week >= $since ) {
+						$output = bp_core_get_format_date( $old_start_date, 'l' );
+					} else {
+						$output = bp_core_get_format_date( $old_start_date, 'M d' );
+					}
+					break;
+				default:
+					$output = $today_text;
+			}
+
+			// No output, so happened right now.
+			if ( ! (int) $count ) {
+				$output = $today_text;
+			}
+		}
+	}
+
+	/**
+	 * Filters the date sent value for the current message as a timestamp.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Timestamp of the date sent value for the current message.
+	 */
+	return apply_filters( 'bb_get_thread_start_date', $output );
 }
