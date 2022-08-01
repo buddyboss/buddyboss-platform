@@ -4835,7 +4835,8 @@ function bp_get_hidden_member_types() {
  */
 function bb_current_user_status( $user_id ) {
 	if ( bb_is_online_user( $user_id ) ) {
-		echo '<span class="member-status online"></span>';
+		echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>' ) );
+
 	}
 }
 
@@ -4862,7 +4863,7 @@ function bb_is_online_user( $user_id ) {
 
 	// the activity timeframe is 5 minutes.
 	$activity_timeframe = 5 * MINUTE_IN_SECONDS;
-	return ( time() - $last_activity <= $activity_timeframe );
+	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $activity_timeframe ), $user_id );
 }
 
 /**
