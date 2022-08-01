@@ -3308,7 +3308,7 @@ window.bp = window.bp || {};
 			var progress = 0;
 			if( dropzone.files.length == 1 ) {
 				$( dropzone.element ).addClass( 'dz-single-view' );
-				message = 'uploading <strong>' + dropzone.files[0].name + '</strong>';
+				message = 'Uploading <strong>' + dropzone.files[0].name + '</strong>';
 				progress = dropzone.files[0].upload.progress;
 			} else {
 				$( dropzone.element ).removeClass( 'dz-single-view' );
