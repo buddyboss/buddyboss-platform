@@ -1429,20 +1429,16 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#messages-media-button' ) ) {
 							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 						}
+						this.element.classList.remove( 'files-uploaded' );
 					}
 				);
 
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
-					function( element ) {
-						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
-						var radius        = circle.r.baseVal.value;
-						var circumference = radius * 2 * Math.PI;
-
-						circle.style.strokeDasharray  = circumference + ' ' + circumference;
-						circle.style.strokeDashoffset = circumference;
-						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-						circle.style.strokeDashoffset = offset;
+					function() {
+						if ( bp.Nouveau.dropZoneGlobalProgress ) {
+							bp.Nouveau.dropZoneGlobalProgress( this );
+						}
 						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
@@ -1517,7 +1513,7 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#messages-media-button' ) ) {
 								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 							}
-							self.$el.children( '.dropzone' ).removeClass( 'files-uploaded' );
+							self.$el.children( '.dropzone' ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 						}
 						Backbone.trigger( 'triggerMediaChange' );
 					}
@@ -1621,6 +1617,7 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#messages-document-button' ) ) {
 							tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 						}
+						this.element.classList.remove( 'files-uploaded' );
 					}
 				);
 
@@ -1654,15 +1651,10 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
-					function( element ) {
-						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
-						var radius        = circle.r.baseVal.value;
-						var circumference = radius * 2 * Math.PI;
-
-						circle.style.strokeDasharray  = circumference + ' ' + circumference;
-						circle.style.strokeDashoffset = circumference;
-						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-						circle.style.strokeDashoffset = offset;
+					function() {
+						if ( bp.Nouveau.dropZoneGlobalProgress ) {
+							bp.Nouveau.dropZoneGlobalProgress( this );
+						}
 						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
@@ -1727,7 +1719,7 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#messages-document-button' ) ) {
 								tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 							}
-							self.$el.children( '.dropzone' ).removeClass( 'files-uploaded' );
+							self.$el.children( '.dropzone' ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 						}
 						Backbone.trigger( 'triggerMediaChange' );
 					}
@@ -1822,6 +1814,7 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#messages-video-button' ) ) {
 							tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 						}
+						this.element.classList.remove( 'files-uploaded' );
 					}
 				);
 
@@ -1844,19 +1837,9 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
-					function( element ) {
-						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
-						var radius        = circle.r.baseVal.value;
-						var circumference = radius * 2 * Math.PI;
-
-						circle.style.strokeDasharray  = circumference + ' ' + circumference;
-						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-						if ( element.upload.progress <= 99 ) {
-							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-							circle.style.strokeDashoffset = offset;
-						} else if ( element.upload.progress === 100 ) {
-							circle.style.strokeDashoffset = circumference - 0.99 * circumference;
-							$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+					function() {
+						if ( bp.Nouveau.dropZoneGlobalProgress ) {
+							bp.Nouveau.dropZoneGlobalProgress( this );
 						}
 						Backbone.trigger( 'triggerMediaInProgress' );
 					}
@@ -1955,7 +1938,7 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#messages-video-button' ) ) {
 								tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 							}
-							self.$el.children( '.dropzone' ).removeClass( 'files-uploaded' );
+							self.$el.children( '.dropzone' ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 						}
 						Backbone.trigger( 'triggerMediaChange' );
 					}
