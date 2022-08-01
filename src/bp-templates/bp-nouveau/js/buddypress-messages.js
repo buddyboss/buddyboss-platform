@@ -1526,7 +1526,7 @@ window.bp = window.bp || {};
 				// Show add more button when all files are uploaded
 				bp.Nouveau.Messages.dropzone.on(
 					'complete',
-					function(file) {
+					function() {
 						if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
 							this.element.classList.add( 'files-uploaded' );
 						}
@@ -1736,7 +1736,7 @@ window.bp = window.bp || {};
 				// Show add more button when all files are uploaded
 				bp.Nouveau.Messages.dropzone.on(
 					'complete',
-					function(file) {
+					function() {
 						if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
 							this.element.classList.add( 'files-uploaded' );
 						}
@@ -1964,7 +1964,7 @@ window.bp = window.bp || {};
 				// Show add more button when all files are uploaded
 				bp.Nouveau.Messages.dropzone.on(
 					'complete',
-					function(file) {
+					function() {
 						if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
 							this.element.classList.add( 'files-uploaded' );
 						}
@@ -2563,7 +2563,33 @@ window.bp = window.bp || {};
 						minimumInputLength: 1,
 						dropdownCssClass: 'bb-select-dropdown bb-compose-input',
 						containerCssClass: 'bb-select-container',
-						language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
+						language: {
+							errorLoading: function() {
+								return bp_select2.i18n.errorLoading;
+							},
+							inputTooLong: function(e) {
+								var n = e.input.length - e.maximum;
+								return bp_select2.i18n.inputTooLong.replace( '%%', n );
+							},
+							inputTooShort: function() {
+								return bp_select2.i18n.msginputTooShort;
+							},
+							loadingMore: function() {
+								return bp_select2.i18n.loadingMore;
+							},
+							maximumSelected: function(e) {
+								return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
+							},
+							noResults: function() {
+								return bp_select2.i18n.noResults;
+							},
+							searching: function() {
+								return bp_select2.i18n.searching;
+							},
+							removeAllItems: function() {
+								return bp_select2.i18n.removeAllItems;
+							}
+						},
 						ajax: {
 							url: bp.ajax.settings.url,
 							dataType: 'json',
