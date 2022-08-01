@@ -83,7 +83,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 				)
 			);
-			$member_report_button = bp_get_button( $report_button );
+			$member_report_button = ! is_super_admin( bp_get_member_user_id() ) ? bp_get_button( $report_button ) : '';
 
 			// Get Primary action.
 			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';

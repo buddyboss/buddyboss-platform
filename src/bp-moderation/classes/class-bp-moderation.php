@@ -171,7 +171,7 @@ class BP_Moderation {
 			$this->item_id   = $item_id;
 			$this->item_type = $item_type;
 
-			$id = self::check_moderation_exist( $this->item_id, $this->item_type );
+			$id = self::check_moderation_exist( $this->item_id, $this->item_type, true );
 			if ( ! empty( $id ) ) {
 				$this->id = (int) $id;
 				$this->populate();
@@ -199,6 +199,37 @@ class BP_Moderation {
 
 		if ( false === $result || true === $force_check ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
+			if ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+				$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.user_report = 1", $item_id, BP_Moderation_Members::$moderation_type ) ); // phpcs:ignore
+			}
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
+		}
+
+		return is_numeric( $result ) ? (int) $result : false;
+	}
+
+	/**
+	 * Check moderation user blocked exist or not
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int  $item_id          Moderation item id.
+	 * @param int  $item_type        Moderation item type.
+	 * @param bool $blocking_user_id blocked by user ID.
+	 * @param bool $force_check      bypass caching or not.
+	 *
+	 * @return false|int
+	 */
+	public static function check_moderation_user_block_exist( $item_id, $item_type, $blocking_user_id = false, $force_check = false ) {
+		global $wpdb;
+
+		$bp               = buddypress();
+		$cache_key        = 'bb_check_moderation_blocked_' . $item_type . '_' . $item_id;
+		$result           = wp_cache_get( $cache_key, 'bp_moderation' );
+		$blocking_user_id = ! empty( $blocking_user_id ) ? $blocking_user_id : get_current_user_id();
+
+		if ( false === $result || true === $force_check ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT ms.id FROM {$bp->moderation->table_name} ms JOIN {$bp->moderation->table_name_reports} mr ON mr.moderation_id = ms.id WHERE ms.item_id = %d AND ms.item_type = %s AND mr.user_id = %d AND mr.user_report = 0", $item_id, $item_type, $blocking_user_id ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
@@ -1325,9 +1356,9 @@ class BP_Moderation {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param int 	$item_id  item id.
-		 * @param int 	$hide_sitewide item hidden sitewide or user specific.
-		 * @param array	$args hide arguments.
+		 * @param int   $item_id  item id.
+		 * @param int   $hide_sitewide item hidden sitewide or user specific.
+		 * @param array $args hide arguments.
 		 */
 		do_action( "bp_suspend_hide_{$this->item_type}", $this->item_id, $this->hide_sitewide, array() );
 	}
