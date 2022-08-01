@@ -263,6 +263,30 @@ window.bp = window.bp || {};
 			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
 		},
 
+		displaySendMessageFeedback: function( message, type ) {
+			var feedback;
+
+			// Make sure to remove the feedbacks.
+			this.removeFeedback();
+
+			if ( ! message ) {
+				return;
+			}
+
+			feedback = new bp.Views.Feedback(
+				{
+					value: message,
+					type:  type || 'info'
+				}
+			);
+
+			this.views.add( { id: 'feedback', view: feedback } );
+
+			feedback.inject( '.bp-send-message-notices' );
+
+			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
+		},
+
 		displaySearchFeedback: function( message, type ) {
 			var feedback;
 
@@ -3876,7 +3900,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					bp.Nouveau.Messages.displayFeedback( feedback, 'error' );
+					bp.Nouveau.Messages.displaySendMessageFeedback( feedback, 'error' );
 					return;
 				}
 

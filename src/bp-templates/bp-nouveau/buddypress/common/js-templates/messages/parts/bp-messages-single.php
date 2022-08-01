@@ -30,6 +30,7 @@ $os = bb_core_get_os();
 	<div class="bp-messages-notice"></div>
 	<form id="send-reply" class="standard-form send-reply">
 		<div class="message-box">
+			<div class="bp-send-message-notices"></div>
 			<div class="message-metadata">
 
 				<?php bp_nouveau_messages_hook( 'before', 'reply_meta' ); ?>
