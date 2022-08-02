@@ -21547,20 +21547,24 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   margin: -1px;
 }
 
+.message-members-list.member-popup .modal-container,
 .moderation-popup .modal-container {
   max-height: 80vh;
   overflow: auto;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-header,
 .moderation-popup .modal-container .bb-model-header {
   margin-bottom: 25px;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-header h4,
 .moderation-popup .modal-container .bb-model-header h4 {
   font-size: 17px;
   font-weight: 500;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-header .mfp-close,
 .moderation-popup .modal-container .bb-model-header .mfp-close {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -21569,19 +21573,23 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   left: inherit;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-footer,
 .moderation-popup .modal-container .bb-model-footer {
   text-align: right;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-footer .button,
 .moderation-popup .modal-container .bb-model-footer .button {
   width: auto;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-footer .button.report-submit.loading,
 .moderation-popup .modal-container .bb-model-footer .button.report-submit.loading {
   pointer-events: none;
   opacity: 0.9;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-footer .button.report-submit.loading:after,
 .moderation-popup .modal-container .bb-model-footer .button.report-submit.loading:after {
   font: normal normal 400 14px/1 bb-icons;
   speak: none;
@@ -21595,6 +21603,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   animation: spin 2s infinite linear;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-footer .button.bb-cancel-report-content,
 .moderation-popup .modal-container .bb-model-footer .button.bb-cancel-report-content {
   color: #a5a7ab;
   background-color: transparent;
@@ -21604,16 +21613,20 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   min-width: inherit;
 }
 
+.message-members-list.member-popup .modal-container #bb-block-member,
+.message-members-list.member-popup .modal-container #bb-report-content,
 .moderation-popup .modal-container #bb-block-member,
 .moderation-popup .modal-container #bb-report-content {
   margin-bottom: 0;
 }
 
+.message-members-list.member-popup .modal-container .form-item,
 .moderation-popup .modal-container .form-item {
   margin-bottom: 10px;
   text-align: left;
 }
 
+.message-members-list.member-popup .modal-container .form-item > span,
 .moderation-popup .modal-container .form-item > span {
   font-size: 14px;
   padding-left: 30px;
@@ -21621,10 +21634,12 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   line-height: 1.4;
 }
 
+.message-members-list.member-popup .modal-container .form-item label,
 .moderation-popup .modal-container .form-item label {
   margin-bottom: 0;
 }
 
+.message-members-list.member-popup .modal-container .form-item label > input[type="radio"],
 .moderation-popup .modal-container .form-item label > input[type="radio"] {
   margin-right: 10px;
   vertical-align: middle;
@@ -21632,18 +21647,21 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   width: 15px;
 }
 
+.message-members-list.member-popup .modal-container .form-item label > span,
 .moderation-popup .modal-container .form-item label > span {
   font-size: 16px;
   font-weight: 500;
   vertical-align: middle;
 }
 
+.message-members-list.member-popup .modal-container .form-item label > textarea,
 .moderation-popup .modal-container .form-item label > textarea {
   margin-left: 30px;
   margin-bottom: 0;
   width: calc(100% - 28px);
 }
 
+.message-members-list.member-popup .modal-container .bp-report-form-err,
 .moderation-popup .modal-container .bp-report-form-err {
   display: flex;
   color: #ef3e46;
@@ -21660,10 +21678,12 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   border-radius: 3px;
 }
 
+.message-members-list.member-popup .modal-container .bp-report-form-err:empty,
 .moderation-popup .modal-container .bp-report-form-err:empty {
   display: none;
 }
 
+.message-members-list.member-popup .modal-container .bp-report-form-err:before,
 .moderation-popup .modal-container .bp-report-form-err:before {
   content: "\f534";
   background-color: #d33;
