@@ -580,6 +580,10 @@
 		content: "\ee6a";
 	}
 
+	li.read a:before {
+		content: "\ee69";
+	}
+
 	li.hide_thread a:before {
 		content: "\ee57";
 	}

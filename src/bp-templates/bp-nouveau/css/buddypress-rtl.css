@@ -9457,7 +9457,7 @@ div.profile_completion_wrap .progress_text_wrap {
   position: relative;
 }
 
-.bp-messages-content .single-message-thread-header .thread-avatar > img {
+.bp-messages-content .single-message-thread-header .thread-avatar img {
   height: 52px;
   width: 52px;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
@@ -9486,6 +9486,18 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 .bp-messages-content .single-message-thread-header .thread-avatar .thread-multiple-avatar img + img {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  z-index: 1;
+}
+
+.bp-messages-content .single-message-thread-header .thread-avatar .thread-multiple-avatar > a img {
+  height: 35px;
+  width: 35px;
+}
+
+.bp-messages-content .single-message-thread-header .thread-avatar .thread-multiple-avatar > a + a img {
   position: absolute;
   top: 17px;
   right: 17px;
@@ -9570,6 +9582,10 @@ div.profile_completion_wrap .progress_text_wrap {
 
 #buddypress .bp-messages-container .message_action__list li.unread a:before {
   content: "\ee6a";
+}
+
+#buddypress .bp-messages-container .message_action__list li.read a:before {
+  content: "\ee69";
 }
 
 #buddypress .bp-messages-container .message_action__list li.hide_thread a:before {

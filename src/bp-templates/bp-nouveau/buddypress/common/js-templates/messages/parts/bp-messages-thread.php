@@ -43,6 +43,11 @@
 	}
 
 	var total_action_member_count = data.action_recipients.count - 1;
+
+	var read_unread_action = 'unread';
+	if (data.unread) {
+		read_unread_action = 'read';
+	}
 	#>
 
 	<div class="bb_more_options message-thread-options">
@@ -50,8 +55,14 @@
 			<i class="bb-icon-menu-dots-h"></i>
 		</a>
 		<ul class="bb_more_options_list message_action__list" data-bp-thread-id="{{ data.id }}">
-			<li class="unread">
-				<a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?></a>
+			<li class="{{ read_unread_action }}">
+				<a data-bp-action="{{ read_unread_action }}" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>">
+					<# if (data.unread) { #>
+						<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>
+					<# } else { #>
+						<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>
+					<# } #>
+				</a>
 			</li>
 
 			<# if ( data.is_thread_archived ) { #>

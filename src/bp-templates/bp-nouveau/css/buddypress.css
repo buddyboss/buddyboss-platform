@@ -9584,6 +9584,10 @@ div.profile_completion_wrap .progress_text_wrap {
   content: "\ee6a";
 }
 
+#buddypress .bp-messages-container .message_action__list li.read a:before {
+  content: "\ee69";
+}
+
 #buddypress .bp-messages-container .message_action__list li.hide_thread a:before {
   content: "\ee57";
 }

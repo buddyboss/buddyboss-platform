@@ -112,10 +112,10 @@
 				?>
 				<div class="message_actions">
 					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
-					<div class="message_action__list">
+					<div class="message_action__list" data-bp-thread-id="{{ data.id }}">
 						<ul>
 							<li class="unread">
-								<a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?></a>
+								<a data-bp-action="unread" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>"><?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?></a>
 							</li>
 							<# if ( data.is_thread_archived ) { #>
 								<li class="unhide_thread">
@@ -162,16 +162,11 @@
 				?>
 				<div class="message_actions">
 					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
-					<div class="message_action__list">
+					<div class="message_action__list" data-bp-thread-id="{{ data.id }}">
 						<ul>
 							<li class="unread">
-								<a data-bp-action="unread" href="#">
-									<?php
-									esc_html_e(
-										'Mark unread',
-										'buddyboss'
-									);
-									?>
+								<a data-bp-action="unread" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>">
+									<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>
 								</a>
 							</li>
 							<# if ( data.is_thread_archived ) { #>
