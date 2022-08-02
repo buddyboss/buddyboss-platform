@@ -191,6 +191,18 @@ window.bp = window.bp || {};
 
 		},
 
+		triggerLoadMore: function () {
+
+			if( jQuery( this ).find( '#load_more_rl' ).length == 0 || jQuery( this ).find( '#load_more_rl' ).hasClass( 'loading') || jQuery( this ).find( '#load_more_rl' ).hasClass( 'hidden') ) {
+				return;
+			}
+
+			if( jQuery( this ).offset().top + jQuery( this ).innerHeight() > jQuery( this ).find( '#load_more_rl' ).offset().top ) {
+				jQuery( this ).find( '#load_more_rl' ).trigger( 'click' );
+			}
+
+		},
+
 		closeModalPopup: function ( event ) {
 			event.preventDefault();
 
@@ -508,6 +520,10 @@ window.bp = window.bp || {};
 						if ( response.success && response.data && '' !== response.data.content ) {
 							if ( $( '#message-members-list #members_list' ).length > 0 ) {
 								$( '#message-members-list #members_list' ).html( response.data.content ).addClass( 'is_not_empty' );
+								if( !$( '#message-members-list' ).hasClass( 'event-triggered' ) ) {
+									$( '#message-members-list .modal-container' ).on( 'scroll', bp.Nouveau.Messages.triggerLoadMore );
+									$( '#message-members-list .modal-container' ).addClass( 'event-triggered' );
+								}
 							}
 						}
 					},
@@ -593,7 +609,7 @@ window.bp = window.bp || {};
 						}
 						if ( totalPages === currentPage ) {
 							if ( 'bp_load_more' === bpAction ) {
-								$( '#load_more_rl' ).hide();
+								$( '#load_more_rl' ).addClass( 'hidden' ).hide();
 							}
 							if ( 'bp_view_more' === bpAction ) {
 								$( '#view_more_members' ).hide();
@@ -677,6 +693,10 @@ window.bp = window.bp || {};
 						if ( response.success && response.data && '' !== response.data.content ) {
 							if ( $( '#mass-user-block-list #moderated_user_list' ).length > 0 ) {
 								$( '#mass-user-block-list #moderated_user_list' ).html( response.data.content ).addClass( 'is_not_empty' );
+								if( !$( '#mass-user-block-list' ).hasClass( 'event-triggered' ) ) {
+									$( '#mass-user-block-list .modal-container' ).on( 'scroll', bp.Nouveau.Messages.triggerLoadMore );
+									$( '#mass-user-block-list .modal-container' ).addClass( 'event-triggered' );
+								}
 							}
 						}
 					},

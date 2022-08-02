@@ -10474,6 +10474,52 @@ body .bp-messages-user-threads {
   animation: spin 2s infinite linear;
 }
 
+.message-members-list .bb-report-type-pagination,
+.mass-user-block-list .bb-report-type-pagination {
+  margin: 0 -10px;
+}
+
+.message-members-list .bb-report-type-pagination .page-data,
+.mass-user-block-list .bb-report-type-pagination .page-data {
+  margin: 0;
+  text-align: right;
+}
+
+.message-members-list .bb-report-type-pagination .page-data #load_more_rl,
+.mass-user-block-list .bb-report-type-pagination .page-data #load_more_rl {
+  opacity: 0;
+  visibility: hidden;
+  height: 1px;
+  overflow: hidden;
+  min-height: 0;
+  transition: none;
+}
+
+.message-members-list .bb-report-type-pagination .page-data #load_more_rl.loading,
+.mass-user-block-list .bb-report-type-pagination .page-data #load_more_rl.loading {
+  font-size: 13px;
+  background-color: transparent;
+  border: 0;
+  color: #767676;
+  opacity: 1;
+  visibility: visible;
+  height: auto;
+  min-height: auto;
+  padding: 10px 0 5px;
+}
+
+.message-members-list .bb-report-type-pagination .page-data #load_more_rl.loading:after,
+.mass-user-block-list .bb-report-type-pagination .page-data #load_more_rl.loading:after {
+  content: "\ef30";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+  float: right;
+  margin: 7px 0 0 6px;
+}
+
 .bb-report-type-pagination .page-data {
   display: block;
   margin: 20px auto 0;
