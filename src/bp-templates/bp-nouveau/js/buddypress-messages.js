@@ -3218,12 +3218,10 @@ window.bp = window.bp || {};
 					this.el.className += ' current';
 				}
 
-				var recipientsCount = this.model.get( 'recipients' ).length, toOthers = '';
+				var recipientsCount = this.model.get( 'action_recipients' ).count, toOthers = '';
 
-				if ( recipientsCount === 5 ) {
-					toOthers = BP_Nouveau.messages.toOthers.one;
-				} else if ( recipientsCount > 4 ) {
-					toOthers = BP_Nouveau.messages.toOthers.more.replace( '%d', Number( recipientsCount - 4 ) );
+				if ( recipientsCount > 4 ) {
+					toOthers = BP_Nouveau.messages.toOthers.other;
 				}
 
 				this.model.set(
@@ -3732,6 +3730,18 @@ window.bp = window.bp || {};
 
 				if ( ! _.isUndefined( response.thread ) ) {
 					this.options.thread = new Backbone.Model( response.thread );
+
+					var recipientsCount = response.thread.recipients.count, toOthers = '';
+					if ( recipientsCount > 4 ) {
+						toOthers = BP_Nouveau.messages.toOthers.other;
+					}
+
+					this.options.thread.set(
+						{
+							toOthers: toOthers
+						},
+						{ silent: true }
+					);
 				}
 
 				this.loadingFeedback.remove();

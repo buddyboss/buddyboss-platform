@@ -20,9 +20,9 @@
 	});
 
 	var include_you = other_recipients.length >= 2;
-	var first_three = _.first(other_recipients, 3);
+	var first_four = _.first(other_recipients, 4);
 
-	if (first_three.length == 0) {
+	if (first_four.length == 0) {
 		include_you = true;
 	}
 
@@ -142,12 +142,13 @@
 				<# if ( data.group_name && data.group_name.length && data.is_group_thread ) { #>
 					<span class="user-name">{{data.group_name}}</span>
 				<# } else { #>
-				<# for ( i in first_three ) { #>
-					<span class="user-name">{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #></span>
-				<# } #>
-				<# if ( data.toOthers ) { #>
-				<span class="num-name">{{data.toOthers}}</span>
-				<# } #>
+					<# for ( i in first_four ) { #>
+						<span class="user-name">{{other_recipients[i].user_name}}<# if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #></span>
+					<# } #>
+
+					<# if ( data.toOthers ) { #>
+						<span class="num-name">{{data.toOthers}}</span>
+					<# } #>
 
 				<# } #>
 			</div>

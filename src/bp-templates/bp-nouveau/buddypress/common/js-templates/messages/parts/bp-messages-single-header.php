@@ -19,6 +19,12 @@
 	if ( other_recipients.length == 0 ) {
 		include_you = true;
 	}
+
+	var first_four = _.first(other_recipients, 4);
+
+	if (first_four.length == 0) {
+		include_you = true;
+	}
 	#>
 
 	<header class="single-message-thread-header">
@@ -27,23 +33,23 @@
 			if( data.avatars.length == 2 ) { #>
 			<div class="thread-multiple-avatar">
 				<# } #>
-                <a href="{{{data.avatars[0].link}}}"><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
+				<a href="{{{data.avatars[0].link}}}"><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
 				<# if( data.avatars[1] ) { #>
-                <a href="{{{data.avatars[1].link}}}"><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
+				<a href="{{{data.avatars[1].link}}}"><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
 				<# }
 				if( data.avatars.length == 2 ) { #>
 			</div>
 			<# } #>
 			<# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
-            <a href="{{data.group_link}}"><img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}" /></a>
+			<a href="{{data.group_link}}"><img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}" /></a>
 			<# } else { #>
 			<# if ( other_recipients.length > 1 ) { #>
 			<span class="recipients-count">{{other_recipients.length}}</span>
-            <a href=""><img class="avatar" src="{{{data.sender_avatar}}}" alt="{{data.sender_name}}" /></a>
+			<a href=""><img class="avatar" src="{{{data.sender_avatar}}}" alt="{{data.sender_name}}" /></a>
 			<# } else { #>
 			<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 			<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-            <a href="{{{recipient.user_link}}}"><img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" /></a>
+			<a href="{{{recipient.user_link}}}"><img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" /></a>
 			<# } #>
 			<# } #>
 			<# } #>
@@ -59,14 +65,29 @@
 						<# } #>
 					</span>
 				<# } else { #>
-					<# for ( i in other_recipients ) { #>
+
+					<# for ( i in first_four ) { #>
 						<span class="participants-name">
 							<# if ( other_recipients[i].is_deleted ) { #>
 								{{other_recipients[i].user_name}}
-							 <# } else { #>
-								<# if( other_recipients[i].user_link ) { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# } else { #>{{other_recipients[i].user_name}}<# } #><# } #><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 ) && data.toOthers ) { #><?php _e( ',', 'buddyboss' ); ?><# } #>
+							<# } else { #>
+								<# if( other_recipients[i].user_link ) { #>
+									<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
+								<# } else { #>
+									{{other_recipients[i].user_name}}
+								<# } #>
+							<# } #>
+
+							<# if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #>
+								<?php esc_html_e( ',', 'buddyboss' ); ?>
+							<# } #>
 						</span>
 					<# } #>
+
+					<# if ( data.toOthers ) { #>
+						<span class="num-name">{{data.toOthers}}</span>
+					<# } #>
+
 					<# if ( ! data.is_group_thread && data.recipients.count > data.recipients.current_count ) { #>
 						<a href="javascript:void(0);" id="view_more_members" class="view_more_members view_more_members_cls"
 							data-thread-id="{{data.id}}"
