@@ -21709,20 +21709,26 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   position: relative;
 }
 
+.mass-user-block-list.moderation-popup .bb-model-header h4 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
 .mass-user-block-list.moderation-popup .bb-model-header .mfp-close {
   top: 7px;
-  right: 25px;
+  right: 20px;
   box-shadow: none;
 }
 
 .mass-user-block-list.moderation-popup .bb-model-header .mfp-close:before {
   content: "\e828";
   color: #939597;
-  letter-spacing: -0.24px;
-  line-height: 24px;
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.24px;
+  line-height: 24px;
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp {

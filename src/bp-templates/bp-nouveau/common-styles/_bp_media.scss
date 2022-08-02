@@ -5227,18 +5227,24 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	.bb-model-header {
 		position: relative;
 
+		h4 {
+			font-size: 20px;
+			font-weight: 600;
+		}
+
 		.mfp-close {
 			top: 7px;
-			right: 25px;
+			right: 20px;
 			box-shadow: none;
 
 			&:before {
 				content: "\e828";
 				color: #939597;
-				letter-spacing: -0.24px;
-				line-height: 24px;
 				font-family: "bb-icons"; /* stylelint-disable-line */
 				font-size: 22px;
+				font-weight: 400;
+				letter-spacing: -0.24px;
+				line-height: 24px;
 			}
 
 		}
