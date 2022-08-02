@@ -57,7 +57,8 @@
 		<a href="#" class="bp-back-to-thread-list"><span class="bb-icon-f bb-icon-arrow-left"></span></a> <# if ( undefined !== other_recipients ) { #>
 		<dl class="thread-participants">
 			<dt>
-				<# if ( data.group_name.length > 1 && data.is_group_thread ) { #> <span class="participants-name">
+				<# if ( data.group_name.length > 1 && data.is_group_thread ) { #>
+                    <span class="participants-name">
 						<# if ( data.is_deleted ) { #>
 							{{data.group_name}}
 						<# } else { #>
@@ -66,13 +67,27 @@
 					</span>
 				<# } else { #>
 
+                <# if ( data.toOthers ) { #>
+                <a href="#message-members-list" id="view_more_members" class="view_more_members view_more_members_cls"
+                   data-thread-id="{{data.id}}"
+                   data-tp="{{data.recipients.total_pages}}"
+                   data-tc="{{data.recipients.count}}"
+                   data-pp="{{data.recipients.per_page}}"
+                   data-cp="1"
+                   data-action="bp_view_more">
+                <# } #>
+
 					<# for ( i in first_four ) { #>
 						<span class="participants-name">
 							<# if ( other_recipients[i].is_deleted ) { #>
 								{{other_recipients[i].user_name}}
 							<# } else { #>
 								<# if( other_recipients[i].user_link ) { #>
-									<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
+                                    <# if ( ! data.toOthers || data.toOthers == '' ) { #>
+									    <a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
+                                    <# } else { #>
+                                        {{other_recipients[i].user_name}}
+                                    <# } #>
 								<# } else { #>
 									{{other_recipients[i].user_name}}
 								<# } #>
@@ -88,15 +103,9 @@
 						<span class="num-name">{{data.toOthers}}</span>
 					<# } #>
 
-					<# if ( ! data.is_group_thread && data.recipients.count > data.recipients.current_count ) { #>
-						<a href="javascript:void(0);" id="view_more_members" class="view_more_members view_more_members_cls"
-							data-thread-id="{{data.id}}"
-							data-tp="{{data.recipients.total_pages}}"
-							data-tc="{{data.recipients.count}}"
-							data-pp="{{data.recipients.per_page}}"
-							data-cp="2"
-							data-action="bp_view_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-					<# } #>
+                    <# if ( data.toOthers ) { #>
+                    </a>
+                    <# } #>
 
 				<# } #>
 			</dt>
@@ -243,5 +252,18 @@
 			<?php
 		}
 		?>
+        <div id="message-members-list" class="message-members-list member-popup mfp-hide">
+            <div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+                <div class="modal-wrapper">
+                    <div class="modal-container">
+                        <header class="bb-model-header">
+                            <h4><?php esc_html_e( 'Members', 'buddyboss' ); ?></h4>
+                            <button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
+                        </header>
+                        <div id="members_list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</header>
 </script>

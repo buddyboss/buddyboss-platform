@@ -180,11 +180,14 @@ window.bp = window.bp || {};
 			/**
 			 * Pagination for message block list
 			 */
-			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
-			$( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
+
+			$( document ).on( 'click', '#view_more_members', this.messageMemberModel.bind( this ) );
+
+			// $( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
 			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member, .bb_more_options_list .mass-block-member', this.messageModeratorMemberList );
 			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
 			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
+			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
 
 		},
 
@@ -446,6 +449,60 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'single', view: single_thread } );
 
 			single_thread.inject( '.bp-messages-content' );
+		},
+
+		messageMemberModel: function( e ) {
+			e.preventDefault();
+			var $this = $( e.target );
+			var current = $this.parents( '.thread-participants' ).find( '#view_more_members' );
+
+			if ( current.length > 0 ) {
+				var currentHref  = current.attr( 'href' );
+				current.magnificPopup(
+					{
+						items: {
+							src: currentHref,
+							type: 'inline'
+						},
+					}
+				).magnificPopup( 'open' );
+
+				bp.Nouveau.Messages.messageMemberList( e );
+			}
+		},
+
+
+		messageMemberList: function ( e ) {
+			e.preventDefault();
+			var $this = $( e.target );
+			var current = $this.parents( '.thread-participants' ).find( '#view_more_members' );
+			var postData = {
+				'page_no': current.attr( 'data-cp' ),
+				'thread_id': current.attr( 'data-thread-id' ),
+				'exclude_current_user': true,
+				'exclude_moderated_members': false,
+			};
+
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: {
+						action: 'messages_moderated_recipient_list',
+						post_data: postData,
+					},
+					beforeSend: function () {
+
+					},
+					success: function ( response ) {
+						if ( response.success && response.data && '' !== response.data.content ) {
+							if ( $( '#message-members-list #members_list' ).length > 0 ) {
+								$( '#message-members-list #members_list' ).html( response.data.content ).addClass( 'is_not_empty' );
+							}
+						}
+					},
+				}
+			);
 		},
 
 		/**
