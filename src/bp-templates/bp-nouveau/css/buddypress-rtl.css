@@ -9093,10 +9093,6 @@ div.profile_completion_wrap .progress_text_wrap {
   width: 100%;
 }
 
-#message-threads li a.close-conversation {
-  left: 35px;
-}
-
 #message-threads:empty {
   display: none;
 }
@@ -25804,19 +25800,6 @@ span.icons:before {
 
 .message-lists .thread-item {
   transform: translate3d(0, 0, 0);
-}
-
-.message-lists .thread-item .close-conversation {
-  color: #939597;
-  position: absolute;
-  left: 22px;
-  bottom: 0;
-  opacity: 0;
-  transition: all ease 0.3s;
-}
-
-.message-lists .thread-item:hover .close-conversation {
-  opacity: 1;
 }
 
 /* Rounded sliders */

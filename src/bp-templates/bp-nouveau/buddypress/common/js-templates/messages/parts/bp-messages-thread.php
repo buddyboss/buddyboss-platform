@@ -116,9 +116,6 @@
 		</ul>
 	</div>
 
-	<# if ( ! data.is_search ) { #>
-	<a href="javascript:void(0);" data-bp-thread-id="{{data.id}}" data-bp-action="hide_thread" class="close-conversation"> <i class="dashicons dashicons-no-alt"></i> </a>
-	<# } #>
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
