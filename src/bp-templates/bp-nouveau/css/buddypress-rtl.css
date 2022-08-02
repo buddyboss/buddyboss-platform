@@ -10454,10 +10454,12 @@ body .bp-messages-user-threads {
   }
 }
 
+.message-members-list #members_list:not(.is_not_empty),
 .mass-user-block-list #moderated_user_list:not(.is_not_empty) {
   text-align: center;
 }
 
+.message-members-list #members_list:not(.is_not_empty):before,
 .mass-user-block-list #moderated_user_list:not(.is_not_empty):before {
   content: "\ef30";
   font: normal normal normal 20px/1 "bb-icons";
@@ -21705,21 +21707,25 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   text-align: right;
 }
 
+.message-members-list.member-popup .bb-model-header,
 .mass-user-block-list.moderation-popup .bb-model-header {
   position: relative;
 }
 
+.message-members-list.member-popup .bb-model-header h4,
 .mass-user-block-list.moderation-popup .bb-model-header h4 {
   font-size: 20px;
   font-weight: 600;
 }
 
+.message-members-list.member-popup .bb-model-header .mfp-close,
 .mass-user-block-list.moderation-popup .bb-model-header .mfp-close {
   top: 7px;
   left: 20px;
   box-shadow: none;
 }
 
+.message-members-list.member-popup .bb-model-header .mfp-close:before,
 .mass-user-block-list.moderation-popup .bb-model-header .mfp-close:before {
   content: "\e828";
   color: #939597;
@@ -21731,16 +21737,19 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   line-height: 24px;
 }
 
+.message-members-list.member-popup .bb-report-type-wrp .user-item-wrp,
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp {
   display: flex;
   align-items: center;
   margin: 15px 0;
 }
 
+.message-members-list.member-popup .bb-report-type-wrp .user-item-wrp:last-child,
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp:last-child {
   margin-bottom: 0;
 }
 
+.message-members-list.member-popup .bb-report-type-wrp .user-item-wrp .user-avatar,
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-avatar {
   max-height: 32px;
   max-width: 32px;
@@ -21748,6 +21757,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   border-radius: 100%;
 }
 
+.message-members-list.member-popup .bb-report-type-wrp .user-item-wrp .user-name,
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
   min-width: calc(100% - 190px);
   margin: 0 8px 0 auto;
@@ -21757,11 +21767,13 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   white-space: nowrap;
 }
 
+.message-members-list.member-popup .bb-report-type-wrp .user-item-wrp .user-actions,
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions {
   margin-right: 8px;
   text-align: left;
 }
 
+.message-members-list.member-popup .bb-report-type-wrp .user-item-wrp .user-actions .button,
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions .button {
   min-width: 95px;
 }

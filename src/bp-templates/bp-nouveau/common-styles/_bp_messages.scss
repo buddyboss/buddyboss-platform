@@ -1535,6 +1535,7 @@ body .bp-messages-user-threads {
 	}
 }
 
+.message-members-list #members_list:not(.is_not_empty),
 .mass-user-block-list #moderated_user_list:not(.is_not_empty) {
 	text-align: center;
 
