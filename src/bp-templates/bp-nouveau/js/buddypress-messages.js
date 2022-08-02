@@ -456,18 +456,25 @@ window.bp = window.bp || {};
 			var $this = $( e.target );
 			var current = $this.parents( '.thread-participants' ).find( '#view_more_members' );
 
+			if ( current.length == 0 ) {
+				current = $this;
+			}
+
+
 			if ( current.length > 0 ) {
 				var currentHref  = current.attr( 'href' );
-				current.magnificPopup(
-					{
-						items: {
-							src: currentHref,
-							type: 'inline'
-						},
-					}
-				).magnificPopup( 'open' );
+				if( currentHref ) {
+					current.magnificPopup(
+						{
+							items: {
+								src: currentHref,
+								type: 'inline'
+							},
+						}
+					).magnificPopup( 'open' );
 
-				bp.Nouveau.Messages.messageMemberList( e );
+					bp.Nouveau.Messages.messageMemberList( e );
+				}
 			}
 		},
 
@@ -476,6 +483,9 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			var $this = $( e.target );
 			var current = $this.parents( '.thread-participants' ).find( '#view_more_members' );
+			if ( current.length == 0 ) {
+				current = $this;
+			}
 			var postData = {
 				'page_no': current.attr( 'data-cp' ),
 				'thread_id': current.attr( 'data-thread-id' ),
