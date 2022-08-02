@@ -1019,6 +1019,17 @@ input#send-to-input {
 		min-width: 0;
 	}
 
+	.messages-search-loader {
+		text-align: center;
+		padding: 15px 0 0;
+
+		> i {
+			font-size: 25px;
+			color: $light-text;
+		}
+
+	}
+
 	.message-header-loading {
 		display: none;
 	}

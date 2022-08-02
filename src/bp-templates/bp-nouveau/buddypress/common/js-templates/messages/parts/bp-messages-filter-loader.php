@@ -10,5 +10,5 @@
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-filter-loader">
-	<i class="dashicons dashicons-update animate-spin"></i>
+	<i class="bb-icon-l bb-icon-spin animate-spin"></i>
 </script>

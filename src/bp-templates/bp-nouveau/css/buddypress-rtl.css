@@ -9986,6 +9986,16 @@ input#send-to-input {
   }
 }
 
+.bp-messages-nav-panel .messages-search-loader {
+  text-align: center;
+  padding: 15px 0 0;
+}
+
+.bp-messages-nav-panel .messages-search-loader > i {
+  font-size: 25px;
+  color: #767676;
+}
+
 .bp-messages-nav-panel .message-header-loading {
   display: none;
 }
