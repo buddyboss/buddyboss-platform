@@ -21742,41 +21742,28 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-avatar {
-  max-height: 40px;
-  max-width: 40px;
+  max-height: 32px;
+  max-width: 32px;
   overflow: hidden;
   border-radius: 100%;
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
   min-width: calc(100% - 190px);
-  margin: 0 25px;
+  margin: 0 8px 0 auto;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions {
-  min-width: 95px;
+  margin-right: 8px;
   text-align: left;
 }
 
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions .button {
   min-width: 95px;
-}
-
-@media (max-width: 480px) {
-  .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp {
-    flex-wrap: wrap;
-  }
-  .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
-    min-width: calc(100% - 100px);
-    margin: 0 25px 0 0;
-  }
-  .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions {
-    width: 100%;
-    margin: 10px 0;
-  }
-  .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-actions .button {
-    width: 100%;
-  }
 }
 
 /*comment option*/
