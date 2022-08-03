@@ -9617,6 +9617,14 @@ div.profile_completion_wrap .progress_text_wrap {
   opacity: 0.9;
 }
 
+#buddypress .bp-messages-container .message_action__list li.notification_preferences a:before {
+  content: "\e86d";
+}
+
+#buddypress .bp-messages-container .message_action__list li.email_preferences a:before {
+  content: "\ee62";
+}
+
 #buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(2) .message_action__list,
 #buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(3) .message_action__list,
 #buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:last-child .message_action__list {

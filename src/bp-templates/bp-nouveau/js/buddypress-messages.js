@@ -149,6 +149,11 @@ window.bp = window.bp || {};
 				function( event ) {
 					event.preventDefault();
 
+					// Do nothing if it's dropdown
+					if( $( event.currentTarget ).data( 'action' ) == 'more_options' ) {
+						return;
+					}
+
 					var view_id = $( event.target ).prop( 'id' );
 
 					// Remove the editor to be sure it will be added dynamically later.

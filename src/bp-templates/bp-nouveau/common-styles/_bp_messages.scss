@@ -619,6 +619,14 @@
 		opacity: 0.9;
 	}
 
+	li.notification_preferences a:before {
+		content: "\e86d";
+	}
+
+	li.email_preferences a:before {
+		content: "\ee62";
+	}
+
 }
 
 #buddypress .bp-messages-container .thread-item:nth-child(3) {

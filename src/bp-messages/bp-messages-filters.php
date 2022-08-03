@@ -913,15 +913,15 @@ add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' 
 function bb_messages_compose_action_sub_nav() {
 	?>
 	<div class="bb_more_options message-action-options">
-		<a href="#" class="bb_more_options_action">
+		<a href="#" class="bb_more_options_action" data-action="more_options">
 			<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 		</a>
-		<ul class="bb_more_options_list message_action__list" data-bp-thread-id="27">
+		<ul class="bb_more_options_list message_action__list">
 			<li class="notification_preferences">
-				<a href="#">Notification preferences</a>
+				<a href="#" data-action="more_options">Notification preferences</a>
 			</li>
 			<li class="email_preferences">
-				<a href="#">Email Preferences</a>
+				<a href="#" data-action="more_options">Email Preferences</a>
 			</li>
 		</ul>
 	</div>
