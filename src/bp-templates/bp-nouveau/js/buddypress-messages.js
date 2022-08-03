@@ -3080,6 +3080,9 @@ window.bp = window.bp || {};
 
 								thread.set( { excerpt: response.message.excerpt } );
 								thread.set( { sender_name: response.message.sender_name } );
+								if ( 'undefined' !== typeof response.message.display_date_list ) {
+									thread.set( { display_date: response.message.display_date_list } );
+								}
 								updatedThread = thread;
 								bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
 								return;
