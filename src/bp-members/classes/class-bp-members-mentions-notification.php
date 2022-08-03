@@ -119,6 +119,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'members',
 			'bb_new_mention',
 			'bb_new_mention',
+			'bb-icon-f bb-icon-activity'
 		);
 
 		$this->register_notification_filter(
@@ -203,42 +204,59 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				}
 			}
 
-			if ( (int) $total_items > 1 ) {
-				$text = sprintf(
-				/* translators: %s: Total mentioned count. */
-					__( 'You have %1$d new mentions', 'buddyboss' ),
-					(int) $total_items
-				);
-				$amount = 'multiple';
-			} else {
-				$amount = 'single';
+			$amount = 'single';
+
+			if ( 'web_push' === $screen ) {
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
-						/* translators: 1: User full name, 2: Activity type. */
-						esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss' ),
-						$user_fullname,
+						/* translators: Activity type. */
+						__( 'Mentioned you in a %s', 'buddyboss' ),
 						$notification_type_html
 					);
 				} else {
-					$text = sprintf(
-						/* translators: %s: User full name. */
-						esc_html__( '%1$s mentioned you', 'buddyboss' ),
-						$user_fullname
+					$text = __( 'Mentioned you', 'buddyboss' );
+				}
+			} else {
+				if ( (int) $total_items > 1 ) {
+					$text   = sprintf(
+					/* translators: %s: Total mentioned count. */
+						__( 'You have %1$d new mentions', 'buddyboss' ),
+						(int) $total_items
 					);
+					$amount = 'multiple';
+				} else {
+					if ( ! empty( $notification_type_html ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type. */
+							esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html
+						);
+					} else {
+						$text = sprintf(
+						/* translators: %s: User full name. */
+							esc_html__( '%1$s mentioned you', 'buddyboss' ),
+							$user_fullname
+						);
+					}
 				}
 			}
+
 
 			$notification_link = add_query_arg( 'rid', (int) $notification_id, $notification_link );
 
 			$content = apply_filters(
 				'bb_members_' . $amount . '_' . $notification->component_action . '_notification',
 				array(
-					'link' => $notification_link,
-					'text' => $text,
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => $user_fullname,
+					'image' => bb_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$notification_link,
-				$text
+				$text,
+				$screen
 			);
 
 		}
@@ -258,8 +276,10 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				}
 			} else {
 				$content = array(
-					'text' => $content['text'],
-					'link' => $content['link'],
+					'text'  => $content['text'],
+					'link'  => $content['link'],
+					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
+					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
 				);
 			}
 		}

@@ -204,7 +204,7 @@ class BP_Latest_Activities extends WP_Widget {
 	 * @return string HTML output.
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array(
+		$instance = bp_parse_args( (array) $instance, array(
 			'title' => __( 'Latest updates', 'buddyboss' ),
 			'max'   => 5,
 			'type'  => '',

@@ -157,7 +157,7 @@ class BP_User_Query {
 		$this->setup_hooks();
 
 		if ( ! empty( $this->query_vars_raw ) ) {
-			$this->query_vars = wp_parse_args(
+			$this->query_vars = bp_parse_args(
 				$this->query_vars_raw,
 				array(
 					'type'                => 'newest',
@@ -661,7 +661,7 @@ class BP_User_Query {
 		foreach ( $this->user_ids as $key => $uid ) {
 			if ( isset( $r[ $uid ] ) ) {
 				$r[ $uid ]->ID          = (int) $uid;
-				$r[ $uid ]->user_status = (int) $r[ $uid ]->user_status;
+				$r[ $uid ]->user_status = isset( $r[ $uid ]->user_status ) ? (int) $r[ $uid ]->user_status : 0;
 
 				$this->results[ $uid ] = $r[ $uid ];
 

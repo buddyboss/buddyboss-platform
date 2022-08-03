@@ -856,7 +856,7 @@
 			cursor: auto;
 		}
 
-		@media screen and (max-width: 767px) {
+		@media screen and (max-width: 1024px) {
 
 			figure {
 				max-height: 50vh;
@@ -913,6 +913,15 @@
 
 }
 
+#video-stream .bp-feedback {
+	margin: 25px 0 0 0;
+
+	.bb-title + & {
+		margin: 0;
+	}
+
+}
+
 /*Video Popups*/
 
 .video-thumbnail-content {
@@ -926,6 +935,9 @@
 		top: 0;
 		bottom: 0;
 		cursor: pointer;
+		height: 155px;
+		margin-right: 0;
+		overflow: hidden;
 
 		.close-thumbnail-custom {
 			position: absolute;
@@ -956,12 +968,17 @@
 		img {
 			height: 100%;
 			width: auto;
-			margin: 0 auto;
+			margin: 0;
 			display: block;
 			min-height: 120px;
 			border-radius: 4px;
+			max-width: inherit;
+			cursor: pointer;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
 		}
-
 	}
 
 	.bb-dropzone-wrap {
@@ -975,7 +992,6 @@
 		.video-thumbnail-custom {
 			border: 3px solid transparent;
 			border-radius: 5px;
-			margin-right: 10px;
 		}
 
 		.bb-custom-check[name="bb-video-thumbnail-select"] + label {
@@ -1077,6 +1093,7 @@
 
 				.dz-image {
 					height: 160px;
+					position: relative;
 
 					img {
 						max-width: inherit;
@@ -1084,8 +1101,12 @@
 						border-radius: 5px;
 						height: 100%;
 						width: auto;
-						margin: 0 auto;
+						margin: 0;
 						display: block;
+						left: 50%;
+						top: 50%;
+						transform: translate(-50%, -50%);
+						position: absolute;
 					}
 
 				}

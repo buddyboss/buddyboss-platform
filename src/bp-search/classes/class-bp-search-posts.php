@@ -170,8 +170,10 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			// lets do a wp_query and generate html for all posts.
 			$qry = new WP_Query(
 				array(
-					'post_type' => $this->pt_name,
-					'post__in'  => $post_ids,
+					'post_type'      => $this->pt_name,
+					'post__in'       => $post_ids,
+					// Override global per page settings and just query with the given IDs.
+					'posts_per_page' => - 1,
 				)
 			);
 
@@ -304,14 +306,18 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param string $search_term Search string.
+		 * @param string $search_type
 		 *
 		 * @return int Total result count.
 		 */
-		public function get_total_match_count( $search_term ) {
+		public function get_total_match_count( $search_term, $search_type = '' ) {
 			global $wpdb;
 			static $bbp_search_term = array();
 			$cache_key              = 'bb_search_term_total_match_count_' . $this->pt_name . '_' . sanitize_title( $search_term );
 
+			if ( ! empty( $search_type ) ) {
+				$cache_key .= sanitize_title( $search_type );
+			}
 			if ( ! isset( $bbp_search_term[ $cache_key ] ) ) {
 				$sql    = $this->sql( $search_term, true );
 				$result = $wpdb->get_var( $sql ); // phpcs:ignore

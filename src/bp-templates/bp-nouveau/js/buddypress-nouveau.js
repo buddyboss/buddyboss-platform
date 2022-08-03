@@ -611,9 +611,9 @@ window.bp = window.bp || {};
 					// Check the querystring to eventually include the search terms.
 					if ( null !== self.querystring ) {
 						if ( undefined !== self.querystring[ object + '_search' ] ) {
-							search_terms = self.querystring[ object + '_search' ];
+							search_terms = decodeURI( self.querystring[ object + '_search' ] );
 						} else if ( undefined !== self.querystring.s ) {
-							search_terms = self.querystring.s;
+							search_terms = decodeURI( self.querystring.s );
 						}
 
 						if ( search_terms ) {
@@ -2693,7 +2693,7 @@ window.bp = window.bp || {};
 				! _.isUndefined( BP_Nouveau.media.emoji ) &&
 				! $targetEl.closest( '.post-emoji' ).length &&
 				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
-				$( '.emojionearea-button.active' ).removeClass( 'active' );
+				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );				
 			}
 		},
 
@@ -2706,7 +2706,7 @@ window.bp = window.bp || {};
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
 				if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					! _.isUndefined( BP_Nouveau.media.emoji ) ) {
-					$( '.emojionearea-button.active' ).removeClass( 'active' );
+					$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 				}
 			}
 		},
@@ -2929,7 +2929,7 @@ window.bp = window.bp || {};
 							video.muted       = true;
 							video.playsInline = true;
 							if ( videoDuration != null ) {
-								video.currentTime = Math.floor( Math.random() * Math.floor( videoDuration ) ); // Seek random second before capturing thumbnail.
+								video.currentTime = Math.floor( videoDuration ); // Seek fixed second before capturing thumbnail.
 							}
 							video.play();
 							clearInterval( timer );

@@ -148,6 +148,19 @@ jQuery( document ).ready(
 									}
 									jQuery( '#' + elem_id )[ 0 ].emojioneArea.hidePicker();
 								},
+								search_keypress: function() {
+									var _this = this;
+									var small = _this.search.val().toLowerCase();
+									_this.search.val(small);
+								},
+								
+								picker_show: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+								},
+
+								picker_hide: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+								},
 							}
 						}
 					);
