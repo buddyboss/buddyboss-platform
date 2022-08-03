@@ -1453,7 +1453,7 @@ function bp_sync_profile_completion_widget() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
 	// Users args.
-	$args   = array(
+	$args = array(
 		'number'   => 50,
 		'fields'   => array( 'ID' ),
 		'meta_key' => 'bp_profile_completion_widgets',
@@ -1461,12 +1461,11 @@ function bp_sync_profile_completion_widget() {
 	);
 
 	$users = get_users( $args );
-
 	if ( ! empty( $users ) ) {
 		foreach ( $users as $user ) {
 			// Get existing user meta who have profile completion widget data in DB.
 			$get_user_data = bp_get_user_meta( $user->ID, 'bp_profile_completion_widgets', true );
-			if ( $get_user_data ) {
+			if ( ! empty( $get_user_data ) ) {
 				// keep old meta in DB.
 				bp_update_user_meta( $user->ID, 'old_bp_profile_completion_widgets', $get_user_data );
 
