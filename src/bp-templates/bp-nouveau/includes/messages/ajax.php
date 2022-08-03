@@ -476,12 +476,13 @@ function bp_nouveau_ajax_messages_send_reply() {
 		}
 	}
 
+	$date_sent = bp_core_current_time();
 	$new_reply = messages_new_message(
 		array(
 			'thread_id'    => $thread_id,
 			'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
 			'content'      => $_POST['content'],
-			'date_sent'    => $date_sent = bp_core_current_time(),
+			'date_sent'    => $date_sent,
 			'mark_visible' => true,
 			'error_type'   => 'wp_error',
 		)
@@ -575,14 +576,14 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	// Output single message template part.
 	$reply = array(
-		'id'            => bp_get_the_thread_message_id(),
-		'content'       => do_shortcode( bp_get_the_thread_message_content() ),
-		'sender_id'     => bp_get_the_thread_message_sender_id(),
-		'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
-		'is_deleted'    => empty( get_userdata( bp_get_the_thread_message_sender_id() ) ) ? 1 : 0,
-		'sender_link'   => bp_get_the_thread_message_sender_link(),
-		'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
-		'sender_avatar' => esc_url(
+		'id'                => bp_get_the_thread_message_id(),
+		'content'           => do_shortcode( bp_get_the_thread_message_content() ),
+		'sender_id'         => bp_get_the_thread_message_sender_id(),
+		'sender_name'       => esc_html( bp_get_the_thread_message_sender_name() ),
+		'is_deleted'        => empty( get_userdata( bp_get_the_thread_message_sender_id() ) ) ? 1 : 0,
+		'sender_link'       => bp_get_the_thread_message_sender_link(),
+		'sender_is_you'     => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
+		'sender_avatar'     => esc_url(
 			bp_core_fetch_avatar(
 				array(
 					'item_id' => bp_get_the_thread_message_sender_id(),
@@ -594,9 +595,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 				)
 			)
 		),
-		'date'          => bp_get_the_thread_message_date_sent() * 1000,
-		'display_date'  => bp_get_the_thread_message_time_since(),
-		'excerpt'       => $excerpt,
+		'date'              => bp_get_the_thread_message_date_sent() * 1000,
+		'display_date'      => bp_get_the_thread_message_time_since(),
+		'display_date_list' => bb_get_thread_sent_date( $date_sent ),
+		'excerpt'           => $excerpt,
 	);
 
 	$get_thread_recipients = $thread_template->thread->recipients;
