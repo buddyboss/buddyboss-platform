@@ -2943,10 +2943,11 @@ window.bp = window.bp || {};
 				}
 
 				if ( response.error === '' ) {
-					if ( response.title.length > 150 ) {
-						response.title = response.title.substring( 0, 150 ) + '...';
+					var title = $.trim( response.title );
+					if ( title && title.length > 150 ) {
+						title.title = title.substring( 0, 150 ) + '...';
 					}
-					if ( -1 === response.description.indexOf( 'iframe' ) && response.description.length > 100 ) {
+					if ( title && response.description && response.description.length > 100 ) {
 						response.description = response.description.substring( 0, 100 ) + '...';
 					}
 					var urlImages = response.images;

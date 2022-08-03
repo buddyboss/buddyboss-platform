@@ -60,7 +60,7 @@
 				var domainName = hostname.replace('www.', '' );
 			#>
 
-			<# if ( -1 === data.link_description.indexOf( 'iframe' ) ) { #>
+			<# if ( $.trim( data.link_title ) && data.link_description ) { #>
 				<p class="activity-link-preview-link-name">{{domainName}}</p>
 			<# } #>
 
