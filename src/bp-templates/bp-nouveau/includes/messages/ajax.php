@@ -892,7 +892,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		add_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
 	}
 
-	//add_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
+	// add_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
 
 	// Simulate the loop.
 	if ( ! bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
@@ -909,7 +909,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		);
 	}
 
-	//remove_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
+	// remove_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
 
 	// remove the message thread filter.
 	if ( 'starred' === $bp->current_action ) {
@@ -1868,7 +1868,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	);
 
 	$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
-	$results       = apply_filters( 'bp_members_suggestions_results', isset(  $results['members'] ) ? $results['members'] : array() );
+	$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
 
 	wp_send_json_success(
 		array(
@@ -3058,7 +3058,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 				if ( isset( $recipient->user_id ) ) {
 					if ( (int) $recipient->user_id !== $user_id ) {
 						if ( empty( $recipient->is_deleted ) ) {
-							$avatar         = esc_url(
+							$avatar    = esc_url(
 								bp_core_fetch_avatar(
 									array(
 										'item_id' => $recipient->user_id,
@@ -3070,18 +3070,19 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 									)
 								)
 							);
-							$user_name      = bp_core_get_user_displayname( $recipient->user_id );
-							$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+							$user_name = bp_core_get_user_displayname( $recipient->user_id );
 							?>
 							<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
 								<div class="user-avatar">
-									<img src="<?php echo $avatar; ?>" alt="<?php echo esc_html( $user_name ); ?>">
+									<a href="<?php echo bp_core_get_user_domain( $recipient->user_id ); ?>"><img src="<?php echo $avatar; ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
 								</div>
 								<div class="user-name">
-									<?php echo esc_html( $user_name ); ?>
+									<a href="<?php echo bp_core_get_user_domain( $recipient->user_id ); ?>"><?php echo esc_html( $user_name ); ?></a>
 								</div>
+								<?php if ( bp_is_active( 'moderation' ) ) { ?>
 								<div class="user-actions">
 									<?php
+									$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 									if ( true === bp_moderation_is_user_blocked( $recipient->user_id ) ) {
 										?>
 										<a id="reported-user" class="blocked-member button small disabled">
@@ -3102,6 +3103,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 									}
 									?>
 								</div>
+								<?php } ?>
 							</div>
 							<?php
 						}

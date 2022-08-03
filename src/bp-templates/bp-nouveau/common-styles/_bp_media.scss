@@ -5291,6 +5291,12 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 }
 
+.message-members-list.member-popup {
+	.user-actions {
+		display: none;
+	}
+}
+
 /*comment option*/
 #comments .comment-body {
 	position: relative;
