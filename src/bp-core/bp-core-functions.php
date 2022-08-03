@@ -7639,3 +7639,4 @@ function bb_admin_icons( $id ) {
 
 	return apply_filters( 'bb_admin_icons', $meta_icon, $id );
 }
+
