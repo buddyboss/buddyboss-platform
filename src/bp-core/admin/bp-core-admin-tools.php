@@ -1466,9 +1466,6 @@ function bp_sync_profile_completion_widget() {
 			// Get existing user meta who have profile completion widget data in DB.
 			$get_user_data = bp_get_user_meta( $user->ID, 'bp_profile_completion_widgets', true );
 			if ( ! empty( $get_user_data ) ) {
-				// keep old meta in DB.
-				bp_update_user_meta( $user->ID, 'old_bp_profile_completion_widgets', $get_user_data );
-
 				$total_completed_count = isset( $get_user_data['completed_fields'] ) ? $get_user_data['completed_fields'] : 0;
 
 				if (
