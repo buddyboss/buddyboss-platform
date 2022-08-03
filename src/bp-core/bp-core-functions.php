@@ -7729,7 +7729,54 @@ function bb_core_get_os() {
 	}
 
 	return $os_platform;
+}
 
+/**
+ * Get week start date with an integer Unix timestamp.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $start_day_of_week Week start day like monday this week.
+ *
+ * @return int
+ */
+function bb_get_week_start_timestamp( $start_day_of_week = false ) {
+	if ( empty( $start_day_of_week ) ) {
+		$start_day_of_week = 'monday this week';
+	}
+
+	$start_week      = strtotime( $start_day_of_week );
+	$start_week_date = date_i18n( 'Y-m-d', $start_week );
+	$start_week_date = $start_week_date . ' 00:00:00';
+
+	$time_chunks = explode( ':', str_replace( ' ', ':', $start_week_date ) );
+	$date_chunks = explode( '-', str_replace( ' ', '-', $start_week_date ) );
+
+	return gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
+}
+
+/**
+ * Get week end date with an integer Unix timestamp.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $end_day_of_week Week end day like sunday this week.
+ *
+ * @return int
+ */
+function bb_get_week_end_timestamp( $end_day_of_week = false ) {
+	if ( empty( $start_day_of_week ) ) {
+		$end_day_of_week = 'sunday this week';
+	}
+
+	$end_week      = strtotime( $end_day_of_week );
+	$end_week_date = date_i18n( 'Y-m-d', $end_week );
+	$end_week_date = $end_week_date . ' 23:59:59';
+
+	$time_chunks = explode( ':', str_replace( ' ', ':', $end_week_date ) );
+	$date_chunks = explode( '-', str_replace( ' ', '-', $end_week_date ) );
+
+	return gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
 }
 
 /**

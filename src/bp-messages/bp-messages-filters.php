@@ -794,6 +794,7 @@ function bb_check_is_message_content_empty( $validated_content, $content, $post 
 function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	$params['current']['message_user_id']           = bp_loggedin_user_id();
+	$params['compose_message_typing_string']        = __( 'Start typing to find members', 'buddyboss' );
 
 	return $params;
 }
@@ -901,3 +902,19 @@ function bb_messages_validate_groups_thread( $thread_id ) {
 }
 
 add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' );
+
+/**
+ * Display the html for the notification preferences actions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_compose_action_sub_nav() {
+	?>
+	<div class="bb-subnav-action-preferences">
+
+	</div>
+	<?php
+}
+add_action( 'bb_nouveau_after_nav_link_compose-action', 'bb_messages_compose_action_sub_nav' );

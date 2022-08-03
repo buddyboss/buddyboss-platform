@@ -891,19 +891,6 @@ span.icons:before {
 
 	.thread-item {
 		transform: translate3d(0, 0, 0);
-
-		.close-conversation {
-			color: #939597;
-			position: absolute;
-			right: 22px;
-			bottom: 0;
-			opacity: 0;
-			transition: all ease 0.3s;
-		}
-
-		&:hover .close-conversation {
-			opacity: 1;
-		}
 	}
 
 }

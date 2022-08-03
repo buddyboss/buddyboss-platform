@@ -79,9 +79,6 @@ function bp_nouveau_messages_enqueue_scripts() {
 
 	wp_enqueue_script( 'bp-nouveau-messages' );
 	wp_enqueue_script( 'bp-select2' );
-	if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
-		wp_enqueue_script( 'bp-select2-local' );
-	}
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
@@ -129,8 +126,9 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		'bulk_actions'               => bp_nouveau_messages_get_bulk_actions(),
 		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
 		'toOthers'                   => array(
-			'one'  => __( '1 other', 'buddyboss' ),
-			'more' => __( '%d others', 'buddyboss' ),
+			'one'   => __( '1 other', 'buddyboss' ),
+			'more'  => __( '%d others', 'buddyboss' ),
+			'other' => __( 'others', 'buddyboss' ),
 		),
 		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ) ),
 		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) ),

@@ -1255,6 +1255,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
 				'id'   => esc_attr( $avatar_user_id ),
 				'type' => 'user',
+				'link' => bp_core_get_user_domain( $avatar_user_id ),
 			);
 		}
 	}
@@ -1269,8 +1270,8 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 
 		if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
 			if ( bp_is_active( 'groups' ) ) {
-
-				$group_name       = bp_get_group_name( groups_get_group( $group_id ) );
+				$group            = groups_get_group( $group_id );
+				$group_name       = bp_get_group_name( $group );
 				$group_avatar_url = '';
 
 				if ( ! bp_disable_group_avatar_uploads() ) {
@@ -1294,6 +1295,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					'name' => $group_name,
 					'id'   => $group_id,
 					'type' => 'group',
+					'link' => bp_get_group_permalink( $group ),
 				);
 
 			} else {
@@ -1328,6 +1330,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
 					'id'   => $group_id,
 					'type' => 'group',
+					'link' => '',
 				);
 			}
 

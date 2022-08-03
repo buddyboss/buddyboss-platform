@@ -5092,7 +5092,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 }
 
-
+.message-members-list.member-popup .modal-container,
 .moderation-popup .modal-container {
 	max-height: 80vh;
 	overflow: auto;
@@ -5262,23 +5262,30 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 }
 
+.message-members-list.member-popup,
 .mass-user-block-list.moderation-popup {
 
 	.bb-model-header {
 		position: relative;
 
+		h4 {
+			font-size: 20px;
+			font-weight: 600;
+		}
+
 		.mfp-close {
 			top: 7px;
-			right: 25px;
+			right: 20px;
 			box-shadow: none;
 
 			&:before {
 				content: "\e828";
 				color: #939597;
-				letter-spacing: -0.24px;
-				line-height: 24px;
 				font-family: "bb-icons"; /* stylelint-disable-line */
 				font-size: 22px;
+				font-weight: 400;
+				letter-spacing: -0.24px;
+				line-height: 24px;
 			}
 
 		}
@@ -5295,19 +5302,23 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		}
 
 		.user-avatar {
-			max-height: 40px;
-			max-width: 40px;
+			max-height: 32px;
+			max-width: 32px;
 			overflow: hidden;
 			border-radius: 100%;
 		}
 
 		.user-name {
 			min-width: calc(100% - 190px);
-			margin: 0 25px;
+			margin: 0 auto 0 8px;
+			font-size: 14px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 
 		.user-actions {
-			min-width: 95px;
+			margin-left: 8px;
 			text-align: right;
 
 			.button {
@@ -5318,30 +5329,13 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	}
 
-	@media (max-width: 480px) {
+}
 
-		.bb-report-type-wrp .user-item-wrp {
-			flex-wrap: wrap;
+.message-members-list.member-popup {
 
-			.user-name {
-				min-width: calc(100% - 100px);
-				margin: 0 0 0 25px;
-			}
-
-			.user-actions {
-				width: 100%;
-				margin: 10px 0;
-
-				.button {
-					width: 100%;
-				}
-
-			}
-
-		}
-
+	.user-actions {
+		display: none;
 	}
-
 }
 
 /*comment option*/
