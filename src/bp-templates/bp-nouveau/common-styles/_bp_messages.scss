@@ -1548,7 +1548,9 @@ body .bp-messages-user-threads {
 
 .message-members-list #members_list:not(.is_not_empty),
 .mass-user-block-list #moderated_user_list:not(.is_not_empty) {
-	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
 	&:before {
 		content: "\ef30";
@@ -1567,6 +1569,15 @@ body .bp-messages-user-threads {
 
 .message-members-list,
 .mass-user-block-list {
+
+	&.moderation-popup,
+	&.member-popup {
+
+		div.modal-container {
+			max-height: 600px;
+		}
+
+	}
 
 	.bb-report-type-pagination {
 		margin: 0 -10px;
