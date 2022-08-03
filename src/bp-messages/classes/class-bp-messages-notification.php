@@ -299,7 +299,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 						} elseif ( ! empty( $gif_data ) ) {
 							$text = sprintf(
 								/* translators: user display name */
-								__( '%s sent a gif', 'buddyboss' ),
+								__( '%s sent a GIF', 'buddyboss' ),
 								bp_core_get_user_displayname( $secondary_item_id )
 							);
 						} else {
