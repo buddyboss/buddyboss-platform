@@ -402,8 +402,6 @@ window.bp = window.bp || {};
 				}
 
 				self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
-				self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
-				self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 			} else {
 				activity_data.gif          = activity_data.gif_data;
 				activity_data.group_name   = activity_data.item_name;
@@ -413,6 +411,9 @@ window.bp = window.bp || {};
 					activity_data.object = 'groups';
 				}
 			}
+			// Set link image index and confirm image index.
+			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
+			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
@@ -3281,10 +3282,11 @@ window.bp = window.bp || {};
 				}
 
 				if ( response.error === '' ) {
-					if ( response.title.length > 150 ) {
-						response.title = response.title.substring( 0, 150 ) + '...';
+					var title = $.trim( response.title );
+					if ( title && title.length > 150 ) {
+						title.title = title.substring( 0, 150 ) + '...';
 					}
-					if ( -1 === response.description.indexOf( 'iframe' ) && response.description.length > 100 ) {
+					if ( title && response.description && response.description.length > 100 ) {
 						response.description = response.description.substring( 0, 100 ) + '...';
 					}
 					var urlImages = response.images;
