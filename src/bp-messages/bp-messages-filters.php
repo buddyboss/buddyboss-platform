@@ -902,3 +902,19 @@ function bb_messages_validate_groups_thread( $thread_id ) {
 }
 
 add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' );
+
+/**
+ * Display the html for the notification preferences actions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_compose_action_sub_nav() {
+	?>
+	<div class="bb-subnav-action-preferences">
+
+	</div>
+	<?php
+}
+add_action( 'bb_nouveau_after_nav_link_compose-action', 'bb_messages_compose_action_sub_nav' );
