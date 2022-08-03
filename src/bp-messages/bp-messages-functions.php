@@ -1386,7 +1386,7 @@ function bb_messages_is_group_thread( $thread_id ) {
  * @since BuddyBoss 1.7.6
  */
 function bb_messages_recipients_per_page() {
-	return apply_filters( 'bb_messages_recipients_per_page', 10 );
+	return apply_filters( 'bb_messages_recipients_per_page', 20 );
 }
 
 /**
