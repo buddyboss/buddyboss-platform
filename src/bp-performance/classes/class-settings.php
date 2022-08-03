@@ -252,8 +252,8 @@ class Settings {
 
 		if ( wp_verify_nonce( $purge_nonce, 'bbapp_cache_purge' ) ) {
 
-			$group      = ( ! empty( $_GET['group'] ) ) ? bbapp_input_clean( wp_unslash( $_GET['group'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$components = ( ! empty( $_GET['component'] ) ) ? bbapp_input_clean( wp_unslash( $_GET['component'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$group      = ( ! empty( $_GET['group'] ) ) ? bb_input_clean( wp_unslash( $_GET['group'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$components = ( ! empty( $_GET['component'] ) ) ? bb_input_clean( wp_unslash( $_GET['component'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			/**
 			 * Handle group purge action.
