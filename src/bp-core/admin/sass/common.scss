@@ -2505,6 +2505,51 @@ h2.has_tutorial_btn {
 	border-radius: 4px;
 }
 
+/* Status Block */
+.status-line {
+	display: inline-block;
+	font-size: 14px;
+	padding: 10px 15px;
+	background: #f0f0f1;
+	border-radius: 5px;
+	color: #808080;
+
+	&:before {
+		content: "";
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		border-radius: 100%;
+		background: #808080;
+		margin-right: 10px;
+		vertical-align: baseline;
+	}
+
+	&.error-connected {
+		color: #ce1010;
+
+		&:before {
+			background: #ce1010;
+		}
+	}
+
+	&.connected {
+		color: #858585;
+
+		&:before {
+			background: #8fd14f;
+		}
+	}
+
+	&.warn-connected {
+		color: #858585;
+
+		&:before {
+			background: #fac710;
+		}
+	}
+
+}
 
 /*------------------------------------------------------------------------------
  * 12.0 Profile Photo UI

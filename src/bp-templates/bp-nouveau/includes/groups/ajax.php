@@ -1376,7 +1376,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				$new_reply = bp_groups_messages_new_message(
 					array(
 						'thread_id'    => $group_thread_id,
-						'subject'      => wp_trim_words( $content, messages_get_default_subject_length() ),
+						'subject'      => false,
 						'content'      => $content,
 						'date_sent'    => bp_core_current_time(),
 						'mark_visible' => true,
@@ -1704,7 +1704,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				$new_reply = bp_groups_messages_new_message(
 					array(
 						'thread_id'    => $individual_thread_id,
-						'subject'      => wp_trim_words( $content, messages_get_default_subject_length() ),
+						'subject'      => false,
 						'content'      => $content,
 						'date_sent'    => bp_core_current_time(),
 						'mark_visible' => true,
@@ -1720,6 +1720,13 @@ function bp_nouveau_ajax_groups_send_message() {
 	} else {
 
 		if ( ! empty( $members ) ) {
+
+			// Comma separated members list to find in meta query.
+			$message_users_ids = implode( ',', $members );
+
+			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
+			$_POST['message_meta_users_list'] = $message_users_ids;
+
 			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
 				$chunk_members = array_chunk( $members, 10 );
 				if ( ! empty( $chunk_members ) ) {

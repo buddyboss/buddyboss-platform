@@ -1426,6 +1426,15 @@ class BP_Moderation {
 			$this->unhide_related_content( $force_all );
 		}
 
+		/**
+		 * Fires after an moderation report item has been deleted to the database.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param BP_Moderation $this Current instance of moderation item being deleted. Passed by reference.
+		 */
+		do_action_ref_array( 'bp_moderation_after_delete', array( &$this ) );
+
 		return ! empty( $updated_row );
 	}
 

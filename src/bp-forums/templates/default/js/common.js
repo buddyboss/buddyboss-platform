@@ -18,7 +18,33 @@ jQuery( document ).ready(
 					minimumInputLength: 1,
 					closeOnSelect: true,
 					tags: true,
-					language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
+					language: {
+						errorLoading: function () {
+							return bp_select2.i18n.errorLoading;
+						},
+						inputTooLong: function ( e ) {
+							var n = e.input.length - e.maximum;
+							return bp_select2.i18n.inputTooLong.replace( '%%', n );
+						},
+						inputTooShort: function ( e ) {
+							return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
+						},
+						loadingMore: function () {
+							return bp_select2.i18n.loadingMore;
+						},
+						maximumSelected: function ( e ) {
+							return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
+						},
+						noResults: function () {
+							return bp_select2.i18n.noResults;
+						},
+						searching: function () {
+							return bp_select2.i18n.searching;
+						},
+						removeAllItems: function () {
+							return bp_select2.i18n.removeAllItems;
+						}
+					},
 					dropdownCssClass: 'bb-select-dropdown',
 					containerCssClass: 'bb-select-container',
 					tokenSeparators: [ ',' ],
@@ -178,7 +204,33 @@ jQuery( document ).ready(
 						minimumInputLength: 1,
 						closeOnSelect: true,
 						tags: true,
-						language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
+						language: {
+							errorLoading: function () {
+								return bp_select2.i18n.errorLoading;
+							},
+							inputTooLong: function ( e ) {
+								var n = e.input.length - e.maximum;
+								return bp_select2.i18n.inputTooLong.replace( '%%', n );
+							},
+							inputTooShort: function ( e ) {
+								return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
+							},
+							loadingMore: function () {
+								return bp_select2.i18n.loadingMore;
+							},
+							maximumSelected: function ( e ) {
+								return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
+							},
+							noResults: function () {
+								return bp_select2.i18n.noResults;
+							},
+							searching: function () {
+								return bp_select2.i18n.searching;
+							},
+							removeAllItems: function () {
+								return bp_select2.i18n.removeAllItems;
+							}
+						},
 						dropdownCssClass: 'bb-select-dropdown',
 						containerCssClass: 'bb-select-container',
 						tokenSeparators: [ ',' ],

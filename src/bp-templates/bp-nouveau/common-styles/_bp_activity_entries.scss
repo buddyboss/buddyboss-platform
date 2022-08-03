@@ -742,7 +742,8 @@ ul.medium-editor-toolbar-actions {
 
 .ac-reply-toolbar,
 #whats-new-toolbar,
-#whats-new-messages-toolbar {
+#whats-new-messages-toolbar,
+#whats-new-formatting-toolbar {
 
 	.bb-icon,
 	[class*=" bb-icon-"] {
@@ -2101,6 +2102,7 @@ span.dashicons.dashicons-admin-file:before {
 				-ms-flex-preferred-size: 38px;
 				flex-basis: 38px;
 				width: 38px;
+				line-height: 1.5;
 				text-align: center;
 				padding: 1px 0 !important;
 				display: inline-block;
