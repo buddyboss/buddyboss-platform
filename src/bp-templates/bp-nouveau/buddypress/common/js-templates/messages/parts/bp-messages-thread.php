@@ -49,6 +49,7 @@
 		read_unread_action = 'read';
 	}
 
+	console.log( data );
 	#>
 
 	<div class="bb_more_options message-thread-options">
@@ -79,9 +80,9 @@
 			<# } #>
 
 			<# if ( data.is_group_thread ) { #>
-				<li class="list_members">
-					<a id="mass-group-members" href="#mass-group-members" class="mass-group-members" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
-				</li>
+			<li class="view_members">
+				<a href="#message-members-list" id="view_more_members" class="view_more_members" data-thread-id="{{data.id}}" data-tp="{{data.action_recipients.total_pages}}" data-tc="{{data.action_recipients.count}}" data-pp="{{data.action_recipients.per_page}}" data-cp="1" data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
+			</li>
 			<# } #>
 
 			<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
