@@ -575,7 +575,8 @@ window.bp = window.bp || {};
 										cloneUserItemWrap.attr( 'id', 'user-' + item.id );
 										cloneUserItemWrap.find( '.user-avatar img' ).attr( 'src', item.avatar );
 										cloneUserItemWrap.find( '.user-avatar img' ).attr( 'alt', item.user_name );
-										cloneUserItemWrap.find( '.user-name' ).html( item.user_name );
+										cloneUserItemWrap.find( '.user-avatar > a' ).attr( 'href', item.user_link );
+										cloneUserItemWrap.find( '.user-name' ).html( '<a href="' + item.user_link + '">' + item.user_name + '</a>' );
 										if ( true === item.is_blocked ) {
 											cloneUserItemWrap.find( '.user-actions .block-member' ).removeAttr( 'data-bp-content-id' );
 											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type' );
