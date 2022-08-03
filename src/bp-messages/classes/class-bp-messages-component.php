@@ -246,6 +246,19 @@ class BP_Messages_Component extends BP_Component {
 		// Show certain screens only if the current user is the displayed user.
 		if ( bp_is_my_profile() ) {
 
+			if ( bp_is_user_messages() ) {
+				// Show "Actions" on the logged-in user's profile only.
+				$sub_nav[] = array(
+					'name'            => __( 'Actions', 'buddyboss' ),
+					'slug'            => 'compose-action',
+					'parent_url'      => 'javascript:void(0);',
+					'parent_slug'     => $slug,
+					'screen_function' => 'messages_screen_compose_action',
+					'position'        => 29,
+					'user_has_access' => $access,
+				);
+			}
+
 			// Show "Compose" on the logged-in user's profile only.
 			$sub_nav[] = array(
 				'name'            => __( 'New Message', 'buddyboss' ),

@@ -892,7 +892,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		add_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
 	}
 
-	add_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
+	// add_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
 
 	// Simulate the loop.
 	if ( ! bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
@@ -909,7 +909,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		);
 	}
 
-	remove_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
+	// remove_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
 
 	// remove the message thread filter.
 	if ( 'starred' === $bp->current_action ) {
@@ -1120,6 +1120,13 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				}
 			}
 		}
+
+		// Check the thread is private or group.
+		$is_private_thread = true;
+		if ( 2 < $messages_template->thread->total_recipients_count ) {
+			$is_private_thread = false;
+		}
+
 		$threads->threads[ $i ] = array(
 			'id'                              => $bp_get_message_thread_id,
 			'message_id'                      => (int) $last_message_id,
@@ -1155,8 +1162,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			),
 			'count'                           => bp_get_message_thread_total_count(),
 			'date'                            => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
-			'display_date'                    => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
+			'display_date'                    => bb_get_thread_sent_date(),
 			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
+			'is_private_thread'               => $is_private_thread,
 		);
 
 		$is_thread_archived = false;
@@ -1174,6 +1182,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][ $count ] = array(
+						'id'         => $recipient->user_id,
 						'avatar'     => esc_url(
 							bp_core_fetch_avatar(
 								array(
@@ -1198,14 +1207,46 @@ function bp_nouveau_ajax_get_user_message_threads() {
 						$threads->threads[ $i ]['recipients'][ $count ]['can_be_blocked']    = ( ! in_array( $recipient->user_id, $admins, true ) ) ? true : false;
 					}
 
+					$threads->threads[ $i ]['recipients'][ $count ]['is_thread_archived'] = 0 < $recipient->is_hidden;
+
+					$threads->threads[ $i ]['action_recipients']['members'][ $count ] = array(
+						'avatar'     => esc_url(
+							bp_core_fetch_avatar(
+								array(
+									'item_id' => $recipient->user_id,
+									'object'  => 'user',
+									'type'    => 'thumb',
+									'width'   => BP_AVATAR_THUMB_WIDTH,
+									'height'  => BP_AVATAR_THUMB_HEIGHT,
+									'html'    => false,
+								)
+							)
+						),
+						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+						'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
+						'id'         => $recipient->user_id,
+					);
+
+					if ( bp_is_active( 'moderation' ) ) {
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					}
+
 					$count ++;
 				}
 
 				// Check the thread is hidden or not.
-				if ( $recipient->is_hidden ) {
+				if ( $recipient->is_hidden && bp_loggedin_user_id() === $recipient->user_id ) {
 					$is_thread_archived = true;
 				}
 			}
+
+			$threads->threads[ $i ]['action_recipients']['count']         = $messages_template->thread->total_recipients_count;
+			$threads->threads[ $i ]['action_recipients']['current_count'] = (int) bb_messages_recipients_per_page();
+			$threads->threads[ $i ]['action_recipients']['per_page']      = bb_messages_recipients_per_page();
+			$threads->threads[ $i ]['action_recipients']['total_pages']   = ceil( (int) $messages_template->thread->total_recipients_count / (int) bb_messages_recipients_per_page() );
 		}
 
 		$threads->threads[ $i ]['is_thread_archived'] = $is_thread_archived;
@@ -1816,25 +1857,33 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	$results = bp_core_get_suggestions(
 		array(
-			'term'         => sanitize_text_field( $_GET['term'] ),
-			'type'         => 'members',
-			'only_friends' => bp_is_active( 'friends' ) && bp_force_friendship_to_message(),
+			'term'            => sanitize_text_field( $_GET['term'] ),
+			'type'            => 'members',
+			'only_friends'    => bp_is_active( 'friends' ) && bp_force_friendship_to_message(),
+			'count_total'     => 'count_query',
+			'page'            => $_GET['page'],
+			'limit'           => 10,
+			'populate_extras' => true,
 		)
 	);
 
-	$results = apply_filters( 'bp_members_suggestions_results', $results );
+	$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
+	$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
 
 	wp_send_json_success(
 		array(
-			'results' => array_map(
+			'results'     => array_map(
 				function ( $result ) {
 					return array(
-						'id'   => "@{$result->ID}",
-						'text' => $result->name,
+						'id'    => "@{$result->ID}",
+						'text'  => $result->name,
+						'image' => $result->image,
+						'html'  => '<div class="cur"><img class="avatar" src="' . esc_url( $result->image ) . '"><span class="username"><strong>' . $result->name . '</strong></div>',
 					);
 				},
 				$results
 			),
+			'total_pages' => ceil( $results_total / 10 ),
 		)
 	);
 }
@@ -2191,7 +2240,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->thread = array(
 		'id'                        => $bp_get_the_thread_id,
 		'subject'                   => wp_strip_all_tags( bp_get_the_thread_subject() ),
-		'started_date'              => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option( 'date_format' ) ),
+		'started_date'              => bb_get_thread_start_date(),
 		'group_id'                  => $group_id,
 		'group_name'                => html_entity_decode( ucwords( $group_name ) ),
 		'is_group_thread'           => $is_group_thread,
@@ -3009,7 +3058,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 				if ( isset( $recipient->user_id ) ) {
 					if ( (int) $recipient->user_id !== $user_id ) {
 						if ( empty( $recipient->is_deleted ) ) {
-							$avatar         = esc_url(
+							$avatar    = esc_url(
 								bp_core_fetch_avatar(
 									array(
 										'item_id' => $recipient->user_id,
@@ -3021,18 +3070,19 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 									)
 								)
 							);
-							$user_name      = bp_core_get_user_displayname( $recipient->user_id );
-							$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+							$user_name = bp_core_get_user_displayname( $recipient->user_id );
 							?>
 							<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
 								<div class="user-avatar">
-									<img src="<?php echo $avatar; ?>" alt="<?php echo esc_html( $user_name ); ?>">
+									<a href="<?php echo bp_core_get_user_domain( $recipient->user_id ); ?>"><img src="<?php echo $avatar; ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
 								</div>
 								<div class="user-name">
-									<?php echo esc_html( $user_name ); ?>
+									<a href="<?php echo bp_core_get_user_domain( $recipient->user_id ); ?>"><?php echo esc_html( $user_name ); ?></a>
 								</div>
+								<?php if ( bp_is_active( 'moderation' ) ) { ?>
 								<div class="user-actions">
 									<?php
+									$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 									if ( true === bp_moderation_is_user_blocked( $recipient->user_id ) ) {
 										?>
 										<a id="reported-user" class="blocked-member button small disabled">
@@ -3053,6 +3103,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 									}
 									?>
 								</div>
+								<?php } ?>
 							</div>
 							<?php
 						}
@@ -3072,7 +3123,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 						data-tp="<?php echo esc_attr( ceil( (int) $thread->total_recipients_count / (int) bb_messages_recipients_per_page() ) ); ?>"
 						data-tc="<?php echo esc_attr( $thread->total_recipients_count ); ?>"
 						data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>" data-cp="2"
-						data-action="bp_load_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?>
+						data-action="bp_load_more"><?php esc_html_e( 'Finding members...', 'buddyboss' ); ?>
 					</a>
 				</p>
 			</div>

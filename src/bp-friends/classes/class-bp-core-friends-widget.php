@@ -163,12 +163,14 @@ class BP_Core_Friends_Widget extends WP_Widget {
 							<a href="<?php bp_member_permalink(); ?>" class="bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
 								<?php bp_member_avatar(); ?>
 								<?php
-								$current_time = current_time( 'mysql', 1 );
-								$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
-								if ( $diff < 300 ) { // 5 minutes  =  5 * 60
-									?>
-									<span class="member-status online"></span>
-									<?php
+								if ( function_exists( 'bb_current_user_status' ) ) {
+									bb_current_user_status( bp_get_member_user_id() );
+								} else {
+									$current_time = current_time( 'mysql', 1 );
+									$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
+									if ( $diff < 300 ) { // 5 minutes  =  5 * 60
+										echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>' ) );
+									}
 								}
 								?>
 							</a>
