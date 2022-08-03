@@ -10038,8 +10038,16 @@ input#send-to-input {
 }
 
 .messages-wrapper #subnav #compose-personal-li {
-  margin-left: auto;
   margin-right: 10px;
+}
+
+.messages-wrapper #subnav #compose-action-personal-li {
+  display: flex;
+  margin: 0 20px 5px auto;
+}
+
+.messages-wrapper #subnav #compose-action-personal-li > a {
+  font-size: 0;
 }
 
 #inbox {
@@ -10236,12 +10244,6 @@ input#send-to-input {
 }
 
 .bp-messages-content-wrapper .dropzone {
-  height: calc(100% - 145px);
-  left: 0;
-  margin: 0;
-}
-
-.bp-messages-content-wrapper .dropzone {
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -10250,15 +10252,14 @@ input#send-to-input {
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
-  position: absolute;
-  top: 0;
+  position: static;
   z-index: 11;
   background: rgba(255, 255, 255, 0.99);
   height: calc(100% - 245px);
   width: 100%;
   left: 0;
   border-radius: 4px;
-  padding: 20px;
+  max-height: 240px;
   overflow: auto;
 }
 
