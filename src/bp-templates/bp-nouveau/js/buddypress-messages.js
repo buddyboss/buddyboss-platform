@@ -2613,6 +2613,13 @@ window.bp = window.bp || {};
 		}
 	);
 
+	bp.Views.composeFeedback = bp.Nouveau.Messages.View.extend(
+		{
+			tagName  : 'div',
+			className : 'compose-feedback',
+		}
+	);
+
 	bp.Views.MessageFormSubmitWrapper = bp.Nouveau.Messages.View.extend(
 		{
 			tagName: 'div',
@@ -2644,6 +2651,7 @@ window.bp = window.bp || {};
 				this.resetModel = this.model.clone();
 
 				// Add the editor view.
+				this.views.add( '#bp-message-content', new bp.Views.composeFeedback() );
 				this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
 				this.messagesAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
 				this.views.add( '#bp-message-content', this.messagesAttachments );
