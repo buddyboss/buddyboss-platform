@@ -3305,7 +3305,8 @@ window.bp = window.bp || {};
 			}
 			
 			var message = '';
-			var progress = 0;
+			var progress = 0,
+				totalProgress = 0;
 			if( dropzone.files.length == 1 ) {
 				$( dropzone.element ).addClass( 'dz-single-view' );
 				message = 'Uploading <strong>' + dropzone.files[0].name + '</strong>';

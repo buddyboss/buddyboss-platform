@@ -21854,6 +21854,10 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   min-width: 95px;
 }
 
+.message-members-list.member-popup .user-actions {
+  display: none;
+}
+
 /*comment option*/
 #comments .comment-body {
   position: relative;

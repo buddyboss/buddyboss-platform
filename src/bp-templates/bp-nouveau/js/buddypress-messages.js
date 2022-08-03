@@ -472,7 +472,6 @@ window.bp = window.bp || {};
 				current = $this;
 			}
 
-
 			if ( current.length > 0 ) {
 				var currentHref  = current.attr( 'href' );
 				if( currentHref ) {
@@ -514,7 +513,7 @@ window.bp = window.bp || {};
 						post_data: postData,
 					},
 					beforeSend: function () {
-
+						$( '#message-members-list #members_list' ).empty().removeClass( 'is_not_empty' );
 					},
 					success: function ( response ) {
 						if ( response.success && response.data && '' !== response.data.content ) {
@@ -715,6 +714,7 @@ window.bp = window.bp || {};
 			var action    = $( event.currentTarget ).data( 'bp-action' ),
 				options   = {},
 				attribute = {},
+				opposite  = {},
 				feedback  = BP_Nouveau.messages.doingAction,
 				thread_id = 0,
 				model;
@@ -754,7 +754,7 @@ window.bp = window.bp || {};
 			$( event.currentTarget ).closest( '.message_action__list' ).removeClass( 'open' ).closest( '.message_actions' ).removeClass( 'open' );
 
 			if ( 'star' === action || 'unstar' === action ) {
-				var opposite = {
+				opposite = {
 					'star'  : 'unstar',
 					'unstar' : 'star'
 				};
@@ -767,7 +767,7 @@ window.bp = window.bp || {};
 				$( event.currentTarget ).parent().find( '[data-bp-action="' + opposite[ action ] + '"]' ).removeClass( 'bp-hide' );
 
 			} else if ( 'read' === action || 'unread' === action ) {
-				var opposite = {
+				opposite = {
 					'read'  : 'unread',
 					'unread' : 'read'
 				};
