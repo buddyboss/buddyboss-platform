@@ -350,8 +350,6 @@ window.bp = window.bp || {};
 				}
 
 				self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
-				self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
-				self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 			} else {
 				activity_data.gif          = activity_data.gif_data;
 				activity_data.group_name   = activity_data.item_name;
@@ -361,6 +359,9 @@ window.bp = window.bp || {};
 					activity_data.object = 'groups';
 				}
 			}
+			// Set link image index and confirm image index.
+			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
+			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
