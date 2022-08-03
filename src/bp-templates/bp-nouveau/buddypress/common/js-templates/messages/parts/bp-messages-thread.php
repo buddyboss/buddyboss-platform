@@ -49,7 +49,6 @@
 		read_unread_action = 'read';
 	}
 
-	console.log( data );
 	#>
 
 	<div class="bb_more_options message-thread-options">
