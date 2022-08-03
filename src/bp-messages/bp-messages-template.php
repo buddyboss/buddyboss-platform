@@ -2368,8 +2368,6 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 		YEAR_IN_SECONDS,
 		WEEK_IN_SECONDS,
 		DAY_IN_SECONDS,
-		HOUR_IN_SECONDS,
-		MINUTE_IN_SECONDS,
 		1,
 	);
 
@@ -2439,7 +2437,6 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 				$output = $right_now_text;
 
 			} else {
-
 				// Set output var.
 				switch ( $seconds ) {
 					case YEAR_IN_SECONDS:
@@ -2449,7 +2446,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 						$start_week = bb_get_week_start_timestamp();
 						$end_week   = bb_get_week_end_timestamp();
 
-						if ( $start_week <= $since && $end_week >= $since ) {
+						if ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
 						} else {
 							$output = bp_core_get_format_date( $old_last_date, 'M d' );
@@ -2461,17 +2458,11 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 
 						if ( 1 == $count ) {
 							$output = __( 'Yesterday', 'buddyboss' );
-						} elseif ( $start_week <= $since && $end_week >= $since ) {
+						} elseif ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
 						} else {
 							$output = bp_core_get_format_date( $old_last_date, 'M d' );
 						}
-						break;
-					case HOUR_IN_SECONDS:
-						$output = bp_core_get_format_date( $old_last_date, 'g:iA' );
-						break;
-					case 5 * MINUTE_IN_SECONDS:
-						$output = $count < 5 ? $right_now_text : bp_core_get_format_date( $old_last_date, 'g:iA' );
 						break;
 					default:
 						$output = $right_now_text;
