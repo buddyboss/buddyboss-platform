@@ -10466,7 +10466,9 @@ body .bp-messages-user-threads {
 
 .message-members-list #members_list:not(.is_not_empty),
 .mass-user-block-list #moderated_user_list:not(.is_not_empty) {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .message-members-list #members_list:not(.is_not_empty):before,
@@ -10482,6 +10484,12 @@ body .bp-messages-user-threads {
   -moz-osx-font-smoothing: grayscale;
   -webkit-animation: spin 2s infinite linear;
   animation: spin 2s infinite linear;
+}
+
+.message-members-list.moderation-popup div.modal-container, .message-members-list.member-popup div.modal-container,
+.mass-user-block-list.moderation-popup div.modal-container,
+.mass-user-block-list.member-popup div.modal-container {
+  max-height: 600px;
 }
 
 .message-members-list .bb-report-type-pagination,
