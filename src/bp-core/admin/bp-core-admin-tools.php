@@ -1472,7 +1472,11 @@ function bp_sync_profile_completion_widget() {
 
 				$total_completed_count = isset( $get_user_data['completed_fields'] ) ? $get_user_data['completed_fields'] : 0;
 
-				if ( isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
+				if (
+					isset( $get_user_data['photo_type'] ) &&
+					isset( $get_user_data['photo_type']['profile_photo'] ) &&
+					isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] )
+				) {
 					$is_profile_photo_uploaded = ( bp_get_user_has_avatar( $user->ID ) ) ? 1 : 0;
 
 					if ( ! $is_profile_photo_uploaded &&
@@ -1493,15 +1497,12 @@ function bp_sync_profile_completion_widget() {
 						}
 					}
 
-					if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) ) {
-						if ( (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] !== (int) $is_profile_photo_uploaded ) {
-							//$response['photo_type']['profile_photo']['is_uploaded'] = $is_profile_photo_uploaded;
-							$get_user_data['photo_type']['profile_photo']['is_uploaded'] = $is_profile_photo_uploaded;
-							if ( 1 === $is_profile_photo_uploaded ) {
-								$total_completed_count = ++ $total_completed_count;
-							} else {
-								$total_completed_count = -- $total_completed_count;
-							}
+					if ( (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] !== (int) $is_profile_photo_uploaded ) {
+						$get_user_data['photo_type']['profile_photo']['is_uploaded'] = $is_profile_photo_uploaded;
+						if ( 1 === (int) $is_profile_photo_uploaded ) {
+							$total_completed_count = ++ $total_completed_count;
+						} else {
+							$total_completed_count = -- $total_completed_count;
 						}
 					}
 				}
