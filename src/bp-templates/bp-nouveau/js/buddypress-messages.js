@@ -245,6 +245,7 @@ window.bp = window.bp || {};
 				if ( _.isUndefined( feedback.get( 'view' ).model.attributes.type ) || 'notice' !== feedback.get( 'view' ).model.attributes.type ) {
 					feedback.get( 'view' ).remove();
 					$( '.bp-messages-content-wrapper' ).removeClass( 'has_info' );
+					$( '.bp-messages-content' ).removeClass( 'has_info' );
 					$( '.bp-messages-nav-panel' ).removeClass( 'has_info' );
 				}
 			}
@@ -276,6 +277,29 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
+		},
+
+		displayComposeFeedback: function( message, type ) {
+			var feedback;
+
+			// Make sure to remove the feedbacks.
+			this.removeFeedback();
+
+			if ( ! message ) {
+				return;
+			}
+
+			feedback = new bp.Views.Feedback(
+				{
+					value: message,
+					type:  type || 'info'
+				}
+			);
+
+			this.views.add( { id: 'feedback', view: feedback } );
+			feedback.inject( '.compose-feedback' );
+
+			$( '.bp-messages-content' ).addClass( 'has_info' );
 		},
 
 		displaySendMessageFeedback: function( message, type ) {
@@ -375,6 +399,8 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
+
+			$( '.bp-messages-content').prepend( '<div class="compose-feedback"></div>' );
 
 			// show compose message screen.
 			$( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
@@ -2613,13 +2639,6 @@ window.bp = window.bp || {};
 		}
 	);
 
-	bp.Views.composeFeedback = bp.Nouveau.Messages.View.extend(
-		{
-			tagName  : 'div',
-			className : 'compose-feedback',
-		}
-	);
-
 	bp.Views.MessageFormSubmitWrapper = bp.Nouveau.Messages.View.extend(
 		{
 			tagName: 'div',
@@ -2651,7 +2670,6 @@ window.bp = window.bp || {};
 				this.resetModel = this.model.clone();
 
 				// Add the editor view.
-				this.views.add( '#bp-message-content', new bp.Views.composeFeedback() );
 				this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
 				this.messagesAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
 				this.views.add( '#bp-message-content', this.messagesAttachments );
@@ -2930,7 +2948,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					bp.Nouveau.Messages.displayFeedback( feedback, 'error' );
+					bp.Nouveau.Messages.displayComposeFeedback( feedback, 'error' );
 					return;
 				}
 
