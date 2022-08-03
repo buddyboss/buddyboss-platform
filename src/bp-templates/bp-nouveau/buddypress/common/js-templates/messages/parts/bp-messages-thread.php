@@ -48,6 +48,8 @@
 	if (data.unread) {
 		read_unread_action = 'read';
 	}
+
+	console.log( data );
 	#>
 
 	<div class="bb_more_options message-thread-options">
@@ -75,6 +77,12 @@
 				<a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Archive', 'buddyboss' ); ?>
 				</a>
 			</li>
+			<# } #>
+
+			<# if ( data.is_group_thread ) { #>
+				<li class="list_members">
+					<a id="mass-group-members" href="#mass-group-members" class="mass-group-members" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+				</li>
 			<# } #>
 
 			<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
