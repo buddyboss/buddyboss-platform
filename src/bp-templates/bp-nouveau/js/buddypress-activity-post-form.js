@@ -2944,13 +2944,6 @@ window.bp = window.bp || {};
 				}
 
 				if ( response.error === '' ) {
-					var title = $.trim( response.title );
-					if ( title && title.length > 150 ) {
-						title.title = title.substring( 0, 150 ) + '...';
-					}
-					if ( title && response.description && response.description.length > 100 ) {
-						response.description = response.description.substring( 0, 100 ) + '...';
-					}
 					var urlImages = response.images;
 					if (
 						true === self.options.activity.get( 'edit_activity' ) && 'undefined' === typeof self.options.activity.get( 'link_image_index_save' ) && '' === self.options.activity.get( 'link_image_index_save' )
