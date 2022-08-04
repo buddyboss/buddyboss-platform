@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.0.6\n"
+"Project-Id-Version: BuddyBoss Platform 2.0.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-08-03 10:45:43+00:00\n"
+"POT-Creation-Date: 2022-08-04 13:25:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -857,7 +857,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:2462
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:231
-#: bp-core/admin/bp-core-admin-tools.php:898
+#: bp-core/admin/bp-core-admin-tools.php:905
 #: bp-core/classes/class-bp-admin.php:515
 #: bp-core/classes/class-bp-admin.php:516
 #: bp-core/classes/class-bp-admin.php:538
@@ -4755,13 +4755,17 @@ msgid ""
 "invitations if needed"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:481
+#: bp-core/admin/bp-core-admin-tools.php:458
+msgid "Sync profile completion widget"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:488
 msgid "Repairing total connections count for each member &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:482
-#: bp-core/admin/bp-core-admin-tools.php:543
-#: bp-core/admin/bp-core-admin-tools.php:591 bp-forums/admin/tools.php:259
+#: bp-core/admin/bp-core-admin-tools.php:489
+#: bp-core/admin/bp-core-admin-tools.php:550
+#: bp-core/admin/bp-core-admin-tools.php:598 bp-forums/admin/tools.php:259
 #: bp-forums/admin/tools.php:325 bp-forums/admin/tools.php:384
 #: bp-forums/admin/tools.php:450 bp-forums/admin/tools.php:452
 #: bp-forums/admin/tools.php:583 bp-forums/admin/tools.php:640
@@ -4775,21 +4779,22 @@ msgstr ""
 msgid "Failed!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:524
-#: bp-core/admin/bp-core-admin-tools.php:574
-#: bp-core/admin/bp-core-admin-tools.php:603
-#: bp-core/admin/bp-core-admin-tools.php:625
-#: bp-core/admin/bp-core-admin-tools.php:642
-#: bp-core/admin/bp-core-admin-tools.php:703
-#: bp-core/admin/bp-core-admin-tools.php:740
-#: bp-core/admin/bp-core-admin-tools.php:791
-#: bp-core/admin/bp-core-admin-tools.php:836
-#: bp-core/admin/bp-core-admin-tools.php:1163
-#: bp-core/admin/bp-core-admin-tools.php:1206
-#: bp-core/admin/bp-core-admin-tools.php:1358
-#: bp-core/admin/bp-core-admin-tools.php:1366
-#: bp-core/admin/bp-core-admin-tools.php:1401
-#: bp-core/admin/bp-core-admin-tools.php:1417 bp-forums/admin/tools.php:305
+#: bp-core/admin/bp-core-admin-tools.php:531
+#: bp-core/admin/bp-core-admin-tools.php:581
+#: bp-core/admin/bp-core-admin-tools.php:610
+#: bp-core/admin/bp-core-admin-tools.php:632
+#: bp-core/admin/bp-core-admin-tools.php:649
+#: bp-core/admin/bp-core-admin-tools.php:710
+#: bp-core/admin/bp-core-admin-tools.php:747
+#: bp-core/admin/bp-core-admin-tools.php:798
+#: bp-core/admin/bp-core-admin-tools.php:843
+#: bp-core/admin/bp-core-admin-tools.php:1170
+#: bp-core/admin/bp-core-admin-tools.php:1213
+#: bp-core/admin/bp-core-admin-tools.php:1365
+#: bp-core/admin/bp-core-admin-tools.php:1373
+#: bp-core/admin/bp-core-admin-tools.php:1408
+#: bp-core/admin/bp-core-admin-tools.php:1424
+#: bp-core/admin/bp-core-admin-tools.php:1525 bp-forums/admin/tools.php:305
 #: bp-forums/admin/tools.php:307 bp-forums/admin/tools.php:365
 #: bp-forums/admin/tools.php:367 bp-forums/admin/tools.php:408
 #: bp-forums/admin/tools.php:410 bp-forums/admin/tools.php:618
@@ -4810,99 +4815,99 @@ msgstr ""
 msgid "Complete!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:542
+#: bp-core/admin/bp-core-admin-tools.php:549
 msgid "Repairing total groups count for each member &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:588
+#: bp-core/admin/bp-core-admin-tools.php:595
 msgid "Repopulating Blogs records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:619
+#: bp-core/admin/bp-core-admin-tools.php:626
 msgid "Repairing total members count &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:637
+#: bp-core/admin/bp-core-admin-tools.php:644
 msgid "Repairing member \"last activity\" data &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:699
+#: bp-core/admin/bp-core-admin-tools.php:706
 msgid "Repairing default profile set and fields &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:730
-#: bp-core/admin/bp-core-admin-tools.php:781
-#: bp-core/admin/bp-core-admin-tools.php:826
-#: bp-core/admin/bp-core-admin-tools.php:1154
-#: bp-core/admin/bp-core-admin-tools.php:1197
+#: bp-core/admin/bp-core-admin-tools.php:737
+#: bp-core/admin/bp-core-admin-tools.php:788
+#: bp-core/admin/bp-core-admin-tools.php:833
+#: bp-core/admin/bp-core-admin-tools.php:1161
+#: bp-core/admin/bp-core-admin-tools.php:1204
 msgid "%s members updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:737
+#: bp-core/admin/bp-core-admin-tools.php:744
 msgid "Re-syncing BuddyBoss profile fields to WordPress profile fields &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:788
+#: bp-core/admin/bp-core-admin-tools.php:795
 msgid "Re-syncing WordPress profile fields to BuddyBoss profile fields &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:833
+#: bp-core/admin/bp-core-admin-tools.php:840
 msgid "Updating display name to selected format in profile settings &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:928
-#: bp-core/admin/bp-core-admin-tools.php:931
+#: bp-core/admin/bp-core-admin-tools.php:935
+#: bp-core/admin/bp-core-admin-tools.php:938
 msgid "BuddyBoss Tools"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:930
+#: bp-core/admin/bp-core-admin-tools.php:937
 msgid ""
 "BuddyBoss keeps track of various relationships between users, groups, and "
 "activity items. Occasionally these relationships become out of sync, most "
 "often after an import, update, or migration."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:931
+#: bp-core/admin/bp-core-admin-tools.php:938
 msgid "Use the %s to repair these relationships."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1012
+#: bp-core/admin/bp-core-admin-tools.php:1019
 #. translators: %1$s for counts missing emails.
 msgid "%1$s missing emails have been installed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1017
+#: bp-core/admin/bp-core-admin-tools.php:1024
 #. translators: %1$s for view emails url.
 msgid "Installing missing emails &hellip; Complete! %1$s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1018
-#: bp-core/admin/bp-core-admin-tools.php:1087
+#: bp-core/admin/bp-core-admin-tools.php:1025
+#: bp-core/admin/bp-core-admin-tools.php:1094
 msgid "View Emails."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1086
+#: bp-core/admin/bp-core-admin-tools.php:1093
 #. translators: %1$s for view emails url.
 msgid "Reseting emails &hellip; Complete! %1$s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1109
+#: bp-core/admin/bp-core-admin-tools.php:1116
 msgid ""
 "It looks like you have more sites to record. Resume recording by checking "
 "the \"Repopulate site tracking records\" option."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1162
+#: bp-core/admin/bp-core-admin-tools.php:1169
 msgid ""
 "Assign users without a profile type to the default profile type "
 "records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1205
+#: bp-core/admin/bp-core-admin-tools.php:1212
 msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1226 bp-forums/admin/tools.php:1961
+#: bp-core/admin/bp-core-admin-tools.php:1233 bp-forums/admin/tools.php:1961
 #: bp-forums/functions.php:869
 #: bp-templates/bp-nouveau/includes/document/ajax.php:187
 #: bp-templates/bp-nouveau/includes/document/ajax.php:546
@@ -4940,31 +4945,39 @@ msgstr ""
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1342
+#: bp-core/admin/bp-core-admin-tools.php:1349
 msgid "%s members activity favorite updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1354
-#: bp-core/admin/bp-core-admin-tools.php:1362
+#: bp-core/admin/bp-core-admin-tools.php:1361
+#: bp-core/admin/bp-core-admin-tools.php:1369
 msgid "Updating activity favorites data &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1387
+#: bp-core/admin/bp-core-admin-tools.php:1394
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Creating the database table for Invitations if it does not exist &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1388
+#: bp-core/admin/bp-core-admin-tools.php:1395
 msgid "Failed to create table!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1409
+#: bp-core/admin/bp-core-admin-tools.php:1416
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Migrating existing group invitations &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1410
+#: bp-core/admin/bp-core-admin-tools.php:1417
 msgid "Failed to migrate invitations!"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1515
+msgid "Profile completion widget updated successfully for %s members."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1522
+msgid "Re-Sync profile completion widget %s"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:77
