@@ -388,7 +388,7 @@ class BP_Messages_Thread {
 				'page'            => 1,
 				'count_total'     => false,
 			);
-			if( false === $include_join_left_message ) {
+			if ( false === $include_join_left_message ) {
 				$args['meta_query'][] = array(
 					'key'     => 'group_message_group_joined',
 					'compare' => 'NOT EXISTS',

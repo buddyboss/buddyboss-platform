@@ -496,7 +496,7 @@ window.bp = window.bp || {};
 
 		messageMemberModel: function( e ) {
 			e.preventDefault();
-			var $this = $( e.currentTarget ).hasClass( 'view_other_members' ) ? $( e.currentTarget ) : $( e.target );
+			var $this   = $( e.currentTarget ).hasClass( 'view_other_members' ) ? $( e.currentTarget ) : $( e.target );
 			var current = $this.parents( '.thread-participants' ).find( '#view_more_members' );
 
 			if ( current.length == 0 ) {
@@ -504,8 +504,8 @@ window.bp = window.bp || {};
 			}
 
 			if ( current.length > 0 ) {
-				var currentHref  = current.attr( 'href' );
-				if( currentHref ) {
+				var currentHref = current.attr( 'href' );
+				if ( currentHref ) {
 					current.magnificPopup(
 						{
 							items: {
@@ -520,10 +520,9 @@ window.bp = window.bp || {};
 			}
 		},
 
-
 		messageMemberList: function ( e ) {
 			e.preventDefault();
-			var $this = $( e.currentTarget ).hasClass( 'view_other_members' ) ? $( e.currentTarget ) : $( e.target );
+			var $this   = $( e.currentTarget ).hasClass( 'view_other_members' ) ? $( e.currentTarget ) : $( e.target );
 			var current = $this.parents( '.thread-participants' ).find( '#view_more_members' );
 			if ( current.length == 0 ) {
 				current = $this;
@@ -552,7 +551,7 @@ window.bp = window.bp || {};
 						if ( response.success && response.data && '' !== response.data.content ) {
 							if ( $( '#message-members-list #members_list' ).length > 0 ) {
 								$( '#message-members-list #members_list' ).html( response.data.content ).addClass( 'is_not_empty' );
-								if( !$( '#message-members-list' ).hasClass( 'event-triggered' ) ) {
+								if ( ! $( '#message-members-list' ).hasClass( 'event-triggered' ) ) {
 									$( '#message-members-list .modal-container' ).on( 'scroll', bp.Nouveau.Messages.triggerLoadMore );
 									$( '#message-members-list .modal-container' ).addClass( 'event-triggered' );
 								}
