@@ -791,18 +791,11 @@ ul.medium-editor-toolbar-actions {
 	padding: 0;
 	line-height: 1.5;
 	color: #82878c;
-	background: #f2f4f5;
+	background: #fff;
 	border: 1px solid #e5e5e5;
 	border-radius: 4px;
 	position: relative;
 	width: 100%;
-
-	p {
-		white-space: nowrap;
-		width: 100%;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
 
 	/*overflow: auto;*/
 
@@ -824,6 +817,25 @@ ul.medium-editor-toolbar-actions {
 		margin-bottom: 0;
 	}
 
+	.activity-link-preview-info {
+
+		p.activity-link-preview-title {
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			width: 100%;
+			white-space: break-spaces;
+		}
+
+		.activity-link-preview-excerpt p {
+			white-space: nowrap;
+			width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
 }
 
 .activity-link-preview {
@@ -897,19 +909,10 @@ ul.medium-editor-toolbar-actions {
 			transition: all linear 0.2s;
 
 			.activity-link-preview-image-cover {
-				height: 380px;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				overflow: hidden;
-
-				@media screen and (max-width: 900px) {
-					height: 30vh;
-				}
-
-				@media screen and (max-width: 680px) {
-					height: 200px;
-				}
 			}
 
 			.activity-link-preview-icons {
@@ -1077,10 +1080,6 @@ ul.medium-editor-toolbar-actions {
 	color: #1e2132;
 	margin: 0 0 2px 0;
 	letter-spacing: -0.24px;
-	white-space: nowrap;
-	width: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 .activity-link-preview-title a,
