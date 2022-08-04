@@ -9129,6 +9129,10 @@ div.profile_completion_wrap .progress_text_wrap {
   display: none;
 }
 
+#message-threads .can-not-send-msg.thread-item .message-thread-options, #message-threads .can-not-send-msg.thread-item:hover .message-thread-options {
+  display: none;
+}
+
 #message-threads .thread-avatar .user-status-icon {
   color: #fff;
   background-color: #767676;

@@ -100,6 +100,15 @@
 		&:hover .thread-to:after {
 			display: none;
 		}
+
+		&.thread-item,
+		&.thread-item:hover {
+
+			.message-thread-options {
+				display: none;
+			}
+
+		}
 	}
 
 	.thread-avatar .user-status-icon {
