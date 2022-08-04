@@ -2496,10 +2496,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$left_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left_users' );
 				if ( is_array( $left_users ) ) {
 					if ( 2 === count( $left_users ) ) {
+						/* translators: 1. Group Name. 2. Member Name. */
 						$content = sprintf( __( '<p class="joined">Left <strong>%1$s</strong>, along with <strong>%2$s</strong></p>', 'buddyboss' ), ucwords( $group_name ), bp_core_get_user_displayname( $left_users[1]['user_id'] ) );
 					} elseif ( 2 < count( $left_users ) ) {
 						unset( $left_users[0] );
-						$content = sprintf( __( '<p class="joined">Left <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="left" data-action="bp_view_others" ><strong>%4$d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_message_id, $bp_get_the_thread_message_id, count( $left_users ) );
+						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
+						$content = sprintf( __( '<p class="joined">Left <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="left" data-action="bp_view_others" ><strong>%4$d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $left_users ) );
 						if ( 5 > count( $left_users ) ) {
 							$left_members = array_map(
 								function( $user ) {
@@ -2507,6 +2509,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 								},
 								$left_users
 							);
+							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
 							$content      = sprintf( __( '<p class="joined">Left <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $left_members ), count( $left_users ) );
 						}
 					}
@@ -2525,10 +2528,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$joined_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined_users' );
 				if ( is_array( $joined_users ) ) {
 					if ( 2 === count( $joined_users ) ) {
+						/* translators: 1. Group Name. 2. Member Name. */
 						$content = sprintf( __( '<p class="joined">Joined <strong>%1$s</strong>, along with <strong>%2$s</strong></p>', 'buddyboss' ), ucwords( $group_name ), bp_core_get_user_displayname( $joined_users[1]['user_id'] ) );
 					} elseif ( 2 < count( $joined_users ) ) {
 						unset( $joined_users[0] );
-						$content = sprintf( __( '<p class="joined">Joined <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="joined" data-action="bp_view_others" ><strong>%4$d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_message_id, $bp_get_the_thread_message_id, count( $joined_users ) );
+						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
+						$content = sprintf( __( '<p class="joined">Joined <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="joined" data-action="bp_view_others" ><strong>%4$d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $joined_users ) );
 						if ( 5 > count( $joined_users ) ) {
 							$joined_members = array_map(
 								function( $user ) {
@@ -2536,6 +2541,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 								},
 								$joined_users
 							);
+							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
 							$content        = sprintf( __( '<p class="joined">Joined <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count( $joined_users ) );
 						}
 					}
@@ -2593,10 +2599,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$left_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left_users' );
 				if ( is_array( $left_users ) ) {
 					if ( 2 === count( $left_users ) ) {
+						/* translators: 1. Group Name. 2. Member Name. */
 						$content = sprintf( __( '<p class="joined">Left <strong>%1$s</strong>, along with <strong>%2$s</strong></p>', 'buddyboss' ), ucwords( $group_name ), bp_core_get_user_displayname( $left_users[1]['user_id'] ) );
 					} elseif ( 2 < count( $left_users ) ) {
 						unset( $left_users[0] );
-						$content = sprintf( __( '<p class="joined">Left <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="left" data-action="bp_view_others" ><strong>%4$d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_message_id, $bp_get_the_thread_message_id, count( $left_users ) );
+						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
+						$content = sprintf( __( '<p class="joined">Left <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="left" data-action="bp_view_others" ><strong>%4$d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $left_users ) );
 						if ( 5 > count( $left_users ) ) {
 							$left_members = array_map(
 								function( $user ) {
@@ -2604,6 +2612,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 								},
 								$left_users
 							);
+							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
 							$content      = sprintf( __( '<p class="joined">Left <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $left_members ), count( $left_users ) );
 						}
 					}
@@ -2622,10 +2631,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$joined_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined_users' );
 				if ( is_array( $joined_users ) ) {
 					if ( 2 === count( $joined_users ) ) {
+						/* translators: 1. Group Name. 2. Member Name. */
 						$content = sprintf( __( '<p class="joined">Joined <strong>%1$s</strong>, along with <strong>%2$s</strong></p>', 'buddyboss' ), ucwords( $group_name ), bp_core_get_user_displayname( $joined_users[1]['user_id'] ) );
 					} elseif ( 2 < count( $joined_users ) ) {
 						unset( $joined_users[0] );
-						$content = sprintf( __( '<p class="joined">Joined <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="joined" data-action="bp_view_others" ><strong>%4$d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_message_id, $bp_get_the_thread_message_id, count( $joined_users ) );
+						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
+						$content = sprintf( __( '<p class="joined">Joined <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="joined" data-action="bp_view_others" ><strong>%4$d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $joined_users ) );
 						if ( 5 > count( $joined_users ) ) {
 							$joined_members = array_map(
 								function( $user ) {
@@ -2633,6 +2644,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 								},
 								$joined_users
 							);
+							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
 							$content        = sprintf( __( '<p class="joined">Joined <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count( $joined_users ) );
 						}
 					}
@@ -3288,10 +3300,10 @@ function bb_nouveau_ajax_left_join_members_list() {
 				?>
 				<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
 					<div class="user-avatar">
-						<a href="<?php echo bp_core_get_user_domain( $recipient->user_id ); ?>"><img src="<?php echo $avatar; ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
+						<a href="<?php echo esc_attr( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><img src="<?php echo esc_attr( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
 					</div>
 					<div class="user-name">
-						<a href="<?php echo bp_core_get_user_domain( $recipient->user_id ); ?>"><?php echo esc_html( $user_name ); ?></a>
+						<a href="<?php echo esc_attr( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><?php echo esc_html( $user_name ); ?></a>
 					</div>
 				</div>
 				<?php
