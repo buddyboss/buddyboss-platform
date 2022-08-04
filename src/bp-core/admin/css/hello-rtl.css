@@ -95,35 +95,14 @@ TABLE OF CONTENTS:
 /*
  * 2.1 - Social Icons
  */
-.bp-hello-social li a:before {
-  color: #23282d;
-  /* wp toolbar */
-  display: inline-block;
-  content: " ";
-  background-size: 20px 20px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #f6f6f6;
-  height: 38px;
-  width: 38px;
-  border-radius: 50px;
+.bp-hello-social li a i:before {
+  font-size: 23px;
   vertical-align: middle;
-}
-
-.bp-hello-social li a:hover:before {
-  background-color: #eee;
-}
-
-.bp-hello-social li a.youtube:before {
-  background-image: url(../../images/admin/icons/fontawesome/brands/youtube.svg);
-}
-
-.bp-hello-social li a.twitter:before {
-  background-image: url(../../images/admin/icons/fontawesome/brands/twitter.svg);
-}
-
-.bp-hello-social li a.facebook:before {
-  background-image: url(../../images/admin/icons/fontawesome/brands/facebook-square.svg);
+  margin: 0;
+  background-color: #f6f6f6;
+  color: #333;
+  border-radius: 50px;
+  padding: 7px;
 }
 
 /*------------------------------------------------------------------------------
@@ -147,6 +126,10 @@ TABLE OF CONTENTS:
   top: 0;
   bottom: 80px;
   z-index: 99999;
+}
+
+.bp-hello-buddyboss#bp-hello-container {
+  bottom: 0;
 }
 
 .bp-disable-scroll {
@@ -296,6 +279,11 @@ TABLE OF CONTENTS:
   background-color: white;
 }
 
+.bp-hello-buddyboss .bp-hello-content {
+  max-height: calc(100vh - 200px);
+  overflow: auto;
+}
+
 .bp-hello-buddyboss-app .bp-hello-content {
   padding: 0;
 }
@@ -342,6 +330,12 @@ TABLE OF CONTENTS:
     z-index: 9999;
     border-radius: 3px;
   }
+  #bp-hello-container.bp-hello-buddyboss {
+    top: 50%;
+    bottom: initial;
+    max-height: calc(100% - 90px);
+    transform: translateY(-50%);
+  }
   #bp-hello-container .bp-hello-header h1 {
     line-height: inherit;
   }
@@ -380,6 +374,11 @@ TABLE OF CONTENTS:
     height: auto;
     max-height: inherit;
     padding: 6px 23px;
+  }
+  .bp-hello-buddyboss .bp-hello-footer {
+    bottom: initial;
+    right: 0;
+    left: 0;
   }
   .bp-hello-content {
     height: calc(100% - 90px);
