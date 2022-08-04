@@ -57,6 +57,18 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.0.7 =
+* Notifications - Handled Activity comment auto-generated notification incorrect text issue
+* Forums - Handled small Forums widget issue shows wrong discussion count
+* Activity - Handled activity comment @mention issue gets converted into HTML markup on post
+* Media - Handled document upload double extension issue on document directory screen
+* Media - Handled symlink option gets enabled issue when activity settings updated
+* Media - Small improvement to fix console JS error when video popup is closed
+* Messages - Handled private messages right click and paste action issue, adds duplicate copies from the clipboard
+* Core - Icon Pack updated with latest icons
+* REST API - Handled get activity videos API endpoint issue
+* Compatibility - Handled 'GeoDirectory' broken listing layout compatibility issue
+
 = 2.0.6 =
 * Forums - Handled forum reply notification wrong pagination URL issue
 * Activity - Handled activity modal @mention RTL language support issue
