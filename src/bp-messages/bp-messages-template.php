@@ -2481,9 +2481,14 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value Timestamp of the date sent value for the current message.
+	 * @param string     $value             Timestamp of the date sent value for the current message.
+	 * @param int|string $old_last_date     The earlier time from which you're calculating
+	 *                                      the time elapsed. Enter either as an integer Unix timestamp,
+	 *                                      or as a date string of the format 'Y-m-d h:i:s'.
+	 * @param int|bool   $newer_date        Optional. Date string of the format 'Y-m-d h:i:s' to compare older
+	 *                                      date to. Default: false (current time).
 	 */
-	return apply_filters( 'bb_get_thread_sent_date', $output );
+	return apply_filters( 'bb_get_thread_sent_date', $output, $old_last_date, $newer_date );
 }
 
 /**
@@ -2633,7 +2638,12 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value Timestamp of the date sent value for the current message.
+	 * @param string     $value             Timestamp of the date sent value for the current message.
+	 * @param int|string $old_start_date    The earlier time from which you're calculating
+	 *                                      the time elapsed. Enter either as an integer Unix timestamp,
+	 *                                      or as a date string of the format 'Y-m-d h:i:s'.
+	 * @param int|bool   $newer_date        Optional. Date string of the format 'Y-m-d h:i:s' to compare older
+	 *                                      date to. Default: false (current time).
 	 */
-	return apply_filters( 'bb_get_thread_start_date', $output );
+	return apply_filters( 'bb_get_thread_start_date', $output, $old_start_date, $newer_date );
 }
