@@ -147,12 +147,13 @@ window.bp = window.bp || {};
 			$( '#subnav a' ).on(
 				'click',
 				function( event ) {
-					event.preventDefault();
 
 					// Do nothing if it's dropdown
 					if( $( event.currentTarget ).data( 'action' ) == 'more_options' ) {
-						return;
+						return event;
 					}
+
+					event.preventDefault();
 
 					var view_id = $( event.target ).prop( 'id' );
 
@@ -193,6 +194,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
 			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
+			$( document ).on( 'click', '#compose-action-personal-li .bb_more_options_action', this.toggleMessageCompose );
 
 		},
 
@@ -206,6 +208,10 @@ window.bp = window.bp || {};
 				jQuery( this ).find( '#load_more_rl' ).trigger( 'click' );
 			}
 
+		},
+
+		toggleMessageCompose: function ( e ) {
+			$( e.currentTarget ).closest( '#compose-action-personal-li' ).toggleClass( 'optionsOpen' );
 		},
 
 		closeModalPopup: function ( event ) {

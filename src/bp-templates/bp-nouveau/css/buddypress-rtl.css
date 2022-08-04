@@ -9747,7 +9747,11 @@ input#send-to-input {
   margin-top: 0;
 }
 
-.bp-messages-container.bp-compose-message #compose-personal-li a {
+.bp-messages-container #subnav #compose-personal-li {
+  margin-right: 20px;
+}
+
+.bp-messages-container.bp-compose-message #compose-personal-li {
   display: none;
 }
 
@@ -10055,7 +10059,7 @@ input#send-to-input {
 
 .messages-wrapper #subnav #compose-action-personal-li {
   display: flex;
-  margin: 0 auto 5px 20px;
+  margin: 0 auto 0 0;
 }
 
 .messages-wrapper #subnav #compose-action-personal-li > a {
