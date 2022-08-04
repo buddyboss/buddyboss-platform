@@ -3792,9 +3792,14 @@ window.bp = window.bp || {};
 				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-action="' + messagePusherData.actions + '" data-hash="' + messagePusherData.hash + '" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="' + messagePusherData.hash + '"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
 				if ( model ) {
 					var content = model.attributes.content;
-					var $s = $( content ).find( '.message_send_sending' ).remove().end();
-					model.set( 'className', model.attributes.className + ' error' );
-					model.set( 'content', $s.html() + ' ' + errorHtml );
+					if ( content.search( 'message_send_error' ) === -1 ) {
+						var $s = $( content );
+						if ( $s.find( '.message_send_sending' ).length ) {
+							$s = $s.find( '.message_send_sending' ).remove().end();
+						}
+						model.set( 'className', model.attributes.className + ' error' );
+						model.set( 'content', $s.html() + ' ' + errorHtml );
+					}
 					this.collection.sync( 'update' );
 				}
 			},
