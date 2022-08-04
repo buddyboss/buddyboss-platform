@@ -490,7 +490,7 @@ window.bp = window.bp || {};
 			} );
 			return false;
 		},
-		
+
 		messageBlockMember: function ( e ) {
 			e.preventDefault();
 			var contentId    = $( this ).data( 'bp-content-id' );
@@ -515,7 +515,7 @@ window.bp = window.bp || {};
 				).magnificPopup( 'open' );
 			}
 		},
-		
+
 		messageModeratorMemberList: function ( e ) {
 			e.preventDefault();
 			var postData = {
@@ -555,7 +555,7 @@ window.bp = window.bp || {};
 				}
 			);
 		},
-		
+
 		clearModeratedMessageList: function () {
 			if ( $( '#moderated_user_list' ).length > 0 ) {
 				$( '#moderated_user_list' ).html( '' ).removeClass( 'is_not_empty' );
@@ -758,6 +758,7 @@ window.bp = window.bp || {};
 			before: null,
 			model: bp.Models.messageThread,
 			options: {},
+			thread_messages: null,
 
 			sync: function( method, model, options ) {
 				options         = options || {};
@@ -776,7 +777,13 @@ window.bp = window.bp || {};
 							}
 					);
 
-					return bp.ajax.send( options );
+					if ( this.thread_messages ) {
+						this.thread_messages.abort();
+					}
+
+					this.thread_messages = bp.ajax.send( options );
+
+					return this.thread_messages;
 				}
 
 				if ( 'create' === method ) {
@@ -789,7 +796,13 @@ window.bp = window.bp || {};
 						model || {}
 					);
 
-					return bp.ajax.send( options );
+					if ( this.thread_messages ) {
+						this.thread_messages.abort();
+					}
+
+					this.thread_messages = bp.ajax.send( options );
+
+					return this.thread_messages;
 				}
 			},
 
@@ -1038,13 +1051,13 @@ window.bp = window.bp || {};
 					$( document ).on ( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function( event ) {
 
 						var URL = event.target.value;
-						
+
 						if ( bp.Nouveau.isURL( URL ) ) {
 							$( event.target ).removeClass('isNotValid').addClass('isValid');
 						} else {
 							$( event.target ).removeClass('isValid').addClass('isNotValid');
 						}
-		
+
 					});
 
 					if ( ! _.isUndefined( BP_Nouveau.media ) &&
@@ -1073,7 +1086,15 @@ window.bp = window.bp || {};
 									emojibtn_click: function () {
 										$( '#message_content' )[0].emojioneArea.hidePicker();
 										bp.Nouveau.Messages.mediumEditor.checkContentChanged();
-									}
+									},
+
+									picker_show: function () {
+										$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+									},
+	
+									picker_hide: function () {
+										$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+									},
 								}
 							}
 						);
@@ -1208,6 +1229,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							if ( ! jQuery( '.message-media-error-popup' ).length) {
@@ -1399,6 +1422,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							if ( ! jQuery( '.document-error-popup' ).length) {
@@ -1609,6 +1634,8 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
 							$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button closeModalErrorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
@@ -2422,7 +2449,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( this.model.get( 'message_content' ) === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'video' ) !== 'undefined' && this.model.get( 'video' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
-					this.model.set( 'message_content', '&nbsp;', { silent: true } );
+					this.model.set( 'message_content', '', { silent: true } );
 				}
 
 				// Set meta.
@@ -3411,7 +3438,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( content === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'video' ) !== 'undefined' && this.model.get( 'video' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
-					content = '&nbsp;';
+					content = '';
 				}
 
 				this.model.set(

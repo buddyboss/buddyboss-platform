@@ -13,10 +13,10 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() &
 	<div class="bb-media-actions-wrap album-actions-wrap">
 		<h2 class="bb-title"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></h2>
 		<?php
-		if ( bp_is_profile_albums_support_enabled() ) {
+		if ( ( bp_is_group() && bp_is_group_albums_support_enabled() ) || bp_is_profile_albums_support_enabled() ) {
 			?>
 			<div class="bb-media-actions">
-				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-l bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
 			</div>
 			<?php
 		}
@@ -24,7 +24,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() &
 	</div>
 
 	<?php
-	if ( bp_is_profile_albums_support_enabled() ) {
+	if ( ( bp_is_group() && bp_is_group_albums_support_enabled() ) || bp_is_profile_albums_support_enabled() ) {
 		bp_get_template_part( 'media/create-album' );
 	}
 } else {
