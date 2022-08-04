@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-22 06:39:43+00:00\n"
+"POT-Creation-Date: 2022-08-04 11:09:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -608,15 +608,15 @@ msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:600
-#: bp-activity/bp-activity-filters.php:2484
-#: bp-activity/bp-activity-filters.php:2518
+#: bp-activity/bp-activity-filters.php:2479
+#: bp-activity/bp-activity-filters.php:2513
 msgid " Read more"
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:604
-#: bp-activity/bp-activity-filters.php:2458
-#: bp-activity/bp-activity-filters.php:2482
-#: bp-activity/bp-activity-filters.php:2516
+#: bp-activity/bp-activity-filters.php:2453
+#: bp-activity/bp-activity-filters.php:2477
+#: bp-activity/bp-activity-filters.php:2511
 #: bp-activity/classes/class-bp-activity-notification.php:190
 #: bp-activity/classes/class-bp-activity-notification.php:205
 #: bp-forums/classes/class-bp-forums-notification.php:379
@@ -631,32 +631,32 @@ msgstr ""
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:670
+#: bp-activity/bp-activity-filters.php:665
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:939
+#: bp-activity/bp-activity-filters.php:934
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1734
-#: bp-activity/bp-activity-filters.php:1937
-#: bp-activity/bp-activity-filters.php:2105
-#: bp-activity/bp-activity-filters.php:2308
-#: bp-activity/bp-activity-filters.php:2724
-#: bp-activity/bp-activity-filters.php:2930
+#: bp-activity/bp-activity-filters.php:1729
+#: bp-activity/bp-activity-filters.php:1932
+#: bp-activity/bp-activity-filters.php:2100
+#: bp-activity/bp-activity-filters.php:2303
+#: bp-activity/bp-activity-filters.php:2719
+#: bp-activity/bp-activity-filters.php:2925
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1731
 #: cli/components/activity.php:763
 #. translators: 1. User Link. 2. Group link.
 msgid "%1$s posted an update in the group %2$s"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3089
+#: bp-activity/bp-activity-filters.php:3084
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:765
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3090 bp-blogs/bp-blogs-template.php:1163
+#: bp-activity/bp-activity-filters.php:3085 bp-blogs/bp-blogs-template.php:1163
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
 #: bp-core/gdpr/class-bp-settings-export.php:72
@@ -689,7 +689,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3091 bp-blogs/bp-blogs-template.php:1171
+#: bp-activity/bp-activity-filters.php:3086 bp-blogs/bp-blogs-template.php:1171
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
 #: bp-core/gdpr/class-bp-settings-export.php:77
@@ -722,14 +722,14 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3102
+#: bp-activity/bp-activity-filters.php:3097
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:773
 #. translators: %s: users mention name.
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3107
-#: bp-activity/bp-activity-filters.php:3127 bp-forums/core/actions.php:364
+#: bp-activity/bp-activity-filters.php:3102
+#: bp-activity/bp-activity-filters.php:3122 bp-forums/core/actions.php:364
 #: bp-forums/core/actions.php:380 bp-friends/bp-friends-filters.php:401
 #: bp-friends/bp-friends-filters.php:417
 #: bp-groups/bp-groups-notifications.php:1345
@@ -742,8 +742,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3114
-#: bp-activity/bp-activity-filters.php:3134 bp-forums/core/actions.php:370
+#: bp-activity/bp-activity-filters.php:3109
+#: bp-activity/bp-activity-filters.php:3129 bp-forums/core/actions.php:370
 #: bp-forums/core/actions.php:386 bp-friends/bp-friends-filters.php:407
 #: bp-friends/bp-friends-filters.php:423
 #: bp-groups/bp-groups-notifications.php:1351
@@ -756,19 +756,19 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3122
+#: bp-activity/bp-activity-filters.php:3117
 #: bp-core/gdpr/class-bp-settings-export.php:157
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:788
 msgid "A member replies to an update or comment you've posted"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3255
+#: bp-activity/bp-activity-filters.php:3250
 #: bp-activity/classes/class-bp-activity-notification.php:179
 #: bp-members/classes/class-bp-members-mentions-notification.php:187
 msgid "comment"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3267
+#: bp-activity/bp-activity-filters.php:3262
 #: bp-activity/bp-activity-functions.php:4154
 msgid "View Comment"
 msgstr ""
