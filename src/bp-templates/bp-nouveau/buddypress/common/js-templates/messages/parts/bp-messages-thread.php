@@ -22,7 +22,7 @@
 	var include_you = other_recipients.length >= 2;
 	var first_four = _.first(other_recipients, 4);
 
-	if (first_four.length == 0) {
+	if ( first_four.length == 0 ) {
 		include_you = true;
 	}
 
@@ -38,14 +38,14 @@
 	var action_include_you = action_other_recipients.length >= 2;
 	var action_first_three = _.first(action_other_recipients, 3);
 
-	if (action_first_three.length == 0) {
+	if ( action_first_three.length == 0 ) {
 		action_include_you = true;
 	}
 
 	var total_action_member_count = data.action_recipients.count - 1;
 
 	var read_unread_action = 'unread';
-	if (data.unread) {
+	if ( data.unread ) {
 		read_unread_action = 'read';
 	}
 	#>
@@ -57,7 +57,7 @@
 		<ul class="bb_more_options_list message_action__list" data-bp-thread-id="{{ data.id }}">
 			<li class="{{ read_unread_action }}">
 				<a data-bp-action="{{ read_unread_action }}" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>">
-					<# if (data.unread) { #>
+					<# if ( data.unread ) { #>
 						<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>
 					<# } else { #>
 						<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>
@@ -92,7 +92,7 @@
 					<li class="reported_thread">
 						<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 					</li>
-				<# } else if( action_other_recipients.length == 1 && true == action_other_recipients[0].can_be_blocked ) { #>
+				<# } else if ( action_other_recipients.length == 1 && true == action_other_recipients[0].can_be_blocked ) { #>
 					<li class="report_thread">
 						<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
 					</li>
@@ -125,14 +125,14 @@
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
-				if( data.avatars.length == 2 ) { #>
+				if ( data.avatars.length == 2 ) { #>
 					<div class="thread-multiple-avatar">
 				<# } #>
 					<img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/>
-					<# if( data.avatars[1] ) { #>
+					<# if ( data.avatars[1] ) { #>
 						<img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/>
 					<# }
-				if( data.avatars.length == 2 ) { #>
+				if ( data.avatars.length == 2 ) { #>
 					</div>
 				<# } #>
 			<# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
