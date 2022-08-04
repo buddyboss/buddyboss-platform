@@ -161,8 +161,9 @@ class BP_Core_Friends_Widget extends WP_Widget {
 					<li class="vcard">
 						<div class="item-avatar">
 							<a href="<?php bp_member_permalink(); ?>" class="bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-								<?php bp_member_avatar(); ?>
 								<?php
+								bp_member_avatar();
+
 								if ( function_exists( 'bb_current_user_status' ) ) {
 									bb_current_user_status( bp_get_member_user_id() );
 								} else {
