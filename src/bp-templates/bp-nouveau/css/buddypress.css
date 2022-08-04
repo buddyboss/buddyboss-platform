@@ -9617,6 +9617,14 @@ div.profile_completion_wrap .progress_text_wrap {
   opacity: 0.9;
 }
 
+#buddypress .bp-messages-container .message_action__list li.notification_preferences a:before {
+  content: "\e86d";
+}
+
+#buddypress .bp-messages-container .message_action__list li.email_preferences a:before {
+  content: "\ee62";
+}
+
 #buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(2) .message_action__list,
 #buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(3) .message_action__list,
 #buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:last-child .message_action__list {
@@ -10038,8 +10046,16 @@ input#send-to-input {
 }
 
 .messages-wrapper #subnav #compose-personal-li {
-  margin-left: auto;
   margin-right: 10px;
+}
+
+.messages-wrapper #subnav #compose-action-personal-li {
+  display: flex;
+  margin: 0 20px 5px auto;
+}
+
+.messages-wrapper #subnav #compose-action-personal-li > a {
+  font-size: 0;
 }
 
 #inbox {
@@ -10236,12 +10252,6 @@ input#send-to-input {
 }
 
 .bp-messages-content-wrapper .dropzone {
-  height: calc(100% - 145px);
-  left: 0;
-  margin: 0;
-}
-
-.bp-messages-content-wrapper .dropzone {
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -10250,15 +10260,14 @@ input#send-to-input {
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
-  position: absolute;
-  top: 0;
+  position: static;
   z-index: 11;
   background: rgba(255, 255, 255, 0.99);
   height: calc(100% - 245px);
   width: 100%;
   left: 0;
   border-radius: 4px;
-  padding: 20px;
+  max-height: 240px;
   overflow: auto;
 }
 

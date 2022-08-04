@@ -149,6 +149,11 @@ window.bp = window.bp || {};
 				function( event ) {
 					event.preventDefault();
 
+					// Do nothing if it's dropdown
+					if( $( event.currentTarget ).data( 'action' ) == 'more_options' ) {
+						return;
+					}
+
 					var view_id = $( event.target ).prop( 'id' );
 
 					// Remove the editor to be sure it will be added dynamically later.
@@ -245,6 +250,7 @@ window.bp = window.bp || {};
 				if ( _.isUndefined( feedback.get( 'view' ).model.attributes.type ) || 'notice' !== feedback.get( 'view' ).model.attributes.type ) {
 					feedback.get( 'view' ).remove();
 					$( '.bp-messages-content-wrapper' ).removeClass( 'has_info' );
+					$( '.bp-messages-content' ).removeClass( 'has_info' );
 					$( '.bp-messages-nav-panel' ).removeClass( 'has_info' );
 				}
 			}
@@ -276,6 +282,29 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
+		},
+
+		displayComposeFeedback: function( message, type ) {
+			var feedback;
+
+			// Make sure to remove the feedbacks.
+			this.removeFeedback();
+
+			if ( ! message ) {
+				return;
+			}
+
+			feedback = new bp.Views.Feedback(
+				{
+					value: message,
+					type:  type || 'info'
+				}
+			);
+
+			this.views.add( { id: 'feedback', view: feedback } );
+			feedback.inject( '.compose-feedback' );
+
+			$( '.bp-messages-content' ).addClass( 'has_info' );
 		},
 
 		displaySendMessageFeedback: function( message, type ) {
@@ -375,6 +404,8 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
+
+			$( '.bp-messages-content').prepend( '<div class="compose-feedback"></div>' );
 
 			// show compose message screen.
 			$( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
@@ -2922,7 +2953,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					bp.Nouveau.Messages.displayFeedback( feedback, 'error' );
+					bp.Nouveau.Messages.displayComposeFeedback( feedback, 'error' );
 					return;
 				}
 
@@ -3079,6 +3110,9 @@ window.bp = window.bp || {};
 
 								thread.set( { excerpt: response.message.excerpt } );
 								thread.set( { sender_name: response.message.sender_name } );
+								if ( 'undefined' !== typeof response.message.display_date_list ) {
+									thread.set( { display_date: response.message.display_date_list } );
+								}
 								updatedThread = thread;
 								bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
 								return;
