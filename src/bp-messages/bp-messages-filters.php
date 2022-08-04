@@ -917,10 +917,10 @@ function bb_messages_compose_action_sub_nav() {
 		</a>
 		<ul class="bb_more_options_list message_action__list">
 			<li class="notification_preferences">
-				<a href="#" data-action="more_options">Notification preferences</a>
+				<a href="#" data-action="more_options"><?php esc_html_e( 'Notification preferences', 'buddyboss' ); ?></a>
 			</li>
 			<li class="email_preferences">
-				<a href="#" data-action="more_options">Email Preferences</a>
+				<a href="#" data-action="more_options"><?php esc_html_e( 'Email Preferences', 'buddyboss' ); ?></a>
 			</li>
 		</ul>
 	</div>
