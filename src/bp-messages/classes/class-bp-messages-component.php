@@ -246,7 +246,7 @@ class BP_Messages_Component extends BP_Component {
 		// Show certain screens only if the current user is the displayed user.
 		if ( bp_is_my_profile() ) {
 
-			if ( bp_is_user_messages() ) {
+			if ( bp_is_user_messages() && bp_is_active( 'notifications' ) ) {
 				// Show "Actions" on the logged-in user's profile only.
 				$sub_nav[] = array(
 					'name'            => __( 'Actions', 'buddyboss' ),

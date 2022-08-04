@@ -910,20 +910,32 @@ add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' 
  * @return void
  */
 function bb_messages_compose_action_sub_nav() {
-	?>
-	<div class="bb_more_options message-action-options">
-		<a href="#" class="bb_more_options_action" data-action="more_options">
-			<i class="bb-icon-f bb-icon-ellipsis-h"></i>
-		</a>
-		<ul class="bb_more_options_list message_action__list">
-			<li class="notification_preferences">
-				<a href="#" data-action="more_options"><?php esc_html_e( 'Notification preferences', 'buddyboss' ); ?></a>
-			</li>
-			<li class="email_preferences">
-				<a href="#" data-action="more_options"><?php esc_html_e( 'Email Preferences', 'buddyboss' ); ?></a>
-			</li>
-		</ul>
-	</div>
-	<?php
+
+	if ( bp_is_user_messages() && bp_is_active( 'notifications' ) ) {
+		?>
+		<div class="bb_more_options message-action-options">
+			<a href="#" class="bb_more_options_action" data-action="more_options">
+				<i class="bb-icon-f bb-icon-ellipsis-h"></i>
+			</a>
+			<ul class="bb_more_options_list message_action__list">
+				<?php
+				if ( function_exists( 'bb_enabled_legacy_email_preference' ) && false === bb_enabled_legacy_email_preference() ) {
+					?>
+					<li class="notification_preferences">
+						<a href="#" data-action="more_options"><?php esc_html_e( 'Notification preferences', 'buddyboss' ); ?></a>
+					</li>
+					<?php
+				} else {
+					?>
+					<li class="email_preferences">
+						<a href="#" data-action="more_options"><?php esc_html_e( 'Email Preferences', 'buddyboss' ); ?></a>
+					</li>
+					<?php
+				}
+				?>
+			</ul>
+		</div>
+				<?php
+	}
 }
 add_action( 'bb_nouveau_after_nav_link_compose-action', 'bb_messages_compose_action_sub_nav' );
