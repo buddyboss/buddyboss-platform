@@ -9075,6 +9075,10 @@ div.profile_completion_wrap .progress_text_wrap {
   display: inline-block;
 }
 
+.bp-messages-content .thread-participants #view_more_members .participants-name {
+  font-size: 16px;
+}
+
 .bp-messages-content time {
   color: #737373;
   font-size: 12px;

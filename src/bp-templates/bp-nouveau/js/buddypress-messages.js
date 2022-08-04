@@ -1711,7 +1711,6 @@ window.bp = window.bp || {};
 
 				// self.$el.find( '#messages-post-media-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
-				$( '#messages-post-media-uploader' ).trigger( 'click' );
 			}
 
 		}
@@ -1916,7 +1915,6 @@ window.bp = window.bp || {};
 
 				// self.$el.find( '#messages-post-document-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
-				$( '#messages-post-document-uploader' ).trigger( 'click' );
 			}
 
 		}
@@ -2134,7 +2132,6 @@ window.bp = window.bp || {};
 
 				// self.$el.find( '#messages-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
-				$( '#messages-post-video-uploader' ).trigger( 'click' );
 			}
 
 		}
@@ -2432,6 +2429,7 @@ window.bp = window.bp || {};
 				this.closeVideoSelector();
 				var event = new Event( 'messages_media_toggle' );
 				document.dispatchEvent( event );
+				$( '#messages-post-media-uploader' ).trigger( 'click' );
 				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
@@ -2442,6 +2440,7 @@ window.bp = window.bp || {};
 				this.closeVideoSelector();
 				var documentEvent = new Event( 'messages_document_toggle' );
 				document.dispatchEvent( documentEvent );
+				$( '#messages-post-document-uploader' ).trigger( 'click' );
 				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
@@ -2452,6 +2451,7 @@ window.bp = window.bp || {};
 				this.closeDocumentSelector();
 				var event = new Event( 'messages_video_toggle' );
 				document.dispatchEvent( event );
+				$( '#messages-post-video-uploader' ).trigger( 'click' );
 				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
