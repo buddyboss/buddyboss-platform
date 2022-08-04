@@ -116,6 +116,12 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
+			array(
+				'messages_left_join_members_list' => array(
+					'function' => 'bb_nouveau_ajax_left_join_members_list',
+					'nopriv'   => false,
+				),
+			),
 
 		);
 
@@ -2494,10 +2500,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						$content = sprintf( __( '<p class="joined">Left <strong>%s</strong>, along with <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ), bp_core_get_user_displayname( $left_users[1]['user_id'] ) );
 					} else if ( 2 < count( $left_users ) ) {
 						unset($left_users[0]);
-						$left_members = array_map(function($user){
-							return bp_core_get_user_displayname( $user['user_id'] );
-						}, $left_users);
-						$content = sprintf( __( '<p class="joined">Left <strong>%s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%s">%d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $left_members ), count($left_users) );
+						$content = sprintf( __( '<p class="joined">Left <strong>%s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%d" data-message-id="%d" data-message-type="left" data-action="bp_view_others" ><strong>%d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_message_id, $bp_get_the_thread_message_id, count($left_users) );
+						if( 5 > count( $left_users ) ) {
+							$left_members = array_map(function($user){
+								return bp_core_get_user_displayname( $user['user_id'] );
+							}, $left_users);
+							$content = sprintf( __( '<p class="joined">Left <strong>%s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%s">%d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $left_members ), count($left_users) );
+						}
 					}
 				}
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
@@ -2517,10 +2526,14 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						$content = sprintf( __( '<p class="joined">Joined <strong>%s</strong>, along with <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ), bp_core_get_user_displayname( $joined_users[1]['user_id'] ) );
 					} else if ( 2 < count( $joined_users ) ) {
 						unset($joined_users[0]);
-						$joined_members = array_map(function($user){
-							return bp_core_get_user_displayname( $user['user_id'] );
-						}, $joined_users);
-						$content = sprintf( __( '<p class="joined">Joined <strong>%s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%s">%d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count($joined_users) );
+						$content = sprintf( __( '<p class="joined">Joined <strong>%s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%d" data-message-id="%d" data-message-type="joined" data-action="bp_view_others" ><strong>%d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_message_id, $bp_get_the_thread_message_id, count($joined_users) );
+						if( 5 > count( $joined_users ) ) {
+							$joined_members = array_map(function($user){
+								return bp_core_get_user_displayname( $user['user_id'] );
+							}, $joined_users);
+							$content = sprintf( __( '<p class="joined">Joined <strong>%s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%s">%d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count($joined_users) );
+						}
+						
 					}
 				}
 			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
@@ -2579,10 +2592,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						$content = sprintf( __( '<p class="joined">Left <strong>%s</strong>, along with <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ), bp_core_get_user_displayname( $left_users[1]['user_id'] ) );
 					} else if ( 2 < count( $left_users ) ) {
 						unset($left_users[0]);
-						$left_members = array_map(function($user){
-							return bp_core_get_user_displayname( $user['user_id'] );
-						}, $left_users);
-						$content = sprintf( __( '<p class="joined">Left <strong>%s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%s">%d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ',  $left_members) , count($left_users) );
+						$content = sprintf( __( '<p class="joined">Left <strong>%s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%d" data-message-id="%d" data-message-type="left" data-action="bp_view_others" ><strong>%d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_message_id, $bp_get_the_thread_message_id, count($left_users) );
+						if( 5 > count( $left_users ) ) {
+							$left_members = array_map(function($user){
+								return bp_core_get_user_displayname( $user['user_id'] );
+							}, $left_users);
+							$content = sprintf( __( '<p class="joined">Left <strong>%s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%s">%d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ',  $left_members) , count($left_users) );
+						}
 					}
 				}
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
@@ -2602,10 +2618,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						$content = sprintf( __( '<p class="joined">Joined <strong>%s</strong>, along with <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ), bp_core_get_user_displayname( $joined_users[1]['user_id'] ) );
 					} else if ( 2 < count( $joined_users ) ) {
 						unset($joined_users[0]);
-						$joined_members = array_map(function($user){
-							return bp_core_get_user_displayname( $user['user_id'] );
-						}, $joined_users);
-						$content = sprintf( __( '<p class="joined">Joined <strong>%s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%s">%d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count($joined_users) );
+						$content = sprintf( __( '<p class="joined">Joined <strong>%s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%d" data-message-id="%d" data-message-type="joined" data-action="bp_view_others" ><strong>%d others</strong></a></p>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_message_id, $bp_get_the_thread_message_id, count($joined_users) );
+						if( 5 > count( $joined_users ) ) {
+							$joined_members = array_map(function($user){
+								return bp_core_get_user_displayname( $user['user_id'] );
+							}, $joined_users);
+							$content = sprintf( __( '<p class="joined">Joined <strong>%s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%s">%d others</strong></p>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count($joined_users) );
+						}
 					}
 				}
 			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
@@ -3200,6 +3219,75 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 			<?php
 		}
 		?>
+		<?php
+	}
+	$html .= ob_get_contents();
+	ob_end_clean();
+	wp_send_json_success(
+		array(
+			'content' => $html,
+			'type'    => 'success',
+		)
+	);
+}
+
+/**
+ * Function which get left/join members list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string|Object A JSON object containing html with success data.
+ */
+function bb_nouveau_ajax_left_join_members_list() {
+	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+	if ( ! isset( $post_data['message_id'] ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_left_join_members_list', esc_html__( 'Missing message id.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+	if ( ! isset( $post_data['message_type'] ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_left_join_members_list', esc_html__( 'Missing message type.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+	$html    = '';
+	
+	if ( 'joined' === $post_data['message_type'] ) {
+		$results = bp_messages_get_meta( $post_data['message_id'], 'group_message_group_joined_users' );
+	} else {
+		$results = bp_messages_get_meta( $post_data['message_id'], 'group_message_group_left_users' );
+	}
+	ob_start();
+	if ( is_array( $results ) ) {
+		unset($results[0]);
+		?>
+		<div class="bb-report-type-wrp">
+			<?php
+			foreach ( $results as $recipient ) {
+				$avatar    = esc_url(
+					bp_core_fetch_avatar(
+						array(
+							'item_id' => $recipient['user_id'],
+							'object'  => 'user',
+							'type'    => 'thumb',
+							'width'   => BP_AVATAR_THUMB_WIDTH,
+							'height'  => BP_AVATAR_THUMB_HEIGHT,
+							'html'    => false,
+						)
+					)
+				);
+				$user_name = bp_core_get_user_displayname( $recipient['user_id'] );
+				?>
+				<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
+					<div class="user-avatar">
+						<a href="<?php echo bp_core_get_user_domain( $recipient->user_id ); ?>"><img src="<?php echo $avatar; ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
+					</div>
+					<div class="user-name">
+						<a href="<?php echo bp_core_get_user_domain( $recipient->user_id ); ?>"><?php echo esc_html( $user_name ); ?></a>
+					</div>
+				</div>
+				<?php
+			}
+			?>
+		</div>
 		<?php
 	}
 	$html .= ob_get_contents();
