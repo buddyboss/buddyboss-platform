@@ -1600,7 +1600,7 @@ function bb_is_last_message_group_join_message( $thread_id, $user_id ) {
 		return false;
 	}
 
-	$last_message    = BP_Messages_Thread::get_last_message( $thread_id );
+	$last_message    = BP_Messages_Thread::get_last_message( $thread_id, true );
 	$is_join_message = bp_messages_get_meta( $last_message->id, 'group_message_group_joined' );
 	if( 'yes' === $is_join_message ) {
 		$joined_user       = array( 'user_id' => $user_id, 'time' =>  bp_core_current_time() );
@@ -1631,7 +1631,7 @@ function bb_is_last_message_group_left_message( $thread_id, $user_id ) {
 		return false;
 	}
 
-	$last_message    = BP_Messages_Thread::get_last_message( $thread_id );
+	$last_message    = BP_Messages_Thread::get_last_message( $thread_id, true );
 	$is_left_message = bp_messages_get_meta( $last_message->id, 'group_message_group_left' );
 	if( 'yes' === $is_left_message ) {
 		$left_user       = array( 'user_id' => $user_id, 'time' =>  bp_core_current_time() );
