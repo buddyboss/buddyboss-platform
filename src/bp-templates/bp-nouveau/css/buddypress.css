@@ -3982,6 +3982,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 0 !important;
 }
 
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-info,
