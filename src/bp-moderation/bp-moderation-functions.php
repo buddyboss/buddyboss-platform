@@ -174,6 +174,7 @@ function bp_moderation_get_hidden_user_ids() {
 	$args         = array(
 		'in_types'          => BP_Moderation_Members::$moderation_type,
 		'update_meta_cache' => false,
+		'blocked_only'      => true,
 		'filter_query'      => array(
 			'relation' => 'OR',
 			array(
@@ -271,7 +272,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
-	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
+	$is_reported = ( BP_Moderation_Members::$moderation_type === $item_type ) ? bp_moderation_user_blocked_report_exist( $item_sub_id, $item_sub_type ) : bp_moderation_report_exist( $item_sub_id, $item_sub_type );
 
 	if ( $is_reported ) {
 		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
@@ -339,6 +340,28 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 }
 
 /**
+ * Function to Check member reported/blocked by current usr or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $item_id          Item id.
+ * @param string $item_type        Item type.
+ * @param int    $blocking_user_id The ID for the user who blocked user.
+ *
+ * @return bool
+ */
+function bp_moderation_user_blocked_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
+	$response = false;
+
+	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
+		$blocked_user = BP_Moderation::check_moderation_user_block_exist( $item_id, $item_type, $blocking_user_id, true );
+		$response     = ( ! empty( $blocked_user ) ) ? true : false;
+	}
+
+	return $response;
+}
+
+/**
  * Check whether a user has been marked as a blocked by current user.
  *
  * @since BuddyBoss 1.5.6
@@ -353,7 +376,7 @@ function bp_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
 		return false;
 	}
 
-	return bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type, $blocking_user_id );
+	return bp_moderation_user_blocked_report_exist( $user_id, BP_Moderation_Members::$moderation_type, $blocking_user_id );
 }
 
 /**
