@@ -10292,14 +10292,16 @@ input#send-to-input {
 }
 
 .bp-messages-search-form #user_messages_search_reset {
+  font-size: 13px;
   color: #767676;
   background-color: transparent;
   border: 0;
   padding: 0;
-  position: absolute;
-  top: 7px;
-  left: 12px;
   opacity: 0.4;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
 }
 
 .bp-messages-search-form #user_messages_search_reset:hover {

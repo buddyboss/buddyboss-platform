@@ -1347,14 +1347,16 @@ input#send-to-input {
 }
 
 .bp-messages-search-form #user_messages_search_reset {
+	font-size: 13px;
 	color: $light-text;
 	background-color: transparent;
 	border: 0;
 	padding: 0;
-	position: absolute;
-	top: 7px;
-	right: 12px;
 	opacity: 0.4;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 12px;
 
 	&:hover {
 		opacity: 1;
