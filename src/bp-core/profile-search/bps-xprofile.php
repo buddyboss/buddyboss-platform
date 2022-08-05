@@ -26,12 +26,12 @@ function bp_ps_xprofile_setup( $fields ) {
 		while ( bp_profile_groups() ) {
 			bp_the_profile_group();
 			$group_name = str_replace( '&amp;', '&', stripslashes( $group->name ) );
-
 			while ( bp_profile_fields() ) {
 				bp_the_profile_field();
 				$f = new stdClass();
 
 				$f->group       = $group_name;
+				$f->group_id	= $group->id;
 				$f->id          = $field->id;
 				$f->code        = 'field_' . $field->id;
 				$f->name        = str_replace( '&amp;', '&', stripslashes( $field->name ) );
@@ -39,7 +39,6 @@ function bp_ps_xprofile_setup( $fields ) {
 				$f->description = str_replace( '&amp;', '&', stripslashes( $field->description ) );
 				$f->description = $f->description;
 				$f->type        = $field->type;
-
 				$f->format         = bp_ps_xprofile_format( $field->type, $field->id );
 				$f->search         = 'bp_ps_xprofile_search';
 				$f->sort_directory = 'bp_ps_xprofile_sort_directory';
@@ -87,7 +86,12 @@ function bp_ps_xprofile_search( $f ) {
 		'where'  => array(),
 	);
 	$sql['select']            = "SELECT user_id FROM {$bp->profile->table_name_data}";
-	$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
+
+	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
+		$sql['where']['field_id'] = $wpdb->prepare( "field_id IN ( SELECT f.id FROM {$bp->profile->table_name_fields} as f, {$bp->profile->table_name_meta} as m where f.id = m.object_id AND group_id = %d AND f.type = %s AND m.meta_key = '_cloned_from' AND m.meta_value = %d )", $f->group_id, $f->type, $f->id );
+	} else {
+		$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
+	}
 
 	switch ( $filter ) {
 		case 'integer_range':
@@ -638,7 +642,7 @@ function bp_ps_search_dummy_fields( $f ) {
 /**
  * Registers Email Address field in frontend and backend in advance search.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.5
  *
  * @param array $fields Fields array.
  *
@@ -667,7 +671,7 @@ add_filter( 'bp_ps_add_fields', 'bb_ps_email_setup' );
 /**
  * Fetch the users based on selected value in advance search.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.5
  *
  * @param object $f Field object.
  *
