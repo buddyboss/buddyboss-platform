@@ -3981,6 +3981,24 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   margin-bottom: 0;
 }
 
+.activity-link-preview-container .activity-link-preview-info p.activity-link-preview-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: break-spaces;
+}
+
+.activity-link-preview-container .activity-link-preview-info .activity-link-preview-excerpt p {
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0 !important;
+}
+
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-info,
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-image-cover {
   position: relative;
@@ -4029,23 +4047,10 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 }
 
 .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-image-cover {
-  height: 380px;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-}
-
-@media screen and (max-width: 900px) {
-  .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-image-cover {
-    height: 30vh;
-  }
-}
-
-@media screen and (max-width: 680px) {
-  .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-image-cover {
-    height: 200px;
-  }
 }
 
 .activity-url-scrapper-container #activity-url-scrapper-img-holder .activity-link-preview-image .activity-link-preview-icons {
@@ -23991,14 +23996,14 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
-  margin: 0 -3px;
+  margin: 0;
   align-items: flex-start;
   position: relative;
 }
 
 .forums-video-wrap .bb-activity-video-elem,
 .bb-activity-video-wrap .bb-activity-video-elem {
-  padding: 3px;
+  padding: 3px 0;
 }
 
 .forums-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader,
