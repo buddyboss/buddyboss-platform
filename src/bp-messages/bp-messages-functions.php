@@ -1588,6 +1588,74 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 }
 
 /**
+ * Check last message is a joined group message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id    Message Thread ID.
+ * @param int $user_id      User ID.
+ *
+ * @return boolean  Is last message joined group message.
+ */
+function bb_is_last_message_group_join_message( $thread_id, $user_id ) {
+
+	global $wpdb, $bp;
+
+	if ( empty( $thread_id ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	$last_message    = BP_Messages_Thread::get_last_message( $thread_id, true );
+	$is_join_message = bp_messages_get_meta( $last_message->id, 'group_message_group_joined' );
+	if ( 'yes' === $is_join_message ) {
+		$joined_user       = array(
+			'user_id' => $user_id,
+			'time'    => bp_core_current_time(),
+		);
+		$joined_users      = bp_messages_get_meta( $last_message->id, 'group_message_group_joined_users' );
+		$joined_users_data = empty( $joined_users ) ? array( $joined_user ) : array_merge( $joined_users, array( $joined_user ) );
+		bp_messages_update_meta( $last_message->id, 'group_message_group_joined_users', $joined_users_data );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 1 where thread_id = %d and unread_count = 0", $thread_id ) );
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Check last message is a left group message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id    Message Thread ID.
+ * @param int $user_id      User ID.
+ *
+ * @return boolean  Is last message left group message.
+ */
+function bb_is_last_message_group_left_message( $thread_id, $user_id ) {
+
+	global $wpdb, $bp;
+
+	if ( empty( $thread_id ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	$last_message    = BP_Messages_Thread::get_last_message( $thread_id, true );
+	$is_left_message = bp_messages_get_meta( $last_message->id, 'group_message_group_left' );
+	if ( 'yes' === $is_left_message ) {
+		$left_user       = array(
+			'user_id' => $user_id,
+			'time'    => bp_core_current_time(),
+		);
+		$left_users      = bp_messages_get_meta( $last_message->id, 'group_message_group_left_users' );
+		$left_users_data = empty( $left_users ) ? array( $left_user ) : array_merge( $left_users, array( $left_user ) );
+		bp_messages_update_meta( $last_message->id, 'group_message_group_left_users', $left_users_data );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 1 where thread_id = %d and unread_count = 0", $thread_id ) );
+		return true;
+	}
+	return false;
+}
+
+/*
  * Change friend button arguments.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1658,3 +1726,4 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
 
 	return $meta_query;
 }
+
