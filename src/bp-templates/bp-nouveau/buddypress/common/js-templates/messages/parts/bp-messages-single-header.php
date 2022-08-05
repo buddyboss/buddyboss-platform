@@ -22,7 +22,7 @@
 
 	var first_four = _.first(other_recipients, 4);
 
-	if (first_four.length == 0) {
+	if ( first_four.length == 0 ) {
 		include_you = true;
 	}
 	#>
@@ -30,14 +30,14 @@
 	<header class="single-message-thread-header">
 		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
-			if( data.avatars.length == 2 ) { #>
+			if ( data.avatars.length == 2 ) { #>
 			<div class="thread-multiple-avatar">
 				<# } #>
 				<a href="{{{data.avatars[0].link}}}"><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
-				<# if( data.avatars[1] ) { #>
+				<# if ( data.avatars[1] ) { #>
 				<a href="{{{data.avatars[1].link}}}"><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
 				<# }
-				if( data.avatars.length == 2 ) { #>
+				if ( data.avatars.length == 2 ) { #>
 			</div>
 			<# } #>
 			<# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
@@ -47,7 +47,7 @@
 			<span class="recipients-count">{{other_recipients.length}}</span>
 			<a href=""><img class="avatar" src="{{{data.sender_avatar}}}" alt="{{data.sender_name}}" /></a>
 			<# } else { #>
-			<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
+			<# var recipient = _.first(other_recipients) ? _.first(other_recipients) : current_user; #>
 			<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
 			<a href="{{{recipient.user_link}}}"><img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" /></a>
 			<# } #>
@@ -58,7 +58,7 @@
 		<dl class="thread-participants">
 			<dt>
 				<# if ( data.group_name.length > 1 && data.is_group_thread ) { #>
-                    <span class="participants-name">
+					<span class="participants-name">
 						<# if ( data.is_deleted ) { #>
 							{{data.group_name}}
 						<# } else { #>
@@ -67,27 +67,27 @@
 					</span>
 				<# } else { #>
 
-                <# if ( data.toOthers ) { #>
-                <a href="#message-members-list" id="view_more_members" class="view_more_members view_more_members_cls"
-                   data-thread-id="{{data.id}}"
-                   data-tp="{{data.recipients.total_pages}}"
-                   data-tc="{{data.recipients.count}}"
-                   data-pp="{{data.recipients.per_page}}"
-                   data-cp="1"
-                   data-action="bp_view_more">
-                <# } #>
+				<# if ( data.toOthers ) { #>
+				<a href="#message-members-list" id="view_more_members" class="view_more_members view_more_members_cls"
+				   data-thread-id="{{data.id}}"
+				   data-tp="{{data.recipients.total_pages}}"
+				   data-tc="{{data.recipients.count}}"
+				   data-pp="{{data.recipients.per_page}}"
+				   data-cp="1"
+				   data-action="bp_view_more">
+				<# } #>
 
 					<# for ( i in first_four ) { #>
 						<span class="participants-name">
 							<# if ( other_recipients[i].is_deleted ) { #>
 								{{other_recipients[i].user_name}}
 							<# } else { #>
-								<# if( other_recipients[i].user_link ) { #>
-                                    <# if ( ! data.toOthers || data.toOthers == '' ) { #>
-									    <a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
-                                    <# } else { #>
-                                        {{other_recipients[i].user_name}}
-                                    <# } #>
+								<# if ( other_recipients[i].user_link ) { #>
+									<# if ( ! data.toOthers || data.toOthers == '' ) { #>
+										<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
+									<# } else { #>
+										{{other_recipients[i].user_name}}
+									<# } #>
 								<# } else { #>
 									{{other_recipients[i].user_name}}
 								<# } #>
@@ -103,16 +103,27 @@
 						<span class="num-name">{{data.toOthers}}</span>
 					<# } #>
 
-                    <# if ( data.toOthers ) { #>
-                    </a>
-                    <# } #>
+					<# if ( data.toOthers ) { #>
+					</a>
+					<# } #>
 
 				<# } #>
 			</dt>
 
-			<dd>
-				<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
-			</dd>
+			<#
+			if ( 1 < data.group_name.length && data.is_group_thread ) {
+				if ( 1 < data.group_joined_date.length ) {
+				#>
+				<dd>
+					<span class="thread-date"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> {{data.group_joined_date}}</span>
+				</dd>
+				<#
+				}
+			} else { #>
+				<dd>
+					<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
+				</dd>
+			<# } #>
 		</dl>
 		<# } #>
 		<div class="actions">
@@ -137,17 +148,17 @@
 									</a>
 								</li>
 							<# }
-                            if ( data.group_name.length > 1 && data.is_group_thread ) { #>
-                            <li class="view_members">
-                                <a href="#message-members-list" id="view_more_members" class="view_more_members"
-                                   data-thread-id="{{data.id}}"
-                                   data-tp="{{data.recipients.total_pages}}"
-                                   data-tc="{{data.recipients.count}}"
-                                   data-pp="{{data.recipients.per_page}}"
-                                   data-cp="1"
-                                   data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
-                            </li>
-                            <# } #>
+							if ( data.group_name.length > 1 && data.is_group_thread ) { #>
+							<li class="view_members">
+								<a href="#message-members-list" id="view_more_members" class="view_more_members"
+								   data-thread-id="{{data.id}}"
+								   data-tp="{{data.recipients.total_pages}}"
+								   data-tc="{{data.recipients.count}}"
+								   data-pp="{{data.recipients.per_page}}"
+								   data-cp="1"
+								   data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
+							</li>
+							<# } #>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
 								<# if ( data.recipients.count > 1 ) { #>
 									<li class="report_thread">
@@ -157,7 +168,7 @@
 									<li class="reported_thread">
 										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 									</li>
-								<# } else if( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
 									<li class="report_thread">
 										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
 									</li>
@@ -222,7 +233,7 @@
 									<li class="reported_thread">
 										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 									</li>
-								<# } else if( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
 								<li class="report_thread">
 									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
 								</li>
@@ -265,18 +276,18 @@
 			<?php
 		}
 		?>
-        <div id="message-members-list" class="message-members-list member-popup mfp-hide">
-            <div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-                <div class="modal-wrapper">
-                    <div class="modal-container">
-                        <header class="bb-model-header">
-                            <h4><?php esc_html_e( 'Members', 'buddyboss' ); ?></h4>
-                            <button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
-                        </header>
-                        <div id="members_list"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div id="message-members-list" class="message-members-list member-popup mfp-hide">
+			<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+				<div class="modal-wrapper">
+					<div class="modal-container">
+						<header class="bb-model-header">
+							<h4><?php esc_html_e( 'Members', 'buddyboss' ); ?></h4>
+							<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
+						</header>
+						<div id="members_list"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</header>
 </script>

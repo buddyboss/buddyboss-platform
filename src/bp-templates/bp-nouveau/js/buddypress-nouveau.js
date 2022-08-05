@@ -2990,7 +2990,7 @@ window.bp = window.bp || {};
 			} else {
 				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible open' );
 				$( 'body' ).removeClass( 'user_more_option_open' );
-				$( '.thread-item' ).removeClass( 'optionsOpen' );
+				$( '.optionsOpen' ).removeClass( 'optionsOpen' );
 			}
 		},
 

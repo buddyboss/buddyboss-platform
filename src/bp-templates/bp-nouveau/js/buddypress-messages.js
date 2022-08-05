@@ -147,6 +147,12 @@ window.bp = window.bp || {};
 			$( '#subnav a' ).on(
 				'click',
 				function( event ) {
+
+					// Do nothing if it's dropdown
+					if( $( event.currentTarget ).data( 'action' ) == 'more_options' ) {
+						return event;
+					}
+
 					event.preventDefault();
 
 					var view_id = $( event.target ).prop( 'id' );
@@ -188,6 +194,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
 			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
+			$( document ).on( 'click', '#compose-action-personal-li .bb_more_options_action', this.toggleMessageCompose );
 
 		},
 
@@ -201,6 +208,10 @@ window.bp = window.bp || {};
 				jQuery( this ).find( '#load_more_rl' ).trigger( 'click' );
 			}
 
+		},
+
+		toggleMessageCompose: function ( e ) {
+			$( e.currentTarget ).closest( '#compose-action-personal-li' ).toggleClass( 'optionsOpen' );
 		},
 
 		closeModalPopup: function ( event ) {
@@ -245,6 +256,7 @@ window.bp = window.bp || {};
 				if ( _.isUndefined( feedback.get( 'view' ).model.attributes.type ) || 'notice' !== feedback.get( 'view' ).model.attributes.type ) {
 					feedback.get( 'view' ).remove();
 					$( '.bp-messages-content-wrapper' ).removeClass( 'has_info' );
+					$( '.bp-messages-content' ).removeClass( 'has_info' );
 					$( '.bp-messages-nav-panel' ).removeClass( 'has_info' );
 				}
 			}
@@ -276,6 +288,29 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bp-messages-content-wrapper' ).addClass( 'has_info' );
+		},
+
+		displayComposeFeedback: function( message, type ) {
+			var feedback;
+
+			// Make sure to remove the feedbacks.
+			this.removeFeedback();
+
+			if ( ! message ) {
+				return;
+			}
+
+			feedback = new bp.Views.Feedback(
+				{
+					value: message,
+					type:  type || 'info'
+				}
+			);
+
+			this.views.add( { id: 'feedback', view: feedback } );
+			feedback.inject( '.compose-feedback' );
+
+			$( '.bp-messages-content' ).addClass( 'has_info' );
 		},
 
 		displaySendMessageFeedback: function( message, type ) {
@@ -375,6 +410,8 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
+
+			$( '.bp-messages-content').prepend( '<div class="compose-feedback"></div>' );
 
 			// show compose message screen.
 			$( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
@@ -1674,7 +1711,6 @@ window.bp = window.bp || {};
 
 				// self.$el.find( '#messages-post-media-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
-				$( '#messages-post-media-uploader' ).trigger( 'click' );
 			}
 
 		}
@@ -1879,7 +1915,6 @@ window.bp = window.bp || {};
 
 				// self.$el.find( '#messages-post-document-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
-				$( '#messages-post-document-uploader' ).trigger( 'click' );
 			}
 
 		}
@@ -2097,7 +2132,6 @@ window.bp = window.bp || {};
 
 				// self.$el.find( '#messages-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
-				$( '#messages-post-video-uploader' ).trigger( 'click' );
 			}
 
 		}
@@ -2395,6 +2429,7 @@ window.bp = window.bp || {};
 				this.closeVideoSelector();
 				var event = new Event( 'messages_media_toggle' );
 				document.dispatchEvent( event );
+				$( '#messages-post-media-uploader' ).trigger( 'click' );
 				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
@@ -2405,6 +2440,7 @@ window.bp = window.bp || {};
 				this.closeVideoSelector();
 				var documentEvent = new Event( 'messages_document_toggle' );
 				document.dispatchEvent( documentEvent );
+				$( '#messages-post-document-uploader' ).trigger( 'click' );
 				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
@@ -2415,6 +2451,7 @@ window.bp = window.bp || {};
 				this.closeDocumentSelector();
 				var event = new Event( 'messages_video_toggle' );
 				document.dispatchEvent( event );
+				$( '#messages-post-video-uploader' ).trigger( 'click' );
 				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
@@ -2922,7 +2959,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					bp.Nouveau.Messages.displayFeedback( feedback, 'error' );
+					bp.Nouveau.Messages.displayComposeFeedback( feedback, 'error' );
 					return;
 				}
 
@@ -3079,6 +3116,9 @@ window.bp = window.bp || {};
 
 								thread.set( { excerpt: response.message.excerpt } );
 								thread.set( { sender_name: response.message.sender_name } );
+								if ( 'undefined' !== typeof response.message.display_date_list ) {
+									thread.set( { display_date: response.message.display_date_list } );
+								}
 								updatedThread = thread;
 								bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
 								return;
@@ -3754,9 +3794,14 @@ window.bp = window.bp || {};
 				var errorHtml = '<div class="message_send_error"><span class="info-text-error-message">' + messagePusherData.notdeliveredtext + '</span> <a data-action="' + messagePusherData.actions + '" data-hash="' + messagePusherData.hash + '" class="retry-message" href="javascript:void(0);">' + messagePusherData.tryagaintext + '</a> | <a data-hash="' + messagePusherData.hash + '"  class="remove-message" href="javascript:void(0);">' + messagePusherData.canceltext + '</a></div>';
 				if ( model ) {
 					var content = model.attributes.content;
-					var $s = $( content ).find( '.message_send_sending' ).remove().end();
-					model.set( 'className', model.attributes.className + ' error' );
-					model.set( 'content', $s.html() + ' ' + errorHtml );
+					if ( content.search( 'message_send_error' ) === -1 ) {
+						var $s = $( content );
+						if ( $s.find( '.message_send_sending' ).length ) {
+							$s = $s.find( '.message_send_sending' ).remove().end();
+						}
+						model.set( 'className', model.attributes.className + ' error' );
+						model.set( 'content', $s.html() + ' ' + errorHtml );
+					}
 					this.collection.sync( 'update' );
 				}
 			},

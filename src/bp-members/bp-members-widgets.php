@@ -109,7 +109,7 @@ function bp_core_ajax_widget_members() {
 							$current_time = current_time( 'mysql', 1 );
 							$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
 							if ( $diff < 300 ) { // 5 minutes  =  5 * 60
-								echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>' ) );
+								echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', $members_template->member->id ) );
 							}
 						}
 						?>
