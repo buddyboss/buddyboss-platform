@@ -103,6 +103,16 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		),
 	);
 
+	if ( bp_is_activity_directory() ) {
+		$activity_params['screen'] = 'directory';
+	} elseif ( bp_is_single_activity() ) {
+		$activity_params['screen'] = 'single';
+	} elseif ( bp_is_user_activity() ) {
+		$activity_params['screen'] = 'member';
+	} else {
+		$activity_params['screen'] = '';
+	}
+
 	$user_displayname = bp_get_loggedin_user_fullname();
 
 	if ( buddypress()->avatar->show_avatars ) {
