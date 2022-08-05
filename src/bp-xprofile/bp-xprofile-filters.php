@@ -1349,10 +1349,10 @@ function bb_xprofile_repeater_field_value_repair_callback() {
 	global $wpdb;
 
 	$bp        = buddypress();
-	$cache_key = 'bb_repeater_group_ids';
+	$cache_key = 'bb_xprofile_repeater_group_ids';
 
-	if ( isset( $group_field_ids[ $cache_key ] ) ) {
-		$repeater_groups = $group_field_ids[ $cache_key ];
+	if ( isset( $repeater_groups_ids[ $cache_key ] ) ) {
+		$repeater_groups = $repeater_groups_ids[ $cache_key ];
 	} else {
 		$repeater_groups = $wpdb->get_col(
 			$wpdb->prepare(
@@ -1436,7 +1436,11 @@ function bb_xprofile_repeater_field_value_repair_callback() {
 				$offset ++;
 			}
 
-			$records_updated = sprintf( __( '%s user repeater field values updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+			$records_updated = sprintf(
+			/* translators: %s: User fields count. */
+				__( '%s user repeater field values updated successfully.', 'buddyboss' ),
+				bp_core_number_format( $offset )
+			);
 
 			return array(
 				'status'  => 'running',
