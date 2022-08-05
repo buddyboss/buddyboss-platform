@@ -43,6 +43,10 @@
 		#view_more_members {
 			font-size: 13px;
 			display: inline-block;
+
+			.participants-name {
+				font-size: 16px;
+			}
 		}
 	}
 
@@ -99,6 +103,15 @@
 
 		&:hover .thread-to:after {
 			display: none;
+		}
+
+		&.thread-item,
+		&.thread-item:hover {
+
+			.message-thread-options {
+				display: none;
+			}
+
 		}
 	}
 
@@ -619,6 +632,14 @@
 		opacity: 0.9;
 	}
 
+	li.notification_preferences a:before {
+		content: "\e86d";
+	}
+
+	li.email_preferences a:before {
+		content: "\ee62";
+	}
+
 }
 
 #buddypress .bp-messages-container .thread-item:nth-child(3) {
@@ -758,11 +779,16 @@ input#send-to-input {
 
 	a {
 		margin-top: 0;
-
-		.bp-messages-container.bp-compose-message & {
-			display: none;
-		}
 	}
+
+	.bp-messages-container #subnav & {
+		margin-left: 20px;
+	}
+
+	.bp-messages-container.bp-compose-message & {
+		display: none;
+	}
+
 }
 
 #bp-message-load-more:not(.loading),
@@ -1075,9 +1101,22 @@ input#send-to-input {
 	}
 }
 
-.messages-wrapper #subnav #compose-personal-li {
-	margin-left: auto;
-	margin-right: 10px;
+.messages-wrapper #subnav {
+
+	#compose-personal-li {
+		margin-right: 10px;
+	}
+
+	#compose-action-personal-li {
+		display: flex;
+		margin: 0 0 0 auto;
+
+		> a {
+			font-size: 0;
+		}
+
+	}
+
 }
 
 #inbox {
@@ -1285,23 +1324,16 @@ input#send-to-input {
 	height: calc(69vh + 130px);
 
 	.dropzone {
-		height: calc(100% - 145px);
-		left: 0;
-		margin: 0;
-	}
-
-	.dropzone {
 
 		@include center-vert();
-		position: absolute;
-		top: 0;
+		position: static;
 		z-index: 11;
 		background: rgba(255, 255, 255, 0.99);
 		height: calc(100% - 245px);
 		width: 100%;
 		left: 0;
 		border-radius: 4px;
-		padding: 20px;
+		max-height: 240px;
 		overflow: auto;
 
 		.dz-default.dz-message {
@@ -1316,14 +1348,16 @@ input#send-to-input {
 }
 
 .bp-messages-search-form #user_messages_search_reset {
+	font-size: 13px;
 	color: $light-text;
 	background-color: transparent;
 	border: 0;
 	padding: 0;
-	position: absolute;
-	top: 7px;
-	right: 12px;
 	opacity: 0.4;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 12px;
 
 	&:hover {
 		opacity: 1;

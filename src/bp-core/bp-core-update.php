@@ -371,8 +371,8 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18751 ) {
+			bb_update_to_2_1_0();
 			bb_update_to_1_9_5();
-			bb_update_to_2_0_6();
 		}
 	}
 
@@ -1900,7 +1900,7 @@ function bb_update_to_1_9_5() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_2_0_6() {
+function bb_update_to_2_1_0() {
 	if ( bp_is_active( 'groups' ) ) {
 		bp_core_install_groups();
 	}

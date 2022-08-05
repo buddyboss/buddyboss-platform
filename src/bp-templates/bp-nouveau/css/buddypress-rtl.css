@@ -9633,6 +9633,10 @@ div.profile_completion_wrap .progress_text_wrap {
   display: inline-block;
 }
 
+.bp-messages-content .thread-participants #view_more_members .participants-name {
+  font-size: 16px;
+}
+
 .bp-messages-content time {
   color: #737373;
   font-size: 12px;
@@ -9684,6 +9688,10 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 #message-threads .can-not-send-msg:hover .thread-to:after {
+  display: none;
+}
+
+#message-threads .can-not-send-msg.thread-item .message-thread-options, #message-threads .can-not-send-msg.thread-item:hover .message-thread-options {
   display: none;
 }
 
@@ -10175,6 +10183,14 @@ div.profile_completion_wrap .progress_text_wrap {
   opacity: 0.9;
 }
 
+#buddypress .bp-messages-container .message_action__list li.notification_preferences a:before {
+  content: "\e86d";
+}
+
+#buddypress .bp-messages-container .message_action__list li.email_preferences a:before {
+  content: "\ee62";
+}
+
 #buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(2) .message_action__list,
 #buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:nth-last-child(3) .message_action__list,
 #buddypress .bp-messages-container .thread-item:nth-child(3) ~ .thread-item:last-child .message_action__list {
@@ -10293,7 +10309,11 @@ input#send-to-input {
   margin-top: 0;
 }
 
-.bp-messages-container.bp-compose-message #compose-personal-li a {
+.bp-messages-container #subnav #compose-personal-li {
+  margin-right: 20px;
+}
+
+.bp-messages-container.bp-compose-message #compose-personal-li {
   display: none;
 }
 
@@ -10596,8 +10616,16 @@ input#send-to-input {
 }
 
 .messages-wrapper #subnav #compose-personal-li {
-  margin-right: auto;
   margin-left: 10px;
+}
+
+.messages-wrapper #subnav #compose-action-personal-li {
+  display: flex;
+  margin: 0 auto 0 0;
+}
+
+.messages-wrapper #subnav #compose-action-personal-li > a {
+  font-size: 0;
 }
 
 #inbox {
@@ -10795,12 +10823,6 @@ input#send-to-input {
 }
 
 .bp-messages-content-wrapper .dropzone {
-  height: calc(100% - 145px);
-  right: 0;
-  margin: 0;
-}
-
-.bp-messages-content-wrapper .dropzone {
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -10809,15 +10831,14 @@ input#send-to-input {
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
-  position: absolute;
-  top: 0;
+  position: static;
   z-index: 11;
   background: rgba(255, 255, 255, 0.99);
   height: calc(100% - 245px);
   width: 100%;
   right: 0;
   border-radius: 4px;
-  padding: 20px;
+  max-height: 240px;
   overflow: auto;
 }
 
@@ -10830,14 +10851,16 @@ input#send-to-input {
 }
 
 .bp-messages-search-form #user_messages_search_reset {
+  font-size: 13px;
   color: #767676;
   background-color: transparent;
   border: 0;
   padding: 0;
-  position: absolute;
-  top: 7px;
-  left: 12px;
   opacity: 0.4;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
 }
 
 .bp-messages-search-form #user_messages_search_reset:hover {

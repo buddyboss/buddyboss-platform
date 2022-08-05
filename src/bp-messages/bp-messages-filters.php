@@ -794,7 +794,6 @@ function bb_check_is_message_content_empty( $validated_content, $content, $post 
 function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	$params['current']['message_user_id']           = bp_loggedin_user_id();
-	$params['compose_message_typing_string']        = __( 'Start typing to find members', 'buddyboss' );
 
 	return $params;
 }
@@ -911,10 +910,27 @@ add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' 
  * @return void
  */
 function bb_messages_compose_action_sub_nav() {
-	?>
-	<div class="bb-subnav-action-preferences">
 
-	</div>
-	<?php
+	if ( bp_is_user_messages() && bp_is_active( 'notifications' ) ) {
+		?>
+		<div class="bb_more_options message-action-options">
+			<a href="#" class="bb_more_options_action" data-action="more_options">
+				<i class="bb-icon-f bb-icon-ellipsis-h"></i>
+			</a>
+			<ul class="bb_more_options_list message_action__list">
+				<?php
+				$settings_slug = function_exists( 'bp_get_settings_slug' ) ? bp_get_settings_slug() : 'settings';
+				$settings_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . $settings_slug . '/notifications/';
+				$class         = function_exists( 'bb_enabled_legacy_email_preference' ) && false === bb_enabled_legacy_email_preference() ? 'notification_preferences' : 'email_preferences';
+				$title         = function_exists( 'bb_enabled_legacy_email_preference' ) && false === bb_enabled_legacy_email_preference() ? __( 'Notification Preferences', 'buddyboss' ) : __( 'Email Preferences', 'buddyboss' );
+				?>
+				<li class="<?php echo esc_attr( $class ); ?>">
+					<a href="<?php echo esc_url( $settings_link ); ?>" data-action="more_options"><?php echo esc_html( $title ); ?></a>
+				</li>
+
+			</ul>
+		</div>
+		<?php
+	}
 }
 add_action( 'bb_nouveau_after_nav_link_compose-action', 'bb_messages_compose_action_sub_nav' );

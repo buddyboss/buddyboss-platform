@@ -22,7 +22,7 @@
 
 	var first_four = _.first(other_recipients, 4);
 
-	if (first_four.length == 0) {
+	if ( first_four.length == 0 ) {
 		include_you = true;
 	}
 	#>
@@ -30,14 +30,14 @@
 	<header class="single-message-thread-header">
 		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
-			if( data.avatars.length == 2 ) { #>
+			if ( data.avatars.length == 2 ) { #>
 			<div class="thread-multiple-avatar">
 				<# } #>
 				<a href="{{{data.avatars[0].link}}}"><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
-				<# if( data.avatars[1] ) { #>
+				<# if ( data.avatars[1] ) { #>
 				<a href="{{{data.avatars[1].link}}}"><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
 				<# }
-				if( data.avatars.length == 2 ) { #>
+				if ( data.avatars.length == 2 ) { #>
 			</div>
 			<# } #>
 			<# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
@@ -47,7 +47,7 @@
 			<span class="recipients-count">{{other_recipients.length}}</span>
 			<a href=""><img class="avatar" src="{{{data.sender_avatar}}}" alt="{{data.sender_name}}" /></a>
 			<# } else { #>
-			<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
+			<# var recipient = _.first(other_recipients) ? _.first(other_recipients) : current_user; #>
 			<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
 			<a href="{{{recipient.user_link}}}"><img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" /></a>
 			<# } #>
@@ -82,7 +82,7 @@
 							<# if ( other_recipients[i].is_deleted ) { #>
 								{{other_recipients[i].user_name}}
 							<# } else { #>
-								<# if( other_recipients[i].user_link ) { #>
+								<# if ( other_recipients[i].user_link ) { #>
 									<# if ( ! data.toOthers || data.toOthers == '' ) { #>
 										<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
 									<# } else { #>
@@ -168,7 +168,7 @@
 									<li class="reported_thread">
 										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 									</li>
-								<# } else if( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
 									<li class="report_thread">
 										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
 									</li>
@@ -233,7 +233,7 @@
 									<li class="reported_thread">
 										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 									</li>
-								<# } else if( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
 								<li class="report_thread">
 									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
 								</li>
