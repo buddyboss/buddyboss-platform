@@ -1241,8 +1241,14 @@ function bp_private_network_template_redirect() {
 
 				if ( ! empty( $exclude_arr_url ) && is_array( $exclude_arr_url ) ) {
 					foreach ( $exclude_arr_url as $url ) {
-						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
-						$un_trailing_slash_it_url = untrailingslashit( $url );
+						$check_is_full_url = filter_var( $url, FILTER_VALIDATE_URL );
+
+						// Remove the trailingslash if it is full url.
+						if ( true === $check_is_full_url ) {
+							$un_trailing_slash_it_url = untrailingslashit( $url );
+						} else {
+							$un_trailing_slash_it_url = $url;
+						}
 
 						// Match request URL(actual/actual with slash) to public URL.
 						if ( ! empty( $actual_url ) && ! empty( $actual_slash_url ) && ! empty( $un_trailing_slash_it_url ) && ( ( $actual_url === $un_trailing_slash_it_url ) || ( $actual_slash_url === $un_trailing_slash_it_url ) ) ) {
