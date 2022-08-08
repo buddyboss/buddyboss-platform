@@ -109,6 +109,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$activity_params['screen'] = 'single';
 	} elseif ( bp_is_user_activity() ) {
 		$activity_params['screen'] = 'member';
+	} elseif ( bp_is_group_activity() ) {
+		$activity_params['screen'] = 'group';
 	} else {
 		$activity_params['screen'] = '';
 	}
