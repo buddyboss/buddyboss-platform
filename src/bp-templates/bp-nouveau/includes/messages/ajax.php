@@ -3303,10 +3303,10 @@ function bb_nouveau_ajax_left_join_members_list() {
 				?>
 				<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
 					<div class="user-avatar">
-						<a href="<?php echo esc_attr( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><img src="<?php echo esc_attr( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
+						<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
 					</div>
 					<div class="user-name">
-						<a href="<?php echo esc_attr( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><?php echo esc_html( $user_name ); ?></a>
+						<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><?php echo esc_html( $user_name ); ?></a>
 					</div>
 				</div>
 				<?php
