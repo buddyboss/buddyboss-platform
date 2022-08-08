@@ -3951,10 +3951,10 @@ window.bp = window.bp || {};
 					loadMore.views.view.$el.find( 'button' ).removeClass( 'loading' ).show();
 
 					this.firstLi = $( '#bp-message-thread-list>li:first-child' );
-
-					// add scroll event for the auto load messages without user having to click the button.
-					$( '#bp-message-thread-list' ).on( 'scroll', this.messages_scrolled );
 				}
+
+				// add scroll event for the auto load messages without user having to click the button.
+				$( '#bp-message-thread-list' ).on( 'scroll', this.messages_scrolled );
 
 				if ( ! this.views.get( '#bp-message-thread-header' ) ) {
 					this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
