@@ -1239,8 +1239,12 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	if ( ! empty( $avatars_user_ids ) ) {
 		$avatars_user_ids = array_reverse( $avatars_user_ids );
 		foreach ( (array) $avatars_user_ids as $avatar_user_id ) {
+
+			$is_suspended = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $avatar_user_id );
+			$is_blocked   = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $avatar_user_id );
+
 			$avatar_urls[] = array(
-				'url'  => esc_url(
+				'url'          => esc_url(
 					bp_core_fetch_avatar(
 						array(
 							'item_id' => $avatar_user_id,
@@ -1252,10 +1256,12 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 						)
 					)
 				),
-				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
-				'id'   => esc_attr( $avatar_user_id ),
-				'type' => 'user',
-				'link' => bp_core_get_user_domain( $avatar_user_id ),
+				'name'         => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
+				'id'           => esc_attr( $avatar_user_id ),
+				'type'         => 'user',
+				'link'         => bp_core_get_user_domain( $avatar_user_id ),
+				'is_suspended' => $is_suspended,
+				'is_blocked'   => $is_blocked,
 			);
 		}
 	}

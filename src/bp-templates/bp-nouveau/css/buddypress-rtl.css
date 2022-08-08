@@ -7060,6 +7060,11 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   z-index: 1;
 }
 
+.bp-user-blocked > .member-status,
+.bp-user-suspended > .member-status {
+  display: none !important;
+}
+
 #buddypress .members-list > li {
   min-width: 275px;
 }
@@ -10503,7 +10508,7 @@ input#send-to-input {
 }
 
 .bp-messages-content .bp-message-content_foot_note strong {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .bp-message-content-wrap .bp-message-content_foot_note {
