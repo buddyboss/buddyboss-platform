@@ -6494,6 +6494,11 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   z-index: 1;
 }
 
+.bp-user-blocked > .member-status,
+.bp-user-suspended > .member-status {
+  display: none !important;
+}
+
 #buddypress .members-list > li {
   min-width: 275px;
 }
