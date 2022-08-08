@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.0.1
 Requires PHP: 5.6.20
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,18 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.0.7 =
+* Notifications - Handled Activity comment auto-generated notification incorrect text issue
+* Forums - Handled small Forums widget issue shows wrong discussion count
+* Activity - Handled activity comment @mention issue gets converted into HTML markup on post
+* Media - Handled document upload double extension issue on document directory screen
+* Media - Handled symlink option gets enabled issue when activity settings updated
+* Media - Small improvement to fix console JS error when video popup is closed
+* Messages - Handled private messages right click and paste action issue, adds duplicate copies from the clipboard
+* Core - Icon Pack updated with latest icons
+* REST API - Handled get activity videos API endpoint issue
+* Compatibility - Handled 'GeoDirectory' broken listing layout compatibility issue
 
 = 2.0.6 =
 * Forums - Handled forum reply notification wrong pagination URL issue
