@@ -636,9 +636,10 @@ window.bp = window.bp || {};
 							queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
 						}
 
-						if ( object === 'activity' ) {
+						if ( object === 'activity' ) { // necessary for ajax cache.
 							queryData.user_id = parseInt( BP_Nouveau.activity.params.displayed_user_id ) !== 0 ? BP_Nouveau.activity.params.displayed_user_id : BP_Nouveau.activity.params.user_id;
 							queryData.screen = '' !== BP_Nouveau.activity.params.screen ? BP_Nouveau.activity.params.screen : '';
+							queryData.type = '' !== BP_Nouveau.activity.params.type ? BP_Nouveau.activity.params.type : '';
 						}
 
 						// Populate the object list.
@@ -1507,9 +1508,10 @@ window.bp = window.bp || {};
 				queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
 			}
 
-			if ( object === 'activity' ) {
+			if ( object === 'activity' ) { // necessary for ajax cache.
 				queryData.user_id = parseInt( BP_Nouveau.activity.params.displayed_user_id ) !== 0 ? BP_Nouveau.activity.params.displayed_user_id : BP_Nouveau.activity.params.user_id;
 				queryData.screen = '' !== BP_Nouveau.activity.params.screen ? BP_Nouveau.activity.params.screen : '';
+				queryData.type = '' !== BP_Nouveau.activity.params.type ? BP_Nouveau.activity.params.type : '';
 			}
 
 			self.objectRequest( queryData );
@@ -1586,9 +1588,10 @@ window.bp = window.bp || {};
 					template: template
 				};
 
-				if ( object === 'activity' ) {
+				if ( object === 'activity' ) { // necessary for ajax cache.
 					queryData.user_id = parseInt( BP_Nouveau.activity.params.displayed_user_id ) !== 0 ? BP_Nouveau.activity.params.displayed_user_id : BP_Nouveau.activity.params.user_id;
 					queryData.screen = '' !== BP_Nouveau.activity.params.screen ? BP_Nouveau.activity.params.screen : '';
+					queryData.type = '' !== BP_Nouveau.activity.params.type ? BP_Nouveau.activity.params.type : '';
 				}
 
 				self.objectRequest( queryData );
@@ -1645,9 +1648,10 @@ window.bp = window.bp || {};
 				group_type: $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val()
 			};
 
-			if ( object === 'activity' ) {
+			if ( object === 'activity' ) { // necessary for ajax cache.
 				queryData.user_id = parseInt( BP_Nouveau.activity.params.displayed_user_id ) !== 0 ? BP_Nouveau.activity.params.displayed_user_id : BP_Nouveau.activity.params.user_id;
 				queryData.screen = '' !== BP_Nouveau.activity.params.screen ? BP_Nouveau.activity.params.screen : '';
+				queryData.type = '' !== BP_Nouveau.activity.params.type ? BP_Nouveau.activity.params.type : '';
 			}
 
 			self.objectRequest( queryData );
@@ -1751,9 +1755,10 @@ window.bp = window.bp || {};
 				template: template
 			};
 
-			if ( object === 'activity' ) {
+			if ( object === 'activity' ) { // necessary for ajax cache.
 				queryData.user_id = parseInt( BP_Nouveau.activity.params.displayed_user_id ) !== 0 ? BP_Nouveau.activity.params.displayed_user_id : BP_Nouveau.activity.params.user_id;
 				queryData.screen = '' !== BP_Nouveau.activity.params.screen ? BP_Nouveau.activity.params.screen : '';
+				queryData.type = '' !== BP_Nouveau.activity.params.type ? BP_Nouveau.activity.params.type : '';
 			}
 
 			self.objectRequest( queryData );
@@ -2433,9 +2438,10 @@ window.bp = window.bp || {};
 				/* jshint ignore:end */
 			}
 
-			if ( object === 'activity' ) {
+			if ( object === 'activity' ) { // necessary for ajax cache.
 				queryData.user_id = parseInt( BP_Nouveau.activity.params.displayed_user_id ) !== 0 ? BP_Nouveau.activity.params.displayed_user_id : BP_Nouveau.activity.params.user_id;
 				queryData.screen = '' !== BP_Nouveau.activity.params.screen ? BP_Nouveau.activity.params.screen : '';
+				queryData.type = '' !== BP_Nouveau.activity.params.type ? BP_Nouveau.activity.params.type : '';
 			}
 
 			// Request the page.

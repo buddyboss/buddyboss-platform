@@ -407,8 +407,10 @@ window.bp = window.bp || {};
 					target              : '#buddypress [data-bp-list] ul.bp-list'
 				};
 
+				// necessary for ajax cache.
 				$data.user_id = ( parseInt( BP_Nouveau.activity.params.displayed_user_id ) !== 0 ? BP_Nouveau.activity.params.displayed_user_id : BP_Nouveau.activity.params.user_id );
 				$data.screen = '' !== BP_Nouveau.activity.params.screen ? BP_Nouveau.activity.params.screen : '';
+				$data.type = '' !== BP_Nouveau.activity.params.type ? BP_Nouveau.activity.params.type : '';
 
 				bp.Nouveau.objectRequest( $data ).done(
 					function( response ) {

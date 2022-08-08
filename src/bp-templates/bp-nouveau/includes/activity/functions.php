@@ -113,6 +113,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$activity_params['screen'] = '';
 	}
 
+	$activity_params['type'] = bp_current_action();
+
 	$user_displayname = bp_get_loggedin_user_fullname();
 
 	if ( buddypress()->avatar->show_avatars ) {
