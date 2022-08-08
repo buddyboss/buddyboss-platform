@@ -359,6 +359,9 @@ window.bp = window.bp || {};
 					activity_data.object = 'groups';
 				}
 			}
+			// Set link image index and confirm image index.
+			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
+			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
@@ -1257,6 +1260,7 @@ window.bp = window.bp || {};
 				privacy_modal: 'general',
 				edit_activity: false,
 				group_image: '',
+				link_image_index_save: '0',
 			}
 		}
 	);
@@ -2206,8 +2210,10 @@ window.bp = window.bp || {};
 				'click #activity-link-preview-button': 'toggleURLInput',
 				'click #activity-url-prevPicButton': 'prev',
 				'click #activity-url-nextPicButton': 'next',
-				'click #activity-link-preview-close-image': 'close',
-				'click #activity-close-link-suggestion': 'destroy'
+				'click #activity-link-preview-remove-image': 'close',
+				'click #activity-close-link-suggestion': 'destroy',
+				'click .icon-exchange': 'displayPrevNextButton',
+				'click #activity-link-preview-select-image': 'selectImageForPreview'
 			},
 
 			initialize: function () {
@@ -2225,6 +2231,13 @@ window.bp = window.bp || {};
 				}
 
 				this.$el.html( this.template( this.model.toJSON() ) );
+				// Show/Hide Preview Link image button.
+				if (
+					'undefined' !== typeof this.model.get( 'link_swap_image_button' ) &&
+					1 === this.model.get( 'link_swap_image_button' )
+				) {
+					this.displayNextPrevButtonView();
+				}
 
 				// if link embed is used then add class to container.
 				if ( this.model.get( 'link_embed' ) == true ) {
@@ -2273,7 +2286,8 @@ window.bp = window.bp || {};
 				this.model.set(
 					{
 						link_images: [],
-						link_image_index: 0
+						link_image_index: 0,
+						link_image_index_save: '0',
 					}
 				);
 			},
@@ -2294,13 +2308,38 @@ window.bp = window.bp || {};
 						link_title: '',
 						link_description: '',
 						link_url: '',
-						link_embed: false
+						link_embed: false,
+						link_swap_image_button: 0,
+						link_image_index_save: '0',
 					}
 				);
 				document.removeEventListener( 'activity_link_preview_open', this.open.bind( this ) );
 				document.removeEventListener( 'activity_link_preview_close', this.destroy.bind( this ) );
 
 				$( '#whats-new-attachments' ).addClass( 'empty' ).closest( '#whats-new-form' ).removeClass( 'focus-in--attm' );
+			},
+			
+			displayPrevNextButton: function () {
+				this.model.set( 'link_swap_image_button', 1 );
+				this.displayNextPrevButtonView();
+			},
+			
+			displayNextPrevButtonView: function () {
+				$('#activity-url-prevPicButton').show();
+				$('#activity-url-nextPicButton').show();
+				$('#activity-link-preview-select-image').show();
+				$('#icon-exchange').hide();
+				$('#activity-link-preview-remove-image').hide();
+			},
+			
+			selectImageForPreview: function () {
+				var imageIndex = this.model.get( 'link_image_index' );
+				this.model.set( 'link_image_index_save', imageIndex );
+				$('#icon-exchange').show();
+				$('#activity-link-preview-remove-image').show();
+				$('#activity-link-preview-select-image').hide();
+				$('#activity-url-prevPicButton').hide();
+				$('#activity-url-nextPicButton').hide();
 			}
 		}
 	);
@@ -2907,13 +2946,24 @@ window.bp = window.bp || {};
 				}
 
 				if ( response.error === '' ) {
+					var urlImages = response.images;
+					if (
+						true === self.options.activity.get( 'edit_activity' ) && 'undefined' === typeof self.options.activity.get( 'link_image_index_save' ) && '' === self.options.activity.get( 'link_image_index_save' )
+					) {
+						urlImages = '';
+					}
+					var urlImagesIndex = '';
+					if ( '' !== self.options.activity.get( 'link_image_index' ) ) {
+						urlImagesIndex =  parseInt( self.options.activity.get( 'link_image_index' ) );
+					}
 					self.options.activity.set(
 						{
 							link_success: true,
 							link_title: response.title,
 							link_description: response.description,
-							link_images: response.images,
-							link_image_index: 0,
+							link_images: urlImages,
+							link_image_index: urlImagesIndex,
+							link_image_index_save: self.options.activity.get( 'link_image_index_save' ),
 							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
 						}
 					);
@@ -4967,6 +5017,7 @@ window.bp = window.bp || {};
 					[
 						'link_images',
 						'link_image_index',
+						'link_image_index_save',
 						'link_success',
 						'link_error',
 						'link_error_msg',
@@ -4979,12 +5030,15 @@ window.bp = window.bp || {};
 				// Form link preview data to pass in request if available.
 				if ( self.model.get( 'link_success' ) ) {
 					var images = self.model.get( 'link_images' ),
-						index  = self.model.get( 'link_image_index' );
+						index  = self.model.get( 'link_image_index' ),
+						indexConfirm  = self.model.get( 'link_image_index_save' );
 					if ( images && images.length ) {
 						data = _.extend(
 							data,
 							{
-								'link_image': images[ index ]
+								'link_image': images[ indexConfirm ],
+								'link_image_index': index,
+								'link_image_index_save' : indexConfirm
 							}
 						);
 					}

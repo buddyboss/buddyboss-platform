@@ -4761,7 +4761,7 @@ function bp_core_parse_url( $url ) {
 			// Parse DOM to get Title
 			if ( empty( $title ) ) {
 				$nodes = $dom->getElementsByTagName( 'title' );
-				$title = $nodes->item( 0 )->nodeValue;
+				$title = $nodes && $nodes->length > 0 ? $nodes->item( 0 )->nodeValue : '';
 			}
 
 			// Parse DOM to get Meta Description
