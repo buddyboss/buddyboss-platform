@@ -187,7 +187,7 @@ window.bp = window.bp || {};
 			 * Pagination for message block list
 			 */
 
-			$( document ).on( 'click', '#view_more_members', this.messageMemberModel.bind( this ) );
+			$( document ).on( 'click', '#view_more_members, .view_other_members', this.messageMemberModel.bind( this ) );
 
 			// $( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
 			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member, .bb_more_options_list .mass-block-member', this.messageModeratorMemberList );
@@ -502,7 +502,7 @@ window.bp = window.bp || {};
 
 		messageMemberModel: function( e ) {
 			e.preventDefault();
-			var $this = $( e.target );
+			var $this   = $( e.currentTarget ).hasClass( 'view_other_members' ) ? $( e.currentTarget ) : $( e.target );
 			var current = $this.parents( '.thread-participants' ).find( '#view_more_members' );
 
 			if ( current.length == 0 ) {
@@ -510,8 +510,8 @@ window.bp = window.bp || {};
 			}
 
 			if ( current.length > 0 ) {
-				var currentHref  = current.attr( 'href' );
-				if( currentHref ) {
+				var currentHref = current.attr( 'href' );
+				if ( currentHref ) {
 					current.magnificPopup(
 						{
 							items: {
@@ -526,10 +526,9 @@ window.bp = window.bp || {};
 			}
 		},
 
-
 		messageMemberList: function ( e ) {
 			e.preventDefault();
-			var $this = $( e.target );
+			var $this   = $( e.currentTarget ).hasClass( 'view_other_members' ) ? $( e.currentTarget ) : $( e.target );
 			var current = $this.parents( '.thread-participants' ).find( '#view_more_members' );
 			if ( current.length == 0 ) {
 				current = $this;
@@ -537,6 +536,8 @@ window.bp = window.bp || {};
 			var postData = {
 				'page_no': current.attr( 'data-cp' ),
 				'thread_id': current.attr( 'data-thread-id' ),
+				'message_id': current.attr( 'data-message-id' ),
+				'message_type': current.attr( 'data-message-type' ),
 				'exclude_current_user': true,
 				'exclude_moderated_members': false,
 			};
@@ -546,7 +547,7 @@ window.bp = window.bp || {};
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
 					data: {
-						action: 'messages_moderated_recipient_list',
+						action: $this.hasClass( 'view_other_members' ) ? 'messages_left_join_members_list' : 'messages_moderated_recipient_list',
 						post_data: postData,
 					},
 					beforeSend: function () {
@@ -556,7 +557,7 @@ window.bp = window.bp || {};
 						if ( response.success && response.data && '' !== response.data.content ) {
 							if ( $( '#message-members-list #members_list' ).length > 0 ) {
 								$( '#message-members-list #members_list' ).html( response.data.content ).addClass( 'is_not_empty' );
-								if( !$( '#message-members-list' ).hasClass( 'event-triggered' ) ) {
+								if ( ! $( '#message-members-list' ).hasClass( 'event-triggered' ) ) {
 									$( '#message-members-list .modal-container' ).on( 'scroll', bp.Nouveau.Messages.triggerLoadMore );
 									$( '#message-members-list .modal-container' ).addClass( 'event-triggered' );
 								}
