@@ -366,7 +366,7 @@ class BP_Messages_Thread {
 	 *
 	 * @return object|null
 	 */
-	public static function get_last_message( $thread_id ) {
+	public static function get_last_message( $thread_id, $include_join_left_message = false ) {
 
 		if ( empty( $thread_id ) ) {
 			return null;
@@ -380,14 +380,6 @@ class BP_Messages_Thread {
 				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					'relation' => 'AND',
 					array(
-						'key'     => 'group_message_group_joined',
-						'compare' => 'NOT EXISTS',
-					),
-					array(
-						'key'     => 'group_message_group_left',
-						'compare' => 'NOT EXISTS',
-					),
-					array(
 						'key'     => 'bp_messages_deleted',
 						'compare' => 'NOT EXISTS',
 					),
@@ -396,6 +388,16 @@ class BP_Messages_Thread {
 				'page'            => 1,
 				'count_total'     => false,
 			);
+			if ( false === $include_join_left_message ) {
+				$args['meta_query'][] = array(
+					'key'     => 'group_message_group_joined',
+					'compare' => 'NOT EXISTS',
+				);
+				$args['meta_query'][] = array(
+					'key'     => 'group_message_group_left',
+					'compare' => 'NOT EXISTS',
+				);
+			}
 		} else {
 			$args = array(
 				'include_threads' => $thread_id,
