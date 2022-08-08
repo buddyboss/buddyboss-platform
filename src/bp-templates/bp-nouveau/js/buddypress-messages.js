@@ -3746,6 +3746,9 @@ window.bp = window.bp || {};
 			firstFetch : true,
 			firstLi : true,
 			loadingFeedback: false,
+			splitDates: [],
+			singleMessages: [],
+			totalMessages: 0,
 
 			initialize: function() {
 				// Load Messages.
@@ -4030,7 +4033,42 @@ window.bp = window.bp || {};
 					options.at = 0;
 				}
 
+				if ( 0 === this.splitDates.length ) {
+					this.singleMessages.push( message );
+				}
+
+				// Increment the total messages.
+				this.totalMessages = this.totalMessages + 1;
+
+				// Add split divider when sent message date change.
+				var split_date = message.get( 'sent_split_date' );
+				if ( $.inArray( split_date, this.splitDates ) === -1 ) {
+					this.splitDates.push( message.get( 'sent_split_date' ) );
+
+					var last_message     = this.singleMessages[this.singleMessages.length - 1],
+						last_second_date = this.splitDates[this.splitDates.length - 2];
+
+					if ( ! _.isUndefined( last_second_date ) ) {
+						$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + last_message.get( 'sent_date' ) + '</div></li>' );
+					}
+
+					// Clear message variable.
+					this.singleMessages = [];
+				}
+
+				// Add messages to use split.
+				this.singleMessages.push( message );
+
 				this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ), options );
+
+				// Insert date split when appear thread start message.
+				if ( this.totalMessages === message.get( 'messages_count' ) ) {
+					var thread_start_message = this.singleMessages[ this.singleMessages.length - 1 ];
+
+					$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + thread_start_message.get( 'sent_date' ) + '</div></li>' );
+
+					this.singleMessages = [];
+				}
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();

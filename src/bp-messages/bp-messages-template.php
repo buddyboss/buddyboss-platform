@@ -2560,8 +2560,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	$newer_date_chunks = explode( '-', str_replace( ' ', '-', $newer_date ) );
 	$newer_date        = gmmktime( (int) $newer_time_chunks[1], (int) $newer_time_chunks[2], (int) $newer_time_chunks[3], (int) $newer_date_chunks[1], (int) $newer_date_chunks[2], (int) $newer_date_chunks[0] );
 
-	$start_week = bb_get_week_start_timestamp();
-	$end_week   = bb_get_week_end_timestamp();
+	$end_week = bb_get_week_start_timestamp( '-7 days' );
 
 	// Difference in seconds.
 	$since = $newer_date - $thread_start_date;
@@ -2607,7 +2606,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, 'M d' ) : bp_core_get_format_date( $old_start_date, 'M d, Y' );
 					break;
 				case WEEK_IN_SECONDS:
-					if ( $end_week >= $since ) {
+					if ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {
 						$output = bp_core_get_format_date( $old_start_date, 'M d' );
@@ -2616,7 +2615,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 				case DAY_IN_SECONDS:
 					if ( 1 == $count ) {
 						$output = __( 'Yesterday', 'buddyboss' );
-					} elseif ( $end_week >= $since ) {
+					} elseif ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {
 						$output = bp_core_get_format_date( $old_start_date, 'M d' );
