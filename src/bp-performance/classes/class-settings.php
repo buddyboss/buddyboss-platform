@@ -252,8 +252,8 @@ class Settings {
 
 		if ( wp_verify_nonce( $purge_nonce, 'bbapp_cache_purge' ) ) {
 
-			$group      = ( ! empty( $_GET['group'] ) ) ? bb_input_clean( wp_unslash( $_GET['group'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$components = ( ! empty( $_GET['component'] ) ) ? bb_input_clean( wp_unslash( $_GET['component'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$group      = ( ! empty( $_GET['group'] ) ) ? self::input_clean( wp_unslash( $_GET['group'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$components = ( ! empty( $_GET['component'] ) ) ? self::input_clean( wp_unslash( $_GET['component'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			/**
 			 * Handle group purge action.
@@ -273,6 +273,22 @@ class Settings {
 				wp_safe_redirect( $purge_url . '&cache_purge=1' );
 				exit();
 			}
+		}
+	}
+
+	/**
+	 * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
+	 * Non-scalar values are ignored.
+	 *
+	 * @param string|array $var Data to sanitize.
+	 *
+	 * @return string|array
+	 */
+	public static function input_clean( $var ) {
+		if ( is_array( $var ) ) {
+			return array_map( 'self::input_clean', $var );
+		} else {
+			return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 		}
 	}
 }
