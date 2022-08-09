@@ -22,6 +22,7 @@ add_filter( 'bp_get_activity_feed_item_description', 'bp_activity_filter_kses', 
 add_filter( 'bp_activity_content_before_save', 'bp_activity_filter_kses', 1 );
 add_filter( 'bp_activity_action_before_save', 'bp_activity_filter_kses', 1 );
 add_filter( 'bp_activity_latest_update_content', 'bp_activity_filter_kses', 1 );
+add_filter( 'bp_activity_comment_content', 'bp_activity_filter_kses', 1 );
 
 add_filter( 'bp_get_activity_action', 'force_balance_tags' );
 add_filter( 'bp_get_activity_content_body', 'force_balance_tags' );
@@ -100,6 +101,7 @@ add_filter( 'bp_activity_new_at_mention_permalink', 'bp_activity_new_at_mention_
 add_filter( 'pre_comment_content', 'bp_activity_at_name_filter' );
 add_filter( 'the_content', 'bp_activity_at_name_filter' );
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_at_name_filter' );
+add_filter( 'bp_activity_comment_content', 'bp_activity_at_name_filter' );
 
 add_filter( 'bp_get_activity_parent_content', 'bp_create_excerpt' );
 
@@ -247,6 +249,11 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_save_link_data( $activity ) {
 
+	// bail if the request is for privacy update.
+	if ( isset( $_POST['action'] ) && $_POST['action'] === 'activity_update_privacy' ) {
+		return;
+	}
+	
 	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
@@ -593,7 +600,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 
 	$excerpt_length = bp_activity_get_excerpt_length();
 
-	$args = wp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
+	$args = bp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
 	$excerpt = bp_create_excerpt( $text, $excerpt_length, $args );
@@ -803,6 +810,10 @@ add_filter( 'bp_get_activity_css_class', 'bp_activity_timestamp_class', 9, 1 );
  */
 function bp_activity_heartbeat_last_recorded( $response = array(), $data = array() ) {
 	if ( empty( $data['bp_activity_last_recorded'] ) ) {
+		return $response;
+	}
+
+	if ( ! bp_is_activity_heartbeat_active() ) {
 		return $response;
 	}
 
@@ -1343,7 +1354,7 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 
 	// members directory
 	if ( ! bp_is_user() && bp_is_members_directory() ) {
-		$qs_args = wp_parse_args( $qs );
+		$qs_args = bp_parse_args( $qs );
 		// check if members scope is following before manipulating.
 		if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
 			$qs .= '&include=' . bp_get_following_ids(
@@ -1704,7 +1715,7 @@ function bp_activity_media_add( $media ) {
 					/* translators: 1. User Link. 2. Group link. */
 						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
 						bp_core_get_userlink( $media->user_id ),
-						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>'
 					);
 					$activity_id = groups_record_activity( $args );
 				} else {
@@ -1905,7 +1916,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 						$args['item_id'] = $old_media->group_id;
 						$args['type']    = 'activity_update';
 						$current_group   = groups_get_group( $old_media->group_id );
-						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_media->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_media->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>' );
 						$activity_id     = groups_record_activity( $args );
 					} else {
 						$activity_id = bp_activity_post_update( $args );
@@ -2075,7 +2086,7 @@ function bp_activity_document_add( $document ) {
 					/* translators: 1. User Link. 2. Group link. */
 						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
 						bp_core_get_userlink( $document->user_id ),
-						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>'
 					);
 					$activity_id = groups_record_activity( $args );
 				} else {
@@ -2276,7 +2287,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 						$args['item_id'] = $old_document->group_id;
 						$args['type']    = 'activity_update';
 						$current_group   = groups_get_group( $old_document->group_id );
-						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>' );
 						$activity_id     = groups_record_activity( $args );
 					} else {
 						$activity_id = bp_activity_post_update( $args );
@@ -2421,6 +2432,11 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 			$content_img = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', '', $blog_post->ID );
 			$post_title  = sprintf( '<a class="bb-post-title-link" href="%s"><span class="bb-post-title">%s</span></a>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( $blog_post->post_title ) );
 			$content     = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( get_the_excerpt( $blog_post->ID ) ) ) );
+
+			if ( empty( $content ) ) {
+				$content = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
+			}
+
 			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
@@ -2477,11 +2493,15 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
-				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-				if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
-					$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
-					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+				if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
+					$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+					if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+						$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
+						$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+						$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+					}
+				} else {
+					$content = html_entity_decode( $comment->comment_content );
 				}
 			}
 		}
@@ -2603,11 +2623,11 @@ function bb_remove_discussion_comment_reply_button( $buttons, $activity_comment_
  * @return bool
  */
 function bb_check_is_activity_content_empty( $data ) {
-	if ( empty( $data['content'] ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
+	if ( empty( trim( wp_strip_all_tags( $data['content'] ) ) ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
 		return true;
-	} elseif ( empty( $data['content'] ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
+	} elseif ( empty( trim( wp_strip_all_tags( $data['content'] ) ) ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
 		return true;
-	} elseif ( ! empty( $data['content'] ) ) {
+	} elseif ( ! empty( trim( wp_strip_all_tags( $data['content'] ) ) ) ) {
 		return true;
 	} else {
 		return false;
@@ -2685,7 +2705,7 @@ function bp_activity_video_add( $video ) {
 						/* translators: 1. User Link. 2. Group link. */
 						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
 						bp_core_get_userlink( $video->user_id ),
-						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>'
 					);
 					$activity_id = groups_record_activity( $args );
 				} else {
@@ -2891,7 +2911,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 							/* translators: 1. User Link. 2. Group link. */
 							__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
 							bp_core_get_userlink( $old_video->user_id ),
-							'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+							'<a href="' . bp_get_group_permalink( $current_group ) . '">' . bp_get_group_name( $current_group ) . '</a>'
 						);
 
 						$activity_id = groups_record_activity( $args );
@@ -3191,6 +3211,12 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 				true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
 			)
 		) {
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $comment_user_id ) ) {
+				continue;
+			}
+
 			// Poster name.
 			$reply_author_name = bp_core_get_user_displayname( $comment_user_id );
 			$author_id         = $comment_user_id;
@@ -3232,3 +3258,27 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 }
 
 add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
+
+/**
+ * Fire an email when someone mentioned users into the blog post comment and post published from Rest API.
+ *
+ * @since BuddyBoss 2.0.1
+ *
+ * @param WP_Comment $comment WP_Comment class object.
+ *
+ * @return void
+ */
+function bb_rest_mention_post_type_comment( $comment ) {
+	// Bail if not a comment.
+	if (
+		empty( $comment )
+		|| ! $comment instanceof WP_Comment
+	) {
+		return;
+	}
+
+	bb_mention_post_type_comment( $comment->comment_ID, $comment->comment_approved );
+
+}
+
+add_action( 'rest_after_insert_comment', 'bb_rest_mention_post_type_comment', 10, 1 );

@@ -112,7 +112,7 @@ window.bp = window.bp || {};
 					return false;
 				}
 
-				$(event.currentTarget).append(' <i class="bb-icon bb-icon-loader animate-spin"></i>');
+				$(event.currentTarget).append(' <i class="bb-icon-l bb-icon-spinner animate-spin"></i>');
 
 				var curObj = $( this );
 				var id = curObj.attr( 'data-id' );
@@ -142,7 +142,7 @@ window.bp = window.bp || {};
 							}
 						});
 					} else {
-						$(event.currentTarget).find('.bb-icon-loader').remove();
+						$(event.currentTarget).find('.bb-icon-spinner').remove();
 						var msg = '';
 						if (response.data.message.errors.bp_moderation_missing_data) {
 							msg = response.data.message.errors.bp_moderation_missing_data;

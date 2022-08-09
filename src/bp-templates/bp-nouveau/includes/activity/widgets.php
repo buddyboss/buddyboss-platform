@@ -108,13 +108,49 @@ class BP_Latest_Activities extends WP_Widget {
 			$reset_activities_template = $GLOBALS['activities_template'];
 		}
 
+		$scope[] = 'public';
+
+		if ( bp_loggedin_user_id() ) {
+
+			$scope[] = 'just-me';				
+
+			if ( bp_activity_do_mentions() ) {
+				$scope[] = 'mentions';
+			}
+
+			if ( bp_is_active( 'friends' ) ) {
+				$scope[] = 'friends';
+			}
+
+			if ( bp_is_active( 'groups' ) ) {
+				$scope[] = 'groups';
+			}
+
+			if ( bp_is_activity_follow_active() ) {
+				$scope[] = 'following';
+			}
+
+			if ( bp_is_active( 'forums' ) ) {
+				$scope[] = 'forums';
+			}			
+		}
+	
+		if ( bp_loggedin_user_id() && bp_is_relevant_feed_enabled() ) {
+			$key = array_search( 'public', $scope, true );
+			if ( is_array( $scope ) && false !== $key ) {
+				unset( $scope[ $key ] );				
+			}
+		}
+
+		$scope = implode( ',', $scope );
+		
 		/**
 		 * Globalize the activity widget arguments.
 		 * @see bp_nouveau_activity_widget_query() to override
 		 */
 		$bp_nouveau->activity->widget_args = array(
 			'max'          => $max,
-			'scope'        => 'all',
+			'scope'        => $scope,
 			'user_id'      => 0,
 			'object'       => false,
 			'action'       => join( ',', $type ),
@@ -168,7 +204,7 @@ class BP_Latest_Activities extends WP_Widget {
 	 * @return string HTML output.
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array(
+		$instance = bp_parse_args( (array) $instance, array(
 			'title' => __( 'Latest updates', 'buddyboss' ),
 			'max'   => 5,
 			'type'  => '',

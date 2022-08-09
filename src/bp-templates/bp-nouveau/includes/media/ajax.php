@@ -284,6 +284,7 @@ function bp_nouveau_ajax_media_save() {
 
 	$media_personal_count = 0;
 	$media_group_count    = 0;
+	$media_all_count      = 0;
 	if ( bp_is_user_media() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 		bp_has_media( bp_ajax_querystring( 'media' ) );
@@ -295,11 +296,30 @@ function bp_nouveau_ajax_media_save() {
 		$media_group_count = bp_media_get_total_group_media_count();
 	}
 
+	if ( bp_is_media_directory() ) {
+
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+		bp_has_media( bp_ajax_querystring( 'media' ) );
+		$media_all_count = bp_core_number_format( $GLOBALS['media_template']->total_media_count );
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+		bp_has_media( bp_ajax_querystring( 'media' ) );
+		$media_personal_count = bp_core_number_format( $GLOBALS['media_template']->total_media_count );
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+		bp_has_media( bp_ajax_querystring( 'groups' ) );
+		$media_group_count = bp_core_number_format( $GLOBALS['media_template']->total_media_count );
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+
+	}
 	wp_send_json_success(
 		array(
 			'media'                => $media,
 			'media_personal_count' => $media_personal_count,
 			'media_group_count'    => $media_group_count,
+			'media_all_count'      => $media_all_count,
 		)
 	);
 
@@ -488,22 +508,13 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
-	$album_privacy = 'public';
-	$album         = new BP_Media_Album( $album_id );
-	if ( ! empty( $album ) ) {
-		$album_privacy = $album->privacy;
-	}
-
 	// Save media.
 	$media_ids = array();
 	foreach ( $medias as $media_id ) {
 
-		$media_obj           = new BP_Media( $media_id );
-		$media_obj->album_id = $album_id;
-		$media_obj->group_id = ! empty( $group_id ) ? $group_id : false;
-		$media_obj->privacy  = $media_obj->group_id ? 'grouponly' : $album_privacy;
+		$media = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
 
-		if ( ! $media_obj->save() ) {
+		if ( ! $media ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'There was a problem when trying to move the media.', 'buddyboss' )
@@ -1033,7 +1044,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
  * @return string
  */
 function bp_nouveau_object_template_results_albums_existing_media_query( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$caller = filter_input( INPUT_POST, 'caller', FILTER_SANITIZE_STRING );
 
@@ -1173,7 +1184,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 					if ( $can_edit_btn ) {
 						?>
 						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
-							<span class="bb-icon-edit-thin"></span>
+							<span class="bb-icon-l bb-icon-edit"></span>
 							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 						</a>
