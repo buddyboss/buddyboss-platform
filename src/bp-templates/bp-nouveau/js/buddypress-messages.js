@@ -1263,23 +1263,18 @@ window.bp = window.bp || {};
 
 							var newDividerMessageObject = jQuery.extend(true, {}, value );
 							newDividerMessageObject.id = value.sent_split_date;
-							newDividerMessageObject.content = value.sent_split_date;
+							newDividerMessageObject.content = value.sent_date;
 							newDividerMessageObject.sender_avatar = '';
 							newDividerMessageObject.sender_id = '';
 							newDividerMessageObject.sender_is_you = '';
 							newDividerMessageObject.sender_link = '';
 							newDividerMessageObject.sender_name = '';
 							newDividerMessageObject.display_date = '';
+							newDividerMessageObject.className = 'divider';
 
 							bp.Nouveau.Messages.divider.push( value.sent_split_date );
 							finalMessagesArray.push( newDividerMessageObject );
-
 						}
-
-
-
-
-
 					}
 				);
 
@@ -3696,6 +3691,7 @@ window.bp = window.bp || {};
 	bp.Views.userMessagesEntry = bp.Views.userMessagesHeader.extend(
 		{
 			tagName     : 'li',
+			className   : '',
 			template    : bp.template( 'bp-messages-single-list' ),
 
 			events: {
@@ -3705,8 +3701,6 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function() {
-
-				this.el.className = ' ';
 
 				if ( this.options.model.attributes.className ) {
 					this.el.className += ' ' + this.options.model.attributes.className;
