@@ -3782,8 +3782,6 @@ window.bp = window.bp || {};
 				this.listenTo( Backbone, 'onReplyReSend', this.triggerPusherUpdateReSendMessage );
 				this.listenTo( Backbone, 'onMessageDeleteSuccess', this.triggerDeleteUpdateMessage );
 				this.listenTo( Backbone, 'onMessageAjaxFail', this.triggerAjaxFailMessage );
-
-				this.collection.on( 'off', this.addMessage, this );
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
