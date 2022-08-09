@@ -1285,6 +1285,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
 		if ( ! empty( $link_embed ) && method_exists( $bp->embed, 'autoembed' ) ) {
 			$data['preview_data'] = $bp->embed->autoembed( $link_embed, '' );
+		} elseif ( method_exists( $bp->embed, 'autoembed' ) && ! empty( $data['content_stripped'] ) ) {
+			$data['preview_data'] = $bp->embed->autoembed( $data['content_stripped'], '' );
 		}
 
 		// remove comment options from media/document/video activity.

@@ -30,7 +30,7 @@ abstract class Integration_Abstract {
 	 *
 	 * @var bool
 	 */
-	private static $instances = [];
+	private static $instances = array();
 
 	/**
 	 * Cache endpoints.
