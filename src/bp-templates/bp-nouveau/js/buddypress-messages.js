@@ -37,6 +37,7 @@ window.bp = window.bp || {};
 			this.router       = new bp.Nouveau.Messages.Router();
 			this.box               = 'inbox';
 			this.mediumEditor      = false;
+			this.divider      = [];
 
 			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -1250,13 +1251,45 @@ window.bp = window.bp || {};
 
 				}
 
+				var finalMessagesArray = [];
+				_.each(
+					resp.messages,
+					function( value, index ) {
+						if ( _.isNull( value ) ) {
+							return;
+						}
+						finalMessagesArray.push( value );
+						if ( $.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1 ) {
+
+							var newDividerMessageObject = jQuery.extend(true, {}, value );
+							newDividerMessageObject.id = value.sent_split_date;
+							newDividerMessageObject.content = value.sent_split_date;
+							newDividerMessageObject.sender_avatar = '';
+							newDividerMessageObject.sender_id = '';
+							newDividerMessageObject.sender_is_you = '';
+							newDividerMessageObject.sender_link = '';
+							newDividerMessageObject.sender_name = '';
+							newDividerMessageObject.display_date = '';
+
+							bp.Nouveau.Messages.divider.push( value.sent_split_date );
+							finalMessagesArray.push( newDividerMessageObject );
+
+						}
+
+
+
+
+
+					}
+				);
+
 				setTimeout(
 					function () { // Waiting to load dummy image.
 						bp.Nouveau.reportPopUp();
 					},
 					1000
 				);
-				return resp.messages;
+				return finalMessagesArray;
 			}
 		}
 	);
@@ -3248,6 +3281,7 @@ window.bp = window.bp || {};
 
 			changePreview: function( event ) {
 				var target = $( event.currentTarget );
+				bp.Nouveau.Messages.divider = [];
 
 				event.preventDefault();
 				bp.Nouveau.Messages.removeFeedback();
@@ -4032,24 +4066,7 @@ window.bp = window.bp || {};
 					options.at = 0;
 				}
 
-				var message_date = message.get( 'sent_split_date' );
-
-				if ( message_date !== this.last_date ) {
-					$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + this.last_date_display + '</div></li>' );
-					this.last_date = message_date;
-					this.last_date_display = message.get( 'sent_date' );
-				}
-
 				this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ), options );
-
-				if ( this.last_date == '' ) {
-					this.last_date = message_date;
-					this.last_date_display = message.get( 'sent_date' );
-				}
-
-				if ( message.get( 'is_first' ) === true ) {
-					$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + message.get( 'sent_date' ) + '</div></li>' );
-				}
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
