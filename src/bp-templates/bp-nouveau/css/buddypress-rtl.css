@@ -14793,6 +14793,7 @@ fieldset div.avatar {
 .activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap .bb-reply-lable {
   color: #7f868f;
   font-weight: 400;
+  margin-left: 5px;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-post-title a,
