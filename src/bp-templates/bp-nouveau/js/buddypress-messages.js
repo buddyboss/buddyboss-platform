@@ -4038,33 +4038,33 @@ window.bp = window.bp || {};
 
 				// Add split divider when sent message date change.
 				var split_date = message.get( 'sent_split_date' );
-				if ( 0 === bp.Views.userMessages.singleMessages.length ) {
-					bp.Views.userMessages.singleMessages.push( message );
-					bp.Views.userMessages.splitDates.push( message.get( 'sent_split_date' ) );
-				} else if ( $.inArray( split_date, bp.Views.userMessages.splitDates ) === -1 ) {
-					bp.Views.userMessages.splitDates.push( message.get( 'sent_split_date' ) );
+				if ( 0 === this.singleMessages.length ) {
+					this.singleMessages.push( message );
+					this.splitDates.push( message.get( 'sent_split_date' ) );
+				} else if ( $.inArray( split_date, this.splitDates ) === -1 ) {
+					this.splitDates.push( message.get( 'sent_split_date' ) );
 
-					var last_message     = bp.Views.userMessages.singleMessages[bp.Views.userMessages.singleMessages.length - 1],
-						last_second_date = bp.Views.userMessages.splitDates[bp.Views.userMessages.splitDates.length - 2];
+					var last_message     = this.singleMessages[this.singleMessages.length - 1],
+						last_second_date = this.splitDates[this.splitDates.length - 2];
 
 					if ( ! _.isUndefined( last_message ) && ! _.isUndefined( last_second_date ) ) {
 						$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + last_message.get( 'sent_date' ) + '</div></li>' );
 					}
 
 					// Clear message variable.
-					bp.Views.userMessages.singleMessages = [];
+					this.singleMessages = [];
 				}
 
-				bp.Views.userMessages.singleMessages.push( message );
+				this.singleMessages.push( message );
 
 				this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ), options );
 
 				// Insert date split when appear thread start message.
-				if ( bp.Views.userMessages.totalMessages === message.get( 'messages_count' ) ) {
+				if ( this.totalMessages === message.get( 'messages_count' ) ) {
 
-					var thread_start_message = bp.Views.userMessages.singleMessages[ bp.Views.userMessages.singleMessages.length - 1 ];
+					var thread_start_message = this.singleMessages[ this.singleMessages.length - 1 ];
 					if ( 1 === message.get( 'messages_count' ) ) {
-						thread_start_message = bp.Views.userMessages.singleMessages[0];
+						thread_start_message = this.singleMessages[0];
 					}
 
 					$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + thread_start_message.get( 'sent_date' ) + '</div></li>' );
