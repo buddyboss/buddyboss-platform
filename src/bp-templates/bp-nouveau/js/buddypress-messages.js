@@ -3746,9 +3746,8 @@ window.bp = window.bp || {};
 			firstFetch : true,
 			firstLi : true,
 			loadingFeedback: false,
-			splitDates: [],
-			singleMessages: [],
-			totalMessages: 0,
+			last_date: '',
+			last_date_display: '',
 
 			initialize: function() {
 				// Load Messages.
@@ -3783,6 +3782,8 @@ window.bp = window.bp || {};
 				this.listenTo( Backbone, 'onReplyReSend', this.triggerPusherUpdateReSendMessage );
 				this.listenTo( Backbone, 'onMessageDeleteSuccess', this.triggerDeleteUpdateMessage );
 				this.listenTo( Backbone, 'onMessageAjaxFail', this.triggerAjaxFailMessage );
+
+				this.collection.on( 'off', this.addMessage, this );
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
@@ -4033,41 +4034,23 @@ window.bp = window.bp || {};
 					options.at = 0;
 				}
 
-				// Increment the total messages.
-				bp.Views.userMessages.totalMessages = bp.Views.userMessages.totalMessages + 1;
+				var message_date = message.get( 'sent_split_date' );
 
-				// Add split divider when sent message date change.
-				var split_date = message.get( 'sent_split_date' );
-				if ( 0 === this.singleMessages.length ) {
-					this.singleMessages.push( message );
-					this.splitDates.push( message.get( 'sent_split_date' ) );
-				} else if ( $.inArray( split_date, this.splitDates ) === -1 ) {
-					this.splitDates.push( message.get( 'sent_split_date' ) );
-
-					var last_message     = this.singleMessages[this.singleMessages.length - 1],
-						last_second_date = this.splitDates[this.splitDates.length - 2];
-
-					if ( ! _.isUndefined( last_message ) && ! _.isUndefined( last_second_date ) ) {
-						$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + last_message.get( 'sent_date' ) + '</div></li>' );
-					}
-
-					// Clear message variable.
-					this.singleMessages = [];
+				if ( message_date !== this.last_date ) {
+					$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + this.last_date_display + '</div></li>' );
+					this.last_date = message_date;
+					this.last_date_display = message.get( 'sent_date' );
 				}
-
-				this.singleMessages.push( message );
 
 				this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ), options );
 
-				// Insert date split when appear thread start message.
-				if ( this.totalMessages === message.get( 'messages_count' ) ) {
+				if ( this.last_date == '' ) {
+					this.last_date = message_date;
+					this.last_date_display = message.get( 'sent_date' );
+				}
 
-					var thread_start_message = this.singleMessages[ this.singleMessages.length - 1 ];
-					if ( 1 === message.get( 'messages_count' ) ) {
-						thread_start_message = this.singleMessages[0];
-					}
-
-					$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + thread_start_message.get( 'sent_date' ) + '</div></li>' );
+				if ( message.get( 'is_first' ) === true ) {
+					$( '#bp-message-thread-list' ).prepend( '<li><div class="single-message-divider">' + message.get( 'sent_date' ) + '</div></li>' );
 				}
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
