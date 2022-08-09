@@ -2646,3 +2646,22 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	 */
 	return apply_filters( 'bb_get_thread_start_date', $output, $old_start_date, $newer_date );
 }
+
+/**
+ * Generate the 'g:i A' string for the current message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_the_thread_message_sent_time() {
+
+	/**
+	 * Filters the 'Sent x hours ago' string for the current message.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param string $value Default text of 'Sent x hours ago'.
+	 */
+	return apply_filters( 'bp_get_the_thread_message_time_since', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', bp_get_the_thread_message_date_sent() ) ) );
+}

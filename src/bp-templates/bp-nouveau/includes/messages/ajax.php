@@ -602,7 +602,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			)
 		),
 		'date'              => bp_get_the_thread_message_date_sent() * 1000,
-		'display_date'      => bp_get_the_thread_message_time_since(),
+		'display_date'      => bb_get_the_thread_message_sent_time(),
 		'display_date_list' => bb_get_thread_sent_date( $date_sent ),
 		'excerpt'           => $excerpt,
 	);
@@ -2582,7 +2582,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'              => bp_get_the_thread_message_time_since(),
+				'display_date'              => bb_get_the_thread_message_sent_time(),
 			);
 
 		} else {
@@ -2676,7 +2676,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => bp_get_the_thread_message_time_since(),
+				'display_date'  => bb_get_the_thread_message_sent_time(),
 			);
 		}
 
