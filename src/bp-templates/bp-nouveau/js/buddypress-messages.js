@@ -4063,8 +4063,8 @@ window.bp = window.bp || {};
 					options.at = 0;
 				}
 
-				if ( 'undefined' !== typeof message.attributes.class_name && 'divider-date' === message.attributes.class_name ) {
-					message.attributes.className = 'date-seprator';
+				if ( 'undefined' !== typeof message.attributes.class_name && '' !== message.attributes.class_name ) {
+					message.attributes.className = message.attributes.class_name;
 				}
 
 				this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ), options );
