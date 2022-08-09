@@ -1270,7 +1270,7 @@ window.bp = window.bp || {};
 							newDividerMessageObject.sender_link = '';
 							newDividerMessageObject.sender_name = '';
 							newDividerMessageObject.display_date = '';
-							newDividerMessageObject.className = 'divider';
+							newDividerMessageObject.class_name = 'divider-date';
 
 							bp.Nouveau.Messages.divider.push( value.sent_split_date );
 							finalMessagesArray.push( newDividerMessageObject );
@@ -3691,7 +3691,6 @@ window.bp = window.bp || {};
 	bp.Views.userMessagesEntry = bp.Views.userMessagesHeader.extend(
 		{
 			tagName     : 'li',
-			className   : '',
 			template    : bp.template( 'bp-messages-single-list' ),
 
 			events: {
@@ -3702,11 +3701,15 @@ window.bp = window.bp || {};
 
 			initialize: function() {
 
+				this.el.className = ' ';
+
 				if ( this.options.model.attributes.className ) {
 					this.el.className += ' ' + this.options.model.attributes.className;
+					this.render();
 				}
 				this.model.on( 'change', this.updateMessage, this );
 				this.model.on( 'change', this.updateMessageClass, this );
+
 			},
 
 			updateMessage: function( model ) {
@@ -4058,6 +4061,10 @@ window.bp = window.bp || {};
 
 				if ( ! message.attributes.is_new ) {
 					options.at = 0;
+				}
+
+				if ( 'undefined' !== typeof message.attributes.class_name && 'divider-date' === message.attributes.class_name ) {
+					message.attributes.className = 'date-seprator';
 				}
 
 				this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ), options );
