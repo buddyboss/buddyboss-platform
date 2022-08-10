@@ -2929,9 +2929,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ] = array_merge( $thread->messages[ $i ], $extra_content );
 		}
 
-        $thread->messages[ $i ]['sent_date']       = bb_get_thread_start_date( $thread_template->message->date_sent );
+		$thread->messages[ $i ]['sent_date']       = bb_get_thread_start_date( $thread_template->message->date_sent );
 		$thread->messages[ $i ]['sent_split_date'] = date_i18n( 'Y-m-d', strtotime( $thread_template->message->date_sent ) );
-		$thread->messages[ $i ]['is_first']        = (int)$bp_get_the_thread_message_id === (int)bb_get_initial_thread_message_id( $bp_get_the_thread_id );
 
 		$i += 1;
 	endwhile;

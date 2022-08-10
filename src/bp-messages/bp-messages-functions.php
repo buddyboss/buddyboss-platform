@@ -1721,17 +1721,3 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
 
 	return $meta_query;
 }
-
-function bb_get_initial_thread_message_id( $thread_id ) {
-	$messages = BP_Messages_Message::get(
-		array(
-			'include_threads' => $thread_id,
-			'order'           => 'ASC',
-			'per_page'        => 1,
-			'page'            => 1,
-			'count_total'     => false,
-		)
-	);
-
-	return ( ! empty( $thread_id ) && ! empty( $messages['messages'] ) ? current( $messages['messages'] )->id : 0 );
-}
