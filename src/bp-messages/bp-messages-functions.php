@@ -1234,8 +1234,12 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	if ( ! empty( $avatars_user_ids ) ) {
 		$avatars_user_ids = array_reverse( $avatars_user_ids );
 		foreach ( (array) $avatars_user_ids as $avatar_user_id ) {
+
+			$is_suspended = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $avatar_user_id );
+			$is_blocked   = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $avatar_user_id );
+
 			$avatar_urls[] = array(
-				'url'  => esc_url(
+				'url'          => esc_url(
 					bp_core_fetch_avatar(
 						array(
 							'item_id' => $avatar_user_id,
@@ -1247,9 +1251,12 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 						)
 					)
 				),
-				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
-				'id'   => esc_attr( $avatar_user_id ),
-				'type' => 'user',
+				'name'         => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
+				'id'           => esc_attr( $avatar_user_id ),
+				'type'         => 'user',
+				'link'         => bp_core_get_user_domain( $avatar_user_id ),
+				'is_suspended' => $is_suspended,
+				'is_blocked'   => $is_blocked,
 			);
 		}
 	}
@@ -1264,8 +1271,8 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 
 		if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
 			if ( bp_is_active( 'groups' ) ) {
-
-				$group_name       = bp_get_group_name( groups_get_group( $group_id ) );
+				$group            = groups_get_group( $group_id );
+				$group_name       = bp_get_group_name( $group );
 				$group_avatar_url = '';
 
 				if ( ! bp_disable_group_avatar_uploads() ) {
@@ -1289,6 +1296,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					'name' => $group_name,
 					'id'   => $group_id,
 					'type' => 'group',
+					'link' => bp_get_group_permalink( $group ),
 				);
 
 			} else {
@@ -1323,6 +1331,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
 					'id'   => $group_id,
 					'type' => 'group',
+					'link' => '',
 				);
 			}
 
@@ -1580,6 +1589,74 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 }
 
 /**
+ * Check last message is a joined group message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id    Message Thread ID.
+ * @param int $user_id      User ID.
+ *
+ * @return boolean  Is last message joined group message.
+ */
+function bb_is_last_message_group_join_message( $thread_id, $user_id ) {
+
+	global $wpdb, $bp;
+
+	if ( empty( $thread_id ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	$last_message    = BP_Messages_Thread::get_last_message( $thread_id, true );
+	$is_join_message = bp_messages_get_meta( $last_message->id, 'group_message_group_joined' );
+	if ( 'yes' === $is_join_message ) {
+		$joined_user       = array(
+			'user_id' => $user_id,
+			'time'    => bp_core_current_time(),
+		);
+		$joined_users      = bp_messages_get_meta( $last_message->id, 'group_message_group_joined_users' );
+		$joined_users_data = empty( $joined_users ) ? array( $joined_user ) : array_merge( $joined_users, array( $joined_user ) );
+		bp_messages_update_meta( $last_message->id, 'group_message_group_joined_users', $joined_users_data );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 1 where thread_id = %d and unread_count = 0", $thread_id ) );
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Check last message is a left group message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id    Message Thread ID.
+ * @param int $user_id      User ID.
+ *
+ * @return boolean  Is last message left group message.
+ */
+function bb_is_last_message_group_left_message( $thread_id, $user_id ) {
+
+	global $wpdb, $bp;
+
+	if ( empty( $thread_id ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	$last_message    = BP_Messages_Thread::get_last_message( $thread_id, true );
+	$is_left_message = bp_messages_get_meta( $last_message->id, 'group_message_group_left' );
+	if ( 'yes' === $is_left_message ) {
+		$left_user       = array(
+			'user_id' => $user_id,
+			'time'    => bp_core_current_time(),
+		);
+		$left_users      = bp_messages_get_meta( $last_message->id, 'group_message_group_left_users' );
+		$left_users_data = empty( $left_users ) ? array( $left_user ) : array_merge( $left_users, array( $left_user ) );
+		bp_messages_update_meta( $last_message->id, 'group_message_group_left_users', $left_users_data );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 1 where thread_id = %d and unread_count = 0", $thread_id ) );
+		return true;
+	}
+	return false;
+}
+
+/*
  * Change friend button arguments.
  *
  * @since BuddyBoss 2.1.0
@@ -1650,3 +1727,4 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
 
 	return $meta_query;
 }
+

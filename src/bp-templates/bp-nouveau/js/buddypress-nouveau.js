@@ -2947,6 +2947,7 @@ window.bp = window.bp || {};
 
 			} else {
 				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+				$( '.optionsOpen' ).removeClass( 'optionsOpen' );
 			}
 		},
 
@@ -3283,6 +3284,45 @@ window.bp = window.bp || {};
 				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).html( '' );
 				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).append( available_option );
 			});
+		},
+
+		/**
+		 *  Register Dropzone Global Progress UI
+		 *
+		 *  @param  {object} dropzone The Dropzone object.
+		 *  @return {function}
+		 */
+		 dropZoneGlobalProgress: function( dropzone ) {
+
+			if( $( dropzone.element ).find( '.dz-global-progress' ).length == 0 ) {
+				$( dropzone.element ).append( '<div class="dz-global-progress"><div class="dz-progress-bar-full"><span class="dz-progress"></span></div><p></p><span class="bb-icon-f bb-icon-times dz-remove-all"></span></div>' );
+				$( dropzone.element ).addClass( 'dz-progress-view' );
+				$( dropzone.element ).find( '.dz-remove-all' ).click( function() {
+					$.each( dropzone.files, function( index, file ) {
+						dropzone.removeFile( file );
+					});
+				});
+			}
+			
+			var message = '';
+			var progress = 0,
+				totalProgress = 0;
+			if( dropzone.files.length == 1 ) {
+				$( dropzone.element ).addClass( 'dz-single-view' );
+				message = 'Uploading <strong>' + dropzone.files[0].name + '</strong>';
+				progress = dropzone.files[0].upload.progress;
+			} else {
+				$( dropzone.element ).removeClass( 'dz-single-view' );
+				totalProgress = 0;
+				$.each( dropzone.files, function( index, file ) {
+					totalProgress += file.upload.progress;
+				});
+				progress = totalProgress / dropzone.files.length;
+				message = 'Uploading <strong>' + dropzone.files.length + ' files</strong>';
+			}
+
+			$( dropzone.element ).find( '.dz-global-progress .dz-progress').css( 'width', progress + '%' );
+			$( dropzone.element ).find( '.dz-global-progress > p').html( message );
 		}
 
 	};

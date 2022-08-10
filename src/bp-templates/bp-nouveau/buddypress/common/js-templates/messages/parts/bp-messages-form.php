@@ -31,7 +31,7 @@ do_action( 'bp_nouveau_messages_form_before_js_template' );
 
 	<div class="bp-messages-recipient">
 		<span><?php esc_html_e( 'To:', 'buddyboss' ); ?></span>
-	
+
 		<select
 			name="send_to[]"
 			class="send-to-input"
@@ -41,7 +41,8 @@ do_action( 'bp_nouveau_messages_form_before_js_template' );
 			multiple="multiple"
 			style="width: 100%"
 		>
-			<?php if ( ! empty( $_GET['r'] ) ):
+			<?php
+			if ( ! empty( $_GET['r'] ) ) :
 
 				if ( bp_is_username_compatibility_mode() ) {
 					$user_id = bp_core_get_userid( urldecode( $_GET['r'] ) );
@@ -57,23 +58,23 @@ do_action( 'bp_nouveau_messages_form_before_js_template' );
 	</div>
 
 	<div id="bp-message-content"></div>
+
 	<?php
 	if ( 'mac' === $os ) {
 		?>
-        <p class="bp-message-content_foot_note"><strong><?php esc_html_e( 'Return + Shift', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
+		<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Return', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Return+ Shift', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
 		<?php
 	} elseif ( 'window' === $os ) {
 		?>
-        <p class="bp-message-content_foot_note"><strong><?php esc_html_e( 'Shift + Enter', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
+		<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Enter', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Shift + Enter', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
 
-
 	<?php bp_nouveau_messages_hook( 'after', 'compose_content' ); ?>
 </script>
 <script type="text/html" id="tmpl-bp-messages-form-submit">
-    <input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
+	<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
 </script>
 
 <?php

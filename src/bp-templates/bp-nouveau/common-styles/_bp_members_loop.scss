@@ -189,6 +189,11 @@
 	border: 2px solid $white;
 	border-radius: 100%;
 	z-index: 1;
+
+	.bp-user-blocked > &,
+	.bp-user-suspended > & {
+		display: none !important;
+	}
 }
 
 // More option on memeber listing
