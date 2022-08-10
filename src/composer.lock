@@ -66,10 +66,6 @@
                 "binary",
                 "driver"
             ],
-            "support": {
-                "issues": "https://github.com/alchemy-fr/BinaryDriver/issues",
-                "source": "https://github.com/alchemy-fr/BinaryDriver/tree/master"
-            },
             "time": "2020-02-12T19:35:11+00:00"
         },
         {
@@ -203,10 +199,6 @@
                 "zend",
                 "zikula"
             ],
-            "support": {
-                "issues": "https://github.com/composer/installers/issues",
-                "source": "https://github.com/composer/installers/tree/v1.12.0"
-            },
             "funding": [
                 {
                     "url": "https://packagist.com",
@@ -302,10 +294,6 @@
                 "redis",
                 "xcache"
             ],
-            "support": {
-                "issues": "https://github.com/doctrine/cache/issues",
-                "source": "https://github.com/doctrine/cache/tree/1.13.0"
-            },
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -363,10 +351,6 @@
                 "event-dispatcher",
                 "event-emitter"
             ],
-            "support": {
-                "issues": "https://github.com/igorw/evenement/issues",
-                "source": "https://github.com/igorw/evenement/tree/master"
-            },
             "time": "2017-07-23T21:35:13+00:00"
         },
         {
@@ -407,10 +391,6 @@
                 }
             ],
             "description": "Symfony filesystem extension to handle temporary files",
-            "support": {
-                "issues": "https://github.com/romainneutron/Temporary-Filesystem/issues",
-                "source": "https://github.com/romainneutron/Temporary-Filesystem/tree/2.4"
-            },
             "time": "2020-02-17T15:27:36+00:00"
         },
         {
@@ -495,10 +475,6 @@
                 "video",
                 "video processing"
             ],
-            "support": {
-                "issues": "https://github.com/PHP-FFMpeg/PHP-FFMpeg/issues",
-                "source": "https://github.com/PHP-FFMpeg/PHP-FFMpeg/tree/master"
-            },
             "time": "2020-03-29T09:57:10+00:00"
         },
         {
@@ -546,23 +522,20 @@
                 "psr",
                 "psr-3"
             ],
-            "support": {
-                "source": "https://github.com/php-fig/log/tree/1.1.4"
-            },
             "time": "2021-05-03T11:20:27+00:00"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v5.4.9",
+            "version": "v5.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "36a017fa4cce1eff1b8e8129ff53513abcef05ba"
+                "reference": "6699fb0228d1bc35b12aed6dd5e7455457609ddd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/36a017fa4cce1eff1b8e8129ff53513abcef05ba",
-                "reference": "36a017fa4cce1eff1b8e8129ff53513abcef05ba",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/6699fb0228d1bc35b12aed6dd5e7455457609ddd",
+                "reference": "6699fb0228d1bc35b12aed6dd5e7455457609ddd",
                 "shasum": ""
             },
             "require": {
@@ -596,9 +569,6 @@
             ],
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v5.4.9"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -613,7 +583,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-20T13:55:35+00:00"
+            "time": "2022-07-20T13:00:38+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -678,9 +648,6 @@
                 "polyfill",
                 "portable"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.26.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -761,9 +728,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.26.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -844,9 +808,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.26.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -865,16 +826,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.8",
+            "version": "v5.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "597f3fff8e3e91836bb0bd38f5718b56ddbde2f3"
+                "reference": "6e75fe6874cbc7e4773d049616ab450eff537bf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/597f3fff8e3e91836bb0bd38f5718b56ddbde2f3",
-                "reference": "597f3fff8e3e91836bb0bd38f5718b56ddbde2f3",
+                "url": "https://api.github.com/repos/symfony/process/zipball/6e75fe6874cbc7e4773d049616ab450eff537bf1",
+                "reference": "6e75fe6874cbc7e4773d049616ab450eff537bf1",
                 "shasum": ""
             },
             "require": {
@@ -906,9 +867,6 @@
             ],
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.8"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -923,7 +881,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-08T05:07:18+00:00"
+            "time": "2022-06-27T16:58:25+00:00"
         }
     ],
     "packages-dev": [],
@@ -936,5 +894,5 @@
         "php": ">=5.6.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "1.1.0"
 }
