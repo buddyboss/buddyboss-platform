@@ -10354,6 +10354,7 @@ input#send-to-input {
 .compose .bp-messages-recipient > span:first-child {
   margin-right: 10px;
   font-size: 14px;
+  font-weight: 500;
   line-height: 30px;
 }
 
