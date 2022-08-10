@@ -25,8 +25,6 @@
 	if ( first_four.length == 0 ) {
 		include_you = true;
 	}
-
-    console.log(data);
 	#>
 
 	<header class="single-message-thread-header">
