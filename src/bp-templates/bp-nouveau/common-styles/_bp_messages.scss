@@ -682,6 +682,43 @@
 		padding: $pad-sml;
 		margin: 1em 0;
 		width: 100%;
+
+		&.divider-date {
+
+			.message-metadata,
+			.bp-avatar-wrap {
+				display: none;
+			}
+
+			.bp-message-content-wrap {
+				color: $light-text;
+				font-size: 11px;
+				font-weight: 500;
+				line-height: 1.5;
+				text-align: center;
+				position: relative;
+				letter-spacing: initial;
+
+				&:after,
+				&:before {
+					content: "";
+					background-color: $bp-border-color;
+					height: 1px;
+					position: absolute;
+					top: 50%;
+					left: 0;
+					transform: translateY(-50%);
+					width: calc(50% - 30px);
+				}
+
+				&:after {
+					left: initial;
+					right: 0;
+				}
+
+			}
+
+		}
 	}
 
 	.message-metadata {
@@ -738,7 +775,17 @@
 
 		p {
 			margin-bottom: 8px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
 		}
+
+		+ .bb-activity-video-wrap,
+		+ .bb-activity-media-wrap {
+			margin-top: 8px;
+		}
+
 	}
 
 	img.avatar {
