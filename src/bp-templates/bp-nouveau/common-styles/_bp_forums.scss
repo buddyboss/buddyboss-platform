@@ -931,6 +931,21 @@ p.form-allowed-tags {
 	margin-bottom: 10px;
 }
 
+.widget_display_topics {
+
+	ul > li {
+		display: flex;
+		margin-bottom: 15px;
+	}
+
+	.bbp-author-link {
+		flex: 0 0 40px;
+		margin-right: 10px;
+	}
+
+
+}
+
 /* =Avatars
 -------------------------------------------------------------- */
 
