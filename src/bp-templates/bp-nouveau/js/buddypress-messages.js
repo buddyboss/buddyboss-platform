@@ -1254,14 +1254,14 @@ window.bp = window.bp || {};
 				var finalMessagesArray = [];
 				_.each(
 					resp.messages,
-					function( value, index ) {
+					function( value ) {
 						if ( _.isNull( value ) ) {
 							return;
 						}
 						finalMessagesArray.push( value );
 						if ( $.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1 ) {
 
-							var newDividerMessageObject = jQuery.extend(true, {}, value );
+							var newDividerMessageObject = jQuery.extend( true, {}, value );
 							newDividerMessageObject.id = value.sent_split_date;
 							newDividerMessageObject.content = value.sent_date;
 							newDividerMessageObject.sender_avatar = '';
@@ -1270,6 +1270,11 @@ window.bp = window.bp || {};
 							newDividerMessageObject.sender_link = '';
 							newDividerMessageObject.sender_name = '';
 							newDividerMessageObject.display_date = '';
+							newDividerMessageObject.group_text = '';
+							newDividerMessageObject.group_name = '';
+							newDividerMessageObject.group_avatar = '';
+							newDividerMessageObject.group_link = '';
+							newDividerMessageObject.message_from = '';
 							newDividerMessageObject.class_name = 'divider-date';
 
 							bp.Nouveau.Messages.divider.push( value.sent_split_date );
@@ -3834,6 +3839,11 @@ window.bp = window.bp || {};
 					split_message.sender_link = '';
 					split_message.sender_name = '';
 					split_message.display_date = '';
+					split_message.group_text = '';
+					split_message.group_name = '';
+					split_message.group_avatar = '';
+					split_message.group_link = '';
+					split_message.message_from = '';
 					split_message.class_name = 'divider-date';
 					delete split_message.className;
 					bp.Nouveau.Messages.divider.push( split_date );
