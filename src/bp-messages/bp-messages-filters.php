@@ -968,7 +968,7 @@ add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' 
 /**
  * Display the html for the notification preferences actions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0.1
  *
  * @return void
  */

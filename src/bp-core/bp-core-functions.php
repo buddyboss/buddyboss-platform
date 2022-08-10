@@ -7732,7 +7732,7 @@ function bb_core_get_os() {
 /**
  * Get week start date with an integer Unix timestamp.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0.1
  *
  * @param string $start_day_of_week Week start day like monday this week.
  *
@@ -7756,7 +7756,7 @@ function bb_get_week_start_timestamp( $start_day_of_week = false ) {
 /**
  * Get week end date with an integer Unix timestamp.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0.1
  *
  * @param string $end_day_of_week Week end day like sunday this week.
  *

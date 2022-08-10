@@ -2324,7 +2324,7 @@ function bb_get_thread_total_recipients_count() {
 /**
  * Generate the human readable string for the current thread last message.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0.1
  *
  * @param int|string $last_message_date The earlier time from which you're calculating
  *                                      the time elapsed. Enter either as an integer Unix timestamp,
@@ -2344,7 +2344,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 	/**
 	 * Filters the value to use if the time since is unknown.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0.1
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
@@ -2357,7 +2357,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 	/**
 	 * Filters the value to use if the time since is right now.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0.1
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
@@ -2479,7 +2479,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 	/**
 	 * Filters the date sent value for the current message as a timestamp.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0.1
 	 *
 	 * @param string     $value             Timestamp of the date sent value for the current message.
 	 * @param int|string $old_last_date     The earlier time from which you're calculating
@@ -2494,7 +2494,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 /**
  * Generate the human readable string for the current thread start date.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0.1
  *
  * @param int|string $thread_start_date The earlier time from which you're calculating
  *                                      the time elapsed. Enter either as an integer Unix timestamp,
@@ -2514,7 +2514,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	/**
 	 * Filters the value to use if the time since is unknown.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0.1
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
@@ -2527,7 +2527,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	/**
 	 * Filters the value to use if the time since is right now.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0.1
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
@@ -2636,7 +2636,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	/**
 	 * Filters the date sent value for the current message as a timestamp.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.0.1
 	 *
 	 * @param string     $value             Timestamp of the date sent value for the current message.
 	 * @param int|string $old_start_date    The earlier time from which you're calculating

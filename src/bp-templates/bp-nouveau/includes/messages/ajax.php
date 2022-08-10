@@ -3256,7 +3256,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 /**
  * Function which get left/join members list.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0.1
  *
  * @return void|string|Object A JSON object containing html with success data.
  */

@@ -1591,7 +1591,7 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 /**
  * Check last message is a joined group message.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0.1
  *
  * @param int $thread_id    Message Thread ID.
  * @param int $user_id      User ID.
@@ -1625,7 +1625,7 @@ function bb_is_last_message_group_join_message( $thread_id, $user_id ) {
 /**
  * Check last message is a left group message.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0.1
  *
  * @param int $thread_id    Message Thread ID.
  * @param int $user_id      User ID.
