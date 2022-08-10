@@ -9342,12 +9342,22 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 #message-threads .message-thread-options .bb_more_options_action i {
+  color: #333;
   font-size: 16px;
   line-height: 1;
+  opacity: 0.4;
+}
+
+#message-threads .message-thread-options .bb_more_options_action:hover i {
+  opacity: 1;
 }
 
 #message-threads .message-thread-options .bb_more_options_list {
   list-style: none;
+}
+
+#message-threads .optionsOpen .message-thread-options .bb_more_options_action i {
+  opacity: 1;
 }
 
 #message-threads .thread-item.optionsOpen .message-thread-options,
