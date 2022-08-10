@@ -3816,6 +3816,30 @@ window.bp = window.bp || {};
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
+
+				var split_message = jQuery.extend(true, {}, _.first( messagePusherData ) );
+				var date = split_message.date,
+					year = date.getFullYear(),
+					month = String( date.getMonth() + 1 ).padStart( 2, '0' ),
+					day = String( date.getDate() ).padStart( 2, '0' ),
+					split_date = year + '-' + month + '-' + day;
+
+				if ( $.inArray( split_date, bp.Nouveau.Messages.divider ) === -1 ) {
+					split_message.hash = '';
+					split_message.id = split_date;
+					split_message.content = BP_Nouveau.messages.today;
+					split_message.sender_avatar = '';
+					split_message.sender_id = '';
+					split_message.sender_is_you = '';
+					split_message.sender_link = '';
+					split_message.sender_name = '';
+					split_message.display_date = '';
+					split_message.class_name = 'divider-date';
+					delete split_message.className;
+					bp.Nouveau.Messages.divider.push( split_date );
+					this.collection.add( split_message );
+				}
+
 				// use sent messageData here.
 				this.collection.add( _.first( messagePusherData ) );
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
