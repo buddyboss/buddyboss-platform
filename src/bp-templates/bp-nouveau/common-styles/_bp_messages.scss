@@ -684,37 +684,39 @@
 		width: 100%;
 
 		&.divider-date {
+			position: relative;
 
 			.message-metadata,
 			.bp-avatar-wrap {
 				display: none;
 			}
 
+			&:after {
+				content: "";
+				background-color: $bp-border-color;
+				height: 1px;
+				position: absolute;
+				top: 24px;
+				left: 20px;
+				right: 20px;
+			}
+
+			.bp-single-message-wrap {
+				text-align: center;
+			}
+
 			.bp-message-content-wrap {
 				color: $light-text;
+				background: $white;
+				display: inline-block;
 				font-size: 11px;
 				font-weight: 500;
 				line-height: 1.5;
 				text-align: center;
+				padding: 0 10px;
 				position: relative;
+				z-index: 1;
 				letter-spacing: initial;
-
-				&:after,
-				&:before {
-					content: "";
-					background-color: $bp-border-color;
-					height: 1px;
-					position: absolute;
-					top: 50%;
-					left: 0;
-					transform: translateY(-50%);
-					width: calc(50% - 30px);
-				}
-
-				&:after {
-					left: initial;
-					right: 0;
-				}
 
 			}
 
