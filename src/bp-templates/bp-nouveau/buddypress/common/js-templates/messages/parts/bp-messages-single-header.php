@@ -128,7 +128,7 @@
 							</li>
 							<# if ( data.is_thread_archived ) { #>
 								<li class="unhide_thread">
-									<a data-bp-action="unhide_thread" href="#"><?php esc_html_e( 'Unarchive Conversation', 'buddyboss' ); ?>
+									<a data-bp-action="unhide_thread" href="#"><?php esc_html_e( 'Unarchive', 'buddyboss' ); ?>
 									</a>
 								</li>
 							<# } else { #>
@@ -194,12 +194,7 @@
 							<# if ( data.is_thread_archived ) { #>
 								<li class="unhide_thread">
 									<a data-bp-action="unhide_thread" href="#">
-										<?php
-										esc_html_e(
-											'Unarchive Conversation',
-											'buddyboss'
-										);
-										?>
+										<?php esc_html_e( 'Unarchive', 'buddyboss' ); ?>
 									</a>
 								</li>
 							<# } else { #>
