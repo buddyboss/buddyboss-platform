@@ -1370,6 +1370,11 @@ window.bp = window.bp || {};
 			},
 
 			postValidate: function() {
+
+				if( window.messageUploaderInProgress ) {
+					return;
+				}
+
 				// Enable submit button if content is available
 				var $message_content = this.$el.find( '#message_content' );
 				var content = $.trim( $message_content[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
@@ -1383,7 +1388,13 @@ window.bp = window.bp || {};
 			},
 
 			DisableSubmit: function () {
+				window.messageUploaderInProgress = true;
 				this.$el.closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+			},
+
+			EnableSubmit: function () {
+				window.messageUploaderInProgress = false;
+				this.postValidate();
 			},
 
 			mediumLink: function () {
@@ -1411,6 +1422,7 @@ window.bp = window.bp || {};
 				this.on( 'ready', this.listenToUploader, this );
 				this.listenTo(Backbone, 'triggerMediaChange', this.postValidate);
 				this.listenTo(Backbone, 'triggerMediaInProgress', this.DisableSubmit);
+				this.listenTo(Backbone, 'triggerMediaComplete', this.EnableSubmit);
 			},
 
 			activateTinyMce: function() {
@@ -1640,26 +1652,27 @@ window.bp = window.bp || {};
 								self.$el.children( '.dropzone' ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 							}
 						}
-						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
 				bp.Nouveau.Messages.dropzone.on(
 					'error',
 					function(file,response) {
+						var errorText = '';
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
-								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								errorText = response.data.feedback;
 							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly.
-								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
 							// if ( ! jQuery( '.message-media-error-popup' ).length) {
 							// 	$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							// }
-							bp.Nouveau.Messages.displaySendMessageFeedback( BP_Nouveau.media.invalid_media_type + '</br>' + response, 'error' );
-							this.removeFile( file );
+							errorText = BP_Nouveau.media.invalid_media_type + '</br>' + response;
 						}
+						bp.Nouveau.Messages.displaySendMessageFeedback( errorText, 'error' );
+						this.removeFile( file );
 						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
@@ -1706,6 +1719,7 @@ window.bp = window.bp || {};
 					function() {
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
+							Backbone.trigger( 'triggerMediaComplete' );
 						}
 					}
 				);
@@ -1812,7 +1826,6 @@ window.bp = window.bp || {};
 							response.data.privacy 	 = 'message';
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
-							Backbone.trigger( 'triggerMediaChange' );
 							bp.Nouveau.Messages.removeFeedback();
 							return file.previewElement.classList.add( 'dz-success' );
 						} else {
@@ -1852,19 +1865,21 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.on(
 					'error',
 					function(file,response) {
+						var errorText = '';
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
-								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								errorText = response.data.feedback;
 							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
-								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
 							// if ( ! jQuery( '.document-error-popup' ).length) {
 							// 	$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							// }
-							bp.Nouveau.Messages.displaySendMessageFeedback( BP_Nouveau.media.invalid_file_type + '</br>' + response, 'error' );
-							this.removeFile( file );
+							errorText =  BP_Nouveau.media.invalid_file_type + '</br>' + response;
 						}
+						bp.Nouveau.Messages.displaySendMessageFeedback( errorText, 'error' );
+						this.removeFile( file );
 						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
@@ -1910,6 +1925,7 @@ window.bp = window.bp || {};
 					function() {
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
+							Backbone.trigger( 'triggerMediaComplete' );
 						}
 					}
 				);
@@ -2051,7 +2067,6 @@ window.bp = window.bp || {};
 								self.$el.children( '.dropzone' ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 							}
 						}
-						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -2071,17 +2086,19 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.on(
 					'error',
 					function(file,response) {
+						var errorText = '';
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
-								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+								errorText = response.data.feedback;
 							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
-								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
 							// $( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button closeModalErrorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							bp.Nouveau.Messages.displaySendMessageFeedback( BP_Nouveau.media.invalid_media_type + '</br>' + response, 'error' );
-							this.removeFile( file );
+							errorText = BP_Nouveau.media.invalid_media_type + '</br>' + response;
 						}
+						bp.Nouveau.Messages.displaySendMessageFeedback( errorText, 'error' );
+						this.removeFile( file );
 						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
@@ -2127,6 +2144,7 @@ window.bp = window.bp || {};
 					function() {
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
+							Backbone.trigger( 'triggerMediaComplete' );
 						}
 					}
 				);
@@ -2627,6 +2645,26 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			className: 'bb-messages-no-thread-found',
 			template  : bp.template( 'bp-messages-no-threads' ),
+			events: {
+				'click #bp-new-message'  : 'openComposeMessage'
+			},
+			initialize: function() {
+				this.$el.html( this.template() );
+				return this;
+			},
+			openComposeMessage: function(e) {
+				e.preventDefault();
+
+				bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
+			}
+		}
+	);
+
+	bp.Views.MessagesSearchNoThreads = bp.Nouveau.Messages.View.extend(
+		{
+			tagName: 'div',
+			className: 'bb-messages-search-no-thread-found',
+			template  : bp.template( 'bp-messages-search-no-threads' ),
 			events: {
 				'click #bp-new-message'  : 'openComposeMessage'
 			},
@@ -3154,7 +3192,6 @@ window.bp = window.bp || {};
 				if ( this.collection.length ) {
 					$( '.bp-messages-threads-list' ).removeClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).removeClass( 'bp-no-messages' );
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
-
 					bp.Nouveau.Messages.displayFilters( this.collection );
 				}
 			},
@@ -3173,6 +3210,7 @@ window.bp = window.bp || {};
 				if ( ! collection.length ) {
 					$( '.bp-messages-threads-list' ).addClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).addClass( 'bp-no-messages' );
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
+					$( '.bp-messages.bp-user-messages-loading' ).remove();
 					this.views.add( new bp.Views.MessagesNoThreads() );
 				}
 			},
@@ -3504,7 +3542,7 @@ window.bp = window.bp || {};
 				$( '.messages-search-loader' ).remove();
 
 				if ( ! _.isUndefined( collection._events.add[0].context.views ) ) {
-					collection._events.add[0].context.views.add( new bp.Views.MessagesNoThreads() );
+					collection._events.add[0].context.views.add( new bp.Views.MessagesSearchNoThreads() );
 				}
 
 				if ( 'error' === response.type ) {
@@ -3800,8 +3838,9 @@ window.bp = window.bp || {};
 						if ( $s.find( '.message_send_sending' ).length ) {
 							$s = $s.find( '.message_send_sending' ).remove().end();
 						}
+						var content_html = $s.text() !== '' ? $s.html() : '';
 						model.set( 'className', model.attributes.className + ' error' );
-						model.set( 'content', $s.html() + ' ' + errorHtml );
+						model.set( 'content', content_html + ' ' + errorHtml );
 					}
 					this.collection.sync( 'update' );
 				}
