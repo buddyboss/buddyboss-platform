@@ -69,33 +69,22 @@
 
 				<# if ( data.toOthers ) { #>
 				<a href="#message-members-list" id="view_more_members" class="view_more_members view_more_members_cls"
-				   data-thread-id="{{data.id}}"
-				   data-tp="{{data.recipients.total_pages}}"
-				   data-tc="{{data.recipients.count}}"
-				   data-pp="{{data.recipients.per_page}}"
-				   data-cp="1"
-				   data-action="bp_view_more">
+					data-thread-id="{{data.id}}"
+					data-tp="{{data.recipients.total_pages}}"
+					data-tc="{{data.recipients.count}}"
+					data-pp="{{data.recipients.per_page}}"
+					data-cp="1"
+					data-action="bp_view_more">
 				<# } #>
 
 					<# for ( i in first_four ) { #>
 						<span class="participants-name">
 							<# if ( other_recipients[i].is_deleted ) { #>
 								{{other_recipients[i].user_name}}
-							<# } else { #>
-								<# if ( other_recipients[i].user_link ) { #>
-									<# if ( ! data.toOthers || data.toOthers == '' ) { #>
-										<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
-									<# } else { #>
-										{{other_recipients[i].user_name}}
-									<# } #>
-								<# } else { #>
-									{{other_recipients[i].user_name}}
-								<# } #>
-							<# } #>
-
-							<# if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #>
-								<?php esc_html_e( ',', 'buddyboss' ); ?>
-							<# } #>
+							<# } else if ( other_recipients[i].user_link && ( ! data.toOthers || data.toOthers == '' ) ) { #>
+								<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
+							<# } else { #>{{ other_recipients[i].user_name }}<# }
+							if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #>
 						</span>
 					<# } #>
 
