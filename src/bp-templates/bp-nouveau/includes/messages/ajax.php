@@ -603,7 +603,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		),
 		'date'              => bp_get_the_thread_message_date_sent() * 1000,
 		'display_date'      => bp_get_the_thread_message_time_since(),
-		'display_date_list' => bb_get_thread_sent_date( $date_sent ),
+		'display_date_list' => bb_get_thread_sent_date( $thread_template->message->date_sent ),
 		'excerpt'           => $excerpt,
 	);
 
