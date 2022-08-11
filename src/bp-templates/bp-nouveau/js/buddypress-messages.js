@@ -1370,6 +1370,11 @@ window.bp = window.bp || {};
 			},
 
 			postValidate: function() {
+
+				if( window.messageUploaderInProgress ) {
+					return;
+				}
+
 				// Enable submit button if content is available
 				var $message_content = this.$el.find( '#message_content' );
 				var content = $.trim( $message_content[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
@@ -1383,7 +1388,13 @@ window.bp = window.bp || {};
 			},
 
 			DisableSubmit: function () {
+				window.messageUploaderInProgress = true;
 				this.$el.closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+			},
+
+			EnableSubmit: function () {
+				window.messageUploaderInProgress = false;
+				this.postValidate();
 			},
 
 			mediumLink: function () {
@@ -1411,6 +1422,7 @@ window.bp = window.bp || {};
 				this.on( 'ready', this.listenToUploader, this );
 				this.listenTo(Backbone, 'triggerMediaChange', this.postValidate);
 				this.listenTo(Backbone, 'triggerMediaInProgress', this.DisableSubmit);
+				this.listenTo(Backbone, 'triggerMediaComplete', this.EnableSubmit);
 			},
 
 			activateTinyMce: function() {
@@ -1640,7 +1652,6 @@ window.bp = window.bp || {};
 								self.$el.children( '.dropzone' ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 							}
 						}
-						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1708,6 +1719,7 @@ window.bp = window.bp || {};
 					function() {
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
+							Backbone.trigger( 'triggerMediaComplete' );
 						}
 					}
 				);
@@ -1814,7 +1826,6 @@ window.bp = window.bp || {};
 							response.data.privacy 	 = 'message';
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
-							Backbone.trigger( 'triggerMediaChange' );
 							bp.Nouveau.Messages.removeFeedback();
 							return file.previewElement.classList.add( 'dz-success' );
 						} else {
@@ -1914,6 +1925,7 @@ window.bp = window.bp || {};
 					function() {
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
+							Backbone.trigger( 'triggerMediaComplete' );
 						}
 					}
 				);
@@ -2055,7 +2067,6 @@ window.bp = window.bp || {};
 								self.$el.children( '.dropzone' ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
 							}
 						}
-						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -2133,6 +2144,7 @@ window.bp = window.bp || {};
 					function() {
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
+							Backbone.trigger( 'triggerMediaComplete' );
 						}
 					}
 				);
