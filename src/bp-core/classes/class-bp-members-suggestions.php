@@ -86,7 +86,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 			'count_total'     => isset( $this->args['count_total'] ) ? $this->args['count_total'] : '',  // Prevents total count.
 			'populate_extras' => false,
 			'type'            => 'alphabetical',
-			'page'            => 1,
+			'page'            => isset( $this->args['page'] ) ? $this->args['page'] : 1,
 			'per_page'        => $this->args['limit'],
 			'search_terms'    => $this->args['term'],
 			'search_wildcard' => 'right',
