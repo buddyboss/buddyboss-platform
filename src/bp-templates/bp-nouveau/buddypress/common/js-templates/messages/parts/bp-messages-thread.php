@@ -186,7 +186,7 @@
 					</span>
 				<# } #>
 				<div class="thread-date">
-					<time datetime="{{data.date.toISOString()}}">{{data.display_date.toLowerCase()}}</time>
+					<time datetime="{{data.date.toISOString()}}">{{data.display_date}}</time>
 				</div>
 			</div>
 
