@@ -104,13 +104,13 @@
 				if ( 1 < data.group_joined_date.length ) {
 				#>
 				<dd>
-					<span class="thread-date"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> {{data.group_joined_date.toLowerCase()}}</span>
+					<span class="thread-date"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> {{data.group_joined_date}}</span>
 				</dd>
 				<#
 				}
 			} else { #>
 				<dd>
-					<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date.toLowerCase()}}</span>
+					<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
 				</dd>
 			<# } #>
 		</dl>

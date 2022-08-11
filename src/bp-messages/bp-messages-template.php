@@ -2440,7 +2440,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 				// Set output var.
 				switch ( $seconds ) {
 					case YEAR_IN_SECONDS:
-						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M d' ) : bp_core_get_format_date( $old_last_date, 'M d, Y' );
+						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M jS' ) : bp_core_get_format_date( $old_last_date, 'M jS, Y' );
 						break;
 					case WEEK_IN_SECONDS:
 						$start_week = bb_get_week_start_timestamp();
@@ -2449,7 +2449,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 						if ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
 						} else {
-							$output = bp_core_get_format_date( $old_last_date, 'M d' );
+							$output = bp_core_get_format_date( $old_last_date, 'M jS' );
 						}
 						break;
 					case DAY_IN_SECONDS:
@@ -2461,7 +2461,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 						} elseif ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
 						} else {
-							$output = bp_core_get_format_date( $old_last_date, 'M d' );
+							$output = bp_core_get_format_date( $old_last_date, 'M jS' );
 						}
 						break;
 					case 1:
