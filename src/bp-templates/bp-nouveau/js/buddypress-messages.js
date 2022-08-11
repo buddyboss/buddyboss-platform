@@ -3824,8 +3824,9 @@ window.bp = window.bp || {};
 						if ( $s.find( '.message_send_sending' ).length ) {
 							$s = $s.find( '.message_send_sending' ).remove().end();
 						}
+						var content_html = $s.text() !== '' ? $s.html() : '';
 						model.set( 'className', model.attributes.className + ' error' );
-						model.set( 'content', $s.html() + ' ' + errorHtml );
+						model.set( 'content', content_html + ' ' + errorHtml );
 					}
 					this.collection.sync( 'update' );
 				}
