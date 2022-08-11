@@ -301,14 +301,25 @@
 			padding: 4px;
 
 			i {
+				color: $black;
 				font-size: 16px;
 				line-height: 1;
+				opacity: 0.4;
 			}
+
+			&:hover i {
+				opacity: 1;
+			}
+
 		}
 
 		.bb_more_options_list {
 			list-style: none;
 		}
+	}
+
+	.optionsOpen  .message-thread-options .bb_more_options_action i {
+		opacity: 1;
 	}
 
 	.thread-item.optionsOpen .message-thread-options,
@@ -1407,6 +1418,7 @@ input#send-to-input {
 	> span:first-child {
 		margin-right: 10px;
 		font-size: 14px;
+		font-weight: 500;
 		line-height: 30px;
 	}
 
@@ -1609,7 +1621,7 @@ body .bp-messages-user-threads {
 	&.member-popup {
 
 		div.modal-container {
-			max-height: 600px;
+			height: 600px;
 		}
 
 	}
