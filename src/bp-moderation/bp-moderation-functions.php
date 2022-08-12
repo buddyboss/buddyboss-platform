@@ -562,6 +562,10 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		return false;
 	}
 
+	if ( in_array( $item_sub_type, array( BP_Moderation_Members::$moderation_type_report ), true ) && bp_displayed_user_id() === $item_sub_id ) {
+		return false;
+	}
+
 	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 		return false;
 	}
