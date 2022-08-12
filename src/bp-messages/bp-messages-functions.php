@@ -1727,4 +1727,3 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
 
 	return $meta_query;
 }
-
