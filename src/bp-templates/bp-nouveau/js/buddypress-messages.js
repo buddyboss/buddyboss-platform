@@ -1285,6 +1285,15 @@ window.bp = window.bp || {};
 
 				setTimeout(
 					function () { // Waiting to load dummy image.
+						if ( ! $( '#bp-message-thread-list li' ).first().hasClass( 'divider-date' ) ) {
+							$('li.divider-date').first().prependTo( '#bp-message-thread-list' );
+						}
+					},
+					10
+				);
+
+				setTimeout(
+					function () { // Waiting to load dummy image.
 						bp.Nouveau.reportPopUp();
 					},
 					1000
