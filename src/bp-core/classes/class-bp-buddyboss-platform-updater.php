@@ -44,10 +44,6 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		}
 
 		function update_plugin( $transient ) {
-//			if ( empty( $transient->checked ) ) {
-//				$transient->checked = array( $this->plugin_path => false ); // force check for update
-//			}
-
 			if ( ! isset( $transient->response ) ) {
 				return $transient;
 			}
