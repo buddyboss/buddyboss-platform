@@ -2606,13 +2606,13 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, 'M d' ) : bp_core_get_format_date( $old_start_date, 'M d, Y' );
+					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, 'M jS' ) : bp_core_get_format_date( $old_start_date, 'M jS, Y' );
 					break;
 				case WEEK_IN_SECONDS:
 					if ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {
-						$output = bp_core_get_format_date( $old_start_date, 'M d' );
+						$output = bp_core_get_format_date( $old_start_date, 'M jS' );
 					}
 					break;
 				case DAY_IN_SECONDS:
@@ -2621,7 +2621,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 					} elseif ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {
-						$output = bp_core_get_format_date( $old_start_date, 'M d' );
+						$output = bp_core_get_format_date( $old_start_date, 'M jS' );
 					}
 					break;
 				default:
