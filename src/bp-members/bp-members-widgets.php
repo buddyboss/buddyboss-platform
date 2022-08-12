@@ -97,10 +97,13 @@ function bp_core_ajax_widget_members() {
 		ob_start();
 		while ( bp_members() ) :
 			bp_the_member();
+
+			$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $members_template->member->id ) ? 'bp-user-suspended' : '';
+			$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $members_template->member->id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
 			<li class="vcard">
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>" class="bb-member-status-<?php echo esc_attr( $members_template->member->id ); ?>">
+					<a href="<?php bp_member_permalink(); ?>" class="bb-member-status-<?php echo esc_attr( $members_template->member->id ) . ' ' . esc_attr( $moderation_class ); ?>">
 						<?php bp_member_avatar(); ?>
 						<?php
 						if ( function_exists( 'bb_current_user_status' ) ) {

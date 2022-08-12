@@ -140,10 +140,13 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				<?php
 				while ( bp_members() ) :
 					bp_the_member();
+
+					$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_get_member_user_id() ) ? 'bp-user-suspended' : '';
+					$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_get_member_user_id() ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 					?>
 
 					<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ) . ' ' . esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
 							<?php bp_member_avatar(); ?>
 							<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', bp_get_member_user_id() ) ); ?>
 						</a>
@@ -354,10 +357,13 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 			<?php
 			while ( bp_members() ) :
 				bp_the_member();
+
+				$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_get_member_user_id() ) ? 'bp-user-suspended' : '';
+				$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_get_member_user_id() ) ? 'bp-user-blocked' : $moderation_class;
 				?>
 
 				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ) . ' ' . esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
                         <?php bp_member_avatar(); ?>
 						<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', bp_get_member_user_id() ) ); ?>
 					</a>
@@ -405,10 +411,13 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 			<?php
 			while ( bp_members() ) :
 				bp_the_member();
+
+				$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_get_member_user_id() ) ? 'bp-user-suspended' : '';
+				$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_get_member_user_id() ) ? 'bp-user-blocked' : $moderation_class;
 				?>
 
 				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ) . ' ' . esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
 						<?php bp_member_avatar(); ?>
 						<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', bp_get_member_user_id() ) ); ?>
 					</a>

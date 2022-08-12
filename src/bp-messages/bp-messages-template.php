@@ -2376,15 +2376,15 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 	if ( ! empty( $last_message_date ) && ! is_numeric( $last_message_date ) ) {
 		$time_chunks       = explode( ':', str_replace( ' ', ':', $last_message_date ) );
 		$date_chunks       = explode( '-', str_replace( ' ', '-', $last_message_date ) );
-		$last_message_date = gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
+		$last_message_date = strtotime( $last_message_date );
 	}
 
 	// Calculate the different with current time for past 5 mins.
-	$newer_current_date = ( ! $newer_date ) ? bp_core_current_time( true, 'timestamp' ) : $newer_date;
+	$newer_current_date = ( ! $newer_date ) ? strtotime( bp_core_current_time() ) : $newer_date;
 	$current_since      = $newer_current_date - $last_message_date;
 	$five_seconds       = ( 5 * MINUTE_IN_SECONDS );
 
-	if ( 0 < $current_since && $five_seconds >= $current_since ) {
+	if ( 0 <= $current_since && $current_since <= $five_seconds ) {
 		$output = $right_now_text;
 	} else {
 
@@ -2440,7 +2440,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 				// Set output var.
 				switch ( $seconds ) {
 					case YEAR_IN_SECONDS:
-						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M d' ) : bp_core_get_format_date( $old_last_date, 'M d, Y' );
+						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M jS' ) : bp_core_get_format_date( $old_last_date, 'M jS, Y' );
 						break;
 					case WEEK_IN_SECONDS:
 						$start_week = bb_get_week_start_timestamp();
@@ -2449,7 +2449,7 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 						if ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
 						} else {
-							$output = bp_core_get_format_date( $old_last_date, 'M d' );
+							$output = bp_core_get_format_date( $old_last_date, 'M jS' );
 						}
 						break;
 					case DAY_IN_SECONDS:
@@ -2461,8 +2461,11 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 						} elseif ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
 						} else {
-							$output = bp_core_get_format_date( $old_last_date, 'M d' );
+							$output = bp_core_get_format_date( $old_last_date, 'M jS' );
 						}
+						break;
+					case 1:
+						$output = bp_core_get_format_date( $old_last_date, 'g:iA' );
 						break;
 					default:
 						$output = $right_now_text;

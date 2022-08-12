@@ -6494,6 +6494,11 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   z-index: 1;
 }
 
+.bp-user-blocked > .member-status,
+.bp-user-suspended > .member-status {
+  display: none !important;
+}
+
 #buddypress .members-list > li {
   min-width: 275px;
 }
@@ -9337,12 +9342,22 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 #message-threads .message-thread-options .bb_more_options_action i {
+  color: #333;
   font-size: 16px;
   line-height: 1;
+  opacity: 0.4;
+}
+
+#message-threads .message-thread-options .bb_more_options_action:hover i {
+  opacity: 1;
 }
 
 #message-threads .message-thread-options .bb_more_options_list {
   list-style: none;
+}
+
+#message-threads .optionsOpen .message-thread-options .bb_more_options_action i {
+  opacity: 1;
 }
 
 #message-threads .thread-item.optionsOpen .message-thread-options,
@@ -9986,7 +10001,7 @@ input#send-to-input {
 }
 
 .bp-messages-content .bp-message-content_foot_note strong {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .bp-message-content-wrap .bp-message-content_foot_note {
@@ -10395,6 +10410,7 @@ input#send-to-input {
 .compose .bp-messages-recipient > span:first-child {
   margin-left: 10px;
   font-size: 14px;
+  font-weight: 500;
   line-height: 30px;
 }
 
@@ -10558,7 +10574,7 @@ body .bp-messages-user-threads {
 .message-members-list.moderation-popup div.modal-container, .message-members-list.member-popup div.modal-container,
 .mass-user-block-list.moderation-popup div.modal-container,
 .mass-user-block-list.member-popup div.modal-container {
-  max-height: 600px;
+  height: 600px;
 }
 
 .message-members-list .bb-report-type-pagination,
