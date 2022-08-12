@@ -1669,7 +1669,11 @@ body .bp-messages-user-threads {
 	&.member-popup {
 
 		div.modal-container {
-			height: 600px;
+			max-height: 600px;
+
+			@media screen and (max-height: 600px) {
+				max-height: 80vh;
+			}
 		}
 
 	}
