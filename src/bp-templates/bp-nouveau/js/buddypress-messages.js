@@ -3600,6 +3600,7 @@ window.bp = window.bp || {};
 			resetSearchTerms: function( event ) {
 				event.preventDefault();
 
+				$( '.bb-messages-search-no-thread-found' ).hide();
 				if ( ! $( event.target ).val() ) {
 					$( event.target ).closest( 'form' ).submit();
 				} else {
@@ -3641,6 +3642,7 @@ window.bp = window.bp || {};
 			resetSearchForm: function( event ) {
 				event.preventDefault();
 
+				$( '.bb-messages-search-no-thread-found' ).hide();
 				var form = $( event.target ).closest( '#user_messages_search_form' );
 
 				if ( '' !== form.find( '#user_messages_search' ).val() ) {
