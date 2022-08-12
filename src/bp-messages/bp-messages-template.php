@@ -2662,9 +2662,9 @@ function bb_get_the_thread_message_sent_time() {
 	/**
 	 * Filters the 'Sent x hours ago' string for the current message.
 	 *
-	 * @since BuddyPress 1.1.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $value Default text of 'Sent x hours ago'.
 	 */
-	return apply_filters( 'bp_get_the_thread_message_time_since', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', bp_get_the_thread_message_date_sent() ) ) );
+	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', bp_get_the_thread_message_date_sent() ) ) );
 }
