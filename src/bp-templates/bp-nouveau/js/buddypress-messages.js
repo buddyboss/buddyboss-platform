@@ -35,8 +35,9 @@ window.bp = window.bp || {};
 			this.threads      = new bp.Collections.Threads();
 			this.messages     = new bp.Collections.Messages();
 			this.router       = new bp.Nouveau.Messages.Router();
-			this.box          = 'inbox';
-			this.mediumEditor = false;
+			this.box               = 'inbox';
+			this.mediumEditor      = false;
+			this.divider      = [];
 
 			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -1250,13 +1251,54 @@ window.bp = window.bp || {};
 
 				}
 
+				var finalMessagesArray = [];
+				_.each(
+					resp.messages,
+					function( value ) {
+						if ( _.isNull( value ) ) {
+							return;
+						}
+						finalMessagesArray.push( value );
+						if ( $.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1 ) {
+
+							var newDividerMessageObject = jQuery.extend( true, {}, value );
+							newDividerMessageObject.id = value.sent_split_date;
+							newDividerMessageObject.content = value.sent_date;
+							newDividerMessageObject.sender_avatar = '';
+							newDividerMessageObject.sender_id = '';
+							newDividerMessageObject.sender_is_you = '';
+							newDividerMessageObject.sender_link = '';
+							newDividerMessageObject.sender_name = '';
+							newDividerMessageObject.display_date = '';
+							newDividerMessageObject.group_text = '';
+							newDividerMessageObject.group_name = '';
+							newDividerMessageObject.group_avatar = '';
+							newDividerMessageObject.group_link = '';
+							newDividerMessageObject.message_from = '';
+							newDividerMessageObject.class_name = 'divider-date';
+
+							bp.Nouveau.Messages.divider.push( value.sent_split_date );
+							finalMessagesArray.push( newDividerMessageObject );
+						}
+					}
+				);
+
+				setTimeout(
+					function () { // Waiting to load dummy image.
+						if ( ! $( '#bp-message-thread-list li' ).first().hasClass( 'divider-date' ) ) {
+							$('li.divider-date').first().prependTo( '#bp-message-thread-list' );
+						}
+					},
+					10
+				);
+
 				setTimeout(
 					function () { // Waiting to load dummy image.
 						bp.Nouveau.reportPopUp();
 					},
 					1000
 				);
-				return resp.messages;
+				return finalMessagesArray;
 			}
 		}
 	);
@@ -3287,6 +3329,7 @@ window.bp = window.bp || {};
 
 			changePreview: function( event ) {
 				var target = $( event.currentTarget );
+				bp.Nouveau.Messages.divider = [];
 
 				event.preventDefault();
 				bp.Nouveau.Messages.removeFeedback();
@@ -3720,9 +3763,11 @@ window.bp = window.bp || {};
 
 				if ( this.options.model.attributes.className ) {
 					this.el.className += ' ' + this.options.model.attributes.className;
+					this.render();
 				}
 				this.model.on( 'change', this.updateMessage, this );
 				this.model.on( 'change', this.updateMessageClass, this );
+
 			},
 
 			updateMessage: function( model ) {
@@ -3790,6 +3835,8 @@ window.bp = window.bp || {};
 			firstFetch : true,
 			firstLi : true,
 			loadingFeedback: false,
+			last_date: '',
+			last_date_display: '',
 
 			initialize: function() {
 				// Load Messages.
@@ -3827,6 +3874,35 @@ window.bp = window.bp || {};
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
+
+				var split_message = jQuery.extend(true, {}, _.first( messagePusherData ) );
+				var date = split_message.date,
+					year = date.getFullYear(),
+					month = String( date.getMonth() + 1 ).padStart( 2, '0' ),
+					day = String( date.getDate() ).padStart( 2, '0' ),
+					split_date = year + '-' + month + '-' + day;
+
+				if ( $.inArray( split_date, bp.Nouveau.Messages.divider ) === -1 ) {
+					split_message.hash = '';
+					split_message.id = split_date;
+					split_message.content = BP_Nouveau.messages.today;
+					split_message.sender_avatar = '';
+					split_message.sender_id = '';
+					split_message.sender_is_you = '';
+					split_message.sender_link = '';
+					split_message.sender_name = '';
+					split_message.display_date = '';
+					split_message.group_text = '';
+					split_message.group_name = '';
+					split_message.group_avatar = '';
+					split_message.group_link = '';
+					split_message.message_from = '';
+					split_message.class_name = 'divider-date';
+					delete split_message.className;
+					bp.Nouveau.Messages.divider.push( split_date );
+					this.collection.add( split_message );
+				}
+
 				// use sent messageData here.
 				this.collection.add( _.first( messagePusherData ) );
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
@@ -4073,6 +4149,10 @@ window.bp = window.bp || {};
 
 				if ( ! message.attributes.is_new ) {
 					options.at = 0;
+				}
+
+				if ( 'undefined' !== typeof message.attributes.class_name && '' !== message.attributes.class_name ) {
+					message.attributes.className = message.attributes.class_name;
 				}
 
 				this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ), options );
