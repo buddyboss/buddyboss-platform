@@ -602,7 +602,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			)
 		),
 		'date'              => bp_get_the_thread_message_date_sent() * 1000,
-		'display_date'      => bp_get_the_thread_message_time_since(),
+		'display_date'      => bb_get_the_thread_message_sent_time(),
 		'display_date_list' => bb_get_thread_sent_date( $thread_template->message->date_sent ),
 		'excerpt'           => $excerpt,
 	);
@@ -1179,7 +1179,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		);
 
 		$is_thread_archived = false;
-		if ( is_array( $messages_template->thread->recipients ) ) {
+		if ( is_array( $check_recipients ) ) {
 			$count  = 1;
 			$admins = array_map(
 				'intval',
@@ -1190,7 +1190,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					)
 				)
 			);
-			foreach ( $messages_template->thread->recipients as $recipient ) {
+			foreach ( $check_recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][ $count ] = array(
 						'id'         => $recipient->user_id,
@@ -1254,10 +1254,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				}
 			}
 
-			$threads->threads[ $i ]['action_recipients']['count']         = $messages_template->thread->total_recipients_count;
+			$threads->threads[ $i ]['action_recipients']['count']         = count( $check_recipients );
 			$threads->threads[ $i ]['action_recipients']['current_count'] = (int) bb_messages_recipients_per_page();
 			$threads->threads[ $i ]['action_recipients']['per_page']      = bb_messages_recipients_per_page();
-			$threads->threads[ $i ]['action_recipients']['total_pages']   = ceil( (int) $messages_template->thread->total_recipients_count / (int) bb_messages_recipients_per_page() );
+			$threads->threads[ $i ]['action_recipients']['total_pages']   = ceil( (int) count( $check_recipients ) / (int) bb_messages_recipients_per_page() );
 		}
 
 		$threads->threads[ $i ]['is_thread_archived'] = $is_thread_archived;
@@ -2585,7 +2585,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'              => bp_get_the_thread_message_time_since(),
+				'display_date'              => bb_get_the_thread_message_sent_time(),
 			);
 
 		} else {
@@ -2679,7 +2679,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => bp_get_the_thread_message_time_since(),
+				'display_date'  => bb_get_the_thread_message_sent_time(),
 			);
 		}
 
@@ -2931,6 +2931,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		if ( array_filter( $extra_content ) ) {
 			$thread->messages[ $i ] = array_merge( $thread->messages[ $i ], $extra_content );
 		}
+
+		$thread->messages[ $i ]['sent_date']       = bb_get_thread_start_date( $thread_template->message->date_sent );
+		$thread->messages[ $i ]['sent_split_date'] = date_i18n( 'Y-m-d', strtotime( $thread_template->message->date_sent ) );
 
 		$i += 1;
 	endwhile;

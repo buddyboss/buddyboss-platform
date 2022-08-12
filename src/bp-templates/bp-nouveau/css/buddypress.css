@@ -10135,6 +10135,43 @@ div.profile_completion_wrap .progress_text_wrap {
   width: 100%;
 }
 
+#bp-message-thread-list li.divider-date {
+  position: relative;
+}
+
+#bp-message-thread-list li.divider-date .message-metadata,
+#bp-message-thread-list li.divider-date .bp-avatar-wrap {
+  display: none;
+}
+
+#bp-message-thread-list li.divider-date:after {
+  content: "";
+  background-color: #eee;
+  height: 1px;
+  position: absolute;
+  top: 24px;
+  left: 20px;
+  right: 20px;
+}
+
+#bp-message-thread-list li.divider-date .bp-single-message-wrap {
+  text-align: center;
+}
+
+#bp-message-thread-list li.divider-date .bp-message-content-wrap {
+  color: #767676;
+  background: #fff;
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  padding: 0 10px;
+  position: relative;
+  z-index: 1;
+  letter-spacing: initial;
+}
+
 #bp-message-thread-list .message-metadata .avatar {
   width: 30px;
 }
@@ -10182,6 +10219,15 @@ div.profile_completion_wrap .progress_text_wrap {
 
 #bp-message-thread-list .bp-message-content-wrap p {
   margin-bottom: 8px;
+}
+
+#bp-message-thread-list .bp-message-content-wrap p:last-child {
+  margin-bottom: 0;
+}
+
+#bp-message-thread-list .bp-message-content-wrap + .bb-activity-video-wrap,
+#bp-message-thread-list .bp-message-content-wrap + .bb-activity-media-wrap {
+  margin-top: 8px;
 }
 
 #bp-message-thread-list img.avatar {
@@ -10973,7 +11019,15 @@ body .bp-messages-user-threads {
 .message-members-list.moderation-popup div.modal-container, .message-members-list.member-popup div.modal-container,
 .mass-user-block-list.moderation-popup div.modal-container,
 .mass-user-block-list.member-popup div.modal-container {
-  height: 600px;
+  max-height: 600px;
+}
+
+@media screen and (max-height: 600px) {
+  .message-members-list.moderation-popup div.modal-container, .message-members-list.member-popup div.modal-container,
+  .mass-user-block-list.moderation-popup div.modal-container,
+  .mass-user-block-list.member-popup div.modal-container {
+    max-height: 80vh;
+  }
 }
 
 .message-members-list .bb-report-type-pagination,
