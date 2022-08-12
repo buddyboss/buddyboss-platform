@@ -602,7 +602,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			)
 		),
 		'date'              => bp_get_the_thread_message_date_sent() * 1000,
-		'display_date'      => bp_get_the_thread_message_time_since(),
+		'display_date'      => bb_get_the_thread_message_sent_time(),
 		'display_date_list' => bb_get_thread_sent_date( $thread_template->message->date_sent ),
 		'excerpt'           => $excerpt,
 	);
@@ -2582,7 +2582,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'              => bp_get_the_thread_message_time_since(),
+				'display_date'              => bb_get_the_thread_message_sent_time(),
 			);
 
 		} else {
@@ -2676,7 +2676,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					)
 				),
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => bp_get_the_thread_message_time_since(),
+				'display_date'  => bb_get_the_thread_message_sent_time(),
 			);
 		}
 
@@ -2928,6 +2928,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		if ( array_filter( $extra_content ) ) {
 			$thread->messages[ $i ] = array_merge( $thread->messages[ $i ], $extra_content );
 		}
+
+		$thread->messages[ $i ]['sent_date']       = bb_get_thread_start_date( $thread_template->message->date_sent );
+		$thread->messages[ $i ]['sent_split_date'] = date_i18n( 'Y-m-d', strtotime( $thread_template->message->date_sent ) );
 
 		$i += 1;
 	endwhile;

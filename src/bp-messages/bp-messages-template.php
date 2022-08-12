@@ -2563,8 +2563,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	$newer_date_chunks = explode( '-', str_replace( ' ', '-', $newer_date ) );
 	$newer_date        = gmmktime( (int) $newer_time_chunks[1], (int) $newer_time_chunks[2], (int) $newer_time_chunks[3], (int) $newer_date_chunks[1], (int) $newer_date_chunks[2], (int) $newer_date_chunks[0] );
 
-	$start_week = bb_get_week_start_timestamp();
-	$end_week   = bb_get_week_end_timestamp();
+	$end_week = bb_get_week_start_timestamp( '-7 days' );
 
 	// Difference in seconds.
 	$since = $newer_date - $thread_start_date;
@@ -2607,22 +2606,22 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, 'M d' ) : bp_core_get_format_date( $old_start_date, 'M d, Y' );
+					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, 'M jS' ) : bp_core_get_format_date( $old_start_date, 'M jS, Y' );
 					break;
 				case WEEK_IN_SECONDS:
-					if ( $end_week >= $since ) {
+					if ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {
-						$output = bp_core_get_format_date( $old_start_date, 'M d' );
+						$output = bp_core_get_format_date( $old_start_date, 'M jS' );
 					}
 					break;
 				case DAY_IN_SECONDS:
 					if ( 1 == $count ) {
 						$output = __( 'Yesterday', 'buddyboss' );
-					} elseif ( $end_week >= $since ) {
+					} elseif ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {
-						$output = bp_core_get_format_date( $old_start_date, 'M d' );
+						$output = bp_core_get_format_date( $old_start_date, 'M jS' );
 					}
 					break;
 				default:
@@ -2649,4 +2648,23 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	 *                                      date to. Default: false (current time).
 	 */
 	return apply_filters( 'bb_get_thread_start_date', $output, $old_start_date, $newer_date );
+}
+
+/**
+ * Generate the 'g:i A' string for the current message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_the_thread_message_sent_time() {
+
+	/**
+	 * Filters the 'Sent x hours ago' string for the current message.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default text of 'Sent x hours ago'.
+	 */
+	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', bp_get_the_thread_message_date_sent() ) ) );
 }
