@@ -243,7 +243,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
 	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
 		$button_text          = __( 'Report Member', 'buddyboss' );
-		$reported_button_text = __( 'Reported Member', 'buddyboss' );
+		$reported_button_text = __( 'Report Member', 'buddyboss' );
 	} else {
 		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
 		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
