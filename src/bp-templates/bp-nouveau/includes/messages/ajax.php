@@ -1176,7 +1176,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		);
 
 		$is_thread_archived = false;
-		if ( is_array( $messages_template->thread->recipients ) ) {
+		if ( is_array( $check_recipients ) ) {
 			$count  = 1;
 			$admins = array_map(
 				'intval',
@@ -1187,7 +1187,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					)
 				)
 			);
-			foreach ( $messages_template->thread->recipients as $recipient ) {
+			foreach ( $check_recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][ $count ] = array(
 						'id'         => $recipient->user_id,
@@ -1251,10 +1251,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				}
 			}
 
-			$threads->threads[ $i ]['action_recipients']['count']         = $messages_template->thread->total_recipients_count;
+			$threads->threads[ $i ]['action_recipients']['count']         = count( $check_recipients );
 			$threads->threads[ $i ]['action_recipients']['current_count'] = (int) bb_messages_recipients_per_page();
 			$threads->threads[ $i ]['action_recipients']['per_page']      = bb_messages_recipients_per_page();
-			$threads->threads[ $i ]['action_recipients']['total_pages']   = ceil( (int) $messages_template->thread->total_recipients_count / (int) bb_messages_recipients_per_page() );
+			$threads->threads[ $i ]['action_recipients']['total_pages']   = ceil( (int) count( $check_recipients ) / (int) bb_messages_recipients_per_page() );
 		}
 
 		$threads->threads[ $i ]['is_thread_archived'] = $is_thread_archived;
