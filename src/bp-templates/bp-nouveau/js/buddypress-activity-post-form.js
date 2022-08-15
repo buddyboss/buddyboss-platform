@@ -503,7 +503,8 @@ window.bp = window.bp || {};
 					if ( 0 < parseInt( activity_data.id ) ) {
 						document_edit_data = {
 							'id': activity_data.document[ doci ].doc_id,
-							'name': activity_data.document[ doci ].name,
+							'name': activity_data.document[ doci ].full_name,
+							'full_name': activity_data.document[ doci ].full_name,
 							'type': 'document',
 							'url': activity_data.document[ doci ].url,
 							'size': activity_data.document[ doci ].size,
@@ -517,7 +518,8 @@ window.bp = window.bp || {};
 					} else {
 						document_edit_data = {
 							'id': activity_data.document[ doci ].id,
-							'name': activity_data.document[ doci ].name,
+							'name': activity_data.document[ doci ].full_name,
+							'full_name': activity_data.document[ doci ].full_name,
 							'type': 'document',
 							'url': activity_data.document[ doci ].url,
 							'size': activity_data.document[ doci ].size,
@@ -530,12 +532,12 @@ window.bp = window.bp || {};
 					}
 
 					doc_file = {
-						name: activity_data.document[ doci ].name,
+						name: activity_data.document[ doci ].full_name,
 						size: activity_data.document[ doci ].size,
 						accepted: true,
 						kind: 'file',
 						upload: {
-							filename: activity_data.document[ doci ].name,
+							filename: activity_data.document[ doci ].full_name,
 							uuid: activity_data.document[ doci ].doc_id
 						},
 						dataURL: activity_data.document[ doci ].url,
@@ -895,7 +897,7 @@ window.bp = window.bp || {};
 			var self = this,
 				meta = {};
 
-			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+			if ( _.isUndefined( this.postForm ) || this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 				return;
 			}
 
@@ -1112,7 +1114,7 @@ window.bp = window.bp || {};
 
 		postDraftActivity: function( is_force_saved, is_reload_window ) {
 
-			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+			if ( _.isUndefined( this.postForm ) || this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 				return;
 			}
 
@@ -4538,6 +4540,14 @@ window.bp = window.bp || {};
 										// Enable post submit button
 										$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
 									},
+
+									picker_show: function () {
+										$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+									},
+
+									picker_hide: function () {
+										$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+									},
 								}
 							}
 						);
@@ -5411,13 +5421,6 @@ window.bp = window.bp || {};
 
 				// Delete the activity from the database.
 				bp.Nouveau.Activity.postForm.resetDraftActivity( true );
-
-				setTimeout(
-					function() {
-						$( '#whats-new-form #aw-whats-new-reset' ).trigger( 'click' );
-					},
-					0
-				);
 			},
 		}
 	);
