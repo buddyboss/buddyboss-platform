@@ -79,11 +79,9 @@
 
 					<# for ( i in first_four ) { #>
 						<span class="participants-name">
-							<# if ( other_recipients[i].is_deleted ) { #>
-								{{other_recipients[i].user_name}}
-							<# } else if ( other_recipients[i].user_link && ( ! data.toOthers || data.toOthers == '' ) ) { #>
-								<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
-							<# } else { #>{{ other_recipients[i].user_name }}<# }
+							<# if ( other_recipients[i].is_deleted ) { #>{{other_recipients[i].user_name}}<#
+							} else if ( other_recipients[i].user_link && ( ! data.toOthers || data.toOthers == '' ) ) { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><#
+							} else { #>{{ other_recipients[i].user_name }}<# }
 							if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #>
 						</span>
 					<# } #>
