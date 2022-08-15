@@ -1287,8 +1287,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$data['preview_data'] = $bp->embed->autoembed( $link_embed, '' );
 		} elseif ( method_exists( $bp->embed, 'autoembed' ) && ! empty( $data['content_stripped'] ) ) {
 			$check_embedded_content = $bp->embed->autoembed( $data['content_stripped'], '' );
-			if ( ! empty( $check_embedded_content ) && strpos( $check_embedded_content, '<iframe' ) !== false ) {
-				$data['preview_data'] = $check_embedded_content;
+			if ( ! empty( $check_embedded_content ) ) {
+				preg_match( '/<iframe[^>]*><\/iframe>/', $check_embedded_content, $match );
+				if ( ! empty( $match[0] ) ) {
+					$data['preview_data'] = $match[0];
+				}
 			}
 		}
 
