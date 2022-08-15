@@ -1000,7 +1000,7 @@ div.video-js {
 			&.loading {
 				text-align: center;
 
-				.bb-icon-loader {
+				[class*="bb-icon"] {
 					font-size: 26px;
 					color: #fff;
 					text-align: center;
