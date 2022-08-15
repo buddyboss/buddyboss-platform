@@ -3974,7 +3974,6 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
-  white-space: break-spaces;
 }
 
 .activity-link-preview-container .activity-link-preview-info .activity-link-preview-excerpt p {
@@ -4114,6 +4113,10 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   text-transform: uppercase;
   line-height: 20px;
   margin-bottom: 2px;
+}
+
+.activity-url-scrapper-container.activity-post-form-link-wp-embed .activity-link-preview-excerpt > .twitter-tweet {
+  margin: 0 auto !important;
 }
 
 .activity-video-preview .activity-link-preview-excerpt {
