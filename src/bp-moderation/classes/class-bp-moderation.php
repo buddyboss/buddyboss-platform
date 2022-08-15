@@ -265,7 +265,6 @@ class BP_Moderation {
 		$this->blog_id       = (int) $row->blog_id;
 		$this->count         = (int) bp_moderation_get_meta( $this->id, '_count' );
 		$this->user_reported = (int) bp_moderation_get_meta( $this->id, '_count_user_reported' );
-		$this->user_report   = $row->user_report;
 
 		/**
 		 * Fetch User Report data
@@ -286,6 +285,7 @@ class BP_Moderation {
 		$this->content      = $report_row->content;
 		$this->date_created = $report_row->date_created;
 		$this->category_id  = (int) $report_row->category_id;
+		$this->user_report  = $report_row->user_report;
 	}
 
 	/**
@@ -373,10 +373,6 @@ class BP_Moderation {
 			$where_conditions['reported'] = 'reported=1';
 		}
 
-		if ( isset( $r['user_report'] ) ) {
-			$where_conditions['user_report'] = 'user_report=1';
-		}
-
 		// Scope takes precedence.
 		if ( ! empty( $r['filter_query'] ) ) {
 			$filter_query = new BP_Moderation_Query( $r['filter_query'] );
@@ -389,6 +385,13 @@ class BP_Moderation {
 			if ( ! empty( $sql['join'] ) ) {
 				$join_sql .= $sql['join'];
 			}
+		}
+
+		if ( isset( $r['user_report'] ) ) {
+			if ( empty( $join_sql ) && empty( $r['user_id'] ) ) {
+				$join_sql .= " LEFT JOIN {$bp->moderation->table_name_reports} mr ON ms.id = mr.moderation_id ";
+			}
+			$where_conditions['user_report'] = 'mr.user_report=1';
 		}
 
 		if ( ! empty( $r['blocked_only'] ) ) {
@@ -1100,7 +1103,7 @@ class BP_Moderation {
 		/**
 		 * IF any new Content reported then do some required actions
 		 */
-		if ( empty( $this->report_id ) ) {
+		if ( empty( $this->report_id ) || ( 0 === $this->user_report && BP_Moderation_Members::$moderation_type === $this->item_type ) ) {
 
 			// Update last update time as new reported added.
 			$this->last_updated = current_time( 'mysql' );
@@ -1242,8 +1245,15 @@ class BP_Moderation {
 
 		$bp = buddypress();
 
-		if ( ! empty( $this->report_id ) ) {
+		if ( ! empty( $this->report_id ) && BP_Moderation_Members::$moderation_type === $this->item_type && empty( $this->user_report ) ) {
+			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id, user_report ) VALUES ( %d, %d, %s, %s, %d, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id, $this->user_report ); // phpcs:ignore
+
+			bp_moderation_update_meta( $this->id, '_count', $this->count );
+			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
+		} else if ( ! empty( $this->report_id ) ) {
 			$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d, user_report = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->user_report, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
+			bp_moderation_update_meta( $this->id, '_count', $this->count );
+			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
 		} else {
 			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id, user_report ) VALUES ( %d, %d, %s, %s, %d, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id, $this->user_report ); // phpcs:ignore
 
