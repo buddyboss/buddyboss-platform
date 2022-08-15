@@ -832,7 +832,6 @@ ul.medium-editor-toolbar-actions {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			width: 100%;
-			white-space: break-spaces;
 		}
 
 		.activity-link-preview-excerpt p {
@@ -1001,6 +1000,14 @@ ul.medium-editor-toolbar-actions {
 			text-transform: uppercase;
 			line-height: 20px;
 			margin-bottom: 2px;
+		}
+
+	}
+
+	&.activity-post-form-link-wp-embed {
+
+		.activity-link-preview-excerpt > .twitter-tweet {
+			margin: 0 auto !important;
 		}
 
 	}
