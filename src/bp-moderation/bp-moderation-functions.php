@@ -334,6 +334,9 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
+		if( BP_Moderation_Members::$moderation_type === $item_type ) {
+			$response   = ( ! empty( $moderation->id ) && empty( $moderation->user_report ) );
+		}
 	}
 
 	return $response;

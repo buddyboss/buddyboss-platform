@@ -238,7 +238,8 @@ function bp_moderation_block_member() {
 		wp_send_json_error( $response );
 	}
 
-	if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
+	$moderation_type = $reported ? BP_Moderation_Members::$moderation_type_report : BP_Moderation_Members::$moderation_type;
+	if ( bp_moderation_report_exist( $item_id, $moderation_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'You have already reported this Member', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
