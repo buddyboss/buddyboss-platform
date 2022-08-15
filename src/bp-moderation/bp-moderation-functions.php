@@ -243,7 +243,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
 	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
 		$button_text          = __( 'Report Member', 'buddyboss' );
-		$reported_button_text = __( 'Reported Member', 'buddyboss' );
+		$reported_button_text = __( 'Report Member', 'buddyboss' );
 	} else {
 		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
 		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
@@ -334,6 +334,9 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
+		if( BP_Moderation_Members::$moderation_type === $item_type ) {
+			$response   = ( ! empty( $moderation->id ) && empty( $moderation->user_report ) );
+		}
 	}
 
 	return $response;
@@ -559,6 +562,10 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 
 	// If Sub type moderation disabled then reporting option should not show.
 	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
+		return false;
+	}
+
+	if ( in_array( $item_sub_type, array( BP_Moderation_Members::$moderation_type_report ), true ) && bp_loggedin_user_id() === $item_sub_id ) {
 		return false;
 	}
 
