@@ -5229,7 +5229,12 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
 
-		if ( is_array( $matched_user_ids ) && count( $matched_user_ids ) > 0 && $query->query_vars['per_page'] < count( $matched_user_ids ) ) {
+		if (
+			is_array( $matched_user_ids ) &&
+			count( $matched_user_ids ) > 0 &&
+			! did_action( 'wp_ajax_messages_search_recipients' ) &&
+			$query->query_vars['per_page'] < count( $matched_user_ids )
+		) {
 			$sql['limit'] = ' LIMIT 0, ' . count( $matched_user_ids );
 		}
 	}
