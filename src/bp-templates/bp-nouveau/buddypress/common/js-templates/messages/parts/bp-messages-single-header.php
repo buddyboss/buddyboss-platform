@@ -138,7 +138,7 @@
 								</li>
 							<# }
 
-							if ( data.is_group_thread ) { #>
+							if ( data.is_group_thread || other_recipients.length > 2 ) { #>
 							<li class="view_members">
 								<a href="#message-members-list" id="view_more_members" class="view_more_members"
 								   data-thread-id="{{data.id}}"
@@ -210,7 +210,7 @@
 								</li>
 							<# }
 
-							if ( data.is_group_thread ) { #>
+							if ( data.is_group_thread || other_recipients.length > 2 ) { #>
 							<li class="view_members">
 								<a href="#message-members-list" id="view_more_members" class="view_more_members"
 								   data-thread-id="{{data.id}}"

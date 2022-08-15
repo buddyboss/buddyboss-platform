@@ -1277,6 +1277,22 @@ window.bp = window.bp || {};
 							newDividerMessageObject.message_from = '';
 							newDividerMessageObject.class_name = 'divider-date';
 
+							if ( typeof newDividerMessageObject.gif !== 'undefined' ) {
+								delete newDividerMessageObject.gif;
+							}
+
+							if ( typeof newDividerMessageObject.video !== 'undefined' ) {
+								delete newDividerMessageObject.video;
+							}
+
+							if ( typeof newDividerMessageObject.document !== 'undefined' ) {
+								delete newDividerMessageObject.document;
+							}
+
+							if ( typeof newDividerMessageObject.media !== 'undefined' ) {
+								delete newDividerMessageObject.media;
+							}
+
 							bp.Nouveau.Messages.divider.push( value.sent_split_date );
 							finalMessagesArray.push( newDividerMessageObject );
 						}
@@ -3897,6 +3913,23 @@ window.bp = window.bp || {};
 					split_message.message_from = '';
 					split_message.class_name = 'divider-date';
 					delete split_message.className;
+
+					if ( typeof split_message.gif !== 'undefined' ) {
+						delete split_message.gif;
+					}
+
+					if ( typeof split_message.video !== 'undefined' ) {
+						delete split_message.video;
+					}
+
+					if ( typeof split_message.document !== 'undefined' ) {
+						delete split_message.document;
+					}
+
+					if ( typeof split_message.media !== 'undefined' ) {
+						delete split_message.media;
+					}
+
 					bp.Nouveau.Messages.divider.push( split_date );
 					this.collection.add( split_message );
 				}
