@@ -23959,7 +23959,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   text-align: center;
 }
 
-.bb-media-model-wrapper.video .bb-media-section figure.loading .bb-icon-loader {
+.bb-media-model-wrapper.video .bb-media-section figure.loading [class*="bb-icon"] {
   font-size: 26px;
   color: #fff;
   text-align: center;
