@@ -1924,8 +1924,7 @@ div.dropzone.dz-started {
 	}
 
 	.dz-preview.dz-file-preview .dz-details {
-		min-height: 130px;
-		height: 130px;
+		min-height: 165px;
 
 		.dz-size {
 			display: none !important;
@@ -1981,10 +1980,9 @@ div.dropzone.dz-started {
 	}
 
 	&.dz-started .dz-default.dz-message {
-		max-width: 175px !important;
-		width: 175px;
-		min-height: 130px !important;
-		height: 130px;
+		max-width: 240px !important;
+		width: 240px;
+		min-height: 165px !important;
 	}
 
 	@media screen and (max-width: 768px ) {
