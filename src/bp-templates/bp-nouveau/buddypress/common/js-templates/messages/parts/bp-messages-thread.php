@@ -77,7 +77,7 @@
 			</li>
 			<# } #>
 
-			<# if ( data.is_group_thread ) { #>
+			<# if ( data.is_group_thread || action_other_recipients.length > 2 ) { #>
 			<li class="view_members">
 				<a href="#message-members-list" id="view_more_members" class="view_more_members" data-thread-id="{{data.id}}" data-tp="{{data.action_recipients.total_pages}}" data-tc="{{data.action_recipients.count}}" data-pp="{{data.action_recipients.per_page}}" data-cp="1" data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
 			</li>
