@@ -2121,6 +2121,12 @@ body .section-repair_community .settings fieldset .checkbox label code {
   opacity: 0.5;
 }
 
+#bp_moderation_settings_blocking label.is_disabled input[type="checkbox"]:disabled,
+#bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled input[type="checkbox"]:disabled {
+  opacity: 1;
+  border-color: inherit;
+}
+
 /*Deactivation Popup*/
 #bp-hello-container.deactivation-popup {
   top: 50%;
