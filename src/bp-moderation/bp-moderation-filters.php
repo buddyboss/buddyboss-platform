@@ -320,7 +320,8 @@ function bp_moderation_block_member() {
 
 			$response['redirect'] = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . '/blocked-members';
 			if ( ! empty( $reported ) ) {
-				$response['redirect'] = bp_get_members_directory_permalink();
+				$response['redirect'] = '';
+				$response['button']['button_attr']['item_id'] = $item_id;
 			}
 		}
 
