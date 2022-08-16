@@ -155,7 +155,10 @@ function bp_has_document( $args = '' ) {
 	) {
 		$group_id = bp_get_current_group_id();
 		$privacy  = array( 'grouponly' );
-		if ( bp_is_active( 'forums' ) && ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) ) {
+		if (
+			( bp_is_active( 'forums' ) && ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) ) ||
+			( isset( $_POST['action'] ) && 'get_single_activity_content' === $_POST['action'] )
+		) {
 			$privacy = false;
 		}
 	}
