@@ -836,6 +836,13 @@ ul.medium-editor-toolbar-actions {
 			margin-bottom: 0 !important;
 		}
 	}
+
+	.activity-link-preview-title > a:before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+	}
 }
 
 .activity-link-preview {
@@ -875,6 +882,15 @@ ul.medium-editor-toolbar-actions {
 				#activity-link-preview-close-image,
 				.activity-url-thumb-nav {
 					z-index: 2;
+				}
+
+				[data-bp-tooltip] {
+
+					&:before,
+					&:after {
+						transform: translate(-50%, 10px);
+					}
+
 				}
 
 			}
