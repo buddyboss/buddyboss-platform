@@ -2341,7 +2341,8 @@ window.bp = window.bp || {};
 				$( '#whats-new-attachments' ).addClass( 'empty' ).closest( '#whats-new-form' ).removeClass( 'focus-in--attm' );
 			},
 			
-			displayPrevNextButton: function () {
+			displayPrevNextButton: function ( e ) {
+				e.preventDefault();
 				this.model.set( 'link_swap_image_button', 1 );
 				this.displayNextPrevButtonView();
 			},
@@ -2354,7 +2355,8 @@ window.bp = window.bp || {};
 				$('#activity-link-preview-remove-image').hide();
 			},
 			
-			selectImageForPreview: function () {
+			selectImageForPreview: function ( e ) {
+				e.preventDefault();
 				var imageIndex = this.model.get( 'link_image_index' );
 				this.model.set( 'link_image_index_save', imageIndex );
 				$('#icon-exchange').show();
