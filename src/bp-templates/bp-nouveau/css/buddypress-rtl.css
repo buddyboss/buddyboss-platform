@@ -4134,6 +4134,16 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   margin: 0 auto !important;
 }
 
+.activity-url-scrapper-container .activity-link-preview-container:before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.activity-url-scrapper-container .activity-link-preview-container .activity-link-preview-image:before,
+.activity-url-scrapper-container .activity-link-preview-container .activity-link-preview-info:before {
+  display: none;
+}
+
 .activity-video-preview .activity-link-preview-excerpt {
   float: none;
   margin: 0 auto;

@@ -1026,6 +1026,21 @@ ul.medium-editor-toolbar-actions {
 
 	}
 
+	.activity-link-preview-container {
+
+		&:before {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.activity-link-preview-image:before,
+		.activity-link-preview-info:before {
+			display: none;
+		}
+
+
+	}
+
 }
 
 .activity-link-preview-excerpt {
