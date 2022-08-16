@@ -2652,6 +2652,7 @@ window.bp = window.bp || {};
 						data.reported = 1;
 						data.action   = 'bp_moderation_block_member';
 						_this.memberReportAjax( data, e );
+						$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 						return;
 					}
 
@@ -2708,6 +2709,7 @@ window.bp = window.bp || {};
 						if ( response.data.redirect ) {
 							location.href = response.data.redirect;
 						}
+						_this.changeMemberReportButtonStatus( response.data );
 					} else {
 						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
 						$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
@@ -2740,6 +2742,25 @@ window.bp = window.bp || {};
 					$( this ).attr( 'class', data.button.button_attr.class );
 					$( this ).attr( 'reported_type', data.button.button_attr.reported_type );
 					$( this ).attr( 'href', data.button.button_attr.href );
+					setTimeout(
+						function () { // Waiting to load dummy image.
+							_this.reportedPopup();
+						},
+						1
+					);
+				}
+			);
+		},
+		changeMemberReportButtonStatus: function ( data ) {
+			var _this = this;
+			$( '[data-bp-content-id=' + data.button.button_attr.item_id + '][data-bp-content-type=user_report]' ).each(
+				function () {
+					$( this ).removeAttr( 'data-bp-content-id' );
+					$( this ).removeAttr( 'data-bp-content-type' );
+					$( this ).removeAttr( 'data-bp-nonce' );
+
+					$( this ).removeClass( 'report-content' ).addClass( 'reported-content' );
+					$( this ).attr( 'href', '#reported-content' );
 					setTimeout(
 						function () { // Waiting to load dummy image.
 							_this.reportedPopup();

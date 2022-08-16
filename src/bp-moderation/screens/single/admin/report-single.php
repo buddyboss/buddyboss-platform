@@ -26,7 +26,7 @@ $admins            = array_map(
 		if ( $is_content_screen ) {
 			printf(
 				/* translators: 1: URL, 2: Title */
-				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i> %2$s</a>',
+				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i>%2$s</a>',
 				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation&tab=reported-content' ) ),
 				esc_html__( 'Back to Reported Content', 'buddyboss' )
 			);
