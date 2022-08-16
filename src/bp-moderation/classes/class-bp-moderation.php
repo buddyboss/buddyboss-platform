@@ -272,7 +272,7 @@ class BP_Moderation {
 		$bp        = buddypress();
 		$cache_key = 'bp_moderation_populate_' . $this->id . '_' . $this->user_id;
 		if ( ! isset( $bb_report_row_query[ $cache_key ] ) ) {
-			$report_row                        = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
+			$report_row                        = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d order by user_report ASC", $this->id, $this->user_id ) ); // phpcs:ignore
 			$bb_report_row_query[ $cache_key ] = ! empty( $report_row ) ? $report_row : false;
 		} else {
 			$report_row = $bb_report_row_query[ $cache_key ];
@@ -1418,7 +1418,7 @@ class BP_Moderation {
 		if ( ! empty( $this->report_id ) ) {
 			$updated_row = $this->delete_report( $force_all );
 
-			if ( 1 > $this->count ) {
+			if ( 1 > $this->count && 1 > $this->user_reported ) {
 				$delete_parent = true;
 			}
 		}
@@ -1477,10 +1477,10 @@ class BP_Moderation {
 				$this->count -= 1;
 			}
 
-			if ( 1 <= $this->count ) {
+			if ( 0 <= $this->count ) {
 				bp_moderation_update_meta( $this->id, '_count', $this->count );
 			}
-			if ( 1 <= $this->user_reported ) {
+			if ( 0 <= $this->user_reported ) {
 				bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
 			}
 		}
