@@ -1031,6 +1031,21 @@ ul.medium-editor-toolbar-actions {
 
 	}
 
+	.activity-link-preview-container {
+
+		&:before {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.activity-link-preview-image:before,
+		.activity-link-preview-info:before {
+			display: none;
+		}
+
+
+	}
+
 }
 
 .activity-link-preview-excerpt {
@@ -1118,10 +1133,6 @@ ul.medium-editor-toolbar-actions {
 .activity-link-preview-title a,
 .activity-link-preview-title a:hover {
 	color: #32373c;
-}
-
-.activity-link-preview-title a:hover {
-	text-decoration: underline !important;
 }
 
 .activity-link-preview-excerpt {

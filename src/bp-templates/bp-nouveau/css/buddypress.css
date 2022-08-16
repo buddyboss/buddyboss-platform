@@ -4139,6 +4139,16 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   margin: 0 auto !important;
 }
 
+.activity-url-scrapper-container .activity-link-preview-container:before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.activity-url-scrapper-container .activity-link-preview-container .activity-link-preview-image:before,
+.activity-url-scrapper-container .activity-link-preview-container .activity-link-preview-info:before {
+  display: none;
+}
+
 .activity-video-preview .activity-link-preview-excerpt {
   float: none;
   margin: 0 auto;
@@ -4211,10 +4221,6 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 .activity-link-preview-title a,
 .activity-link-preview-title a:hover {
   color: #32373c;
-}
-
-.activity-link-preview-title a:hover {
-  text-decoration: underline !important;
 }
 
 .activity-link-preview-excerpt p {
