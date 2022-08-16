@@ -553,6 +553,8 @@ function bp_moderation_block_user_profile_button( $buttons ) {
 
 	if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable () ) {
 		$buttons['member_block'] = __( 'Report Member', 'buddyboss' );
+	}
+
 	return $buttons;
 }
 
