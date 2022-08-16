@@ -3991,6 +3991,12 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   z-index: 1;
 }
 
+.activity-link-preview .activity-link-preview-container .activity-link-preview-info:before,
+.activity-link-preview .activity-link-preview-container .activity-link-preview-image:before {
+  content: "";
+  transition: all linear 0.3s;
+}
+
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-info,
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-image-cover {
   position: relative;
@@ -3998,12 +4004,10 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-info:before,
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-image-cover:before {
-  content: "";
   background-color: rgba(0, 0, 0, 0.05);
   position: absolute;
   inset: 0;
   z-index: 1;
-  transition: all linear 0.2s;
 }
 
 .activity-link-preview .activity-link-preview-container:hover .activity-link-preview-info p,

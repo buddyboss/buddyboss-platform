@@ -849,6 +849,12 @@ ul.medium-editor-toolbar-actions {
 
 	.activity-link-preview-container {
 
+		.activity-link-preview-info:before,
+		.activity-link-preview-image:before {
+			content: "";
+			transition: all linear 0.3s;
+		}
+
 		&:hover {
 
 			.activity-link-preview-info,
@@ -856,12 +862,10 @@ ul.medium-editor-toolbar-actions {
 				position: relative;
 
 				&:before {
-					content: "";
 					background-color: rgba(0, 0, 0, 0.05);
 					position: absolute;
 					inset: 0;
 					z-index: 1;
-					transition: all linear 0.2s;
 				}
 
 			}
