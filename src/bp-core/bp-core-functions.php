@@ -219,7 +219,7 @@ function bp_core_number_format( $number = 0, $decimals = false ) {
  *           'arg3' => array(),
  *           'arg4' => false,
  *       );
- *       $r = wp_parse_args( $args, $defaults ); // ...
+ *       $r = bp_parse_args( $args, $defaults ); // ...
  *
  * The first argument, $old_args_keys, is an array that matches the parameter positions (keys) to
  * the new $args keys (values):
@@ -2822,10 +2822,6 @@ function bp_nav_menu_get_loggedin_pages() {
 		// Remove <span>number</span>.
 		$item_name = _bp_strip_spans_from_title( $bp_item['name'] );
 
-		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
-			$bp_item['link'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $bp_item['link'] );
-		}
-
 		$page_args[ $bp_item['slug'] ] = (object) array(
 			'ID'             => $nav_counter,
 			'post_title'     => $item_name,
@@ -2957,10 +2953,6 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
 					$key = 'group-invites-settings';
-				}
-
-				if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
-					$s_nav['link'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $s_nav['link'] );
 				}
 
 				$link                  = $s_nav['link'];
@@ -6571,7 +6563,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
  * @return string
  */
 function bb_core_remove_unfiltered_html( $content ) {
-	return esc_html( wp_strip_all_tags( wp_specialchars_decode( $content ) ) );
+	return wp_strip_all_tags( $content );
 }
 
 /**
@@ -6651,7 +6643,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		return false;
 	}
 
-	$notifications     = wp_parse_args( $all_notifications, $default_by_admin );
+	$notifications     = bp_parse_args( $all_notifications, $default_by_admin );
 	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
 	$enable_type_key   = in_array( $type, array( 'web', 'app' ), true ) ? 'enable_notification_' . $type : 'enable_notification';
 
@@ -6721,7 +6713,17 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 	$notification_type = array_filter(
 		array_map(
 			function ( $n ) use ( $component_name, $component_action ) {
-				if ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
+				if (
+					'bb_new_mention' === $component_action &&
+					in_array( $component_name, array( 'activity', 'forums', 'members' ), true )
+				) {
+					return $n['notification_type'];
+				} elseif (
+					'bb_groups_new_message' === $component_action &&
+					in_array( $component_name, array( 'messages', 'groups' ), true )
+				) {
+					return $n['notification_type'];
+				} elseif ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
 					return $n['notification_type'];
 				}
 			},
@@ -7008,6 +7010,15 @@ function bb_render_notification( $notification_group ) {
 		}
 	);
 
+	$column_count = 2;
+	if ( bb_web_notification_enabled() ) {
+		$column_count += 1;
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$column_count += 1;
+	}
+
 	if ( ! empty( $options['fields'] ) ) {
 		?>
 
@@ -7016,7 +7027,7 @@ function bb_render_notification( $notification_group ) {
 
 			<?php if ( ! empty( $options['label'] ) ) { ?>
 				<tr class="notification_heading">
-					<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
+					<td class="title" colspan="<?php echo esc_attr( $column_count ); ?>"><?php echo esc_html( $options['label'] ); ?></td>
 				</tr>
 				<?php
 			}
@@ -7619,10 +7630,13 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
+		case 'bp_web_push_notification_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
+			break;
 		default:
 			$meta_icon = '';
 	}
 
-	return apply_filters( 'bb_admin_icons', $meta_icon );
+	return apply_filters( 'bb_admin_icons', $meta_icon, $id );
 }
 

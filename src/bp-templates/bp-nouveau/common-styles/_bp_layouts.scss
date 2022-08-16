@@ -304,7 +304,7 @@
 			padding-left: 20px;
 		}
 
-		#subnav {
+		.subnav {
 			background: $light-grey;
 			margin: 0;
 			width: auto;
@@ -312,7 +312,7 @@
 			li {
 
 				@include font-size(16);
-				margin: $marg-sml 0;
+				margin: 0 0 $marg-sml;
 
 				a {
 					border-right: 1px solid $bp-border-dark;
@@ -336,11 +336,11 @@
 			li:last-child {
 
 				a {
-					border: none;
+					border-right: none;
 				}
 			}
 
-		} // close #subnav
+		} // close .subnav
 	}
 
 	.bb-single-main-nav--vertical {

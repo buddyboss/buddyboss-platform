@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.0
+Tested up to: 6.0.1
 Requires PHP: 5.6.20
-Stable tag: 2.0.3.1
+Stable tag: 2.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,8 +57,98 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.0.7 =
+* Notifications - Handled Activity comment auto-generated notification incorrect text issue
+* Forums - Handled small Forums widget issue shows wrong discussion count
+* Activity - Handled activity comment @mention issue gets converted into HTML markup on post
+* Media - Handled document upload double extension issue on document directory screen
+* Media - Handled symlink option gets enabled issue when activity settings updated
+* Media - Small improvement to fix console JS error when video popup is closed
+* Messages - Handled private messages right click and paste action issue, adds duplicate copies from the clipboard
+* Core - Icon Pack updated with latest icons
+* REST API - Handled get activity videos API endpoint issue
+* Compatibility - Handled 'GeoDirectory' broken listing layout compatibility issue
+
+= 2.0.6 =
+* Forums - Handled forum reply notification wrong pagination URL issue
+* Activity - Handled activity modal @mention RTL language support issue
+* Profiles - Handled other member's profile sub-tabs taking to logged-in members profile tabs issue
+* Profiles - Handled activate account issue when registration is disabled
+* Profiles - Small improvement to show 'See all' for the 'Recently Active Members' widget
+* Groups - Handled HTML tags not working issue for group description
+* Groups - Handled Group videos not showing issues for non-logged-in members
+* Groups - Handled 'Enable Album in groups' option not working issue
+* Media - Handled issue for moving photos into album action and not creating separate activity
+* Media - Handled upload/delete photos action not updating count issue in profile and directory page
+* Media - Handled edit privacy dropdown issue on documents directory screen
+* Messages - Handled messages thread UI issue when switching between multiple threads quickly
+* Network Search - Handled search results not showing issue even when search string exists in repeater fieldsets value
+* Network Search - Handled search results pagination issue for blog posts and pages
+* Core - Updated styling for toolbars and pickers across all content types editor
+* Core - Handled a bunch of styling issues for Theme 2.0 updates
+* Core - Small improvement to not close modal on discard draft for Activity, Forum discussion, and Forum replies
+* REST API - Handled member connections cache purge not working issue
+* REST API - Small notification endpoint improvement to redirect to specific reply considering pagination
+* REST API - Handled wrong API response for discussion replies when discussion created in the admin dashboard
+* REST API - Handled members endpoint critical issue when activity component is not active
+* LearnDash - Handled js conflict on edit course screen when there are a huge number of members in the network
+* LearnDash - Handled Learndash Group slug update issue on plugin activation
+* WPML - Handled Social Groups tabs not working issue when switched to a different language
+
+= 2.0.5 =
+* Groups - Handled Group Parent settings removed issue when member deleted from the parent group
+* Groups - Handled Group permission issue allowing members with no access to post activity
+* Forums - Handled forum [bbp-search] shortcode not showing issue
+* Forums - Handled Forum discussion tags getting deleted issue on reply update
+* Activity - Handled Activity form text color issue when @mention added and removed
+* Activity - Small improvement to show user-friendly validation message from dropzone uploader
+* Activity - Small improvement to restrict media upload for post types auto-generated activity
+* Activity - Handled post types auto-generated activity long comment read more issue 
+* Media - Handled symlink not working issue on private page excluded URL for non-logged-in member
+* Media - Handled media upload not showing thumbnail issue for media size more than 10MB
+* Media - Handled media popup layout issue for a specific set of device sizes
+* Messages - Handled iPhone device message thread UX issue
+* Network Search - Provided support to search members by email id
+* Core - Handled a bunch of important styling issues for Theme 2.0 updates
+* Core - Small layout improvement for popup in the admin Dashboard
+* Core - Icon Pack updated with latest icons
+* Core - Handled critical issue on fresh Platform plugin installation
+* Coding Standards - Code Refactoring replacing wp_parse_args functions with custom
+* Coding Standards - Code refactoring to support different notification types for custom development
+* REST API - Group Document cannot be renamed if the same file is uploaded more then once
+* REST API - Restrict media upload for post types auto-generated activity in the API
+* REST API - Handled read more issue for blog posts auto-generated activity in the API
+
+= 2.0.4.1 =
+* Activity - Fixed critical issue when ‘Forum Discussions’ component is not active
+
+= 2.0.4 =
+* Notifications - Provided support for Web Push Notification from BuddyBoss Platform Pro
+* Forums - Added support to save forum Discussion and replies content in the draft on accidental close or refresh
+* Forums - Handled member unsubscribed automatically issue when discussion edited from admin Dashboard
+* Forums - Handled discussion alignment formatting for RTL language site
+* Activity - Added support to save Post activity content in the draft on accidental close or refresh
+* Activity - Provided draft support for activity directory, profile timeline, members profile timeline, and groups timeline
+* Activity - Small improvement to show embed preview for blog auto-generated activity
+* Profiles - Handled profile repeater field issue not getting saved properly
+* Groups - Handled group name with apostrophe not showing correctly across the network
+* Groups - Handled group URL not working issue in the email
+* Media - Handled video not playing issue in the popup on other member's timeline
+* Media - Fixed issue to search emoji with uppercase string in messaging, activity, forums, etc
+* Messages - Handled critical issue of sharing same thread when multiple members create thread at the same time
+* Messages - Small code refactoring to not save entity code in the DB for empty messages with just media
+* Coding Standards - Menu and sub-navigation CSS Code refactoring
+* REST API - Provided raw group name parameter in the group API
+* REST API - Handled edit activity critical issue in the activity API
+* REST API - Provided create album parameter for a specific group in the group API
+* REST API - Small improvement to send message thread sender details in the message thread API
+* REST API - Handled emojis inconsistent response issue
+* REST API - Handled critical issue of sharing same thread in the API
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issues
+* Documentation - Small code refactoring to stop sending resources documentation requests on every page load
+
 = 2.0.3.1 =
-* Compatibility - Fixed ‘WP Offload Media’ plugin critical topics issue attached with documents
+* Compatibility - Fixed 'WP Offload Media' plugin critical topics issue attached with documents
 
 = 2.0.3 =
 * Profiles - Handled repeater set title issue showing dropdown value instead of text
