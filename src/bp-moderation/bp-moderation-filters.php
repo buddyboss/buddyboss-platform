@@ -320,7 +320,8 @@ function bp_moderation_block_member() {
 
 			$response['redirect'] = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . '/blocked-members';
 			if ( ! empty( $reported ) ) {
-				$response['redirect'] = bp_get_members_directory_permalink();
+				$response['redirect'] = '';
+				$response['button']['button_attr']['item_id'] = $item_id;
 			}
 		}
 
@@ -549,6 +550,10 @@ function bp_moderation_block_user_profile_button( $buttons ) {
 
 	if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
 		$buttons['member_report'] = __( 'Block', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable () ) {
+		$buttons['member_block'] = __( 'Report Member', 'buddyboss' );
 	}
 
 	return $buttons;
