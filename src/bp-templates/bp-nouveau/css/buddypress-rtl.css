@@ -4208,10 +4208,6 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   color: #32373c;
 }
 
-.activity-link-preview-title a:hover {
-  text-decoration: underline !important;
-}
-
 .activity-link-preview-excerpt p {
   font-size: 14px;
   font-weight: 400;
