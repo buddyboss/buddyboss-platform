@@ -695,26 +695,28 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 		$visibility     = bbp_get_forum_visibility( $parent_id );
 		$old_visibility = bbp_get_forum_visibility( $forum_id );
 
-		global $wpdb;
-		$wpdb->update( $wpdb->posts, array( 'post_status' => $visibility ), array( 'ID' => $forum_id ) );
+		if ( $visibility !== $old_visibility ) {
+			global $wpdb;
+			$wpdb->update( $wpdb->posts, array( 'post_status' => $visibility ), array( 'ID' => $forum_id ) );
 
-		// What is the new forum visibility setting?
-		switch ( $visibility ) {
-			// Hidden.
-			case bbp_get_hidden_status_id():
-				bbp_hide_forum( $forum_id, $old_visibility );
-				break;
+			// What is the new forum visibility setting?
+			switch ( $visibility ) {
+				// Hidden.
+				case bbp_get_hidden_status_id():
+					bbp_hide_forum( $forum_id, $old_visibility );
+					break;
 
-			// Private.
-			case bbp_get_private_status_id():
-				bbp_privatize_forum( $forum_id, $old_visibility );
-				break;
+				// Private.
+				case bbp_get_private_status_id():
+					bbp_privatize_forum( $forum_id, $old_visibility );
+					break;
 
-			// Publish (default).
-			case bbp_get_public_status_id():
-			default:
-				bbp_publicize_forum( $forum_id, $old_visibility );
-				break;
+				// Publish (default).
+				case bbp_get_public_status_id():
+				default:
+					bbp_publicize_forum( $forum_id, $old_visibility );
+					break;
+			}
 		}
 	}
 }

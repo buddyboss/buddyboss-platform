@@ -2038,3 +2038,62 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	}
 }
 add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bp_admin_forum_repair_tools_wrapper_function' );
+
+/** Repair forums visibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_admin_repair_forums_visibility() {
+	global $wpdb;
+
+	$post_type = bbp_get_forum_post_type();
+	// Get pages in order of hierarchy, i.e. children after parents.
+	$pages = $wpdb->get_results( "SELECT ID, post_name, post_parent FROM $wpdb->posts WHERE post_type = '{$post_type}' AND post_status != 'auto-draft'" );
+	$forums = get_page_hierarchy( $pages );
+
+	if ( empty( $forums ) ) {
+		return array(
+			'status'  => 1,
+			'message' => __( 'Complete!', 'buddyboss' ),
+		);
+	}
+
+	foreach ( $forums as $forum_id => $forum_name ) {
+		$parent_id = bbp_get_forum_parent_id( $forum_id );
+		if ( $parent_id ) {
+			$visibility     = bbp_get_forum_visibility( $parent_id );
+			$old_visibility = bbp_get_forum_visibility( $forum_id );
+
+			if ( $visibility !== $old_visibility ) {
+
+				$wpdb->update( $wpdb->posts, array( 'post_status' => $visibility ), array( 'ID' => $forum_id ) );
+
+				// What is the new forum visibility setting?
+				switch ( $visibility ) {
+					// Hidden.
+					case bbp_get_hidden_status_id():
+						bbp_hide_forum( $forum_id, $old_visibility );
+						break;
+
+					// Private.
+					case bbp_get_private_status_id():
+						bbp_privatize_forum( $forum_id, $old_visibility );
+						break;
+
+					// Publish (default).
+					case bbp_get_public_status_id():
+					default:
+						bbp_publicize_forum( $forum_id, $old_visibility );
+						break;
+				}
+			}
+		}
+	}
+
+	return array(
+		'status'  => 1,
+		'message' => __( 'Complete!', 'buddyboss' ),
+	);
+}
