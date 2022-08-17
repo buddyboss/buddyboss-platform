@@ -26,14 +26,14 @@ $admins            = array_map(
 		if ( $is_content_screen ) {
 			printf(
 				/* translators: 1: URL, 2: Title */
-				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i>%2$s</a>',
+				'<a class="bb-back" href="%1$s"><i class="bb-icon-f bb-icon-arrow-left"></i>%2$s</a>',
 				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation&tab=reported-content' ) ),
 				esc_html__( 'Back to Reported Content', 'buddyboss' )
 			);
 		} else {
 			printf(
 				/* translators: 1: URL, 2: Title */
-				'<a class="bb-back" href="%1$s"><i class="dashicons dashicons-arrow-left-alt"></i> %2$s</a>',
+				'<a class="bb-back" href="%1$s"><i class="bb-icon-f bb-icon-arrow-left"></i> %2$s</a>',
 				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
 				esc_html__( 'Back to Flagged Members', 'buddyboss' )
 			);
@@ -73,10 +73,10 @@ $admins            = array_map(
 												if ( ! empty( $view_content_url ) ) {
 													printf(
 													/* translators: 1: View content URL, 2: Attribute title, 3: Title */
-													'<a target="_blank" href="%s" title="%s"> <span>#%s</span> <i class="bb-icon-external-link bb-icon-l"></i> </a> ',
+													'<span>#%s</span> <a target="_blank" href="%s" title="%s"><i class="bb-icon-external-link bb-icon-l"></i></a>',
+														esc_html( $moderation_request_data->item_id ),
 														esc_url( $view_content_url ),
-														esc_attr__( 'View', 'buddyboss' ),
-														esc_html( $moderation_request_data->item_id )
+														esc_attr__( 'View', 'buddyboss' )
 													);
 												}
 												?>
@@ -91,9 +91,10 @@ $admins            = array_map(
 												foreach ( $user_ids as $user_id ) {
 													printf(
 														/* translators: 1: Avtar, 2: Title with link */
-														'%s <strong>%s</strong> <br/>',
+														'<strong><a target="_blank" href="%s">%s %s</a></strong>',
+														esc_url( BP_Moderation_Members::get_permalink( $user_id ) ),
 														get_avatar( $user_id, '32' ),
-														wp_kses_post( bp_core_get_userlink( $user_id ) )
+														esc_html( bp_core_get_userlink( $user_id, true ) ) 
 													);
 												}
 												?>
@@ -103,7 +104,7 @@ $admins            = array_map(
 											<strong class="report-header_number">
 												<?php echo esc_html( bp_core_number_format( $moderation_request_data->count ) ); ?>
 											</strong>
-											<?php esc_html_e( 'Reports', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->count ) ? esc_html__( 'Report', 'buddyboss' ) : esc_html__( 'Reports', 'buddyboss' ); ?>
 										</div>
 										<div class="report-header_action">
 											<?php
@@ -141,9 +142,9 @@ $admins            = array_map(
 											<?php
 											printf(
 												/* translators: 1: Member avtar, 2: Member avtar URL, 3: Member Name */
-												'%s <strong><a href="%s">%s</a></strong>',
-												get_avatar( $moderation_request_data->item_id, '32' ),
+												'<strong><a target="_blank" href="%s">%s %s</a></strong>',
 												esc_url( BP_Moderation_Members::get_permalink( $moderation_request_data->item_id ) ),
+												get_avatar( $moderation_request_data->item_id, '32' ),
 												esc_html( bp_core_get_userlink( $moderation_request_data->item_id, true ) )
 											);
 											?>
@@ -152,13 +153,13 @@ $admins            = array_map(
 											<strong class="report-header_number">
 												<?php echo esc_html( bp_core_number_format( $moderation_request_data->count ) ); ?>
 											</strong>
-											<?php esc_html_e( 'Blocks', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->count ) ? esc_html__( 'Block', 'buddyboss' ) : esc_html__( 'Blocks', 'buddyboss' ); ?>
 										</div>
 										<div class="report-header_content">
 											<strong class="report-header_number">
 												<?php echo esc_html( bp_core_number_format( $moderation_request_data->user_reported ) ); ?>
 											</strong>
-											<?php esc_html_e( 'Reports', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->user_reported ) ? esc_html__( 'Report', 'buddyboss' ) : esc_html__( 'Reports', 'buddyboss' ); ?>
 										</div>
 										<div class="report-header_action">
 											<?php
