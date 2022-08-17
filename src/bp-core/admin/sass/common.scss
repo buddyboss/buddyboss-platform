@@ -3600,15 +3600,17 @@ table.moderations .column-member {
 		color: #1d2327;
 		margin-bottom: 10px;
 
+		span {
+			color: #808080;
+			margin-left: 5px;
+		}
+
 		a {
 			text-decoration: none;
 
-			span {
-				color: #808080;
-			}
-
 			i {
 				font-weight: 300;
+				font-size: 18px;
 			}
 		}
 	}
@@ -3652,7 +3654,7 @@ table.moderations .column-member {
 			}
 
 			+ .report-header_button {
-				margin-left: 15px;
+				margin-left: 10px;
 			}
 
 		}

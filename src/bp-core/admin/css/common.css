@@ -3321,16 +3321,18 @@ table.moderations .column-member img {
   margin-bottom: 10px;
 }
 
+#bp_moderation_action .report-header_content_id span {
+  color: #808080;
+  margin-left: 5px;
+}
+
 #bp_moderation_action .report-header_content_id a {
   text-decoration: none;
 }
 
-#bp_moderation_action .report-header_content_id a span {
-  color: #808080;
-}
-
 #bp_moderation_action .report-header_content_id a i {
   font-weight: 300;
+  font-size: 18px;
 }
 
 #bp_moderation_action .report-header_user {
@@ -3340,7 +3342,7 @@ table.moderations .column-member img {
 
 #bp_moderation_action .report-header_user strong a {
   text-decoration: none;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 #bp_moderation_action .report-header_user img {
@@ -3371,7 +3373,7 @@ table.moderations .column-member img {
 }
 
 #bp_moderation_action .report-header_action .report-header_button + .report-header_button {
-  margin-left: 15px;
+  margin-left: 10px;
 }
 
 .taxonomy-bpm_category .form-field.term-slug-wrap {
