@@ -247,7 +247,8 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_reporter( $item = array() ) {
-		printf( '%s <strong>%s</strong>', get_avatar( $item['user_id'], '32' ), wp_kses_post( bp_core_get_userlink( $item['user_id'] ) ) );
+		printf( '%s <strong><a target="_blank" href="%s">%s</a></strong>', get_avatar( $item['user_id'], '32' ), esc_url( BP_Moderation_Members::get_permalink( $item['user_id'] ) ), esc_html( bp_core_get_userlink( $item['user_id'], true ) ) );
+
 	}
 
 	/**
