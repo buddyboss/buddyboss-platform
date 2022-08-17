@@ -3979,6 +3979,10 @@ window.bp = window.bp || {};
 					messagePusherData.message.date = new Date( messagePusherData.message.date );
 					model.set( messagePusherData.message );
 
+					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'has-medias' ) ) {
+						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'has-medias' );
+					}
+
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'sending' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'sending' );
 

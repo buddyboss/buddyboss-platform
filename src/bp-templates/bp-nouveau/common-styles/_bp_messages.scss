@@ -732,6 +732,16 @@
 			}
 
 		}
+
+		&.has-medias {
+
+			.bb-activity-media-wrap,
+			.bb-activity-video-wrap {
+				pointer-events: none;
+			}
+
+		}
+
 	}
 
 	.message-metadata {
