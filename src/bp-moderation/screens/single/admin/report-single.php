@@ -91,9 +91,9 @@ $admins            = array_map(
 												foreach ( $user_ids as $user_id ) {
 													printf(
 														/* translators: 1: Avtar, 2: Title with link */
-														'%s <strong><a target="_blank" href="%s">%s</a></strong>',
-														get_avatar( $user_id, '32' ),
+														'<strong><a target="_blank" href="%s">%s %s</a></strong>',
 														esc_url( BP_Moderation_Members::get_permalink( $user_id ) ),
+														get_avatar( $user_id, '32' ),
 														esc_html( bp_core_get_userlink( $user_id, true ) ) 
 													);
 												}
@@ -142,9 +142,9 @@ $admins            = array_map(
 											<?php
 											printf(
 												/* translators: 1: Member avtar, 2: Member avtar URL, 3: Member Name */
-												'%s <strong><a target="_blank" href="%s">%s</a></strong>',
-												get_avatar( $moderation_request_data->item_id, '32' ),
+												'<strong><a target="_blank" href="%s">%s %s</a></strong>',
 												esc_url( BP_Moderation_Members::get_permalink( $moderation_request_data->item_id ) ),
+												get_avatar( $moderation_request_data->item_id, '32' ),
 												esc_html( bp_core_get_userlink( $moderation_request_data->item_id, true ) )
 											);
 											?>
