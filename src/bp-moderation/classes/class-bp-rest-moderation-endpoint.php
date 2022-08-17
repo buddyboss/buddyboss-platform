@@ -358,17 +358,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} item_id User ID which needs to be blocked.
-	 * @apiParam {String} type type of moderation.
-	 * @apiParam {Boolean} user_report  whether you eant to report member (0 = Blocked, 1 = Report member).
-	 * @apiParam {Number} report_category category for report the member.
-	 * @apiParam {Number} note For other category only the reason why want to report the member.
 	 */
 	public function create_item( $request ) {
-		$item_id  = $request->get_param( 'item_id' );
-		$type     = $request->get_param( 'type' );
-		$category = $request->get_param( 'user_report' );
-		$reported = $request->get_param( 'report_category' );
-		$note     = $request->get_param( 'note' );
+		$item_id = $request->get_param( 'item_id' );
+		$type    = $request->get_param( 'type' );
 
 		$user_id = bp_loggedin_user_id();
 
@@ -385,7 +378,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
-				__( 'You have already reported this Member.', 'buddyboss' ),
+				__( 'Already reported this item.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -396,9 +389,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			array(
 				'content_id'   => $item_id,
 				'content_type' => $type,
-				'note'         => ( ! empty( $note ) ? $note : ( ! empty( $reported ) ? esc_html__( 'Member report', 'buddyboss' ) : esc_html__( 'Member block', 'buddyboss' ) ) ),
-				'category_id'  => ! empty( $category ) ? $category : 0,
-				'user_report'  => ! empty( $reported ) ? 1 : 0,
+				'note'         => esc_html__( 'Member block', 'buddyboss' ),
 			)
 		);
 

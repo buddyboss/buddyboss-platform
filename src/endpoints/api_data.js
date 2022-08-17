@@ -7106,34 +7106,6 @@ define({ "api": [
             "optional": false,
             "field": "item_id",
             "description": "<p>User ID which needs to be blocked.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "type",
-            "description": "<p>type of moderation.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Boolean",
-            "optional": false,
-            "field": "user_report",
-            "description": "<p>whether you eant to report member (0 = Blocked, 1 = Report member).</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "report_category",
-            "description": "<p>category for report the member.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "note",
-            "description": "<p>For other category only the reason why want to report the member.</p>"
           }
         ]
       }
