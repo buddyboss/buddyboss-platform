@@ -2205,6 +2205,17 @@ body .section-repair_community .settings fieldset .checkbox label code {
 		margin-right: 5px;
 	}
 
+	[data-colname] a {
+		outline: 0;
+		box-shadow: none;
+
+		img {
+			display: inline-block;
+			vertical-align: middle;
+		}
+
+	}
+
 }
 
 @keyframes contentLoader {
@@ -3531,13 +3542,17 @@ table.moderations {
 	}
 
 	.bb-back {
+		display: inline-block;
+		margin-top: 15px;
+		text-decoration: none;
 
-		.dashicons {
-			text-decoration: none;
+		[class*="bb-icon"] {
+			display: inline-block;
+			font-size: 17px;
 			margin-right: 5px;
-			font-size: 18px;
-			margin-top: 2px;
+			vertical-align: middle;
 		}
+
 	}
 
 	table.reports {
@@ -3563,13 +3578,31 @@ table.moderations .column-member {
 
 #bp_moderation_action {
 
+	> .inside {
+		margin: 0;
+		padding: 0 20px;
+
+		.tablenav.bottom {
+			height: auto;
+			min-height: 20px;
+			margin: 0;
+			padding-top: 0;
+
+			.tablenav-pages {
+				margin: 20px 0;
+			}
+
+		}
+
+	}
+
 	.report-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		border-bottom: 1px solid #dfdfdf;
-		margin: 0 -12px;
-		padding: 25px;
+		margin: 0 -20px;
+		padding: 20px;
 	}
 
 	.report-header_content_id {
@@ -3578,15 +3611,17 @@ table.moderations .column-member {
 		color: #1d2327;
 		margin-bottom: 10px;
 
+		span {
+			color: #808080;
+			margin-left: 5px;
+		}
+
 		a {
 			text-decoration: none;
 
-			span {
-				color: #808080;
-			}
-
 			i {
 				font-weight: 300;
+				font-size: 18px;
 			}
 		}
 	}
@@ -3597,7 +3632,8 @@ table.moderations .column-member {
 
 		strong a {
 			text-decoration: none;
-			font-size: 14px;
+			font-size: 16px;
+			box-shadow: none;
 		}
 
 		img {
@@ -3605,6 +3641,7 @@ table.moderations .column-member {
 			max-width: 35px;
 			height: auto;
 			margin-right: 10px;
+			vertical-align: middle;
 		}
 	}
 
@@ -3630,12 +3667,16 @@ table.moderations .column-member {
 			}
 
 			+ .report-header_button {
-				margin-left: 15px;
+				margin-left: 10px;
 			}
 
 		}
 
 	}
+}
+
+#the-moderation-report-list .reporter a {
+	box-shadow: none;
 }
 
 .taxonomy-bpm_category .form-field.term-slug-wrap {
