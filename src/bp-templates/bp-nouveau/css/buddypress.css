@@ -10314,6 +10314,11 @@ div.profile_completion_wrap .progress_text_wrap {
   letter-spacing: initial;
 }
 
+#bp-message-thread-list li.has-medias .bb-activity-media-wrap,
+#bp-message-thread-list li.has-medias .bb-activity-video-wrap {
+  pointer-events: none;
+}
+
 #bp-message-thread-list .message-metadata .avatar {
   width: 30px;
 }
