@@ -2081,6 +2081,16 @@ body .section-repair_community .settings fieldset .checkbox label code {
   margin-left: 5px;
 }
 
+#the-moderation-request-list [data-colname] a {
+  outline: 0;
+  box-shadow: none;
+}
+
+#the-moderation-request-list [data-colname] a img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 @keyframes contentLoader {
   0% {
     top: 8px;
@@ -3321,11 +3331,17 @@ table.moderations tbody tr .column-suspend .dashicons {
   font-weight: 700;
 }
 
-.buddyboss_page_bp-moderation .bb-back .dashicons {
+.buddyboss_page_bp-moderation .bb-back {
+  display: inline-block;
+  margin-top: 15px;
   text-decoration: none;
+}
+
+.buddyboss_page_bp-moderation .bb-back [class*="bb-icon"] {
+  display: inline-block;
+  font-size: 17px;
   margin-left: 5px;
-  font-size: 18px;
-  margin-top: 2px;
+  vertical-align: middle;
 }
 
 .buddyboss_page_bp-moderation table.reports thead tr th,
@@ -3341,13 +3357,29 @@ table.moderations .column-member img {
   border-radius: 50%;
 }
 
+#bp_moderation_action > .inside {
+  margin: 0;
+  padding: 0 20px;
+}
+
+#bp_moderation_action > .inside .tablenav.bottom {
+  height: auto;
+  min-height: 20px;
+  margin: 0;
+  padding-top: 0;
+}
+
+#bp_moderation_action > .inside .tablenav.bottom .tablenav-pages {
+  margin: 20px 0;
+}
+
 #bp_moderation_action .report-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #dfdfdf;
-  margin: 0 -12px;
-  padding: 25px;
+  margin: 0 -20px;
+  padding: 20px;
 }
 
 #bp_moderation_action .report-header_content_id {
@@ -3357,16 +3389,18 @@ table.moderations .column-member img {
   margin-bottom: 10px;
 }
 
+#bp_moderation_action .report-header_content_id span {
+  color: #808080;
+  margin-right: 5px;
+}
+
 #bp_moderation_action .report-header_content_id a {
   text-decoration: none;
 }
 
-#bp_moderation_action .report-header_content_id a span {
-  color: #808080;
-}
-
 #bp_moderation_action .report-header_content_id a i {
   font-weight: 300;
+  font-size: 18px;
 }
 
 #bp_moderation_action .report-header_user {
@@ -3376,7 +3410,8 @@ table.moderations .column-member img {
 
 #bp_moderation_action .report-header_user strong a {
   text-decoration: none;
-  font-size: 14px;
+  font-size: 16px;
+  box-shadow: none;
 }
 
 #bp_moderation_action .report-header_user img {
@@ -3384,6 +3419,7 @@ table.moderations .column-member img {
   max-width: 35px;
   height: auto;
   margin-left: 10px;
+  vertical-align: middle;
 }
 
 #bp_moderation_action .report-header_content {
@@ -3407,7 +3443,11 @@ table.moderations .column-member img {
 }
 
 #bp_moderation_action .report-header_action .report-header_button + .report-header_button {
-  margin-right: 15px;
+  margin-right: 10px;
+}
+
+#the-moderation-report-list .reporter a {
+  box-shadow: none;
 }
 
 .taxonomy-bpm_category .form-field.term-slug-wrap {
