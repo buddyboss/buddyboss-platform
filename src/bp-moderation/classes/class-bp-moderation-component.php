@@ -226,7 +226,15 @@ class BP_Moderation_Component extends BP_Component {
 			foreach ( $moderation_terms as $moderation_term ) {
 				$term = term_exists( $moderation_term['name'], 'bpm_category' );
 				if ( empty( $term ) ) {
-					wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
+					$term = wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
+					if( isset( $term['term_id'] ) && ! empty( $term['term_id'] ) ) {
+						update_term_meta(
+							$term['term_id'],
+							'bb_category_show_when_reporting',
+							'content_members'
+						);
+					}
+					
 				}
 			}
 
