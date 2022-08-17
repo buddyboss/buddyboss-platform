@@ -3263,11 +3263,17 @@ table.moderations tbody tr .column-suspend .dashicons {
   font-weight: 700;
 }
 
-.buddyboss_page_bp-moderation .bb-back .dashicons {
+.buddyboss_page_bp-moderation .bb-back {
+  display: inline-block;
+  margin-top: 15px;
   text-decoration: none;
+}
+
+.buddyboss_page_bp-moderation .bb-back [class*="bb-icon"] {
+  display: inline-block;
+  font-size: 17px;
   margin-right: 5px;
-  font-size: 18px;
-  margin-top: 2px;
+  vertical-align: middle;
 }
 
 .buddyboss_page_bp-moderation table.reports thead tr th,
@@ -3283,13 +3289,29 @@ table.moderations .column-member img {
   border-radius: 50%;
 }
 
+#bp_moderation_action > .inside {
+  margin: 0;
+  padding: 0 20px;
+}
+
+#bp_moderation_action > .inside .tablenav.bottom {
+  height: auto;
+  min-height: 20px;
+  margin: 0;
+  padding-top: 0;
+}
+
+#bp_moderation_action > .inside .tablenav.bottom .tablenav-pages {
+  margin: 20px 0;
+}
+
 #bp_moderation_action .report-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #dfdfdf;
-  margin: 0 -12px;
-  padding: 25px;
+  margin: 0 -20px;
+  padding: 20px;
 }
 
 #bp_moderation_action .report-header_content_id {

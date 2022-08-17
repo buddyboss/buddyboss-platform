@@ -3531,13 +3531,17 @@ table.moderations {
 	}
 
 	.bb-back {
+		display: inline-block;
+		margin-top: 15px;
+		text-decoration: none;
 
-		.dashicons {
-			text-decoration: none;
+		[class*="bb-icon"] {
+			display: inline-block;
+			font-size: 17px;
 			margin-right: 5px;
-			font-size: 18px;
-			margin-top: 2px;
+			vertical-align: middle;
 		}
+
 	}
 
 	table.reports {
@@ -3563,13 +3567,31 @@ table.moderations .column-member {
 
 #bp_moderation_action {
 
+	> .inside {
+		margin: 0;
+		padding: 0 20px;
+
+		.tablenav.bottom {
+			height: auto;
+			min-height: 20px;
+			margin: 0;
+			padding-top: 0;
+
+			.tablenav-pages {
+				margin: 20px 0;
+			}
+
+		}
+
+	}
+
 	.report-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		border-bottom: 1px solid #dfdfdf;
-		margin: 0 -12px;
-		padding: 25px;
+		margin: 0 -20px;
+		padding: 20px;
 	}
 
 	.report-header_content_id {
@@ -3597,7 +3619,7 @@ table.moderations .column-member {
 
 		strong a {
 			text-decoration: none;
-			font-size: 14px;
+			font-size: 16px;
 		}
 
 		img {
