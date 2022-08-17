@@ -2081,6 +2081,16 @@ body .section-repair_community .settings fieldset .checkbox label code {
   margin-right: 5px;
 }
 
+#the-moderation-request-list [data-colname] a {
+  outline: 0;
+  box-shadow: none;
+}
+
+#the-moderation-request-list [data-colname] a img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 @keyframes contentLoader {
   0% {
     top: 8px;
@@ -3343,6 +3353,7 @@ table.moderations .column-member img {
 #bp_moderation_action .report-header_user strong a {
   text-decoration: none;
   font-size: 16px;
+  box-shadow: none;
 }
 
 #bp_moderation_action .report-header_user img {
@@ -3350,6 +3361,7 @@ table.moderations .column-member img {
   max-width: 35px;
   height: auto;
   margin-right: 10px;
+  vertical-align: middle;
 }
 
 #bp_moderation_action .report-header_content {
@@ -3374,6 +3386,10 @@ table.moderations .column-member img {
 
 #bp_moderation_action .report-header_action .report-header_button + .report-header_button {
   margin-left: 10px;
+}
+
+#the-moderation-report-list .reporter a {
+  box-shadow: none;
 }
 
 .taxonomy-bpm_category .form-field.term-slug-wrap {

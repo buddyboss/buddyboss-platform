@@ -2205,6 +2205,17 @@ body .section-repair_community .settings fieldset .checkbox label code {
 		margin-right: 5px;
 	}
 
+	[data-colname] a {
+		outline: 0;
+		box-shadow: none;
+
+		img {
+			display: inline-block;
+			vertical-align: middle;
+		}
+
+	}
+
 }
 
 @keyframes contentLoader {
@@ -3622,6 +3633,7 @@ table.moderations .column-member {
 		strong a {
 			text-decoration: none;
 			font-size: 16px;
+			box-shadow: none;
 		}
 
 		img {
@@ -3629,6 +3641,7 @@ table.moderations .column-member {
 			max-width: 35px;
 			height: auto;
 			margin-right: 10px;
+			vertical-align: middle;
 		}
 	}
 
@@ -3660,6 +3673,10 @@ table.moderations .column-member {
 		}
 
 	}
+}
+
+#the-moderation-report-list .reporter a {
+	box-shadow: none;
 }
 
 .taxonomy-bpm_category .form-field.term-slug-wrap {
