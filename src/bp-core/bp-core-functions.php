@@ -4759,7 +4759,7 @@ function bp_core_parse_url( $url ) {
 			// Parse DOM to get Title
 			if ( empty( $title ) ) {
 				$nodes = $dom->getElementsByTagName( 'title' );
-				$title = $nodes->item( 0 )->nodeValue;
+				$title = $nodes && $nodes->length > 0 ? $nodes->item( 0 )->nodeValue : '';
 			}
 
 			// Parse DOM to get Meta Description
@@ -6965,7 +6965,7 @@ function bb_check_email_type_registered( string $notification_type ) {
  * @return bool Is media profile media support enabled or not.
  */
 function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) get_option( 'bp_labs_notification_preferences_enabled', $default ) );
+	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) bp_get_option( 'bp_labs_notification_preferences_enabled', $default ) );
 }
 
 /**

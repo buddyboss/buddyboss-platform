@@ -47,7 +47,7 @@ jQuery( document ).ready(
 					},
 					dropdownCssClass: 'bb-select-dropdown',
 					containerCssClass: 'bb-select-container',
-					tokenSeparators: [ ',', ' ' ],
+					tokenSeparators: [ ',' ],
 					ajax: {
 						url: bbpCommonJsData.ajax_url,
 						dataType: 'json',
@@ -233,7 +233,7 @@ jQuery( document ).ready(
 						},
 						dropdownCssClass: 'bb-select-dropdown',
 						containerCssClass: 'bb-select-container',
-						tokenSeparators: [ ',', ' ' ],
+						tokenSeparators: [ ',' ],
 						ajax: {
 							url: bbpCommonJsData.ajax_url,
 							dataType: 'json',
