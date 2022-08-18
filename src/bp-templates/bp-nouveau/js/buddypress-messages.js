@@ -1252,18 +1252,40 @@ window.bp = window.bp || {};
 				}
 
 				var finalMessagesArray = [];
+				var prev_message_date = '';
+				var prev_message_date_display = '';
+				var thread_start_date = resp.thread.started_date_mysql;
+				var next_message_date = resp.next_messages_timestamp;
+				var index = 0;
+
 				_.each(
 					resp.messages,
 					function( value ) {
 						if ( _.isNull( value ) ) {
 							return;
 						}
-						finalMessagesArray.push( value );
-						if ( $.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1 ) {
 
+						index++;
+
+						if (
+							(
+								prev_message_date != '' &&
+								prev_message_date != value.sent_split_date &&
+								$.inArray( prev_message_date, bp.Nouveau.Messages.divider ) === -1
+							) ||
+							(
+								thread_start_date == next_message_date &&
+								resp.messages.length === index &&
+								$.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1
+							)
+						) {
+							if ( 1 === resp.messages_count ) {
+								prev_message_date_display = value.sent_date;
+								prev_message_date = value.sent_split_date;
+							}
 							var newDividerMessageObject = jQuery.extend( true, {}, value );
-							newDividerMessageObject.id = value.sent_split_date;
-							newDividerMessageObject.content = value.sent_date;
+							newDividerMessageObject.id = prev_message_date;
+							newDividerMessageObject.content = prev_message_date_display;
 							newDividerMessageObject.sender_avatar = '';
 							newDividerMessageObject.sender_id = '';
 							newDividerMessageObject.sender_is_you = '';
@@ -1293,19 +1315,29 @@ window.bp = window.bp || {};
 								delete newDividerMessageObject.media;
 							}
 
-							bp.Nouveau.Messages.divider.push( value.sent_split_date );
-							finalMessagesArray.push( newDividerMessageObject );
+							bp.Nouveau.Messages.divider.push( prev_message_date );
+
+							if (
+								thread_start_date == next_message_date &&
+								resp.messages.length === index
+							) {
+								finalMessagesArray.push( value );
+								finalMessagesArray.push( newDividerMessageObject );
+							} else {
+								finalMessagesArray.push( newDividerMessageObject );
+								finalMessagesArray.push( value );
+							}
+							prev_message_date = value.sent_split_date;
+							prev_message_date_display = value.sent_date;
+						} else {
+							finalMessagesArray.push( value );
+
+							if ( prev_message_date == '' ) {
+								prev_message_date = value.sent_split_date;
+								prev_message_date_display = value.sent_date;
+							}
 						}
 					}
-				);
-
-				setTimeout(
-					function () { // Waiting to load dummy image.
-						if ( ! $( '#bp-message-thread-list li' ).first().hasClass( 'divider-date' ) ) {
-							$('li.divider-date').first().prependTo( '#bp-message-thread-list' );
-						}
-					},
-					10
 				);
 
 				setTimeout(
