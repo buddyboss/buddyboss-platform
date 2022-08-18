@@ -1278,6 +1278,10 @@ window.bp = window.bp || {};
 								resp.messages.length === index
 							)
 						) {
+							if ( 1 === resp.messages_count ) {
+								prev_message_date_display = value.sent_date;
+								prev_message_date = value.sent_split_date;
+							}
 							var newDividerMessageObject = jQuery.extend( true, {}, value );
 							newDividerMessageObject.id = prev_message_date;
 							newDividerMessageObject.content = prev_message_date_display;
