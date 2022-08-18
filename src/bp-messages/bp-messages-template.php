@@ -2329,12 +2329,10 @@ function bb_get_thread_total_recipients_count() {
  * @param int|string $last_message_date The earlier time from which you're calculating
  *                                      the time elapsed. Enter either as an integer Unix timestamp,
  *                                      or as a date string of the format 'Y-m-d h:i:s'.
- * @param int|bool   $newer_date        Optional. Date string of the format 'Y-m-d h:i:s' to compare older
- *                                      date to. Default: false (current time).
  *
  * @return string
  */
-function bb_get_thread_sent_date( $last_message_date = false, $newer_date = false ) {
+function bb_get_thread_sent_date( $last_message_date = false ) {
 	global $messages_template;
 
 	if ( empty( $last_message_date ) && isset( $messages_template->thread->last_message_date ) ) {
@@ -2374,13 +2372,11 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 	$old_last_date = $last_message_date;
 
 	if ( ! empty( $last_message_date ) && ! is_numeric( $last_message_date ) ) {
-		$time_chunks       = explode( ':', str_replace( ' ', ':', $last_message_date ) );
-		$date_chunks       = explode( '-', str_replace( ' ', '-', $last_message_date ) );
 		$last_message_date = strtotime( $last_message_date );
 	}
 
 	// Calculate the different with current time for past 5 mins.
-	$newer_current_date = ( ! $newer_date ) ? strtotime( bp_core_current_time() ) : $newer_date;
+	$newer_current_date = strtotime( bp_core_current_time() );
 	$current_since      = $newer_current_date - $last_message_date;
 	$five_seconds       = ( 5 * MINUTE_IN_SECONDS );
 
@@ -2393,11 +2389,8 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
 		 * a date and the today end time. $newer_date will have a value if we want to
 		 * work out time elapsed between two known dates.
 		 */
-		$today             = date_i18n( 'Y-m-d' ) . ' 23:59:59';
-		$newer_date        = ( ! $newer_date ) ? $today : $newer_date;
-		$newer_time_chunks = explode( ':', str_replace( ' ', ':', $newer_date ) );
-		$newer_date_chunks = explode( '-', str_replace( ' ', '-', $newer_date ) );
-		$newer_date        = gmmktime( (int) $newer_time_chunks[1], (int) $newer_time_chunks[2], (int) $newer_time_chunks[3], (int) $newer_date_chunks[1], (int) $newer_date_chunks[2], (int) $newer_date_chunks[0] );
+		$newer_date = date_i18n( 'Y-m-d', false, true ) . ' 23:59:59';
+		$newer_date = strtotime( $newer_date );
 
 		// Difference in seconds.
 		$since = $newer_date - $last_message_date;
@@ -2502,12 +2495,10 @@ function bb_get_thread_sent_date( $last_message_date = false, $newer_date = fals
  * @param int|string $thread_start_date The earlier time from which you're calculating
  *                                      the time elapsed. Enter either as an integer Unix timestamp,
  *                                      or as a date string of the format 'Y-m-d h:i:s'.
- * @param int|bool   $newer_date        Optional. Date string of the format 'Y-m-d h:i:s' to compare older
- *                                      date to. Default: false (current time).
  *
  * @return string
  */
-function bb_get_thread_start_date( $thread_start_date = false, $newer_date = false ) {
+function bb_get_thread_start_date( $thread_start_date = false, $show_week_days = true ) {
 	global $thread_template;
 
 	if ( empty( $thread_start_date ) && isset( $thread_template->thread->first_message_date ) ) {
@@ -2547,9 +2538,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	$old_start_date = $thread_start_date;
 
 	if ( ! empty( $thread_start_date ) && ! is_numeric( $thread_start_date ) ) {
-		$time_chunks       = explode( ':', str_replace( ' ', ':', $thread_start_date ) );
-		$date_chunks       = explode( '-', str_replace( ' ', '-', $thread_start_date ) );
-		$thread_start_date = gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
+		$thread_start_date = strtotime( $thread_start_date );
 	}
 
 	/**
@@ -2557,11 +2546,8 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 	 * a date and the today end time. $newer_date will have a value if we want to
 	 * work out time elapsed between two known dates.
 	 */
-	$today             = date_i18n( 'Y-m-d' ) . ' 23:59:59';
-	$newer_date        = ( ! $newer_date ) ? $today : $newer_date;
-	$newer_time_chunks = explode( ':', str_replace( ' ', ':', $newer_date ) );
-	$newer_date_chunks = explode( '-', str_replace( ' ', '-', $newer_date ) );
-	$newer_date        = gmmktime( (int) $newer_time_chunks[1], (int) $newer_time_chunks[2], (int) $newer_time_chunks[3], (int) $newer_date_chunks[1], (int) $newer_date_chunks[2], (int) $newer_date_chunks[0] );
+	$newer_date = date_i18n( 'Y-m-d', false, true ) . ' 23:59:59';
+	$newer_date = strtotime( $newer_date );
 
 	$end_week = bb_get_week_start_timestamp( '-7 days' );
 
@@ -2603,16 +2589,22 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 
 		} else {
 
+			if ( $show_week_days ) {
+				$format = 'l, F j';
+			} else {
+				$format = 'F j';
+			}
+
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, 'l, F j' ) : bp_core_get_format_date( $old_start_date, 'F j, Y' );
+					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, $format ) : bp_core_get_format_date( $old_start_date, 'F j, Y' );
 					break;
 				case WEEK_IN_SECONDS:
 					if ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {
-						$output = bp_core_get_format_date( $old_start_date, 'l, F j' );
+						$output = bp_core_get_format_date( $old_start_date, $format );
 					}
 					break;
 				case DAY_IN_SECONDS:
@@ -2621,11 +2613,15 @@ function bb_get_thread_start_date( $thread_start_date = false, $newer_date = fal
 					} elseif ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {
-						$output = bp_core_get_format_date( $old_start_date, 'l, F j' );
+						$output = bp_core_get_format_date( $old_start_date, $format );
 					}
 					break;
 				case 1:
-					$output = bp_core_get_format_date( $old_start_date, 'g:iA' );
+					if ( ! $show_week_days ) {
+						$output = bp_core_get_format_date( $old_start_date, 'g:iA' );
+					} else {
+						$output = $today_text;
+					}
 					break;
 				default:
 					$output = $today_text;

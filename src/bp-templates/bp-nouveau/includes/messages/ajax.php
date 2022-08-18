@@ -2270,7 +2270,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->thread = array(
 		'id'                        => $bp_get_the_thread_id,
 		'subject'                   => wp_strip_all_tags( bp_get_the_thread_subject() ),
-		'started_date'              => bb_get_thread_start_date(),
+		'started_date'              => bb_get_thread_start_date( $thread_template->thread->first_message_date, false ),
 		'group_id'                  => $group_id,
 		'group_name'                => html_entity_decode( ucwords( $group_name ) ),
 		'is_group_thread'           => $is_group_thread,

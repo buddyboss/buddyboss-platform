@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.8\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-08-18 05:53:23+00:00\n"
+"POT-Creation-Date: 2022-08-18 10:01:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2369,7 +2369,7 @@ msgstr ""
 #: bp-members/bp-members-template.php:3041
 #: bp-messages/bp-messages-functions.php:332
 #: bp-messages/bp-messages-template.php:2155
-#: bp-messages/bp-messages-template.php:2672
+#: bp-messages/bp-messages-template.php:2668
 #: bp-search/bp-search-settings.php:1031 bp-settings/actions/export.php:35
 msgid "%s"
 msgstr ""
@@ -23698,21 +23698,21 @@ msgstr ""
 msgid "This message was deleted."
 msgstr ""
 
-#: bp-messages/bp-messages-template.php:2351
-#: bp-messages/bp-messages-template.php:2524
+#: bp-messages/bp-messages-template.php:2349
+#: bp-messages/bp-messages-template.php:2515
 msgid "Sometime"
 msgstr ""
 
-#: bp-messages/bp-messages-template.php:2364
+#: bp-messages/bp-messages-template.php:2362
 msgid "Now"
 msgstr ""
 
-#: bp-messages/bp-messages-template.php:2460
-#: bp-messages/bp-messages-template.php:2620
+#: bp-messages/bp-messages-template.php:2453
+#: bp-messages/bp-messages-template.php:2612
 msgid "Yesterday"
 msgstr ""
 
-#: bp-messages/bp-messages-template.php:2537
+#: bp-messages/bp-messages-template.php:2528
 #: bp-templates/bp-nouveau/includes/messages/functions.php:135
 msgid "Today"
 msgstr ""
