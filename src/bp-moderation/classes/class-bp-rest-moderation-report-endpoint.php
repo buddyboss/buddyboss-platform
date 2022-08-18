@@ -85,13 +85,11 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$reports_terms = get_terms( 'bpm_category', array( 'hide_empty' => false ) );
 		if ( ! empty( $reports_terms ) ) {
 			foreach ( $reports_terms as $reports_term ) {
-				$show_when           = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting' );
 				$fields['options'][] = array(
 					'id'                => $reports_term->term_id,
 					'type'              => 'option',
 					'name'              => esc_html( $reports_term->name ),
 					'description'       => esc_html( $reports_term->description ),
-					'show_when'         => ! empty( $show_when ) ? $show_when[0] : 'content',
 					'is_default_option' => ( 1 === $count++ ),
 					'value'             => esc_attr( $reports_term->term_id ),
 				);
@@ -103,7 +101,6 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			'type'              => 'option',
 			'name'              => esc_html__( 'Other', 'buddyboss' ),
 			'description'       => '',
-			'show_when'         => 'content_members',
 			'is_default_option' => ( 1 === $count ),
 			'value'             => 'other',
 		);
