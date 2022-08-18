@@ -540,12 +540,12 @@
 	display: -ms-flexbox;
 	display: flex;
 	flex-flow: row wrap;
-	margin: 0 -3px;
+	margin: 0;
 	align-items: flex-start;
 	position: relative;
 
 	.bb-activity-video-elem {
-		padding: 3px;
+		padding: 3px 0;
 
 		video.video-js + .bb-video-loader {
 			position: absolute;
