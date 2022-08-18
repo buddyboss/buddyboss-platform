@@ -2340,13 +2340,13 @@ window.bp = window.bp || {};
 
 				$( '#whats-new-attachments' ).addClass( 'empty' ).closest( '#whats-new-form' ).removeClass( 'focus-in--attm' );
 			},
-			
+
 			displayPrevNextButton: function ( e ) {
 				e.preventDefault();
 				this.model.set( 'link_swap_image_button', 1 );
 				this.displayNextPrevButtonView();
 			},
-			
+
 			displayNextPrevButtonView: function () {
 				$('#activity-url-prevPicButton').show();
 				$('#activity-url-nextPicButton').show();
@@ -2354,7 +2354,7 @@ window.bp = window.bp || {};
 				$('#icon-exchange').hide();
 				$('#activity-link-preview-remove-image').hide();
 			},
-			
+
 			selectImageForPreview: function ( e ) {
 				e.preventDefault();
 				var imageIndex = this.model.get( 'link_image_index' );
@@ -2871,7 +2871,7 @@ window.bp = window.bp || {};
 
 			getURL: function ( prefix, urlText ) {
 				var urlString   = '';
-				urlText         = urlText.replace(/&nbsp;/g, '');
+				urlText         = urlText.replace( /&nbsp;/g, '' );
 				var startIndex  = urlText.indexOf( prefix );
 				var responseUrl = '';
 
@@ -2879,7 +2879,12 @@ window.bp = window.bp || {};
 					urlString = $( urlText ).attr( 'href' );
 				} else {
 					for ( var i = startIndex; i < urlText.length; i++ ) {
-						if ( urlText[ i ] === ' ' || urlText[ i ] === '\n' || ( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ) {
+						if (
+							urlText[ i ] === ' ' ||
+							urlText[ i ] === '\n' ||
+							( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ||
+							( urlText[ i ] === '<' && urlText[ i + 1 ] === 'b' && urlText[ i + 2 ] === 'r' )
+						) {
 							break;
 						} else {
 							urlString += urlText[ i ];
