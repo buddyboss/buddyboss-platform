@@ -1324,7 +1324,7 @@ function bb_validate_user_nickname_on_user_update( WP_Error $errors, bool $updat
 
 /**
  * Function will check if user confirmed change email address then
- * update profile completion widget based on change email's gravatar
+ * update profile completion widget based on change email's gravatar.
  *
  * @since BuddyBoss [BBVERSION]
  *
