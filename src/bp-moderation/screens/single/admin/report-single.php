@@ -33,7 +33,7 @@ $admins            = array_map(
 		} else {
 			printf(
 				/* translators: 1: URL, 2: Title */
-				'<a class="bb-back" href="%1$s"><i class="bb-icon-f bb-icon-arrow-left"></i> %2$s</a>',
+				'<a class="bb-back" href="%1$s"><i class="bb-icon-f bb-icon-arrow-left"></i>%2$s</a>',
 				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
 				esc_html__( 'Back to Flagged Members', 'buddyboss' )
 			);
