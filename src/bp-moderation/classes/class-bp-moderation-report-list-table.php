@@ -162,21 +162,25 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		</h2>
 
 		<table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
+			<?php if ( $this->has_items() ) { ?>
 			<thead>
 			<tr>
 				<?php $this->print_column_headers(); ?>
 			</tr>
 			</thead>
+			<?php } ?>
 
 			<tbody id="the-moderation-report-list">
 			<?php $this->display_rows_or_placeholder(); ?>
 			</tbody>
 
+			<?php if ( $this->has_items() ) { ?>
 			<tfoot>
 			<tr>
 				<?php $this->print_column_headers( false ); ?>
 			</tr>
 			</tfoot>
+			<?php } ?>
 		</table>
 		<?php
 
