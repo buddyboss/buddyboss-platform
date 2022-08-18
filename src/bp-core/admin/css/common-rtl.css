@@ -3282,7 +3282,7 @@ table.moderations tbody tr .column-suspend .dashicons {
 .buddyboss_page_bp-moderation .bb-back [class*="bb-icon"] {
   display: inline-block;
   font-size: 17px;
-  margin-left: 5px;
+  margin: -1px 0 0 3px;
   vertical-align: middle;
 }
 
@@ -3343,6 +3343,8 @@ table.moderations .column-member img {
 #bp_moderation_action .report-header_content_id a i {
   font-weight: 300;
   font-size: 18px;
+  transform: translateY(-1px);
+  display: inline-block;
 }
 
 #bp_moderation_action .report-header_user {
@@ -3386,6 +3388,10 @@ table.moderations .column-member img {
 
 #bp_moderation_action .report-header_action .report-header_button + .report-header_button {
   margin-right: 10px;
+}
+
+.moderation-table-heading.form-table td {
+  padding: 15px 0;
 }
 
 #the-moderation-report-list .reporter a {

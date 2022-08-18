@@ -181,7 +181,7 @@ $admins            = array_map(
 
 
 
-								<table class="form-table report-table">
+								<table class="form-table report-table moderation-table-heading">
 									<tbody>
 										<?php if ( $is_content_screen ) { ?>
 											<tr>
@@ -209,7 +209,7 @@ $admins            = array_map(
 									$bp_moderation_report_list_table->display();
 
 									?>
-									<table class="form-table report-table">
+									<table class="form-table report-table moderation-table-heading">
 										<tbody>
 											<tr>
 												<td scope="row" style="width: 20%;">
