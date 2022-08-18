@@ -3616,7 +3616,7 @@ table.moderations {
 		[class*="bb-icon"] {
 			display: inline-block;
 			font-size: 17px;
-			margin-right: 5px;
+			margin: -1px 3px 0 0;
 			vertical-align: middle;
 		}
 
@@ -3689,6 +3689,8 @@ table.moderations .column-member {
 			i {
 				font-weight: 300;
 				font-size: 18px;
+				transform: translateY(-1px);
+				display: inline-block;
 			}
 		}
 	}
@@ -3740,6 +3742,10 @@ table.moderations .column-member {
 		}
 
 	}
+}
+
+.moderation-table-heading.form-table td {
+	padding: 15px 0;
 }
 
 #the-moderation-report-list .reporter a {

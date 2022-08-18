@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.8\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-08-18 05:41:38+00:00\n"
+"POT-Creation-Date: 2022-08-18 10:40:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8403,7 +8403,7 @@ msgstr ""
 #: bp-core/classes/class-bp-core-notification-abstract.php:159
 #: bp-core/profile-search/bps-xprofile.php:350
 #: bp-core/profile-search/bps-xprofile.php:655
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:263
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:267
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:102
 #: bp-moderation/screens/content-report-form.php:55
 #: bp-xprofile/bp-xprofile-admin.php:967
@@ -8925,13 +8925,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -14842,8 +14842,8 @@ msgid "<strong>ERROR</strong>: Your forum cannot be edited at this time."
 msgstr ""
 
 #: bp-forums/forums/functions.php:1680
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:200
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:212
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:204
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:216
 msgid "Category"
 msgstr ""
 
@@ -15236,7 +15236,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:971
 #: bp-moderation/bp-moderation-filters.php:935
 #: bp-moderation/classes/class-bp-moderation-list-table.php:235
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:206
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:210
 msgid "Member"
 msgstr ""
 
@@ -25114,17 +25114,17 @@ msgstr ""
 msgid "This member has not been blocked by any members."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:199
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:211
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:203
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:215
 msgid "Reporter"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:201
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:213
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:205
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:217
 msgid "Date Reported"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-report-list-table.php:207
+#: bp-moderation/classes/class-bp-moderation-report-list-table.php:211
 msgid "Date Blocked"
 msgstr ""
 
@@ -31937,15 +31937,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
