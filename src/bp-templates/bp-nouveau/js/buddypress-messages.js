@@ -1275,7 +1275,8 @@ window.bp = window.bp || {};
 							) ||
 							(
 								thread_start_date == next_message_date &&
-								resp.messages.length === index
+								resp.messages.length === index &&
+								$.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1
 							)
 						) {
 							if ( 1 === resp.messages_count ) {
