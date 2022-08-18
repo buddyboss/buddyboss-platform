@@ -2477,14 +2477,12 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string     $value             Timestamp of the date sent value for the current message.
+	 * @param string     $output             Timestamp of the date sent value for the current message.
 	 * @param int|string $old_last_date     The earlier time from which you're calculating
 	 *                                      the time elapsed. Enter either as an integer Unix timestamp,
 	 *                                      or as a date string of the format 'Y-m-d h:i:s'.
-	 * @param int|bool   $newer_date        Optional. Date string of the format 'Y-m-d h:i:s' to compare older
-	 *                                      date to. Default: false (current time).
 	 */
-	return apply_filters( 'bb_get_thread_sent_date', $output, $old_last_date, $newer_date );
+	return apply_filters( 'bb_get_thread_sent_date', $output, $old_last_date );
 }
 
 /**
@@ -2616,13 +2614,6 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 						$output = bp_core_get_format_date( $old_start_date, $format );
 					}
 					break;
-				case 1:
-					if ( ! $show_week_days ) {
-						$output = bp_core_get_format_date( $old_start_date, 'g:iA' );
-					} else {
-						$output = $today_text;
-					}
-					break;
 				default:
 					$output = $today_text;
 			}
@@ -2643,10 +2634,9 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	 * @param int|string $old_start_date    The earlier time from which you're calculating
 	 *                                      the time elapsed. Enter either as an integer Unix timestamp,
 	 *                                      or as a date string of the format 'Y-m-d h:i:s'.
-	 * @param int|bool   $newer_date        Optional. Date string of the format 'Y-m-d h:i:s' to compare older
-	 *                                      date to. Default: false (current time).
+	 * @param bool   $show_week_days        Optional. Show the weekdays or not.
 	 */
-	return apply_filters( 'bb_get_thread_start_date', $output, $old_start_date, $newer_date );
+	return apply_filters( 'bb_get_thread_start_date', $output, $old_start_date, $show_week_days );
 }
 
 /**

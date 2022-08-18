@@ -38,6 +38,7 @@ window.bp = window.bp || {};
 			this.box               = 'inbox';
 			this.mediumEditor      = false;
 			this.divider      = [];
+			this.previous      = '';
 
 			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -1251,9 +1252,7 @@ window.bp = window.bp || {};
 
 				}
 
-				var finalMessagesArray = [];
-				var prev_message_date = '';
-				var prev_message_date_display = '';
+				var finalMessagesArray = [], dividerMessageObject = {};
 				var thread_start_date = resp.thread.started_date_mysql;
 				var next_message_date = resp.next_messages_timestamp;
 				var index = 0;
@@ -1268,74 +1267,26 @@ window.bp = window.bp || {};
 						index++;
 
 						if (
-							(
-								prev_message_date != '' &&
-								prev_message_date != value.sent_split_date &&
-								$.inArray( prev_message_date, bp.Nouveau.Messages.divider ) === -1
-							) ||
-							(
-								thread_start_date == next_message_date &&
-								resp.messages.length === index &&
-								$.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1
-							)
+							bp.Nouveau.Messages.previous != '' &&
+							bp.Nouveau.Messages.previous.sent_split_date != value.sent_split_date &&
+							$.inArray( bp.Nouveau.Messages.previous.sent_split_date, bp.Nouveau.Messages.divider ) === -1
 						) {
-							if ( 1 === resp.messages_count ) {
-								prev_message_date_display = value.sent_date;
-								prev_message_date = value.sent_split_date;
-							}
-							var newDividerMessageObject = jQuery.extend( true, {}, value );
-							newDividerMessageObject.id = prev_message_date;
-							newDividerMessageObject.content = prev_message_date_display;
-							newDividerMessageObject.sender_avatar = '';
-							newDividerMessageObject.sender_id = '';
-							newDividerMessageObject.sender_is_you = '';
-							newDividerMessageObject.sender_link = '';
-							newDividerMessageObject.sender_name = '';
-							newDividerMessageObject.display_date = '';
-							newDividerMessageObject.group_text = '';
-							newDividerMessageObject.group_name = '';
-							newDividerMessageObject.group_avatar = '';
-							newDividerMessageObject.group_link = '';
-							newDividerMessageObject.message_from = '';
-							newDividerMessageObject.class_name = 'divider-date';
-
-							if ( typeof newDividerMessageObject.gif !== 'undefined' ) {
-								delete newDividerMessageObject.gif;
-							}
-
-							if ( typeof newDividerMessageObject.video !== 'undefined' ) {
-								delete newDividerMessageObject.video;
-							}
-
-							if ( typeof newDividerMessageObject.document !== 'undefined' ) {
-								delete newDividerMessageObject.document;
-							}
-
-							if ( typeof newDividerMessageObject.media !== 'undefined' ) {
-								delete newDividerMessageObject.media;
-							}
-
-							bp.Nouveau.Messages.divider.push( prev_message_date );
-
-							if (
-								thread_start_date == next_message_date &&
-								resp.messages.length === index
-							) {
-								finalMessagesArray.push( value );
-								finalMessagesArray.push( newDividerMessageObject );
-							} else {
-								finalMessagesArray.push( newDividerMessageObject );
-								finalMessagesArray.push( value );
-							}
-							prev_message_date = value.sent_split_date;
-							prev_message_date_display = value.sent_date;
-						} else {
-							finalMessagesArray.push( value );
-
-							if ( prev_message_date == '' ) {
-								prev_message_date = value.sent_split_date;
-								prev_message_date_display = value.sent_date;
-							}
+							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value );
+							bp.Nouveau.Messages.divider.push( bp.Nouveau.Messages.previous.sent_split_date );
+							finalMessagesArray.push( dividerMessageObject );
+						}
+						finalMessagesArray.push( value );
+						bp.Nouveau.Messages.previous = value;
+						if (
+							thread_start_date == next_message_date &&
+							resp.messages.length === index &&
+							$.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1
+						) {
+							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value );
+							dividerMessageObject.id = value.sent_split_date;
+							dividerMessageObject.content = value.sent_date;
+							bp.Nouveau.Messages.divider.push( value.sent_split_date );
+							finalMessagesArray.push( dividerMessageObject );
 						}
 					}
 				);
@@ -1347,6 +1298,43 @@ window.bp = window.bp || {};
 					1000
 				);
 				return finalMessagesArray;
+			},
+
+			createSpliter: function( value ) {
+				var dividerObject = jQuery.extend( true, {}, value );
+
+				dividerObject.id = bp.Nouveau.Messages.previous.sent_split_date;
+				dividerObject.content = bp.Nouveau.Messages.previous.sent_date;
+				dividerObject.sender_avatar = '';
+				dividerObject.sender_id = '';
+				dividerObject.sender_is_you = '';
+				dividerObject.sender_link = '';
+				dividerObject.sender_name = '';
+				dividerObject.display_date = '';
+				dividerObject.group_text = '';
+				dividerObject.group_name = '';
+				dividerObject.group_avatar = '';
+				dividerObject.group_link = '';
+				dividerObject.message_from = '';
+				dividerObject.class_name = 'divider-date';
+
+				if ( typeof dividerObject.gif !== 'undefined' ) {
+					delete dividerObject.gif;
+				}
+
+				if ( typeof dividerObject.video !== 'undefined' ) {
+					delete dividerObject.video;
+				}
+
+				if ( typeof dividerObject.document !== 'undefined' ) {
+					delete dividerObject.document;
+				}
+
+				if ( typeof dividerObject.media !== 'undefined' ) {
+					delete dividerObject.media;
+				}
+
+				return dividerObject;
 			}
 		}
 	);
@@ -3378,6 +3366,7 @@ window.bp = window.bp || {};
 			changePreview: function( event ) {
 				var target = $( event.currentTarget );
 				bp.Nouveau.Messages.divider = [];
+				bp.Nouveau.Messages.previous = '';
 
 				event.preventDefault();
 				bp.Nouveau.Messages.removeFeedback();
