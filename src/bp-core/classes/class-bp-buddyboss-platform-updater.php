@@ -20,6 +20,8 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		var $plugin_id = 0;
 		var $plugin_path;
 		var $plugin_slug;
+		var $_transient_name = 'bb_updates_';
+		var $_transient_time = DAY_IN_SECONDS;
 
 
 		function __construct( $api_url, $plugin_path, $plugin_id, $license = '' ) {
@@ -42,19 +44,34 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		}
 
 		function update_plugin( $transient ) {
+			if ( ! isset( $transient->response ) ) {
+				return $transient;
+			}
 
-			if ( empty( $transient->checked ) ) {
-				$transient->checked = array( $this->plugin_path => false ); // force check for update
+			// Check if force check exists.
+			$force_check = ! empty( $_GET['force-check'] ) ? true : false;
+
+			// Check if response exists then return existing transient.
+			// Also check if force check exists then bypass transient.
+			if ( ! $force_check ) {
+				$response_transient = get_transient( $this->_transient_name . $this->plugin_slug );
+				if ( ! empty( $response_transient ) ) {
+					if ( isset( $response_transient->body ) ) {
+						unset( $response_transient->body );
+						$transient->no_update[ $this->plugin_path ] = $response_transient;
+					} else {
+						$transient->response[ $this->plugin_path ] = $response_transient;
+					}
+
+					return $transient;
+				}
 			}
 
 			/**
-			 * Some plugins like seedprod-pro, wp-analytify-pro, uncanny-toolkit-pro etc explicitly set
-			 * their corresponding value in $transient->checked array.
-			 * Doing that, wipes out other records from that array, for reasons not known yet.
-			 * This causes 'version' => $transient->checked[$this->plugin_path],' to return null and so, api query always returns
-			 * with the message that there is an update available.
+			 * Get plugin version from transient. If transient return false then we will get plugin version from
+			 * get_plugin_data function.
 			 *
-			 * To fix that, we need to get version number differently, by directly reading the plugin file.
+			 * @uses get_plugin_data()
 			 */
 			$current_version = isset( $transient->checked[ $this->plugin_path ] ) ? $transient->checked[ $this->plugin_path ] : false;
 			if ( ! $current_version ) {
@@ -83,6 +100,17 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 
 			$response = null;
 			if ( ! is_wp_error( $raw_response ) && ( $raw_response['response']['code'] == 200 ) ) {
+				if ( empty( $raw_response['body'] ) ) {
+					// If we have no update then we store response in $transient->no_update variable.
+					$no_update_response                         = new stdClass();
+					$no_update_response->id                     = $this->plugin_id;
+					$no_update_response->slug                   = $this->plugin_slug;
+					$no_update_response->plugin                 = $this->plugin_path;
+					$no_update_response->new_version            = $current_version;
+					$no_update_response->body                   = $raw_response['body'];
+					$transient->no_update[ $this->plugin_path ] = $no_update_response;
+					set_transient( $this->_transient_name . $this->plugin_slug, $no_update_response, $this->_transient_time );
+				}
 				$response = unserialize( $raw_response['body'] );
 			}
 
@@ -90,6 +118,8 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			if ( is_object( $response ) && ! empty( $response ) ) {
 				$transient->response[ $this->plugin_path ] = $response;
 
+				// Set plugins data in transient for a day to avoid multiple request to hit on server.
+				set_transient( $this->_transient_name . $this->plugin_slug, $response, $this->_transient_time );
 				return $transient;
 			}
 
