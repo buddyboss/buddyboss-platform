@@ -6468,10 +6468,11 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   max-height: calc(100vh - 220px);
   overflow: auto;
   padding: 20px 30px;
+  padding-bottom: 0;
 }
 
-.bb-action-popup .bb-action-popup-content p {
-  margin-bottom: 0;
+.bb-action-popup .bb-action-popup-content p:empty {
+  display: none;
 }
 
 .bb-action-popup .bb-model-footer {
