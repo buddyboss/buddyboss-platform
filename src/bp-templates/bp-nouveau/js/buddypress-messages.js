@@ -593,6 +593,11 @@ window.bp = window.bp || {};
 				'exclude_current_user': true,
 				'exclude_moderated_members': 'bp_load_more' === bpAction ? true : false,
 			};
+
+			if ( $this.parents( '#members_list' ).length > 0 ) {
+				postData.exclude_moderated_members = false;
+			}
+
 			$.ajax( {
 				type: 'POST',
 				url: BP_Nouveau.ajaxurl,
