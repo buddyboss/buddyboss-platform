@@ -3164,7 +3164,9 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	$args['exclude_moderated_members'] = filter_var( $post_data['exclude_moderated_members'], FILTER_VALIDATE_BOOLEAN );
 	$args['exclude_current_user']      = filter_var( $post_data['exclude_current_user'], FILTER_VALIDATE_BOOLEAN );
 	$args['page']                      = (int) $post_data['page_no'];
-	$args['exclude_admin_user']        = $administrator_ids;
+	if ( $args['exclude_moderated_members'] ) {
+		$args['exclude_admin_user'] = $administrator_ids;
+	}
 	$thread                            = new BP_Messages_Thread( false );
 	$results                           = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
 	$html                              = '';
