@@ -60,6 +60,9 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			add_filter( 'bp_core_get_root_domain', array( $this, 'bp_core_wpml_fix_get_root_domain' ) );
 			add_filter( 'bp_core_get_directory_page_ids', array( $this, 'bb_core_get_wpml_directory_page_ids' ), 10, 1 );
+
+			// Trigger function to delete profile completion data when switch language.
+			add_action( 'wpml_language_has_switched', 'bp_core_xprofile_clear_all_user_progress_cache' );
 		}
 
 		/**
