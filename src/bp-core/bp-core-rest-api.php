@@ -416,7 +416,7 @@ function bb_is_rest() {
  *
  * @param string|array $var Data to sanitize.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.8
  * @return string|array
  */
 function bb_input_clean( $var ) {
