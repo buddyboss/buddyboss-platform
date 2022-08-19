@@ -48,6 +48,8 @@ function bp_core_install( $active_components = false ) {
 	// Install the signups table.
 	bp_core_maybe_install_signups();
 
+	bb_core_install_data_cache();
+
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
 		bp_core_install_notifications();
@@ -1274,4 +1276,29 @@ function bp_core_install_moderation_emails() {
 	 * @since BuddyBoss 1.5.6
 	 */
 	do_action( 'bp_core_install_moderation_emails' );
+}
+
+/**
+ * Install database tables for cache component.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_install_data_cache() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bb_item_cache (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   user_id bigint(20) NOT NULL,
+	   item_id bigint(20) NOT NULL,
+	   item_type varchar(20) NOT NULL,
+	   content longtext DEFAULT NULL,
+	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   PRIMARY KEY  (id),
+	   KEY user_id (user_id),
+	   KEY item (item_id, item_type)
+   ) {$charset_collate};";
+
+	dbDelta( $sql );
 }

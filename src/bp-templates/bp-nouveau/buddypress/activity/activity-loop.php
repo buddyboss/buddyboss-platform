@@ -19,11 +19,20 @@ bp_nouveau_before_loop(); ?>
 	<?php
 	while ( bp_activities() ) :
 		bp_the_activity();
+
+		$cache = bb_fetch_cache_item( bp_get_activity_id(), 'activity', get_current_user_id() );
+		if ( ! empty( $cache ) ) {
+			echo $cache;
+		} else {
+			ob_start();
+			bp_get_template_part( 'activity/entry' );
+			$content = ob_get_clean();
+
+			bb_insert_cache_item( bp_get_activity_id(), 'activity', $content );
+			echo $content;
+		}
+	endwhile;
 	?>
-
-		<?php bp_get_template_part( 'activity/entry' ); ?>
-
-	<?php endwhile; ?>
 
 	<?php if ( bp_activity_has_more_items() ) : ?>
 
