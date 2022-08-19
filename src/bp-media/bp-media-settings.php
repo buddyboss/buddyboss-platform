@@ -880,6 +880,14 @@ function bp_media_settings_callback_gif_key() {
 		?>
 	</p>
 	<?php
+	$is_valid_key = bb_check_valid_giphy_api_key( true );
+	if ( ! is_wp_error( $is_valid_key ) && isset( $is_valid_key['response']['code'] ) && 200 !== $is_valid_key['response']['code'] ) {
+		?>
+	<p class="display-notice bp-new-notice-panel-notice">
+		<strong><?php esc_html_e( 'There was a problem connecting to GIPHY with your API key:', 'buddyboss' ); ?></strong><br>(<?php esc_attr_e( $is_valid_key['response']['code'] ); ?>) <?php esc_attr_e( $is_valid_key['response']['message'] ); ?>.
+	</p>
+		<?php
+	}
 }
 
 /**
@@ -910,7 +918,7 @@ function bp_media_get_gif_api_key( $default = '' ) {
  */
 function bp_media_settings_callback_profiles_gif_support() {
 	?>
-	<input name="bp_media_profiles_gif_support" id="bp_media_profiles_gif_support" type="checkbox" value="1" <?php checked( bp_is_profiles_gif_support_enabled() ); ?> />
+	<input name="bp_media_profiles_gif_support" id="bp_media_profiles_gif_support" type="checkbox" value="1" <?php checked( bp_is_profiles_gif_support_enabled() ); ?> <?php echo ! bb_check_valid_giphy_api_key() ? 'disabled' : ''; ?>/>
 	<label for="bp_media_profiles_gif_support">
 		<?php _e( 'Allow members to use animated GIFs in <strong>profile activity posts</strong>', 'buddyboss' ); ?>
 	</label>
@@ -955,7 +963,7 @@ function bp_media_settings_callback_groups_gif_support() {
 	}
 	$display_string .= $last_string;
 	?>
-	<input name="bp_media_groups_gif_support" id="bp_media_groups_gif_support" type="checkbox" value="1" <?php checked( bp_is_groups_gif_support_enabled() ); ?> />
+	<input name="bp_media_groups_gif_support" id="bp_media_groups_gif_support" type="checkbox" value="1" <?php checked( bp_is_groups_gif_support_enabled() ); ?> <?php echo ! bb_check_valid_giphy_api_key() ? 'disabled' : ''; ?>/>
 	<label for="bp_media_groups_gif_support">
 		<?php
 		printf(
@@ -975,7 +983,7 @@ function bp_media_settings_callback_groups_gif_support() {
  */
 function bp_media_settings_callback_messages_gif_support() {
 	?>
-	<input name="bp_media_messages_gif_support" id="bp_media_messages_gif_support" type="checkbox" value="1" <?php checked( bp_is_messages_gif_support_enabled() ); ?> />
+	<input name="bp_media_messages_gif_support" id="bp_media_messages_gif_support" type="checkbox" value="1" <?php checked( bp_is_messages_gif_support_enabled() ); ?> <?php echo ! bb_check_valid_giphy_api_key() ? 'disabled' : ''; ?>/>
 	<label for="bp_media_messages_gif_support">
 		<?php
 		_e( 'Allow members to use animated GIFs in <strong>private messages</strong>', 'buddyboss' );
@@ -991,7 +999,7 @@ function bp_media_settings_callback_messages_gif_support() {
  */
 function bp_media_settings_callback_forums_gif_support() {
 	?>
-	<input name="bp_media_forums_gif_support" id="bp_media_forums_gif_support" type="checkbox" value="1" <?php checked( bp_is_forums_gif_support_enabled() ); ?> />
+	<input name="bp_media_forums_gif_support" id="bp_media_forums_gif_support" type="checkbox" value="1" <?php checked( bp_is_forums_gif_support_enabled() ); ?> <?php echo ! bb_check_valid_giphy_api_key() ? 'disabled' : ''; ?>/>
 	<label for="bp_media_forums_gif_support">
 		<?php _e( 'Allow members to use animated GIFs in <strong>forum discussions</strong> and <strong>replies</strong>', 'buddyboss' ); ?>
 	</label>
@@ -1007,7 +1015,11 @@ function bp_media_settings_callback_forums_gif_support() {
  * @since BuddyBoss 1.0.0
  */
 function bp_is_profiles_gif_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_profiles_gif_support_enabled', (bool) get_option( 'bp_media_profiles_gif_support', $default ) );
+	$result = false;
+	if ( bb_check_valid_giphy_api_key() ) {
+		$result = (bool) get_option( 'bp_media_profiles_gif_support', $default );
+	}
+	return (bool) apply_filters( 'bp_is_profiles_gif_support_enabled', $result );
 }
 
 /**
@@ -1019,7 +1031,11 @@ function bp_is_profiles_gif_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_is_groups_gif_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_groups_gif_support_enabled', (bool) get_option( 'bp_media_groups_gif_support', $default ) );
+	$result = false;
+	if ( bb_check_valid_giphy_api_key() ) {
+		$result = (bool) get_option( 'bp_media_groups_gif_support', $default );
+	}
+	return (bool) apply_filters( 'bp_is_groups_gif_support_enabled', $result );
 }
 
 /**
@@ -1031,7 +1047,11 @@ function bp_is_groups_gif_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_is_messages_gif_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_messages_gif_support_enabled', (bool) get_option( 'bp_media_messages_gif_support', $default ) );
+	$result = false;
+	if ( bb_check_valid_giphy_api_key() ) {
+		$result = (bool) get_option( 'bp_media_messages_gif_support', $default );
+	}
+	return (bool) apply_filters( 'bp_is_messages_gif_support_enabled', $result );
 }
 
 /**
@@ -1043,7 +1063,11 @@ function bp_is_messages_gif_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_is_forums_gif_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', (bool) get_option( 'bp_media_forums_gif_support', $default ) );
+	$result = false;
+	if ( bb_check_valid_giphy_api_key() ) {
+		$result = (bool) get_option( 'bp_media_forums_gif_support', $default );
+	}
+	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', $result );
 }
 
 /**
