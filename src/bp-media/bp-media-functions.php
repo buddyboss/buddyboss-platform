@@ -3974,3 +3974,36 @@ function bb_media_delete_older_symlinks() {
 }
 bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 
+/**
+ * Check the GIPHY key is valid or not.
+ *
+ * @param boolean $message GIPHY api key validation response message.
+ *
+ * @return mixed Whether the giphy key is valid or error object.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_check_valid_giphy_api_key( $message = false ) {
+
+	static $cache = null;
+	if ( null !== $cache ) {
+		if ( true === $message ) {
+			return $cache;
+		}
+		return (bool) ( ! is_wp_error( $cache ) && isset( $cache['response']['code'] ) && 200 === $cache['response']['code'] );
+	}
+	$api_key = bp_media_get_gif_api_key();
+	if ( empty( $api_key ) ) {
+		$cache = null;
+		return $cache;
+	}
+
+	$output = wp_remote_get( "http://api.giphy.com/v1/gifs/trending?api_key=$api_key&limit=1" );
+	if ( $output ) {
+		$cache = $output;
+	}
+	if ( true === $message ) {
+		return $cache;
+	}
+	return (bool) ( ! is_wp_error( $cache ) && isset( $cache['response']['code'] ) && 200 === $cache['response']['code'] );
+}
