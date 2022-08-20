@@ -21,7 +21,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		var $plugin_path;
 		var $plugin_slug;
 		var $_transient_name = 'bb_updates_';
-		var $_transient_time = DAY_IN_SECONDS;
+		var $_transient_time = 8 * HOUR_IN_SECONDS;
 
 
 		function __construct( $api_url, $plugin_path, $plugin_id, $license = '' ) {
