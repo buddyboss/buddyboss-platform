@@ -2508,7 +2508,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
 					echo '<div class="bb-password-wrap">';
-					echo '<a href="#" class="bb-toggle-password"><i class="bb-icon-l bb-icon-eye"></i></a>';
+					echo '<a href="#" class="bb-toggle-password" tabindex="-1"><i class="bb-icon-l bb-icon-eye"></i></a>';
 				}
 
 				print( $field_output );  // Constructed safely above.
