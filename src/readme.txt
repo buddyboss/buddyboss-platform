@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.0.1
 Requires PHP: 5.6.20
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,19 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.0.8 =
+* Notifications - Handled save notification preferences issue in multi-site
+* Forums - Small improvement to allow creating tags with space at the time of adding discussion
+* Forums - Small improvement by providing filter hook to change discussion dropdown format when moving reply to a specific discussion
+* Activity - Improved link preview and embeds layout and styling
+* Activity - Handled embed preview issue for forum discussion auto-generated activity
+* Media - Handled group video not playing issue when members are not allowed to upload
+* Core - Small improvements to plugin updates logic by reducing the number of requests to check updates
+* Core - Handled draft issue for activity, forum discussion, and replies when uploaded media removed
+* Coding Standards - Small code refactoring to fix PHP 8 warnings and notices
+* REST API - Handled media symlink issue in the API when uploaded from the App
+* REST API - Handled auto-generated forum discussion activity embed iframe issue
 
 = 2.0.7 =
 * Notifications - Handled Activity comment auto-generated notification incorrect text issue
