@@ -320,7 +320,16 @@ function bb_group_wp_admin_bar_updates_menu() {
 function bb_ld_group_archive_slug_change( $post_options, $post_type ) {
 	$page_ids = bp_core_get_directory_page_ids();
 
-	if ( bp_is_active( 'groups') && is_array( $page_ids ) && isset( $page_ids['groups'] ) && !empty( $page_ids['groups'] ) && learndash_get_post_type_slug( 'group' ) === $post_type ) {
+	if (
+		bp_is_active( 'groups' ) &&
+		is_array( $page_ids ) &&
+		isset( $page_ids['groups'] ) &&
+		! empty( $page_ids['groups'] ) &&
+		function_exists( 'learndash_get_post_type_slug' ) &&
+		learndash_get_post_type_slug( 'group' ) === $post_type &&
+		isset( $post_options['rewrite']['slug'] ) &&
+		learndash_get_post_type_slug( 'group' ) === $post_options['rewrite']['slug']
+	) {
 		$post_options['rewrite']['slug'] = 'ld-groups';
 	}
 

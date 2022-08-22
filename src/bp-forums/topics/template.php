@@ -1497,12 +1497,16 @@ function bbp_get_topic_author_display_name( $topic_id = 0 ) {
 		// Get the author ID
 		$author_id = bbp_get_topic_author_id( $topic_id );
 
-		// Try to get a display name
-		$author_name = get_the_author_meta( 'display_name', $author_id );
+		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id ) : '';
 
-		// Fall back to user login
 		if ( empty( $author_name ) ) {
-			$author_name = get_the_author_meta( 'user_login', $author_id );
+			// Try to get a display name
+			$author_name = get_the_author_meta( 'display_name', $author_id );
+
+			// Fall back to user login
+			if ( empty( $author_name ) ) {
+				$author_name = get_the_author_meta( 'user_login', $author_id );
+			}
 		}
 
 		// User does not have an account
