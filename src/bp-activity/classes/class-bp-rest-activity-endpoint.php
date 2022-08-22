@@ -1285,6 +1285,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
 		if ( ! empty( $link_embed ) && method_exists( $bp->embed, 'autoembed' ) ) {
 			$data['preview_data'] = $bp->embed->autoembed( $link_embed, '' );
+		} elseif ( method_exists( $bp->embed, 'autoembed' ) && ! empty( $data['content_stripped'] ) ) {
+			$check_embedded_content = $bp->embed->autoembed( $data['content_stripped'], '' );
+			if ( ! empty( $check_embedded_content ) ) {
+				preg_match( '/<iframe[^>]*><\/iframe>/', $check_embedded_content, $match );
+				if ( ! empty( $match[0] ) ) {
+					$data['preview_data'] = $match[0];
+				}
+			}
 		}
 
 		// remove comment options from media/document/video activity.
