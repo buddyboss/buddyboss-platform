@@ -1681,7 +1681,7 @@ body .bp-messages-user-threads {
 		div.modal-container {
 			max-height: 600px;
 
-			@media screen and (max-height: 600px) {
+			@media screen and (max-height: 768px) {
 				max-height: 80vh;
 			}
 		}
