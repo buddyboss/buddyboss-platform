@@ -918,7 +918,7 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	 */
 	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
 
-		if ( bb_enabled_legacy_email_preference() ) {
+		if ( bb_enabled_legacy_email_preference() || is_admin() ) {
 
 			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
 			$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
