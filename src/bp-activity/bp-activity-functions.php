@@ -2256,7 +2256,7 @@ function bp_activity_add( $args = '' ) {
 function bp_activity_post_update( $args = '' ) {
 	global $bp_activity_edit;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'id'            => false,
@@ -2990,7 +2990,7 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
 function bp_activity_new_comment( $args = '' ) {
 	$bp = buddypress();
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'id'                => false,
@@ -4114,6 +4114,12 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 
 	// Now email the user with the contents of the message (if they have enabled email notifications).
 	if ( true === bb_is_notification_enabled( $receiver_user_id, $type_key ) ) {
+
+		// Check the sender is blocked by recipient or not.
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $receiver_user_id, get_current_user_id() ) ) {
+			return;
+		}
+
 		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 			$email_type = 'groups-at-message';
 			$group_name = bp_get_current_group_name();
@@ -4224,7 +4230,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $original_activity->user_id != $commenter_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
+		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $original_activity->user_id, $commenter_id ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4272,7 +4278,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
+		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $commenter_id )  ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,
@@ -4775,7 +4781,7 @@ add_action( 'transition_comment_status', 'bp_activity_transition_post_type_comme
  */
 function bp_start_following( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'leader_id'   => bp_displayed_user_id(),
@@ -4813,7 +4819,7 @@ function bp_start_following( $args = '' ) {
  */
 function bp_stop_following( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'leader_id'   => bp_displayed_user_id(),
@@ -4851,7 +4857,7 @@ function bp_stop_following( $args = '' ) {
  */
 function bp_is_following( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'leader_id'   => bp_displayed_user_id(),
@@ -4877,7 +4883,7 @@ function bp_is_following( $args = '' ) {
  */
 function bp_get_followers( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
@@ -4900,7 +4906,7 @@ function bp_get_followers( $args = '' ) {
  */
 function bp_get_following( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
@@ -4924,7 +4930,7 @@ function bp_get_following( $args = '' ) {
 function bp_total_follow_counts( $args = '' ) {
 	global $bp;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => bp_loggedin_user_id(),
@@ -5500,6 +5506,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	$group_name              = '';
 	$album_activity_id       = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
 	$album_video_activity_id = bp_activity_get_meta( $activity_id, 'bp_video_album_activity', true );
+	$link_image_index_save   = '';
 
 	if ( ! empty( $album_activity_id ) || ! empty( $album_video_activity_id ) ) {
 		$album_id = $album_activity_id;
@@ -5523,6 +5530,11 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	}
 	$group_avatar = bp_is_active( 'groups' ) ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
 
+	// Link preview data.
+	$link_preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+	if ( isset( $link_preview_data['link_image_index_save'] ) ) {
+		$link_image_index_save = $link_preview_data['link_image_index_save'];
+	}
 	/**
 	 * Filter here to edit the activity edit data.
 	 *
@@ -5533,17 +5545,18 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	return apply_filters(
 		'bp_activity_get_edit_data',
 		array(
-			'id'               => $activity_id,
-			'can_edit_privacy' => $can_edit_privacy,
-			'album_id'         => $album_id,
-			'group_id'         => $group_id,
-			'group_name'       => $group_name,
-			'folder_id'        => $folder_id,
-			'content'          => stripslashes( $activity->content ),
-			'item_id'          => $activity->item_id,
-			'object'           => $activity->component,
-			'privacy'          => $activity->privacy,
-			'group_avatar'     => $group_avatar,
+			'id'                    => $activity_id,
+			'can_edit_privacy'      => $can_edit_privacy,
+			'album_id'              => $album_id,
+			'group_id'              => $group_id,
+			'group_name'            => $group_name,
+			'folder_id'             => $folder_id,
+			'content'               => stripslashes( $activity->content ),
+			'item_id'               => $activity->item_id,
+			'object'                => $activity->component,
+			'privacy'               => $activity->privacy,
+			'group_avatar'          => $group_avatar,
+			'link_image_index_save' => $link_image_index_save,
 		)
 	);
 }
@@ -5563,7 +5576,7 @@ function bp_activity_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'id'                => 'activity_report',
@@ -5600,7 +5613,7 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'id'                => 'activity_comment_report',

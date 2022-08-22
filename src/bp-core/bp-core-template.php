@@ -4082,7 +4082,7 @@ function bp_nav_menu( $args = array() ) {
 		'menu_id'         => '',
 		'walker'          => '',
 	);
-	$args     = wp_parse_args( $args, $defaults );
+	$args     = bp_parse_args( $args, $defaults );
 
 	/**
 	 * Filters the parsed bp_nav_menu arguments.

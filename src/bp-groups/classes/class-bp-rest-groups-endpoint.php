@@ -729,6 +729,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'enable_forum'       => $this->bp_rest_group_is_forum_enabled( $item ),
 			'link'               => bp_get_group_permalink( $item ),
 			'name'               => bp_get_group_name( $item ),
+			'name_raw'           => $item->name,
 			'slug'               => bp_get_group_slug( $item ),
 			'status'             => bp_get_group_status( $item ),
 			'types'              => bp_groups_get_group_type( $item->id, false ),
@@ -749,6 +750,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'can_join'           => $this->bp_rest_user_can_join( $item ),
 			'can_post'           => $this->bp_rest_user_can_post( $item ),
 			'create_media'       => ( bp_is_active( 'media' ) && groups_can_user_manage_media( bp_loggedin_user_id(), $item->id ) ),
+			'create_album'       => ( bp_is_active( 'media' ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $item->id ) ),
 			'create_video'       => ( bp_is_active( 'video' ) && groups_can_user_manage_video( bp_loggedin_user_id(), $item->id ) ),
 			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
 		);
@@ -1247,6 +1249,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
+				'name_raw'           => array(
+					'context'     => array( 'edit' ),
+					'description' => __( 'Content for the name of the Group, as it exists in the database.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
 				'slug'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The URL-friendly slug for the Group.', 'buddyboss' ),
@@ -1444,6 +1452,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
+				'create_album'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user has permission to create an album to the group or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
 				'create_video'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user has permission to upload video to the group or not.', 'buddyboss' ),
@@ -1456,7 +1470,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'group_type'    => array(
+				'group_type'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the group type details will pass.', 'buddyboss' ),
 					'type'        => 'array',
