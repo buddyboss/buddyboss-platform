@@ -695,7 +695,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 			if ( false === $response ) {
 				$gravcheck = 'https://www.gravatar.com/avatar/' . md5( strtolower( $params['email'] ) ) . '?d=404';
 				$response  = get_headers( $gravcheck );
-				set_transient( $key, $response, DAY_IN_SECONDS );
+				set_transient( $key, $response, 3 * HOUR_IN_SECONDS );
 			}
 			if ( isset( $response[0] ) && $response[0] == 'HTTP/1.1 404 Not Found' ) {
 
