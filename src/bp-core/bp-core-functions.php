@@ -4707,12 +4707,12 @@ function bp_core_parse_url( $url ) {
 			);
 
 			@file_get_contents( $url, null, stream_context_create( $context ) );
-            if ( isset( $http_response_header) && isset( $http_response_header[6] ) ) {
-	            $new_url = str_replace( 'Location: ', '', $http_response_header[6] );
-	            if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
-		            $url = $new_url;
-	            }
-            }
+			if ( isset( $http_response_header ) && isset( $http_response_header[6] ) ) {
+				$new_url = str_replace( 'Location: ', '', $http_response_header[6] );
+				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+					$url = $new_url;
+				}
+			}
 		}
 	}
 
