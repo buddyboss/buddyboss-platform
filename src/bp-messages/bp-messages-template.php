@@ -2496,7 +2496,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
  *
  * @return string
  */
-function bb_get_thread_start_date( $thread_start_date = false, $show_week_days = true ) {
+function bb_get_thread_start_date( $thread_start_date = false, $show_week_days = true, $is_group_thread = false ) {
 	global $thread_template;
 
 	if ( empty( $thread_start_date ) && isset( $thread_template->thread->first_message_date ) ) {
@@ -2523,7 +2523,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$today_text = apply_filters( 'bb_get_thread_start_date_today_text', __( 'Today', 'buddyboss' ) );
+	$today_text = apply_filters( 'bb_get_thread_start_date_today_text', ( $is_group_thread ) ? __( 'today', 'buddyboss' ) : __( 'Today', 'buddyboss' ) );
 
 	// Array of time period chunks.
 	$chunks = array(
@@ -2607,7 +2607,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 					break;
 				case DAY_IN_SECONDS:
 					if ( 1 == $count ) {
-						$output = __( 'Yesterday', 'buddyboss' );
+						$output = ( $is_group_thread ) ? __( 'yesterday', 'buddyboss' ) : __( 'Yesterday', 'buddyboss' );
 					} elseif ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {
