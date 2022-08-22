@@ -5047,6 +5047,16 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 
 	$profile_groups     = $settings['profile_groups'];
 	$profile_photo_type = $settings['profile_photo_type'];
+	// Get user profile data if exists.
+	$get_user_data     = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	$current_user_data = get_userdata( get_current_user_id() );
+	if ( function_exists( 'bb_validate_gravatar' ) ) {
+		$check_new_gravatar = bb_validate_gravatar( $current_user_data->user_email );
+		$existing_gravatar  = isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) && isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) ? $get_user_data['photo_type']['profile_photo']['is_uploaded'] : '';
+		if ( (bool) $check_new_gravatar !== (bool) $existing_gravatar ) {
+			bp_core_xprofile_update_profile_completion_user_progress();
+		}
+	}
 
 	// Get logged in user Progress.
 	$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
@@ -7799,3 +7809,24 @@ function bb_is_wp_cli() {
 	return defined( 'WP_CLI' ) && WP_CLI;
 }
 
+/**
+ * Function will validate gravatar image based on email.
+ * If gravatar is validate then function will return true otherwise false.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $email User email address.
+ *
+ * @return bool
+ */
+function bb_validate_gravatar( $email ) {
+	$url              = 'https://www.gravatar.com/avatar/' . md5( strtolower( $email ) ) . '?d=404';
+	$key              = base64_encode( $url );
+	$response         = get_transient( $key );
+	$has_valid_avatar = false;
+	if ( isset( $response ) && isset( $response[0] ) && preg_match( "|200|", $response[0] ) ) {
+		$has_valid_avatar = true;
+	}
+
+	return $has_valid_avatar;
+}
