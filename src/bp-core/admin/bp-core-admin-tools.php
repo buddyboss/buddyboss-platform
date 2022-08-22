@@ -456,7 +456,7 @@ function bp_admin_repair_list() {
 	$repair_list[111] = array(
 		'bp-sync-profile-completion-widget',
 		esc_html__( 'Sync profile completion widget', 'buddyboss' ),
-		'bp_sync_profile_completion_widget',
+		'bb_sync_profile_completion_widget',
 	);
 
 	ksort( $repair_list );
@@ -1449,7 +1449,7 @@ function bp_admin_invitations_table() {
  *
  * @return array
  */
-function bp_sync_profile_completion_widget() {
+function bb_sync_profile_completion_widget() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
 	// Users args.
