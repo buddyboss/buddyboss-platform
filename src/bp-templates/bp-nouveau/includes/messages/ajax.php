@@ -2134,7 +2134,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					}
 
 					if ( ! empty( $joined_date ) ) {
-						$joined_date = bb_get_thread_start_date( $joined_date, true, true );
+						$joined_date = bb_get_thread_start_date( $joined_date, true );
 					}
 
 					$group_joined_date = $joined_date;
