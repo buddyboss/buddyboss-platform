@@ -10762,7 +10762,7 @@ body .bp-messages-user-threads {
   max-height: 600px;
 }
 
-@media screen and (max-height: 600px) {
+@media screen and (max-height: 768px) {
   .message-members-list.moderation-popup div.modal-container, .message-members-list.member-popup div.modal-container,
   .mass-user-block-list.moderation-popup div.modal-container,
   .mass-user-block-list.member-popup div.modal-container {
