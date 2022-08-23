@@ -39,7 +39,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 
 			$this->plugin_slug = str_replace( '.php', '', $part2 );
 
-			add_filter( 'pre_set_site_transient_update_plugins', array( &$this, 'update_plugin' ) );
+			add_filter( 'pre_set_site_transient_update_plugins', array( &$this, 'update_plugin' ), 99 );
 			add_filter( 'plugins_api', array( &$this, 'plugins_api' ), 10, 3 );
 		}
 
@@ -62,7 +62,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 					} else {
 						$transient->response[ $this->plugin_path ] = $response_transient;
 					}
-
+					$transient->last_checked = time();
 					return $transient;
 				}
 			}
@@ -120,6 +120,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 
 				// Set plugins data in transient for a day to avoid multiple request to hit on server.
 				set_transient( $this->_transient_name . $this->plugin_slug, $response, $this->_transient_time );
+				$transient->last_checked = time();
 				return $transient;
 			}
 
@@ -129,7 +130,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 					unset( $transient->response[ $this->plugin_path ] );
 				}
 			}
-
+			$transient->last_checked = time();
 			return $transient;
 		}
 
