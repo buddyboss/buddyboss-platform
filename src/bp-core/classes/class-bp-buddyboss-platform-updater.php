@@ -118,7 +118,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			if ( is_object( $response ) && ! empty( $response ) ) {
 				$transient->response[ $this->plugin_path ] = $response;
 
-				// Set plugins data in transient for a day to avoid multiple request to hit on server.
+				// Set plugins data in transient for 8 hours to avoid multiple request to hit on server.
 				set_transient( $this->_transient_name . $this->plugin_slug, $response, $this->_transient_time );
 				$transient->last_checked = time();
 				return $transient;
