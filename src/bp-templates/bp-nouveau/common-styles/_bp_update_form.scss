@@ -1723,6 +1723,31 @@ div[class*="attached-gif-container"] {
 		display: block;
 		width: 300px;
 	}
+
+	.gif-alert {
+
+		@include center-vert();
+		justify-content: center;
+		flex-flow: column;
+		min-height: 100px;
+
+		[class*="bb-icon"] {
+			// !important used to have these styles globally for all components
+			font-size: 30px !important;
+			color: $black !important;
+			opacity: 0.4;
+		}
+
+		p {
+			color: $black;
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 1.5;
+			opacity: 0.4;
+		}
+
+	}
+
 }
 
 @media screen and (min-width: 768px) {
