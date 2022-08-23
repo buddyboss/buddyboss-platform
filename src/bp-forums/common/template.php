@@ -1108,7 +1108,7 @@ function bbp_body_class( $wp_classes, $custom_classes = false ) {
 	} elseif ( bbp_is_search_results() ) {
 		$bbp_classes[] = 'bbp-search-results';
 		$bbp_classes[] = 'forum-search-results';
-	} elseif ( isset( $post->post_content ) && has_shortcode( $post->post_content, 'bbp-forum-form' ) ) {
+	} elseif ( isset( $post->post_content ) && ( has_shortcode( $post->post_content, 'bbp-forum-form' ) || has_shortcode( $post->post_content, 'bbp-reply-form' ) || has_shortcode( $post->post_content, 'bbp-topic-form' ) ) ) {
 		$bbp_classes[] = 'forum';
 		$bbp_classes[] = 'bbpress';
 		$bbp_classes[] = 'forum-template-default';
