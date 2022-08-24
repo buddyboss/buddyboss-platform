@@ -209,6 +209,15 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 						<div class="gif-search-results" id="gif-search-results">
 							<ul class="gif-search-results-list" >
 							</ul>
+							<div class="gif-alert gif-no-results">
+								<i class="bb-icon-l bb-icon-image-slash"></i>
+								<p><?php _e('No results found', 'buddyboss'); ?></p>
+							</div>
+
+							<div class="gif-alert gif-no-connection">
+								<i class="bb-icon-l bb-icon-cloud-slash"></i>
+								<p><?php _e('Could not connect to GIPHY', 'buddyboss'); ?></p>
+							</div>
 						</div>
 					</div>
 				</div>
