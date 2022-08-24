@@ -129,6 +129,15 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
+		// Exclude blocked by members.
+		$blocked_by_query = $this->blocked_by_user_query();
+		if ( ! empty( $blocked_by_query ) ) {
+			if ( ! empty( $where ) ) {
+				$where['moderation_where'] .= ' AND ';
+			}
+			$where['moderation_where'] .= "( u.ID NOT IN ( $blocked_by_query ))";
+		}
+
 		return $where;
 	}
 
@@ -159,7 +168,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
-		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+
+		if ( bb_moderation_is_user_blocked_by( $user_id ) || bp_moderation_is_user_blocked( $user_id ) ) {
 			buddypress()->displayed_user->id = 0;
 			bp_do_404();
 
