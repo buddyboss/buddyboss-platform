@@ -3139,6 +3139,13 @@ div[class*="attached-gif-container"] .gif-icon {
 }
 
 .gif-media-search-dropdown .gif-alert {
+  justify-content: center;
+  flex-flow: column;
+  min-height: 100px;
+  display: none;
+}
+
+.gif-media-search-dropdown .gif-alert.show {
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -3147,9 +3154,6 @@ div[class*="attached-gif-container"] .gif-icon {
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
-  justify-content: center;
-  flex-flow: column;
-  min-height: 100px;
 }
 
 .gif-media-search-dropdown .gif-alert [class*="bb-icon"] {
