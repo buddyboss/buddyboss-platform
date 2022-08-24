@@ -3166,7 +3166,7 @@ window.bp = window.bp || {};
 
 			getURL: function ( prefix, urlText ) {
 				var urlString   = '';
-				urlText         = urlText.replace(/&nbsp;/g, '');
+				urlText         = urlText.replace( /&nbsp;/g, '' );
 				var startIndex  = urlText.indexOf( prefix );
 				var responseUrl = '';
 
@@ -3174,7 +3174,12 @@ window.bp = window.bp || {};
 					urlString = $( urlText ).attr( 'href' );
 				} else {
 					for ( var i = startIndex; i < urlText.length; i++ ) {
-						if ( urlText[ i ] === ' ' || urlText[ i ] === '\n' || ( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ) {
+						if (
+							urlText[ i ] === ' ' ||
+							urlText[ i ] === '\n' ||
+							( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ||
+							( urlText[ i ] === '<' && urlText[ i + 1 ] === 'b' && urlText[ i + 2 ] === 'r' )
+						) {
 							break;
 						} else {
 							urlString += urlText[ i ];
