@@ -1347,7 +1347,7 @@ function bb_profile_update_completion_user_progress( $user_id, $old_user_data ) 
 	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
-	if ( IS_PROFILE_PAGE && isset( $_GET['newuseremail'] ) && $user_id ) {
+	if ( defined( 'IS_PROFILE_PAGE' ) && IS_PROFILE_PAGE && isset( $_GET['newuseremail'] ) && $user_id ) {
 		$new_email = get_user_meta( $user_id, '_new_email', true );
 		if ( $new_email && hash_equals( $new_email['hash'], $_GET['newuseremail'] ) ) {
 			bp_core_xprofile_update_profile_completion_user_progress();
