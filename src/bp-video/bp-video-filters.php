@@ -196,14 +196,9 @@ function bp_video_activity_append_video( $content, $activity ) {
 			'sort'     => 'ASC',
 		);
 
-		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 			if ( bp_is_group_video_support_enabled() ) {
-
 				$args['privacy'] = array( 'grouponly' );
-				if ( 'activity_comment' === $activity->type ) {
-					$args['privacy'][] = 'comment';
-				}
-
 				if ( ! bp_is_group_albums_support_enabled() ) {
 					$args['album_id'] = 'existing-video';
 				}
@@ -212,7 +207,17 @@ function bp_video_activity_append_video( $content, $activity ) {
 				$args['album_id'] = 'existing-video';
 			}
 		} else {
-			$args['privacy'] = bp_video_query_privacy( $activity->user_id, 0, $activity->component );
+
+			$group_id = 0;
+			if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+				$group_id = bp_get_current_group_id();
+			}
+			$args['privacy'] = bp_video_query_privacy( $activity->user_id, $group_id, $activity->component );
+
+			if ( 'activity_comment' === $activity->type ) {
+				$args['privacy'][] = 'comment';
+			}
+
 			if ( ! bp_is_profile_video_support_enabled() ) {
 				$args['user_id'] = 'null';
 			}
