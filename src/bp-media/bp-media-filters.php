@@ -229,9 +229,14 @@ function bp_media_activity_append_media( $content, $activity ) {
 			'sort'     => 'ASC',
 		);
 
-		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 			if ( bp_is_group_media_support_enabled() ) {
-				$args['privacy'] = array( 'grouponly' );
+
+				$args['privacy'] = array( 'grouponly');
+				if ( 'activity_comment' === $activity->type ) {
+					$args['privacy'][] = 'comment';
+				}
+
 				if ( ! bp_is_group_albums_support_enabled() ) {
 					$args['album_id'] = 'existing-media';
 				}

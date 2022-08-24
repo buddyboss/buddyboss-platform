@@ -190,13 +190,25 @@ function bp_document_activity_append_document( $content, $activity ) {
 
 	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
+	$args = array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+	);
+
+	$privacy = false;
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
+		$privacy = array( 'grouponly' );
+		if ( 'activity_comment' === $activity->type ) {
+			$privacy[] = 'comment';
+		}
+	}
+
+	if ( $privacy ) {
+		$args['privacy'] = $privacy;
+	}
+
+	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		ob_start();
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
