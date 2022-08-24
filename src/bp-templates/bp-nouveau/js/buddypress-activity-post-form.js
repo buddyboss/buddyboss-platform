@@ -2518,6 +2518,8 @@ window.bp = window.bp || {};
 
 				self.clearRequests();
 				self.el.classList.add( 'loading' );
+				this.$el.find( '.gif-no-results' ).removeClass('show');
+				this.$el.find( '.gif-no-connection' ).removeClass('show');
 
 				var request = self.giphy.search(
 					{
@@ -2527,9 +2529,18 @@ window.bp = window.bp || {};
 						limit: this.limit
 					},
 					function ( response ) {
+						if( undefined !== response.data.length && 0 === response.data.length ) {
+							$( self.el ).find( '.gif-no-results' ).addClass('show');
+						}
+						if( undefined !== response.meta.status && 200 !== response.meta.status ) {
+							$( self.el ).find( '.gif-no-connection' ).addClass('show');
+						}
 						self.gifDataItems.reset( response.data );
 						self.total_count = response.pagination.total_count;
 						self.el.classList.remove( 'loading' );
+					},
+					function () {
+						$( self.el ).find( '.gif-no-connection' ).addClass('show');
 					}
 				);
 
@@ -2600,6 +2611,8 @@ window.bp = window.bp || {};
 						limit: this.limit
 					},
 					function ( response ) {
+						console.log('loadTrending search result');
+						console.log( response );
 						self.gifDataItems.reset( response.data );
 						self.total_count = response.pagination.total_count;
 						self.el.classList.remove( 'loading' );
