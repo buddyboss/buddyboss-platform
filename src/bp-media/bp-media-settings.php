@@ -884,7 +884,7 @@ function bp_media_settings_callback_gif_key() {
 	if ( ! is_wp_error( $is_valid_key ) && isset( $is_valid_key['response']['code'] ) && 200 !== $is_valid_key['response']['code'] ) {
 		?>
 	<p class="display-notice bp-new-notice-panel-notice">
-		<strong><?php esc_html_e( 'There was a problem connecting to GIPHY with your API key:', 'buddyboss' ); ?></strong><br>(<?php esc_attr_e( $is_valid_key['response']['code'] ); ?>) <?php esc_attr_e( $is_valid_key['response']['message'] ); ?>.
+		<strong><?php esc_html_e( 'There was a problem connecting to GIPHY with your API key:', 'buddyboss' ); ?></strong><br>(<?php echo wp_kses_post( $is_valid_key['response']['code'] ); ?>) <?php echo wp_kses_post( $is_valid_key['response']['message'] ); ?>.
 	</p>
 		<?php
 	}
