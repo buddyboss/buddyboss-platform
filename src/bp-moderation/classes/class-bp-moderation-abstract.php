@@ -275,7 +275,7 @@ abstract class BP_Moderation_Abstract {
 			$blocked_by_users_ids = bb_moderation_get_blocked_by_user_ids();
 			if ( ! empty( $blocked_by_users_ids ) ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				return $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d", $this->item_type, bp_loggedin_user_id() );
+				return $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d", BP_Moderation_Members::$moderation_type, bp_loggedin_user_id() );
 			}
 		}
 
