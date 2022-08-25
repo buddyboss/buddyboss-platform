@@ -1088,7 +1088,8 @@ function bbp_remove_page_attributes_metabox_for_forum() {
 add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
 
 /**
- * Function will remove template_redirect when we visit elementor library template.
+ * Function will remove template_redirect when we visit elementor
+ * library template in the saved template section.
  *
  * @since BuddyBoss [BBVERSION]
  */
