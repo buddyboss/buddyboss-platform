@@ -866,7 +866,8 @@ function bp_emoji_tutorial() {
  */
 function bp_media_settings_callback_gif_key() {
 	?>
-	<input type="text" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo bp_media_get_gif_api_key(); ?>" placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>" style="width: 300px;" />
+	<input type="text" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo bp_media_get_gif_api_key(); ?>" placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>" style="width: 300px;" <?php echo ! empty( bp_media_get_gif_api_key() ) ? 'readonly' : '' ; ?> />
+	<input type="button" data-connected="<?php echo empty( bp_media_get_gif_api_key() ) ? false : true ; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-giphy-connect' ) ); ?>" name="connect" id="bb-giphy-connect" class="button <?php echo empty( bp_media_get_gif_api_key() ) ? 'button-primary' : '' ;?>" data-disconnect-text="<?php _e( 'Disconnect', 'buddyboss' ) ?>" data-connect-text="<?php _e( 'Connect', 'buddyboss' ) ?>" value="<?php empty( bp_media_get_gif_api_key() ) ? _e( 'Connect', 'buddyboss' ) : _e( 'Disconnect', 'buddyboss' ); ?>" />
 	<p class="description">
 		<?php
 		printf(
@@ -879,15 +880,11 @@ function bp_media_settings_callback_gif_key() {
 		);
 		?>
 	</p>
-	<?php
-	$is_valid_key = bb_check_valid_giphy_api_key( true );
-	if ( ! is_wp_error( $is_valid_key ) && isset( $is_valid_key['response']['code'] ) && 200 !== $is_valid_key['response']['code'] ) {
-		?>
-	<p class="display-notice bp-new-notice-panel-notice">
-		<strong><?php esc_html_e( 'There was a problem connecting to GIPHY with your API key:', 'buddyboss' ); ?></strong><br>(<?php echo esc_attr( $is_valid_key['response']['code'] ); ?>) <?php echo esc_attr( $is_valid_key['response']['message'] ); ?>.
+	<?php $is_valid_key = bb_check_valid_giphy_api_key( '', true );	?>
+	<p class="display-notice bp-new-notice-panel-notice <?php echo ( ! is_wp_error( $is_valid_key ) && isset( $is_valid_key['response']['code'] ) && 200 !== $is_valid_key['response']['code'] ) ? '' : 'hidden' ?>">
+		<strong><?php esc_html_e( 'There was a problem connecting to GIPHY with your API key:', 'buddyboss' ); ?></strong><br><span id="giphy_response_code">(<?php echo ( isset( $is_valid_key['response']['code'] ) ) ? esc_attr( $is_valid_key['response']['code'] ) : ''; ?>)</span> <span id="giphy_response_message"><?php echo isset( $is_valid_key['response']['message'] ) ? esc_attr( $is_valid_key['response']['message'] ) : ''; ?>.</span>
 	</p>
-		<?php
-	}
+	<?php
 }
 
 /**

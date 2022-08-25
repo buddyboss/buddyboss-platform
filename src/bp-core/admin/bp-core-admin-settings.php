@@ -3020,3 +3020,49 @@ function bb_labs_notification_preferences_info_section_callback() {
 
 	<?php
 }
+
+/**
+ * Wrapper function to check GIPHY key is valid or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_check_valid_giphy_key() {
+	$response = array(
+		'code'    => 403,
+		'message' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+	);
+
+	$key = filter_input( INPUT_POST, 'key', FILTER_SANITIZE_STRING );
+
+	if ( empty( $key ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['nonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_POST['nonce'];
+	$check = 'bb-giphy-connect';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$result = bb_check_valid_giphy_api_key( $key, true );
+
+	if( $result ) {
+		wp_send_json_success( $result['response'] );
+	}
+
+	wp_send_json_error( $response );
+
+}
+add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giphy_key' );

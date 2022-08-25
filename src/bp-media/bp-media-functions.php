@@ -3983,27 +3983,27 @@ bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_check_valid_giphy_api_key( $message = false ) {
+function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 
-	static $cache = null;
-	if ( null !== $cache ) {
+	static $cache = array();
+	$api_key = ! empty ( $api_key ) ? $api_key : bp_media_get_gif_api_key();
+	if ( isset( $cache[ $api_key ] ) && ! empty ( $cache[ $api_key ] ) ) {
 		if ( true === $message ) {
-			return $cache;
+			return $cache[ $api_key ];
 		}
-		return (bool) ( ! is_wp_error( $cache ) && isset( $cache['response']['code'] ) && 200 === $cache['response']['code'] );
+		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
 	}
-	$api_key = bp_media_get_gif_api_key();
+	
 	if ( empty( $api_key ) ) {
-		$cache = null;
-		return $cache;
+		return false;
 	}
 
 	$output = wp_remote_get( "http://api.giphy.com/v1/gifs/trending?api_key=$api_key&limit=1" );
 	if ( $output ) {
-		$cache = $output;
+		$cache[ $api_key ] = $output;
 	}
 	if ( true === $message ) {
-		return $cache;
+		return $cache[ $api_key ];
 	}
-	return (bool) ( ! is_wp_error( $cache ) && isset( $cache['response']['code'] ) && 200 === $cache['response']['code'] );
+	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
 }
