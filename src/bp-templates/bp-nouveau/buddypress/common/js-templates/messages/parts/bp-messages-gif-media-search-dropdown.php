@@ -12,7 +12,7 @@
 <script type="text/html" id="tmpl-messages-gif-media-search-dropdown">
 	<div class="gif-search-content">
 		<div class="gif-search-query">
-			<input type="search" placeholder="<?php _e('Search GIPHY...', 'buddyboss'); ?>" class="search-query-input" />
+			<input type="search" placeholder="<?php _e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input" />
 			<span class="search-icon"></span>
 		</div>
 		<div class="gif-search-results" id="gif-search-results">
@@ -20,12 +20,12 @@
 			</ul>
 			<div class="gif-alert gif-no-results">
 				<i class="bb-icon-l bb-icon-image-slash"></i>
-				<p><?php _e('No results found', 'buddyboss'); ?></p>
+				<p><?php _e( 'No results found', 'buddyboss' ); ?></p>
 			</div>
 
 			<div class="gif-alert gif-no-connection">
 				<i class="bb-icon-l bb-icon-cloud-slash"></i>
-				<p><?php _e('Could not connect to GIPHY', 'buddyboss'); ?></p>
+				<p><?php _e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
 			</div>
 		</div>
 	</div>

@@ -92,8 +92,8 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 				<div class="dz-progress-ring-wrap">
 					<i class="bb-icon-f bb-icon-file-attach"></i>
 					<svg class="dz-progress-ring" width="54" height="54">
-                    <circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
-                </svg>
+					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+				</svg>
 				</div>
 				<div class="dz-error-message"><span data-dz-errormessage></span></div>
 				<div class="dz-error-mark">
@@ -120,8 +120,8 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 			<div class="dz-progress-ring-wrap">
 				<i class="bb-icon-f bb-icon-video"></i>
 				<svg class="dz-progress-ring" width="54" height="54">
-                    <circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
-                </svg>
+					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+				</svg>
 			</div>
 			<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
 			<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -211,12 +211,12 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 							</ul>
 							<div class="gif-alert gif-no-results">
 								<i class="bb-icon-l bb-icon-image-slash"></i>
-								<p><?php _e('No results found', 'buddyboss'); ?></p>
+								<p><?php _e( 'No results found', 'buddyboss' ); ?></p>
 							</div>
 
 							<div class="gif-alert gif-no-connection">
 								<i class="bb-icon-l bb-icon-cloud-slash"></i>
-								<p><?php _e('Could not connect to GIPHY', 'buddyboss'); ?></p>
+								<p><?php _e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 					</div>

@@ -230,7 +230,9 @@
 			};
 			req.onerror = function() {
 				var status = req.status;
-				if(errCb) errCb(status);
+				if ( errCb ) {
+					errCb( status );
+				}
 			};
 			req.send();
 

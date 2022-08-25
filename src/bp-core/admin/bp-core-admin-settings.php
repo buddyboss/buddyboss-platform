@@ -3058,7 +3058,7 @@ function bb_admin_check_valid_giphy_key() {
 
 	$result = bb_check_valid_giphy_api_key( $key, true );
 
-	if( $result ) {
+	if ( $result ) {
 		wp_send_json_success( $result['response'] );
 	}
 

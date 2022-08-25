@@ -2502,7 +2502,7 @@ window.bp = window.bp || {};
 					clearTimeout( this.Timeout );
 				}
 
-				if( '' === e.target.value ) {
+				if ( '' === e.target.value ) {
 					this.loadTrending();
 					return;
 				}
@@ -2534,10 +2534,10 @@ window.bp = window.bp || {};
 						limit: this.limit
 					},
 					function ( response ) {
-						if( undefined !== response.data.length && 0 === response.data.length ) {
+						if ( undefined !== response.data.length && 0 === response.data.length ) {
 							$( self.el ).find( '.gif-no-results' ).addClass( 'show' );
 						}
-						if( undefined !== response.meta.status && 200 !== response.meta.status ) {
+						if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
 							$( self.el ).find( '.gif-no-connection' ).addClass( 'show' );
 						}
 						self.gifDataItems.reset( response.data );

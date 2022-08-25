@@ -1270,14 +1270,14 @@ function bp_media_delete_orphaned_attachments() {
 			'relation' => 'AND',
 			array(
 				'key'   => 'bp_media_saved',
-				'value' => '0'
+				'value' => '0',
 			),
 			array(
 				'key'     => 'bb_media_draft',
 				'compare' => 'NOT EXISTS',
-				'value'   => ''
-			)
-		)
+				'value'   => '',
+			),
+		),
 	);
 
 	$media_wp_query = new WP_query( $args );
@@ -3986,14 +3986,14 @@ bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_
 function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 
 	static $cache = array();
-	$api_key = ! empty ( $api_key ) ? $api_key : bp_media_get_gif_api_key();
-	if ( isset( $cache[ $api_key ] ) && ! empty ( $cache[ $api_key ] ) ) {
+	$api_key      = ! empty( $api_key ) ? $api_key : bp_media_get_gif_api_key();
+	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
 		if ( true === $message ) {
 			return $cache[ $api_key ];
 		}
 		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
 	}
-	
+
 	if ( empty( $api_key ) ) {
 		return false;
 	}

@@ -1737,7 +1737,7 @@ window.bp = window.bp || {};
 				clearTimeout( this.gif_timeout );
 			}
 
-			if( '' === e.target.value ) {
+			if ( '' === e.target.value ) {
 				this.toggleGifSelector( e );
 				return;
 			}
@@ -1758,7 +1758,7 @@ window.bp = window.bp || {};
 				clearTimeout( this.gif_timeout );
 			}
 
-			if( '' === e.target.value ) {
+			if ( '' === e.target.value ) {
 				this.toggleGroupMessagesGifSelector( e );
 				return;
 			}
@@ -1791,10 +1791,10 @@ window.bp = window.bp || {};
 					limit: self.gif_limit
 				},
 				function ( response ) {
-					if( undefined !== response.data.length && 0 === response.data.length ) {
+					if ( undefined !== response.data.length && 0 === response.data.length ) {
 						$( e.target ).find( '.gif-no-results' ).addClass( 'show' );
 					}
-					if( undefined !== response.meta.status && 200 !== response.meta.status ) {
+					if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
 						$( e.target ).find( '.gif-no-connection' ).addClass( 'show' );
 					}
 					if ( typeof response.data !== 'undefined' && response.data.length ) {
@@ -1849,10 +1849,10 @@ window.bp = window.bp || {};
 					limit: self.gif_data[ gif_container_key ].limit
 				},
 				function ( response ) {
-					if( undefined !== response.data.length && 0 === response.data.length ) {
+					if ( undefined !== response.data.length && 0 === response.data.length ) {
 						$( e.target ).closest( 'form' ).find( '.gif-no-results' ).addClass( 'show' );
 					}
-					if( undefined !== response.meta.status && 200 !== response.meta.status ) {
+					if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
 						$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).addClass( 'show' );
 					}
 					if ( typeof response.data !== 'undefined' && response.data.length ) {
