@@ -3977,6 +3977,7 @@ bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_
 /**
  * Check the GIPHY key is valid or not.
  *
+ * @param boolean $api_key GIPHY api key.
  * @param boolean $message GIPHY api key validation response message.
  *
  * @return mixed Whether the giphy key is valid or error object.

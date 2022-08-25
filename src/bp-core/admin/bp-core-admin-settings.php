@@ -3047,8 +3047,8 @@ function bb_admin_check_valid_giphy_key() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
-	$nonce = $_POST['nonce'];
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
 	$check = 'bb-giphy-connect';
 
 	// Nonce check!

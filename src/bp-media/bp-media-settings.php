@@ -866,8 +866,8 @@ function bp_emoji_tutorial() {
  */
 function bp_media_settings_callback_gif_key() {
 	?>
-	<input type="text" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo bp_media_get_gif_api_key(); ?>" placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>" style="width: 300px;" <?php echo ! empty( bp_media_get_gif_api_key() ) ? 'readonly' : ''; ?> />
-	<input type="button" data-connected="<?php echo empty( bp_media_get_gif_api_key() ) ? false : true; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-giphy-connect' ) ); ?>" name="connect" id="bb-giphy-connect" class="button <?php echo empty( bp_media_get_gif_api_key() ) ? 'button-primary' : ''; ?>" data-disconnect-text="<?php _e( 'Disconnect', 'buddyboss' ); ?>" data-connect-text="<?php _e( 'Connect', 'buddyboss' ); ?>" value="<?php empty( bp_media_get_gif_api_key() ) ? _e( 'Connect', 'buddyboss' ) : _e( 'Disconnect', 'buddyboss' ); ?>" />
+	<input type="text" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo esc_attr( bp_media_get_gif_api_key() ); ?>" placeholder="<?php esc_html_e( 'GIPHY API Key', 'buddyboss' ); ?>" style="width: 300px;" <?php echo ! empty( bp_media_get_gif_api_key() ) ? 'readonly' : ''; ?> />
+	<input type="button" data-connected="<?php echo empty( bp_media_get_gif_api_key() ) ? false : true; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-giphy-connect' ) ); ?>" name="connect" id="bb-giphy-connect" class="button <?php echo empty( bp_media_get_gif_api_key() ) ? 'button-primary' : ''; ?>" data-disconnect-text="<?php esc_html_e( 'Disconnect', 'buddyboss' ); ?>" data-connect-text="<?php esc_html_e( 'Connect', 'buddyboss' ); ?>" value="<?php empty( bp_media_get_gif_api_key() ) ? esc_html_e( 'Connect', 'buddyboss' ) : esc_html_e( 'Disconnect', 'buddyboss' ); ?>" />
 	<p class="description">
 		<?php
 		printf(
