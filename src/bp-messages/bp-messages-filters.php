@@ -104,6 +104,9 @@ add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 )
 add_action( 'bp_messages_includes', 'bb_load_messages_notifications', 20 );
 add_action( 'bp_notification_settings', 'messages_screen_notification_settings', 2 );
 
+// Hide archived thread notifications.
+add_filter( 'bp_notifications_get_where_conditions', 'bb_messages_hide_archived_notifications', 10, 2 );
+
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -998,3 +1001,34 @@ function bb_messages_compose_action_sub_nav() {
 }
 add_action( 'bb_nouveau_after_nav_link_compose-action', 'bb_messages_compose_action_sub_nav' );
 
+/**
+ * Function to exclude the archived notification for messages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $where_conditions Where clause to get notification.
+ *
+ * @return array
+ */
+function bb_messages_hide_archived_notifications( $where_conditions, $args ) {
+	global $wpdb, $bp;
+
+	if ( is_user_logged_in() ) {
+
+		// The user_id.
+		if ( ! empty( $args['user_id'] ) ) {
+			$user_id_in = implode( ',', wp_parse_id_list( $args['user_id'] ) );
+		} else {
+			$user_id_in = bp_loggedin_user_id();
+		}
+
+		$messages_ids = $wpdb->get_col( $wpdb->prepare( "SELECT m.id FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id WHERE r.user_id IN ({$user_id_in}) AND r.is_deleted = %d AND r.is_hidden = %d", 0, 1 ) );
+
+		if ( ! empty( $messages_ids ) ) {
+			$ma_in                                = implode( ',', $messages_ids );
+			$where_conditions['archived_exclude'] = "( item_id NOT IN ({$ma_in}) AND component_name = 'messages' )";
+		}
+	}
+
+	return $where_conditions;
+}
