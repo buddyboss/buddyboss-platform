@@ -1006,7 +1006,8 @@ add_action( 'bb_nouveau_after_nav_link_compose-action', 'bb_messages_compose_act
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $where_conditions Where clause to get notification.
+ * @param array $where_conditions Where clause to get notifications.
+ * @param array $args             Parsed arguments to get notifications.
  *
  * @return array
  */
