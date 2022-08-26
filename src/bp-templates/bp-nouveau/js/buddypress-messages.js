@@ -4468,6 +4468,10 @@ window.bp = window.bp || {};
 					return;
 				}
 
+				// Reset the variable when viewing the thread message using route.
+				bp.Nouveau.Messages.divider = [];
+				bp.Nouveau.Messages.previous = '';
+
 				// Try to get the corresponding thread.
 				var thread = bp.Nouveau.Messages.threads.get( thread_id );
 

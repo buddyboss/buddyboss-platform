@@ -2137,7 +2137,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					}
 
 					if ( ! empty( $joined_date ) ) {
-						$joined_date = bb_get_thread_start_date( $joined_date );
+						$joined_date = bb_get_thread_start_date( $joined_date, true );
 					}
 
 					$group_joined_date = $joined_date;
@@ -2937,7 +2937,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ] = array_merge( $thread->messages[ $i ], $extra_content );
 		}
 
-		$thread->messages[ $i ]['sent_date']       = bb_get_thread_start_date( $thread_template->message->date_sent );
+		$thread->messages[ $i ]['sent_date']       = ucfirst( bb_get_thread_start_date( $thread_template->message->date_sent ) );
 		$thread->messages[ $i ]['sent_split_date'] = date_i18n( 'Y-m-d', strtotime( $thread_template->message->date_sent ) );
 
 		$i += 1;
