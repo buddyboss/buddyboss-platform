@@ -3486,7 +3486,10 @@ window.bp = window.bp || {};
 					this.el.className += ' current';
 				}
 
-				var recipientsCount = this.model.get( 'action_recipients' ).count, toOthers = '';
+				var recipientsCount = 0, toOthers = '';
+				if ( this.model.get( 'action_recipients' ) ) {
+					recipientsCount = this.model.get( 'action_recipients' ).count;
+				}
 
 				if ( recipientsCount > 4 ) {
 					toOthers = BP_Nouveau.messages.toOthers.other;
