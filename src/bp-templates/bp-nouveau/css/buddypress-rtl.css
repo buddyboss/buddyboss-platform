@@ -10286,23 +10286,12 @@ div.profile_completion_wrap .progress_text_wrap {
   display: none;
 }
 
-#bp-message-thread-list li.divider-date:after {
-  content: "";
-  background-color: #eee;
-  height: 1px;
-  position: absolute;
-  top: 25px;
-  right: 20px;
-  left: 20px;
-}
-
 #bp-message-thread-list li.divider-date .bp-single-message-wrap {
   text-align: center;
 }
 
 #bp-message-thread-list li.divider-date .bp-message-content-wrap {
   color: #767676;
-  background: #fff;
   display: inline-block;
   font-size: 11px;
   font-weight: 500;
