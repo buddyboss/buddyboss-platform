@@ -23303,7 +23303,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .forums-video-wrap .bb-activity-video-elem,
 .bb-activity-video-wrap .bb-activity-video-elem {
-  padding: 3px 0;
+  padding: 3px;
 }
 
 .forums-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader,
