@@ -1544,6 +1544,7 @@ class BP_Messages_Thread {
 				'user_id'    => $user_id,
 				'per_page'   => - 1,
 				'is_deleted' => 0,
+				'is_hidden'  => 0,
 			);
 
 			add_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 2 );
@@ -1813,6 +1814,10 @@ class BP_Messages_Thread {
 
 		if ( false !== $r['is_deleted'] ) {
 			$where_conditions['is_deleted'] = $wpdb->prepare( 'r.is_deleted = %d', $r['is_deleted'] );
+		}
+
+		if ( isset( $r['is_hidden'] ) ) {
+			$where_conditions['is_hidden'] = $wpdb->prepare( 'r.is_hidden = %d', $r['is_hidden'] );
 		}
 
 		if ( true === $r['exclude_active_users'] ) {
