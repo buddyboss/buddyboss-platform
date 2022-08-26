@@ -489,7 +489,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
 			'content'      => $_POST['content'],
 			'date_sent'    => $date_sent,
-			'mark_visible' => true,
+			'mark_visible' => false,
 			'error_type'   => 'wp_error',
 		)
 	);
