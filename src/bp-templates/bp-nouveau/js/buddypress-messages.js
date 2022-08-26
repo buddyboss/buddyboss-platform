@@ -877,6 +877,7 @@ window.bp = window.bp || {};
 						// Refresh the current thread.
 						var hash = Math.round( (new Date()).getTime() / 1000 );
 						bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
+						window.Backbone.trigger( 'relistelements' );
 					} else if ( response.id ) {
 						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 						if ( undefined !== response.messages_count && 0 === response.messages_count ) {
