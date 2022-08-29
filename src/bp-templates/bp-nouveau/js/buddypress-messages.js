@@ -460,6 +460,14 @@ window.bp = window.bp || {};
 				this.views.add( {id: 'filters', view: filters_view} );
 
 				filters_view.inject( '.bp-messages-filters' );
+
+				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
+					var available_width = $( this ).width() - 10;
+					var date_width = $( this ).find( '.thread-date' ).width();
+					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
+					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
+				});
+
 			}
 		},
 
@@ -3256,6 +3264,13 @@ window.bp = window.bp || {};
 				} else {
 					this.requestThreads();
 				}
+
+				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
+					var available_width = $( this ).width() - 10;
+					var date_width = $( this ).find( '.thread-date' ).width();
+					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
+					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
+				});
 
 				bp.Nouveau.Messages.removeFeedback();
 			},

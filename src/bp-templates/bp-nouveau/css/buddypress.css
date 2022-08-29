@@ -9383,11 +9383,6 @@ div.profile_completion_wrap .progress_text_wrap {
   margin: 5px 10px 0 0;
 }
 
-#message-threads .bp-message-link .thread-to .user-name {
-  display: inline-block;
-  line-height: 1.1;
-}
-
 #message-threads .bp-message-link .thread-to .num-recipients {
   color: #737373;
   font-weight: 400;
