@@ -3630,6 +3630,12 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.removeFeedback();
 				$( '.bb-messages-no-thread-found' ).remove();
 				$( '.messages-search-loader' ).remove();
+				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
+					var available_width = $( this ).width() - 10;
+					var date_width = $( this ).find( '.thread-date' ).width();
+					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
+					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
+				});
 			},
 
 			threadsFilterError: function( collection, response ) {
