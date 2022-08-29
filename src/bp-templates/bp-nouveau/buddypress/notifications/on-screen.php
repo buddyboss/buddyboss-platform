@@ -11,7 +11,7 @@
 
 remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 add_filter( 'bp_ajax_querystring', 'bb_notifications_on_screen_notifications_add', 20, 2 );
-// We are checking here - Pusher is connected + Live Messaging is enabled.
+// We are checking here - Pusher is connected + Live Messaging is enabled + On Message Screen.
 $pusher_and_live_message_status = false;
 if (
 	class_exists( 'BB_Platform_Pro' ) &&
