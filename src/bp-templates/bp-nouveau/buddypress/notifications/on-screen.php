@@ -14,6 +14,21 @@ add_filter( 'bp_ajax_querystring', 'bb_notifications_on_screen_notifications_add
 if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 	while ( bp_the_notifications() ) :
 		bp_the_notification();
+		if (
+			class_exists( 'BB_Platform_Pro' ) &&
+			bbp_pro_is_license_valid() &&
+			bb_pusher_is_enabled() &&
+			bb_pusher_is_feature_enabled( 'live-messaging' ) &&
+			bp_is_user_messages() &&
+			isset( buddypress()->notifications->query_loop->notification->component_action ) &&
+			(
+				'bb_messages_new' === buddypress()->notifications->query_loop->notification->component_action ||
+				'bb_groups_new_message' === buddypress()->notifications->query_loop->notification->component_action ||
+				'bb_messages_new' === buddypress()->notifications->query_loop->notification->component_action
+			)
+		) {
+			return;
+		}
 		?>
 		<li class="read-item <?php echo isset( buddypress()->notifications->query_loop->notification->is_new ) && buddypress()->notifications->query_loop->notification->is_new ? 'unread' : ''; ?>">
 			<span class="bb-full-link">
