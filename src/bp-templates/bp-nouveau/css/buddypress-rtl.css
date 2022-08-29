@@ -9672,11 +9672,6 @@ div.profile_completion_wrap .progress_text_wrap {
   margin: 5px 0 0 10px;
 }
 
-#message-threads .bp-message-link .thread-to .user-name {
-  display: inline-block;
-  line-height: 1.1;
-}
-
 #message-threads .bp-message-link .thread-to .num-recipients {
   color: #737373;
   font-weight: 400;
@@ -10168,23 +10163,12 @@ div.profile_completion_wrap .progress_text_wrap {
   display: none;
 }
 
-#bp-message-thread-list li.divider-date:after {
-  content: "";
-  background-color: #eee;
-  height: 1px;
-  position: absolute;
-  top: 25px;
-  right: 20px;
-  left: 20px;
-}
-
 #bp-message-thread-list li.divider-date .bp-single-message-wrap {
   text-align: center;
 }
 
 #bp-message-thread-list li.divider-date .bp-message-content-wrap {
   color: #767676;
-  background: #fff;
   display: inline-block;
   font-size: 11px;
   font-weight: 500;
@@ -23764,7 +23748,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .forums-video-wrap .bb-activity-video-elem,
 .bb-activity-video-wrap .bb-activity-video-elem {
-  padding: 3px 0;
+  padding: 3px;
 }
 
 .forums-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader,

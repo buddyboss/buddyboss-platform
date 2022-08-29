@@ -218,6 +218,16 @@ function bp_nouveau_ajax_messages_send_message() {
 		$response              = array();
 		$get_thread_recipients = array();
 
+		$admins = array_map(
+			'intval',
+			get_users(
+				array(
+					'role'   => 'administrator',
+					'fields' => 'ID',
+				)
+			)
+		);
+
 		if ( bp_has_message_threads( array( 'include' => $send ) ) ) {
 
 			while ( bp_message_threads() ) {
@@ -319,6 +329,31 @@ function bp_nouveau_ajax_messages_send_message() {
 								'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 								'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
 							);
+
+							$response['action_recipients']['members'][] = array(
+								'avatar'     => esc_url(
+									bp_core_fetch_avatar(
+										array(
+											'item_id' => $recipient->user_id,
+											'object'  => 'user',
+											'type'    => 'thumb',
+											'width'   => BP_AVATAR_THUMB_WIDTH,
+											'height'  => BP_AVATAR_THUMB_HEIGHT,
+											'html'    => false,
+										)
+									)
+								),
+								'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+								'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+								'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+								'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
+								'id'         => $recipient->user_id,
+							);
+
+							if ( bp_is_active( 'moderation' ) ) {
+								$response['action_recipients']['members'][]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+								$response['action_recipients']['members'][]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+							}
 						}
 					}
 				}
@@ -327,6 +362,11 @@ function bp_nouveau_ajax_messages_send_message() {
 					$response['is_user_suspended'] = bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id );
 					$response['is_user_blocked']   = bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id );
 				}
+
+				$response['action_recipients']['count']         = count( $check_recipients );
+				$response['action_recipients']['current_count'] = (int) bb_messages_recipients_per_page();
+				$response['action_recipients']['per_page']      = bb_messages_recipients_per_page();
+				$response['action_recipients']['total_pages']   = ceil( (int) count( $check_recipients ) / (int) bb_messages_recipients_per_page() );
 
 				if ( bp_is_active( 'messages', 'star' ) ) {
 					$star_link = bp_get_the_message_star_action_link(
@@ -489,7 +529,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
 			'content'      => $_POST['content'],
 			'date_sent'    => $date_sent,
-			'mark_visible' => true,
+			'mark_visible' => false,
 			'error_type'   => 'wp_error',
 		)
 	);
@@ -3170,9 +3210,9 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	if ( $args['exclude_moderated_members'] ) {
 		$args['exclude_admin_user'] = $administrator_ids;
 	}
-	$thread                            = new BP_Messages_Thread( false );
-	$results                           = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
-	$html                              = '';
+	$thread  = new BP_Messages_Thread( false );
+	$results = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+	$html    = '';
 	ob_start();
 	if ( is_array( $results ) ) {
 		?>
@@ -3309,7 +3349,7 @@ function bb_nouveau_ajax_left_join_members_list() {
 						)
 					)
 				);
-				$user_name = ( $recipient['user_id'] === bp_loggedin_user_id() ) ? __( 'You', 'buddyboss' ) :bp_core_get_user_displayname( $recipient['user_id'] );
+				$user_name = ( $recipient['user_id'] === bp_loggedin_user_id() ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $recipient['user_id'] );
 				?>
 				<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient['user_id'] ); ?>">
 					<div class="user-avatar">

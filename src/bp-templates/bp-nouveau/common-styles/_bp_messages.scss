@@ -159,11 +159,6 @@
 				margin: 5px $marg-sml 0 0;
 			}
 
-			.user-name {
-				display: inline-block;
-				line-height: 1.1;
-			}
-
 			.num-recipients {
 				color: $meta-text;
 				font-weight: 400;
@@ -702,23 +697,12 @@
 				display: none;
 			}
 
-			&:after {
-				content: "";
-				background-color: $bp-border-color;
-				height: 1px;
-				position: absolute;
-				top: 25px;
-				left: 20px;
-				right: 20px;
-			}
-
 			.bp-single-message-wrap {
 				text-align: center;
 			}
 
 			.bp-message-content-wrap {
 				color: $light-text;
-				background: $white;
 				display: inline-block;
 				font-size: 11px;
 				font-weight: 500;
