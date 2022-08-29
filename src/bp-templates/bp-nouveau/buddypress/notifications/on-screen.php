@@ -22,7 +22,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 			bp_is_user_messages() &&
 			isset( buddypress()->notifications->query_loop->notification->component_action ) &&
 			(
-				'bb_messages_new' === buddypress()->notifications->query_loop->notification->component_action ||
+				'new_message' === buddypress()->notifications->query_loop->notification->component_action ||
 				'bb_groups_new_message' === buddypress()->notifications->query_loop->notification->component_action ||
 				'bb_messages_new' === buddypress()->notifications->query_loop->notification->component_action
 			)
