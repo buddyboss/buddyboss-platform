@@ -2562,10 +2562,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Removed Ban %s</p>', 'buddyboss' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Ban %s</p>', 'buddyboss' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_joined && 'yes' === $message_joined ) {
 				/* translators: %s: Group Name */
 				$content      = '<p class="joined">' . sprintf( __( 'Joined %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
@@ -2667,10 +2667,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Removed Ban %s</p>', 'buddyboss' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Ban %s</p>', 'buddyboss' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_joined && 'yes' === $message_joined ) {
 				/* translators: %s: Group Name */
 				$content      = '<p class="joined">' . sprintf( __( 'Joined %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
