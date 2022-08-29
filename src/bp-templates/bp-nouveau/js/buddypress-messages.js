@@ -460,6 +460,14 @@ window.bp = window.bp || {};
 				this.views.add( {id: 'filters', view: filters_view} );
 
 				filters_view.inject( '.bp-messages-filters' );
+
+				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
+					var available_width = $( this ).width() - 10;
+					var date_width = $( this ).find( '.thread-date' ).width();
+					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
+					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
+				});
+
 			}
 		},
 
@@ -877,6 +885,7 @@ window.bp = window.bp || {};
 						// Refresh the current thread.
 						var hash = Math.round( (new Date()).getTime() / 1000 );
 						bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
+						window.Backbone.trigger( 'relistelements' );
 					} else if ( response.id ) {
 						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 						if ( undefined !== response.messages_count && 0 === response.messages_count ) {
@@ -3243,6 +3252,13 @@ window.bp = window.bp || {};
 				} else {
 					this.requestThreads();
 				}
+
+				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
+					var available_width = $( this ).width() - 10;
+					var date_width = $( this ).find( '.thread-date' ).width();
+					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
+					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
+				});
 
 				bp.Nouveau.Messages.removeFeedback();
 			},

@@ -9790,11 +9790,6 @@ div.profile_completion_wrap .progress_text_wrap {
   margin: 5px 10px 0 0;
 }
 
-#message-threads .bp-message-link .thread-to .user-name {
-  display: inline-block;
-  line-height: 1.1;
-}
-
 #message-threads .bp-message-link .thread-to .num-recipients {
   color: #737373;
   font-weight: 400;
@@ -24092,7 +24087,7 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
 
 .forums-video-wrap .bb-activity-video-elem,
 .bb-activity-video-wrap .bb-activity-video-elem {
-  padding: 3px 0;
+  padding: 3px;
 }
 
 .forums-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader,
