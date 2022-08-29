@@ -2857,6 +2857,21 @@ function bp_nav_menu_get_loggedin_pages() {
 				'post_parent'    => $nav_counter,
 			);
 
+			$page_args['archived-messages'] =
+			(object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Archived', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'archived-messages',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'archived',
+				'post_parent'    => $nav_counter,
+			);
+
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				$page_args['site-notice'] = (object) array(
 					'ID'             => hexdec( uniqid() ),

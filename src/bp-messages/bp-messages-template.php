@@ -2658,3 +2658,83 @@ function bb_get_the_thread_message_sent_time() {
 	 */
 	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', bp_get_the_thread_message_date_sent() ) ) );
 }
+
+/**
+ * Output the messages component slug.
+ *
+ * @since BuddyPress 1.5.0
+ */
+function bb_messages_archived_slug() {
+	echo bb_get_messages_archived_slug();
+}
+/**
+ * Return the messages component slug.
+ *
+ * @since BuddyPress 1.5.0
+ *
+ * @return string
+ */
+function bb_get_messages_archived_slug() {
+
+	/**
+	 * Filters the messages component slug.
+	 *
+	 * @since BuddyPress 1.5.0
+	 *
+	 * @param string $slug Messages component slug.
+	 */
+	return apply_filters( 'bb_get_messages_archived_slug', 'archived' );
+}
+
+/**
+ * Output the permalink for a particular thread.
+ *
+ * @since BuddyPress 2.9.0 Introduced `$user_id` parameter.
+ *
+ * @param int $thread_id Optional. ID of the thread. Default: current thread
+ *                       being iterated on in the loop.
+ * @param int $user_id   Optional. ID of the user relative to whom the link
+ *                       should be generated. Default: ID of logged-in user.
+ */
+function bb_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
+	echo bb_get_message_archived_thread_view_link( $thread_id, $user_id );
+}
+/**
+ * Get the permalink of a particular thread.
+ *
+ * @since BuddyPress 2.9.0 Introduced `$user_id` parameter.
+ *
+ * @param int $thread_id Optional. ID of the thread. Default: current
+ *                       thread being iterated on in the loop.
+ * @param int $user_id   Optional. ID of the user relative to whom the link
+ *                       should be generated. Default: ID of logged-in user.
+ * @return string
+ */
+function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
+	global $messages_template;
+
+	if ( empty( $messages_template ) && (int) $thread_id > 0 ) {
+		$thread_id = (int) $thread_id;
+	} elseif ( ! empty( $messages_template->thread->thread_id ) ) {
+		$thread_id = $messages_template->thread->thread_id;
+	}
+
+	if ( null === $user_id ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$domain = bp_core_get_user_domain( $user_id );
+
+	/**
+	 * Filters the permalink of a particular thread.
+	 *
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.6.0 Added the `$thread_id` parameter.
+	 * @since BuddyPress 2.9.0 Added the `$user_id` parameter.
+	 *
+	 * @param string $value     Permalink of a particular thread.
+	 * @param int    $thread_id ID of the thread.
+	 * @param int    $user_id   ID of the user.
+	 */
+	return apply_filters( 'bp_get_message_thread_view_link', trailingslashit( $domain . bp_get_messages_slug() . '/archived/view/' . $thread_id ), $thread_id, $user_id );
+}

@@ -92,6 +92,13 @@ class BP_Messages_Component extends BP_Component {
 
 		if ( bp_is_messages_component() ) {
 			// Authenticated actions.
+			if ( is_user_logged_in() && 'archived' === bp_current_action() && bp_action_variable( 0 ) && 'view' === bp_action_variable( 0 ) ) {
+				require $this->path . 'bp-messages/screens/' . bp_current_action() . '-' . bp_action_variable( 0 ) . '.php';
+			} elseif ( is_user_logged_in() && 'archived' === bp_current_action() ) {
+				require $this->path . 'bp-messages/actions/' . bp_current_action() . '.php';
+			}
+
+			// Authenticated actions.
 			if ( is_user_logged_in() &&
 				in_array( bp_current_action(), array( 'compose', 'notices', 'view' ), true )
 			) {
@@ -267,6 +274,17 @@ class BP_Messages_Component extends BP_Component {
 				'parent_slug'     => $slug,
 				'screen_function' => 'messages_screen_compose',
 				'position'        => 30,
+				'user_has_access' => $access,
+			);
+
+			// Show "Archived" on the logged-in user's profile only.
+			$sub_nav[] = array(
+				'name'            => __( 'Archived', 'buddyboss' ),
+				'slug'            => 'archived',
+				'parent_url'      => $messages_link,
+				'parent_slug'     => $slug,
+				'screen_function' => 'messages_screen_archived',
+				'position'        => 35,
 				'user_has_access' => $access,
 			);
 
