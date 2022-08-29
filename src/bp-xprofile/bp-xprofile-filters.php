@@ -135,6 +135,8 @@ add_action( 'user_profile_update_errors', 'bb_validate_user_nickname_on_user_upd
 // When email changed then check profile completion for gravatar.
 add_action( 'profile_update', 'bb_profile_update_completion_user_progress', 10, 2 );
 
+add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_param' );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -192,31 +194,31 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 	if ( $field_id && bp_xprofile_is_richtext_enabled_for_field( $field_id ) ) {
 		$richtext_tags = array(
 			'img'  => array(
-				'id'      => 1,
-				'class'   => 1,
-				'src'     => 1,
-				'alt'     => 1,
-				'width'   => 1,
-				'height'  => 1,
+				'id'     => 1,
+				'class'  => 1,
+				'src'    => 1,
+				'alt'    => 1,
+				'width'  => 1,
+				'height' => 1,
 			),
 			'ul'   => array(
-				'id'     => 1,
-				'class'  => 1,
+				'id'    => 1,
+				'class' => 1,
 			),
 			'ol'   => array(
-				'id'     => 1,
-				'class'  => 1,
+				'id'    => 1,
+				'class' => 1,
 			),
 			'li'   => array(
-				'id'     => 1,
-				'class'  => 1,
+				'id'    => 1,
+				'class' => 1,
 			),
 			'span' => array(),
 			'p'    => array(),
 			'a'    => array(
 				'href'   => 1,
-				'target' => 1
-			)
+				'target' => 1,
+			),
 		);
 
 		// Allow style attributes on certain elements for capable users
@@ -226,6 +228,35 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 		}
 
 		$xprofile_allowedtags = array_merge( $allowedtags, $richtext_tags );
+	}
+
+	// If the field type is social network then allow some tags.
+	if ( $field_id ) {
+
+		$field      = xprofile_get_field( $field_id );
+		$field_type = $field->type ?? '';
+
+		if ( 'socialnetworks' === $field_type ) {
+			$social_tags = array(
+				'div'  => array(
+					'class' => 1,
+				),
+				'span' => array(
+					'class' => 1,
+				),
+				'p'    => array(),
+				'i'    => array(
+					'class' => 1,
+				),
+				'a'    => array(
+					'href'   => 1,
+					'target' => 1,
+					'data-*' => 1,
+				),
+			);
+
+			$xprofile_allowedtags = array_merge( $allowedtags, $social_tags );
+		}
 	}
 
 	/**
@@ -428,6 +459,12 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
 			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
 		}
 
+		$value = xprofile_filter_kses( $value, $data_obj );
+	} elseif ( 'socialnetworks' === $field_type ) {
+		$data_obj = null;
+		if ( bp_is_user() ) {
+			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
+		}
 		$value = xprofile_filter_kses( $value, $data_obj );
 	} else {
 		$value = esc_html( $value );
@@ -1353,4 +1390,26 @@ function bb_profile_update_completion_user_progress( $user_id, $old_user_data ) 
 			bp_core_xprofile_update_profile_completion_user_progress();
 		}
 	}
+}
+
+/**
+ * Set social network param to profile query.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Arguments.
+ *
+ * @return array
+ */
+function bb_xprofile_set_social_network_param( $args = array() ) {
+
+	if ( bp_is_user_profile() ) {
+		$is_enabled_social_networks = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+
+		if ( ! $is_enabled_social_networks ) {
+			$args['fetch_social_network_fields'] = true;
+		}
+	}
+
+	return $args;
 }
