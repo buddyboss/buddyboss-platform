@@ -507,25 +507,6 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 		}
 
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
-
-		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-		remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
-		$new_reply = messages_new_message(
-			array(
-				'sender_id'  => $user_id,
-				'thread_id'  => $group_thread,
-				'subject'    => false,
-				'content'    => '<p> </p>',
-				'date_sent'  => bp_core_current_time(),
-				'error_type' => 'wp_error',
-			)
-		);
-		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-		add_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
-
-		$last_message = BP_Messages_Thread::get_last_message( $group_thread );
-		bp_messages_update_meta( $last_message->id, 'group_id', $group_id );
-		bp_messages_update_meta( $last_message->id, 'group_message_group_ban', 'yes' );
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
 
 	}
@@ -558,25 +539,6 @@ function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
 		}
 
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
-
-		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-		remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
-		$new_reply = messages_new_message(
-			array(
-				'sender_id'  => $user_id,
-				'thread_id'  => $group_thread,
-				'subject'    => false,
-				'content'    => '<p> </p>',
-				'date_sent'  => bp_core_current_time(),
-				'error_type' => 'wp_error',
-			)
-		);
-		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-		add_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
-
-		$last_message = BP_Messages_Thread::get_last_message( $group_thread );
-		bp_messages_update_meta( $last_message->id, 'group_message_group_ban', 'yes' );
-		bp_messages_update_meta( $last_message->id, 'group_id', $group_id );
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
 
 	}
@@ -607,33 +569,6 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 
 		$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_thread ) );
 
-		if ( bb_is_last_message_group_join_message( $group_thread, $user_id ) ) {
-			return;
-		}
-
-		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-		remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
-		$new_reply = messages_new_message(
-			array(
-				'thread_id'  => $group_thread,
-				'sender_id'  => $user_id,
-				'subject'    => false,
-				'content'    => '<p> </p>',
-				'date_sent'  => bp_core_current_time(),
-				'error_type' => 'wp_error',
-			)
-		);
-		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-		add_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
-
-		$last_message = BP_Messages_Thread::get_last_message( $group_thread );
-		bp_messages_update_meta( $last_message->id, 'group_id', $group_id );
-		$joined_user = array(
-			'user_id' => $user_id,
-			'time'    => bp_core_current_time(),
-		);
-		bp_messages_update_meta( $last_message->id, 'group_message_group_joined_users', array( $joined_user ) );
-		bp_messages_update_meta( $last_message->id, 'group_message_group_un_ban', 'yes' );
 	}
 }
 
