@@ -926,6 +926,7 @@ class BP_Messages_Thread {
 				'meta_query'   => array(),
 				'fields'       => 'all',
 				'having_sql'   => false,
+				'thread_type'  => 'unarchived',
 			)
 		);
 
@@ -1029,15 +1030,25 @@ class BP_Messages_Thread {
 
 		$additional_where = array();
 
-		if ( ! empty( $r['include'] ) ) {
-			$user_threads_query = $r['include'];
-		} elseif ( ! empty( $r['user_id'] ) ) {
+		if ( 'unarchived' === $r['thread_type'] ) {
+			if ( ! empty( $r['include'] ) ) {
+				$user_threads_query = $r['include'];
+			} elseif ( ! empty( $r['user_id'] ) ) {
 
-			$additional_where[] = 'r.is_deleted = 0';
-			$additional_where[] = 'r.user_id = ' . $r['user_id'];
+				$additional_where[] = 'r.is_deleted = 0';
+				$additional_where[] = 'r.user_id = ' . $r['user_id'];
 
-			if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
-				$additional_where[] = 'r.is_hidden = 0';
+				if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
+					$additional_where[] = 'r.is_hidden = 0';
+				}
+			}
+		} elseif ( 'archived' === $r['thread_type'] ) {
+			if ( ! empty( $r['include'] ) ) {
+				$user_threads_query = $r['include'];
+			} elseif ( ! empty( $r['user_id'] ) ) {
+				$additional_where[] = 'r.is_deleted = 0';
+				$additional_where[] = 'r.user_id = ' . $r['user_id'];
+				$additional_where[] = 'r.is_hidden = 1';
 			}
 		}
 
@@ -2055,5 +2066,38 @@ class BP_Messages_Thread {
 		 * @param int   $thread_id  ID of the current thread.
 		 */
 		return apply_filters( 'bp_messages_thread_get_pagination_recipients', $recipients, $thread_id );
+	}
+
+	/**
+	 * Checks whether a message thread is archived or not.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $thread_id The message thread ID.
+	 * @param int $user_id   The user ID.
+	 *
+	 * @return boolean
+	 */
+	public static function is_valid_archived( $thread_id = 0, $user_id = 0 ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		// Bail if no thread ID is passed.
+		if ( empty( $thread_id ) ) {
+			return false;
+		}
+
+		if ( empty( $user_id ) ) {
+			$user_id = bp_loggedin_user_id();
+		}
+
+		$is_thread_archived = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $user_id ) );
+
+		if ( 0 < $is_thread_archived ) {
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -18,14 +18,15 @@ function messages_screen_archived() {
 		return false;
 	}
 
-	$thread_id = (int) bp_action_variable( 1 );
+	$thread_id   = (int) bp_action_variable( 1 );
+	$is_redirect = false;
 
-	if ( empty( $thread_id ) || ! messages_is_valid_thread( $thread_id ) ) {
+	if ( empty( $thread_id ) || ! messages_is_valid_thread( $thread_id ) || ! messages_is_valid_archived_thread( $thread_id ) ) {
 		if ( is_user_logged_in() ) {
 			bp_core_add_message( __( 'The conversation you tried to access is no longer available', 'buddyboss' ), 'error' );
 		}
 
-		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bb_get_messages_archived_slug() ) );
+		$is_redirect = true;
 	}
 
 	// No access.
@@ -38,37 +39,44 @@ function messages_screen_archived() {
 			// Redirect away.
 		} else {
 			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
+			$is_redirect = true;
+		}
+	}
+
+	if ( $is_redirect ) {
+		// check if user has archived threads or not, if yes then redirect to latest archived thread.
+		if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&thread_type=archived' ) ) {
+			$new_thread_id = 0;
+			while ( bp_message_threads() ) :
+				bp_message_thread();
+				$new_thread_id = bp_get_message_thread_id();
+				if ( $thread_id !== $new_thread_id ) {
+					break;
+				}
+			endwhile;
+
+			if ( $new_thread_id ) {
+				// reset error and redirect to archived thread.
+				bp_core_add_message( '', 'error' );
+				wp_safe_redirect( bb_get_message_archived_thread_view_link( $new_thread_id ) );
+				exit;
+			}
+		} else {
 			bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bb_get_messages_archived_slug() ) );
 		}
 	}
 
-	// Load up BuddyPress one time.
-	$bp = buddypress();
-
-	// Decrease the unread count in the nav before it's rendered.
-	$count    = bp_get_total_unread_messages_count();
-	$class    = ( 0 === $count ) ? 'no-count' : 'count';
-	$nav_name = sprintf( __( 'Messages <span class="%1$s">%2$s</span>', 'buddyboss' ), esc_attr( $class ), bp_core_number_format( $count ) );
-
-	// Edit the Navigation name.
-	$bp->members->nav->edit_nav(
-		array(
-			'name' => $nav_name,
-		),
-		$bp->messages->slug
-	);
-
 	/**
 	 * Fires right before the loading of the Messages view screen template file.
 	 *
-	 * @since BuddyPress 1.7.0
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'messages_screen_archived' );
 
 	/**
 	 * Filters the template to load for the Messages view screen.
 	 *
-	 * @since BuddyPress 1.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */
