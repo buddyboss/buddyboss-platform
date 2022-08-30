@@ -512,7 +512,7 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 		/**
 		 * Fired action after user banned for the message.
 		 *
-		 * @since [BBVERSION]
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int $group_thread Group thread ID.
 		 * @param int $user_id      User id.
@@ -554,7 +554,7 @@ function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
 		/**
 		 * Fired action after user banned for the message.
 		 *
-		 * @since [BBVERSION]
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int $group_thread Group thread ID.
 		 * @param int $user_id      User id.
@@ -593,7 +593,7 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 		/**
 		 * Fired action after user un-banned for the message.
 		 *
-		 * @since [BBVERSION]
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int $group_thread Group thread ID.
 		 * @param int $user_id      User id.
