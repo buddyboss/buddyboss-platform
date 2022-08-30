@@ -1298,8 +1298,8 @@ window.bp = window.bp || {};
 				}
 
 				var finalMessagesArray = [], dividerMessageObject = {};
-				var thread_start_date = resp.thread.started_date_mysql;
-				var next_message_date = resp.next_messages_timestamp;
+				var thread_start_date = ! _.isUndefined( resp.thread ) && ! _.isUndefined( resp.thread.started_date_mysql ) ? resp.thread.started_date_mysql : (! _.isUndefined( resp.started_date_mysql ) ? resp.started_date_mysql : '');
+				var next_message_date = ! _.isUndefined( resp.next_messages_timestamp ) ? resp.next_messages_timestamp : '';
 				var index = 0;
 
 				_.each(
@@ -1316,18 +1316,20 @@ window.bp = window.bp || {};
 							bp.Nouveau.Messages.previous.sent_split_date != value.sent_split_date &&
 							$.inArray( bp.Nouveau.Messages.previous.sent_split_date, bp.Nouveau.Messages.divider ) === -1
 						) {
-							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value );
+							var current = resp.messages.length === 1 && '' === next_message_date;
+							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value,  current );
 							bp.Nouveau.Messages.divider.push( bp.Nouveau.Messages.previous.sent_split_date );
 							finalMessagesArray.push( dividerMessageObject );
 						}
 						finalMessagesArray.push( value );
 						bp.Nouveau.Messages.previous = value;
 						if (
+							next_message_date != '' &&
 							thread_start_date == next_message_date &&
 							resp.messages.length === index &&
 							$.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1
 						) {
-							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value );
+							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value, false );
 							dividerMessageObject.id = value.sent_split_date;
 							dividerMessageObject.content = value.sent_date;
 							bp.Nouveau.Messages.divider.push( value.sent_split_date );
@@ -1345,11 +1347,16 @@ window.bp = window.bp || {};
 				return finalMessagesArray;
 			},
 
-			createSpliter: function( value ) {
+			createSpliter: function( value, current = false ) {
 				var dividerObject = jQuery.extend( true, {}, value );
 
-				dividerObject.id = bp.Nouveau.Messages.previous.sent_split_date;
-				dividerObject.content = bp.Nouveau.Messages.previous.sent_date;
+				if ( false === current ) {
+					dividerObject.id = bp.Nouveau.Messages.previous.sent_split_date;
+					dividerObject.content = bp.Nouveau.Messages.previous.sent_date;
+				} else {
+					dividerObject.id = value.sent_split_date;
+					dividerObject.content = value.sent_date;
+				}
 				dividerObject.sender_avatar = '';
 				dividerObject.sender_id = '';
 				dividerObject.sender_is_you = '';
@@ -4423,7 +4430,13 @@ window.bp = window.bp || {};
 
 				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
 					var reply = this.collection.parse( response );
-					this.collection.add( _.first( reply ) );
+					_.each(
+						reply,
+						function( item ) {
+							this.collection.add( item );
+						},
+						this
+					);
 				}
 
 				bp.Nouveau.Messages.removeFeedback();
