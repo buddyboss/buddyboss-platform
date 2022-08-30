@@ -509,6 +509,16 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
 
+		/**
+		 * Fired action after user banned for the message.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param int $group_thread Group thread ID.
+		 * @param int $user_id      User id.
+		 * @param int $group_id     Group id.
+		 */
+		do_action( 'bp_group_messages_banned_member', $group_thread, $user_id, $group_id );
 	}
 }
 
@@ -541,6 +551,17 @@ function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
 
+		/**
+		 * Fired action after user banned for the message.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param int $group_thread Group thread ID.
+		 * @param int $user_id      User id.
+		 * @param int $group_id     Group id.
+		 */
+		do_action( 'bp_group_messages_banned_member', $group_thread, $user_id, $group_id );
+
 	}
 }
 
@@ -568,6 +589,17 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 
 		$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_thread ) );
+
+		/**
+		 * Fired action after user un-banned for the message.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param int $group_thread Group thread ID.
+		 * @param int $user_id      User id.
+		 * @param int $group_id     Group id.
+		 */
+		do_action( 'bp_group_messages_unbanned_member', $group_thread, $user_id, $group_id );
 
 	}
 }
