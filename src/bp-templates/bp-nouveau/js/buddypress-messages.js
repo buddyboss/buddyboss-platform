@@ -1782,7 +1782,9 @@ window.bp = window.bp || {};
 									self.model.set( 'media', self.media );
 								}
 							}
-							bp.Nouveau.Messages.removeFeedback();
+							if ( 'error' !== file.status ) {
+								bp.Nouveau.Messages.removeFeedback();
+							}
 						}
 
 						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
