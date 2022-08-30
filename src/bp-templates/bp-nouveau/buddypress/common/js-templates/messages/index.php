@@ -13,14 +13,30 @@
 <input type="hidden" id="thread-id" value="" />
 <div class="bp-messages-container">
 	<div class="bp-messages-nav-panel loading">
-        <div class="message-header-loading">
-            <div class="message-header-loading_top">
-                <div class="message-header-loading_title bb-bg-animation bb-loading-bg"></div>
-                <div class="message-header-loading_option bb-bg-animation bb-loading-bg"></div>
-            </div>
-            <div class="message-header-loading_description bb-bg-animation bb-loading-bg bb-loading-input"></div>
-        </div>
-		<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+		<div class="message-header-loading">
+			<div class="message-header-loading_top">
+				<div class="message-header-loading_title bb-bg-animation bb-loading-bg"></div>
+				<div class="message-header-loading_option bb-bg-animation bb-loading-bg"></div>
+			</div>
+			<div class="message-header-loading_description bb-bg-animation bb-loading-bg bb-loading-input"></div>
+		</div>
+		<?php
+		if ( ! bp_is_current_action( 'archived' ) ) {
+			bp_get_template_part( 'members/single/parts/item-subnav' );
+		} else {
+			?>
+			<nav class="bp-navs bp-subnavs no-ajax user-subnav bb-subnav-plain" id="subnav" role="navigation" aria-label="Sub Menu">
+				<ul class="subnav">
+					<li id="back-to-thread-li" class="bp-personal-sub-tab last">
+						<a href="#" id="back-to-thread">
+							<span class="bb-icon-f bb-icon-arrow-left"></span> <?php echo esc_html__( 'Archived', 'buddyboss' ); ?>
+						</a>
+					</li>
+				</ul>
+			</nav>
+			<?php
+		}
+		?>
 		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
 		<div class="bp-messages-search-feedback"></div>
 		<div class="bp-messages-threads-list bp-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bp-messages-threads-list"></div>
@@ -29,9 +45,8 @@
 
 </div>
 
-
-
 <?php
+
 if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 	bp_get_template_part( 'media/theatre' );
 }

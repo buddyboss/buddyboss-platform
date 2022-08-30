@@ -198,6 +198,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
 			$( document ).on( 'click', '#compose-action-personal-li .bb_more_options_action', this.toggleMessageCompose );
+			$( document ).on( 'click', '.bp-messages-nav-panel #back-to-thread', this.backToThreadList );
 
 		},
 
@@ -962,6 +963,12 @@ window.bp = window.bp || {};
 
 			single_thread.inject( '.bp-messages-content' );
 		},
+
+		backToThreadList: function( event ) {
+			event.preventDefault();
+			bp.Nouveau.Messages.router.navigate( '/' );
+			window.location.reload();
+		}
 	};
 
 	bp.Models.Message = Backbone.Model.extend(
@@ -1701,7 +1708,7 @@ window.bp = window.bp || {};
 
 			open_media_uploader: function() {
 				var self = this;
-				
+
 				var total_uploaded_file = 0;
 
 				if ( self.$el.find( '#messages-post-media-uploader' ).hasClass( 'open' ) ) {
@@ -1716,11 +1723,11 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'addedfile',
-					function ( file ) {
+					function () {
 						total_uploaded_file++;
 					}
 				);
-				
+
 				bp.Nouveau.Messages.dropzone.on(
 					'sending',
 					function(file, xhr, formData) {
