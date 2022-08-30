@@ -11,9 +11,35 @@
 
 remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 add_filter( 'bp_ajax_querystring', 'bb_notifications_on_screen_notifications_add', 20, 2 );
+// We are checking here - Pusher is connected + Live Messaging is enabled + On Message Screen.
+$pusher_and_live_message_status = false;
+if (
+	class_exists( 'BB_Platform_Pro' ) &&
+	bbp_pro_is_license_valid() &&
+	bb_pusher_is_enabled() &&
+	bb_pusher_is_feature_enabled( 'live-messaging' ) &&
+	bp_is_user_messages()
+) {
+	$pusher_and_live_message_status = true;
+}
 if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 	while ( bp_the_notifications() ) :
 		bp_the_notification();
+		/**
+		 * When a member is on the messaging screens (and they have live messaging enabled as well pusher is connected),
+		 * they don’t need to receive on-screen notifications about new messages received. So, we will disable them in this scenario.
+		 */
+		if (
+			true === $pusher_and_live_message_status &&
+			isset( buddypress()->notifications->query_loop->notification->component_action ) &&
+			(
+				'new_message' === buddypress()->notifications->query_loop->notification->component_action ||
+				'bb_groups_new_message' === buddypress()->notifications->query_loop->notification->component_action ||
+				'bb_messages_new' === buddypress()->notifications->query_loop->notification->component_action
+			)
+		) {
+			return;
+		}
 		?>
 		<li class="read-item <?php echo isset( buddypress()->notifications->query_loop->notification->is_new ) && buddypress()->notifications->query_loop->notification->is_new ? 'unread' : ''; ?>">
 			<span class="bb-full-link">
