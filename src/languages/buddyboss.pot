@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.8\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-08-25 12:37:39+00:00\n"
+"POT-Creation-Date: 2022-08-30 06:37:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2731,6 +2731,45 @@ msgstr ""
 msgid "<strong>Error</strong>: Nickname already has been taken. Please try again."
 msgstr ""
 
+#: bp-core/admin/bp-core-admin-actions.php:296
+#: bp-core/admin/bp-core-admin-tools.php:1226 bp-forums/admin/tools.php:1961
+#: bp-forums/functions.php:869
+#: bp-templates/bp-nouveau/includes/document/ajax.php:187
+#: bp-templates/bp-nouveau/includes/document/ajax.php:546
+#: bp-templates/bp-nouveau/includes/document/ajax.php:623
+#: bp-templates/bp-nouveau/includes/document/ajax.php:738
+#: bp-templates/bp-nouveau/includes/document/ajax.php:844
+#: bp-templates/bp-nouveau/includes/document/ajax.php:981
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1082
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1169
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1309
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1491
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1561
+#: bp-templates/bp-nouveau/includes/follow/ajax.php:52
+#: bp-templates/bp-nouveau/includes/friends/ajax.php:70
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:106
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:327
+#: bp-templates/bp-nouveau/includes/media/ajax.php:132
+#: bp-templates/bp-nouveau/includes/media/ajax.php:228
+#: bp-templates/bp-nouveau/includes/media/ajax.php:339
+#: bp-templates/bp-nouveau/includes/media/ajax.php:469
+#: bp-templates/bp-nouveau/includes/media/ajax.php:563
+#: bp-templates/bp-nouveau/includes/media/ajax.php:686
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1280
+#: bp-templates/bp-nouveau/includes/video/ajax.php:155
+#: bp-templates/bp-nouveau/includes/video/ajax.php:325
+#: bp-templates/bp-nouveau/includes/video/ajax.php:434
+#: bp-templates/bp-nouveau/includes/video/ajax.php:561
+#: bp-templates/bp-nouveau/includes/video/ajax.php:659
+#: bp-templates/bp-nouveau/includes/video/ajax.php:764
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1325
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1399
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1501
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1571
+#: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
+msgid "There was a problem performing this action. Please try again."
+msgstr ""
+
 #: bp-core/admin/bp-core-admin-components.php:27
 #: bp-core/admin/bp-core-admin-functions.php:665
 #: bp-core/classes/class-bp-admin.php:318
@@ -4457,45 +4496,6 @@ msgid ""
 "can help us prepare these features for official release by reporting issues "
 "and providing feedback through the <a href=\"%s\" target=\"_blank\" "
 ">support portal</a>."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:3032
-#: bp-core/admin/bp-core-admin-tools.php:1226 bp-forums/admin/tools.php:1961
-#: bp-forums/functions.php:869
-#: bp-templates/bp-nouveau/includes/document/ajax.php:187
-#: bp-templates/bp-nouveau/includes/document/ajax.php:546
-#: bp-templates/bp-nouveau/includes/document/ajax.php:623
-#: bp-templates/bp-nouveau/includes/document/ajax.php:738
-#: bp-templates/bp-nouveau/includes/document/ajax.php:844
-#: bp-templates/bp-nouveau/includes/document/ajax.php:981
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1082
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1169
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1309
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1491
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1561
-#: bp-templates/bp-nouveau/includes/follow/ajax.php:52
-#: bp-templates/bp-nouveau/includes/friends/ajax.php:70
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:106
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:327
-#: bp-templates/bp-nouveau/includes/media/ajax.php:132
-#: bp-templates/bp-nouveau/includes/media/ajax.php:228
-#: bp-templates/bp-nouveau/includes/media/ajax.php:339
-#: bp-templates/bp-nouveau/includes/media/ajax.php:469
-#: bp-templates/bp-nouveau/includes/media/ajax.php:563
-#: bp-templates/bp-nouveau/includes/media/ajax.php:686
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1280
-#: bp-templates/bp-nouveau/includes/video/ajax.php:155
-#: bp-templates/bp-nouveau/includes/video/ajax.php:325
-#: bp-templates/bp-nouveau/includes/video/ajax.php:434
-#: bp-templates/bp-nouveau/includes/video/ajax.php:561
-#: bp-templates/bp-nouveau/includes/video/ajax.php:659
-#: bp-templates/bp-nouveau/includes/video/ajax.php:764
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1325
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1399
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1501
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1571
-#: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
-msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
