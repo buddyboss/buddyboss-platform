@@ -228,6 +228,12 @@
 			 		else console.log(status);
 				}
 			};
+			req.onerror = function() {
+				var status = req.status;
+				if ( errCb ) {
+					errCb( status );
+				}
+			};
 			req.send();
 
 			return req;

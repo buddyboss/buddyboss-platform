@@ -243,6 +243,15 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 												<div class="gif-search-results" id="gif-search-results">
 													<ul class="gif-search-results-list">
 													</ul>
+													<div class="gif-alert gif-no-results">
+														<i class="bb-icon-l bb-icon-image-slash"></i>
+														<p><?php esc_html_e( 'No results found', 'buddyboss' ); ?></p>
+													</div>
+
+													<div class="gif-alert gif-no-connection">
+														<i class="bb-icon-l bb-icon-cloud-slash"></i>
+														<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
+													</div>
 												</div>
 											</div>
 										</div>
