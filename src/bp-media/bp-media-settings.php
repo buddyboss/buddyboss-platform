@@ -915,7 +915,7 @@ function bp_media_get_gif_api_key( $default = '' ) {
  */
 function bp_media_settings_callback_profiles_gif_support() {
 	?>
-	<input name="bp_media_profiles_gif_support" id="bp_media_profiles_gif_support" type="checkbox" value="1" <?php checked( bp_is_profiles_gif_support_enabled() ); echo ! bb_check_valid_giphy_api_key() ? 'disabled' : ''; ?>/>
+	<input name="bp_media_profiles_gif_support" id="bp_media_profiles_gif_support" type="checkbox" value="1" <?php checked( bp_is_profiles_gif_support_enabled() ); echo ! bb_check_valid_giphy_api_key() ? ' disabled' : ''; ?>/>
 	<label for="bp_media_profiles_gif_support">
 		<?php _e( 'Allow members to use animated GIFs in <strong>profile activity posts</strong>', 'buddyboss' ); ?>
 	</label>
@@ -960,7 +960,7 @@ function bp_media_settings_callback_groups_gif_support() {
 	}
 	$display_string .= $last_string;
 	?>
-	<input name="bp_media_groups_gif_support" id="bp_media_groups_gif_support" type="checkbox" value="1" <?php checked( bp_is_groups_gif_support_enabled() );  echo ! bb_check_valid_giphy_api_key() ? 'disabled' : ''; ?>/>
+	<input name="bp_media_groups_gif_support" id="bp_media_groups_gif_support" type="checkbox" value="1" <?php checked( bp_is_groups_gif_support_enabled() );  echo ! bb_check_valid_giphy_api_key() ? ' disabled' : ''; ?>/>
 	<label for="bp_media_groups_gif_support">
 		<?php
 		printf(
@@ -980,7 +980,7 @@ function bp_media_settings_callback_groups_gif_support() {
  */
 function bp_media_settings_callback_messages_gif_support() {
 	?>
-	<input name="bp_media_messages_gif_support" id="bp_media_messages_gif_support" type="checkbox" value="1" <?php checked( bp_is_messages_gif_support_enabled() ); echo ! bb_check_valid_giphy_api_key() ? 'disabled' : ''; ?>/>
+	<input name="bp_media_messages_gif_support" id="bp_media_messages_gif_support" type="checkbox" value="1" <?php checked( bp_is_messages_gif_support_enabled() ); echo ! bb_check_valid_giphy_api_key() ? ' disabled' : ''; ?>/>
 	<label for="bp_media_messages_gif_support">
 		<?php
 		_e( 'Allow members to use animated GIFs in <strong>private messages</strong>', 'buddyboss' );
@@ -996,7 +996,7 @@ function bp_media_settings_callback_messages_gif_support() {
  */
 function bp_media_settings_callback_forums_gif_support() {
 	?>
-	<input name="bp_media_forums_gif_support" id="bp_media_forums_gif_support" type="checkbox" value="1" <?php checked( bp_is_forums_gif_support_enabled() ); echo ! bb_check_valid_giphy_api_key() ? 'disabled' : ''; ?>/>
+	<input name="bp_media_forums_gif_support" id="bp_media_forums_gif_support" type="checkbox" value="1" <?php checked( bp_is_forums_gif_support_enabled() ); echo ! bb_check_valid_giphy_api_key() ? ' disabled' : ''; ?>/>
 	<label for="bp_media_forums_gif_support">
 		<?php _e( 'Allow members to use animated GIFs in <strong>forum discussions</strong> and <strong>replies</strong>', 'buddyboss' ); ?>
 	</label>
