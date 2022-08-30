@@ -1742,7 +1742,7 @@ window.bp = window.bp || {};
 							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
-							if ( total_uploaded_file < BP_Nouveau.media.maxFiles ) {
+							if ( total_uploaded_file <= BP_Nouveau.media.maxFiles ) {
 								bp.Nouveau.Messages.removeFeedback();
 							}
 						} else {
@@ -1825,6 +1825,7 @@ window.bp = window.bp || {};
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
 							Backbone.trigger( 'triggerMediaComplete' );
+							total_uploaded_file = self.media.length;
 						}
 					}
 				);
