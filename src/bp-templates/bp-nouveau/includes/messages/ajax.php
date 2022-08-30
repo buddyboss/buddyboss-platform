@@ -1219,7 +1219,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'is_private_thread'               => $is_private_thread,
 		);
 
-		$is_thread_archived = false;
 		if ( is_array( $check_recipients ) ) {
 			$count  = 1;
 			$admins = array_map(
@@ -1301,7 +1300,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ]['action_recipients']['total_pages']   = ceil( (int) count( $check_recipients ) / (int) bb_messages_recipients_per_page() );
 		}
 
-		$threads->threads[ $i ]['is_thread_archived'] = $is_thread_archived;
+		$threads->threads[ $i ]['is_thread_archived'] = false;
+		if ( isset( $_POST['thread_type'] ) && 'archived' === $_POST['thread_type'] ) {
+			$threads->threads[ $i ]['is_thread_archived'] = true;
+		}
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$star_link = bp_get_the_message_star_action_link(
