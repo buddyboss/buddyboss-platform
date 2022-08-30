@@ -1701,6 +1701,8 @@ window.bp = window.bp || {};
 
 			open_media_uploader: function() {
 				var self = this;
+				
+				var total_uploaded_file = 0;
 
 				if ( self.$el.find( '#messages-post-media-uploader' ).hasClass( 'open' ) ) {
 					return false;
@@ -1712,6 +1714,13 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-media-uploader', bp.Nouveau.Messages.dropzone_options );
 
+				bp.Nouveau.Messages.dropzone.on(
+					'addedfile',
+					function ( file ) {
+						total_uploaded_file++;
+					}
+				);
+				
 				bp.Nouveau.Messages.dropzone.on(
 					'sending',
 					function(file, xhr, formData) {
@@ -1757,7 +1766,9 @@ window.bp = window.bp || {};
 							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
-							bp.Nouveau.Messages.removeFeedback();
+							if ( total_uploaded_file <= BP_Nouveau.media.maxFiles ) {
+								bp.Nouveau.Messages.removeFeedback();
+							}
 						} else {
 							// if ( ! jQuery( '.message-media-error-popup' ).length) {
 							// 	$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
@@ -1806,7 +1817,9 @@ window.bp = window.bp || {};
 									self.model.set( 'media', self.media );
 								}
 							}
-							bp.Nouveau.Messages.removeFeedback();
+							if ( 'error' !== file.status ) {
+								bp.Nouveau.Messages.removeFeedback();
+							}
 						}
 
 						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
@@ -1836,6 +1849,7 @@ window.bp = window.bp || {};
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
 							Backbone.trigger( 'triggerMediaComplete' );
+							total_uploaded_file = self.media.length;
 						}
 					}
 				);
