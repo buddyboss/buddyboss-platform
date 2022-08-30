@@ -37,5 +37,14 @@ function messages_action_archived() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'messages_action_archived' );
+
+	/**
+	 * Filters the template to load for the Messages view screen.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $template Path to the messages template to load.
+	 */
+	bp_core_load_template( apply_filters( 'messages_template_archived', 'members/single/home' ) );
 }
 add_action( 'bp_actions', 'messages_action_archived' );

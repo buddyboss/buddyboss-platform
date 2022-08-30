@@ -946,7 +946,22 @@ window.bp = window.bp || {};
 				}
 			);
 
-		}
+		},
+
+		singleNoArchivedThreadView: function() {
+
+			this.box = 'single';
+
+			// Remove the editor to be sure it will be added dynamically later.
+			this.removeTinyMCE();
+
+			// Create the single thread view.
+			var single_thread = new bp.Views.userArchivedNoThreads();
+
+			this.views.add( { id: 'single', view: single_thread } );
+
+			single_thread.inject( '.bp-messages-content' );
+		},
 	};
 
 	bp.Models.Message = Backbone.Model.extend(
@@ -4456,6 +4471,33 @@ window.bp = window.bp || {};
 		}
 	);
 
+	bp.Views.userArchivedNoThreads = bp.Nouveau.Messages.View.extend(
+		{
+			tagName  : 'div',
+			className  : 'bp-messages-content-wrapper archived-empty',
+			template : bp.template( 'bp-messages-single' ),
+
+			initialize: function() {
+				var self = this;
+				setTimeout(
+					function () {
+						// Add the empty message view.
+						self.views.add( '#bp-message-thread-list', new bp.Views.userArchivedNoMessages() );
+					},
+					1000
+				);
+			}
+		}
+	);
+
+	bp.Views.userArchivedNoMessages = bp.Nouveau.Messages.View.extend(
+		{
+			tagName  : 'li',
+			className  : 'bp-empty-messages-li',
+			template : bp.template( 'bp-messages-empty-single-list' ),
+		}
+	);
+
 	bp.Nouveau.Messages.Router = Backbone.Router.extend(
 		{
 			routes: {
@@ -4464,6 +4506,7 @@ window.bp = window.bp || {};
 				'starred/'          : 'starredView',
 				'inbox/'            : 'inboxView',
 				''                  : 'inboxView',
+				'archived/'         : 'viewNoArchivedThread',
 				'archived/view/:id/': 'viewArchivedMessage',
 			},
 
@@ -4559,6 +4602,15 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.threadsView();
 
 				$( 'body' ).removeClass( 'view' ).removeClass( 'compose' ).addClass( 'inbox' );
+			},
+
+			viewNoArchivedThread: function() {
+				bp.Nouveau.Messages.threadType = 'archived';
+				bp.Nouveau.Messages.threadsView();
+
+				bp.Nouveau.Messages.singleNoArchivedThreadView();
+
+				//$( '#bp-message-thread-list' ).html( '<li></li>' );
 			},
 
 			viewArchivedMessage: function( thread_id ) {
