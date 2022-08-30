@@ -3,11 +3,11 @@
  * Messages: View action handler
  *
  * @package BuddyBoss\Message\Actions
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 /**
- * Process a request to view a single message thread.
+ * Process a request to view a single message archived thread.
  */
 function messages_action_archived() {
 
@@ -16,8 +16,8 @@ function messages_action_archived() {
 		return false;
 	}
 
-	// check if user has threads or not, if yes then redirect to latest thread otherwise to compose screen
-	if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
+	// check if user has archived threads or not, if yes then redirect to latest archived thread.
+	if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&thread_type=archived' ) ) {
 		$thread_id = 0;
 		while ( bp_message_threads() ) :
 			bp_message_thread();
@@ -29,15 +29,12 @@ function messages_action_archived() {
 			wp_safe_redirect( bb_get_message_archived_thread_view_link( $thread_id ) );
 			exit;
 		}
-	} else {
-		wp_safe_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/compose' ) );
-		exit;
 	}
 
 	/**
-	 * Fires after processing a view request for a single message thread.
+	 * Fires after processing a view request for a single message archived thread.
 	 *
-	 * @since BuddyPress 1.7.0
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'messages_action_archived' );
 }

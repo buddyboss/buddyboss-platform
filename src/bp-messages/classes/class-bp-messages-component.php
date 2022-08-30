@@ -91,7 +91,7 @@ class BP_Messages_Component extends BP_Component {
 		}
 
 		if ( bp_is_messages_component() ) {
-			// Authenticated actions.
+			// Authenticated actions for archived threads.
 			if ( is_user_logged_in() && 'archived' === bp_current_action() && bp_action_variable( 0 ) && 'view' === bp_action_variable( 0 ) ) {
 				require $this->path . 'bp-messages/screens/' . bp_current_action() . '-' . bp_action_variable( 0 ) . '.php';
 			} elseif ( is_user_logged_in() && 'archived' === bp_current_action() ) {

@@ -35,10 +35,11 @@ window.bp = window.bp || {};
 			this.threads      = new bp.Collections.Threads();
 			this.messages     = new bp.Collections.Messages();
 			this.router       = new bp.Nouveau.Messages.Router();
-			this.box               = 'inbox';
-			this.mediumEditor      = false;
+			this.box          = 'inbox';
+			this.mediumEditor = false;
 			this.divider      = [];
-			this.previous      = '';
+			this.previous     = '';
+			this.threadType   = 'unarchived';
 
 			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -493,7 +494,7 @@ window.bp = window.bp || {};
 
 			if ( ! threadView || ! this.threads.length ) {
 
-				// Set has threads expliciltely true if single view is on because obviously.
+				// Set has threads explicitly true if single view is on because obviously.
 				BP_Nouveau.messages.hasThreads = true;
 
 				// Remove all existing views except threads view.
@@ -882,10 +883,16 @@ window.bp = window.bp || {};
 					} else if ( 'unhide_thread' === action ) {
 						// Remove previous feedback.
 						bp.Nouveau.Messages.removeFeedback();
-						// Refresh the current thread.
-						var hash = Math.round( (new Date()).getTime() / 1000 );
-						bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
-						window.Backbone.trigger( 'relistelements' );
+						if ( bp.Nouveau.Messages.threads.length > 1 ) {
+							// Navigate back to current box.
+							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
+							bp.Nouveau.Messages.router.navigate( 'archived/view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							window.Backbone.trigger( 'relistelements' );
+						} else {
+							window.Backbone.trigger( 'relistelements' );
+							BP_Nouveau.messages.hasThreads = false;
+							bp.Nouveau.Messages.router.navigate( 'archived/', { trigger: true } );
+						}
 					} else if ( response.id ) {
 						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 						if ( undefined !== response.messages_count && 0 === response.messages_count ) {
@@ -1041,7 +1048,8 @@ window.bp = window.bp || {};
 				options.data    = options.data || {};
 
 				// Add generic nonce.
-				options.data.nonce = BP_Nouveau.nonces.messages;
+				options.data.nonce       = BP_Nouveau.nonces.messages;
+				options.data.thread_type = bp.Nouveau.Messages.threadType;
 
 				if ( 'read' === method ) {
 					options.data = _.extend(
@@ -1151,8 +1159,9 @@ window.bp = window.bp || {};
 					options.data = _.extend(
 						options.data,
 						{
-							action: 'messages_get_thread_messages',
-							before: this.before
+							action     : 'messages_get_thread_messages',
+							before     : this.before,
+							thread_type: bp.Nouveau.Messages.threadType
 						}
 					);
 
@@ -4439,11 +4448,12 @@ window.bp = window.bp || {};
 	bp.Nouveau.Messages.Router = Backbone.Router.extend(
 		{
 			routes: {
-				'compose/' : 'composeMessage',
-				'view/:id/': 'viewMessage',
-				'starred/' : 'starredView',
-				'inbox/'   : 'inboxView',
-				''        : 'inboxView'
+				'compose/'          : 'composeMessage',
+				'view/:id/'         : 'viewMessage',
+				'starred/'          : 'starredView',
+				'inbox/'            : 'inboxView',
+				''                  : 'inboxView',
+				'archived/view/:id/': 'viewArchivedMessage',
 			},
 
 			composeMessage: function() {
@@ -4538,7 +4548,48 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.threadsView();
 
 				$( 'body' ).removeClass( 'view' ).removeClass( 'compose' ).addClass( 'inbox' );
-			}
+			},
+
+			viewArchivedMessage: function( thread_id ) {
+				if ( ! thread_id ) {
+					return;
+				}
+
+				// Reset the variable when viewing the thread message using route.
+				bp.Nouveau.Messages.divider    = [];
+				bp.Nouveau.Messages.previous   = '';
+				bp.Nouveau.Messages.threadType = 'archived';
+
+				// Try to get the corresponding thread.
+				var thread = bp.Nouveau.Messages.threads.get( thread_id );
+
+				if ( undefined === thread ) {
+					thread    = {};
+					thread.id = thread_id;
+				}
+
+				bp.Nouveau.Messages.singleView( thread );
+
+				// set current thread id.
+				$( '#thread-id' ).val( thread_id );
+
+				$.each(
+					$( '.thread-content' ),
+					function() {
+						var _this = $( this );
+						if ( _this.data( 'thread-id' ) == thread_id ) {
+							_this.closest( '.thread-item' ).addClass( 'current' );
+							if ( _this.closest( '.thread-item' ).hasClass( 'unread' ) ) {
+								_this.closest( '.thread-item' ).removeClass( 'unread' );
+							}
+						} else {
+							_this.closest( '.thread-item' ).removeClass( 'current' );
+						}
+					}
+				);
+
+				$( 'body' ).removeClass( 'compose' ).removeClass( 'inbox' ).addClass( 'view' );
+			},
 		}
 	);
 
