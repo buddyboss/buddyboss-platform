@@ -2857,6 +2857,7 @@ function bp_nav_menu_get_loggedin_pages() {
 				'post_parent'    => $nav_counter,
 			);
 
+			// Add archived menu to display archived threads.
 			$page_args['archived-messages'] =
 			(object) array(
 				'ID'             => hexdec( uniqid() ),

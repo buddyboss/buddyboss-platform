@@ -1725,3 +1725,16 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
 
 	return $meta_query;
 }
+
+/**
+ * Checks whether a message thread is archived or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id ID of the thread.
+ *
+ * @return boolean
+ */
+function messages_is_valid_archived_thread( $thread_id ) {
+	return BP_Messages_Thread::is_valid_archived( $thread_id );
+}

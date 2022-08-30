@@ -139,6 +139,7 @@ class BP_Messages_Box_Template {
 				'search_terms' => '',
 				'include'      => false,
 				'is_hidden'    => false,
+				'thread_type'  => 'unarchived',
 				'meta_query'   => array(),
 			)
 		);
@@ -171,6 +172,7 @@ class BP_Messages_Box_Template {
 					'search_terms' => $this->search_terms,
 					'include'      => $this->include,
 					'is_hidden'    => $this->is_hidden,
+					'thread_type'  => $r['thread_type'],
 					'meta_query'   => $r['meta_query'],
 				)
 			);
