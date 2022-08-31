@@ -26517,16 +26517,27 @@ span.icons:before {
 }
 
 .bb-group-message-info {
-  font-size: 12px;
-  font-style: italic;
+  font-size: 13px;
   color: #939597;
-  letter-spacing: -0.21px;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+.bb-group-message-info:before {
+  content: "\e95d";
+  display: inline-block;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
   line-height: 1;
-  margin-top: 6px;
+  margin-left: 8px;
+  vertical-align: middle;
 }
 
 #buddypress .bb-group-message-info a {
-  text-decoration: underline;
+  text-decoration: none;
+  font-weight: 500;
+  color: inherit;
 }
 
 #group-messages-container .bp-message-dropdown-options-hide {
