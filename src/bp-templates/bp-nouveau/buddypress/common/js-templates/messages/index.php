@@ -20,7 +20,23 @@
 			</div>
 			<div class="message-header-loading_description bb-bg-animation bb-loading-bg bb-loading-input"></div>
 		</div>
-		<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+		<?php
+		if ( ! bp_is_current_action( 'archived' ) ) {
+			bp_get_template_part( 'members/single/parts/item-subnav' );
+		} else {
+			?>
+			<nav class="bp-navs bp-subnavs no-ajax user-subnav bb-subnav-plain" id="subnav" role="navigation" aria-label="Sub Menu">
+				<ul class="subnav">
+					<li id="back-to-thread-li" class="bp-personal-sub-tab last">
+						<a href="#" id="back-to-thread">
+							<span class="bb-icon-f bb-icon-arrow-left"></span> <?php echo esc_html__( 'Archived', 'buddyboss' ); ?>
+						</a>
+					</li>
+				</ul>
+			</nav>
+			<?php
+		}
+		?>
 		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
 		<div class="bp-messages-search-feedback"></div>
 		<div class="bp-messages-threads-list bp-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bp-messages-threads-list"></div>
@@ -29,9 +45,8 @@
 
 </div>
 
-
-
 <?php
+
 if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 	bp_get_template_part( 'media/theatre' );
 }
@@ -74,6 +89,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
 			'parts/bp-messages-no-threads',
 			'parts/bp-messages-search-no-threads',
 			'parts/bp-messages-filter-loader',
+			'parts/bp-messages-empty-single-list',
 		)
 	);
 

@@ -2666,6 +2666,7 @@ function bb_get_the_thread_message_sent_time() {
 function bb_messages_archived_slug() {
 	echo bb_get_messages_archived_slug();
 }
+
 /**
  * Return the archived messages component slug.
  *
@@ -2683,6 +2684,34 @@ function bb_get_messages_archived_slug() {
 	 * @param string $slug Archived messages component slug.
 	 */
 	return apply_filters( 'bb_get_messages_archived_slug', 'archived' );
+}
+
+/**
+ * Output the archived messages component URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_messages_archived_url() {
+	echo esc_url( bb_get_messages_archived_url() );
+}
+
+/**
+ * Return the archived messages component URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_messages_archived_url() {
+
+	/**
+	 * Filters the archived messages component URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $slug Archived messages component URL.
+	 */
+	return apply_filters( 'bb_get_messages_archived_url', bp_loggedin_user_domain() . bp_get_messages_slug() . '/' . bb_get_messages_archived_slug() );
 }
 
 /**

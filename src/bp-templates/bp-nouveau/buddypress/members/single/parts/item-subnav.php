@@ -26,6 +26,11 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 		<?php
 		while ( bp_nouveau_nav_items() ) :
 			bp_nouveau_nav_item();
+
+			$nav_item = bp_nouveau()->current_nav_item;
+			if ( 'archived' === $nav_item->slug ) {
+				continue;
+			}
 			?>
 
 			<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>" <?php bp_nouveau_nav_scope(); ?>>
