@@ -773,7 +773,8 @@ window.bp = window.bp || {};
 				opposite  = {},
 				feedback  = BP_Nouveau.messages.doingAction,
 				thread_id = 0,
-				model;
+				model,
+				target = $( event.currentTarget );
 
 			if ( ! action ) {
 				return event;
@@ -840,8 +841,24 @@ window.bp = window.bp || {};
 				read_unread.parent( 'li' ).removeClass( action ).addClass( opposite[ action ] );
 			}
 
-			if ( ! _.isUndefined( feedback[ action ] ) ) {
+			if (
+				! _.isUndefined( feedback[ action ] ) &&
+				'read' !== action &&
+				'unread' !== action &&
+				'hide_thread' !== action &&
+				'unhide_thread' !== action &&
+				'delete' !== action
+			) {
 				bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
+			} else if (
+				'read' === action ||
+				'unread' === action ||
+				'hide_thread' === action ||
+				'unhide_thread' === action ||
+				'delete' === action
+			) {
+				target.parents( '.message_actions' ).addClass( 'loading' );
+				target.parents( '.message-thread-options' ).addClass( 'loading' );
 			}
 
 			if ( 'delete' === action || 'delete_thread' === action ) {
@@ -895,7 +912,17 @@ window.bp = window.bp || {};
 							bp.Nouveau.Messages.router.navigate( 'archived/', { trigger: true } );
 						}
 					} else if ( response.id ) {
-						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						if (
+							'read' !== action &&
+							'unread' !== action &&
+							'hide_thread' !== action &&
+							'unhide_thread' !== action &&
+							'delete' !== action
+						) {
+							// Display the feedback.
+							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						}
+
 						if ( undefined !== response.messages_count && 0 === response.messages_count ) {
 							if ( bp.Nouveau.Messages.threads.length > 1 ) {
 								bp.Nouveau.Messages.threads.remove( response.id );
@@ -914,8 +941,16 @@ window.bp = window.bp || {};
 
 						model.set( _.first( response.messages ) );
 
-						// Display the feedback.
-						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						if (
+							'read' !== action &&
+							'unread' !== action &&
+							'hide_thread' !== action &&
+							'unhide_thread' !== action &&
+							'delete' !== action
+						) {
+							// Display the feedback.
+							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						}
 
 						if ( 'unread' === action && ! _.isUndefined( response.ids ) ) {
 							$( '.bp-compose-message.bp-messages-container, .bp-view-message.bp-messages-container' ).removeClass( 'bp-compose-message bp-view-message' );
@@ -937,13 +972,40 @@ window.bp = window.bp || {};
 
 						bp.Nouveau.Messages.removeFeedback();
 					}
+
+					target.parents( '.message_actions' ).removeClass( 'loading' );
+					target.parents( '.message-thread-options' ).removeClass( 'loading' );
 				}
 			).fail(
 				function( response ) {
 					// Remove previous feedback.
 					bp.Nouveau.Messages.removeFeedback();
 
-					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+					if (
+						'read' === action ||
+						'unread' === action ||
+						'hide_thread' === action ||
+						'unhide_thread' === action ||
+						'delete' === action
+					) {
+						if ( 'undefined' !== typeof response.feedback ) {
+							jQuery( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									response.feedback,
+									'error',
+									null,
+									true
+								]
+							);
+						}
+					} else {
+						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+					}
+
+					target.parents( '.message_actions' ).removeClass( 'loading' );
+					target.parents( '.message-thread-options' ).removeClass( 'loading' );
 				}
 			);
 
