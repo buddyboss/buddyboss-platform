@@ -786,15 +786,25 @@ span.icons:before {
 }
 
 .bb-group-message-info {
-	font-size: 12px;
-	font-style: italic;
+	font-size: 13px;
 	color: #939597;
-	letter-spacing: -0.21px;
-	line-height: 1;
-	margin-top: 6px;
+	line-height: 1.5;
+	margin-top: 10px;
+
+	&:before {
+		content: "\e95d";
+		display: inline-block;
+		font-family: "bb-icons";/* stylelint-disable-line */
+		font-size: 18px;
+		line-height: 1;
+		margin-right: 8px;
+		vertical-align: middle;
+	}
 
 	#buddypress & a {
-		text-decoration: underline;
+		text-decoration: none;
+		font-weight: 500;
+		color: inherit;
 	}
 }
 
