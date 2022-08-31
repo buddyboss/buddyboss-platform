@@ -645,6 +645,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 		'display_date'      => bb_get_the_thread_message_sent_time(),
 		'display_date_list' => bb_get_thread_sent_date( $thread_template->message->date_sent ),
 		'excerpt'           => $excerpt,
+		'sent_date'         => ucfirst( bb_get_thread_start_date( $thread_template->message->date_sent ) ),
+		'sent_split_date'   => date_i18n( 'Y-m-d', strtotime( $thread_template->message->date_sent ) ),
 	);
 
 	$get_thread_recipients = $thread_template->thread->recipients;
@@ -909,6 +911,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			'hash'                          => $hash,
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 			'type'                          => 'success',
+			'started_date_mysql'            => $thread_template->thread->first_message_date,
 		)
 	);
 

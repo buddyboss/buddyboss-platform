@@ -13112,26 +13112,69 @@ button[data-bp-close]:hover {
   }
 }
 
-.bb-bg-animation {
-  position: relative;
-  overflow: hidden;
+@-moz-keyframes fade-in-out {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
-.bb-bg-animation:after {
-  content: "";
-  width: 200%;
-  background-color: rgba(0, 0, 0, 0.03);
-  display: block;
-  position: absolute;
-  left: 20px;
-  top: 0;
-  bottom: 0;
-  filter: blur(10px);
-  animation: backgroundColor 2s ease-in infinite;
+@-webkit-keyframes fade-in-out {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fade-in-out {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fade-in-out {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .bb-loading-bg {
   background-color: #f2f4f5;
+  animation: fade-in-out infinite 2s ease;
 }
 
 @keyframes backgroundColor {
