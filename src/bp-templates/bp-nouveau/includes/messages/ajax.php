@@ -2511,32 +2511,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if ( empty( $group_name ) ) {
 				$group_name = '"' . __( 'Deleted Group', 'buddyboss' ) . '"';
-				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
-					/* translators: %s: Group Name */
-					$group_text = sprintf( __( 'Sent from group %s to all group members.', 'buddyboss' ), $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
-					/* translators: %s: Group Name */
-					$group_text = sprintf( __( 'Sent from group %s to the people in this conversation.', 'buddyboss' ), $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
-					/* translators: %s: Group Name */
-					$group_text = sprintf( __( 'Sent from group %s individually to all group members.', 'buddyboss' ), $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
-					/* translators: %s: Group Name */
-					$group_text = sprintf( __( 'Sent from group %s to individual members.', 'buddyboss' ), $group_name );
+				if ( $group_message_users && $group_message_type && 'individual' === $group_message_users && ( 'private' === $group_message_type || 'open' === $group_message_type ) ) {
+					$group_text = sprintf( __( 'Sent from %s', 'buddyboss' ), $group_name );
 				}
 			} else {
-				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
-					/* translators: 1: Group Link 2: Group Name */
-					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> to all group members.', 'buddyboss' ), $group_link, $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
-					/* translators: 1: Group Link 2: Group Name */
-					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> to the people in this conversation.', 'buddyboss' ), $group_link, $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
-					/* translators: 1: Group Link 2: Group Name */
-					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> individually to all group members.', 'buddyboss' ), $group_link, $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
-					/* translators: 1: Group Link 2: Group Name */
-					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> to individual members.', 'buddyboss' ), $group_link, $group_name );
+				if ( $group_message_users && $group_message_type && 'individual' === $group_message_users && ( 'private' === $group_message_type || 'open' === $group_message_type ) ) {
+					$group_text = sprintf( '%1$s <a href="%2$s">%3$s</a>', __( 'Sent from', 'buddyboss' ), $group_link, $group_name );
 				}
 			}
 
