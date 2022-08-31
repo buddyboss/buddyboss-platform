@@ -2042,8 +2042,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$check_recipients = $recipients;
 
+	$is_group_message_thread = bb_messages_is_group_thread( bp_get_the_thread_id() );
+
 	// Check recipients if connected or not.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! $is_group_message_thread ) {
 		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 		foreach ( $recipients as $recipient ) {
 			if ( $login_user_id !== $recipient->user_id && ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
@@ -2512,32 +2514,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if ( empty( $group_name ) ) {
 				$group_name = '"' . __( 'Deleted Group', 'buddyboss' ) . '"';
-				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
-					/* translators: %s: Group Name */
-					$group_text = sprintf( __( 'Sent from group %s to all group members.', 'buddyboss' ), $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
-					/* translators: %s: Group Name */
-					$group_text = sprintf( __( 'Sent from group %s to the people in this conversation.', 'buddyboss' ), $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
-					/* translators: %s: Group Name */
-					$group_text = sprintf( __( 'Sent from group %s individually to all group members.', 'buddyboss' ), $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
-					/* translators: %s: Group Name */
-					$group_text = sprintf( __( 'Sent from group %s to individual members.', 'buddyboss' ), $group_name );
+				if ( $group_message_users && $group_message_type && 'individual' === $group_message_users && ( 'private' === $group_message_type || 'open' === $group_message_type ) ) {
+					$group_text = sprintf( __( 'Sent from %s', 'buddyboss' ), $group_name );
 				}
 			} else {
-				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
-					/* translators: 1: Group Link 2: Group Name */
-					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> to all group members.', 'buddyboss' ), $group_link, $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
-					/* translators: 1: Group Link 2: Group Name */
-					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> to the people in this conversation.', 'buddyboss' ), $group_link, $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
-					/* translators: 1: Group Link 2: Group Name */
-					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> individually to all group members.', 'buddyboss' ), $group_link, $group_name );
-				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
-					/* translators: 1: Group Link 2: Group Name */
-					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> to individual members.', 'buddyboss' ), $group_link, $group_name );
+				if ( $group_message_users && $group_message_type && 'individual' === $group_message_users && ( 'private' === $group_message_type || 'open' === $group_message_type ) ) {
+					$group_text = sprintf( '%1$s <a href="%2$s">%3$s</a>', __( 'Sent from', 'buddyboss' ), $group_link, $group_name );
 				}
 			}
 
@@ -2567,7 +2549,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					}
 				}
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
-				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
+				$content = '<p class="joined deleted-message">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
@@ -2672,7 +2654,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					}
 				}
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
-				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
+				$content = '<p class="joined deleted-message">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
@@ -2705,7 +2687,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					}
 				}
 			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
-				$content = '<p class="joined">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
+				$content = '<p class="joined deleted-message">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {
 				$content = do_shortcode( bp_get_the_thread_message_content() );
 			}
@@ -3067,6 +3049,15 @@ function bp_nouveau_ajax_hide_thread() {
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
 
 		/**
+		 * Fires when messages thread was archived.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $thread_id The message thread ID.
+		 */
+		do_action( 'bb_messages_thread_archived', $thread_id );
+
+		/**
 		 * Fires when messages thread was marked as read.
 		 *
 		 * @since BuddyBoss 1.9.3
@@ -3113,6 +3104,7 @@ function bp_nouveau_ajax_hide_thread() {
 			'messages'                      => __( 'Thread removed successfully.', 'buddyboss' ),
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 			'toast_message'                 => $toast_message,
+			'thread_ids'                    => $thread_ids,
 		)
 	);
 }
@@ -3217,8 +3209,27 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	if ( $args['exclude_moderated_members'] ) {
 		$args['exclude_admin_user'] = $administrator_ids;
 	}
+
+	$thread_id = (int) $post_data['thread_id'];
+
+	$is_group_message_thread = bb_messages_is_group_thread( $thread_id );
+	$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+	$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+
+	if ( $is_group_message_thread && $group_id && bp_is_active( 'groups' ) ) {
+		$banned_member   = groups_get_group_members(
+			array(
+				'group_id'        => $group_id,
+				'group_role'      => array( 'banned' ),
+				'per_page'        => - 1,
+				'populate_extras' => false,
+			)
+		);
+		$args['exclude'] = ! empty( $banned_member['members'] ) ? array_column( $banned_member['members'], 'ID' ) : array();
+	}
+
 	$thread  = new BP_Messages_Thread( false );
-	$results = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+	$results = $thread->get_pagination_recipients( $thread_id, $args );
 	$html    = '';
 	ob_start();
 	if ( is_array( $results ) ) {
@@ -3416,8 +3427,49 @@ function bp_nouveau_ajax_unhide_thread() {
 
 	$thread_ids = wp_parse_id_list( $_POST['id'] );
 
+	$is_group_message_thread = bb_messages_is_group_thread( (int) current( $thread_ids ) );
+	if ( $is_group_message_thread ) {
+		$thread_id     = current( $thread_ids );
+		$first_message = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$group_name    = bp_get_group_name( groups_get_group( $group_id ) );
+		if ( empty( $group_name ) ) {
+			$group_name = __( 'Deleted Group', 'buddyboss' );
+		}
+
+		$toast_message = sprintf(
+			__( 'Messages for "%s" have been unarchived.', 'buddyboss' ),
+			$group_name
+		);
+
+	} else {
+		$thread_recipients = BP_Messages_Thread::get_recipients_for_thread( (int) current( $thread_ids ) );
+		$recipients        = array();
+		if ( ! empty( $thread_recipients ) ) {
+			foreach ( $thread_recipients as $recepient ) {
+				if ( bp_loggedin_user_id() !== $recepient->user_id ) {
+					$recipients[] = bp_core_get_user_displayname( $recepient->user_id );
+				}
+			}
+		}
+
+		$toast_message = sprintf(
+			__( 'The conversation with %s has been unarchived.', 'buddyboss' ),
+			implode( ', ', $recipients )
+		);
+	}
+
 	foreach ( $thread_ids as $thread_id ) {
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 0, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+
+		/**
+		 * Fires when messages thread was un-archived.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $thread_id The message thread ID.
+		 */
+		do_action( 'bb_messages_thread_unarchived', $thread_id );
 	}
 
 	$inbox_unread_cnt = array(
@@ -3425,12 +3477,19 @@ function bp_nouveau_ajax_unhide_thread() {
 		'inbox_unread_count' => messages_get_unread_count( bp_loggedin_user_id() ),
 	);
 
+	$thread_link = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+	if ( isset( $_POST['is_current_thread'] ) && 'yes' === $_POST['is_current_thread'] ) {
+		$thread_link = bp_get_message_thread_view_link( current( $thread_ids ) );
+	}
+
 	wp_send_json_success(
 		array(
 			'type'                          => 'success',
 			'messages'                      => __( 'Thread un-archived successfully.', 'buddyboss' ),
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 			'thread_ids'                    => $thread_ids,
+			'toast_message'                 => $toast_message,
+			'thread_link'                   => $thread_link,
 		)
 	);
 }

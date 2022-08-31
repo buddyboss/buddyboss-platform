@@ -40,6 +40,7 @@ window.bp = window.bp || {};
 			this.divider      = [];
 			this.previous     = '';
 			this.threadType   = 'unarchived';
+			this.xhr          = '';
 
 			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -773,7 +774,8 @@ window.bp = window.bp || {};
 				opposite  = {},
 				feedback  = BP_Nouveau.messages.doingAction,
 				thread_id = 0,
-				model;
+				model,
+				target = $( event.currentTarget );
 
 			if ( ! action ) {
 				return event;
@@ -781,7 +783,7 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			if ( ! _.isUndefined( obj.options.box ) && 'single' === obj.options.box ) {
+			if ( ! _.isUndefined( obj.options.box ) && ( 'single' === obj.options.box || 'box' === obj.options.box || 'inbox' === obj.options.box ) ) {
 				thread_id = $( event.currentTarget ).closest( '.bb_more_options_list' ).data( 'bp-thread-id' );
 				attribute = obj.collection.models.filter(
 					function ( el ) {
@@ -840,8 +842,24 @@ window.bp = window.bp || {};
 				read_unread.parent( 'li' ).removeClass( action ).addClass( opposite[ action ] );
 			}
 
-			if ( ! _.isUndefined( feedback[ action ] ) ) {
+			if (
+				! _.isUndefined( feedback[ action ] ) &&
+				'read' !== action &&
+				'unread' !== action &&
+				'hide_thread' !== action &&
+				'unhide_thread' !== action &&
+				'delete' !== action
+			) {
 				bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
+			} else if (
+				'read' === action ||
+				'unread' === action ||
+				'hide_thread' === action ||
+				'unhide_thread' === action ||
+				'delete' === action
+			) {
+				target.parents( '.message_actions' ).addClass( 'loading' );
+				target.parents( '.message-thread-options' ).addClass( 'loading' );
 			}
 
 			if ( 'delete' === action || 'delete_thread' === action ) {
@@ -862,6 +880,18 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.removeFeedback();
 					return;
 				}
+			}
+
+			if ( 'unhide_thread' === action ) {
+
+				var is_current_thread = 'no';
+				if ( $( event.currentTarget ).closest( '#bp-message-thread-header' ).hasClass( 'message-thread-header' ) || $( event.currentTarget ).closest( '.thread-item' ).hasClass( 'current' ) ) {
+					is_current_thread = 'yes';
+				}
+
+				options.data = {
+					'is_current_thread' : is_current_thread
+				};
 			}
 
 			bp.Nouveau.Messages.threads.doAction( action, thread_id, options ).done(
@@ -895,7 +925,17 @@ window.bp = window.bp || {};
 							bp.Nouveau.Messages.router.navigate( 'archived/', { trigger: true } );
 						}
 					} else if ( response.id ) {
-						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						if (
+							'read' !== action &&
+							'unread' !== action &&
+							'hide_thread' !== action &&
+							'unhide_thread' !== action &&
+							'delete' !== action
+						) {
+							// Display the feedback.
+							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						}
+
 						if ( undefined !== response.messages_count && 0 === response.messages_count ) {
 							if ( bp.Nouveau.Messages.threads.length > 1 ) {
 								bp.Nouveau.Messages.threads.remove( response.id );
@@ -914,8 +954,16 @@ window.bp = window.bp || {};
 
 						model.set( _.first( response.messages ) );
 
-						// Display the feedback.
-						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						if (
+							'read' !== action &&
+							'unread' !== action &&
+							'hide_thread' !== action &&
+							'unhide_thread' !== action &&
+							'delete' !== action
+						) {
+							// Display the feedback.
+							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						}
 
 						if ( 'unread' === action && ! _.isUndefined( response.ids ) ) {
 							$( '.bp-compose-message.bp-messages-container, .bp-view-message.bp-messages-container' ).removeClass( 'bp-compose-message bp-view-message' );
@@ -937,13 +985,40 @@ window.bp = window.bp || {};
 
 						bp.Nouveau.Messages.removeFeedback();
 					}
+
+					target.parents( '.message_actions' ).removeClass( 'loading' );
+					target.parents( '.message-thread-options' ).removeClass( 'loading' );
 				}
 			).fail(
 				function( response ) {
 					// Remove previous feedback.
 					bp.Nouveau.Messages.removeFeedback();
 
-					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+					if (
+						'read' === action ||
+						'unread' === action ||
+						'hide_thread' === action ||
+						'unhide_thread' === action ||
+						'delete' === action
+					) {
+						if ( 'undefined' !== typeof response.feedback ) {
+							jQuery( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									response.feedback,
+									'error',
+									null,
+									true
+								]
+							);
+						}
+					} else {
+						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+					}
+
+					target.parents( '.message_actions' ).removeClass( 'loading' );
+					target.parents( '.message-thread-options' ).removeClass( 'loading' );
 				}
 			);
 
@@ -1081,7 +1156,16 @@ window.bp = window.bp || {};
 						}
 					);
 
-					return bp.ajax.send( options );
+					if ( typeof options.data.search_terms !== 'undefined' && bp.Nouveau.Messages.xhr != '' ) {
+						bp.Nouveau.Messages.xhr.abort();
+						$( '.bb-messages-search-no-thread-found' ).hide();
+						var loader = new bp.Views.filterSearchLoader().render().el;
+						$( '.bp-messages-search-feedback' ).html( loader );
+					}
+
+					var ajax = bp.ajax.send( options );
+					bp.Nouveau.Messages.xhr = ajax;
+					return ajax;
 				}
 			},
 
@@ -3639,6 +3723,7 @@ window.bp = window.bp || {};
 			events : {
 				'search #user_messages_search'      : 'resetSearchTerms',
 				'submit #user_messages_search_form' : 'setSearchTerms',
+				'keyup #user_messages_search'       : 'setSearchTerms',
 				'click #bp-messages-next-page'      : 'nextPage',
 				'click #bp-messages-prev-page'      : 'prevPage',
 				'click #user_messages_search_reset' : 'resetSearchForm'
@@ -3720,14 +3805,27 @@ window.bp = window.bp || {};
 			setSearchTerms: function( event ) {
 				event.preventDefault();
 
+				var search_string = '';
+				if ( $( event.target ).find( 'input[type=search]' ).length <= 1 ) {
+					search_string = $( event.target ).closest( 'form' ).find( 'input[type=search]' ).val();
+				}
+
+				if ( $( event.target ).find( 'input[type=search]' ).length === 1 ) {
+					search_string = $( event.target ).find( 'input[type=search]' ).val();
+				}
+
+				if ( search_string == '' ) {
+					$( event.target ).closest( 'form' ).find( '#user_messages_search_reset' ).addClass( 'bp-hide' );
+				}
+
 				this.model.set(
 					{
-						'search_terms': $( event.target ).find( 'input[type=search]' ).val() || '',
+						'search_terms': search_string,
 						page: 1
 					}
 				);
 
-				if ( '' !== $( event.target ).find( 'input[type=search]' ).val() ) {
+				if ( '' !== search_string ) {
 					$( event.target ).closest( 'form' ).find( '#user_messages_search_reset' ).removeClass( 'bp-hide' );
 				}
 			},
@@ -4461,8 +4559,8 @@ window.bp = window.bp || {};
 			},
 
 			unhideConversation: function ( event ) {
-				var action = $( event.currentTarget ).data( 'bp-action' ), options = {},
-					id = $( event.currentTarget ).data( 'bp-thread-id' ),
+				var action   = $( event.currentTarget ).data( 'bp-action' ), options = {},
+					id       = $( event.currentTarget ).data( 'bp-thread-id' ),
 					feedback = BP_Nouveau.messages.doingAction;
 
 				if ( ! action ) {
@@ -4475,15 +4573,26 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
 				}
 
+				options.data = {
+					'is_current_thread' : 'yes'
+				};
+
 				bp.Nouveau.Messages.threads.doAction( action, id, options ).done(
 					function () {
 
 						// Remove previous feedback.
 						bp.Nouveau.Messages.removeFeedback();
 
-						// Refresh the current thread.
-						var hash = Math.round( (new Date()).getTime() / 1000 );
-						bp.Nouveau.Messages.router.navigate( 'view/' + id + '/?hash=' + hash, { trigger: true } );
+						if ( bp.Nouveau.Messages.threads.length > 1 ) {
+							// Navigate back to current box.
+							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( id ) );
+							bp.Nouveau.Messages.router.navigate( 'archived/view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							window.Backbone.trigger( 'relistelements' );
+						} else {
+							window.Backbone.trigger( 'relistelements' );
+							BP_Nouveau.messages.hasThreads = false;
+							bp.Nouveau.Messages.router.navigate( 'archived/', { trigger: true } );
+						}
 					}
 				).fail(
 					function ( response ) {
@@ -4635,8 +4744,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.threadsView();
 
 				bp.Nouveau.Messages.singleNoArchivedThreadView();
-
-				//$( '#bp-message-thread-list' ).html( '<li></li>' );
 			},
 
 			viewArchivedMessage: function( thread_id ) {

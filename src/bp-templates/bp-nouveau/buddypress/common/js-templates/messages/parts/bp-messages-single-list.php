@@ -11,11 +11,7 @@
 
 <script type="text/html" id="tmpl-bp-messages-single-list">
 
-	<# if ( data.message_from && 'group' === data.message_from ) { #>
-	<div class="bp-single-message-wrap group-messages-highlight">
-	<# } else { #>
-	<div class="bp-single-message-wrap">
-	<# } #>
+    <div class="bp-single-message-wrap">
 
 		<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 		<div class="bp-avatar-wrap">
