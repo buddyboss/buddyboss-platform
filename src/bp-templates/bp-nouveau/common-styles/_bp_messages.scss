@@ -1168,19 +1168,19 @@ input#send-to-input {
 
 		.message-header-loading {
 			display: block;
-			padding: 20px 15px 15px;
+			padding: 15px;
 
 			.message-header-loading_top {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				margin-bottom: 10px;
+				margin-bottom: 12px;
 			}
 
 			.message-header-loading_title,
 			.message-header-loading_description {
 				width: 151px;
-				height: 30px;
+				height: 34px;
 			}
 
 			.message-header-loading_title {
@@ -1193,8 +1193,8 @@ input#send-to-input {
 			}
 
 			.message-header-loading_option {
-				width: 40px;
-				height: 40px;
+				width: 34px;
+				height: 34px;
 				border-radius: 50%;
 			}
 		}
