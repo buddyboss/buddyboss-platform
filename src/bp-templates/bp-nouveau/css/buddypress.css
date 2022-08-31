@@ -9531,6 +9531,10 @@ div.profile_completion_wrap .progress_text_wrap {
   list-style: none;
 }
 
+#message-threads .message-thread-options.loading .bb_more_options_action {
+  pointer-events: none;
+}
+
 #message-threads .message-thread-options.loading .bb_more_options_action > i {
   opacity: 1;
 }
@@ -9581,6 +9585,10 @@ div.profile_completion_wrap .progress_text_wrap {
 
 .bp-messages-content .actions .message_actions .message_action__anchor .bb-icon-menu-dots-v {
   font-size: 20px;
+}
+
+.bp-messages-content .actions .message_actions.loading .message_action__anchor {
+  pointer-events: none;
 }
 
 .bp-messages-content .actions .message_actions.loading .message_action__anchor > i:before {

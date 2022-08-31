@@ -312,13 +312,18 @@
 			list-style: none;
 		}
 
-		&.loading .bb_more_options_action > i {
-			opacity: 1;
+		&.loading .bb_more_options_action {
+			pointer-events: none;
 
-			&:before {
-				content: "\ef30";
-				animation: spin 2s infinite linear;
-				display: inline-block;
+			> i {
+				opacity: 1;
+
+				&:before {
+					content: "\ef30";
+					animation: spin 2s infinite linear;
+					display: inline-block;
+				}
+
 			}
 
 		}
@@ -377,10 +382,15 @@
 				}
 			}
 
-			&.loading .message_action__anchor > i:before {
-				content: "\ef30";
-				animation: spin 2s infinite linear;
-				display: inline-block;
+			&.loading .message_action__anchor {
+				pointer-events: none;
+
+				> i:before {
+					content: "\ef30";
+					animation: spin 2s infinite linear;
+					display: inline-block;
+				}
+
 			}
 
 			.message_action__list {
