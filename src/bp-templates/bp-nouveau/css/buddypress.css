@@ -9487,10 +9487,8 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 #message-threads .bp-message-link .thread-multiple-avatar img.avatar + img {
-  top: auto;
-  right: 0;
-  bottom: 0;
-  left: auto;
+  top: 17px;
+  left: 17px;
 }
 
 #message-threads .bp-message-link:hover .thread-multiple-avatar img.avatar,
