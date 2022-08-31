@@ -18,9 +18,9 @@
 						<span class="bb-icon-l bb-icon-times"></span>
 					</button>
 				</header>
-				<div class="bp-feedback bp-feedback-v2 error" style="display: none;">
+				<div class="bp-feedback bp-feedback-v2 error" id="notes-error" style="display: none;">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p>There was a problem reporting this post.</p>
+					<p><?php esc_html_e( 'There was a problem reporting this post.', 'buddyboss' ); ?></p>
 				</div>
 				<?php
 				$reports_terms = get_terms(

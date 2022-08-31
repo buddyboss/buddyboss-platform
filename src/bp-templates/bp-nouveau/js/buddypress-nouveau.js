@@ -2475,6 +2475,7 @@ window.bp = window.bp || {};
 						midClick: true,
 						callbacks: {
 							open: function () {
+								$( '#notes-error' ).hide();
 								var contentId   = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
 								var nonce       = this.currItem.el.data( 'bp-nonce' );
@@ -2525,10 +2526,8 @@ window.bp = window.bp || {};
 				function () {
 					if ( 'other' === this.value ) {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).removeClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', true );
 					} else {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).addClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', false );
 					}
 				}
 			);
@@ -2536,8 +2535,8 @@ window.bp = window.bp || {};
 			$( '#bb-report-content' ).submit(
 				function ( e ) {
 
-					if( $( '#report-category-other' ).attr( 'checked' ) && "" === $( '#report-note' ).val() ) {
-						
+					if( $( '#report-category-other' ).is( ':checked' ) && "" === $( '#report-note' ).val() ) {
+						$( '#notes-error' ).show();
 						return false;
 					}
 
