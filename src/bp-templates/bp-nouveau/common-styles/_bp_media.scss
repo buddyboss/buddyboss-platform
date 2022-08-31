@@ -5111,6 +5111,10 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	}
 
+	.bb-model-header ~ .bp-feedback {
+		margin: -15px -20px 15px;
+	}
+
 	#bb-block-member,
 	#bb-report-content {
 		margin-bottom: 0;
