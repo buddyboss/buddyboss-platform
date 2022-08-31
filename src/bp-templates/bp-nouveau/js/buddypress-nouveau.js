@@ -2535,7 +2535,7 @@ window.bp = window.bp || {};
 			$( '#bb-report-content' ).submit(
 				function ( e ) {
 
-					if( $( '#report-category-other' ).is( ':checked' ) && "" === $( '#report-note' ).val() ) {
+					if( $( '#report-category-other' ).is( ':checked' ) && '' === $( '#report-note' ).val() ) {
 						$( '#notes-error' ).show();
 						return false;
 					}
