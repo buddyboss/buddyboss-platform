@@ -4472,8 +4472,8 @@ window.bp = window.bp || {};
 			},
 
 			unhideConversation: function ( event ) {
-				var action = $( event.currentTarget ).data( 'bp-action' ), options = {},
-					id = $( event.currentTarget ).data( 'bp-thread-id' ),
+				var action   = $( event.currentTarget ).data( 'bp-action' ), options = {},
+					id       = $( event.currentTarget ).data( 'bp-thread-id' ),
 					feedback = BP_Nouveau.messages.doingAction;
 
 				if ( ! action ) {
@@ -4492,9 +4492,16 @@ window.bp = window.bp || {};
 						// Remove previous feedback.
 						bp.Nouveau.Messages.removeFeedback();
 
-						// Refresh the current thread.
-						var hash = Math.round( (new Date()).getTime() / 1000 );
-						bp.Nouveau.Messages.router.navigate( 'view/' + id + '/?hash=' + hash, { trigger: true } );
+						if ( bp.Nouveau.Messages.threads.length > 1 ) {
+							// Navigate back to current box.
+							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( id ) );
+							bp.Nouveau.Messages.router.navigate( 'archived/view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							window.Backbone.trigger( 'relistelements' );
+						} else {
+							window.Backbone.trigger( 'relistelements' );
+							BP_Nouveau.messages.hasThreads = false;
+							bp.Nouveau.Messages.router.navigate( 'archived/', { trigger: true } );
+						}
 					}
 				).fail(
 					function ( response ) {
