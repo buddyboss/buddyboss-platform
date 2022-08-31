@@ -3214,8 +3214,27 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	if ( $args['exclude_moderated_members'] ) {
 		$args['exclude_admin_user'] = $administrator_ids;
 	}
+
+	$thread_id = (int) $post_data['thread_id'];
+
+	$is_group_message_thread = bb_messages_is_group_thread( $thread_id );
+	$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+	$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+
+	if ( $is_group_message_thread && $group_id && bp_is_active( 'groups' ) ) {
+		$banned_member   = groups_get_group_members(
+			array(
+				'group_id'        => $group_id,
+				'group_role'      => array( 'banned' ),
+				'per_page'        => - 1,
+				'populate_extras' => false,
+			)
+		);
+		$args['exclude'] = ! empty( $banned_member['members'] ) ? array_column( $banned_member['members'], 'ID' ) : array();
+	}
+
 	$thread  = new BP_Messages_Thread( false );
-	$results = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+	$results = $thread->get_pagination_recipients( $thread_id, $args );
 	$html    = '';
 	ob_start();
 	if ( is_array( $results ) ) {
