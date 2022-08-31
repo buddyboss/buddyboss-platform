@@ -781,7 +781,7 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			if ( ! _.isUndefined( obj.options.box ) && 'single' === obj.options.box ) {
+			if ( ! _.isUndefined( obj.options.box ) && ( 'single' === obj.options.box || 'box' === obj.options.box || 'inbox' === obj.options.box ) ) {
 				thread_id = $( event.currentTarget ).closest( '.bb_more_options_list' ).data( 'bp-thread-id' );
 				attribute = obj.collection.models.filter(
 					function ( el ) {
