@@ -2043,8 +2043,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$check_recipients = $recipients;
 
+	$is_group_message_thread = bb_messages_is_group_thread( bp_get_the_thread_id() );
+
 	// Check recipients if connected or not.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! $is_group_message_thread ) {
 		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 		foreach ( $recipients as $recipient ) {
 			if ( $login_user_id !== $recipient->user_id && ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
