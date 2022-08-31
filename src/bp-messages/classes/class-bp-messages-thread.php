@@ -1038,7 +1038,7 @@ class BP_Messages_Thread {
 				$additional_where[] = 'r.is_deleted = 0';
 				$additional_where[] = 'r.user_id = ' . $r['user_id'];
 
-				if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
+				if ( false === $r['is_hidden'] ) {
 					$additional_where[] = 'r.is_hidden = 0';
 				}
 			}
@@ -1067,6 +1067,12 @@ class BP_Messages_Thread {
 				$participants_sql['where'] .= " AND r.thread_id IN ($user_threads_query)";
 			} elseif ( ! empty( $additional_where ) ) {
 				$participants_sql['where'] .= ' AND r.is_deleted = 0';
+			}
+
+			if ( 'unarchived' === $r['thread_type'] ) {
+				$participants_sql['where'] .= ' AND r.is_hidden = 0';
+			} elseif ( 'archived' === $r['thread_type'] ) {
+				$participants_sql['where'] .= ' AND r.is_hidden = 1';
 			}
 			$participants_sql['where_like'] = 'u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s';
 
