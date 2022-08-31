@@ -40,6 +40,7 @@ window.bp = window.bp || {};
 			this.divider      = [];
 			this.previous     = '';
 			this.threadType   = 'unarchived';
+			this.xhr          = '';
 
 			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -1143,7 +1144,16 @@ window.bp = window.bp || {};
 						}
 					);
 
-					return bp.ajax.send( options );
+					if ( typeof options.data.search_terms !== 'undefined' && bp.Nouveau.Messages.xhr != '' ) {
+						bp.Nouveau.Messages.xhr.abort();
+						$( '.bb-messages-search-no-thread-found' ).hide();
+						var loader = new bp.Views.filterSearchLoader().render().el;
+						$( '.bp-messages-search-feedback' ).html( loader );
+					}
+
+					var ajax = bp.ajax.send( options );
+					bp.Nouveau.Messages.xhr = ajax;
+					return ajax;
 				}
 			},
 
@@ -3714,6 +3724,7 @@ window.bp = window.bp || {};
 			events : {
 				'search #user_messages_search'      : 'resetSearchTerms',
 				'submit #user_messages_search_form' : 'setSearchTerms',
+				'keyup #user_messages_search'       : 'setSearchTerms',
 				'click #bp-messages-next-page'      : 'nextPage',
 				'click #bp-messages-prev-page'      : 'prevPage',
 				'click #user_messages_search_reset' : 'resetSearchForm'
@@ -3795,14 +3806,27 @@ window.bp = window.bp || {};
 			setSearchTerms: function( event ) {
 				event.preventDefault();
 
+				var search_string = '';
+				if ( $( event.target ).find( 'input[type=search]' ).length <= 1 ) {
+					search_string = $( event.target ).closest( 'form' ).find( 'input[type=search]' ).val();
+				}
+
+				if ( $( event.target ).find( 'input[type=search]' ).length === 1 ) {
+					search_string = $( event.target ).find( 'input[type=search]' ).val();
+				}
+
+				if ( search_string == '' ) {
+					$( event.target ).closest( 'form' ).find( '#user_messages_search_reset' ).addClass( 'bp-hide' );
+				}
+
 				this.model.set(
 					{
-						'search_terms': $( event.target ).find( 'input[type=search]' ).val() || '',
+						'search_terms': search_string,
 						page: 1
 					}
 				);
 
-				if ( '' !== $( event.target ).find( 'input[type=search]' ).val() ) {
+				if ( '' !== search_string ) {
 					$( event.target ).closest( 'form' ).find( '#user_messages_search_reset' ).removeClass( 'bp-hide' );
 				}
 			},
