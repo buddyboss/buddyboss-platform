@@ -3474,6 +3474,11 @@ function bp_nouveau_ajax_unhide_thread() {
 		'inbox_unread_count' => messages_get_unread_count( bp_loggedin_user_id() ),
 	);
 
+	$thread_link = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+	if ( isset( $_POST['is_current_thread'] ) && 'yes' === $_POST['is_current_thread'] ) {
+		$thread_link = bp_get_message_thread_view_link( current( $thread_ids ) );
+	}
+
 	wp_send_json_success(
 		array(
 			'type'                          => 'success',
@@ -3481,7 +3486,7 @@ function bp_nouveau_ajax_unhide_thread() {
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 			'thread_ids'                    => $thread_ids,
 			'toast_message'                 => $toast_message,
-			'thread_link'                   => bp_get_message_thread_view_link( current( $thread_ids ) ),
+			'thread_link'                   => $thread_link,
 		)
 	);
 }
