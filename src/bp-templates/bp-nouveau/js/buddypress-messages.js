@@ -1347,7 +1347,10 @@ window.bp = window.bp || {};
 				return finalMessagesArray;
 			},
 
-			createSpliter: function( value, current = false ) {
+			createSpliter: function( value, current ) {
+				if ( 'undefined' === typeof current ) {
+					current = false;
+				}
 				var dividerObject = jQuery.extend( true, {}, value );
 
 				if ( false === current ) {
