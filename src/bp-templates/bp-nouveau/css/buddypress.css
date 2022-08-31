@@ -9986,7 +9986,7 @@ div.profile_completion_wrap .progress_text_wrap {
   /* stylelint-disable-line */
   font-weight: 300;
   font-size: 14px;
-  margin-right: 7px;
+  margin: -1px 7px 0 0;
   vertical-align: middle;
 }
 
