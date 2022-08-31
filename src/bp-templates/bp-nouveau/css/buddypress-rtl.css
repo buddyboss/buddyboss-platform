@@ -9472,9 +9472,8 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 #message-threads .bp-message-link .thread-multiple-avatar {
-  min-height: 45px;
-  min-width: 45px;
-  margin: 0 -2px;
+  min-height: 52px;
+  min-width: 52px;
   position: relative;
 }
 
