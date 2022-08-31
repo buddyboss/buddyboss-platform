@@ -881,6 +881,18 @@ window.bp = window.bp || {};
 				}
 			}
 
+			if ( 'unhide_thread' === action ) {
+
+				var is_current_thread = 'no';
+				if ( $( event.currentTarget ).closest( '#bp-message-thread-header' ).hasClass( 'message-thread-header' ) || $( event.currentTarget ).closest( '.thread-item' ).hasClass( 'current' ) ) {
+					is_current_thread = 'yes';
+				}
+
+				options.data = {
+					'is_current_thread' : is_current_thread
+				};
+			}
+
 			bp.Nouveau.Messages.threads.doAction( action, thread_id, options ).done(
 				function( response ) {
 
@@ -4548,6 +4560,10 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
 				}
 
+				options.data = {
+					'is_current_thread' : 'yes'
+				};
+
 				bp.Nouveau.Messages.threads.doAction( action, id, options ).done(
 					function () {
 
@@ -4715,8 +4731,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.threadsView();
 
 				bp.Nouveau.Messages.singleNoArchivedThreadView();
-
-				//$( '#bp-message-thread-list' ).html( '<li></li>' );
 			},
 
 			viewArchivedMessage: function( thread_id ) {
