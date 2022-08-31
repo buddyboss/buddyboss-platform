@@ -455,7 +455,7 @@ function bp_admin_repair_list() {
 	// Sync profile completion widget.
 	$repair_list[111] = array(
 		'bp-sync-profile-completion-widget',
-		esc_html__( 'Sync profile completion widget', 'buddyboss' ),
+		esc_html__( 'Re-Sync Profile Completion widget profile photo status', 'buddyboss' ),
 		'bb_sync_profile_completion_widget',
 	);
 
@@ -1512,14 +1512,14 @@ function bb_sync_profile_completion_widget() {
 			$offset++;
 		}
 
-		$records_updated = sprintf( __( 'Profile completion widget updated successfully for %s members.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Re-Sync profile completion widget %s', 'buddyboss' );
+		$statement = __( 'Profile Completion widget, profile photo status re-sync %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
