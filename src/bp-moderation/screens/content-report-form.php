@@ -36,7 +36,7 @@
 								$checked   = ( 1 === $count ) ? 'checked' : '';
 								$when_show = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
 								?>
-								<div class="form-item form-item-category <?php echo ! empty( $when_show ) ? esc_attr( $when_show ) : esc_attr( 'content' ); ?>">
+								<div class="form-item form-item-category <?php echo ! empty( $when_show ) ? esc_attr( $when_show ) : esc_attr( 'content_members' ); ?>">
 									<label for="report-category-<?php echo esc_attr( $reports_term->term_id ); ?>">
 										<input type="radio" id="report-category-<?php echo esc_attr( $reports_term->term_id ); ?>" name="report_category" value="<?php echo esc_attr( $reports_term->term_id ); ?>" <?php echo esc_attr( $checked ); ?>>
 										<span><?php echo esc_html( $reports_term->name ); ?></span>
@@ -57,7 +57,7 @@
 						</div>
 						<div class="form-item bp-hide">
 							<label for="report-note">
-								<textarea id="report-note" type="text" name="note" class="bp-other-report-cat"></textarea> </label>
+								<textarea id="report-note" placeholder="<?php esc_attr_e( 'Enter your reason for reporting...', 'buddyboss' ); ?>" type="text" name="note" class="bp-other-report-cat"></textarea> </label>
 						</div>
 						<footer class="bb-model-footer">
 							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
