@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.8\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-08-31 04:34:45+00:00\n"
+"POT-Creation-Date: 2022-08-31 06:32:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14469,7 +14469,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:229
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:93
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:32
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3262
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3281
 #. translators: user role
 msgid "Blocked"
 msgstr ""
@@ -22640,7 +22640,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2666
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2689
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2699
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3361
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3380
 msgid "You"
 msgstr ""
 
@@ -24786,7 +24786,7 @@ msgstr ""
 #: bp-moderation/bp-moderation-filters.php:556
 #: bp-moderation/bp-moderation-functions.php:242
 #: bp-moderation/screens/single/admin/report-single.php:156
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3273
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3292
 #. translators: 1: Member avtar, 2: Member avtar URL, 3: Member Name
 msgid "Block"
 msgstr ""
@@ -29871,23 +29871,23 @@ msgstr ""
 msgid "Invalid page number."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3299
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3318
 msgid "Finding members..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3328
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3347
 msgid "Missing message id."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3332
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3351
 msgid "Missing message type."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3407
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3426
 msgid "There was a problem un-archiving your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:3433
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:3452
 msgid "Thread un-archived successfully."
 msgstr ""
 
