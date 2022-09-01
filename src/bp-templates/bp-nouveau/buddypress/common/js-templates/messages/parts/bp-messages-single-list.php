@@ -41,18 +41,10 @@
 				<# } #>
 
 				<# if ( data.is_deleted ) { #>
-					<# if ( data.sender_is_you ) { #>
-					<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
-					<# } else { #>
 					<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
-					<# } #>
 				<# } else { #>
 					<a href="{{data.sender_link}}" class="bp-user-link">
-						<# if ( data.sender_is_you ) { #>
-							<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
-						<# } else { #>
                             <strong>{{{data.sender_name}}}</strong>
-						<# } #>
 					</a>
 				<# } #>
 
@@ -162,7 +154,7 @@
 								<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 							</a>
 							<div class="document-action_list bb_more_dropdown">
-								<div class="bb_more_dropdown__title"> 
+								<div class="bb_more_dropdown__title">
 									<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
 									<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
 								</div>
