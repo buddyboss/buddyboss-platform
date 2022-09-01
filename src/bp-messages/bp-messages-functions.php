@@ -1500,7 +1500,6 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 				'recipients'          => $member,
 				'subject'             => wp_trim_words( $content, messages_get_default_subject_length() ),
 				'content'             => $content,
-				'is_hidden'           => true,
 				'append_thread'       => false,
 				'message_thread_type' => 'new',
 			);
