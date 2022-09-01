@@ -22,7 +22,7 @@ function messages_screen_conversation() {
 
 	$thread_id = (int) bp_action_variable( 0 );
 
-	if ( messages_is_valid_archived_thread( $thread_id ) ) {
+	if ( ! empty( $thread_id ) && messages_is_valid_archived_thread( $thread_id ) ) {
 		if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
 			$thread_id = 0;
 			while ( bp_message_threads() ) :
