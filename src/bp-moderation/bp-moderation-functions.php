@@ -269,11 +269,11 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
 
 	if ( $is_reported ) {
-		$button['link_text']                    = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
-		$button['button_attr']['class']         = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
-		$button['button_attr']['item_id']       = $item_id;
-		$button['button_attr']['item_type']     = $item_type;
-		$button['button_attr']['href']          = '#reported-content';
+		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
+		$button['button_attr']['class']     = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
+		$button['button_attr']['item_id']   = $item_id;
+		$button['button_attr']['item_type'] = $item_type;
+		$button['button_attr']['href']      = '#reported-content';
 		unset( $button['button_attr']['data-bp-content-id'] );
 		unset( $button['button_attr']['data-bp-content-type'] );
 		unset( $button['button_attr']['data-bp-nonce'] );
@@ -535,7 +535,7 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 	}
 
 	$owner_ids = bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type );
-	if ( ! is_array( $owner_ids ) ){
+	if ( ! is_array( $owner_ids ) ) {
 		$owner_ids = array( $owner_ids );
 	}
 
@@ -872,13 +872,13 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 
 		// Check for message type and content type as user.
 	} elseif ( BP_Moderation_Message::$moderation_type === $content_type ) {
-		return bp_is_moderation_member_blocking_enable(0);
+		return bp_is_moderation_member_blocking_enable( 0 );
 	}
 
 	$settings = get_option( 'bpm_reporting_content_reporting', array() );
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -906,7 +906,7 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
 
 	$settings = get_option( 'bpm_reporting_auto_hide', array() );
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -931,7 +931,7 @@ function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_typ
 	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -969,7 +969,7 @@ function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
 	$user_ids = 0;
-	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
+	$class    = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
 	if ( method_exists( $class, 'get_content_owner_id' ) ) {
 		$user_ids = $class::get_content_owner_id( $moderation_item_id );
@@ -1216,7 +1216,7 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
  *
  * @return string $avatar_url     Updated avatar url.
  */
-function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url, $params ) {
+function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
 	if ( bp_is_group_members() && bp_get_group_member_id() ) {
 		$group_id = bp_get_current_group_id();
 		if (
@@ -1244,7 +1244,7 @@ function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url, $par
 	$activity_component = $activity->component;
 	$group_id           = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
 
-	if ( ! empty( $group_id) && 'groups' === $activity_component ) {
+	if ( ! empty( $group_id ) && 'groups' === $activity_component ) {
 		if (
 			groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
 			groups_is_user_mod( bp_loggedin_user_id(), $group_id )
