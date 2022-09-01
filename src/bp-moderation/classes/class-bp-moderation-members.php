@@ -28,10 +28,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @var string
 	 */
-	public $is_blocked_label   = 'is_blocked_label',
-		   $is_blocked_avatar  = 'is_blocked_avatar',
-		   $has_blocked_label  = 'has_blocked_label',
-		   $has_blocked_avatar = 'has_blocked_avatar';
+	public $is_blocked_label = 'is_blocked_label',
+		$is_blocked_avatar = 'is_blocked_avatar',
+		$has_blocked_label = 'has_blocked_label',
+		$has_blocked_avatar = 'has_blocked_avatar';
 
 	/**
 	 * BP_Moderation_Members constructor.
