@@ -26071,7 +26071,7 @@ span.icons:before {
   font-size: 13px;
   color: #939597;
   line-height: 1.5;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .bb-group-message-info:before {
@@ -26081,7 +26081,7 @@ span.icons:before {
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
-  margin-left: 8px;
+  margin: -1px 0 0 5px;
   vertical-align: middle;
 }
 
