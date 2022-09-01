@@ -7665,7 +7665,7 @@ function bb_admin_icons( $id ) {
  * Function will validate gravatar image based on email.
  * If gravatar is validate then function will return true otherwise false.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.9
  *
  * @param string $email User email address.
  *
