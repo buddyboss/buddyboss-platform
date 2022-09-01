@@ -10412,8 +10412,8 @@ div.profile_completion_wrap .progress_text_wrap {
 #bp-message-thread-list .bp-message-content-wrap p.deleted-message {
   display: inline-block;
   font-size: 13px;
-  font-weight: 500;
-  padding: 5px 15px 5px 12px;
+  font-weight: 400;
+  padding: 5px 15px 5px 10px;
   border: 1px solid #eaeaea;
   border-radius: 4px;
 }
@@ -10425,7 +10425,8 @@ div.profile_completion_wrap .progress_text_wrap {
   /* stylelint-disable-line */
   font-weight: 300;
   font-size: 14px;
-  margin: -1px 7px 0 0;
+  line-height: 1;
+  margin: -2px 5px 0 0;
   vertical-align: middle;
 }
 
@@ -26900,7 +26901,7 @@ span.icons:before {
   font-size: 13px;
   color: #939597;
   line-height: 1.5;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .bb-group-message-info:before {
@@ -26910,7 +26911,7 @@ span.icons:before {
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
-  margin-right: 8px;
+  margin: -1px 5px 0 0;
   vertical-align: middle;
 }
 
