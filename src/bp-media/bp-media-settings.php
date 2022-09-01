@@ -882,7 +882,7 @@ function bp_media_settings_callback_gif_key() {
 	</p>
 	<?php $is_valid_key = bb_check_valid_giphy_api_key( '', true ); ?>
 	<p class="display-notice bp-new-notice-panel-notice <?php echo ( ! is_wp_error( $is_valid_key ) && isset( $is_valid_key['response']['code'] ) && 200 !== $is_valid_key['response']['code'] ) ? '' : 'hidden'; ?>">
-		<strong><?php esc_html_e( 'There was a problem connecting to GIPHY with your API key:', 'buddyboss' ); ?></strong><br><span id="giphy_response_code">(<?php echo ( isset( $is_valid_key['response']['code'] ) ) ? esc_attr( $is_valid_key['response']['code'] ) : ''; ?>)</span> <span id="giphy_response_message"><?php echo isset( $is_valid_key['response']['message'] ) ? esc_attr( $is_valid_key['response']['message'] ) : ''; ?>.</span>
+		<strong><?php esc_html_e( 'There was a problem connecting to GIPHY with your API key:', 'buddyboss' ); ?></strong><br>(<span id="giphy_response_code"><?php echo ( isset( $is_valid_key['response']['code'] ) ) ? esc_attr( $is_valid_key['response']['code'] ) : ''; ?>)</span>) <span id="giphy_response_message"><?php echo isset( $is_valid_key['response']['message'] ) ? esc_attr( $is_valid_key['response']['message'] ) : ''; ?>.</span>
 	</p>
 	<?php
 }
