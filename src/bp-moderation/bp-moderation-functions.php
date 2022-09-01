@@ -7,12 +7,9 @@
  * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
-
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
 /** Moderation Core functions ************************************************/
-
 /**
  * Function to get the moderation content types.
  *
@@ -21,7 +18,6 @@ defined( 'ABSPATH' ) || exit;
  * @return mixed|void
  */
 function bp_moderation_content_types() {
-
 	/**
 	 * Filter to update content types
 	 *
@@ -42,7 +38,6 @@ function bp_moderation_content_types() {
  * @return mixed|void
  */
 function bp_moderation_get_content_type( $key ) {
-
 	$content_types = bp_moderation_content_types();
 
 	/**
@@ -70,7 +65,6 @@ function bp_moderation_get_content_type( $key ) {
  *        and the format of the returned value.
  */
 function bp_moderation_get( $args = '' ) {
-
 	$r = bp_parse_args(
 		$args,
 		array(
@@ -105,7 +99,6 @@ function bp_moderation_get( $args = '' ) {
 			'update_meta_cache' => true,
 			'display_reporters' => false,
 			'count_total'       => false,
-
 			/**
 			 * Pass filters as an array -- all filter items can be multiple values comma separated:
 			 * array(
@@ -118,7 +111,6 @@ function bp_moderation_get( $args = '' ) {
 		),
 		'moderation_get'
 	);
-
 	$moderation = BP_Moderation::get(
 		array(
 			'page'              => $r['page'],
@@ -168,7 +160,6 @@ function bp_moderation_get( $args = '' ) {
  * @return array $moderation See BP_Moderation::get() for description.
  */
 function bp_moderation_get_hidden_user_ids() {
-
 	$args         = array(
 		'in_types'          => BP_Moderation_Members::$moderation_type,
 		'update_meta_cache' => false,
@@ -185,7 +176,6 @@ function bp_moderation_get_hidden_user_ids() {
 		),
 	);
 	$hidden_users = bp_moderation_get( $args );
-
 	$hidden_users_ids = array();
 	if ( ! empty( $hidden_users['moderations'] ) ) {
 		$hidden_users_ids = wp_list_pluck( $hidden_users['moderations'], 'item_id' );
@@ -205,14 +195,11 @@ function bp_moderation_get_hidden_user_ids() {
  * @return string|array
  */
 function bp_moderation_get_report_button( $args, $html = true ) {
-
 	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
 		return ! empty( $html ) ? '' : array();
 	}
-
 	$item_id   = isset( $args['button_attr']['data-bp-content-id'] ) ? $args['button_attr']['data-bp-content-id'] : false;
 	$item_type = isset( $args['button_attr']['data-bp-content-type'] ) ? $args['button_attr']['data-bp-content-type'] : false;
-
 	/**
 	 * Filter to update report link args
 	 *
@@ -222,18 +209,14 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	 * @param string $item_id item id.
 	 */
 	$args = apply_filters( "bp_moderation_{$item_type}_button_args", $args, $item_id );
-
 	if ( empty( $item_id ) || empty( $item_type ) || empty( $args ) ) {
 		return ! empty( $html ) ? '' : array();
 	}
-
 	// Check the current user's permission.
 	$user_can = bp_moderation_user_can( $item_id, $item_type, false );
-
 	if ( false === (bool) $user_can ) {
 		return ! empty( $html ) ? '' : array();
 	}
-
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		$button_text          = __( 'Block', 'buddyboss' );
@@ -242,11 +225,9 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
 		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
 	}
-
 	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
-
 	$args['button_attr'] = bp_parse_args(
 		$args['button_attr'],
 		array(
@@ -258,29 +239,24 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 			'data-bp-nonce'        => wp_create_nonce( 'bp-moderation-content' ),
 		)
 	);
-
 	$button = bp_parse_args(
 		$args,
 		array(
 			'link_text' => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $button_text ), esc_html( $button_text ) ),
 		)
 	);
-
 	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
-
 	if ( $is_reported ) {
-		$button['link_text']                    = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
-		$button['button_attr']['class']         = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
-		$button['button_attr']['item_id']       = $item_id;
-		$button['button_attr']['item_type']     = $item_type;
-		$button['button_attr']['href']          = '#reported-content';
+		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
+		$button['button_attr']['class']     = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
+		$button['button_attr']['item_id']   = $item_id;
+		$button['button_attr']['item_type'] = $item_type;
+		$button['button_attr']['href']      = '#reported-content';
 		unset( $button['button_attr']['data-bp-content-id'] );
 		unset( $button['button_attr']['data-bp-content-type'] );
 		unset( $button['button_attr']['data-bp-nonce'] );
 	}
-
 	$button['button_attr']['reported_type'] = bp_moderation_get_report_type( $item_type, $item_id );
-
 	/**
 	 * Filter to update report link args
 	 *
@@ -290,7 +266,6 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	 * @param string $is_reported Item reported.
 	 */
 	$button = apply_filters( "bp_moderation_{$item_type}_button", $button, $is_reported );
-
 	if ( ! empty( $html ) ) {
 		if ( $is_reported ) {
 			$button = sprintf( '<a href="%s"  id="%s" class="%s" reported_type="%s" >%s</a>', $button['button_attr']['href'], esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), $button['button_attr']['reported_type'], wp_kses_post( $button['link_text'] ) );
@@ -324,7 +299,6 @@ function bp_moderation_get_report_button( $args, $html = true ) {
  */
 function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
 	$response = false;
-
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
@@ -375,7 +349,6 @@ function bp_moderation_is_user_suspended( $user_id ) {
  * @return array
  */
 function bp_moderation_get_sub_items( $item_id, $item_type ) {
-
 	/**
 	 * If Sub item id and sub type is empty then actual item is reported otherwise Connected item will be reported
 	 * Like For Forum create activity, When reporting Activity it'll report actual forum
@@ -386,7 +359,6 @@ function bp_moderation_get_sub_items( $item_id, $item_type ) {
 	 * @param string $is_reported Item reported.
 	 */
 	$sub_items = apply_filters( "bp_moderation_{$item_type}_button_sub_items", $item_id );
-
 	if ( empty( $sub_items ) ) {
 		$sub_items = array(
 			'id'   => $item_id,
@@ -409,11 +381,9 @@ function bp_moderation_get_sub_items( $item_id, $item_type ) {
  * @return bool
  */
 function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true ) {
-
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		return false;
 	}
-
 	/**
 	 * Filter to check the current permission.
 	 *
@@ -423,11 +393,9 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
 	 * @param string $item_id item id.
 	 */
 	$args = apply_filters( "bp_moderation_{$item_type}_button_args", array( 'id' => '' ), $item_id );
-
 	if ( empty( $args ) ) {
 		return false;
 	}
-
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
@@ -436,7 +404,6 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
 	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 		return false;
 	}
-
 	/**
 	 * Filter to check the item_id is valid or not.
 	 *
@@ -446,20 +413,16 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
 	 * @param string $item_id item id.
 	 */
 	$validate = apply_filters( "bp_moderation_{$item_type}_validate", true, $item_id );
-
 	if ( $bypass_validate && empty( $validate ) ) {
 		return false;
 	}
-
 	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
-
 	// If Sub type moderation disabled then reporting option should not show.
 	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
 		return false;
 	}
-
 	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 		return false;
 	}
@@ -479,11 +442,9 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
  * @return bool
  */
 function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true ) {
-
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		return false;
 	}
-
 	/**
 	 * Filter to check the current permission.
 	 *
@@ -493,11 +454,9 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 	 * @param string $item_id item id.
 	 */
 	$args = apply_filters( "bp_moderation_{$item_type}_button_args", array( 'id' => '' ), $item_id );
-
 	if ( empty( $args ) ) {
 		return false;
 	}
-
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
@@ -506,7 +465,6 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 		return false;
 	}
-
 	/**
 	 * Filter to check the item_id is valid or not.
 	 *
@@ -516,29 +474,23 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 	 * @param string $item_id item id.
 	 */
 	$validate = apply_filters( "bp_moderation_{$item_type}_validate", true, $item_id );
-
 	if ( $bypass_validate && empty( $validate ) ) {
 		return false;
 	}
-
 	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
-
 	// If Sub type moderation disabled then reporting option should not show.
 	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
 		return false;
 	}
-
 	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 		return false;
 	}
-
 	$owner_ids = bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type );
-	if ( ! is_array( $owner_ids ) ){
+	if ( ! is_array( $owner_ids ) ) {
 		$owner_ids = array( $owner_ids );
 	}
-
 	// Hide if content is created by current user.
 	if ( in_array( bp_loggedin_user_id(), $owner_ids, true ) ) {
 		return false;
@@ -561,7 +513,6 @@ function bp_moderation_is_content_hidden( $item_id, $item_type ) {
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		return false;
 	}
-
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
@@ -575,7 +526,6 @@ function bp_moderation_is_content_hidden( $item_id, $item_type ) {
 }
 
 /** Moderation actions *******************************************************/
-
 /**
  * Function to Report content.
  *
@@ -587,10 +537,8 @@ function bp_moderation_is_content_hidden( $item_id, $item_type ) {
  */
 function bp_moderation_add( $args = array() ) {
 	$response = false;
-
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
 		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
-
 		if ( method_exists( $class, 'report' ) ) {
 			$response = $class::report( $args );
 		}
@@ -610,10 +558,8 @@ function bp_moderation_add( $args = array() ) {
  */
 function bp_moderation_hide( $args = array() ) {
 	$response = false;
-
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
 		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
-
 		if ( method_exists( $class, 'hide' ) ) {
 			$response = $class::hide( $args );
 		}
@@ -633,10 +579,8 @@ function bp_moderation_hide( $args = array() ) {
  */
 function bp_moderation_unhide( $args = array() ) {
 	$response = false;
-
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
 		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
-
 		if ( method_exists( $class, 'unhide' ) ) {
 			$response = $class::unhide( $args );
 		}
@@ -656,10 +600,8 @@ function bp_moderation_unhide( $args = array() ) {
  */
 function bp_moderation_delete( $args = array() ) {
 	$response = false;
-
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
 		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
-
 		if ( method_exists( $class, 'delete' ) ) {
 			$response = $class::delete( $args );
 		}
@@ -669,7 +611,6 @@ function bp_moderation_delete( $args = array() ) {
 }
 
 /** Meta *********************************************************************/
-
 /**
  * Get metadata for a given moderation item.
  *
@@ -768,20 +709,16 @@ function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $pre
  * @global wpdb  $wpdb          WordPress database abstraction object.
  */
 function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
-
 	// Legacy - if no meta_key is passed, delete all for the item.
 	if ( empty( $meta_key ) ) {
 		$all_meta = bp_moderation_get_meta( $moderation_id );
 		$keys     = ! empty( $all_meta ) ? array_keys( $all_meta ) : array();
-
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
 	} else {
 		$keys = array( $meta_key );
 	}
-
 	$retval = true;
-
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	foreach ( $keys as $key ) {
 		$retval = delete_metadata( 'moderation', $moderation_id, $key, $meta_value, $delete_all );
@@ -792,7 +729,6 @@ function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value 
 }
 
 /** Setting *********************************************************************/
-
 /**
  * Checks if Moderation Member blocking feature is enabled.
  *
@@ -832,7 +768,6 @@ function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
  * @uses  get_option() To get the bp_search_autocomplete option
  */
 function bp_moderation_auto_suspend_threshold( $default = 5 ) {
-
 	return apply_filters( 'bp_moderation_auto_suspend_threshold', (int) bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', $default ) );
 }
 
@@ -865,20 +800,16 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 	// Check for folder type and content type as document.
 	if ( BP_Moderation_Folder::$moderation_type === $content_type ) {
 		$content_type = BP_Moderation_Document::$moderation_type;
-
 		// Check for album type and content type as media.
 	} elseif ( BP_Moderation_Album::$moderation_type === $content_type ) {
 		$content_type = BP_Moderation_Media::$moderation_type;
-
 		// Check for message type and content type as user.
 	} elseif ( BP_Moderation_Message::$moderation_type === $content_type ) {
-		return bp_is_moderation_member_blocking_enable(0);
+		return bp_is_moderation_member_blocking_enable( 0 );
 	}
-
 	$settings = get_option( 'bpm_reporting_content_reporting', array() );
-
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -892,7 +823,7 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int    $default bool Optional.Default value true.
+ * @param int    $default      bool Optional.Default value true.
  * @param string $content_type content type.
  *
  * @return bool Is search autocomplete enabled or not
@@ -903,10 +834,9 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
 	if ( empty( $is_enabled ) ) {
 		return false;
 	}
-
 	$settings = get_option( 'bpm_reporting_auto_hide', array() );
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -920,18 +850,16 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int    $default bool Optional.Default value true.
+ * @param int    $default      bool Optional.Default value true.
  * @param string $content_type content type.
  *
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
 function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_type = '' ) {
-
 	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
-
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -955,7 +883,6 @@ function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
 }
 
 /** Other *********************************************************************/
-
 /**
  * Function get content owner id.
  *
@@ -967,10 +894,8 @@ function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
  * @return int|array
  */
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
-
 	$user_ids = 0;
-	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
-
+	$class    = BP_Moderation_Abstract::get_class( $moderation_item_type );
 	if ( method_exists( $class, 'get_content_owner_id' ) ) {
 		$user_ids = $class::get_content_owner_id( $moderation_item_id );
 	}
@@ -989,10 +914,8 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
  * @return string
  */
 function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type ) {
-
 	$link  = '';
 	$class = BP_Moderation_Abstract::get_class( $moderation_item_type );
-
 	if ( method_exists( $class, 'get_permalink' ) ) {
 		$link = $class::get_permalink( $moderation_item_id );
 	}
@@ -1065,9 +988,7 @@ function bp_moderation_item_count( $args = array() ) {
 		'per_page'    => - 1,
 		'count_total' => true,
 	);
-
 	$moderation_request_args = bp_parse_args( $args, $moderation_request_args );
-
 	$result = BP_Moderation::get( $moderation_request_args );
 
 	return apply_filters( 'bp_moderation_item_count', ! empty( $result['total'] ) ? $result['total'] : 0 );
@@ -1168,7 +1089,6 @@ function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
 	}
-
 	$cache_key = 'bb_moderation_blocked_by_' . $user_id;
 	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
 		$type = BP_Moderation_Members::$moderation_type;
@@ -1176,7 +1096,6 @@ function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 		$sql  = $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d", $type, $user_id );
 		$data = $wpdb->get_col( $sql ); // phpcs:ignore
 		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
-
 		$cache[ $cache_key ] = $data;
 	} else {
 		$data = $cache[ $cache_key ];
@@ -1198,7 +1117,6 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
 	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 		return false;
 	}
-
 	$blocked_by_members = bb_moderation_get_blocked_by_user_ids();
 
 	return ( ! empty( $blocked_by_members ) && in_array( (int) $user_id, $blocked_by_members, true ) );
@@ -1218,16 +1136,11 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
  */
 function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url, $params ) {
 	if ( bp_is_group_members() && bp_get_group_member_id() ) {
-		$group_id            = bp_get_current_group_id();
-		$group_admins        = groups_get_group_admins( $group_id );
-		$group_admin         = ( ! empty( $group_admins ) ) ? wp_list_pluck( $group_admins, 'user_id' ) : 0;
-		$group_modes         = groups_get_group_mods( $group_id );
-		$group_mode          = ( ! empty( $group_modes ) ) ? wp_list_pluck( $group_modes, 'user_id' ) : 0;
-		$group_admin_or_mods = $group_admin;
-		if ( ! empty( $group_mode ) ) {
-			$group_admin_or_mods = array_merge( $group_admin_or_mods, $group_mode );
-		}
-		if ( in_array( bp_loggedin_user_id(), $group_admin_or_mods, true ) ) {
+		$group_id = bp_get_current_group_id();
+		if (
+			groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
+			groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+		) {
 			return $old_avatar_url;
 		}
 	}
@@ -1239,7 +1152,7 @@ function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url, $par
 		return $avatar_url;
 	}
 
-	$activity    = new BP_Activity_Activity( $activity_id );
+	$activity = new BP_Activity_Activity( $activity_id );
 
 	// check activity exists.
 	if ( empty( $activity->id ) ) {
@@ -1249,16 +1162,11 @@ function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url, $par
 	$activity_component = $activity->component;
 	$group_id           = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
 
-	if ( ! empty( $group_id) && 'groups' === $activity_component ) {
-		$group_admins = groups_get_group_admins( $group_id );
-		$group_admin  = ( ! empty( $group_admins ) ) ? wp_list_pluck( $group_admins, 'user_id' ) : 0;
-		$group_modes = groups_get_group_mods( $group_id );
-		$group_mode  = ( ! empty( $group_modes ) ) ? wp_list_pluck( $group_modes, 'user_id' ) : 0;
-		$group_admin_or_mods = $group_admin;
-		if ( ! empty( $group_mode ) ) {
-			$group_admin_or_mods = array_merge( $group_admin_or_mods, $group_mode );
-		}
-		if ( in_array( bp_loggedin_user_id(), $group_admin_or_mods, true ) ) {
+	if ( ! empty( $group_id ) && 'groups' === $activity_component ) {
+		if (
+			groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
+			groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+		) {
 			return $old_avatar_url;
 		}
 	}
