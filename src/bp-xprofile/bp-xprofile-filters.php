@@ -1375,7 +1375,7 @@ function bb_core_xprofile_clear_group_cache() {
  * Function will check if user confirmed change email address then
  * update profile completion widget based on change email's gravatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.9
  *
  * @param int   $user_id       Get current user id.
  * @param array $old_user_data Old user data.
