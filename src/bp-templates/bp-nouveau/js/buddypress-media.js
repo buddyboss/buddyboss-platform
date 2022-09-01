@@ -1737,6 +1737,11 @@ window.bp = window.bp || {};
 				clearTimeout( this.gif_timeout );
 			}
 
+			if ( '' === e.target.value ) {
+				this.toggleGifSelector( e );
+				return;
+			}
+
 			self.gif_timeout = setTimeout(
 				function () {
 					self.gif_timeout = null;
@@ -1751,6 +1756,11 @@ window.bp = window.bp || {};
 
 			if ( self.gif_timeout != null ) {
 				clearTimeout( this.gif_timeout );
+			}
+
+			if ( '' === e.target.value ) {
+				this.toggleGroupMessagesGifSelector( e );
+				return;
 			}
 
 			self.gif_timeout = setTimeout(
@@ -1770,6 +1780,8 @@ window.bp = window.bp || {};
 
 			self.clearGifRequests();
 			$( e.target ).closest( '.bp-group-messages-attached-gif-container' ).addClass( 'loading' );
+			$( e.target ).find( '.gif-no-results' ).removeClass( 'show' );
+			$( e.target ).find( '.gif-no-connection' ).removeClass( 'show' );
 
 			var request = self.giphy.search(
 				{
@@ -1779,6 +1791,12 @@ window.bp = window.bp || {};
 					limit: self.gif_limit
 				},
 				function ( response ) {
+					if ( undefined !== response.data.length && 0 === response.data.length ) {
+						$( e.target ).find( '.gif-no-results' ).addClass( 'show' );
+					}
+					if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
+						$( e.target ).find( '.gif-no-connection' ).addClass( 'show' );
+					}
 					if ( typeof response.data !== 'undefined' && response.data.length ) {
 						var li_html = '';
 						for ( i = 0; i < response.data.length; i++ ) {
@@ -1799,6 +1817,9 @@ window.bp = window.bp || {};
 						self.gif_total_count = response.pagination.total_count;
 					}
 					$( e.target ).closest( '.bp-group-messages-attached-gif-container' ).removeClass( 'loading' );
+				},
+				function () {
+					$( e.target ).find( '.gif-no-connection' ).addClass( 'show' );
 				}
 			);
 
@@ -1812,6 +1833,8 @@ window.bp = window.bp || {};
 			var $forums_gif_container = $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
 			$forums_gif_container.addClass( 'loading' );
 			var gif_container_key = $forums_gif_container.data( 'key' );
+			$( e.target ).closest( 'form' ).find( '.gif-no-results' ).removeClass( 'show' );
+			$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).removeClass( 'show' );
 
 			self.clearGifRequests( gif_container_key );
 
@@ -1826,6 +1849,12 @@ window.bp = window.bp || {};
 					limit: self.gif_data[ gif_container_key ].limit
 				},
 				function ( response ) {
+					if ( undefined !== response.data.length && 0 === response.data.length ) {
+						$( e.target ).closest( 'form' ).find( '.gif-no-results' ).addClass( 'show' );
+					}
+					if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
+						$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).addClass( 'show' );
+					}
 					if ( typeof response.data !== 'undefined' && response.data.length ) {
 						var li_html = '';
 						for ( i = 0; i < response.data.length; i++ ) {
@@ -1846,6 +1875,9 @@ window.bp = window.bp || {};
 						self.gif_data[ gif_container_key ].total_count = response.pagination.total_count;
 					}
 					$forums_gif_container.removeClass( 'loading' );
+				},
+				function () {
+					$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).addClass( 'show' );
 				}
 			);
 
