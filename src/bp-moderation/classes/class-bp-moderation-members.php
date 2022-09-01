@@ -28,10 +28,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @var string
 	 */
-	public $is_blocked_label = 'is_blocked_label',
-		$is_blocked_avatar = 'is_blocked_avatar',
-		$has_blocked_label = 'has_blocked_label',
-		$has_blocked_avatar = 'has_blocked_avatar';
+	public $is_blocked_label   = 'is_blocked_label',
+		   $is_blocked_avatar  = 'is_blocked_avatar',
+		   $has_blocked_label  = 'has_blocked_label',
+		   $has_blocked_avatar = 'has_blocked_avatar';
 
 	/**
 	 * BP_Moderation_Members constructor.
@@ -236,8 +236,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			if ( bp_moderation_is_user_blocked( $user_id ) ) {
 				return apply_filters( $this->is_blocked_label, $value );
 			} else if ( bb_moderation_get_blocked_by_user_ids( $user_id ) ) {
-                return apply_filters( $this->has_blocked_label, $value );
-            }
+				return apply_filters( $this->has_blocked_label, $value );
+			}
 		}
 
 		return $value;
@@ -282,8 +282,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
 			return apply_filters( $this->is_blocked_avatar, $retval );
 		} else if ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
-            return apply_filters( $this->has_blocked_avatar, bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
-        }
+			return apply_filters( $this->has_blocked_avatar, bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
+		}
 
 		return $retval;
 	}
