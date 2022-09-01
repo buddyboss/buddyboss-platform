@@ -172,11 +172,17 @@
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 					<span class="thread-excerpt">
 						<span class="last-message-sender">
-							<# if ( data.sender_is_you ) { #>
-								<?php _e( 'You', 'buddyboss' ); ?>:
+							<#
+							var checkedContent = $.trim( data.content.replace(/<\/?[^>]+(>|$)/g, "") );
+							if ( data.sender_is_you && '' !== checkedContent ) { #>
+								<?php esc_html_e( 'You', 'buddyboss' ); ?>:
+							<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
+								<?php esc_html_e( 'You', 'buddyboss' ); ?>
 							<# } else { #>
-								<# if ( data.sender_name ) { #>
+								<# if ( data.sender_name && '' !== checkedContent ) { #>
 									{{ data.sender_name }}:
+								<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
+									{{ data.sender_name }}
 								<# } #>
 							<# } #>
 							</span>

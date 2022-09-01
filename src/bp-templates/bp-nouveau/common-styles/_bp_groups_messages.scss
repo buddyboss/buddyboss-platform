@@ -789,7 +789,7 @@ span.icons:before {
 	font-size: 13px;
 	color: #939597;
 	line-height: 1.5;
-	margin-top: 10px;
+	margin-top: 5px;
 
 	&:before {
 		content: "\e95d";
@@ -797,7 +797,7 @@ span.icons:before {
 		font-family: "bb-icons";/* stylelint-disable-line */
 		font-size: 18px;
 		line-height: 1;
-		margin-right: 8px;
+		margin: -1px 5px 0 0;
 		vertical-align: middle;
 	}
 
