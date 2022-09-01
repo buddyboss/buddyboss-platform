@@ -13,7 +13,7 @@
 <input type="hidden" id="thread-id" value="" />
 <div class="bp-messages-container">
 	<div class="bp-messages-nav-panel loading">
-		<div class="message-header-loading">
+		<div class="message-header-loading bp-hide">
 			<div class="message-header-loading_top">
 				<div class="message-header-loading_title bb-bg-animation bb-loading-bg"></div>
 				<div class="message-header-loading_option bb-bg-animation bb-loading-bg"></div>

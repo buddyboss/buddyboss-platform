@@ -663,6 +663,10 @@
 		opacity: 0.9;
 	}
 
+	li.archived-messages a:before {
+		content: "\e976";
+	}
+
 	li.notification_preferences a:before {
 		content: "\e86d";
 	}
@@ -1131,6 +1135,21 @@ input#send-to-input {
 	-ms-flex-align: center;
 	align-items: center;
 	width: 100%;
+
+	#back-to-thread {
+		background-color: transparent;
+		font-size: 24px;
+		font-weight: 600;
+		padding: 0;
+
+		> [class*="bb-icon"] {
+			display: inline-block;
+			margin: 2px 10px 0 0;
+			line-height: 1;
+			vertical-align: middle;
+		}
+
+	}
 }
 
 .bp-messages-nav-panel {
@@ -1501,8 +1520,8 @@ input#send-to-input {
 
 .compose .bp-messages-recipient {
 	display: flex;
-	padding: 0 45px 17px 22px;
-	margin: 7px -20px;
+	padding: 0 0 45px 22px 22px;
+	margin: 2px -20px;
 
 	> span:first-child {
 		margin-right: 10px;

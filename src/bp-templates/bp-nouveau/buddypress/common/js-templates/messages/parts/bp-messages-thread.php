@@ -173,7 +173,7 @@
 					<span class="thread-excerpt">
 						<span class="last-message-sender">
 							<#
-							var checkedContent = $.trim( data.content.replace(/<\/?[^>]+(>|$)/g, "") );
+							var checkedContent = data.content.replace(/<\/?[^>]+(>|$)/g, '').replace(/^\s+|\s+$/gm,'');
 							if ( data.sender_is_you && '' !== checkedContent ) { #>
 								<?php esc_html_e( 'You', 'buddyboss' ); ?>:
 							<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
