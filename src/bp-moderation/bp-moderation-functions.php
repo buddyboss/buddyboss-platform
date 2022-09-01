@@ -1205,12 +1205,18 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
 }
 
 /**
- * @param $avatar_url
- * @param $old_avatar_url
+ * Group organizers should be able to see the names/avatars of members in all places in their group,
+ * even if they’re blocked by that member.
  *
- * @return mixed
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $avatar_url     Updated avatar url.
+ * @param string $old_avatar_url Old avatar url before updated.
+ * @param array  $params         Array of parameters for the request.
+ *
+ * @return string $avatar_url     Updated avatar url.
  */
-function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url ) {
+function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url, $params ) {
 	if ( bp_is_group_members() && bp_get_group_member_id() ) {
 		$group_id            = bp_get_current_group_id();
 		$group_admins        = groups_get_group_admins( $group_id );

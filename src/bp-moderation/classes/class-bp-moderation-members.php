@@ -308,14 +308,14 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
-					$avatar_url = apply_filters( $this->is_blocked_avatar, $avatar_url );
+					$avatar_url = apply_filters( $this->is_blocked_avatar, $avatar_url, $params );
 				} else if ( bb_moderation_is_user_blocked_by( $item_id ) ) {
-					$avatar_url = apply_filters( $this->has_blocked_avatar, bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
+					$avatar_url = apply_filters( $this->has_blocked_avatar, bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $params );
 				}
 			}
 		}
 
-		return apply_filters( 'bp_fetch_avatar_url_filter', $avatar_url, $old_avatar_url );
+		return apply_filters( 'bp_fetch_avatar_url_filter', $avatar_url, $old_avatar_url, $params );
 	}
 
 	/**
