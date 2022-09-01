@@ -41,18 +41,10 @@
 				<# } #>
 
 				<# if ( data.is_deleted ) { #>
-					<# if ( data.sender_is_you ) { #>
-					<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
-					<# } else { #>
 					<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
-					<# } #>
 				<# } else { #>
 					<a href="{{data.sender_link}}" class="bp-user-link">
-						<# if ( data.sender_is_you ) { #>
-							<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
-						<# } else { #>
-							<strong>{{{data.sender_name}}}</strong>
-						<# } #>
+                        <strong>{{{data.sender_name}}}</strong>
 					</a>
 				<# } #>
 
