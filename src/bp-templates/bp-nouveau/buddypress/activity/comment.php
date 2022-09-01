@@ -22,14 +22,12 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 	<div class="acomment-avatar item-avatar">
 		<a href="<?php bp_activity_comment_user_link(); ?>">
 			<?php
-			add_filter( 'bp_fetch_avatar_url_filter', 'bp_fetch_avatar_url_filter_callback', 10, 3 );
 			bp_activity_avatar(
 				array(
 					'type'    => 'thumb',
 					'user_id' => bp_get_activity_comment_user_id(),
 				)
 			);
-			remove_filter( 'bp_fetch_avatar_url_filter', 'bp_fetch_avatar_url_filter_callback', 10, 3 );
 			?>
 		</a>
 	</div>
