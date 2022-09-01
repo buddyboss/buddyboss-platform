@@ -1445,7 +1445,7 @@ function bp_admin_invitations_table() {
 /**
  * Function will sync profile uploaded photo for profile completion widget data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.9
  *
  * @return array
  */
