@@ -774,8 +774,8 @@ window.bp = window.bp || {};
 				opposite  = {},
 				feedback  = BP_Nouveau.messages.doingAction,
 				thread_id = 0,
-				model,
-				target = $( event.currentTarget );
+				target    = $( event.currentTarget ),
+				model;
 
 			if ( ! action ) {
 				return event;
@@ -908,8 +908,10 @@ window.bp = window.bp || {};
 							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
 							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
 						} else {
+							window.Backbone.trigger( 'relistelements' );
 							BP_Nouveau.messages.hasThreads = false;
 							bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
+							$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
 						}
 					} else if ( 'unhide_thread' === action ) {
 						// Remove previous feedback.
@@ -2970,7 +2972,14 @@ window.bp = window.bp || {};
 				var form = bp.Nouveau.Messages.views.get( 'compose' );
 				form.get( 'view' ).remove();
 				bp.Nouveau.Messages.views.remove( { id: 'compose', view: form } );
-				bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+
+				var previous_thread_id = parseInt( $( '#thread-id' ).val() );
+				if ( 0 !== previous_thread_id && bp.Nouveau.Messages.threads.where( { id: previous_thread_id } ).length > 0 ) {
+					bp.Nouveau.Messages.router.navigate( 'view/' + previous_thread_id + '/', { trigger: true } );
+				} else {
+					bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+				}
+
 				$( '.bp-messages-container' ).removeClass( 'bp-compose-message' );
 			},
 
@@ -3388,6 +3397,7 @@ window.bp = window.bp || {};
 									thread.set( { unread: true } );
 								}
 
+								thread.set( { content: response.message.content } );
 								thread.set( { excerpt: response.message.excerpt } );
 								thread.set( { sender_name: response.message.sender_name } );
 								if ( 'undefined' !== typeof response.message.display_date_list ) {
@@ -4666,6 +4676,7 @@ window.bp = window.bp || {};
 			},
 
 			composeMessage: function() {
+				$( '#message-threads .thread-item.current' ).removeClass( 'current' );
 				bp.Nouveau.Messages.composeView();
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
@@ -4705,6 +4716,10 @@ window.bp = window.bp || {};
 
 				$( 'body' ).removeClass( 'view' ).removeClass( 'inbox' ).addClass( 'compose' );
 				$( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
+
+				if ( ! _.isUndefined( BP_Nouveau.archived_threads ) && 0 < BP_Nouveau.archived_threads.length ) {
+					$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+				}
 			},
 
 			viewMessage: function( thread_id ) {

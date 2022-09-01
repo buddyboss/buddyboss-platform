@@ -2711,7 +2711,7 @@ function bb_get_messages_archived_url() {
 	 *
 	 * @param string $slug Archived messages component URL.
 	 */
-	return apply_filters( 'bb_get_messages_archived_url', bp_loggedin_user_domain() . bp_get_messages_slug() . '/' . bb_get_messages_archived_slug() );
+	return apply_filters( 'bb_get_messages_archived_url', trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/' . bb_get_messages_archived_slug() ) );
 }
 
 /**

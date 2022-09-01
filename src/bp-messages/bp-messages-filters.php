@@ -828,6 +828,22 @@ function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	$params['current']['message_user_id']           = bp_loggedin_user_id();
 
+	$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
+		array(
+			'fields'      => 'ids',
+			'user_id'     => bp_loggedin_user_id(),
+			'is_hidden'   => true,
+			'thread_type' => 'archived',
+		)
+	);
+
+	$archived_threads_ids = array();
+	if ( ! empty( $hidden_threads ) ) {
+		$archived_threads_ids = $hidden_threads['threads'];
+	}
+
+	$params['archived_threads'] = $archived_threads_ids;
+
 	return $params;
 }
 
