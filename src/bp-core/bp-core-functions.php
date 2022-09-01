@@ -7719,6 +7719,27 @@ function bb_admin_icons( $id ) {
 	return apply_filters( 'bb_admin_icons', $meta_icon, $id );
 }
 
+/**
+ * Function will validate gravatar image based on email.
+ * If gravatar is validate then function will return true otherwise false.
+ *
+ * @since BuddyBoss 2.0.9
+ *
+ * @param string $email User email address.
+ *
+ * @return bool
+ */
+function bb_validate_gravatar( $email ) {
+	$url              = 'https://www.gravatar.com/avatar/' . md5( strtolower( $email ) ) . '?d=404';
+	$key              = base64_encode( $url );
+	$response         = get_transient( $key );
+	$has_valid_avatar = false;
+	if ( isset( $response ) && isset( $response[0] ) && preg_match( "|200|", $response[0] ) ) {
+		$has_valid_avatar = true;
+	}
+
+	return $has_valid_avatar;
+}
 /** Function to get the client machine os.
  *
  * @since BuddyBoss [BBVERSION]
@@ -7854,26 +7875,4 @@ function bb_get_week_end_timestamp( $end_day_of_week = false ) {
 	$date_chunks = explode( '-', str_replace( ' ', '-', $end_week_date ) );
 
 	return gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
-}
-
-/**
- * Function will validate gravatar image based on email.
- * If gravatar is validate then function will return true otherwise false.
- *
- * @since BuddyBoss 2.0.9
- *
- * @param string $email User email address.
- *
- * @return bool
- */
-function bb_validate_gravatar( $email ) {
-	$url              = 'https://www.gravatar.com/avatar/' . md5( strtolower( $email ) ) . '?d=404';
-	$key              = base64_encode( $url );
-	$response         = get_transient( $key );
-	$has_valid_avatar = false;
-	if ( isset( $response ) && isset( $response[0] ) && preg_match( "|200|", $response[0] ) ) {
-		$has_valid_avatar = true;
-	}
-
-	return $has_valid_avatar;
 }

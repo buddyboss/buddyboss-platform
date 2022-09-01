@@ -1295,7 +1295,21 @@ window.bp = window.bp || {};
 						model || {}
 					);
 
-					return bp.ajax.send( options );
+					return bp.ajax.send( options ).done(
+						function( response ) {
+							if ( ! _.isUndefined( response.type ) && 'success' === response.type ) {
+								window.Backbone.trigger(
+									'relistelements',
+									{
+										hash: response.hash,
+										message: response.messages[ 0 ],
+										recipient_inbox_unread_counts: response.recipient_inbox_unread_counts,
+										thread_id: response.thread_id
+									}
+								);
+							}
+						}
+					);
 				}
 			},
 
