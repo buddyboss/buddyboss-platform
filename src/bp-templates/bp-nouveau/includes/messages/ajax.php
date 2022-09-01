@@ -1141,7 +1141,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
 		$un_access_users = array();
-		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() && count( $messages_template->thread->recipients ) < 3 ) {
 			foreach ( (array) $messages_template->thread->recipients as $recipient ) {
 				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
@@ -2046,7 +2046,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$is_group_message_thread = bb_messages_is_group_thread( bp_get_the_thread_id() );
 
 	// Check recipients if connected or not.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! $is_group_message_thread ) {
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! $is_group_message_thread && count( $recipients ) < 2 ) {
 		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
 		foreach ( $recipients as $recipient ) {
 			if ( $login_user_id !== $recipient->user_id && ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {

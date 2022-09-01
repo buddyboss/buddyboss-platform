@@ -439,6 +439,8 @@ window.bp = window.bp || {};
 
 			threads_list.inject( '.bp-messages-threads-list' );
 
+			$( '.message-header-loading' ).removeClass( 'bp-hide' );
+
 			// Attach filters.
 			this.displayFilters( this.threads );
 		},
