@@ -85,6 +85,25 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			);
 			$member_report_button = ! is_super_admin( bp_get_member_user_id() ) ? bp_get_button( $report_button ) : '';
 
+			// Member block button.
+			$block_button = bp_member_get_report_link(
+				array(
+					'button_element' => 'a',
+					'position'       => 30,
+					'parent_attr'    => array(
+						'id'    => 'user-block-' . bp_get_member_user_id(),
+						'class' => '',
+					),
+					'button_attr'    => array(
+						'data-bp-content-id'   => bp_get_member_user_id(),
+						'data-bp-content-type' => BP_Moderation_Members::$moderation_type,
+						'data-reported_type'   => bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type, bp_get_member_user_id() ),
+					),
+
+				)
+			);
+			$member_block_button = ! is_super_admin( bp_get_member_user_id() ) ? bp_get_button( $block_button ) : '';
+
 			// Get Primary action.
 			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
 			?>
@@ -187,7 +206,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						</div>
 					</div>
 
-					<?php if ( ! empty( $member_switch_button ) || ! empty( $member_report_button ) ) { ?>
+					<?php if ( ! empty( $member_switch_button ) || ! empty( $member_report_button ) || ! empty ( $member_block_button ) ) { ?>
 					<div class="bb_more_options member-dropdown">
 						<a href="#" class="bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 							<i class="bb-icon-menu-dots-h"></i>
@@ -195,6 +214,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						<div class="bb_more_options_list">
 							<?php echo wp_kses_post( $member_switch_button ); ?>
 							<?php echo wp_kses_post( $member_report_button ); ?>
+							<?php echo wp_kses_post( $member_block_button ); ?>
 						</div>
 					</div><!-- .bb_more_options -->
 					<?php } ?>

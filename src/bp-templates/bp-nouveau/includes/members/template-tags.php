@@ -735,7 +735,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'class' => $parent_class,
 				),
 				'button_element' => $button_element,
-				'position'       => 30,
+				'position'       => 25,
 				'report_user'    => true,
 			)
 		);
