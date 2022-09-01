@@ -3391,6 +3391,7 @@ window.bp = window.bp || {};
 									thread.set( { unread: true } );
 								}
 
+								thread.set( { content: response.message.content } );
 								thread.set( { excerpt: response.message.excerpt } );
 								thread.set( { sender_name: response.message.sender_name } );
 								if ( 'undefined' !== typeof response.message.display_date_list ) {
