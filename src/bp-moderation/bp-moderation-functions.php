@@ -1227,7 +1227,7 @@ function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url, $par
 		if ( ! empty( $group_mode ) ) {
 			$group_admin_or_mods = array_merge( $group_admin_or_mods, $group_mode );
 		}
-		if ( in_array( bp_loggedin_user_id(), $group_admin_or_mods ) ) {
+		if ( in_array( bp_loggedin_user_id(), $group_admin_or_mods, true ) ) {
 			return $old_avatar_url;
 		}
 	}
@@ -1258,7 +1258,7 @@ function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url, $par
 		if ( ! empty( $group_mode ) ) {
 			$group_admin_or_mods = array_merge( $group_admin_or_mods, $group_mode );
 		}
-		if ( in_array( bp_loggedin_user_id(), $group_admin_or_mods ) ) {
+		if ( in_array( bp_loggedin_user_id(), $group_admin_or_mods, true ) ) {
 			return $old_avatar_url;
 		}
 	}
