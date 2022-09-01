@@ -663,6 +663,10 @@
 		opacity: 0.9;
 	}
 
+	li.archived-messages a:before {
+		content: "\e976";
+	}
+
 	li.notification_preferences a:before {
 		content: "\e86d";
 	}

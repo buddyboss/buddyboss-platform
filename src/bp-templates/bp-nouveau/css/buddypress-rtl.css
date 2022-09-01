@@ -9836,6 +9836,10 @@ div.profile_completion_wrap .progress_text_wrap {
   opacity: 0.9;
 }
 
+#buddypress .bp-messages-container .message_action__list li.archived-messages a:before {
+  content: "\e976";
+}
+
 #buddypress .bp-messages-container .message_action__list li.notification_preferences a:before {
   content: "\e86d";
 }
