@@ -1135,6 +1135,21 @@ input#send-to-input {
 	-ms-flex-align: center;
 	align-items: center;
 	width: 100%;
+
+	#back-to-thread {
+		background-color: transparent;
+		font-size: 24px;
+		font-weight: 600;
+		padding: 0;
+
+		> [class*="bb-icon"] {
+			display: inline-block;
+			margin: 2px 10px 0 0;
+			line-height: 1;
+			vertical-align: middle;
+		}
+
+	}
 }
 
 .bp-messages-nav-panel {

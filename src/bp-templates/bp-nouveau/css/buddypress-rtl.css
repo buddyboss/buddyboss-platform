@@ -10267,6 +10267,20 @@ input#send-to-input {
   width: 100%;
 }
 
+.messages-wrapper #subnav .subnav #back-to-thread {
+  background-color: transparent;
+  font-size: 24px;
+  font-weight: 600;
+  padding: 0;
+}
+
+.messages-wrapper #subnav .subnav #back-to-thread > [class*="bb-icon"] {
+  display: inline-block;
+  margin: 2px 0 0 10px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
 .bp-messages-nav-panel {
   display: block;
   -webkit-box-flex: 0;
