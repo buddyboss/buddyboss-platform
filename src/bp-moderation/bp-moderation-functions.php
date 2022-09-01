@@ -1150,3 +1150,112 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
 	 */
 	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss' ), $item_id );
 }
+
+/**
+ * Fetch the user id by blocked by.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int  $user_id User id.
+ * @param bool $force   Whether to bypass the static cache or not.
+ *
+ * @return array|mixed
+ */
+function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
+	static $cache = array();
+	global $wpdb;
+	$bp = buddypress();
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$cache_key = 'bb_moderation_blocked_by_' . $user_id;
+	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
+		$type = BP_Moderation_Members::$moderation_type;
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sql  = $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d", $type, $user_id );
+		$data = $wpdb->get_col( $sql ); // phpcs:ignore
+		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
+
+		$cache[ $cache_key ] = $data;
+	} else {
+		$data = $cache[ $cache_key ];
+	}
+
+	return $data;
+}
+
+/**
+ * Check whether a user has been marked as a blocked by another user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id The ID for the user.
+ *
+ * @return bool
+ */
+function bb_moderation_is_user_blocked_by( $user_id ) {
+	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+		return false;
+	}
+
+	$blocked_by_members = bb_moderation_get_blocked_by_user_ids();
+
+	return ( ! empty( $blocked_by_members ) && in_array( (int) $user_id, $blocked_by_members, true ) );
+}
+
+/**
+ * @param $avatar_url
+ * @param $old_avatar_url
+ *
+ * @return mixed
+ */
+function bp_fetch_avatar_url_filter_callback( $avatar_url, $old_avatar_url ) {
+	if ( bp_is_group_members() && bp_get_group_member_id() ) {
+		$group_id            = bp_get_current_group_id();
+		$group_admins        = groups_get_group_admins( $group_id );
+		$group_admin         = ( ! empty( $group_admins ) ) ? wp_list_pluck( $group_admins, 'user_id' ) : 0;
+		$group_modes         = groups_get_group_mods( $group_id );
+		$group_mode          = ( ! empty( $group_modes ) ) ? wp_list_pluck( $group_modes, 'user_id' ) : 0;
+		$group_admin_or_mods = $group_admin;
+		if ( ! empty( $group_mode ) ) {
+			$group_admin_or_mods = array_merge( $group_admin_or_mods, $group_mode );
+		}
+		if ( in_array( bp_loggedin_user_id(), $group_admin_or_mods ) ) {
+			return $old_avatar_url;
+		}
+	}
+
+	$activity_id = bp_get_activity_id();
+
+	// check activity id empty.
+	if ( empty( $activity_id ) ) {
+		return $avatar_url;
+	}
+
+	$activity    = new BP_Activity_Activity( $activity_id );
+
+	// check activity exists.
+	if ( empty( $activity->id ) ) {
+		return $avatar_url;
+	}
+
+	$activity_component = $activity->component;
+	$group_id           = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+
+	if ( ! empty( $group_id) && 'groups' === $activity_component ) {
+		$group_admins = groups_get_group_admins( $group_id );
+		$group_admin  = ( ! empty( $group_admins ) ) ? wp_list_pluck( $group_admins, 'user_id' ) : 0;
+		$group_modes = groups_get_group_mods( $group_id );
+		$group_mode  = ( ! empty( $group_modes ) ) ? wp_list_pluck( $group_modes, 'user_id' ) : 0;
+		$group_admin_or_mods = $group_admin;
+		if ( ! empty( $group_mode ) ) {
+			$group_admin_or_mods = array_merge( $group_admin_or_mods, $group_mode );
+		}
+		if ( in_array( bp_loggedin_user_id(), $group_admin_or_mods ) ) {
+			return $old_avatar_url;
+		}
+	}
+
+	return $avatar_url;
+}

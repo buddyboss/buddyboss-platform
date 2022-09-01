@@ -24,6 +24,16 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public static $moderation_type = 'user';
 
 	/**
+	 * Is blocked label, avtar, Has blocked label and avtar.
+	 *
+	 * @var string
+	 */
+	public $is_blocked_label = 'is_blocked_label',
+		$is_blocked_avatar = 'is_blocked_avatar',
+		$has_blocked_label = 'has_blocked_label',
+		$has_blocked_avatar = 'has_blocked_avatar';
+
+	/**
 	 * BP_Moderation_Members constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -222,8 +232,12 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return $value;
 		}
 
-		if ( ! bp_moderation_is_user_suspended( $user_id ) && bp_moderation_is_user_blocked( $user_id ) ) {
-			return esc_html__( 'Blocked Member', 'buddyboss' );
+		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
+			if ( bp_moderation_is_user_blocked( $user_id ) ) {
+				return apply_filters( $this->is_blocked_label, $value );
+			} else if ( bb_moderation_get_blocked_by_user_ids( $user_id ) ) {
+                return apply_filters( $this->has_blocked_label, $value );
+            }
 		}
 
 		return $value;
@@ -266,8 +280,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			return buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
-		}
+			return apply_filters( $this->is_blocked_avatar, $retval );
+		} else if ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
+            return apply_filters( $this->has_blocked_avatar, bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
+        }
 
 		return $retval;
 	}
@@ -284,18 +300,22 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function bp_fetch_avatar_url( $avatar_url, $params ) {
 
-		$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
+		$item_id        = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
+		$old_avatar_url = $avatar_url;
+
 		if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
-					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
+					$avatar_url = apply_filters( $this->is_blocked_avatar, $avatar_url );
+				} else if ( bb_moderation_is_user_blocked_by( $item_id ) ) {
+					$avatar_url = apply_filters( $this->has_blocked_avatar, bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
 				}
 			}
 		}
 
-		return $avatar_url;
+		return apply_filters( 'bp_fetch_avatar_url_filter', $avatar_url, $old_avatar_url );
 	}
 
 	/**

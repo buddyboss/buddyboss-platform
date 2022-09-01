@@ -11,6 +11,8 @@
  * @version 1.0.0
  */
 
+bp_nouveau_activity_hook( 'before', 'comment_entry' );
+
 ?>
 
 <li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class() ?>" data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
@@ -20,12 +22,14 @@
 	<div class="acomment-avatar item-avatar">
 		<a href="<?php bp_activity_comment_user_link(); ?>">
 			<?php
+			add_filter( 'bp_fetch_avatar_url_filter', 'bp_fetch_avatar_url_filter_callback', 10, 3 );
 			bp_activity_avatar(
 				array(
 					'type'    => 'thumb',
 					'user_id' => bp_get_activity_comment_user_id(),
 				)
 			);
+			remove_filter( 'bp_fetch_avatar_url_filter', 'bp_fetch_avatar_url_filter_callback', 10, 3 );
 			?>
 		</a>
 	</div>
@@ -46,3 +50,5 @@
 
 	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
 </li>
+<?php
+bp_nouveau_activity_hook( 'after', 'comment_entry' );

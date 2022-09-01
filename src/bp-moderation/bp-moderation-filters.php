@@ -739,3 +739,17 @@ function bb_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) {
 	return (bool) $retval;
 }
 add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated', 10, 3 );
+
+function bp_before_activity_entry_callback() {
+	add_filter( 'bp_fetch_avatar_url_filter', 'bp_fetch_avatar_url_filter_callback', 10, 3 );
+}
+add_action( 'bp_before_activity_entry', 'bp_before_activity_entry_callback' );
+add_action( 'bp_before_activity_comment_entry', 'bp_before_activity_entry_callback' );
+add_action( 'bp_before_group_members_list', 'bp_before_activity_entry_callback' );
+
+function bp_after_activity_entry_callback() {
+	remove_filter( 'bp_fetch_avatar_url_filter', 'bp_fetch_avatar_url_filter_callback', 10, 3 );
+}
+add_action( 'bp_after_activity_entry', 'bp_after_activity_entry_callback' );
+add_action( 'bp_after_activity_comment_entry', 'bp_after_activity_entry_callback' );
+add_action( 'bp_after_group_members_list', 'bp_before_activity_entry_callback' );
