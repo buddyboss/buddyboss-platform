@@ -1214,7 +1214,7 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
  * @param string $old_avatar_url Old avatar url before updated.
  * @param array  $params         Array of parameters for the request.
  *
- * @return string $avatar_url     Updated avatar url.
+ * @return string $avatar_url    Updated avatar url.
  */
 function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
 	if ( bp_is_active( 'groups' ) && bp_is_group_members() && bp_get_group_member_id() ) {
@@ -1244,24 +1244,99 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 	$activity_component = $activity->component;
 	$group_id           = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
 
-	if (
-		! empty( $group_id ) &&
-		'groups' === $activity_component &&
-		(
+	if ( ! empty( $group_id ) && 'groups' === $activity_component ) {
+		if (
 			groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
 			groups_is_user_mod( bp_loggedin_user_id(), $group_id )
-		)
-	) {
-		return $old_avatar_url;
+		) {
+			return $old_avatar_url;
+		}
 	}
 
 	return $avatar_url;
 }
 
-function bb_moderation_is_suspended_label( $value ) {
-	return apply_filters( 'bb_moderation_is_suspended_label', $value );
+/**
+ * Function to fetch the blocked by user label.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $value   Current user display name.
+ * @param int    $user_id User id.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
+	return apply_filters( 'bb_moderation_is_blocked_label', $value, $user_id );
 }
 
-function bb_moderation_is_suspended_avatar( $retval, $id_or_email, $args ) {
-	return apply_filters( 'bb_moderation_is_suspended_avatar', $retval );
+/**
+ * Function to fetch the blocked user label.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $value   Current user display name.
+ * @param int    $user_id User id.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
+	return apply_filters( 'bb_moderation_has_blocked_label', $value, $user_id );
+}
+
+/**
+ * Function to fetch the blocked by user avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $user_id User id.
+ * @param array $args    Arguments passed to get_avatar_data(), after processing.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
+	return apply_filters( 'bb_moderation_is_blocked_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
+}
+
+/**
+ * Function to fetch the blocked user avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $avatar_url Current avatar URL.
+ * @param int    $user_id    User id.
+ * @param array  $args       Arguments passed to get_avatar_data(), after processing.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array() ) {
+	return apply_filters( 'bb_moderation_has_blocked_avatar', $avatar_url, $user_id, $args );
+}
+
+/**
+ * Function to fetch the suspended by user label.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $value   Current user display name.
+ * @param int    $user_id User id.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_suspended_label( $value, $user_id = 0 ) {
+	return apply_filters( 'bb_moderation_is_suspended_label', $value, $user_id );
+}
+
+/**
+ * Function to fetch the suspended by user avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $user_id User id.
+ * @param array $args    Arguments passed to get_avatar_data(), after processing.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_suspended_avatar( $user_id, $args = array() ) {
+	return apply_filters( 'bb_moderation_is_suspended_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
 }

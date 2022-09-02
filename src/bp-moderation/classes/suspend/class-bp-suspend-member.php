@@ -657,7 +657,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			return bb_moderation_is_suspended_label( esc_html__( 'Unknown Member', 'buddyboss' ) );
+			$value = esc_html__( 'Unknown Member', 'buddyboss' );
+			return bb_moderation_is_suspended_label( $value, $user_id );
 		}
 
 		return $value;
@@ -701,9 +702,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user->ID ) ) {
-			$retval = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) );
-
-			return bb_moderation_is_suspended_avatar( $retval, $id_or_email, $args );
+			return bb_moderation_is_suspended_avatar( $id_or_email, $args );
 		}
 
 		return $retval;
@@ -727,9 +726,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_suspended( $item_id ) ) {
-					$avatar_url = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) );
-
-					return bb_moderation_is_suspended_avatar( $avatar_url, $item_id, $params );
+					return bb_moderation_is_suspended_avatar( $item_id, $params );
 				}
 			}
 		}
