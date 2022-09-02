@@ -1046,7 +1046,7 @@ function bp_add_activation_redirect() {
  * @since BuddyBoss 1.0.0
  */
 function bp_platform_plugin_updater() {
-	if ( class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) {
+	if ( ! class_exists( 'BB_Platform_Pro' ) && class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) {
 		new BP_BuddyBoss_Platform_Updater( 'https://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
 	}
 }
