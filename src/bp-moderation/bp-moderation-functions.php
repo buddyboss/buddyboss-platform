@@ -1217,7 +1217,7 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
  * @return string $avatar_url     Updated avatar url.
  */
 function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
-	if ( bp_is_group_members() && bp_get_group_member_id() ) {
+	if ( bp_is_active( 'groups' ) && bp_is_group_members() && bp_get_group_member_id() ) {
 		$group_id = bp_get_current_group_id();
 		if (
 			groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
@@ -1244,13 +1244,15 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 	$activity_component = $activity->component;
 	$group_id           = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
 
-	if ( ! empty( $group_id ) && 'groups' === $activity_component ) {
-		if (
+	if (
+		! empty( $group_id ) &&
+		'groups' === $activity_component &&
+		(
 			groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
 			groups_is_user_mod( bp_loggedin_user_id(), $group_id )
-		) {
-			return $old_avatar_url;
-		}
+		)
+	) {
+		return $old_avatar_url;
 	}
 
 	return $avatar_url;
