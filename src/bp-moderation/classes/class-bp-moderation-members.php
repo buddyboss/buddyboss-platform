@@ -245,7 +245,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
-		$user = false;
+		$user       = false;
+		$old_retval = $retval;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
@@ -270,12 +271,12 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			return bb_moderation_has_blocked_avatar( $retval, $id_or_email, $args );
+			$retval = bb_moderation_has_blocked_avatar( $retval, $id_or_email, $args );
 		} else if ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
-			return bb_moderation_is_blocked_avatar( $id_or_email, $args );
+			$retval = bb_moderation_is_blocked_avatar( $id_or_email, $args );
 		}
 
-		return $retval;
+		return apply_filters( 'bp_fetch_avatar_url_filter', $retval, $old_retval, $args );
 	}
 
 	/**

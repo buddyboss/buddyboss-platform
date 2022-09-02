@@ -702,7 +702,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user->ID ) ) {
-			return bb_moderation_is_suspended_avatar( $id_or_email, $args );
+			return bb_moderation_is_suspended_avatar( $user->ID, $args );
 		}
 
 		return $retval;
