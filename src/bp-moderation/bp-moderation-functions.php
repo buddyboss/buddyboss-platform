@@ -1318,13 +1318,12 @@ function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array(
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $value   Current user display name.
- * @param int    $user_id User id.
+ * @param int $user_id User id.
  *
  * @return mixed|void
  */
-function bb_moderation_is_suspended_label( $value, $user_id = 0 ) {
-	return apply_filters( 'bb_moderation_is_suspended_label', $value, $user_id );
+function bb_moderation_is_suspended_label( $user_id = 0 ) {
+	return apply_filters( 'bb_moderation_is_suspended_label', esc_html__( 'Unknown Member', 'buddyboss' ), $user_id );
 }
 
 /**
