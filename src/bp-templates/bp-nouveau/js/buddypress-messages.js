@@ -439,8 +439,6 @@ window.bp = window.bp || {};
 
 			threads_list.inject( '.bp-messages-threads-list' );
 
-			$( '.message-header-loading' ).removeClass( 'bp-hide' );
-
 			// Attach filters.
 			this.displayFilters( this.threads );
 		},
@@ -468,7 +466,7 @@ window.bp = window.bp || {};
 
 				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
 					var available_width = $( this ).width() - 10;
-					var date_width = $( this ).find( '.thread-date' ).width();
+					var date_width      = $( this ).find( '.thread-date' ).width();
 					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
 					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
 				});
@@ -3383,6 +3381,7 @@ window.bp = window.bp || {};
 				$( '.bp-messages.bp-user-messages-loading' ).remove();
 				$( '.bb-messages-no-thread-found' ).remove();
 
+				$( '.message-header-loading' ).removeClass( 'bp-hide' );
 				this.loadingFeedback = new bp.Views.MessagesLoading();
 				this.views.add( this.loadingFeedback );
 
@@ -3456,6 +3455,7 @@ window.bp = window.bp || {};
 				if ( this.collection.length ) {
 					$( '.bp-messages-threads-list' ).removeClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).removeClass( 'bp-no-messages' );
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
+					$( '.message-header-loading' ).addClass( 'bp-hide' );
 					bp.Nouveau.Messages.displayFilters( this.collection );
 				}
 			},
@@ -3475,6 +3475,7 @@ window.bp = window.bp || {};
 					$( '.bp-messages-threads-list' ).addClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).addClass( 'bp-no-messages' );
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 					$( '.bp-messages.bp-user-messages-loading' ).remove();
+					$( '.message-header-loading' ).addClass( 'bp-hide' );
 					this.views.add( new bp.Views.MessagesNoThreads() );
 				}
 			},
@@ -4722,7 +4723,6 @@ window.bp = window.bp || {};
 				}
 
 				$( 'body' ).removeClass( 'view' ).removeClass( 'inbox' ).addClass( 'compose' );
-				$( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 
 				if ( ! _.isUndefined( BP_Nouveau.archived_threads ) && 0 < BP_Nouveau.archived_threads.length ) {
 					$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
@@ -4735,7 +4735,7 @@ window.bp = window.bp || {};
 				}
 
 				// Reset the variable when viewing the thread message using route.
-				bp.Nouveau.Messages.divider = [];
+				bp.Nouveau.Messages.divider  = [];
 				bp.Nouveau.Messages.previous = '';
 
 				// Try to get the corresponding thread.
