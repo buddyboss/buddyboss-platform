@@ -373,6 +373,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18751 ) {
 			bb_update_to_2_1_0();
 		}
+
+		if ( $raw_db_version < 18801 ) {
+			bb_update_to_2_2_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1892,4 +1896,83 @@ function bb_update_to_2_1_0() {
 	}
 
 	bp_core_install_invitations();
+}
+
+/**
+ * Migrate messages table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_2_0() {
+	global $wpdb, $bp_background_updater;
+
+	// Add 'is_deleted' column in 'bp_messages_messages' table.
+	$table_name = $wpdb->prefix . 'bp_messages_messages';
+	$wpdb->query( 'SELECT * FROM `' . $table_name . '` LIMIT 0,1' ); // phpcs:ignore
+	$col_names = $wpdb->get_col_info( 'name' );
+
+	if ( ! in_array( 'is_deleted', $col_names, true ) ) {
+		$wpdb->query( 'ALTER TABLE  `' . $table_name . '` ADD `is_deleted` TINYINT( 1 ) NOT NULL DEFAULT 0 AFTER `message`' ); // phpcs:ignore
+	}
+
+	// Migrate the 'bp_messages_deleted' value from 'wp_bp_messages_meta' table to 'is_deleted' column in 'bp_messages_messages' table.
+	$args = array(
+		'fields'      => 'ids',
+		'meta_query'  => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'relation' => 'AND',
+			array(
+				'key'     => 'bp_messages_deleted',
+				'compare' => 'EXISTS',
+			),
+		),
+		'per_page'    => false,
+		'count_total' => false,
+	);
+
+	$messages = BP_Messages_Message::get( $args );
+
+	if ( isset( $messages['messages'] ) && ! empty( $messages['messages'] ) ) {
+		foreach ( array_chunk( $messages['messages'], 200 ) as $chunk ) {
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_messages_migrate_is_deleted_column',
+						'args'     => array( $chunk ),
+					),
+				)
+			);
+
+			$bp_background_updater->save()->schedule_event();
+		}
+	}
+}
+
+/**
+ * Migrate notification preferences.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param array $messages_ids Array of messages ids.
+ *
+ * @return void
+ */
+function bb_messages_migrate_is_deleted_column( $messages_ids ) {
+	global $wpdb;
+
+	if ( empty( $messages_ids ) ) {
+		return;
+	}
+
+	$table_name = $wpdb->prefix . 'bp_messages_messages';
+
+	foreach ( $messages_ids as $messaged_id ) {
+		// phpcs:ignore
+		$wpdb->query(
+			$wpdb->prepare(
+				'UPDATE  `' . $table_name . '` SET `is_deleted` = %s WHERE `wp_bp_messages_messages`.`id` = %d',  // phpcs:ignore
+				'1',
+				$messaged_id
+			)
+		);
+	}
 }
