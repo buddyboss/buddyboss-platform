@@ -22405,6 +22405,11 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   min-width: inherit;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-header ~ .bp-feedback,
+.moderation-popup .modal-container .bb-model-header ~ .bp-feedback {
+  margin: -15px -20px 15px;
+}
+
 .message-members-list.member-popup .modal-container #bb-block-member,
 .message-members-list.member-popup .modal-container #bb-report-content,
 .moderation-popup .modal-container #bb-block-member,
@@ -22448,9 +22453,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .message-members-list.member-popup .modal-container .form-item label > textarea,
 .moderation-popup .modal-container .form-item label > textarea {
-  margin-right: 30px;
+  font-size: 14px;
   margin-bottom: 0;
-  width: calc(100% - 28px);
 }
 
 .message-members-list.member-popup .modal-container .bp-report-form-err,

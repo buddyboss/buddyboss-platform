@@ -2578,6 +2578,7 @@ window.bp = window.bp || {};
 						midClick: true,
 						callbacks: {
 							open: function () {
+								$( '#notes-error' ).hide();
 								var contentId   = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
 								var nonce       = this.currItem.el.data( 'bp-nonce' );
@@ -2589,6 +2590,11 @@ window.bp = window.bp || {};
 									$( '#bb-report-content .form-item-category.members' ).hide();
 								}
 								$( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' ).attr( 'checked', true );
+								if( ! $( '#bb-report-content .form-item-category:visible label input[type="radio"]' ).length ) {
+									$( '#report-category-other' ).attr( 'checked', true );
+									$( '#report-category-other' ).trigger( 'click' );
+									$( 'label[for="report-category-other"]' ).hide();
+								}
 								var mf_content = $( '#content-report' );
 								mf_content.find( '.bp-reported-type' ).text( this.currItem.el.data( 'reported_type' ) );
 								if ( 'undefined' !== typeof reportType ) {
@@ -2623,16 +2629,19 @@ window.bp = window.bp || {};
 				function () {
 					if ( 'other' === this.value ) {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).removeClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', true );
 					} else {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).addClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', false );
 					}
 				}
 			);
 
 			$( '#bb-report-content' ).submit(
 				function ( e ) {
+
+					if( $( '#report-category-other' ).is( ':checked' ) && '' === $( '#report-note' ).val() ) {
+						$( '#notes-error' ).show();
+						return false;
+					}
 
 					$( '#bb-report-content' ).find( '.report-submit' ).addClass( 'loading' );
 

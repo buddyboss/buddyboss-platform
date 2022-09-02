@@ -18,6 +18,10 @@
 						<span class="bb-icon-l bb-icon-times"></span>
 					</button>
 				</header>
+				<div class="bp-feedback bp-feedback-v2 error" id="notes-error" style="display: none;">
+					<span class="bp-icon" aria-hidden="true"></span>
+					<p><?php esc_html_e( 'There was a problem reporting this post.', 'buddyboss' ); ?></p>
+				</div>
 				<?php
 				$reports_terms = get_terms(
 					'bpm_category',
@@ -57,7 +61,7 @@
 						</div>
 						<div class="form-item bp-hide">
 							<label for="report-note">
-								<textarea id="report-note" type="text" name="note" class="bp-other-report-cat"></textarea> </label>
+								<textarea id="report-note" placeholder="<?php esc_attr_e( 'Enter your reason for reporting...', 'buddyboss' ); ?>" type="text" name="note" class="bp-other-report-cat"></textarea> </label>
 						</div>
 						<footer class="bb-model-footer">
 							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
