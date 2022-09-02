@@ -276,7 +276,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			$retval = bb_moderation_is_blocked_avatar( $user->ID, $args );
 		}
 
-		return apply_filters( 'bp_fetch_avatar_url_filter', $retval, $old_retval, $args );
+		return apply_filters( 'bp_fetch_blocked_avatar_url', $retval, $old_retval, $args );
 	}
 
 	/**
@@ -306,7 +306,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			}
 		}
 
-		return apply_filters( 'bp_fetch_avatar_url_filter', $avatar_url, $old_avatar_url, $params );
+		return apply_filters( 'bp_fetch_blocked_avatar_url', $avatar_url, $old_avatar_url, $params );
 	}
 
 	/**
