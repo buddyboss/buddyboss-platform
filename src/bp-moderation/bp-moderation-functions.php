@@ -1217,6 +1217,7 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
  * @return string $avatar_url    Updated avatar url.
  */
 function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
+	// Check for group.
 	if (
 		bp_is_active( 'groups' ) &&
 		(
@@ -1233,29 +1234,26 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 		}
 	}
 
-	$activity_id = bp_get_activity_id();
+	// Check for activity.
+	$activity_id = bp_is_active( 'activity' ) && function_exists( 'bp_get_activity_id' ) ? bp_get_activity_id() : 0;
+	if ( ! empty( $activity_id ) ) {
+		$activity = new BP_Activity_Activity( $activity_id );
 
-	// check activity id empty.
-	if ( empty( $activity_id ) ) {
-		return $avatar_url;
-	}
+		// check activity exists.
+		if ( empty( $activity->id ) ) {
+			return $avatar_url;
+		}
 
-	$activity = new BP_Activity_Activity( $activity_id );
+		$activity_component = $activity->component;
+		$group_id           = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
 
-	// check activity exists.
-	if ( empty( $activity->id ) ) {
-		return $avatar_url;
-	}
-
-	$activity_component = $activity->component;
-	$group_id           = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
-
-	if ( ! empty( $group_id ) && 'groups' === $activity_component ) {
-		if (
-			groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
-			groups_is_user_mod( bp_loggedin_user_id(), $group_id )
-		) {
-			return $old_avatar_url;
+		if ( ! empty( $group_id ) && 'groups' === $activity_component ) {
+			if (
+				groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
+				groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+			) {
+				return $old_avatar_url;
+			}
 		}
 	}
 
