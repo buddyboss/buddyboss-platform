@@ -271,9 +271,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			$retval = bb_moderation_has_blocked_avatar( $retval, $id_or_email, $args );
-		} else if ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
-			$retval = bb_moderation_is_blocked_avatar( $id_or_email, $args );
+			$retval = bb_moderation_has_blocked_avatar( $retval, $user->ID, $args );
+		} elseif ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
+			$retval = bb_moderation_is_blocked_avatar( $user->ID, $args );
 		}
 
 		return apply_filters( 'bp_fetch_avatar_url_filter', $retval, $old_retval, $args );
@@ -300,7 +300,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
 					$avatar_url = bb_moderation_has_blocked_avatar( $avatar_url, $item_id, $params );
-				} else if ( bb_moderation_is_user_blocked_by( $item_id ) ) {
+				} elseif ( bb_moderation_is_user_blocked_by( $item_id ) ) {
 					$avatar_url = bb_moderation_is_blocked_avatar( $item_id, $params );
 				}
 			}

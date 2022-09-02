@@ -657,8 +657,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			$value = esc_html__( 'Unknown Member', 'buddyboss' );
-			return bb_moderation_is_suspended_label( $value, $user_id );
+			return bb_moderation_is_suspended_label( $user_id );
 		}
 
 		return $value;
