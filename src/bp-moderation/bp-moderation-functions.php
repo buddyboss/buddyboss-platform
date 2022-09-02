@@ -1257,3 +1257,11 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 
 	return $avatar_url;
 }
+
+function bb_moderation_is_suspended_label( $value ) {
+	return apply_filters( 'bb_moderation_is_suspended_label', $value );
+}
+
+function bb_moderation_is_suspended_avatar( $retval, $id_or_email, $args ) {
+	return apply_filters( 'bb_moderation_is_suspended_avatar', $retval );
+}
