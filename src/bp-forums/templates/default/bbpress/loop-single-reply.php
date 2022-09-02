@@ -6,6 +6,7 @@
  * @package BuddyBoss\Theme
  */
 
+do_action( 'bbp_template_before_single_reply_loop');
 ?>
 
 <div id="post-<?php bbp_reply_id(); ?>" class="bbp-reply-header">
@@ -65,3 +66,5 @@
 	</div><!-- .bbp-reply-content -->
 
 </div><!-- .reply -->
+<?php
+do_action( 'bbp_template_after_single_reply_loop');
