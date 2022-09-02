@@ -225,7 +225,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
 			if ( bp_moderation_is_user_blocked( $user_id ) ) {
 				return bb_moderation_is_blocked_label( $value, $user_id );
-			} else if ( bb_moderation_get_blocked_by_user_ids( $user_id ) ) {
+			} elseif ( bb_moderation_get_blocked_by_user_ids( $user_id ) ) {
 				return bb_moderation_has_blocked_label( $value, $user_id );
 			}
 		}
@@ -270,9 +270,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			return bb_moderation_has_blocked_avatar( $retval, $id_or_email, $args );
-		} else if ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
-			return bb_moderation_is_blocked_avatar( $id_or_email, $args );
+			return bb_moderation_has_blocked_avatar( $retval, $user->ID, $args );
+		} elseif ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
+			return bb_moderation_is_blocked_avatar( $user->ID, $args );
 		}
 
 		return $retval;
@@ -299,7 +299,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
 					$avatar_url = bb_moderation_has_blocked_avatar( $avatar_url, $item_id, $params );
-				} else if ( bb_moderation_is_user_blocked_by( $item_id ) ) {
+				} elseif ( bb_moderation_is_user_blocked_by( $item_id ) ) {
 					$avatar_url = bb_moderation_is_blocked_avatar( $item_id, $params );
 				}
 			}
