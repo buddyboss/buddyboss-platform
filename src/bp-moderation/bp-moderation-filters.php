@@ -754,6 +754,8 @@ add_action( 'bp_before_activity_entry', 'bb_moderation_before_activity_entry_cal
 add_action( 'bp_before_activity_comment_entry', 'bb_moderation_before_activity_entry_callback' );
 add_action( 'bp_before_group_members_list', 'bb_moderation_before_activity_entry_callback' );
 add_action( 'bbp_template_before_single_reply_loop', 'bb_moderation_before_activity_entry_callback' );
+add_action( 'bbp_template_before_topics_loop', 'bb_moderation_before_activity_entry_callback' );
+
 /**
  * * Filter to update the avatar url for the after activity.
  *
@@ -768,3 +770,4 @@ add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callb
 add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bbp_template_after_single_reply_loop', 'bb_moderation_before_activity_entry_callback' );
+add_action( 'bbp_template_after_topics_loop', 'bb_moderation_before_activity_entry_callback' );
