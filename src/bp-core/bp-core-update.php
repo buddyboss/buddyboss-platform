@@ -1948,9 +1948,9 @@ function bb_update_to_2_2_0() {
 }
 
 /**
- * Migrate notification preferences.
+ * Migrate message table for is_deleted column.
  *
- * @since BuddyBoss 1.9.3
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $messages_ids Array of messages ids.
  *
