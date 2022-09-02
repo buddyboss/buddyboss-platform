@@ -11,7 +11,7 @@
 
 <script type="text/html" id="tmpl-bp-messages-single-list">
 
-    <div class="bp-single-message-wrap">
+	<div class="bp-single-message-wrap">
 
 		<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 		<div class="bp-avatar-wrap">
@@ -44,7 +44,7 @@
 					<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
 				<# } else { #>
 					<a href="{{data.sender_link}}" class="bp-user-link">
-                        <strong>{{{data.sender_name}}}</strong>
+						<strong>{{{data.sender_name}}}</strong>
 					</a>
 				<# } #>
 
@@ -96,15 +96,12 @@
 			<div class="bb-activity-video-wrap bb-video-length-{{data.video.length}}">
 				<# for ( i in data.video ) { #>
 				<div class="bb-activity-video-elem">
-				   <# if ( data.video[i].id ) { #>
-					<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
-					   data-id="{{data.video[i].id}}"
-					   data-attachment-id="{{data.video[i].attachment_id}}"
-					   data-attachment-full="{{data.video[i].full}}"
-					   data-privacy="{{data.video[i].privacy}}"
-					   href="#">
-						<img src="{{data.video[i].thumbnail}}" alt="{{data.video[i].title}}"/>
-					</a>
+				   <# if ( data.video[i].id && 1 === data.video.length ) { #>
+                        {{{data.video[i].video_html}}}
+					<# } else if ( data.video[i].id ) { #>
+						<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="{{data.video[i].id}}" data-attachment-id="{{data.video[i].attachment_id}}" data-attachment-full="{{data.video[i].full}}" data-privacy="{{data.video[i].privacy}}" href="#">
+							<img src="{{data.video[i].thumbnail}}" alt="{{data.video[i].title}}"/>
+						</a>
 					<# } else { #>
 						<span class="bb-video-cover-wrap bb-item-cover-wrap bb-icon bb-icon-loader" data-id="{{ i }}"></span>
 					<# } #>
