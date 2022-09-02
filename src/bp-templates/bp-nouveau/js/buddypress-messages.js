@@ -1039,6 +1039,19 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'single', view: single_thread } );
 
 			single_thread.inject( '.bp-messages-content' );
+
+			// Clear filter view.
+			if ( ! _.isUndefined( this.views.models ) ) {
+				_.each(
+					this.views.models,
+					function( model ) {
+						if ( 'filters' === model.attributes.id ) {
+							model.get( 'view' ).remove();
+						}
+					},
+					this
+				);
+			}
 		},
 
 		backToThreadList: function( event ) {
