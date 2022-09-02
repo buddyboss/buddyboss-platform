@@ -5169,6 +5169,10 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	}
 
+	.bb-model-header ~ .bp-feedback {
+		margin: -15px -20px 15px;
+	}
+
 	#bb-block-member,
 	#bb-report-content {
 		margin-bottom: 0;
@@ -5202,9 +5206,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			}
 
 			> textarea {
-				margin-left: 30px;
+				font-size: 14px;
 				margin-bottom: 0;
-				width: calc(100% - 28px);
 			}
 
 		}
