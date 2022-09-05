@@ -778,6 +778,11 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 			continue;
 		}
 
+		// Disabled the notification for user who archived this thread.
+		if ( buddypress()->messages->id === $component_name && isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
+			continue;
+		}
+
 		bp_notifications_add_notification(
 			array(
 				'user_id'           => $user_id,
