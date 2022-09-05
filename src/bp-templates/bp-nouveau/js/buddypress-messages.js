@@ -2032,6 +2032,8 @@ window.bp = window.bp || {};
 
 			open_document_uploader: function() {
 				var self = this;
+				
+				var total_uploaded_file = 0;
 
 				if ( self.$el.find( '#messages-post-document-uploader' ).hasClass( 'open' ) ) {
 					return false;
@@ -2049,6 +2051,8 @@ window.bp = window.bp || {};
 						var filename = file.upload.filename;
 						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
 						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						
+						total_uploaded_file++;
 					}
 				);
 
@@ -2086,7 +2090,9 @@ window.bp = window.bp || {};
 							response.data.privacy 	 = 'message';
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
-							bp.Nouveau.Messages.removeFeedback();
+							if ( total_uploaded_file <= BP_Nouveau.document.maxFiles ) {
+								bp.Nouveau.Messages.removeFeedback();
+							}
 							return file.previewElement.classList.add( 'dz-success' );
 						} else {
 							var message = response.data.feedback;
@@ -2157,6 +2163,9 @@ window.bp = window.bp || {};
 									self.model.set( 'document', self.document );
 								}
 							}
+							if ( 'error' !== file.status ) {
+								bp.Nouveau.Messages.removeFeedback();
+							}
 						}
 
 						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
@@ -2186,6 +2195,7 @@ window.bp = window.bp || {};
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
 							Backbone.trigger( 'triggerMediaComplete' );
+							total_uploaded_file = self.document.length;
 						}
 					}
 				);
@@ -2238,6 +2248,8 @@ window.bp = window.bp || {};
 
 			open_video_uploader: function() {
 				var self = this;
+				
+				var total_uploaded_file = 0;
 
 				if ( self.$el.find( '#messages-post-video-uploader' ).hasClass( 'open' ) ) {
 					return false;
@@ -2275,7 +2287,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.on(
 					'addedfile',
 					function ( file ) {
-
+						total_uploaded_file++;
 						if (file.dataURL) {
 							// Get Thumbnail image from response.
 						} else {
@@ -2318,7 +2330,9 @@ window.bp = window.bp || {};
 							response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 							self.video.push( response.data );
 							self.model.set( 'video', self.video );
-							bp.Nouveau.Messages.removeFeedback();
+							if ( total_uploaded_file <= BP_Nouveau.video.maxFiles ) {
+								bp.Nouveau.Messages.removeFeedback();
+							}
 						} else {
 							var message = response.data.feedback;
 							bp.Nouveau.Messages.displaySendMessageFeedback( message, 'error' );
@@ -2376,6 +2390,9 @@ window.bp = window.bp || {};
 									self.model.set( 'video', self.video );
 								}
 							}
+							if ( 'error' !== file.status ) {
+								bp.Nouveau.Messages.removeFeedback();
+							}
 						}
 
 						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
@@ -2405,6 +2422,7 @@ window.bp = window.bp || {};
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
 							Backbone.trigger( 'triggerMediaComplete' );
+							total_uploaded_file = self.video.length;
 						}
 					}
 				);
