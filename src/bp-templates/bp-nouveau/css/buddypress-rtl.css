@@ -10576,6 +10576,10 @@ input#send-to-input {
   flex: 1;
 }
 
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .post-elements-buttons-item.disable {
+  pointer-events: initial;
+}
+
 .bp-messages-content #bp-message-content .medium-editor-toolbar {
   top: inherit;
   bottom: -6px;
