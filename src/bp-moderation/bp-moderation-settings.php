@@ -73,7 +73,7 @@ function bp_moderation_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bb_reporting_auto_suspend_'           => array(
+		'bb_reporting_auto_suspend'           => array(
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
@@ -267,8 +267,8 @@ function bpm_blocking_settings_callback_auto_suspend() {
 		?>
 	</label>
 	<br/><br/>
-	<label for="bb_reporting_auto_suspend_" class="<?php echo bb_is_moderation_member_reporting_enable( false ) ? '' : esc_attr( 'is_disabled' ); ?>">
-		<input name="bb_reporting_auto_suspend_" id="bb_reporting_auto_suspend_" type="checkbox" value="1"
+	<label for="bb_reporting_auto_suspend" class="<?php echo bb_is_moderation_member_reporting_enable( false ) ? '' : esc_attr( 'is_disabled' ); ?>">
+		<input name="bb_reporting_auto_suspend" id="bb_reporting_auto_suspend" type="checkbox" value="1"
 				<?php checked( bb_is_moderation_auto_suspend_report_enable( false ) ); ?> />
 		<?php
 		// translators: html for report threshold fields.

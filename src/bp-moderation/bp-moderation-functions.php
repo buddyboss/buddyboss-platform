@@ -897,10 +897,10 @@ function bb_is_moderation_member_reporting_enable( $default = 0 ) {
  * @param int $default bool Optional.Default value true.
  *
  * @return bool Is auto suspend report enabled or not.
- * @uses get_option() To get the bb_reporting_auto_suspend_ option.
+ * @uses get_option() To get the bb_reporting_auto_suspend option.
  */
 function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
-	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend_', $default ) );
+	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend', $default ) );
 }
 
 /**
