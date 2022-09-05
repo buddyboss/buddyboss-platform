@@ -2682,6 +2682,7 @@ window.bp = window.bp || {};
 			id: 'whats-new-messages-toolbar',
 			template: bp.template( 'whats-new-messages-toolbar' ),
 			events: {
+				'click .post-elements-buttons-item.disable .toolbar-button': 'disabledButton',
 				'click #messages-media-button': 'toggleMediaSelector',
 				'click #messages-document-button': 'toggleDocumentSelector',
 				'click #messages-video-button': 'toggleVideoSelector',
@@ -2703,6 +2704,10 @@ window.bp = window.bp || {};
 
 			toggleMediaSelector: function( e ) {
 				e.preventDefault();
+				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
+				if( parentElement.hasClass( 'disable' ) ) {
+					return;
+				}
 				this.closeGifSelector();
 				this.closeDocumentSelector();
 				this.closeVideoSelector();
@@ -2714,6 +2719,10 @@ window.bp = window.bp || {};
 
 			toggleDocumentSelector: function( e ) {
 				e.preventDefault();
+				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
+				if( parentElement.hasClass( 'disable' ) ) {
+					return;
+				}
 				this.closeMediaSelector();
 				this.closeGifSelector();
 				this.closeVideoSelector();
@@ -2725,6 +2734,10 @@ window.bp = window.bp || {};
 
 			toggleVideoSelector: function( e ) {
 				e.preventDefault();
+				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
+				if( parentElement.hasClass( 'disable' )) {
+					return;
+				}
 				this.closeGifSelector();
 				this.closeMediaSelector();
 				this.closeDocumentSelector();
@@ -2754,6 +2767,10 @@ window.bp = window.bp || {};
 
 			toggleGifSelector: function( e ) {
 				e.preventDefault();
+				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
+				if( parentElement.hasClass( 'disable' ) ) {
+					return;
+				}
 				this.closeMediaSelector();
 				this.closeDocumentSelector();
 				this.closeVideoSelector();
@@ -2808,7 +2825,11 @@ window.bp = window.bp || {};
 					}
 					this.$gifPickerEl.removeClass( 'open' );
 				}
-			}
+			},
+			
+			disabledButton: function () {
+				bp.Nouveau.Messages.displaySendMessageFeedback( BP_Nouveau.messages.errors.media_fail, 'info noMediaError' );
+			},
 
 		}
 	);
