@@ -300,7 +300,7 @@ function bpm_blocking_settings_callback_auto_suspend_threshold() {
  */
 function bb_blocking_settings_callback_auto_suspend_report_threshold() {
 	?>
-	<input name="bb_reporting_auto_suspend_threshold" id="bb_reporting_auto_suspend_threshold" type="number" min="1" step="1" value="<?php echo esc_attr( bb_moderation_auto_suspend_report_threshold( 5 ) ); ?>" class="small-text"/>
+	<input name="bb_reporting_auto_suspend_threshold" id="bb_reporting_auto_suspend_threshold" type="number" min="1" step="1" value="<?php echo esc_attr( bb_moderation_auto_suspend_report_threshold() ); ?>" class="small-text"/>
 	<?php
 }
 
