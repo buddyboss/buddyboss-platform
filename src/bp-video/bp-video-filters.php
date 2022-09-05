@@ -207,11 +207,6 @@ function bp_video_activity_append_video( $content, $activity ) {
 				$args['album_id'] = 'existing-video';
 			}
 		} else {
-
-			$group_id = 0;
-			if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-				$group_id = bp_get_current_group_id();
-			}
 			$args['privacy'] = bp_video_query_privacy( $activity->user_id, $group_id, $activity->component );
 
 			if ( 'activity_comment' === $activity->type ) {

@@ -196,16 +196,11 @@ function bp_document_activity_append_document( $content, $activity ) {
 		'sort'     => 'ASC',
 	);
 
-	$privacy = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
-		$privacy = array( 'grouponly' );
+		$args['privacy'] = array( 'grouponly' );
 		if ( 'activity_comment' === $activity->type ) {
-			$privacy[] = 'comment';
+			$args['privacy'][] = 'comment';
 		}
-	}
-
-	if ( $privacy ) {
-		$args['privacy'] = $privacy;
 	}
 
 	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
