@@ -20,7 +20,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		var $plugin_id = 0;
 		var $plugin_path;
 		var $plugin_slug;
-		var $_transient_name = 'bb_updates_';
+		var $_transient_name;
 		var $_transient_time = 8 * HOUR_IN_SECONDS;
 
 
@@ -37,9 +37,10 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				$part2 = $plugin_path;
 			}
 
-			$this->plugin_slug = str_replace( '.php', '', $part2 );
+			$this->plugin_slug     = str_replace( '.php', '', $part2 );
+			$this->_transient_name = 'bb_updates_' . $this->plugin_slug;
 
-			add_filter( 'pre_set_site_transient_update_plugins', array( &$this, 'update_plugin' ) );
+			add_filter( 'pre_set_site_transient_update_plugins', array( &$this, 'update_plugin' ), 99 );
 			add_filter( 'plugins_api', array( &$this, 'plugins_api' ), 10, 3 );
 		}
 
@@ -54,7 +55,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			// Check if response exists then return existing transient.
 			// Also check if force check exists then bypass transient.
 			if ( ! $force_check ) {
-				$response_transient = get_transient( $this->_transient_name . $this->plugin_slug );
+				$response_transient = get_transient( $this->_transient_name );
 				if ( ! empty( $response_transient ) ) {
 					if ( isset( $response_transient->body ) ) {
 						unset( $response_transient->body );
@@ -62,7 +63,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 					} else {
 						$transient->response[ $this->plugin_path ] = $response_transient;
 					}
-
+					$transient->last_checked = time();
 					return $transient;
 				}
 			}
@@ -109,7 +110,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 					$no_update_response->new_version            = $current_version;
 					$no_update_response->body                   = $raw_response['body'];
 					$transient->no_update[ $this->plugin_path ] = $no_update_response;
-					set_transient( $this->_transient_name . $this->plugin_slug, $no_update_response, $this->_transient_time );
+					set_transient( $this->_transient_name, $no_update_response, $this->_transient_time );
 				}
 				$response = unserialize( $raw_response['body'] );
 			}
@@ -118,8 +119,9 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			if ( is_object( $response ) && ! empty( $response ) ) {
 				$transient->response[ $this->plugin_path ] = $response;
 
-				// Set plugins data in transient for a day to avoid multiple request to hit on server.
-				set_transient( $this->_transient_name . $this->plugin_slug, $response, $this->_transient_time );
+				// Set plugins data in transient for 8 hours to avoid multiple request to hit on server.
+				set_transient( $this->_transient_name, $response, $this->_transient_time );
+				$transient->last_checked = time();
 				return $transient;
 			}
 
@@ -129,7 +131,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 					unset( $transient->response[ $this->plugin_path ] );
 				}
 			}
-
+			$transient->last_checked = time();
 			return $transient;
 		}
 
