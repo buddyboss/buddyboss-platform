@@ -549,7 +549,7 @@ function bp_get_the_notification_description( $notification = '' ) {
 	 * @param string $description  Full-text description for a specific notification.
 	 * @param object $notification Notification object.
 	 */
-	return apply_filters( 'bp_get_the_notification_description', $description, $notification );
+	return apply_filters( 'bp_get_the_notification_description', stripcslashes( $description ), $notification );
 }
 
 /**

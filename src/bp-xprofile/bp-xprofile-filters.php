@@ -131,6 +131,9 @@ add_action( 'user_profile_update_errors', 'bb_validate_user_nickname_on_user_upd
 
 add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_param' );
 
+// When email changed then check profile completion for gravatar.
+add_action( 'profile_update', 'bb_profile_update_completion_user_progress', 10, 2 );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1352,6 +1355,27 @@ function bb_validate_user_nickname_on_user_update( WP_Error $errors, bool $updat
 		// or use the user_nickname.
 		if ( $invalid ) {
 			$errors->add( 'nickname', esc_html( $invalid ) );
+		}
+	}
+}
+
+/**
+ * Function will check if user confirmed change email address then
+ * update profile completion widget based on change email's gravatar.
+ *
+ * @since BuddyBoss 2.0.9
+ *
+ * @param int   $user_id       Get current user id.
+ * @param array $old_user_data Old user data.
+ */
+function bb_profile_update_completion_user_progress( $user_id, $old_user_data ) {
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+	if ( defined( 'IS_PROFILE_PAGE' ) && IS_PROFILE_PAGE && isset( $_GET['newuseremail'] ) && $user_id ) {
+		$new_email = get_user_meta( $user_id, '_new_email', true );
+		if ( $new_email && hash_equals( $new_email['hash'], $_GET['newuseremail'] ) ) {
+			bp_core_xprofile_update_profile_completion_user_progress();
 		}
 	}
 }
