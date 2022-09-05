@@ -44,11 +44,20 @@ function bb_notification_get_settings_sections() {
 				) : ''
 			),
 		),
-		'bp_web_push_notification_settings'  => array(
+	);
+
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		$settings['bp_messaging_notification_settings'] = array(
 			'page'              => 'notifications',
-			'title'             => esc_html__( 'Web Push Notifications', 'buddyboss' ),
-			'tutorial_callback' => 'bb_web_push_notifications_tutorial',
-		),
+			'title'             => esc_html__( 'Messaging Notifications', 'buddyboss' ),
+			'tutorial_callback' => 'bb_messaging_notifications_tutorial',
+		);
+	}
+
+	$settings['bp_web_push_notification_settings'] = array(
+		'page'              => 'notifications',
+		'title'             => esc_html__( 'Web Push Notifications', 'buddyboss' ),
+		'tutorial_callback' => 'bb_web_push_notifications_tutorial',
 	);
 
 	return (array) apply_filters( 'bb_notification_get_settings_sections', $settings );
@@ -196,6 +205,16 @@ function bb_notification_get_settings_fields() {
 			'sanitize_callback' => 'string',
 			'args'              => array( 'class' => 'notes-hidden-header child-no-padding' ),
 		);
+
+		$fields['bp_messaging_notification_settings'] = array(
+			'hide_message_notification' => array(
+				'title'             => esc_html__( 'Hide From Notifications', 'buddyboss' ),
+				'callback'          => 'bb_admin_setting_callback_hide_notification_fields',
+				'sanitize_callback' => 'intval',
+				'args'              => array(),
+			),
+		);
+
 	} else {
 		$fields['bp_notification_settings_automatic']['infos'] = array(
 			'title'             => esc_html__( 'Notes', 'buddyboss' ),
@@ -239,7 +258,7 @@ function bb_notification_get_settings_fields() {
 		);
 	} else {
 		$fields['bp_web_push_notification_settings'] = apply_filters( 'bb_notification_web_push_notification_settings', $fields['bp_web_push_notification_settings'] );
-    }
+	}
 
 	return (array) apply_filters( 'bb_notification_get_settings_fields', $fields );
 }
@@ -398,23 +417,6 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 		}
 		echo '</tbody></table>';
 	}
-
-	?>
-	<table class="form-table dynamic-notification-after">
-		<tbody>
-		<tr>
-			<th scope="row"><?php esc_html_e( 'Hide Messaging Notifications', 'buddyboss' ); ?></th>
-			<td>
-				<input name="hide_message_notification" type="hidden" value="0" />
-				<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'hide_message_notification', 1 ) ); ?> />
-				<label for="hide_message_notification"><?php esc_html_e( 'Hide group and private messages from notifications', 'buddyboss' ); ?></label>
-				<p class="description"><?php esc_html_e( 'When enabled, notifications for group messages and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
-			</td>
-		</tr>
-		</tbody>
-	</table>
-
-	<?php
 }
 
 /**
@@ -526,4 +528,51 @@ function bb_admin_setting_callback_push_notification_lab_notification_preference
 			'</a>'
 		) .
 	'</p>';
+}
+
+
+/**
+ * Link to Messaging Notification tutorial.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_messaging_notifications_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => '125638',
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		">
+			<?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?>
+		</a>
+	</p>
+
+	<?php
+}
+
+/**
+ * Callback fields for the hide message notification fields options.
+ *
+ * @since [BBVERSION]
+ *
+ * @return void
+ */
+function bb_admin_setting_callback_hide_notification_fields() {
+	?>
+	<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'hide_message_notification', 1 ) ); ?> />
+	<label for="hide_message_notification"><?php esc_html_e( 'Hide messages from notifications', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'When enabled, notifications for group and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
+	<?php
 }
