@@ -105,6 +105,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
 			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),
 			'no_messages'     => __( 'Sorry, no messages were found.', 'buddyboss' ),
+			'media_fail'      => __( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
 		),
 		'nonces'                     => array(
 			'send'           => wp_create_nonce( 'messages_send_message' ),

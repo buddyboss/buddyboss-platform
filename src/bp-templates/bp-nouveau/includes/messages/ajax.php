@@ -720,6 +720,22 @@ function bp_nouveau_ajax_messages_send_reply() {
 			while ( bp_video() ) {
 				bp_the_video();
 
+				$video_html = '';
+				if ( 1 === $video_template->video_count ) {
+					ob_start();
+					bp_get_template_part( 'video/single-video' );
+					?>
+					<p class="bb-video-loader"></p>
+					<?php
+					if ( ! empty( bp_get_video_length() ) ) {
+						?>
+						<p class="bb-video-duration"><?php bp_video_length(); ?></p>
+						<?php
+					}
+					$video_html = ob_get_clean();
+
+				}
+
 				$reply['video'][] = array(
 					'id'            => bp_get_video_id(),
 					'title'         => bp_get_video_title(),
@@ -730,6 +746,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'full'          => bp_get_video_attachment_image(),
 					'meta'          => $video_template->video->attachment_data->meta,
 					'privacy'       => bp_get_video_privacy(),
+					'video_html'    => $video_html,
 				);
 			}
 		}
@@ -2793,6 +2810,22 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				while ( bp_video() ) {
 					bp_the_video();
 
+					$video_html = '';
+					if ( 1 === $video_template->video_count ) {
+						ob_start();
+						bp_get_template_part( 'video/single-video' );
+						?>
+						<p class="bb-video-loader"></p>
+						<?php
+						if ( ! empty( bp_get_video_length() ) ) {
+							?>
+							<p class="bb-video-duration"><?php bp_video_length(); ?></p>
+							<?php
+						}
+						$video_html = ob_get_clean();
+
+					}
+
 					$thread->messages[ $i ]['video'][] = array(
 						'id'            => bp_get_video_id(),
 						'message_id'    => $bp_get_the_thread_message_id,
@@ -2803,6 +2836,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'full'          => bp_get_video_attachment_image(),
 						'meta'          => $video_template->video->attachment_data->meta,
 						'privacy'       => bp_get_video_privacy(),
+						'video_html'    => $video_html,
 					);
 				}
 			}
