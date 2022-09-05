@@ -2466,6 +2466,7 @@ window.bp = window.bp || {};
 			},
 
 			destroy: function() {
+				bp.Nouveau.Messages.removeFeedback();
 				this.model.set( 'gif_data', {} );
 				this.el.style.backgroundImage = '';
 				this.el.style.backgroundSize  = '';
