@@ -1892,6 +1892,11 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
+						if ( bp.Nouveau.dropZoneGlobalProgress ) {
+							bp.Nouveau.dropZoneGlobalProgress( this );
+						}
+						Backbone.trigger( 'triggerMediaInProgress' );
+
 						var tool_box = self.$el.parents( '#bp-message-content' );
 						if ( tool_box.find( '#messages-document-button' ) ) {
 							tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
@@ -2097,6 +2102,11 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'document_document_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
+						if ( bp.Nouveau.dropZoneGlobalProgress ) {
+							bp.Nouveau.dropZoneGlobalProgress( this );
+						}
+						Backbone.trigger( 'triggerMediaInProgress' );
+
 						var tool_box = self.$el.parents( '#bp-message-content' );
 						if ( tool_box.find( '#messages-media-button' ) ) {
 							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
@@ -2301,6 +2311,11 @@ window.bp = window.bp || {};
 					function(file, xhr, formData) {
 						formData.append( 'action', 'video_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.video );
+
+						if ( bp.Nouveau.dropZoneGlobalProgress ) {
+							bp.Nouveau.dropZoneGlobalProgress( this );
+						}
+						Backbone.trigger( 'triggerMediaInProgress' );
 
 						var tool_box = self.$el.parents( '#bp-message-content' );
 						if ( tool_box.find( '#messages-document-button' ) ) {
