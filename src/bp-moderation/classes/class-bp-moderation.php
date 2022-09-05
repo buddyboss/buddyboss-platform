@@ -892,7 +892,7 @@ class BP_Moderation {
 			}
 
 			if ( isset( $args['user_repoted'] ) ) {
-				$where_conditions[] = ! empty( $args['user_repoted'] ) ? 'user_report=1' : 'user_report=0';
+				$where_conditions[] = ! empty( $args['user_repoted'] ) ? 'user_report = 1' : 'user_report = 0';
 			}
 
 			// Join the where conditions together.
