@@ -261,6 +261,12 @@ function bp_messages_message_sent_add_notification( $message ) {
 			$bb_notifications_background_updater->save()->dispatch();
 		} else {
 			foreach ( (array) $message->recipients as $recipient ) {
+
+				// Disabled the notification for user who archived this thread.
+				if ( isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
+					continue;
+				}
+
 				bp_notifications_add_notification(
 					array(
 						'user_id'           => $recipient->user_id,

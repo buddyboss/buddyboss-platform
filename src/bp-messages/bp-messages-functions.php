@@ -922,6 +922,11 @@ function messages_notification_new_message( $raw_args = array() ) {
 			continue;
 		}
 
+		// Disabled the notification for user who archived this thread.
+		if ( isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
+			continue;
+		}
+
 		$unsubscribe_args = array(
 			'user_id'           => $recipient->user_id,
 			'notification_type' => 'messages-unread',
@@ -995,7 +1000,6 @@ add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
  * @param array $raw_args
  */
 function group_messages_notification_new_message( $raw_args = array() ) {
-
 	if ( is_object( $raw_args ) ) {
 		$args = (array) $raw_args;
 	} else {
@@ -1090,6 +1094,11 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 
 			// Check the sender is blocked by recipient or not.
 			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $sender_id ) ) {
+				continue;
+			}
+
+			// Disabled the notification for user who archived this thread.
+			if ( isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
 				continue;
 			}
 
