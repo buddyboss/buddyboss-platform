@@ -47,28 +47,28 @@ function bp_moderation_get_settings_fields() {
 
 	$fields['bp_moderation_settings_blocking'] = array(
 
-		'bpm_blocking_member_blocking'               => array(
+		'bpm_blocking_member_blocking'        => array(
 			'title'             => __( 'Member Blocking', 'buddyboss' ),
 			'callback'          => 'bpm_blocking_settings_callback_member_blocking',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 
-		'bb_blocking_member_reporting'              => array(
+		'bb_blocking_member_reporting'        => array(
 			'title'             => __( 'Member Reporting', 'buddyboss' ),
 			'callback'          => 'bb_blocking_settings_callback_member_reporting',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 
-		'bpm_blocking_auto_suspend'                  => array(
+		'bpm_blocking_auto_suspend'           => array(
 			'title'             => __( 'Auto Suspend', 'buddyboss' ),
 			'callback'          => 'bpm_blocking_settings_callback_auto_suspend',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 
-		'bpm_blocking_auto_suspend_threshold'        => array(
+		'bpm_blocking_auto_suspend_threshold' => array(
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
@@ -83,7 +83,7 @@ function bp_moderation_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bpm_blocking_email_notification'            => array(
+		'bpm_blocking_email_notification'     => array(
 			'title'             => __( 'Email Notification', 'buddyboss' ),
 			'callback'          => 'bpm_blocking_settings_callback_email_notification',
 			'sanitize_callback' => 'intval',
