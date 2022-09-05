@@ -834,11 +834,11 @@ add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_
  */
 function bb_category_save_term_fields_show_when_reporting( $term_id ) {
 
-	if ( isset( $_POST['bb_category_show_when_reporting'] ) ) { // phpcs:ignore
+	if ( isset( $_POST['bb_category_show_when_reporting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		update_term_meta(
 			$term_id,
 			'bb_category_show_when_reporting',
-			sanitize_text_field( wp_unslash( $_POST['bb_category_show_when_reporting'] ) ) // phpcs:ignore
+			sanitize_text_field( wp_unslash( $_POST['bb_category_show_when_reporting'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		);
 	}
 }
