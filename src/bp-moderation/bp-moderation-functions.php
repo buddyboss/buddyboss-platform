@@ -334,8 +334,8 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
-		if( BP_Moderation_Members::$moderation_type === $item_type ) {
-			$response   = ( ! empty( $moderation->id ) && empty( $moderation->user_report ) );
+		if ( BP_Moderation_Members::$moderation_type === $item_type ) {
+			$response = ( ! empty( $moderation->id ) && empty( $moderation->user_report ) );
 		}
 	}
 
@@ -1230,4 +1230,29 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
 	 * @param int    $item_id     Item id.
 	 */
 	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss' ), $item_id );
+}
+
+/**
+ * Function to get reporting categories show when fields array.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bp_moderation_get_reporting_category_show_when_field_array() {
+
+	$result = array(
+		'content'         => esc_html__( 'Content', 'buddyboss' ),
+		'members'         => esc_html__( 'Members', 'buddyboss' ),
+		'content_members' => esc_html__( 'Content & Members', 'buddyboss' ),
+	);
+
+	/**
+	 * Filters the reported button text for different components
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $result Options for show when field.
+	 */
+	return apply_filters( 'bp_moderation_get_reporting_category_show_when_field_array', $result );
 }

@@ -552,7 +552,7 @@ function bp_moderation_block_user_profile_button( $buttons ) {
 		$buttons['member_report'] = __( 'Block', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable () ) {
+	if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) {
 		$buttons['member_block'] = __( 'Report Member', 'buddyboss' );
 	}
 
@@ -787,9 +787,12 @@ function bb_category_add_term_fields_show_when_reporting( $taxonomy ) {
 	<div class="form-field">
 		<label for="bb_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></label>
 		<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
-			<option value="content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
-			<option value="members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
-			<option value="content_members"><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+			<?php
+				$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
+			foreach ( $show_when_options as $key => $value ) {
+				printf( '<option value="%1$s" >%2$s</option>', esc_attr( $key ), esc_attr( $value ) );
+			}
+			?>
 		</select>
 	</div>
 	<?php
@@ -815,9 +818,12 @@ function bb_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
 		</th>
 		<td>
 			<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
-				<option value="content" <?php echo 'content' === $value ? esc_attr( 'selected' ) : ''; ?>><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
-				<option value="members" <?php echo 'members' === $value ? esc_attr( 'selected' ) : ''; ?>><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
-				<option value="content_members" <?php echo 'content_members' === $value ? esc_attr( 'selected' ) : ''; ?>><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+				<?php
+					$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
+				foreach ( $show_when_options as $key => $val ) {
+					printf( '<option value="%1$s" %2$s >%3$s</option>', esc_attr( $key ), selected( $value, $key, false ), esc_attr( $val ) );
+				}
+				?>
 			</select>
 		</td>
 	</tr>
@@ -874,15 +880,9 @@ add_filter( 'manage_edit-bpm_category_columns', 'bb_category_show_when_reporting
  * @return mixed Term meta data.
  */
 function bb_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
-	$value = get_term_meta( $term_id, $column_name, true );
-	switch ( $value ) {
-		case 'members':
-			return esc_html__( 'Members', 'buddyboss' );
-		case 'content_members':
-			return esc_html__( 'Content & Members', 'buddyboss' );
-		default:
-			return esc_html__( 'Content', 'buddyboss' );
-	}
+	$value             = get_term_meta( $term_id, $column_name, true );
+	$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
+	return ( isset( $show_when_options[ $value ] ) ? esc_attr( $show_when_options[ $value ] ) : esc_attr__( 'Content', 'buddyboss' ) );
 }
 add_filter( 'manage_bpm_category_custom_column', 'bb_category_show_when_reporting_column_display', 10, 3 );
 
@@ -908,9 +908,12 @@ function bb_quick_edit_bb_category_show_when_reporting_field( $column_name, $scr
 				<span class="title"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></span>
 				<span class="input-text-wrap">
 					<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
-						<option value="content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
-						<option value="members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
-						<option value="content_members"><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+						<?php
+							$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
+						foreach ( $show_when_options as $key => $value ) {
+							printf( '<option value="%1$s" >%2$s</option>', esc_attr( $key ), esc_attr( $value ) );
+						}
+						?>
 					</select>
 				</span>
 			</label>
