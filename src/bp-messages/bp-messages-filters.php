@@ -966,14 +966,14 @@ function bb_messages_compose_action_sub_nav() {
 		</a>
 		<ul class="bb_more_options_list message_action__list">
 			<li class="archived-messages">
-				<a href="<?php bb_messages_archived_url(); ?>" data-action="more_options"><?php echo esc_html__( 'Archived Messages', 'buddyboss' ); ?></a>
+				<a href="<?php bb_messages_archived_url(); ?>" data-action="more_options"><?php echo esc_html__( 'Archived messages', 'buddyboss' ); ?></a>
 			</li>
 			<?php
 			if ( bp_is_user_messages() && bp_is_active( 'notifications' ) ) {
 				$settings_slug = function_exists( 'bp_get_settings_slug' ) ? bp_get_settings_slug() : 'settings';
 				$settings_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . $settings_slug . '/notifications/';
 				$class         = function_exists( 'bb_enabled_legacy_email_preference' ) && false === bb_enabled_legacy_email_preference() ? 'notification_preferences' : 'email_preferences';
-				$title         = function_exists( 'bb_enabled_legacy_email_preference' ) && false === bb_enabled_legacy_email_preference() ? __( 'Notification Preferences', 'buddyboss' ) : __( 'Email Preferences', 'buddyboss' );
+				$title         = function_exists( 'bb_enabled_legacy_email_preference' ) && false === bb_enabled_legacy_email_preference() ? __( 'Notifications', 'buddyboss' ) : __( 'Email Preferences', 'buddyboss' );
 				?>
 				<li class="<?php echo esc_attr( $class ); ?>">
 					<a href="<?php echo esc_url( $settings_link ); ?>" data-action="more_options"><?php echo esc_html( $title ); ?></a>
