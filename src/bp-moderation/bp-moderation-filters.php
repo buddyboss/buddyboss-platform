@@ -229,9 +229,9 @@ function bp_moderation_block_member() {
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
 	// Member Report only.
-	$note     = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
+	$note     = filter_input( INPUT_POST, 'note', FILTER_DEFAULT );
 	$reported = filter_input( INPUT_POST, 'reported', FILTER_SANITIZE_NUMBER_INT );
-	$category = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
+	$category = filter_input( INPUT_POST, 'report_category', FILTER_DEFAULT );
 
 	if ( empty( $item_id ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
