@@ -213,6 +213,12 @@ function bb_notification_get_settings_fields() {
 				'sanitize_callback' => 'intval',
 				'args'              => array(),
 			),
+			'delay_email_notifications' => array(
+				'title'             => esc_html__( 'Delay Email Notifications', 'buddyboss' ),
+				'callback'          => 'bb_admin_setting_callback_delay_email_notification_fields',
+				'sanitize_callback' => 'intval',
+				'args'              => array(),
+			),
 		);
 
 	} else {
@@ -574,5 +580,39 @@ function bb_admin_setting_callback_hide_notification_fields() {
 	<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'hide_message_notification', 1 ) ); ?> />
 	<label for="hide_message_notification"><?php esc_html_e( 'Hide messages from notifications', 'buddyboss' ); ?></label>
 	<p class="description"><?php esc_html_e( 'When enabled, notifications for group and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Callback fields for the delay email notification fields options.
+ *
+ * @since [BBVERSION]
+ *
+ * @return void
+ */
+function bb_admin_setting_callback_delay_email_notification_fields() {
+
+	$html = '<select name="time_delay_email_notification">' .
+        '<option value="5">' . esc_html__( '5 mins', 'buddyboss-pro' ) . '</option>' .
+    '</select>';
+
+	?>
+	<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'delay_email_notification', 1 ) ); ?> />
+	<label for="delay_email_notification"><?php esc_html_e( 'Delay email notifications for new messages', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will delayed to allow time for members to read them on your site. After the delay, the emails will be only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
+
+	<p class="description">
+		<label for="time_delay_email_notification">
+			<?php
+			printf(
+				wp_kses_post(
+				/* translators: Permission validate select box. */
+					__( 'Delay notifications for %s', 'buddyboss-pro' )
+				),
+			    $html // phpcs:ignore
+			)
+			?>
+		</label>
+	</p>
 	<?php
 }
