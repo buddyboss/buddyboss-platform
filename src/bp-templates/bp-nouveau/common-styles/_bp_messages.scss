@@ -997,6 +997,10 @@ input#send-to-input {
 		-ms-flex-pack: start;
 		justify-content: flex-start;
 		flex: 1;
+
+			.post-elements-buttons-item.disable {
+				pointer-events: initial;
+		}
 	}
 
 	.medium-editor-toolbar {
