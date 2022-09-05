@@ -771,6 +771,20 @@ ul.medium-editor-toolbar-actions {
 	}
 }
 
+#whats-new-messages-toolbar {
+
+	.post-elements-buttons-item.disable,
+	.post-elements-buttons-item.disable.active {
+		opacity: 1;
+
+		a > i {
+			opacity: 0.4;
+		}
+
+	}
+
+}
+
 
 // link previews
 .activity-url-scrapper-loading {
