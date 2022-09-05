@@ -370,8 +370,8 @@ function bp_version_updater() {
 			bb_update_to_1_9_3();
 		}
 
-		if ( $raw_db_version < 18751 ) {
-			bb_update_to_1_9_5();
+		if ( $raw_db_version < 18755 ) {
+			bb_update_to_2_1_0();
 		}
 	}
 
@@ -1886,11 +1886,43 @@ function migrate_notification_preferences( $user_ids ) {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_1_9_5() {
+function bb_update_to_2_1_0() {
 
 	global $wpdb;
-	$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_moderation ADD `user_report` TINYINT NULL DEFAULT '0'" );
-	$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_suspend ADD `user_report` TINYINT NULL DEFAULT '0' AFTER `reported`; " );
+
+	//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$table_exists = (bool) $wpdb->get_results( "DESCRIBE {$wpdb->prefix}bp_moderation;" );
+
+	// Table already exists, so maybe upgrade instead?
+	if ( true === $table_exists ) {
+
+		// Look for the 'user_report' column.
+		//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$column_exists = $wpdb->query( "SHOW COLUMNS FROM {$wpdb->prefix}bp_moderation LIKE 'user_report'" );
+
+		// 'user_report' column doesn't exist, so run the upgrade
+		if ( empty( $column_exists ) ) {
+			//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+			$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_moderation ADD `user_report` TINYINT NULL DEFAULT '0'" );
+		}
+	}
+
+	//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$table_exists = (bool) $wpdb->get_results( "DESCRIBE {$wpdb->prefix}bp_suspend;" );
+
+	// Table already exists, so maybe upgrade instead?
+	if ( true === $table_exists ) {
+
+		// Look for the 'user_report' column.
+		//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$column_exists = $wpdb->query( "SHOW COLUMNS FROM {$wpdb->prefix}bp_suspend LIKE 'user_report'" );
+
+		// 'user_report' column doesn't exist, so run the upgrade
+		if ( empty( $column_exists ) ) {
+			//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+			$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_suspend ADD `user_report` TINYINT NULL DEFAULT '0' AFTER `reported`; " );
+		}
+	}
 }
 
 
