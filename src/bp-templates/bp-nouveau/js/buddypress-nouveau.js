@@ -2554,14 +2554,6 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if ( 'user_report' === $( '#bb-report-content' ).find( 'input[name="content_type"]' ).val() ) {
-						data.reported = 1;
-						data.action   = 'bp_moderation_block_member';
-						_this.memberReportAjax( data, e );
-						$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
-						return;
-					}
-
 					$.post(
 						BP_Nouveau.ajaxurl,
 						data,

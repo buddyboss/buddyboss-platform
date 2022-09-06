@@ -176,14 +176,18 @@ function bp_moderation_content_report() {
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
-		$moderation = bp_moderation_add(
-			array(
-				'content_id'   => $item_sub_id,
-				'content_type' => $item_sub_type,
-				'category_id'  => $category,
-				'note'         => $item_note,
-			)
+		$args = array(
+			'content_id'   => $item_sub_id,
+			'content_type' => $item_sub_type,
+			'category_id'  => $category,
+			'note'         => $item_note,
 		);
+
+		if ( BP_Moderation_Members::$moderation_type_report === $item_sub_type ) {
+			$args['user_report'] = 1;
+		}
+
+		$moderation = bp_moderation_add( $args );
 
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['moderation'] = $moderation;
@@ -549,11 +553,11 @@ add_action( 'wp_footer', 'bb_moderation_content_report_popup' );
 function bp_moderation_block_user_profile_button( $buttons ) {
 
 	if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
-		$buttons['member_report'] = __( 'Block', 'buddyboss' );
+		$buttons['member_block'] = __( 'Block', 'buddyboss' );
 	}
 
 	if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) {
-		$buttons['member_block'] = __( 'Report Member', 'buddyboss' );
+		$buttons['member_report'] = __( 'Report Member', 'buddyboss' );
 	}
 
 	return $buttons;

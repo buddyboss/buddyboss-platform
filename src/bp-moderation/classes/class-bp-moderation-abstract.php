@@ -135,7 +135,7 @@ abstract class BP_Moderation_Abstract {
 
 		if ( empty( $moderation->id ) ) {
 			$moderation->item_id   = $args['content_id'];
-			$moderation->item_type = $args['content_type'];
+			$moderation->item_type = ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ? BP_Moderation_Members::$moderation_type : $args['content_type'] );
 		}
 
 		$moderation->category_id  = isset( $args['category_id'] ) ? $args['category_id'] : 0;

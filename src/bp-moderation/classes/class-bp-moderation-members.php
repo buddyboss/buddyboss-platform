@@ -21,7 +21,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @var string
 	 */
-	public static $moderation_type        = 'user';
+	public static $moderation_type = 'user';
 
 	/**
 	 * Item type for report member.

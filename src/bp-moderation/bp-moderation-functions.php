@@ -334,8 +334,8 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
-		if ( BP_Moderation_Members::$moderation_type === $item_type ) {
-			$response = ( ! empty( $moderation->id ) && empty( $moderation->user_report ) );
+		if ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+			$response = ( ! empty( $moderation->id ) && ! empty( $moderation->user_report ) );
 		}
 	}
 
@@ -628,7 +628,12 @@ function bp_moderation_add( $args = array() ) {
 	$response = false;
 
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		// Called member class externally when content_type = report_member.
+		if ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
+			$class = BP_Moderation_Abstract::get_class( BP_Moderation_Members::$moderation_type );
+		} else {
+			$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		}
 
 		if ( method_exists( $class, 'report' ) ) {
 			$response = $class::report( $args );
@@ -943,8 +948,12 @@ function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
  * @uses  get_option() To get the bp_search_autocomplete option
  */
 function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
-	// Check for folder type and content type as document.
-	if ( BP_Moderation_Folder::$moderation_type === $content_type ) {
+
+	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
+		$content_type = BP_Moderation_Members::$moderation_type_report;
+
+		// Check for folder type and content type as document.
+	} elseif ( BP_Moderation_Folder::$moderation_type === $content_type ) {
 		$content_type = BP_Moderation_Document::$moderation_type;
 
 		// Check for album type and content type as media.
@@ -957,6 +966,10 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 	}
 
 	$settings = get_option( 'bpm_reporting_content_reporting', array() );
+
+	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
+		$settings[ $content_type ] = bb_is_moderation_member_reporting_enable();
+	}
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
 		if ( empty( $settings ) ) {

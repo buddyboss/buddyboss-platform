@@ -190,7 +190,7 @@ class BP_Moderation {
 	 *
 	 * @return false|int
 	 */
-	public static function check_moderation_exist( $item_id, $item_type, $force_check = false ) {
+	public static function check_moderation_exist( $item_id, $item_type, $force_check = false, $user_report = false ) {
 		global $wpdb;
 
 		$bp        = buddypress();
@@ -198,10 +198,12 @@ class BP_Moderation {
 		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result || true === $force_check ) {
-			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
-			if ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+			if ( true === $user_report ) {
 				$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.user_report = 1", $item_id, BP_Moderation_Members::$moderation_type ) ); // phpcs:ignore
+			} else {
+				$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
 			}
+
 			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
@@ -1097,13 +1099,13 @@ class BP_Moderation {
 		/**
 		 * Check Content report already exist or not.
 		 */
-		$this->id        = self::check_moderation_exist( $this->item_id, $this->item_type, true );
+		$this->id        = self::check_moderation_exist( $this->item_id, $this->item_type, true, (bool) $this->user_report );
 		$this->report_id = self::check_moderation_report_exist( $this->id, $this->user_id );
 
 		/**
 		 * IF any new Content reported then do some required actions
 		 */
-		if ( empty( $this->report_id ) || ( 0 === $this->user_report && BP_Moderation_Members::$moderation_type === $this->item_type ) ) {
+		if ( empty( $this->report_id ) || ( 0 === (int) $this->user_report && BP_Moderation_Members::$moderation_type === $this->item_type ) ) {
 
 			// Update last update time as new reported added.
 			$this->last_updated = current_time( 'mysql' );
@@ -1150,7 +1152,7 @@ class BP_Moderation {
 			if ( ! empty( $email_notification ) ) {
 				$this->send_emails();
 			}
-		} elseif ( BP_Moderation_Members::$moderation_type === $this->item_type ) {
+		} elseif ( BP_Moderation_Members::$moderation_type === $this->item_type && 0 === (int) $this->user_report ) {
 			// Content will be hide when Blocked User for reported.
 			$this->hide_related_content();
 		}
@@ -1197,28 +1199,24 @@ class BP_Moderation {
 	public function store() {
 		global $wpdb;
 
+		$args = array(
+			'item_id'      => $this->item_id,
+			'item_type'    => $this->item_type,
+			'reported'     => 1,
+			'user_report'  => $this->user_report,
+			'last_updated' => $this->last_updated,
+		);
+
+		if ( in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true ) && ! empty( $this->user_report ) ) {
+			$args['reported'] = 0;
+		}
+
 		// If we have an existing ID, update the moderation report item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = BP_Core_Suspend::add_suspend(
-				array(
-					'item_id'      => $this->item_id,
-					'item_type'    => $this->item_type,
-					'reported'     => 1,
-					'user_report'  => $this->user_report,
-					'last_updated' => $this->last_updated,
-				)
-			);
+			$q = BP_Core_Suspend::add_suspend( $args );
 		} else {
-			$q = BP_Core_Suspend::add_suspend(
-				array(
-					'item_id'      => $this->item_id,
-					'item_type'    => $this->item_type,
-					'reported'     => 1,
-					'user_report'  => $this->user_report,
-					'last_updated' => $this->last_updated,
-					'blog_id'      => $this->blog_id,
-				)
-			);
+			$args['blog_id'] = $this->blog_id;
+			$q               = BP_Core_Suspend::add_suspend( $args );
 		}
 
 		if ( false === $q ) { // phpcs:ignore
@@ -1227,7 +1225,7 @@ class BP_Moderation {
 
 		// If this is a new moderation report item, set the $id property.
 		if ( empty( $this->id ) ) {
-			$this->id = self::check_moderation_exist( $this->item_id, $this->item_type, true );
+			$this->id = self::check_moderation_exist( $this->item_id, $this->item_type, true, (bool) $this->user_report );
 		}
 
 		return true;
