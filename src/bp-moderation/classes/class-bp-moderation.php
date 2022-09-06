@@ -1247,16 +1247,16 @@ class BP_Moderation {
 			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id, user_report ) VALUES ( %d, %d, %s, %s, %d, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id, $this->user_report ); // phpcs:ignore
 
 			bp_moderation_update_meta( $this->id, '_count', $this->count );
-			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
+			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
 		} else if ( ! empty( $this->report_id ) ) {
 			$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d, user_report = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->user_report, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
 			bp_moderation_update_meta( $this->id, '_count', $this->count );
-			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
+			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
 		} else {
 			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id, user_report ) VALUES ( %d, %d, %s, %s, %d, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id, $this->user_report ); // phpcs:ignore
 
 			bp_moderation_update_meta( $this->id, '_count', $this->count );
-			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
+			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
 		}
 
 		if ( false === $wpdb->query( $q_report ) ) { // phpcs:ignore
