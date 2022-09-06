@@ -3969,6 +3969,16 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   pointer-events: none;
 }
 
+#whats-new-messages-toolbar .post-elements-buttons-item.disable,
+#whats-new-messages-toolbar .post-elements-buttons-item.disable.active {
+  opacity: 1;
+}
+
+#whats-new-messages-toolbar .post-elements-buttons-item.disable a > i,
+#whats-new-messages-toolbar .post-elements-buttons-item.disable.active a > i {
+  opacity: 0.4;
+}
+
 .activity-url-scrapper-loading {
   display: block;
   font-size: 14px;
