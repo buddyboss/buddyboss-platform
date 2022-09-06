@@ -1086,3 +1086,21 @@ function bbp_remove_page_attributes_metabox_for_forum() {
 }
 
 add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
+
+/**
+ * Function will remove template_redirect action when we view individual saved template
+ * in the Elementor plugin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_elementor_library_template() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+		return;
+	}
+
+	if ( isset( $_GET['elementor_library'] ) ) {
+		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+	}
+}
+add_action( 'bp_loaded', 'bb_elementor_library_template' );
+
