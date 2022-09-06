@@ -727,6 +727,8 @@ function bp_nouveau_get_members_buttons( $args ) {
 				'position'       => 29,
 			)
 		);
+	}
+	if ( is_user_logged_in() && bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) {
 		$buttons['member_block']  = bp_member_get_report_link(
 			array(
 				'parent_element' => $parent_element,
