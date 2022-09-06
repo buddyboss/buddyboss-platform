@@ -318,7 +318,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 }
 
 /**
- * Function to Check content Reported by current usr or not.
+ * Function to Check content Reported by current user or not.
  *
  * @since BuddyBoss 1.5.6
  *
@@ -343,7 +343,7 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 }
 
 /**
- * Function to Check member reported/blocked by current usr or not.
+ * Function to Check member reported/blocked by current user or not.
  *
  * @since BuddyBoss [BBVERSION]
  *
