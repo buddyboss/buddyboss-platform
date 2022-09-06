@@ -120,7 +120,7 @@ class BP_Moderation {
 	 * @since BuddyBoss [BBVERSION]
 	 * @var int
 	 */
-	public $user_reported = 0;
+	public $count_report = 0;
 
 	/**
 	 * Report flag for members Moderation report.
@@ -266,7 +266,7 @@ class BP_Moderation {
 		$this->last_updated  = $row->last_updated;
 		$this->blog_id       = (int) $row->blog_id;
 		$this->count         = (int) bp_moderation_get_meta( $this->id, '_count' );
-		$this->user_reported = (int) bp_moderation_get_meta( $this->id, '_count_user_reported' );
+		$this->count_report  = (int) bp_moderation_get_meta( $this->id, '_count_user_reported' );
 
 		/**
 		 * Fetch User Report data
@@ -828,7 +828,7 @@ class BP_Moderation {
 				$moderation->hide_sitewide = (int) $moderation->hide_sitewide;
 				$moderation->blog_id       = (int) $moderation->blog_id;
 				$moderation->count         = (int) bp_moderation_get_meta( $moderation->id, '_count' );
-				$moderation->user_reported = (int) bp_moderation_get_meta( $moderation->id, '_count_user_reported' );
+				$moderation->count_report  = (int) bp_moderation_get_meta( $moderation->id, '_count_user_reported' );
 				$moderation->user_report   = $moderation->user_report;
 			}
 			$moderations[] = $moderation;
@@ -1014,7 +1014,7 @@ class BP_Moderation {
 
 		$this->hide_sitewide = 1;
 
-		if ( $this->count <= 0 && $this->user_reported <= 0 ) {
+		if ( $this->count <= 0 && $this->count_report <= 0 ) {
 			$this->save();
 		}
 
@@ -1112,9 +1112,9 @@ class BP_Moderation {
 
 			// Update count and check $threshold for auto hide/suspended and send email notification if auto hide/suspended.
 			$this->count         = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
-			$this->user_reported = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
+			$this->count_report  = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
 			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->user_report ) ) {
-				$this->user_reported += 1;
+				$this->count_report += 1;
 			} else {
 				$this->count += 1;
 			}
@@ -1123,7 +1123,7 @@ class BP_Moderation {
 					$this->hide_sitewide = 1;
 					$auto_hide           = true;
 				}
-				if ( BP_Moderation_Members::$moderation_type === $this->item_type && $this->user_reported >= $user_threshold && empty( $this->hide_sitewide ) ) {
+				if ( BP_Moderation_Members::$moderation_type === $this->item_type && $this->count_report >= $user_threshold && empty( $this->hide_sitewide ) ) {
 					$this->hide_sitewide = 1;
 					$auto_hide           = true;
 				}
@@ -1296,7 +1296,7 @@ class BP_Moderation {
 				$tokens = array(
 					'user_name'      => bp_core_get_user_displayname( $this->item_id ),
 					'times_blocked'  => $this->count,
-					'times_reported' => $this->user_reported,
+					'times_reported' => $this->count_report,
 					'member_link'    => BP_Moderation_Members::get_permalink( $this->item_id ),
 					'report_link'    => add_query_arg(
 						array(
@@ -1416,7 +1416,7 @@ class BP_Moderation {
 		if ( ! empty( $this->report_id ) ) {
 			$updated_row = $this->delete_report( $force_all );
 
-			if ( 1 > $this->count && 1 > $this->user_reported ) {
+			if ( 1 > $this->count && 1 > $this->count_report ) {
 				$delete_parent = true;
 			}
 		}
@@ -1461,16 +1461,16 @@ class BP_Moderation {
 		if ( ! empty( $updated_row ) ) {
 			$this->report_id = null;
 			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->user_report ) ) {
-				$this->user_reported -= 1;
+				$this->count_report -= 1;
 			} else {
 				$this->count -= 1;
 			}
 
-			if ( 0 <= $this->count ) {
+			if ( 0 < $this->count ) {
 				bp_moderation_update_meta( $this->id, '_count', $this->count );
 			}
-			if ( 0 <= $this->user_reported ) {
-				bp_moderation_update_meta( $this->id, '_count_user_reported', $this->user_reported );
+			if ( 0 < $this->count_report ) {
+				bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
 			}
 		}
 

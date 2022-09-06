@@ -157,9 +157,9 @@ $admins            = array_map(
 										</div>
 										<div class="report-header_content">
 											<strong class="report-header_number">
-												<?php echo esc_html( bp_core_number_format( $moderation_request_data->user_reported ) ); ?>
+												<?php echo esc_html( bp_core_number_format( $moderation_request_data->count_report ) ); ?>
 											</strong>
-											<?php echo ( 1 === $moderation_request_data->user_reported ) ? esc_html__( 'Report', 'buddyboss' ) : esc_html__( 'Reports', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->count_report ) ? esc_html__( 'Report', 'buddyboss' ) : esc_html__( 'Reports', 'buddyboss' ); ?>
 										</div>
 										<div class="report-header_action">
 											<?php
