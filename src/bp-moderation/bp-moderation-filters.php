@@ -49,6 +49,15 @@ function bb_moderation_load() {
 	if ( bp_is_active( 'messages' ) ) {
 		new BP_Moderation_Message();
 	}
+
+	/**
+	 * Handle notification.
+	 *
+	 * @since BuddyBoss 2.0.3
+	 */
+	if ( bp_is_active( 'notifications' ) ) {
+		new BP_Moderation_Notification();
+	}
 }
 
 add_action( 'bp_init', 'bb_moderation_load', 1 );
@@ -256,11 +265,10 @@ function bp_moderation_block_member() {
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['moderation'] = $moderation;
 
-			$friend_status = bp_is_friend( $item_id );
+			$friend_status = function_exists( 'bp_is_friend' ) && bp_is_active( 'friends' ) ? bp_is_friend( $item_id ) : array();
 			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
-
 			if ( bp_is_following(
 				array(
 					'leader_id'   => $item_id,
@@ -643,7 +651,7 @@ add_action( 'bb_suspend_unhide_before', 'bp_core_clear_cache' );
 /**
  * Add moderation repair list.
  *
- * @param array $repair_list
+ * @param array $repair_list Repair list.
  *
  * @since BuddyBoss 1.7.5
  *
@@ -652,7 +660,7 @@ add_action( 'bb_suspend_unhide_before', 'bp_core_clear_cache' );
 function bb_moderation_migrate_old_data( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-moderation-data',
-		__( 'Repair moderation data.', 'buddyboss' ),
+		esc_html__( 'Repair moderation data', 'buddyboss' ),
 		'bb_moderation_admin_repair_old_moderation_data',
 	);
 
@@ -688,7 +696,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Moderation update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing moderation data &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -701,7 +709,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
  * @return array|mixed
  */
 function bp_moderation_get_js_dependencies( $js_handles = array() ) {
-	if ( bp_is_active( 'forums' ) && bbp_is_single_topic() ) { // Topic detail page.
+	if ( bp_is_active( 'forums' ) && ( bbp_is_single_topic() || bbp_is_single_forum() ) ) { // Topic or forum detail page.
 		$js_handles[] = 'bp-nouveau-magnific-popup';
 	}
 
@@ -709,3 +717,25 @@ function bp_moderation_get_js_dependencies( $js_handles = array() ) {
 }
 
 add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 10, 1 );
+
+/**
+ * Check the user blocked/suspended or not?
+ *
+ * @since BuddyBoss 2.0.3
+ *
+ * @param bool $retval  Default false.
+ * @param int  $item_id Blocking User ID.
+ * @param int  $user_id Blocked User ID.
+ *
+ * @return bool True if the user blocked/suspended otherwise false.
+ */
+function bb_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) {
+	if ( bp_moderation_is_user_blocked( $user_id, $item_id ) ) {
+		return true;
+	} else if ( bp_moderation_is_user_suspended( $item_id ) ) {
+		return true;
+	}
+
+	return (bool) $retval;
+}
+add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated', 10, 3 );

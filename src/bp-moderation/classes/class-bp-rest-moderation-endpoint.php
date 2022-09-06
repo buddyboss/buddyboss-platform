@@ -405,9 +405,18 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $moderation->id ) ) {
 
-			$friend_status = bp_is_friend( $item_id );
-			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
-				friends_remove_friend( bp_loggedin_user_id(), $item_id );
+			if ( bp_is_active( 'friends' ) ) {
+				$friend_status = bp_is_friend( $item_id );
+				if (
+					! empty( $friend_status ) &&
+					in_array(
+						$friend_status,
+						array( 'is_friend', 'pending', 'awaiting_response' ),
+						true
+					)
+				) {
+					friends_remove_friend( bp_loggedin_user_id(), $item_id );
+				}
 			}
 
 			if ( bp_is_following(
@@ -1337,6 +1346,36 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				),
 			)
 		);
+
+		// Added moderation data into group members endpoint.
+		register_rest_field(
+			'bp_group_members',
+			'can_report',
+			array(
+				'get_callback' => array( $this, 'bp_rest_member_can_report' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		register_rest_field(
+			'bp_group_members',
+			'reported',
+			array(
+				'get_callback' => array( $this, 'bp_rest_member_is_reported' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the member is reported or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
 	}
 
 	/**

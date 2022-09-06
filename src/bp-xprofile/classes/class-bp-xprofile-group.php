@@ -271,10 +271,11 @@ class BP_XProfile_Group {
 	 */
 	public static function get( $args = array() ) {
 		static $bp_xprofile_group_ids = array();
+		static $bp_xprofile_field_ids = array();
 		global $wpdb;
 
 		// Parse arguments.
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'profile_group_id'               => false,
@@ -293,12 +294,6 @@ class BP_XProfile_Group {
 				'fetch_social_network_fields'    => false,
 			)
 		);
-
-		$cache_key = 'groups_' . md5( maybe_serialize( $r ) );
-
-		if ( isset( $bp_xprofile_group_ids[ $cache_key ] ) ) {
-			return $bp_xprofile_group_ids[ $cache_key ];
-		}
 
 		// Keep track of object IDs for cache-priming.
 		$object_ids = array(
@@ -320,10 +315,16 @@ class BP_XProfile_Group {
 		$bp = buddypress();
 
 		// Include or exclude empty groups.
-		if ( ! empty( $r['hide_empty_groups'] ) ) {
-			$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
+		$cache_key = 'bp_xprofile_group_ids_' . md5( maybe_serialize( $r ) . '_' . maybe_serialize( $where_sql ) );
+		if ( ! isset( $bp_xprofile_group_ids[ $cache_key ] ) ) {
+			if ( ! empty( $r['hide_empty_groups'] ) ) {
+				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
+			} else {
+				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
+			}
+			$bp_xprofile_group_ids[ $cache_key ] = $group_ids;
 		} else {
-			$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
+			$group_ids = $bp_xprofile_group_ids[ $cache_key ];
 		}
 
 		// Get all group data.
@@ -331,7 +332,6 @@ class BP_XProfile_Group {
 
 		// Bail if not also getting fields.
 		if ( empty( $r['fetch_fields'] ) ) {
-			$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -343,7 +343,6 @@ class BP_XProfile_Group {
 
 		// Bail if no groups found.
 		if ( empty( $group_ids ) ) {
-			$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -427,7 +426,13 @@ class BP_XProfile_Group {
 		}
 
 		// Fetch the fields.
-		$field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+		$cache_field_key = 'bp_xprofile_field_ids_' . md5( maybe_serialize( $r ) );
+		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) ) {
+			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+			$bp_xprofile_field_ids[ $cache_field_key ] = $field_ids;
+		} else {
+			$field_ids = $bp_xprofile_field_ids[ $cache_field_key ];
+		}
 
 		foreach ( $groups as $group ) {
 			$group->fields = array();
@@ -435,7 +440,6 @@ class BP_XProfile_Group {
 
 		// Bail if no fields.
 		if ( empty( $field_ids ) ) {
-			$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -571,8 +575,6 @@ class BP_XProfile_Group {
 			// Reset indexes.
 			$groups = array_values( $groups );
 		}
-
-		$bp_xprofile_group_ids[ $cache_key ] = $groups;
 
 		return $groups;
 	}

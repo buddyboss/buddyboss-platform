@@ -461,7 +461,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 
 	return array(
 		'id'             => $item->id,
-		'name'           => wp_specialchars_decode( $item->name ),
+		'name'           => bp_get_group_name( $item ),
 		'avatar_url'     => $item_avatar_url,
 		'object_type'    => 'group',
 		'is_public'      => ( 'public' === $item->status ),
@@ -1217,6 +1217,11 @@ function bp_nouveau_group_get_core_manage_screens( $id = '' ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_notification_filters() {
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		return;
+	}
+
 	$notifications = array(
 		array(
 			'id'       => 'new_membership_request',

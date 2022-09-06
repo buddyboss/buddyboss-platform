@@ -9,6 +9,73 @@ window.bp = window.bp || {};
 
 	$(
 		function() {
+
+
+			// Add buttons to Email Template screen.
+			var $email_template_screen = $( '.edit-php.post-type-bp-email' ),
+				$title_action   = $email_template_screen.find( '.page-title-action:first' );
+
+			$title_action.after( BP_ADMIN.email_template.html );
+
+			$( document ).on(
+				'click',
+				'.btn-open-missing-email',
+				function(e) {
+					e.preventDefault();
+
+					if ( $( document ).find( '#bp-hello-backdrop' ).length ) {
+					} else {
+						var finder = $( document ).find( '.bp-hello-email' );
+						$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
+					}
+					var backdrop = document.getElementById( 'bp-hello-backdrop' ),
+						modal    = document.getElementById( 'bp-hello-container' );
+
+					if ( null === backdrop ) {
+						return;
+					}
+					document.body.classList.add( 'bp-disable-scroll' );
+
+					// Show modal and overlay.
+					backdrop.style.display = '';
+					modal.style.display    = '';
+
+					// Focus the "X" so bp_hello_handle_keyboard_events() works.
+					var focus_target = modal.querySelectorAll( 'a[href], button' );
+					focus_target     = Array.prototype.slice.call( focus_target );
+					focus_target[0].focus();
+				}
+			);
+
+			var displayInstallEMailPopup = $.bbGetParameterByName( 'popup' );
+			if ( 'yes' === displayInstallEMailPopup ) {
+				$( '.btn-open-missing-email' ).trigger( 'click' );
+			}
+
+			/* jshint ignore:start */
+			var missingEmailInstallScroll = bbgetUrlParameter( 'scrollto' );
+			if ( 'bpmissingemails' === missingEmailInstallScroll ) {
+				$('html, body').animate({
+					scrollTop: $( '#bp-missing-emails' ).offset().top
+				}, 1500);
+				$( '.label-bp-missing-emails' ).css('background-color', '#faafaa');
+				setTimeout(function () {
+					$( '.label-bp-missing-emails' ).css('background-color', 'transparent');
+				}, 1500);
+			}
+
+			var reInstallEmailScroll = bbgetUrlParameter( 'scrollto' );
+			if ( 'bpreinstallemails' === reInstallEmailScroll ) {
+				$('html, body').animate({
+					scrollTop: $( '#bp-reinstall-emails' ).offset().top
+				}, 1500);
+				$( '.label-bp-reinstall-emails' ).css('background-color', '#faafaa');
+				setTimeout(function () {
+					$( '.label-bp-reinstall-emails' ).css('background-color', 'transparent');
+				}, 1500);
+			}
+			/* jshint ignore:end */
+
 			$( '[data-run-js-condition]' ).each(
 				function() {
 					var id  = $( this ).data( 'run-js-condition' );
@@ -877,6 +944,10 @@ window.bp = window.bp || {};
 											} else {
 												$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools' ).remove();
 												$( '.section-repair_community .settings fieldset' ).append( '<div class="updated"><p>' + response.data.message + '</p></div>' );
+												if ( typeof response.data.records !== 'undefined' && '' !== response.data.records ) {
+													$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] code' ).remove();
+													$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]' ).append( '<code>' + response.data.records + '</code>' );
+												}
 												currentAction = currentAction + 1;
 												bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
 											}
@@ -1596,57 +1667,61 @@ window.bp = window.bp || {};
 			// Confirmed box appears when change profile sizes options.
 			var is_confirmed_show = false;
 
-			var bpCoverProfileWidth  = $( 'select[id="bb-cover-profile-width"] option:selected' ).val();
-			var bpCoverProfileHeight = $( 'select[id="bb-cover-profile-height"] option:selected' ).val();
-			$( '#bp_member_avatar_settings' ).on(
-				'change',
-				'select[id="bb-cover-profile-width"], select[id="bb-cover-profile-height"]',
-				function(e) {
-					e.preventDefault();
+			if ( $( '#bp_member_avatar_settings .image-width-height' ).length ) {
+				var bpCoverProfileWidth  = $( 'select#bb-cover-profile-width' ).find( 'option:selected' ).val();
+				var bpCoverProfileHeight = $( 'select#bb-cover-profile-height' ).find( 'option:selected' ).val();
+				$( '#bp_member_avatar_settings' ).on(
+					'change',
+					'select#bb-cover-profile-width, select#bb-cover-profile-height',
+					function(e) {
+						e.preventDefault();
 
-					is_confirmed_show = true;
-					if ( 'bb-cover-profile-width' === $( this ).attr( 'id' ) && bpCoverProfileWidth === $( this ).val() ) {
-						is_confirmed_show = false;
-					} else if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) && bpCoverProfileHeight === $( this ).val() ) {
-						is_confirmed_show = false;
-					}
+						is_confirmed_show = true;
+						if ( 'bb-cover-profile-width' === $( this ).attr( 'id' ) && bpCoverProfileWidth === $( this ).val() ) {
+							is_confirmed_show = false;
+						} else if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) && bpCoverProfileHeight === $( this ).val() ) {
+							is_confirmed_show = false;
+						}
 
-					// Add class to preview section for browser only.
-					if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) ) {
-						if ( 'small' === $( this ).val() ) {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
-						} else {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						// Add class to preview section for browser only.
+						if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) ) {
+							if ( 'small' === $( this ).val() ) {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+							} else {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+							}
 						}
 					}
-				}
-			);
+				);
+			}
 
-			var bpCoverGroupWidth  = $( 'select[id="bb-cover-group-width"] option:selected' ).val();
-			var bpCoverGroupHeight = $( 'select[id="bb-cover-group-height"] option:selected' ).val();
-			$( '#bp_groups_avatar_settings' ).on(
-				'change',
-				'select[id="bb-cover-group-width"], select[id="bb-cover-group-height"]',
-				function(e) {
-					e.preventDefault();
+			if ( $( '#bp_groups_avatar_settings .image-width-height' ).length ) {
+				var bpCoverGroupWidth  = $( 'select#bb-cover-group-width' ).find( 'option:selected' ).val();
+				var bpCoverGroupHeight = $( 'select#bb-cover-group-height' ).find( 'option:selected' ).val();
+				$( '#bp_groups_avatar_settings' ).on(
+					'change',
+					'select#bb-cover-group-width, select#bb-cover-group-height',
+					function(e) {
+						e.preventDefault();
 
-					is_confirmed_show = true;
-					if ( 'bb-cover-group-width' === $( this ).attr( 'id' ) && bpCoverGroupWidth === $( this ).val() ) {
-						is_confirmed_show = false;
-					} else if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) && bpCoverGroupHeight === $( this ).val() ) {
-						is_confirmed_show = false;
-					}
+						is_confirmed_show = true;
+						if ( 'bb-cover-group-width' === $( this ).attr( 'id' ) && bpCoverGroupWidth === $( this ).val() ) {
+							is_confirmed_show = false;
+						} else if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) && bpCoverGroupHeight === $( this ).val() ) {
+							is_confirmed_show = false;
+						}
 
-					// Add class to preview section for browser only.
-					if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) ) {
-						if ( 'small' === $( this ).val() ) {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
-						} else {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						// Add class to preview section for browser only.
+						if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) ) {
+							if ( 'small' === $( this ).val() ) {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+							} else {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+							}
 						}
 					}
-				}
-			);
+				);
+			}
 
 			$( 'body.buddyboss_page_bp-settings' ).on(
 				'click',
@@ -2126,6 +2201,81 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			$( document ).on(
+				'click',
+				'.notification-defaults',
+				function () {
+					var isHidden = $( this ).next( '.manage-defaults' );
+					if ( isHidden.hasClass( 'manage-defaults-hide' ) ) {
+						$( this ).next( '.manage-defaults' ).removeClass( 'manage-defaults-hide' );
+					} else {
+						$( this ).next( '.manage-defaults' ).addClass( 'manage-defaults-hide' );
+					}
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'.bb-notification-checkbox',
+				function () {
+					if ( false === $( this ).prop( 'checked' ) ) {
+						$( this ).parents( '.field-block' ).find( '.manage-defaults .field-wrap' ).addClass( 'disabled' );
+					} else {
+						$( this ).parents( '.field-block' ).find( '.manage-defaults .field-wrap' ).removeClass( 'disabled' );
+					}
+				}
+			);
+
+			// Run only post_type is member type and group type.
+			if (
+				'undefined' !== typeof BP_ADMIN.post_type &&
+				'object' === typeof jQuery.wp &&
+				'function' === typeof jQuery.wp.wpColorPicker
+			) {
+				var type = BP_ADMIN.post_type;
+				if ( type ) {
+					if ( $( '#' + type + '-label-background-color' ).length ) {
+						$( '#' + type + '-label-background-color' ).wpColorPicker();
+					}
+					if ( $( '#' + type + '-label-text-color' ).length ) {
+						$( '#' + type + '-label-text-color' ).wpColorPicker();
+					}
+					if ( $( '#' + type + '-label-color-type' ).length ) {
+						$( document ).on(
+							'change',
+							'#' + type + '-label-color-type',
+							function ( e ) {
+								e.preventDefault();
+								if ( 'default' === $( this ).val() ) {
+									$( '#' + type + '-color-settings' ).hide();
+								} else {
+									$( '#' + type + '-color-settings' ).show();
+								}
+							}
+						);
+					}
+
+					$( '.wp-picker-input-wrap .wp-picker-clear' ).click( function ( e ) {
+						e.preventDefault();
+						var colorPickerId = $( this ).closest( 'span' ).find( '.wp-color-picker' ).attr( 'id' );
+						if ( type + '-label-background-color' === colorPickerId ) {
+							var defaultBgColor = ( 'undefined' !== typeof BP_ADMIN.background_color ) ? BP_ADMIN.background_color : '';
+							if ( defaultBgColor ) {
+								$( '#' + type + '-label-background-color' ).val( defaultBgColor );
+								$( '#' + type + '-background-color-colorpicker .wp-color-result' ).css( 'background-color', defaultBgColor );
+							}
+						}
+						if ( type + '-label-text-color' === colorPickerId ) {
+							var defaultTextColor = 'undefined' !== typeof BP_ADMIN.color ? BP_ADMIN.color : '';
+							if ( defaultTextColor ) {
+								$( '#' + type + '-label-text-color' ).val( defaultTextColor );
+								$( '#' + type + '-text-color-colorpicker .wp-color-result' ).css( 'background-color', defaultTextColor );
+							}
+						}
+					} );
+				}
+			}
 		}
 	);
 
@@ -2136,6 +2286,21 @@ window.bp = window.bp || {};
 		var expires     = 'expires=' + d.toUTCString();
 		document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 	}
+
+	// Read a page's GET URL variables and return them as an associative array.
+
+	$.bbGetParameterByName = function(name) {
+		var results = new RegExp('[\\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+		return (results && results[1]) ? results[1] : null;
+	};
+
+	function bbgetUrlParameter(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
 	/* jshint ignore:end */
 
 }());

@@ -718,6 +718,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 
 	if ( isset( $menu_item->classes ) && is_array( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
 		$menu_item->type_label = __( 'BuddyBoss', 'buddyboss' );
+		$menu_item->menu_type  = 'buddyboss';
 	}
 
 	if ( is_admin() ) {
@@ -1122,6 +1123,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 	// These options are escaped with esc_html on the way into the database in sanitize_option().
 	$tokens['site.description'] = wp_specialchars_decode( bp_get_option( 'blogdescription' ), ENT_QUOTES );
 	$tokens['site.name']        = wp_specialchars_decode( bp_get_option( 'blogname' ), ENT_QUOTES );
+	$tokens['reset.url']        = esc_url( wp_lostpassword_url() );
 
 	// Default values for tokens set conditionally below.
 	$tokens['email.preheader']    = '';
@@ -1164,7 +1166,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 		$tokens['unsubscribe'] = wp_login_url();
 	}
 
-	// Email preheader.
+	// Email pre header.
 	$post = $email->get_post_object();
 	if ( $post ) {
 		$tokens['email.preheader'] = sanitize_text_field( get_post_meta( $post->ID, 'bp_email_preheader', true ) );
@@ -2063,3 +2065,80 @@ function bb_member_enabled_gravatar( $no_grav, $params ) {
 	return $no_grav;
 }
 add_filter( 'bp_core_fetch_avatar_no_grav', 'bb_member_enabled_gravatar', 99, 2 );
+
+/**
+ * Filter the admin emails by notification preference.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param WP_Query $query The WP_Query instance (passed by reference).
+ */
+function bb_filter_admin_emails( $query ) {
+	if (
+		is_admin() &&
+		$query->get( 'post_type' ) === bp_get_email_post_type() &&
+		! empty( $_GET['terms'] ) // phpcs:ignore
+	) {
+		$taxquery = array(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'field'    => 'slug',
+				'terms'    => explode( ',', $_GET['terms'] ), // phpcs:ignore
+			),
+		);
+
+		$query->set( 'tax_query', $taxquery );
+	}
+}
+add_action( 'pre_get_posts', 'bb_filter_admin_emails' );
+
+/**
+ * Filter to change the display user URLs and current user URLs.
+ *
+ * @since BuddyBoss 2.0.6
+ *
+ * @param array    $atts {
+ *        The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
+ *
+ *     @type string $title  Title attribute.
+ *     @type string $target Target attribute.
+ *     @type string $rel    The rel attribute.
+ *     @type string $href   The href attribute.
+ * }
+ * @param WP_Post  $item  The current menu item.
+ * @param stdClass $args  An object of wp_nav_menu() arguments.
+ * @param int      $depth Depth of menu item. Used for padding.
+ */
+function bb_change_nav_menu_links( $atts, $item, $args, $depth ) {
+
+	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type && isset( $atts['href'] ) ) {
+		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+			$atts['href'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $atts['href'] );
+		}
+	}
+
+	return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
+
+/**
+ * Filters to update the active classes for display user URLs and current user URLs.
+ *
+ * @since BuddyBoss 2.0.6
+ *
+ * @param array    $classes The CSS classes that are applied to the menu item's `<li>` element.
+ * @param WP_Post  $item    The current menu item.
+ * @param stdClass $args    An object of wp_nav_menu() arguments.
+ * @param int      $depth   Depth of menu item. Used for padding.
+ */
+function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
+
+	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type ) {
+		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+			$classes = array_diff( $classes, array( 'current-menu-item', 'current_page_item' ) );
+		}
+	}
+
+	return $classes;
+}
+add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );

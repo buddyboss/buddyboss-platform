@@ -44,7 +44,7 @@ add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 
 add_action( 'messages_message_sent', 'bp_video_attach_video_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_video_messages_delete_attached_video', 10, 2 ); // Delete thread videos.
 add_action( 'bp_messages_thread_messages_after_update', 'bp_video_user_messages_delete_attached_video', 10, 4 ); // Delete messages videos.
-add_filter( 'bp_messages_message_validated_content', 'bp_video_message_validated_content', 10, 3 );
+add_filter( 'bp_messages_message_validated_content', 'bp_video_message_validated_content', 20, 3 );
 
 // Core tools.
 add_filter( 'bp_repair_list', 'bp_video_add_admin_repair_items' );
@@ -70,6 +70,11 @@ add_filter( 'bb_check_ios_device', 'bb_video_safari_popup_video_play', 1 );
 add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
 add_filter( 'query_vars', 'bb_setup_query_video_preview' );
 add_action( 'template_include', 'bb_setup_template_for_video_preview', PHP_INT_MAX );
+
+// Setup rewrite rule to access attachment video.
+add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_video_preview' );
+add_filter( 'query_vars', 'bb_setup_attachment_video_preview_query' );
+add_action( 'template_include', 'bb_setup_attachment_video_preview_template', PHP_INT_MAX );
 
 /**
  * Add video theatre template for activity pages.
@@ -227,8 +232,8 @@ function bp_video_activity_append_video( $content, $activity ) {
 				( $video_template->video_count > 5 ? esc_attr( ' bb-video-length-more' ) : '' ),
 				( true === $is_forum_activity ? esc_attr( ' forums-video-wrap' ) : '' ),
 			);
+			ob_start();
 			?>
-			<?php ob_start(); ?>
 			<div class="bb-activity-video-wrap <?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
 				<?php
 				bp_get_template_part( 'video/add-video-thumbnail' );
@@ -417,8 +422,8 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 			if ( ! empty( $old_video_ids ) ) {
 
 				foreach ( $old_video_ids as $video_id ) {
-				    if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) && ! in_array( $video_id, $video_ids ) ) {
-					    $video_ids[] = $video_id;
+					if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) && ! in_array( $video_id, $video_ids ) ) {
+						$video_ids[] = $video_id;
 					}
 				    if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
 						bp_video_delete( array( 'id' => $video_id ) );
@@ -778,20 +783,20 @@ function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids,
 /**
  * Validate message if video is not empty.
  *
- * @param bool         $validated_content Boolean from filter.
+ * @since BuddyBoss 2.0.4
+ *
+ * @param bool         $validated_content True if message is valid, false otherwise.
  * @param string       $content           Message content.
  * @param array|object $post              Request object.
  *
  * @return bool
- *
- * @since BuddyBoss 1.7.0
  */
 function bp_video_message_validated_content( $validated_content, $content, $post ) {
-	// check if video is enabled in messages or not and empty video in object request or not.
-	if ( bp_is_messages_video_support_enabled() && ! empty( $post['video'] ) ) {
-		$validated_content = true;
+	if ( ! bp_is_messages_video_support_enabled() || ! isset( $post['video'] ) ) {
+		return (bool) $validated_content;
 	}
-	return $validated_content;
+
+	return (bool) ! empty( $post['video'] );
 }
 
 /**
@@ -883,12 +888,12 @@ function bp_video_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-video',
-			__( 'Repair video on the site.', 'buddyboss' ),
+			esc_html__( 'Repair videos', 'buddyboss' ),
 			'bp_video_admin_repair_video',
 		);
 		$repair_list[] = array(
 			'bp-video-forum-privacy-repair',
-			__( 'Repair forum video privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum video privacy', 'buddyboss' ),
 			'bp_video_forum_privacy_repair',
 		);
 	}
@@ -942,7 +947,7 @@ function bp_video_admin_repair_video() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );  // phpcs:ignore
+		$records_updated = sprintf( __( '%s videos updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );  // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -952,7 +957,7 @@ function bp_video_admin_repair_video() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Video update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing videos &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -981,7 +986,7 @@ function bp_video_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ); // phpcs:ignore
+		$records_updated = sprintf( __( '%s forums video privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ); // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -989,7 +994,7 @@ function bp_video_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Forums video privacy updated %s', 'buddyboss' ); // phpcs:ignore
+		$statement = __( 'Repairing forum video privacy &hellip; %s', 'buddyboss' ); // phpcs:ignore
 
 		return array(
 			'status'  => 1,
@@ -1809,6 +1814,56 @@ function bb_setup_template_for_video_preview( $template ) {
 		do_action( 'bb_setup_template_for_video_thumb_preview' );
 
 		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/preview.php';
+	}
+
+	return $template;
+}
+
+/**
+ * Add rewrite rule to setup attachment video preview.
+ *
+ * @since BuddyBoss 2.0.4
+ */
+function bb_setup_attachment_video_preview() {
+	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]', 'top' );
+}
+
+/**
+ * Setup query variable for attachment video preview.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ */
+function bb_setup_attachment_video_preview_query( $query_vars ) {
+	$query_vars[] = 'video-attachment-id';
+
+	return $query_vars;
+}
+
+/**
+ * Setup template for the attachment video play.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param string $template Template path to include.
+ *
+ * @return string
+ */
+function bb_setup_attachment_video_preview_template( $template ) {
+
+	if ( ! empty( get_query_var( 'video-attachment-id' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss 2.0.4
+		 */
+		do_action( 'bb_setup_attachment_video_preview_template' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/attachment.php';
 	}
 
 	return $template;

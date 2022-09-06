@@ -154,23 +154,32 @@
 
 					<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_topic_edit() || ( bbp_is_topic_edit() && ! bbp_is_topic_anonymous() ) ) ) : ?>
 
-						<?php do_action( 'bbp_theme_before_topic_form_subscriptions' ); ?>
+						<?php
+						if (
+							bb_enabled_legacy_email_preference() ||
+							( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) )
+						) {
+							?>
 
-						<p class="checkbox bp-checkbox-wrap">
-							<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe" <?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+							<?php do_action( 'bbp_theme_before_topic_form_subscriptions' ); ?>
 
-							<?php if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) : ?>
+							<p class="checkbox bp-checkbox-wrap">
+								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe" <?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 
-								<label for="bbp_topic_subscription"><?php _e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
+								<?php if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) : ?>
 
-							<?php else : ?>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
 
-								<label for="bbp_topic_subscription"><?php _e( 'Notify me of follow-up replies via email', 'buddyboss' ); ?></label>
+								<?php else : ?>
 
-							<?php endif; ?>
-						</p>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of follow-up replies via email', 'buddyboss' ); ?></label>
 
-						<?php do_action( 'bbp_theme_after_topic_form_subscriptions' ); ?>
+								<?php endif; ?>
+							</p>
+
+							<?php do_action( 'bbp_theme_after_topic_form_subscriptions' ); ?>
+
+						<?php } ?>
 
 					<?php endif; ?>
 
@@ -199,6 +208,8 @@
 					<div class="bbp-submit-wrapper">
 
 						<?php do_action( 'bbp_theme_before_topic_form_submit_button' ); ?>
+
+						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_topic_discard_draft" name="bb_topic_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss' ); ?></button>
 
 						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit"><?php _e( 'Post', 'buddyboss' ); ?></button>
 

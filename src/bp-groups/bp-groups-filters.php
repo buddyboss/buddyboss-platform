@@ -87,6 +87,14 @@ add_filter( 'bp_get_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_new_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 99 );
 
+// setup backward compatibilty to retrieve the encoded value from db.
+add_filter( 'groups_group_name_before_save', 'html_entity_decode' );
+add_filter( 'bp_get_group_name', 'html_entity_decode' );
+add_filter( 'bp_get_group_description', 'html_entity_decode' );
+
+// Load Group Notifications.
+add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -97,30 +105,27 @@ add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 9
  */
 function bp_groups_filter_kses( $content = '' ) {
 
+	$allowed_tags = array();
 	/**
 	 * Note that we don't immediately bail if $content is empty. This is because
 	 * WordPress's KSES API calls several other filters that might be relevant
 	 * to someone's workflow (like `pre_kses`)
 	 */
 
-	// Get allowed tags using core WordPress API allowing third party plugins
-	// to target the specific `buddypress-groups` context.
-	$allowed_tags = wp_kses_allowed_html( 'buddypress-groups' );
-
 	// Add our own tags allowed in group descriptions.
-	$allowed_tags['a']['class']    = array();
-	$allowed_tags['img']           = array();
-	$allowed_tags['img']['src']    = array();
-	$allowed_tags['img']['alt']    = array();
-	$allowed_tags['img']['width']  = array();
-	$allowed_tags['img']['height'] = array();
-	$allowed_tags['img']['class']  = array();
-	$allowed_tags['img']['id']     = array();
-	$allowed_tags['code']          = array();
-	$allowed_tags['ol']            = array();
-	$allowed_tags['ul']            = array();
-	$allowed_tags['li']            = array();
-	$allowed_tags['a']['target']   = array();
+	$allowed_tags['a']           = array();
+	$allowed_tags['a']['href']   = true;
+	$allowed_tags['a']['title']  = true;
+	$allowed_tags['a']['class']  = array();
+	$allowed_tags['a']['target'] = array();
+	$allowed_tags['i']           = array();
+	$allowed_tags['b']           = array();
+	$allowed_tags['strong']      = array();
+	$allowed_tags['blockquote']  = array();
+	$allowed_tags['ol']          = array();
+	$allowed_tags['ul']          = array();
+	$allowed_tags['li']          = array();
+	$allowed_tags['code']        = array();
 
 	/**
 	 * Filters the HTML elements allowed for a given context.
@@ -130,6 +135,9 @@ function bp_groups_filter_kses( $content = '' ) {
 	 * @param string $allowed_tags Allowed tags, attributes, and/or entities.
 	 */
 	$tags = apply_filters( 'bp_groups_filter_kses', $allowed_tags );
+
+	// Convert HTML entities to their corresponding characters.
+	$content = html_entity_decode( $content );
 
 	// Return KSES'ed content, allowing the above tags.
 	return wp_kses( $content, $tags );
@@ -548,6 +556,10 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
+	if ( bp_is_group() ) {
+		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	}
+
 	$args = array(
 		'relation' => 'AND',
 		array(
@@ -640,6 +652,10 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	if ( empty( $group_ids ) ) {
 		$group_ids = array( 'groups' => 0 );
+	}
+
+	if ( bp_is_group() ) {
+		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
 	}
 
 	$args = array(
@@ -962,3 +978,79 @@ function bb_group_member_query_group_message_member_ids( $group_member_ids, $gro
 	return apply_filters( 'bb_group_member_query_group_message_member_ids', $group_member_ids, $group_member_query_object );
 }
 add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_group_message_member_ids', 9999, 2 );
+
+/**
+ * Filters the my-groups menu url for the logged in group member.
+ *
+ * When there is My gorups menu available on the website,
+ * use this filter to fix the current user's gorups link.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param array $sorted_menu_objects Array of menu objects.
+ * @param array $args                Array of arguments.
+ */
+function bb_my_group_menu_url( $sorted_menu_objects, $args ) {
+
+	if ( 'header-menu' !== $args->theme_location ) {
+		return $sorted_menu_objects;
+	}
+
+	foreach ( $sorted_menu_objects as $key => $menu_object ) {
+
+		// Replace the URL when bp_loggedin_user_domain && bp_displayed_user_domain are not same.
+		if ( class_exists( 'BuddyPress' ) ) {
+			if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+				$menu_object->url = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $menu_object->url );
+			}
+		}
+	}
+
+	return $sorted_menu_objects;
+}
+add_filter( 'wp_nav_menu_objects', 'bb_my_group_menu_url', 10, 2 );
+
+
+/**
+ * Register the group notifications.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_load_groups_notifications() {
+	if ( class_exists( 'BP_Groups_Notification' ) ) {
+		BP_Groups_Notification::instance();
+	}
+}
+
+/**
+ * Custom css for all group type's label. ( i.e - Background color, Text color)
+ *
+ * @since BuddyBoss 2.0.0
+ */
+function bb_load_group_type_label_custom_css() {
+	if ( true === bp_disable_group_type_creation() ) {
+		$registered_group_types = bp_groups_get_group_types();
+		$cache_key              = 'bb-group-type-label-css';
+		$group_type_custom_css  = wp_cache_get( $cache_key, 'bp_groups_group_type' );
+		if ( false === $group_type_custom_css && ! empty( $registered_group_types ) ) {
+			foreach ( $registered_group_types as $type ) {
+				$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $type ) : '';
+				if (
+					isset( $label_color_data ) &&
+					isset( $label_color_data['color_type'] ) &&
+					'custom' === $label_color_data['color_type']
+				) {
+					$background_color      = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
+					$text_color            = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
+					$class_name            = 'body .bp-group-meta .group-type.bb-current-group-' . $type;
+					$group_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
+					$group_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+				}
+			}
+			wp_cache_set( $cache_key, $group_type_custom_css, 'bp_groups_group_type' );
+		}
+		wp_add_inline_style( 'bp-nouveau', $group_type_custom_css );
+	}
+}
+add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
+

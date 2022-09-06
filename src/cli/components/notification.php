@@ -81,7 +81,7 @@ class Notification extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$assoc_args,
 			array(
 				'component'         => '',
@@ -326,7 +326,7 @@ class Notification extends BuddypressCommand {
 	public function _list( $args, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 
-		$query_args = wp_parse_args(
+		$query_args = bp_parse_args(
 			$assoc_args,
 			array(
 				'count' => 50,
@@ -385,7 +385,7 @@ class Notification extends BuddypressCommand {
 
 		// Friendship.
 		if ( $bp->friends->id === $component ) {
-			$actions = array( 'friendship_request', 'friendship_accepted' );
+			$actions = array( 'friendship_request', 'friendship_accepted', 'bb_connections_request_accepted', 'bb_connections_new_request' );
 		}
 
 		// Groups.
