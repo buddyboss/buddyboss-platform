@@ -1207,6 +1207,10 @@ class BP_Moderation {
 			'last_updated' => $this->last_updated,
 		);
 
+		if ( in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true ) && ! empty( $this->user_report ) ) {
+			$args['reported'] = 0;
+		}
+
 		// If we have an existing ID, update the moderation report item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
 			$q = BP_Core_Suspend::add_suspend( $args );
