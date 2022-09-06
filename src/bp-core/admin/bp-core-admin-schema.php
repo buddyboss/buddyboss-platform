@@ -350,6 +350,7 @@ function bp_core_install_private_messaging() {
 				sender_id bigint(20) NOT NULL,
 				subject varchar(200) NOT NULL,
 				message longtext NOT NULL,
+				is_deleted tinyint(1) NOT NULL DEFAULT '0',
 				date_sent datetime NOT NULL,
 				PRIMARY KEY  (id),
 				KEY sender_id (sender_id),
