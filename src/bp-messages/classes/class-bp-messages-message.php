@@ -574,6 +574,7 @@ class BP_Messages_Message {
 			'group_by'          => '',
 			'subject'           => '',
 			'count_total'       => false,
+			'is_deleted'        => true,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_messages_message_get' );
@@ -629,6 +630,10 @@ class BP_Messages_Message {
 		if ( ! empty( $r['meta_key__not_in'] ) ) {
 			$meta_key_not_in                 = implode( "','", wp_parse_slug_list( $r['meta_key__not_in'] ) );
 			$where_conditions['meta_not_in'] = "mm.meta_key NOT IN ('{$meta_key_not_in}')";
+		}
+
+		if ( isset( $r['is_deleted'] ) && false === $r['is_deleted'] ) {
+			$where_conditions['is_deleted'] = $wpdb->prepare( 'm.is_deleted = %d', (int) $r['is_deleted'] );
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
