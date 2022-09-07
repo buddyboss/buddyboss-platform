@@ -272,7 +272,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
-	$is_reported = ( BP_Moderation_Members::$moderation_type === $item_type ) ? bp_moderation_user_blocked_report_exist( $item_sub_id, $item_sub_type ) : bp_moderation_report_exist( $item_sub_id, $item_sub_type );
+	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
 
 	if ( $is_reported ) {
 		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
@@ -335,7 +335,7 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
 		if ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
-			$response = ( ! empty( $moderation->id ) && ! empty( $moderation->user_report ) );
+			$response = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && ! empty( $moderation->user_report ) );
 		}
 	}
 

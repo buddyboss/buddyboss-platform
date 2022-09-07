@@ -171,7 +171,9 @@ class BP_Moderation {
 			$this->item_id   = $item_id;
 			$this->item_type = $item_type;
 
-			$id = self::check_moderation_exist( $this->item_id, $this->item_type, true );
+			$report_type = ( BP_Moderation_Members::$moderation_type_report === $item_type ) ? BP_Moderation_Members::$moderation_type : $this->item_type;
+
+			$id = self::check_moderation_exist( $this->item_id, $report_type, true, BP_Moderation_Members::$moderation_type_report === $item_type );
 			if ( ! empty( $id ) ) {
 				$this->id = (int) $id;
 				$this->populate();
@@ -194,7 +196,7 @@ class BP_Moderation {
 		global $wpdb;
 
 		$bp        = buddypress();
-		$cache_key = 'bb_check_moderation_' . $item_type . '_' . $item_id;
+		$cache_key = 'bb_check_moderation_' . $item_type . '_' . $item_id . '_' . $user_report;
 		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result || true === $force_check ) {
@@ -1202,13 +1204,12 @@ class BP_Moderation {
 		$args = array(
 			'item_id'      => $this->item_id,
 			'item_type'    => $this->item_type,
-			'reported'     => 1,
 			'user_report'  => $this->user_report,
 			'last_updated' => $this->last_updated,
 		);
 
-		if ( in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true ) && ! empty( $this->user_report ) ) {
-			$args['reported'] = 0;
+		if ( in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true ) && empty( $this->user_report ) ) {
+			$args['reported'] = 1;
 		}
 
 		// If we have an existing ID, update the moderation report item, otherwise insert it.
