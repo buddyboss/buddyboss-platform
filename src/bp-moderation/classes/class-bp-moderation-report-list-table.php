@@ -114,6 +114,10 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
 		$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
 
+		if( empty( $moderation_request_data->id ) ) {
+			$moderation_request_data = new BP_Moderation( $moderation_id, BP_Moderation_Members::$moderation_type_report );
+		}
+
 		// Set current page.
 		$page = $this->get_pagenum();
 		// Set per page from the screen options.
