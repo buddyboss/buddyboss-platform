@@ -1239,11 +1239,10 @@ class BP_Moderation {
 			'last_updated' => $this->last_updated,
 		);
 
-		if ( in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true ) && empty( $this->user_report ) ) {
-			$args['reported'] = 1;
-		}
-
-		if ( ! in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true )  ) {
+		if (
+			( in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true ) && empty( $this->user_report ) )
+			|| ! in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true )
+		) {
 			$args['reported'] = 1;
 		}
 
