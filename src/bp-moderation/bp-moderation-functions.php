@@ -333,32 +333,10 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
-		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
+		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && empty( $moderation->user_report ) );
 		if ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
 			$response = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && ! empty( $moderation->user_report ) );
 		}
-	}
-
-	return $response;
-}
-
-/**
- * Function to Check member reported/blocked by current user or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int    $item_id          Item id.
- * @param string $item_type        Item type.
- * @param int    $blocking_user_id The ID for the user who blocked user.
- *
- * @return bool
- */
-function bp_moderation_user_blocked_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
-	$response = false;
-
-	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
-		$blocked_user = BP_Moderation::check_moderation_user_block_exist( $item_id, $item_type, $blocking_user_id, true );
-		$response     = ( ! empty( $blocked_user ) ) ? true : false;
 	}
 
 	return $response;
@@ -379,7 +357,7 @@ function bp_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
 		return false;
 	}
 
-	return bp_moderation_user_blocked_report_exist( $user_id, BP_Moderation_Members::$moderation_type, $blocking_user_id );
+	return bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type, $blocking_user_id );
 }
 
 /**

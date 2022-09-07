@@ -243,7 +243,7 @@ function bp_moderation_block_member() {
 	}
 
 	$moderation_type = $reported ? BP_Moderation_Members::$moderation_type_report : BP_Moderation_Members::$moderation_type;
-	if ( bp_moderation_user_blocked_report_exist( $item_id, $moderation_type ) ) {
+	if ( bp_moderation_report_exist( $item_id, $moderation_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'You have already reported this Member', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
@@ -364,7 +364,7 @@ function bp_moderation_unblock_user() {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! bp_moderation_user_blocked_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
+	if ( ! bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_not_exit', esc_html__( 'Reported content was not found.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
