@@ -232,7 +232,7 @@ class BP_Moderation {
 		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result || true === $force_check ) {
-			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ( ms.reported = 1 OR ms.user_report = 1 )", $item_id, BP_Moderation_Members::$moderation_type ) ); // phpcs:ignore
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ( ms.reported = 1 OR ms.user_report = 1 )", $item_id, $item_type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
