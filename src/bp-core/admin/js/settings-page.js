@@ -164,8 +164,7 @@ window.bp = window.bp || {};
 				'#bpm_blocking_member_blocking',
 				function () {
 					$( 'label[for="bpm_blocking_auto_suspend"' ).toggleClass( 'is_disabled' );
-					$( '#bpm_blocking_auto_suspend_threshold' ).attr( 'disabled', ! $( this ).prop( 'checked' ) );
-					$( '#bpm_blocking_auto_suspend' ).attr( 'disabled', ! $( this ).prop( 'checked' ) );
+					$( '#bpm_blocking_auto_suspend' ).prop( 'checked', false );
 				}
 			);
 		
@@ -179,8 +178,7 @@ window.bp = window.bp || {};
 				'#bb_blocking_member_reporting',
 				function () {
 					$( 'label[for="bb_reporting_auto_suspend"]' ).toggleClass('is_disabled');
-					$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( this ).prop( 'checked' ) );
-					$( '#bb_reporting_auto_suspend' ).attr('disabled', ! $( this ).prop( 'checked' ) );
+					$( '#bb_reporting_auto_suspend' ).prop( 'checked', false );
 				}
 			);
 
