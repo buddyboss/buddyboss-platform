@@ -599,14 +599,14 @@ function bb_admin_setting_callback_delay_email_notification_fields() {
 	// Prepare the drop-down for time.
 	$html = '<select name="time_delay_email_notification">';
 
-	foreach ( $get_delay_times as $mins => $time ) {
-		$mins = (int) $mins;
+	foreach ( $get_delay_times as $delay_time ) {
+		$mins = (int) $delay_time['value'];
 
 		$html .= sprintf(
 			'<option value="%s" %s>%s</option>',
 			$mins,
 			( $db_delay_time === $mins ? 'selected="selected"' : '' ),
-			$time
+			$delay_time['label']
 		);
 	}
 	$html .= '</select>';
