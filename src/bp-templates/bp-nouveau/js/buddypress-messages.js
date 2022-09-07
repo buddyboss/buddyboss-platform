@@ -1696,16 +1696,34 @@ window.bp = window.bp || {};
 				} else {
 					this.$el.closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
 				}
+				var $this = this;
+				setTimeout( function(){
+					$this.checkContentScroll();
+				},0);
 			},
 
 			DisableSubmit: function () {
 				window.messageUploaderInProgress = true;
 				this.$el.closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+				var $this = this;
+				setTimeout( function(){
+					$this.checkContentScroll();
+				},0);
 			},
 
 			EnableSubmit: function () {
 				window.messageUploaderInProgress = false;
 				this.postValidate();
+			},
+
+			checkContentScroll: function() {
+				// Show / hide shadow below on message form top whenever it's height change
+				var messages_list = $( '.bp-messages-content' ).find( '#bp-message-thread-list' );
+				if( messages_list.prop('scrollHeight') > messages_list.scrollTop() + messages_list.height() + 22 ) {
+					$( '.bp-messages-content' ).find( '.bp-messages-content-wrapper' ).addClass( 'scrolled--up' );
+				} else {
+					$( '.bp-messages-content' ).find( '.bp-messages-content-wrapper' ).removeClass( 'scrolled--up' );
+				}
 			},
 
 			mediumLink: function () {
