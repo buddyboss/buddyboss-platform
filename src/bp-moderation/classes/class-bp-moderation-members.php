@@ -225,7 +225,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
 			if ( bp_moderation_is_user_blocked( $user_id ) ) {
 				return bb_moderation_has_blocked_label( $value, $user_id );
-			} else if ( bb_moderation_get_blocked_by_user_ids( $user_id ) ) {
+			} else if ( bb_moderation_is_user_blocked_by( $user_id ) ) {
 				return bb_moderation_is_blocked_label( $value, $user_id );
 			}
 		}
