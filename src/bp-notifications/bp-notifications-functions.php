@@ -1545,3 +1545,24 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 	return $renderable;
 
 }
+
+/**
+ * Delay times for Email Notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_get_delay_notification_times() {
+	$delay_times = array(
+		'5'    => esc_html__( '5 mins', 'buddyboss' ),
+		'15'   => esc_html__( '15 mins', 'buddyboss' ),
+		'30'   => esc_html__( '30 mins', 'buddyboss' ),
+		'60'   => esc_html__( '1 hour', 'buddyboss' ),
+		'180'  => esc_html__( '3 hours', 'buddyboss' ),
+		'720'  => esc_html__( '12 hours', 'buddyboss' ),
+		'1440' => esc_html__( '24 hours', 'buddyboss' ),
+	);
+
+	return apply_filters( 'bb_get_delay_notification_times', $delay_times );
+}

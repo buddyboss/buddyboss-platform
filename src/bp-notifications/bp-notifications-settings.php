@@ -592,9 +592,24 @@ function bb_admin_setting_callback_hide_notification_fields() {
  */
 function bb_admin_setting_callback_delay_email_notification_fields() {
 
-	$html = '<select name="time_delay_email_notification">' .
-        '<option value="5">' . esc_html__( '5 mins', 'buddyboss-pro' ) . '</option>' .
-    '</select>';
+	// Get all defined time.
+	$get_delay_times = bb_get_delay_notification_times();
+	$db_delay_time   = (int) bp_get_option( 'time_delay_email_notification', '' );
+
+	// Prepare the drop-down for time.
+	$html = '<select name="time_delay_email_notification">';
+
+	foreach ( $get_delay_times as $mins => $time ) {
+		$mins = (int) $mins;
+
+		$html .= sprintf(
+			'<option value="%s" %s>%s</option>',
+			$mins,
+			( $db_delay_time === $mins ? 'selected="selected"' : '' ),
+			$time
+		);
+	}
+	$html .= '</select>';
 
 	?>
 	<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'delay_email_notification', 1 ) ); ?> />
