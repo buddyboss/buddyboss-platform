@@ -3654,7 +3654,8 @@ window.bp = window.bp || {};
 
 			changePreview: function( event ) {
 				var target = $( event.currentTarget );
-				bp.Nouveau.Messages.divider = [];
+
+				bp.Nouveau.Messages.divider  = [];
 				bp.Nouveau.Messages.previous = '';
 
 				event.preventDefault();
@@ -3668,17 +3669,32 @@ window.bp = window.bp || {};
 						function() {
 							selected.set( 'unread', false );
 
-							bp.Nouveau.Messages.router.navigate(
-								'view/' + target.data( 'thread-id' ) + '/',
-								{ trigger: true }
-							);
+							if ( 'archived' === bp.Nouveau.Messages.threadType ) {
+								bp.Nouveau.Messages.router.navigate(
+									'archived/view/' + target.data( 'thread-id' ) + '/',
+									{ trigger: true }
+								);
+							} else {
+								bp.Nouveau.Messages.router.navigate(
+									'view/' + target.data( 'thread-id' ) + '/',
+									{ trigger: true }
+								);
+							}
+
 						}
 					);
 				} else {
-					bp.Nouveau.Messages.router.navigate(
-						'view/' + target.data( 'thread-id' ) + '/',
-						{ trigger: true }
-					);
+					if ( 'archived' === bp.Nouveau.Messages.threadType ) {
+						bp.Nouveau.Messages.router.navigate(
+							'archived/view/' + target.data( 'thread-id' ) + '/',
+							{ trigger: true }
+						);
+					} else {
+						bp.Nouveau.Messages.router.navigate(
+							'view/' + target.data( 'thread-id' ) + '/',
+							{ trigger: true }
+						);
+					}
 				}
 
 				$.each(
