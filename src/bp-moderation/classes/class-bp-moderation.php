@@ -1243,6 +1243,10 @@ class BP_Moderation {
 			$args['reported'] = 1;
 		}
 
+		if ( ! in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true )  ) {
+			$args['reported'] = 1;
+		}
+
 		// If we have an existing ID, update the moderation report item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
 			$q = BP_Core_Suspend::add_suspend( $args );
