@@ -638,7 +638,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_reported( $item = array() ) {
-		esc_html_e( bp_core_number_format( $item['count'] ) );
+		echo esc_attr( bp_core_number_format( $item['count'] ) );
 	}
 
 	/**
@@ -649,7 +649,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_count_report( $item = array() ) {
-		esc_html_e( bp_core_number_format( $item['count_report'] ) );
+		echo esc_attr( bp_core_number_format( $item['count_report'] ) );
 	}
 
 	/**
@@ -660,7 +660,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_blocked( $item = array() ) {
-		esc_html_e( bp_core_number_format( $item['count'] ) );
+		echo esc_attr( bp_core_number_format( $item['count'] ) );
 	}
 
 	/**
