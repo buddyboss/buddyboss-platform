@@ -232,18 +232,12 @@ function bp_moderation_block_member() {
 	$nonce   = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
-	// Member Report only.
-	$note     = filter_input( INPUT_POST, 'note', FILTER_DEFAULT );
-	$reported = filter_input( INPUT_POST, 'reported', FILTER_SANITIZE_NUMBER_INT );
-	$category = filter_input( INPUT_POST, 'report_category', FILTER_DEFAULT );
-
 	if ( empty( $item_id ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 
-	$moderation_type = $reported ? BP_Moderation_Members::$moderation_type_report : BP_Moderation_Members::$moderation_type;
-	if ( bp_moderation_report_exist( $item_id, $moderation_type ) ) {
+	if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'You have already reported this Member', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
@@ -251,23 +245,6 @@ function bp_moderation_block_member() {
 	if ( (int) bp_loggedin_user_id() === (int) $item_id ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not allowed to block yourself.', 'buddyboss' ) );
 		wp_send_json_error( $response );
-	}
-
-	if ( ! empty( $reported ) ) {
-		$reports_terms = get_terms(
-			'bpm_category',
-			array(
-				'hide_empty' => false,
-				'fields'     => 'ids',
-			)
-		);
-		if ( ( 'other' === $category && empty( $note ) ) || ( 'other' !== $category && ! in_array( (int) $category, $reports_terms, true ) ) ) {
-			$response['message'] = new WP_Error(
-				'bp_moderation_missing_data',
-				esc_html__( 'Please specify reason to report this member.', 'buddyboss' )
-			);
-			wp_send_json_error( $response );
-		}
 	}
 
 	// Check the current has access to report the item ot not.
@@ -285,9 +262,7 @@ function bp_moderation_block_member() {
 			array(
 				'content_id'   => $item_id,
 				'content_type' => BP_Moderation_Members::$moderation_type,
-				'note'         => ( ! empty( $note ) ? $note : ( ! empty( $reported ) ? esc_html__( 'Member report', 'buddyboss' ) : esc_html__( 'Member block', 'buddyboss' ) ) ),
-				'category_id'  => ! empty( $category ) ? $category : 0,
-				'user_report'  => ! empty( $reported ) ? 1 : 0,
+				'note'         => esc_html__( 'Member block', 'buddyboss' ),
 			)
 		);
 
@@ -323,10 +298,6 @@ function bp_moderation_block_member() {
 			);
 
 			$response['redirect'] = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . '/blocked-members';
-			if ( ! empty( $reported ) ) {
-				$response['redirect']                         = '';
-				$response['button']['button_attr']['item_id'] = $item_id;
-			}
 		}
 
 		$response['message'] = $moderation->errors;
