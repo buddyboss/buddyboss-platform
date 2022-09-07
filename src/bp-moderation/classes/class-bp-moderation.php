@@ -189,6 +189,7 @@ class BP_Moderation {
 	 * @param int  $item_id     Moderation item id.
 	 * @param int  $item_type   Moderation item type.
 	 * @param bool $force_check bypass caching or not.
+	 * @param bool $user_report if user report or not.
 	 *
 	 * @return false|int
 	 */
@@ -206,6 +207,32 @@ class BP_Moderation {
 				$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
 			}
 
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
+		}
+
+		return is_numeric( $result ) ? (int) $result : false;
+	}
+
+	/**
+	 * Check any moderation item block/report exist or not
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int  $item_id     Moderation item id.
+	 * @param int  $item_type   Moderation item type.
+	 * @param bool $force_check bypass caching or not.
+	 *
+	 * @return false|int
+	 */
+	public static function check_any_moderation_exist( $item_id, $item_type, $force_check = false ) {
+		global $wpdb;
+
+		$bp        = buddypress();
+		$cache_key = 'bb_check_any_moderation_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
+
+		if ( false === $result || true === $force_check ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ( ms.reported = 1 OR ms.user_report = 1 )", $item_id, BP_Moderation_Members::$moderation_type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
@@ -1101,8 +1128,8 @@ class BP_Moderation {
 		/**
 		 * Check Content report already exist or not.
 		 */
-		$this->id        = self::check_moderation_exist( $this->item_id, $this->item_type, true, (bool) $this->user_report );
-		$this->report_id = self::check_moderation_report_exist( $this->id, $this->user_id );
+		$this->id        = self::check_any_moderation_exist( $this->item_id, $this->item_type, true );
+		$this->report_id = self::check_moderation_report_exist( $this->id, $this->user_id, (bool) $this->user_report );
 
 		/**
 		 * IF any new Content reported then do some required actions
@@ -1181,12 +1208,16 @@ class BP_Moderation {
 	 *
 	 * @return false
 	 */
-	public static function check_moderation_report_exist( $moderation_id, $user_id ) {
+	public static function check_moderation_report_exist( $moderation_id, $user_id, $user_report = false ) {
 		global $wpdb;
 
 		$bp = buddypress();
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $moderation_id, $user_id ) ); // phpcs:ignore
+		if( $user_report ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d and mr.user_report = 1", $moderation_id, $user_id ) ); // phpcs:ignore
+		} else {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d and mr.user_report = 0", $moderation_id, $user_id ) ); // phpcs:ignore
+		}
 
 		return is_numeric( $result ) ? (int) $result : false;
 	}
