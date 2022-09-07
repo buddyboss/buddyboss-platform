@@ -1229,7 +1229,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if ( typeof options.data.search_terms !== 'undefined' && '' != bp.Nouveau.Messages.xhr ) {
+					if ( ! _.isUndefined( options.data.search_terms ) && '' !== $.trim( options.data.search_terms ) && 0 < $.trim( options.data.search_terms ).length && '' !== bp.Nouveau.Messages.xhr ) {
 						bp.Nouveau.Messages.xhr.abort();
 						$( '.bb-messages-search-no-thread-found' ).hide();
 						var loader = new bp.Views.filterSearchLoader().render().el;
