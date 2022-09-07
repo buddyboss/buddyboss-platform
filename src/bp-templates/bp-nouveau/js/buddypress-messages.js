@@ -1229,14 +1229,21 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if ( typeof options.data.search_terms !== 'undefined' && bp.Nouveau.Messages.xhr != '' ) {
+					if ( typeof options.data.search_terms !== 'undefined' && '' != bp.Nouveau.Messages.xhr ) {
 						bp.Nouveau.Messages.xhr.abort();
 						$( '.bb-messages-search-no-thread-found' ).hide();
 						var loader = new bp.Views.filterSearchLoader().render().el;
 						$( '.bp-messages-search-feedback' ).html( loader );
 					}
 
-					var ajax = bp.ajax.send( options );
+					var ajax = bp.ajax.send(
+						options
+					).done(
+						function() {
+							$( '.messages-search-loader' ).remove();
+						}
+					);
+
 					bp.Nouveau.Messages.xhr = ajax;
 					return ajax;
 				}
