@@ -1909,6 +1909,9 @@ function bb_update_to_2_2_0() {
 
 	// Migrate the 'bp_messages_deleted' value from 'wp_bp_messages_meta' table to 'is_deleted' column in 'bp_messages_messages' table.
 	bb_messages_migrate_is_deleted_column();
+
+	// For existing customer set default values for Messaging Notifications metabox.
+	bb_set_default_value_for_messaging_notifications_metabox();
 }
 
 /**
@@ -1956,4 +1959,16 @@ function bb_messages_migrate_is_deleted_column() {
 			'1'
 		)
 	);
+}
+
+/**
+ * For existing customer set default values for Messaging Notifications metabox.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_set_default_value_for_messaging_notifications_metabox() {
+	bp_update_option( 'delay_email_notification', 0 );
+	bp_update_option( 'time_delay_email_notification', '' );
 }
