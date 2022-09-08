@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Schedule an event on change notification settings.
+ *
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_schedule_event_on_update_notification_settings() {
 
@@ -24,7 +26,7 @@ function bb_schedule_event_on_update_notification_settings() {
 	$get_delay_times = bb_get_delay_notification_times();
 
 	$old_scheduled_time                  = (int) bp_get_option( 'time_delay_email_notification', '' );
-	$new_scheduled_time                  = isset( $_POST['time_delay_email_notification'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['time_delay_email_notification'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$new_scheduled_time                  = (int) sanitize_text_field( wp_unslash( $_POST['time_delay_email_notification'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$is_enabled_delay_notification_after = isset( $_POST['delay_email_notification'] ) ? sanitize_text_field( wp_unslash( $_POST['delay_email_notification'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 	if (
@@ -61,7 +63,7 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
 /**
  * Add schedule to cron schedules.
  *
- * @since Buddyboss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $schedules Array of schedules for cron.
  *
@@ -82,6 +84,11 @@ function bb_delay_notification_register_cron_schedule_time( $schedules = array()
 }
 add_filter( 'cron_schedules', 'bb_delay_notification_register_cron_schedule_time' ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
 
+/**
+ * Prepare the email notification content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 function bb_delay_email_notification_scheduled_action_callback() {
 	// Add logic for notification.
 }
