@@ -207,7 +207,7 @@ function bb_notification_get_settings_fields() {
 		);
 
 		if ( ! bb_hide_messages_from_notification_enabled() && ! bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
-			$fields['bp_messaging_notification_settings']['hide_message_notice'] = array(
+			$fields['bp_messaging_notification_settings']['infos'] = array(
 				'title'             => esc_html__( 'Notes', 'buddyboss' ),
 				'callback'          => 'bb_admin_setting_callback_messaging_notification_warning',
 				'sanitize_callback' => 'string',
@@ -215,18 +215,11 @@ function bb_notification_get_settings_fields() {
 			);
 		}
 
-		$fields['bp_messaging_notification_settings']['hide_message_notification'] = array(
-			'title'             => esc_html__( 'Hide From Notifications', 'buddyboss' ),
-			'callback'          => 'bb_admin_setting_callback_hide_notification_fields',
-			'sanitize_callback' => 'intval',
-			'args'              => array(),
-		);
-
-		$fields['bp_messaging_notification_settings']['delay_email_notifications'] = array(
-			'title'             => esc_html__( 'Delay Email Notifications', 'buddyboss' ),
-			'callback'          => 'bb_admin_setting_callback_delay_email_notification_fields',
-			'sanitize_callback' => 'intval',
-			'args'              => array(),
+		$fields['bp_messaging_notification_settings']['fields'] = array(
+			'title'             => esc_html__( 'Messaging Notifications Fields', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_messaging_notification_fields',
+			'sanitize_callback' => 'string',
+			'args'              => array( 'class' => 'notes-hidden-header' ),
 		);
 
 	} else {
@@ -609,23 +602,7 @@ function bb_messaging_notifications_tutorial() {
  *
  * @return void
  */
-function bb_admin_setting_callback_hide_notification_fields() {
-	?>
-	<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bb_hide_messages_from_notification_enabled() ); ?> />
-	<label for="hide_message_notification"><?php esc_html_e( 'Hide messages from notifications', 'buddyboss' ); ?></label>
-	<p class="description"><?php esc_html_e( 'When enabled, notifications for group and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
-	<?php
-}
-
-/**
- * Callback fields for the delay email notification fields options.
- *
- * @since [BBVERSION]
- *
- * @return void
- */
-function bb_admin_setting_callback_delay_email_notification_fields() {
-
+function bb_admin_setting_callback_messaging_notification_fields() {
 	// Get all defined time.
 	$get_delay_times = bb_get_delay_notification_times();
 	$db_delay_time   = bb_get_delay_email_notifications_time();
@@ -644,24 +621,40 @@ function bb_admin_setting_callback_delay_email_notification_fields() {
 		);
 	}
 	$html .= '</select>';
-
 	?>
-	<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bb_delay_email_notifications_enabled() ); ?> />
-	<label for="delay_email_notification"><?php esc_html_e( 'Delay email notifications for new messages', 'buddyboss' ); ?></label>
-	<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will delayed to allow time for members to read them on your site. After the delay, the emails will be only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
+	<table class="form-table render-hide-message-notification">
+		<tbody>
+			<tr>
+				<th><?php echo esc_html__( 'Hide From Notifications', 'buddyboss' ); ?></th>
+				<td>
+					<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bb_hide_messages_from_notification_enabled() ); ?> />
+					<label for="hide_message_notification"><?php esc_html_e( 'Hide messages from notifications', 'buddyboss' ); ?></label>
+					<p class="description"><?php esc_html_e( 'When enabled, notifications for group and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo esc_html__( 'Delay Email Notifications', 'buddyboss' ); ?></th>
+				<td>
+					<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bb_delay_email_notifications_enabled() ); ?> />
+					<label for="delay_email_notification"><?php esc_html_e( 'Delay email notifications for new messages', 'buddyboss' ); ?></label>
+					<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will delayed to allow time for members to read them on your site. After the delay, the emails will be only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
 
-	<p class="description">
-		<label for="time_delay_email_notification">
-			<?php
-			printf(
-				wp_kses_post(
-				/* translators: Permission validate select box. */
-					__( 'Delay notifications for %s', 'buddyboss' )
-				),
-			    $html // phpcs:ignore
-			)
-			?>
-		</label>
-	</p>
+					<p class="description">
+						<label for="time_delay_email_notification">
+							<?php
+							printf(
+								wp_kses_post(
+								/* translators: Permission validate select box. */
+									__( 'Delay notifications for %s', 'buddyboss' )
+								),
+								$html // phpcs:ignore
+							)
+							?>
+						</label>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 	<?php
 }
