@@ -206,19 +206,27 @@ function bb_notification_get_settings_fields() {
 			'args'              => array( 'class' => 'notes-hidden-header child-no-padding' ),
 		);
 
-		$fields['bp_messaging_notification_settings'] = array(
-			'hide_message_notification' => array(
-				'title'             => esc_html__( 'Hide From Notifications', 'buddyboss' ),
-				'callback'          => 'bb_admin_setting_callback_hide_notification_fields',
-				'sanitize_callback' => 'intval',
-				'args'              => array(),
-			),
-			'delay_email_notifications' => array(
-				'title'             => esc_html__( 'Delay Email Notifications', 'buddyboss' ),
-				'callback'          => 'bb_admin_setting_callback_delay_email_notification_fields',
-				'sanitize_callback' => 'intval',
-				'args'              => array(),
-			),
+		if ( ! bb_hide_messages_from_notification_enabled() && ! bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
+			$fields['bp_messaging_notification_settings']['hide_message_notice'] = array(
+				'title'             => esc_html__( 'Notes', 'buddyboss' ),
+				'callback'          => 'bb_admin_setting_callback_messaging_notification_warning',
+				'sanitize_callback' => 'string',
+				'args'              => array( 'class' => 'notes-hidden-header' ),
+			);
+		}
+
+		$fields['bp_messaging_notification_settings']['hide_message_notification'] = array(
+			'title'             => esc_html__( 'Hide From Notifications', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_hide_notification_fields',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		);
+
+		$fields['bp_messaging_notification_settings']['delay_email_notifications'] = array(
+			'title'             => esc_html__( 'Delay Email Notifications', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_delay_email_notification_fields',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
 		);
 
 	} else {
@@ -536,6 +544,32 @@ function bb_admin_setting_callback_push_notification_lab_notification_preference
 	'</p>';
 }
 
+/**
+ * Callback fields for the Messaging Notifications warning.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_messaging_notification_warning() {
+	echo '<p class="description notification-information bp-new-notice-panel-notice">' .
+		sprintf(
+			wp_kses_post(
+			/* translators: %s: Live Messages. */
+				__( 'When using %s, we recommend enabling these settings to ensure the optimal experience for your members.', 'buddyboss' )
+			),
+			'<a href="' .
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-integrations',
+							'tab'  => 'bb-pusher',
+						),
+						admin_url( 'admin.php' )
+					)
+				)
+			. '">' . esc_html__( 'Live Messages', 'buddyboss' ) . '</a>'
+		) .
+		'</p>';
+}
 
 /**
  * Link to Messaging Notification tutorial.
@@ -622,7 +656,7 @@ function bb_admin_setting_callback_delay_email_notification_fields() {
 			printf(
 				wp_kses_post(
 				/* translators: Permission validate select box. */
-					__( 'Delay notifications for %s', 'buddyboss-pro' )
+					__( 'Delay notifications for %s', 'buddyboss' )
 				),
 			    $html // phpcs:ignore
 			)
