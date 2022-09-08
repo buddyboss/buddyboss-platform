@@ -1704,5 +1704,5 @@ function bb_delay_email_notifications_enabled() {
  * @return int
  */
 function bb_get_delay_email_notifications_time() {
-	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', '' ) );
+	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
 }
