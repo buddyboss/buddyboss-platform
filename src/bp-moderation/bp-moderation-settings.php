@@ -334,6 +334,7 @@ function bpm_blocking_settings_callback_email_notification() {
  */
 function bpm_reporting_settings_callback_content_reporting() {
 	$content_types = bp_moderation_content_types();
+	unset( $content_types[ BP_Moderation_Members::$moderation_type_report ] );
 	?>
 	<label
 			for="bpm_reporting_content_reporting"><?php esc_html_e( 'Allow the following content types to be reported:', 'buddyboss' ); ?></label>
