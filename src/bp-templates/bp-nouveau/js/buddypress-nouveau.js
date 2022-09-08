@@ -2589,34 +2589,24 @@ window.bp = window.bp || {};
 						}
 					);
 
-					_this.memberReportAjax( data, e );
-				}
-			);
-		},
-		memberReportAjax: function ( data, element ) {
-			var _this = this;
-			$.post(
-				BP_Nouveau.ajaxurl,
-				data,
-				function ( response ) {
-					if ( true === response.success ) {
-						_this.resetReportPopup();
-						_this.changeReportButtonStatus( response.data );
-						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
-						$( '.mfp-close' ).trigger( 'click' );
-						if ( response.data.redirect ) {
-							location.href = response.data.redirect;
+					$.post(
+						BP_Nouveau.ajaxurl,
+						data,
+						function ( response ) {
+							if ( response.success ) {
+								_this.resetReportPopup();
+								_this.changeReportButtonStatus( response.data );
+								$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
+								$( '.mfp-close' ).trigger( 'click' );
+								if ( response.data.redirect ) {
+									location.href = response.data.redirect;
+								}
+							} else {
+								$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
+								_this.handleReportError( response.data.message.errors, e.currentTarget );
+							}
 						}
-						_this.changeMemberReportButtonStatus( response.data );
-					} else {
-						$( '#bb-block-member' ).find( '.report-submit' ).removeClass( 'loading' );
-						$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
-						_this.handleReportError( response.data.message.errors, element.currentTarget );
-					}
-				}
-			).fail(
-				function() {
-					location.href = window.href;
+					);
 				}
 			);
 		},
@@ -2640,25 +2630,6 @@ window.bp = window.bp || {};
 					$( this ).attr( 'class', data.button.button_attr.class );
 					$( this ).attr( 'reported_type', data.button.button_attr.reported_type );
 					$( this ).attr( 'href', data.button.button_attr.href );
-					setTimeout(
-						function () { // Waiting to load dummy image.
-							_this.reportedPopup();
-						},
-						1
-					);
-				}
-			);
-		},
-		changeMemberReportButtonStatus: function ( data ) {
-			var _this = this;
-			$( '[data-bp-content-id=' + data.button.button_attr.item_id + '][data-bp-content-type=user_report]' ).each(
-				function () {
-					$( this ).removeAttr( 'data-bp-content-id' );
-					$( this ).removeAttr( 'data-bp-content-type' );
-					$( this ).removeAttr( 'data-bp-nonce' );
-
-					$( this ).removeClass( 'report-content' ).addClass( 'reported-content' );
-					$( this ).attr( 'href', '#reported-content' );
 					setTimeout(
 						function () { // Waiting to load dummy image.
 							_this.reportedPopup();
