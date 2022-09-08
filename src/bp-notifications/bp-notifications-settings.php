@@ -46,7 +46,7 @@ function bb_notification_get_settings_sections() {
 		),
 	);
 
-	if ( false === bb_enabled_legacy_email_preference() ) {
+	if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'messages' ) ) {
 		$settings['bp_messaging_notification_settings'] = array(
 			'page'              => 'notifications',
 			'title'             => esc_html__( 'Messaging Notifications', 'buddyboss' ),
