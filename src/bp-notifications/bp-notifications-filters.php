@@ -35,24 +35,22 @@ function bb_schedule_event_on_update_notification_settings() {
 			( ! $is_enabled_delay_notification_after )
 		)
 	) {
-		$result_key = array_search( (int) $old_scheduled_time, array_column( $get_delay_times, 'value' ), true );
-
+		$old_schedule_found = bb_get_delay_notification_time_by_minutes( $old_scheduled_time );
 		// Un-schedule the scheduled event.
-		if ( isset( $get_delay_times[ $result_key ] ) ) {
-			$timestamp = wp_next_scheduled( $get_delay_times[ $result_key ]['schedule_action'] );
-
+		if ( ! empty( $old_schedule_found ) ) {
+			$timestamp = wp_next_scheduled( $old_schedule_found['schedule_action'] );
 			if ( $timestamp ) {
-				$is_unschedule = wp_unschedule_event( $timestamp, $get_delay_times[ $result_key ]['schedule_action'] );
+				wp_unschedule_event( $timestamp, $old_schedule_found['schedule_action'] );
 			}
 		}
 	}
 
 	if ( $is_enabled_delay_notification_after ) {
 
-		$new_schedule_key = array_search( (int) $new_scheduled_time, array_column( $get_delay_times, 'value' ), true );
+		$new_schedule_found = bb_get_delay_notification_time_by_minutes( $new_scheduled_time );
 		// Schedule an action if it's not already scheduled.
-		if ( isset( $get_delay_times[ $new_schedule_key ] ) && ! wp_next_scheduled( $get_delay_times[ $new_schedule_key ]['schedule_action'] ) ) {
-			wp_schedule_event( time() + (int) $get_delay_times[ $new_schedule_key ]['schedule_interval'], $get_delay_times[ $new_schedule_key ]['schedule_key'], $get_delay_times[ $new_schedule_key ]['schedule_action'] );
+		if ( ! empty( $new_schedule_found ) && ! wp_next_scheduled( $new_schedule_found['schedule_action'] ) ) {
+			wp_schedule_event( time() + (int) $new_schedule_found['schedule_interval'], $new_schedule_found['schedule_key'], $new_schedule_found['schedule_action'] );
 		}
 	}
 }
