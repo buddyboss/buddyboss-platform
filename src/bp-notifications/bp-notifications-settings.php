@@ -577,7 +577,7 @@ function bb_messaging_notifications_tutorial() {
  */
 function bb_admin_setting_callback_hide_notification_fields() {
 	?>
-	<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'hide_message_notification', 1 ) ); ?> />
+	<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bb_hide_messages_from_notification_enabled() ); ?> />
 	<label for="hide_message_notification"><?php esc_html_e( 'Hide messages from notifications', 'buddyboss' ); ?></label>
 	<p class="description"><?php esc_html_e( 'When enabled, notifications for group and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
 	<?php

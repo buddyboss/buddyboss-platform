@@ -983,7 +983,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
  */
 function bb_notification_exclude_group_message_notification( $component_names ) {
 
-	$hide_message_notification = (bool) bp_get_option( 'hide_message_notification', 1 );
+	$hide_message_notification = bb_hide_messages_from_notification_enabled();
 
 	if (
 		function_exists( 'bb_enabled_legacy_email_preference' ) &&
