@@ -23,9 +23,8 @@ function bb_schedule_event_on_update_notification_settings() {
 		return;
 	}
 
-	$get_delay_times = bb_get_delay_notification_times();
-
-	$old_scheduled_time                  = (int) bp_get_option( 'time_delay_email_notification', '' );
+	$get_delay_times                     = bb_get_delay_notification_times();
+	$old_scheduled_time                  = bb_get_delay_email_notifications_time();
 	$new_scheduled_time                  = (int) sanitize_text_field( wp_unslash( $_POST['time_delay_email_notification'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$is_enabled_delay_notification_after = isset( $_POST['delay_email_notification'] ) ? sanitize_text_field( wp_unslash( $_POST['delay_email_notification'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 

@@ -594,7 +594,7 @@ function bb_admin_setting_callback_delay_email_notification_fields() {
 
 	// Get all defined time.
 	$get_delay_times = bb_get_delay_notification_times();
-	$db_delay_time   = (int) bp_get_option( 'time_delay_email_notification', '' );
+	$db_delay_time   = bb_get_delay_email_notifications_time();
 
 	// Prepare the drop-down for time.
 	$html = '<select name="time_delay_email_notification">';
@@ -612,7 +612,7 @@ function bb_admin_setting_callback_delay_email_notification_fields() {
 	$html .= '</select>';
 
 	?>
-	<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'delay_email_notification', 1 ) ); ?> />
+	<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bb_delay_email_notifications_enabled() ); ?> />
 	<label for="delay_email_notification"><?php esc_html_e( 'Delay email notifications for new messages', 'buddyboss' ); ?></label>
 	<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will delayed to allow time for members to read them on your site. After the delay, the emails will be only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
 
