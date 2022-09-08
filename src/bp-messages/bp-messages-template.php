@@ -2435,8 +2435,8 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M j' ) : bp_core_get_format_date( $old_last_date, 'M j, Y' );
 						break;
 					case WEEK_IN_SECONDS:
-						$start_week = bb_get_week_start_timestamp();
-						$end_week   = bb_get_week_end_timestamp();
+						$start_week = bb_get_week_start_timestamp( '-7 days' );
+						$end_week   = bb_get_week_end_timestamp( 'now' );
 
 						if ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
@@ -2445,9 +2445,8 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 						}
 						break;
 					case DAY_IN_SECONDS:
-						$start_week = bb_get_week_start_timestamp();
-						$end_week   = bb_get_week_end_timestamp();
-
+						$start_week = bb_get_week_start_timestamp( '-7 days' );
+						$end_week   = bb_get_week_end_timestamp( 'now' );
 						if ( 1 == $count ) {
 							$output = __( 'Yesterday', 'buddyboss' );
 						} elseif ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {

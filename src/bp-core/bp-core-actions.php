@@ -176,6 +176,10 @@ add_action(
 	2
 );
 
+
+// Add 'is_deleted' column on Activation.
+add_action( 'bp_activation', 'bb_messages_add_is_deleted_column' );
+
 /**
  * Restrict user when visit attachment url from media/document.
  * - Privacy security.

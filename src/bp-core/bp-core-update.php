@@ -373,6 +373,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18751 ) {
 			bb_update_to_2_1_0();
 		}
+
+		if ( $raw_db_version < 18801 ) {
+			bb_update_to_2_2_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1892,4 +1896,64 @@ function bb_update_to_2_1_0() {
 	}
 
 	bp_core_install_invitations();
+}
+
+/**
+ * Migrate messages table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_2_0() {
+	// Add 'is_deleted' column in 'bp_messages_messages' table.
+	bb_messages_add_is_deleted_column();
+
+	// Migrate the 'bp_messages_deleted' value from 'wp_bp_messages_meta' table to 'is_deleted' column in 'bp_messages_messages' table.
+	bb_messages_migrate_is_deleted_column();
+}
+
+/**
+ * Add 'is_deleted' column to bp_messages table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_add_is_deleted_column() {
+	global $wpdb;
+
+	// Add 'is_deleted' column in 'bp_messages_messages' table.
+	$table_name = $wpdb->prefix . 'bp_messages_messages';
+	$wpdb->query( 'SELECT * FROM `' . $table_name . '` LIMIT 0,1' ); // phpcs:ignore
+	$col_names = $wpdb->get_col_info( 'name' );
+
+	if ( ! in_array( 'is_deleted', $col_names, true ) ) {
+		$wpdb->query( 'ALTER TABLE  `' . $table_name . '` ADD `is_deleted` TINYINT( 1 ) NOT NULL DEFAULT 0 AFTER `message`' ); // phpcs:ignore
+	}
+}
+
+/**
+ * Migrate message table for is_deleted column.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_migrate_is_deleted_column() {
+	global $wpdb;
+
+	$table_name = $wpdb->prefix . 'bp_messages_messages';
+	$meta_table = $wpdb->prefix . 'bp_messages_meta';
+
+	$query = $wpdb->prepare(
+		'SELECT `message_id` FROM `' . $meta_table . '` WHERE `meta_key` = %s',  // phpcs:ignore
+		'bp_messages_deleted'
+	);
+
+	// phpcs:ignore
+	$wpdb->query(
+		$wpdb->prepare(
+			'UPDATE  `' . $table_name . '` SET `is_deleted` = %s WHERE `id` IN ( ' . $query . ' )',  // phpcs:ignore
+			'1'
+		)
+	);
 }

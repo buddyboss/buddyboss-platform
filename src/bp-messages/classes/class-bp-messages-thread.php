@@ -737,7 +737,7 @@ class BP_Messages_Thread {
 		if ( ! empty( $update_message_ids ) ) {
 			foreach ( $update_message_ids as $message_id ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
-				$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+				$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET message= '%s', is_deleted=%d WHERE id = %d", $message_deleted_text, 1, $message_id );
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$wpdb->query( $query ); // db call ok; no-cache ok.
 				bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
@@ -1239,7 +1239,7 @@ class BP_Messages_Thread {
 			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
 		}
 
-		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
+		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id AND m.is_deleted = 0 {$meta_query_sql['join']}";
 		$sql['where'] = "WHERE {$where_sql} {$meta_query_sql['where']}";
 		$sql['misc']  = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
