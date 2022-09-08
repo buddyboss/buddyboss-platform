@@ -1706,3 +1706,23 @@ function bb_delay_email_notifications_enabled() {
 function bb_get_delay_email_notifications_time() {
 	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
 }
+
+/**
+ * Function to search value by minutes from the bb_get_delay_notification_times function.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $time Notification delay time.
+ *
+ * @return array
+ */
+function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
+	$get_delay_times     = bb_get_delay_notification_times();
+	$search_schedule_key = array_search( (int) $time, array_column( $get_delay_times, 'value' ), true );
+
+	if ( isset( $get_delay_times[ $search_schedule_key ] ) ) {
+		return $get_delay_times[ $search_schedule_key ];
+	}
+
+	return array();
+}
