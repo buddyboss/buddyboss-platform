@@ -95,12 +95,15 @@ function bb_delay_email_notification_scheduled_action_callback() {
 
 		if ( ! empty( $get_delay_time_array ) && $db_delay_time === $get_delay_time_array['value'] ) {
 
-			$current_date = bp_core_current_time();
-			$start_date   = wp_date( 'Y-m-d H:i:s', strtotime( $current_date . ' -' . $db_delay_time . ' minutes' ), new DateTimeZone( 'UTC' ) );
+			// $current_date = bp_core_current_time();
+			// $start_date   = wp_date( 'Y-m-d H:i:s', strtotime( $current_date . ' -' . $db_delay_time . ' minutes' ), new DateTimeZone( 'UTC' ) );
 
-			$results = $wpdb->query(
+			$current_date = '2022-09-09 06:06:39';
+			$start_date   = '2022-09-09 05:06:39';
+
+			$results = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT * FROM `{$wpdb->prefix}bp_messages_messages` AS m LEFT JOIN `{$wpdb->prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND r.is_hidden = %d ORDER BY m.id ASC",
+					"SELECT m.*, r.user_id, r.unread_count FROM `{$wpdb->prefix}bp_messages_messages` AS m LEFT JOIN `{$wpdb->prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND r.is_hidden = %d ORDER BY m.thread_id, m.id ASC",
 					$start_date,
 					$current_date,
 					0,
@@ -109,8 +112,43 @@ function bb_delay_email_notification_scheduled_action_callback() {
 				)
 			);
 
+			$threads = array();
 			if ( ! empty( $results ) ) {
-				// write logic for send email in background.
+				global $bb_email_background_updater;
+				foreach ( $results as $unread_thread ) {
+					$threads[ $unread_thread->thread_id ]['thread_id'] = $unread_thread->thread_id;
+
+					// Set messages.
+					$threads[ $unread_thread->thread_id ]['recipients'][ $unread_thread->user_id ][] = array(
+						'message_id'    => $unread_thread->id,
+						'sender_id'     => $unread_thread->sender_id,
+						'recipients_id' => $unread_thread->user_id,
+						'message'       => $unread_thread->message,
+						'subject'       => $unread_thread->subject,
+						'thread_id'     => $unread_thread->thread_id,
+					);
+				}
+			}
+
+			if ( ! empty( $threads ) ) {
+				global $bb_email_background_updater;
+				foreach ( $threads as $thread ) {
+					bb_render_digest_messages_template( $thread['recipients'], $thread['thread_id'] );
+
+//					$bb_email_background_updater->data(
+//						array(
+//							array(
+//								'callback' => 'bb_render_digest_messages_template',
+//								'args'     => array(
+//									$thread['recipients'],
+//									$thread['thread_id'],
+//								),
+//							),
+//						)
+//					);
+//					$bb_email_background_updater->save();
+				}
+				$bb_email_background_updater->dispatch();
 			}
 		}
 	}

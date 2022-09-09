@@ -1758,3 +1758,162 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
 function messages_is_valid_archived_thread( $thread_id ) {
 	return BP_Messages_Thread::is_valid_archived( $thread_id );
 }
+
+/**
+ * Send digest email into background.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $recipients Message Recipients.
+ * @param int   $thread_id  ID of the thread.
+ */
+function bb_render_digest_messages_template( $recipients, $thread_id ) {
+	global $wpdb;
+
+	if ( empty( $recipients ) ) {
+		return;
+	}
+
+	// Send an email to all recipient.
+	$type_key = 'notification_group_messages_new_message';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
+	$message_slug = bp_get_messages_slug();
+
+	foreach ( $recipients as $recipients_id => $recipient ) {
+
+		if ( false === bb_is_notification_enabled( $recipients_id, $type_key ) ) {
+			continue;
+		}
+
+		// User data and links.
+		$ud = get_userdata( $recipients_id );
+		if ( empty( $ud ) ) {
+			continue;
+		}
+
+		$email_type           = 'messages-unread-digest';
+		$get_first_message_id = current( $recipient );
+		$message_id           = $get_first_message_id['message_id'];
+		$group_id             = bp_messages_get_meta( $message_id, 'group_id', true );
+		$group_name           = '';
+
+		if ( ! empty( $group_id ) ) {
+			$email_type = 'group-message-digest';
+			if ( bp_is_active( 'groups' ) ) {
+				$group      = groups_get_group( $group_id );
+				$group_name = bp_get_group_name( $group );
+				if ( empty( $group_name ) ) {
+					$group_link = 'javascript:void(0);';
+				} else {
+					$group_link = bp_get_group_permalink( $group );
+				}
+
+				if ( ! bp_disable_group_avatar_uploads() ) {
+					$group_avatar = bp_core_fetch_avatar(
+						array(
+							'item_id'    => $group_id,
+							'object'     => 'group',
+							'type'       => 'full',
+							'avatar_dir' => 'group-avatars',
+							'alt'        => sprintf(
+							/* translators: group name. */
+								__( 'Group logo of %s', 'buddyboss' ),
+								$group_name
+							),
+							'title'      => $group_name,
+							'html'       => false,
+						)
+					);
+				} else {
+					$group_avatar = bb_get_buddyboss_group_avatar();
+				}
+			} else {
+
+				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_table             = $prefix . 'bp_groups';
+				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
+				$group_link               = 'javascript:void(0);';
+				$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
+				$legacy_group_avatar_name = '-groupavatar-full';
+				$legacy_user_avatar_name  = '-avatar2';
+
+				if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
+					$directory         = 'group-avatars';
+					$avatar_size       = '-bpfull';
+					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+					$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+					$avatar = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
+					if ( '' !== $avatar ) {
+						$group_avatar = $avatar;
+					}
+				}
+			}
+
+			$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+		}
+
+		$unsubscribe_args = array(
+			'user_id'           => $recipients_id,
+			'notification_type' => $email_type,
+		);
+
+		$tokens                 = array();
+		$tokens['usermessage']  = bb_render_unread_message_list( $recipient );
+		$tokens['message']      = bb_render_unread_message_list( $recipient );
+		$tokens['usersubject']  = $get_first_message_id['subject'];
+		$tokens['unread.count'] = $group_name;
+		$tokens['group.name']   = $group_name;
+		$tokens['message.url']  = esc_url( bp_core_get_user_domain( $recipients_id ) . $message_slug . '/view/' . $thread_id . '/' );
+		$tokens['unsubscribe']  = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+		bp_send_email(
+			$email_type,
+			$ud,
+			array(
+				'tokens' => $tokens,
+			)
+		);
+		die();
+	}
+}
+
+/**
+ * Prepare HTML to display list of unread messages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $messages Message Recipients.
+ *
+ * @return string
+ */
+function bb_render_unread_message_list( $messages = array() ) {
+	$message_list = '';
+
+	if ( empty( $messages ) ) {
+		return $message_list;
+	}
+
+	$message_list         .= '<td style="padding: 20px 40px;font-family: sans-serif;line-height: 25px;color: #7F868F;font-size: 16px" class="body_text_color body_text_size repsonsive-padding">';
+		$message_list     .= '<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">';
+			$message_list .= '<tbody>';
+				foreach ( $messages as $message ) {
+					$sender_id     = $message['sender_id'];
+					$sender_avatar = bp_get_displayed_user_avatar( 'type=full&item_id=' . $sender_id );
+
+					$message_list         .= '<tr>';
+						$message_list     .= '<td style="padding: 20px 40px;font-family: sans-serif;line-height: 25px;color: #7F868F;font-size: 16px" class="body_text_color body_text_size repsonsive-padding">';
+							$message_list .= $sender_avatar;
+							$message_list .= $message['message'];
+						$message_list     .= '</td>';
+					$message_list         .= '</tr>';
+				}
+			$message_list .= '</tbody>';
+		$message_list     .= '</table>';
+	$message_list         .= '</td>';
+
+	return $message_list;
+}
