@@ -870,7 +870,7 @@ function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = fa
 function messages_notification_new_message( $raw_args = array() ) {
 
 	// Disabled the email notification if enabled "Delay Email Notifications" setting from the backend.
-	if ( bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
+	if ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
 		return;
 	}
 
@@ -1008,7 +1008,7 @@ add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 function group_messages_notification_new_message( $raw_args = array() ) {
 
 	// Disabled the email notification if enabled "Delay Email Notifications" setting from the backend.
-	if ( bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
+	if ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
 		return;
 	}
 

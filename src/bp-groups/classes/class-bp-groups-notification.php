@@ -358,6 +358,23 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'bb_groups_new_message'
 		);
 
+		if ( false === bb_enabled_legacy_email_preference() && function_exists( 'bb_delay_email_notifications_enabled' ) && bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
+			$this->register_email_type(
+				'group-message-digest',
+				array(
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_title'         => __( '[{{{site.name}}}] New messages from group: "{{group.name}}"', 'buddyboss' ),
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_content'       => __( "You have {{unread.count}} unread messages from {{group.name}}.\n\n{{{message}}}", 'buddyboss' ),
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_plain_content' => __( "You have {{unread.count}} unread messages from {{group.name}}.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+					'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
+					'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+				),
+				'bb_groups_new_message'
+			);
+		}
+
 		$this->register_notification(
 			'groups',
 			'bb_groups_new_message',
