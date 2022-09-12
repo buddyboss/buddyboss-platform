@@ -231,11 +231,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( ! empty( $hidden_members ) ) {
 			$where['blocked_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
 		}
-
-		// phpcs:ignore
+// phpcs:ignore
 		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s AND ( {$this->alias}.user_suspended = 1 )", 'user' );
 		$where['suspend_where'] = '( r.user_id NOT IN( ' . $sql . ' ) )';
-
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
@@ -271,7 +269,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'      => $member_id,
@@ -327,7 +325,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'      => $member_id,
