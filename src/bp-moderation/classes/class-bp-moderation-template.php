@@ -182,7 +182,6 @@ class BP_Moderation_Template {
 				'update_meta_cache' => $r['update_meta_cache'],
 				'display_reporters' => $r['display_reporters'],
 				'count_total'       => $r['count_total'],
-				'blocked_only'      => $r['blocked_only']
 			)
 		);
 

@@ -148,7 +148,6 @@ function bp_has_moderation( $args = '' ) {
 			'display_reporters' => false,           // Whether or not to fetch user data.
 			'update_meta_cache' => true,            // Whether or not to update meta cache.
 			'count_total'       => true,           // Whether or not to use count_total.
-			'blocked_only'      => true,           // Whether or not to use blocked member only.
 		),
 		'has_moderation'
 	);
