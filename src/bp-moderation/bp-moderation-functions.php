@@ -1230,7 +1230,7 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
  *
  * @return array
  */
-function bp_moderation_get_reporting_category_show_when_field_array() {
+function bb_moderation_get_reporting_category_fields_array() {
 
 	$result = array(
 		'content'         => esc_html__( 'Content', 'buddyboss' ),
@@ -1245,5 +1245,5 @@ function bp_moderation_get_reporting_category_show_when_field_array() {
 	 *
 	 * @param array $result Options for show when field.
 	 */
-	return apply_filters( 'bp_moderation_get_reporting_category_show_when_field_array', $result );
+	return apply_filters( 'bb_moderation_get_reporting_category_fields_array', $result );
 }
