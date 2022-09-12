@@ -961,6 +961,15 @@ function bbp_repair_forum_visibility() {
 	delete_option( '_bbp_private_forums' );
 	delete_option( '_bbp_hidden_forums' );
 
+	/**
+	 * Don't search for both private/hidden statuses. Since 'pre_get_posts' is an
+	 * action, it's not removed by suppress_filters. We need to make sure that
+	 * we're only searching for the supplied post_status.
+	 *
+	 * @see https://bbpress.trac.wordpress.org/ticket/2512
+	 */
+	remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 	// Next, get all the private and hidden forums
 	$private_forums = new WP_Query(
 		array(
@@ -969,11 +978,14 @@ function bbp_repair_forum_visibility() {
 			'post_type'        => bbp_get_forum_post_type(),
 			'post_status'      => bbp_get_private_status_id(),
 			'fields'           => 'ids',
+
+			// Performance
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+			'ignore_sticky_posts'    => true,
+			'no_found_rows'          => true
 		)
 	);
-
-	// Reset the $post global
-	wp_reset_postdata();
 
 	$hidden_forums = new WP_Query(
 		array(
@@ -982,8 +994,16 @@ function bbp_repair_forum_visibility() {
 			'post_type'        => bbp_get_forum_post_type(),
 			'post_status'      => bbp_get_hidden_status_id(),
 			'fields'           => 'ids',
+
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+			'ignore_sticky_posts'    => true,
+			'no_found_rows'          => true
 		)
 	);
+
+	// Enable forum visibilty normalization
+	add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 
 	// Reset the $post global
 	wp_reset_postdata();
