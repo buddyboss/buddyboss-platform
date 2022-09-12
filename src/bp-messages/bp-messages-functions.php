@@ -1838,6 +1838,5 @@ function bb_render_digest_messages_template( $recipients, $thread_id ) {
 				'tokens' => $tokens,
 			)
 		);
-		die();
 	}
 }
