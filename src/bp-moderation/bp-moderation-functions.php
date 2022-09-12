@@ -247,7 +247,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
-	$args['button_attr'] = wp_parse_args(
+	$args['button_attr'] = bp_parse_args(
 		$args['button_attr'],
 		array(
 			'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
@@ -259,7 +259,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
-	$button = wp_parse_args(
+	$button = bp_parse_args(
 		$args,
 		array(
 			'link_text' => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $button_text ), esc_html( $button_text ) ),
@@ -316,16 +316,17 @@ function bp_moderation_get_report_button( $args, $html = true ) {
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int    $item_id   Item id.
- * @param string $item_type Item type.
+ * @param int    $item_id          Item id.
+ * @param string $item_type        Item type.
+ * @param int    $blocking_user_id The ID for the user who blocked user.
  *
  * @return bool
  */
-function bp_moderation_report_exist( $item_id, $item_type ) {
+function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
 	$response = false;
 
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
-		$moderation = new BP_Moderation( $item_id, $item_type );
+		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
 	}
 
@@ -337,16 +338,17 @@ function bp_moderation_report_exist( $item_id, $item_type ) {
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int $user_id The ID for the user.
+ * @param int $user_id          The ID for the user.
+ * @param int $blocking_user_id The ID for the user who blocked user.
  *
  * @return bool True if suspended, otherwise false.
  */
-function bp_moderation_is_user_blocked( $user_id ) {
+function bp_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
 	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 		return false;
 	}
 
-	return bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type );
+	return bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type, $blocking_user_id );
 }
 
 /**
@@ -1064,7 +1066,7 @@ function bp_moderation_item_count( $args = array() ) {
 		'count_total' => true,
 	);
 
-	$moderation_request_args = wp_parse_args( $args, $moderation_request_args );
+	$moderation_request_args = bp_parse_args( $args, $moderation_request_args );
 
 	$result = BP_Moderation::get( $moderation_request_args );
 

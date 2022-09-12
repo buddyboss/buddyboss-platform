@@ -1211,6 +1211,12 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 		$chunk_user_ids = array_chunk( $user_ids, 10 );
 		if ( ! empty( $chunk_user_ids ) ) {
 			foreach ( $chunk_user_ids as $key => $member_ids ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $member_ids, $reply_author ) ) {
+					continue;
+				}
+
 				$bb_email_background_updater->data(
 					array(
 						array(
@@ -1241,6 +1247,11 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 
 			// Bail if member opted out of receiving this email.
 			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+				continue;
+			}
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $reply_author ) ) {
 				continue;
 			}
 
@@ -1381,6 +1392,12 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		$chunk_user_ids = array_chunk( $user_ids, 10 );
 		if ( ! empty( $chunk_user_ids ) ) {
 			foreach ( $chunk_user_ids as $key => $member_ids ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $member_ids, $topic_author ) ) {
+					continue;
+				}
+
 				$bb_email_background_updater->data(
 					array(
 						array(
@@ -1410,6 +1427,11 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 			// Bail if member opted out of receiving this email.
 			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+				continue;
+			}
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $topic_author ) ) {
 				continue;
 			}
 
@@ -2253,6 +2275,57 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 		// Send notification email.
 		bp_send_email( $email_type, (int) $user_id, $args );
 	}
+}
+
+/**
+ * Function will get all parent ids of the topic replies.
+ *
+ * @since BuddyBoss 2.0.6
+ *
+ * @param int    $topic_id  Topic ID.
+ * @param string $post_type Post type.
+ *
+ * @return array Array of topic parent reply ids.
+ */
+function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
+	global $wpdb;
+
+	// Bail if nothing passed.
+	if ( empty( $topic_id ) ) {
+		return false;
+	}
+	$cache_id   = 'bb_parent_all_' . $topic_id . '_type_' . $post_type . '_parent_ids';
+	$parent_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
+
+	// If nothing is found, build the object.
+	if ( false === $parent_ids ) {
+		$post_status = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
+		// WP_Query arguments.
+		$args               = array(
+			'fields'         => 'ids',
+			'post_parent'    => $topic_id,
+			'posts_per_page' => - 1,
+			'post_type'      => $post_type,
+			'post_status'    => $post_status,
+			'meta_query'     => array(
+				array(
+					'key'     => '_bbp_reply_to',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		);
+
+		$get_replies_parent = new WP_Query( $args );
+
+		if ( ! is_wp_error( $get_replies_parent ) && $get_replies_parent->have_posts() ) {
+			$parent_ids = $get_replies_parent->posts;
+			// Cache the whole WP_Query object in the cache.
+			wp_cache_set( $cache_id, $parent_ids, 'bbpress_posts' );
+		}
+	}
+
+	// Filter and return.
+	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
 }
 
 /**

@@ -137,15 +137,16 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param bool $item_id   Moderation item id.
-	 * @param bool $item_type Moderation item type.
+	 * @param bool $item_id          Moderation item id.
+	 * @param bool $item_type        Moderation item type.
+	 * @param bool $blocking_user_id Moderation user id.
 	 */
-	public function __construct( $item_id = false, $item_type = false ) {
+	public function __construct( $item_id = false, $item_type = false, $blocking_user_id = false ) {
 		// Instantiate errors object.
 		$this->id            = 0;
 		$this->hide_sitewide = 0;
 		$this->errors        = new WP_Error();
-		$this->user_id       = get_current_user_id();
+		$this->user_id       = ! empty( $blocking_user_id ) ? $blocking_user_id : get_current_user_id();
 		$this->blog_id       = get_current_blog_id();
 		$this->report_id     = 0;
 		$this->category_id   = 0;
@@ -281,7 +282,7 @@ class BP_Moderation {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'page'              => 1,               // The current page.
