@@ -155,13 +155,6 @@
 							</div>
 						</div>
 						{{{data.document[i].msg_preview}}}
-						<# } else { #>
-						<div class="document-description-wrap">
-							<span class="entry-img" data-id="{{ i }}">
-								<i class="bb-icon-file-default" ></i>
-							</span>
-							<span class="document-detail-wrap bb-icon bb-icon-loader"></span>
-						</div>
 						<# } #>
 					</div>
 				<# } #>
