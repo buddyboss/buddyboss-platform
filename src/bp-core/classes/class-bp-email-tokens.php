@@ -1002,17 +1002,19 @@ class BP_Email_Tokens {
 															while ( bp_media() ) {
 																bp_the_media();
 																?>
-																<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
+																<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;">
 																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																		<img src="<?php echo esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																		<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																	</a>
 																</div>
+																<?php if ( $total_media_ids > 1 ) : ?>
+																	<p style="height: 6px;background: rgba(0, 0, 0, 0.3);border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;"></p>
+																	<p style="height: 6px;background: rgba(0, 0, 0, 0.1);border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;"></p>
+																<?php endif; ?>
 																<?php
+																break;
 															}
 															?>
-															<?php if ( $total_media_ids > 5 ) : ?>
-																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_media_ids - 5 ); ?></a>
-															<?php endif; ?>
 														</div>
 														<?php
 													endif;
@@ -1038,17 +1040,19 @@ class BP_Email_Tokens {
 																	$poster_thumb = bb_get_video_default_placeholder_image();
 																}
 																?>
-																<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
+																<div class="bb-activity-media-elem"  style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;">
 																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																		<img src="<?php echo esc_url( $poster_thumb ); ?>" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
+																		<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo plugin_dir_url( __FILE__ ); ?>/src/bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
 																	</a>
 																</div>
+																<?php if ( $total_video_ids > 1 ) : ?>
+																	<p style="height: 6px;background: rgba(0, 0, 0, 0.3);border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;"></p>
+																	<p style="height: 6px;background: rgba(0, 0, 0, 0.1);border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;"></p>
+																<?php endif; ?>
 																<?php
+																break;
 															}
 															?>
-															<?php if ( $total_video_ids > 5 ) : ?>
-																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_video_ids - 5 ); ?></a>
-															<?php endif; ?>
 														</div>
 														<?php
 													endif;
@@ -1071,11 +1075,11 @@ class BP_Email_Tokens {
 																$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
 																$extension     = bp_get_document_extension();
 																?>
-																<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
-																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																		<?php echo esc_html( $filename ); ?>
-																		<span><?php echo esc_html( $size ); ?></span>
-																		<span><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
+																<div class="bb-activity-media-elem">
+																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" style="font-size:14px; text-decoration:none;">
+																		<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
+																		<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( $size ); ?></span>
+																		<span style="font-size: 13px; margin-left:3px; text-transform: uppercase; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
 																	</a>
 																</div>
 																<?php
@@ -1093,11 +1097,10 @@ class BP_Email_Tokens {
 														<div class="activity-attached-gif-container">
 															<div class="gif-image-container">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
-																	<span class="bb-icon-l bb-icon-play"></span>
 																	<?php if ( is_int( $gif_data['still'] ) ) { ?>
-																		<img alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
+																		<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
 																	<?php } else { ?>
-																		<img alt="" src="<?php echo esc_url( $gif_data['still'] ); ?>" />
+																		<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( $gif_data['still'] ); ?>" />
 																	<?php } ?>
 																</a>
 																<span class="gif-icon"></span>
