@@ -3084,6 +3084,18 @@ window.bp = window.bp || {};
 		}
 	);
 
+	bp.Views.MessagesNoArchivedThreads = bp.Nouveau.Messages.View.extend(
+		{
+			tagName: 'div',
+			className: 'bb-messages-no-thread-found',
+			template  : bp.template( 'bp-messages-no-archived-threads' ),
+			initialize: function() {
+				this.$el.html( this.template() );
+				return this;
+			},
+		}
+	);
+
 	bp.Views.MessagesSearchNoThreads = bp.Nouveau.Messages.View.extend(
 		{
 			tagName: 'div',
@@ -3653,7 +3665,12 @@ window.bp = window.bp || {};
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 					$( '.bp-messages.bp-user-messages-loading' ).remove();
 					$( '.message-header-loading' ).addClass( 'bp-hide' );
-					this.views.add( new bp.Views.MessagesNoThreads() );
+
+					if ( 'archived' === bp.Nouveau.Messages.threadType ) {
+						this.views.add( new bp.Views.MessagesNoArchivedThreads() );
+					} else {
+						this.views.add( new bp.Views.MessagesNoThreads() );
+					}
 				}
 			},
 

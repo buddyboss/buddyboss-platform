@@ -90,6 +90,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
 			'parts/bp-messages-search-no-threads',
 			'parts/bp-messages-filter-loader',
 			'parts/bp-messages-empty-single-list',
+			'parts/bp-messages-no-archived-threads',
 		)
 	);
 
