@@ -84,8 +84,6 @@
 					   href="#">
 						<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
 					</a>
-				   <# } else { #>
-					<span class="bb-photo-cover-wrap bb-item-cover-wrap bb-icon bb-icon-loader" data-id="{{ i }}"></span>
 				   <# } #>
 				</div>
 				<# } #>
