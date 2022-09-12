@@ -1926,6 +1926,15 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
+						var parts = Backbone.history.getFragment().split('/');
+						var newArray = $.map( parts, function(v){
+							return v === "" ? null : v;
+						});
+						var thread_id = newArray.pop();
+
+						formData.append( 'from', 'message' );
+						formData.append( 'thread_id', thread_id );
+
 						if ( bp.Nouveau.dropZoneGlobalProgress ) {
 							bp.Nouveau.dropZoneGlobalProgress( this );
 						}
@@ -2136,6 +2145,15 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'document_document_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
+						var parts = Backbone.history.getFragment().split('/');
+						var newArray = $.map( parts, function(v){
+							return v === "" ? null : v;
+						});
+						var thread_id = newArray.pop();
+
+						formData.append( 'from', 'message' );
+						formData.append( 'thread_id', thread_id );
+
 						if ( bp.Nouveau.dropZoneGlobalProgress ) {
 							bp.Nouveau.dropZoneGlobalProgress( this );
 						}
@@ -2345,6 +2363,15 @@ window.bp = window.bp || {};
 					function(file, xhr, formData) {
 						formData.append( 'action', 'video_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.video );
+
+						var parts = Backbone.history.getFragment().split('/');
+						var newArray = $.map( parts, function(v){
+							return v === "" ? null : v;
+						});
+						var thread_id = newArray.pop();
+
+						formData.append( 'from', 'message' );
+						formData.append( 'thread_id', thread_id );
 
 						if ( bp.Nouveau.dropZoneGlobalProgress ) {
 							bp.Nouveau.dropZoneGlobalProgress( this );
