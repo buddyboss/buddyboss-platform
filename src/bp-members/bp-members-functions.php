@@ -4730,7 +4730,7 @@ function bp_member_get_report_link( $args = array() ) {
 	$args = bp_parse_args(
 		$args,
 		array(
-			'id'                => isset( $args['report_user'] ) ? 'member_block' : 'member_report',
+			'id'                => isset( $args['report_user'] ) ? 'member_report' : 'member_block',
 			'component'         => 'moderation',
 			'position'          => 50,
 			'must_be_logged_in' => true,

@@ -113,7 +113,7 @@ $admins            = array_map(
 
 											if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
 												?>
-												<a href="javascript:void(0);" class="button report-header_button bp-hide-request single-report-btn <?php echo ( 'unhide' === $action_type ) ? esc_attr( 'green' ) : ''; ?>" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_html( $action_label ); ?>">
+												<a href="javascript:void(0);" class="button report-header_button bp-hide-request single-report-btn <?php echo ( 'unhide' === $action_type ) ? esc_attr( 'green' ) : ''; ?>" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_attr( $action_label ); ?>">
 													<?php
 													echo esc_html( $action_label );
 													?>
@@ -157,9 +157,9 @@ $admins            = array_map(
 										</div>
 										<div class="report-header_content">
 											<strong class="report-header_number">
-												<?php echo esc_html( bp_core_number_format( $moderation_request_data->user_reported ) ); ?>
+												<?php echo esc_html( bp_core_number_format( $moderation_request_data->count_report ) ); ?>
 											</strong>
-											<?php echo ( 1 === $moderation_request_data->user_reported ) ? esc_html__( 'Report', 'buddyboss' ) : esc_html__( 'Reports', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->count_report ) ? esc_html__( 'Report', 'buddyboss' ) : esc_html__( 'Reports', 'buddyboss' ); ?>
 										</div>
 										<div class="report-header_action">
 											<?php

@@ -127,6 +127,14 @@ class BP_Core_Suspend {
 				'item_type' => $args['item_type'],
 			);
 
+			if ( empty( $args['user_report'] ) ) {
+				unset( $args['user_report'] );
+			}
+
+			if ( empty( $args['report'] ) ) {
+				unset( $args['report'] );
+			}
+
 			$wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 		} else {
 			$wpdb->insert( $table_name, $args ); // phpcs:ignore

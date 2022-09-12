@@ -272,7 +272,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
-	$is_reported = ( BP_Moderation_Members::$moderation_type === $item_type ) ? bp_moderation_user_blocked_report_exist( $item_sub_id, $item_sub_type ) : bp_moderation_report_exist( $item_sub_id, $item_sub_type );
+	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
 
 	if ( $is_reported ) {
 		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
@@ -318,7 +318,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 }
 
 /**
- * Function to Check content Reported by current usr or not.
+ * Function to Check content Reported by current user or not.
  *
  * @since BuddyBoss 1.5.6
  *
@@ -333,32 +333,10 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
-		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
-		if( BP_Moderation_Members::$moderation_type === $item_type ) {
-			$response   = ( ! empty( $moderation->id ) && empty( $moderation->user_report ) );
+		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && empty( $moderation->user_report ) );
+		if ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+			$response = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && ! empty( $moderation->user_report ) );
 		}
-	}
-
-	return $response;
-}
-
-/**
- * Function to Check member reported/blocked by current usr or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int    $item_id          Item id.
- * @param string $item_type        Item type.
- * @param int    $blocking_user_id The ID for the user who blocked user.
- *
- * @return bool
- */
-function bp_moderation_user_blocked_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
-	$response = false;
-
-	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
-		$blocked_user = BP_Moderation::check_moderation_user_block_exist( $item_id, $item_type, $blocking_user_id, true );
-		$response     = ( ! empty( $blocked_user ) ) ? true : false;
 	}
 
 	return $response;
@@ -379,7 +357,7 @@ function bp_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
 		return false;
 	}
 
-	return bp_moderation_user_blocked_report_exist( $user_id, BP_Moderation_Members::$moderation_type, $blocking_user_id );
+	return bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type, $blocking_user_id );
 }
 
 /**
@@ -628,7 +606,12 @@ function bp_moderation_add( $args = array() ) {
 	$response = false;
 
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		// Called member class externally when content_type = report_member.
+		if ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
+			$class = BP_Moderation_Abstract::get_class( BP_Moderation_Members::$moderation_type );
+		} else {
+			$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		}
 
 		if ( method_exists( $class, 'report' ) ) {
 			$response = $class::report( $args );
@@ -897,10 +880,10 @@ function bb_is_moderation_member_reporting_enable( $default = 0 ) {
  * @param int $default bool Optional.Default value true.
  *
  * @return bool Is auto suspend report enabled or not.
- * @uses get_option() To get the bb_reporting_auto_suspend_ option.
+ * @uses get_option() To get the bb_reporting_auto_suspend option.
  */
 function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
-	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend_', $default ) );
+	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend', $default ) );
 }
 
 /**
@@ -943,8 +926,12 @@ function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
  * @uses  get_option() To get the bp_search_autocomplete option
  */
 function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
-	// Check for folder type and content type as document.
-	if ( BP_Moderation_Folder::$moderation_type === $content_type ) {
+
+	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
+		$content_type = BP_Moderation_Members::$moderation_type_report;
+
+		// Check for folder type and content type as document.
+	} elseif ( BP_Moderation_Folder::$moderation_type === $content_type ) {
 		$content_type = BP_Moderation_Document::$moderation_type;
 
 		// Check for album type and content type as media.
@@ -957,6 +944,10 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 	}
 
 	$settings = get_option( 'bpm_reporting_content_reporting', array() );
+
+	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
+		$settings[ $content_type ] = bb_is_moderation_member_reporting_enable();
+	}
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
 		if ( empty( $settings ) ) {
@@ -1230,4 +1221,29 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
 	 * @param int    $item_id     Item id.
 	 */
 	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss' ), $item_id );
+}
+
+/**
+ * Function to get reporting categories show when fields array.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_moderation_get_reporting_category_fields_array() {
+
+	$result = array(
+		'content'         => esc_html__( 'Content', 'buddyboss' ),
+		'members'         => esc_html__( 'Members', 'buddyboss' ),
+		'content_members' => esc_html__( 'Content & Members', 'buddyboss' ),
+	);
+
+	/**
+	 * Filters the reported button text for different components
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $result Options for show when field.
+	 */
+	return apply_filters( 'bb_moderation_get_reporting_category_fields_array', $result );
 }
