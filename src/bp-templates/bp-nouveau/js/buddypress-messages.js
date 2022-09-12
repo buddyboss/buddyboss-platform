@@ -4914,6 +4914,23 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( BP_Nouveau.archived_threads ) && 0 < BP_Nouveau.archived_threads.length ) {
 					$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
 				}
+
+				if ( ! _.isUndefined( BP_Nouveau.archived_threads ) && 0 < BP_Nouveau.archived_threads.length ) {
+					$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+				}
+
+				// Clear filter view.
+				if ( ! _.isUndefined( bp.Nouveau.Messages.threads.length ) && 0 === bp.Nouveau.Messages.threads.length && ! _.isUndefined( bp.Nouveau.Messages.views.models ) ) {
+					_.each(
+						bp.Nouveau.Messages.views.models,
+						function( model ) {
+							if ( ! _.isUndefined( model.attributes.id ) && 'filters' === model.attributes.id ) {
+								model.get( 'view' ).remove();
+							}
+						},
+						bp.Nouveau.Messages
+					);
+				}
 			},
 
 			viewMessage: function( thread_id ) {
