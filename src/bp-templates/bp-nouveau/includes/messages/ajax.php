@@ -919,7 +919,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$reply['is_new']  = true;
 	$inbox_unread_cnt = apply_filters( 'thread_recipient_inbox_unread_counts', array(), $get_thread_recipients );
 
-	wp_send_json_success(
+	$response = apply_filters(
+		'bb_nouveau_ajax_messages_send_reply_success',
 		array(
 			'messages'                      => array( $reply ),
 			'thread_id'                     => $thread_id,
@@ -930,6 +931,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 			'started_date_mysql'            => $thread_template->thread->first_message_date,
 		)
 	);
+
+	wp_send_json_success( $response );
 
 }
 
