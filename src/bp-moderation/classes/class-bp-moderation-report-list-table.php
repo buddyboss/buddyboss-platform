@@ -114,7 +114,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
 		$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
 
-		if( empty( $moderation_request_data->id ) ) {
+		if ( empty( $moderation_request_data->id ) ) {
 			$moderation_request_data = new BP_Moderation( $moderation_id, BP_Moderation_Members::$moderation_type_report );
 		}
 
@@ -123,7 +123,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		// Set per page from the screen options.
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 
-		$args = ( 'user' === $moderation_content_type ) ? array( 'user_repoted' => true ) : array() ;
+		$args = 'user' === $moderation_content_type ? array( 'user_repoted' => true ) : array();
 		if ( 'blocked' === $this->view ) {
 			$args = array( 'user_repoted' => false );
 		}
