@@ -976,7 +976,7 @@ class BP_Email_Tokens {
 																?>
 																<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
 																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																		<img src="<?php echo esc_url( wp_get_attachment_image_url( bp_get_media_attachment_id() ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																		<img style="width:100%;" src="<?php echo esc_url( bp_get_media_attachment_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																	</a>
 																</div>
 																<?php
