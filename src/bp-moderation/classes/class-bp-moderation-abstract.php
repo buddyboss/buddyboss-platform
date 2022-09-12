@@ -124,6 +124,8 @@ abstract class BP_Moderation_Abstract {
 		// Get Moderation settings.
 		if ( BP_Moderation_Members::$moderation_type === $args['content_type'] ) {
 			$is_allow = bp_is_moderation_member_blocking_enable();
+		} else if ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
+			$is_allow = bb_is_moderation_member_reporting_enable();
 		} else {
 			$is_allow = bp_is_moderation_content_reporting_enable( 0, $args['content_type'] );
 		}
@@ -135,7 +137,7 @@ abstract class BP_Moderation_Abstract {
 
 		if ( empty( $moderation->id ) ) {
 			$moderation->item_id   = $args['content_id'];
-			$moderation->item_type = $args['content_type'];
+			$moderation->item_type = ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ? BP_Moderation_Members::$moderation_type : $args['content_type'] );
 		}
 
 		$moderation->category_id  = isset( $args['category_id'] ) ? $args['category_id'] : 0;

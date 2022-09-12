@@ -65,7 +65,8 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			// Member switch button.
 			$member_switch_button = bp_get_add_switch_button( bp_get_member_user_id() );
 
-			$member_block_button = $member_report_button = '';
+			$member_block_button  = '';
+			$member_report_button = '';
 
 			if ( bp_is_active( 'moderation' ) && is_user_logged_in() ) {
 				// Member report button.

@@ -170,20 +170,28 @@ function bp_moderation_content_report() {
 	if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_already_reported',
-			esc_html__( 'You have already reported this ', 'buddyboss' ) . esc_attr( $item_sub_type )
+			sprintf(
+				/* translators: Item type to reported. */
+				esc_html__( 'You have already reported this %s', 'buddyboss' ),
+				esc_attr( $item_sub_type )
+			)
 		);
 		wp_send_json_error( $response );
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
-		$moderation = bp_moderation_add(
-			array(
-				'content_id'   => $item_sub_id,
-				'content_type' => $item_sub_type,
-				'category_id'  => $category,
-				'note'         => $item_note,
-			)
+		$args = array(
+			'content_id'   => $item_sub_id,
+			'content_type' => $item_sub_type,
+			'category_id'  => $category,
+			'note'         => $item_note,
 		);
+
+		if ( BP_Moderation_Members::$moderation_type_report === $item_sub_type ) {
+			$args['user_report'] = 1;
+		}
+
+		$moderation = bp_moderation_add( $args );
 
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['moderation'] = $moderation;
@@ -228,18 +236,12 @@ function bp_moderation_block_member() {
 	$nonce   = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
-	// Member Report only.
-	$note     = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
-	$reported = filter_input( INPUT_POST, 'reported', FILTER_SANITIZE_NUMBER_INT );
-	$category = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
-
 	if ( empty( $item_id ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 
-	$moderation_type = $reported ? BP_Moderation_Members::$moderation_type_report : BP_Moderation_Members::$moderation_type;
-	if ( bp_moderation_user_blocked_report_exist( $item_id, $moderation_type ) ) {
+	if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'You have already reported this Member', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
@@ -247,23 +249,6 @@ function bp_moderation_block_member() {
 	if ( (int) bp_loggedin_user_id() === (int) $item_id ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not allowed to block yourself.', 'buddyboss' ) );
 		wp_send_json_error( $response );
-	}
-
-	if ( ! empty( $reported ) ) {
-		$reports_terms = get_terms(
-			'bpm_category',
-			array(
-				'hide_empty' => false,
-				'fields'     => 'ids',
-			)
-		);
-		if ( ( 'other' === $category && empty( $note ) ) || ( 'other' !== $category && ! in_array( (int) $category, $reports_terms, true ) ) ) {
-			$response['message'] = new WP_Error(
-				'bp_moderation_missing_data',
-				esc_html__( 'Please specify reason to report this member.', 'buddyboss' )
-			);
-			wp_send_json_error( $response );
-		}
 	}
 
 	// Check the current has access to report the item ot not.
@@ -281,9 +266,7 @@ function bp_moderation_block_member() {
 			array(
 				'content_id'   => $item_id,
 				'content_type' => BP_Moderation_Members::$moderation_type,
-				'note'         => ( ! empty( $note ) ? $note : ( ! empty( $reported ) ? esc_html__( 'Member report', 'buddyboss' ) : esc_html__( 'Member block', 'buddyboss' ) ) ),
-				'category_id'  => ! empty( $category ) ? $category : 0,
-				'user_report'  => ! empty( $reported ) ? 1 : 0,
+				'note'         => esc_html__( 'Member block', 'buddyboss' ),
 			)
 		);
 
@@ -323,10 +306,6 @@ function bp_moderation_block_member() {
 			);
 
 			$response['redirect'] = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . '/blocked-members';
-			if ( ! empty( $reported ) ) {
-				$response['redirect'] = '';
-				$response['button']['button_attr']['item_id'] = $item_id;
-			}
 		}
 
 		$response['message'] = $moderation->errors;
@@ -364,7 +343,7 @@ function bp_moderation_unblock_user() {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! bp_moderation_user_blocked_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
+	if ( ! bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_not_exit', esc_html__( 'Reported content was not found.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
@@ -553,11 +532,11 @@ add_action( 'wp_footer', 'bb_moderation_content_report_popup' );
 function bp_moderation_block_user_profile_button( $buttons ) {
 
 	if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
-		$buttons['member_report'] = __( 'Block', 'buddyboss' );
+		$buttons['member_block'] = __( 'Block', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable () ) {
-		$buttons['member_block'] = __( 'Report Member', 'buddyboss' );
+	if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) {
+		$buttons['member_report'] = __( 'Report Member', 'buddyboss' );
 	}
 
 	return $buttons;
@@ -782,18 +761,19 @@ add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated',
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $taxonomy Reporting category taxonomy.
- *
  * @return mixed Show when Reporting field.
  */
-function bb_category_add_term_fields_show_when_reporting( $taxonomy ) {
+function bb_category_add_term_fields_show_when_reporting() {
 	?>
 	<div class="form-field">
 		<label for="bb_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></label>
 		<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
-			<option value="content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
-			<option value="members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
-			<option value="content_members"><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+			<?php
+			$show_when_options = bb_moderation_get_reporting_category_fields_array();
+			foreach ( $show_when_options as $key => $value ) {
+				printf( '<option value="%1$s" >%2$s</option>', esc_attr( $key ), esc_attr( $value ) );
+			}
+			?>
 		</select>
 	</div>
 	<?php
@@ -805,12 +785,11 @@ add_action( 'bpm_category_add_form_fields', 'bb_category_add_term_fields_show_wh
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object $term     Reporting category object.
- * @param string $taxonomy Reporting category taxonomy.
+ * @param object $term Reporting category object.
  *
  * @return mixed Show when Reporting field.
  */
-function bb_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
+function bb_category_edit_term_fields_show_when_reporting( $term ) {
 	$value = get_term_meta( $term->term_id, 'bb_category_show_when_reporting', true );
 	?>
 	<tr class="form-field">
@@ -819,15 +798,18 @@ function bb_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
 		</th>
 		<td>
 			<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
-				<option value="content" <?php echo 'content' === $value ? esc_attr( 'selected' ) : ''; ?>><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
-				<option value="members" <?php echo 'members' === $value ? esc_attr( 'selected' ) : ''; ?>><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
-				<option value="content_members" <?php echo 'content_members' === $value ? esc_attr( 'selected' ) : ''; ?>><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+				<?php
+				$show_when_options = bb_moderation_get_reporting_category_fields_array();
+				foreach ( $show_when_options as $key => $val ) {
+					printf( '<option value="%1$s" %2$s >%3$s</option>', esc_attr( $key ), selected( $value, $key, false ), esc_attr( $val ) );
+				}
+				?>
 			</select>
 		</td>
 	</tr>
 	<?php
 }
-add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_when_reporting', 10, 2 );
+add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_when_reporting', 10, 1 );
 
 /**
  * Save show when reporting field in reporting categories.
@@ -838,11 +820,11 @@ add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_
  */
 function bb_category_save_term_fields_show_when_reporting( $term_id ) {
 
-	if ( isset( $_POST['bb_category_show_when_reporting'] ) ) { // phpcs:ignore
+	if ( isset( $_POST['bb_category_show_when_reporting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		update_term_meta(
 			$term_id,
 			'bb_category_show_when_reporting',
-			sanitize_text_field( wp_unslash( $_POST['bb_category_show_when_reporting'] ) ) // phpcs:ignore
+			sanitize_text_field( wp_unslash( $_POST['bb_category_show_when_reporting'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		);
 	}
 }
@@ -878,15 +860,9 @@ add_filter( 'manage_edit-bpm_category_columns', 'bb_category_show_when_reporting
  * @return mixed Term meta data.
  */
 function bb_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
-	$value = get_term_meta( $term_id, $column_name, true );
-	switch ( $value ) {
-		case 'members':
-			return esc_html__( 'Members', 'buddyboss' );
-		case 'content_members':
-			return esc_html__( 'Content & Members', 'buddyboss' );
-		default:
-			return esc_html__( 'Content', 'buddyboss' );
-	}
+	$value             = get_term_meta( $term_id, $column_name, true );
+	$show_when_options = bb_moderation_get_reporting_category_fields_array();
+	return ( isset( $show_when_options[ $value ] ) ? esc_attr( $show_when_options[ $value ] ) : esc_attr__( 'Content', 'buddyboss' ) );
 }
 add_filter( 'manage_bpm_category_custom_column', 'bb_category_show_when_reporting_column_display', 10, 3 );
 
@@ -912,9 +888,12 @@ function bb_quick_edit_bb_category_show_when_reporting_field( $column_name, $scr
 				<span class="title"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></span>
 				<span class="input-text-wrap">
 					<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
-						<option value="content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></option>
-						<option value="members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></option>
-						<option value="content_members"><?php esc_html_e( 'Content & Members', 'buddyboss' ); ?></option>
+						<?php
+						$show_when_options = bb_moderation_get_reporting_category_fields_array();
+						foreach ( $show_when_options as $key => $value ) {
+							printf( '<option value="%1$s" >%2$s</option>', esc_attr( $key ), esc_attr( $value ) );
+						}
+						?>
 					</select>
 				</span>
 			</label>

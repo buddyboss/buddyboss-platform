@@ -21,7 +21,13 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @var string
 	 */
-	public static $moderation_type        = 'user';
+	public static $moderation_type = 'user';
+
+	/**
+	 * Item type for report member.
+	 *
+	 * @var string
+	 */
 	public static $moderation_type_report = 'user_report';
 
 	/**
@@ -108,6 +114,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function add_content_types( $content_types ) {
 		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss' );
+
+		if ( bb_is_moderation_member_reporting_enable() ) {
+			$content_types[ self::$moderation_type_report ] = __( 'Report Member', 'buddyboss' );
+		}
 
 		return $content_types;
 	}

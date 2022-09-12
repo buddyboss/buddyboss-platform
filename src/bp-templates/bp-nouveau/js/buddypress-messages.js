@@ -1928,7 +1928,7 @@ window.bp = window.bp || {};
 
 						var parts = Backbone.history.getFragment().split('/');
 						var newArray = $.map( parts, function(v){
-							return v === "" ? null : v;
+							return v === '' ? null : v;
 						});
 						var thread_id = newArray.pop();
 
@@ -2147,7 +2147,7 @@ window.bp = window.bp || {};
 
 						var parts = Backbone.history.getFragment().split('/');
 						var newArray = $.map( parts, function(v){
-							return v === "" ? null : v;
+							return v === '' ? null : v;
 						});
 						var thread_id = newArray.pop();
 
@@ -2366,7 +2366,7 @@ window.bp = window.bp || {};
 
 						var parts = Backbone.history.getFragment().split('/');
 						var newArray = $.map( parts, function(v){
-							return v === "" ? null : v;
+							return v === '' ? null : v;
 						});
 						var thread_id = newArray.pop();
 
