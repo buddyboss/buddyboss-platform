@@ -2330,6 +2330,38 @@ function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
 }
 
+/*
+ * Assist pagination by returning correct page number for sub-forums.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @uses  get_query_var() To get the 'forum-paged' value.
+ *
+ * @return int Current page number
+ */
+function bb_get_forum_paged() {
+	global $wp_query;
+
+	// Check the query var.
+	if ( get_query_var( 'forum-paged' ) ) {
+		$paged = get_query_var( 'forum-paged' );
+
+		// Check query paged.
+	} elseif ( ! empty( $wp_query->query['forum-paged'] ) ) {
+		$paged = $wp_query->query['forum-paged'];
+	} elseif ( isset( $_GET['forum-paged'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$paged = intval( $_GET['forum-paged'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	}
+
+	// Paged found.
+	if ( ! empty( $paged ) ) {
+		return (int) $paged;
+	}
+
+	// Default to first page.
+	return 1;
+}
+
 /**
  * Return array of bbPress registered post types
  *
