@@ -95,11 +95,8 @@ function bb_delay_email_notification_scheduled_action_callback() {
 
 		if ( ! empty( $get_delay_time_array ) && $db_delay_time === $get_delay_time_array['value'] ) {
 
-			// $current_date = bp_core_current_time();
-			// $start_date   = wp_date( 'Y-m-d H:i:s', strtotime( $current_date . ' -' . $db_delay_time . ' minutes' ), new DateTimeZone( 'UTC' ) );
-
-			$current_date = '2022-09-09 06:06:39';
-			$start_date   = '2022-09-09 05:06:39';
+			$current_date = bp_core_current_time();
+			$start_date   = wp_date( 'Y-m-d H:i:s', strtotime( $current_date . ' -' . $db_delay_time . ' minutes' ), new DateTimeZone( 'UTC' ) );
 
 			$results = $wpdb->get_results(
 				$wpdb->prepare(

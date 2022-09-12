@@ -902,6 +902,30 @@ class BP_Email_Tokens {
 			}
 		}
 
+		$video_ids       = false;
+		$total_video_ids = 0;
+		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+			$video_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_video_ids', true );
+
+			if ( ! empty( $video_ids ) ) {
+				$video_ids       = explode( ',', $video_ids );
+				$total_video_ids = count( $video_ids );
+				$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
+			}
+		}
+
+		$document_ids       = false;
+		$total_document_ids = 0;
+		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+			$document_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_document_ids', true );
+
+			if ( ! empty( $document_ids ) ) {
+				$document_ids       = explode( ',', $document_ids );
+				$total_document_ids = count( $document_ids );
+				$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );
+			}
+		}
+
 		$gif_data = false;
 		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$gif_data = bp_messages_get_meta( $tokens['message_id'], '_gif_data', true );
@@ -980,7 +1004,7 @@ class BP_Email_Tokens {
 																?>
 																<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
 																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																		<img src="<?php echo esc_url( wp_get_attachment_image_url( bp_get_media_attachment_id() ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																		<img src="<?php echo esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																	</a>
 																</div>
 																<?php
@@ -990,8 +1014,82 @@ class BP_Email_Tokens {
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_media_ids - 5 ); ?></a>
 															<?php endif; ?>
 														</div>
-													<?php endif; ?>
-													<?php if ( ! empty( $gif_data ) ) : ?>
+														<?php
+													endif;
+
+													if ( ! empty( $video_ids ) && bp_has_video(
+														array(
+															'include' => $video_ids,
+															'order_by' => 'menu_order',
+															'sort' => 'ASC',
+														)
+													) ) :
+														?>
+														<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+															<?php
+															while ( bp_video() ) {
+																bp_the_video();
+
+																$poster_thumb = bp_get_video_activity_thumb();
+																if ( empty( $poster_thumb ) ) {
+																	$poster_thumb = bp_get_video_popup_thumb();
+																}
+																if ( empty( $poster_thumb ) ) {
+																	$poster_thumb = bb_get_video_default_placeholder_image();
+																}
+																?>
+																<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
+																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																		<img src="<?php echo esc_url( $poster_thumb ); ?>" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
+																	</a>
+																</div>
+																<?php
+															}
+															?>
+															<?php if ( $total_video_ids > 5 ) : ?>
+																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_video_ids - 5 ); ?></a>
+															<?php endif; ?>
+														</div>
+														<?php
+													endif;
+
+													if ( ! empty( $document_ids ) && bp_has_document(
+														array(
+															'include' => $document_ids,
+															'order_by' => 'menu_order',
+															'sort' => 'ASC',
+														)
+													) ) :
+														?>
+														<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+															<?php
+															while ( bp_document() ) {
+																bp_the_document();
+
+																$attachment_id = bp_get_document_attachment_id();
+																$filename      = basename( get_attached_file( $attachment_id ) );
+																$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+																$extension     = bp_get_document_extension();
+																?>
+																<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
+																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																		<?php echo esc_html( $filename ); ?>
+																		<span><?php echo esc_html( $size ); ?></span>
+																		<span><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
+																	</a>
+																</div>
+																<?php
+															}
+															?>
+															<?php if ( $total_document_ids > 5 ) : ?>
+																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+															<?php endif; ?>
+														</div>
+														<?php
+													endif;
+
+													if ( ! empty( $gif_data ) ) :
+														?>
 														<div class="activity-attached-gif-container">
 															<div class="gif-image-container">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
@@ -1628,11 +1726,11 @@ class BP_Email_Tokens {
 								?>
 								<tr>
 									<td valign="middle" width="65px" style="vertical-align: middle;">
-										<?php echo implode( " ", $sender_avatars ); ?>
+										<?php echo implode( ' ', $sender_avatars ); ?>
 									</td>
 									<td width="88%" style="vertical-align: middle;">
 										<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-											<?php echo implode( ", ", $sender_names ); ?>
+											<?php echo implode( ', ', $sender_names ); ?>
 										</div>
 									</td>
 								</tr>
@@ -1683,7 +1781,6 @@ class BP_Email_Tokens {
 													<?php echo nl2br( stripslashes( wpautop( $message['message'] ) ) ); ?>
 												</div>
 												<?php
-
 												$media_ids       = false;
 												$total_media_ids = 0;
 												if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $message['message_id'] ) ) {
@@ -1693,6 +1790,30 @@ class BP_Email_Tokens {
 														$media_ids       = explode( ',', $media_ids );
 														$total_media_ids = count( $media_ids );
 														$media_ids       = implode( ',', array_slice( $media_ids, 0, 5 ) );
+													}
+												}
+
+												$video_ids       = false;
+												$total_video_ids = 0;
+												if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && ! empty( $message['message_id'] ) ) {
+													$video_ids = bp_messages_get_meta( $message['message_id'], 'bp_video_ids', true );
+
+													if ( ! empty( $video_ids ) ) {
+														$video_ids       = explode( ',', $video_ids );
+														$total_video_ids = count( $video_ids );
+														$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
+													}
+												}
+
+												$document_ids       = false;
+												$total_document_ids = 0;
+												if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && ! empty( $message['message_id'] ) ) {
+													$document_ids = bp_messages_get_meta( $message['message_id'], 'bp_document_ids', true );
+
+													if ( ! empty( $document_ids ) ) {
+														$document_ids       = explode( ',', $document_ids );
+														$total_document_ids = count( $document_ids );
+														$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );
 													}
 												}
 
@@ -1716,7 +1837,7 @@ class BP_Email_Tokens {
 															?>
 															<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																	<img src="<?php echo esc_url( wp_get_attachment_image_url( bp_get_media_attachment_id() ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																	<img src="<?php echo esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																</a>
 															</div>
 															<?php
@@ -1726,8 +1847,82 @@ class BP_Email_Tokens {
 															<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_media_ids - 5 ); ?></a>
 														<?php endif; ?>
 													</div>
-												<?php endif; ?>
-												<?php if ( ! empty( $gif_data ) ) : ?>
+													<?php
+												endif;
+
+												if ( ! empty( $video_ids ) && bp_has_video(
+													array(
+														'include' => $video_ids,
+														'order_by' => 'menu_order',
+														'sort' => 'ASC',
+													)
+												) ) :
+													?>
+													<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+														<?php
+														while ( bp_video() ) {
+															bp_the_video();
+
+															$poster_thumb = bp_get_video_activity_thumb();
+															if ( empty( $poster_thumb ) ) {
+																$poster_thumb = bp_get_video_popup_thumb();
+															}
+															if ( empty( $poster_thumb ) ) {
+																$poster_thumb = bb_get_video_default_placeholder_image();
+															}
+															?>
+															<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
+																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																	<img src="<?php echo esc_url( $poster_thumb ); ?>" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
+																</a>
+															</div>
+															<?php
+														}
+														?>
+														<?php if ( $total_video_ids > 5 ) : ?>
+															<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_video_ids - 5 ); ?></a>
+														<?php endif; ?>
+													</div>
+													<?php
+												endif;
+
+												if ( ! empty( $document_ids ) && bp_has_document(
+													array(
+														'include' => $document_ids,
+														'order_by' => 'menu_order',
+														'sort' => 'ASC',
+													)
+												) ) :
+													?>
+													<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+														<?php
+														while ( bp_document() ) {
+															bp_the_document();
+
+															$attachment_id = bp_get_document_attachment_id();
+															$filename      = basename( get_attached_file( $attachment_id ) );
+															$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+															$extension     = bp_get_document_extension();
+															?>
+															<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
+																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																	<?php echo esc_html( $filename ); ?>
+																	<span><?php echo esc_html( $size ); ?></span>
+																	<span><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
+																</a>
+															</div>
+															<?php
+														}
+														?>
+														<?php if ( $total_document_ids > 5 ) : ?>
+															<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+														<?php endif; ?>
+													</div>
+													<?php
+												endif;
+
+												if ( ! empty( $gif_data ) ) :
+													?>
 													<div class="activity-attached-gif-container">
 														<div class="gif-image-container">
 															<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
@@ -1741,7 +1936,9 @@ class BP_Email_Tokens {
 															<span class="gif-icon"></span>
 														</div>
 													</div>
-												<?php endif; ?>
+													<?php
+												endif;
+												?>
 											</td>
 										</tr>
 									<?php } ?>
