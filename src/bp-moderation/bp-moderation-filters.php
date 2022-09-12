@@ -170,7 +170,11 @@ function bp_moderation_content_report() {
 	if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_already_reported',
-			esc_html__( 'You have already reported this ', 'buddyboss' ) . esc_attr( $item_sub_type )
+			sprintf(
+				/* translators: Item type to reported. */
+				esc_html__( 'You have already reported this %s', 'buddyboss' ),
+				esc_attr( $item_sub_type )
+			)
 		);
 		wp_send_json_error( $response );
 	}
@@ -753,17 +757,15 @@ add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated',
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $taxonomy Reporting category taxonomy.
- *
  * @return mixed Show when Reporting field.
  */
-function bb_category_add_term_fields_show_when_reporting( $taxonomy ) {
+function bb_category_add_term_fields_show_when_reporting() {
 	?>
 	<div class="form-field">
 		<label for="bb_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss' ); ?></label>
 		<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
 			<?php
-				$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
+			$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
 			foreach ( $show_when_options as $key => $value ) {
 				printf( '<option value="%1$s" >%2$s</option>', esc_attr( $key ), esc_attr( $value ) );
 			}
@@ -779,12 +781,11 @@ add_action( 'bpm_category_add_form_fields', 'bb_category_add_term_fields_show_wh
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object $term     Reporting category object.
- * @param string $taxonomy Reporting category taxonomy.
+ * @param object $term Reporting category object.
  *
  * @return mixed Show when Reporting field.
  */
-function bb_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
+function bb_category_edit_term_fields_show_when_reporting( $term ) {
 	$value = get_term_meta( $term->term_id, 'bb_category_show_when_reporting', true );
 	?>
 	<tr class="form-field">
@@ -794,7 +795,7 @@ function bb_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
 		<td>
 			<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
 				<?php
-					$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
+				$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
 				foreach ( $show_when_options as $key => $val ) {
 					printf( '<option value="%1$s" %2$s >%3$s</option>', esc_attr( $key ), selected( $value, $key, false ), esc_attr( $val ) );
 				}
@@ -804,7 +805,7 @@ function bb_category_edit_term_fields_show_when_reporting( $term, $taxonomy ) {
 	</tr>
 	<?php
 }
-add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_when_reporting', 10, 2 );
+add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_when_reporting', 10, 1 );
 
 /**
  * Save show when reporting field in reporting categories.
@@ -884,7 +885,7 @@ function bb_quick_edit_bb_category_show_when_reporting_field( $column_name, $scr
 				<span class="input-text-wrap">
 					<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
 						<?php
-							$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
+						$show_when_options = bp_moderation_get_reporting_category_show_when_field_array();
 						foreach ( $show_when_options as $key => $value ) {
 							printf( '<option value="%1$s" >%2$s</option>', esc_attr( $key ), esc_attr( $value ) );
 						}
