@@ -415,7 +415,8 @@ function bp_nouveau_ajax_messages_send_message() {
 
 		$inbox_unread_cnt = apply_filters( 'thread_recipient_inbox_unread_counts', array(), $get_thread_recipients );
 
-		wp_send_json_success(
+		$response = apply_filters(
+			'bb_nouveau_ajax_messages_send_message_success_response',
 			array(
 				'feedback'                      => __( 'Message successfully sent.', 'buddyboss' ),
 				'type'                          => 'success',
@@ -425,6 +426,8 @@ function bp_nouveau_ajax_messages_send_message() {
 				'hash'                          => $response['message_id'],
 			)
 		);
+
+		wp_send_json_success( $response );
 
 		// Message could not be sent.
 	} else {
