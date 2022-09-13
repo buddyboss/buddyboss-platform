@@ -40,7 +40,11 @@ add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10
  */
 function bp_ld_popup_register_redirect( $bool ) {
 
-	if ( isset( $_POST ) && isset( $_POST['learndash-registration-form'] ) ) {
+	if (
+		isset( $_POST )
+		&& isset( $_POST['learndash-registration-form'] )
+		&& 'true' === $_POST['learndash-registration-form']
+	) {
 		return false;
 	}
 

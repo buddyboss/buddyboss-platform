@@ -232,7 +232,6 @@ function bp_media_activity_append_media( $content, $activity ) {
 
 		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 			if ( bp_is_group_media_support_enabled() ) {
-				$args['privacy'] = array( 'grouponly' );
 				if ( ! bp_is_group_albums_support_enabled() ) {
 					$args['album_id'] = 'existing-media';
 				}
@@ -241,7 +240,12 @@ function bp_media_activity_append_media( $content, $activity ) {
 				$args['album_id'] = 'existing-media';
 			}
 		} else {
-			$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+			$args['privacy'] = bp_media_query_privacy( $activity->user_id, $group_id, $activity->component );
+
+			if ( 'activity_comment' === $activity->type ) {
+				$args['privacy'][] = 'comment';
+			}
+
 			if ( ! bp_is_profile_media_support_enabled() ) {
 				$args['user_id'] = 'null';
 			}
