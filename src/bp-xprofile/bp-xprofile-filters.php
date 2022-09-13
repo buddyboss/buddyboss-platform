@@ -129,10 +129,10 @@ add_filter( 'bp_repair_list', 'bb_xprofile_repair_user_nicknames' );
 add_filter( 'insert_user_meta', 'bb_validate_user_nickname_on_user_register', 10, 3 );
 add_action( 'user_profile_update_errors', 'bb_validate_user_nickname_on_user_update', 10, 3 );
 
+add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_param' );
+
 // When email changed then check profile completion for gravatar.
 add_action( 'profile_update', 'bb_profile_update_completion_user_progress', 10, 2 );
-
-add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_param' );
 
 /**
  * Sanitize each field option name for saving to the database.
