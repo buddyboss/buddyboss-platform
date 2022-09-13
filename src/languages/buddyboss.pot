@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-09-01 11:31:02+00:00\n"
+"POT-Creation-Date: 2022-09-13 12:01:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -863,7 +863,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:538
 #: bp-core/classes/class-bp-admin.php:539 bp-forums/admin/settings.php:1433
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1762
-#: bp-media/bp-media-filters.php:1365
+#: bp-media/bp-media-filters.php:1369
 msgid "Tools"
 msgstr ""
 
@@ -1136,7 +1136,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:358
 #: bp-core/admin/bp-core-admin-pages.php:392
 #: bp-core/deprecated/buddyboss/1.0.php:75
-#: bp-document/bp-document-filters.php:330 bp-forums/admin/replies.php:783
+#: bp-document/bp-document-filters.php:337 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
 #: bp-groups/classes/class-bp-groups-list-table.php:576
 #: bp-invites/bp-invites-admin.php:273
@@ -1349,7 +1349,7 @@ msgid "Filter activities list"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:347
-#: bp-core/bp-core-functions.php:7199
+#: bp-core/bp-core-functions.php:7240
 #: bp-groups/classes/class-bp-groups-list-table.php:354
 #: bp-messages/bp-messages-template.php:1023
 #: bp-moderation/classes/class-bp-moderation-list-table.php:282
@@ -1421,7 +1421,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:284
 #: bp-forums/classes/class-bp-forums-component.php:335
 #: bp-forums/common/widgets.php:757 bp-forums/core/actions.php:352
-#: bp-forums/forums/template.php:49 bp-media/bp-media-filters.php:1425
+#: bp-forums/forums/template.php:49 bp-media/bp-media-filters.php:1429
 #: bp-media/bp-media-settings.php:239 bp-media/bp-media-settings.php:246
 #: bp-media/bp-media-settings.php:253 bp-media/bp-media-settings.php:260
 #: bp-media/bp-media-settings.php:267 bp-media/classes/class-bp-media.php:751
@@ -1935,7 +1935,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:449
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:71
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:109
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1698
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1704
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1125
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1517
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1330
@@ -2055,122 +2055,122 @@ msgstr ""
 msgid "Sorry, you are not allowed to update favorites."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1704
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1710
 msgid "The ID of some other object primarily associated with this one."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1709
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1715
 msgid "The ID of some other object also associated with this one."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1714
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1720
 msgid "The ID for the author of the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1719
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1725
 msgid "User's display name for the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1724
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1730
 msgid "The permalink to this activity on the site."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1730
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1736
 msgid "The active BuddyPress component the activity relates to."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1739
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1745
 msgid "The activity type of the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1748
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1754
 msgid "The description of the activity's type (eg: Username posted an update)"
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1757
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1763
 msgid "Allowed HTML content for the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1767
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1773
 msgid "Content for the activity, as it exists in the database."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1772
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1778
 msgid "HTML content for the activity, transformed for display."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1781
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1787
 msgid "The date the activity was published, in the site's timezone."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1787
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1793
 msgid "Whether the activity has been marked as spam or not."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1797
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1803
 msgid "A list of objects children of the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1803
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1809
 msgid "Total number of comments of the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1809
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1815
 msgid "Whether the activity object should be sitewide hidden or not."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1814
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1820
 msgid "Whether the activity object has been favorited by the current user."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1820
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1826
 msgid "Whether or not user have the favorite access for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1826
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1832
 msgid "Favorite count for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1832
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1838
 msgid "Whether or not user have the comment access for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1838
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1844
 msgid "Comment count for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1844
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1850
 msgid "Whether or not user have the edit access for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1850
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1856
 msgid "Whether or not user have the delete access for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1856
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1862
 msgid "Content for the activity without HTML tags."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1862
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2057
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1868
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2063
 msgid "Privacy of the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1868
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1874
 msgid "Activity data for allow edit or not."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1873
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1879
 msgid ""
 "Feature media image which added last in the content for blog post as well "
 "as custom post type."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1879
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1885
 msgid "WordPress Embed data with activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1893
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1899
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:479
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1488
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:298
@@ -2185,7 +2185,7 @@ msgstr ""
 msgid "Avatar URL with full image size (%1$d x %2$d pixels)."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1901
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1907
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:487
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1496
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:306
@@ -2203,12 +2203,12 @@ msgstr ""
 msgid "Avatar URL with thumb image size (%1$d x %2$d pixels)."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1908
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1914
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2207
 msgid "Avatar URLs for the author of the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1934
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1940
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:599
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1211
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1320
@@ -2216,7 +2216,7 @@ msgstr ""
 msgid "Ensure result set excludes specific IDs."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1943
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1949
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:531
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1202
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1797
@@ -2227,7 +2227,7 @@ msgstr ""
 msgid "Ensure result set includes specific IDs."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1952
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1958
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1691
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1133
 #: bp-groups/classes/class-bp-rest-group-invites-endpoint.php:1222
@@ -2243,56 +2243,56 @@ msgstr ""
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1961
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1967
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1432
 msgid "Order by a specific parameter."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1969
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1975
 msgid "Limit result set to items published after a given ISO8601 compliant date."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1976
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1982
 msgid "Limit result set to items created by a specific user (ID)."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1984
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1990
 #: bp-core/classes/class-bp-rest-components-endpoint.php:513
 msgid "Limit result set to items with a specific status."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1993
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1999
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1122
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1662
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1352
 msgid "Limit result set to items with a specific scope."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2001
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2007
 msgid "Limit result set to items created by a specific group."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2009
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2015
 msgid "Limit result set to items created by a specific site."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2017
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2023
 msgid "Limit result set to items with a specific prime association ID."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2025
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2031
 msgid "Limit result set to items with a specific secondary association ID."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2033
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2039
 msgid "Limit result set to items with a specific active BuddyPress component."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2041
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2047
 msgid "Limit result set to items with a specific activity type."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2049
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2055
 msgid ""
 "No comments by default, stream for within stream display, threaded for "
 "below each activity item."
@@ -3291,7 +3291,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2497
-#: bp-media/bp-media-filters.php:1473
+#: bp-media/bp-media-filters.php:1477
 msgid "Run Migration"
 msgstr ""
 
@@ -3851,7 +3851,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:584
 #: bp-core/admin/bp-core-admin-settings.php:969
 #: bp-core/admin/bp-core-admin-settings.php:1326
-#: bp-core/bp-core-functions.php:7199
+#: bp-core/bp-core-functions.php:7240
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:218
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:233
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:247
@@ -3882,7 +3882,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:698
 #: bp-core/admin/bp-core-admin-settings.php:1062
-#: bp-core/bp-core-functions.php:7178 bp-core/bp-core-functions.php:7260
+#: bp-core/bp-core-functions.php:7219 bp-core/bp-core-functions.php:7301
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:664
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:64
 msgid "App"
@@ -4379,7 +4379,7 @@ msgid "BuddyBoss Labs"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2886
-#: bp-core/bp-core-functions.php:7139 bp-core/bp-core-functions.php:7140
+#: bp-core/bp-core-functions.php:7180 bp-core/bp-core-functions.php:7181
 #: bp-notifications/bp-notifications-settings.php:432
 #: bp-notifications/bp-notifications-settings.php:513
 msgid "Notification Preferences"
@@ -4629,7 +4629,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:49 bp-forums/topics/template.php:50
-#: bp-media/bp-media-filters.php:1431
+#: bp-media/bp-media-filters.php:1435
 #: bp-templates/bp-nouveau/includes/groups/classes.php:316
 msgid "Discussions"
 msgstr ""
@@ -4646,7 +4646,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:1437
+#: bp-media/bp-media-filters.php:1441
 msgid "Replies"
 msgstr ""
 
@@ -4795,8 +4795,8 @@ msgstr ""
 #: bp-forums/admin/tools.php:1591 bp-forums/admin/tools.php:1593
 #: bp-forums/admin/tools.php:1667 bp-forums/admin/tools.php:1669
 #: bp-forums/admin/tools.php:1741 bp-forums/admin/tools.php:1743
-#: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1820
-#: bp-video/bp-video-filters.php:1001
+#: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1824
+#: bp-video/bp-video-filters.php:1006
 msgid "Complete!"
 msgstr ""
 
@@ -5284,7 +5284,7 @@ msgid "Labs"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
-#: bp-media/bp-media-filters.php:1419
+#: bp-media/bp-media-filters.php:1423
 msgid "Media"
 msgstr ""
 
@@ -6035,7 +6035,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-functions.php:2135
 #: bp-xprofile/classes/class-bp-xprofile-component.php:286
 #: bp-xprofile/classes/class-bp-xprofile-component.php:401
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:138
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:141
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:174
 msgid "Profile Photo"
 msgstr ""
@@ -6063,7 +6063,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
-#: bp-core/bp-core-catchuri.php:1301 bp-core/bp-core-functions.php:5926
+#: bp-core/bp-core-catchuri.php:1301 bp-core/bp-core-functions.php:5967
 msgid "Please login to access this website."
 msgstr ""
 
@@ -6791,7 +6791,7 @@ msgid "Search Emails"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3287 bp-core/bp-core-functions.php:3383
-#: bp-core/bp-core-functions.php:7169 bp-forums/admin/metaboxes.php:573
+#: bp-core/bp-core-functions.php:7210 bp-forums/admin/metaboxes.php:573
 #: bp-members/classes/class-bp-members-admin.php:2466
 #: bp-members/classes/class-bp-members-list-table.php:157
 #: bp-members/classes/class-bp-members-list-table.php:173
@@ -7161,17 +7161,17 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:5964
+#: bp-core/bp-core-functions.php:6005
 msgid "Only authenticated users can access the REST API."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6531
+#: bp-core/bp-core-functions.php:6572
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed with "
 "custom CSS."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6550
+#: bp-core/bp-core-functions.php:6591
 #. translators: 1: theme setting url 2: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -7179,14 +7179,14 @@ msgid ""
 "changed in the <a href=\"%2$s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6557
+#: bp-core/bp-core-functions.php:6598
 #. translators: 1: theme setting url
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed in the <a "
 "href=\"%s\">Theme Options</a>."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6563
+#: bp-core/bp-core-functions.php:6604
 #. translators: 1: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -7194,40 +7194,40 @@ msgid ""
 "href=\"%s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7080 bp-core/bp-core-functions.php:7289
-#: bp-core/bp-core-functions.php:7318
+#: bp-core/bp-core-functions.php:7121 bp-core/bp-core-functions.php:7330
+#: bp-core/bp-core-functions.php:7359
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:187
 msgid "-"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7131 bp-core/bp-core-functions.php:7132
+#: bp-core/bp-core-functions.php:7172 bp-core/bp-core-functions.php:7173
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:871
 msgid "Email Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7133
+#: bp-core/bp-core-functions.php:7174
 msgid "Choose your email notification preferences."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7141
+#: bp-core/bp-core-functions.php:7182
 msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7146
+#: bp-core/bp-core-functions.php:7187
 msgid "Choose which notifications to receive by email."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7167
+#: bp-core/bp-core-functions.php:7208
 msgid "Enable Notifications"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7174 bp-core/bp-core-functions.php:7254
+#: bp-core/bp-core-functions.php:7215 bp-core/bp-core-functions.php:7295
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:662
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:51
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7249
+#: bp-core/bp-core-functions.php:7290
 msgid "A manual notification from a site admin"
 msgstr ""
 
@@ -8184,14 +8184,14 @@ msgstr ""
 msgid "Every %d minutes"
 msgstr ""
 
-#: bp-core/classes/class-bp-buddyboss-platform-updater.php:129
+#: bp-core/classes/class-bp-buddyboss-platform-updater.php:161
 msgid ""
 "An Unexpected HTTP Error occurred during the API request.</p> <p><a "
 "href=\"?\" onclick=\"document.location.reload(); return false;\">Try "
 "again</a>"
 msgstr ""
 
-#: bp-core/classes/class-bp-buddyboss-platform-updater.php:133
+#: bp-core/classes/class-bp-buddyboss-platform-updater.php:165
 msgid "An unknown error occurred"
 msgstr ""
 
@@ -8321,7 +8321,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-whos-online-widget.php:238
 #: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:225
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:148
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:151
 msgid "Title:"
 msgstr ""
 
@@ -9427,7 +9427,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-functions.php:2156
 #: bp-xprofile/classes/class-bp-xprofile-component.php:299
 #: bp-xprofile/classes/class-bp-xprofile-component.php:411
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:141
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:144
 msgid "Cover Photo"
 msgstr ""
 
@@ -9773,7 +9773,7 @@ msgstr ""
 msgid "Document Folders"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:342
+#: bp-document/bp-document-filters.php:349
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:34
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:256
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1343
@@ -9789,35 +9789,35 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1213 bp-media/bp-media-filters.php:1915
-#: bp-video/bp-video-filters.php:1094
+#: bp-document/bp-document-filters.php:1220 bp-media/bp-media-filters.php:1919
+#: bp-video/bp-video-filters.php:1099
 msgid "File not found"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1230
+#: bp-document/bp-document-filters.php:1237
 msgid "Go to document"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1524
+#: bp-document/bp-document-filters.php:1531
 msgid "Repair documents"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1585
+#: bp-document/bp-document-filters.php:1592
 msgid "%s documents updated successfully."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1595
+#: bp-document/bp-document-filters.php:1602
 msgid "Repairing documents &hellip; Complete!"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1792
+#: bp-document/bp-document-filters.php:1799
 msgid "%s document"
 msgid_plural "%s documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-document/bp-document-filters.php:1797 bp-media/bp-media-filters.php:2332
-#: bp-video/bp-video-filters.php:1499
+#: bp-document/bp-document-filters.php:1804 bp-media/bp-media-filters.php:2336
+#: bp-video/bp-video-filters.php:1504
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
 
@@ -17956,7 +17956,7 @@ msgid "Pending Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:799
-#: bp-media/bp-media-filters.php:99 bp-media/bp-media-filters.php:1413
+#: bp-media/bp-media-filters.php:99 bp-media/bp-media-filters.php:1417
 #: bp-media/classes/class-bp-media-component.php:300
 #: bp-search/bp-search-settings.php:786
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:14
@@ -20890,43 +20890,43 @@ msgid ""
 "bbPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1294 bp-media/bp-media-filters.php:1310
-#: bp-media/bp-media-filters.php:1311 bp-media/bp-media-filters.php:1383
-#: bp-media/bp-media-filters.php:1521
+#: bp-media/bp-media-filters.php:1298 bp-media/bp-media-filters.php:1314
+#: bp-media/bp-media-filters.php:1315 bp-media/bp-media-filters.php:1387
+#: bp-media/bp-media-filters.php:1525
 msgid "Import Media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1390
+#: bp-media/bp-media-filters.php:1394
 msgid ""
 "BuddyBoss Media plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1407
+#: bp-media/bp-media-filters.php:1411
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1410
+#: bp-media/bp-media-filters.php:1414
 msgid "Migration in progress"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1415 bp-media/bp-media-filters.php:1421
-#: bp-media/bp-media-filters.php:1427 bp-media/bp-media-filters.php:1433
-#: bp-media/bp-media-filters.php:1439
+#: bp-media/bp-media-filters.php:1419 bp-media/bp-media-filters.php:1425
+#: bp-media/bp-media-filters.php:1431 bp-media/bp-media-filters.php:1437
+#: bp-media/bp-media-filters.php:1443
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1451 bp-media/bp-media-filters.php:1465
+#: bp-media/bp-media-filters.php:1455 bp-media/bp-media-filters.php:1469
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1460 bp-media/bp-media-functions.php:2219
+#: bp-media/bp-media-filters.php:1464 bp-media/bp-media-functions.php:2219
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1472
+#: bp-media/bp-media-filters.php:1476
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -20934,7 +20934,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1519
+#: bp-media/bp-media-filters.php:1523
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -20943,47 +20943,47 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1665
+#: bp-media/bp-media-filters.php:1669
 msgid "Repair media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1670
+#: bp-media/bp-media-filters.php:1674
 msgid "Repair forum media privacy"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1675
+#: bp-media/bp-media-filters.php:1679
 msgid "Repair messages media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1708
+#: bp-media/bp-media-filters.php:1712
 msgid "%s messages updated successfully."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1718
+#: bp-media/bp-media-filters.php:1722
 msgid "Repairing messages media &hellip; Complete!"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1770
+#: bp-media/bp-media-filters.php:1774
 msgid "%s media updated successfully."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1780
+#: bp-media/bp-media-filters.php:1784
 msgid "Repairing media &hellip; Complete!"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1808
+#: bp-media/bp-media-filters.php:1812
 msgid "%s forums media privacy updated successfully."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1816
+#: bp-media/bp-media-filters.php:1820
 msgid "Repair forum media privacy &hellip; %s"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1933
+#: bp-media/bp-media-filters.php:1937
 msgid "Go to media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:2327
+#: bp-media/bp-media-filters.php:2331
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:41
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:55
 #. translators: Photos count.
@@ -21785,7 +21785,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:565
 #: bp-members/classes/class-bp-members-admin.php:600
 #: bp-members/classes/class-bp-members-admin.php:601
-#: bp-xprofile/bp-xprofile-template.php:1349
+#: bp-xprofile/bp-xprofile-template.php:1353
 msgid "Edit Profile"
 msgstr ""
 
@@ -21841,7 +21841,7 @@ msgid "That username is not allowed"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:1732
-#: bp-xprofile/bp-xprofile-filters.php:814
+#: bp-xprofile/bp-xprofile-filters.php:851
 msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\", \"_\" and \".\" are allowed."
 msgstr ""
 
@@ -27244,7 +27244,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:68
 #: bp-templates/bp-nouveau/buddypress/video/album-entry.php:24
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:47
-#: bp-video/bp-video-filters.php:1494
+#: bp-video/bp-video-filters.php:1499
 #. translators: Photos count.
 #. translators: videos
 msgid "%s video"
@@ -29729,31 +29729,31 @@ msgstr ""
 msgid "All Videos"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:891
+#: bp-video/bp-video-filters.php:896
 msgid "Repair videos"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:896
+#: bp-video/bp-video-filters.php:901
 msgid "Repair forum video privacy"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:950
+#: bp-video/bp-video-filters.php:955
 msgid "%s videos updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:960
+#: bp-video/bp-video-filters.php:965
 msgid "Repairing videos &hellip; Complete!"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:989
+#: bp-video/bp-video-filters.php:994
 msgid "%s forums video privacy updated successfully."
 msgstr ""
 
-#: bp-video/bp-video-filters.php:997
+#: bp-video/bp-video-filters.php:1002
 msgid "Repairing forum video privacy &hellip; %s"
 msgstr ""
 
-#: bp-video/bp-video-filters.php:1112
+#: bp-video/bp-video-filters.php:1117
 msgid "Go to video"
 msgstr ""
 
@@ -30257,58 +30257,58 @@ msgid ""
 "fields?"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:809
-#: bp-xprofile/bp-xprofile-filters.php:904
-#: bp-xprofile/bp-xprofile-filters.php:1017
+#: bp-xprofile/bp-xprofile-filters.php:846
+#: bp-xprofile/bp-xprofile-filters.php:941
+#: bp-xprofile/bp-xprofile-filters.php:1054
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:532
 #: bp-xprofile/screens/edit.php:140
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:820
+#: bp-xprofile/bp-xprofile-filters.php:857
 msgid "%1$s must be shorter than %2$d characters."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:825
+#: bp-xprofile/bp-xprofile-filters.php:862
 msgid "%s must be at least 3 characters"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:834
-#: bp-xprofile/bp-xprofile-filters.php:854
+#: bp-xprofile/bp-xprofile-filters.php:871
+#: bp-xprofile/bp-xprofile-filters.php:891
 msgid "%s has already been taken."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:913
-#: bp-xprofile/bp-xprofile-filters.php:923
+#: bp-xprofile/bp-xprofile-filters.php:950
+#: bp-xprofile/bp-xprofile-filters.php:960
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1028
+#: bp-xprofile/bp-xprofile-filters.php:1065
 msgid "Please enter valid %s profile url."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1104
+#: bp-xprofile/bp-xprofile-filters.php:1141
 msgid "Repair BuddyBoss profile repeater field sets"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1182
+#: bp-xprofile/bp-xprofile-filters.php:1219
 msgid "%s field updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1202
+#: bp-xprofile/bp-xprofile-filters.php:1239
 msgid "Repairing BuddyBoss profile repeater field sets &hellip; Complete!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1219
+#: bp-xprofile/bp-xprofile-filters.php:1256
 msgid "Repair user nicknames"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1269
+#: bp-xprofile/bp-xprofile-filters.php:1306
 msgid "%s user nicknames updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1274
+#: bp-xprofile/bp-xprofile-filters.php:1311
 msgid "Repairing user nicknames &hellip; Complete!"
 msgstr ""
 
@@ -30397,24 +30397,24 @@ msgstr ""
 msgid "This member's profile settings have been saved."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1241
+#: bp-xprofile/bp-xprofile-template.php:1245
 msgid "Profile not recently updated."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1267
+#: bp-xprofile/bp-xprofile-template.php:1271
 msgid "Profile updated %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1515
+#: bp-xprofile/bp-xprofile-template.php:1519
 msgid "Select visibility"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1575
+#: bp-xprofile/bp-xprofile-template.php:1579
 #. translators: accessibility text
 msgid "(required)"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1608
+#: bp-xprofile/bp-xprofile-template.php:1612
 msgid "(optional)"
 msgstr ""
 
@@ -31260,27 +31260,27 @@ msgstr ""
 msgid "(BB) Profile Completion"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:125
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:128
 msgid "Complete Your Profile"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:144
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:147
 msgid "Hide widget once progress hits 100%"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:151
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:154
 msgid "Profile field sets:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:173
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:176
 msgid "Profile photos:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:193
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:196
 msgid "Options:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:221
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:224
 msgid "Note: This widget is only displayed if a member is logged in."
 msgstr ""
 
@@ -31397,17 +31397,17 @@ msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6871
+#: bp-core/bp-core-functions.php:6912
 msgctxt "Notification preference label"
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6888
+#: bp-core/bp-core-functions.php:6929
 msgctxt "Notification preference label"
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6906
+#: bp-core/bp-core-functions.php:6947
 msgctxt "Notification preference label"
 msgid "App"
 msgstr ""
@@ -31541,7 +31541,7 @@ msgctxt "Group type URL base slug"
 msgid "type"
 msgstr ""
 
-#: bp-integrations/learndash/bp-learndash-filters.php:355
+#: bp-integrations/learndash/bp-learndash-filters.php:363
 #. translators: placeholder: URL for CPT Archive.
 msgctxt "placeholder: URL for CPT Archive"
 msgid "Archive URL: %s"
