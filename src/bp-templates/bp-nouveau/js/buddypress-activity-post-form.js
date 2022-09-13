@@ -2766,24 +2766,13 @@ window.bp = window.bp || {};
 				this.$el.html( activity.get( 'content' ) );
 			},
 
-			handlePaste: function ( event ) {
-				// Get user's pasted data.
-				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-					data          = clipboardData.getData( 'text/plain' );
-
-				// Insert the filtered content.
-				document.execCommand( 'insertHTML', false, data );
-
+			handlePaste: function () {
 				// trigger keyup event of this view to handle changes.
 				this.$el.trigger( 'keyup' );
-
-				// Prevent the standard paste behavior.
-				event.preventDefault();
 			},
 
 			handleKeyUp: function () {
 				var self = this;
-
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
 					if ( this.linkTimeout != null ) {
