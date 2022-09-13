@@ -337,7 +337,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// Check if force friendship is enabled and check recipients.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread ) {
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread && ( count( $message->recipients ) < 2 ) ) {
 
 		$error_messages = array(
 			'new_message'       => __( 'You need to be connected with this member in order to send a message.', 'buddyboss' ),

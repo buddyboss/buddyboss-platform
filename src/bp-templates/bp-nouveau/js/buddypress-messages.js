@@ -920,6 +920,7 @@ window.bp = window.bp || {};
 							// Navigate back to current box.
 							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
 							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							$( '.bp-messages-container' ).removeClass( 'bp-view-message bp-compose-message' );
 						} else {
 							window.Backbone.trigger( 'relistelements' );
 							BP_Nouveau.messages.hasThreads = false;
@@ -3087,6 +3088,18 @@ window.bp = window.bp || {};
 		}
 	);
 
+	bp.Views.MessagesNoArchivedThreads = bp.Nouveau.Messages.View.extend(
+		{
+			tagName: 'div',
+			className: 'bb-messages-no-thread-found',
+			template  : bp.template( 'bp-messages-no-archived-threads' ),
+			initialize: function() {
+				this.$el.html( this.template() );
+				return this;
+			},
+		}
+	);
+
 	bp.Views.MessagesSearchNoThreads = bp.Nouveau.Messages.View.extend(
 		{
 			tagName: 'div',
@@ -3656,7 +3669,12 @@ window.bp = window.bp || {};
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 					$( '.bp-messages.bp-user-messages-loading' ).remove();
 					$( '.message-header-loading' ).addClass( 'bp-hide' );
-					this.views.add( new bp.Views.MessagesNoThreads() );
+
+					if ( 'archived' === bp.Nouveau.Messages.threadType ) {
+						this.views.add( new bp.Views.MessagesNoArchivedThreads() );
+					} else {
+						this.views.add( new bp.Views.MessagesNoThreads() );
+					}
 				}
 			},
 
@@ -4918,6 +4936,23 @@ window.bp = window.bp || {};
 
 				if ( ! _.isUndefined( BP_Nouveau.archived_threads ) && 0 < BP_Nouveau.archived_threads.length ) {
 					$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+				}
+
+				if ( ! _.isUndefined( BP_Nouveau.archived_threads ) && 0 < BP_Nouveau.archived_threads.length ) {
+					$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+				}
+
+				// Clear filter view.
+				if ( ! _.isUndefined( bp.Nouveau.Messages.threads.length ) && 0 === bp.Nouveau.Messages.threads.length && ! _.isUndefined( bp.Nouveau.Messages.views.models ) ) {
+					_.each(
+						bp.Nouveau.Messages.views.models,
+						function( model ) {
+							if ( ! _.isUndefined( model.attributes.id ) && 'filters' === model.attributes.id ) {
+								model.get( 'view' ).remove();
+							}
+						},
+						bp.Nouveau.Messages
+					);
 				}
 			},
 

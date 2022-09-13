@@ -88,6 +88,7 @@ add_action( 'template_include', 'bb_setup_template_for_media_preview', PHP_INT_M
 // Setup rewrite rule to access attachment media.
 add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_media_preview' );
 add_filter( 'query_vars', 'bb_setup_attachment_media_preview_query' );
+add_filter( 'query_vars', 'bb_setup_attachment_media_message_preview_query' );
 add_action( 'template_include', 'bb_setup_attachment_media_preview_template', PHP_INT_MAX );
 
 /**
@@ -2683,6 +2684,7 @@ function bp_media_activity_append_gif( $content, $activity ) {
 function bb_setup_attachment_media_preview() {
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]', 'top' );
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]&size=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]&size=$matches[2]&media-thread-attachment-id=$matches[3]&media-thread-attachment-new=$matches[4]', 'top' );
 }
 
 /**
@@ -2724,4 +2726,23 @@ function bb_setup_attachment_media_preview_template( $template ) {
 	}
 
 	return $template;
+}
+
+/**
+ * Setup query variable for attachment media preview.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ */
+function bb_setup_attachment_media_message_preview_query( $query_vars ) {
+
+	if ( bp_is_active( 'messages' ) ) {
+		$query_vars[] = 'media-thread-attachment-id';
+		$query_vars[] = 'media-thread-attachment-new';
+	}
+
+	return $query_vars;
 }
