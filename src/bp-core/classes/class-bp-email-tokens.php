@@ -1693,8 +1693,8 @@ class BP_Email_Tokens {
 									?>
 									<tr>
 										<td valign="middle" width="65px" style="vertical-align: middle;">
-											<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_get_group_link( $group ) ); ?>" target="_blank" rel="nofollow">
-												<img alt="" src="<?php echo esc_url( $cover_image ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+											<a style="display: block; width: 52px;" href="<?php echo esc_url( bp_get_group_link( $group ) ); ?>" target="_blank" rel="nofollow">
+												<img alt="" src="<?php echo esc_url( $cover_image ); ?>" width="52" height="52" border="0" style="margin:0; padding:0; border:none; display:block; width: 52px; height: 52px; border-radius: 50%;" />
 											</a>
 										</td>
 										<td width="88%" style="vertical-align: middle;">
@@ -1788,8 +1788,8 @@ class BP_Email_Tokens {
 												<p style="margin:0 0 5px 0;">	
 													<a href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ) ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( bp_core_get_user_displayname( $message['sender_id'] ) ) ?></a>
 												</p>
-												<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-													<?php echo nl2br( stripslashes( wpautop( $message['message'] ) ) ); ?>
+												<div class style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+													<?php echo stripslashes( wpautop( $message['message'] ) ); ?>
 												</div>
 												<?php
 												$media_ids       = false;
@@ -1886,7 +1886,7 @@ class BP_Email_Tokens {
 															?>
 															<div class="bb-activity-media-elem" style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																	<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo plugin_dir_url( __FILE__ ); ?>/src/bp-templates/bp-nouveau/images/video-play.svg"" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
+																	<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo plugin_dir_url( __FILE__ ); ?>/src/bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
 																</a>
 															</div>
 															<?php if ( $total_video_ids > 1 ) : ?>
@@ -1922,7 +1922,7 @@ class BP_Email_Tokens {
 															<div class="bb-activity-media-elem">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" style="font-size:14px; text-decoration:none;">
 																	<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
-																	<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( $size ); ?></span>
+																	<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( strtolower( $size ) ); ?></span>
 																	<span style="font-size: 13px; margin-left:3px; text-transform: uppercase; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
 																</a>
 															</div>
