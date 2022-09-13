@@ -1707,9 +1707,9 @@ class BP_Email_Tokens {
 								}
 							} elseif ( ! empty( $sender_ids ) ) {
 
-								$sender_avatars		 = array();
-								$sender_names		 = array();
-								$avatars_iteration   = 0;
+								$sender_avatars    = array();
+								$sender_names      = array();
+								$avatars_iteration = 0;
 								foreach ( $sender_ids as $sender_id ) {
 
 									$avatar_url = bp_core_fetch_avatar(
@@ -1722,9 +1722,9 @@ class BP_Email_Tokens {
 										)
 									);
 
-									if( $avatars_iteration == 0 ){
+									if ( $avatars_iteration == 0 ) {
 										$sender_avatars[] = '<div style="height:17px;with:17px;"><a style="display: block; width: 35px;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 35px; border-radius: 50%;" /></a></div>';
-									} else if( $avatars_iteration == 1 ) {
+									} elseif ( $avatars_iteration == 1 ) {
 										$sender_avatars[] = '<div style="padding-left: 17px; opacity: 0.999;"><a style="display: block; width: 35px;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 35px; border-radius: 50%; border: 2px solid #fff;" /></a></div>';
 									}
 
@@ -1766,8 +1766,12 @@ class BP_Email_Tokens {
 							<td align="center">
 								<table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
 									<tbody>
-									<?php foreach ( $tokens['message'] as $message ) { ?>
-										<tr style="<?php echo next( $message ) ? 'border-bottom: 1px solid' . esc_attr( $settings['body_border_color'] ) . ';' : ''; ?>">
+									<?php
+									$total_messages = count( $tokens['message'] );
+									$message_index  = 1;
+									foreach ( $tokens['message'] as $message ) {
+										?>
+										<tr style="<?php echo ( $total_messages !== $message_index ) ? 'border-bottom: 1px solid' . esc_attr( $settings['body_border_color'] ) . ';' : ''; ?>">
 											<td valign="middle" width="55px" style="vertical-align: top;">
 												<a style="display: block; width: 40px;" href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow">
 													<?php
@@ -1785,8 +1789,8 @@ class BP_Email_Tokens {
 												</a>
 											</td>
 											<td width="88%" style="vertical-align: top;padding-bottom:20px;">
-												<p style="margin:0 0 5px 0;">	
-													<a href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ) ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( bp_core_get_user_displayname( $message['sender_id'] ) ) ?></a>
+												<p style="margin:0 0 5px 0;">
+													<a href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( bp_core_get_user_displayname( $message['sender_id'] ) ); ?></a>
 												</p>
 												<div class style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 													<?php echo stripslashes( wpautop( $message['message'] ) ); ?>
@@ -1886,7 +1890,7 @@ class BP_Email_Tokens {
 															?>
 															<div class="bb-activity-media-elem" style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																	<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo plugin_dir_url( __FILE__ ); ?>/src/bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
+																	<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_get_video_title() ); ?>" />
 																</a>
 															</div>
 															<?php if ( $total_video_ids > 1 ) : ?>
