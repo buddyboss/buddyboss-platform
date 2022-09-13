@@ -1698,7 +1698,7 @@ class BP_Email_Tokens {
 											</a>
 										</td>
 										<td width="88%" style="vertical-align: middle;">
-											<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+											<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; font-weight: 500;">
 												<a href="<?php echo esc_url( bp_get_group_link( $group ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;"><?php echo esc_html( bp_get_group_name( $group ) ); ?></a>
 											</div>
 										</td>
@@ -1709,6 +1709,7 @@ class BP_Email_Tokens {
 
 								$sender_avatars    = array();
 								$sender_names      = array();
+								$avatars_count 	   = count( $sender_ids );
 								$avatars_iteration = 0;
 								foreach ( $sender_ids as $sender_id ) {
 
@@ -1722,10 +1723,16 @@ class BP_Email_Tokens {
 										)
 									);
 
-									if ( $avatars_iteration == 0 ) {
-										$sender_avatars[] = '<div style="height:17px;with:17px;"><a style="display: block; width: 35px;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 35px; border-radius: 50%;" /></a></div>';
-									} elseif ( $avatars_iteration == 1 ) {
-										$sender_avatars[] = '<div style="padding-left: 17px; opacity: 0.999;"><a style="display: block; width: 35px;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 35px; border-radius: 50%; border: 2px solid #fff;" /></a></div>';
+									if( $avatars_count > 1 ) {
+
+										if ( $avatars_iteration == 0 ) {
+											$sender_avatars[] = '<div style="height:17px;with:17px;"><a style="display: block; width: 35px;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 35px; border-radius: 50%;" /></a></div>';
+										} elseif ( $avatars_iteration == 1 ) {
+											$sender_avatars[] = '<div style="padding-left: 17px; opacity: 0.999;"><a style="display: block; width: 35px;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 35px; border-radius: 50%; border: 2px solid #fff;" /></a></div>';
+										}
+
+									} else {
+										$sender_avatars[] = '<div><a style="display: block;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="52" height="52" border="0" style="margin:0; padding:0; border:none; display:block; width: 52px; height: 52px; border-radius: 50%;" /></a></div>';
 									}
 
 									$sender_names[] = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['body_secondary_text_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_core_get_user_displayname( $sender_id ) ) . '</a>';
@@ -1785,14 +1792,14 @@ class BP_Email_Tokens {
 														)
 													);
 													?>
-													<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="40" height="40" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 40px; border-radius: 50%;" />
+													<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="40" height="40" border="0" style="margin:0; padding:0; border:none; display:block; width: 40px; height: 40px; border-radius: 50%;" />
 												</a>
 											</td>
 											<td width="88%" style="vertical-align: top;padding-bottom:20px;">
 												<p style="margin:0 0 5px 0;">
 													<a href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( bp_core_get_user_displayname( $message['sender_id'] ) ); ?></a>
 												</p>
-												<div class style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+												<div class="bb-email-message-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 													<?php echo stripslashes( wpautop( $message['message'] ) ); ?>
 												</div>
 												<?php
