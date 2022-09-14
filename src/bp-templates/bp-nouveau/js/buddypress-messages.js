@@ -1377,7 +1377,7 @@ window.bp = window.bp || {};
 						{
 							action : 'messages_send_reply',
 							nonce  : BP_Nouveau.messages.nonces.send,
-							hash   : Math.round( (new Date()).getTime() / 1000 )
+							hash   : new Date().getTime()
 						},
 						model || {}
 					);

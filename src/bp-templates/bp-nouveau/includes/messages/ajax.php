@@ -534,6 +534,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			'date_sent'    => $date_sent,
 			'mark_visible' => false,
 			'error_type'   => 'wp_error',
+			'return'       => 'id',
 		)
 	);
 
@@ -563,6 +564,14 @@ function bp_nouveau_ajax_messages_send_reply() {
 		)
 	);
 
+	$messages = BP_Messages_Message::get(
+		array(
+			'include'         => array( $new_reply ),
+			'include_threads' => array( $thread_id ),
+			'per_page'        => 1,
+		)
+	);
+
 	// Set current message to current key.
 	$thread_template->current_message = - 1;
 
@@ -572,6 +581,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Manually call oEmbed
 	// this is needed because we're not at the beginning of the loop.
 	bp_messages_embed();
+
+	if ( ! empty( $messages ) && ! empty( $messages['messages'] ) ) {
+		$thread_template->message = current( $messages['messages'] );
+	}
 
 	$excerpt = wp_strip_all_tags( bp_get_the_thread_message_excerpt() );
 	if ( empty( $excerpt ) ) {
