@@ -87,6 +87,10 @@ add_filter( 'cron_schedules', 'bb_delay_notification_register_cron_schedule_time
 function bb_delay_email_notification_scheduled_action_callback() {
 	global $wpdb;
 
+	if ( ! function_exists( 'bb_render_digest_messages_template' ) ) {
+		return;
+	}
+
 	// Get all defined time.
 	$db_delay_time = bb_get_delay_email_notifications_time();
 
@@ -125,8 +129,10 @@ function bb_delay_email_notification_scheduled_action_callback() {
 						'thread_id'     => $unread_thread->thread_id,
 					);
 
-					// Save meta to sent unread digest email notifications.
-					bp_messages_update_meta( $unread_thread->id, 'bb_sent_digest_email', 'yes' );
+					if ( function_exists( 'bp_messages_update_meta' ) ) {
+						// Save meta to sent unread digest email notifications.
+						bp_messages_update_meta( $unread_thread->id, 'bb_sent_digest_email', 'yes' );
+					}
 				}
 			}
 
