@@ -1395,7 +1395,7 @@ function bb_profile_update_completion_user_progress( $user_id, $old_user_data ) 
 /**
  * Set social network param to profile query.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param array $args Arguments.
  *

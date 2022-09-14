@@ -388,7 +388,7 @@ function bb_support_learndash_course_permalink( $bp, $bp_uri ) {
 /**
  * Update the URL setup from the learndash permalink.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  *
  * @param string $url URL to be redirected.
  *
