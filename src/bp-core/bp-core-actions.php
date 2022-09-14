@@ -133,7 +133,7 @@ add_action( 'bp_activation', 'bp_add_activation_redirect' );
 
 // Add Platform plugin updater code.
 if ( is_admin() ) {
-	add_action( 'bp_init', 'bp_platform_plugin_updater' );
+	add_action( 'bp_admin_init', 'bp_platform_plugin_updater' );
 }
 
 // Email unsubscribe.
@@ -488,7 +488,7 @@ add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 
  * @param array  $options         Array of bulk item update data.
  */
 function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
-	$show_display_popup = true;
+	$show_display_popup = false;
 	// The path to our plugin's main file.
 	$our_plugin = 'buddyboss-platform/bp-loader.php';
 	if ( ! empty( $options ) && 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {

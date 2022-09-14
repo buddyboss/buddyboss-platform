@@ -88,8 +88,8 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 				$fields['options'][] = array(
 					'id'                => $reports_term->term_id,
 					'type'              => 'option',
-					'name'              => esc_html( $reports_term->name ),
-					'description'       => esc_html( $reports_term->description ),
+					'name'              => wp_specialchars_decode( $reports_term->name ),
+					'description'       => wp_specialchars_decode( $reports_term->description ),
 					'is_default_option' => ( 1 === $count++ ),
 					'value'             => esc_attr( $reports_term->term_id ),
 				);

@@ -21,7 +21,7 @@ jQuery( document ).ready(
 					language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
 					dropdownCssClass: 'bb-select-dropdown',
 					containerCssClass: 'bb-select-container',
-					tokenSeparators: [ ',', ' ' ],
+					tokenSeparators: [ ',' ],
 					ajax: {
 						url: bbpCommonJsData.ajax_url,
 						dataType: 'json',
@@ -153,6 +153,14 @@ jQuery( document ).ready(
 									var small = _this.search.val().toLowerCase();
 									_this.search.val(small);
 								},
+								
+								picker_show: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+								},
+
+								picker_hide: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+								},
 							}
 						}
 					);
@@ -173,7 +181,7 @@ jQuery( document ).ready(
 						language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
 						dropdownCssClass: 'bb-select-dropdown',
 						containerCssClass: 'bb-select-container',
-						tokenSeparators: [ ',', ' ' ],
+						tokenSeparators: [ ',' ],
 						ajax: {
 							url: bbpCommonJsData.ajax_url,
 							dataType: 'json',

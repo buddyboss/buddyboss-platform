@@ -1,6 +1,6 @@
 <?php
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -75,63 +75,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support WPML Multilingual CMS
 	 */
 	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
-
-		/**
-		 * Add fix for WPML redirect issue
-		 *
-		 * @since BuddyBoss 1.4.0
-		 *
-		 * @param array $q
-		 *
-		 * @return array
-		 */
-		function bp_core_fix_wpml_redirection( $q ) {
-			if (
-				! defined( 'DOING_AJAX' )
-				&& ! bp_is_blog_page()
-				&& (bool) $q->get( 'page_id' ) === false
-				&& (bool) $q->get( 'pagename' ) === true
-			) {
-				$bp_current_component = bp_current_component();
-				$bp_pages             = bp_core_get_directory_pages();
-
-				if ( 'photos' === $bp_current_component && isset( $bp_pages->media->id ) ) {
-					$q->set( 'page_id', $bp_pages->media->id );
-				} elseif ( 'forums' === $bp_current_component && isset( $bp_pages->members->id ) ) {
-					$q->set( 'page_id', $bp_pages->members->id );
-				} elseif ( 'groups' === $bp_current_component && isset( $bp_pages->groups->id ) ) {
-					$q->set( 'page_id', $bp_pages->groups->id );
-				} elseif ( 'documents' === $bp_current_component && isset( $bp_pages->document->id ) ) {
-					$q->set( 'page_id', $bp_pages->document->id );
-				} elseif ( 'videos' === $bp_current_component && isset( $bp_pages->video->id ) ) {
-					$q->set( 'page_id', $bp_pages->video->id );
-				} else {
-					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
-					if ( $page_id ) {
-						$q->set( 'page_id', $page_id );
-					}
-				}
-			}
-
-			return $q;
-		}
-
-		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
-
-		/**
-		 * Fix for url with wpml
-		 *
-		 * @since BuddyBoss 1.2.6
-		 *
-		 * @param $url
-		 * @return string
-		 */
-		function bp_core_wpml_fix_get_root_domain( $url ) {
-			return untrailingslashit( $url );
-		}
-
-		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
-
+		require buddypress()->compatibility_dir . '/class-bb-wpml-helpers.php';
 	}
 
 	/**
@@ -180,7 +124,7 @@ function bp_helper_plugins_loaded_callback() {
 			$bp_current_component = bp_current_component();
 
 			// deregister geodirectory select2 script and styles from all component pages
-			if ( $bp_current_component ) {
+			if ( $bp_current_component && 'listings' !== $bp_current_component ) {
 				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
 				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
 			}
@@ -1142,3 +1086,20 @@ function bbp_remove_page_attributes_metabox_for_forum() {
 }
 
 add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
+
+/**
+ * Function will remove template_redirect action when we view individual saved template
+ * in the Elementor plugin.
+ *
+ * @since BuddyBoss 2.1.0
+ */
+function bb_elementor_library_template() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+		return;
+	}
+
+	if ( isset( $_GET['elementor_library'] ) ) {
+		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+	}
+}
+add_action( 'bp_loaded', 'bb_elementor_library_template' );

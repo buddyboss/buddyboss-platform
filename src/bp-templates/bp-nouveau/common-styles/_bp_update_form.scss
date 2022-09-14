@@ -1022,6 +1022,11 @@
 			.medium-editor-action-more-button b:before {
 				content: "\ee5c";
 				font-family: 'bb-icons'; /* stylelint-disable-line */
+				font-weight: 300;
+			}
+
+			.medium-editor-action-more-button.active b:before {
+				color: #000;
 			}
 
 			> ul {
@@ -1031,10 +1036,10 @@
 				left: 10px;
 				transform: translateX(-50%);
 				background: #fff;
-				border: 1px solid #e7e9eb;
+				border: 1px solid #e1e3e6;
 				box-sizing: border-box;
-				box-shadow: 0 0 6px rgba(0, 0, 0, 0.1), 0 6px 14px rgba(0, 0, 0, 0.16);
-				border-radius: 3px;
+				box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.13);
+				border-radius: 4px;
 				display: none;
 
 				&:after {
@@ -1056,6 +1061,7 @@
 					-webkit-transition: all linear 0.2s;
 					transition: all linear 0.2s;
 					z-index: 101;
+					display: none;
 				}
 
 				button {
@@ -1670,13 +1676,14 @@ div[class*="attached-gif-container"] {
 	}
 
 	.gif-play-button {
-		height: 80px;
-		width: 80px;
+		height: 60px;
+		width: 60px;
+		font-size: 60px;
 		position: absolute;
 		left: 50%;
-		margin-left: -40px;
+		margin-left: -30px;
 		top: 50%;
-		margin-top: -40px;
+		margin-top: -30px;
 
 		.bb-icon-play-thin {
 			font-size: 80px;

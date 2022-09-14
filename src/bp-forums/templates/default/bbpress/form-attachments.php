@@ -204,7 +204,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 				<div class="gif-media-search-dropdown">
 					<div class="gif-search-content">
 						<div class="gif-search-query">
-							<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY', 'buddyboss' ); ?>" class="search-query-input" />
+							<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input" />
 							<span class="search-icon"></span>
 						</div>
 						<div class="gif-search-results" id="gif-search-results">
