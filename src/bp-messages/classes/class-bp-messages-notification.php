@@ -96,7 +96,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			'bb_messages_new'
 		);
 
-		if ( false === bb_enabled_legacy_email_preference() && function_exists( 'bb_delay_email_notifications_enabled' ) && bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
+		if ( function_exists( 'bb_check_delay_email_notification' ) && bb_check_delay_email_notification() ) {
 			$this->register_email_type(
 				'messages-unread-digest',
 				array(

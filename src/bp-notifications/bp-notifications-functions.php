@@ -1708,6 +1708,21 @@ function bb_get_delay_email_notifications_time() {
 }
 
 /**
+ * Function to check the Delay email notifications for new messages is enabled with pusher or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_check_delay_email_notification() {
+	if ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Function to search value by minutes from the bb_get_delay_notification_times function.
  *
  * @since BuddyBoss [BBVERSION]
