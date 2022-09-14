@@ -1968,7 +1968,10 @@ class BP_Email_Tokens {
 										<tr>
 											<td height="20px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
 										</tr>
-									<?php } ?>
+										<?php
+										$message_index++;
+									}
+									?>
 									</tbody>
 								</table>
 							</td>
