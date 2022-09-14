@@ -917,3 +917,19 @@ function bp_moderation_user_report_content_type( $content_type, $item_id ) {
 	return esc_html__( 'Member', 'buddyboss' );
 }
 add_action( 'bp_moderation_user_report_report_content_type', 'bp_moderation_user_report_content_type', 10, 2 );
+
+/**
+ * Filters the labels of a specific taxonomy.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $labels Object of labels for taxonomy `bpm_category`.
+ *
+ * @return object Object of labels for taxonomy `bpm_category`.
+ */
+function bb_get_bpm_category_labels( $labels ) {
+	$labels->name_field_description = esc_html__( 'The name of this reporting category.', 'buddyboss' );
+	$labels->desc_field_description = esc_html__( 'A short description of this reporting category.', 'buddyboss' );
+	return $labels;
+}
+add_action( 'taxonomy_labels_bpm_category', 'bb_get_bpm_category_labels' );
