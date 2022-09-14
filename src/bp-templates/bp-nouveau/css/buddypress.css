@@ -4638,12 +4638,12 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
-#media-stream.media .bb-photo-thumb.is-visible .media-action-wrap > a i,
-#media-stream.media .bb-photo-thumb.is-visible .video-action-wrap > a i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .media-action-wrap > a i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .video-action-wrap > a i,
-.bb-activity-media-wrap .bb-activity-video-elem.is-visible .media-action-wrap > a i,
-.bb-activity-media-wrap .bb-activity-video-elem.is-visible .video-action-wrap > a i {
+#media-stream.media .bb-photo-thumb.is-visible .media-action-wrap > a,
+#media-stream.media .bb-photo-thumb.is-visible .video-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .media-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .video-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-video-elem.is-visible .media-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-video-elem.is-visible .video-action-wrap > a {
   opacity: 1;
 }
 
@@ -5182,6 +5182,13 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem:hover .item-action-wrap {
   opacity: 1;
   visibility: visible;
+}
+
+#video-stream.video .bb-item-thumb.is-visible .item-action-wrap > a,
+#media-stream.media .bb-video-thumb.is-visible .item-action-wrap > a,
+.bb-activity-video-wrap .bb-activity-video-elem.is-visible .item-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-video-elem.is-visible .item-action-wrap > a {
+  opacity: 1;
 }
 
 #video-stream.video .bb-item-thumb.is-visible .item-action-wrap .item-action_list,

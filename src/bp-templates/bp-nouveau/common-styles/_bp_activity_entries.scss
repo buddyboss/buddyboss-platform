@@ -1514,8 +1514,8 @@ span.dashicons.dashicons-admin-file:before {
 			visibility: visible;
 		}
 
-		.media-action-wrap > a i,
-		.video-action-wrap > a i {
+		.media-action-wrap > a,
+		.video-action-wrap > a {
 			opacity: 1;
 		}
 
@@ -1793,6 +1793,10 @@ span.dashicons.dashicons-admin-file:before {
 	}
 
 	&.is-visible {
+
+		.item-action-wrap > a {
+			opacity: 1;
+		}
 
 		.item-action-wrap .item-action_list {
 			opacity: 1;
