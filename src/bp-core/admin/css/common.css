@@ -902,16 +902,18 @@ body.users_page_bp-signups td.count_sent {
 }
 
 .activity-attached-gif-container .gif-icon {
-  background: url(../../images/gif-symbol.png) bottom left no-repeat;
+  background: url(../images/gif.svg) center no-repeat;
   position: absolute;
-  width: 100%;
-  height: 100%;
   display: block;
+  height: 28px;
+  width: 44px;
   bottom: 0;
-  left: 10px;
-  background-size: 40px 30px;
-  max-width: 40px;
-  max-height: 30px;
+  left: 0;
+  border-radius: 0 4px 0 0;
+  background-size: 28px;
+  padding: 8px;
+  background-color: #000;
+  opacity: 0.45;
 }
 
 /*
