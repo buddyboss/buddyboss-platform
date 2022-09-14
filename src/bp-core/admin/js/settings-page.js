@@ -157,8 +157,6 @@ window.bp = window.bp || {};
 			/**
 			 * Function for hide/show auto suspend fields on member blocking enable/disabled.
 			 */
-			$( '#bpm_blocking_auto_suspend_threshold' ).attr( 'disabled', ! $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) );
-			$( '#bpm_blocking_auto_suspend' ).attr( 'disabled', ! $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) );
 			$( document ).on(
 				'change',
 				'#bpm_blocking_member_blocking',
@@ -171,8 +169,6 @@ window.bp = window.bp || {};
 			/**
 			 * Function for hide/show auto suspend fields on member reporting enable/disabled.
 			 */
-			$( '#bb_reporting_auto_suspend_threshold' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ) );
-			$( '#bb_reporting_auto_suspend' ).attr('disabled', ! $( '#bb_blocking_member_reporting' ).prop( 'checked' ) );
 			$( document ).on(
 				'change',
 				'#bb_blocking_member_reporting',
@@ -192,12 +188,12 @@ window.bp = window.bp || {};
 				var val = $tr.find( 'td.bb_category_show_when_reporting' ).text();
 				if ( val !== '' ) {
 					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' )
-						.removeAttr( 'selected' );
+						.prop( 'selected', false );
 					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' )
 						.filter( function () {
 							return this.text === val;
 						} )
-						.attr( 'selected', 'selected' );
+						.prop( 'selected', true );
 				}
 			} );
 		}
