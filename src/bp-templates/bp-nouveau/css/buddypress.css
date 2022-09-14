@@ -4654,8 +4654,8 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap {
   position: absolute;
-  right: 15px;
-  top: 21px;
+  right: 11px;
+  top: 11px;
   opacity: 0;
   visibility: hidden;
   z-index: 111;
@@ -4672,10 +4672,11 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a {
   float: left;
   background-color: #fff;
-  border-radius: 50%;
-  height: 25px;
-  width: 25px;
+  border-radius: 4px;
+  height: 28px;
+  width: 28px;
   text-align: center;
+  opacity: 0.75;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -4687,12 +4688,11 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a i {
-  font-size: 18px;
-  line-height: 25px;
+  font-size: 16px;
+  line-height: 28px;
   color: #1e2132;
   font-weight: 300;
   display: inline-block;
-  opacity: 0.4;
   margin-right: -1px;
 }
 
@@ -4703,14 +4703,6 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a:hover,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a:hover {
   color: #461212;
-}
-
-#media-stream.media .bb-photo-thumb .media-action-wrap > a:hover i,
-#media-stream.media .bb-photo-thumb .video-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a:hover i {
   opacity: 1;
 }
 
@@ -5151,6 +5143,13 @@ span.dashicons.dashicons-admin-file:before {
   }
 }
 
+#video-stream.video .bb-item-thumb .item-action-wrap,
+#media-stream.media .bb-video-thumb .item-action-wrap,
+#media-stream.media .bb-photo-thumb .media-action-wrap {
+  top: 8px;
+  right: 8px;
+}
+
 #video-stream.video .video-list li:hover {
   z-index: 11;
 }
@@ -5205,8 +5204,8 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap,
 .bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap {
   position: absolute;
-  right: 15px;
-  top: 21px;
+  right: 10px;
+  top: 8px;
   opacity: 0;
   visibility: hidden;
   z-index: 111;
@@ -5221,10 +5220,11 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap > a {
   float: left;
   background-color: #fff;
-  border-radius: 50%;
-  height: 25px;
-  width: 25px;
+  border-radius: 4px;
+  height: 28px;
+  width: 28px;
   text-align: center;
+  opacity: 0.75;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -5234,12 +5234,11 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap > a i,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap > a i {
-  font-size: 18px;
-  line-height: 25px;
+  font-size: 16px;
+  line-height: 28px;
   color: #1e2132;
   font-weight: 300;
   display: inline-block;
-  opacity: 0.4;
   margin-right: -1px;
 }
 
@@ -5248,12 +5247,6 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a:hover,
 .bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap > a:hover {
   color: #461212;
-}
-
-#video-stream.video .bb-item-thumb .item-action-wrap > a:hover i,
-#media-stream.media .bb-video-thumb .item-action-wrap > a:hover i,
-.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap > a:hover i {
   opacity: 1;
 }
 
@@ -5517,6 +5510,11 @@ span.dashicons.dashicons-admin-file:before {
   font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 20px;
+}
+
+.bb-activity-video-wrap.bb-video-length-1 .bb-activity-video-elem .item-action-wrap {
+  right: 15px;
+  top: 18px;
 }
 
 @media screen and (max-width: 799px) {
