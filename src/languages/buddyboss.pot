@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.1.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-09-14 06:21:12+00:00\n"
+"POT-Creation-Date: 2022-09-14 11:55:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24784,6 +24784,14 @@ msgstr ""
 #: bp-moderation/bp-moderation-filters.php:843
 #: bp-moderation/bp-moderation-filters.php:885
 msgid "Show When Reporting"
+msgstr ""
+
+#: bp-moderation/bp-moderation-filters.php:928
+msgid "The name of this reporting category."
+msgstr ""
+
+#: bp-moderation/bp-moderation-filters.php:929
+msgid "A short description of this reporting category."
 msgstr ""
 
 #: bp-moderation/bp-moderation-functions.php:1194
