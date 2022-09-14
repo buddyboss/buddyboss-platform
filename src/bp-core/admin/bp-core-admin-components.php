@@ -105,9 +105,10 @@ function bp_core_admin_components_options() {
 	 */
 
 	// Get the total count of all plugins.
-	$all_count = count( $all_components );
-	$page      = bp_core_do_network_admin() ? 'admin.php' : 'admin.php';
-	$action    = ! empty( $_GET['action'] ) ? $_GET['action'] : 'all';
+	$all_count    = count( $all_components );
+	$active_count = $all_count - count( $inactive_components );
+	$page         = bp_core_do_network_admin() ? 'admin.php' : 'admin.php';
+	$action       = ! empty( $_GET['action'] ) ? $_GET['action'] : 'all';
 
 	switch ( $action ) {
 		case 'all':
@@ -174,7 +175,7 @@ function bp_core_admin_components_options() {
 	<?php
 	if ( $action === 'active' ) :
 		?>
-		class="current"<?php endif; ?>><?php printf( __( 'Active <span class="count">(%s)</span>', 'buddyboss' ), bp_core_number_format( count( $active_components ) ) ); ?></a> | </li>
+		class="current"<?php endif; ?>><?php printf( __( 'Active <span class="count">(%s)</span>', 'buddyboss' ), bp_core_number_format( $active_count) ); ?></a> | </li>
 		<li><a href="
 		<?php
 		echo esc_url(
