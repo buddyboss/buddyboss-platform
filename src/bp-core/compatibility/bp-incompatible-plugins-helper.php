@@ -1024,7 +1024,7 @@ add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
  * Function will remove template_redirect action when we view individual saved template
  * in the Elementor plugin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.0
  */
 function bb_elementor_library_template() {
 	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {

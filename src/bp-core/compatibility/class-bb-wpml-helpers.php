@@ -154,7 +154,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Update BP Core pages with WPML if available otherwise return original IDs.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.0
 		 *
 		 * @param array $page_ids BP Core pages ID.
 		 *
