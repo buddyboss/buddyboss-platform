@@ -1750,45 +1750,57 @@ class BP_Email_Tokens {
 		$sender_ids = array_column( $tokens['message'], 'sender_id' );
 		$sender_ids = array_unique( wp_parse_id_list( $sender_ids ) );
 
+		// Find the group.
+		$group = $tokens['group'] ?? false;
+		if ( empty( $group ) ) {
+			$group_id = $tokens['group.id'] ?? false;
+			if ( empty( $group_id ) ) {
+				$message_ids = array_column( $tokens['message'], 'message_id' );
+				$message_ids = array_unique( wp_parse_id_list( $message_ids ) );
+				$message_id  = ! empty( $message_ids ) ? current( $message_ids ) : false;
+				$group_id    = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+			}
+
+			if ( ! empty( $group_id ) ) {
+				$group = groups_get_group( $group_id );
+			}
+		}
+
 		ob_start();
 		?>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
-			<?php if ( ! empty( $sender_ids ) || ! empty( $tokens['group.id'] ) ) : ?>
+			<?php if ( ! empty( $sender_ids ) || ! empty( $group ) ) : ?>
 				<tr>
 					<td>
 						<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%">
 							<tbody>
 							<?php
-							if ( ! empty( $tokens['group.id'] ) ) {
-								$group = groups_get_group( $tokens['group.id'] );
-
-								if ( ! empty( $group ) ) {
-									$group_avatar = bp_core_fetch_avatar(
-										array(
-											'item_id'    => $tokens['group.id'],
-											'avatar_dir' => 'group-avatars',
-											'type'       => 'full',
-											'object'     => 'group',
-											'width'      => 200,
-											'height'     => 200,
-											'html'       => false,
-										)
-									);
-									?>
-									<tr>
-										<td valign="middle" width="65px" style="vertical-align: middle;">
-											<a style="display: block; width: 52px;" href="<?php echo esc_url( bp_get_group_link( $group ) ); ?>" target="_blank" rel="nofollow">
-												<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="52" height="52" border="0" style="margin:0; padding:0; border:none; display:block; width: 52px; height: 52px; border-radius: 50%;" />
-											</a>
-										</td>
-										<td width="88%" style="vertical-align: middle;">
-											<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; font-weight: 500;">
-												<a href="<?php echo esc_url( bp_get_group_link( $group ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;"><?php echo esc_html( bp_get_group_name( $group ) ); ?></a>
-											</div>
-										</td>
-									</tr>
-									<?php
-								}
+							if ( ! empty( $group ) ) {
+								$group_avatar = bp_core_fetch_avatar(
+									array(
+										'item_id'    => $group->id,
+										'avatar_dir' => 'group-avatars',
+										'type'       => 'full',
+										'object'     => 'group',
+										'width'      => 200,
+										'height'     => 200,
+										'html'       => false,
+									)
+								);
+								?>
+								<tr>
+									<td valign="middle" width="65px" style="vertical-align: middle;">
+										<a style="display: block; width: 52px;" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" target="_blank" rel="nofollow">
+											<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="52" height="52" border="0" style="margin:0; padding:0; border:none; display:block; width: 52px; height: 52px; border-radius: 50%;" />
+										</a>
+									</td>
+									<td width="88%" style="vertical-align: middle;">
+										<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; font-weight: 500;">
+											<a href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;"><?php echo esc_html( bp_get_group_name( $group ) ); ?></a>
+										</div>
+									</td>
+								</tr>
+								<?php
 							} elseif ( ! empty( $sender_ids ) ) {
 
 								$sender_avatars    = array();
@@ -2133,7 +2145,7 @@ class BP_Email_Tokens {
 	public function token__group_name( $bp_email, $formatted_tokens, $tokens ) {
 		$output = $tokens['group.name'] ?? '';
 
-		if ( ! in_array( $bp_email->get( 'type' ), array( 'group-message-email' ), true ) ) {
+		if ( ! in_array( $bp_email->get( 'type' ), array( 'group-message-email', 'group-message-digest' ), true ) ) {
 			return $output;
 		}
 

@@ -124,6 +124,9 @@ function bb_delay_email_notification_scheduled_action_callback() {
 						'subject'       => $unread_thread->subject,
 						'thread_id'     => $unread_thread->thread_id,
 					);
+
+					// Save meta to sent unread digest email notifications.
+					bp_messages_update_meta( $unread_thread->id, 'bb_sent_digest_email', 'yes' );
 				}
 			}
 
