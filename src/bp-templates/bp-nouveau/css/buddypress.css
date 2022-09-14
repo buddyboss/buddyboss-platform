@@ -22255,8 +22255,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   text-indent: 3px;
   font-weight: 300;
   font-style: normal;
-  color: rgba(0, 0, 0, 0.8);
-  background-color: #fff !important;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.7) !important;
   height: 52px;
   width: 52px;
   position: absolute;
@@ -22268,6 +22268,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border: 0;
   transition: all ease 0.3s !important;
   border-radius: 50%;
+}
+
+.bb-video-cover-wrap:hover:before {
+  background-color: rgba(0, 0, 0, 0.9) !important;
 }
 
 .bb-activity-video-elem .bb-video-duration,
@@ -22695,10 +22699,9 @@ div.video-js .bb-video-play {
 }
 
 div.video-js button.vjs-big-play-button {
-  background-color: #fff !important;
-  height: 52px;
-  width: 52px;
-  opacity: 0.85;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  height: 48px;
+  width: 48px;
   border: 0;
   border-radius: 100%;
   transition: all ease 0.3s !important;
@@ -22713,14 +22716,19 @@ div.video-js button.vjs-big-play-button:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 28px;
-  color: #000;
+  color: #fff;
+  opacity: 0.8;
   font-weight: 300;
   margin-left: 2px;
 }
 
 div.video-js button.vjs-big-play-button:hover {
-  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.9) !important;
   box-shadow: none;
+}
+
+div.video-js button.vjs-big-play-button:hover:before {
+  opacity: 1;
 }
 
 div.video-js button.vjs-big-play-button .vjs-icon-placeholder {
