@@ -85,11 +85,11 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			'messages-unread',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] New message from {{{sender.name}}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+				'email_content'       => __( "{{{sender.name}}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{{sender.name}}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a new private message', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
 			),
@@ -101,11 +101,11 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 				'messages-unread-digest',
 				array(
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_title'         => __( '[{{{site.name}}}] You have {{unread.count}} unread messages', 'buddyboss' ),
+					'email_title'         => __( '[{{{site.name}}}] You have {{{unread.count}}} unread messages', 'buddyboss' ),
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_content'       => __( "You have {{unread.count}} unread messages.\n\n{{{message}}}", 'buddyboss' ),
+					'email_content'       => __( "You have {{{unread.count}}} unread messages.\n\n{{{message}}}", 'buddyboss' ),
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_plain_content' => __( "You have {{unread.count}} unread messages.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+					'email_plain_content' => __( "You have {{{unread.count}}} unread messages.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 					'situation_label'     => __( 'A member receives a new private message', 'buddyboss' ),
 					'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
 				),
