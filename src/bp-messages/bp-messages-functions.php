@@ -402,6 +402,11 @@ function messages_new_message( $args = '' ) {
 	 */
 	do_action_ref_array( 'messages_message_sent', array( &$message ) );
 
+	if ( isset( $r['return'] ) && $r['return'] == 'id' ) {
+		// Return the Message ID.
+		return $send;
+	}
+
 	// Return the thread ID.
 	return $message->thread_id;
 }
