@@ -3087,7 +3087,7 @@ window.bp = window.bp || {};
 
 				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
 				if ( gif_box.length && $.trim( gif_box.html() ) == '' ) {
-					this.$self.removeClass( 'open active' );
+					$('#messages-gif-button').removeClass( 'open active' );
 				}
 			}
 
