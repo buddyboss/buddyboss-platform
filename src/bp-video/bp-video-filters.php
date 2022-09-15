@@ -74,7 +74,6 @@ add_action( 'template_include', 'bb_setup_template_for_video_preview', PHP_INT_M
 // Setup rewrite rule to access attachment video.
 add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_video_preview' );
 add_filter( 'query_vars', 'bb_setup_attachment_video_preview_query' );
-add_filter( 'query_vars', 'bb_setup_attachment_video_message_preview_query' );
 add_action( 'template_include', 'bb_setup_attachment_video_preview_template', PHP_INT_MAX );
 
 /**
@@ -1832,7 +1831,7 @@ function bb_setup_template_for_video_preview( $template ) {
  */
 function bb_setup_attachment_video_preview() {
 	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]', 'top' );
-	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]&video-thread-attachment-id=$matches[2]&video-thread-attachment-new=$matches[3]', 'top' );
+	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]&video-thread-id=$matches[2]', 'top' );
 }
 
 /**
@@ -1846,6 +1845,10 @@ function bb_setup_attachment_video_preview() {
  */
 function bb_setup_attachment_video_preview_query( $query_vars ) {
 	$query_vars[] = 'video-attachment-id';
+
+	if ( bp_is_active( 'messages' ) ) {
+		$query_vars[] = 'video-thread-id';
+	}
 
 	return $query_vars;
 }
@@ -1876,21 +1879,3 @@ function bb_setup_attachment_video_preview_template( $template ) {
 	return $template;
 }
 
-/**
- * Setup query variable for attachment video message preview.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $query_vars Array of query variables.
- *
- * @return array
- */
-function bb_setup_attachment_video_message_preview_query( $query_vars ) {
-
-	if ( bp_is_active( 'messages' ) ) {
-		$query_vars[] = 'video-thread-attachment-id';
-        $query_vars[] = 'video-thread-attachment-new';
-	}
-
-	return $query_vars;
-}
