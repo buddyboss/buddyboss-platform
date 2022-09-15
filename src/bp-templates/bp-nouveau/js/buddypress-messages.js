@@ -944,10 +944,26 @@ window.bp = window.bp || {};
 						// Remove previous feedback.
 						bp.Nouveau.Messages.removeFeedback();
 
-						if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
-							bp.Nouveau.Messages.createCookie( 'bb-thread-unarchive', response.toast_message, 5 );
+						if ( 'yes' === is_current_thread ) {
+							if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
+								bp.Nouveau.Messages.createCookie( 'bb-thread-unarchive', response.toast_message, 5 );
+							}
+							window.location.href = response.thread_link;
+						} else {
+							window.Backbone.trigger( 'relistelements', {}, false );
+							if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
+								jQuery( document ).trigger(
+									'bb_trigger_toast_message',
+									[
+										'',
+										response.toast_message,
+										'info',
+										null,
+										true,
+									]
+								);
+							}
 						}
-						window.location.href = response.thread_link;
 					} else if ( response.id ) {
 						if (
 							'read' !== action &&
