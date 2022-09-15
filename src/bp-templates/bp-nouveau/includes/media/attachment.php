@@ -24,7 +24,7 @@ $upload_dir      = $upload_dir['basedir'];
 $output_file_src = '';
 
 $encode_thread_id = base64_decode( get_query_var( 'media-thread-id' ) );
-$thread_arr       = explode( 'thread_', $encode_id );
+$thread_arr       = explode( 'thread_', $encode_thread_id );
 
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
 
