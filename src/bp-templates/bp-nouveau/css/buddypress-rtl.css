@@ -9985,6 +9985,18 @@ div.profile_completion_wrap .progress_text_wrap {
   z-index: 1002;
 }
 
+.bp-messages-content .bp-messages-notice .bp-user-messages-feedback .archive-button.loading:before {
+  content: "";
+  display: inline-block;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--bb-alternate-text-color-rgb), 0.2);
+  border-top-color: var(--bb-alternate-text-color);
+  animation: spin 2s infinite linear;
+}
+
 .bp-messages-content form.send-reply .avatar-box {
   padding: 0.7em 0;
 }
