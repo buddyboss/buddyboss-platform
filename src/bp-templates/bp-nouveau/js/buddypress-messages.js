@@ -4882,6 +4882,9 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
 				}
 
+				$( event.currentTarget ).addClass( 'bp-hide' );
+				$( event.currentTarget ).parent().addClass( 'loading' );
+
 				options.data = {
 					'is_current_thread' : 'yes'
 				};
@@ -4903,6 +4906,9 @@ window.bp = window.bp || {};
 						bp.Nouveau.Messages.removeFeedback();
 
 						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+
+						$( event.currentTarget ).removeClass( 'bp-hide' );
+						$( event.currentTarget ).parent().removeClass( 'loading' );
 					}
 				);
 			}
