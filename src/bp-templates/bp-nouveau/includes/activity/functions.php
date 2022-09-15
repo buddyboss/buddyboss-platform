@@ -201,31 +201,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			);
 			$cache_key  = 'bbp_default_groups_' . md5( maybe_serialize( $group_args ) );
 			if ( ! isset( $group_query_cache[ $cache_key ] ) ) {
-
-				$exclude_groups = array();
-
-				$group_exclude_args = array(
-					'user_id'     => bp_loggedin_user_id(),
-					'show_hidden' => true,
-					'per_page'    => - 1,
-					'orderby'     => 'name',
-					'order'       => 'ASC',
-					'fields'      => 'ids',
-				);
-				$groups = groups_get_groups( $group_exclude_args );
-
-				if ( ! empty( $groups['groups'] ) ) {
-					foreach ( $groups['groups'] as $exclude_group_id ) {
-						if ( ! groups_is_user_allowed_posting( bp_loggedin_user_id(), $exclude_group_id ) ) {
-							$exclude_groups[] = $exclude_group_id;
-						}
-					}
-				}
-				
-				if ( ! empty( $exclude_groups ) ){
-					$group_args['exclude'] = $exclude_groups;
-				}
+				add_filter( 'bp_groups_get_join_sql', 'bp_groups_get_join_sql_for_activity', 10, 2 );
+				add_filter( 'bp_groups_get_where_conditions', 'bp_groups_get_where_conditions_for_activity', 10, 2 );
 				$group_query_cache[ $cache_key ] = groups_get_groups( $group_args );
+				remove_filter( 'bp_groups_get_join_sql', 'bp_groups_get_join_sql_for_activity', 10, 2 );
+				remove_filter( 'bp_groups_get_where_conditions', 'bp_groups_get_where_conditions_for_activity', 10, 2 );
 			}
 			$groups = $group_query_cache[ $cache_key ];
 
@@ -667,4 +647,37 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //			'type'       => 'checkbox',
 //		),
 	) );
+}
+
+/**
+ * Function will append join query to display group lists in the activity feed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $sql From SQL statement.
+ * @param array  $r   Array of parsed arguments for the get method.
+ *
+ * @return string
+ */
+function bp_groups_get_join_sql_for_activity( $sql, $r ) {
+	global $wpdb;
+	$sql .= ' LEFT JOIN ' . $wpdb->prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id )';
+
+	return $sql;
+}
+
+/**
+ * Function will append where condition to display group lists in the activity feed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $where_conditions Where conditions SQL statement.
+ * @param array $r                Array of parsed arguments for the get method.
+ *
+ * @return mixed
+ */
+function bp_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
+	$where_conditions['exclude_where'] = ' ( ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "members" ) OR ( m.is_mod = "1" OR m.is_admin = "1" ) )';
+
+	return $where_conditions;
 }
