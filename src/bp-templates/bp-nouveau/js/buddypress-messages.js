@@ -1759,19 +1759,26 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				// Enable submit button if content is available
+				// Enable submit button if content is available.
 				var $message_content = this.$el.find( '#message_content' );
-				var content = $.trim( $message_content[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-				content = content.replace( /&nbsp;/g, ' ' );
+				var content          = $.trim( $message_content[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+				content              = content.replace( /&nbsp;/g, ' ' );
 
 				if ( $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.views.parent.model.get( 'video' ) ) && 0 !== this.views.parent.model.get('video').length ) || ( ! _.isUndefined( this.views.parent.model.get( 'document' ) ) && 0 !== this.views.parent.model.get('document').length ) || ( ! _.isUndefined( this.views.parent.model.get( 'media' ) ) && 0 !== this.views.parent.model.get('media').length ) || ( ! _.isUndefined( this.views.parent.model.get( 'gif_data' ) ) && ! _.isEmpty( this.views.parent.model.get( 'gif_data' ) ) ) ) {
 					this.$el.closest( '#bp-message-content' ).addClass( 'focus-in--content' );
 				} else {
-					this.$el.closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+					if ( content.indexOf( 'emojioneemoji' ) >= 0 ) {
+						this.$el.closest( '#bp-message-content' ).addClass( 'focus-in--content' );
+					} else {
+						this.$el.closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+					}
 				}
-				setTimeout( function(){
-					bp.Nouveau.Messages.checkContentScroll();
-				},0);
+				setTimeout(
+					function() {
+						bp.Nouveau.Messages.checkContentScroll();
+					},
+					0
+				);
 			},
 
 			DisableSubmit: function () {
