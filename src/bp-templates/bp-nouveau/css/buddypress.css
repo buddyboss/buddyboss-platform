@@ -22487,7 +22487,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-slider,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-slider,
 .bb-media-section .video-js .vjs-control-bar .vjs-slider {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
 }
 
@@ -22717,7 +22717,7 @@ div.video-js button.vjs-big-play-button:before {
   content: "\eef7";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 28px;
+  font-size: 34px;
   color: #fff;
   opacity: 0.8;
   font-weight: 300;
@@ -22989,7 +22989,7 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
 .bb-activity-video-elem .video-js:after {
   content: " ";
   position: absolute;
-  background: rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 15.62%, rgba(0, 0, 0, 0.6) 92.71%);
   border-radius: 3px;
   width: 100%;
   height: 100%;
@@ -22998,6 +22998,17 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   transition: 0.3s all;
   visibility: hidden;
   opacity: 0;
+}
+
+.bb-activity-video-elem .video-js.vjs-playing.vjs-user-inactive:after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bb-activity-video-elem .video-js.vjs-has-started:after,
+.bb-activity-video-elem .video-js.vjs-playing:after {
+  visibility: visible;
+  opacity: 1;
 }
 
 .bb-activity-video-elem:hover .video-js:not(.vjs-playing):after {
@@ -23273,12 +23284,44 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   border-radius: 4px 0 0 4px;
 }
 
+.bb-media-model-wrapper.video .bb-media-section .video-js:after {
+  content: " ";
+  position: absolute;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 15.62%, rgba(0, 0, 0, 0.6) 92.71%);
+  border-radius: 3px;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  transition: 0.3s all;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.bb-media-model-wrapper.video .bb-media-section .video-js.vjs-playing.vjs-user-inactive:after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bb-media-model-wrapper.video .bb-media-section .video-js.vjs-has-started:after,
+.bb-media-model-wrapper.video .bb-media-section .video-js.vjs-playing:after {
+  visibility: visible;
+  opacity: 1;
+}
+
+.bb-media-model-wrapper.video .bb-media-section:hover .video-js:not(.vjs-playing):after {
+  visibility: visible;
+  opacity: 1;
+}
+
+.bb-media-model-wrapper.video .bb-media-section:hover .video-js:not(.vjs-playing) .vjs-big-play-button {
+  opacity: 1;
+}
+
 .bb-media-model-wrapper.video .bb-media-section .vjs-big-play-button {
-  background: url(../images/video-play.svg) !important;
-  background-color: #fff !important;
-  height: 52px;
-  width: 52px;
-  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  height: 48px;
+  width: 48px;
   border: 0;
   transition: all ease 0.3s !important;
   position: absolute;
