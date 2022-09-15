@@ -4409,29 +4409,29 @@ window.bp = window.bp || {};
 
 			triggerPusherMessage: function ( messagePusherData ) {
 
-				var split_message = jQuery.extend(true, {}, _.first( messagePusherData ) );
-				var date = split_message.date,
-					year = date.getFullYear(),
-					month = String( date.getMonth() + 1 ).padStart( 2, '0' ),
-					day = String( date.getDate() ).padStart( 2, '0' ),
-					split_date = year + '-' + month + '-' + day;
+				var split_message = jQuery.extend( true, {}, _.first( messagePusherData ) );
+				var date          = split_message.date,
+					year          = date.getFullYear(),
+					month         = String( date.getMonth() + 1 ).padStart( 2, '0' ),
+					day           = String( date.getDate() ).padStart( 2, '0' ),
+					split_date    = year + '-' + month + '-' + day;
 
 				if ( $.inArray( split_date, bp.Nouveau.Messages.divider ) === -1 ) {
-					split_message.hash = '';
-					split_message.id = split_date;
-					split_message.content = BP_Nouveau.messages.today;
+					split_message.hash          = '';
+					split_message.id            = split_date;
+					split_message.content       = BP_Nouveau.messages.today;
 					split_message.sender_avatar = '';
-					split_message.sender_id = '';
+					split_message.sender_id     = '';
 					split_message.sender_is_you = '';
-					split_message.sender_link = '';
-					split_message.sender_name = '';
-					split_message.display_date = '';
-					split_message.group_text = '';
-					split_message.group_name = '';
-					split_message.group_avatar = '';
-					split_message.group_link = '';
-					split_message.message_from = '';
-					split_message.class_name = 'divider-date';
+					split_message.sender_link   = '';
+					split_message.sender_name   = '';
+					split_message.display_date  = '';
+					split_message.group_text    = '';
+					split_message.group_name    = '';
+					split_message.group_avatar  = '';
+					split_message.group_link    = '';
+					split_message.message_from  = '';
+					split_message.class_name    = 'divider-date';
 					delete split_message.className;
 
 					if ( typeof split_message.gif !== 'undefined' ) {
