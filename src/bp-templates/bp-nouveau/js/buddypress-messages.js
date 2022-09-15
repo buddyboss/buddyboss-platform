@@ -922,7 +922,7 @@ window.bp = window.bp || {};
 							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
 							$( '.bp-messages-container' ).removeClass( 'bp-view-message bp-compose-message' );
 						} else {
-							window.Backbone.trigger( 'relistelements' );
+							window.Backbone.trigger( 'relistelements', {}, false );
 							BP_Nouveau.messages.hasThreads = false;
 							bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
 							$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
@@ -944,10 +944,26 @@ window.bp = window.bp || {};
 						// Remove previous feedback.
 						bp.Nouveau.Messages.removeFeedback();
 
-						if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
-							bp.Nouveau.Messages.createCookie( 'bb-thread-unarchive', response.toast_message, 5 );
+						if ( 'yes' === is_current_thread ) {
+							if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
+								bp.Nouveau.Messages.createCookie( 'bb-thread-unarchive', response.toast_message, 5 );
+							}
+							window.location.href = response.thread_link;
+						} else {
+							window.Backbone.trigger( 'relistelements', {}, false );
+							if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
+								jQuery( document ).trigger(
+									'bb_trigger_toast_message',
+									[
+										'',
+										response.toast_message,
+										'info',
+										null,
+										true,
+									]
+								);
+							}
 						}
-						window.location.href = response.thread_link;
 					} else if ( response.id ) {
 						if (
 							'read' !== action &&
@@ -1377,7 +1393,7 @@ window.bp = window.bp || {};
 						{
 							action : 'messages_send_reply',
 							nonce  : BP_Nouveau.messages.nonces.send,
-							hash   : Math.round( (new Date()).getTime() / 1000 )
+							hash   : new Date().getTime()
 						},
 						model || {}
 					);
@@ -3569,15 +3585,20 @@ window.bp = window.bp || {};
 				this.collection.on( 'add', this.addThread, this );
 			},
 
-			requestThreads: function() {
-				this.collection.reset();
+			requestThreads: function( hideLoader ) {
+				var hideLoader = typeof hideLoader !== 'undefined' ? hideLoader : false; // jshint ignore:line
+				if ( hideLoader !== true ) {
+					this.collection.reset();
+				}
 
 				$( '.bp-messages.bp-user-messages-loading' ).remove();
 				$( '.bb-messages-no-thread-found' ).remove();
 
-				$( '.message-header-loading' ).removeClass( 'bp-hide' );
-				this.loadingFeedback = new bp.Views.MessagesLoading();
-				this.views.add( this.loadingFeedback );
+				if ( hideLoader !== true ) {
+					$( '.message-header-loading' ).removeClass( 'bp-hide' );
+					this.loadingFeedback = new bp.Views.MessagesLoading();
+					this.views.add( this.loadingFeedback );
+				}
 
 				this.collection.fetch(
 					{
@@ -3588,7 +3609,8 @@ window.bp = window.bp || {};
 				);
 			},
 
-			updateThreadsList: function ( response ) {
+			updateThreadsList: function ( response, hideLoader ) {
+				var hideLoader = typeof hideLoader !== 'undefined' ? hideLoader : true; // jshint ignore:line
 				var updatedThread = '';
 				if ( 'undefined' !== typeof response && 'undefined' !== typeof response.thread_id ) {
 					this.collection.models.forEach(
@@ -3620,7 +3642,7 @@ window.bp = window.bp || {};
 					var threads = bp.Nouveau.Messages.threads.parse( { threads: [ updatedThread ] } );
 					bp.Nouveau.Messages.threads.unshift( _.first( threads ) );
 				} else {
-					this.requestThreads();
+					this.requestThreads( hideLoader );
 				}
 
 				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
@@ -4937,10 +4959,6 @@ window.bp = window.bp || {};
 				}
 
 				$( 'body' ).removeClass( 'view' ).removeClass( 'inbox' ).addClass( 'compose' );
-
-				if ( ! _.isUndefined( BP_Nouveau.archived_threads ) && 0 < BP_Nouveau.archived_threads.length ) {
-					$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
-				}
 
 				if ( ! _.isUndefined( BP_Nouveau.archived_threads ) && 0 < BP_Nouveau.archived_threads.length ) {
 					$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
