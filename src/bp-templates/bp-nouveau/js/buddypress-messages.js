@@ -1859,8 +1859,13 @@ window.bp = window.bp || {};
 							// Add valid line breaks.
 							content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 							content = content.replace( /&nbsp;/g, ' ' );
-							if ( content ) {
-								jQuery( document ).find( '#send_reply_button' ).trigger( 'click' );
+							var content_text = $(content).text();
+							if ( content_text !== '' ) {
+								if ( jQuery( document ).find( '#bp-messages-send' ).length > 0 ) {
+									jQuery( document ).find( '#bp-messages-send' ).trigger( 'click' );
+								} else {
+									jQuery( document ).find( '#send_reply_button' ).trigger( 'click' );
+								}
 							}
 						}
 					} );
