@@ -62,7 +62,7 @@ function bp_video_upload() {
 	// Generate video attachment preview link.
 	$attachment_id     = 'forbidden_' . $attachment->ID;
 	$attachment_url    = home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id );
-	$video_message_url = ( isset( $_POST ) && isset( $_POST['from'] ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( 'thread_' . $_POST['thread_id'] ) . '/' . $_POST['from'] : '' );
+	$video_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
 
 	$file_url = wp_get_attachment_url( $attachment->ID );
 	$filetype = wp_check_filetype( $file_url );
@@ -82,8 +82,8 @@ function bp_video_upload() {
 		'thumb'       => '',
 		'url'         => esc_url( $attachment_url ),
 		'name'        => esc_attr( $name ),
-		'vid_msg_url' => esc_attr( $video_message_url ),
 		'ext'         => esc_attr( $ext ),
+		'vid_msg_url' => esc_url( $video_message_url ),
 	);
 
 	return $result;

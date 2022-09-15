@@ -16,15 +16,15 @@ if ( empty( get_query_var( 'media-attachment-id' ) ) ) {
 	exit();
 }
 
-$encode_id           = base64_decode( get_query_var( 'media-attachment-id' ) );
-$encode_thread_id    = base64_decode( get_query_var( 'media-thread-attachment-id' ) );
-$from                = ( ! empty( get_query_var( 'media-thread-attachment-new' ) ) ? get_query_var( 'media-thread-attachment-new' ) : '' );
-$explode_arr         = explode( 'forbidden_', $encode_id );
-$explode_message_arr = explode( 'thread_', $encode_thread_id );
-$size                = ( ! empty( get_query_var( 'size' ) ) ? get_query_var( 'size' ) : '' );
-$upload_dir          = wp_upload_dir();
-$upload_dir          = $upload_dir['basedir'];
-$output_file_src     = '';
+$encode_id       = base64_decode( get_query_var( 'media-attachment-id' ) );
+$explode_arr     = explode( 'forbidden_', $encode_id );
+$size            = ( ! empty( get_query_var( 'size' ) ) ? get_query_var( 'size' ) : '' );
+$upload_dir      = wp_upload_dir();
+$upload_dir      = $upload_dir['basedir'];
+$output_file_src = '';
+
+$encode_thread_id = base64_decode( get_query_var( 'media-thread-id' ) );
+$thread_arr       = explode( 'thread_', $encode_id );
 
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
 
@@ -32,15 +32,17 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 
 	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d AND type= %s", $attachment_id, 'photo' ) );
 
-	if ( $media && empty( $from ) && empty( $encode_message_thread_id ) ) {
+	if (
+		$media &&
+		 (
+			 ! isset( $thread_arr ) ||
+			 empty( $thread_arr ) ||
+			 ! isset( $thread_arr[1] ) ||
+			 (int) $thread_arr[1] <= 0
+		 )
+	) {
 		echo '// Silence is golden.';
 		exit();
-	} elseif ( $media && ! empty( $from ) && ! empty( $explode_message_arr[1] ) && function_exists( 'bp_is_active' ) && bp_is_active( 'messages' ) ) {
-		$thread_id = (int) $explode_message_arr[1];
-		if ( function_exists( 'bp_loggedin_user_id' ) && function_exists( 'messages_check_thread_access' ) && ! messages_check_thread_access( $thread_id, bp_loggedin_user_id() ) ) {
-			echo '// Silence is golden.';
-			exit();
-		}
 	}
 
 	if ( wp_attachment_is_image( $attachment_id ) ) {
