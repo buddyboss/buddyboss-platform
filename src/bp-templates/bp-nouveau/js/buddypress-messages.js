@@ -970,6 +970,7 @@ window.bp = window.bp || {};
 							if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
 								bp.Nouveau.Messages.createCookie( 'bb-thread-unarchive', response.toast_message, 5 );
 							}
+							bp.Nouveau.Messages.createCookie( 'bb-show-detail-page', 'yes', 5 );
 							window.location.href = response.thread_link;
 						} else {
 							window.Backbone.trigger( 'relistelements', {}, false );
@@ -1180,6 +1181,13 @@ window.bp = window.bp || {};
 				);
 
 				self.createCookie( 'bb-thread-unarchive', '', -1 );
+			}
+
+			// Show detail page in mobile after un-archived thread.
+			var show_detail_page = self.readCookie( 'bb-show-detail-page' );
+			if ( show_detail_page ) {
+				$( '.bp-messages-container' ).addClass( 'bp-view-message' );
+				self.createCookie( 'bb-show-detail-page', '', -1 );
 			}
 		}
 	};
@@ -4898,6 +4906,7 @@ window.bp = window.bp || {};
 						if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
 							bp.Nouveau.Messages.createCookie( 'bb-thread-unarchive', response.toast_message, 5 );
 						}
+						bp.Nouveau.Messages.createCookie( 'bb-show-detail-page', 'yes', 5 );
 						window.location.href = response.thread_link;
 					}
 				).fail(
