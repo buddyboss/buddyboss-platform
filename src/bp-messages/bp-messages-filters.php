@@ -164,11 +164,18 @@ function maybe_redirects_to_previous_thread_message() {
 	$recipient = bp_get_messages_username_value();
 	$user_id   = bp_core_get_userid( $recipient );
 
-	if ( ! $thread_id = BP_Messages_Message::get_existing_thread( array( $user_id ), bp_loggedin_user_id() ) ) {
+	$thread_id = BP_Messages_Message::get_existing_thread( array( $user_id ), bp_loggedin_user_id() );
+	if ( ! $thread_id ) {
 		return;
 	}
 
-	$thread_url = esc_url( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' );
+	$is_thread_archived = BP_Messages_Message::is_archived_thread( $thread_id, bp_loggedin_user_id() );
+
+	if ( ! $is_thread_archived ) {
+		$thread_url = esc_url( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' );
+	} else {
+		$thread_url = esc_url( bb_get_message_archived_thread_view_link( $thread_id ) );
+	}
 
 	wp_safe_redirect( $thread_url );
 	exit();

@@ -908,4 +908,32 @@ class BP_Messages_Message {
 	protected static function strip_leading_and( $s ) {
 		return preg_replace( '/^\s*AND\s*/', '', $s );
 	}
+
+	/**
+	 * Function to check the thread is archived or not for user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param integer $thread_id The ID of the users in the thread.
+	 * @param integer $user_id   The ID of the sender user.
+	 *
+	 * @return bool|int
+	 */
+	public static function is_archived_thread( $thread_id, $user_id = 0 ) {
+		global $wpdb;
+
+		if ( empty( $user_id ) ) {
+			$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+		}
+
+		$bp = buddypress();
+
+		$is_thread_archived = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $user_id ) );
+
+		if ( 0 < $is_thread_archived ) {
+			return $thread_id;
+		}
+
+		return false;
+	}
 }
