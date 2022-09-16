@@ -169,7 +169,7 @@ function maybe_redirects_to_previous_thread_message() {
 		return;
 	}
 
-	$is_thread_archived = BP_Messages_Message::is_archived_thread( $thread_id, bp_loggedin_user_id() );
+	$is_thread_archived = messages_is_valid_archived_thread( $thread_id, bp_loggedin_user_id() );
 
 	if ( ! $is_thread_archived ) {
 		$thread_url = esc_url( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' );

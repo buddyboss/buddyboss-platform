@@ -2138,7 +2138,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	// Check the thread is hide/archived or not.
-	$is_thread_archived = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $login_user_id ) );
+	$is_thread_archived = messages_is_valid_archived_thread( $thread_id, $login_user_id );
 
 	if ( 0 < $is_thread_archived ) {
 		$thread->feedback_error = array(
