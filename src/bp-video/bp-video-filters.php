@@ -207,7 +207,12 @@ function bp_video_activity_append_video( $content, $activity ) {
 				$args['album_id'] = 'existing-video';
 			}
 		} else {
-			$args['privacy'] = bp_video_query_privacy( $activity->user_id, 0, $activity->component );
+			$args['privacy'] = bp_video_query_privacy( $activity->user_id, $group_id, $activity->component );
+
+			if ( 'activity_comment' === $activity->type ) {
+				$args['privacy'][] = 'comment';
+			}
+
 			if ( ! bp_is_profile_video_support_enabled() ) {
 				$args['user_id'] = 'null';
 			}
@@ -1826,6 +1831,7 @@ function bb_setup_template_for_video_preview( $template ) {
  */
 function bb_setup_attachment_video_preview() {
 	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]', 'top' );
+	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]&video-thread-id=$matches[2]', 'top' );
 }
 
 /**
@@ -1839,6 +1845,10 @@ function bb_setup_attachment_video_preview() {
  */
 function bb_setup_attachment_video_preview_query( $query_vars ) {
 	$query_vars[] = 'video-attachment-id';
+
+	if ( bp_is_active( 'messages' ) ) {
+		$query_vars[] = 'video-thread-id';
+	}
 
 	return $query_vars;
 }
@@ -1868,3 +1878,4 @@ function bb_setup_attachment_video_preview_template( $template ) {
 
 	return $template;
 }
+

@@ -16,16 +16,26 @@ if ( empty( get_query_var( 'video-attachment-id' ) ) ) {
 	exit();
 }
 
-$encode_id   = base64_decode( get_query_var( 'video-attachment-id' ) );
-$explode_arr = explode( 'forbidden_', $encode_id );
+$encode_id        = base64_decode( get_query_var( 'video-attachment-id' ) );
+$explode_arr      = explode( 'forbidden_', $encode_id );
+$encode_thread_id = base64_decode( get_query_var( 'video-thread-id' ) );
+$thread_arr       = explode( 'thread_', $encode_thread_id );
 
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
 
-	$attachment_id  = (int) $explode_arr[1];
+	$attachment_id = (int) $explode_arr[1];
 
 	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d AND type= %s", $attachment_id, 'video' ) );
 
-	if ( $media ) {
+	if (
+		$media &&
+		(
+			! isset( $thread_arr ) ||
+			empty( $thread_arr ) ||
+			! isset( $thread_arr[1] ) ||
+			(int) $thread_arr[1] <= 0
+		)
+	) {
 		echo '// Silence is golden.';
 		exit();
 	}

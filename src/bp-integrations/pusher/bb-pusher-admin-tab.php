@@ -209,7 +209,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 						add_query_arg(
 							array(
 								'page'    => 'bp-help',
-								'article' => '',
+								'article' => '125826',
 							),
 							'admin.php'
 						)

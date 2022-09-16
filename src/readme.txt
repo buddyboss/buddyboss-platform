@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.0.2
 Requires PHP: 5.6.20
-Stable tag: 2.0.9
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,19 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.1.0 =
+* Forums - Handled forum discussion and reply right click and paste action issue, adds duplicate copies from the clipboard
+* Activity - Handled activity comment not showing attachment issue when read more is clicked
+* Activity - Handled broken preview issue when adding a new line with the link
+* Activity - Handled preview issues for URL shortener sites
+* Profiles - Handled course tab not working issue for non-English language slug
+* Profiles - Handled profile type and social link profile fields value not showing issue in the profile
+* Core - Icon Pack updated with latest icons
+* Core - Code refactoring by using transients to optimize the check updates logic for the plugin
+* REST API - Handled invalid API response for report content categories with special characters
+* Elementor - Handled view template not taking to the right page issue
+* WPML - Handled a bunch of languages compatibility issues
 
 = 2.0.9 =
 * Notifications - Handled notification content backslash issue for specific special characters

@@ -4691,6 +4691,47 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  * @since BuddyBoss 1.3.2
  */
 function bp_core_parse_url( $url ) {
+
+	$parse_url_data = wp_parse_url( $url, PHP_URL_HOST );
+	$original_url   = $url;
+
+	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', '' ) ), true ) ) {
+		$response = wp_safe_remote_get(
+			$url,
+			array(
+				'redirection' => 1,
+				'stream'      => true,
+				'headers'     => array(
+					'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+				),
+			),
+		);
+
+		if ( ! is_wp_error( $response ) && ! empty( $response['http_response']->get_response_object()->url ) && $response['http_response']->get_response_object()->url !== $url ) {
+			$new_url = $response['http_response']->get_response_object()->url;
+			if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+				$url = $new_url;
+			}
+		}
+
+		if ( $original_url === $url ) {
+			$context = array(
+				'http' => array(
+					'method'        => 'GET',
+					'max_redirects' => 1,
+				),
+			);
+
+			@file_get_contents( $url, null, stream_context_create( $context ) );
+			if ( isset( $http_response_header ) && isset( $http_response_header[6] ) ) {
+				$new_url = str_replace( 'Location: ', '', $http_response_header[6] );
+				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+					$url = $new_url;
+				}
+			}
+		}
+	}
+
 	$cache_key = 'bp_activity_oembed_' . md5( maybe_serialize( $url ) );
 
 	// get transient data for url.
@@ -4730,15 +4771,15 @@ function bp_core_parse_url( $url ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'user-agent' => '', // Default value being blocked by Cloudflare
+				'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
 			)
 		);
 		$body     = wp_remote_retrieve_body( $response );
 
-		// if response is not empty
+		// if response is not empty.
 		if ( ! is_wp_error( $body ) && ! empty( $body ) ) {
 
-			// Load HTML to DOM Object
+			// Load HTML to DOM Object.
 			$dom = new DOMDocument();
 			@$dom->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
 
@@ -4772,13 +4813,13 @@ function bp_core_parse_url( $url ) {
 				}
 			}
 
-			// Parse DOM to get Title
+			// Parse DOM to get Title.
 			if ( empty( $title ) ) {
 				$nodes = $dom->getElementsByTagName( 'title' );
 				$title = $nodes && $nodes->length > 0 ? $nodes->item( 0 )->nodeValue : '';
 			}
 
-			// Parse DOM to get Meta Description
+			// Parse DOM to get Meta Description.
 			if ( empty( $description ) ) {
 				$metas = $dom->getElementsByTagName( 'meta' );
 				for ( $i = 0; $i < $metas->length; $i ++ ) {
@@ -4790,7 +4831,7 @@ function bp_core_parse_url( $url ) {
 				}
 			}
 
-			// Parse DOM to get Images
+			// Parse DOM to get Images.
 			$image_elements = $dom->getElementsByTagName( 'img' );
 			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
 				$image = $image_elements->item( $i );

@@ -84,8 +84,6 @@
 					   href="#">
 						<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
 					</a>
-				   <# } else { #>
-					<span class="bb-photo-cover-wrap bb-item-cover-wrap bb-icon bb-icon-loader" data-id="{{ i }}"></span>
 				   <# } #>
 				</div>
 				<# } #>
@@ -102,8 +100,6 @@
 						<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="{{data.video[i].id}}" data-attachment-id="{{data.video[i].attachment_id}}" data-attachment-full="{{data.video[i].full}}" data-privacy="{{data.video[i].privacy}}" href="#">
 							<img src="{{data.video[i].thumbnail}}" alt="{{data.video[i].title}}"/>
 						</a>
-					<# } else { #>
-						<span class="bb-video-cover-wrap bb-item-cover-wrap bb-icon bb-icon-loader" data-id="{{ i }}"></span>
 					<# } #>
 				</div>
 				<# } #>
@@ -159,13 +155,6 @@
 							</div>
 						</div>
 						{{{data.document[i].msg_preview}}}
-						<# } else { #>
-						<div class="document-description-wrap">
-							<span class="entry-img" data-id="{{ i }}">
-								<i class="bb-icon-file-default" ></i>
-							</span>
-							<span class="document-detail-wrap bb-icon bb-icon-loader"></span>
-						</div>
 						<# } #>
 					</div>
 				<# } #>

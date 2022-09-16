@@ -452,6 +452,27 @@
 		}
 	}
 
+	.bp-messages-notice {
+
+		.bp-user-messages-feedback {
+
+			.archive-button {
+
+				&.loading:before {
+					content: "";
+					display: inline-block;
+					box-sizing: border-box;
+					width: 20px;
+					height: 20px;
+					border-radius: 50%;
+					border: 2px solid rgba(var(--bb-alternate-text-color-rgb), 0.2);
+					border-top-color: var(--bb-alternate-text-color);
+					animation: spin 2s infinite linear;
+				}
+			}
+		}
+	}
+
 	form.send-reply {
 
 		.avatar-box {
@@ -608,7 +629,7 @@
 
 // Message options
 #buddypress .bp-messages-container .message_action__list {
-	min-width: 205px;
+	min-width: 220px;
 
 	li a:before {
 		font-family: "bb-icons";/* stylelint-disable-line */

@@ -973,7 +973,7 @@ function bb_messages_compose_action_sub_nav() {
 				$settings_slug = function_exists( 'bp_get_settings_slug' ) ? bp_get_settings_slug() : 'settings';
 				$settings_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . $settings_slug . '/notifications/';
 				$class         = function_exists( 'bb_enabled_legacy_email_preference' ) && false === bb_enabled_legacy_email_preference() ? 'notification_preferences' : 'email_preferences';
-				$title         = function_exists( 'bb_enabled_legacy_email_preference' ) && false === bb_enabled_legacy_email_preference() ? __( 'Notifications', 'buddyboss' ) : __( 'Email Preferences', 'buddyboss' );
+				$title         = function_exists( 'bb_enabled_legacy_email_preference' ) && false === bb_enabled_legacy_email_preference() ? __( 'Notification preferences', 'buddyboss' ) : __( 'Email preferences', 'buddyboss' );
 				?>
 				<li class="<?php echo esc_attr( $class ); ?>">
 					<a href="<?php echo esc_url( $settings_link ); ?>" data-action="more_options"><?php echo esc_html( $title ); ?></a>

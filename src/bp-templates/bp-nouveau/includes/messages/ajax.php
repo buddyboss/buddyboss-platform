@@ -415,7 +415,8 @@ function bp_nouveau_ajax_messages_send_message() {
 
 		$inbox_unread_cnt = apply_filters( 'thread_recipient_inbox_unread_counts', array(), $get_thread_recipients );
 
-		wp_send_json_success(
+		$response = apply_filters(
+			'bb_nouveau_ajax_messages_send_message_success_response',
 			array(
 				'feedback'                      => __( 'Message successfully sent.', 'buddyboss' ),
 				'type'                          => 'success',
@@ -425,6 +426,8 @@ function bp_nouveau_ajax_messages_send_message() {
 				'hash'                          => $response['message_id'],
 			)
 		);
+
+		wp_send_json_success( $response );
 
 		// Message could not be sent.
 	} else {
@@ -542,6 +545,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				'date_sent'    => $date_sent,
 				'mark_visible' => false,
 				'error_type'   => 'wp_error',
+				'return'       => 'id',
 			)
 		);
 	} else {
@@ -553,6 +557,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				'date_sent'    => $date_sent,
 				'mark_visible' => false,
 				'error_type'   => 'wp_error',
+				'return'       => 'id',
 			)
 		);
 	}
@@ -583,6 +588,14 @@ function bp_nouveau_ajax_messages_send_reply() {
 		)
 	);
 
+	$messages = BP_Messages_Message::get(
+		array(
+			'include'         => array( $new_reply ),
+			'include_threads' => array( $thread_id ),
+			'per_page'        => 1,
+		)
+	);
+
 	// Set current message to current key.
 	$thread_template->current_message = - 1;
 
@@ -592,6 +605,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Manually call oEmbed
 	// this is needed because we're not at the beginning of the loop.
 	bp_messages_embed();
+
+	if ( ! empty( $messages ) && ! empty( $messages['messages'] ) ) {
+		$thread_template->message = current( $messages['messages'] );
+	}
 
 	$excerpt = wp_strip_all_tags( bp_get_the_thread_message_excerpt() );
 	if ( empty( $excerpt ) ) {
@@ -3155,6 +3172,11 @@ function bp_nouveau_ajax_hide_thread() {
 		'inbox_unread_count' => messages_get_unread_count( bp_loggedin_user_id() ),
 	);
 
+	$thread_link = bb_get_messages_archived_url();
+	if ( isset( $_POST['is_current_thread'] ) && 'yes' === $_POST['is_current_thread'] ) {
+		$thread_link = bb_get_message_archived_thread_view_link( current( $thread_ids ) );
+	}
+
 	wp_send_json_success(
 		array(
 			'type'                          => 'success',
@@ -3162,6 +3184,7 @@ function bp_nouveau_ajax_hide_thread() {
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 			'toast_message'                 => $toast_message,
 			'thread_ids'                    => $thread_ids,
+			'thread_link'                   => $thread_link,
 		)
 	);
 }
