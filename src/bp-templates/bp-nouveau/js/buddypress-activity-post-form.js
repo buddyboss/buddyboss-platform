@@ -3517,27 +3517,34 @@ window.bp = window.bp || {};
 					var model_attributes = this.model.attributes;
 					// check media is enable in groups or not.
 					if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
-						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
-						Backbone.trigger( 'activity_media_close' );
+						if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
+							Backbone.trigger( 'activity_media_close' );
+						}
 					} else {
 						$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
 					}
 
 					// check document is enable in groups or not.
 					if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
-						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
-						Backbone.trigger( 'activity_document_close' );
+						if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
+							Backbone.trigger( 'activity_document_close' );
+						}
 					} else {
 						$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
 					}
 
 					// check video is enable in groups or not.
 					if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
-						$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-						Backbone.trigger( 'activity_video_close' );
+						if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
+							Backbone.trigger( 'activity_video_close' );
+						}
 					} else {
 						$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 					}
+					
 				}
 			}
 		}
@@ -4191,24 +4198,30 @@ window.bp = window.bp || {};
 
 						// check media is enable in groups or not.
 						if ( BP_Nouveau.media.group_media === false ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
-							Backbone.trigger( 'activity_media_close' );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
+								Backbone.trigger( 'activity_media_close' );
+							}
 						} else {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
 						}
 
 						// check document is enable in groups or not.
 						if ( BP_Nouveau.media.group_document === false ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
-							Backbone.trigger( 'activity_document_close' );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
+								Backbone.trigger( 'activity_document_close' );
+							}
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
 						}
 
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.group_video === false ) {
-							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-							Backbone.trigger( 'activity_video_close' );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
+								Backbone.trigger( 'activity_video_close' );
+							}
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 						}
@@ -4226,24 +4239,30 @@ window.bp = window.bp || {};
 
 						// check media is enable in profile or not.
 						if ( BP_Nouveau.media.profile_media === false ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
-							Backbone.trigger( 'activity_media_close' );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
+								Backbone.trigger( 'activity_media_close' );
+							}
 						} else {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
 						}
 
 						// check document is enable in profile or not.
 						if ( BP_Nouveau.media.profile_document === false ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
-							Backbone.trigger( 'activity_document_close' );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
+								Backbone.trigger( 'activity_document_close' );
+							}
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
 						}
 
 						// check video is enable in profile or not.
 						if ( BP_Nouveau.video.profile_video === false ) {
-							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-							Backbone.trigger( 'activity_video_close' );
+							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
+								Backbone.trigger( 'activity_video_close' );
+							}
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 						}
@@ -4259,6 +4278,8 @@ window.bp = window.bp || {};
 						}
 					}
 					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
+					$( '#show-toolbar-button' ).removeClass( 'active' );										
+					$( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip', $( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
 				}
 			}
 		}
@@ -5205,7 +5226,7 @@ window.bp = window.bp || {};
 
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				$( '#show-toolbar-button' ).removeClass( 'active' );
-				$( 'medium-editor-action' ).removeClass( 'medium-editor-button-active' );
+				$( '.medium-editor-action' ).removeClass( 'medium-editor-button-active' );
 				$( '.medium-editor-toolbar-actions' ).show();
 				$( '.medium-editor-toolbar-form' ).removeClass( 'medium-editor-toolbar-form-active' );
 				$( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip', $( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
@@ -5707,7 +5728,7 @@ window.bp = window.bp || {};
 							$( '#editor-toolbar .post-emoji' ).removeClass('post-emoji-hide');
 						}
 					}
-					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
+					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );																																																		
 				}
 			},
 
