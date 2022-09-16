@@ -1561,8 +1561,22 @@ window.bp = window.bp || {};
 							return;
 						}
 
-						if ( bp.Nouveau.Messages.last === '' && 1 === index ) {
+						if ( bp.Nouveau.Messages.last === '' && 0 === index ) {
 							bp.Nouveau.Messages.last = value;
+						}
+
+						if (
+							next_message_date == '' &&
+							bp.Nouveau.Messages.last != ''
+						) {
+							if ( bp.Nouveau.Messages.last.sent_split_date != value.sent_split_date ) {
+								dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value, true );
+								finalMessagesArray.push( dividerMessageObject );
+								bp.Nouveau.Messages.divider.push( value.sent_split_date );
+								bp.Nouveau.Messages.last = value;
+							} else {
+								bp.Nouveau.Messages.last = value;
+							}
 						}
 
 						finalMessagesArray.push( value );
@@ -1572,12 +1586,14 @@ window.bp = window.bp || {};
 						if ( next_message != '' && next_message.sent_split_date != value.sent_split_date ) {
 							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value,  true );
 							finalMessagesArray.push( dividerMessageObject );
+							bp.Nouveau.Messages.divider.push( value.sent_split_date );
 							bp.Nouveau.Messages.previous = value;
 						} else if ( next_message != '' && next_message.sent_split_date == value.sent_split_date ) {
 							bp.Nouveau.Messages.previous = value;
 						} else if ( next_message == '' && next_message_date != '' && thread_start_date == next_message_date ) {
 							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value,  true );
 							finalMessagesArray.push( dividerMessageObject );
+							bp.Nouveau.Messages.divider.push( value.sent_split_date );
 							bp.Nouveau.Messages.previous = value;
 						}
 
@@ -1586,7 +1602,11 @@ window.bp = window.bp || {};
 					}
 				);
 
-				if ( bp.Nouveau.Messages.divider.length === 0 && bp.Nouveau.Messages.last != '' ) {
+				if (
+					bp.Nouveau.Messages.divider.length === 0 &&
+					bp.Nouveau.Messages.last != '' &&
+					$.inArray( bp.Nouveau.Messages.last.sent_split_date , bp.Nouveau.Messages.divider ) === -1
+				) {
 					bp.Nouveau.Messages.divider.push( bp.Nouveau.Messages.last.sent_split_date );
 				}
 
@@ -4411,12 +4431,17 @@ window.bp = window.bp || {};
 
 			triggerPusherMessage: function ( messagePusherData ) {
 
-				var split_message = jQuery.extend( true, {}, _.first( messagePusherData ) );
+				var pusherMessage = _.first( messagePusherData );
+				bp.Nouveau.Messages.last = pusherMessage;
+
+				var split_message = jQuery.extend( true, {}, pusherMessage );
 				var date          = split_message.date,
-					year          = date.getFullYear(),
-					month         = String( date.getMonth() + 1 ).padStart( 2, '0' ),
-					day           = String( date.getDate() ).padStart( 2, '0' ),
+					year          = date.getUTCFullYear(),
+					month         = String( date.getUTCMonth() + 1 ).padStart( 2, '0' ),
+					day           = String( date.getUTCDate() ).padStart( 2, '0' ),
 					split_date    = year + '-' + month + '-' + day;
+
+				bp.Nouveau.Messages.last.split_date = split_date;
 
 				if ( $.inArray( split_date, bp.Nouveau.Messages.divider ) === -1 ) {
 					split_message.hash          = '';
@@ -4524,7 +4549,7 @@ window.bp = window.bp || {};
 					} else {
 						messagePusherData.sender_is_you = false;
 					}
-					messagePusherData.date = new Date( messagePusherData.date );
+					messagePusherData.date = new Date( messagePusherData.date ).toGMTString();
 					model.set( messagePusherData );
 
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
