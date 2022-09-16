@@ -39,6 +39,7 @@ window.bp = window.bp || {};
 			this.mediumEditor = false;
 			this.divider      = [];
 			this.previous     = '';
+			this.last         = '';
 			this.threadType   = 'unarchived';
 			this.xhr          = '';
 
@@ -1553,6 +1554,8 @@ window.bp = window.bp || {};
 				var next_message_date = ! _.isUndefined( resp.next_messages_timestamp ) ? resp.next_messages_timestamp : '';
 				var index = 0;
 
+
+
 				_.each(
 					resp.messages,
 					function( value ) {
@@ -1561,6 +1564,11 @@ window.bp = window.bp || {};
 						}
 
 						index++;
+
+						if ( bp.Nouveau.Messages.last === '' && 1 === index ) {
+							bp.Nouveau.Messages.last = value;
+						}
+
 
 						if (
 							bp.Nouveau.Messages.previous != '' &&
@@ -1588,6 +1596,10 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+
+				if ( bp.Nouveau.Messages.divider.length === 0 && bp.Nouveau.Messages.last != '' ) {
+					bp.Nouveau.Messages.divider.push( bp.Nouveau.Messages.last.sent_split_date );
+				}
 
 				setTimeout(
 					function () { // Waiting to load dummy image.
@@ -3829,6 +3841,7 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.divider  = [];
 				bp.Nouveau.Messages.previous = '';
+				bp.Nouveau.Messages.last     = '';
 
 				event.preventDefault();
 				bp.Nouveau.Messages.removeFeedback();
@@ -5042,6 +5055,7 @@ window.bp = window.bp || {};
 				// Reset the variable when viewing the thread message using route.
 				bp.Nouveau.Messages.divider  = [];
 				bp.Nouveau.Messages.previous = '';
+				bp.Nouveau.Messages.last     = '';
 
 				// Try to get the corresponding thread.
 				var thread = bp.Nouveau.Messages.threads.get( thread_id );
@@ -5101,6 +5115,7 @@ window.bp = window.bp || {};
 				// Reset the variable when viewing the thread message using route.
 				bp.Nouveau.Messages.divider    = [];
 				bp.Nouveau.Messages.previous   = '';
+				bp.Nouveau.Messages.last       = '';
 				bp.Nouveau.Messages.threadType = 'archived';
 
 				// Try to get the corresponding thread.
