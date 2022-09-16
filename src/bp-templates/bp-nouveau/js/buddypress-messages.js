@@ -1190,6 +1190,24 @@ window.bp = window.bp || {};
 				$( '.bp-messages-container' ).addClass( 'bp-view-message' );
 				self.createCookie( 'bb-show-detail-page', '', -1 );
 			}
+		},
+
+		getUTCDateTime: function() {
+			var current_utc = new Date(),
+				day         = current_utc.getUTCDate(),
+				month       = current_utc.getUTCMonth() + 1,
+				year        = current_utc.getUTCFullYear(),
+				hours       = current_utc.getUTCHours(),
+				minutes     = current_utc.getUTCMinutes(),
+				seconds     = current_utc.getSeconds();
+
+			day     = ( 10 > day ) ? '0' + day : day;
+			month   = ( 10 > month ) ? '0' + month : month;
+			hours   = ( 10 > hours ) ? '0' + hours : hours;
+			minutes = ( 10 > minutes ) ? '0' + minutes : minutes;
+			seconds = ( 10 > seconds ) ? '0' + seconds : seconds;
+
+			return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
 		}
 	};
 
@@ -1444,6 +1462,16 @@ window.bp = window.bp || {};
 						},
 						model || {}
 					);
+
+					if ( ! _.isUndefined( bb_pusher_vars ) && ! _.isUndefined( bb_pusher_vars.is_live_messaging_enabled ) && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
+						options.data = _.extend(
+							options.data,
+							{
+								send_at : bp.Nouveau.Messages.getUTCDateTime()
+							},
+							model || {}
+						);
+					}
 
 					return bp.ajax.send( options ).done(
 						function( response ) {

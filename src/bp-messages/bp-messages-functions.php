@@ -44,6 +44,8 @@ defined( 'ABSPATH' ) || exit;
 function messages_new_message( $args = '' ) {
 	global $wpdb, $bp;
 
+	$current_sent_time = bp_core_current_time();
+
 	// Parse the default arguments.
 	$r = bp_parse_args(
 		$args,
@@ -53,7 +55,7 @@ function messages_new_message( $args = '' ) {
 			'recipients'    => array(), // Can be an array of usernames, user_ids or mixed.
 			'subject'       => false,
 			'content'       => false,
-			'date_sent'     => bp_core_current_time(),
+			'date_sent'     => $current_sent_time,
 			'append_thread' => true,
 			'is_hidden'     => false,
 			'mark_visible'  => false,
@@ -388,6 +390,9 @@ function messages_new_message( $args = '' ) {
 
 		return false;
 	}
+
+	// Save the meta for current sent time.
+	bp_messages_update_meta( $send, 'user_date_sent', $current_sent_time );
 
 	// only update after the send().
 	BP_Messages_Thread::update_last_message_status( $last_message_data );

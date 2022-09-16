@@ -526,6 +526,21 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	$date_sent = bp_core_current_time();
+
+	// Check the sent_at param is requested or not.
+	$pusher_send_at = ! empty( $_POST['send_at'] ) ? sanitize_text_field( wp_unslash( $_POST['send_at'] ) ) : '';
+	if ( ! empty( $pusher_send_at ) ) {
+
+		$date_sent_timestamp        = strtotime( $date_sent );
+		$date_sent_timestamp_before = $date_sent_timestamp - ( 60 * 5 );
+		$pusher_send_at_timestamp   = strtotime( $pusher_send_at );
+
+		// Check the pusher date is not more than 5 mins.
+		if ( $pusher_send_at_timestamp <= $date_sent_timestamp && $pusher_send_at_timestamp >= $date_sent_timestamp_before ) {
+			$date_sent = $pusher_send_at;
+		}
+	}
+
 	$new_reply = messages_new_message(
 		array(
 			'thread_id'    => $thread_id,
