@@ -547,6 +547,10 @@ function bp_moderation_admin_view() {
 	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
 	$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
 
+	if ( empty( $moderation_request_data->id ) ) {
+		$moderation_request_data = new BP_Moderation( $moderation_id, BP_Moderation_Members::$moderation_type_report );
+	}
+
 	/**
 	 * Fires before moderation edit form is displays so plugins can modify the activity.
 	 *

@@ -21713,6 +21713,10 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   min-width: inherit;
 }
 
+.moderation-popup .modal-container .bb-model-header ~ .bp-feedback {
+  margin: -15px -20px 15px;
+}
+
 .moderation-popup .modal-container #bb-block-member,
 .moderation-popup .modal-container #bb-report-content {
   margin-bottom: 0;
@@ -21748,9 +21752,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .moderation-popup .modal-container .form-item label > textarea {
-  margin-right: 30px;
+  font-size: 14px;
   margin-bottom: 0;
-  width: calc(100% - 28px);
 }
 
 .moderation-popup .modal-container .bp-report-form-err {

@@ -370,8 +370,8 @@ function bp_version_updater() {
 			bb_update_to_1_9_3();
 		}
 
-		if ( $raw_db_version < 18751 ) {
-			bb_update_to_1_9_5();
+		if ( $raw_db_version < 18855 ) {
+			bb_update_to_2_1_0();
 		}
 
 		if ( $raw_db_version < 18751 ) {
@@ -1890,11 +1890,32 @@ function migrate_notification_preferences( $user_ids ) {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_1_9_5() {
+function bb_update_to_2_1_0() {
+
+	bb_moderation_add_user_report_column();
+
+}
+
+/**
+ * Function to add user report column in moderation for user report.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_moderation_add_user_report_column() {
 
 	global $wpdb;
-	$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_moderation ADD `user_report` TINYINT NULL DEFAULT '0'" );
-	$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_suspend ADD `user_report` TINYINT NULL DEFAULT '0' AFTER `reported`; " );
+
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_moderation' AND column_name = 'user_report'" ); //phpcs:ignore
+
+	if ( empty( $row ) ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_moderation ADD user_report TINYINT NULL DEFAULT '0'" ); //phpcs:ignore
+	}
+
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_suspend' AND column_name = 'user_report'" ); //phpcs:ignore
+
+	if ( empty( $row ) ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_suspend ADD user_report TINYINT NULL DEFAULT '0'" ); //phpcs:ignore
+	}
 }
 
 
