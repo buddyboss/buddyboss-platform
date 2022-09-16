@@ -392,6 +392,13 @@ function messages_new_message( $args = '' ) {
 	// only update after the send().
 	BP_Messages_Thread::update_last_message_status( $last_message_data );
 
+	// Silent recipients for the push notification.
+	if ( ! empty( $_POST['silent_recipients'] ) && is_int( $send ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$silent_recipients = wp_parse_id_list( $_POST['silent_recipients'] );
+		bp_messages_update_meta( $send, 'silent_recipients', $silent_recipients );
+	}
+
 	/**
 	 * Fires after a message has been successfully sent.
 	 *
