@@ -1045,6 +1045,61 @@ window.bp = window.bp || {};
 					);
 			}
 
+			if ( $( '#bb-giphy-connect' ).length ) {
+
+				$( document ).on(
+					'click',
+					'#bb-giphy-connect',
+					function( e ) {
+						e.preventDefault();
+						if ( $( '#bb-giphy-connect' ).data( 'connected' ) ) {
+							$( '#bb-giphy-connect' ).data( 'connected', false );
+							$( '#bb-giphy-connect' ).addClass( 'button-primary' );
+							$( '#bp_media_gif_api_key' ).attr( 'readonly', false );
+							$( '#bp_media_gif_api_key' ).val( '' );
+							$( '#bp_media_profiles_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bp_media_groups_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bp_media_messages_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bp_media_forums_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bb-giphy-connect' ).val( $( '#bb-giphy-connect' ).data( 'connect-text' ) );
+							return false;
+						}
+						$( '#bb-giphy-connect' ).addClass( 'disable-btn' );
+						$( '#bp_media_settings_gifs .bp-new-notice-panel-notice' ).addClass( 'hidden' );
+						$.ajax(
+							{
+								'url' : BP_ADMIN.ajax_url,
+								'method' : 'POST',
+								'data' : {
+									'action' : 'bb_admin_check_valid_giphy_key',
+									'key'    : $( '#bp_media_gif_api_key' ).val(),
+									'nonce'  : $( '#bb-giphy-connect' ).data( 'nonce' )
+								},
+								'success' : function( response ) {
+									if ( response.data.code && 200 === response.data.code ) {
+										$( '#bb-giphy-connect' ).data( 'connected', true );
+										$( '#bb-giphy-connect' ).removeClass( 'button-primary' );
+										$( '#bp_media_gif_api_key' ).attr( 'readonly', true );
+										$( '#bp_media_profiles_gif_support' ).attr( 'disabled', false );
+										$( '#bp_media_groups_gif_support' ).attr( 'disabled', false );
+										$( '#bp_media_messages_gif_support' ).attr( 'disabled', false );
+										$( '#bp_media_forums_gif_support' ).attr( 'disabled', false );
+										$( '#bb-giphy-connect' ).val( $( '#bb-giphy-connect' ).data( 'disconnect-text' ) );
+									} else {
+										$( '#bp_media_settings_gifs .bp-new-notice-panel-notice' ).removeClass( 'hidden' );
+										$( '#bp_media_settings_gifs .bp-new-notice-panel-notice span#giphy_response_code' ).html( response.data.code );
+										$( '#bp_media_settings_gifs .bp-new-notice-panel-notice span#giphy_response_message' ).html( response.data.message );
+									}
+								},
+								'error' : function() {
+									$( '#bb-giphy-connect' ).removeClass( 'disable-btn' );
+								}
+							}
+						);
+					}
+				);
+			}
+
 			if ( $( '#bp-tools-forum-submit' ).length ) {
 				var bp_admin_forum_repair_tools_wrapper_function = function( offset, currentAction ) {
 					$( 'body .section-repair_forums .settings fieldset .checkbox label[for="' + BbToolsForumsRepairActions[currentAction] + '"]' ).append( '<div class="loader-repair-tools"></div>' );
