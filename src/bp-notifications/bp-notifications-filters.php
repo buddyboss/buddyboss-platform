@@ -139,20 +139,18 @@ function bb_delay_email_notification_scheduled_action_callback() {
 			if ( ! empty( $threads ) ) {
 				global $bb_email_background_updater;
 				foreach ( $threads as $thread ) {
-					bb_render_digest_messages_template( $thread['recipients'], $thread['thread_id'] );
-
-//					$bb_email_background_updater->data(
-//						array(
-//							array(
-//								'callback' => 'bb_render_digest_messages_template',
-//								'args'     => array(
-//									$thread['recipients'],
-//									$thread['thread_id'],
-//								),
-//							),
-//						)
-//					);
-//					$bb_email_background_updater->save();
+					$bb_email_background_updater->data(
+						array(
+							array(
+								'callback' => 'bb_render_digest_messages_template',
+								'args'     => array(
+									$thread['recipients'],
+									$thread['thread_id'],
+								),
+							),
+						)
+					);
+					$bb_email_background_updater->save();
 				}
 				$bb_email_background_updater->dispatch();
 			}
@@ -160,5 +158,4 @@ function bb_delay_email_notification_scheduled_action_callback() {
 	}
 }
 add_action( 'bb_delay_email_notification_scheduled_action', 'bb_delay_email_notification_scheduled_action_callback' );
-add_action( 'wp_ajax_bb_delay_email_notification_scheduled_action', 'bb_delay_email_notification_scheduled_action_callback' );
 
