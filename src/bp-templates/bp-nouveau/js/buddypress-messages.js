@@ -430,7 +430,7 @@ window.bp = window.bp || {};
 
 			form.inject( '.bp-messages-content' );
 
-			$( '.bp-messages-content').prepend( '<div class="compose-feedback"></div>' );
+			$( '.bp-messages-content' ).prepend( '<div class="compose-feedback"></div>' );
 
 			// show compose message screen.
 			$( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
@@ -3634,7 +3634,7 @@ window.bp = window.bp || {};
 				).fail(
 					function( response ) {
 						if ( response.feedback ) {
-							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+							bp.Nouveau.Messages.displayComposeFeedback( response.feedback, response.type );
 						}
 
 						$( '#bp-messages-send' ).prop( 'disabled',false ).removeClass( 'loading' );

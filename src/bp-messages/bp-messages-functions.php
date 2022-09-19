@@ -1755,9 +1755,84 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $thread_id ID of the thread.
+ * @param int $user_id   The user ID.
  *
  * @return boolean
  */
-function messages_is_valid_archived_thread( $thread_id ) {
-	return BP_Messages_Thread::is_valid_archived( $thread_id );
+function messages_is_valid_archived_thread( $thread_id, $user_id = 0 ) {
+	return BP_Messages_Thread::is_valid_archived( $thread_id, $user_id );
+}
+
+/**
+ * Checks whether thread exists through the recipients.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $recipients Username array of the user.
+ * @param int   $user_id    The user ID.
+ *
+ * @return boolean|array
+ */
+function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $user_id = 0 ) {
+
+	if ( empty( $recipients ) ) {
+		return false;
+	}
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	// Setup the recipients array.
+	$recipient_ids = array();
+
+	// Loop the recipients and convert all usernames to user_ids where needed.
+	foreach ( (array) $recipients as $recipient ) {
+
+		// Trim spaces and skip if empty.
+		$recipient = trim( $recipient );
+		if ( empty( $recipient ) ) {
+			continue;
+		}
+
+		// Check user_login / nicename columns first
+		// @see http://buddypress.trac.wordpress.org/ticket/5151.
+		if ( bp_is_username_compatibility_mode() && function_exists( 'bp_core_get_userid' ) ) {
+			$recipient_id = bp_core_get_userid( urldecode( $recipient ) );
+		} elseif ( function_exists( 'bp_core_get_userid_from_nicename' ) ) {
+			$recipient_id = bp_core_get_userid_from_nicename( $recipient );
+		}
+
+		// Check against user ID column if no match and if passed recipient is numeric.
+		if ( empty( $recipient_id ) && is_numeric( $recipient ) && function_exists( 'bp_core_get_core_userdata' ) ) {
+			if ( bp_core_get_core_userdata( (int) $recipient ) ) {
+				$recipient_id = (int) $recipient;
+			}
+		}
+
+		// If $recipient_id still blank then try last time to find $recipient_id via the nickname field.
+		if ( empty( $recipient_id ) && function_exists( 'bp_core_get_userid_from_nickname' ) ) {
+			$recipient_id = bp_core_get_userid_from_nickname( $recipient );
+		}
+
+		// Decide which group to add this recipient to.
+		if ( ! empty( $recipient_id ) ) {
+			$recipient_ids[] = (int) $recipient_id;
+		}
+	}
+
+	// Strip the sender from the recipient list, and unset them if they are
+	// not alone. If they are alone, let them talk to themselves.
+	$self_send = array_search( $user_id, $recipient_ids, true );
+	if ( ! empty( $self_send ) && ( count( $recipient_ids ) > 1 ) ) {
+		unset( $recipient_ids[ $self_send ] );
+	}
+
+	// Remove duplicates & bail if no recipients.
+	$recipient_ids = array_unique( $recipient_ids );
+	if ( empty( $recipient_ids ) ) {
+		return false;
+	}
+
+	return BP_Messages_Message::get_existing_threads( $recipient_ids, $user_id );
 }

@@ -202,6 +202,20 @@ function bp_nouveau_ajax_messages_send_message() {
 		)
 	);
 
+	$previous_threads = bb_messages_is_thread_exists_by_recipients( $recipients );
+	if ( ! empty( $previous_threads ) ) {
+		$current_thread = current( $previous_threads );
+
+		if ( ! empty( $current_thread ) ) {
+			$is_thread_archived = messages_is_valid_archived_thread( $current_thread->thread_id, bp_loggedin_user_id() );
+
+			if ( $is_thread_archived ) {
+				$response['feedback'] = __( "You can't send messages in conversations you've archived.", 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+		}
+	}
+
 	// Attempt to send the message.
 	$send = messages_new_message(
 		array(
@@ -2132,7 +2146,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	// Check the thread is hide/archived or not.
-	$is_thread_archived = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $login_user_id ) );
+	$is_thread_archived = messages_is_valid_archived_thread( $thread_id, $login_user_id );
 
 	if ( 0 < $is_thread_archived ) {
 		$thread->feedback_error = array(
