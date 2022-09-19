@@ -4544,6 +4544,9 @@ window.bp = window.bp || {};
 						if ( $s.find( '.message_send_sending' ).length ) {
 							$s = $s.find( '.message_send_sending' ).remove().end();
 						}
+						if ( $s.find( '.info-text-send-message' ).length ) {
+							$s = $s.find( '.info-text-send-message' ).remove().end();
+						}
 						var content_html = $s.text() !== '' ? $s.html() : '';
 						model.set( 'className', model.attributes.className + ' error' );
 						model.set( 'content', content_html + ' ' + errorHtml );
