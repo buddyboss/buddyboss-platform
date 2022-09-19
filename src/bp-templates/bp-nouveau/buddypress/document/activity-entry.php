@@ -92,7 +92,7 @@ $video_url     = bb_document_video_get_symlink( bp_get_document_id() );
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
 			<span class="document-extension-description"><?php echo esc_html( bp_document_get_extension_description( bp_get_document_extension() ) ); ?></span>
-			<span class="document-helper-text"> <span> — </span><span class="document-helper-text-click"><?php esc_html_e( 'Click to', 'buddyboss' ); ?></span><span class="document-helper-text-inner"><?php echo esc_html( $click_text ); ?></span></span>
+			<span class="document-helper-text"> <span> - </span><span class="document-helper-text-click"><?php esc_html_e( 'Click to', 'buddyboss' ); ?></span><span class="document-helper-text-inner"><?php echo esc_html( $click_text ); ?></span></span>
 		</a>
 	</div>
 
