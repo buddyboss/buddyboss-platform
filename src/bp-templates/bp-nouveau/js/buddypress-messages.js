@@ -4586,7 +4586,7 @@ window.bp = window.bp || {};
 					} else {
 						messagePusherData.sender_is_you = false;
 					}
-					messagePusherData.date = new Date( messagePusherData.date ).toGMTString();
+					messagePusherData.date = new Date( messagePusherData.date );
 					model.set( messagePusherData );
 
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
