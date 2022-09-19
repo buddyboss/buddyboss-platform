@@ -1453,13 +1453,22 @@ window.bp = window.bp || {};
 				}
 
 				if ( 'create' === method ) {
+					var params = {
+						action : 'messages_send_reply',
+						nonce  : BP_Nouveau.messages.nonces.send,
+						hash   : new Date().getTime()
+					};
+
+					if (
+						'undefined' !== bp.Pusher_FrontCommon &&
+						'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
+					) {
+						params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join(',');
+					}
+
 					options.data = _.extend(
 						options.data,
-						{
-							action : 'messages_send_reply',
-							nonce  : BP_Nouveau.messages.nonces.send,
-							hash   : new Date().getTime()
-						},
+						params,
 						model || {}
 					);
 
@@ -5142,6 +5151,12 @@ window.bp = window.bp || {};
 						bp.Pusher_FrontCommon.pusherSubscribeThreadsChannels( parseInt( thread_id ) );
 					}
 
+					if (
+						'undefined' !== bp.Pusher_FrontCommon &&
+						'function' === typeof bp.Pusher_FrontCommon.pusherPresenceChannels
+					) {
+						bp.Pusher_FrontCommon.pusherPresenceChannels( parseInt( thread_id ) );
+					}
 				}
 
 				bp.Nouveau.Messages.singleView( thread );
