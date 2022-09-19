@@ -202,6 +202,20 @@ function bp_nouveau_ajax_messages_send_message() {
 		)
 	);
 
+	$previous_threads = bb_messages_is_thread_exists_by_recipients( $recipients );
+	if ( ! empty( $previous_threads ) ) {
+		$current_thread = current( $previous_threads );
+
+		if ( ! empty( $current_thread ) ) {
+			$is_thread_archived = messages_is_valid_archived_thread( $current_thread->thread_id, bp_loggedin_user_id() );
+
+			if ( $is_thread_archived ) {
+				$response['feedback'] = __( "You can't send messages in conversations you've archived.", 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+		}
+	}
+
 	// Attempt to send the message.
 	$send = messages_new_message(
 		array(
@@ -526,6 +540,21 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	$date_sent = bp_core_current_time();
+
+	// Check the sent_at param is requested or not.
+	$pusher_send_at = ! empty( $_POST['send_at'] ) ? sanitize_text_field( wp_unslash( $_POST['send_at'] ) ) : '';
+	if ( ! empty( $pusher_send_at ) ) {
+
+		$date_sent_timestamp        = strtotime( $date_sent );
+		$date_sent_timestamp_before = $date_sent_timestamp - ( 60 * 5 );
+		$pusher_send_at_timestamp   = strtotime( $pusher_send_at );
+
+		// Check the pusher date is not more than 5 mins.
+		if ( $pusher_send_at_timestamp <= $date_sent_timestamp && $pusher_send_at_timestamp >= $date_sent_timestamp_before ) {
+			$date_sent = $pusher_send_at;
+		}
+	}
+
 	$new_reply = messages_new_message(
 		array(
 			'thread_id'    => $thread_id,
@@ -2114,7 +2143,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	// Check the thread is hide/archived or not.
-	$is_thread_archived = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $login_user_id ) );
+	$is_thread_archived = messages_is_valid_archived_thread( $thread_id, $login_user_id );
 
 	if ( 0 < $is_thread_archived ) {
 		$thread->feedback_error = array(
