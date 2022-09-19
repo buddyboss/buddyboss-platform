@@ -430,7 +430,7 @@ window.bp = window.bp || {};
 
 			form.inject( '.bp-messages-content' );
 
-			$( '.bp-messages-content').prepend( '<div class="compose-feedback"></div>' );
+			$( '.bp-messages-content' ).prepend( '<div class="compose-feedback"></div>' );
 
 			// show compose message screen.
 			$( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
@@ -3635,7 +3635,7 @@ window.bp = window.bp || {};
 				).fail(
 					function( response ) {
 						if ( response.feedback ) {
-							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+							bp.Nouveau.Messages.displayComposeFeedback( response.feedback, response.type );
 						}
 
 						$( '#bp-messages-send' ).prop( 'disabled',false ).removeClass( 'loading' );
@@ -5114,6 +5114,43 @@ window.bp = window.bp || {};
 				if ( undefined === thread ) {
 					thread    = {};
 					thread.id = thread_id;
+				}
+
+				if ( 'undefined' !== typeof bb_pusher_vars ) {
+					if ( 'undefined' !== typeof bb_pusher_vars.current_thread_id ) {
+						bb_pusher_vars.current_thread_id = parseInt( thread_id );
+					}
+
+					if ( 'undefined' !== typeof bb_pusher_vars.current_thread ) {
+						bb_pusher_vars.current_thread = thread;
+
+						if (
+							'undefined' !== typeof bb_pusher_vars.current_thread_group_id &&
+							'undefined' !== typeof thread.group_id
+						) {
+							bb_pusher_vars.current_thread_group_id = thread.group_id;
+						} else {
+							bb_pusher_vars.current_thread_group_id = 0;
+						}
+
+						if (
+							'undefined' !== typeof bb_pusher_vars.current_thread_recipients_count &&
+							'undefined' !== typeof thread.recipients &&
+							'undefined' !== typeof thread.recipients.count
+						) {
+							bb_pusher_vars.current_thread_recipients_count = thread.recipients.count;
+						} else {
+							bb_pusher_vars.current_thread_recipients_count = 0;
+						}
+					}
+
+					if (
+						'undefined' !== bp.Pusher_FrontCommon &&
+						'function' === typeof bp.Pusher_FrontCommon.pusherSubscribeThreadsChannels
+					) {
+						bp.Pusher_FrontCommon.pusherSubscribeThreadsChannels( parseInt( thread_id ) );
+					}
+
 				}
 
 				bp.Nouveau.Messages.singleView( thread );
