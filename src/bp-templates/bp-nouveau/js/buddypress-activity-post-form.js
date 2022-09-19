@@ -2340,13 +2340,13 @@ window.bp = window.bp || {};
 
 				$( '#whats-new-attachments' ).addClass( 'empty' ).closest( '#whats-new-form' ).removeClass( 'focus-in--attm' );
 			},
-			
+
 			displayPrevNextButton: function ( e ) {
 				e.preventDefault();
 				this.model.set( 'link_swap_image_button', 1 );
 				this.displayNextPrevButtonView();
 			},
-			
+
 			displayNextPrevButtonView: function () {
 				$('#activity-url-prevPicButton').show();
 				$('#activity-url-nextPicButton').show();
@@ -2354,7 +2354,7 @@ window.bp = window.bp || {};
 				$('#icon-exchange').hide();
 				$('#activity-link-preview-remove-image').hide();
 			},
-			
+
 			selectImageForPreview: function ( e ) {
 				e.preventDefault();
 				var imageIndex = this.model.get( 'link_image_index' );
@@ -2766,24 +2766,13 @@ window.bp = window.bp || {};
 				this.$el.html( activity.get( 'content' ) );
 			},
 
-			handlePaste: function ( event ) {
-				// Get user's pasted data.
-				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-					data          = clipboardData.getData( 'text/plain' );
-
-				// Insert the filtered content.
-				document.execCommand( 'insertHTML', false, data );
-
+			handlePaste: function () {
 				// trigger keyup event of this view to handle changes.
 				this.$el.trigger( 'keyup' );
-
-				// Prevent the standard paste behavior.
-				event.preventDefault();
 			},
 
 			handleKeyUp: function () {
 				var self = this;
-
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
 					if ( this.linkTimeout != null ) {
@@ -2871,7 +2860,7 @@ window.bp = window.bp || {};
 
 			getURL: function ( prefix, urlText ) {
 				var urlString   = '';
-				urlText         = urlText.replace(/&nbsp;/g, '');
+				urlText         = urlText.replace( /&nbsp;/g, '' );
 				var startIndex  = urlText.indexOf( prefix );
 				var responseUrl = '';
 
@@ -2879,7 +2868,12 @@ window.bp = window.bp || {};
 					urlString = $( urlText ).attr( 'href' );
 				} else {
 					for ( var i = startIndex; i < urlText.length; i++ ) {
-						if ( urlText[ i ] === ' ' || urlText[ i ] === '\n' || ( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ) {
+						if (
+							urlText[ i ] === ' ' ||
+							urlText[ i ] === '\n' ||
+							( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ||
+							( urlText[ i ] === '<' && urlText[ i + 1 ] === 'b' && urlText[ i + 2 ] === 'r' )
+						) {
 							break;
 						} else {
 							urlString += urlText[ i ];
