@@ -396,18 +396,23 @@ window.bp = window.bp || {};
 					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
 				}
 
-				bp.Nouveau.objectRequest(
-					{
-						object              : 'activity',
-						scope               : scope,
-						filter              : filter,
-						search_terms        : search_terms,
-						page                : next_page,
-						method              : 'append',
-						exclude_just_posted : this.just_posted.join( ',' ),
-						target              : '#buddypress [data-bp-list] ul.bp-list'
-					}
-				).done(
+				var $data = {
+					object              : 'activity',
+					scope               : scope,
+					filter              : filter,
+					search_terms        : search_terms,
+					page                : next_page,
+					method              : 'append',
+					exclude_just_posted : this.just_posted.join( ',' ),
+					target              : '#buddypress [data-bp-list] ul.bp-list'
+				};
+
+				// necessary for ajax cache.
+				$data.user_id = ( parseInt( BP_Nouveau.activity.params.displayed_user_id ) !== 0 ? BP_Nouveau.activity.params.displayed_user_id : BP_Nouveau.activity.params.user_id );
+				$data.screen = '' !== BP_Nouveau.activity.params.screen ? BP_Nouveau.activity.params.screen : '';
+				$data.type = '' !== BP_Nouveau.activity.params.type ? BP_Nouveau.activity.params.type : '';
+
+				bp.Nouveau.objectRequest( $data ).done(
 					function( response ) {
 						if ( true === response.success ) {
 							targetEl.remove();
