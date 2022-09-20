@@ -922,8 +922,8 @@ class BP_Email_Tokens {
 		}
 
 		if ( ! empty( $group ) ) {
-			$group_name   = esc_html( bp_get_group_name( $group ) );
-			$group_link   = esc_url( bp_get_group_permalink( $group ) );
+			$group_name   = bp_get_group_name( $group );
+			$group_link   = bp_get_group_permalink( $group );
 			$group_avatar = bp_core_fetch_avatar(
 				array(
 					'item_id'    => $group->id,
@@ -942,7 +942,7 @@ class BP_Email_Tokens {
 		$sender_avatar = '';
 		if ( $this->_message_sender_id ) {
 			$sender_name   = $tokens['sender.name'] ?? bp_core_get_user_displayname( $this->_message_sender_id );
-			$sender_link   = esc_url( bp_core_get_user_domain( $this->_message_sender_id ) );
+			$sender_link   = bp_core_get_user_domain( $this->_message_sender_id );
 			$sender_avatar = bp_core_fetch_avatar(
 				array(
 					'item_id' => $this->_message_sender_id,
