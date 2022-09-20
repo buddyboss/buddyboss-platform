@@ -1604,7 +1604,7 @@ function bb_check_delay_email_notification() {
  * @return array
  */
 function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
-	$get_delay_times     = bb_get_cron_times();
+	$get_delay_times     = bb_notification_get_digest_cron_times();
 	$search_schedule_key = array_search( (int) $time, array_column( $get_delay_times, 'value' ), true );
 
 	if ( isset( $get_delay_times[ $search_schedule_key ] ) ) {
@@ -1612,4 +1612,82 @@ function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
 	}
 
 	return array();
+}
+
+/**
+ * Schedule digest notification action times.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_notification_get_digest_cron_times() {
+
+	$delay_times = array(
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d mins', 'buddyboss' ),
+				5
+			),
+			'value'        => 5,
+			'schedule_key' => 'bb_schedule_5min',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d mins', 'buddyboss' ),
+				15
+			),
+			'value'        => 15,
+			'schedule_key' => 'bb_schedule_15min',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d mins', 'buddyboss' ),
+				30
+			),
+			'value'        => 30,
+			'schedule_key' => 'bb_schedule_30min',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d hour', 'buddyboss' ),
+				1
+			),
+			'value'        => 60,
+			'schedule_key' => 'bb_schedule_1hour',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d hours', 'buddyboss' ),
+				3
+			),
+			'value'        => 180,
+			'schedule_key' => 'bb_schedule_3hours',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d hours', 'buddyboss' ),
+				12
+			),
+			'value'        => 720,
+			'schedule_key' => 'bb_schedule_12hours',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d hours', 'buddyboss' ),
+				24
+			),
+			'value'        => 1440,
+			'schedule_key' => 'bb_schedule_24hours',
+		),
+	);
+
+	return apply_filters( 'bb_notification_get_digest_cron_times', $delay_times );
 }

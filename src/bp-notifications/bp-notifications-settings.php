@@ -604,7 +604,7 @@ function bb_messaging_notifications_tutorial() {
  */
 function bb_admin_setting_callback_messaging_notification_fields() {
 	// Get all defined time.
-	$get_delay_times = bb_get_cron_times();
+	$get_delay_times = bb_notification_get_digest_cron_times();
 	$db_delay_time   = bb_get_delay_email_notifications_time();
 
 	// Prepare the drop-down for time.

@@ -1588,27 +1588,47 @@ function bp_rest_restrict_oembed_request_post_id( $post_id ) {
  */
 function bp_core_cron_schedules( $schedules = array() ) {
 	$bb_schedules = array(
-		'bb_schedule_1min'  => array(
+		'bb_schedule_1min'    => array(
 			'interval' => MINUTE_IN_SECONDS,
 			'display'  => __( 'Every minute', 'buddyboss' ),
 		),
-		'bb_schedule_5min'  => array(
+		'bb_schedule_5min'    => array(
 			'interval' => 5 * MINUTE_IN_SECONDS,
 			'display'  => __( 'Once in 5 minutes', 'buddyboss' ),
 		),
-		'bb_schedule_10min' => array(
+		'bb_schedule_10min'   => array(
 			'interval' => 10 * MINUTE_IN_SECONDS,
 			'display'  => __( 'Once in 10 minutes', 'buddyboss' ),
 		),
-		'bb_schedule_30min' => array(
+		'bb_schedule_15min'   => array(
+			'interval' => 15 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 15 minutes', 'buddyboss' ),
+		),
+		'bb_schedule_30min'   => array(
 			'interval' => 30 * MINUTE_IN_SECONDS,
 			'display'  => __( 'Once in 30 minutes', 'buddyboss' ),
 		),
-		'bb_schedule_15days' => array(
+		'bb_schedule_1hour'   => array(
+			'interval' => 60 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once Hourly', 'buddyboss' ),
+		),
+		'bb_schedule_3hours'  => array(
+			'interval' => 180 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 3 hours', 'buddyboss' ),
+		),
+		'bb_schedule_12hours' => array(
+			'interval' => 720 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 12 hours', 'buddyboss' ),
+		),
+		'bb_schedule_24hours' => array(
+			'interval' => 1440 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 24 hours', 'buddyboss' ),
+		),
+		'bb_schedule_15days'  => array(
 			'interval' => 15 * DAY_IN_SECONDS,
 			'display'  => __( 'Every 15 days', 'buddyboss' ),
 		),
-		'bb_schedule_30days' => array(
+		'bb_schedule_30days'  => array(
 			'interval' => 30 * DAY_IN_SECONDS,
 			'display'  => __( 'Every 30 days', 'buddyboss' ),
 		),
@@ -2142,26 +2162,3 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 	return $classes;
 }
 add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
-
-/**
- * Add schedule to cron schedules.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $schedules Array of schedules for cron.
- *
- * @return array $schedules Array of schedules from cron.
- */
-function bb_core_cron_schedule_time( $schedules = array() ) {
-	$get_delay_times = bb_get_cron_times();
-
-	foreach ( $get_delay_times as $cron_schedule ) {
-		$schedules[ $cron_schedule['schedule_key'] ] = array(
-			'interval' => $cron_schedule['schedule_interval'],
-			'display'  => $cron_schedule['schedule_display'],
-		);
-	}
-
-	return $schedules;
-}
-add_filter( 'cron_schedules', 'bb_core_cron_schedule_time' ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected

@@ -1965,3 +1965,27 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 		);
 	}
 }
+
+/**
+ * Get thread id from message id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $message_id Message ID.
+ *
+ * @return integer
+ */
+function bb_get_thread_id_by_message_id( $message_id ) {
+	global $wpdb;
+	$bp = buddypress();
+
+	if ( empty( $message_id ) ) {
+		return 0;
+	}
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$sql = $wpdb->prepare( "SELECT thread_id FROM {$bp->messages->table_name_messages} WHERE id = %d LIMIT 1", $message_id );
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	return $wpdb->get_var( $sql );
+}

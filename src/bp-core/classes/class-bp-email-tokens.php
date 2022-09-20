@@ -905,15 +905,21 @@ class BP_Email_Tokens {
 		$settings = bp_email_get_appearance_settings();
 
 		// Check the thread is group or not.
+		$thread_id    = 0;
+		$message_id   = $tokens['message_id'] ?? 0;
 		$group_name   = '';
 		$group_link   = '';
 		$group_avatar = '';
 		$group        = $tokens['group'] ?? false;
+
+		if ( ! empty( $message_id ) ) {
+			$thread_id = bb_get_thread_id_by_message_id( $message_id );
+		}
+
 		if ( empty( $group ) ) {
 			$group_id = $tokens['group.id'] ?? false;
 			if ( empty( $group_id ) ) {
-				$message_id = $tokens['message_id'] ?? false;
-				$group_id   = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+				$group_id = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
 			}
 
 			if ( ! empty( $group_id ) ) {
@@ -1079,10 +1085,13 @@ class BP_Email_Tokens {
 															<?php
 															while ( bp_media() ) {
 																bp_the_media();
+
+																$attachment_id = base64_encode( 'forbidden_' . bp_get_media_attachment_id() );
+																$media_url     = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $thread_id );
 																?>
 																<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;">
 																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																		<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																		<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																	</a>
 																</div>
 																<?php if ( $total_media_ids > 1 ) : ?>
@@ -1120,7 +1129,7 @@ class BP_Email_Tokens {
 																?>
 																<div class="bb-activity-media-elem"  style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;">
 																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																		<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo plugin_dir_url( __FILE__ ); ?>/src/bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
+																		<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
 																	</a>
 																</div>
 																<?php if ( $total_video_ids > 1 ) : ?>
@@ -1947,10 +1956,13 @@ class BP_Email_Tokens {
 														<?php
 														while ( bp_media() ) {
 															bp_the_media();
+
+															$attachment_id = base64_encode( 'forbidden_' . bp_get_media_attachment_id() );
+															$media_url     = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $message['thread_id'] );
 															?>
 															<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																	<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																	<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																</a>
 															</div>
 															<?php if ( $total_media_ids > 1 ) : ?>

@@ -37,9 +37,9 @@ function bb_schedule_event_on_update_notification_settings() {
 		$old_schedule_found = bb_get_delay_notification_time_by_minutes( $old_scheduled_time );
 		// Un-schedule the scheduled event.
 		if ( ! empty( $old_schedule_found ) ) {
-			$timestamp = wp_next_scheduled( $old_schedule_found['schedule_action'] );
+			$timestamp = wp_next_scheduled( 'bb_digest_email_notifications_hook' );
 			if ( $timestamp ) {
-				wp_unschedule_event( $timestamp, $old_schedule_found['schedule_action'] );
+				wp_unschedule_event( $timestamp, 'bb_digest_email_notifications_hook' );
 			}
 		}
 	}
@@ -48,8 +48,8 @@ function bb_schedule_event_on_update_notification_settings() {
 
 		$new_schedule_found = bb_get_delay_notification_time_by_minutes( $new_scheduled_time );
 		// Schedule an action if it's not already scheduled.
-		if ( ! empty( $new_schedule_found ) && ! wp_next_scheduled( $new_schedule_found['schedule_action'] ) ) {
-			wp_schedule_event( time() + (int) $new_schedule_found['schedule_interval'], $new_schedule_found['schedule_key'], $new_schedule_found['schedule_action'] );
+		if ( ! empty( $new_schedule_found ) ) {
+			bp_core_schedule_cron( 'digest_email_notifications', 'bb_digest_email_notifications', $new_schedule_found['schedule_key'] );
 		}
 	}
 }
@@ -60,7 +60,7 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_schedules_delay_email_notification() {
+function bb_digest_email_notifications() {
 	global $wpdb;
 
 	if ( ! function_exists( 'bb_render_digest_messages_template' ) ) {
@@ -151,5 +151,3 @@ function bb_schedules_delay_email_notification() {
 		}
 	}
 }
-add_action( 'bb_scheduled_action', 'bb_schedules_delay_email_notification' );
-
