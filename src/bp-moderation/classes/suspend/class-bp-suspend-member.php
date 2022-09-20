@@ -705,7 +705,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			$retval = bb_moderation_is_suspended_avatar( $user->ID, $args );
 		}
 
-		return apply_filters( 'bp_fetch_suspended_avatar_url', $retval, $old_retval, $args );
+		return apply_filters( 'bb_get_suspended_avatar_url', $retval, $old_retval, $args );
 	}
 
 	/**
@@ -732,6 +732,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		return apply_filters( 'bp_fetch_suspended_avatar_url', $avatar_url, $old_avatar_url, $params );
+		return apply_filters( 'bb_get_suspended_avatar_url', $avatar_url, $old_avatar_url, $params );
 	}
 }

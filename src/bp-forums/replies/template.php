@@ -1326,11 +1326,11 @@ function bbp_get_reply_author_link( $args = '' ) {
 		// Get avatar
 		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
 			if ( bp_is_active( 'moderation' ) ) {
-				add_filter( 'bp_fetch_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+				add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 			}
 			$author_links['avatar'] = bbp_get_reply_author_avatar( $reply_id, $r['size'] );
 			if ( bp_is_active( 'moderation' ) ) {
-				remove_filter( 'bp_fetch_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+				remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 			}
 		}
 
