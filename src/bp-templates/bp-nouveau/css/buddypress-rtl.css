@@ -3111,16 +3111,18 @@ div[class*="attached-gif-container"] .gif-play-button .bb-icon-play-thin {
 }
 
 div[class*="attached-gif-container"] .gif-icon {
-  background: url(../images/gif-symbol.png) bottom right no-repeat;
+  background: url(../images/gif.svg) center no-repeat;
   position: absolute;
-  width: 100%;
-  height: 100%;
   display: block;
-  bottom: 30px;
-  right: 10px;
-  background-size: 40px 30px;
-  max-width: 40px;
-  max-height: 30px;
+  height: 28px;
+  width: 44px;
+  bottom: 0;
+  right: 0;
+  border-radius: 4px 0 0 0;
+  background-size: 28px;
+  padding: 8px;
+  background-color: #000;
+  opacity: 0.45;
 }
 
 .gif-media-search-dropdown {
@@ -4715,16 +4717,16 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
-#media-stream.media .bb-photo-thumb.is-visible .media-action-wrap > a i,
-#media-stream.media .bb-photo-thumb.is-visible .video-action-wrap > a i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .media-action-wrap > a i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .video-action-wrap > a i,
-.bb-activity-media-wrap .bb-activity-video-elem.is-visible .media-action-wrap > a i,
-.bb-activity-media-wrap .bb-activity-video-elem.is-visible .video-action-wrap > a i,
-#bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem.is-visible .media-action-wrap > a i,
-#bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem.is-visible .video-action-wrap > a i,
-#bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .media-action-wrap > a i,
-#bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .video-action-wrap > a i {
+#media-stream.media .bb-photo-thumb.is-visible .media-action-wrap > a,
+#media-stream.media .bb-photo-thumb.is-visible .video-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .media-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .video-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-video-elem.is-visible .media-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-video-elem.is-visible .video-action-wrap > a,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem.is-visible .media-action-wrap > a,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem.is-visible .video-action-wrap > a,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .media-action-wrap > a,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .video-action-wrap > a {
   opacity: 1;
 }
 
@@ -4739,8 +4741,8 @@ span.dashicons.dashicons-admin-file:before {
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap,
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap {
   position: absolute;
-  left: 15px;
-  top: 21px;
+  left: 11px;
+  top: 11px;
   opacity: 0;
   visibility: hidden;
   z-index: 111;
@@ -4761,10 +4763,11 @@ span.dashicons.dashicons-admin-file:before {
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a {
   float: right;
   background-color: #fff;
-  border-radius: 50%;
-  height: 25px;
-  width: 25px;
+  border-radius: 4px;
+  height: 28px;
+  width: 28px;
   text-align: center;
+  opacity: 0.75;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -4780,12 +4783,11 @@ span.dashicons.dashicons-admin-file:before {
 #bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a i,
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a i,
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a i {
-  font-size: 18px;
-  line-height: 25px;
+  font-size: 16px;
+  line-height: 28px;
   color: #1e2132;
   font-weight: 300;
   display: inline-block;
-  opacity: 0.4;
   margin-left: -1px;
 }
 
@@ -4800,18 +4802,6 @@ span.dashicons.dashicons-admin-file:before {
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a:hover,
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a:hover {
   color: #461212;
-}
-
-#media-stream.media .bb-photo-thumb .media-action-wrap > a:hover i,
-#media-stream.media .bb-photo-thumb .video-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a:hover i,
-#bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a:hover i,
-#bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a:hover i,
-#bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a:hover i,
-#bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a:hover i {
   opacity: 1;
 }
 
@@ -5481,6 +5471,13 @@ span.dashicons.dashicons-admin-file:before {
   }
 }
 
+#video-stream.video .bb-item-thumb .item-action-wrap,
+#media-stream.media .bb-video-thumb .item-action-wrap,
+#media-stream.media .bb-photo-thumb .media-action-wrap {
+  top: 8px;
+  left: 8px;
+}
+
 #video-stream.video .video-list li:hover {
   z-index: 11;
 }
@@ -5515,6 +5512,13 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
+#video-stream.video .bb-item-thumb.is-visible .item-action-wrap > a,
+#media-stream.media .bb-video-thumb.is-visible .item-action-wrap > a,
+.bb-activity-video-wrap .bb-activity-video-elem.is-visible .item-action-wrap > a,
+.bb-activity-media-wrap .bb-activity-video-elem.is-visible .item-action-wrap > a {
+  opacity: 1;
+}
+
 #video-stream.video .bb-item-thumb.is-visible .item-action-wrap .item-action_list,
 #media-stream.media .bb-video-thumb.is-visible .item-action-wrap .item-action_list,
 .bb-activity-video-wrap .bb-activity-video-elem.is-visible .item-action-wrap .item-action_list,
@@ -5535,8 +5539,8 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap,
 .bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap {
   position: absolute;
-  left: 15px;
-  top: 21px;
+  left: 10px;
+  top: 8px;
   opacity: 0;
   visibility: hidden;
   z-index: 111;
@@ -5551,10 +5555,11 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap > a {
   float: right;
   background-color: #fff;
-  border-radius: 50%;
-  height: 25px;
-  width: 25px;
+  border-radius: 4px;
+  height: 28px;
+  width: 28px;
   text-align: center;
+  opacity: 0.75;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -5564,12 +5569,11 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap > a i,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap > a i {
-  font-size: 18px;
-  line-height: 25px;
+  font-size: 16px;
+  line-height: 28px;
   color: #1e2132;
   font-weight: 300;
   display: inline-block;
-  opacity: 0.4;
   margin-left: -1px;
 }
 
@@ -5578,12 +5582,6 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a:hover,
 .bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap > a:hover {
   color: #461212;
-}
-
-#video-stream.video .bb-item-thumb .item-action-wrap > a:hover i,
-#media-stream.media .bb-video-thumb .item-action-wrap > a:hover i,
-.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-video-elem .item-action-wrap > a:hover i {
   opacity: 1;
 }
 
@@ -5870,6 +5868,11 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 20px;
 }
 
+.bb-activity-video-wrap.bb-video-length-1 .bb-activity-video-elem .item-action-wrap {
+  left: 15px;
+  top: 18px;
+}
+
 @media screen and (max-width: 799px) {
   #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list {
     left: -53px;
@@ -5982,6 +5985,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description {
   margin-left: 6px;
+  text-transform: lowercase;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click {
@@ -6020,6 +6024,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a i {
   font-size: 19px;
+  font-weight: 300;
   color: #9ca8b4;
   background-color: #fff;
   padding: 7px;
@@ -6347,7 +6352,6 @@ span.dashicons.dashicons-admin-file:before {
   border-left-width: 0;
   border-right-width: 1px;
   border-radius: 0 3px 3px 0;
-  color: #461212;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.code-full-view .document-action-wrap .document-action_collapse + .document-action_download i {
@@ -19543,7 +19547,7 @@ img.emojioneemoji {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 22px;
-  font-weight: 300;
+  font-weight: 400;
   height: 50px;
   width: 50px;
   display: inline-block;
@@ -19630,7 +19634,7 @@ img.emojioneemoji {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   margin-top: 15px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-filename {
@@ -19655,6 +19659,10 @@ img.emojioneemoji {
   background-color: transparent;
 }
 
+.dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details:before {
+  display: none;
+}
+
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-size,
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-icon {
   display: none;
@@ -19665,7 +19673,7 @@ img.emojioneemoji {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
-  font-weight: 300;
+  font-weight: 400;
   position: absolute;
   top: 50%;
   right: 50%;
@@ -23488,8 +23496,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   text-indent: 3px;
   font-weight: 300;
   font-style: normal;
-  color: rgba(0, 0, 0, 0.8);
-  background-color: #fff !important;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.7) !important;
   height: 52px;
   width: 52px;
   position: absolute;
@@ -23501,6 +23509,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border: 0;
   transition: all ease 0.3s !important;
   border-radius: 50%;
+}
+
+.bb-video-cover-wrap:hover:before {
+  background-color: rgba(0, 0, 0, 0.9) !important;
 }
 
 .bb-activity-video-elem .bb-video-duration,
@@ -23714,7 +23726,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-slider,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-slider,
 .bb-media-section .video-js .vjs-control-bar .vjs-slider {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
 }
 
@@ -23928,10 +23940,9 @@ div.video-js .bb-video-play {
 }
 
 div.video-js button.vjs-big-play-button {
-  background-color: #fff !important;
-  height: 52px;
-  width: 52px;
-  opacity: 0.85;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  height: 48px;
+  width: 48px;
   border: 0;
   border-radius: 100%;
   transition: all ease 0.3s !important;
@@ -23945,15 +23956,20 @@ div.video-js button.vjs-big-play-button:before {
   content: "\eef7";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 28px;
-  color: #000;
+  font-size: 34px;
+  color: #fff;
+  opacity: 0.8;
   font-weight: 300;
   margin-right: 2px;
 }
 
 div.video-js button.vjs-big-play-button:hover {
-  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.9) !important;
   box-shadow: none;
+}
+
+div.video-js button.vjs-big-play-button:hover:before {
+  opacity: 1;
 }
 
 div.video-js button.vjs-big-play-button .vjs-icon-placeholder {
@@ -24212,7 +24228,7 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
 .bb-activity-video-elem .video-js:after {
   content: " ";
   position: absolute;
-  background: rgba(0, 0, 0, 0.35);
+  background: linear-gradient(-180deg, rgba(0, 0, 0, 0) 15.62%, rgba(0, 0, 0, 0.6) 92.71%);
   border-radius: 3px;
   width: 100%;
   height: 100%;
@@ -24221,6 +24237,17 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   transition: 0.3s all;
   visibility: hidden;
   opacity: 0;
+}
+
+.bb-activity-video-elem .video-js.vjs-playing.vjs-user-inactive:after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bb-activity-video-elem .video-js.vjs-has-started:after,
+.bb-activity-video-elem .video-js.vjs-playing:after {
+  visibility: visible;
+  opacity: 1;
 }
 
 .bb-activity-video-elem:hover .video-js:not(.vjs-playing):after {
@@ -24496,12 +24523,44 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   border-radius: 0 4px 4px 0;
 }
 
+.bb-media-model-wrapper.video .bb-media-section .video-js:after {
+  content: " ";
+  position: absolute;
+  background: linear-gradient(-180deg, rgba(0, 0, 0, 0) 15.62%, rgba(0, 0, 0, 0.6) 92.71%);
+  border-radius: 3px;
+  width: 100%;
+  height: 100%;
+  right: 0;
+  top: 0;
+  transition: 0.3s all;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.bb-media-model-wrapper.video .bb-media-section .video-js.vjs-playing.vjs-user-inactive:after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bb-media-model-wrapper.video .bb-media-section .video-js.vjs-has-started:after,
+.bb-media-model-wrapper.video .bb-media-section .video-js.vjs-playing:after {
+  visibility: visible;
+  opacity: 1;
+}
+
+.bb-media-model-wrapper.video .bb-media-section:hover .video-js:not(.vjs-playing):after {
+  visibility: visible;
+  opacity: 1;
+}
+
+.bb-media-model-wrapper.video .bb-media-section:hover .video-js:not(.vjs-playing) .vjs-big-play-button {
+  opacity: 1;
+}
+
 .bb-media-model-wrapper.video .bb-media-section .vjs-big-play-button {
-  background: url(../images/video-play.svg) !important;
-  background-color: #fff !important;
-  height: 52px;
-  width: 52px;
-  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  height: 48px;
+  width: 48px;
   border: 0;
   transition: all ease 0.3s !important;
   position: absolute;
@@ -25174,7 +25233,7 @@ div.dropzone.dz-started .dz-default.dz-message {
 .dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove:after {
   font-size: 18px;
   line-height: 26px;
-  opacity: 0.5;
+  opacity: 0.4;
   font-weight: 300;
 }
 
