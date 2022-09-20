@@ -396,13 +396,13 @@ class BP_Messages_Message {
 
 		$thread_ids = isset( $threads['messages'] ) ? $threads['messages'] : array();
 
-		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
-		$message_deleted_text = '<p> </p>';
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', '' );
+		$message_deleted_text = '';
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
-			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject = '%s', message = '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query ); // db call ok; no-cache ok;
 			// bp_messages_delete_meta( $message_id );

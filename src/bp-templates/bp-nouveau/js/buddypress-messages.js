@@ -430,7 +430,7 @@ window.bp = window.bp || {};
 
 			form.inject( '.bp-messages-content' );
 
-			$( '.bp-messages-content').prepend( '<div class="compose-feedback"></div>' );
+			$( '.bp-messages-content' ).prepend( '<div class="compose-feedback"></div>' );
 
 			// show compose message screen.
 			$( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
@@ -825,6 +825,11 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).closest( '.message_action__list' ).removeClass( 'open' ).closest( '.message_actions' ).removeClass( 'open' );
 
+			var is_current_thread = 'no';
+			if ( parseInt( thread_id ) === parseInt( $( event.currentTarget ).closest( '#bp-message-thread-header' ).find( '.message_action__list' ).data( 'bp-thread-id' ) ) || $( event.currentTarget ).closest( '.thread-item' ).hasClass( 'current' ) ) {
+				is_current_thread = 'yes';
+			}
+
 			if ( 'star' === action || 'unstar' === action ) {
 				opposite = {
 					'star'  : 'unstar',
@@ -897,12 +902,6 @@ window.bp = window.bp || {};
 			}
 
 			if ( 'hide_thread' === action || 'unhide_thread' === action ) {
-
-				var is_current_thread = 'no';
-				if ( $( event.currentTarget ).closest( '#bp-message-thread-header' ).hasClass( 'message-thread-header' ) || $( event.currentTarget ).closest( '.thread-item' ).hasClass( 'current' ) ) {
-					is_current_thread = 'yes';
-				}
-
 				options.data = {
 					'is_current_thread' : is_current_thread
 				};
@@ -921,6 +920,18 @@ window.bp = window.bp || {};
 							// Navigate back to current box.
 							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
 							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							$( '.bp-messages-container' ).removeClass( 'bp-view-message bp-compose-message' );
+						} else {
+							window.Backbone.trigger( 'relistelements', {}, false );
+							BP_Nouveau.messages.hasThreads = false;
+							bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
+							$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+						}
+					} else if ( 'delete' === action ) {
+						if ( bp.Nouveau.Messages.threads.length > 1 ) {
+							window.Backbone.trigger( 'relistelements', {}, false );
+							var hash = new Date().getTime();
+							bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
 							$( '.bp-messages-container' ).removeClass( 'bp-view-message bp-compose-message' );
 						} else {
 							window.Backbone.trigger( 'relistelements', {}, false );
@@ -1190,6 +1201,24 @@ window.bp = window.bp || {};
 				$( '.bp-messages-container' ).addClass( 'bp-view-message' );
 				self.createCookie( 'bb-show-detail-page', '', -1 );
 			}
+		},
+
+		getUTCDateTime: function() {
+			var current_utc = new Date(),
+				day         = current_utc.getUTCDate(),
+				month       = current_utc.getUTCMonth() + 1,
+				year        = current_utc.getUTCFullYear(),
+				hours       = current_utc.getUTCHours(),
+				minutes     = current_utc.getUTCMinutes(),
+				seconds     = current_utc.getSeconds();
+
+			day     = ( 10 > day ) ? '0' + day : day;
+			month   = ( 10 > month ) ? '0' + month : month;
+			hours   = ( 10 > hours ) ? '0' + hours : hours;
+			minutes = ( 10 > minutes ) ? '0' + minutes : minutes;
+			seconds = ( 10 > seconds ) ? '0' + seconds : seconds;
+
+			return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
 		}
 	};
 
@@ -1435,15 +1464,34 @@ window.bp = window.bp || {};
 				}
 
 				if ( 'create' === method ) {
+					var params = {
+						action : 'messages_send_reply',
+						nonce  : BP_Nouveau.messages.nonces.send,
+						hash   : new Date().getTime()
+					};
+
+					if (
+						'undefined' !== bp.Pusher_FrontCommon &&
+						'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
+					) {
+						params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join(',');
+					}
+
 					options.data = _.extend(
 						options.data,
-						{
-							action : 'messages_send_reply',
-							nonce  : BP_Nouveau.messages.nonces.send,
-							hash   : new Date().getTime()
-						},
+						params,
 						model || {}
 					);
+
+					if ( ! _.isUndefined( bb_pusher_vars ) && ! _.isUndefined( bb_pusher_vars.is_live_messaging_enabled ) && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
+						options.data = _.extend(
+							options.data,
+							{
+								send_at : bp.Nouveau.Messages.getUTCDateTime()
+							},
+							model || {}
+						);
+					}
 
 					return bp.ajax.send( options ).done(
 						function( response ) {
@@ -1554,8 +1602,6 @@ window.bp = window.bp || {};
 				var next_message_date = ! _.isUndefined( resp.next_messages_timestamp ) ? resp.next_messages_timestamp : '';
 				var index = 0;
 
-
-
 				_.each(
 					resp.messages,
 					function( value ) {
@@ -1563,41 +1609,52 @@ window.bp = window.bp || {};
 							return;
 						}
 
-						index++;
-
-						if ( bp.Nouveau.Messages.last === '' && 1 === index ) {
+						if ( bp.Nouveau.Messages.last === '' && 0 === index ) {
 							bp.Nouveau.Messages.last = value;
 						}
 
+						if (
+							next_message_date == '' &&
+							bp.Nouveau.Messages.last != ''
+						) {
+							if ( bp.Nouveau.Messages.last.sent_split_date != value.sent_split_date ) {
+								dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value, true );
+								finalMessagesArray.push( dividerMessageObject );
+								bp.Nouveau.Messages.divider.push( value.sent_split_date );
+								bp.Nouveau.Messages.last = value;
+							} else {
+								bp.Nouveau.Messages.last = value;
+							}
+						}
 
-						if (
-							bp.Nouveau.Messages.previous != '' &&
-							bp.Nouveau.Messages.previous.sent_split_date != value.sent_split_date &&
-							$.inArray( bp.Nouveau.Messages.previous.sent_split_date, bp.Nouveau.Messages.divider ) === -1
-						) {
-							var current = resp.messages.length === 1 && '' === next_message_date;
-							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value,  current );
-							bp.Nouveau.Messages.divider.push( bp.Nouveau.Messages.previous.sent_split_date );
-							finalMessagesArray.push( dividerMessageObject );
-						}
 						finalMessagesArray.push( value );
-						bp.Nouveau.Messages.previous = value;
-						if (
-							next_message_date != '' &&
-							thread_start_date == next_message_date &&
-							resp.messages.length === index &&
-							$.inArray( value.sent_split_date, bp.Nouveau.Messages.divider ) === -1
-						) {
-							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value, false );
-							dividerMessageObject.id = value.sent_split_date;
-							dividerMessageObject.content = value.sent_date;
-							bp.Nouveau.Messages.divider.push( value.sent_split_date );
+
+						var next_message = ( resp.messages[ index + 1 ] ) ? resp.messages[ index + 1 ] : '';
+
+						if ( next_message != '' && next_message.sent_split_date != value.sent_split_date ) {
+							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value,  true );
 							finalMessagesArray.push( dividerMessageObject );
+							bp.Nouveau.Messages.divider.push( value.sent_split_date );
+							bp.Nouveau.Messages.previous = value;
+						} else if ( next_message != '' && next_message.sent_split_date == value.sent_split_date ) {
+							bp.Nouveau.Messages.previous = value;
+						} else if ( next_message == '' && next_message_date != '' && thread_start_date == next_message_date ) {
+							dividerMessageObject = bp.Nouveau.Messages.messages.createSpliter( value,  true );
+							finalMessagesArray.push( dividerMessageObject );
+							bp.Nouveau.Messages.divider.push( value.sent_split_date );
+							bp.Nouveau.Messages.previous = value;
 						}
+
+						index++;
+
 					}
 				);
 
-				if ( bp.Nouveau.Messages.divider.length === 0 && bp.Nouveau.Messages.last != '' ) {
+				if (
+					bp.Nouveau.Messages.divider.length === 0 &&
+					bp.Nouveau.Messages.last != '' &&
+					$.inArray( bp.Nouveau.Messages.last.sent_split_date , bp.Nouveau.Messages.divider ) === -1
+				) {
 					bp.Nouveau.Messages.divider.push( bp.Nouveau.Messages.last.sent_split_date );
 				}
 
@@ -3594,7 +3651,7 @@ window.bp = window.bp || {};
 				).fail(
 					function( response ) {
 						if ( response.feedback ) {
-							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+							bp.Nouveau.Messages.displayComposeFeedback( response.feedback, response.type );
 						}
 
 						$( '#bp-messages-send' ).prop( 'disabled',false ).removeClass( 'loading' );
@@ -4422,12 +4479,17 @@ window.bp = window.bp || {};
 
 			triggerPusherMessage: function ( messagePusherData ) {
 
-				var split_message = jQuery.extend( true, {}, _.first( messagePusherData ) );
+				var pusherMessage = _.first( messagePusherData );
+				bp.Nouveau.Messages.last = pusherMessage;
+
+				var split_message = jQuery.extend( true, {}, pusherMessage );
 				var date          = split_message.date,
-					year          = date.getFullYear(),
-					month         = String( date.getMonth() + 1 ).padStart( 2, '0' ),
-					day           = String( date.getDate() ).padStart( 2, '0' ),
+					year          = date.getUTCFullYear(),
+					month         = String( date.getUTCMonth() + 1 ).padStart( 2, '0' ),
+					day           = String( date.getUTCDate() ).padStart( 2, '0' ),
 					split_date    = year + '-' + month + '-' + day;
+
+				bp.Nouveau.Messages.last.split_date = split_date;
 
 				if ( $.inArray( split_date, bp.Nouveau.Messages.divider ) === -1 ) {
 					split_message.hash          = '';
@@ -4467,8 +4529,23 @@ window.bp = window.bp || {};
 					this.collection.add( split_message );
 				}
 
+				var first_message = _.first( messagePusherData );
+
+				if ( 'undefined' !== typeof first_message.video && first_message.video.length > 0 ) {
+					var videos = first_message.video;
+					$.each(
+						videos,
+						function ( index, video ) {
+							var blobData = BP_Nouveau.messages.video_default_url;
+							video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + blobData + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.vid_ids_fake + '" type="video/' + video.ext + '"></source></video>';
+							videos[ index ] = video;
+						}
+					);
+					first_message.video = videos;
+				}
+
 				// use sent messageData here.
-				this.collection.add( _.first( messagePusherData ) );
+				this.collection.add( first_message );
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
 			},
 
@@ -4482,6 +4559,9 @@ window.bp = window.bp || {};
 						if ( $s.find( '.message_send_sending' ).length ) {
 							$s = $s.find( '.message_send_sending' ).remove().end();
 						}
+						if ( $s.find( '.info-text-send-message' ).length ) {
+							$s = $s.find( '.info-text-send-message' ).remove().end();
+						}
 						var content_html = $s.text() !== '' ? $s.html() : '';
 						model.set( 'className', model.attributes.className + ' error' );
 						model.set( 'content', content_html + ' ' + errorHtml );
@@ -4492,12 +4572,10 @@ window.bp = window.bp || {};
 
 			triggerDeleteUpdateMessage: function ( thread_id ) {
 				if (
-					'undefined' !== typeof bp.Nouveau.Messages.threads.get( thread_id ) &&
-					'undefined' !== typeof bp.Nouveau.Messages.threads.get( thread_id ).attributes.active &&
-					true === bp.Nouveau.Messages.threads.get( thread_id ).attributes.active ) {
+					'undefined' !== typeof bp.Nouveau.Messages.threads.get( thread_id ) ) {
 					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?refresh=1', { trigger: true } );
 					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/', { trigger: true } );
-					window.Backbone.trigger( 'relistelements' );
+					window.Backbone.trigger( 'relistelements', {}, false );
 				}
 			},
 
@@ -4536,6 +4614,20 @@ window.bp = window.bp || {};
 						messagePusherData.sender_is_you = false;
 					}
 					messagePusherData.date = new Date( messagePusherData.date );
+
+					if ( 'undefined' !== typeof messagePusherData.video && messagePusherData.video.length > 0 ) {
+						var videos = messagePusherData.video;
+						$.each(
+							videos,
+							function ( index, video ) {
+								var blobData = BP_Nouveau.messages.video_default_url;
+								video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + blobData + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.full + '" type="video/' + video.ext + '"></source></video>';
+								videos[ index ] = video;
+							}
+						);
+						messagePusherData.video = videos;
+					}
+
 					model.set( messagePusherData );
 
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
@@ -5063,6 +5155,49 @@ window.bp = window.bp || {};
 				if ( undefined === thread ) {
 					thread    = {};
 					thread.id = thread_id;
+				}
+
+				if ( 'undefined' !== typeof bb_pusher_vars ) {
+					if ( 'undefined' !== typeof bb_pusher_vars.current_thread_id ) {
+						bb_pusher_vars.current_thread_id = parseInt( thread_id );
+					}
+
+					if ( 'undefined' !== typeof bb_pusher_vars.current_thread ) {
+						bb_pusher_vars.current_thread = thread;
+
+						if (
+							'undefined' !== typeof bb_pusher_vars.current_thread_group_id &&
+							'undefined' !== typeof thread.group_id
+						) {
+							bb_pusher_vars.current_thread_group_id = thread.group_id;
+						} else {
+							bb_pusher_vars.current_thread_group_id = 0;
+						}
+
+						if (
+							'undefined' !== typeof bb_pusher_vars.current_thread_recipients_count &&
+							'undefined' !== typeof thread.recipients &&
+							'undefined' !== typeof thread.recipients.count
+						) {
+							bb_pusher_vars.current_thread_recipients_count = thread.recipients.count;
+						} else {
+							bb_pusher_vars.current_thread_recipients_count = 0;
+						}
+					}
+
+					if (
+						'undefined' !== bp.Pusher_FrontCommon &&
+						'function' === typeof bp.Pusher_FrontCommon.pusherSubscribeThreadsChannels
+					) {
+						bp.Pusher_FrontCommon.pusherSubscribeThreadsChannels( parseInt( thread_id ) );
+					}
+
+					if (
+						'undefined' !== bp.Pusher_FrontCommon &&
+						'function' === typeof bp.Pusher_FrontCommon.pusherPresenceChannels
+					) {
+						bp.Pusher_FrontCommon.pusherPresenceChannels( parseInt( thread_id ) );
+					}
 				}
 
 				bp.Nouveau.Messages.singleView( thread );

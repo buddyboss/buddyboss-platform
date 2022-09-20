@@ -706,8 +706,8 @@ class BP_Messages_Thread {
 
 		$message_ids = ( isset( $messages['messages'] ) ) ? $messages['messages'] : array();
 
-		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
-		$message_deleted_text = '<p> </p>';
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', '' );
+		$message_deleted_text = '';
 
 		// Update the message subject & content of particular user messages.
 		$update_messages    = BP_Messages_Message::get(
@@ -737,7 +737,7 @@ class BP_Messages_Thread {
 		if ( ! empty( $update_message_ids ) ) {
 			foreach ( $update_message_ids as $message_id ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
-				$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET message= '%s', is_deleted=%d WHERE id = %d", $message_deleted_text, 1, $message_id );
+				$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET message = '%s', subject = '%s', is_deleted = %d WHERE id = %d", $message_deleted_text, $subject_deleted_text, 1, $message_id );
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$wpdb->query( $query ); // db call ok; no-cache ok.
 				bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
