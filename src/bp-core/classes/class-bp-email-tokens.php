@@ -1742,8 +1742,7 @@ class BP_Email_Tokens {
 			return $output;
 		}
 
-		$settings = bp_email_get_appearance_settings();
-
+		$settings   = bp_email_get_appearance_settings();
 		$sender_ids = array_column( $tokens['message'], 'sender_id' );
 		$sender_ids = array_unique( wp_parse_id_list( $sender_ids ) );
 
