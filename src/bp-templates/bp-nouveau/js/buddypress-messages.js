@@ -4534,8 +4534,23 @@ window.bp = window.bp || {};
 					this.collection.add( split_message );
 				}
 
+				var first_message = _.first( messagePusherData );
+
+				if ( 'undefined' !== typeof first_message.video && first_message.video.length > 0 ) {
+					var videos = first_message.video;
+					$.each(
+						videos,
+						function ( index, video ) {
+							var blobData = BP_Nouveau.messages.video_default_url;
+							video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + blobData + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.vid_ids_fake + '" type="video/' + video.ext + '"></source></video>';
+							videos[ index ] = video;
+						}
+					);
+					first_message.video = videos;
+				}
+
 				// use sent messageData here.
-				this.collection.add( _.first( messagePusherData ) );
+				this.collection.add( first_message );
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
 			},
 
@@ -4548,6 +4563,9 @@ window.bp = window.bp || {};
 						var $s = $( content );
 						if ( $s.find( '.message_send_sending' ).length ) {
 							$s = $s.find( '.message_send_sending' ).remove().end();
+						}
+						if ( $s.find( '.info-text-send-message' ).length ) {
+							$s = $s.find( '.info-text-send-message' ).remove().end();
 						}
 						var content_html = $s.text() !== '' ? $s.html() : '';
 						model.set( 'className', model.attributes.className + ' error' );
@@ -4601,6 +4619,20 @@ window.bp = window.bp || {};
 						messagePusherData.sender_is_you = false;
 					}
 					messagePusherData.date = new Date( messagePusherData.date );
+
+					if ( 'undefined' !== typeof messagePusherData.video && messagePusherData.video.length > 0 ) {
+						var videos = messagePusherData.video;
+						$.each(
+							videos,
+							function ( index, video ) {
+								var blobData = BP_Nouveau.messages.video_default_url;
+								video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + blobData + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.full + '" type="video/' + video.ext + '"></source></video>';
+								videos[ index ] = video;
+							}
+						);
+						messagePusherData.video = videos;
+					}
+
 					model.set( messagePusherData );
 
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
