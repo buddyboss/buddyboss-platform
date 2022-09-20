@@ -7882,7 +7882,7 @@ function bb_get_week_end_timestamp( $end_day_of_week = false ) {
  *
  * @return array
  */
-function bb_cron_times() {
+function bb_get_cron_times() {
 	$schedule_action = 'bb_scheduled_action';
 
 	$delay_times = array(
@@ -8000,5 +8000,5 @@ function bb_cron_times() {
 		),
 	);
 
-	return apply_filters( 'bb_cron_times', $delay_times );
+	return apply_filters( 'bb_get_cron_times', $delay_times );
 }

@@ -1604,7 +1604,7 @@ function bb_check_delay_email_notification() {
  * @return array
  */
 function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
-	$get_delay_times     = bb_cron_times();
+	$get_delay_times     = bb_get_cron_times();
 	$search_schedule_key = array_search( (int) $time, array_column( $get_delay_times, 'value' ), true );
 
 	if ( isset( $get_delay_times[ $search_schedule_key ] ) ) {
