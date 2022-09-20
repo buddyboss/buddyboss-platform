@@ -37,8 +37,18 @@
                     <div class="thread-multiple-avatar">
                 <# } #>
                     <img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/>
+		                <# if ( data.avatars[0].is_user_blocked ) { #>
+	                        <i class="bb-icon-f bb-icon-cancel"></i>
+		                <# } else if ( data.avatars[0].is_user_blocked_by ) { #>
+	                        <i class="bb-icon-f bb-icon-lock"></i>
+		                <# } #>
                     <# if( data.avatars[1] ) { #>
                         <img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/>
+			                <# if ( data.avatars[1].is_user_blocked ) { #>
+	                            <i class="bb-icon-f bb-icon-cancel"></i>
+			                <# } else if ( data.avatars[1].is_user_blocked_by ) { #>
+	                            <i class="bb-icon-f bb-icon-lock"></i>
+			                <# } #>
                     <# }
                 if( data.avatars.length == 2 ) { #>
                     </div>
@@ -53,7 +63,12 @@
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
 						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
-					<# } #>
+                            <# if ( recipient.is_user_blocked ) { #>
+								<i class="bb-icon-f bb-icon-cancel"></i>
+                            <# } else if ( recipient.is_user_blocked_by ) { #>
+								<i class="bb-icon-f bb-icon-lock"></i>
+                            <# }
+					} #>
 				<# } #>
 			<# } #>
 		</div>
