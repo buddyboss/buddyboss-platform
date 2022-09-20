@@ -954,7 +954,7 @@ class BP_Email_Tokens {
 			);
 		}
 
-		$media_ids       = false;
+		$media_ids       = '';
 		$total_media_ids = 0;
 		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$media_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_media_ids', true );
@@ -965,7 +965,7 @@ class BP_Email_Tokens {
 			}
 		}
 
-		$video_ids       = false;
+		$video_ids       = '';
 		$total_video_ids = 0;
 		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$video_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_video_ids', true );
@@ -976,7 +976,7 @@ class BP_Email_Tokens {
 			}
 		}
 
-		$document_ids       = false;
+		$document_ids       = '';
 		$total_document_ids = 0;
 		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$document_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_document_ids', true );
@@ -987,7 +987,7 @@ class BP_Email_Tokens {
 			}
 		}
 
-		$gif_data = false;
+		$gif_data = array();
 		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$gif_data = bp_messages_get_meta( $tokens['message_id'], '_gif_data', true );
 		}
@@ -1894,7 +1894,7 @@ class BP_Email_Tokens {
 													<?php echo stripslashes( wpautop( $message['message'] ) ); ?>
 												</div>
 												<?php
-												$media_ids       = false;
+												$media_ids       = '';
 												$total_media_ids = 0;
 												if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $message['message_id'] ) ) {
 													$media_ids = bp_messages_get_meta( $message['message_id'], 'bp_media_ids', true );
@@ -1906,7 +1906,7 @@ class BP_Email_Tokens {
 													}
 												}
 
-												$video_ids       = false;
+												$video_ids       = '';
 												$total_video_ids = 0;
 												if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && ! empty( $message['message_id'] ) ) {
 													$video_ids = bp_messages_get_meta( $message['message_id'], 'bp_video_ids', true );
@@ -1918,7 +1918,7 @@ class BP_Email_Tokens {
 													}
 												}
 
-												$document_ids       = false;
+												$document_ids       = '';
 												$total_document_ids = 0;
 												if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && ! empty( $message['message_id'] ) ) {
 													$document_ids = bp_messages_get_meta( $message['message_id'], 'bp_document_ids', true );
@@ -1930,7 +1930,7 @@ class BP_Email_Tokens {
 													}
 												}
 
-												$gif_data = false;
+												$gif_data = array();
 												if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() && ! empty( $message['message_id'] ) ) {
 													$gif_data = bp_messages_get_meta( $message['message_id'], '_gif_data', true );
 												}

@@ -1856,26 +1856,79 @@ function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $use
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $recipients Message Recipients.
- * @param int   $thread_id  ID of the thread.
+ * @param array $recipient_messages Message array.
+ * @param int   $thread_id          ID of the thread.
  */
-function bb_render_digest_messages_template( $recipients, $thread_id ) {
+function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 	global $wpdb;
 
-	if ( empty( $recipients ) ) {
+	if ( empty( $recipient_messages ) || empty( $thread_id ) ) {
 		return;
 	}
 
-	// Send an email to all recipient.
-	$type_key = 'notification_group_messages_new_message';
+	$thread_id = (int) $thread_id;
+
+	// Get notification type key.
+	$type_key = 'notification_messages_new_message';
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$type_key = bb_get_prefences_key( 'legacy', $type_key );
 	}
 
+	$email_type    = 'messages-unread-digest';
+	$first_message = BP_Messages_Thread::get_first_message( $thread_id );
+	$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+	$group_name    = '';
+
+	if ( ! empty( $group_id ) ) {
+		$email_type = 'group-message-digest';
+		if ( bp_is_active( 'groups' ) ) {
+			$group      = groups_get_group( $group_id );
+			$group_name = bp_get_group_name( $group );
+		} else {
+			$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+			$groups_table = $prefix . 'bp_groups';
+			$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
+		}
+
+		$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+
+		// Get notification type key.
+		$type_key = 'notification_group_messages_new_message';
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		}
+	}
+
 	$message_slug = bp_get_messages_slug();
 
-	foreach ( $recipients as $recipients_id => $recipient ) {
+	static $moderation = array();
+	foreach ( $recipient_messages as $messages ) {
 
+		foreach ( $messages as $message_key => $message ) {
+
+			// Check the sender is blocked by recipient or not.
+			$cache_key = $message['recipients_id'] . '-' . $message['sender_id'];
+			if ( ! isset( $moderation[ $cache_key ] ) ) {
+				$moderation[ $cache_key ] = (bool) apply_filters( 'bb_is_recipient_moderated', false, $message['recipients_id'], $message['sender_id'] );
+			}
+
+			if ( true === $moderation[ $cache_key ] ) {
+				unset( $messages[ $message_key ] );
+			}
+		}
+
+		if ( empty( $messages ) ) {
+			continue;
+		}
+
+		$current_message = current( $messages );
+		$recipients_id   = isset( $current_message['recipients_id'] ) ? $current_message['recipients_id'] : 0;
+
+		if ( empty( $recipients_id ) ) {
+			continue;
+		}
+
+		// Notification enabled or not.
 		if ( false === bb_is_notification_enabled( $recipients_id, $type_key ) ) {
 			continue;
 		}
@@ -1886,42 +1939,22 @@ function bb_render_digest_messages_template( $recipients, $thread_id ) {
 			continue;
 		}
 
-		$email_type           = 'messages-unread-digest';
-		$get_first_message_id = current( $recipient );
-		$message_id           = $get_first_message_id['message_id'];
-		$group_id             = bp_messages_get_meta( $message_id, 'group_id', true );
-		$group_name           = '';
-
-		if ( ! empty( $group_id ) ) {
-			$email_type = 'group-message-digest';
-			if ( bp_is_active( 'groups' ) ) {
-				$group      = groups_get_group( $group_id );
-				$group_name = bp_get_group_name( $group );
-			} else {
-				$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-				$groups_table = $prefix . 'bp_groups';
-				$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
-			}
-
-			$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
-		}
-
 		$unsubscribe_args = array(
 			'user_id'           => $recipients_id,
 			'notification_type' => $email_type,
 		);
 
 		$tokens                 = array();
-		$tokens['usersubject']  = $get_first_message_id['subject'];
-		$tokens['unread.count'] = count( $recipient );
+		$tokens['usersubject']  = isset( $first_message->subject ) ? $first_message->subject : '';
+		$tokens['unread.count'] = count( $messages );
 		$tokens['group.id']     = $group_id;
 		$tokens['group.name']   = $group_name;
 		$tokens['message.url']  = esc_url( bp_core_get_user_domain( $recipients_id ) . $message_slug . '/view/' . $thread_id . '/' );
 		$tokens['unsubscribe']  = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 
 		// Slice array to get last five records.
-		$recipient         = array_slice( $recipient, - 5 );
-		$tokens['message'] = $recipient;
+		$messages          = array_slice( $messages, - 5 );
+		$tokens['message'] = $messages;
 
 		bp_send_email(
 			$email_type,

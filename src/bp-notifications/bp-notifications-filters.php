@@ -61,7 +61,7 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
  * @since BuddyBoss [BBVERSION]
  */
 function bb_schedules_delay_email_notification() {
-	global $wpdb, $bb_email_background_updater;
+	global $wpdb;
 
 	if ( ! function_exists( 'bb_render_digest_messages_template' ) ) {
 		return;
@@ -113,20 +113,40 @@ function bb_schedules_delay_email_notification() {
 
 			if ( ! empty( $threads ) ) {
 				foreach ( $threads as $thread ) {
-					$bb_email_background_updater->data(
-						array(
-							array(
-								'callback' => 'bb_render_digest_messages_template',
-								'args'     => array(
-									$thread['recipients'],
-									$thread['thread_id'],
-								),
-							),
-						)
-					);
-					$bb_email_background_updater->save();
+
+					if ( empty( $thread['recipients'] ) ) {
+						continue;
+					}
+
+					// check if it has enough recipients to use batch emails.
+					$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $thread['recipients'] );
+
+					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+						global $bb_email_background_updater;
+
+						$chunk_recipient_array = array_chunk( $thread['recipients'], 10 );
+
+						if ( ! empty( $chunk_recipient_array ) ) {
+							foreach ( $chunk_recipient_array as $chunk_recipient ) {
+								$bb_email_background_updater->data(
+									array(
+										array(
+											'callback' => 'bb_render_digest_messages_template',
+											'args'     => array(
+												$chunk_recipient,
+												$thread['thread_id'],
+											),
+										),
+									)
+								);
+								$bb_email_background_updater->save();
+							}
+							$bb_email_background_updater->dispatch();
+						}
+					} else {
+						bb_render_digest_messages_template( $thread['recipients'], $thread['thread_id'] );
+					}
 				}
-				$bb_email_background_updater->dispatch();
 			}
 		}
 	}
