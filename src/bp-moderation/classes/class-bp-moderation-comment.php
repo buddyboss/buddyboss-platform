@@ -144,9 +144,6 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-//		if ( $this->is_content_hidden( $comment_id, false ) ) {
-//			$return = esc_html__( 'Blocked Member', 'buddyboss' );
-//		}
 		$user_id = self::get_content_owner_id( $comment_id );
 		if ( bp_moderation_is_user_blocked( $user_id ) ) {
 			return bb_moderation_is_blocked_label( $return, $user_id );
@@ -183,10 +180,6 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function blocked_get_comment_author( $author, $comment_id ) {
-
-//		if ( $this->is_content_hidden( $comment_id, false ) ) {
-//			$author = '';
-//		}
 
 		return $author;
 	}
