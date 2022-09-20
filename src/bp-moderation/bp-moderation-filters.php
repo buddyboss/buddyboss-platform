@@ -732,7 +732,7 @@ add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 
 function bb_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) {
 	if ( bp_moderation_is_user_blocked( $user_id, $item_id ) ) {
 		return true;
-	} else if ( bp_moderation_is_user_suspended( $item_id ) ) {
+	} elseif ( bp_moderation_is_user_suspended( $item_id ) ) {
 		return true;
 	}
 
