@@ -2142,3 +2142,26 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 	return $classes;
 }
 add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
+
+/**
+ * Add schedule to cron schedules.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $schedules Array of schedules for cron.
+ *
+ * @return array $schedules Array of schedules from cron.
+ */
+function bb_core_cron_schedule_time( $schedules = array() ) {
+	$get_delay_times = bb_cron_times();
+
+	foreach ( $get_delay_times as $cron_schedule ) {
+		$schedules[ $cron_schedule['schedule_key'] ] = array(
+			'interval' => $cron_schedule['schedule_interval'],
+			'display'  => $cron_schedule['schedule_display'],
+		);
+	}
+
+	return $schedules;
+}
+add_filter( 'cron_schedules', 'bb_core_cron_schedule_time' ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected

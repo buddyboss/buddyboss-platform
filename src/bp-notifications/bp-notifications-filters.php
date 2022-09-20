@@ -23,7 +23,6 @@ function bb_schedule_event_on_update_notification_settings() {
 		return;
 	}
 
-	$get_delay_times                     = bb_get_delay_notification_times();
 	$old_scheduled_time                  = bb_get_delay_email_notifications_time();
 	$new_scheduled_time                  = (int) sanitize_text_field( wp_unslash( $_POST['time_delay_email_notification'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$is_enabled_delay_notification_after = isset( $_POST['delay_email_notification'] ) ? sanitize_text_field( wp_unslash( $_POST['delay_email_notification'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -57,35 +56,12 @@ function bb_schedule_event_on_update_notification_settings() {
 add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
 
 /**
- * Add schedule to cron schedules.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $schedules Array of schedules for cron.
- *
- * @return array $schedules Array of schedules from cron.
- */
-function bb_delay_notification_register_cron_schedule_time( $schedules = array() ) {
-	$get_delay_times = bb_get_delay_notification_times();
-
-	foreach ( $get_delay_times as $cron_schedule ) {
-		$schedules[ $cron_schedule['schedule_key'] ] = array(
-			'interval' => $cron_schedule['schedule_interval'],
-			'display'  => $cron_schedule['schedule_display'],
-		);
-	}
-
-	return $schedules;
-}
-add_filter( 'cron_schedules', 'bb_delay_notification_register_cron_schedule_time' ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
-
-/**
  * Prepare the email notification content.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_delay_email_notification_scheduled_action_callback() {
-	global $wpdb;
+function bb_schedules_delay_email_notification() {
+	global $wpdb, $bb_email_background_updater;
 
 	if ( ! function_exists( 'bb_render_digest_messages_template' ) ) {
 		return;
@@ -115,29 +91,27 @@ function bb_delay_email_notification_scheduled_action_callback() {
 
 			$threads = array();
 			if ( ! empty( $results ) ) {
-				global $bb_email_background_updater;
-				foreach ( $results as $unread_thread ) {
-					$threads[ $unread_thread->thread_id ]['thread_id'] = $unread_thread->thread_id;
+				foreach ( $results as $unread_message ) {
+					$threads[ $unread_message->thread_id ]['thread_id'] = $unread_message->thread_id;
 
 					// Set messages.
-					$threads[ $unread_thread->thread_id ]['recipients'][ $unread_thread->user_id ][] = array(
-						'message_id'    => $unread_thread->id,
-						'sender_id'     => $unread_thread->sender_id,
-						'recipients_id' => $unread_thread->user_id,
-						'message'       => $unread_thread->message,
-						'subject'       => $unread_thread->subject,
-						'thread_id'     => $unread_thread->thread_id,
+					$threads[ $unread_message->thread_id ]['recipients'][ $unread_message->user_id ][] = array(
+						'message_id'    => $unread_message->id,
+						'sender_id'     => $unread_message->sender_id,
+						'recipients_id' => $unread_message->user_id,
+						'message'       => $unread_message->message,
+						'subject'       => $unread_message->subject,
+						'thread_id'     => $unread_message->thread_id,
 					);
 
 					if ( function_exists( 'bp_messages_update_meta' ) ) {
 						// Save meta to sent unread digest email notifications.
-						bp_messages_update_meta( $unread_thread->id, 'bb_sent_digest_email', 'yes' );
+						bp_messages_update_meta( $unread_message->id, 'bb_sent_digest_email', 'yes' );
 					}
 				}
 			}
 
 			if ( ! empty( $threads ) ) {
-				global $bb_email_background_updater;
 				foreach ( $threads as $thread ) {
 					$bb_email_background_updater->data(
 						array(
@@ -157,5 +131,5 @@ function bb_delay_email_notification_scheduled_action_callback() {
 		}
 	}
 }
-add_action( 'bb_delay_email_notification_scheduled_action', 'bb_delay_email_notification_scheduled_action_callback' );
+add_action( 'bb_scheduled_action', 'bb_schedules_delay_email_notification' );
 

@@ -958,7 +958,6 @@ class BP_Email_Tokens {
 		$total_media_ids = 0;
 		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$media_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_media_ids', true );
-
 			if ( ! empty( $media_ids ) ) {
 				$media_ids       = explode( ',', $media_ids );
 				$total_media_ids = count( $media_ids );
@@ -970,7 +969,6 @@ class BP_Email_Tokens {
 		$total_video_ids = 0;
 		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$video_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_video_ids', true );
-
 			if ( ! empty( $video_ids ) ) {
 				$video_ids       = explode( ',', $video_ids );
 				$total_video_ids = count( $video_ids );
@@ -982,7 +980,6 @@ class BP_Email_Tokens {
 		$total_document_ids = 0;
 		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$document_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_document_ids', true );
-
 			if ( ! empty( $document_ids ) ) {
 				$document_ids       = explode( ',', $document_ids );
 				$total_document_ids = count( $document_ids );

@@ -1547,134 +1547,6 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 }
 
 /**
- * Delay times for Email Notification.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return array
- */
-function bb_get_delay_notification_times() {
-	$schedule_action = 'bb_delay_email_notification_scheduled_action';
-
-	$delay_times = array(
-		array(
-			'label'             => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d mins', 'buddyboss' ),
-				5
-			),
-			'value'             => 5,
-			'schedule_key'      => 'bb_delay_email_every_five_minutes',
-			'schedule_interval' => 300,
-			'schedule_display'  => sprintf(
-			/* translators: %s: Cron schedule label. */
-				__( 'Every %d minutes', 'buddyboss' ),
-				5
-			),
-			'schedule_action'   => $schedule_action,
-		),
-		array(
-			'label'             => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d mins', 'buddyboss' ),
-				15
-			),
-			'value'             => 15,
-			'schedule_key'      => 'bb_delay_email_every_fifteen_minutes',
-			'schedule_interval' => 900,
-			'schedule_display'  => sprintf(
-			/* translators: %s: Cron schedule label. */
-				__( 'Every %d minutes', 'buddyboss' ),
-				15
-			),
-			'schedule_action'   => $schedule_action,
-		),
-		array(
-			'label'             => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d mins', 'buddyboss' ),
-				30
-			),
-			'value'             => 30,
-			'schedule_key'      => 'bb_delay_email_every_thirty_minutes',
-			'schedule_interval' => 1800,
-			'schedule_display'  => sprintf(
-			/* translators: %s: Cron schedule label. */
-				__( 'Every %d minutes', 'buddyboss' ),
-				30
-			),
-			'schedule_action'   => $schedule_action,
-		),
-		array(
-			'label'             => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d hour', 'buddyboss' ),
-				1
-			),
-			'value'             => 60,
-			'schedule_key'      => 'bb_delay_email_every_one_hour',
-			'schedule_interval' => 3600,
-			'schedule_display'  => sprintf(
-			/* translators: %s: Cron schedule label. */
-				__( 'Every %d hour', 'buddyboss' ),
-				1
-			),
-			'schedule_action'   => $schedule_action,
-		),
-		array(
-			'label'             => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d hours', 'buddyboss' ),
-				3
-			),
-			'value'             => 180,
-			'schedule_key'      => 'bb_delay_email_every_three_hours',
-			'schedule_interval' => 10800,
-			'schedule_display'  => sprintf(
-			/* translators: %s: Cron schedule label. */
-				__( 'Every %d hours', 'buddyboss' ),
-				3
-			),
-			'schedule_action'   => $schedule_action,
-		),
-		array(
-			'label'             => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d hours', 'buddyboss' ),
-				12
-			),
-			'value'             => 720,
-			'schedule_key'      => 'bb_delay_email_every_twelve_hours',
-			'schedule_interval' => 43200,
-			'schedule_display'  => sprintf(
-			/* translators: %s: Cron schedule label. */
-				__( 'Every %d hours', 'buddyboss' ),
-				12
-			),
-			'schedule_action'   => $schedule_action,
-		),
-		array(
-			'label'             => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d hours', 'buddyboss' ),
-				24
-			),
-			'value'             => 1440,
-			'schedule_key'      => 'bb_delay_email_every_twenty_four_hours',
-			'schedule_interval' => 86400,
-			'schedule_display'  => sprintf(
-			/* translators: %s: Cron schedule label. */
-				__( 'Every %d hours', 'buddyboss' ),
-				24
-			),
-			'schedule_action'   => $schedule_action,
-		),
-	);
-
-	return apply_filters( 'bb_get_delay_notification_times', $delay_times );
-}
-
-/**
  * Function to check the Hide messages from notifications is enabled or not.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1732,7 +1604,7 @@ function bb_check_delay_email_notification() {
  * @return array
  */
 function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
-	$get_delay_times     = bb_get_delay_notification_times();
+	$get_delay_times     = bb_cron_times();
 	$search_schedule_key = array_search( (int) $time, array_column( $get_delay_times, 'value' ), true );
 
 	if ( isset( $get_delay_times[ $search_schedule_key ] ) ) {

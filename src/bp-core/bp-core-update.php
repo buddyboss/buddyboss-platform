@@ -1971,7 +1971,7 @@ function bb_messages_migrate_is_deleted_column() {
  */
 function bb_set_default_value_for_messaging_notifications_metabox() {
 	bp_update_option( 'delay_email_notification', 0 );
-	bp_update_option( 'time_delay_email_notification', '' );
+	bp_update_option( 'time_delay_email_notification', 15 );
 }
 
 /**
