@@ -206,7 +206,7 @@ function bb_notification_get_settings_fields() {
 			'args'              => array( 'class' => 'notes-hidden-header child-no-padding' ),
 		);
 
-		if ( ! bb_hide_messages_from_notification_enabled() && ! bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
+		if ( bp_is_active( 'messages' ) && ! bb_hide_messages_from_notification_enabled() && ! bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
 			$fields['bp_messaging_notification_settings']['infos'] = array(
 				'title'             => esc_html__( 'Notes', 'buddyboss' ),
 				'callback'          => 'bb_admin_setting_callback_messaging_notification_warning',
@@ -603,6 +603,12 @@ function bb_messaging_notifications_tutorial() {
  * @return void
  */
 function bb_admin_setting_callback_messaging_notification_fields() {
+
+	// Bail if messages component is disabled.
+	if ( ! bp_is_active( 'messages' ) ) {
+		return;
+	}
+
 	// Get all defined time.
 	$get_delay_times = bb_notification_get_digest_cron_times();
 	$db_delay_time   = bb_get_delay_email_notifications_time();

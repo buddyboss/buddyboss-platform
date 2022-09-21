@@ -983,6 +983,10 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
  */
 function bb_notification_exclude_group_message_notification( $component_names ) {
 
+	if ( ! bp_is_active( 'messages' ) ) {
+		return $component_names;
+	}
+
 	$hide_message_notification = bb_hide_messages_from_notification_enabled();
 
 	if (
@@ -1544,146 +1548,4 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 
 	return $renderable;
 
-}
-
-/**
- * Function to check the Hide messages from notifications is enabled or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool
- */
-function bb_hide_messages_from_notification_enabled() {
-	return (bool) apply_filters( 'bb_hide_messages_from_notification_enabled', bp_get_option( 'hide_message_notification', 1 ) );
-}
-
-/**
- * Function to check the Delay email notifications for new messages is enabled or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool
- */
-function bb_delay_email_notifications_enabled() {
-	return (bool) apply_filters( 'bb_delay_email_notifications_enabled', bp_get_option( 'delay_email_notification', 1 ) );
-}
-
-/**
- * Function to check the Delay email notifications for new messages is enabled or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return int
- */
-function bb_get_delay_email_notifications_time() {
-	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
-}
-
-/**
- * Function to check the Delay email notifications for new messages is enabled with pusher or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool
- */
-function bb_check_delay_email_notification() {
-	return (bool) ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() );
-}
-
-/**
- * Function to search value by minutes from the bb_get_delay_notification_times function.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $time Notification delay time.
- *
- * @return array
- */
-function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
-	$get_delay_times     = bb_notification_get_digest_cron_times();
-	$search_schedule_key = array_search( (int) $time, array_column( $get_delay_times, 'value' ), true );
-
-	if ( isset( $get_delay_times[ $search_schedule_key ] ) ) {
-		return $get_delay_times[ $search_schedule_key ];
-	}
-
-	return array();
-}
-
-/**
- * Schedule digest notification action times.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return array
- */
-function bb_notification_get_digest_cron_times() {
-
-	$delay_times = array(
-		array(
-			'label'        => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d mins', 'buddyboss' ),
-				5
-			),
-			'value'        => 5,
-			'schedule_key' => 'bb_schedule_5min',
-		),
-		array(
-			'label'        => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d mins', 'buddyboss' ),
-				15
-			),
-			'value'        => 15,
-			'schedule_key' => 'bb_schedule_15min',
-		),
-		array(
-			'label'        => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d mins', 'buddyboss' ),
-				30
-			),
-			'value'        => 30,
-			'schedule_key' => 'bb_schedule_30min',
-		),
-		array(
-			'label'        => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d hour', 'buddyboss' ),
-				1
-			),
-			'value'        => 60,
-			'schedule_key' => 'bb_schedule_1hour',
-		),
-		array(
-			'label'        => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d hours', 'buddyboss' ),
-				3
-			),
-			'value'        => 180,
-			'schedule_key' => 'bb_schedule_3hours',
-		),
-		array(
-			'label'        => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d hours', 'buddyboss' ),
-				12
-			),
-			'value'        => 720,
-			'schedule_key' => 'bb_schedule_12hours',
-		),
-		array(
-			'label'        => sprintf(
-			/* translators: %s: The admin setting field label. */
-				__( '%d hours', 'buddyboss' ),
-				24
-			),
-			'value'        => 1440,
-			'schedule_key' => 'bb_schedule_24hours',
-		),
-	);
-
-	return apply_filters( 'bb_notification_get_digest_cron_times', $delay_times );
 }
