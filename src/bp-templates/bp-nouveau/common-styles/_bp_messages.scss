@@ -242,7 +242,8 @@
 
 			img.avatar {
 				max-width: 60px;
-				width: 100%;
+				height: 52px;
+				width: 52px;
 				image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 			}
 		}
@@ -254,7 +255,8 @@
 
 			img.avatar {
 				border: 2px solid #fff;
-				max-width: 35px;
+				width: 35px;
+				height: 35px;
 				position: absolute;
 				left: 0;
 				top: 0;
