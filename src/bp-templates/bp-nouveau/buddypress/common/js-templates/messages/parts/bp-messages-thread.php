@@ -129,40 +129,40 @@
 
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }} {{ data.avatars[0].is_user_suspended && ! data.is_group_thread ? 'bp-user-suspended' : '' }} {{ data.avatars[0].is_user_blocked && ! data.is_group_thread ? 'bp-user-blocked' : '' }} ">
-            <# if ( data.avatars && data.avatars.length > 1  ) {
-                if( data.avatars.length == 2 ) { #>
-                    <div class="thread-multiple-avatar">
-                <# } #>
-                    <img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/>
-		                <# if ( 0 === data.avatars[0].is_deleted ) {
-                            if ( data.avatars[0].is_user_blocked ) {
-				                #>
-	                                <i class="bb-icon-f bb-icon-cancel"></i>
-				                <#
-                            } else if ( data.avatars[0].is_user_blocked_by ) {
-				                #>
-	                                <i class="bb-icon-f bb-icon-lock"></i>
-				                <#
-			                }
-	                    } #>
-                    <# if( data.avatars[1] ) { #>
-                        <img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/>
-                            <# if ( 0 === data.avatars[1].is_deleted ) {
-			                    if ( data.avatars[1].is_user_blocked ) {
-                                    #>
-				                        <i class="bb-icon-f bb-icon-cancel"></i>
-			                        <#
-			                    } else if ( data.avatars[1].is_user_blocked_by ) {
-			                        #>
-				                        <i class="bb-icon-f bb-icon-lock"></i>
-			                        <#
-			                    }
-			                } #>
-                    <# }
-                if( data.avatars.length == 2 ) { #>
-                    </div>
-                <# } #>
-            <# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
+			<# if ( data.avatars && data.avatars.length > 1  ) {
+				if ( data.avatars.length == 2 ) { #>
+					<div class="thread-multiple-avatar">
+				<# } #>
+					<img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/>
+						<# if ( 0 === data.avatars[0].is_deleted ) {
+							if ( data.avatars[0].is_user_blocked ) {
+								#>
+									<i class="bb-icon-f bb-icon-cancel"></i>
+								<#
+							} else if ( data.avatars[0].is_user_blocked_by ) {
+								#>
+									<i class="bb-icon-f bb-icon-lock"></i>
+								<#
+							}
+						} #>
+					<# if ( data.avatars[1] ) { #>
+						<img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/>
+							<# if ( 0 === data.avatars[1].is_deleted ) {
+								if ( data.avatars[1].is_user_blocked ) {
+									#>
+										<i class="bb-icon-f bb-icon-cancel"></i>
+									<#
+								} else if ( data.avatars[1].is_user_blocked_by ) {
+									#>
+										<i class="bb-icon-f bb-icon-lock"></i>
+									<#
+								}
+							} #>
+					<# }
+				if ( data.avatars.length == 2 ) { #>
+					</div>
+				<# } #>
+			<# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
 				<img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}" />
 			<# } else { #>
 				<# if ( other_recipients.length > 1 ) { #>
@@ -175,11 +175,11 @@
 				            <# if ( 0 === recipient.is_deleted ) {
 				                if ( recipient.is_user_blocked ) {
 				                    #>
-									<i class="bb-icon-f bb-icon-cancel"></i>
+										<i class="bb-icon-f bb-icon-cancel"></i>
 				                    <#
 				                } else if ( recipient.is_user_blocked_by ) {
 				                    #>
-									<i class="bb-icon-f bb-icon-lock"></i>
+										<i class="bb-icon-f bb-icon-lock"></i>
 				                    <#
                                 }
 				            } #>
@@ -205,7 +205,6 @@
 				<# } #>
 			</div>
 
-            <# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 			<div class="thread-subject">
 				<div class="typing-indicator bp-hide"></div>
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
