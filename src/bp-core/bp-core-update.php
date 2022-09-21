@@ -374,7 +374,7 @@ function bp_version_updater() {
 			bb_update_to_2_1_0();
 		}
 
-		if ( $raw_db_version < 18801 ) {
+		if ( $raw_db_version < 18901 ) {
 			bb_update_to_2_2_0();
 		}
 	}
@@ -1918,31 +1918,30 @@ function bb_moderation_add_user_report_column() {
 	}
 }
 
-
 /**
+ * Migrate messages table.
  * Migrate group member meta table.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_2_1_1() {
+function bb_update_to_2_2_0() {
 	if ( bp_is_active( 'groups' ) ) {
 		bp_core_install_groups();
 	}
 
 	bp_core_install_invitations();
-}
 
-/**
- * Migrate messages table.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_update_to_2_2_0() {
 	// Add 'is_deleted' column in 'bp_messages_messages' table.
 	bb_messages_add_is_deleted_column();
 
 	// Migrate the 'bp_messages_deleted' value from 'wp_bp_messages_meta' table to 'is_deleted' column in 'bp_messages_messages' table.
 	bb_messages_migrate_is_deleted_column();
+
+	// For existing customer set default values for Messaging Notifications metabox.
+	bb_set_default_value_for_messaging_notifications_metabox();
+
+	// Update the messages email templates.
+	bb_migrate_messages_email_templates();
 }
 
 /**
@@ -1990,3 +1989,65 @@ function bb_messages_migrate_is_deleted_column() {
 	);
 }
 
+/**
+ * For existing customer set default values for Messaging Notifications metabox.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_set_default_value_for_messaging_notifications_metabox() {
+	bp_update_option( 'delay_email_notification', 0 );
+	bp_update_option( 'time_delay_email_notification', 15 );
+}
+
+/**
+ * For existing customer update the messages email template.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_migrate_messages_email_templates() {
+	$emails = get_posts(
+		array(
+			'post_status'            => 'publish',
+			'post_type'              => bp_get_email_post_type(),
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'tax_query'              => array(
+				array(
+					'taxonomy' => bp_get_email_tax_type(),
+					'field'    => 'slug',
+					'terms'    => array( 'group-message-email', 'messages-unread' ), // phpcs:ignore
+				),
+			),
+		)
+	);
+
+	if ( $emails ) {
+		foreach ( $emails as $email ) {
+
+			// Generate token to replace in existing email templates.
+			$token                    = array();
+			$token['{{sender.name}}'] = '{{{sender.name}}}';
+			$token['{{group.name}}']  = '{{{group.name}}}';
+
+			// Replace token to existing content.
+			$post_content = strtr( $email->post_content, $token );
+			$post_title   = strtr( $email->post_title, $token );
+			$post_excerpt = strtr( $email->post_excerpt, $token );
+
+			// Update the email template.
+			wp_update_post(
+				array(
+					'ID'           => $email->ID,
+					'post_title'   => $post_title,
+					'post_content' => $post_content,
+					'post_excerpt' => $post_excerpt,
+				)
+			);
+		}
+	}
+}

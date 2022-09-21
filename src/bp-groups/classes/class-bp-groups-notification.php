@@ -347,16 +347,33 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'group-message-email',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] New message from group: "{{{group.name}}}"', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+				'email_content'       => __( "{{{sender.name}}} from {{{group.name}}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{{sender.name}}} from {{{group.name}}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
 			),
 			'bb_groups_new_message'
 		);
+
+		if ( function_exists( 'bb_check_delay_email_notification' ) && bb_check_delay_email_notification() ) {
+			$this->register_email_type(
+				'group-message-digest',
+				array(
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_title'         => __( '[{{{site.name}}}] New messages from group: "{{{group.name}}}"', 'buddyboss' ),
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_content'       => __( "You have {{{unread.count}}} unread messages from {{{group.name}}}.\n\n{{{message}}}", 'buddyboss' ),
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_plain_content' => __( "You have {{{unread.count}}} unread messages from {{{group.name}}}.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+					'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
+					'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+				),
+				'bb_groups_new_message'
+			);
+		}
 
 		$this->register_notification(
 			'groups',

@@ -3236,6 +3236,19 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   margin-top: 0;
 }
 
+#bp_messaging_notification_settings table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_messaging_notification_settings table.form-table .notes-hidden-header > th + td {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#bp_messaging_notification_settings table.form-table .no-padding {
+  padding: 0;
+}
+
 /*------------------------------------------------------------------------------
  * 15.0 Admin bar Notification
  *----------------------------------------------------------------------------*/

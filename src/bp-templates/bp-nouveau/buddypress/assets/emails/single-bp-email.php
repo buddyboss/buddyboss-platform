@@ -177,6 +177,10 @@ $settings = bp_email_get_appearance_settings();
 			display: inline-table;
 		}
 
+		.bb-email-message-content p {
+			margin: 0 0 5px 0;
+		}
+
 		/* MOBILE STYLES */
 		@media screen and (max-width: 525px) {
 			/* ALLOWS FOR FLUID TABLES */
