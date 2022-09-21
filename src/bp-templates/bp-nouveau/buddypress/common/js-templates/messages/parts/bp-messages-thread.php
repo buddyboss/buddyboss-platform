@@ -128,7 +128,7 @@
 	</div>
 
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
-		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }} {{ data.avatars[0].is_user_suspended && ! data.is_group_thread ? 'bp-user-suspended' : '' }} {{ data.avatars[0].is_user_blocked && ! data.is_group_thread ? 'bp-user-blocked' : '' }} ">
+		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }} {{ data.avatars[0].is_user_suspended && ! data.is_group_thread ? 'bp-user-suspended' : '' }} {{ data.avatars[0].is_user_blocked && ! data.is_group_thread ? 'bp-user-blocked' : '' }} ">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
 				if ( data.avatars.length == 2 ) { #>
 					<div class="thread-multiple-avatar">

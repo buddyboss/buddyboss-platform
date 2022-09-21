@@ -28,7 +28,7 @@
 	#>
 
 	<header class="single-message-thread-header">
-		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }} {{ data.avatars[0].is_suspended && ! data.is_group_thread ? 'bp-user-suspended' : '' }} {{ data.avatars[0].is_blocked && ! data.is_group_thread ? 'bp-user-blocked' : '' }}">
+		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }} {{ data.avatars[0].is_user_suspended && ! data.is_group_thread ? 'bp-user-suspended' : '' }} {{ data.avatars[0].is_user_blocked && ! data.is_group_thread ? 'bp-user-blocked' : '' }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
 			if ( data.avatars.length == 2 ) { #>
 			<div class="thread-multiple-avatar">
@@ -49,7 +49,15 @@
 			<# } else { #>
 			<# var recipient = _.first(other_recipients) ? _.first(other_recipients) : current_user; #>
 			<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-			<a href="{{{recipient.user_link}}}"><img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" /></a>
+			<a href="{{{recipient.user_link}}}">
+				<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
+				<# if ( 0 === recipient.is_deleted ) {
+					if ( recipient.is_blocked ) { #>
+						<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
+				<# } else if ( recipient.is_user_blocked_by ) { #>
+						<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
+				<# } } #>
+			</a>
 			<# } #>
 			<# } #>
 			<# } #>

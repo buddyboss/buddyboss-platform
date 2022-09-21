@@ -2455,6 +2455,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				if ( bp_is_active( 'moderation' ) ) {
 					$thread->thread['recipients']['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
 					$thread->thread['recipients']['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					$thread->thread['recipients']['members'][ $count ]['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
+					$thread->thread['recipients']['members'][ $count ]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
 				}
 
 				$count ++;
