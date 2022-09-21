@@ -210,7 +210,7 @@ function bp_nouveau_ajax_messages_send_message() {
 			$is_thread_archived = messages_is_valid_archived_thread( $current_thread->thread_id, bp_loggedin_user_id() );
 
 			if ( $is_thread_archived ) {
-				$response['feedback'] = __( "You can't send messages in conversations you've archived.", 'buddyboss' );
+				$response['feedback'] = __( 'You can’t send new messages in conversations you’ve archived.', 'buddyboss' );
 				wp_send_json_error( $response );
 			}
 		}
@@ -2153,7 +2153,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$thread->feedback_error = array(
 			'feedback' => sprintf(
 				'%1$s %2$s',
-				__( "You can't send messages in conversations you've archived.", 'buddyboss' ),
+				__( 'You can’t send new messages in conversations you’ve archived.', 'buddyboss' ),
 				sprintf(
 					'<div class="button-wrapper" data-bp-item-id="' . $thread_id . '" data-bp-item-component="messages" data-bp-used-to-component="messages"><div class="archive-button archived generic-button"><a href="#" class="archive-button archived unhide" rel="unhide" data-bp-action="unhide_thread" data-bp-thread-id="' . $thread_id . '">%s</a></div></div>',
 					__( 'Unarchive Conversation', 'buddyboss' )

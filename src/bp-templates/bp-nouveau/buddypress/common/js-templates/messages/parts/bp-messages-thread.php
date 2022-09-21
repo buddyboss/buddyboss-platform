@@ -48,6 +48,11 @@
 	if ( data.unread ) {
 		read_unread_action = 'read';
 	}
+
+	var senderName = data.sender_name;
+	if ( ! data.is_group && data.recipients && 1 === parseInt( data.recipientsCount ) ) {
+		senderName = '';
+	}
 	#>
 
 	<div class="bb_more_options message-thread-options">
@@ -179,10 +184,10 @@
 							<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
 								<?php esc_html_e( 'You', 'buddyboss' ); ?>
 							<# } else { #>
-								<# if ( data.sender_name && '' !== checkedContent ) { #>
-									{{ data.sender_name }}:
-								<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
-									{{ data.sender_name }}
+								<# if ( senderName && '' !== checkedContent ) { #>
+									{{ senderName }}:
+								<# } else if ( senderName && '' === checkedContent )  { #>
+									{{ senderName }}
 								<# } #>
 							<# } #>
 							</span>
