@@ -1587,11 +1587,7 @@ function bb_get_delay_email_notifications_time() {
  * @return bool
  */
 function bb_check_delay_email_notification() {
-	if ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
-		return true;
-	}
-
-	return false;
+	return (bool) ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() );
 }
 
 /**

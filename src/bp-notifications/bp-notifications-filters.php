@@ -49,7 +49,7 @@ function bb_schedule_event_on_update_notification_settings() {
 		$new_schedule_found = bb_get_delay_notification_time_by_minutes( $new_scheduled_time );
 		// Schedule an action if it's not already scheduled.
 		if ( ! empty( $new_schedule_found ) ) {
-			bp_core_schedule_cron( 'digest_email_notifications', 'bb_digest_email_notifications', $new_schedule_found['schedule_key'] );
+			bp_core_schedule_cron( 'digest_email_notifications', 'bb_digest_message_email_notifications', $new_schedule_found['schedule_key'] );
 		}
 	}
 }
@@ -60,10 +60,13 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_digest_email_notifications() {
+function bb_digest_message_email_notifications() {
 	global $wpdb;
 
-	if ( ! function_exists( 'bb_render_digest_messages_template' ) ) {
+	if (
+		! function_exists( 'bb_render_digest_messages_template' ) ||
+		! bp_is_active( 'messages' )
+	) {
 		return;
 	}
 
@@ -104,10 +107,8 @@ function bb_digest_email_notifications() {
 						'thread_id'     => $unread_message->thread_id,
 					);
 
-					if ( function_exists( 'bp_messages_update_meta' ) ) {
-						// Save meta to sent unread digest email notifications.
-						bp_messages_update_meta( $unread_message->id, 'bb_sent_digest_email', 'yes' );
-					}
+					// Save meta to sent unread digest email notifications.
+					bp_messages_update_meta( $unread_message->id, 'bb_sent_digest_email', 'yes' );
 				}
 			}
 
@@ -151,3 +152,5 @@ function bb_digest_email_notifications() {
 		}
 	}
 }
+
+add_action( 'bb_digest_email_notifications_hook', 'bb_digest_message_email_notifications' );
