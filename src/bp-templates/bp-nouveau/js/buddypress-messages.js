@@ -2133,6 +2133,8 @@ window.bp = window.bp || {};
 							response.data.saved 	 = false;
 							response.data.privacy 	 = 'message';
 							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
+							response.data.image_h	 = file.height;
+							response.data.image_w	 = file.width;
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 							if ( total_uploaded_file <= BP_Nouveau.media.maxFiles ) {

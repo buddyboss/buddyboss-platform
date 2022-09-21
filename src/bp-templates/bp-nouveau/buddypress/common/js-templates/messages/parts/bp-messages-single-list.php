@@ -82,7 +82,11 @@
 					   data-attachment-full="{{data.media[i].full}}"
 					   data-privacy="{{data.media[i].privacy}}"
 					   href="#">
-						<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
+						<# if ( data.media.length == 1 && data.media[i].width !== null ) { #>
+							<img src="{{data.media[i].thumbnail}}" style="width: {{data.media[i].width}}; height: {{data.media[i].height}}" alt="{{data.media[i].title}}"/>
+						<# } else { #>
+							<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
+						<# } #>
 					</a>
 				   <# } #>
 				</div>
