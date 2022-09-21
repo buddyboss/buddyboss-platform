@@ -775,7 +775,19 @@ function bp_nouveau_ajax_messages_send_reply() {
 						<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 						<?php
 					}
+					$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+
+					if ( empty( $thumbnail_url ) ) {
+						$thumbnail_url = bb_get_video_default_placeholder_image();
+					}
+					?>
+                    <a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+                        <img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
+                    </a>
+					<?php
 					$video_html = ob_get_clean();
+					$video_html = str_replace( 'video-js', 'video-js single-activity-video', $video_html );
+					$video_html = str_replace( 'id="theatre-video', 'id="video', $video_html );
 
 				}
 
@@ -2865,10 +2877,21 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						if ( ! empty( bp_get_video_length() ) ) {
 							?>
 							<p class="bb-video-duration"><?php bp_video_length(); ?></p>
-							<?php
+						<?php
 						}
-						$video_html = ob_get_clean();
+                        $thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 
+						if ( empty( $thumbnail_url ) ) {
+							$thumbnail_url = bb_get_video_default_placeholder_image();
+						}
+                        ?>
+                        <a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+                            <img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
+                        </a>
+                        <?php
+						$video_html = ob_get_clean();
+						$video_html = str_replace( 'video-js', 'video-js single-activity-video', $video_html );
+						$video_html = str_replace( 'id="theatre-video', 'id="video', $video_html );
 					}
 
 					$thread->messages[ $i ]['video'][] = array(
