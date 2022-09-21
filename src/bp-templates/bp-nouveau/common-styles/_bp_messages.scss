@@ -85,11 +85,6 @@
 		position: absolute;
 		right: -5px;
 		bottom: -5px;
-
-		&.bb-icon-lock {
-			font-size: 17px;
-			padding: 4px;
-		}
 	}
 
 	// The primary list elements
@@ -736,6 +731,18 @@
 				pointer-events: none;
 			}
 
+		}
+
+		.bp-avatar-wrap .user-status-icon {
+			color: $white;
+			background-color: $light-text;
+			font-size: 17px;
+			line-height: 1;
+			padding: 4px;
+			border-radius: 50%;
+			position: absolute;
+			right: -5px;
+			bottom: -5px;
 		}
 
 	}

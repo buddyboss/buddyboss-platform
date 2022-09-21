@@ -9308,11 +9308,6 @@ div.profile_completion_wrap .progress_text_wrap {
   bottom: -5px;
 }
 
-#message-threads .thread-avatar .user-status-icon.bb-icon-lock {
-  font-size: 17px;
-  padding: 4px;
-}
-
 #message-threads .bp-message-link {
   display: -webkit-flex;
   display: -moz-flex;
@@ -9907,6 +9902,18 @@ div.profile_completion_wrap .progress_text_wrap {
 #bp-message-thread-list li.has-medias .bb-activity-media-wrap,
 #bp-message-thread-list li.has-medias .bb-activity-video-wrap {
   pointer-events: none;
+}
+
+#bp-message-thread-list li .bp-avatar-wrap .user-status-icon {
+  color: #fff;
+  background-color: #767676;
+  font-size: 17px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 50%;
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
 }
 
 #bp-message-thread-list .message-metadata .avatar {
