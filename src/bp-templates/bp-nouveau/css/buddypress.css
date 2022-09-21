@@ -22974,6 +22974,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-media-section .vjs-menu-button-popup .vjs-menu-content li {
   list-style-type: none !important;
   margin: 0 !important;
+  padding: 0.2em 0 !important;
 }
 
 .bb-activity-video-elem .video-js.vjs-has-started ~ .bb-video-duration,
