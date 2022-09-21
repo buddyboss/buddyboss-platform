@@ -323,6 +323,7 @@ function bp_nouveau_ajax_messages_send_message() {
 				);
 
 				if ( is_array( $messages_template->thread->recipients ) ) {
+					$recipient_index = 0;
 					foreach ( $messages_template->thread->recipients as $recipient ) {
 						if ( empty( $recipient->is_deleted ) ) {
 							$response['recipients'][] = array(
@@ -344,7 +345,7 @@ function bp_nouveau_ajax_messages_send_message() {
 								'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
 							);
 
-							$response['action_recipients']['members'][] = array(
+							$response['action_recipients']['members'][ $recipient_index ] = array(
 								'avatar'     => esc_url(
 									bp_core_fetch_avatar(
 										array(
@@ -365,9 +366,10 @@ function bp_nouveau_ajax_messages_send_message() {
 							);
 
 							if ( bp_is_active( 'moderation' ) ) {
-								$response['action_recipients']['members'][]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-								$response['action_recipients']['members'][]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+								$response['action_recipients']['members'][ $recipient_index ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+								$response['action_recipients']['members'][ $recipient_index ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 							}
+							$recipient_index++;
 						}
 					}
 				}
@@ -775,7 +777,19 @@ function bp_nouveau_ajax_messages_send_reply() {
 						<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 						<?php
 					}
+					$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+
+					if ( empty( $thumbnail_url ) ) {
+						$thumbnail_url = bb_get_video_default_placeholder_image();
+					}
+					?>
+                    <a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+                        <img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
+                    </a>
+					<?php
 					$video_html = ob_get_clean();
+					$video_html = str_replace( 'video-js', 'video-js single-activity-video', $video_html );
+					$video_html = str_replace( 'id="theatre-video', 'id="video', $video_html );
 
 				}
 
@@ -2867,10 +2881,21 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						if ( ! empty( bp_get_video_length() ) ) {
 							?>
 							<p class="bb-video-duration"><?php bp_video_length(); ?></p>
-							<?php
+						<?php
 						}
-						$video_html = ob_get_clean();
+                        $thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 
+						if ( empty( $thumbnail_url ) ) {
+							$thumbnail_url = bb_get_video_default_placeholder_image();
+						}
+                        ?>
+                        <a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+                            <img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
+                        </a>
+                        <?php
+						$video_html = ob_get_clean();
+						$video_html = str_replace( 'video-js', 'video-js single-activity-video', $video_html );
+						$video_html = str_replace( 'id="theatre-video', 'id="video', $video_html );
 					}
 
 					$thread->messages[ $i ]['video'][] = array(
@@ -3127,7 +3152,7 @@ function bp_nouveau_ajax_hide_thread() {
 	}
 
 	foreach ( $thread_ids as $thread_id ) {
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
 
 		/**
 		 * Fires when messages thread was archived.
@@ -3136,16 +3161,7 @@ function bp_nouveau_ajax_hide_thread() {
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */
-		do_action( 'bb_messages_thread_archived', $thread_id );
-
-		/**
-		 * Fires when messages thread was marked as read.
-		 *
-		 * @since BuddyBoss 1.9.3
-		 *
-		 * @param int $thread_id The message thread ID.
-		 */
-		do_action( 'messages_thread_mark_as_read', $thread_id );
+		do_action( 'bb_messages_thread_archived', $thread_id, bp_loggedin_user_id() );
 	}
 
 	// Mark each notification for each PM message as read when hide the thread.
@@ -3547,7 +3563,7 @@ function bp_nouveau_ajax_unhide_thread() {
 	}
 
 	foreach ( $thread_ids as $thread_id ) {
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 0, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, (int) $thread_id, bp_loggedin_user_id() ) );
 
 		/**
 		 * Fires when messages thread was un-archived.
@@ -3556,7 +3572,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */
-		do_action( 'bb_messages_thread_unarchived', $thread_id );
+		do_action( 'bb_messages_thread_unarchived', $thread_id, bp_loggedin_user_id() );
 	}
 
 	$inbox_unread_cnt = array(
