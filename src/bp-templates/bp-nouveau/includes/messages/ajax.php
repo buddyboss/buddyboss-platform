@@ -742,6 +742,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'full'          => bb_get_media_photos_theatre_popup_image(),
 					'meta'          => $media_template->media->attachment_data->meta,
 					'privacy'       => bp_get_media_privacy(),
+					'height'        => ( isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : '' ),
+					'width'         => ( isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : '' ),
 				);
 			}
 		}
@@ -2845,6 +2847,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'full'          => bb_get_media_photos_theatre_popup_image(),
 						'meta'          => $media_template->media->attachment_data->meta,
 						'privacy'       => bp_get_media_privacy(),
+						'height'        => ( isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : '' ),
+						'width'         => ( isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : '' ),
 					);
 				}
 			}
