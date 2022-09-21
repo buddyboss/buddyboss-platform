@@ -16,6 +16,11 @@ function messages_action_archived() {
 		return false;
 	}
 
+	if ( ! is_user_logged_in() ) {
+		bp_core_no_access();
+		return;
+	}
+
 	// check if user has archived threads or not, if yes then redirect to latest archived thread.
 	if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&thread_type=archived' ) ) {
 		$thread_id = 0;
