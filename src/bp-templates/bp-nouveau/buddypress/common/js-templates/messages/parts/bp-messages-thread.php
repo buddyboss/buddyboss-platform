@@ -175,11 +175,11 @@
 				            <# if ( 0 === recipient.is_deleted ) {
 				                if ( recipient.is_user_blocked ) {
 				                    #>
-										<i class="bb-icon-f bb-icon-cancel"></i>
+									    <i class="bb-icon-f bb-icon-cancel"></i>
 				                    <#
 				                } else if ( recipient.is_user_blocked_by ) {
 				                    #>
-										<i class="bb-icon-f bb-icon-lock"></i>
+									    <i class="bb-icon-f bb-icon-lock"></i>
 				                    <#
                                 }
 				            } #>
