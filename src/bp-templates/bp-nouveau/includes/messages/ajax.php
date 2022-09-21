@@ -323,6 +323,7 @@ function bp_nouveau_ajax_messages_send_message() {
 				);
 
 				if ( is_array( $messages_template->thread->recipients ) ) {
+					$recipient_index = 0;
 					foreach ( $messages_template->thread->recipients as $recipient ) {
 						if ( empty( $recipient->is_deleted ) ) {
 							$response['recipients'][] = array(
@@ -344,7 +345,7 @@ function bp_nouveau_ajax_messages_send_message() {
 								'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
 							);
 
-							$response['action_recipients']['members'][] = array(
+							$response['action_recipients']['members'][ $recipient_index ] = array(
 								'avatar'     => esc_url(
 									bp_core_fetch_avatar(
 										array(
@@ -365,9 +366,10 @@ function bp_nouveau_ajax_messages_send_message() {
 							);
 
 							if ( bp_is_active( 'moderation' ) ) {
-								$response['action_recipients']['members'][]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-								$response['action_recipients']['members'][]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+								$response['action_recipients']['members'][ $recipient_index ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+								$response['action_recipients']['members'][ $recipient_index ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 							}
+							$recipient_index++;
 						}
 					}
 				}
