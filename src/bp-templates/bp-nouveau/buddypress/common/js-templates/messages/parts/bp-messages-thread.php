@@ -134,30 +134,8 @@
 					<div class="thread-multiple-avatar">
 				<# } #>
 					<img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/>
-						<# if ( 0 === data.avatars[0].is_deleted ) {
-							if ( data.avatars[0].is_user_blocked ) {
-								#>
-									<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
-								<#
-							} else if ( data.avatars[0].is_user_blocked_by ) {
-								#>
-									<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
-								<#
-							}
-						} #>
 					<# if ( data.avatars[1] ) { #>
 						<img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/>
-							<# if ( 0 === data.avatars[1].is_deleted ) {
-								if ( data.avatars[1].is_user_blocked ) {
-									#>
-										<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
-									<#
-								} else if ( data.avatars[1].is_user_blocked_by ) {
-									#>
-										<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
-									<#
-								}
-							} #>
 					<# }
 				if ( data.avatars.length == 2 ) { #>
 					</div>
