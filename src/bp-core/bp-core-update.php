@@ -1960,12 +1960,10 @@ function bb_messages_add_is_deleted_column() {
 	global $wpdb;
 
 	// Add 'is_deleted' column in 'bp_messages_messages' table.
-	$table_name = $wpdb->prefix . 'bp_messages_messages';
-	$wpdb->query( 'SELECT * FROM `' . $table_name . '` LIMIT 0,1' ); // phpcs:ignore
-	$col_names = $wpdb->get_col_info( 'name' );
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_messages_messages' AND column_name = 'is_deleted'" ); //phpcs:ignore
 
-	if ( ! in_array( 'is_deleted', $col_names, true ) ) {
-		$wpdb->query( 'ALTER TABLE  `' . $table_name . '` ADD `is_deleted` TINYINT( 1 ) NOT NULL DEFAULT 0 AFTER `message`' ); // phpcs:ignore
+	if ( empty( $row ) ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_messages_messages ADD `is_deleted` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `message`" ); //phpcs:ignore
 	}
 }
 

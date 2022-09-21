@@ -3743,6 +3743,12 @@ window.bp = window.bp || {};
 						function ( thread ) {
 							var thread_id = parseInt( thread.id );
 							if ( thread_id === parseInt( response.thread_id ) ) {
+								
+								if ( parseInt( response.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
+									thread.set( { sender_is_you: true } );
+								} else {
+									thread.set( { sender_is_you: false } );
+								}
 
 								if ( $( document.body ).find( '#message-threads li.' + thread_id ).hasClass( 'current' ) ) {
 									thread.set( { unread: false } );
