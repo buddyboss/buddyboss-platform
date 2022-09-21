@@ -137,11 +137,11 @@
 						<# if ( 0 === data.avatars[0].is_deleted ) {
 							if ( data.avatars[0].is_user_blocked ) {
 								#>
-									<i class="bb-icon-f bb-icon-cancel"></i>
+									<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
 								<#
 							} else if ( data.avatars[0].is_user_blocked_by ) {
 								#>
-									<i class="bb-icon-f bb-icon-lock"></i>
+									<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 								<#
 							}
 						} #>
@@ -150,11 +150,11 @@
 							<# if ( 0 === data.avatars[1].is_deleted ) {
 								if ( data.avatars[1].is_user_blocked ) {
 									#>
-										<i class="bb-icon-f bb-icon-cancel"></i>
+										<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
 									<#
 								} else if ( data.avatars[1].is_user_blocked_by ) {
 									#>
-										<i class="bb-icon-f bb-icon-lock"></i>
+										<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 									<#
 								}
 							} #>
@@ -175,11 +175,11 @@
 				            <# if ( 0 === recipient.is_deleted ) {
 				                if ( recipient.is_user_blocked ) {
 				                    #>
-									  <i class="bb-icon-f bb-icon-cancel"></i>
+									  <i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
 				                    <#
 				                } else if ( recipient.is_user_blocked_by ) {
 				                    #>
-									  <i class="bb-icon-f bb-icon-lock"></i>
+									  <i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 				                    <#
                                 }
 				            } #>
