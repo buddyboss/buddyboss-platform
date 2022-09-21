@@ -59,16 +59,16 @@ function bp_core_ajax_widget_friends() {
 			$type = 'popular';
 			break;
 	}
-	
-	$user_id     = bp_displayed_user_id();
-	
+
+	$user_id = bp_displayed_user_id();
+
 	if ( ! $user_id ) {
-		
+
 		// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
-		$user_id     = bp_loggedin_user_id();
-		
+		$user_id = bp_loggedin_user_id();
+
 	}
-	
+
 	// If $user_id still blank then return.
 	if ( ! $user_id ) {
 		return;
@@ -81,6 +81,8 @@ function bp_core_ajax_widget_friends() {
 		'populate_extras' => 1,
 	);
 
+	global $members_template;
+
 	if ( bp_has_members( $members_args ) ) : ?>
 		<?php echo '0[[SPLIT]]'; // Return valid result. TODO: remove this. ?>
 		<?php
@@ -89,14 +91,27 @@ function bp_core_ajax_widget_friends() {
 			?>
 			<li class="vcard">
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar(); ?></a>
+					<a href="<?php bp_member_permalink(); ?>" class="bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
+						<?php bp_member_avatar(); ?>
+						<?php
+						if ( function_exists( 'bb_current_user_status' ) ) {
+							bb_current_user_status( bp_get_member_user_id() );
+						} else {
+							$current_time = current_time( 'mysql', 1 );
+							$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
+							if ( $diff < 300 ) { // 5 minutes  =  5 * 60
+								echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', bp_get_member_user_id() ) );
+							}
+						}
+						?>
+					</a>
 				</div>
 
 				<div class="item">
 					<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
-					<?php if ( 'active' == $type ) : ?>
+					<?php if ( 'active' === $type ) : ?>
 						<div class="item-meta"><span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span></div>
-					<?php elseif ( 'newest' == $type ) : ?>
+					<?php elseif ( 'newest' === $type ) : ?>
 						<div class="item-meta"><span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span></div>
 					<?php elseif ( bp_is_active( 'friends' ) ) : ?>
 						<div class="item-meta"><span class="activity"><?php bp_member_total_friend_count(); ?></span></div>

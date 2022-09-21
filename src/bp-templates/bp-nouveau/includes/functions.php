@@ -130,6 +130,9 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		if ( ! empty( $post_query['box'] ) ) {
 			$qs[] = 'box=' . $post_query['box'];
 		}
+		if ( ! empty( $post_query['thread_type'] ) ) {
+			$qs[] = 'thread_type=' . $post_query['thread_type'];
+		}
 	}
 
 	// Single activity.

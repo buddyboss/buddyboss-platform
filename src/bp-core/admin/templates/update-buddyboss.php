@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // If you have not any release note then set $show_overview as false.
-$show_overview = true;
+$show_overview = false;
 
 // Get release data based on plugin version from gitHub API.
 $cache_key    = 'bb_changelog_' . BP_PLATFORM_VERSION;

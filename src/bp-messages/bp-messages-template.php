@@ -77,7 +77,6 @@ function bp_has_message_threads( $args = array() ) {
 		),
 		'has_message_threads'
 	);
-
 	// Load the messages loop global up with messages.
 	$messages_template = new BP_Messages_Box_Template( $r );
 
@@ -182,7 +181,7 @@ function bp_get_message_thread_excerpt() {
 	 *
 	 * @param string $value Excerpt of the current thread in the loop.
 	 */
-	return apply_filters( 'bp_get_message_thread_excerpt', strip_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 75 ) ) );
+	return apply_filters( 'bp_get_message_thread_excerpt', wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 75 ) ) );
 }
 
 /**
@@ -2218,6 +2217,41 @@ function bp_get_the_thread_message_content() {
 	return apply_filters( 'bp_get_the_thread_message_content', $content );
 }
 
+/**
+ * Output the excerpt of the current message in the loop.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_the_thread_message_excerpt() {
+	echo bp_get_the_thread_message_excerpt();
+}
+/**
+ * Get the excerpt of the current message in the loop.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bp_get_the_thread_message_excerpt() {
+	global $thread_template;
+
+	$content = $thread_template->message->message;
+
+	// If user was deleted, mark content as deleted.
+	if ( false === bp_core_get_core_userdata( bp_get_the_thread_message_sender_id() ) ) {
+		$content = esc_html__( 'This message was deleted.', 'buddyboss' );
+	}
+
+	/**
+	 * Filters the excerpt of the current message in the loop.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $message The excerpt of the current message in the loop.
+	 */
+	return apply_filters( 'bp_get_the_thread_message_excerpt', $content );
+}
+
 /** Embeds *******************************************************************/
 
 /**
@@ -2284,4 +2318,448 @@ function bb_get_thread_total_recipients_count() {
 	 * @param int $count Total recipients number.
 	 */
 	return (int) apply_filters( 'bb_get_thread_total_recipients_count', $thread_template->thread->total_recipients_count );
+}
+
+/**
+ * Generate the human readable string for the current thread last message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|string $last_message_date The earlier time from which you're calculating
+ *                                      the time elapsed. Enter either as an integer Unix timestamp,
+ *                                      or as a date string of the format 'Y-m-d h:i:s'.
+ *
+ * @return string
+ */
+function bb_get_thread_sent_date( $last_message_date = false ) {
+	global $messages_template;
+
+	if ( empty( $last_message_date ) && isset( $messages_template->thread->last_message_date ) ) {
+		$last_message_date = $messages_template->thread->last_message_date;
+	}
+
+	/**
+	 * Filters the value to use if the time since is unknown.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value String representing the time since the older date.
+	 */
+	$unknown_text = apply_filters( 'bb_get_thread_sent_date_unknown_text', __( 'Sometime', 'buddyboss' ) );
+
+	if ( empty( $last_message_date ) ) {
+		return $unknown_text;
+	}
+
+	/**
+	 * Filters the value to use if the time since is right now.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value String representing the time since the older date.
+	 */
+	$right_now_text = apply_filters( 'bb_get_thread_sent_date_right_now_text', __( 'Now', 'buddyboss' ) );
+
+	// Array of time period chunks.
+	$chunks = array(
+		YEAR_IN_SECONDS,
+		WEEK_IN_SECONDS,
+		DAY_IN_SECONDS,
+		1,
+	);
+
+	$old_last_date = $last_message_date;
+
+	if ( ! empty( $last_message_date ) && ! is_numeric( $last_message_date ) ) {
+		$last_message_date = strtotime( $last_message_date );
+	}
+
+	// Calculate the different with current time for past 5 mins.
+	$newer_current_date = strtotime( bp_core_current_time() );
+	$current_since      = $newer_current_date - $last_message_date;
+	$five_seconds       = ( 5 * MINUTE_IN_SECONDS );
+
+	if ( 0 <= $current_since && $current_since <= $five_seconds ) {
+		$output = $right_now_text;
+	} else {
+
+		/**
+		 * $newer_date will equal false if we want to know the time elapsed between
+		 * a date and the today end time. $newer_date will have a value if we want to
+		 * work out time elapsed between two known dates.
+		 */
+		$newer_date = date_i18n( 'Y-m-d', false, true ) . ' 23:59:59';
+		$newer_date = strtotime( $newer_date );
+
+		// Difference in seconds.
+		$since = $newer_date - $last_message_date;
+		if ( 0 > $since ) {
+			$output = $unknown_text;
+
+			/**
+			 * We only want to output only one chunk of time here, eg:
+			 * Dec 20, 2021
+			 * May 26
+			 * Wednesday
+			 * Yesterday
+			 * 1:00PM
+			 * Now
+			 * so there's only one bit of calculation below:
+			 */
+		} else {
+
+			/**
+			 * Initializing the count variable to avoid undefined notice
+			 */
+			$count   = 0;
+			$seconds = 0;
+
+			for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
+				$seconds = $chunks[ $i ];
+
+				// Finding the biggest chunk (if the chunk fits, break).
+				$count = floor( $since / $seconds );
+				if ( 0 != $count ) {
+					break;
+				}
+			}
+
+			// If $i iterates all the way to $j, then the event happened 0 seconds ago.
+			if ( ! isset( $chunks[ $i ] ) ) {
+				$output = $right_now_text;
+
+			} else {
+				// Set output var.
+				switch ( $seconds ) {
+					case YEAR_IN_SECONDS:
+						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M j' ) : bp_core_get_format_date( $old_last_date, 'M j, Y' );
+						break;
+					case WEEK_IN_SECONDS:
+						$start_week = bb_get_week_start_timestamp( '-7 days' );
+						$end_week   = bb_get_week_end_timestamp( 'now' );
+
+						if ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
+							$output = bp_core_get_format_date( $old_last_date, 'l' );
+						} else {
+							$output = bp_core_get_format_date( $old_last_date, 'M j' );
+						}
+						break;
+					case DAY_IN_SECONDS:
+						$start_week = bb_get_week_start_timestamp( '-7 days' );
+						$end_week   = bb_get_week_end_timestamp( 'now' );
+						if ( 1 == $count ) {
+							$output = __( 'Yesterday', 'buddyboss' );
+						} elseif ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
+							$output = bp_core_get_format_date( $old_last_date, 'l' );
+						} else {
+							$output = bp_core_get_format_date( $old_last_date, 'M j' );
+						}
+						break;
+					case 1:
+						$output = bp_core_get_format_date( $old_last_date, 'g:iA' );
+						break;
+					default:
+						$output = $right_now_text;
+				}
+
+				// No output, so happened right now.
+				if ( ! (int) $count ) {
+					$output = $right_now_text;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Filters the date sent value for the current message as a timestamp.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string     $output             Timestamp of the date sent value for the current message.
+	 * @param int|string $old_last_date     The earlier time from which you're calculating
+	 *                                      the time elapsed. Enter either as an integer Unix timestamp,
+	 *                                      or as a date string of the format 'Y-m-d h:i:s'.
+	 */
+	return apply_filters( 'bb_get_thread_sent_date', $output, $old_last_date );
+}
+
+/**
+ * Generate the human readable string for the current thread start date.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|string $thread_start_date The earlier time from which you're calculating
+ *                                      the time elapsed. Enter either as an integer Unix timestamp,
+ *                                      or as a date string of the format 'Y-m-d h:i:s'.
+ * @param bool       $show_week_days    Display week day if true.
+ *
+ * @return string
+ */
+function bb_get_thread_start_date( $thread_start_date = false, $show_week_days = true ) {
+	global $thread_template;
+
+	if ( empty( $thread_start_date ) && isset( $thread_template->thread->first_message_date ) ) {
+		$thread_start_date = $thread_template->thread->first_message_date;
+	}
+
+	/**
+	 * Filters the value to use if the time since is unknown.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value String representing the time since the older date.
+	 */
+	$unknown_text = apply_filters( 'bb_get_thread_start_date_unknown_text', __( 'Sometime', 'buddyboss' ) );
+
+	if ( empty( $thread_start_date ) ) {
+		return $unknown_text;
+	}
+
+	/**
+	 * Filters the value to use if the time since is right now.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value String representing the time since the older date.
+	 */
+	$today_text = apply_filters( 'bb_get_thread_start_date_today_text', __( 'today', 'buddyboss' ) );
+
+	// Array of time period chunks.
+	$chunks = array(
+		YEAR_IN_SECONDS,
+		WEEK_IN_SECONDS,
+		DAY_IN_SECONDS,
+		1,
+	);
+
+	$old_start_date = $thread_start_date;
+
+	if ( ! empty( $thread_start_date ) && ! is_numeric( $thread_start_date ) ) {
+		$thread_start_date = strtotime( $thread_start_date );
+	}
+
+	/**
+	 * $newer_date will equal false if we want to know the time elapsed between
+	 * a date and the today end time. $newer_date will have a value if we want to
+	 * work out time elapsed between two known dates.
+	 */
+	$newer_date = date_i18n( 'Y-m-d', false, true ) . ' 23:59:59';
+	$newer_date = strtotime( $newer_date );
+
+	$end_week = bb_get_week_start_timestamp( '-7 days' );
+
+	// Difference in seconds.
+	$since = $newer_date - $thread_start_date;
+	if ( 0 > $since ) {
+		$output = $unknown_text;
+
+		/**
+		 * We only want to output only one chunk of time here, eg:
+		 * Dec 20, 2021
+		 * May 26
+		 * Wednesday
+		 * Yesterday
+		 * Today
+		 * so there's only one bit of calculation below:
+		 */
+	} else {
+
+		/**
+		 * Initializing the count variable to avoid undefined notice
+		 */
+		$count   = 0;
+		$seconds = 0;
+
+		for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
+			$seconds = $chunks[ $i ];
+
+			// Finding the biggest chunk (if the chunk fits, break).
+			$count = floor( $since / $seconds );
+			if ( 0 != $count ) {
+				break;
+			}
+		}
+
+		// If $i iterates all the way to $j, then the event happened 0 seconds ago.
+		if ( ! isset( $chunks[ $i ] ) ) {
+			$output = $today_text;
+
+		} else {
+
+			if ( $show_week_days ) {
+				$format = 'l, F j';
+			} else {
+				$format = 'F j';
+			}
+
+			// Set output var.
+			switch ( $seconds ) {
+				case YEAR_IN_SECONDS:
+					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, $format ) : bp_core_get_format_date( $old_start_date, 'F j, Y' );
+					break;
+				case WEEK_IN_SECONDS:
+					if ( $end_week <= $thread_start_date ) {
+						$output = bp_core_get_format_date( $old_start_date, 'l' );
+					} else {
+						$output = bp_core_get_format_date( $old_start_date, $format );
+					}
+					break;
+				case DAY_IN_SECONDS:
+					if ( 1 == $count ) {
+						$output = __( 'yesterday', 'buddyboss' );
+					} elseif ( $end_week <= $thread_start_date ) {
+						$output = bp_core_get_format_date( $old_start_date, 'l' );
+					} else {
+						$output = bp_core_get_format_date( $old_start_date, $format );
+					}
+					break;
+				default:
+					$output = $today_text;
+			}
+
+			// No output, so happened right now.
+			if ( ! (int) $count ) {
+				$output = $today_text;
+			}
+		}
+	}
+
+	/**
+	 * Filters the date sent value for the current message as a timestamp.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string     $value             Timestamp of the date sent value for the current message.
+	 * @param int|string $old_start_date    The earlier time from which you're calculating
+	 *                                      the time elapsed. Enter either as an integer Unix timestamp,
+	 *                                      or as a date string of the format 'Y-m-d h:i:s'.
+	 * @param bool   $show_week_days        Optional. Show the weekdays or not.
+	 */
+	return apply_filters( 'bb_get_thread_start_date', $output, $old_start_date, $show_week_days );
+}
+
+/**
+ * Generate the 'g:i A' string for the current message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_the_thread_message_sent_time() {
+
+	/**
+	 * Filters the 'Sent x hours ago' string for the current message.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default text of 'Sent x hours ago'.
+	 */
+	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', bp_get_the_thread_message_date_sent() ) ) );
+}
+
+/**
+ * Output the archived messages component slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_messages_archived_slug() {
+	echo bb_get_messages_archived_slug();
+}
+
+/**
+ * Return the archived messages component slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_messages_archived_slug() {
+
+	/**
+	 * Filters the archived messages component slug.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $slug Archived messages component slug.
+	 */
+	return apply_filters( 'bb_get_messages_archived_slug', 'archived' );
+}
+
+/**
+ * Output the archived messages component URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_messages_archived_url() {
+	echo esc_url( bb_get_messages_archived_url() );
+}
+
+/**
+ * Return the archived messages component URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_messages_archived_url() {
+
+	/**
+	 * Filters the archived messages component URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $slug Archived messages component URL.
+	 */
+	return apply_filters( 'bb_get_messages_archived_url', trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/' . bb_get_messages_archived_slug() ) );
+}
+
+/**
+ * Output the permalink for a particular archived thread.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id Optional. ID of the archived thread. Default: current archived thread
+ *                       being iterated on in the loop.
+ * @param int $user_id   Optional. ID of the user relative to whom the link
+ *                       should be generated. Default: ID of logged-in user.
+ */
+function bb_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
+	echo bb_get_message_archived_thread_view_link( $thread_id, $user_id );
+}
+/**
+ * Get the permalink of a particular archived thread.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id Optional. ID of the archived thread. Default: current
+ *                       archived thread being iterated on in the loop.
+ * @param int $user_id   Optional. ID of the user relative to whom the link
+ *                       should be generated. Default: ID of logged-in user.
+ * @return string
+ */
+function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
+	global $messages_template;
+
+	if ( empty( $messages_template ) && (int) $thread_id > 0 ) {
+		$thread_id = (int) $thread_id;
+	} elseif ( ! empty( $messages_template->thread->thread_id ) ) {
+		$thread_id = $messages_template->thread->thread_id;
+	}
+
+	if ( null === $user_id ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$domain = bp_core_get_user_domain( $user_id );
+
+	/**
+	 * Filters the permalink of a particular archived thread.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value     Permalink of a particular archived thread.
+	 * @param int    $thread_id ID of the archived thread.
+	 * @param int    $user_id   ID of the user.
+	 */
+	return apply_filters( 'bp_get_message_thread_view_link', trailingslashit( $domain . bp_get_messages_slug() . '/archived/view/' . $thread_id ), $thread_id, $user_id );
 }

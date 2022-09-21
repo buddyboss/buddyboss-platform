@@ -11,11 +11,7 @@
 
 <script type="text/html" id="tmpl-bp-messages-single-list">
 
-	<# if ( data.message_from && 'group' === data.message_from ) { #>
-	<div class="bp-single-message-wrap group-messages-highlight">
-	<# } else { #>
 	<div class="bp-single-message-wrap">
-	<# } #>
 
 		<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 		<div class="bp-avatar-wrap">
@@ -45,18 +41,10 @@
 				<# } #>
 
 				<# if ( data.is_deleted ) { #>
-					<# if ( data.sender_is_you ) { #>
-					<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
-					<# } else { #>
 					<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
-					<# } #>
 				<# } else { #>
 					<a href="{{data.sender_link}}" class="bp-user-link">
-						<# if ( data.sender_is_you ) { #>
-							<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
-						<# } else { #>
-							<strong>{{{data.sender_name}}}</strong>
-						<# } #>
+						<strong>{{{data.sender_name}}}</strong>
 					</a>
 				<# } #>
 
@@ -83,10 +71,11 @@
 				<div class="bp-message-content-wrap">{{{data.content}}}</div>
 			<# } #>
 
-			<# if ( data.media ) { #>
+			<# if ( data.media && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
 			<div class="bb-activity-media-wrap bb-media-length-{{data.media.length}}">
 				<# for ( i in data.media ) { #>
 				<div class="bb-activity-media-elem">
+				   <# if ( data.media[i].id ) { #>
 					<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
 					   data-id="{{data.media[i].id}}"
 					   data-attachment-id="{{data.media[i].attachment_id}}"
@@ -95,32 +84,33 @@
 					   href="#">
 						<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
 					</a>
+				   <# } #>
 				</div>
 				<# } #>
 			</div>
 			<# } #>
 
-			<# if ( data.video ) { #>
+			<# if ( data.video && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
 			<div class="bb-activity-video-wrap bb-video-length-{{data.video.length}}">
 				<# for ( i in data.video ) { #>
 				<div class="bb-activity-video-elem">
-					<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
-					   data-id="{{data.video[i].id}}"
-					   data-attachment-id="{{data.video[i].attachment_id}}"
-					   data-attachment-full="{{data.video[i].full}}"
-					   data-privacy="{{data.video[i].privacy}}"
-					   href="#">
-						<img src="{{data.video[i].thumbnail}}" alt="{{data.video[i].title}}"/>
-					</a>
+				   <# if ( data.video[i].id && 1 === data.video.length ) { #>
+                        {{{data.video[i].video_html}}}
+					<# } else if ( data.video[i].id ) { #>
+						<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="{{data.video[i].id}}" data-attachment-id="{{data.video[i].attachment_id}}" data-attachment-full="{{data.video[i].full}}" data-privacy="{{data.video[i].privacy}}" href="#">
+							<img src="{{data.video[i].thumbnail}}" alt="{{data.video[i].title}}"/>
+						</a>
+					<# } #>
 				</div>
 				<# } #>
 			</div>
 			<# } #>
 
-			<# if ( data.document ) { #>
+			<# if ( data.document && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
 			<div class="bb-activity-media-wrap bb-media-length-{{data.document.length}}">
 				<# for ( i in data.document ) { #>
 					<div class="bb-activity-media-elem document-activity " data-id="">
+						<# if ( data.document[i].id ) { #>
 						<div class="document-description-wrap">
 							<a href="{{data.document[i].url}}" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
 								<i class="{{data.document[i].svg_icon}}" ></i>
@@ -165,13 +155,14 @@
 							</div>
 						</div>
 						{{{data.document[i].msg_preview}}}
+						<# } #>
 					</div>
 				<# } #>
 			</div>
 
 			<# } #>
 
-			<# if ( data.gif ) { #>
+			<# if ( data.gif && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
 			<div class="activity-attached-gif-container">
 				<div class="gif-image-container">
 					<div class="gif-player">

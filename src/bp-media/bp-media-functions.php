@@ -51,15 +51,19 @@ function bp_media_upload() {
 	$name = $attachment->post_title;
 
 	// Generate document attachment preview link.
-	$attachment_id        = base64_encode( 'forbidden_' . $attachment->ID );
-	$attachment_url       = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
-	$attachment_thumb_url = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
+	$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
+	$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
+	$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
+	$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
+	$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
 
 	$result = array(
-		'id'    => (int) $attachment->ID,
-		'thumb' => $attachment_thumb_url,
-		'url'   => $attachment_url,
-		'name'  => esc_attr( $name ),
+		'id'      => (int) $attachment->ID,
+		'thumb'   => $attachment_thumb_url,
+		'medium'  => $attachment_medium,
+		'url'     => $attachment_url,
+		'msg_url' => $attachment_message_url,
+		'name'    => esc_attr( $name ),
 	);
 
 	return $result;

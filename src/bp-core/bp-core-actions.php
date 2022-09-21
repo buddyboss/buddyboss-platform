@@ -176,6 +176,10 @@ add_action(
 	2
 );
 
+
+// Add 'is_deleted' column on Activation.
+add_action( 'bp_activation', 'bb_messages_add_is_deleted_column' );
+
 /**
  * Restrict user when visit attachment url from media/document.
  * - Privacy security.
@@ -488,7 +492,7 @@ add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 
  * @param array  $options         Array of bulk item update data.
  */
 function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
-	$show_display_popup = true;
+	$show_display_popup = false;
 	// The path to our plugin's main file.
 	$our_plugin = 'buddyboss-platform/bp-loader.php';
 	if ( ! empty( $options ) && 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {

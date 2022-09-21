@@ -10,9 +10,12 @@
 	position: relative;
 
 	@media screen and (max-width: 500px) {
-		display: none;
 
-		&.bb-onscreen-notification-enable-mobile-support {
+		.bb-onscreen-notification .notification-list {
+			display: none;
+		}
+
+		&.bb-onscreen-notification-enable-mobile-support .bb-onscreen-notification .notification-list {
 			display: block;
 		}
 

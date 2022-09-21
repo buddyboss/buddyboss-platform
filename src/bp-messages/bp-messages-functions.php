@@ -44,6 +44,8 @@ defined( 'ABSPATH' ) || exit;
 function messages_new_message( $args = '' ) {
 	global $wpdb, $bp;
 
+	$current_sent_time = bp_core_current_time();
+
 	// Parse the default arguments.
 	$r = bp_parse_args(
 		$args,
@@ -53,7 +55,7 @@ function messages_new_message( $args = '' ) {
 			'recipients'    => array(), // Can be an array of usernames, user_ids or mixed.
 			'subject'       => false,
 			'content'       => false,
-			'date_sent'     => bp_core_current_time(),
+			'date_sent'     => $current_sent_time,
 			'append_thread' => true,
 			'is_hidden'     => false,
 			'mark_visible'  => false,
@@ -336,7 +338,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// Check if force friendship is enabled and check recipients.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread ) {
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread && ( count( $message->recipients ) < 2 ) ) {
 
 		$error_messages = array(
 			'new_message'       => __( 'You need to be connected with this member in order to send a message.', 'buddyboss' ),
@@ -389,8 +391,18 @@ function messages_new_message( $args = '' ) {
 		return false;
 	}
 
+	// Save the meta for current sent time.
+	bp_messages_update_meta( $send, 'user_date_sent', $current_sent_time );
+
 	// only update after the send().
 	BP_Messages_Thread::update_last_message_status( $last_message_data );
+
+	// Silent recipients for the push notification.
+	if ( ! empty( $_POST['silent_recipients'] ) && is_int( $send ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$silent_recipients = wp_parse_id_list( $_POST['silent_recipients'] );
+		bp_messages_update_meta( $send, 'silent_recipients', $silent_recipients );
+	}
 
 	/**
 	 * Fires after a message has been successfully sent.
@@ -400,6 +412,11 @@ function messages_new_message( $args = '' ) {
 	 * @param BP_Messages_Message $message Message object. Passed by reference.
 	 */
 	do_action_ref_array( 'messages_message_sent', array( &$message ) );
+
+	if ( isset( $r['return'] ) && $r['return'] == 'id' ) {
+		// Return the Message ID.
+		return $send;
+	}
 
 	// Return the thread ID.
 	return $message->thread_id;
@@ -922,6 +939,11 @@ function messages_notification_new_message( $raw_args = array() ) {
 			continue;
 		}
 
+		// Disabled the notification for user who archived this thread.
+		if ( isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
+			continue;
+		}
+
 		$unsubscribe_args = array(
 			'user_id'           => $recipient->user_id,
 			'notification_type' => 'messages-unread',
@@ -995,7 +1017,6 @@ add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
  * @param array $raw_args
  */
 function group_messages_notification_new_message( $raw_args = array() ) {
-
 	if ( is_object( $raw_args ) ) {
 		$args = (array) $raw_args;
 	} else {
@@ -1090,6 +1111,11 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 
 			// Check the sender is blocked by recipient or not.
 			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $sender_id ) ) {
+				continue;
+			}
+
+			// Disabled the notification for user who archived this thread.
+			if ( isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
 				continue;
 			}
 
@@ -1248,6 +1274,9 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					)
 				),
 				'name'               => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
+				'id'                 => esc_attr( $avatar_user_id ),
+				'type'               => 'user',
+				'link'               => bp_core_get_user_domain( $avatar_user_id ),
 				'is_user_suspended'  => bp_moderation_is_user_suspended( $avatar_user_id ),
 				'is_user_blocked'    => bp_moderation_is_user_blocked( $avatar_user_id ),
 				'is_user_blocked_by' => bb_moderation_is_user_blocked_by( $avatar_user_id ),
@@ -1260,14 +1289,14 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	$first_message_id = ( ! empty( $first_message ) ? $first_message->id : false );
 	$group_id         = ( isset( $first_message_id ) ) ? (int) bp_messages_get_meta( $first_message_id, 'group_id', true ) : 0;
 	if ( ! empty( $first_message_id ) && ! empty( $group_id ) ) {
-		$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group
-		$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual
-		$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private
+		$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group.
+		$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual.
+		$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private.
 
 		if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
 			if ( bp_is_active( 'groups' ) ) {
-
-				$group_name       = bp_get_group_name( groups_get_group( $group_id ) );
+				$group            = groups_get_group( $group_id );
+				$group_name       = bp_get_group_name( $group );
 				$group_avatar_url = '';
 
 				if ( ! bp_disable_group_avatar_uploads() ) {
@@ -1289,6 +1318,9 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$group_avatar = array(
 					'url'  => $group_avatar_url,
 					'name' => $group_name,
+					'id'   => $group_id,
+					'type' => 'group',
+					'link' => bp_get_group_permalink( $group ),
 				);
 
 			} else {
@@ -1321,6 +1353,9 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$group_avatar = array(
 					'url'  => ! empty( $group_avatar_url ) ? $group_avatar_url : $default_group_avatar_url,
 					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
+					'id'   => $group_id,
+					'type' => 'group',
+					'link' => '',
 				);
 			}
 
@@ -1489,7 +1524,6 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 				'recipients'          => $member,
 				'subject'             => wp_trim_words( $content, messages_get_default_subject_length() ),
 				'content'             => $content,
-				'is_hidden'           => true,
 				'append_thread'       => false,
 				'message_thread_type' => 'new',
 			);
@@ -1497,7 +1531,7 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 			$message_args = array(
 				'sender_id'           => $current_user_id,
 				'thread_id'           => $member_thread_id,
-				'subject'             => wp_trim_words( $content, messages_get_default_subject_length() ),
+				'subject'             => false,
 				'content'             => $content,
 				'mark_visible'        => true,
 				'message_thread_type' => 'reply',
@@ -1575,4 +1609,230 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 			)
 		);
 	}
+}
+
+/**
+ * Check last message is a joined group message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id    Message Thread ID.
+ * @param int $user_id      User ID.
+ *
+ * @return boolean  Is last message joined group message.
+ */
+function bb_is_last_message_group_join_message( $thread_id, $user_id ) {
+
+	global $wpdb, $bp;
+
+	if ( empty( $thread_id ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	$last_message    = BP_Messages_Thread::get_last_message( $thread_id, true );
+	$is_join_message = bp_messages_get_meta( $last_message->id, 'group_message_group_joined' );
+	if ( 'yes' === $is_join_message ) {
+		$joined_user       = array(
+			'user_id' => $user_id,
+			'time'    => bp_core_current_time(),
+		);
+		$joined_users      = bp_messages_get_meta( $last_message->id, 'group_message_group_joined_users' );
+		$joined_users_data = empty( $joined_users ) ? array( $joined_user ) : array_merge( $joined_users, array( $joined_user ) );
+		bp_messages_update_meta( $last_message->id, 'group_message_group_joined_users', $joined_users_data );
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Check last message is a left group message.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id    Message Thread ID.
+ * @param int $user_id      User ID.
+ *
+ * @return boolean  Is last message left group message.
+ */
+function bb_is_last_message_group_left_message( $thread_id, $user_id ) {
+
+	global $wpdb, $bp;
+
+	if ( empty( $thread_id ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	$last_message    = BP_Messages_Thread::get_last_message( $thread_id, true );
+	$is_left_message = bp_messages_get_meta( $last_message->id, 'group_message_group_left' );
+	if ( 'yes' === $is_left_message ) {
+		$left_user       = array(
+			'user_id' => $user_id,
+			'time'    => bp_core_current_time(),
+		);
+		$left_users      = bp_messages_get_meta( $last_message->id, 'group_message_group_left_users' );
+		$left_users_data = empty( $left_users ) ? array( $left_user ) : array_merge( $left_users, array( $left_user ) );
+		bp_messages_update_meta( $last_message->id, 'group_message_group_left_users', $left_users_data );
+		return true;
+	}
+	return false;
+}
+
+/*
+ * Change friend button arguments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Button arguments.
+ *
+ * @return array Button arguments with updated.
+ */
+function bb_messaged_set_friend_button_args( $args = array() ) {
+
+	if ( isset( $args['block_self'] ) ) {
+		$args['block_self'] = false;
+	}
+
+	if ( isset( $args['id'] ) && 'not_friends' === $args['id'] ) {
+		$args['link_text'] = __( 'Send Connection Request', 'buddyboss' );
+	} elseif ( isset( $args['id'] ) && 'pending' === $args['id'] ) {
+		$args['link_href'] = '';
+	}
+
+	return $args;
+}
+
+/**
+ * Update meta query when fetching the threads for user unread count.
+ *
+ * @since [BBVERSION]
+ *
+ * @param array $meta_query Array of meta query arguments.
+ * @param array $r          Array of arguments.
+ *
+ * @return array|mixed
+ */
+function bb_messages_update_unread_count( $meta_query, $r ) {
+	if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
+		$meta_query = array(
+			'relation' => 'AND',
+			array(
+				'key'     => 'group_message_thread_id',
+				'compare' => 'EXISTS',
+			),
+		);
+	} elseif ( bp_is_active( 'groups' ) ) {
+		// Determine groups of user.
+		$groups = groups_get_groups(
+			array(
+				'fields'      => 'ids',
+				'per_page'    => - 1,
+				'user_id'     => $r['user_id'],
+				'show_hidden' => true,
+			)
+		);
+
+		$group_ids  = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+		$meta_query = array(
+			'relation' => 'AND',
+			array(
+				'key'     => 'group_message_thread_id',
+				'compare' => 'EXISTS',
+			),
+			array(
+				'key'     => 'group_id',
+				'compare' => 'NOT IN',
+				'value'   => $group_ids,
+			),
+		);
+	}
+
+	return $meta_query;
+}
+
+/**
+ * Checks whether a message thread is archived or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id ID of the thread.
+ * @param int $user_id   The user ID.
+ *
+ * @return boolean
+ */
+function messages_is_valid_archived_thread( $thread_id, $user_id = 0 ) {
+	return BP_Messages_Thread::is_valid_archived( $thread_id, $user_id );
+}
+
+/**
+ * Checks whether thread exists through the recipients.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $recipients Username array of the user.
+ * @param int   $user_id    The user ID.
+ *
+ * @return boolean|array
+ */
+function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $user_id = 0 ) {
+
+	if ( empty( $recipients ) ) {
+		return false;
+	}
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	// Setup the recipients array.
+	$recipient_ids = array();
+
+	// Loop the recipients and convert all usernames to user_ids where needed.
+	foreach ( (array) $recipients as $recipient ) {
+
+		// Trim spaces and skip if empty.
+		$recipient = trim( $recipient );
+		if ( empty( $recipient ) ) {
+			continue;
+		}
+
+		// Check user_login / nicename columns first
+		// @see http://buddypress.trac.wordpress.org/ticket/5151.
+		if ( bp_is_username_compatibility_mode() && function_exists( 'bp_core_get_userid' ) ) {
+			$recipient_id = bp_core_get_userid( urldecode( $recipient ) );
+		} elseif ( function_exists( 'bp_core_get_userid_from_nicename' ) ) {
+			$recipient_id = bp_core_get_userid_from_nicename( $recipient );
+		}
+
+		// Check against user ID column if no match and if passed recipient is numeric.
+		if ( empty( $recipient_id ) && is_numeric( $recipient ) && function_exists( 'bp_core_get_core_userdata' ) ) {
+			if ( bp_core_get_core_userdata( (int) $recipient ) ) {
+				$recipient_id = (int) $recipient;
+			}
+		}
+
+		// If $recipient_id still blank then try last time to find $recipient_id via the nickname field.
+		if ( empty( $recipient_id ) && function_exists( 'bp_core_get_userid_from_nickname' ) ) {
+			$recipient_id = bp_core_get_userid_from_nickname( $recipient );
+		}
+
+		// Decide which group to add this recipient to.
+		if ( ! empty( $recipient_id ) ) {
+			$recipient_ids[] = (int) $recipient_id;
+		}
+	}
+
+	// Strip the sender from the recipient list, and unset them if they are
+	// not alone. If they are alone, let them talk to themselves.
+	$self_send = array_search( $user_id, $recipient_ids, true );
+	if ( ! empty( $self_send ) && ( count( $recipient_ids ) > 1 ) ) {
+		unset( $recipient_ids[ $self_send ] );
+	}
+
+	// Remove duplicates & bail if no recipients.
+	$recipient_ids = array_unique( $recipient_ids );
+	if ( empty( $recipient_ids ) ) {
+		return false;
+	}
+
+	return BP_Messages_Message::get_existing_threads( $recipient_ids, $user_id );
 }

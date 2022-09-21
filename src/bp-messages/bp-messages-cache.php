@@ -145,3 +145,27 @@ add_action( 'messages_delete_thread', 'bb_core_clear_message_cache' );
 add_action( 'messages_send_notice', 'bb_core_clear_message_cache' );
 add_action( 'messages_message_sent', 'bb_core_clear_message_cache' );
 add_action( 'messages_thread_mark_as_read', 'bb_core_clear_message_cache' );
+
+/**
+ * Clear cache when group messages has been disabled by admin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $old_value Old values of array.
+ * @param array $value     New values of the array.
+ *
+ * @return void
+ */
+function bb_clear_cache_while_group_messsage_settings_updated( $old_value, $value ) {
+
+	if ( $old_value !== $value ) {
+		global $wp_object_cache;
+		if ( isset( $wp_object_cache->cache['bp_messages_unread_count'] ) ) {
+			unset( $wp_object_cache->cache['bp_messages_unread_count'] );
+		}
+
+		bp_core_reset_incrementor( 'bp_messages' );
+	}
+}
+
+add_action( 'update_option_bp-disable-group-messages', 'bb_clear_cache_while_group_messsage_settings_updated', 10, 2 );

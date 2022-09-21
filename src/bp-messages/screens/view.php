@@ -22,6 +22,25 @@ function messages_screen_conversation() {
 
 	$thread_id = (int) bp_action_variable( 0 );
 
+	if ( ! empty( $thread_id ) && messages_is_valid_archived_thread( $thread_id ) ) {
+		if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
+			$thread_id = 0;
+			while ( bp_message_threads() ) :
+				bp_message_thread();
+				$thread_id = bp_get_message_thread_id();
+				break;
+			endwhile;
+
+			if ( $thread_id ) {
+				wp_safe_redirect( bp_get_message_thread_view_link( $thread_id ) );
+				exit;
+			}
+		} else {
+			wp_safe_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/compose' ) );
+			exit;
+		}
+	}
+
 	if ( empty( $thread_id ) || ! messages_is_valid_thread( $thread_id ) ) {
 		if ( is_user_logged_in() ) {
 			bp_core_add_message( __( 'The conversation you tried to access is no longer available', 'buddyboss' ), 'error' );

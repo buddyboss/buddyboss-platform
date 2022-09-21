@@ -83,11 +83,10 @@ class BP_Members_Suggestions extends BP_Suggestions {
 	 */
 	public function get_suggestions() {
 		$user_query = array(
-			'count_total'     => '',  // Prevents total count.
+			'count_total'     => isset( $this->args['count_total'] ) ? $this->args['count_total'] : '',  // Prevents total count.
 			'populate_extras' => false,
 			'type'            => 'alphabetical',
-
-			'page'            => 1,
+			'page'            => isset( $this->args['page'] ) ? $this->args['page'] : 1,
 			'per_page'        => $this->args['limit'],
 			'search_terms'    => $this->args['term'],
 			'search_wildcard' => 'right',
@@ -132,7 +131,15 @@ class BP_Members_Suggestions extends BP_Suggestions {
 			$result->name          = bp_core_get_user_displayname( $user->ID );
 			$result->user_id       = $user->ID;
 
-			$results[] = $result;
+			if ( isset( $this->args['count_total'] ) && $this->args['count_total'] ) {
+				$results['members'][] = $result;
+			} else {
+				$results[] = $result;
+			}
+		}
+
+		if ( isset( $this->args['count_total'] ) && $this->args['count_total'] ) {
+			$results['total'] = $user_query->total_users;
 		}
 
 		/**

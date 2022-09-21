@@ -545,7 +545,7 @@
 	position: relative;
 
 	.bb-activity-video-elem {
-		padding: 3px 0;
+		padding: 3px;
 
 		video.video-js + .bb-video-loader {
 			position: absolute;
@@ -783,7 +783,7 @@
 			&.loading {
 				text-align: center;
 
-				.bb-icon-loader {
+				[class*="bb-icon"] {
 					font-size: 26px;
 					color: #fff;
 					text-align: center;

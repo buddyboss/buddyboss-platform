@@ -346,7 +346,7 @@ class BP_Messages_Thread {
 		}
 
 		foreach ( $deleted_recipients as $recipient ) {
-			// use add to allow multiple values
+			// use add to allow multiple values.
 			bp_messages_add_meta( $last_message->id, 'deleted_by', $recipient->user_id );
 		}
 
@@ -366,30 +366,48 @@ class BP_Messages_Thread {
 	 *
 	 * @return object|null
 	 */
-	public static function get_last_message( $thread_id ) {
-		global $wpdb;
+	public static function get_last_message( $thread_id, $include_join_left_message = false ) {
 
 		if ( empty( $thread_id ) ) {
 			return null;
 		}
 
-		$bp = buddypress();
-
-		$is_group_thread = self::get_first_message( $thread_id );
-		if ( $is_group_thread->id > 0 ) {
+		$is_group_thread  = self::get_first_message( $thread_id );
+		$message_group_id = (int) bp_messages_get_meta( $is_group_thread->id, 'group_id', true ); // group id.
+		if ( $message_group_id > 0 ) {
 			$args = array(
-				'include_threads'  => $thread_id,
-				'meta_key__not_in' => array(
-					'group_message_group_joined',
-					'group_message_group_left',
+				'include_threads' => $thread_id,
+				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'relation' => 'AND',
+					array(
+						'key'     => 'bp_messages_deleted',
+						'compare' => 'NOT EXISTS',
+					),
 				),
-				'per_page'         => 1,
-				'page'             => 1,
-				'count_total'      => false,
+				'per_page'        => 1,
+				'page'            => 1,
+				'count_total'     => false,
 			);
+			if ( false === $include_join_left_message ) {
+				$args['meta_query'][] = array(
+					'key'     => 'group_message_group_joined',
+					'compare' => 'NOT EXISTS',
+				);
+				$args['meta_query'][] = array(
+					'key'     => 'group_message_group_left',
+					'compare' => 'NOT EXISTS',
+				);
+			}
 		} else {
 			$args = array(
 				'include_threads' => $thread_id,
+				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'relation' => 'AND',
+					array(
+						'key'     => 'bp_messages_deleted',
+						'compare' => 'NOT EXISTS',
+					),
+				),
 				'per_page'        => 1,
 				'page'            => 1,
 				'count_total'     => false,
@@ -688,8 +706,8 @@ class BP_Messages_Thread {
 
 		$message_ids = ( isset( $messages['messages'] ) ) ? $messages['messages'] : array();
 
-		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
-		$message_deleted_text = '<p> </p>';
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', '' );
+		$message_deleted_text = '';
 
 		// Update the message subject & content of particular user messages.
 		$update_messages    = BP_Messages_Message::get(
@@ -719,7 +737,7 @@ class BP_Messages_Thread {
 		if ( ! empty( $update_message_ids ) ) {
 			foreach ( $update_message_ids as $message_id ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
-				$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+				$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET message = '%s', subject = '%s', is_deleted = %d WHERE id = %d", $message_deleted_text, $subject_deleted_text, 1, $message_id );
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$wpdb->query( $query ); // db call ok; no-cache ok.
 				bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
@@ -752,7 +770,21 @@ class BP_Messages_Thread {
 			}
 		}
 
-		if ( $thread_delete ) {
+		// Group thread will delete only when group is deleted.
+		$is_group_thread = false;
+		if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+			// Get the group id from the first message.
+			$first_message    = self::get_first_message( (int) $thread_id );
+			$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
+			if ( $message_group_id > 0 ) {
+				$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
+				if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
+					$is_group_thread = true;
+				}
+			}
+		}
+
+		if ( $thread_delete && ! $is_group_thread ) {
 
 			/**
 			 * Fires before an entire message thread is deleted.
@@ -766,21 +798,12 @@ class BP_Messages_Thread {
 			 */
 			do_action( 'bp_messages_thread_before_delete', $thread_id, $message_ids, $thread_delete );
 
-			// Removed the thread id from the group meta.
-			if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
-				// Get the group id from the first message.
-				$first_message    = self::get_first_message( (int) $thread_id );
-				$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
-				if ( $message_group_id > 0 ) {
-					$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
-					if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
-						groups_update_groupmeta( $message_group_id, 'group_message_thread', '' );
-					}
-				}
+			if ( bp_is_active( 'notifications' ) ) {
+				// Delete Message Notifications.
+				bp_messages_message_delete_notifications( $thread_id, $message_ids );
 			}
 
-			// Delete Message Notifications.
-			bp_messages_message_delete_notifications( $thread_id, $message_ids );
+			$recipients = self::get_recipients_for_thread( (int) $thread_id );
 
 			// Delete thread messages.
 			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -796,6 +819,13 @@ class BP_Messages_Thread {
 			$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query_recipients ); // db call ok; no-cache ok.
+
+			/**
+			 * Fires after message thread deleted.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 */
+			do_action( 'bp_messages_message_delete_thread', $thread_id, $recipients );
 
 			/**
 			 * Fires before an entire message thread is deleted.
@@ -896,8 +926,88 @@ class BP_Messages_Thread {
 				'meta_query'   => array(),
 				'fields'       => 'all',
 				'having_sql'   => false,
+				'thread_type'  => 'unarchived',
 			)
 		);
+
+		if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
+			if ( empty( $r['meta_query'] ) ) {
+				$r['meta_query'] = array(
+					'relation' => 'AND',
+					array(
+						'key'     => 'group_message_thread_id',
+						'compare' => 'NOT EXISTS',
+					),
+				);
+			} else {
+				$meta_query             = $r['meta_query'];
+				$meta_query[]           = array(
+					'key'     => 'group_message_thread_id',
+					'compare' => 'NOT EXISTS',
+				);
+				$meta_query['relation'] = 'AND';
+				$r['meta_query']        = $meta_query;
+			}
+		} elseif ( bp_is_active( 'groups' ) ) {
+			// Determine groups of user.
+			$groups = groups_get_groups(
+				array(
+					'fields'      => 'ids',
+					'per_page'    => - 1,
+					'user_id'     => $r['user_id'],
+					'show_hidden' => true,
+				)
+			);
+
+			$group_ids = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+
+			if ( empty( $r['meta_query'] ) ) {
+				$r['meta_query'] = array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'group_message_thread_id',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'group_message_thread_id',
+							'compare' => 'EXISTS',
+						),
+						array(
+							'key'     => 'group_id',
+							'compare' => 'IN',
+							'value'   => $group_ids,
+						),
+					),
+				);
+			} else {
+				$meta_query             = $r['meta_query'];
+				$meta_query[]           = array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'group_message_thread_id',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'group_message_thread_id',
+							'compare' => 'EXISTS',
+						),
+						array(
+							'key'     => 'group_id',
+							'compare' => 'IN',
+							'value'   => $group_ids,
+						),
+					),
+				);
+				$meta_query['relation'] = 'AND';
+				$r['meta_query']        = $meta_query;
+			}
+		}
+
+		$r['meta_query'] = apply_filters( 'bb_messages_meta_query_threads_for_user', $r['meta_query'], $r );
 
 		$pag_sql     = '';
 		$type_sql    = '';
@@ -920,32 +1030,49 @@ class BP_Messages_Thread {
 
 		$additional_where = array();
 
-		if ( ! empty( $r['include'] ) ) {
-			$user_threads_query = $r['include'];
-		} elseif ( ! empty( $r['user_id'] ) ) {
+		if ( 'unarchived' === $r['thread_type'] ) {
+			if ( ! empty( $r['include'] ) ) {
+				$user_threads_query = $r['include'];
+			} elseif ( ! empty( $r['user_id'] ) ) {
 
-			$additional_where[] = 'r.is_deleted = 0';
-			$additional_where[] = 'r.user_id = ' . $r['user_id'];
+				$additional_where[] = 'r.is_deleted = 0';
+				$additional_where[] = 'r.user_id = ' . $r['user_id'];
 
-			if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
-				$additional_where[] = 'r.is_hidden = 0';
+				if ( false === $r['is_hidden'] ) {
+					$additional_where[] = 'r.is_hidden = 0';
+				}
+			}
+		} elseif ( 'archived' === $r['thread_type'] ) {
+			if ( ! empty( $r['include'] ) ) {
+				$user_threads_query = $r['include'];
+			} elseif ( ! empty( $r['user_id'] ) ) {
+				$additional_where[] = 'r.is_deleted = 0';
+				$additional_where[] = 'r.user_id = ' . $r['user_id'];
+				$additional_where[] = 'r.is_hidden = 1';
 			}
 		}
 
 		$group_thread_in = array();
 		if ( ! empty( $r['search_terms'] ) ) {
+			$current_user_participants_ids = array();
 
 			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
 			$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
 
 			$participants_sql           = array();
-			$participants_sql['select'] = 'SELECT DISTINCT(r.user_id), u.display_name';
+			$participants_sql['select'] = 'SELECT DISTINCT(r.thread_id)';
 			$participants_sql['from']   = "FROM {$bp->messages->table_name_recipients} r LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID";
 			$participants_sql['where']  = 'WHERE 1=1';
 			if ( ! empty( $user_threads_query ) ) {
 				$participants_sql['where'] .= " AND r.thread_id IN ($user_threads_query)";
 			} elseif ( ! empty( $additional_where ) ) {
-				$participants_sql['where'] .= ' AND ' . implode( ' AND ', $additional_where );
+				$participants_sql['where'] .= ' AND r.is_deleted = 0';
+			}
+
+			if ( 'unarchived' === $r['thread_type'] ) {
+				$participants_sql['where'] .= ' AND r.is_hidden = 0';
+			} elseif ( 'archived' === $r['thread_type'] ) {
+				$participants_sql['where'] .= ' AND r.is_hidden = 1';
 			}
 			$participants_sql['where_like'] = 'u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s';
 
@@ -987,27 +1114,23 @@ class BP_Messages_Thread {
 				$current_user_participants = $participants_sql_cached;
 			}
 
-			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
-			$current_user_participants_ids = array_diff( $current_user_participants_ids, array( bp_loggedin_user_id() ) );
+			$current_user_thread_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'thread_id' ) );
 
+			$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+			$groups_table = $prefix . 'bp_groups';
 			if ( bp_is_active( 'groups' ) ) {
 				$groups_table = $bp->groups->table_name;
-			} else {
-				$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-				$groups_table = $prefix . 'bp_groups';
-			}
+				// Search Group Thread via Group Name via search_terms.
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$groups           = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT(r.thread_id) FROM {$bp->messages->table_name_recipients} r LEFT JOIN {$groups_table} g ON r.user_id = g.creator_id LEFT JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id LEFT JOIN {$bp->messages->table_name_meta} mt ON m.id = mt.message_id WHERE g.name LIKE %s AND r.is_deleted = 0 AND mt.meta_key = 'group_id' AND mt.meta_value = g.id", $search_terms_like ) );
+				$group_thread_ids = array_map( 'intval', wp_list_pluck( $groups, 'thread_id' ) );
 
-			// Search Group Thread via Group Name via search_terms.
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$groups            = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$groups_table} g WHERE g.name LIKE %s", $search_terms_like ) );
-			$group_creator_ids = array_map( 'intval', wp_list_pluck( $groups, 'creator_id' ) );
-
-			// If Group Found.
-			if ( ! empty( $group_creator_ids ) ) {
-				if ( is_array( $current_user_participants_ids ) ) {
-					$current_user_participants_ids = array_merge( $current_user_participants_ids, $group_creator_ids );
-				} else {
-					$current_user_participants_ids = $group_creator_ids;
+				if ( ! empty( $group_thread_ids ) ) {
+					if ( is_array( $current_user_thread_ids ) ) {
+						$current_user_thread_ids = array_merge( $current_user_thread_ids, $group_thread_ids );
+					} else {
+						$current_user_thread_ids = $group_thread_ids;
+					}
 				}
 			}
 
@@ -1063,15 +1186,28 @@ class BP_Messages_Thread {
 				}
 			}
 
-			if ( $current_user_participants_ids ) {
-				$user_ids = implode( ',', array_unique( $current_user_participants_ids ) );
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$where_sql = '( ' . $wpdb->prepare( "m.message LIKE %s OR r.user_id IN ({$user_ids})", $search_terms_like );
-				if ( ! empty( $group_thread_in ) ) {
-					$thread_in  = implode( ',', $group_thread_in );
-					$where_sql .= " OR r.thread_id IN ({$thread_in})";
+			if ( ! empty( $group_thread_in ) ) {
+				if ( is_array( $current_user_thread_ids ) ) {
+					$current_user_thread_ids = array_merge( $current_user_thread_ids, $group_thread_in );
+				} else {
+					$current_user_thread_ids = $group_thread_in;
 				}
-				$where_sql .= ' )';
+			}
+
+			$search_where = '';
+			if ( ! empty( $current_user_thread_ids ) ) {
+				$thread_in     = implode( ',', array_unique( $current_user_thread_ids ) );
+				$search_where .= " OR r.thread_id IN ({$thread_in})";
+			}
+
+			if ( ! empty( $current_user_participants_ids ) ) {
+				$user_ids      = implode( ',', array_unique( $current_user_participants_ids ) );
+				$search_where .= " OR r.user_id IN ({$user_ids})";
+			}
+
+			if ( ! empty( $search_where ) ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$where_sql = '( ' . $wpdb->prepare( 'm.message LIKE %s', $search_terms_like ) . $search_where . ' )';
 			}
 		}
 
@@ -1103,7 +1239,7 @@ class BP_Messages_Thread {
 			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
 		}
 
-		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
+		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id AND m.is_deleted = 0 {$meta_query_sql['join']}";
 		$sql['where'] = "WHERE {$where_sql} {$meta_query_sql['where']}";
 		$sql['misc']  = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
@@ -1147,7 +1283,7 @@ class BP_Messages_Thread {
 		$sql['select'] = 'SELECT COUNT( DISTINCT m.thread_id )';
 		unset( $sql['misc'] );
 
-		$total_threads_query = implode( ' ', $sql );
+		$total_threads_query  = implode( ' ', $sql );
 		$total_threads_cached = bp_core_get_incremented_cache( $total_threads_query, 'bp_messages' );
 
 		if ( false === $total_threads_cached ) {
@@ -1421,14 +1557,30 @@ class BP_Messages_Thread {
 		$unread_count = wp_cache_get( $user_id, 'bp_messages_unread_count' );
 
 		if ( false === $unread_count ) {
+			$args = array(
+				'user_id'    => $user_id,
+				'per_page'   => - 1,
+				'is_deleted' => 0,
+				'is_hidden'  => 0,
+			);
 
-			$unread_counts = self::get(
+			add_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 2 );
+
+			$threads = self::get_current_threads_for_user(
 				array(
-					'user_id'    => $user_id,
-					'per_page'   => - 1,
-					'is_deleted' => 0,
+					'user_id' => $user_id,
+					'limit'   => - 1,
+					'fields'  => 'ids',
 				)
 			);
+
+			remove_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 2 );
+
+			if ( ! empty( $threads['threads'] ) ) {
+				$args['exclude_threads'] = $threads['threads'];
+			}
+
+			$unread_counts = self::get( $args );
 
 			$unread_count = 0;
 			if ( ! empty( $unread_counts['recipients'] ) ) {
@@ -1681,6 +1833,10 @@ class BP_Messages_Thread {
 			$where_conditions['is_deleted'] = $wpdb->prepare( 'r.is_deleted = %d', $r['is_deleted'] );
 		}
 
+		if ( isset( $r['is_hidden'] ) ) {
+			$where_conditions['is_hidden'] = $wpdb->prepare( 'r.is_hidden = %d', $r['is_hidden'] );
+		}
+
 		if ( true === $r['exclude_active_users'] ) {
 			$where_conditions['exclude_active_users'] = 'user_id NOT IN (SELECT ID FROM ' . $wpdb->users . ')';
 		}
@@ -1916,5 +2072,38 @@ class BP_Messages_Thread {
 		 * @param int   $thread_id  ID of the current thread.
 		 */
 		return apply_filters( 'bp_messages_thread_get_pagination_recipients', $recipients, $thread_id );
+	}
+
+	/**
+	 * Checks whether a message thread is archived or not.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $thread_id The message thread ID.
+	 * @param int $user_id   The user ID.
+	 *
+	 * @return boolean
+	 */
+	public static function is_valid_archived( $thread_id = 0, $user_id = 0 ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		// Bail if no thread ID is passed.
+		if ( empty( $thread_id ) ) {
+			return false;
+		}
+
+		if ( empty( $user_id ) ) {
+			$user_id = bp_loggedin_user_id();
+		}
+
+		$is_thread_archived = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $user_id ) );
+
+		if ( 0 < $is_thread_archived ) {
+			return true;
+		}
+
+		return false;
 	}
 }

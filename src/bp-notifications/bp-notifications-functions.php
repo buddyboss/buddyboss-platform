@@ -778,6 +778,11 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 			continue;
 		}
 
+		// Disabled the notification for user who archived this thread.
+		if ( buddypress()->messages->id === $component_name && isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
+			continue;
+		}
+
 		bp_notifications_add_notification(
 			array(
 				'user_id'           => $user_id,
@@ -1084,8 +1089,11 @@ function bb_notification_avatar() {
 				$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
 			}
 
+			$class            = ( isset( $user ) ? 'bb-member-status-' . $user->ID : '' );
+			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
+			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<a href="<?php echo esc_url( $link ); ?>">
+			<a href="<?php echo esc_url( $link ); ?>" class="bb-member-status-<?php echo esc_attr( $class ) . ' ' . esc_attr( $moderation_class ); ?>">
 				<?php
 				echo bp_core_fetch_avatar(
 					array(

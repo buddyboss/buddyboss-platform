@@ -369,6 +369,14 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18701 ) {
 			bb_update_to_1_9_3();
 		}
+
+		if ( $raw_db_version < 18751 ) {
+			bb_update_to_2_1_0();
+		}
+
+		if ( $raw_db_version < 18801 ) {
+			bb_update_to_2_2_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1877,3 +1885,73 @@ function migrate_notification_preferences( $user_ids ) {
 	}
 }
 
+/**
+ * Migrate group member meta table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_1_0() {
+	if ( bp_is_active( 'groups' ) ) {
+		bp_core_install_groups();
+	}
+
+	bp_core_install_invitations();
+}
+
+/**
+ * Migrate messages table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_2_0() {
+	// Add 'is_deleted' column in 'bp_messages_messages' table.
+	bb_messages_add_is_deleted_column();
+
+	// Migrate the 'bp_messages_deleted' value from 'wp_bp_messages_meta' table to 'is_deleted' column in 'bp_messages_messages' table.
+	bb_messages_migrate_is_deleted_column();
+}
+
+/**
+ * Add 'is_deleted' column to bp_messages table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_add_is_deleted_column() {
+	global $wpdb;
+
+	// Add 'is_deleted' column in 'bp_messages_messages' table.
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_messages_messages' AND column_name = 'is_deleted'" ); //phpcs:ignore
+
+	if ( empty( $row ) ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_messages_messages ADD `is_deleted` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `message`" ); //phpcs:ignore
+	}
+}
+
+/**
+ * Migrate message table for is_deleted column.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_migrate_is_deleted_column() {
+	global $wpdb;
+
+	$table_name = $wpdb->prefix . 'bp_messages_messages';
+	$meta_table = $wpdb->prefix . 'bp_messages_meta';
+
+	$query = $wpdb->prepare(
+		'SELECT `message_id` FROM `' . $meta_table . '` WHERE `meta_key` = %s',  // phpcs:ignore
+		'bp_messages_deleted'
+	);
+
+	// phpcs:ignore
+	$wpdb->query(
+		$wpdb->prepare(
+			'UPDATE  `' . $table_name . '` SET `is_deleted` = %s WHERE `id` IN ( ' . $query . ' )',  // phpcs:ignore
+			'1'
+		)
+	);
+}
