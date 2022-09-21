@@ -3456,6 +3456,27 @@ table tbody td .bb-description {
 
 }
 
+#bp_messaging_notification_settings {
+
+	table.form-table {
+
+		.notes-hidden-header {
+
+			> th {
+				display: none;
+
+				+ td {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+		}
+
+		.no-padding {
+			padding: 0;
+		}
+	}
+}
 
 /*------------------------------------------------------------------------------
  * 15.0 Admin bar Notification
