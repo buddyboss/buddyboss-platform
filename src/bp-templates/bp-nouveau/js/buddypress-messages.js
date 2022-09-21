@@ -1471,10 +1471,10 @@ window.bp = window.bp || {};
 					};
 
 					if (
-						'undefined' !== bp.Pusher_FrontCommon &&
+						'undefined' !== typeof bp.Pusher_FrontCommon &&
 						'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
 					) {
-						params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join(',');
+						params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join( ',' );
 					}
 
 					options.data = _.extend(
@@ -1483,7 +1483,7 @@ window.bp = window.bp || {};
 						model || {}
 					);
 
-					if ( ! _.isUndefined( bb_pusher_vars ) && ! _.isUndefined( bb_pusher_vars.is_live_messaging_enabled ) && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
+					if ( 'undefined' !== typeof bb_pusher_vars && 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
 						options.data = _.extend(
 							options.data,
 							{
@@ -3740,7 +3740,7 @@ window.bp = window.bp || {};
 						function ( thread ) {
 							var thread_id = parseInt( thread.id );
 							if ( thread_id === parseInt( response.thread_id ) ) {
-								
+
 								if ( parseInt( response.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
 									thread.set( { sender_is_you: true } );
 								} else {
