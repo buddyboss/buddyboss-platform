@@ -2207,4 +2207,4 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 	}
 
 }
-add_filter( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
+add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
