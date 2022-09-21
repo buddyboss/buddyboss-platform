@@ -2162,3 +2162,49 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 	return $classes;
 }
 add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
+
+/**
+ * Update the digest schedule event on change messages component status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $active_components Components to install.
+ */
+function bb_update_digest_schedule_event_on_change_component_status( $active_components = array() ) {
+
+	$active_components = array_keys( $active_components );
+	$db_component      = array_keys( bp_get_option( 'bp-active-components' ) );
+
+	// If 'messages' component is disabled.
+	if ( in_array( 'messages', $db_component, true ) && ! in_array( 'messages', $active_components, true ) ) {
+		$timestamp = wp_next_scheduled( 'bb_digest_email_notifications_hook' );
+		if ( $timestamp ) {
+			wp_unschedule_event( $timestamp, 'bb_digest_email_notifications_hook' );
+		}
+		// If 'messages' component is enabled.
+	} elseif ( ! in_array( 'messages', $db_component, true ) && in_array( 'messages', $active_components, true ) ) {
+
+		$time_delay_email_notification = (int) bp_get_option( 'time_delay_email_notification', 15 );
+		$schedule_key                  = 'bb_schedule_15min';
+		if ( 5 === $time_delay_email_notification ) {
+			$schedule_key = 'bb_schedule_5min';
+		} elseif ( 30 === $time_delay_email_notification ) {
+			$schedule_key = 'bb_schedule_30min';
+		} elseif ( 60 === $time_delay_email_notification ) {
+			$schedule_key = 'bb_schedule_1hour';
+		} elseif ( 180 === $time_delay_email_notification ) {
+			$schedule_key = 'bb_schedule_3hours';
+		} elseif ( 720 === $time_delay_email_notification ) {
+			$schedule_key = 'bb_schedule_12hours';
+		} elseif ( 1440 === $time_delay_email_notification ) {
+			$schedule_key = 'bb_schedule_24hours';
+		}
+
+		// Schedule an action if it's not already scheduled.
+		if ( ! wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
+			wp_schedule_event( time(), $schedule_key, 'bb_digest_email_notifications_hook' );
+		}
+	}
+
+}
+add_filter( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
