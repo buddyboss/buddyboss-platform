@@ -960,6 +960,10 @@ window.bp = window.bp || {};
 								$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
 							}
 
+							if ( 'undefined' !== typeof window.wp.heartbeat ) {
+								window.wp.heartbeat.connectNow();
+							}
+
 							if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
 								jQuery( document ).trigger(
 									'bb_trigger_toast_message',
@@ -986,6 +990,9 @@ window.bp = window.bp || {};
 							window.location.href = response.thread_link;
 						} else {
 							window.Backbone.trigger( 'relistelements', {}, false );
+							if ( 'undefined' !== typeof window.wp.heartbeat ) {
+								window.wp.heartbeat.connectNow();
+							}
 							if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
 								jQuery( document ).trigger(
 									'bb_trigger_toast_message',

@@ -3150,7 +3150,7 @@ function bp_nouveau_ajax_hide_thread() {
 	}
 
 	foreach ( $thread_ids as $thread_id ) {
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
 
 		/**
 		 * Fires when messages thread was archived.
@@ -3159,16 +3159,7 @@ function bp_nouveau_ajax_hide_thread() {
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */
-		do_action( 'bb_messages_thread_archived', $thread_id );
-
-		/**
-		 * Fires when messages thread was marked as read.
-		 *
-		 * @since BuddyBoss 1.9.3
-		 *
-		 * @param int $thread_id The message thread ID.
-		 */
-		do_action( 'messages_thread_mark_as_read', $thread_id );
+		do_action( 'bb_messages_thread_archived', $thread_id, bp_loggedin_user_id() );
 	}
 
 	// Mark each notification for each PM message as read when hide the thread.
@@ -3570,7 +3561,7 @@ function bp_nouveau_ajax_unhide_thread() {
 	}
 
 	foreach ( $thread_ids as $thread_id ) {
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 0, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, (int) $thread_id, bp_loggedin_user_id() ) );
 
 		/**
 		 * Fires when messages thread was un-archived.
@@ -3579,7 +3570,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */
-		do_action( 'bb_messages_thread_unarchived', $thread_id );
+		do_action( 'bb_messages_thread_unarchived', $thread_id, bp_loggedin_user_id() );
 	}
 
 	$inbox_unread_cnt = array(
