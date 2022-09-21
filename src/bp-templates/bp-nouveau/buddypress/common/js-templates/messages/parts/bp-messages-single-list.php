@@ -75,13 +75,29 @@
 			<div class="bb-activity-media-wrap bb-media-length-{{data.media.length}}">
 				<# for ( i in data.media ) { #>
 				<div class="bb-activity-media-elem">
-				   <# if ( data.media[i].id ) { #>
-					<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
+				   <#
+					var image_class = '';
+					var image_style = '';
+					if ( data.media[i].id ) {
+						if (
+						data.media.length == 1 &&
+						data.media[i].width !== '' &&
+						data.media[i].height !== ''
+						) {
+							var ratio = ( ( parseInt(data.media[i].height) * 100 ) / parseInt(data.media[i].width) ).toFixed(2);
+							var width = parseInt(data.media[i].width) < 360 ? parseInt(data.media[i].width) : 360;
+							var image_class = 'single-ratio';
+							var image_style = 'padding-top:' + ratio + '%; width:' + width + 'px;';
+						}
+					#>
+					<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap {{ image_class }}"
 					   data-id="{{data.media[i].id}}"
 					   data-attachment-id="{{data.media[i].attachment_id}}"
 					   data-attachment-full="{{data.media[i].full}}"
 					   data-privacy="{{data.media[i].privacy}}"
-					   href="#">
+					   href="#"
+					   <# if ( image_style != '' ) { #>style="{{image_style}}"<# } #>
+					   >
 						<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
 					</a>
 				   <# } #>
@@ -95,7 +111,7 @@
 				<# for ( i in data.video ) { #>
 				<div class="bb-activity-video-elem">
 				   <# if ( data.video[i].id && 1 === data.video.length ) { #>
-                        {{{data.video[i].video_html}}}
+						{{{data.video[i].video_html}}}
 					<# } else if ( data.video[i].id ) { #>
 						<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="{{data.video[i].id}}" data-attachment-id="{{data.video[i].attachment_id}}" data-attachment-full="{{data.video[i].full}}" data-privacy="{{data.video[i].privacy}}" href="#">
 							<img src="{{data.video[i].thumbnail}}" alt="{{data.video[i].title}}"/>

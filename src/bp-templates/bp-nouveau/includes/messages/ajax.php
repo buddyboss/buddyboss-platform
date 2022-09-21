@@ -541,6 +541,15 @@ function bp_nouveau_ajax_messages_send_reply() {
 		}
 	}
 
+	// Find the thread is group or not.
+	$group         = '';
+	$first_message = BP_Messages_Thread::get_first_message( $thread_id );
+	$group_id      = bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
+
+	if ( ! empty( $group_id ) ) {
+		$group = groups_get_group( $group_id );
+	}
+
 	$date_sent = bp_core_current_time();
 
 	// Check the sent_at param is requested or not.
@@ -557,17 +566,31 @@ function bp_nouveau_ajax_messages_send_reply() {
 		}
 	}
 
-	$new_reply = messages_new_message(
-		array(
-			'thread_id'    => $thread_id,
-			'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
-			'content'      => $_POST['content'],
-			'date_sent'    => $date_sent,
-			'mark_visible' => false,
-			'error_type'   => 'wp_error',
-			'return'       => 'id',
-		)
-	);
+	if ( empty( $group ) ) {
+		$new_reply = messages_new_message(
+			array(
+				'thread_id'    => $thread_id,
+				'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
+				'content'      => $_POST['content'],
+				'date_sent'    => $date_sent,
+				'mark_visible' => false,
+				'error_type'   => 'wp_error',
+				'return'       => 'id',
+			)
+		);
+	} else {
+		$new_reply = bp_groups_messages_new_message(
+			array(
+				'thread_id'    => $thread_id,
+				'subject'      => false,
+				'content'      => $_POST['content'],
+				'date_sent'    => $date_sent,
+				'mark_visible' => false,
+				'error_type'   => 'wp_error',
+				'return'       => 'id',
+			)
+		);
+	}
 
 	if ( is_wp_error( $new_reply ) ) {
 		$response['feedback'] = $new_reply->get_error_message();
@@ -743,6 +766,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'full'          => bb_get_media_photos_theatre_popup_image(),
 					'meta'          => $media_template->media->attachment_data->meta,
 					'privacy'       => bp_get_media_privacy(),
+					'height'        => ( isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : '' ),
+					'width'         => ( isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : '' ),
 				);
 			}
 		}
@@ -2848,6 +2873,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'full'          => bb_get_media_photos_theatre_popup_image(),
 						'meta'          => $media_template->media->attachment_data->meta,
 						'privacy'       => bp_get_media_privacy(),
+						'height'        => ( isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : '' ),
+						'width'         => ( isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : '' ),
 					);
 				}
 			}
@@ -3153,7 +3180,7 @@ function bp_nouveau_ajax_hide_thread() {
 	}
 
 	foreach ( $thread_ids as $thread_id ) {
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
 
 		/**
 		 * Fires when messages thread was archived.
@@ -3162,16 +3189,7 @@ function bp_nouveau_ajax_hide_thread() {
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */
-		do_action( 'bb_messages_thread_archived', $thread_id );
-
-		/**
-		 * Fires when messages thread was marked as read.
-		 *
-		 * @since BuddyBoss 1.9.3
-		 *
-		 * @param int $thread_id The message thread ID.
-		 */
-		do_action( 'messages_thread_mark_as_read', $thread_id );
+		do_action( 'bb_messages_thread_archived', $thread_id, bp_loggedin_user_id() );
 	}
 
 	// Mark each notification for each PM message as read when hide the thread.
@@ -3573,7 +3591,7 @@ function bp_nouveau_ajax_unhide_thread() {
 	}
 
 	foreach ( $thread_ids as $thread_id ) {
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 0, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, (int) $thread_id, bp_loggedin_user_id() ) );
 
 		/**
 		 * Fires when messages thread was un-archived.
@@ -3582,7 +3600,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */
-		do_action( 'bb_messages_thread_unarchived', $thread_id );
+		do_action( 'bb_messages_thread_unarchived', $thread_id, bp_loggedin_user_id() );
 	}
 
 	$inbox_unread_cnt = array(

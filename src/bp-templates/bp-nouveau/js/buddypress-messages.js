@@ -960,6 +960,10 @@ window.bp = window.bp || {};
 								$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
 							}
 
+							if ( 'undefined' !== typeof window.wp.heartbeat ) {
+								window.wp.heartbeat.connectNow();
+							}
+
 							if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
 								jQuery( document ).trigger(
 									'bb_trigger_toast_message',
@@ -986,6 +990,9 @@ window.bp = window.bp || {};
 							window.location.href = response.thread_link;
 						} else {
 							window.Backbone.trigger( 'relistelements', {}, false );
+							if ( 'undefined' !== typeof window.wp.heartbeat ) {
+								window.wp.heartbeat.connectNow();
+							}
 							if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
 								jQuery( document ).trigger(
 									'bb_trigger_toast_message',
@@ -1471,10 +1478,10 @@ window.bp = window.bp || {};
 					};
 
 					if (
-						'undefined' !== bp.Pusher_FrontCommon &&
+						'undefined' !== typeof bp.Pusher_FrontCommon &&
 						'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
 					) {
-						params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join(',');
+						params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join( ',' );
 					}
 
 					options.data = _.extend(
@@ -1483,7 +1490,7 @@ window.bp = window.bp || {};
 						model || {}
 					);
 
-					if ( ! _.isUndefined( bb_pusher_vars ) && ! _.isUndefined( bb_pusher_vars.is_live_messaging_enabled ) && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
+					if ( 'undefined' !== typeof bb_pusher_vars && 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
 						options.data = _.extend(
 							options.data,
 							{
@@ -2120,6 +2127,8 @@ window.bp = window.bp || {};
 							response.data.saved 	 = false;
 							response.data.privacy 	 = 'message';
 							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
+							response.data.image_h	 = file.height;
+							response.data.image_w	 = file.width;
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 							if ( total_uploaded_file <= BP_Nouveau.media.maxFiles ) {
@@ -3743,7 +3752,7 @@ window.bp = window.bp || {};
 						function ( thread ) {
 							var thread_id = parseInt( thread.id );
 							if ( thread_id === parseInt( response.thread_id ) ) {
-								
+
 								if ( parseInt( response.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
 									thread.set( { sender_is_you: true } );
 								} else {

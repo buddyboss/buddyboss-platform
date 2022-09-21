@@ -886,6 +886,12 @@ function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = fa
  * }
  */
 function messages_notification_new_message( $raw_args = array() ) {
+
+	// Disabled the email notification if enabled "Delay Email Notifications" setting from the backend.
+	if ( function_exists( 'bb_check_delay_email_notification' ) && bb_check_delay_email_notification() ) {
+		return;
+	}
+
 	if ( is_object( $raw_args ) ) {
 		$args = (array) $raw_args;
 	} else {
@@ -1018,6 +1024,12 @@ add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
  * @param array $raw_args
  */
 function group_messages_notification_new_message( $raw_args = array() ) {
+
+	// Disabled the email notification if enabled "Delay Email Notifications" setting from the backend.
+	if ( function_exists( 'bb_check_delay_email_notification' ) && bb_check_delay_email_notification() ) {
+		return;
+	}
+
 	if ( is_object( $raw_args ) ) {
 		$args = (array) $raw_args;
 	} else {
@@ -1842,4 +1854,285 @@ function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $use
 	}
 
 	return BP_Messages_Message::get_existing_threads( $recipient_ids, $user_id );
+}
+
+/**
+ * Send digest email into background.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $recipient_messages Message array.
+ * @param int   $thread_id          ID of the thread.
+ */
+function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
+	global $wpdb;
+
+	if ( empty( $recipient_messages ) || empty( $thread_id ) ) {
+		return;
+	}
+
+	$thread_id = (int) $thread_id;
+
+	// Get notification type key.
+	$type_key = 'notification_messages_new_message';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
+	$email_type    = 'messages-unread-digest';
+	$first_message = BP_Messages_Thread::get_first_message( $thread_id );
+	$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+	$group_name    = '';
+
+	if ( ! empty( $group_id ) ) {
+		$email_type = 'group-message-digest';
+		if ( bp_is_active( 'groups' ) ) {
+			$group      = groups_get_group( $group_id );
+			$group_name = bp_get_group_name( $group );
+		} else {
+			$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+			$groups_table = $prefix . 'bp_groups';
+			$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
+		}
+
+		$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+
+		// Get notification type key.
+		$type_key = 'notification_group_messages_new_message';
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		}
+	}
+
+	$message_slug = bp_get_messages_slug();
+
+	static $moderation = array();
+	foreach ( $recipient_messages as $messages ) {
+
+		foreach ( $messages as $message_key => $message ) {
+
+			// Check the sender is blocked by recipient or not.
+			$cache_key = $message['recipients_id'] . '-' . $message['sender_id'];
+			if ( ! isset( $moderation[ $cache_key ] ) ) {
+				$moderation[ $cache_key ] = (bool) apply_filters( 'bb_is_recipient_moderated', false, $message['recipients_id'], $message['sender_id'] );
+			}
+
+			if ( true === $moderation[ $cache_key ] ) {
+				unset( $messages[ $message_key ] );
+			}
+		}
+
+		if ( empty( $messages ) ) {
+			continue;
+		}
+
+		$current_message = current( $messages );
+		$recipients_id   = isset( $current_message['recipients_id'] ) ? $current_message['recipients_id'] : 0;
+
+		if ( empty( $recipients_id ) ) {
+			continue;
+		}
+
+		// Notification enabled or not.
+		if ( false === bb_is_notification_enabled( $recipients_id, $type_key ) ) {
+			continue;
+		}
+
+		// User data and links.
+		$ud = get_userdata( $recipients_id );
+		if ( empty( $ud ) ) {
+			continue;
+		}
+
+		$unsubscribe_args = array(
+			'user_id'           => $recipients_id,
+			'notification_type' => $email_type,
+		);
+
+		$tokens                 = array();
+		$tokens['usersubject']  = isset( $first_message->subject ) ? $first_message->subject : '';
+		$tokens['unread.count'] = count( $messages );
+		$tokens['group.id']     = $group_id;
+		$tokens['group.name']   = $group_name;
+		$tokens['message.url']  = esc_url( bp_core_get_user_domain( $recipients_id ) . $message_slug . '/view/' . $thread_id . '/' );
+		$tokens['unsubscribe']  = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+		// Slice array to get last five records.
+		$messages          = array_slice( $messages, - 5 );
+		$tokens['message'] = $messages;
+
+		bp_send_email(
+			$email_type,
+			$ud,
+			array(
+				'tokens' => $tokens,
+			)
+		);
+	}
+}
+
+/**
+ * Get thread id from message id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $message_id Message ID.
+ *
+ * @return integer
+ */
+function bb_get_thread_id_by_message_id( $message_id ) {
+	global $wpdb;
+	$bp = buddypress();
+
+	if ( empty( $message_id ) ) {
+		return 0;
+	}
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$sql = $wpdb->prepare( "SELECT thread_id FROM {$bp->messages->table_name_messages} WHERE id = %d LIMIT 1", $message_id );
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	return $wpdb->get_var( $sql );
+}
+
+/**
+ * Function to check the Hide messages from notifications is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_hide_messages_from_notification_enabled() {
+	return (bool) apply_filters( 'bb_hide_messages_from_notification_enabled', bp_get_option( 'hide_message_notification', 1 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_delay_email_notifications_enabled() {
+	return (bool) apply_filters( 'bb_delay_email_notifications_enabled', bp_get_option( 'delay_email_notification', 1 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_get_delay_email_notifications_time() {
+	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled with pusher or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_check_delay_email_notification() {
+	return (bool) ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() );
+}
+
+/**
+ * Function to search value by minutes from the bb_get_delay_notification_times function.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $time Notification delay time.
+ *
+ * @return array
+ */
+function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
+	$get_delay_times     = bb_notification_get_digest_cron_times();
+	$search_schedule_key = array_search( (int) $time, array_column( $get_delay_times, 'value' ), true );
+
+	if ( isset( $get_delay_times[ $search_schedule_key ] ) ) {
+		return $get_delay_times[ $search_schedule_key ];
+	}
+
+	return array();
+}
+
+/**
+ * Schedule digest notification action times.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_notification_get_digest_cron_times() {
+
+	$delay_times = array(
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d mins', 'buddyboss' ),
+				5
+			),
+			'value'        => 5,
+			'schedule_key' => 'bb_schedule_5min',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d mins', 'buddyboss' ),
+				15
+			),
+			'value'        => 15,
+			'schedule_key' => 'bb_schedule_15min',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d mins', 'buddyboss' ),
+				30
+			),
+			'value'        => 30,
+			'schedule_key' => 'bb_schedule_30min',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d hour', 'buddyboss' ),
+				1
+			),
+			'value'        => 60,
+			'schedule_key' => 'bb_schedule_1hour',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d hours', 'buddyboss' ),
+				3
+			),
+			'value'        => 180,
+			'schedule_key' => 'bb_schedule_3hours',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d hours', 'buddyboss' ),
+				12
+			),
+			'value'        => 720,
+			'schedule_key' => 'bb_schedule_12hours',
+		),
+		array(
+			'label'        => sprintf(
+			/* translators: %s: The admin setting field label. */
+				__( '%d hours', 'buddyboss' ),
+				24
+			),
+			'value'        => 1440,
+			'schedule_key' => 'bb_schedule_24hours',
+		),
+	);
+
+	return apply_filters( 'bb_notification_get_digest_cron_times', $delay_times );
 }
