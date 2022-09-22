@@ -3779,6 +3779,12 @@ window.bp = window.bp || {};
 				if ( '' !== updatedThread ) {
 					var threads = bp.Nouveau.Messages.threads.parse( { threads: [ updatedThread ] } );
 					bp.Nouveau.Messages.threads.unshift( _.first( threads ) );
+					if (
+						'undefined' !== typeof bp.Pusher_FrontCommon &&
+						'function' === typeof bp.Pusher_FrontCommon.updateOnlineStatus
+					) {
+						bp.Pusher_FrontCommon.updateOnlineStatus();
+					}
 				} else {
 					this.requestThreads( hideLoader );
 				}
