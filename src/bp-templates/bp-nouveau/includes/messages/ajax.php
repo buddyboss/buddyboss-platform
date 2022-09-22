@@ -541,6 +541,15 @@ function bp_nouveau_ajax_messages_send_reply() {
 		}
 	}
 
+	// Find the thread is group or not.
+	$group         = '';
+	$first_message = BP_Messages_Thread::get_first_message( $thread_id );
+	$group_id      = bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
+
+	if ( ! empty( $group_id ) ) {
+		$group = groups_get_group( $group_id );
+	}
+
 	$date_sent = bp_core_current_time();
 
 	// Check the sent_at param is requested or not.
@@ -557,17 +566,31 @@ function bp_nouveau_ajax_messages_send_reply() {
 		}
 	}
 
-	$new_reply = messages_new_message(
-		array(
-			'thread_id'    => $thread_id,
-			'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
-			'content'      => $_POST['content'],
-			'date_sent'    => $date_sent,
-			'mark_visible' => false,
-			'error_type'   => 'wp_error',
-			'return'       => 'id',
-		)
-	);
+	if ( empty( $group ) ) {
+		$new_reply = messages_new_message(
+			array(
+				'thread_id'    => $thread_id,
+				'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
+				'content'      => $_POST['content'],
+				'date_sent'    => $date_sent,
+				'mark_visible' => false,
+				'error_type'   => 'wp_error',
+				'return'       => 'id',
+			)
+		);
+	} else {
+		$new_reply = bp_groups_messages_new_message(
+			array(
+				'thread_id'    => $thread_id,
+				'subject'      => false,
+				'content'      => $_POST['content'],
+				'date_sent'    => $date_sent,
+				'mark_visible' => false,
+				'error_type'   => 'wp_error',
+				'return'       => 'id',
+			)
+		);
+	}
 
 	if ( is_wp_error( $new_reply ) ) {
 		$response['feedback'] = $new_reply->get_error_message();
@@ -742,6 +765,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'full'          => bb_get_media_photos_theatre_popup_image(),
 					'meta'          => $media_template->media->attachment_data->meta,
 					'privacy'       => bp_get_media_privacy(),
+					'height'        => ( isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : '' ),
+					'width'         => ( isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : '' ),
 				);
 			}
 		}
@@ -2849,6 +2874,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'full'          => bb_get_media_photos_theatre_popup_image(),
 						'meta'          => $media_template->media->attachment_data->meta,
 						'privacy'       => bp_get_media_privacy(),
+						'height'        => ( isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : '' ),
+						'width'         => ( isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : '' ),
 					);
 				}
 			}
