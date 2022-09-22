@@ -1390,8 +1390,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					);
 
 					if ( bp_is_active( 'moderation' ) ) {
-						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['is_user_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['is_user_blocked'] = bp_moderation_is_user_blocked( $recipient->user_id );
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['can_be_blocked']  = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 					}
 
 					$count ++;
