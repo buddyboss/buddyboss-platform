@@ -89,7 +89,6 @@
 				<# for ( i in data.media ) { #>
 				<div class="bb-activity-media-elem">
 				   <#
-					var image_class = '';
 					var image_style = '';
 					if ( data.media[i].id ) {
 						if (
@@ -97,21 +96,39 @@
 						data.media[i].width !== '' &&
 						data.media[i].height !== ''
 						) {
-							var ratio = ( ( parseInt(data.media[i].height) * 100 ) / parseInt(data.media[i].width) ).toFixed(2);
-							var width = parseInt(data.media[i].width) < 360 ? parseInt(data.media[i].width) : 360;
-							var image_class = 'single-ratio';
-							var image_style = 'padding-top:' + ratio + '%; width:' + width + 'px;';
+							var media_height = '';
+							var media_width = '';
+							if( data.media[i].width > 360 ) {
+								media_height	= ( data.media[i].height / data.media[i].width ) * 360 + 'px';
+								media_width		= '360px';
+
+								if( parseInt( media_height.replace( 'px', '' ) ) > 360 ) {
+									media_width	= ( parseInt( media_width.replace( 'px', '' ) ) / ( parseInt( media_height.replace( 'px', '' ) ) ) * 360 ) + 'px';
+									media_height	= '360px';
+								}
+
+							} else if( data.media[i].height > 360 ) {
+								media_height	= '360px';
+								media_width		= ( ( data.media[i].width / data.media[i].height ) * 360 ) + 'px';
+							} else {
+								media_height	= data.media[i].height + 'px';
+								media_width		= data.media[i].width + 'px';
+							}
+							var image_style = 'width:' + media_width + '; height:' + media_height;
 						}
 					#>
-					<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap {{ image_class }}"
+					<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
 					   data-id="{{data.media[i].id}}"
 					   data-attachment-id="{{data.media[i].attachment_id}}"
 					   data-attachment-full="{{data.media[i].full}}"
 					   data-privacy="{{data.media[i].privacy}}"
 					   href="#"
-					   <# if ( image_style != '' ) { #>style="{{image_style}}"<# } #>
 					   >
-						<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
+						<img 
+							<# if ( image_style != '' ) { #>style="{{image_style}}"<# } #>
+							src="{{data.media[i].thumbnail}}"
+							alt="{{data.media[i].title}}"
+						/>
 					</a>
 				   <# } #>
 				</div>

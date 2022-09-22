@@ -891,6 +891,7 @@ input#send-to-input {
 
 	.bp-messages-container #subnav & {
 		margin-left: 10px;
+		margin-bottom: 5px;
 	}
 
 	.bp-messages-container.bp-compose-message & {
@@ -1273,10 +1274,6 @@ input#send-to-input {
 
 	.bb-icons {
 		font-size: 24px;
-	}
-
-	.bp-messages-container.bp-no-messages.bp-compose-message & {
-		display: none;
 	}
 }
 

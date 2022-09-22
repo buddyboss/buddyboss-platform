@@ -156,8 +156,12 @@ window.bp = window.bp || {};
 				'click',
 				function( event ) {
 
-					// Do nothing if it's dropdown
+					// Do nothing if it's dropdown.
 					if( $( event.currentTarget ).data( 'action' ) == 'more_options' ) {
+						return event;
+					}
+
+					if ( 'back-to-thread' === $( event.currentTarget ).prop( 'id' ) ) {
 						return event;
 					}
 
@@ -174,7 +178,6 @@ window.bp = window.bp || {};
 						$( event.target ).parents( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
 						// Other views are classic.
 					} else {
-
 						if ( self.box !== view_id || ! _.isUndefined( self.views.get( 'compose' ) ) ) {
 							self.clearViews();
 
@@ -1137,8 +1140,8 @@ window.bp = window.bp || {};
 
 		backToThreadList: function( event ) {
 			event.preventDefault();
-			bp.Nouveau.Messages.router.navigate( '/' );
-			window.location.reload();
+			window.location.href = BP_Nouveau.messages.message_url;
+			return false;
 		},
 
 		createCookie: function ( name, value, minutes ) {
@@ -1245,11 +1248,11 @@ window.bp = window.bp || {};
 				}
 
 				this.set( 'sending', true, { silent: true } );
-				
+
 				var params = {
 					nonce  : BP_Nouveau.messages.nonces.send,
 				};
-				
+
 				if (
 					'undefined' !== typeof bp.Pusher_FrontCommon &&
 					'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
@@ -1482,9 +1485,10 @@ window.bp = window.bp || {};
 
 				if ( 'create' === method ) {
 					var params = {
-						action : 'messages_send_reply',
-						nonce  : BP_Nouveau.messages.nonces.send,
-						hash   : new Date().getTime()
+						action  : 'messages_send_reply',
+						nonce   : BP_Nouveau.messages.nonces.send,
+						hash    : new Date().getTime(),
+						send_at : bp.Nouveau.Messages.getUTCDateTime()
 					};
 
 					if (
@@ -1499,16 +1503,6 @@ window.bp = window.bp || {};
 						params,
 						model || {}
 					);
-
-					if ( 'undefined' !== typeof bb_pusher_vars && 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
-						options.data = _.extend(
-							options.data,
-							{
-								send_at : bp.Nouveau.Messages.getUTCDateTime()
-							},
-							model || {}
-						);
-					}
 
 					return bp.ajax.send( options ).done(
 						function( response ) {
@@ -4786,6 +4780,25 @@ window.bp = window.bp || {};
 					this.$el.addClass( 'focus-in--scroll' );
 				} else {
 					this.$el.removeClass( 'focus-in--scroll' );
+				}
+
+				// Check if current listed messages are not enough and we can load more messages to fill out the empty space
+				var MessageThreadHeight = 0;
+				$('#bp-message-thread-list > li').each( function() {
+					MessageThreadHeight += $(this).outerHeight();
+				});
+				if( jQuery( '#bp-message-thread-list' ).height() > MessageThreadHeight ) {
+					var button = $( '#bp-message-load-more' ).find( 'button' );
+					if ( ! button.hasClass( 'loading' ) ) {
+						button.trigger( 'click' );
+						button.addClass( 'initial-load');
+					}
+				}
+				if( $( '#bp-message-load-more' ).find( 'button' ).hasClass( 'initial-load') ) {
+					setTimeout( function() {
+						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 100 );
+						$( '#bp-message-load-more' ).find( 'button' ).removeClass( 'initial-load');
+					},0);
 				}
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
