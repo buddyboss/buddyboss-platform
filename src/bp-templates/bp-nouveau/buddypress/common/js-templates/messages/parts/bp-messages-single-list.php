@@ -98,8 +98,8 @@
 								media_height	= '360px';
 								media_width		= ( ( data.media[i].width / data.media[i].height ) * 360 ) + 'px';
 							} else {
-								media_height	= data.media[i].height;
-								media_width		= data.media[i].width;
+								media_height	= data.media[i].height + 'px';
+								media_width		= data.media[i].width + 'px';
 							}
 							var image_style = 'width:' + media_width + '; height:' + media_height;
 						}
