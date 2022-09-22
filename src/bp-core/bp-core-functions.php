@@ -7706,6 +7706,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
+		case 'bp_messaging_notification_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
+			break;
 		case 'bp_web_push_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
