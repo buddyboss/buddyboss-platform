@@ -150,17 +150,17 @@
 								<span class="document-title">{{data.document[i].title}}.{{data.document[i].extension}}</span>
 								<span class="document-description">{{data.document[i].size}}</span>
 								{{{data.document[i].extension_description}}}
-								<span class="document-helper-text"> <span> — </span> <span class="document-helper-text-inner">{{data.document[i].download_text}}</span></span>
+								<span class="document-helper-text"> <span> - </span> <span class="document-helper-text-inner">{{data.document[i].download_text}}</span></span>
 							</a>
 						</div>
 						<div class="document-action-wrap">
-							<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="{{data.document[i].collapse}}"><i class="bb-icon-arrow-up bb-icon-l document-icon-collapse"></i></a>
+							<a href="#" class="document-action_collapse" data-balloon-pos="up" data-tooltip-collapse="{{data.document[i].collapse}}" data-balloon="{{data.document[i].expand}}"><i class="bb-icon-merge bb-icon-l document-icon-collapse"></i></a>
 							<a href="{{data.document[i].url}}" class="document-action_download" data-balloon-pos="up" data-balloon="{{data.document[i].download}}">
 								<i class="bb-icon-l bb-icon-download"></i>
 							</a>
 
 							<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="{{data.document[i].more_action}}">
-								<i class="bb-icon-f bb-icon-ellipsis-v"></i>
+								<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 							</a>
 							<div class="document-action_list bb_more_dropdown">
 								<div class="bb_more_dropdown__title">
