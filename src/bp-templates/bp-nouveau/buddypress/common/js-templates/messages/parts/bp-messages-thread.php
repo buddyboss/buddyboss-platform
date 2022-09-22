@@ -93,7 +93,7 @@
 					<li class="report_thread">
 						<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 					</li>
-				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_blocked ) { #>
+				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_user_blocked ) { #>
 					<li class="reported_thread">
 						<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 					</li>

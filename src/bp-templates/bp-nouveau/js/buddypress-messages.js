@@ -648,7 +648,7 @@ window.bp = window.bp || {};
 										cloneUserItemWrap.find( '.user-avatar img' ).attr( 'alt', item.user_name );
 										cloneUserItemWrap.find( '.user-avatar > a' ).attr( 'href', item.user_link );
 										cloneUserItemWrap.find( '.user-name' ).html( '<a href="' + item.user_link + '">' + item.user_name + '</a>' );
-										if ( true === item.is_blocked ) {
+										if ( true === item.is_user_blocked ) {
 											cloneUserItemWrap.find( '.user-actions .block-member' ).removeAttr( 'data-bp-content-id' );
 											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type' );
 											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce' );
