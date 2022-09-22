@@ -1323,6 +1323,7 @@ function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string Get default avatar image URL based on settings.
 	 * @param int   $user_id User id.
 	 * @param array $args    Arguments passed to get_avatar_data(), after processing.
 	 */
@@ -1370,6 +1371,7 @@ function bb_moderation_is_suspended_label( $user_id = 0 ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string Default suspended label.
 	 * @param int $user_id User id.
 	 */
 	return apply_filters( 'bb_moderation_is_suspended_label', esc_html__( 'Unknown Member', 'buddyboss' ), $user_id );
@@ -1392,6 +1394,7 @@ function bb_moderation_is_suspended_avatar( $user_id, $args = array() ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string Get default avatar image URL based on settings.
 	 * @param int   $user_id User id.
 	 * @param array $args    Arguments passed to get_avatar_data(), after processing.
 	 */
