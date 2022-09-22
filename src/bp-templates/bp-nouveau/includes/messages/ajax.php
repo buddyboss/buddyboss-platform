@@ -327,7 +327,7 @@ function bp_nouveau_ajax_messages_send_message() {
 					foreach ( $messages_template->thread->recipients as $recipient ) {
 						if ( empty( $recipient->is_deleted ) ) {
 							$response['recipients'][] = array(
-								'avatar'     => esc_url(
+								'avatar'             => esc_url(
 									bp_core_fetch_avatar(
 										array(
 											'item_id' => $recipient->user_id,
@@ -339,10 +339,13 @@ function bp_nouveau_ajax_messages_send_message() {
 										)
 									)
 								),
-								'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-								'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
-								'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-								'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
+								'user_link'          => bp_core_get_userlink( $recipient->user_id, false, true ),
+								'user_name'          => bp_core_get_user_displayname( $recipient->user_id ),
+								'is_deleted'         => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+								'is_you'             => bp_loggedin_user_id() === $recipient->user_id,
+								'is_user_suspended'  => function_exists( 'bp_moderation_is_user_suspended' ) ? bp_moderation_is_user_suspended( $recipient->user_id ) : false,
+								'is_user_blocked'    => function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $recipient->user_id ) : false,
+								'is_user_blocked_by' => function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $recipient->user_id ) : false,
 							);
 
 							$response['action_recipients']['members'][ $recipient_index ] = array(
@@ -366,8 +369,10 @@ function bp_nouveau_ajax_messages_send_message() {
 							);
 
 							if ( bp_is_active( 'moderation' ) ) {
-								$response['action_recipients']['members'][ $recipient_index ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-								$response['action_recipients']['members'][ $recipient_index ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+								$response['action_recipients']['members'][ $recipient_index ]['is_user_blocked']    = bp_moderation_is_user_blocked( $recipient->user_id );
+								$response['action_recipients']['members'][ $recipient_index ]['can_be_blocked']     = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+								$response['action_recipients']['members'][ $recipient_index ]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
+								$response['action_recipients']['members'][ $recipient_index ]['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
 							}
 							$recipient_index++;
 						}
@@ -1385,7 +1390,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					);
 
 					if ( bp_is_active( 'moderation' ) ) {
-						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['is_user_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
 						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 					}
 
@@ -2478,8 +2483,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				);
 
 				if ( bp_is_active( 'moderation' ) ) {
-					$thread->thread['recipients']['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-					$thread->thread['recipients']['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					$thread->thread['recipients']['members'][ $count ]['is_user_blocked']    = bp_moderation_is_user_blocked( $recipient->user_id );
+					$thread->thread['recipients']['members'][ $count ]['can_be_blocked']     = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 					$thread->thread['recipients']['members'][ $count ]['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
 					$thread->thread['recipients']['members'][ $count ]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
 				}
@@ -3296,8 +3301,8 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 							'id'         => $recipient->user_id,
 						);
 						if ( bp_is_active( 'moderation' ) ) {
-							$recipients_arr['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-							$recipients_arr['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+							$recipients_arr['members'][ $count ]['is_user_blocked'] = bp_moderation_is_user_blocked( $recipient->user_id );
+							$recipients_arr['members'][ $count ]['can_be_blocked']  = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 						}
 						$count ++;
 					}
