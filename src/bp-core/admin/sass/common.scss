@@ -1977,7 +1977,7 @@ body.post-type-bp_ps_form .page-title-action {
 /* Notices */
 .buddypress .wrap div#message,
 .buddypress .wrap div.notice {
-	margin: 25px 0 0;
+	margin: 25px 0 15px;
 }
 
 tr.child-no-padding th {
@@ -2214,6 +2214,14 @@ body .section-repair_community .settings fieldset .checkbox label code {
 			vertical-align: middle;
 		}
 
+	}
+
+	.content_type strong {
+		color: #1d2327;
+
+		> span {
+			color: #808080;
+		}
 	}
 
 }
