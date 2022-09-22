@@ -1387,7 +1387,7 @@ function bb_moderation_is_suspended_label( $user_id = 0 ) {
  *
  * @return mixed|void
  */
-function bb_moderation_is_suspended_avatar( $user_id, $args = array() ) {
+function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
 
 	/**
 	 * Filter to update is_suspended_avatar.
