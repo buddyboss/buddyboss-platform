@@ -52,7 +52,7 @@
 			<a href="{{{recipient.user_link}}}">
 				<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
 				<# if ( 0 === recipient.is_deleted ) {
-					if ( recipient.is_blocked ) { #>
+					if ( recipient.is_user_blocked ) { #>
 						<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
 				<# } else if ( recipient.is_user_blocked_by ) { #>
 						<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
