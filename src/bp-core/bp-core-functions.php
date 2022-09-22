@@ -7740,6 +7740,7 @@ function bb_validate_gravatar( $email ) {
 
 	return $has_valid_avatar;
 }
+
 /** Function to get the client machine os.
  *
  * @since BuddyBoss [BBVERSION]
