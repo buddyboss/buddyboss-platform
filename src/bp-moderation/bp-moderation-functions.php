@@ -1271,6 +1271,15 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
  * @return mixed|void
  */
 function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
+
+	/**
+	 * Filter to update is_blocked_label.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value   Current user display name.
+	 * @param int    $user_id User id.
+	 */
 	return apply_filters( 'bb_moderation_is_blocked_label', $value, $user_id );
 }
 
@@ -1285,6 +1294,15 @@ function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
  * @return mixed|void
  */
 function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
+
+	/**
+	 * Filter to update has_blocked_label.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value   Current user display name.
+	 * @param int    $user_id User id.
+	 */
 	return apply_filters( 'bb_moderation_has_blocked_label', $value, $user_id );
 }
 
@@ -1299,6 +1317,15 @@ function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
  * @return mixed|void
  */
 function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
+
+	/**
+	 * Filter to update is_blocked_avatar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $user_id User id.
+	 * @param array $args    Arguments passed to get_avatar_data(), after processing.
+	 */
 	return apply_filters( 'bb_moderation_is_blocked_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
 }
 
@@ -1314,6 +1341,16 @@ function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
  * @return mixed|void
  */
 function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array() ) {
+
+	/**
+	 * Filter to update has_blocked_avatar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $avatar_url Current avatar URL.
+	 * @param int    $user_id    User id.
+	 * @param array  $args       Arguments passed to get_avatar_data(), after processing.
+	 */
 	return apply_filters( 'bb_moderation_has_blocked_avatar', $avatar_url, $user_id, $args );
 }
 
@@ -1327,6 +1364,14 @@ function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array(
  * @return mixed|void
  */
 function bb_moderation_is_suspended_label( $user_id = 0 ) {
+
+	/**
+	 * Filter to update is_suspended_label.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id User id.
+	 */
 	return apply_filters( 'bb_moderation_is_suspended_label', esc_html__( 'Unknown Member', 'buddyboss' ), $user_id );
 }
 
@@ -1341,5 +1386,14 @@ function bb_moderation_is_suspended_label( $user_id = 0 ) {
  * @return mixed|void
  */
 function bb_moderation_is_suspended_avatar( $user_id, $args = array() ) {
+
+	/**
+	 * Filter to update is_suspended_avatar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $user_id User id.
+	 * @param array $args    Arguments passed to get_avatar_data(), after processing.
+	 */
 	return apply_filters( 'bb_moderation_is_suspended_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
 }

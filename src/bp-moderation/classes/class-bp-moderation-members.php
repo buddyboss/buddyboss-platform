@@ -276,6 +276,15 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			$retval = bb_moderation_is_blocked_avatar( $user->ID, $args );
 		}
 
+		/**
+		 * Filter to update blocked avatar url.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $retval         The URL of the avatar.
+		 * @param string $old_avatar_url URL for a originally uploaded avatar.
+		 * @param array  $args           Arguments passed to get_avatar_data(), after processing.
+		 */
 		return apply_filters( 'bb_get_blocked_avatar_url', $retval, $old_retval, $args );
 	}
 
@@ -306,6 +315,15 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			}
 		}
 
+		/**
+		 * Filter to update blocked avatar url.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $avatar_url     URL for a locally uploaded avatar.
+		 * @param string $old_avatar_url URL for a originally uploaded avatar.
+		 * @param array  $params         Array of parameters for the request.
+		 */
 		return apply_filters( 'bb_get_blocked_avatar_url', $avatar_url, $old_avatar_url, $params );
 	}
 
