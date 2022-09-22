@@ -1289,9 +1289,9 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				'id'                 => esc_attr( $avatar_user_id ),
 				'type'               => 'user',
 				'link'               => bp_core_get_user_domain( $avatar_user_id ),
-				'is_user_suspended'  => bp_moderation_is_user_suspended( $avatar_user_id ),
-				'is_user_blocked'    => bp_moderation_is_user_blocked( $avatar_user_id ),
-				'is_user_blocked_by' => bb_moderation_is_user_blocked_by( $avatar_user_id ),
+				'is_user_suspended'  => function_exists( 'bp_moderation_is_user_suspended' ) ? bp_moderation_is_user_suspended( $avatar_user_id ) : false,
+				'is_user_blocked'    => function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $avatar_user_id ) : false,
+				'is_user_blocked_by' => function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $avatar_user_id ) : false,
 				'is_deleted'         => empty( get_userdata( $avatar_user_id ) ) ? 1 : 0,
 			);
 		}
