@@ -3088,8 +3088,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ] = array_merge( $thread->messages[ $i ], $extra_content );
 		}
 
+		// Sent date convert into the site zone.
+		$date_sent_formatted = bp_core_get_format_date( $thread_template->message->date_sent, 'Y-m-d h:i:s' );
+
 		$thread->messages[ $i ]['sent_date']       = ucfirst( bb_get_thread_start_date( $thread_template->message->date_sent ) );
-		$thread->messages[ $i ]['sent_split_date'] = date_i18n( 'Y-m-d', strtotime( $thread_template->message->date_sent ) );
+		$thread->messages[ $i ]['sent_split_date'] = get_date_from_gmt( $date_sent_formatted, 'Y-m-d' );
 
 		$i += 1;
 	endwhile;
