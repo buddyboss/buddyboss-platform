@@ -10497,6 +10497,7 @@ input#send-to-input {
 
 .bp-messages-container #subnav #compose-personal-li {
   margin-left: 10px;
+  margin-bottom: 5px;
 }
 
 .bp-messages-container.bp-compose-message #compose-personal-li {
@@ -10861,10 +10862,6 @@ input#send-to-input {
 
 .bp-close-compose-form .bb-icons {
   font-size: 24px;
-}
-
-.bp-messages-container.bp-no-messages.bp-compose-message .bp-close-compose-form {
-  display: none;
 }
 
 #message_content {

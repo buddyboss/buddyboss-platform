@@ -61,9 +61,22 @@ function messages_new_message( $args = '' ) {
 			'mark_visible'  => false,
 			'group_thread'  => false,
 			'error_type'    => 'bool',
+			'send_at'       => $current_sent_time,
 		),
 		'messages_new_message'
 	);
+
+	if ( ! empty( $r['send_at'] ) && strtotime( $r['date_sent'] ) !== strtotime( $r['send_at'] ) ) {
+
+		$date_sent_timestamp        = strtotime( $r['date_sent'] );
+		$date_sent_timestamp_before = $date_sent_timestamp - ( 60 * 5 );
+		$send_at_timestamp          = strtotime( $r['send_at'] );
+
+		// Check the pusher date is not more than 5 mins.
+		if ( $send_at_timestamp <= $date_sent_timestamp && $send_at_timestamp >= $date_sent_timestamp_before ) {
+			$r['date_sent'] = $r['send_at'];
+		}
+	}
 
 	// Bail if no sender or no content.
 	if ( empty( $r['sender_id'] ) ) {

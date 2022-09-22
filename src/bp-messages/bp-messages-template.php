@@ -2368,11 +2368,18 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 		1,
 	);
 
-	$old_last_date = $last_message_date;
-
-	if ( ! empty( $last_message_date ) && ! is_numeric( $last_message_date ) ) {
-		$last_message_date = strtotime( $last_message_date );
+	if ( is_numeric( $last_message_date ) ) {
+		$last_message_date_formatted = bp_core_get_format_date( $last_message_date, 'Y-m-d h:i:s' );
+	} else {
+		$last_message_date_formatted = $last_message_date;
 	}
+
+	// Convert UTC to WordPress timezone.
+	$last_message_date = get_date_from_gmt( $last_message_date_formatted );
+
+	// Backup formatted date to use later.
+	$old_last_date     = $last_message_date;
+	$last_message_date = strtotime( $last_message_date );
 
 	// Calculate the different with current time for past 5 mins.
 	$newer_current_date = strtotime( bp_core_current_time() );
@@ -2388,7 +2395,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 		 * a date and the today end time. $newer_date will have a value if we want to
 		 * work out time elapsed between two known dates.
 		 */
-		$newer_date = date_i18n( 'Y-m-d', false, true ) . ' 23:59:59';
+		$newer_date = date_i18n( 'Y-m-d' ) . ' 23:59:59';
 		$newer_date = strtotime( $newer_date );
 
 		// Difference in seconds.
@@ -2435,8 +2442,8 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M j' ) : bp_core_get_format_date( $old_last_date, 'M j, Y' );
 						break;
 					case WEEK_IN_SECONDS:
-						$start_week = bb_get_week_start_timestamp( '-7 days' );
-						$end_week   = bb_get_week_end_timestamp( 'now' );
+						$start_week = bb_get_week_timestamp( '-7 days' );
+						$end_week   = bb_get_week_timestamp( 'now', 'end' );
 
 						if ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
@@ -2445,8 +2452,8 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 						}
 						break;
 					case DAY_IN_SECONDS:
-						$start_week = bb_get_week_start_timestamp( '-7 days' );
-						$end_week   = bb_get_week_end_timestamp( 'now' );
+						$start_week = bb_get_week_timestamp( '-7 days' );
+						$end_week   = bb_get_week_timestamp( 'now', 'end' );
 						if ( 1 == $count ) {
 							$output = __( 'Yesterday', 'buddyboss' );
 						} elseif ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
@@ -2532,21 +2539,28 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 		1,
 	);
 
-	$old_start_date = $thread_start_date;
-
-	if ( ! empty( $thread_start_date ) && ! is_numeric( $thread_start_date ) ) {
-		$thread_start_date = strtotime( $thread_start_date );
+	if ( is_numeric( $thread_start_date ) ) {
+		$last_message_date_formatted = bp_core_get_format_date( $thread_start_date, 'Y-m-d h:i:s' );
+	} else {
+		$last_message_date_formatted = $thread_start_date;
 	}
+
+	// Convert UTC to WordPress timezone.
+	$thread_start_date = get_date_from_gmt( $last_message_date_formatted );
+
+	// Backup formatted date to use later.
+	$old_start_date    = $thread_start_date;
+	$thread_start_date = strtotime( $thread_start_date );
 
 	/**
 	 * $newer_date will equal false if we want to know the time elapsed between
 	 * a date and the today end time. $newer_date will have a value if we want to
 	 * work out time elapsed between two known dates.
 	 */
-	$newer_date = date_i18n( 'Y-m-d', false, true ) . ' 23:59:59';
+	$newer_date = date_i18n( 'Y-m-d' ) . ' 23:59:59';
 	$newer_date = strtotime( $newer_date );
 
-	$end_week = bb_get_week_start_timestamp( '-7 days' );
+	$end_week = bb_get_week_timestamp( '-7 days' );
 
 	// Difference in seconds.
 	$since = $newer_date - $thread_start_date;
@@ -2646,6 +2660,9 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
  * @return string
  */
 function bb_get_the_thread_message_sent_time() {
+	$sent_date           = bp_get_the_thread_message_date_sent();
+	$sent_date_formatted = date_i18n( 'Y-m-d h:i:s', $sent_date );
+	$site_sent_date      = get_date_from_gmt( $sent_date_formatted );
 
 	/**
 	 * Filters the 'Sent x hours ago' string for the current message.
@@ -2654,7 +2671,7 @@ function bb_get_the_thread_message_sent_time() {
 	 *
 	 * @param string $value Default text of 'Sent x hours ago'.
 	 */
-	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', bp_get_the_thread_message_date_sent() ) ) );
+	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', strtotime( $site_sent_date ) ) ) );
 }
 
 /**
