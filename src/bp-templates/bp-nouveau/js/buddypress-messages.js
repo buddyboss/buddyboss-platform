@@ -4784,6 +4784,25 @@ window.bp = window.bp || {};
 					this.$el.removeClass( 'focus-in--scroll' );
 				}
 
+				// Check if current listed messages are not enough and we can load more messages to fill out the empty space
+				var MessageThreadHeight = 0;
+				$('#bp-message-thread-list > li').each( function() {
+					MessageThreadHeight += $(this).outerHeight();
+				});
+				if( jQuery( '#bp-message-thread-list' ).height() > MessageThreadHeight ) {
+					var button = $( '#bp-message-load-more' ).find( 'button' );
+					if ( ! button.hasClass( 'loading' ) ) {
+						button.trigger( 'click' );
+						button.addClass( 'initial-load');
+					}
+				}
+				if( $( '#bp-message-load-more' ).find( 'button' ).hasClass( 'initial-load') ) {
+					setTimeout( function() {
+						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 100 );
+						$( '#bp-message-load-more' ).find( 'button' ).removeClass( 'initial-load');
+					},0);
+				}
+
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
 
