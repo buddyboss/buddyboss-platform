@@ -553,18 +553,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$date_sent = bp_core_current_time();
 
 	// Check the sent_at param is requested or not.
-	$pusher_send_at = ! empty( $_POST['send_at'] ) ? sanitize_text_field( wp_unslash( $_POST['send_at'] ) ) : '';
-	if ( ! empty( $pusher_send_at ) ) {
-
-		$date_sent_timestamp        = strtotime( $date_sent );
-		$date_sent_timestamp_before = $date_sent_timestamp - ( 60 * 5 );
-		$pusher_send_at_timestamp   = strtotime( $pusher_send_at );
-
-		// Check the pusher date is not more than 5 mins.
-		if ( $pusher_send_at_timestamp <= $date_sent_timestamp && $pusher_send_at_timestamp >= $date_sent_timestamp_before ) {
-			$date_sent = $pusher_send_at;
-		}
-	}
+	$send_at = ! empty( $_POST['send_at'] ) ? sanitize_text_field( wp_unslash( $_POST['send_at'] ) ) : '';
 
 	if ( empty( $group ) ) {
 		$new_reply = messages_new_message(
@@ -576,6 +565,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				'mark_visible' => false,
 				'error_type'   => 'wp_error',
 				'return'       => 'id',
+				'send_at'      => $send_at,
 			)
 		);
 	} else {
@@ -588,6 +578,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				'mark_visible' => false,
 				'error_type'   => 'wp_error',
 				'return'       => 'id',
+				'send_at'      => $send_at,
 			)
 		);
 	}
@@ -3102,8 +3093,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ] = array_merge( $thread->messages[ $i ], $extra_content );
 		}
 
+		// Sent date convert into the site zone.
+		$date_sent_formatted = bp_core_get_format_date( $thread_template->message->date_sent, 'Y-m-d h:i:s' );
+
 		$thread->messages[ $i ]['sent_date']       = ucfirst( bb_get_thread_start_date( $thread_template->message->date_sent ) );
-		$thread->messages[ $i ]['sent_split_date'] = date_i18n( 'Y-m-d', strtotime( $thread_template->message->date_sent ) );
+		$thread->messages[ $i ]['sent_split_date'] = get_date_from_gmt( $date_sent_formatted, 'Y-m-d' );
 
 		$i += 1;
 	endwhile;
