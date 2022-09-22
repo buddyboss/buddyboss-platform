@@ -150,7 +150,14 @@ class BP_Activity_Follow {
 	public static function get_followers( $user_id ) {
 		global $bp, $wpdb;
 
-		$followers_sql = $wpdb->prepare( "SELECT follower_id FROM {$bp->activity->table_name_follow} WHERE leader_id = %d", $user_id );
+		$sql['select'] = "SELECT u.follower_id FROM {$bp->activity->table_name_follow} u ";
+		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'follower_id' );
+
+		$sql['where'][] = $wpdb->prepare( "leader_id = %d", $user_id );
+		$sql['where']   = apply_filters( 'bp_user_query_where_sql', $sql['where'], 'follower_id' );
+		
+		$where_sql      = 'WHERE ' . join( ' AND ', $sql['where'] );
+		$followers_sql  = "{$sql['select']} {$where_sql}";
 
 		$cached = bp_core_get_incremented_cache( $followers_sql, 'bp_activity_follow' );
 
@@ -175,7 +182,14 @@ class BP_Activity_Follow {
 	public static function get_following( $user_id ) {
 		global $bp, $wpdb;
 
-		$following_sql = $wpdb->prepare( "SELECT leader_id FROM {$bp->activity->table_name_follow} WHERE follower_id = %d", $user_id );
+		$sql['select'] = "SELECT u.leader_id FROM {$bp->activity->table_name_follow} u ";
+		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'leader_id' );
+
+		$sql['where'][] = $wpdb->prepare( "follower_id = %d", $user_id );
+		$sql['where']   = apply_filters( 'bp_user_query_where_sql', $sql['where'], 'leader_id' );
+		
+		$where_sql      = 'WHERE ' . join( ' AND ', $sql['where'] );
+		$following_sql  = "{$sql['select']} {$where_sql}";
 
 		$cached = bp_core_get_incremented_cache( $following_sql, 'bp_activity_follow' );
 
