@@ -156,8 +156,12 @@ window.bp = window.bp || {};
 				'click',
 				function( event ) {
 
-					// Do nothing if it's dropdown
+					// Do nothing if it's dropdown.
 					if( $( event.currentTarget ).data( 'action' ) == 'more_options' ) {
+						return event;
+					}
+
+					if ( 'back-to-thread' === $( event.currentTarget ).prop( 'id' ) ) {
 						return event;
 					}
 
@@ -173,11 +177,7 @@ window.bp = window.bp || {};
 						self.router.navigate( 'compose/', { trigger: true } );
 						$( event.target ).parents( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
 						// Other views are classic.
-					} else if ( 'back-to-thread' === view_id ) {
-						window.location.href = BP_Nouveau.messages.message_url;
-						return false;
 					} else {
-
 						if ( self.box !== view_id || ! _.isUndefined( self.views.get( 'compose' ) ) ) {
 							self.clearViews();
 
@@ -206,6 +206,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
 			$( document ).on( 'click', '#compose-action-personal-li .bb_more_options_action', this.toggleMessageCompose );
+			$( document ).on( 'click', '.bp-messages-nav-panel #back-to-thread', this.backToThreadList );
 
 		},
 
@@ -1135,6 +1136,12 @@ window.bp = window.bp || {};
 					this
 				);
 			}
+		},
+
+		backToThreadList: function( event ) {
+			event.preventDefault();
+			window.location.href = BP_Nouveau.messages.message_url;
+			return false;
 		},
 
 		createCookie: function ( name, value, minutes ) {
