@@ -23,6 +23,23 @@
 	flex-flow: row wrap;
 }
 
+.messages-screen .user-status-icon {
+	color: $white;
+	background-color: $light-text;
+	font-size: 17px;
+	line-height: 1;
+	padding: 4px;
+	border-radius: 50%;
+	position: absolute;
+	right: -5px;
+	bottom: -5px;
+}
+
+.bp-single-message-wrap .user-status-icon {
+	bottom: inherit;
+	top: 25px;
+}
+
 .bp-messages-content {
 	flex: 1;
 	min-width: 0;
@@ -733,18 +750,6 @@
 
 		}
 
-		.bp-avatar-wrap .user-status-icon {
-			color: $white;
-			background-color: $light-text;
-			font-size: 17px;
-			line-height: 1;
-			padding: 4px;
-			border-radius: 50%;
-			position: absolute;
-			right: -5px;
-			bottom: -5px;
-		}
-
 	}
 
 	.message-metadata {
@@ -806,6 +811,7 @@
 				margin-bottom: 0;
 			}
 
+			&.blocked,
 			&.deleted-message {
 				display: inline-block;
 				font-size: 13px;

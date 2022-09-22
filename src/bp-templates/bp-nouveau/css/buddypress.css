@@ -9245,6 +9245,23 @@ div.profile_completion_wrap .progress_text_wrap {
   flex-flow: row wrap;
 }
 
+.messages-screen .user-status-icon {
+  color: #fff;
+  background-color: #767676;
+  font-size: 17px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 50%;
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+}
+
+.bp-single-message-wrap .user-status-icon {
+  bottom: inherit;
+  top: 25px;
+}
+
 .bp-messages-content {
   flex: 1;
   min-width: 0;
@@ -9904,18 +9921,6 @@ div.profile_completion_wrap .progress_text_wrap {
   pointer-events: none;
 }
 
-#bp-message-thread-list li .bp-avatar-wrap .user-status-icon {
-  color: #fff;
-  background-color: #767676;
-  font-size: 17px;
-  line-height: 1;
-  padding: 4px;
-  border-radius: 50%;
-  position: absolute;
-  right: -5px;
-  bottom: -5px;
-}
-
 #bp-message-thread-list .message-metadata .avatar {
   width: 30px;
 }
@@ -9969,7 +9974,7 @@ div.profile_completion_wrap .progress_text_wrap {
   margin-bottom: 0;
 }
 
-#bp-message-thread-list .bp-message-content-wrap p.deleted-message {
+#bp-message-thread-list .bp-message-content-wrap p.blocked, #bp-message-thread-list .bp-message-content-wrap p.deleted-message {
   display: inline-block;
   font-size: 13px;
   font-weight: 400;
@@ -9978,7 +9983,7 @@ div.profile_completion_wrap .progress_text_wrap {
   border-radius: 4px;
 }
 
-#bp-message-thread-list .bp-message-content-wrap p.deleted-message:before {
+#bp-message-thread-list .bp-message-content-wrap p.blocked:before, #bp-message-thread-list .bp-message-content-wrap p.deleted-message:before {
   content: "\ee08";
   display: inline-block;
   font-family: "bb-icons";
