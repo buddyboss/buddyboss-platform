@@ -9257,6 +9257,10 @@ div.profile_completion_wrap .progress_text_wrap {
   bottom: -5px;
 }
 
+.bp-single-message-wrap .bp-avatar-wrap {
+  position: relative;
+}
+
 .bp-single-message-wrap .user-status-icon {
   bottom: inherit;
   top: 25px;

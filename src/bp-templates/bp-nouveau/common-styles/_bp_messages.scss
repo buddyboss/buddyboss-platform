@@ -35,9 +35,17 @@
 	bottom: -5px;
 }
 
-.bp-single-message-wrap .user-status-icon {
-	bottom: inherit;
-	top: 25px;
+.bp-single-message-wrap {
+
+	.bp-avatar-wrap {
+		position: relative;
+	}
+
+	.user-status-icon {
+		bottom: inherit;
+		top: 25px;
+	}
+
 }
 
 .bp-messages-content {
