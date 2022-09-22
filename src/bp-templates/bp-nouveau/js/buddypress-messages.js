@@ -1478,9 +1478,10 @@ window.bp = window.bp || {};
 
 				if ( 'create' === method ) {
 					var params = {
-						action : 'messages_send_reply',
-						nonce  : BP_Nouveau.messages.nonces.send,
-						hash   : new Date().getTime()
+						action  : 'messages_send_reply',
+						nonce   : BP_Nouveau.messages.nonces.send,
+						hash    : new Date().getTime(),
+						send_at : bp.Nouveau.Messages.getUTCDateTime()
 					};
 
 					if (
@@ -1495,16 +1496,6 @@ window.bp = window.bp || {};
 						params,
 						model || {}
 					);
-
-					if ( 'undefined' !== typeof bb_pusher_vars && 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
-						options.data = _.extend(
-							options.data,
-							{
-								send_at : bp.Nouveau.Messages.getUTCDateTime()
-							},
-							model || {}
-						);
-					}
 
 					return bp.ajax.send( options ).done(
 						function( response ) {
