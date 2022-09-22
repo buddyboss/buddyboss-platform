@@ -1244,13 +1244,22 @@ window.bp = window.bp || {};
 				}
 
 				this.set( 'sending', true, { silent: true } );
+				
+				var params = {
+					nonce  : BP_Nouveau.messages.nonces.send,
+				};
+				
+				if (
+					'undefined' !== typeof bp.Pusher_FrontCommon &&
+					'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
+				) {
+					params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join( ',' );
+				}
 
 				var sent = bp.ajax.post(
 					'messages_send_message',
 					_.extend(
-						{
-							nonce: BP_Nouveau.messages.nonces.send
-						},
+						params,
 						this.attributes
 					)
 				);
