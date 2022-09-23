@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 18901;
+		$this->db_version = 18751;
 
 		/** Loading */
 
@@ -558,6 +558,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-gdpr.php';
 		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
 		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
+		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
