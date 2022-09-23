@@ -2439,7 +2439,14 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 				// Set output var.
 				switch ( $seconds ) {
 					case YEAR_IN_SECONDS:
-						$output = $count < 2 ? bp_core_get_format_date( $old_last_date, 'M j' ) : bp_core_get_format_date( $old_last_date, 'M j, Y' );
+						$date_year    = bp_core_get_format_date( $old_last_date, 'Y' );
+						$current_year = bp_core_get_format_date( bp_core_current_time( false ), 'Y' );
+
+						if ( $current_year === $date_year ) {
+							$output = bp_core_get_format_date( $old_last_date, 'M j' );
+						} else {
+							$output = bp_core_get_format_date( $old_last_date, 'M j, Y' );
+						}
 						break;
 					case WEEK_IN_SECONDS:
 						$start_week = bb_get_week_timestamp( '-7 days' );
@@ -2609,7 +2616,14 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$output = $count < 2 ? bp_core_get_format_date( $old_start_date, $format ) : bp_core_get_format_date( $old_start_date, 'F j, Y' );
+					$date_year    = bp_core_get_format_date( $old_start_date, 'Y' );
+					$current_year = bp_core_get_format_date( bp_core_current_time( false ), 'Y' );
+
+					if ( $current_year === $date_year ) {
+						$output = bp_core_get_format_date( $old_start_date, $format );
+					} else {
+						$output = bp_core_get_format_date( $old_start_date, 'F j, Y' );
+					}
 					break;
 				case WEEK_IN_SECONDS:
 					if ( $end_week <= $thread_start_date ) {
