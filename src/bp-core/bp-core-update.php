@@ -371,11 +371,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18751 ) {
-			bb_update_to_2_1_0();
-		}
-
-		if ( $raw_db_version < 18801 ) {
-			bb_update_to_2_2_0();
+			bb_update_to_2_1_1();
 		}
 	}
 
@@ -1886,24 +1882,19 @@ function migrate_notification_preferences( $user_ids ) {
 }
 
 /**
- * Migrate group member meta table.
+ * Migrate group member meta table, is_deleted column in messages table and migrate existing email templates.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_2_1_0() {
+function bb_update_to_2_1_1() {
+	// Create 'bp_groups_membermeta' table.
 	if ( bp_is_active( 'groups' ) ) {
 		bp_core_install_groups();
 	}
 
+	// Create 'bp_invitations_invitemeta' table.
 	bp_core_install_invitations();
-}
 
-/**
- * Migrate messages table.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_update_to_2_2_0() {
 	// Add 'is_deleted' column in 'bp_messages_messages' table.
 	bb_messages_add_is_deleted_column();
 

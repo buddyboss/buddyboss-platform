@@ -894,6 +894,8 @@ window.bp = window.bp || {};
 			if ( 'delete' === action ) {
 				if ( ! confirm( BP_Nouveau.messages.delete_confirmation ) ) {
 					bp.Nouveau.Messages.removeFeedback();
+					target.parents( '.message_actions' ).removeClass( 'loading' );
+					target.parents( '.message-thread-options' ).removeClass( 'loading' );
 					return;
 				}
 			}
@@ -901,6 +903,8 @@ window.bp = window.bp || {};
 			if ( 'delete_thread' === action ) {
 				if ( ! confirm( BP_Nouveau.messages.delete_thread_confirmation ) ) {
 					bp.Nouveau.Messages.removeFeedback();
+					target.parents( '.message_actions' ).removeClass( 'loading' );
+					target.parents( '.message-thread-options' ).removeClass( 'loading' );
 					return;
 				}
 			}
