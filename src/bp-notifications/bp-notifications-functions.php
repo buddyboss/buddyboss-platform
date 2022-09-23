@@ -1547,5 +1547,49 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 	}
 
 	return $renderable;
+}
 
+
+/**
+ * Function to check the Hide messages from notifications is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_hide_messages_from_notification_enabled() {
+	return (bool) apply_filters( 'bb_hide_messages_from_notification_enabled', bp_get_option( 'hide_message_notification', 1 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_delay_email_notifications_enabled() {
+	return (bool) apply_filters( 'bb_delay_email_notifications_enabled', bp_get_option( 'delay_email_notification', 1 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_get_delay_email_notifications_time() {
+	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled with pusher or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_check_delay_email_notification() {
+	return (bool) ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() );
 }
