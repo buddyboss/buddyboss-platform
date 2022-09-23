@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-09-22 14:48:29+00:00\n"
+"POT-Creation-Date: 2022-09-23 13:19:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -355,7 +355,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:754
 #: bp-messages/classes/class-bp-messages-notices-admin.php:211
 #: bp-messages/classes/class-bp-messages-notices-list-table.php:84
-#: bp-moderation/bp-moderation-filters.php:861
+#: bp-moderation/bp-moderation-filters.php:866
 #: bp-moderation/bp-moderation-functions.php:1233
 #: bp-moderation/classes/class-bp-moderation-list-table.php:227
 msgid "Content"
@@ -3389,7 +3389,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:3309
 #: bp-moderation/bp-moderation-admin.php:577
 #: bp-moderation/bp-moderation-settings.php:121
-#: bp-moderation/classes/class-bp-moderation-component.php:189
+#: bp-moderation/classes/class-bp-moderation-component.php:190
 msgid "Reporting Categories"
 msgstr ""
 
@@ -15162,7 +15162,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-members/bp-members-functions.php:3887
 #: bp-members/classes/class-bp-members-admin.php:971
-#: bp-moderation/bp-moderation-filters.php:913
+#: bp-moderation/bp-moderation-filters.php:918
 #: bp-moderation/classes/class-bp-moderation-list-table.php:235
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:214
 msgid "Member"
@@ -24498,10 +24498,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-moderation/bp-moderation-filters.php:128
-#: bp-moderation/bp-moderation-filters.php:240
-#: bp-moderation/bp-moderation-filters.php:338
-#: bp-moderation/bp-moderation-filters.php:397
-#: bp-moderation/bp-moderation-filters.php:463
+#: bp-moderation/bp-moderation-filters.php:245
+#: bp-moderation/bp-moderation-filters.php:343
+#: bp-moderation/bp-moderation-filters.php:402
+#: bp-moderation/bp-moderation-filters.php:468
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:371
 msgid "Required field missing."
 msgstr ""
@@ -24511,8 +24511,8 @@ msgid "Please specify reason to report this content."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:157
-#: bp-moderation/bp-moderation-filters.php:404
-#: bp-moderation/bp-moderation-filters.php:470
+#: bp-moderation/bp-moderation-filters.php:409
+#: bp-moderation/bp-moderation-filters.php:475
 msgid "Sorry, you are not allowed to report this content."
 msgstr ""
 
@@ -24521,60 +24521,65 @@ msgstr ""
 msgid "You have already reported this %s"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:213
-#: bp-moderation/bp-moderation-filters.php:311
-#: bp-moderation/bp-moderation-filters.php:369
-#: bp-moderation/bp-moderation-filters.php:435
-#: bp-moderation/bp-moderation-filters.php:488
+#: bp-moderation/bp-moderation-filters.php:212
+#. translators: Item type reported.
+msgid "This %s has been reported."
+msgstr ""
+
+#: bp-moderation/bp-moderation-filters.php:218
+#: bp-moderation/bp-moderation-filters.php:316
+#: bp-moderation/bp-moderation-filters.php:374
+#: bp-moderation/bp-moderation-filters.php:440
+#: bp-moderation/bp-moderation-filters.php:493
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:245
+#: bp-moderation/bp-moderation-filters.php:250
 msgid "You have already reported this Member"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:250
+#: bp-moderation/bp-moderation-filters.php:255
 msgid "Sorry, you can not allowed to block yourself."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:259
+#: bp-moderation/bp-moderation-filters.php:264
 msgid "Sorry, you are not allowed to block this member."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:269
+#: bp-moderation/bp-moderation-filters.php:274
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:392
 msgid "Member block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:343
+#: bp-moderation/bp-moderation-filters.php:348
 msgid "Reported content was not found."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:350
+#: bp-moderation/bp-moderation-filters.php:355
 msgid "Sorry, you cannot unblock suspended member."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:364
+#: bp-moderation/bp-moderation-filters.php:369
 msgid "User unblocked successfully"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:418
+#: bp-moderation/bp-moderation-filters.php:423
 msgid "Content has been successfully hidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:429
+#: bp-moderation/bp-moderation-filters.php:434
 msgid "Content has been successfully unhidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:479
+#: bp-moderation/bp-moderation-filters.php:484
 msgid "Member has been successfully suspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:483
+#: bp-moderation/bp-moderation-filters.php:488
 msgid "Member has been successfully unsuspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:531
+#: bp-moderation/bp-moderation-filters.php:536
 #: bp-moderation/bp-moderation-functions.php:239
 #: bp-moderation/screens/single/admin/report-single.php:156
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2813
@@ -24582,37 +24587,37 @@ msgstr ""
 msgid "Block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:535
+#: bp-moderation/bp-moderation-filters.php:540
 #: bp-moderation/bp-moderation-functions.php:242
 #: bp-moderation/bp-moderation-functions.php:243
 #: bp-moderation/classes/class-bp-moderation-members.php:119
 msgid "Report Member"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:675
+#: bp-moderation/bp-moderation-filters.php:680
 msgid "Repair moderation data"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:701
+#: bp-moderation/bp-moderation-filters.php:706
 msgid "%s moderation item updated successfully."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:711
+#: bp-moderation/bp-moderation-filters.php:716
 msgid "Repairing moderation data &hellip; Complete!"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:765
-#: bp-moderation/bp-moderation-filters.php:793
-#: bp-moderation/bp-moderation-filters.php:842
-#: bp-moderation/bp-moderation-filters.php:884
+#: bp-moderation/bp-moderation-filters.php:770
+#: bp-moderation/bp-moderation-filters.php:798
+#: bp-moderation/bp-moderation-filters.php:847
+#: bp-moderation/bp-moderation-filters.php:889
 msgid "Show When Reporting"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:927
+#: bp-moderation/bp-moderation-filters.php:932
 msgid "The name of this reporting category."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:928
+#: bp-moderation/bp-moderation-filters.php:933
 msgid "A short description of this reporting category."
 msgstr ""
 
@@ -24798,91 +24803,98 @@ msgstr ""
 msgid "Reporting Category"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:178
-msgid "Search Categories"
+#: bp-moderation/classes/class-bp-moderation-component.php:175
+msgid ""
+"Create reporting categories for members to select when reporting content "
+"and members on the front-end. An additional \"Other\" category will also be "
+"available for members to specify their own reason for reporting."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:179
-msgid "Popular Categories"
+msgid "Search Categories"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:180
-msgid "All Categories"
+msgid "Popular Categories"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:181
-msgid "Edit Category"
+msgid "All Categories"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:182
-msgid "Update Category"
+msgid "Edit Category"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:183
-msgid "Add New Category"
+msgid "Update Category"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:184
-msgid "New Category Name"
+msgid "Add New Category"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:185
-msgid "Separate categories with commas"
+msgid "New Category Name"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:186
-msgid "Add or remove categories"
+msgid "Separate categories with commas"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:187
-msgid "Choose from the most used categories"
+msgid "Add or remove categories"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:188
+msgid "Choose from the most used categories"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-component.php:189
 msgid "No reporting categories found."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:190
+#: bp-moderation/classes/class-bp-moderation-component.php:191
 msgid "&larr; Back to Reporting Categories"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:205
+#: bp-moderation/classes/class-bp-moderation-component.php:206
 msgid "Offensive"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:206
+#: bp-moderation/classes/class-bp-moderation-component.php:207
 msgid "Contains abusive or derogatory content"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:209
+#: bp-moderation/classes/class-bp-moderation-component.php:210
 msgid "Inappropriate"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:210
+#: bp-moderation/classes/class-bp-moderation-component.php:211
 msgid "Contains mature or sensitive content"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:213
+#: bp-moderation/classes/class-bp-moderation-component.php:214
 msgid "Misinformation"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:214
+#: bp-moderation/classes/class-bp-moderation-component.php:215
 msgid "Contains misleading or false information"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:217
+#: bp-moderation/classes/class-bp-moderation-component.php:218
 msgid "Suspicious"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:218
+#: bp-moderation/classes/class-bp-moderation-component.php:219
 msgid "Contains spam, fake content or potential malware"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:221
+#: bp-moderation/classes/class-bp-moderation-component.php:222
 msgid "Harassment"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:222
+#: bp-moderation/classes/class-bp-moderation-component.php:223
 msgid "Harassment or bullying behavior"
 msgstr ""
 
@@ -31608,12 +31620,12 @@ msgctxt ""
 msgid "Active: %s"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:176
+#: bp-moderation/classes/class-bp-moderation-component.php:177
 msgctxt "taxonomy general name"
 msgid "Reporting Categories"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:177
+#: bp-moderation/classes/class-bp-moderation-component.php:178
 msgctxt "taxonomy singular name"
 msgid "Reporting Category"
 msgstr ""
