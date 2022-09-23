@@ -2263,6 +2263,7 @@ body .section-repair_community .settings fieldset .checkbox label code {
 }
 
 #bp_moderation_settings_blocking label.is_disabled,
+#bp_moderation_settings_reporting label.is_disabled,
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled {
 	pointer-events: none;
 	opacity: 0.5;

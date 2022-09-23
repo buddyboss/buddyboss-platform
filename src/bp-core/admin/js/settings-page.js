@@ -163,6 +163,11 @@ window.bp = window.bp || {};
 				function () {
 					$( 'label[for="bpm_blocking_auto_suspend"' ).toggleClass( 'is_disabled' );
 					$( '#bpm_blocking_auto_suspend' ).prop( 'checked', false );
+					$( 'label[for="bpm_blocking_email_notification"' ).removeClass( 'is_disabled' );
+					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
+						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
+						$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+					}
 				}
 			);
 		
@@ -175,8 +180,21 @@ window.bp = window.bp || {};
 				function () {
 					$( 'label[for="bb_reporting_auto_suspend"]' ).toggleClass('is_disabled');
 					$( '#bb_reporting_auto_suspend' ).prop( 'checked', false );
+					$( 'label[for="bpm_blocking_email_notification"' ).removeClass( 'is_disabled' );
+					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
+						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
+						$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+					}
 				}
 			);
+
+			/**
+			 * Checked if member block and reporting both inactive then disabled the email notification for it.
+			 */
+			if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
+				$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
+				$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+			}
 
 			if( $( '#bb_reporting_category_description' ).length ) {
 				$('.wp-heading-inline').append( $( '#bb_reporting_category_description' ) );
@@ -2233,8 +2251,21 @@ window.bp = window.bp || {};
 					} else {
 						$( this ).parent().next( 'label' ).addClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).removeProp( 'checked' ).removeAttr( 'checked' ).prop( 'disabled', 'disabled' );
 					}
+					$( 'label[for="bpm_reporting_email_notification"' ).removeClass( 'is_disabled' );
+					if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
+						$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
+						$( 'label[for="bpm_reporting_email_notification"' ).addClass( 'is_disabled' );
+					}
 				}
 			);
+
+			/**
+			 * Checked all item reporting inactive then disabled the email notification for it.
+			 */
+			if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
+				$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
+				$( 'label[for="bpm_reporting_email_notification"' ).addClass( 'is_disabled' );
+			}
 
 			$( document ).on(
 				'click',
