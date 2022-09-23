@@ -370,16 +370,8 @@ function bp_version_updater() {
 			bb_update_to_1_9_3();
 		}
 
-		if ( $raw_db_version < 18855 ) {
-			bb_update_to_2_1_0();
-		}
-
 		if ( $raw_db_version < 18751 ) {
 			bb_update_to_2_1_1();
-		}
-
-		if ( $raw_db_version < 18801 ) {
-			bb_update_to_2_2_0();
 		}
 	}
 
@@ -1890,58 +1882,19 @@ function migrate_notification_preferences( $user_ids ) {
 }
 
 /**
- * Update moderation tables.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_update_to_2_1_0() {
-
-	bb_moderation_add_user_report_column();
-
-}
-
-/**
- * Function to add user report column in moderation for user report.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_moderation_add_user_report_column() {
-
-	global $wpdb;
-
-	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_moderation' AND column_name = 'user_report'" ); //phpcs:ignore
-
-	if ( empty( $row ) ) {
-		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_moderation ADD user_report TINYINT NULL DEFAULT '0'" ); //phpcs:ignore
-	}
-
-	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_suspend' AND column_name = 'user_report'" ); //phpcs:ignore
-
-	if ( empty( $row ) ) {
-		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_suspend ADD user_report TINYINT NULL DEFAULT '0'" ); //phpcs:ignore
-	}
-}
-
-
-/**
- * Migrate group member meta table.
+ * Migrate group member meta table, is_deleted column in messages table and migrate existing email templates.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_2_1_1() {
+	// Create 'bp_groups_membermeta' table.
 	if ( bp_is_active( 'groups' ) ) {
 		bp_core_install_groups();
 	}
 
+	// Create 'bp_invitations_invitemeta' table.
 	bp_core_install_invitations();
-}
 
-/**
- * Migrate messages table.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_update_to_2_2_0() {
 	// Add 'is_deleted' column in 'bp_messages_messages' table.
 	bb_messages_add_is_deleted_column();
 
