@@ -206,7 +206,12 @@ function bp_moderation_content_report() {
 			$response['button'] = bp_moderation_get_report_button( $button_args, false );
 		}
 
-		$response['message'] = $moderation->errors;
+		$response['message']       = $moderation->errors;
+		$response['toast_message'] = sprintf(
+			/* translators: Item type reported. */
+			esc_html__( 'This %s has been reported.', 'buddyboss' ),
+			strtolower( bp_moderation_get_report_type( $item_type, $item_id ) )
+		);
 	}
 
 	if ( empty( $response['message'] ) ) {
@@ -933,3 +938,24 @@ function bb_get_bpm_category_labels( $labels ) {
 	return $labels;
 }
 add_action( 'taxonomy_labels_bpm_category', 'bb_get_bpm_category_labels' );
+
+/**
+ * Prepend taxonomy description for Reporting Category page.
+ * 
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @param string $tax_slug Taxonomy slug.
+ * 
+ * @return 
+ */
+function bb_moderation_category_admin_edit_description( $tax_slug ) {
+
+    // Grab the Taxonomy Object
+    $tax_obj = get_taxonomy( $tax_slug );
+
+    // IF the description is set on our object
+    if( property_exists( $tax_obj, 'description' ) ) {
+		printf( '<p id="bb_reporting_category_description" >%s</p>', esc_attr( $tax_obj->description ) );
+    }
+}
+add_action( 'bpm_category_pre_add_form', 'bb_moderation_category_admin_edit_description' );

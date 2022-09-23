@@ -1198,6 +1198,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.browserTabCountNotification();
 					bp.Nouveau.visibilityOnScreenClearButton();
 					list.closest( '.bb-onscreen-notification' ).addClass( 'close-all-items' );
+					$( '.bb-onscreen-notification' ).fadeOut( 200 );
 					$( '.toast-messages-list > li' ).each( function () {
 						$( this ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
 					} );
@@ -2674,6 +2675,10 @@ window.bp = window.bp || {};
 								_this.changeReportButtonStatus( response.data );
 								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 								$( '.mfp-close' ).trigger( 'click' );
+								jQuery( document ).trigger(
+									'bb_trigger_toast_message',
+									[ '', response.data.toast_message, 'info', null, true ]
+								);
 							} else {
 								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 								_this.handleReportError( response.data.message.errors, e.currentTarget );
@@ -3375,3 +3380,4 @@ window.bp = window.bp || {};
    bp.Nouveau.start();
 
 } )( bp, jQuery );
+

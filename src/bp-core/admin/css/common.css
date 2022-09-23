@@ -1874,7 +1874,7 @@ body.post-type-bp_ps_form .page-title-action {
 /* Notices */
 .buddypress .wrap div#message,
 .buddypress .wrap div.notice {
-  margin: 25px 0 0;
+  margin: 25px 0 15px;
 }
 
 tr.child-no-padding th {
@@ -2093,6 +2093,14 @@ body .section-repair_community .settings fieldset .checkbox label code {
   vertical-align: middle;
 }
 
+#the-moderation-request-list .content_type strong {
+  color: #1d2327;
+}
+
+#the-moderation-request-list .content_type strong > span {
+  color: #808080;
+}
+
 @keyframes contentLoader {
   0% {
     top: 8px;
@@ -2128,12 +2136,14 @@ body .section-repair_community .settings fieldset .checkbox label code {
 }
 
 #bp_moderation_settings_blocking label.is_disabled,
+#bp_moderation_settings_reporting label.is_disabled,
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled {
   pointer-events: none;
   opacity: 0.5;
 }
 
 #bp_moderation_settings_blocking label.is_disabled input[type="checkbox"]:disabled,
+#bp_moderation_settings_reporting label.is_disabled input[type="checkbox"]:disabled,
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled input[type="checkbox"]:disabled {
   opacity: 1;
   border-color: inherit;

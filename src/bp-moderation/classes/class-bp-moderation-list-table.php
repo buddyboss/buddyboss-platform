@@ -148,6 +148,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$moderation_request_args['hidden'] = 1;
 			} elseif ( 'blocked' === $moderation_status ) {
 				$this->view = 'blocked';
+				unset($moderation_request_args['reported']);
 			} elseif ( 'reported' === $moderation_status ) {
 				$this->view                             = 'reported';
 				$moderation_request_args['user_report'] = 1;
@@ -360,6 +361,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 					if ( 'suspended' === $key ) {
 						$moderation_args['hidden'] = 1;
+					} elseif ( 'blocked' === $key ) {
+						unset($moderation_args['reported']);
 					} elseif ( 'reported' === $key ) {
 						$moderation_args['user_report'] = 1;
 					}
@@ -567,7 +570,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			);
 		}
 
-		printf( '<strong>%s</strong> %s', esc_html( bp_moderation_get_content_type( $item['item_type'] ) ), wp_kses_post( $this->row_actions( $actions ) ) );
+		printf( '<strong>%s <span>#%s</span></strong> %s', esc_html( bp_moderation_get_content_type( $item['item_type'] ) ), esc_attr( $item['item_id'] ), wp_kses_post( $this->row_actions( $actions ) ) );
 
 	}
 
