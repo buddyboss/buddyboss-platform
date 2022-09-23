@@ -178,6 +178,10 @@ window.bp = window.bp || {};
 				}
 			);
 
+			if( $( '#bb_reporting_category_description' ).length ) {
+				$('.wp-heading-inline').append( $( '#bb_reporting_category_description' ) );
+			}
+
 			$( 'span:contains("Slug")' ).each( function () {
 				$( this ).parent().remove();
 			} );
