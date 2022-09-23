@@ -4967,6 +4967,56 @@ window.bp = window.bp || {};
 					}
 				);
 
+				if ( 'undefined' !== typeof bb_pusher_vars && 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
+					this.resetReplyForm();
+				}
+			},
+
+			replySent: function( response ) {
+
+				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
+					var reply = this.collection.parse( response );
+					_.each(
+						reply,
+						function( item ) {
+							this.collection.add( item );
+						},
+						this
+					);
+
+					this.resetReplyForm();
+				}
+
+				bp.Nouveau.Messages.removeFeedback();
+
+				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
+					$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				}
+
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+
+				// Add class for message form shadow when messages are scrollable.
+				var scrollViewScrollHeight = this.$el.find( '#bp-message-thread-list' ).prop( 'scrollHeight' );
+				var scrollViewClientHeight = this.$el.find( '#bp-message-thread-list' ).prop( 'clientHeight' );
+				if ( scrollViewScrollHeight > scrollViewClientHeight ) {
+					this.$el.addClass( 'focus-in--scroll' );
+				} else {
+					this.$el.removeClass( 'focus-in--scroll' );
+				}
+			},
+
+			replyError: function( response ) {
+				this.model.set( 'sending', false );
+				if ( response.feedback && response.type ) {
+					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+				}
+				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
+					$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
+				}
+				$( '#send_reply_button' ).closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
+			},
+
+			resetReplyForm: function() {
 				// Reset the form.
 				if ( typeof tinyMCE !== 'undefined' ) {
 					tinyMCE.activeEditor.setContent( '' );
@@ -5007,48 +5057,6 @@ window.bp = window.bp || {};
 				if (this.messageAttachments.onClose) {
 					this.messageAttachments.onClose();
 				}
-			},
-
-			replySent: function( response ) {
-
-				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
-					var reply = this.collection.parse( response );
-					_.each(
-						reply,
-						function( item ) {
-							this.collection.add( item );
-						},
-						this
-					);
-				}
-
-				bp.Nouveau.Messages.removeFeedback();
-
-				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
-					$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
-				}
-
-				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
-
-				//Add class for message form shadow when messages are scrollable
-				var scrollViewScrollHeight = this.$el.find( '#bp-message-thread-list' ).prop('scrollHeight');
-				var scrollViewClientHeight = this.$el.find( '#bp-message-thread-list' ).prop('clientHeight');
-				if ( scrollViewScrollHeight > scrollViewClientHeight ) {
-					this.$el.addClass( 'focus-in--scroll' );
-				} else {
-					this.$el.removeClass( 'focus-in--scroll' );
-				}
-			},
-
-			replyError: function( response ) {
-				this.model.set( 'sending', false );
-				if ( response.feedback && response.type ) {
-					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
-				}
-				if ( 'undefined' === typeof bb_pusher_vars || 'undefined' === typeof bb_pusher_vars.is_live_messaging_enabled || 'off' === bb_pusher_vars.is_live_messaging_enabled ) {
-					$( '#send_reply_button' ).prop( 'disabled',false ).removeClass( 'loading' );
-				}
-				$( '#send_reply_button' ).closest( '#bp-message-content' ).removeClass( 'focus-in--content' );
 			},
 
 			unhideConversation: function ( event ) {
