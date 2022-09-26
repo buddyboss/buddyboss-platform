@@ -9925,6 +9925,10 @@ div.profile_completion_wrap .progress_text_wrap {
   pointer-events: none;
 }
 
+#bp-message-thread-list li.sending .bp-message-content-wrap p {
+  margin-bottom: 0;
+}
+
 #bp-message-thread-list .message-metadata .avatar {
   width: 30px;
 }
