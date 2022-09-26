@@ -378,7 +378,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
-				__( 'Already reported this item.', 'buddyboss' ),
+				__( 'You have already reported this Member.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
