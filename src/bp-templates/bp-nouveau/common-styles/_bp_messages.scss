@@ -758,6 +758,10 @@
 
 		}
 
+		&.sending .bp-message-content-wrap p {
+			margin-bottom: 0;
+		}
+
 	}
 
 	.message-metadata {
