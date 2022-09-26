@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.1.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-09-23 11:30:41+00:00\n"
+"POT-Creation-Date: 2022-09-26 05:13:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1063,7 +1063,7 @@ msgstr ""
 #: bp-activity/bp-activity-template.php:1195
 #: bp-groups/bp-groups-template.php:920
 #: bp-groups/classes/class-bp-groups-list-table.php:598
-#: bp-messages/bp-messages-functions.php:1334
+#: bp-messages/bp-messages-functions.php:1339
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1121
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1181
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2268
@@ -2353,9 +2353,9 @@ msgstr ""
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:119
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:137
 #: bp-members/bp-members-template.php:3041
-#: bp-messages/bp-messages-functions.php:346
+#: bp-messages/bp-messages-functions.php:349
 #: bp-messages/bp-messages-template.php:2154
-#: bp-messages/bp-messages-template.php:2674
+#: bp-messages/bp-messages-template.php:2688
 #: bp-search/bp-search-settings.php:1031 bp-settings/actions/export.php:35
 msgid "%s"
 msgstr ""
@@ -18408,7 +18408,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-notification.php:352
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
-"{{{sender.name}}} from {{{group.name}}} sent you a new message.\n"
+"{{{sender.name}}} from {{{group.name}}} sent you a message.\n"
 "\n"
 "{{{message}}}"
 msgstr ""
@@ -18416,7 +18416,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-notification.php:354
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
-"{{{sender.name}}} from {{{group.name}}} sent you a new message.\n"
+"{{{sender.name}}} from {{{group.name}}} sent you a message.\n"
 "\n"
 "{{{message}}}\"\n"
 "\n"
@@ -23395,7 +23395,7 @@ msgstr ""
 msgid "Your message was not sent. Please enter a subject line."
 msgstr ""
 
-#: bp-messages/actions/compose.php:38 bp-messages/bp-messages-functions.php:109
+#: bp-messages/actions/compose.php:38 bp-messages/bp-messages-functions.php:112
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1124
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:173
 msgid "Your message was not sent. Please enter some content."
@@ -23507,72 +23507,72 @@ msgstr ""
 msgid "Email preferences"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:85
+#: bp-messages/bp-messages-functions.php:88
 msgid "Your message was not sent. Please use a valid sender."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:120
+#: bp-messages/bp-messages-functions.php:123
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:516
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:525
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:534
 msgid "You don't have access to send the media. "
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:129
+#: bp-messages/bp-messages-functions.php:132
 msgid "You don't have access to send the document. "
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:138
+#: bp-messages/bp-messages-functions.php:141
 msgid "You don't have access to send the video. "
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:147
+#: bp-messages/bp-messages-functions.php:150
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:543
 msgid "You don't have access to send the gif. "
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:189
+#: bp-messages/bp-messages-functions.php:192
 msgid "Re"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:224
+#: bp-messages/bp-messages-functions.php:227
 msgid "Message could not be sent. Please enter a recipient."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:232
+#: bp-messages/bp-messages-functions.php:235
 msgid "No Subject"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:289
+#: bp-messages/bp-messages-functions.php:292
 msgid ""
 "Message could not be sent because you have entered an invalid username. "
 "Please try again."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:357
+#: bp-messages/bp-messages-functions.php:360
 msgid "You need to be connected with this member in order to send a message."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:358
+#: bp-messages/bp-messages-functions.php:361
 msgid "You need to be connected with this member to continue this conversation."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:359
+#: bp-messages/bp-messages-functions.php:362
 msgid ""
 "You need to be connected with all recipients in order to send them a "
 "message."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:360
+#: bp-messages/bp-messages-functions.php:363
 msgid "You need to be connected with all recipients to continue this conversation."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:400
+#: bp-messages/bp-messages-functions.php:403
 msgid "Message was not sent. Please try again."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:1380
-#: bp-messages/bp-messages-functions.php:1904
+#: bp-messages/bp-messages-functions.php:1385
+#: bp-messages/bp-messages-functions.php:1909
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1379
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1670
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1154
@@ -23585,26 +23585,26 @@ msgstr ""
 msgid "Deleted Group"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:1721
+#: bp-messages/bp-messages-functions.php:1726
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2165
 msgid "Send Connection Request"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2037
-#: bp-messages/bp-messages-functions.php:2046
-#: bp-messages/bp-messages-functions.php:2055
+#: bp-messages/bp-messages-functions.php:2042
+#: bp-messages/bp-messages-functions.php:2051
+#: bp-messages/bp-messages-functions.php:2060
 #. translators: %s: The admin setting field label.
 msgid "%d mins"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2064
+#: bp-messages/bp-messages-functions.php:2069
 #. translators: %s: The admin setting field label.
 msgid "%d hour"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2073
-#: bp-messages/bp-messages-functions.php:2082
-#: bp-messages/bp-messages-functions.php:2091
+#: bp-messages/bp-messages-functions.php:2078
+#: bp-messages/bp-messages-functions.php:2087
+#: bp-messages/bp-messages-functions.php:2096
 #. translators: %s: The admin setting field label.
 msgid "%d hours"
 msgstr ""
@@ -23773,7 +23773,7 @@ msgid "This message was deleted."
 msgstr ""
 
 #: bp-messages/bp-messages-template.php:2348
-#: bp-messages/bp-messages-template.php:2519
+#: bp-messages/bp-messages-template.php:2526
 msgid "Sometime"
 msgstr ""
 
@@ -23781,15 +23781,15 @@ msgstr ""
 msgid "Now"
 msgstr ""
 
-#: bp-messages/bp-messages-template.php:2458
+#: bp-messages/bp-messages-template.php:2465
 msgid "Yesterday"
 msgstr ""
 
-#: bp-messages/bp-messages-template.php:2532
+#: bp-messages/bp-messages-template.php:2539
 msgid "today"
 msgstr ""
 
-#: bp-messages/bp-messages-template.php:2623
+#: bp-messages/bp-messages-template.php:2637
 msgid "yesterday"
 msgstr ""
 
@@ -23874,7 +23874,7 @@ msgstr ""
 #: bp-messages/classes/class-bp-messages-notification.php:90
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
-"{{{sender.name}}} sent you a new message.\n"
+"{{{sender.name}}} sent you a message.\n"
 "\n"
 "{{{message}}}"
 msgstr ""
@@ -23882,7 +23882,7 @@ msgstr ""
 #: bp-messages/classes/class-bp-messages-notification.php:92
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
-"{{{sender.name}}} sent you a new message.\n"
+"{{{sender.name}}} sent you a message.\n"
 "\n"
 "{{{message}}}\"\n"
 "\n"

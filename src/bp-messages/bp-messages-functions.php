@@ -46,6 +46,8 @@ function messages_new_message( $args = '' ) {
 
 	$current_sent_time = bp_core_current_time();
 
+	$send_date = false;
+
 	// Parse the default arguments.
 	$r = bp_parse_args(
 		$args,
@@ -61,7 +63,7 @@ function messages_new_message( $args = '' ) {
 			'mark_visible'  => false,
 			'group_thread'  => false,
 			'error_type'    => 'bool',
-			'send_at'       => $current_sent_time,
+			'send_at'       => false,
 		),
 		'messages_new_message'
 	);
@@ -75,6 +77,7 @@ function messages_new_message( $args = '' ) {
 		// Check the pusher date is not more than 5 mins.
 		if ( $send_at_timestamp <= $date_sent_timestamp && $send_at_timestamp >= $date_sent_timestamp_before ) {
 			$r['date_sent'] = $r['send_at'];
+			$send_date = true;
 		}
 	}
 
@@ -404,8 +407,10 @@ function messages_new_message( $args = '' ) {
 		return false;
 	}
 
-	// Save the meta for current sent time.
-	bp_messages_update_meta( $send, 'user_date_sent', $current_sent_time );
+	if ( $send_date ) {
+		// Save the meta for current sent time.
+		bp_messages_update_meta( $send, 'user_date_sent', $current_sent_time );
+	}
 
 	// only update after the send().
 	BP_Messages_Thread::update_last_message_status( $last_message_data );
