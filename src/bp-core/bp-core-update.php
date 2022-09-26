@@ -1993,15 +1993,25 @@ function bb_migrate_messages_email_templates() {
 	if ( $emails ) {
 		foreach ( $emails as $email ) {
 
+			// First verify the content if already have 3 brackets.
+			$existing_token                      = array();
+			$existing_token['{{{sender.name}}}'] = '{{sender.name}}';
+			$existing_token['{{{group.name}}}']  = '{{group.name}}';
+
+			// Replace tokens to existing content.
+			$post_content = strtr( $email->post_content, $existing_token );
+			$post_title   = strtr( $email->post_title, $existing_token );
+			$post_excerpt = strtr( $email->post_excerpt, $existing_token );
+
 			// Generate token to replace in existing email templates.
 			$token                    = array();
 			$token['{{sender.name}}'] = '{{{sender.name}}}';
 			$token['{{group.name}}']  = '{{{group.name}}}';
 
-			// Replace token to existing content.
-			$post_content = strtr( $email->post_content, $token );
-			$post_title   = strtr( $email->post_title, $token );
-			$post_excerpt = strtr( $email->post_excerpt, $token );
+			// Replace actual tokens to existing content.
+			$post_content = strtr( $post_content, $token );
+			$post_title   = strtr( $post_title, $token );
+			$post_excerpt = strtr( $post_excerpt, $token );
 
 			// Update the email template.
 			wp_update_post(
