@@ -4597,6 +4597,11 @@ window.bp = window.bp || {};
 						var content_html = $s.text() !== '' ? $s.html() : '';
 						model.set( 'className', model.attributes.className + ' error' );
 						model.set( 'content', content_html + ' ' + errorHtml );
+						// scroll to bottom
+						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 100 );
+						setTimeout( function() {
+							$( '.bp-messages-content-wrapper.scrolled--up' ).removeClass( 'scrolled--up' );
+						}, 0);
 					}
 					this.collection.sync( 'update' );
 				}
