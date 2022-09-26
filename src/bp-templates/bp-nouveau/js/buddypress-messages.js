@@ -5225,7 +5225,7 @@ window.bp = window.bp || {};
 					thread.id = thread_id;
 				}
 
-				if ( 'undefined' !== typeof bb_pusher_vars ) {
+				if ( 'undefined' !== typeof bb_pusher_vars && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
 					if ( 'undefined' !== typeof bb_pusher_vars.current_thread_id ) {
 						bb_pusher_vars.current_thread_id = parseInt( thread_id );
 					}
