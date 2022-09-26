@@ -23,6 +23,31 @@
 	flex-flow: row wrap;
 }
 
+.messages-screen .user-status-icon {
+	color: $white;
+	background-color: $light-text;
+	font-size: 17px;
+	line-height: 1;
+	padding: 4px;
+	border-radius: 50%;
+	position: absolute;
+	right: -5px;
+	bottom: -5px;
+}
+
+.bp-single-message-wrap {
+
+	.bp-avatar-wrap {
+		position: relative;
+	}
+
+	.user-status-icon {
+		bottom: inherit;
+		top: 25px;
+	}
+
+}
+
 .bp-messages-content {
 	flex: 1;
 	min-width: 0;
@@ -75,61 +100,16 @@
 		display: none;
 	}
 
-	.can-not-send-msg {
-		opacity: 0.5;
-
-		.bp-message-link .thread-content.bp-suspended-content,
-		.bp-message-link .thread-avatar.bp-suspended-avatar {
-			opacity: 1;
-		}
-
-		&.unread .thread-to:after {
-			opacity: 0.85;
-		}
-
-		.thread-to:after {
-			content: "\ee08";
-			font-size: 14px;
-			font-weight: 300;
-			color: #122b46;
-			line-height: 1;
-			font-family: "bb-icons";/* stylelint-disable-line */
-			display: inline-block;
-			vertical-align: middle;
-			position: absolute;
-			right: 36px;
-			bottom: 10px;
-		}
-
-		&:hover .thread-to:after {
-			display: none;
-		}
-
-		&.thread-item,
-		&.thread-item:hover {
-
-			.message-thread-options {
-				display: none;
-			}
-
-		}
-	}
-
 	.thread-avatar .user-status-icon {
 		color: $white;
 		background-color: $light-text;
-		font-size: 18px;
+		font-size: 17px;
 		line-height: 1;
-		padding: 3.5px;
+		padding: 4px;
 		border-radius: 50%;
 		position: absolute;
 		right: -5px;
 		bottom: -5px;
-
-		&.bb-icon-lock {
-			font-size: 17px;
-			padding: 4px;
-		}
 	}
 
 	// The primary list elements
@@ -839,6 +819,7 @@
 				margin-bottom: 0;
 			}
 
+			&.blocked,
 			&.deleted-message {
 				display: inline-block;
 				font-size: 13px;
@@ -1545,7 +1526,7 @@ input#send-to-input {
 
 .compose .bp-messages-recipient {
 	display: flex;
-	padding: 0 45px 22px 22px;
+	padding: 0 55px 22px 22px;
 	margin: 2px -20px;
 
 	> span:first-child {

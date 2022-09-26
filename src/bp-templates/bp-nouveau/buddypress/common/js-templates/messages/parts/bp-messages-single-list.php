@@ -19,9 +19,17 @@
 				<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
 			<# } else if ( data.is_user_suspended || data.is_user_blocked  ) { #>
 				<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
+				<# if ( data.is_user_blocked ) { #>
+					<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
+				<# } else if ( data.is_user_blocked_by ) { #>
+					<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
+				<# } #>
 			<# } else { #>
 				<a href="{{data.sender_link}}" class="bp-user-avatar">
 					<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
+					<# if ( data.is_user_blocked_by ) { #>
+						<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
+					<# } #>
 				</a>
 			<# } #>
 		</div>
@@ -30,6 +38,11 @@
 		<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
 			<div class="bp-avatar-wrap bp-suspended-avatar">
 				<img class="avatar" src="{{{data.sender_avatar}}}" alt="Suspended Member Avatar">
+				<# if ( data.is_user_blocked ) { #>
+					<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
+				<# } else if ( data.is_user_blocked_by ) { #>
+					<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
+				<# } #>
 			</div>
 		<# } #>
 

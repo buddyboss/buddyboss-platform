@@ -947,12 +947,40 @@ add_action( 'taxonomy_labels_bpm_category', 'bb_get_bpm_category_labels' );
  */
 function bb_moderation_category_admin_edit_description( $tax_slug ) {
 
-    // Grab the Taxonomy Object
+    // Grab the Taxonomy Object.
     $tax_obj = get_taxonomy( $tax_slug );
 
-    // IF the description is set on our object
+    // IF the description is set on our object.
     if( property_exists( $tax_obj, 'description' ) ) {
 		printf( '<p id="bb_reporting_category_description" >%s</p>', esc_attr( $tax_obj->description ) );
     }
 }
 add_action( 'bpm_category_pre_add_form', 'bb_moderation_category_admin_edit_description' );
+
+/**
+ * Filter to update the avatar url for the before activity comment, group posts/comment, group members.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_moderation_before_activity_entry_callback() {
+	add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+}
+add_action( 'bp_before_activity_entry', 'bb_moderation_before_activity_entry_callback' );
+add_action( 'bp_before_activity_comment_entry', 'bb_moderation_before_activity_entry_callback' );
+add_action( 'bp_before_group_members_list', 'bb_moderation_before_activity_entry_callback' );
+
+/*
+ * Filter to update the avatar url for the after activity comment, group posts/comment, group members.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_moderation_after_activity_entry_callback() {
+	remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+}
+add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callback' );
+add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
+add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );

@@ -657,7 +657,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			return esc_html__( 'Suspended Member', 'buddyboss' );
+			return bb_moderation_is_suspended_label( $user_id );
 		}
 
 		return $value;
@@ -676,7 +676,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
-		$user = false;
+		$user       = false;
+		$old_retval = $retval;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
@@ -701,10 +702,19 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user->ID ) ) {
-			return buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
+			$retval = bb_moderation_is_suspended_avatar( $user->ID, $args );
 		}
 
-		return $retval;
+		/**
+		 * Filter to update suspended avatar url.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $retval     The URL of the avatar.
+		 * @param string $old_retval URL for a originally uploaded avatar.
+		 * @param array  $args       Arguments passed to get_avatar_data(), after processing.
+		 */
+		return apply_filters( 'bb_get_suspended_avatar_url', $retval, $old_retval, $args );
 	}
 
 	/**
@@ -719,17 +729,27 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function bp_fetch_avatar_url( $avatar_url, $params ) {
 
-		$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
+		$item_id        = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
+		$old_avatar_url = $avatar_url;
 		if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_suspended( $item_id ) ) {
-					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
+					$avatar_url = bb_moderation_is_suspended_avatar( $item_id, $params );
 				}
 			}
 		}
 
-		return $avatar_url;
+		/**
+		 * Filter to update suspended avatar url.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $avatar_url     URL for a locally uploaded avatar.
+		 * @param string $old_avatar_url URL for a originally uploaded avatar.
+		 * @param array  $params         Array of parameters for the request.
+		 */
+		return apply_filters( 'bb_get_suspended_avatar_url', $avatar_url, $old_avatar_url, $params );
 	}
 }
