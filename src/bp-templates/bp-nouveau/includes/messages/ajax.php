@@ -2007,6 +2007,12 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		wp_send_json_error( $response );
 	}
 
+	$exclude_user_ids = array();
+	if ( isset( $_GET['except'] ) && ! empty( $_GET['except'] ) ) {
+		$exclude          = array_map( 'sanitize_text_field', $_GET['except'] );
+		$exclude_user_ids = bb_get_user_id_by_activity_mentionname( $exclude );
+	}
+
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
 	$results = bp_core_get_suggestions(
@@ -2018,6 +2024,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 			'page'            => $_GET['page'],
 			'limit'           => 10,
 			'populate_extras' => true,
+			'exclude'         => $exclude_user_ids,
 		)
 	);
 
@@ -2055,6 +2062,9 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 	}
 
 	$user_query['exclude'][] = get_current_user_id();
+
+	// Avoid duplicate user IDs.
+	$user_query['exclude'] = array_unique( $user_query['exclude'] );
 
 	return $user_query;
 }

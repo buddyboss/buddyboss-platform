@@ -10658,6 +10658,10 @@ input#send-to-input {
   width: 100%;
 }
 
+.select2-container--open ul .select2-results__message + .select2-results__option--load-more {
+  display: none;
+}
+
 .compose #buddypress #send_message_form .select2-search__field {
   font-size: 14px;
   padding-bottom: 0;
