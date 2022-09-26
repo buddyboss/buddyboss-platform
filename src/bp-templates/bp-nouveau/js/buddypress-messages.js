@@ -3410,7 +3410,8 @@ window.bp = window.bp || {};
 									{
 										nonce: BP_Nouveau.messages.nonces.load_recipient,
 										action: 'messages_search_recipients',
-										page: ( 'undefined' === typeof params.page ) ? 1 : params.page
+										page: ( 'undefined' === typeof params.page ) ? 1 : params.page,
+										except: ArrayData
 									}
 								);
 							},

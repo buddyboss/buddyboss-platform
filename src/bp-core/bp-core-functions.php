@@ -7866,3 +7866,65 @@ function bb_get_week_timestamp( $date = false, $type = 'start' ) {
 
 	return gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
 }
+
+/**
+ * Get user ID by their activity mention name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|array $mention_names Username appropriate for @-mentions.
+ *
+ * @return array
+ */
+function bb_get_user_id_by_activity_mentionname( $mention_names ) {
+	$mention_user_ids = array();
+
+	if ( empty( $mention_names ) ) {
+		return $mention_user_ids;
+	}
+
+	if ( is_string( $mention_names ) ) {
+		$mention_names = array( $mention_names );
+	}
+
+	$mention_names = array_map(
+		function ( $username ) {
+			return trim( $username, '@' );
+		},
+		$mention_names
+	);
+
+	// Loop the recipients and convert all usernames to user_ids where needed.
+	foreach ( (array) $mention_names as $mention_user ) {
+
+		// Trim spaces and skip if empty.
+		$mention_user = trim( $mention_user );
+		if ( empty( $mention_user ) ) {
+			continue;
+		}
+
+		// Check user_login / nicename columns first
+		// @see http://buddypress.trac.wordpress.org/ticket/5151.
+		if ( bp_is_username_compatibility_mode() ) {
+			$user_id = bp_core_get_userid( urldecode( $mention_user ) );
+		} else {
+			$user_id = bp_core_get_userid_from_nicename( $mention_user );
+		}
+
+		// Check against user ID column if no match and if passed user is numeric.
+		if ( empty( $user_id ) && is_numeric( $mention_user ) ) {
+			if ( bp_core_get_core_userdata( (int) $mention_user ) ) {
+				$user_id = (int) $mention_user;
+			}
+		}
+
+		// If $user_id still blank then try last time to find $user_id via the nickname field.
+		if ( empty( $user_id ) ) {
+			$user_id = bp_core_get_userid_from_nickname( $mention_user );
+		}
+
+		$mention_user_ids[] = (int) $user_id;
+	}
+
+	return $mention_user_ids;
+}
