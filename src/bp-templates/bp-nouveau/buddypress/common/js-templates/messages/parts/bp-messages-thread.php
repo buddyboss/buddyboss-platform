@@ -150,18 +150,18 @@
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
 						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
-				            <# if ( 0 === recipient.is_deleted ) {
-				                if ( recipient.is_user_blocked ) {
-				                    #>
+							<# if ( 0 === recipient.is_deleted ) {
+								if ( recipient.is_user_blocked ) {
+									#>
 									  <i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
-				                    <#
-				                } else if ( recipient.is_user_blocked_by ) {
-				                    #>
+									<#
+								} else if ( recipient.is_user_blocked_by ) {
+									#>
 									  <i class="user-status-icon bb-icon-f bb-icon-lock"></i>
-				                    <#
-                                }
-				            } #>
-                    <# } #>
+									<#
+								}
+							} #>
+					<# } #>
 				<# } #>
 			<# } #>
 		</div>
