@@ -804,9 +804,9 @@ function bp_nouveau_ajax_messages_send_reply() {
 						$thumbnail_url = bb_get_video_default_placeholder_image();
 					}
 					?>
-                    <a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
-                        <img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
-                    </a>
+					<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+						<img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
+					</a>
 					<?php
 					$video_html = ob_get_clean();
 					$video_html = str_replace( 'video-js', 'video-js single-activity-video', $video_html );
@@ -856,6 +856,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$text_attachment_url   = wp_get_attachment_url( $attachment_id );
 				$mirror_text           = bp_document_mirror_text( $attachment_id );
 				$audio_url             = '';
+				$video_url             = '';
 
 				if ( ! empty( $extension_lists ) ) {
 					$extension_lists = array_column( $extension_lists, 'description', 'extension' );
@@ -863,6 +864,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 					if ( ! empty( $extension_lists ) && ! empty( $extension ) && array_key_exists( $extension_name, $extension_lists ) ) {
 						$extension_description = '<span class="document-extension-description">' . esc_html( $extension_lists[ $extension_name ] ) . '</span>';
 					}
+				}
+
+				if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
+					$video_url = bb_document_video_get_symlink( bp_get_document_id(), true );
 				}
 
 				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
@@ -955,6 +960,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'mp3_preview'           => $audio_url ? $audio_url : '',
 					'document_title'        => $filename ? $filename : '',
 					'mirror_text'           => $mirror_text ? $mirror_text : '',
+					'video'                 => $video_url ? $video_url : '',
 				);
 			}
 		}
@@ -2916,18 +2922,18 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						if ( ! empty( bp_get_video_length() ) ) {
 							?>
 							<p class="bb-video-duration"><?php bp_video_length(); ?></p>
-						<?php
+							<?php
 						}
-                        $thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+						$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 
 						if ( empty( $thumbnail_url ) ) {
 							$thumbnail_url = bb_get_video_default_placeholder_image();
 						}
-                        ?>
-                        <a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
-                            <img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
-                        </a>
-                        <?php
+						?>
+						<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+							<img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
+						</a>
+						<?php
 						$video_html = ob_get_clean();
 						$video_html = str_replace( 'video-js', 'video-js single-activity-video', $video_html );
 						$video_html = str_replace( 'id="theatre-video', 'id="video', $video_html );
@@ -2976,9 +2982,15 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$text_attachment_url   = wp_get_attachment_url( $attachment_id );
 					$mirror_text           = bp_document_mirror_text( $attachment_id );
 					$audio_url             = '';
+					$video_url             = '';
 
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
+					}
+
+
+					if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
+						$video_url = bb_document_video_get_symlink( bp_get_document_id(), true );
 					}
 
 					if ( ! empty( $extension_lists ) ) {
@@ -3075,6 +3087,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'mp3_preview'           => $audio_url ? $audio_url : '',
 						'document_title'        => $filename ? $filename : '',
 						'mirror_text'           => $mirror_text ? $mirror_text : '',
+						'video'                 => $video_url ? $video_url : '',
 					);
 				}
 			}

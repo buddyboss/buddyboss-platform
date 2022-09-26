@@ -176,6 +176,7 @@
 							   data-text-preview="{{data.document[i].text_preview}}"
 							   data-mp3-preview="{{data.document[i].mp3_preview}}"
 							   data-document-title="{{data.document[i].document_title}}"
+							   data-video-preview="{{data.document[i].video}}"
 							   data-mirror-text="{{data.document[i].mirror_text}}">
 								<span class="document-title">{{data.document[i].title}}.{{data.document[i].extension}}</span>
 								<span class="document-description">{{data.document[i].size}}</span>
