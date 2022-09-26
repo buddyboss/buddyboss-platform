@@ -885,7 +885,7 @@ window.bp = window.bp || {};
 				target.parents( '.message-thread-options' ).addClass( 'loading' );
 			}
 
-			if ( 'delete' === action || 'delete_thread' === action ) {
+			if ( 1 === $( event.currentTarget ).closest( '#bp-message-thread-header' ).length && ( 'delete' === action || 'delete_thread' === action ) ) {
 				if ( $( '.message_actions .message_action__anchor' ).length ) {
 					$( '.message_actions .message_action__anchor' ).trigger( 'click' );
 				}
