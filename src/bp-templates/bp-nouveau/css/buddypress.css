@@ -9689,6 +9689,27 @@ div.profile_completion_wrap .progress_text_wrap {
   flex-flow: row wrap;
 }
 
+.messages-screen .user-status-icon {
+  color: #fff;
+  background-color: #767676;
+  font-size: 17px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 50%;
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+}
+
+.bp-single-message-wrap .bp-avatar-wrap {
+  position: relative;
+}
+
+.bp-single-message-wrap .user-status-icon {
+  bottom: inherit;
+  top: 25px;
+}
+
 .bp-messages-content {
   flex: 1;
   min-width: 0;
@@ -9740,57 +9761,16 @@ div.profile_completion_wrap .progress_text_wrap {
   display: none;
 }
 
-#message-threads .can-not-send-msg {
-  opacity: 0.5;
-}
-
-#message-threads .can-not-send-msg .bp-message-link .thread-content.bp-suspended-content,
-#message-threads .can-not-send-msg .bp-message-link .thread-avatar.bp-suspended-avatar {
-  opacity: 1;
-}
-
-#message-threads .can-not-send-msg.unread .thread-to:after {
-  opacity: 0.85;
-}
-
-#message-threads .can-not-send-msg .thread-to:after {
-  content: "\ee08";
-  font-size: 14px;
-  font-weight: 300;
-  color: #122b46;
-  line-height: 1;
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  display: inline-block;
-  vertical-align: middle;
-  position: absolute;
-  right: 36px;
-  bottom: 10px;
-}
-
-#message-threads .can-not-send-msg:hover .thread-to:after {
-  display: none;
-}
-
-#message-threads .can-not-send-msg.thread-item .message-thread-options, #message-threads .can-not-send-msg.thread-item:hover .message-thread-options {
-  display: none;
-}
-
 #message-threads .thread-avatar .user-status-icon {
   color: #fff;
   background-color: #767676;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1;
-  padding: 3.5px;
+  padding: 4px;
   border-radius: 50%;
   position: absolute;
   right: -5px;
   bottom: -5px;
-}
-
-#message-threads .thread-avatar .user-status-icon.bb-icon-lock {
-  font-size: 17px;
-  padding: 4px;
 }
 
 #message-threads .bp-message-link {
@@ -10442,7 +10422,7 @@ div.profile_completion_wrap .progress_text_wrap {
   margin-bottom: 0;
 }
 
-#bp-message-thread-list .bp-message-content-wrap p.deleted-message {
+#bp-message-thread-list .bp-message-content-wrap p.blocked, #bp-message-thread-list .bp-message-content-wrap p.deleted-message {
   display: inline-block;
   font-size: 13px;
   font-weight: 400;
@@ -10451,7 +10431,7 @@ div.profile_completion_wrap .progress_text_wrap {
   border-radius: 4px;
 }
 
-#bp-message-thread-list .bp-message-content-wrap p.deleted-message:before {
+#bp-message-thread-list .bp-message-content-wrap p.blocked:before, #bp-message-thread-list .bp-message-content-wrap p.deleted-message:before {
   content: "\ee08";
   display: inline-block;
   font-family: "bb-icons";

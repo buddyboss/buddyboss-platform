@@ -959,3 +959,31 @@ function bb_moderation_category_admin_edit_description( $tax_slug ) {
     }
 }
 add_action( 'bpm_category_pre_add_form', 'bb_moderation_category_admin_edit_description' );
+
+/**
+ * Filter to update the avatar url for the before activity comment, group posts/comment, group members.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_moderation_before_activity_entry_callback() {
+	add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+}
+add_action( 'bp_before_activity_entry', 'bb_moderation_before_activity_entry_callback' );
+add_action( 'bp_before_activity_comment_entry', 'bb_moderation_before_activity_entry_callback' );
+add_action( 'bp_before_group_members_list', 'bb_moderation_before_activity_entry_callback' );
+
+/**
+ * Filter to update the avatar url for the after activity comment, group posts/comment, group members.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_moderation_after_activity_entry_callback() {
+	remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+}
+add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callback' );
+add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
+add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );

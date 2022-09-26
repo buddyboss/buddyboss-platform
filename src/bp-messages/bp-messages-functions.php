@@ -46,6 +46,8 @@ function messages_new_message( $args = '' ) {
 
 	$current_sent_time = bp_core_current_time();
 
+	$send_date = false;
+
 	// Parse the default arguments.
 	$r = bp_parse_args(
 		$args,
@@ -61,7 +63,7 @@ function messages_new_message( $args = '' ) {
 			'mark_visible'  => false,
 			'group_thread'  => false,
 			'error_type'    => 'bool',
-			'send_at'       => $current_sent_time,
+			'send_at'       => false,
 		),
 		'messages_new_message'
 	);
@@ -75,6 +77,7 @@ function messages_new_message( $args = '' ) {
 		// Check the pusher date is not more than 5 mins.
 		if ( $send_at_timestamp <= $date_sent_timestamp && $send_at_timestamp >= $date_sent_timestamp_before ) {
 			$r['date_sent'] = $r['send_at'];
+			$send_date = true;
 		}
 	}
 
@@ -405,8 +408,10 @@ function messages_new_message( $args = '' ) {
 		return false;
 	}
 
-	// Save the meta for current sent time.
-	bp_messages_update_meta( $send, 'user_date_sent', $current_sent_time );
+	if ( $send_date ) {
+		// Save the meta for current sent time.
+		bp_messages_update_meta( $send, 'user_date_sent', $current_sent_time );
+	}
 
 	// only update after the send().
 	BP_Messages_Thread::update_last_message_status( $last_message_data );
@@ -1290,12 +1295,8 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	if ( ! empty( $avatars_user_ids ) ) {
 		$avatars_user_ids = array_reverse( $avatars_user_ids );
 		foreach ( (array) $avatars_user_ids as $avatar_user_id ) {
-
-			$is_suspended = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $avatar_user_id );
-			$is_blocked   = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $avatar_user_id );
-
 			$avatar_urls[] = array(
-				'url'          => esc_url(
+				'url'                => esc_url(
 					bp_core_fetch_avatar(
 						array(
 							'item_id' => $avatar_user_id,
@@ -1307,12 +1308,14 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 						)
 					)
 				),
-				'name'         => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
-				'id'           => esc_attr( $avatar_user_id ),
-				'type'         => 'user',
-				'link'         => bp_core_get_user_domain( $avatar_user_id ),
-				'is_suspended' => $is_suspended,
-				'is_blocked'   => $is_blocked,
+				'name'               => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) ),
+				'id'                 => esc_attr( $avatar_user_id ),
+				'type'               => 'user',
+				'link'               => bp_core_get_user_domain( $avatar_user_id ),
+				'is_user_suspended'  => function_exists( 'bp_moderation_is_user_suspended' ) ? bp_moderation_is_user_suspended( $avatar_user_id ) : false,
+				'is_user_blocked'    => function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $avatar_user_id ) : false,
+				'is_user_blocked_by' => function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $avatar_user_id ) : false,
+				'is_deleted'         => empty( get_userdata( $avatar_user_id ) ) ? 1 : 0,
 			);
 		}
 	}
