@@ -222,8 +222,12 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return $value;
 		}
 
-		if ( ! bp_moderation_is_user_suspended( $user_id ) && bp_moderation_is_user_blocked( $user_id ) ) {
-			return esc_html__( 'Blocked Member', 'buddyboss' );
+		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
+			if ( bp_moderation_is_user_blocked( $user_id ) ) {
+				return bb_moderation_has_blocked_label( $value, $user_id );
+			} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+				return bb_moderation_is_blocked_label( $value, $user_id );
+			}
 		}
 
 		return $value;
@@ -241,7 +245,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
-		$user = false;
+		$user       = false;
+		$old_retval = $retval;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
@@ -266,10 +271,21 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			return buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
+			$retval = bb_moderation_has_blocked_avatar( $retval, $user->ID, $args );
+		} elseif ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
+			$retval = bb_moderation_is_blocked_avatar( $user->ID, $args );
 		}
 
-		return $retval;
+		/**
+		 * Filter to update blocked avatar url.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $retval         The URL of the avatar.
+		 * @param string $old_avatar_url URL for a originally uploaded avatar.
+		 * @param array  $args           Arguments passed to get_avatar_data(), after processing.
+		 */
+		return apply_filters( 'bb_get_blocked_avatar_url', $retval, $old_retval, $args );
 	}
 
 	/**
@@ -284,18 +300,31 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function bp_fetch_avatar_url( $avatar_url, $params ) {
 
-		$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
+		$item_id        = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
+		$old_avatar_url = $avatar_url;
+
 		if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
-					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
+					$avatar_url = bb_moderation_has_blocked_avatar( $avatar_url, $item_id, $params );
+				} elseif ( bb_moderation_is_user_blocked_by( $item_id ) ) {
+					$avatar_url = bb_moderation_is_blocked_avatar( $item_id, $params );
 				}
 			}
 		}
 
-		return $avatar_url;
+		/**
+		 * Filter to update blocked avatar url.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $avatar_url     URL for a locally uploaded avatar.
+		 * @param string $old_avatar_url URL for a originally uploaded avatar.
+		 * @param array  $params         Array of parameters for the request.
+		 */
+		return apply_filters( 'bb_get_blocked_avatar_url', $avatar_url, $old_avatar_url, $params );
 	}
 
 	/**
