@@ -98,7 +98,9 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		}
 
 		// Exclude current user from mention list.
-		if ( is_user_logged_in() ) {
+		if ( is_user_logged_in() && $this->args['exclude'] && ! empty( $this->args['exclude'] ) ) {
+			$user_query['exclude'] = array_merge( $this->args['exclude'], array( get_current_user_id() ) );
+		} elseif ( is_user_logged_in() ) {
 			$user_query['exclude'] = get_current_user_id();
 		}
 
