@@ -314,7 +314,11 @@ function bp_media_messages_save_group_data( &$message ) {
 			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
 			bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
 			bp_messages_update_meta( $message->id, $thread_key, $group );
-			bp_messages_update_meta( $message->id, 'message_from', 'personal' );
+			$message_from = 'personal';
+			if ( 'all' === $message_users ) {
+				$message_from = 'group';
+			}
+			bp_messages_update_meta( $message->id, 'message_from', $message_from );
 			bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
 		}
 	}
