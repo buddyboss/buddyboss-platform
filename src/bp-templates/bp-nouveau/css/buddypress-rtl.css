@@ -22057,6 +22057,11 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   min-width: inherit;
 }
 
+.message-members-list.member-popup .modal-container .bb-model-header ~ .bp-feedback,
+.moderation-popup .modal-container .bb-model-header ~ .bp-feedback {
+  margin: -15px -20px 15px;
+}
+
 .message-members-list.member-popup .modal-container #bb-block-member,
 .message-members-list.member-popup .modal-container #bb-report-content,
 .moderation-popup .modal-container #bb-block-member,
@@ -22100,9 +22105,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .message-members-list.member-popup .modal-container .form-item label > textarea,
 .moderation-popup .modal-container .form-item label > textarea {
-  margin-right: 30px;
+  font-size: 14px;
   margin-bottom: 0;
-  width: calc(100% - 28px);
 }
 
 .message-members-list.member-popup .modal-container .bp-report-form-err,
@@ -26885,6 +26889,25 @@ span.icons:before {
 #content-report .bb-model-header .mfp-close [class*=" bb-icon-"] {
   font-size: 24px;
   pointer-events: none;
+}
+
+.taxonomy-bpm_category .table-view-list.tags tbody tr td .inline-edit-wrapper .inline-edit-col .title {
+  width: 140px;
+}
+
+.taxonomy-bpm_category .table-view-list.tags tbody tr td .inline-edit-wrapper .inline-edit-col .input-text-wrap {
+  margin-right: 20px;
+  width: calc(100% - 160px);
+  float: right;
+}
+
+@media screen and (max-width: 1460px) {
+  .buddyboss_page_bp-moderation .fixed .column-date {
+    width: 150px;
+  }
+  .buddyboss_page_bp-moderation .fixed .column-reporter {
+    width: calc(100% - 150px);
+  }
 }
 
 /*

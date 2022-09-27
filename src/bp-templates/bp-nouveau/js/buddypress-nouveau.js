@@ -89,7 +89,7 @@ window.bp = window.bp || {};
 		/*
 		 *	Toast Message
 		 */
-		bbToastMessage: function ( title, message, type, url, autoHide ) {
+		 bbToastMessage: function ( title, message, type, url, autoHide ) {
 
 			if ( ! message || message.trim() == '' ) { // Toast Message can't be triggered without content.
 				return;
@@ -1191,6 +1191,9 @@ window.bp = window.bp || {};
 					bp.Nouveau.browserTabCountNotification();
 					bp.Nouveau.visibilityOnScreenClearButton();
 					list.closest( '.bb-onscreen-notification' ).addClass( 'close-all-items' );
+					$( '.toast-messages-list > li' ).each( function () {
+						$( this ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
+					} );
 					$( '.toast-messages-list > li' ).each( function () {
 						$( this ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
 					} );
@@ -2562,17 +2565,39 @@ window.bp = window.bp || {};
 						midClick: true,
 						callbacks: {
 							open: function () {
-								var contentId   = this.currItem.el.data( 'bp-content-id' );
+								$( '#notes-error' ).hide();
+								var contentId = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
-								var nonce       = this.currItem.el.data( 'bp-nonce' );
-								var reportType  = this.currItem.el.attr( 'reported_type' );
+								var nonce = this.currItem.el.data( 'bp-nonce' );
+								var reportType = this.currItem.el.attr( 'reported_type' );
+								$( '#bb-report-content .form-item-category' ).show();
+								if ( 'user_report' === contentType ) {
+									$( '#bb-report-content .form-item-category.content' ).hide();
+								} else {
+									$( '#bb-report-content .form-item-category.members' ).hide();
+								}
+
+								$( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' ).attr( 'checked', true );
+
+								if ( ! $( '#bb-report-content .form-item-category:visible label input[type="radio"]' ).length ) {
+									$( '#report-category-other' ).attr( 'checked', true );
+									$( '#report-category-other' ).trigger( 'click' );
+									$( 'label[for="report-category-other"]' ).hide();
+								}
+
+								var mf_content = $( '#content-report' );
+								mf_content.find( '.bp-reported-type' ).text( this.currItem.el.data( 'reported_type' ) );
 								if ( 'undefined' !== typeof reportType ) {
-									var mf_content = $( '#content-report' );
 									mf_content.find( '.bp-reported-type' ).text( reportType );
 								}
+
 								if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 									$( document ).find( '.bp-report-form-err' ).empty();
-									_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
+									_this.setFormValues( {
+										contentId: contentId,
+										contentType: contentType,
+										nonce: nonce
+									} );
 								}
 							}
 						}
@@ -2599,16 +2624,19 @@ window.bp = window.bp || {};
 				function () {
 					if ( 'other' === this.value ) {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).removeClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', true );
 					} else {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).addClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', false );
 					}
 				}
 			);
 
 			$( '#bb-report-content' ).submit(
 				function ( e ) {
+
+					if ( $( '#report-category-other' ).is( ':checked' ) && '' === $( '#report-note' ).val() ) {
+						$( '#notes-error' ).show();
+						return false;
+					}
 
 					$( '#bb-report-content' ).find( '.report-submit' ).addClass( 'loading' );
 
@@ -2633,6 +2661,10 @@ window.bp = window.bp || {};
 								_this.changeReportButtonStatus( response.data );
 								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 								$( '.mfp-close' ).trigger( 'click' );
+								jQuery( document ).trigger(
+									'bb_trigger_toast_message',
+									[ '', response.data.toast_message, 'info', null, true ]
+								);
 							} else {
 								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 								_this.handleReportError( response.data.message.errors, e.currentTarget );
@@ -2717,7 +2749,7 @@ window.bp = window.bp || {};
 						midClick: true,
 						callbacks: {
 							open: function () {
-								var contentType = this.currItem.el.attr( 'reported_type' );
+								var contentType = undefined !== this.currItem.el.attr( 'reported_type' ) ? this.currItem.el.attr( 'reported_type' ) : this.currItem.el.data( 'reported_type' );
 								if ( 'undefined' !== typeof contentType ) {
 									var mf_content = $( '#reported-content' );
 									mf_content.find( '.bp-reported-type' ).text( contentType );
@@ -3303,7 +3335,7 @@ window.bp = window.bp || {};
 					});
 				});
 			}
-			
+
 			var message = '';
 			var progress = 0,
 				totalProgress = 0;
