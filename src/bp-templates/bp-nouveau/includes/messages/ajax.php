@@ -2989,7 +2989,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 					}
 
-
 					if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
 						$video_url = bb_document_video_get_symlink( bp_get_document_id(), true );
 					}
@@ -3365,6 +3364,16 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 		$args['exclude_admin_user'] = $administrator_ids;
 	}
 
+	$member_action = 'block';
+	if ( isset( $post_data['member_action'] ) ) {
+		$member_action = filter_var( $post_data['member_action'], FILTER_SANITIZE_STRING );
+	}
+
+	if ( 'report' === $member_action ) {
+		$args['exclude_reported_members'] = $args['exclude_moderated_members'];
+		unset( $args['exclude_moderated_members'] );
+	}
+
 	$thread_id = (int) $post_data['thread_id'];
 
 	$is_group_message_thread = bb_messages_is_group_thread( $thread_id );
@@ -3416,30 +3425,55 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 								<div class="user-name">
 									<a href="<?php echo bp_core_get_user_domain( $recipient->user_id ); ?>"><?php echo esc_html( $user_name ); ?></a>
 								</div>
-								<?php if ( bp_is_active( 'moderation' ) ) { ?>
-								<div class="user-actions">
-									<?php
-									$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
-									if ( true === bp_moderation_is_user_blocked( $recipient->user_id ) ) {
-										?>
-										<a id="reported-user" class="blocked-member button small disabled">
-											<?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
-										</a>
+								<?php if ( 'block' === $member_action && bp_is_active( 'moderation' ) ) { ?>
+									<div class="user-actions">
 										<?php
-									} elseif ( false !== $can_be_blocked ) {
-										$bp_moderation_type = BP_Moderation_Members::$moderation_type;
+										$can_be_blocked = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+										if ( true === bp_moderation_is_user_blocked( $recipient->user_id ) ) {
+											?>
+											<a id="reported-user" class="blocked-member button small disabled">
+												<?php esc_html_e( 'Blocked', 'buddyboss' ); ?>
+											</a>
+											<?php
+										} elseif ( false !== $can_be_blocked ) {
+											$bp_moderation_type = BP_Moderation_Members::$moderation_type;
+											?>
+											<a id="report-content-<?php echo esc_attr( $bp_moderation_type ); ?>-<?php echo esc_attr( $recipient->user_id ); ?>"
+												href="#block-member" class="block-member button small"
+												data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
+												data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
+												data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
+												<?php esc_html_e( 'Block', 'buddyboss' ); ?>
+											</a>
+											<?php
+										}
 										?>
-										<a id="report-content-<?php echo esc_attr( $bp_moderation_type ); ?>-<?php echo esc_attr( $recipient->user_id ); ?>"
-											href="#block-member" class="block-member button small"
-											data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
-											data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
-											data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
-											<?php esc_html_e( 'Block', 'buddyboss' ); ?>
-										</a>
+									</div>
+								<?php } elseif ( 'report' === $member_action && bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) { ?>
+									<div class="user-actions">
 										<?php
-									}
-									?>
-								</div>
+										$bp_moderation_type = BP_Moderation_Members::$moderation_type_report;
+										$can_be_blocked     = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === (bool) bp_moderation_user_can( $user_id, $bp_moderation_type, false ) ) ? true : false;
+
+										if ( bp_moderation_report_exist( $recipient->user_id, $bp_moderation_type ) ) {
+											?>
+											<a id="reported-user" class="reported-content button small disabled">
+												<?php esc_html_e( 'Reported', 'buddyboss' ); ?>
+											</a>
+											<?php
+										} elseif ( false !== $can_be_blocked ) {
+											?>
+											<a id="report-content-<?php echo esc_attr( $bp_moderation_type ); ?>-<?php echo esc_attr( $recipient->user_id ); ?>"
+												href="#content-report" class="report-content button small"
+												data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
+												data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
+												data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
+												<?php esc_html_e( 'Report Member', 'buddyboss' ); ?>
+											</a>
+											<?php
+										}
+										?>
+									</div>
 								<?php } ?>
 							</div>
 							<?php
