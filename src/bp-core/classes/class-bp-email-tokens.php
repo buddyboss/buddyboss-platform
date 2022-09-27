@@ -2133,7 +2133,7 @@ class BP_Email_Tokens {
 		);
 
 		if ( ! empty( $sender_id ) ) {
-			$output = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['body_secondary_text_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_core_get_user_displayname( $sender_id ) ) . '</a>';
+			$output = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_core_get_user_displayname( $sender_id ) ) . '</a>';
 		}
 
 		return $output;
@@ -2178,7 +2178,7 @@ class BP_Email_Tokens {
 
 		$settings = bp_email_get_appearance_settings();
 
-		$output = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['body_secondary_text_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_get_group_name( $group ) ) . '</a>';
+		$output = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_get_group_name( $group ) ) . '</a>';
 
 		return $output;
 	}
@@ -2204,7 +2204,7 @@ class BP_Email_Tokens {
 		$settings = bp_email_get_appearance_settings();
 
 		if ( isset( $tokens['message.url'], $tokens['unread.count'] ) && ! empty( $tokens['message.url'] ) ) {
-			$output = '<a href="' . esc_url( $tokens['message.url'] ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['body_secondary_text_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( $tokens['unread.count'] ) . '</a>';
+			$output = '<a href="' . esc_url( $tokens['message.url'] ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( $tokens['unread.count'] ) . '</a>';
 		}
 
 		return $output;
