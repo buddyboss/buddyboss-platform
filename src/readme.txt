@@ -57,6 +57,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.1.1 =
+* Moderation - Provided members option to report other members
+* Moderation - Improvements to the moderation module settings, categories, and reports in the Dashboard
+* Core - Icon Pack updated with latest icons
+* REST API - Provided 'Report member' option API support
+* REST API - Handled blogs 'Report comment' endpoint issue in the API
+
 = 2.1.0 =
 * Forums - Handled forum discussion and reply right click and paste action issue, adds duplicate copies from the clipboard
 * Activity - Handled activity comment not showing attachment issue when read more is clicked
