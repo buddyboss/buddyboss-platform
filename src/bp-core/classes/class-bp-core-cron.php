@@ -94,7 +94,7 @@ class BP_Core_Cron {
 	public function schedule() {
 		foreach ( $this->crons as $cron ) {
 			// Schedule if not scheduled already.
-			if ( ! wp_next_scheduled( $cron['hook'] ) ) {
+			if ( ! wp_next_scheduled( $cron['hook'] ) && apply_filters( 'bp_core_cron_schedule_' . $cron['hook'], true ) ) {
 				wp_schedule_event( time(), $cron['recurrence'], $cron['hook'] );
 			}
 		}

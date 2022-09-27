@@ -50,22 +50,22 @@ class Hooks {
 
 	/**
 	 * Skip the leardash course field from member search when course price type or course mode is 'open'.
-	 * 
+	 *
 	 * @since BuddyBoss 1.6.0
-	 * 
+	 *
 	 * @param bool  $has_access Default activity for leardash course search field.
 	 * @param mixed $field      Field attributes for learndash course.
-	 * 
+	 *
 	 * @uses learndash_get_setting() Get learndash individual course settings.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function checkLearndashCourseFilter( $has_access, $field ) {
-		if ( 'field_learndash_courses' === $field->code ) {
+		if ( is_object( $field ) && property_exists( $field, 'code' ) && property_exists( $field, 'value' ) && 'field_learndash_courses' === $field->code ) {
 			$course_settings = learndash_get_setting( $field->value );
-			
+
 			// Skip the leardash course field from member search when course price type or course mode is 'open'.
-			if ( 'open' === $course_settings['course_price_type'] ) {
+			if ( isset( $course_settings['course_price_type'] ) && 'open' === $course_settings['course_price_type'] ) {
 				return false;
 			}
 		}

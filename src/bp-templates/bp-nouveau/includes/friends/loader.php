@@ -95,6 +95,11 @@ class BP_Nouveau_Friends {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function notification_filters() {
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			return;
+		}
+
 		$notifications = array(
 			array(
 				'id'       => 'friendship_accepted',

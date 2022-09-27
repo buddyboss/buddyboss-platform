@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Member Courses
+ * The template for member courses
  *
- * @since BuddyBoss 1.2.0
- * @version 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/courses/courses.php.
+ *
+ * @since   BuddyBoss 1.2.0
+ * @version 1.2.0
  */
 
 $filepath = locate_template(

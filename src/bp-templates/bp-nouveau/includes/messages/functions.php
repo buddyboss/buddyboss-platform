@@ -474,6 +474,11 @@ function bp_nouveau_messages_get_bulk_actions() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_messages_notification_filters() {
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		return;
+	}
+
 	bp_nouveau_notifications_register_filter(
 		array(
 			'id'       => 'new_message',

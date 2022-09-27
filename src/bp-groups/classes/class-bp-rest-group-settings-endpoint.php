@@ -38,7 +38,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base       = buddypress()->groups->id;
 		$this->groups_endpoint = new BP_REST_Groups_Endpoint();
-		$this->nav             = array( 'group-settings' );
+		$this->nav             = array( 'edit-details', 'group-settings' );
 	}
 
 	/**
@@ -108,7 +108,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the Group.
-	 * @apiParam {String=group-settings,forum,courses} nav Navigation item slug.
+	 * @apiParam {String=edit-details,group-settings,forum,courses} nav Navigation item slug.
 	 */
 	public function get_item( $request ) {
 
@@ -127,6 +127,10 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$nav    = $request->get_param( 'nav' );
 		$fields = array();
 		switch ( $nav ) {
+			case 'edit-details':
+				$fields = $this->get_detais_fields( $group->id );
+				break;
+
 			case 'group-settings':
 				$fields = $this->get_settings_fields( $group->id );
 				break;
@@ -255,6 +259,11 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$updated = array();
 
 		switch ( $nav ) {
+			case 'edit-details':
+				$updated = $this->update_details_fields( $request );
+				$fields  = $this->get_detais_fields( $group->id );
+				break;
+
 			case 'group-settings':
 				$updated = $this->update_settings_fields( $request );
 				$fields  = $this->get_settings_fields( $group->id );
@@ -507,6 +516,81 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		 * @param array $schema The endpoint schema.
 		 */
 		return apply_filters( 'bp_rest_group_schema', $this->add_additional_fields_schema( $schema ) );
+	}
+
+	/**
+	 * Get Group Details fields.
+	 *
+	 * @param integer $group_id Group ID.
+	 *
+	 * @return mixed|void
+	 */
+	protected function get_detais_fields( $group_id ) {
+		$fields                             = array();
+		$group                              = groups_get_group( $group_id );
+		buddypress()->groups->current_group = $group;
+
+		$fields[] = array(
+			'label'       => esc_html__( 'Group Name (required)', 'buddyboss' ),
+			'name'        => 'group-name',
+			'description' => '',
+			'field'       => 'text',
+			'value'       => ( function_exists( 'bp_get_group_name_editable' ) ? bp_get_group_name_editable( $group ) : bp_get_group_name( $group ) ),
+			'options'     => array(),
+		);
+
+		$fields[] = array(
+			'label'       => esc_html__( 'Group Description', 'buddyboss' ),
+			'name'        => 'group-desc',
+			'description' => '',
+			'field'       => 'textarea',
+			'value'       => bp_get_group_description_editable( $group ),
+			'options'     => array(),
+		);
+
+		if (
+			(
+				function_exists( 'bb_enabled_legacy_email_preference' ) &&
+				(
+					(
+						! bb_enabled_legacy_email_preference() &&
+						bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' )
+					) ||
+					bb_enabled_legacy_email_preference()
+				)
+			) ||
+			! function_exists( 'bb_enabled_legacy_email_preference' )
+		) {
+			$checked = 0;
+			$label   = esc_html__( 'Notify group members of these changes via email', 'buddyboss' );
+
+			if (
+				function_exists( 'bb_enabled_legacy_email_preference' ) &&
+				! bb_enabled_legacy_email_preference() &&
+				bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' )
+			) {
+				$label   = esc_html__( 'Notify group members of these changes', 'buddyboss' );
+				$checked = 1;
+			}
+
+			$fields[] = array(
+				'label'       => '',
+				'name'        => 'group-notify-members',
+				'description' => '',
+				'field'       => 'checkbox',
+				'value'       => '',
+				'options'     => array(
+					array(
+						'label'             => $label,
+						'value'             => 1,
+						'description'       => '',
+						'is_default_option' => $checked,
+					),
+				),
+			);
+		}
+
+		return apply_filters( 'bp_rest_group_details', $fields, $group_id );
 	}
 
 	/**
@@ -909,6 +993,62 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		return apply_filters( 'bp_rest_group_settings', $fields, $group_id );
+
+	}
+
+	/**
+	 * Details Group settings.
+	 *
+	 * @param WP_REST_Request $request Request used to generate the response.
+	 *
+	 * @return array
+	 */
+	protected function update_details_fields( $request ) {
+		$post_fields                        = $request->get_param( 'fields' );
+		$group_id                           = $request->get_param( 'id' );
+		$group                              = groups_get_group( $group_id );
+		buddypress()->groups->current_group = $group;
+
+		if ( empty( $post_fields ) ) {
+			return array(
+				'error'  => '',
+				'notice' => '',
+			);
+		}
+
+		$group_name           = ( array_key_exists( 'group-name', (array) $post_fields ) && ! empty( $post_fields['group-name'] ) ) ? $post_fields['group-name'] : bp_get_group_name( $group );
+		$group_desc           = ( array_key_exists( 'group-desc', (array) $post_fields ) && ! empty( $post_fields['group-desc'] ) ) ? $post_fields['group-desc'] : bp_get_group_description_editable( $group );
+		$group_notify_members = (bool) ( array_key_exists( 'group-notify-members', (array) $post_fields ) && ! empty( $post_fields['group-notify-members'] ) ) ? $post_fields['group-notify-members'] : false;
+
+		$error  = '';
+		$notice = '';
+
+		if ( ! groups_edit_base_group_details(
+			array(
+				'group_id'       => $group_id,
+				'name'           => $group_name,
+				'slug'           => null,
+				'description'    => $group_desc,
+				'notify_members' => $group_notify_members,
+				'parent_id'      => false,
+			)
+		) ) {
+			$error = __( 'There was an error updating group details. Please try again.', 'buddyboss' );
+		} else {
+			$notice = __( 'Group details were successfully updated.', 'buddyboss' );
+		}
+
+		/**
+		 * Fires before the redirect if a group details has been edited and saved.
+		 *
+		 * @param int $group_id ID of the group that was edited.
+		 */
+		do_action( 'groups_group_details_edited', $group_id );
+
+		return array(
+			'error'  => $error,
+			'notice' => $notice,
+		);
 
 	}
 

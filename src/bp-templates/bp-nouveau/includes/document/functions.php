@@ -93,7 +93,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss' ),
 		'invalid_file_type'               => __( 'Unable to upload the file', 'buddyboss' ),
 		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
-		'dropzone_document_message'       => __( 'Drop files here to upload', 'buddyboss' ),
+		'dropzone_document_message'       => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Files', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
 		'is_document_directory'           => ( bp_is_document_directory() ) ? 'yes' : 'no',
 		'document_preview_error'          => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
 		'move_to_folder'                  => __( 'Move folder to...', 'buddyboss' ),
@@ -939,7 +939,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 			readfile( "{$zip_name}" );
 
-			BP_Document::bp_document_remove_temp_directory( $upload_dir );
+			bp_document_remove_temp_directory( $upload_dir );
 			exit();
 
 		}
@@ -1073,7 +1073,18 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
  * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && ( bp_is_document_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) {
+	if (
+		isset( $buttons['activity_edit'] ) &&
+		(
+			bp_is_document_component() ||
+			! bp_is_activity_component()
+		) &&
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		(
+			'document_get_activity' === $_REQUEST['action'] || // phpcs:ignore
+			'document_get_document_description' === $_REQUEST['action'] // phpcs:ignore
+		)
+	) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'document' !== $activity->privacy ) {

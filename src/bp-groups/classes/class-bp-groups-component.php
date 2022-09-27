@@ -1137,7 +1137,7 @@ class BP_Groups_Component extends BP_Component {
 				);
 
 				if ( empty( $bp->bp_options_avatar ) ) {
-					$bp->bp_options_avatar = '<img src="' . esc_url( bp_core_avatar_default_thumb() ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
+					$bp->bp_options_avatar = '<img src="' . esc_url( bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group', 'type' => 'thumb' ) ) ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
 				}
 			}
 		}
@@ -1161,6 +1161,9 @@ class BP_Groups_Component extends BP_Component {
 				'group_meta',
 				'bp_groups_memberships',
 				'bp_groups_memberships_for_user',
+				'bp_group_mods',
+				'bp_groups_invitations_as_memberships',
+				'bp_groups_group_type',
 			)
 		);
 
