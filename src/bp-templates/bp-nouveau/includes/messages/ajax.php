@@ -2584,6 +2584,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( $group_id && $message_from && 'group' === $message_from ) {
 
+			$group_text = '';
 			if ( bp_is_active( 'groups' ) ) {
 				$get_group  = groups_get_group( $group_id );
 				$group_name = bp_get_group_name( $get_group );
