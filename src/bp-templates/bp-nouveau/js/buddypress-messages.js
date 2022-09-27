@@ -4638,6 +4638,8 @@ window.bp = window.bp || {};
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
+					// Scroll Messages to bottom
+					$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 				}
 			},
 
