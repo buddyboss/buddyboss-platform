@@ -6452,6 +6452,8 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 			 * Avatar Display = unchecked.
 			 * Profile Avatars = WordPress.
 			 */
+		} elseif ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' !== bp_get_option( 'avatar_default', 'mystery' ) ) {
+			$avatar_image_url = $avatar = get_avatar_url( '', array( 'size' => $size ) );
 		} elseif ( ! $show_avatar && 'WordPress' === $profile_avatar_type ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 		}
