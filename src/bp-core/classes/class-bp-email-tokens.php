@@ -1015,7 +1015,7 @@ class BP_Email_Tokens {
 										</td>
 										<td width="88%" style="vertical-align: middle;">
 											<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-												<a href="<?php echo esc_url( $group_link ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;">
+												<a href="<?php echo esc_url( $group_link ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;text-decoration: none;">
 													<?php echo esc_html( $group_name ); ?>
 												</a>
 											</div>
@@ -1028,7 +1028,7 @@ class BP_Email_Tokens {
 										</td>
 										<td width="88%" style="vertical-align: middle;">
 											<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-												<a href="<?php echo esc_url( $sender_link ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;">
+												<a href="<?php echo esc_url( $sender_link ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;text-decoration: none;">
 													<?php echo esc_html( $sender_name ); ?>
 												</a>
 											</div>
@@ -1801,7 +1801,7 @@ class BP_Email_Tokens {
 									</td>
 									<td width="88%" style="vertical-align: middle;">
 										<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; font-weight: 500;">
-											<a href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;"><?php echo esc_html( bp_get_group_name( $group ) ); ?></a>
+											<a href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;text-decoration: none;"><?php echo esc_html( bp_get_group_name( $group ) ); ?></a>
 										</div>
 									</td>
 								</tr>

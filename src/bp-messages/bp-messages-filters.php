@@ -1091,7 +1091,7 @@ function bb_digest_message_email_notifications() {
 
 			$results = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT m.*, r.user_id, r.unread_count FROM `{$wpdb->prefix}bp_messages_messages` AS m LEFT JOIN `{$wpdb->prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$wpdb->prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND r.is_hidden = %d AND meta1.message_id IS NULL ORDER BY m.thread_id, m.id ASC",
+					"SELECT m.*, r.user_id, r.unread_count FROM `{$wpdb->prefix}bp_messages_messages` AS m LEFT JOIN `{$wpdb->prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$wpdb->prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND m.sender_id != r.user_id AND r.is_hidden = %d AND meta1.message_id IS NULL ORDER BY m.thread_id, m.id ASC",
 					$start_date,
 					$current_date,
 					0,
@@ -1103,6 +1103,23 @@ function bb_digest_message_email_notifications() {
 			$threads = array();
 			if ( ! empty( $results ) ) {
 				foreach ( $results as $unread_message ) {
+
+					// Check the message for group joined.
+					$is_left_message = bp_messages_get_meta( $unread_message->id, 'group_message_group_joined' );
+					if ( 'yes' === $is_left_message ) {
+						continue;
+					}
+
+					// Check the message for group left.
+					$is_left_message = bp_messages_get_meta( $unread_message->id, 'group_message_group_left' );
+					if ( 'yes' === $is_left_message ) {
+						continue;
+					}
+
+					if ( $unread_message->sender_id === $unread_message->user_id ) {
+						continue;
+					}
+
 					$threads[ $unread_message->thread_id ]['thread_id'] = $unread_message->thread_id;
 
 					// Set messages.
