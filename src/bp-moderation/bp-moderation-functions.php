@@ -858,7 +858,7 @@ function bp_moderation_auto_suspend_threshold( $default = 5 ) {
 /**
  * Checks if Moderation Member reporting feature is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -872,7 +872,7 @@ function bb_is_moderation_member_reporting_enable( $default = 0 ) {
 /**
  * Checks if Moderation Member auto suspend report feature is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -886,7 +886,7 @@ function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
 /**
  * Checks if Moderation Member auto suspend report feature is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -1223,7 +1223,7 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
 /**
  * Function to get reporting categories show when fields array.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @return array
  */
@@ -1238,7 +1238,7 @@ function bb_moderation_get_reporting_category_fields_array() {
 	/**
 	 * Filters the reported button text for different components
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.1
 	 *
 	 * @param array $result Options for show when field.
 	 */

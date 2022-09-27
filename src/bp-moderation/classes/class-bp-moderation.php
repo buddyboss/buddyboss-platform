@@ -117,7 +117,7 @@ class BP_Moderation {
 	/**
 	 * Reported count for members Moderation report.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.1
 	 * @var int
 	 */
 	public $count_report = 0;
@@ -125,7 +125,7 @@ class BP_Moderation {
 	/**
 	 * Report flag for members Moderation report.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.1
 	 * @var int
 	 */
 	public $user_report = 0;
@@ -216,7 +216,7 @@ class BP_Moderation {
 	/**
 	 * Check any moderation item block/report exist or not
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.1
 	 *
 	 * @param int  $item_id     Moderation item id.
 	 * @param int  $item_type   Moderation item type.

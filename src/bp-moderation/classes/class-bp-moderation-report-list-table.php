@@ -24,7 +24,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 *
 	 * E.g. "Blocked", "Reported"
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.1
 	 * @var string $view
 	 */
 	public $view = 'reported';
