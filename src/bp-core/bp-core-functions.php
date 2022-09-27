@@ -7930,3 +7930,14 @@ function bb_get_user_id_by_activity_mentionname( $mention_names ) {
 
 	return $mention_user_ids;
 }
+
+/**
+ * Return to check its working with WP CLI or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_wp_cli() {
+	return defined( 'WP_CLI' ) && WP_CLI;
+}
