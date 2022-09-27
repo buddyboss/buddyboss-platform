@@ -761,7 +761,7 @@ add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated',
 /**
  * Add show when reporting field in reporting categories add page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @return mixed Show when Reporting field.
  */
@@ -785,7 +785,7 @@ add_action( 'bpm_category_add_form_fields', 'bb_category_add_term_fields_show_wh
 /**
  * Add show when reporting field in reporting categories edit page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param object $term Reporting category object.
  *
@@ -816,7 +816,7 @@ add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_
 /**
  * Save show when reporting field in reporting categories.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param int $term_id Show when reporting field term ID.
  */
@@ -836,7 +836,7 @@ add_action( 'edited_bpm_category', 'bb_category_save_term_fields_show_when_repor
 /**
  * Register columns for our taxonomy.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param array $columns List of columns for Reporting category taxonomy.
  *
@@ -853,7 +853,7 @@ add_filter( 'manage_edit-bpm_category_columns', 'bb_category_show_when_reporting
 /**
  * Retrieve value for our custom column.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param string $string      Blank string.
  * @param string $column_name Name of the column.
@@ -871,7 +871,7 @@ add_filter( 'manage_bpm_category_custom_column', 'bb_category_show_when_reportin
 /**
  * Display markup or template for custom field.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param string $column_name Column being shown.
  * @param string $screen Post type being shown.
@@ -908,7 +908,7 @@ add_action( 'quick_edit_custom_box', 'bb_quick_edit_bb_category_show_when_report
 /**
  * Function to change member report type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param string $content_type Button text.
  * @param int    $item_id      Item id.
@@ -923,7 +923,7 @@ add_action( 'bp_moderation_user_report_report_content_type', 'bp_moderation_user
 /**
  * Filters the labels of a specific taxonomy.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @param object $labels Object of labels for taxonomy `bpm_category`.
  *
@@ -938,22 +938,20 @@ add_action( 'taxonomy_labels_bpm_category', 'bb_get_bpm_category_labels' );
 
 /**
  * Prepend taxonomy description for Reporting Category page.
- * 
- * @since BuddyBoss [BBVERSION]
- * 
+ *
+ * @since BuddyBoss 2.1.1
+ *
  * @param string $tax_slug Taxonomy slug.
- * 
- * @return 
  */
 function bb_moderation_category_admin_edit_description( $tax_slug ) {
 
-    // Grab the Taxonomy Object.
-    $tax_obj = get_taxonomy( $tax_slug );
+	// Grab the Taxonomy Object.
+	$tax_obj = get_taxonomy( $tax_slug );
 
-    // IF the description is set on our object.
-    if( property_exists( $tax_obj, 'description' ) ) {
+	// IF the description is set on our object.
+	if ( property_exists( $tax_obj, 'description' ) ) {
 		printf( '<p id="bb_reporting_category_description" >%s</p>', esc_attr( $tax_obj->description ) );
-    }
+	}
 }
 add_action( 'bpm_category_pre_add_form', 'bb_moderation_category_admin_edit_description' );
 

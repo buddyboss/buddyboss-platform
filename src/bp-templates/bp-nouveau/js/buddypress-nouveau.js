@@ -1198,6 +1198,9 @@ window.bp = window.bp || {};
 					bp.Nouveau.browserTabCountNotification();
 					bp.Nouveau.visibilityOnScreenClearButton();
 					list.closest( '.bb-onscreen-notification' ).addClass( 'close-all-items' );
+					$( '.toast-messages-list > li' ).each( function () {
+						$( this ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
+					} );
 					$( '.bb-onscreen-notification' ).fadeOut( 200 );
 					$( '.toast-messages-list > li' ).each( function () {
 						$( this ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
@@ -3380,5 +3383,3 @@ window.bp = window.bp || {};
    bp.Nouveau.start();
 
 } )( bp, jQuery );
-
-

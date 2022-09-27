@@ -210,7 +210,7 @@ function bpm_blocking_settings_callback_member_blocking() {
 /**
  * Moderation blocking Member reporting setting field.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @uses checked() To display the checked attribute.
  */
@@ -294,7 +294,7 @@ function bpm_blocking_settings_callback_auto_suspend_threshold() {
 /**
  * Moderation blocking auto suspend report threshold setting field.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  *
  * @uses checked() To display the checked attribute
  */
