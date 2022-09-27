@@ -1884,7 +1884,7 @@ function migrate_notification_preferences( $user_ids ) {
 /**
  * Update moderation tables.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  */
 function bb_update_to_2_1_0() {
 
@@ -1895,7 +1895,7 @@ function bb_update_to_2_1_0() {
 /**
  * Function to add user report column in moderation for user report.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.1
  */
 function bb_moderation_add_user_report_column() {
 
