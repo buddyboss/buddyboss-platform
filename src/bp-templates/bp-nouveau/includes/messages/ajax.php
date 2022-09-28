@@ -2220,11 +2220,16 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'feedback' => __( 'Unable to send new messages at this time.', 'buddyboss' ),
 				'type'     => 'notice',
 			);
+		} elseif ( bb_moderation_is_user_blocked_by( $recipient_id ) ) {
+			$thread->feedback_error = array(
+				'feedback' => __( 'Unable to send new messages to this member.', 'buddyboss' ),
+				'type'     => 'notice',
+			);
 		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
 			$thread->feedback_error = array(
 				'feedback' => sprintf(
 					'%1$s %2$s',
-					__( "You can't send messages to this members you have blocked.", 'buddyboss' ),
+					__( 'You can\'t send messages to this members you have blocked.', 'buddyboss' ),
 					sprintf(
 						'<div class="blocked-button blocked generic-button"><a href="' . esc_url( trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . 'blocked-members' ) . '" class="blocked-button blocked add">%s</a></div>',
 						__( 'View Blocked Members.', 'buddyboss' )
