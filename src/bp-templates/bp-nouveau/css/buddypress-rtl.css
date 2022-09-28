@@ -9877,10 +9877,14 @@ div.profile_completion_wrap .progress_text_wrap {
   height: 3px;
   width: 3px;
   border-radius: 50%;
-  display: inline-block;
+  display: none;
   vertical-align: middle;
   background-color: #767676;
   margin-left: 3px;
+}
+
+#message-threads .bp-message-link .thread-excerpt + .thread-date:before {
+  display: inline-block;
 }
 
 #message-threads .bp-message-link .thread-avatar {
