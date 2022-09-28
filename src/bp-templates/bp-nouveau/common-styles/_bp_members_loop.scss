@@ -191,7 +191,8 @@
 	z-index: 1;
 
 	.bp-user-blocked > &,
-	.bp-user-suspended > & {
+	.bp-user-suspended > &,
+	.bp-user-blocked-by > & {
 		display: none !important;
 	}
 }
