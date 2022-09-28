@@ -104,6 +104,23 @@
 				<# } #>
 			<?php } ?>
 
+			<?php if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) { ?>
+				<# if ( total_action_member_count > 1 ) { #>
+					<li class="report_member_thread">
+						<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss' ); ?></a>
+					</li>
+				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_user_blocked ) { #>
+					<li class="report_member_thread">
+						<a href="#reported-content"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+					</li>
+				<# } else if ( action_other_recipients.length == 1 && true == action_other_recipients[0].can_be_blocked ) { #>
+					<li class="report_member_thread">
+						<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+					</li>
+				<# } #>
+			<?php } ?>
+
+
 			<li class="delete_messages" data-bp-action="delete">
 				<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 			</li>
@@ -128,7 +145,7 @@
 	</div>
 
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
-		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }} {{ data.avatars[0].is_user_suspended && ! data.is_group_thread ? 'bp-user-suspended' : '' }} {{ data.avatars[0].is_user_blocked && ! data.is_group_thread ? 'bp-user-blocked' : '' }} ">
+		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }} {{ data.avatars[0].is_user_suspended && ! data.is_group_thread ? 'bp-user-suspended' : '' }} {{ data.avatars[0].is_user_blocked && ! data.is_group_thread ? 'bp-user-blocked' : '' }} {{ data.avatars[0].is_user_blocked_by && ! data.is_group_thread ? 'bp-user-blocked-by' : '' }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
 				if ( data.avatars.length == 2 ) { #>
 					<div class="thread-multiple-avatar">
