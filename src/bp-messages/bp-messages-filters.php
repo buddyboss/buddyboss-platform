@@ -262,6 +262,7 @@ function bp_media_messages_save_group_data( &$message ) {
 	$message_type            = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private.
 	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( $_POST['message_meta_users_list'] ) : ''; // users list.
 	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : ''; // new - reply.
+	$thread_action           = ( isset( $_POST ) && isset( $_POST['action'] ) && '' !== $_POST['action'] ) ? trim( $_POST['action'] ) : ''; // new - reply.
 
 	if ( '' === $message_meta_users_list && isset( $group ) && '' !== $group ) {
 		if ( isset( $cache[ $group ] ) ) {
@@ -290,6 +291,7 @@ function bp_media_messages_save_group_data( &$message ) {
 		bp_messages_update_meta( $message->id, 'message_from', 'group' );
 		bp_messages_update_meta( $message->id, 'message_users_ids', $message_meta_users_list );
 		bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
+		bp_messages_update_meta( $message->id, 'thread_action', $thread_action );
 	} else {
 
 		if ( isset( $cache_first_message[ $message->thread_id ] ) ) {
@@ -320,6 +322,7 @@ function bp_media_messages_save_group_data( &$message ) {
 			}
 			bp_messages_update_meta( $message->id, 'message_from', $message_from );
 			bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
+			bp_messages_update_meta( $message->id, 'thread_action', $thread_action );
 		}
 	}
 }

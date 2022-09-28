@@ -7125,7 +7125,8 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
 }
 
 .bp-user-blocked > .member-status,
-.bp-user-suspended > .member-status {
+.bp-user-suspended > .member-status,
+.bp-user-blocked-by > .member-status {
   display: none !important;
 }
 

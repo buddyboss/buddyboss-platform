@@ -2173,7 +2173,7 @@ add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
 function bb_update_digest_schedule_event_on_change_component_status( $active_components = array() ) {
 
 	$active_components = array_keys( $active_components );
-	$db_component      = array_keys( bp_get_option( 'bp-active-components' ) );
+	$db_component      = array_keys( bp_get_option( 'bp-active-components', array() ) );
 
 	// If 'messages' component is disabled.
 	if ( in_array( 'messages', $db_component, true ) && ! in_array( 'messages', $active_components, true ) ) {

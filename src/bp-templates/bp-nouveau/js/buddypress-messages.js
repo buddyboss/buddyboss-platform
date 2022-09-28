@@ -201,12 +201,14 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#view_more_members, .view_other_members', this.messageMemberModel.bind( this ) );
 
 			// $( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
-			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member, .bb_more_options_list .mass-block-member', this.messageModeratorMemberList );
+			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member, .bb_more_options_list .mass-block-member', this.messageBlockMemberPopup );
+			$( document ).on( 'click', '#bp-message-thread-header .mass-report-member, .bb_more_options_list .mass-report-member', this.messageReportMemberPopup );
 			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
 			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
 			$( document ).on( 'click', '#compose-action-personal-li .bb_more_options_action', this.toggleMessageCompose );
 			$( document ).on( 'click', '.bp-messages-nav-panel #back-to-thread', this.backToThreadList );
+			$( document ).on( 'click', '#mass-user-block-list a.report-content', this.messageReportMember );
 
 		},
 
@@ -734,15 +736,61 @@ window.bp = window.bp || {};
 			}
 		},
 
-		messageModeratorMemberList: function ( e ) {
+		messageReportMember: function( e ) {
 			e.preventDefault();
-			var postData = {
+			var contentId    = $( this ).data( 'bp-content-id' );
+			var contentType  = $( this ).data( 'bp-content-type' );
+			var nonce        = $( this ).data( 'bp-nonce' );
+			var currentHref  = $( this ).attr( 'href' );
+
+			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+				$( document ).find( '.bp-report-form-err' ).empty();
+				var mf_content = $( currentHref );
+				mf_content.find( '.bp-content-id' ).val( contentId );
+				mf_content.find( '.bp-content-type' ).val( contentType );
+				mf_content.find( '.bp-nonce' ).val( nonce );
+			}
+			if ( $( '#mass-user-block-list a.report-content' ).length > 0 ) {
+				$( '#mass-user-block-list a.report-content' ).magnificPopup(
+					{
+						items: {
+							src: currentHref,
+							type: 'inline'
+						},
+					}
+				).magnificPopup( 'open' );
+			}
+		},
+
+		messageBlockMemberPopup: function ( e ) {
+			e.preventDefault();
+			var currentHref = $( this ).attr( 'href' );
+			var postData    = {
 				'page_no': $( this ).attr( 'data-cp' ),
 				'thread_id': $( this ).attr( 'data-thread-id' ),
 				'exclude_current_user': true,
 				'exclude_moderated_members': true,
+				'member_action': 'block',
 			};
+
+			bp.Nouveau.Messages.messageModeratorMemberList( postData, currentHref );
+		},
+
+		messageReportMemberPopup: function ( e ) {
+			e.preventDefault();
 			var currentHref = $( this ).attr( 'href' );
+			var postData    = {
+				'page_no': $( this ).attr( 'data-cp' ),
+				'thread_id': $( this ).attr( 'data-thread-id' ),
+				'exclude_current_user': true,
+				'exclude_moderated_members': true,
+				'member_action': 'report',
+			};
+
+			bp.Nouveau.Messages.messageModeratorMemberList( postData, currentHref );
+		},
+
+		messageModeratorMemberList: function ( postData, currentHref ) {
 			$.ajax(
 				{
 					type: 'POST',
@@ -4643,6 +4691,8 @@ window.bp = window.bp || {};
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
+					// Scroll Messages to bottom
+					$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 				}
 			},
 
