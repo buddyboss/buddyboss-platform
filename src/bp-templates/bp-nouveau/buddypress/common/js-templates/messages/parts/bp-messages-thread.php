@@ -42,8 +42,6 @@
 		action_include_you = true;
 	}
 
-	var total_action_member_count = data.action_recipients.count - 1;
-
 	var read_unread_action = 'unread';
 	if ( data.unread ) {
 		read_unread_action = 'read';
