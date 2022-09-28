@@ -1366,6 +1366,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 						$threads->threads[ $i ]['recipients'][ $count ]['is_user_blocked']    = bp_moderation_is_user_blocked( $recipient->user_id );
 						$threads->threads[ $i ]['recipients'][ $count ]['can_be_blocked']     = ( ! in_array( $recipient->user_id, $admins, true ) ) ? true : false;
 						$threads->threads[ $i ]['recipients'][ $count ]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
+						$threads->threads[ $i ]['recipients'][ $count ]['is_user_reported']   = bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
+						$threads->threads[ $i ]['recipients'][ $count ]['can_be_report']      = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_user_can( bp_loggedin_user_id(), BP_Moderation_Members::$moderation_type_report );
+						$threads->threads[ $i ]['recipients'][ $count ]['reported_type']      = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
 					}
 
 					$threads->threads[ $i ]['recipients'][ $count ]['is_thread_archived'] = 0 < $recipient->is_hidden;
@@ -1391,8 +1394,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					);
 
 					if ( bp_is_active( 'moderation' ) ) {
-						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['is_user_blocked'] = bp_moderation_is_user_blocked( $recipient->user_id );
-						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['can_be_blocked']  = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['is_user_blocked']  = bp_moderation_is_user_blocked( $recipient->user_id );
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['can_be_blocked']   = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['is_user_reported'] = bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['can_be_report']    = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_user_can( bp_loggedin_user_id(), BP_Moderation_Members::$moderation_type_report );
+						$threads->threads[ $i ]['action_recipients']['members'][ $count ]['reported_type']    = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
 					}
 
 					$count ++;
@@ -2224,11 +2230,16 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'feedback' => __( 'Unable to send new messages at this time.', 'buddyboss' ),
 				'type'     => 'notice',
 			);
+		} elseif ( bb_moderation_is_user_blocked_by( $recipient_id ) ) {
+			$thread->feedback_error = array(
+				'feedback' => __( 'Unable to send new messages to this member.', 'buddyboss' ),
+				'type'     => 'notice',
+			);
 		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
 			$thread->feedback_error = array(
 				'feedback' => sprintf(
 					'%1$s %2$s',
-					__( "You can't send messages to this members you have blocked.", 'buddyboss' ),
+					__( 'You can\'t send messages to this members you have blocked.', 'buddyboss' ),
 					sprintf(
 						'<div class="blocked-button blocked generic-button"><a href="' . esc_url( trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . 'blocked-members' ) . '" class="blocked-button blocked add">%s</a></div>',
 						__( 'View Blocked Members.', 'buddyboss' )
@@ -2498,6 +2509,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$thread->thread['recipients']['members'][ $count ]['can_be_blocked']     = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
 					$thread->thread['recipients']['members'][ $count ]['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
 					$thread->thread['recipients']['members'][ $count ]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
+					$thread->thread['recipients']['members'][ $count ]['is_user_reported']   = bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
+					$thread->thread['recipients']['members'][ $count ]['can_be_report']      = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_user_can( bp_loggedin_user_id(), BP_Moderation_Members::$moderation_type_report );
+					$thread->thread['recipients']['members'][ $count ]['reported_type']      = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
 				}
 
 				$count ++;
@@ -3294,8 +3308,20 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 	if ( $args['exclude_moderated_members'] ) {
 		$args['exclude_admin_user'] = $administrator_ids;
 	}
-	$thread  = new BP_Messages_Thread( false );
-	$results = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
+
+	$member_action = '';
+	if ( isset( $post_data['member_action'] ) ) {
+		$member_action = filter_var( $post_data['member_action'], FILTER_SANITIZE_STRING );
+	}
+
+	if ( 'report' === $member_action ) {
+		$args['exclude_reported_members'] = $args['exclude_moderated_members'];
+		unset( $args['exclude_moderated_members'] );
+	}
+
+	$bp_moderation_type = '';
+	$thread             = new BP_Messages_Thread( false );
+	$results            = $thread->get_pagination_recipients( $post_data['thread_id'], $args );
 	if ( is_array( $results ) ) {
 		$count          = 1;
 		$recipients_arr = array();
@@ -3322,9 +3348,14 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 							'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
 							'id'         => $recipient->user_id,
 						);
-						if ( bp_is_active( 'moderation' ) ) {
+						if ( bp_is_active( 'moderation' ) && 'block' === $member_action ) {
+							$bp_moderation_type                                     = BP_Moderation_Members::$moderation_type;
 							$recipients_arr['members'][ $count ]['is_user_blocked'] = bp_moderation_is_user_blocked( $recipient->user_id );
 							$recipients_arr['members'][ $count ]['can_be_blocked']  = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+						} elseif ( 'report' === $member_action && bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) {
+							$bp_moderation_type                                      = BP_Moderation_Members::$moderation_type_report;
+							$recipients_arr['members'][ $count ]['is_user_reported'] = bp_moderation_report_exist( $recipient->user_id, $bp_moderation_type );
+							$recipients_arr['members'][ $count ]['can_be_report']    = ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === bp_moderation_user_can( $user_id, $bp_moderation_type );
 						}
 						$count ++;
 					}
@@ -3369,7 +3400,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 		$args['exclude_admin_user'] = $administrator_ids;
 	}
 
-	$member_action = 'block';
+	$member_action = '';
 	if ( isset( $post_data['member_action'] ) ) {
 		$member_action = filter_var( $post_data['member_action'], FILTER_SANITIZE_STRING );
 	}
@@ -3447,7 +3478,9 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 												href="#block-member" class="block-member button small"
 												data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
 												data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
-												data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
+												data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"
+												data-bp-block-title="<?php esc_html_e( 'Block', 'buddyboss' ); ?>"
+												data-bp-blocked-title="<?php esc_html_e( 'Blocked', 'buddyboss' ); ?>">
 												<?php esc_html_e( 'Block', 'buddyboss' ); ?>
 											</a>
 											<?php
@@ -3458,7 +3491,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 									<div class="user-actions">
 										<?php
 										$bp_moderation_type = BP_Moderation_Members::$moderation_type_report;
-										$can_be_blocked     = ( ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === (bool) bp_moderation_user_can( $user_id, $bp_moderation_type, false ) ) ? true : false;
+										$can_be_blocked     = ! in_array( (int) $recipient->user_id, $administrator_ids, true ) && false === (bool) bp_moderation_user_can( $user_id, $bp_moderation_type, false );
 
 										if ( bp_moderation_report_exist( $recipient->user_id, $bp_moderation_type ) ) {
 											?>
@@ -3472,7 +3505,10 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 												href="#content-report" class="report-content button small"
 												data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
 												data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
-												data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>">
+												data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"
+												reported_type="<?php echo esc_attr( bp_moderation_get_report_type( $bp_moderation_type, $recipient->user_id ) );?>>"
+												data-bp-report-title="<?php esc_html_e( 'Report Member', 'buddyboss' ); ?>"
+												data-bp-reported-title="<?php esc_html_e( 'Reported Member', 'buddyboss' ); ?>">
 												<?php esc_html_e( 'Report Member', 'buddyboss' ); ?>
 											</a>
 											<?php
@@ -3499,6 +3535,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 						data-tp="<?php echo esc_attr( ceil( (int) $thread->total_recipients_count / (int) bb_messages_recipients_per_page() ) ); ?>"
 						data-tc="<?php echo esc_attr( $thread->total_recipients_count ); ?>"
 						data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>" data-cp="2"
+						data-member-action="<?php echo esc_attr( $member_action ); ?>"
 						data-action="bp_load_more"><?php esc_html_e( 'Finding members...', 'buddyboss' ); ?>
 					</a>
 				</p>

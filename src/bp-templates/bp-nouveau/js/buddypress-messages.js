@@ -209,6 +209,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#compose-action-personal-li .bb_more_options_action', this.toggleMessageCompose );
 			$( document ).on( 'click', '.bp-messages-nav-panel #back-to-thread', this.backToThreadList );
 			$( document ).on( 'click', '#mass-user-block-list a.report-content', this.messageReportMember );
+			$( document ).on( 'click', '.message_action__list a.reported-content', this.messageReportedMember );
 
 		},
 
@@ -613,16 +614,18 @@ window.bp = window.bp || {};
 			if ( $( '#load_more_rl' ).length ) {
 				$( '#load_more_rl' ).removeClass( 'load_more_rl' );
 			}
-			var $this       = $( this );
-			var bpAction    = $this.attr( 'data-action' );
-			var threadId    = parseInt( $this.attr( 'data-thread-id' ) );
-			var currentPage = parseInt( $this.attr( 'data-cp' ) );
-			var totalPages  = parseInt( $this.attr( 'data-tp' ) );
-			var postData    = {
+			var $this        = $( this );
+			var bpAction     = $this.attr( 'data-action' );
+			var threadId     = parseInt( $this.attr( 'data-thread-id' ) );
+			var currentPage  = parseInt( $this.attr( 'data-cp' ) );
+			var totalPages   = parseInt( $this.attr( 'data-tp' ) );
+			var memberAction = $this.data( 'member-action' );
+			var postData     = {
 				'page_no': currentPage,
 				'thread_id': threadId,
 				'exclude_current_user': true,
 				'exclude_moderated_members': 'bp_load_more' === bpAction ? true : false,
+				'member_action': memberAction,
 			};
 
 			if ( $this.parents( '#members_list' ).length > 0 ) {
@@ -653,24 +656,49 @@ window.bp = window.bp || {};
 										cloneUserItemWrap.find( '.user-avatar img' ).attr( 'alt', item.user_name );
 										cloneUserItemWrap.find( '.user-avatar > a' ).attr( 'href', item.user_link );
 										cloneUserItemWrap.find( '.user-name' ).html( '<a href="' + item.user_link + '">' + item.user_name + '</a>' );
-										if ( true === item.is_user_blocked ) {
-											cloneUserItemWrap.find( '.user-actions .block-member' ).removeAttr( 'data-bp-content-id' );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type' );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce' );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Blocked' );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).removeClass( 'block-member' ).addClass( 'blocked-member disabled' );
-										} else if ( false !== item.can_be_blocked ) {
-											cloneUserItemWrap.find( '.user-actions a.button' ).removeClass( 'blocked-member disabled' ).addClass( 'block-member' );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
-											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
+
+										var buttonTitle = '';
+										if ( 'block' === memberAction ) {
+											if ( true === item.is_user_blocked ) {
+												buttonTitle = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-blocked-title' );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).removeAttr( 'data-bp-content-id' );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type' );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce' );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).html( buttonTitle );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).removeClass( 'block-member' ).addClass( 'blocked-member disabled' );
+											} else if ( false !== item.can_be_blocked ) {
+												buttonTitle = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-block-title' );
+												cloneUserItemWrap.find( '.user-actions a.button' ).removeClass( 'blocked-member disabled' ).addClass( 'block-member' );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
+												cloneUserItemWrap.find( '.user-actions .block-member' ).html( buttonTitle );
+											}
+											$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
+										} else if ( 'report' === memberAction ) {
+											if ( true === item.is_user_reported ) {
+												buttonTitle = cloneUserItemWrap.find( '.user-actions .report-content' ).data( 'bp-reported-title' );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).removeAttr( 'data-bp-content-id' );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).attr( 'data-bp-content-type' );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).attr( 'data-bp-nonce' );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).html( buttonTitle );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).removeClass( 'report-content' ).addClass( 'reported-member disabled' );
+											} else if ( false !== item.can_be_report ) {
+												buttonTitle = cloneUserItemWrap.find( '.user-actions .report-content' ).data( 'bp-report-title' );
+												cloneUserItemWrap.find( '.user-actions a.button' ).removeClass( 'reported-member disabled' ).addClass( 'report-content' );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).attr( 'data-bp-content-id', item.id );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).attr( 'data-bp-content-type', moderation_type );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
+												cloneUserItemWrap.find( '.user-actions .report-content' ).html( buttonTitle );
+											}
+											$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 										}
-										$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
+
 									}
 									if ( 'bp_view_more' === bpAction ) {
-										var oldSpanTagTextNode = document.createTextNode( ', ' );
+										var oldSpanTagTextNode    = document.createTextNode( ', ' );
 										var cloneParticipantsName = $( '.participants-name:last' ).clone();
 										cloneParticipantsName.find( 'a' ).attr( 'href', item.user_link );
 										cloneParticipantsName.find( 'a' ).html( item.user_name );
@@ -712,10 +740,10 @@ window.bp = window.bp || {};
 
 		messageBlockMember: function ( e ) {
 			e.preventDefault();
-			var contentId    = $( this ).data( 'bp-content-id' );
-			var contentType  = $( this ).data( 'bp-content-type' );
-			var nonce        = $( this ).data( 'bp-nonce' );
-			var currentHref  = $( this ).attr( 'href' );
+			var contentId   = $( this ).data( 'bp-content-id' );
+			var contentType = $( this ).data( 'bp-content-type' );
+			var nonce       = $( this ).data( 'bp-nonce' );
+			var currentHref = $( this ).attr( 'href' );
 
 			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 				$( document ).find( '.bp-report-form-err' ).empty();
@@ -738,25 +766,68 @@ window.bp = window.bp || {};
 
 		messageReportMember: function( e ) {
 			e.preventDefault();
-			var contentId    = $( this ).data( 'bp-content-id' );
-			var contentType  = $( this ).data( 'bp-content-type' );
-			var nonce        = $( this ).data( 'bp-nonce' );
-			var currentHref  = $( this ).attr( 'href' );
+			var contentId   = $( this ).data( 'bp-content-id' );
+			var contentType = $( this ).data( 'bp-content-type' );
+			var nonce       = $( this ).data( 'bp-nonce' );
+			var currentHref = $( this ).attr( 'href' );
+			var reportType  = $( this ).attr( 'reported_type' );
+			var mf_content  = $( currentHref );
 
 			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 				$( document ).find( '.bp-report-form-err' ).empty();
-				var mf_content = $( currentHref );
 				mf_content.find( '.bp-content-id' ).val( contentId );
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
 			}
 			if ( $( '#mass-user-block-list a.report-content' ).length > 0 ) {
+
+				$( '#bb-report-content .form-item-category' ).show();
+				if ( 'user_report' === contentType ) {
+					$( '#bb-report-content .form-item-category.content' ).hide();
+				} else {
+					$( '#bb-report-content .form-item-category.members' ).hide();
+				}
+
+				$( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' ).attr( 'checked', true );
+
+				if ( ! $( '#bb-report-content .form-item-category:visible label input[type="radio"]' ).length ) {
+					$( '#report-category-other' ).attr( 'checked', true );
+					$( '#report-category-other' ).trigger( 'click' );
+					$( 'label[for="report-category-other"]' ).hide();
+				}
+
+				mf_content.find( '.bp-reported-type' ).text( reportType );
+				if ( 'undefined' !== typeof reportType ) {
+					mf_content.find( '.bp-reported-type' ).text( reportType );
+				}
+
 				$( '#mass-user-block-list a.report-content' ).magnificPopup(
 					{
 						items: {
 							src: currentHref,
 							type: 'inline'
 						},
+					}
+				).magnificPopup( 'open' );
+			}
+		},
+
+		messageReportedMember: function( e ) {
+			e.preventDefault();
+			var contentType = $( this ).attr( 'reported_type' );
+			if ( $( '.reported-content' ).length > 0 ) {
+				$( '.reported-content' ).magnificPopup(
+					{
+						type: 'inline',
+						midClick: true,
+						callbacks: {
+							open: function () {
+								if ( 'undefined' !== typeof contentType ) {
+									var mf_content = $( '#reported-content' );
+									mf_content.find( '.bp-reported-type' ).text( contentType );
+								}
+							}
+						}
 					}
 				).magnificPopup( 'open' );
 			}
@@ -773,6 +844,10 @@ window.bp = window.bp || {};
 				'member_action': 'block',
 			};
 
+			var modalTitle = $( this ).text();
+			var mf_content = $( currentHref );
+			mf_content.find( '.bb-model-header h4' ).html( modalTitle );
+
 			bp.Nouveau.Messages.messageModeratorMemberList( postData, currentHref );
 		},
 
@@ -786,6 +861,10 @@ window.bp = window.bp || {};
 				'exclude_moderated_members': true,
 				'member_action': 'report',
 			};
+
+			var modalTitle = $( this ).text();
+			var mf_content = $( currentHref );
+			mf_content.find( '.bb-model-header h4' ).html( modalTitle );
 
 			bp.Nouveau.Messages.messageModeratorMemberList( postData, currentHref );
 		},
