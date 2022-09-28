@@ -879,8 +879,8 @@ window.bp = window.bp || {};
 						post_data: postData,
 					},
 					beforeSend: function () {
-						if ( $( '.mass-block-member' ).length > 0 ) {
-							$( '.mass-block-member' ).magnificPopup(
+						if ( $( '.mass-block-member' ).length > 0 || $( '.mass-report-member' ).length > 0 ) {
+							$( '.mass-block-member, .mass-report-member' ).magnificPopup(
 								{
 									items: {
 										src: currentHref,
