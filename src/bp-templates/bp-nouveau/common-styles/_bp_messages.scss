@@ -653,6 +653,10 @@
 		content: "\ef48";
 	}
 
+	li.report_member_thread a:before {
+		content: "\ee9c";
+	}
+
 	li.reported-content a,
 	li.reported_thread a,
 	li.report_thread a {
