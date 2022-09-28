@@ -1955,22 +1955,41 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 			continue;
 		}
 
+		if ( 1 === count( $messages ) ) {
+			if ( ! empty( $group_id ) ) {
+				$email_type = 'group-message-email';
+			} else {
+				$email_type = 'messages-unread';
+			}
+		}
+
 		$unsubscribe_args = array(
 			'user_id'           => $recipients_id,
 			'notification_type' => $email_type,
 		);
 
-		$tokens                 = array();
-		$tokens['usersubject']  = isset( $first_message->subject ) ? $first_message->subject : '';
-		$tokens['unread.count'] = count( $messages );
-		$tokens['group.id']     = $group_id;
-		$tokens['group.name']   = $group_name;
-		$tokens['message.url']  = esc_url( bp_core_get_user_domain( $recipients_id ) . $message_slug . '/view/' . $thread_id . '/' );
-		$tokens['unsubscribe']  = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+		$tokens                = array();
+		$tokens['usersubject'] = isset( $first_message->subject ) ? $first_message->subject : '';
+		$tokens['group.id']    = $group_id;
+		$tokens['group.name']  = $group_name;
+		$tokens['message.url'] = esc_url( bp_core_get_user_domain( $recipients_id ) . $message_slug . '/view/' . $thread_id . '/' );
+		$tokens['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 
-		// Slice array to get last five records.
-		$messages          = array_slice( $messages, - 5 );
-		$tokens['message'] = $messages;
+		if ( in_array( $email_type, array( 'messages-unread', 'group-message-email' ), true ) ) {
+			$messages    = current( $messages );
+			$sender_name = bp_core_get_user_displayname( $messages['sender_id'] );
+
+			$tokens['message_id']  = $messages['message_id'];
+			$tokens['usermessage'] = stripslashes( $messages['message'] );
+			$tokens['message']     = stripslashes( $messages['message'] );
+			$tokens['sender.name'] = $sender_name;
+			$tokens['sender.id']   = $messages['sender_id'];
+		} else {
+			$tokens['unread.count'] = count( $messages );
+			// Slice array to get last five records.
+			$messages          = array_slice( $messages, - 5 );
+			$tokens['message'] = $messages;
+		}
 
 		bp_send_email(
 			$email_type,

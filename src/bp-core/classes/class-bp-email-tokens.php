@@ -946,6 +946,11 @@ class BP_Email_Tokens {
 		$sender_name   = '';
 		$sender_link   = '';
 		$sender_avatar = '';
+
+		if ( empty( $this->_message_sender_id ) ) {
+			$this->_message_sender_id = $tokens['sender.id'];
+		}
+
 		if ( $this->_message_sender_id ) {
 			$sender_name   = $tokens['sender.name'] ?? bp_core_get_user_displayname( $this->_message_sender_id );
 			$sender_link   = bp_core_get_user_domain( $this->_message_sender_id );
