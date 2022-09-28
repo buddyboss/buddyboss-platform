@@ -33,9 +33,9 @@
 			if ( data.avatars.length == 2 ) { #>
 			<div class="thread-multiple-avatar">
 				<# } #>
-				<a href="{{{data.avatars[0].link}}}"><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
+				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) ) ) { #> href="{{{data.avatars[0].link}}}"<# } #>><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
 				<# if ( data.avatars[1] ) { #>
-				<a href="{{{data.avatars[1].link}}}"><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
+				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[1].is_user_suspended || data.avatars[1].is_user_blocked ) ) ) { #> href="{{{data.avatars[1].link}}}"<# } #>><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
 				<# }
 				if ( data.avatars.length == 2 ) { #>
 			</div>
@@ -49,7 +49,7 @@
 			<# } else { #>
 			<# var recipient = _.first(other_recipients) ? _.first(other_recipients) : current_user; #>
 			<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-			<a href="{{{recipient.user_link}}}">
+			<a <# if ( ! ( recipient.is_user_suspended || recipient.is_user_blocked ) ) { #>href="{{{recipient.user_link}}}"<# } #>>
 				<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
 				<# if ( 0 === recipient.is_deleted ) {
 					if ( recipient.is_user_blocked ) { #>
