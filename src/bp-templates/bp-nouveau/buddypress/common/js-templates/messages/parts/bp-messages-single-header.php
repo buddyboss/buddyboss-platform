@@ -170,6 +170,23 @@
 									</li>
 								<# } #>
 							<?php } ?>
+
+							<?php if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) { ?>
+								<# if ( data.recipients.count > 1 ) { #>
+									<li class="report_member_thread">
+										<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss' ); ?></a>
+									</li>
+								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_user_reported ) { #>
+									<li class="report_member_thread">
+										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{other_recipients[0].reported_type}}" item_id="{{other_recipients[0].id}}" item_type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+									</li>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_report ) { #>
+									<li class="report_member_thread">
+										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+									</li>
+								<# } #>
+							<?php } ?>
+
 							<li class="delete_messages">
 								<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 							</li>
@@ -241,6 +258,23 @@
 								</li>
 								<# } #>
 							<?php } ?>
+
+							<?php if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) { ?>
+								<# if ( data.recipients.count > 1 ) { #>
+								<li class="report_member_thread">
+									<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss' ); ?></a>
+								</li>
+								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_user_reported ) { #>
+								<li class="report_member_thread">
+									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{other_recipients[0].reported_type}}" item_id="{{other_recipients[0].id}}" item_type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+								</li>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_report ) { #>
+								<li class="report_member_thread">
+									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+								</li>
+								<# } #>
+							<?php } ?>
+
 							<li class="delete_messages" data-bp-action="delete">
 								<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 							</li>
@@ -260,7 +294,7 @@
 			}
 			?>
 		</div>
-		<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
+		<?php if ( bp_is_active( 'moderation' ) && ( bp_is_moderation_member_blocking_enable() || bb_is_moderation_member_reporting_enable() ) ) { ?>
 			<div id="mass-user-block-list" class="mass-user-block-list moderation-popup mfp-hide">
 				<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
 					<div class="modal-wrapper">
