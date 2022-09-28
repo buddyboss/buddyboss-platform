@@ -9832,6 +9832,10 @@ div.profile_completion_wrap .progress_text_wrap {
   content: "\ef48";
 }
 
+#buddypress .bp-messages-container .message_action__list li.report_member_thread a:before {
+  content: "\ee9c";
+}
+
 #buddypress .bp-messages-container .message_action__list li.reported-content a:before,
 #buddypress .bp-messages-container .message_action__list li.reported_thread a:before,
 #buddypress .bp-messages-container .message_action__list li.report_thread a:before {
