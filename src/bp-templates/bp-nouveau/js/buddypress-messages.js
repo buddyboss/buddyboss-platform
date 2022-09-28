@@ -1495,6 +1495,7 @@ window.bp = window.bp || {};
 					).done(
 						function() {
 							$( '.messages-search-loader' ).remove();
+							bp.Nouveau.reportPopUp();
 						}
 					);
 
@@ -3922,6 +3923,7 @@ window.bp = window.bp || {};
 						'function' === typeof bp.Pusher_FrontCommon.updateOnlineStatus
 					) {
 						bp.Pusher_FrontCommon.updateOnlineStatus();
+						bp.Nouveau.reportPopUp();
 					}
 				} else {
 					this.requestThreads( hideLoader );
