@@ -42,8 +42,6 @@
 		action_include_you = true;
 	}
 
-	var total_action_member_count = data.action_recipients.count - 1;
-
 	var read_unread_action = 'unread';
 	if ( data.unread ) {
 		read_unread_action = 'read';
@@ -89,7 +87,7 @@
 			<# } #>
 
 			<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-				<# if ( total_action_member_count > 1 ) { #>
+				<# if ( data.action_recipients.count > 1 ) { #>
 					<li class="report_thread">
 						<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 					</li>
@@ -105,7 +103,7 @@
 			<?php } ?>
 
 			<?php if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) { ?>
-				<# if ( total_action_member_count > 1 ) { #>
+				<# if (  data.action_recipients.count > 1 ) { #>
 					<li class="report_member_thread">
 						<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss' ); ?></a>
 					</li>
