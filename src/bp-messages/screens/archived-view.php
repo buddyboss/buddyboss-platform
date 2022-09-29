@@ -21,20 +21,12 @@ function messages_screen_archived() {
 	$thread_id   = (int) bp_action_variable( 1 );
 	$is_redirect = false;
 
-	if ( empty( $thread_id ) || ! messages_is_valid_thread( $thread_id ) ) {
-		if ( is_user_logged_in() ) {
-			bp_core_add_message( __( 'The conversation you tried to access is no longer available', 'buddyboss' ), 'error' );
-		}
-
-		$is_redirect = true;
-	}
-
-	if ( ! messages_is_valid_archived_thread( $thread_id ) ) {
+	if ( empty( $thread_id ) || ! messages_is_valid_thread( $thread_id ) || ! messages_is_valid_archived_thread( $thread_id ) ) {
 		$is_redirect = true;
 	}
 
 	// No access.
-	if ( ( ! messages_check_thread_access( $thread_id ) || ! bp_is_my_profile() ) ) {
+	if ( ! $is_redirect && ( ! messages_check_thread_access( $thread_id ) || ! bp_is_my_profile() ) ) {
 		// If not logged in, prompt for login.
 		if ( ! is_user_logged_in() ) {
 			bp_core_no_access();

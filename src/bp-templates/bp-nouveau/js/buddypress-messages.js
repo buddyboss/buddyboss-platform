@@ -1065,14 +1065,15 @@ window.bp = window.bp || {};
 							$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
 						}
 					} else if ( 'delete' === action ) {
-						if ( bp.Nouveau.Messages.threads.length > 1 ) {
-							if ( ('undefined' === typeof response.thread_exists || parseInt( response.thread_exists ) > 0) && 'yes' === is_current_thread ) {
-								var hash = new Date().getTime();
-								bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
-							} else if ( 'yes' === is_current_thread ) {
-								window.location.reload();
-							}
+
+						if ( ( 'undefined' === typeof response.thread_exists || parseInt( response.thread_exists ) > 0 ) && 'yes' === is_current_thread ) {
+							var hash = new Date().getTime();
+							bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
 							$( '.bp-messages-container' ).removeClass( 'bp-view-message bp-compose-message' );
+							window.Backbone.trigger( 'relistelements' );
+						} else if ( 'yes' === is_current_thread ) {
+							window.location.reload();
+						} else if ( ( 'undefined' === typeof response.thread_exists || parseInt( response.thread_exists ) > 0 ) && 'no' === is_current_thread ) {
 							window.Backbone.trigger( 'relistelements' );
 						} else {
 							window.Backbone.trigger( 'relistelements' );
@@ -4358,6 +4359,7 @@ window.bp = window.bp || {};
 			threadsFiltered: function() {
 				bp.Nouveau.Messages.removeFeedback();
 				$( '.bb-messages-no-thread-found' ).remove();
+				$( '.bb-messages-search-no-thread-found' ).remove();
 				$( '.messages-search-loader' ).remove();
 				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
 					var available_width = $( this ).width() - 10;
