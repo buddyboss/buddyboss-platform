@@ -10493,7 +10493,7 @@ input#send-to-input {
   margin-bottom: 5px;
 }
 
-.bp-messages-container.bp-compose-message #compose-personal-li {
+.compose #compose-personal-li {
   display: none;
 }
 
