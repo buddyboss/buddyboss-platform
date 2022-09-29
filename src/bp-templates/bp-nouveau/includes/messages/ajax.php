@@ -3528,7 +3528,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 			}
 
 			if ( 0 === $item && 'block' === $member_action ) {
-				echo '<p>' . esc_html__( 'All members in this thread are already blocked.', 'buddyboss' ) . '</p>';
+				echo '<p class="bbm-notice">' . esc_html__( 'All members in this thread are already blocked.', 'buddyboss' ) . '</p>';
 			}
 			?>
 		</div>
@@ -3556,7 +3556,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	}
 
 	if ( 0 === $item && 'block' === $member_action && empty( $html ) ) {
-		echo '<div class="bb-report-type-wrp"><p>' . esc_html__( 'All members in this thread are already blocked.', 'buddyboss' ) . '</p></div>';
+		echo '<div class="bb-report-type-wrp"><p class="bbm-notice">' . esc_html__( 'All members in this thread are already blocked.', 'buddyboss' ) . '</p></div>';
 	}
 
 	wp_send_json_success(
