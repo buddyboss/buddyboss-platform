@@ -22236,7 +22236,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .message-members-list.member-popup .bb-report-type-wrp .user-item-wrp .user-name,
 .mass-user-block-list.moderation-popup .bb-report-type-wrp .user-item-wrp .user-name {
-  min-width: calc(100% - 190px);
+  min-width: calc(100% - 195px);
   margin: 0 auto 0 8px;
   font-size: 14px;
   overflow: hidden;
