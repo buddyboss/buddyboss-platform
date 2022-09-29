@@ -10658,6 +10658,7 @@ input#send-to-input {
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
   padding: 0 15px 0 0;
   width: auto;
+  min-height: 24px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-formatting-toolbar {
@@ -22688,6 +22689,10 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 [dir="rtl"] .moderation-popup .bb-report-type-wrp .bb-model-footer {
   text-align: left;
+}
+
+.moderation-popup .bb-report-type-wrp .bbm-notice {
+  margin: 10px;
 }
 
 .message-members-list.member-popup .bb-model-header,

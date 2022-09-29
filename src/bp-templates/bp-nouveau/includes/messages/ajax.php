@@ -3413,7 +3413,6 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	}
 
 	if ( 'report' === $member_action ) {
-		$args['exclude_reported_members'] = $args['exclude_moderated_members'];
 		unset( $args['exclude_moderated_members'] );
 	}
 
@@ -3438,8 +3437,10 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	$thread  = new BP_Messages_Thread( false );
 	$results = $thread->get_pagination_recipients( $thread_id, $args );
 	$html    = '';
-	ob_start();
+	$item    = 0;
+
 	if ( is_array( $results ) ) {
+		ob_start();
 		?>
 		<div class="bb-report-type-wrp">
 			<?php
@@ -3525,9 +3526,14 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 								<?php } ?>
 							</div>
 							<?php
+							$item ++;
 						}
 					}
 				}
+			}
+
+			if ( 0 === $item && 'block' === $member_action ) {
+				echo '<p class="bbm-notice">' . esc_html__( 'All members in this thread are already blocked.', 'buddyboss' ) . '</p>';
 			}
 			?>
 		</div>
@@ -3551,9 +3557,13 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 		}
 		?>
 		<?php
+		$html .= ob_get_clean();
 	}
-	$html .= ob_get_contents();
-	ob_end_clean();
+
+	if ( 0 === $item && 'block' === $member_action && empty( $html ) ) {
+		echo '<div class="bb-report-type-wrp"><p class="bbm-notice">' . esc_html__( 'All members in this thread are already blocked.', 'buddyboss' ) . '</p></div>';
+	}
+
 	wp_send_json_success(
 		array(
 			'content' => $html,

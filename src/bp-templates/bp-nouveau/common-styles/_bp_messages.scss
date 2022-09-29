@@ -1079,6 +1079,7 @@ input#send-to-input {
 	#whats-new-messages-toolbar {
 		padding: 0 15px 0 0;
 		width: auto;
+		min-height: 24px; // Make sure height is persistence for medium editor toolbar position
 	}
 
 	#whats-new-formatting-toolbar {
