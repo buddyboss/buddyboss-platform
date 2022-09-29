@@ -22185,6 +22185,10 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   text-align: right;
 }
 
+.moderation-popup .bb-report-type-wrp .bbm-notice {
+  margin: 10px;
+}
+
 .message-members-list.member-popup .bb-model-header,
 .mass-user-block-list.moderation-popup .bb-model-header {
   position: relative;
