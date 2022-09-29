@@ -1328,6 +1328,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'is_private_thread'               => $is_private_thread,
 		);
 
+		if ( (int) bp_action_variable( 0 ) === (int) $bp_get_message_thread_id ) {
+			$threads->threads[ $i ]['unread'] = false;
+		}
+
 		if ( is_array( $check_recipients ) ) {
 			$count  = 1;
 			$admins = array_map(
