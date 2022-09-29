@@ -2090,7 +2090,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					bp.Nouveau.Messages.mediumEditor.subscribe( 'editableKeypress', function ( event ) {
+					bp.Nouveau.Messages.mediumEditor.subscribe( 'editableKeypress', function( event ) {
 						if ( event.keyCode === 13 && ! event.shiftKey ) {
 							event.preventDefault();
 
@@ -2098,8 +2098,9 @@ window.bp = window.bp || {};
 							// Add valid line breaks.
 							content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 							content = content.replace( /&nbsp;/g, ' ' );
-							var content_text = $(content).text();
-							if ( content_text !== '' ) {
+
+							var content_text = $( content ).text();
+							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0  ) {
 								if ( jQuery( document ).find( '#bp-messages-send' ).length > 0 ) {
 									jQuery( document ).find( '#bp-messages-send' ).trigger( 'click' );
 								} else {
