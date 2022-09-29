@@ -1648,6 +1648,8 @@ function bp_nouveau_ajax_delete_thread_messages() {
 		'inbox_unread_count' => messages_get_unread_count( bp_loggedin_user_id() ),
 	);
 
+	BP_Messages_Thread::$noCache = true;
+
 	wp_send_json_success(
 		array(
 			'id'                            => $thread_id,
@@ -1655,6 +1657,7 @@ function bp_nouveau_ajax_delete_thread_messages() {
 			'messages'                      => __( 'Messages successfully deleted.', 'buddyboss' ),
 			'messages_count'                => bp_get_message_thread_total_count( $thread_id ),
 			'recipient_inbox_unread_counts' => $inbox_unread_cnt,
+			'thread_exists'                 => messages_is_valid_thread( $thread_id ),
 		)
 	);
 
