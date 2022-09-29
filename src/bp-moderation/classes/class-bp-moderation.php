@@ -382,7 +382,7 @@ class BP_Moderation {
 
 		// Scope takes precedence.
 		if ( ! empty( $r['filter_query'] ) ) {
-			$filter_query = new BP_Moderation_Query( $r['filter_query'] );
+			$filter_query = new BP_Moderation_Query( $r['filter_query'], $r );
 			$sql          = $filter_query->get_sql();
 
 			if ( ! empty( $sql['where'] ) ) {
@@ -436,6 +436,9 @@ class BP_Moderation {
 
 			$user_ids                    = implode( ',', wp_parse_id_list( $r['user_id'] ) );
 			$where_conditions['user_id'] = "mr.user_id IN ({$user_ids})";
+			if ( ! isset( $r['user_report'] ) ) {
+				$where_conditions['user_id'] .= " and mr.user_report = 0 ";
+			}
 		}
 
 		// Exclude specified items.
