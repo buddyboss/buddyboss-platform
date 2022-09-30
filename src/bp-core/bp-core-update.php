@@ -371,11 +371,11 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18855 ) {
-			bb_update_to_2_1_0();
+			bb_update_to_2_1_1();
 		}
 
-		if ( $raw_db_version < 18751 ) {
-			bb_update_to_2_1_1();
+		if ( $raw_db_version < 18901 ) {
+			bb_update_to_2_2_0();
 		}
 	}
 
@@ -1890,10 +1890,8 @@ function migrate_notification_preferences( $user_ids ) {
  *
  * @since BuddyBoss 2.1.1
  */
-function bb_update_to_2_1_0() {
-
+function bb_update_to_2_1_1() {
 	bb_moderation_add_user_report_column();
-
 }
 
 /**
@@ -1918,13 +1916,12 @@ function bb_moderation_add_user_report_column() {
 	}
 }
 
-
 /**
  * Migrate group member meta table, is_deleted column in messages table and migrate existing email templates.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_2_1_1() {
+function bb_update_to_2_2_0() {
 	// Create 'bp_groups_membermeta' table.
 	if ( bp_is_active( 'groups' ) ) {
 		bp_core_install_groups();
