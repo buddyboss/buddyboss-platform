@@ -1073,7 +1073,7 @@ window.bp = window.bp || {};
 							window.Backbone.trigger( 'relistelements' );
 						} else if ( 'yes' === is_current_thread ) {
 							window.location.reload();
-						} else if ( ( 'undefined' === typeof response.thread_exists || parseInt( response.thread_exists ) > 0 ) && 'no' === is_current_thread ) {
+						} else if ( ( null === response.thread_exists || 'undefined' === typeof response.thread_exists || parseInt( response.thread_exists ) > 0 ) && 'no' === is_current_thread ) {
 							window.Backbone.trigger( 'relistelements' );
 						} else {
 							window.Backbone.trigger( 'relistelements' );
