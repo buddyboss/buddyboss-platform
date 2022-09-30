@@ -5240,9 +5240,8 @@ window.bp = window.bp || {};
 			},
 
 			unhideConversation: function ( event ) {
-				var action   = $( event.currentTarget ).data( 'bp-action' ), options = {},
-					id       = $( event.currentTarget ).data( 'bp-thread-id' ),
-					feedback = BP_Nouveau.messages.doingAction;
+				var action = $( event.currentTarget ).data( 'bp-action' ), options = {},
+					id     = $( event.currentTarget ).data( 'bp-thread-id' );
 
 				if ( ! action ) {
 					return event;
@@ -5250,9 +5249,7 @@ window.bp = window.bp || {};
 
 				event.preventDefault();
 
-				if ( ! _.isUndefined( feedback[ action ] ) ) {
-					bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
-				}
+				bp.Nouveau.Messages.removeFeedback();
 
 				$( event.currentTarget ).addClass( 'bp-hide' );
 				$( event.currentTarget ).parent().addClass( 'loading' );
@@ -5263,10 +5260,6 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.threads.doAction( action, id, options ).done(
 					function ( response ) {
-
-						// Remove previous feedback.
-						bp.Nouveau.Messages.removeFeedback();
-
 						if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
 							bp.Nouveau.Messages.createCookie( 'bb-thread-unarchive', response.toast_message, 5 );
 						}
@@ -5275,10 +5268,16 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function ( response ) {
-						// Remove previous feedback.
-						bp.Nouveau.Messages.removeFeedback();
-
-						bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						jQuery( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								response.feedback,
+								'error',
+								null,
+								true
+							]
+						);
 
 						$( event.currentTarget ).removeClass( 'bp-hide' );
 						$( event.currentTarget ).parent().removeClass( 'loading' );
