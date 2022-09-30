@@ -5095,8 +5095,9 @@ window.bp = window.bp || {};
 								return this.dataset.emojiChar;
 							}
 						);
+						content = $.trim( bp.Nouveau.Messages.mediumEditor.getContent().replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ) );
+						content = '<p>' + content + '</p>';
 					}
-					content = bp.Nouveau.Messages.mediumEditor.getContent();
 					jQuery( '#message_content' ).addClass( 'loading' );
 				}
 
