@@ -906,8 +906,12 @@ input#send-to-input {
 		margin-bottom: 5px;
 	}
 
-	.compose & {
-		display: none;
+	@media screen and (min-width: 1080px) {
+
+		.compose & {
+			display: none;
+		}
+
 	}
 
 }
