@@ -5087,7 +5087,8 @@ window.bp = window.bp || {};
 							}
 						);
 					}
-					content = bp.Nouveau.Messages.mediumEditor.getContent();
+					content = $.trim( bp.Nouveau.Messages.mediumEditor.getContent().replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ) );
+					content = '<p>' + content + '</p>';
 					jQuery( '#message_content' ).addClass( 'loading' );
 				}
 
