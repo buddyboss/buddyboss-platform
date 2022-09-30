@@ -10486,8 +10486,10 @@ input#send-to-input {
   margin-bottom: 5px;
 }
 
-.compose #compose-personal-li {
-  display: none;
+@media screen and (min-width: 1080px) {
+  .compose #compose-personal-li {
+    display: none;
+  }
 }
 
 #bp-message-load-more:not(.loading),

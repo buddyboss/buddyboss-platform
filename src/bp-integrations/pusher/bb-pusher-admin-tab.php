@@ -181,7 +181,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			);
 		} elseif (
 			function_exists( 'bb_platform_pro' ) &&
-			version_compare( bb_platform_pro()->version, '2.1.0', '<' )
+			version_compare( bb_platform_pro()->version, '2.2.0', '<' )
 		) {
 			$fields['bb_pusher_settings_section']['infos'] = array(
 				'title'             => esc_html__( 'Notes', 'buddyboss' ),
