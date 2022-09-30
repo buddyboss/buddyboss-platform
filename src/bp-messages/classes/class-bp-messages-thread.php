@@ -1069,11 +1069,6 @@ class BP_Messages_Thread {
 				$participants_sql['where'] .= ' AND r.is_deleted = 0';
 			}
 
-			if ( 'unarchived' === $r['thread_type'] ) {
-				$participants_sql['where'] .= ' AND r.is_hidden = 0';
-			} elseif ( 'archived' === $r['thread_type'] ) {
-				$participants_sql['where'] .= ' AND r.is_hidden = 1';
-			}
 			$participants_sql['where_like'] = 'u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s';
 
 			$participants_args = array(
