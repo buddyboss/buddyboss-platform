@@ -45,6 +45,21 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		}
 
 		function update_plugin( $transient ) {
+
+			/**
+			 * Get plugin version from transient. If transient return false then we will get plugin version from
+			 * get_plugin_data function.
+			 *
+			 * @uses get_plugin_data()
+			 */
+			$current_version = isset( $transient->checked[ $this->plugin_path ] ) ? $transient->checked[ $this->plugin_path ] : false;
+			if ( ! $current_version ) {
+				$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $this->plugin_path, false, false );
+				if ( ! empty( $plugin_data ) && isset( $plugin_data['Version'] ) ) {
+					$current_version = $plugin_data['Version'];
+				}
+			}
+
 			if ( ! isset( $transient->response ) ) {
 				return $transient;
 			}
@@ -61,24 +76,15 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 						unset( $response_transient->body );
 						$transient->no_update[ $this->plugin_path ] = $response_transient;
 					} else {
-						$transient->response[ $this->plugin_path ] = $response_transient;
+						if( $current_version === $response_transient->new_version ) {
+							$transient->no_update[ $this->plugin_path ] = $response_transient;
+							unset( $transient->response[ $this->plugin_path ] );
+						} else {
+							$transient->response[ $this->plugin_path ] = $response_transient;
+						}
 					}
 					$transient->last_checked = time();
 					return $transient;
-				}
-			}
-
-			/**
-			 * Get plugin version from transient. If transient return false then we will get plugin version from
-			 * get_plugin_data function.
-			 *
-			 * @uses get_plugin_data()
-			 */
-			$current_version = isset( $transient->checked[ $this->plugin_path ] ) ? $transient->checked[ $this->plugin_path ] : false;
-			if ( ! $current_version ) {
-				$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $this->plugin_path, false, false );
-				if ( ! empty( $plugin_data ) && isset( $plugin_data['Version'] ) ) {
-					$current_version = $plugin_data['Version'];
 				}
 			}
 
