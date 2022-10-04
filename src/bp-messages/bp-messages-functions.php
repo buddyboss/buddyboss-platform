@@ -1715,7 +1715,7 @@ function bb_is_last_message_group_left_message( $thread_id, $user_id ) {
 	return false;
 }
 
-/*
+/**
  * Change friend button arguments.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1742,7 +1742,7 @@ function bb_messaged_set_friend_button_args( $args = array() ) {
 /**
  * Update meta query when fetching the threads for user unread count.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $meta_query Array of meta query arguments.
  * @param array $r          Array of arguments.
