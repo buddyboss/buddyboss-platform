@@ -431,9 +431,12 @@ function messages_new_message( $args = '' ) {
 	 */
 	do_action_ref_array( 'messages_message_sent', array( &$message ) );
 
-	if ( isset( $r['return'] ) && $r['return'] == 'id' ) {
+	if ( isset( $r['return'] ) && 'id' === $r['return'] ) {
 		// Return the Message ID.
 		return $send;
+	} elseif ( isset( $r['return'] ) && 'object' === $r['return'] ) {
+		$message->id = $send;
+		return $message;
 	}
 
 	// Return the thread ID.
