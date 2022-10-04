@@ -589,7 +589,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td>
-					<a href="<?php echo esc_attr( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 		</table>
@@ -1095,7 +1095,7 @@ class BP_Email_Tokens {
 																$media_url     = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $thread_id );
 																?>
 																<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;">
-																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																	<a href="<?php echo esc_url( $tokens['message.url'] ); ?>">
 																		<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																	</a>
 																</div>
@@ -1133,7 +1133,7 @@ class BP_Email_Tokens {
 																}
 																?>
 																<div class="bb-activity-media-elem"  style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;">
-																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																	<a href="<?php echo esc_url( $tokens['message.url'] ); ?>">
 																		<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
 																	</a>
 																</div>
@@ -1168,7 +1168,7 @@ class BP_Email_Tokens {
 																$extension     = bp_get_document_extension();
 																?>
 																<div class="bb-activity-media-elem">
-																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" style="font-size:14px; text-decoration:none;">
+																	<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" style="font-size:14px; text-decoration:none;">
 																		<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
 																		<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( $size ); ?></span>
 																		<span style="font-size: 13px; margin-left:3px; text-transform: uppercase; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
@@ -1178,7 +1178,7 @@ class BP_Email_Tokens {
 															}
 															?>
 															<?php if ( $total_document_ids > 5 ) : ?>
-																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
 															<?php endif; ?>
 														</div>
 														<?php
@@ -1188,7 +1188,7 @@ class BP_Email_Tokens {
 														?>
 														<div class="activity-attached-gif-container">
 															<div class="gif-image-container">
-																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" class="gif-play-button">
 																	<?php if ( is_int( $gif_data['still'] ) ) { ?>
 																		<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
 																	<?php } else { ?>
@@ -1680,7 +1680,7 @@ class BP_Email_Tokens {
 										)
 									);
 									?>
-									<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+									<img src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
@@ -1966,7 +1966,7 @@ class BP_Email_Tokens {
 															$media_url     = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $message['thread_id'] );
 															?>
 															<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;">
-																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>">
 																	<img style="border-radius: 4px; min-width: 100%; min-height: 100%; max-width: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																</a>
 															</div>
@@ -2004,7 +2004,7 @@ class BP_Email_Tokens {
 															}
 															?>
 															<div class="bb-activity-media-elem" style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;padding:0;">
-																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>">
 																	<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_get_video_title() ); ?>" />
 																</a>
 															</div>
@@ -2039,7 +2039,7 @@ class BP_Email_Tokens {
 															$extension     = bp_get_document_extension();
 															?>
 															<div class="bb-activity-media-elem">
-																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" style="font-size:14px; text-decoration:none;">
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" style="font-size:14px; text-decoration:none;">
 																	<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
 																	<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( strtolower( $size ) ); ?></span>
 																	<span style="font-size: 13px; margin-left:3px; text-transform: uppercase; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
@@ -2049,7 +2049,7 @@ class BP_Email_Tokens {
 														}
 														?>
 														<?php if ( $total_document_ids > 5 ) : ?>
-															<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+															<a href="<?php echo esc_url( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
 														<?php endif; ?>
 													</div>
 													<?php
@@ -2059,7 +2059,7 @@ class BP_Email_Tokens {
 													?>
 													<div class="activity-attached-gif-container">
 														<div class="gif-image-container">
-															<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
+															<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" class="gif-play-button">
 																<?php if ( is_int( $gif_data['still'] ) ) { ?>
 																	<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
 																<?php } else { ?>

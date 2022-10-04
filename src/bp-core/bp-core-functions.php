@@ -2858,8 +2858,7 @@ function bp_nav_menu_get_loggedin_pages() {
 			);
 
 			// Add archived menu to display archived threads.
-			$page_args['archived-messages'] =
-			(object) array(
+			$page_args['archived-messages'] = (object) array(
 				'ID'             => hexdec( uniqid() ),
 				'post_title'     => __( 'Archived', 'buddyboss' ),
 				'object_id'      => hexdec( uniqid() ),
