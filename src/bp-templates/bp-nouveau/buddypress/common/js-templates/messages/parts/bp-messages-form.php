@@ -8,15 +8,8 @@
  * @version 1.0.0
  */
 
-
 $os = bb_core_get_os();
 
-/**
- * Fires before the message form template.
- *
- * @since BuddyBoss [BBVERSION]
- */
-do_action( 'bp_nouveau_messages_form_before_js_template' );
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-form">
@@ -76,11 +69,3 @@ do_action( 'bp_nouveau_messages_form_before_js_template' );
 <script type="text/html" id="tmpl-bp-messages-form-submit">
 	<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
 </script>
-
-<?php
-/**
- * Fires after the message form template.
- *
- * @since BuddyBoss [BBVERSION]
- */
-do_action( 'bp_nouveau_messages_form_after_js_template' );

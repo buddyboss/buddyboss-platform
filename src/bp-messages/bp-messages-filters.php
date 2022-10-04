@@ -940,7 +940,7 @@ function messages_screen_notification_settings() {
 /**
  * Validate the thread is group thread or not.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param int $thread_id Thread ID.
  *

@@ -4,8 +4,8 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-no-archived-threads.php.
  *
- * @since   [BBVERSION]
- * @version [BBVERSION]
+ * @since   BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 ?>
 
