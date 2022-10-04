@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-formatting-toolbar.php.
  *
- * @since   [BBVERSION]
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 ?>

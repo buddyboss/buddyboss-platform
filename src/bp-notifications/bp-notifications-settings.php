@@ -598,7 +598,7 @@ function bb_messaging_notifications_tutorial() {
 /**
  * Callback fields for the hide message notification fields options.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
