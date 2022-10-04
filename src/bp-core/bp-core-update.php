@@ -1975,7 +1975,7 @@ function bb_messages_migrate_is_deleted_column() {
 	$meta_table = $wpdb->prefix . 'bp_messages_meta';
 
 	$query = $wpdb->prepare(
-		'SELECT `message_id` FROM `' . $meta_table . '` WHERE `meta_key` = %s',  // phpcs:ignore
+		'SELECT DISTINCT `message_id` FROM `' . $meta_table . '` WHERE `meta_key` = %s',  // phpcs:ignore
 		'bp_messages_deleted'
 	);
 
