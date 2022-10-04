@@ -19,13 +19,13 @@ if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_
 		if ( bp_is_group() && bp_is_group_albums_support_enabled() ) {
 			?>
 			<div class="bb-video-actions">
-				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-l bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
 			</div>
 			<?php
 		} elseif ( bp_is_profile_albums_support_enabled() ) {
 			?>
 		<div class="bb-video-actions">
-			<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+			<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-l bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
 		</div>
 		<?php } ?>
 	</div>
