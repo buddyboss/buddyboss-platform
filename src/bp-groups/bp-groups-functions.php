@@ -188,6 +188,9 @@ function groups_create_group( $args = '' ) {
 		$member->date_modified = bp_core_current_time();
 		$member->save();
 
+		// add the Organizer to group joined date.
+		groups_update_membermeta( $member->id, 'joined_date', bp_core_current_time() );
+
 		/**
 		 * Fires after the creation of a new group and a group creator needs to be made.
 		 *

@@ -2859,6 +2859,21 @@ function bp_nav_menu_get_loggedin_pages() {
 				'post_parent'    => $nav_counter,
 			);
 
+			// Add archived menu to display archived threads.
+			$page_args['archived-messages'] = (object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Archived', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'archived-messages',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'archived',
+				'post_parent'    => $nav_counter,
+			);
+
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				$page_args['site-notice'] = (object) array(
 					'ID'             => hexdec( uniqid() ),
@@ -6435,6 +6450,8 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 			 * Avatar Display = unchecked.
 			 * Profile Avatars = WordPress.
 			 */
+		} elseif ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' !== bp_get_option( 'avatar_default', 'mystery' ) ) {
+			$avatar_image_url = $avatar = get_avatar_url( '', array( 'size' => $size ) );
 		} elseif ( ! $show_avatar && 'WordPress' === $profile_avatar_type ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 		}
@@ -7692,6 +7709,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
+		case 'bp_messaging_notification_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
+			break;
 		case 'bp_web_push_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
@@ -7722,4 +7742,190 @@ function bb_validate_gravatar( $email ) {
 	}
 
 	return $has_valid_avatar;
+}
+
+/** Function to get the client machine os.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_core_get_os() {
+
+	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+	$os_platform = '';
+	$os_array    = array(
+		'/windows nt 10/i'      => 'Windows 10',
+		'/windows nt 6.3/i'     => 'Windows 8.1',
+		'/windows nt 6.2/i'     => 'Windows 8',
+		'/windows nt 6.1/i'     => 'Windows 7',
+		'/windows nt 6.0/i'     => 'Windows Vista',
+		'/windows nt 5.2/i'     => 'Windows Server 2003/XP x64',
+		'/windows nt 5.1/i'     => 'Windows XP',
+		'/windows xp/i'         => 'Windows XP',
+		'/windows nt 5.0/i'     => 'Windows 2000',
+		'/windows me/i'         => 'Windows ME',
+		'/win98/i'              => 'Windows 98',
+		'/win95/i'              => 'Windows 95',
+		'/win16/i'              => 'Windows 3.11',
+		'/macintosh|mac os x/i' => 'Mac OS X',
+		'/mac_powerpc/i'        => 'Mac OS 9',
+		'/linux/i'              => 'Linux',
+		'/ubuntu/i'             => 'Ubuntu',
+		'/iphone/i'             => 'iPhone',
+		'/ipod/i'               => 'iPod',
+		'/ipad/i'               => 'iPad',
+		'/android/i'            => 'Android',
+		'/blackberry/i'         => 'BlackBerry',
+		'/webos/i'              => 'Mobile',
+	);
+
+	foreach ( $os_array as $regex => $value ) {
+		if ( preg_match( $regex, $user_agent ) ) {
+			$os_platform = $value;
+		}
+	}
+
+	switch ( $os_platform ) {
+		case 'Windows 10':
+		case 'Windows 8.1':
+		case 'Windows 8':
+		case 'Windows 7':
+		case 'Windows Vista':
+		case 'Windows Server 2003/XP x64':
+		case 'Windows XP':
+		case 'Windows 2000':
+		case 'Windows ME':
+		case 'Windows 98':
+		case 'Windows 3.11':
+		case 'Windows 95':
+			$os_platform = 'window';
+			break;
+		case 'Mac OS X':
+		case 'Mac OS 9':
+			$os_platform = 'mac';
+			break;
+		case 'Linux':
+		case 'Ubuntu':
+			$os_platform = 'ubuntu';
+			break;
+		case 'iPhone':
+		case 'iPod':
+		case 'iPad':
+			$os_platform = 'ios_device';
+			break;
+		case 'Android':
+			$os_platform = 'android_device';
+			break;
+		case 'BlackBerry':
+			$os_platform = 'BlackBerry';
+			break;
+		case 'Mobile':
+			$os_platform = 'Mobile';
+			break;
+		default:
+			$os_platform = 'window';
+
+			break;
+	}
+
+	return $os_platform;
+}
+
+/**
+ * Get week start date with an integer Unix timestamp.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $date The date to be converted.
+ * @param string $type Start or end of date.
+ *
+ * @return int
+ */
+function bb_get_week_timestamp( $date = false, $type = 'start' ) {
+
+	if ( empty( $date ) ) {
+		$date = 'monday this week';
+		if ( 'end' === $type ) {
+			$date = 'sunday this week';
+		}
+	}
+
+	// Set based on $type.
+	$time = ' 00:00:00';
+	if ( 'end' === $type ) {
+		$time = ' 23:59:59';
+	}
+
+	$start_week      = strtotime( $date );
+	$start_week_date = date_i18n( 'Y-m-d', $start_week );
+	$start_week_date = $start_week_date . $time;
+
+	$time_chunks = explode( ':', str_replace( ' ', ':', $start_week_date ) );
+	$date_chunks = explode( '-', str_replace( ' ', '-', $start_week_date ) );
+
+	return gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
+}
+
+/**
+ * Get user ID by their activity mention name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|array $mention_names Username appropriate for @-mentions.
+ *
+ * @return array
+ */
+function bb_get_user_id_by_activity_mentionname( $mention_names ) {
+	$mention_user_ids = array();
+
+	if ( empty( $mention_names ) ) {
+		return $mention_user_ids;
+	}
+
+	if ( is_string( $mention_names ) ) {
+		$mention_names = array( $mention_names );
+	}
+
+	$mention_names = array_map(
+		function ( $username ) {
+			return trim( $username, '@' );
+		},
+		$mention_names
+	);
+
+	// Loop the recipients and convert all usernames to user_ids where needed.
+	foreach ( (array) $mention_names as $mention_user ) {
+
+		// Trim spaces and skip if empty.
+		$mention_user = trim( $mention_user );
+		if ( empty( $mention_user ) ) {
+			continue;
+		}
+
+		// Check user_login / nicename columns first
+		// @see http://buddypress.trac.wordpress.org/ticket/5151.
+		if ( bp_is_username_compatibility_mode() ) {
+			$user_id = bp_core_get_userid( urldecode( $mention_user ) );
+		} else {
+			$user_id = bp_core_get_userid_from_nicename( $mention_user );
+		}
+
+		// Check against user ID column if no match and if passed user is numeric.
+		if ( empty( $user_id ) && is_numeric( $mention_user ) ) {
+			if ( bp_core_get_core_userdata( (int) $mention_user ) ) {
+				$user_id = (int) $mention_user;
+			}
+		}
+
+		// If $user_id still blank then try last time to find $user_id via the nickname field.
+		if ( empty( $user_id ) ) {
+			$user_id = bp_core_get_userid_from_nickname( $mention_user );
+		}
+
+		$mention_user_ids[] = (int) $user_id;
+	}
+
+	return $mention_user_ids;
 }
