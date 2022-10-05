@@ -157,7 +157,7 @@ window.bp = window.bp || {};
 				function( event ) {
 
 					// Do nothing if it's dropdown.
-					if( $( event.currentTarget ).data( 'action' ) == 'more_options' ) {
+					if ( $( event.currentTarget ).data( 'action' ) == 'more_options' ) {
 						return event;
 					}
 
@@ -215,11 +215,15 @@ window.bp = window.bp || {};
 
 		triggerLoadMore: function () {
 
-			if( jQuery( this ).find( '#load_more_rl' ).length == 0 || jQuery( this ).find( '#load_more_rl' ).hasClass( 'loading') || jQuery( this ).find( '#load_more_rl' ).hasClass( 'hidden') ) {
+			if (
+				jQuery( this ).find( '#load_more_rl' ).length == 0 ||
+				jQuery( this ).find( '#load_more_rl' ).hasClass( 'loading' ) ||
+				jQuery( this ).find( '#load_more_rl' ).hasClass( 'hidden' )
+			) {
 				return;
 			}
 
-			if( jQuery( this ).offset().top + jQuery( this ).innerHeight() > jQuery( this ).find( '#load_more_rl' ).offset().top ) {
+			if ( jQuery( this ).offset().top + jQuery( this ).innerHeight() > jQuery( this ).find( '#load_more_rl' ).offset().top ) {
 				jQuery( this ).find( '#load_more_rl' ).trigger( 'click' );
 			}
 
@@ -228,7 +232,7 @@ window.bp = window.bp || {};
 		checkContentScroll: function() {
 			// Show / hide shadow below on message form top whenever it's height change
 			var messages_list = $( '.bp-messages-content' ).find( '#bp-message-thread-list' );
-			if( messages_list.prop('scrollHeight') > messages_list.scrollTop() + messages_list.height() + 22 ) {
+			if ( messages_list.prop( 'scrollHeight' ) > messages_list.scrollTop() + messages_list.height() + 22 ) {
 				$( '.bp-messages-content' ).find( '.bp-messages-content-wrapper' ).addClass( 'scrolled--up' );
 			} else {
 				$( '.bp-messages-content' ).find( '.bp-messages-content-wrapper' ).removeClass( 'scrolled--up' );
@@ -485,12 +489,12 @@ window.bp = window.bp || {};
 
 				filters_view.inject( '.bp-messages-filters' );
 
-				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
+				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function () {
 					var available_width = $( this ).width() - 10;
-					var date_width      = $( this ).find( '.thread-date' ).width();
+					var date_width = $( this ).find( '.thread-date' ).width();
 					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
 					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
-				});
+				} );
 
 			}
 		},
@@ -896,7 +900,7 @@ window.bp = window.bp || {};
 						if ( response.success && response.data && '' !== response.data.content ) {
 							if ( $( '#mass-user-block-list #moderated_user_list' ).length > 0 ) {
 								$( '#mass-user-block-list #moderated_user_list' ).html( response.data.content ).addClass( 'is_not_empty' );
-								if( !$( '#mass-user-block-list' ).hasClass( 'event-triggered' ) ) {
+								if ( ! $( '#mass-user-block-list' ).hasClass( 'event-triggered' ) ) {
 									$( '#mass-user-block-list .modal-container' ).on( 'scroll', bp.Nouveau.Messages.triggerLoadMore );
 									$( '#mass-user-block-list .modal-container' ).addClass( 'event-triggered' );
 								}
@@ -1987,7 +1991,7 @@ window.bp = window.bp || {};
 
 			postValidate: function() {
 
-				if( window.messageUploaderInProgress ) {
+				if ( window.messageUploaderInProgress ) {
 					return;
 				}
 
@@ -1996,7 +2000,25 @@ window.bp = window.bp || {};
 				var content          = $.trim( $message_content[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content              = content.replace( /&nbsp;/g, ' ' );
 
-				if ( $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.views.parent.model.get( 'video' ) ) && 0 !== this.views.parent.model.get('video').length ) || ( ! _.isUndefined( this.views.parent.model.get( 'document' ) ) && 0 !== this.views.parent.model.get('document').length ) || ( ! _.isUndefined( this.views.parent.model.get( 'media' ) ) && 0 !== this.views.parent.model.get('media').length ) || ( ! _.isUndefined( this.views.parent.model.get( 'gif_data' ) ) && ! _.isEmpty( this.views.parent.model.get( 'gif_data' ) ) ) ) {
+				if (
+					$( $.parseHTML( content ) ).text().trim() !== '' ||
+					(
+						! _.isUndefined( this.views.parent.model.get( 'video' ) ) &&
+						0 !== this.views.parent.model.get( 'video' ).length
+					) ||
+					(
+						! _.isUndefined( this.views.parent.model.get( 'document' ) ) &&
+						0 !== this.views.parent.model.get( 'document' ).length
+					) ||
+					(
+						! _.isUndefined( this.views.parent.model.get( 'media' ) ) &&
+						0 !== this.views.parent.model.get( 'media' ).length
+					) ||
+					(
+						! _.isUndefined( this.views.parent.model.get( 'gif_data' ) ) &&
+						! _.isEmpty( this.views.parent.model.get( 'gif_data' ) )
+					)
+				) {
 					this.$el.closest( '#bp-message-content' ).addClass( 'focus-in--content' );
 				} else {
 					if ( content.indexOf( 'emojioneemoji' ) >= 0 ) {
@@ -2148,16 +2170,49 @@ window.bp = window.bp || {};
 										$( '#message_content' )[0].emojioneArea.hidePicker();
 										bp.Nouveau.Messages.mediumEditor.checkContentChanged();
 
+										// When add new emoji without any content then it was adding without p tag. It should be add within p tag.
+										if ( window.getSelection && document.createRange ) {
+											var sel = window.getSelection && window.getSelection();
+											if ( sel && sel.rangeCount > 0 ) {
+												window.messageCaretPosition = sel.getRangeAt( 0 );
+											}
+										} else {
+											window.messageCaretPosition = document.selection.createRange();
+										}
+
+										if ( 'undefined' !== typeof window.messageCaretPosition.commonAncestorContainer.classList &&
+										     window.messageCaretPosition.commonAncestorContainer.classList.contains( 'medium-editor-element' ) ) {
+											var content = '<p>' + bp.Nouveau.Messages.mediumEditor.getContent() + '</p>';
+											bp.Nouveau.Messages.mediumEditor.setContent( content );
+											bp.Nouveau.Messages.mediumEditor.checkContentChanged();
+
+											if ( window.getSelection && document.createRange ) {
+												var range = document.createRange();
+												range.setStart( window.messageCaretPosition.startContainer, window.messageCaretPosition.startOffset + 1 );
+												range.setEnd( window.messageCaretPosition.endContainer, window.messageCaretPosition.endOffset + 1 );
+												var getSelection = window.getSelection();
+												getSelection.removeAllRanges();
+												getSelection.addRange( range );
+											} else {
+												var textRange = document.body.createTextRange();
+												textRange.moveToElementText( $( '#message_content' )[0] );
+												textRange.setStart( window.messageCaretPosition.startContainer, window.messageCaretPosition.startOffset + 1 );
+												textRange.setEnd( window.messageCaretPosition.endContainer, window.messageCaretPosition.endOffset + 1 );
+												textRange.select();
+											}
+											window.messageCaretPosition = '';
+										}
+
 										// Enable submit button
 										$( '#bp-message-content' ).addClass( 'focus-in--content' );
 									},
 
 									picker_show: function () {
-										$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+										$( this.button[ 0 ] ).closest( '.post-emoji' ).addClass( 'active' );
 									},
 
 									picker_hide: function () {
-										$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+										$( this.button[ 0 ] ).closest( '.post-emoji' ).removeClass( 'active' );
 									},
 								}
 							}
@@ -2246,10 +2301,10 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-						var parts = Backbone.history.getFragment().split('/');
-						var newArray = $.map( parts, function(v){
+						var parts = Backbone.history.getFragment().split( '/' );
+						var newArray = $.map( parts, function ( v ) {
 							return v === '' ? null : v;
-						});
+						} );
 						var thread_id = newArray.pop();
 
 						formData.append( 'from', 'message' );
@@ -2455,7 +2510,7 @@ window.bp = window.bp || {};
 					function ( file ) {
 						var filename = file.upload.filename;
 						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
 
 						total_uploaded_file++;
 					}
@@ -2467,10 +2522,10 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'document_document_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-						var parts = Backbone.history.getFragment().split('/');
-						var newArray = $.map( parts, function(v){
+						var parts = Backbone.history.getFragment().split( '/' );
+						var newArray = $.map( parts, function ( v ) {
 							return v === '' ? null : v;
-						});
+						} );
 						var thread_id = newArray.pop();
 
 						formData.append( 'from', 'message' );
@@ -2554,7 +2609,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -2686,10 +2741,10 @@ window.bp = window.bp || {};
 						formData.append( 'action', 'video_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
-						var parts = Backbone.history.getFragment().split('/');
-						var newArray = $.map( parts, function(v){
+						var parts = Backbone.history.getFragment().split( '/' );
+						var newArray = $.map( parts, function ( v ) {
 							return v === '' ? null : v;
-						});
+						} );
 						var thread_id = newArray.pop();
 
 						formData.append( 'from', 'message' );
@@ -2797,7 +2852,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -3173,7 +3228,7 @@ window.bp = window.bp || {};
 			toggleMediaSelector: function( e ) {
 				e.preventDefault();
 				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
-				if( parentElement.hasClass( 'disable' ) ) {
+				if ( parentElement.hasClass( 'disable' ) ) {
 					return;
 				}
 				this.closeGifSelector();
@@ -3188,7 +3243,7 @@ window.bp = window.bp || {};
 			toggleDocumentSelector: function( e ) {
 				e.preventDefault();
 				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
-				if( parentElement.hasClass( 'disable' ) ) {
+				if ( parentElement.hasClass( 'disable' ) ) {
 					return;
 				}
 				this.closeMediaSelector();
@@ -3203,7 +3258,7 @@ window.bp = window.bp || {};
 			toggleVideoSelector: function( e ) {
 				e.preventDefault();
 				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
-				if( parentElement.hasClass( 'disable' )) {
+				if ( parentElement.hasClass( 'disable' ) ) {
 					return;
 				}
 				this.closeGifSelector();
@@ -3236,7 +3291,7 @@ window.bp = window.bp || {};
 			toggleGifSelector: function( e ) {
 				e.preventDefault();
 				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
-				if( parentElement.hasClass( 'disable' ) ) {
+				if ( parentElement.hasClass( 'disable' ) ) {
 					return;
 				}
 				this.closeMediaSelector();
@@ -3338,7 +3393,7 @@ window.bp = window.bp || {};
 
 				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
 				if ( gif_box.length && $.trim( gif_box.html() ) == '' ) {
-					$('#messages-gif-button').removeClass( 'open active' );
+					$( '#messages-gif-button' ).removeClass( 'open active' );
 				}
 			}
 
@@ -4373,17 +4428,17 @@ window.bp = window.bp || {};
 				);
 			},
 
-			threadsFiltered: function() {
+			threadsFiltered: function () {
 				bp.Nouveau.Messages.removeFeedback();
 				$( '.bb-messages-no-thread-found' ).remove();
 				$( '.bb-messages-search-no-thread-found' ).remove();
 				$( '.messages-search-loader' ).remove();
-				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function() {
+				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function () {
 					var available_width = $( this ).width() - 10;
 					var date_width = $( this ).find( '.thread-date' ).width();
 					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
 					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
-				});
+				} );
 			},
 
 			threadsFilterError: function( collection, response ) {
@@ -4534,7 +4589,7 @@ window.bp = window.bp || {};
 						if ( $( event.target ).hasClass( 'message_action__anchor' ) || $( event.target ).parent().hasClass( 'message_action__anchor' ) ) {
 							return event;
 						} else {
-							$( '.message_action__list.open' ).removeClass( 'open' ).closest( '.message_actions').removeClass( 'open' );
+							$( '.message_action__list.open' ).removeClass( 'open' ).closest( '.message_actions' ).removeClass( 'open' );
 							$( 'body' ).removeClass( 'message_more_option_open' );
 						}
 
@@ -4556,7 +4611,7 @@ window.bp = window.bp || {};
 			showOptions: function( event ) {
 				event.preventDefault();
 				var currentTarget = event.currentTarget;
-				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' ).closest( '.message_actions').toggleClass( 'open' );
+				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' ).closest( '.message_actions' ).toggleClass( 'open' );
 			},
 
 		}
@@ -4975,8 +5030,8 @@ window.bp = window.bp || {};
 				);
 
 				// Add class for message form shadow when messages are scrollable.
-				var scrollViewScrollHeight = this.$el.find( '#bp-message-thread-list' ).prop('scrollHeight');
-				var scrollViewClientHeight = this.$el.find( '#bp-message-thread-list' ).prop('clientHeight');
+				var scrollViewScrollHeight = this.$el.find( '#bp-message-thread-list' ).prop( 'scrollHeight' );
+				var scrollViewClientHeight = this.$el.find( '#bp-message-thread-list' ).prop( 'clientHeight' );
 				if ( scrollViewScrollHeight > scrollViewClientHeight ) {
 					this.$el.addClass( 'focus-in--scroll' );
 				} else {
@@ -4985,21 +5040,21 @@ window.bp = window.bp || {};
 
 				// Check if current listed messages are not enough and we can load more messages to fill out the empty space
 				var MessageThreadHeight = 0;
-				$('#bp-message-thread-list > li').each( function() {
-					MessageThreadHeight += $(this).outerHeight();
-				});
-				if( jQuery( '#bp-message-thread-list' ).height() > MessageThreadHeight ) {
+				$( '#bp-message-thread-list > li' ).each( function () {
+					MessageThreadHeight += $( this ).outerHeight();
+				} );
+				if ( jQuery( '#bp-message-thread-list' ).height() > MessageThreadHeight ) {
 					var button = $( '#bp-message-load-more' ).find( 'button' );
 					if ( ! button.hasClass( 'loading' ) ) {
 						button.trigger( 'click' );
-						button.addClass( 'initial-load');
+						button.addClass( 'initial-load' );
 					}
 				}
-				if( $( '#bp-message-load-more' ).find( 'button' ).hasClass( 'initial-load') ) {
-					setTimeout( function() {
-						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 100 );
-						$( '#bp-message-load-more' ).find( 'button' ).removeClass( 'initial-load');
-					},0);
+				if ( $( '#bp-message-load-more' ).find( 'button' ).hasClass( 'initial-load' ) ) {
+					setTimeout( function () {
+						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 100 );
+						$( '#bp-message-load-more' ).find( 'button' ).removeClass( 'initial-load' );
+					}, 0 );
 				}
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.

@@ -175,6 +175,12 @@ class BP_Messages_Message {
 
 		$recipient_ids = array();
 
+		$silent_recipients = array();
+
+		if ( ! empty( $_POST['silent_recipients'] ) ) {
+			$silent_recipients = array_unique( wp_parse_id_list( $_POST['silent_recipients'] ) );
+		}
+
 		if ( $new_thread ) {
 			// Add an recipient entry for all recipients.
 			foreach ( (array) $this->recipients as $recipient ) {
@@ -203,7 +209,14 @@ class BP_Messages_Message {
 
 		} else {
 			// Update the unread count for all recipients.
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			if ( ! empty( $silent_recipients ) ) {
+				if ( ! in_array( $this->sender_id, $silent_recipients, true ) ) {
+					$silent_recipients[] = $this->sender_id;
+				}
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id NOT IN (" . implode( $silent_recipients, ', ' ) . ")", $this->thread_id ) );
+			} else {
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			}
 
 			if ( true === $this->mark_visible ) {
 				// Mark the thread to visible for all recipients.

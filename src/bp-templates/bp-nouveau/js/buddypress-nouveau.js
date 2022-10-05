@@ -3244,7 +3244,7 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '.bb-mobile-setting ul li', function( e ) {
 				e.preventDefault();
-				if( $( this ).find( 'input' ).is( ':checked' ) ) {
+				if ( $( this ).find( 'input' ).is( ':checked' ) ) {
 					$( this ).find( 'input' ).prop( 'checked', false );
 					$( $( 'input#' + $( this ).find( 'label' ).attr( 'data-for' ) ) ).trigger( 'click' );
 				} else {
@@ -3260,7 +3260,7 @@ window.bp = window.bp || {};
 			});
 
 			$( document ).on( 'click', function( e ) {
-				if( !$( e.target ).hasClass( 'bb-mobile-setting-anchor') ) {
+				if ( ! $( e.target ).hasClass( 'bb-mobile-setting-anchor' ) ) {
 					$( '.bb-mobile-setting' ).removeClass( 'active' );
 				}
 			});
@@ -3275,7 +3275,7 @@ window.bp = window.bp || {};
 				/* jshint ignore:start */
 				(function (_i) {
 					$( document ).on( 'click', '.main-notification-settings th' + node[_i] + ' input[type="checkbox"]', function() {
-						if( $( this ).is( ':checked' ) ) {
+						if ( $( this ).is( ':checked' ) ) {
 							$( '.main-notification-settings' ).find( 'td' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
 							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
 						} else {
@@ -3299,25 +3299,25 @@ window.bp = window.bp || {};
 				var available_option = '';
 				var nodeSelector = $( this ).find( 'td' ).length ? 'td' : 'th';
 				var allInputsChecked = 0;
-				$( this ).find( nodeSelector + ':not(:first-child)' ).each( function() {
-					if( $( this ).find( 'input[type="checkbox"]').length ) {
+				$( this ).find( nodeSelector + ':not(:first-child)' ).each( function () {
+					if ( $( this ).find( 'input[type="checkbox"]' ).length ) {
 						var inputText = $( this ).find( 'label' ).text();
 						var inputChecked = $( this ).find( 'input' ).is( ':checked' ) ? 'checked' : '';
 						var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
 						available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
 					}
-					if( !$( this ).find( 'input:checked' ).length ) {
+					if ( ! $( this ).find( 'input:checked' ).length ) {
 						return;
 					}
 					selected_text += selected_text === '' ? $( this ).find( 'input[type="checkbox"] + label' ).text().trim() : ', ' + $( this ).find( 'input[type="checkbox"] + label' ).text().trim();
 					allInputsChecked++;
-				});
-				if( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
+				} );
+				if ( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
 					selected_text = textAll;
 				} else {
 					selected_text = selected_text === '' ? textNone : selected_text;
 				}
-				if( $( this ).find( nodeSelector + ':first-child .bb-mobile-setting' ).length === 0 ) {
+				if ( $( this ).find( nodeSelector + ':first-child .bb-mobile-setting' ).length === 0 ) {
 					$( this ).find( nodeSelector + ':first-child' ).append( '<div class="bb-mobile-setting"><span class="bb-mobile-setting-anchor">' + selected_text + '</span><ul></ul></div>' );
 				} else {
 					$( this ).find( nodeSelector + ':first-child .bb-mobile-setting .bb-mobile-setting-anchor' ).text( selected_text );
@@ -3335,7 +3335,7 @@ window.bp = window.bp || {};
 		 */
 		 dropZoneGlobalProgress: function( dropzone ) {
 
-			if( $( dropzone.element ).find( '.dz-global-progress' ).length == 0 ) {
+			if ( $( dropzone.element ).find( '.dz-global-progress' ).length == 0 ) {
 				$( dropzone.element ).append( '<div class="dz-global-progress"><div class="dz-progress-bar-full"><span class="dz-progress"></span></div><p></p><span class="bb-icon-f bb-icon-times dz-remove-all"></span></div>' );
 				$( dropzone.element ).addClass( 'dz-progress-view' );
 				$( dropzone.element ).find( '.dz-remove-all' ).click( function() {
@@ -3348,7 +3348,7 @@ window.bp = window.bp || {};
 			var message = '';
 			var progress = 0,
 				totalProgress = 0;
-			if( dropzone.files.length == 1 ) {
+			if ( dropzone.files.length == 1 ) {
 				$( dropzone.element ).addClass( 'dz-single-view' );
 				message = 'Uploading <strong>' + dropzone.files[0].name + '</strong>';
 				progress = dropzone.files[0].upload.progress;
