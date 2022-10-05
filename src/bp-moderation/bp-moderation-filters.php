@@ -282,12 +282,16 @@ function bp_moderation_block_member() {
 			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
-			if ( bp_is_following(
-				array(
-					'leader_id'   => $item_id,
-					'follower_id' => bp_loggedin_user_id(),
+
+			if (
+				function_exists( 'bp_is_following' ) &&
+				bp_is_following(
+					array(
+						'leader_id'   => $item_id,
+						'follower_id' => bp_loggedin_user_id(),
+					)
 				)
-			) ) {
+			) {
 				bp_stop_following(
 					array(
 						'leader_id'   => $item_id,
@@ -981,3 +985,4 @@ function bb_moderation_after_activity_entry_callback() {
 add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );
+
