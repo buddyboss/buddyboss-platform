@@ -242,9 +242,10 @@
 				}
 
 				.vjs-icon-placeholder:before {
-					content: "\e88b";
+					content: "\ee67";
 					font-family: "bb-icons";/* stylelint-disable-line */
 					font-size: 16px;
+					font-weight: 400;
 				}
 
 			}
@@ -283,7 +284,7 @@
 				}
 
 				.vjs-icon-placeholder:before {
-					content: "\e88b";
+					content: "\ee67";
 					font-family: "bb-icons";/* stylelint-disable-line */
 					font-size: 16px;
 					display: -webkit-box;
@@ -300,8 +301,9 @@
 			}
 
 			.vjs-seek-button span.vjs-icon-placeholder:before {
-				content: "\e9ce" !important;
+				content: "\ef07" !important;
 				font-family: "bb-icons";/* stylelint-disable-line */
+				font-weight: 400;
 			}
 
 			.vjs-seek-button.skip-back .vjs-icon-placeholder:before {
@@ -349,7 +351,8 @@
 			}
 
 			.vjs-icon-placeholder:before {
-				content: "\e8af";
+				font-family: "bb-icons";/* stylelint-disable-line */
+				content: "\eed5";
 			}
 
 		}
@@ -442,8 +445,8 @@
 					}
 
 					&:before {
-						content: "\e9cb";
-						font-family: 'bb-icons';/* stylelint-disable-line */
+						content: "\eeb4";
+						font-family: "bb-icons";/* stylelint-disable-line */						
 						font-size: 20px;
 						display: inline-block;
 						text-align: center;
@@ -455,7 +458,7 @@
 					}
 
 					&.video-file-delete:before {
-						content: "\e937";
+						content: "\ef48";
 						font-size: 15px;
 					}
 
@@ -537,12 +540,12 @@
 	display: -ms-flexbox;
 	display: flex;
 	flex-flow: row wrap;
-	margin: 0 -3px;
+	margin: 0;
 	align-items: flex-start;
 	position: relative;
 
 	.bb-activity-video-elem {
-		padding: 3px;
+		padding: 3px 0;
 
 		video.video-js + .bb-video-loader {
 			position: absolute;
@@ -560,7 +563,7 @@
 			border-radius: 4px;
 
 			&:after {
-				content: "\e838";
+				content: "\ef30";
 				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 35px;
 				animation: spin 2s infinite linear;
@@ -853,7 +856,7 @@
 			cursor: auto;
 		}
 
-		@media screen and (max-width: 767px) {
+		@media screen and (max-width: 1024px) {
 
 			figure {
 				max-height: 50vh;
@@ -910,6 +913,15 @@
 
 }
 
+#video-stream .bp-feedback {
+	margin: 25px 0 0 0;
+
+	.bb-title + & {
+		margin: 0;
+	}
+
+}
+
 /*Video Popups*/
 
 .video-thumbnail-content {
@@ -923,6 +935,9 @@
 		top: 0;
 		bottom: 0;
 		cursor: pointer;
+		height: 155px;
+		margin-right: 0;
+		overflow: hidden;
 
 		.close-thumbnail-custom {
 			position: absolute;
@@ -953,12 +968,17 @@
 		img {
 			height: 100%;
 			width: auto;
-			margin: 0 auto;
+			margin: 0;
 			display: block;
 			min-height: 120px;
 			border-radius: 4px;
+			max-width: inherit;
+			cursor: pointer;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
 		}
-
 	}
 
 	.bb-dropzone-wrap {
@@ -972,7 +992,6 @@
 		.video-thumbnail-custom {
 			border: 3px solid transparent;
 			border-radius: 5px;
-			margin-right: 10px;
 		}
 
 		.bb-custom-check[name="bb-video-thumbnail-select"] + label {
@@ -1005,7 +1024,7 @@
 			z-index: 1111;
 			display: none;
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 
 				border: 2px solid #fff;
 				background-color: rgba(255, 255, 255, 0.40);/* stylelint-disable-line */
@@ -1019,6 +1038,7 @@
 			.bb-custom-check:checked + label .bb-icon:before {
 				content: "\e876";
 				display: inline;
+				font-family: "bb-icons";/* stylelint-disable-line */
 			}
 
 		}
@@ -1073,6 +1093,7 @@
 
 				.dz-image {
 					height: 160px;
+					position: relative;
 
 					img {
 						max-width: inherit;
@@ -1080,8 +1101,12 @@
 						border-radius: 5px;
 						height: 100%;
 						width: auto;
-						margin: 0 auto;
+						margin: 0;
 						display: block;
+						left: 50%;
+						top: 50%;
+						transform: translate(-50%, -50%);
+						position: absolute;
 					}
 
 				}
@@ -1096,13 +1121,14 @@
 				position: relative;
 
 				&:before {
-					content: "\e9d3";
+					content: "\ee06";
 					font-family: "bb-icons";/* stylelint-disable-line */
 					position: absolute;
 					top: -10px;
 					left: 50%;
 					transform: translateX(-50%);
-					font-size: 16px;
+					font-size: 24px;
+					font-weight: 300;
 				}
 
 			}
@@ -1158,7 +1184,7 @@
 					top: 0;
 					bottom: 0;
 
-					.bb-icon {
+					[class*=" bb-icon-"] {
 						display: none;
 					}
 
@@ -1172,7 +1198,7 @@
 					right: 7px;
 					left: inherit;
 
-					.bb-icon {
+					[class*=" bb-icon-"] {
 
 						border: 2px solid #fff;
 						background-color: rgba(255, 255, 255, 0.40);/* stylelint-disable-line */
@@ -1184,8 +1210,10 @@
 					}
 
 					.bb-custom-check:checked + label .bb-icon:before {
+						font-family: "bb-icons";/* stylelint-disable-line */
 						content: "\e876";
 						display: inline;
+						font-weight: 300;
 					}
 
 				}
@@ -1251,9 +1279,10 @@
 		margin-top: 25px;
 
 		&.saving:after {
-			content: "\e838";
+			content: "\ef30";
 			font-family: "bb-icons";/* stylelint-disable-line */
 			font-size: 18px;
+			font-weight: 300;
 			line-height: 1;
 			margin-left: 10px;
 			text-align: center;
@@ -1359,6 +1388,7 @@
 		.bp-video-thumbnail-submit.is-disabled {
 			pointer-events: none;
 			background-color: #9ea8b3 !important;
+			border-color: #9ea8b3 !important;
 			box-shadow: none !important;
 		}
 
@@ -1430,7 +1460,7 @@
 			max-height: 106px;
 		}
 
-		.bb-action-check-wrap .bb-icon {
+		.bb-action-check-wrap [class*=" bb-icon-"] {
 			font-size: 11px;
 			width: 18px;
 			height: 18px;
@@ -1532,10 +1562,6 @@ div.dropzone.dz-started {
 		}
 	}
 
-	.dz-preview .dz-progress-ring-wrap .bb-icon {
-		font-size: 16px;
-	}
-
 	.dz-preview .dz-filename {
 		opacity: 0;
 		visibility: hidden;
@@ -1594,7 +1620,7 @@ div.dropzone.dz-started {
 		.dz-progress-ring-wrap {
 			background-color: rgba(0, 0, 0, 0.05);
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				color: rgba(18, 43, 70, 0.5);
 			}
 		}

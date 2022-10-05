@@ -60,7 +60,7 @@
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
+					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 					<div class="message_action__list">
 						<ul>
 							<li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread',
@@ -70,7 +70,7 @@
 											'buddyboss' ); ?></a>
 							</li>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-								<# if ( other_recipients.length > 1 ) { #>
+								<# if ( data.recipients.count > 1 ) { #>
 	                                <li class="report_thread">
 	                                    <a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 	                                </li>
@@ -102,7 +102,7 @@
 				}
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
+					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 					<div class="message_action__list">
 						<ul>
 							<li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread',
@@ -112,7 +112,7 @@
 											'buddyboss' ); ?></a>
 							</li>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-								<# if ( other_recipients.length > 1 ) { #>
+								<# if ( data.recipients.count > 1 ) { #>
 								<li class="report_thread">
 									<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 								</li>
