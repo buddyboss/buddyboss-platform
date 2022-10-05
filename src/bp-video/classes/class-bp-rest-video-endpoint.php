@@ -1047,7 +1047,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$status = bp_video_delete( array( 'id' => $id ), true );
+		$status = bp_video_delete( array( 'id' => $id ) );
 
 		// Build the response.
 		$response = new WP_REST_Response();
@@ -1154,18 +1154,6 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$args = array();
 		$key  = 'create';
 
-		if ( WP_REST_Server::EDITABLE === $method ) {
-			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss' ),
-				'type'              => 'integer',
-				'required'          => true,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
-			);
-
-			$key = 'update';
-		}
-
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['upload_ids'] = array(
 				'description'       => __( 'Video specific IDs.', 'buddyboss' ),
@@ -1207,6 +1195,20 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
+		if ( WP_REST_Server::EDITABLE === $method ) {
+			$args['id'] = array(
+				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss' ),
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
+			unset( $args['privacy']['default'] );
+
+			$key = 'update';
+		}
 
 		/**
 		 * Filters the method query arguments.
@@ -1775,6 +1777,35 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		// Added param to main activity to check the comment has access to upload video or not.
+		bp_rest_register_field(
+			'activity',
+			'comment_upload_video',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_video' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload video or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
+
+		// Added param to comment activity to check the child comment has access to upload video or not.
+		register_rest_field(
+			'activity_comments',
+			'comment_upload_video',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_video' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload video or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -1793,14 +1824,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$video_ids = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+		$video_id  = bp_activity_get_meta( $activity_id, 'bp_video_id', true );
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
+
+		if ( ! empty( $video_id ) ) {
+			$video_ids[] = $video_id;
+			$video_ids   = array_filter( array_unique( $video_ids ) );
+		}
 
 		if ( empty( $video_ids ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
+		$videos = $this->assemble_response_data(
+			array(
+				'video_ids' => $video_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2027,14 +2069,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$video_ids = get_post_meta( $p_id, 'bp_video_ids', true );
+		$video_id  = get_post_meta( $p_id, 'bp_video_id', true );
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
+
+		if ( ! empty( $video_id ) ) {
+			$video_ids[] = $video_id;
+			$video_ids   = array_filter( array_unique( $video_ids ) );
+		}
 
 		if ( empty( $video_ids ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
+		$videos = $this->assemble_response_data(
+			array(
+				'video_ids' => $video_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2196,14 +2249,25 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+		$video_id  = bp_messages_get_meta( $message_id, 'bp_video_id', true );
 		$video_ids = trim( $video_ids );
 		$video_ids = explode( ',', $video_ids );
+
+		if ( ! empty( $video_id ) ) {
+			$video_ids[] = $video_id;
+			$video_ids   = array_filter( array_unique( $video_ids ) );
+		}
 
 		if ( empty( $video_ids ) ) {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
+		$videos = $this->assemble_response_data(
+			array(
+				'video_ids' => $video_ids,
+				'sort'      => 'ASC',
+			)
+		);
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2349,6 +2413,61 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			);
 
 		return $bool;
+	}
+
+
+	/**
+	 * The function to use to set `comment_upload_video`
+	 *
+	 * @param BP_Activity_Activity $activity  Activity Array.
+	 * @param string               $attribute The REST Field key used into the REST response.
+	 *
+	 * @return string            The value of the REST Field to include into the REST response.
+	 */
+	protected function bp_rest_user_can_comment_upload_video( $activity, $attribute ) {
+		$activity_id = $activity['id'];
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		$component = $activity['component'];
+		$type      = 'activity_comment' === $activity['type'];
+		$item_id   = $activity['primary_item_id'];
+
+		if ( ! empty( $item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( $item_id );
+			if ( true === $type ) {
+				if ( 'groups' === $parent_activity->component ) {
+					$item_id   = $parent_activity->item_id;
+					$component = 'groups';
+				}
+			}
+			if ( 'blogs' === $parent_activity->component ||
+			     (
+				     ! empty( $activity['component'] ) &&
+				     'blogs' === $activity['component']
+			     )
+			) {
+				return false;
+			}
+		}
+
+		$user_id = bp_loggedin_user_id();
+		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		$group_id = 0;
+		if ( bp_is_active( 'groups' ) && 'groups' === $component && ! empty( $item_id ) ) {
+			$group_id = $item_id;
+		}
+
+		if ( function_exists( 'bb_user_has_access_upload_video' ) ) {
+			return bb_user_has_access_upload_video( $group_id, $user_id, 0, 0, 'profile' );
+		}
+
+		return false;
 	}
 
 }

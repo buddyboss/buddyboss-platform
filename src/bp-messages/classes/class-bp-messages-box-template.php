@@ -126,7 +126,7 @@ class BP_Messages_Box_Template {
 			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'page'         => 1,
@@ -317,9 +317,8 @@ class BP_Messages_Box_Template {
 		$this->in_the_loop = true;
 		$this->thread      = $this->next_thread();
 
-		if ( ! bp_is_current_action( 'notices' ) ) {
+		if ( ! bp_is_current_action( 'notices' ) && ! empty( $this->thread->messages ) ) {
 			$last_message_index = 0;
-			// $this->thread->messages = array_reverse( (array) $this->thread->messages );
 
 			$this->thread->last_message_id      = $this->thread->messages[ $last_message_index ]->id;
 			$this->thread->last_message_date    = $this->thread->messages[ $last_message_index ]->date_sent;

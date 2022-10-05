@@ -48,7 +48,7 @@
 					<div class="privacy-tag-wrapper">
 						<span class="privacy-figure privacy-figure--group"></span>
 						<div class="privacy-tag">
-							<div class="privacy-label"><?php esc_html_e( 'Post in Group', 'buddyboss' ); ?><i class="bb-icon-chevron-right"></i></div>
+							<div class="privacy-label"><?php esc_html_e( 'Post in Group', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></div>
 							<span class="privacy-sub-label"><?php esc_html_e( 'Visible to members of a group', 'buddyboss' ); ?></span>
 						</div>
 					</div>
