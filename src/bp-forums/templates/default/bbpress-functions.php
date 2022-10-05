@@ -201,6 +201,18 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				}
 			}
 
+			if ( bbp_is_single_forum() || bbp_is_single_topic() ) {
+				$dependencies = array( 'jquery', 'bp-nouveau' );
+				if ( bp_is_active( 'media' ) ) {
+					$dependencies[] = 'bp-nouveau-media';
+				}
+
+				$scripts['bb-topic-reply-draft'] = array(
+					'file'         => 'js/topic-reply-draft.js',
+					'dependencies' => $dependencies,
+				);
+			}
+
 			// User Profile edit.
 			if ( bbp_is_single_user_edit() ) {
 				$scripts['bbpress-user'] = array(

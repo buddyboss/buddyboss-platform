@@ -20,15 +20,15 @@
 
 		<div class="item activity-content">
 			<div class="activity-header">
-				<?php echo bp_get_activity_action( [ 'no_timestamp' => true ] ); ?>
+				<?php echo wp_kses_post( bp_get_activity_action( array( 'no_timestamp' => true ) ) ); ?>
 			</div>
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
-				<div class="activity-inner"><?php echo wp_trim_words( $GLOBALS['activities_template']->activity->content, '20', '...' ) ?></div>
+				<div class="activity-inner"><?php echo wp_kses_post( wp_trim_words( $GLOBALS['activities_template']->activity->content, '20', '...' ) ); ?></div>
 			<?php endif; ?>
 			<div class="item-meta">
 				<a href="<?php bp_activity_thread_permalink(); ?>">
 					<time>
-						<?php echo human_time_diff( bp_nouveau_get_activity_timestamp() ) . '&nbsp;' . esc_html__( 'ago', 'buddyboss' ) ?>
+						<?php echo wp_kses_post( human_time_diff( bp_nouveau_get_activity_timestamp() ) ) . '&nbsp;' . esc_html__( 'ago', 'buddyboss' ); ?>
 					</time>
 				</a>
 			</div>
