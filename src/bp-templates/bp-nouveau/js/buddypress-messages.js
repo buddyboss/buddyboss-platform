@@ -2182,8 +2182,7 @@ window.bp = window.bp || {};
 										
 										if ( 'undefined' !== typeof window.messageCaretPosition.commonAncestorContainer.classList &&
 										     window.messageCaretPosition.commonAncestorContainer.classList.contains( 'medium-editor-element' ) ) {
-											var content = bp.Nouveau.Messages.mediumEditor.getContent();
-											var content = '<p>' + content + '</p>';
+											var content = '<p>' + bp.Nouveau.Messages.mediumEditor.getContent() + '</p>';
 											bp.Nouveau.Messages.mediumEditor.setContent( content );
 											bp.Nouveau.Messages.mediumEditor.checkContentChanged();
 											
@@ -2191,12 +2190,12 @@ window.bp = window.bp || {};
 												var range = document.createRange();
 												range.setStart( window.messageCaretPosition.startContainer, window.messageCaretPosition.startOffset + 1 );
 												range.setEnd( window.messageCaretPosition.endContainer, window.messageCaretPosition.endOffset + 1 );
-												var sel = window.getSelection();
-												sel.removeAllRanges();
-												sel.addRange( range );
+												var getSelection = window.getSelection();
+												getSelection.removeAllRanges();
+												getSelection.addRange( range );
 											} else {
 												var textRange = document.body.createTextRange();
-												textRange.moveToElementText( editor[0] );
+												textRange.moveToElementText( $( '#message_content' )[0] );
 												textRange.setStart( window.messageCaretPosition.startContainer, window.messageCaretPosition.startOffset + 1 );
 												textRange.setEnd( window.messageCaretPosition.endContainer, window.messageCaretPosition.endOffset + 1 );
 												textRange.select();
