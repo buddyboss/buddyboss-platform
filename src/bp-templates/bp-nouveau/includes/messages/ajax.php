@@ -2246,7 +2246,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->feedback_error = array(
 				'feedback' => sprintf(
 					'%1$s %2$s',
-					__( 'You can\'t send messages to this members you have blocked.', 'buddyboss' ),
+					__( 'You can\'t send messages to members you have blocked.', 'buddyboss' ),
 					sprintf(
 						'<div class="blocked-button blocked generic-button"><a href="' . esc_url( trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() ) . 'blocked-members' ) . '" class="blocked-button blocked add">%s</a></div>',
 						__( 'View Blocked Members', 'buddyboss' )
