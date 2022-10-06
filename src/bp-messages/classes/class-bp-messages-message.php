@@ -213,7 +213,7 @@ class BP_Messages_Message {
 				if ( ! in_array( $this->sender_id, $silent_recipients, true ) ) {
 					$silent_recipients[] = $this->sender_id;
 				}
-				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id NOT IN (" . implode( $silent_recipients, ', ' ) . ")", $this->thread_id ) );
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id NOT IN (" . implode( ', ', $silent_recipients ) . ")", $this->thread_id ) );
 			} else {
 				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
 			}
