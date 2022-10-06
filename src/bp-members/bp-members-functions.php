@@ -198,6 +198,10 @@ function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_lo
 	// Use the 'bp_core_get_user_domain' filter instead.
 	$domain = apply_filters( 'bp_core_get_user_domain_pre_cache', $domain, $user_id, $user_nicename, $user_login );
 
+	$user_data = get_userdata( $user_id );
+	if ( empty( $user_data ) ) {
+		$domain = '';
+	}
 	/**
 	 * Filters the domain for the passed user.
 	 *
