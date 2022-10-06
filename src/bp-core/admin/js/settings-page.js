@@ -200,7 +200,7 @@ window.bp = window.bp || {};
 				$('.wp-heading-inline').append( $( '#bb_reporting_category_description' ) );
 			}
 
-			$( 'span:contains("Slug")' ).each( function () {
+			$( 'body.taxonomy-bpm_category span:contains("Slug")' ).each( function () {
 				$( this ).parent().remove();
 			} );
 
