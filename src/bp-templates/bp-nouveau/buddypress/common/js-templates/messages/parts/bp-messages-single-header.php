@@ -164,7 +164,7 @@
 									<li class="reported_thread">
 										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 									</li>
-								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked && 1 !== other_recipients[0].is_deleted ) { #>
 									<li class="report_thread">
 										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
 									</li>
@@ -180,7 +180,7 @@
 									<li class="report_member_thread">
 										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{other_recipients[0].reported_type}}" item_id="{{other_recipients[0].id}}" item_type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
 									</li>
-								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_report ) { #>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_report && 1 !== other_recipients[0].is_deleted ) { #>
 									<li class="report_member_thread">
 										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
 									</li>
@@ -253,7 +253,7 @@
 									<li class="reported_thread">
 										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 									</li>
-								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked ) { #>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked && 1 !== other_recipients[0].is_deleted ) { #>
 								<li class="report_thread">
 									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
 								</li>
@@ -269,7 +269,7 @@
 								<li class="report_member_thread">
 									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{other_recipients[0].reported_type}}" item_id="{{other_recipients[0].id}}" item_type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
 								</li>
-								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_report ) { #>
+								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_report && 1 !== other_recipients[0].is_deleted ) { #>
 								<li class="report_member_thread">
 									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
 								</li>
