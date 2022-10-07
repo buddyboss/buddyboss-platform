@@ -681,7 +681,6 @@ window.bp = window.bp || {};
 												cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
 												cloneUserItemWrap.find( '.user-actions .block-member' ).html( buttonTitle );
 											}
-											$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 										} else if ( 'report' === memberAction ) {
 											if ( true === item.is_user_reported ) {
 												buttonTitle = cloneUserItemWrap.find( '.user-actions .report-content' ).data( 'bp-reported-title' );
@@ -699,8 +698,8 @@ window.bp = window.bp || {};
 												cloneUserItemWrap.find( '.user-actions .report-content' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
 												cloneUserItemWrap.find( '.user-actions .report-content' ).html( buttonTitle );
 											}
-											$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 										}
+										$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 
 									}
 									if ( 'bp_view_more' === bpAction ) {
