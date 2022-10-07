@@ -3447,6 +3447,14 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 			foreach ( $results as $recipient ) {
 				if ( isset( $recipient->user_id ) ) {
 					if ( (int) $recipient->user_id !== $user_id ) {
+
+						if ( ! empty( $member_action ) ) {
+							$user_data = get_userdata( $recipient->user_id );
+							if ( empty( $user_data ) ) {
+								continue;
+							}
+						}
+
 						if ( empty( $recipient->is_deleted ) ) {
 							$avatar    = esc_url(
 								bp_core_fetch_avatar(

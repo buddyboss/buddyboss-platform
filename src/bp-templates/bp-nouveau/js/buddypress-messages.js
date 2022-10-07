@@ -681,7 +681,6 @@ window.bp = window.bp || {};
 												cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
 												cloneUserItemWrap.find( '.user-actions .block-member' ).html( buttonTitle );
 											}
-											$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 										} else if ( 'report' === memberAction ) {
 											if ( true === item.is_user_reported ) {
 												buttonTitle = cloneUserItemWrap.find( '.user-actions .report-content' ).data( 'bp-reported-title' );
@@ -699,8 +698,8 @@ window.bp = window.bp || {};
 												cloneUserItemWrap.find( '.user-actions .report-content' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
 												cloneUserItemWrap.find( '.user-actions .report-content' ).html( buttonTitle );
 											}
-											$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 										}
+										$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 
 									}
 									if ( 'bp_view_more' === bpAction ) {
@@ -2156,7 +2155,7 @@ window.bp = window.bp || {};
 									emojibtn_click: function () {
 										$( '#message_content' )[0].emojioneArea.hidePicker();
 										bp.Nouveau.Messages.mediumEditor.checkContentChanged();
-										
+
 										// When add new emoji without any content then it was adding without p tag. It should be add within p tag.
 										if ( window.getSelection && document.createRange ) {
 											var sel = window.getSelection && window.getSelection();
@@ -2166,13 +2165,13 @@ window.bp = window.bp || {};
 										} else {
 											window.messageCaretPosition = document.selection.createRange();
 										}
-										
+
 										if ( 'undefined' !== typeof window.messageCaretPosition.commonAncestorContainer.classList &&
 										     window.messageCaretPosition.commonAncestorContainer.classList.contains( 'medium-editor-element' ) ) {
 											var content = '<p>' + bp.Nouveau.Messages.mediumEditor.getContent() + '</p>';
 											bp.Nouveau.Messages.mediumEditor.setContent( content );
 											bp.Nouveau.Messages.mediumEditor.checkContentChanged();
-											
+
 											if ( window.getSelection && document.createRange ) {
 												var range = document.createRange();
 												range.setStart( window.messageCaretPosition.startContainer, window.messageCaretPosition.startOffset + 1 );
