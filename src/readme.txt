@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.1.1.1 =
+* Core - Handled updater critical issue by reverting the latest refactored code
+
 = 2.1.1 =
 * Moderation - Provided members option to report other members
 * Moderation - Improvements to the moderation module settings, categories, and reports in the Dashboard
