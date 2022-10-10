@@ -61,13 +61,14 @@ function bp_messages_clear_cache_on_message_save( BP_Messages_Message $message )
 	// Delete unread count for each recipient.
 	foreach ( (array) $message->recipients as $recipient ) {
 		wp_cache_delete( $recipient->user_id, 'bp_messages_unread_count' );
-		wp_cache_delete( "bb_thread_message_unread_count_{$recipient->user_id}_{$recipient->thread_id}", 'bp_messages_unread_count' );
+		wp_cache_delete( "bb_thread_message_unread_count_{$recipient->user_id}_{$message->thread_id}", 'bp_messages_unread_count' );
 	}
 
 	// Delete thread recipient cache.
 	wp_cache_delete( 'thread_recipients_' . $message->thread_id, 'bp_messages' );
 }
 add_action( 'messages_message_after_save', 'bp_messages_clear_cache_on_message_save' );
+add_action( 'messages_message_sent', 'bp_messages_clear_cache_on_message_save', 1, 2 );
 
 /**
  * Clear message cache after a message thread is deleted.
@@ -116,7 +117,7 @@ function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
 	BP_Messages_Thread::$noCache = true;
 	$thread_id                   = $thread_id;
 	$before                      = null;
-	$perpage                     = 10;
+	$perpage                     = apply_filters( 'bp_messages_default_per_page', 10 );
 
 	while ( wp_cache_get( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' ) ) {
 		wp_cache_delete( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' );
@@ -143,5 +144,4 @@ add_action( 'messages_message_after_save', 'bb_core_clear_message_cache' );
 add_action( 'messages_delete_thread', 'bb_core_clear_message_cache' );
 add_action( 'messages_send_notice', 'bb_core_clear_message_cache' );
 add_action( 'messages_message_sent', 'bb_core_clear_message_cache' );
-add_action( 'messages_message_after_save', 'bb_core_clear_message_cache' );
 add_action( 'messages_thread_mark_as_read', 'bb_core_clear_message_cache' );

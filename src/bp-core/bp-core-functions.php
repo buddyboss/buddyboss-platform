@@ -219,7 +219,7 @@ function bp_core_number_format( $number = 0, $decimals = false ) {
  *           'arg3' => array(),
  *           'arg4' => false,
  *       );
- *       $r = wp_parse_args( $args, $defaults ); // ...
+ *       $r = bp_parse_args( $args, $defaults ); // ...
  *
  * The first argument, $old_args_keys, is an array that matches the parameter positions (keys) to
  * the new $args keys (values):
@@ -2946,7 +2946,9 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
-					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+					$course_label = is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ? LearnDash_Custom_Label::get_label( 'courses' ) : __( 'Course', 'buddyboss' );
+					/* translators: My Course, e.g. "My Course". */
+					$sub_name = sprintf( __( 'My %s', 'buddyboss' ), $course_label );
 				}
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
@@ -4673,6 +4675,47 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  * @since BuddyBoss 1.3.2
  */
 function bp_core_parse_url( $url ) {
+
+	$parse_url_data = wp_parse_url( $url, PHP_URL_HOST );
+	$original_url   = $url;
+
+	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', '' ) ), true ) ) {
+		$response = wp_safe_remote_get(
+			$url,
+			array(
+				'redirection' => 1,
+				'stream'      => true,
+				'headers'     => array(
+					'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+				),
+			),
+		);
+
+		if ( ! is_wp_error( $response ) && ! empty( $response['http_response']->get_response_object()->url ) && $response['http_response']->get_response_object()->url !== $url ) {
+			$new_url = $response['http_response']->get_response_object()->url;
+			if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+				$url = $new_url;
+			}
+		}
+
+		if ( $original_url === $url ) {
+			$context = array(
+				'http' => array(
+					'method'        => 'GET',
+					'max_redirects' => 1,
+				),
+			);
+
+			@file_get_contents( $url, null, stream_context_create( $context ) );
+			if ( isset( $http_response_header ) && isset( $http_response_header[6] ) ) {
+				$new_url = str_replace( 'Location: ', '', $http_response_header[6] );
+				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+					$url = $new_url;
+				}
+			}
+		}
+	}
+
 	$cache_key = 'bp_activity_oembed_' . md5( maybe_serialize( $url ) );
 
 	// get transient data for url.
@@ -4712,15 +4755,15 @@ function bp_core_parse_url( $url ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'user-agent' => '', // Default value being blocked by Cloudflare
+				'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
 			)
 		);
 		$body     = wp_remote_retrieve_body( $response );
 
-		// if response is not empty
+		// if response is not empty.
 		if ( ! is_wp_error( $body ) && ! empty( $body ) ) {
 
-			// Load HTML to DOM Object
+			// Load HTML to DOM Object.
 			$dom = new DOMDocument();
 			@$dom->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
 
@@ -4754,13 +4797,13 @@ function bp_core_parse_url( $url ) {
 				}
 			}
 
-			// Parse DOM to get Title
+			// Parse DOM to get Title.
 			if ( empty( $title ) ) {
 				$nodes = $dom->getElementsByTagName( 'title' );
-				$title = $nodes->item( 0 )->nodeValue;
+				$title = $nodes && $nodes->length > 0 ? $nodes->item( 0 )->nodeValue : '';
 			}
 
-			// Parse DOM to get Meta Description
+			// Parse DOM to get Meta Description.
 			if ( empty( $description ) ) {
 				$metas = $dom->getElementsByTagName( 'meta' );
 				for ( $i = 0; $i < $metas->length; $i ++ ) {
@@ -4772,7 +4815,7 @@ function bp_core_parse_url( $url ) {
 				}
 			}
 
-			// Parse DOM to get Images
+			// Parse DOM to get Images.
 			$image_elements = $dom->getElementsByTagName( 'img' );
 			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
 				$image = $image_elements->item( $i );
@@ -5043,6 +5086,16 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 
 	$profile_groups     = $settings['profile_groups'];
 	$profile_photo_type = $settings['profile_photo_type'];
+	// Get user profile data if exists.
+	$get_user_data     = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	$current_user_data = get_userdata( get_current_user_id() );
+	if ( function_exists( 'bb_validate_gravatar' ) ) {
+		$check_new_gravatar = bb_validate_gravatar( $current_user_data->user_email );
+		$existing_gravatar  = isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) && isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) ? $get_user_data['photo_type']['profile_photo']['is_uploaded'] : '';
+		if ( (bool) $check_new_gravatar !== (bool) $existing_gravatar ) {
+			bp_core_xprofile_update_profile_completion_user_progress();
+		}
+	}
 
 	// Get logged in user Progress.
 	$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
@@ -5224,6 +5277,15 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$search_core            = $sql['where']['search'];
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
+
+		if (
+			is_array( $matched_user_ids ) &&
+			count( $matched_user_ids ) > 0 &&
+			! did_action( 'wp_ajax_messages_search_recipients' ) &&
+			$query->query_vars['per_page'] < count( $matched_user_ids )
+		) {
+			$sql['limit'] = ' LIMIT 0, ' . count( $matched_user_ids );
+		}
 	}
 
 	return $sql;
@@ -6561,7 +6623,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
  * @return string
  */
 function bb_core_remove_unfiltered_html( $content ) {
-	return esc_html( wp_strip_all_tags( wp_specialchars_decode( $content ) ) );
+	return wp_strip_all_tags( $content );
 }
 
 /**
@@ -6641,7 +6703,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		return false;
 	}
 
-	$notifications     = wp_parse_args( $all_notifications, $default_by_admin );
+	$notifications     = bp_parse_args( $all_notifications, $default_by_admin );
 	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
 	$enable_type_key   = in_array( $type, array( 'web', 'app' ), true ) ? 'enable_notification_' . $type : 'enable_notification';
 
@@ -6711,7 +6773,17 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 	$notification_type = array_filter(
 		array_map(
 			function ( $n ) use ( $component_name, $component_action ) {
-				if ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
+				if (
+					'bb_new_mention' === $component_action &&
+					in_array( $component_name, array( 'activity', 'forums', 'members' ), true )
+				) {
+					return $n['notification_type'];
+				} elseif (
+					'bb_groups_new_message' === $component_action &&
+					in_array( $component_name, array( 'messages', 'groups' ), true )
+				) {
+					return $n['notification_type'];
+				} elseif ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
 					return $n['notification_type'];
 				}
 			},
@@ -6953,7 +7025,7 @@ function bb_check_email_type_registered( string $notification_type ) {
  * @return bool Is media profile media support enabled or not.
  */
 function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) get_option( 'bp_labs_notification_preferences_enabled', $default ) );
+	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) bp_get_option( 'bp_labs_notification_preferences_enabled', $default ) );
 }
 
 /**
@@ -6998,6 +7070,15 @@ function bb_render_notification( $notification_group ) {
 		}
 	);
 
+	$column_count = 2;
+	if ( bb_web_notification_enabled() ) {
+		$column_count += 1;
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$column_count += 1;
+	}
+
 	if ( ! empty( $options['fields'] ) ) {
 		?>
 
@@ -7006,7 +7087,7 @@ function bb_render_notification( $notification_group ) {
 
 			<?php if ( ! empty( $options['label'] ) ) { ?>
 				<tr class="notification_heading">
-					<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
+					<td class="title" colspan="<?php echo esc_attr( $column_count ); ?>"><?php echo esc_html( $options['label'] ); ?></td>
 				</tr>
 				<?php
 			}
@@ -7609,10 +7690,34 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
+		case 'bp_web_push_notification_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
+			break;
 		default:
 			$meta_icon = '';
 	}
 
-	return apply_filters( 'bb_admin_icons', $meta_icon );
+	return apply_filters( 'bb_admin_icons', $meta_icon, $id );
 }
 
+/**
+ * Function will validate gravatar image based on email.
+ * If gravatar is validate then function will return true otherwise false.
+ *
+ * @since BuddyBoss 2.0.9
+ *
+ * @param string $email User email address.
+ *
+ * @return bool
+ */
+function bb_validate_gravatar( $email ) {
+	$url              = 'https://www.gravatar.com/avatar/' . md5( strtolower( $email ) ) . '?d=404';
+	$key              = base64_encode( $url );
+	$response         = get_transient( $key );
+	$has_valid_avatar = false;
+	if ( isset( $response ) && isset( $response[0] ) && preg_match( "|200|", $response[0] ) ) {
+		$has_valid_avatar = true;
+	}
+
+	return $has_valid_avatar;
+}
