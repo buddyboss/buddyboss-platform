@@ -25,10 +25,31 @@
 	if ( first_four.length == 0 ) {
 		include_you = true;
 	}
+
+	var threadAvatarClass = '';
+	if ( 1 === data.avatars.length ) {
+		if ( 'user' === data.avatars[0].type ) {
+			threadAvatarClass += 'bb-member-status-' + data.avatars[0].id;
+		}
+		if ( ! data.is_group_thread ) {
+			if ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) {
+				threadAvatarClass += ' bp-suspended-avatar';
+			}
+			if ( data.avatars[0].is_user_suspended ) {
+				threadAvatarClass += ' bp-user-suspended';
+			}
+			if ( data.avatars[0].is_user_blocked ) {
+				threadAvatarClass += ' bp-user-blocked';
+			}
+			if ( data.avatars[0].is_user_blocked_by ) {
+				threadAvatarClass += ' bp-user-blocked-by';
+			}
+		}
+	}
 	#>
 
 	<header class="single-message-thread-header">
-		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }} {{ data.avatars[0].is_user_suspended && ! data.is_group_thread ? 'bp-user-suspended' : '' }} {{ data.avatars[0].is_user_blocked && ! data.is_group_thread ? 'bp-user-blocked' : '' }} {{ data.avatars[0].is_user_blocked_by && ! data.is_group_thread ? 'bp-user-blocked-by' : '' }}">
+		<div class="thread-avatar {{ threadAvatarClass }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
 			if ( data.avatars.length == 2 ) { #>
 			<div class="thread-multiple-avatar">
