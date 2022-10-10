@@ -2691,7 +2691,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					}
 				}
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
-				$content = '<p class="joined deleted-message">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
+				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
@@ -2723,7 +2723,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						}
 					}
 				}
-			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
+			} elseif ( 'This message was deleted' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {
 				$content = do_shortcode( bp_get_the_thread_message_content() );
@@ -2796,7 +2796,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					}
 				}
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
-				$content = '<p class="joined deleted-message">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
+				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
@@ -2828,7 +2828,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						}
 					}
 				}
-			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
+			} elseif ( 'This message was deleted' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined deleted-message">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {
 				$content = do_shortcode( bp_get_the_thread_message_content() );

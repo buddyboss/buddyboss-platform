@@ -51,6 +51,27 @@
 	if ( ! data.is_group && data.recipients && 1 === parseInt( data.recipientsCount ) ) {
 		senderName = '';
 	}
+
+	var threadAvatarClass = '';
+	if ( 1 === data.avatars.length ) {
+		if ( 'user' === data.avatars[0].type ) {
+			threadAvatarClass += 'bb-member-status-' + data.avatars[0].id;
+		}
+		if ( ! data.is_group_thread ) {
+			if ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) {
+				threadAvatarClass += ' bp-suspended-avatar';
+			}
+			if ( data.avatars[0].is_user_suspended ) {
+				threadAvatarClass += ' bp-user-suspended';
+			}
+			if ( data.avatars[0].is_user_blocked ) {
+				threadAvatarClass += ' bp-user-blocked';
+			}
+			if ( data.avatars[0].is_user_blocked_by ) {
+				threadAvatarClass += ' bp-user-blocked-by';
+			}
+		}
+	}
 	#>
 
 	<div class="bb_more_options message-thread-options">
@@ -89,7 +110,7 @@
 			<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
 				<# if ( data.action_recipients.count > 1 ) { #>
 					<li class="report_thread">
-						<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+						<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1" data-text="<?php esc_html_e( 'Block a Member', 'buddyboss' ); ?>"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 					</li>
 				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_user_blocked ) { #>
 					<li class="reported_thread">
@@ -143,7 +164,7 @@
 	</div>
 
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../{{data.id}}/" data-thread-id="{{data.id}}">
-		<div class="thread-avatar {{ ( 1 === data.avatars.length && 'user' === data.avatars[0].type ? 'bb-member-status-' + data.avatars[0].id : '' ) }} {{ ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-avatar' : '' }} {{ data.avatars[0].is_user_suspended && ! data.is_group_thread ? 'bp-user-suspended' : '' }} {{ data.avatars[0].is_user_blocked && ! data.is_group_thread ? 'bp-user-blocked' : '' }} {{ data.avatars[0].is_user_blocked_by && ! data.is_group_thread ? 'bp-user-blocked-by' : '' }}">
+		<div class="thread-avatar {{ threadAvatarClass }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
 				if ( data.avatars.length == 2 ) { #>
 					<div class="thread-multiple-avatar">
