@@ -681,6 +681,13 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 	// Tracking join a public group.
 	if ( 'public' === $group->status ) {
 		groups_update_membermeta( $new_member->id, 'joined_date', bp_core_current_time() );
+	} elseif ( ! empty( $_POST['bp-groups-new-members'] ) && in_array( $group->status, array( 'private', 'hidden' ), true ) ) {
+		groups_update_membermeta( $new_member->id, 'joined_date', bp_core_current_time() );
+	}
+
+	// Add meta when user added from the backend.
+	if ( ! empty( $_POST['bp-groups-new-members'] ) ) {
+		groups_update_membermeta( $new_member->id, 'joined_from', 'admin' );
 	}
 
 	// Record this in activity feeds.
