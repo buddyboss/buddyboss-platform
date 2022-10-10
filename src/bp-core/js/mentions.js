@@ -10,7 +10,13 @@ window.bp = window.bp || {};
 	bp.mentions.users = window.bp.mentions.users || [];
 
 	if ( typeof window.BP_Suggestions === 'object' ) {
-		bp.mentions.users = window.BP_Suggestions.friends || window.BP_Suggestions.members || bp.mentions.users;
+		if ( window.BP_Suggestions.friends && window.BP_Suggestions.friends.length > 0 ) {
+			bp.mentions.users = window.BP_Suggestions.friends;
+		} else if ( window.BP_Suggestions.members && window.BP_Suggestions.members.length > 0 ) {
+			bp.mentions.users = window.BP_Suggestions.members;
+		} else if ( bp.mentions.users && bp.mentions.users.length > 0 ) {
+			bp.mentions.users = bp.mentions.users;
+		}
 	}
 
 	bp.mentions.xhr = null;
@@ -239,6 +245,15 @@ window.bp = window.bp || {};
 									render_view( data );
 								}
 							);
+					},
+					beforeReposition: function(offset) {
+						// suggestions left position when RTL.
+						if ( $( 'body.rtl' ).length > 0 ) {
+							var at_view = this.$el.find( '.atwho-view' );
+							if ( at_view.length > 0 ) {
+								offset.left = this.rect().left - at_view.width();
+							}
+						}
 					}
 				},
 

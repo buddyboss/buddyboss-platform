@@ -57,10 +57,8 @@ add_action( 'bp_admin_init', 'bp_register_admin_integrations' );
 add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 );
 add_action( 'bp_admin_init', 'bp_check_for_legacy_theme' );
 
-// Hide the Gravatar metabox from the WordPress discussion page.
-if ( function_exists( 'bp_enable_profile_gravatar ' ) && false === bp_enable_profile_gravatar() ) {
-	add_action( 'admin_head', 'bp_remove_avatar_settings_from_options_discussion_page' );
-}
+// Show notice when Profile Avatars is BuddyBoss.
+add_action( 'bp_admin_head', 'bb_discussion_page_show_notice_in_avatar_section' );
 
 // Add a new separator.
 add_action( 'bp_admin_menu', 'bp_admin_separator' );

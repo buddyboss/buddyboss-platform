@@ -42,13 +42,13 @@ function bp_settings_action_general() {
 		return;
 	}
 
-	// Define local defaults
-	$bp            = buddypress(); // The instance
-	$email_error   = false;        // invalid|blocked|taken|empty|nochange
-	$pass_error    = false;        // invalid|mismatch|empty|nochange
-	$pass_changed  = false;        // true if the user changes their password
-	$email_changed = false;        // true if the user changes their email
-	$feedback_type = 'error';      // success|error
+	// Define local defaults.
+	$bp            = buddypress(); // The instance.
+	$email_error   = false;        // invalid|blocked|taken|empty|nochange.
+	$pass_error    = false;        // invalid|mismatch|empty|nochange.
+	$pass_changed  = false;        // true if the user changes their password.
+	$email_changed = false;        // true if the user changes their email.
+	$feedback_type = 'error';      // success|error.
 	$feedback      = array();      // array of strings for feedback.
 
 	// Nonce check.
@@ -69,7 +69,7 @@ function bp_settings_action_general() {
 			$old_user_email = $bp->displayed_user->userdata->user_email;
 
 			// User is changing email address.
-			if ( $old_user_email != $user_email ) {
+			if ( $old_user_email !== $user_email ) {
 
 				// Run some tests on the email address.
 				$email_checks = bp_core_validate_email_address( $user_email );
@@ -225,6 +225,43 @@ function bp_settings_action_general() {
 	if ( ( ( false === $email_error ) || ( false == $pass_error ) ) && ( ( true === $pass_changed ) || ( true === $email_changed ) ) ) {
 		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss' );
 		$feedback_type = 'success';
+
+		// If the user is changing their password, send them a confirmation email.
+		if ( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_account_password', 'members' ) && true === bb_is_notification_enabled( bp_displayed_user_id(), 'bb_account_password' ) ) {
+
+			$unsubscribe_args = array(
+				'user_id'           => (int) bp_displayed_user_id(),
+				'notification_type' => 'settings-password-changed',
+			);
+
+			$args = array(
+				'tokens' => array(
+					'reset.url'   => esc_url( wp_lostpassword_url() ),
+					'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				),
+			);
+
+			// Send notification email.
+			bp_send_email( 'settings-password-changed', (int) bp_displayed_user_id(), $args );
+		}
+
+		if ( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_account_password', 'members' ) && bp_is_active( 'notifications' ) ) {
+
+			// Send a notification to the user.
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => bp_displayed_user_id(),
+					'item_id'           => bp_displayed_user_id(),
+					'secondary_item_id' => bp_displayed_user_id(),
+					'component_name'    => buddypress()->members->id,
+					'component_action'  => 'bb_account_password',
+					'date_notified'     => bp_core_current_time(),
+					'allow_duplicate'   => true,
+					'is_new'            => 1,
+				)
+			);
+
+		}
 
 		// Some kind of errors occurred.
 	} elseif ( ( ( false === $email_error ) || ( false === $pass_error ) ) && ( ( false === $pass_changed ) || ( false === $email_changed ) ) ) {

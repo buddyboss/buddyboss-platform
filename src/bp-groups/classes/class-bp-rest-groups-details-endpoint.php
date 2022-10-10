@@ -209,6 +209,9 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bb_init_email_background_updater' ) ) {
 			remove_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			remove_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
+		}
 		remove_all_actions( 'bp_actions' );
 
 		/**
@@ -232,6 +235,9 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		add_action( 'bp_init', 'bp_init_background_updater', 50 );
 		if ( function_exists( 'bb_init_email_background_updater' ) ) {
 			add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 		}
 
 		$group_slug = $group->slug;

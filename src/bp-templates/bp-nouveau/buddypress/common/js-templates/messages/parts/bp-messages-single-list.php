@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages single list template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-single-list.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-bp-messages-single-list">
 
 	<# if ( data.message_from && 'group' === data.message_from ) { #>
@@ -137,13 +148,13 @@
 							</a>
 						</div>
 						<div class="document-action-wrap">
-							<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="{{data.document[i].collapse}}"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
+							<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="{{data.document[i].collapse}}"><i class="bb-icon-arrow-up bb-icon-l document-icon-collapse"></i></a>
 							<a href="{{data.document[i].url}}" class="document-action_download" data-balloon-pos="up" data-balloon="{{data.document[i].download}}">
-								<i class="bb-icon-download"></i>
+								<i class="bb-icon-l bb-icon-download"></i>
 							</a>
 
 							<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="{{data.document[i].more_action}}">
-								<i class="bb-icon-menu-dots-v"></i>
+								<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 							</a>
 							<div class="document-action_list">
 								<ul>
@@ -168,7 +179,7 @@
 							<source src="{{data.gif.video_url}}" type="video/mp4">
 						</video>
 						<a href="#" class="gif-play-button">
-							<span class="bb-icon-play-thin"></span>
+							<span class="bb-icon-bl bb-icon-play"></span>
 						</a>
 						<span class="gif-icon"></span>
 					</div>
