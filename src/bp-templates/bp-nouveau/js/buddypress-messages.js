@@ -849,7 +849,7 @@ window.bp = window.bp || {};
 				'member_action': 'block',
 			};
 
-			var modalTitle = $( this ).text();
+			var modalTitle = $( this ).attr( 'text' );
 			var mf_content = $( currentHref );
 			mf_content.find( '.bb-model-header h4' ).html( modalTitle );
 
@@ -4170,7 +4170,7 @@ window.bp = window.bp || {};
 				this.setActiveThread( target.data( 'thread-id' ) );
 				var selected = this.collection.findWhere( { active: true } );
 
-				if ( selected.get( 'unread' ) ) {
+				if ( ! _.isUndefined( selected.get( 'unread' ) ) && selected.get( 'unread' ) ) {
 					selected.updateReadState().done(
 						function() {
 							selected.set( 'unread', false );
