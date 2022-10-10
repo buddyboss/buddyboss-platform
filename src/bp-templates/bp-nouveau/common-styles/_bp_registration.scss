@@ -178,10 +178,6 @@ body.register {
 
 #buddypress #signup-form {
 
-	input:focus {
-		border-color: $form-border-focus;
-	}
-
 	input.error {
 		border-color: $warn;
 		border-width: 2px;

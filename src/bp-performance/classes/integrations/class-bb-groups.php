@@ -32,6 +32,7 @@ class BB_Groups extends Integration_Abstract {
 
 		$purge_events = array(
 			'bp_group_admin_edit_after',         // When Group change form admin.
+			'groups_created_group',              // When Group is created from api.
 			'groups_create_group_step_complete', // When Group created from Manage.
 			'groups_delete_group',               // When Group was deleted.
 			'groups_join_group',                 // When user join the group.
@@ -52,6 +53,7 @@ class BB_Groups extends Integration_Abstract {
 		$purge_single_events = array(
 			'bp_group_admin_edit_after'                          => 1,  // When Group change form admin.
 			'groups_create_group_step_complete'                  => 0,  // When Group created from Manage.
+			'groups_created_group'                               => 1,  // When Group was created/updated.
 			'groups_delete_group'                                => 1,  // When Group was deleted.
 			'groups_group_details_edited'                        => 1,  // When Group Details updated form Manage.
 			'groups_group_settings_edited'                       => 1,  // When Group setting updated form Manage.
@@ -146,6 +148,17 @@ class BB_Groups extends Integration_Abstract {
 	public function event_groups_create_group_step_complete() {
 		$bp       = buddypress();
 		$group_id = $bp->groups->new_group_id;
+		if ( ! empty( $group_id ) ) {
+			$this->purge_item_cache_by_item_id( $group_id );
+		}
+	}
+
+	/**
+	 * When Group was created/updated.
+	 *
+	 * @param int $group_id Group id.
+	 */
+	public function event_groups_created_group( $group_id ) {
 		if ( ! empty( $group_id ) ) {
 			$this->purge_item_cache_by_item_id( $group_id );
 		}
