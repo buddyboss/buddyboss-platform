@@ -849,7 +849,7 @@ window.bp = window.bp || {};
 				'member_action': 'block',
 			};
 
-			var modalTitle = $( this ).text();
+			var modalTitle = $( this ).attr( 'text' );
 			var mf_content = $( currentHref );
 			mf_content.find( '.bb-model-header h4' ).html( modalTitle );
 
