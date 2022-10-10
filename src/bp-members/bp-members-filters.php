@@ -541,10 +541,6 @@ function bb_core_prime_mentions_results() {
 		return;
 	}
 
-	if ( bp_is_active( 'activity' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
-		return;
-	}
-
 	// Bail out if the site has a ton of users.
 	if ( bp_is_large_install() ) {
 		return;
@@ -708,3 +704,54 @@ function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 
 	return apply_filters( 'bb_members_allow_html_tags', $bbp_allow_tags );
 }
+
+// Load Account Settings Notifications.
+add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
+
+/**
+ * Register the Account Settings notifications.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_load_members_account_settings_notifications() {
+	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {
+		BP_Members_Mentions_Notification::instance();
+	}
+
+	if ( class_exists( 'BP_Members_Notification' ) ) {
+		BP_Members_Notification::instance();
+	}
+}
+
+/**
+ * Function will add custom css for all member type's label. ( i.e - Background color, Text color)
+ *
+ * @since BuddyBoss 2.0.0
+ */
+function bb_load_member_type_label_custom_css() {
+	if ( true === bp_member_type_enable_disable() ) {
+		$registered_member_types = bp_get_member_types();
+		$cache_key               = 'bb-member-type-label-css';
+		$member_type_custom_css  = wp_cache_get( $cache_key, 'bp_member_member_type' );
+		if ( false === $member_type_custom_css && ! empty( $registered_member_types ) ) {
+			foreach ( $registered_member_types as $type ) {
+				$label_color_data = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $type ) : '';
+				if (
+					isset( $label_color_data ) &&
+					isset( $label_color_data['color_type'] ) &&
+					'custom' === $label_color_data['color_type']
+				) {
+					$background_color       = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
+					$text_color             = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
+					$class_name             = 'body .bp-member-type.bb-current-member-' . $type;
+					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+				}
+			}
+			wp_cache_set( $cache_key, $member_type_custom_css, 'bp_member_member_type' );
+		}
+		wp_add_inline_style( 'bp-nouveau', $member_type_custom_css );
+	}
+}
+add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
+

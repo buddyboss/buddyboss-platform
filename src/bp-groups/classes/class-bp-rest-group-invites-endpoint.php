@@ -162,7 +162,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		}
 
 		// If the query is not restricted by group, user or inviter, limit it to the current user, if not an admin.
-		if ( ! $args['item_id'] && ! $args['user_id'] && ! empty( $args['inviter_id'] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! $args['item_id'] && ! $args['user_id'] && ! $args['inviter_id'] && ! bp_current_user_can( 'bp_moderate' ) ) {
 			$args['user_id'] = bp_loggedin_user_id();
 		}
 

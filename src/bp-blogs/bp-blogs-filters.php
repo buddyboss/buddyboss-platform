@@ -161,7 +161,7 @@ function bb_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
 				'link_text'      => sprintf( '<span class="text">%1$s %2$s</span>', esc_html__( 'View', 'buddyboss' ), esc_attr( ucfirst( $post_type_obj->labels->singular_name ) ) ),
 				'button_attr'    => array(
 					'href'  => esc_url( get_permalink( $blog_post->ID ) ),
-					'class' => 'button bb-icon-arrow-circle bp-secondary-action',
+					'class' => 'button bb-icon-arrow-down bb-icons bp-secondary-action',
 				),
 			);
 		}

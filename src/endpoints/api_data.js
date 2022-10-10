@@ -4814,6 +4814,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "allowedValues": [
+              "edit-details",
               "group-settings",
               "forum",
               "courses"
@@ -6982,6 +6983,13 @@ define({ "api": [
             "optional": false,
             "field": "recipient_id",
             "description": "<p>Thread recipient ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "include_group_thread",
+            "description": "<p>Include group thread or not.</p>"
           }
         ]
       }

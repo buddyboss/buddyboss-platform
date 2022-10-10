@@ -868,9 +868,14 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			);
 
 			if ( has_action( 'bp_notification_settings' ) ) {
+				$title = esc_html__( 'Email Preferences', 'buddyboss' );
+				if ( function_exists( 'bb_core_notification_preferences_data' ) ) {
+					$data  = bb_core_notification_preferences_data();
+					$title = esc_html( $data['menu_title'] );
+				}
 				$item_settings['children'][] = array(
 					'ID'    => 'notifications',
-					'title' => __( 'Email Preferences', 'buddyboss' ),
+					'title' => $title,
 					'url'   => esc_url( trailingslashit( $settings_link . 'notifications' ) ),
 					'count' => '',
 				);

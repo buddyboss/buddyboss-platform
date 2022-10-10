@@ -230,10 +230,24 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 		if ( empty( $value ) ) {
 			// phpcs:ignore
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, (int) $thread_id, bp_loggedin_user_id() ) );
+
+			/**
+			 * Fires when messages thread was marked as read.
+			 *
+			 * @param int $thread_id The message thread ID.
+			 */
+			do_action( 'messages_thread_mark_as_read', $thread_id );
 			return true;
 		} elseif ( ! empty( $value ) ) {
 			// phpcs:ignore
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
+
+			/**
+			 * Fires when messages thread was marked as read.
+			 *
+			 * @param int $thread_id The message thread ID.
+			 */
+			do_action( 'messages_thread_mark_as_read', $thread_id );
 			return true;
 		}
 
