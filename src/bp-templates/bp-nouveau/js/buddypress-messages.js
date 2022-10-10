@@ -4154,7 +4154,7 @@ window.bp = window.bp || {};
 				this.setActiveThread( target.data( 'thread-id' ) );
 				var selected = this.collection.findWhere( { active: true } );
 
-				if ( selected.get( 'unread' ) ) {
+				if ( ! _.isUndefined( selected.get( 'unread' ) ) && selected.get( 'unread' ) ) {
 					selected.updateReadState().done(
 						function() {
 							selected.set( 'unread', false );
