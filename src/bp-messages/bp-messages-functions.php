@@ -1467,6 +1467,7 @@ function bb_messages_recipients_per_page() {
  */
 function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '', $is_background = false ) {
 
+	global $bp;
 	// setup post data into $_POST.
 	if ( is_array( $post_data ) ) {
 		$_POST = $post_data;
@@ -1478,6 +1479,9 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 		return;
 	}
 
+	if ( empty( bp_loggedin_user_id() ) ) {
+		$bp->loggedin_user->id = $current_user_id;
+	}
 	// We have to send Message to all members to "Individual" message in both cases like "All Group Members" OR "Individual Members" selected.
 	foreach ( $members as $member ) {
 
