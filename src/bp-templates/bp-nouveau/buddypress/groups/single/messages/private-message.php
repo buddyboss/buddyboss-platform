@@ -299,7 +299,7 @@ if ( 0 === $total_count ) {
 											<div class="bp-group-messages-attached-gif-container">
 												<div class="gif-search-content">
 													<div class="gif-search-query">
-														<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY', 'buddyboss' ); ?>" class="search-query-input"/>
+														<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input"/>
 														<span class="search-icon"></span>
 													</div>
 													<div class="gif-search-results" id="gif-search-results">

@@ -945,7 +945,15 @@ window.bp = window.bp || {};
 								emojibtn_click: function () {
 									$( '#group_message_content' )[0].emojioneArea.hidePicker();
 									window.group_messages_editor.checkContentChanged();
-								}
+								},
+
+								picker_show: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+								},
+
+								picker_hide: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+								},
 							}
 						}
 					);

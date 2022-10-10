@@ -855,6 +855,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	if ( ! empty( $video_id ) ) {
 		$args = array(
 			'include' => $video_id,
+			'user_id' => false,
 		);
 		ob_start();
 		if ( bp_has_video( $args ) ) {
@@ -1133,7 +1134,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
  * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_object_template_results_albums_existing_video_query( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$caller = filter_input( INPUT_POST, 'caller', FILTER_SANITIZE_STRING );
 

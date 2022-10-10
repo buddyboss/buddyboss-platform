@@ -222,7 +222,7 @@ function bp_nouveau_object_template_results_members_personal_scope( $querystring
 		return $querystring;
 	}
 
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 		$counts = bp_total_follow_counts();
@@ -250,7 +250,7 @@ function bp_nouveau_object_template_results_members_following_scope( $querystrin
 		return $querystring;
 	}
 
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$args                             = array(
 		'user_id' => ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id(),
@@ -277,7 +277,7 @@ function bp_nouveau_object_template_results_groups_personal_scope( $querystring,
 		return $querystring;
 	}
 
-	$querystring             = wp_parse_args( $querystring );
+	$querystring             = bp_parse_args( $querystring );
 	$querystring['scope']    = 'personal';
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
