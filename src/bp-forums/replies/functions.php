@@ -496,6 +496,29 @@ function bbp_new_reply_handler( $action = '' ) {
 			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, false ) + 1, 'add' );
 		}
 
+		// Delete draft data from the database.
+		if ( 0 < $topic_id ) {
+			$draft_data_key = 'draft_reply_' . $topic_id;
+			if ( 0 < $reply_to ) {
+				$draft_data_key .= '_' . $reply_to;
+			}
+
+			$usermeta_key   = 'bb_user_topic_reply_draft';
+			$user_id        = bp_loggedin_user_id();
+			$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+
+			if ( ! empty( $existing_draft ) && isset( $existing_draft[ $draft_data_key ] ) ) {
+				unset( $existing_draft[ $draft_data_key ] );
+			}
+
+			if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
+				$existing_draft = array();
+			}
+
+			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+		}
+
+
 		/** Additional Actions (After Save) */
 
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
@@ -1967,7 +1990,7 @@ function bbp_trashed_reply( $reply_id = 0 ) {
  * @uses bbp_is_reply() To check if the passed id is a reply
  * @uses do_action() Calls 'bbp_untrashed_reply' with the reply id
  */
-function bbp_untrashed_reply( $reply_id = 0, $previous_status ) {
+function bbp_untrashed_reply( $reply_id = 0, $previous_status = '' ) {
 	$reply_id = bbp_get_reply_id( $reply_id );
 
 	if ( empty( $reply_id ) || ! bbp_is_reply( $reply_id ) ) {
