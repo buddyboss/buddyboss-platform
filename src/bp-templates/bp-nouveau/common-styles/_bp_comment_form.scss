@@ -51,6 +51,8 @@ form.ac-form {
 				margin-top: 10px;
 
 				.post-elements-buttons-item {
+
+					@include center-vert();
 					margin-right: 10px;
 					position: relative;
 
@@ -72,11 +74,7 @@ form.ac-form {
 			}
 		}
 
-		input {
-			margin-top: $marg-sml;
-		}
 	}
-
 }
 
 .bp-ac-form-cotainer {
