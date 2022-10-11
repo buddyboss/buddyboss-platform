@@ -3505,7 +3505,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 	// Now we can build the BP Title Parts
 	// Is there a displayed user, and do they have a name?
-	$displayed_user_name = bp_get_displayed_user_fullname();
+	$displayed_user_name = bp_core_get_user_displayname( bp_displayed_user_id() );
 
 	// Displayed user.
 	if ( ! empty( $displayed_user_name ) && ! is_404() ) {
@@ -4630,4 +4630,3 @@ function bb_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum_id
 	return false;
 
 }
-
