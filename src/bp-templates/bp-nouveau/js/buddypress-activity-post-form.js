@@ -955,8 +955,8 @@ window.bp = window.bp || {};
 				}
 				self.postForm.model.set( 'media', medias );
 			} else if ( ! _.isUndefined( medias ) && medias.length ) {
-				for ( var k = 0; k < medias.length; k ++ ) {
-					delete medias[ k ].group_id;
+				for ( var md = 0; md < medias.length; md ++ ) {
+					delete medias[ md ].group_id;
 				}
 				self.postForm.model.set( 'media', medias );
 			}
@@ -968,8 +968,8 @@ window.bp = window.bp || {};
 				}
 				self.postForm.model.set( 'document', document );
 			} else if ( ! _.isUndefined( document ) && document.length ) {
-				for ( var d = 0; d < document.length; d ++ ) {
-					delete document[ d ].group_id;
+				for ( var dd = 0; dd < document.length; dd ++ ) {
+					delete document[ dd ].group_id;
 				}
 				self.postForm.model.set( 'document', document );
 			}
@@ -981,8 +981,8 @@ window.bp = window.bp || {};
 				}
 				self.postForm.model.set( 'video', video );
 			} else if ( ! _.isUndefined( video ) && video.length ) {
-				for ( var v = 0; v < video.length; v ++ ) {
-					delete video[ v ].group_id;
+				for ( var vd = 0; vd < video.length; vd ++ ) {
+					delete video[ vd ].group_id;
 				}
 				self.postForm.model.set( 'video', video );
 			}
