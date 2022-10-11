@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string|array Formatted notifications.
  */
-function messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
+function messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
 	$total_items = (int) $total_items;
 	$text        = '';
 	$link        = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );

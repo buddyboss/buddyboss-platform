@@ -83,16 +83,18 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_blog_tracking();
 	}
 
-	// Discussion forums
+	// Discussion forums.
 	if ( ! empty( $active_components['forums'] ) ) {
 		bp_core_install_discussion_forums();
 	}
 
-	// Media
+	// Media.
 	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 		bp_core_install_document();
-		bp_update_option( 'bp_media_symlink_support', 1 );
+		if ( false === bp_get_option( 'bp_media_symlink_support', false ) ) {
+			bp_update_option( 'bp_media_symlink_support', 1 );
+		}
 	}
 
 	if ( ! empty( $active_components['moderation'] ) ) {
@@ -1162,6 +1164,7 @@ function bp_core_install_suspend() {
 	   hide_parent tinyint(1) NOT NULL,
 	   user_suspended tinyint(1) NOT NULL,
 	   reported tinyint(1) NOT NULL,
+	   user_report tinyint DEFAULT '0',
 	   last_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   blog_id bigint(20) NOT NULL,
 	   PRIMARY KEY  (id),
@@ -1203,6 +1206,7 @@ function bp_core_install_moderation() {
 	   content longtext NOT NULL,
 	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   category_id bigint(20) NOT NULL,
+	   user_report tinyint DEFAULT '0',
 	   PRIMARY KEY  (id),
 	   KEY moderation_report_id (moderation_id,user_id),
 	   KEY user_id (user_id)
