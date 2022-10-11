@@ -677,7 +677,9 @@ function bb_groups_get_join_sql_for_activity( $sql, $r ) {
  * @return mixed
  */
 function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
-	$where_conditions['exclude_where'] = ' ( ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "members" ) OR ( m.is_mod = "1" OR m.is_admin = "1" ) )';
+	$where_conditions['exclude_where'] = ' ( ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "mods" AND m.is_mod = "1" OR m.is_admin = "1" ) 
+            OR ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "admins" AND m.is_admin = "1" ) 
+            OR ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "members" ) )';
 
 	return $where_conditions;
 }
