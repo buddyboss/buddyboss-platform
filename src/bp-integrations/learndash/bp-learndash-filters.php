@@ -25,6 +25,10 @@ add_action( 'add_meta_boxes', 'bp_activity_add_meta_boxes', 50 );
 
 add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
 
+// Support other lanaguages slug for LD.
+add_filter( 'bp_get_requested_url', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
+add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -345,10 +349,10 @@ function bb_ld_group_archive_slug_change( $post_options, $post_type ) {
  * Show the proper archive page link on LD domain.com/wp-admin/admin.php?page=groups-options page.
  *
  * @since BuddyBoss 1.4.7
- * 
+ *
  * @param array  $setting_option_fields Associative array of Setting field details like name,type,label,value.
  * @param string $settings_section_key Used within the Settings API to uniquely identify this section.
- * 
+ *
  * @return array $setting_option_fields
  */
 function bb_ld_group_archive_backend_slug_print( $setting_option_fields, $settings_section_key) {
@@ -379,4 +383,17 @@ function bb_support_learndash_course_permalink( $bp, $bp_uri ) {
 		$bp->current_component = bb_learndash_profile_courses_slug();
 		$bp->current_action    = '';
 	}
+}
+
+/**
+ * Update the URL setup from the learndash permalink.
+ *
+ * @since BuddyBoss 2.1.0
+ *
+ * @param string $url URL to be redirected.
+ *
+ * @return string URL of the current page.
+ */
+function bb_support_learndash_course_other_language_permalink( $url ) {
+	return rawurldecode( $url );
 }
