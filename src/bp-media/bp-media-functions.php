@@ -1270,14 +1270,14 @@ function bp_media_delete_orphaned_attachments() {
 			'relation' => 'AND',
 			array(
 				'key'   => 'bp_media_saved',
-				'value' => '0'
+				'value' => '0',
 			),
 			array(
 				'key'     => 'bb_media_draft',
 				'compare' => 'NOT EXISTS',
-				'value'   => ''
-			)
-		)
+				'value'   => '',
+			),
+		),
 	);
 
 	$media_wp_query = new WP_query( $args );
@@ -3974,3 +3974,37 @@ function bb_media_delete_older_symlinks() {
 }
 bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 
+/**
+ * Check the GIPHY key is valid or not.
+ *
+ * @param boolean $api_key GIPHY api key.
+ * @param boolean $message GIPHY api key validation response message.
+ *
+ * @return mixed Whether the giphy key is valid or error object.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
+
+	static $cache = array();
+	$api_key      = ! empty( $api_key ) ? $api_key : bp_media_get_gif_api_key();
+	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
+		if ( true === $message ) {
+			return $cache[ $api_key ];
+		}
+		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
+	}
+
+	if ( empty( $api_key ) ) {
+		return false;
+	}
+
+	$output = wp_remote_get( 'http://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
+	if ( $output ) {
+		$cache[ $api_key ] = $output;
+	}
+	if ( true === $message ) {
+		return $cache[ $api_key ];
+	}
+	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
+}
