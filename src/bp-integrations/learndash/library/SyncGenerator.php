@@ -726,7 +726,13 @@ class SyncGenerator {
 	 */
 	protected function addUserToBpGroup( $userId, $type, $remove ) {
 		$groupMember = new BP_Groups_Member( $userId, $this->bpGroupId );
-		$syncTo      = $this->getLdSyncToRole( $type );
+
+		// ignore moderator in syncing as there's no moderator in learndash.
+		if ( $groupMember->is_mod === 1 ) {
+			return false;
+		}
+
+		$syncTo = $this->getLdSyncToRole( $type );
 
 		if ( $remove ) {
 			if ( bp_is_active( 'messages' ) ) {
