@@ -1,0 +1,284 @@
+// BP Toast Messages
+// @version 1.0.0
+
+// 1. Global Styling
+
+// Global Styling
+
+/*__ Global Styling __*/
+.bb-toast-messages-enable {
+	position: relative;
+
+	@media screen and (max-width: 500px) {
+		display: none;
+
+		&.bb-toast-messages-enable-mobile-support {
+			display: block;
+		}
+
+	}
+
+	.bb-toast-messages {
+		position: fixed;
+		bottom: 25px;
+		right: 35px;
+		max-width: 360px;
+		width: 100%;
+		z-index: 1099;
+
+		@media screen and (min-width: 501px) {
+
+			.bb-onscreen-notification-enable & {
+				position: static; // Don't position if Toast messages are appended into on screen notification
+			}
+
+		}
+
+		.toast-messages-list {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+
+			.read-item {
+				background: #fff;
+				box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+				margin: 12px 0;
+				border: solid 1px #ebe9e6;
+				border-radius: 4px;
+				transition: all linear 0.2s;
+				padding: 15px 20px;
+				z-index: 4;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				position: relative;
+
+				&:before {
+					content: " ";
+					left: -1px;
+					top: 0;
+					height: 100%;
+					width: 5px;
+					background: #385dff;
+					position: absolute;
+					border-radius: 4px 0 0 4px;
+				}
+
+				&.has-url:hover {
+					background: #f7fafe;
+				}
+
+				.toast-messages-icon {
+					margin-right: 12px;
+					width: 18px;
+					height: 28px;
+					position: relative;
+
+					.bb-icon {
+						font-family: bb-icons;
+						font-style: normal;
+						display: inline-block;
+						text-decoration: inherit;
+						text-align: center;
+						font-weight: 200;
+						font-variant: normal;
+						text-transform: none;
+						line-height: 1;
+						-webkit-font-smoothing: antialiased;
+						-moz-osx-font-smoothing: grayscale;
+						color: #385dff;
+
+						&.bb-icon-exclamation-triangle {
+							font-weight: 300;
+						}
+
+						&::before {
+							margin-left: 0;
+						}
+
+					}
+
+				}
+
+				.toast-messages-content {
+					align-self: center;
+					width: calc(100% - 54px);
+
+					span {
+						display: flex;
+						flex-direction: column;
+
+						&.toast-messages-title {
+							font-weight: 500;
+							font-size: 14px;
+							line-height: 21px;
+							letter-spacing: -0.24px;
+							color: #1e2132;
+						}
+
+						&.toast-messages-content {
+							color: #9b9c9f;
+							font-weight: 400;
+							font-size: 13px;
+							line-height: 20px;
+						}
+
+					}
+
+				}
+
+				.actions {
+
+					@include center-vert();
+					align-self: center;
+					height: 24px;
+					width: 24px;
+					position: relative;
+					z-index: 1;
+
+					a {
+						transition: all linear 0.2s;
+
+						.bb-icon {
+							font-size: 24px;
+							color: #000;
+							transition: all linear 0.2s;
+						}
+
+					}
+
+				}
+
+				.toast-messages-url {
+					position: absolute;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					top: 0;
+				}
+
+			}
+
+		}
+
+		&.bb-position-right {
+			right: 35px;
+			left: inherit;
+
+			.bb-remove-all-toast-messages {
+				justify-content: flex-end;
+			}
+
+		}
+
+	}
+
+	@media screen and (max-width: 500px) {
+
+		.bb-toast-messages {
+			max-width: calc(100% - 30px);
+			display: flex;
+			justify-content: space-between;
+			right: 15px;
+			bottom: inherit;
+			top: 85px;
+
+			&.bb-position-right {
+				right: 15px;
+			}
+
+			.toast-messages-list {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				margin: 0 0 0 0;
+				flex: 100%;
+				position: relative;
+
+				.read-item {
+					margin: 0;
+					padding: 12px;
+					min-height: 67px;
+					position: absolute;
+					width: 100%;
+					left: 0;
+					top: 0;
+					display: none;
+
+					&:last-child {
+						display: flex;
+					}
+
+					.toast-messages-icon {
+						margin-right: 10px;
+					}
+
+				}
+
+			}
+
+			.bb-remove-all-toast-messages {
+
+				.action-close {
+					border-radius: 5px;
+					padding: 12px 10px;
+					text-align: center;
+					width: 70px;
+
+					.dashicons {
+						display: none;
+					}
+
+				}
+
+			}
+
+			&.single-notification {
+
+				.toast-messages-list {
+					width: 100%;
+					margin: 0;
+					flex: 0 0 100%;
+				}
+
+				.bb-remove-all-toast-messages {
+					display: none;
+				}
+
+			}
+
+			&.active-button {
+
+				.toast-messages-list {
+					margin-bottom: 14px;
+
+					&:before {
+						content: " ";
+						height: 20px;
+						width: calc(100% - 80px);
+						border-radius: 0 0 5px 5px;
+						box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+						position: absolute;
+						left: 0;
+						bottom: 0;
+						z-index: 2;
+						background: #fff;
+					}
+
+				}
+
+				.bb-remove-all-toast-messages {
+
+					.action-close {
+						display: flex !important;
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+}

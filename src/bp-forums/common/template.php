@@ -1657,7 +1657,7 @@ function bbp_reply_attributes_meta_box_discussion_reply_title( $title, $post ) {
 		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $post->post_content ), 8, '...' ), 'buddyboss' );
 	}
 
-	return $title;
+	return apply_filters( 'bbp_reply_attributes_meta_box_discussion_reply_title', $title, $post );
 }
 
 /**
@@ -1974,9 +1974,7 @@ function bbp_get_the_content( $args = array() ) {
 		$editor_unique_id = bp_unique_id( 'forums_editor_' );
 
 		?>
-			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>>
-			<?php echo $post_content; ?>
-			</div>
+			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>><?php echo wp_kses_post( $post_content ); ?></div>
 			<input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo esc_attr( $post_content ); ?>" />
 			<?php
 
@@ -2009,7 +2007,7 @@ function bbp_get_the_content( $args = array() ) {
 		else :
 			?>
 
-			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>><?php echo $post_content; ?></textarea>
+			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>><?php echo esc_textarea( $post_content ); ?></textarea>
 
 			<?php
 		endif;
