@@ -36,7 +36,7 @@ bp_nouveau_template_notices();
 		if ( is_user_logged_in() && bp_is_profile_media_support_enabled() && bb_user_can_create_media() ) :
 			?>
 			<a class="bb-add-photos button small" id="bp-add-media" href="#">
-				<i class="bb-icon-upload"></i>
+				<i class="bb-icon-l bb-icon-upload"></i>
 				<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
 			</a>
 
@@ -44,7 +44,7 @@ bp_nouveau_template_notices();
 			if ( bp_is_profile_albums_support_enabled() ) {
 				?>
 				<a href="#" id="bb-create-album" class="bb-create-album button small">
-					<i class="bb-icon-media"></i>
+					<i class="bb-icon-l bb-icon-image-video"></i>
 					<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
 				</a>
 				<?php

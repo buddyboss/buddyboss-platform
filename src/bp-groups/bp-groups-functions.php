@@ -1000,7 +1000,7 @@ function bp_group_object_template_results_groups_all_scope( $querystring, $objec
 		return $querystring;
 	}
 
-	$querystring             = wp_parse_args( $querystring );
+	$querystring             = bp_parse_args( $querystring );
 	$querystring['scope']    = 'all';
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
@@ -1728,7 +1728,7 @@ function groups_post_update( $args = '' ) {
 	}
 
 	// Record this in activity feeds.
-	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . esc_attr( $bp->groups->current_group->name ) . '</a>' );
+	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . bp_get_group_name( $bp->groups->current_group ) . '</a>' );
 	$activity_content = $content;
 
 	/**
@@ -3865,7 +3865,11 @@ function bp_group_type_short_code_add_body_class( $class ) {
 		$class[] = 'groups';
 		$class[] = 'buddypress';
 		$class[] = 'buddyboss';
-		$class[] = 'bb-buddypanel';
+		/**
+		 *This class commented because this class will add when buddypanel enable
+		 *and this condition already in the theme
+		 */
+		//$class[] = 'bb-buddypanel';
 	}
 	return $class;
 }
@@ -3882,7 +3886,7 @@ function bp_group_type_short_code_add_body_class( $class ) {
  */
 function bp_groups_exclude_group_type( $qs = false, $object = false ) {
 
-	$args = wp_parse_args( $qs );
+	$args = bp_parse_args( $qs );
 
 	if ( $object !== 'groups' ) {
 		return $qs;
@@ -4602,7 +4606,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			?>
 			">
 				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
-					<span class="bb-icon bb-icon-menu-dots-h"></span>
+					<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 				</a>
 			</span>
 			<?php
@@ -4642,3 +4646,111 @@ function bb_get_group_cover_image_height( $default = 'small' ) {
 	return bp_get_option( 'bb-pro-cover-group-height', $default );
 }
 
+/**
+ * Function will return label background and text color's for specific group type.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param $type Type of the group
+ *
+ * @return array Return array of label color data
+ */
+function bb_get_group_type_label_colors( $type ) {
+	if ( empty( $type ) ) {
+		return false;
+	}
+	$post_id                   = bp_group_get_group_type_id( $type );
+	$cache_key                 = 'bb-group-type-label-color-' . $type;
+	$bp_group_type_label_color = wp_cache_get( $cache_key, 'bp_groups_group_type' );
+	if ( false === $bp_group_type_label_color && ! empty( $post_id ) ) {
+		$label_colors_meta = get_post_meta( $post_id, '_bp_group_type_label_color', true );
+		$label_color_data  = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : array();
+		$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+		if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {
+			$background_color = buddyboss_theme_get_option( 'label_background_color' );
+			$text_color       = buddyboss_theme_get_option( 'label_text_color' );
+		} else {
+			$background_color = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+			$text_color       = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+		}
+		// Array of label's text and background color data.
+		$bp_group_type_label_color = array(
+			'color_type'       => $color_type,
+			'background-color' => $background_color,
+			'color'            => $text_color,
+		);
+		wp_cache_set( $cache_key, $bp_group_type_label_color, 'bp_groups_group_type' );
+	}
+
+	return apply_filters( 'bb_get_group_type_label_colors', $bp_group_type_label_color );
+}
+
+/**
+ * Function will fetch all members.
+ * If groups_ids pass in args then return that group related to members.
+ * Also, if pass per_page and page in args then it will return members list based on that.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param array $args      {
+ * Array of optional arguments.
+ *
+ * @type array  $group_ids Group ids.
+ * @type int    $page      Page of members being requested. Default 1.
+ * @type int    $per_page  Members to return per page. Default 20.
+ * }
+ *
+ * @return array
+ */
+function bb_get_all_members_for_groups( $args = array() ) {
+	static $cache;
+	global $wpdb;
+	$bp = buddypress();
+	$r  = array_merge(
+		array(
+			'page'     => 1,
+			'per_page' => 20,
+		),
+		$args
+	);
+
+	$cache_key = md5( maybe_serialize( $r ) );
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		$results = $cache[ $cache_key ];
+	} else {
+		$sql['select'] = "SELECT DISTINCT user_id FROM {$bp->groups->table_name_members}";
+		$sql['where']  = array(
+			'is_confirmed = 1',
+			'is_banned = 0',
+		);
+
+		if ( ! empty( $r['group_ids'] ) ) {
+			$sql['where'][] = 'group_id IN ( ' . implode( ',', wp_parse_id_list( $r['group_ids'] ) ) . ' )';
+		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.4
+		 *
+		 * @param string $sql         From SQL statement.
+		 * @param string $column_name Column name.
+		 */
+		$sql['where'] = apply_filters( 'bb_get_all_members_for_groups_where_sql', $sql['where'], 'user_id' );
+
+		// Concatenate where statement.
+		$sql['where'] = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : '';
+
+		// Set limit query.
+		$sql['limit'] = '';
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) ) {
+			$sql['limit'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+		}
+
+		// Get the specific user ids.
+		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" );
+	}
+
+	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
+}
