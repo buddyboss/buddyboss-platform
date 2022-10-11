@@ -2077,6 +2077,21 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			: ''
 		);
 
+		if ( ! empty( $data['group'] ) ) {
+			$this->forum_endpoint->group = $data['group'];
+		}
+
+		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
+			$group_forum_extention = new BBP_Forums_Group_Extension();
+			// Allow group member to view private/hidden forums.
+			add_filter( 'bbp_map_meta_caps', array( $group_forum_extention, 'map_group_forum_meta_caps' ), 10, 4 );
+
+			// Fix issue - Group organizers and moderators can not add topic tags.
+			add_filter( 'bbp_map_topic_tag_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_assign_topic_tags_caps' ), 10, 4 );
+		}
+
+		add_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
 		// Setup subscribe/unsubscribe state.
 		$data['action_states'] = $this->get_topic_action_states( $topic->ID );
 
@@ -2084,6 +2099,10 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		// current user permission.
 		$data['current_user_permissions'] = $this->get_topic_current_user_permissions( $topic->ID );
+
+		remove_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
+		$this->forum_endpoint->group = '';
 
 		// Revisions.
 		$data['revisions'] = $this->get_topic_revisions( $topic->ID );
@@ -2663,6 +2682,9 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$topic   = bbp_get_topic( bbp_get_topic_id( (int) $topic_id ) );
 		$form_id = bbp_get_topic_forum_id( $topic_id );
+		if ( empty( $form_id ) && ! empty( $topic_id ) ) {
+			$form_id = $topic->ID;
+		}
 
 		return array(
 			'show_replies' => $this->forum_endpoint->can_access_content( $form_id ),

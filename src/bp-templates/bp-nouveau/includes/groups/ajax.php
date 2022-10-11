@@ -347,7 +347,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		wp_send_json_error( $response );
 	}
 
-	$request = wp_parse_args(
+	$request = bp_parse_args(
 		$_POST,
 		array(
 			'scope' => 'members',
@@ -1079,18 +1079,30 @@ function bp_nouveau_ajax_groups_send_message() {
 	$video    = filter_input( INPUT_POST, 'video', FILTER_DEFAULT );
 	$message  = '';
 
+	if ( isset( $_POST['gif_data'] ) ) {
+		unset( $_POST['gif_data'] );
+	}
 	if ( isset( $gif_data ) && '' !== $gif_data ) {
 		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $gif_data ), true );
 	}
 
+	if ( isset( $_POST['media'] ) ) {
+		unset( $_POST['media'] );
+	}
 	if ( isset( $media ) && '' !== $media ) {
 		$_POST['media'] = json_decode( wp_kses_stripslashes( $media ), true );
 	}
 
+	if ( isset( $_POST['document'] ) ) {
+		unset( $_POST['document'] );
+	}
 	if ( isset( $document ) && '' !== $document ) {
 		$_POST['document'] = json_decode( wp_kses_stripslashes( $document ), true );
 	}
 
+	if ( isset( $_POST['video'] ) ) {
+		unset( $_POST['video'] );
+	}
 	if ( isset( $video ) && '' !== $video ) {
 		$_POST['video'] = json_decode( wp_kses_stripslashes( $video ), true );
 	}
@@ -1100,11 +1112,11 @@ function bp_nouveau_ajax_groups_send_message() {
 	/**
 	 * Filter to validate message content.
 	 *
-	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param bool   $validated_content True if message is valid, false otherwise.
 	 * @param string $content           Content of the message.
 	 * @param array  $_POST             POST Request Object.
 	 *
-	 * @return bool True if message is not valid, false otherwise.
+	 * @return bool True if message is valid, false otherwise.
 	 */
 	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
 
