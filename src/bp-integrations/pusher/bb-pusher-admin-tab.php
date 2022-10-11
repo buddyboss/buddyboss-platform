@@ -263,7 +263,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			sprintf(
 				wp_kses_post(
 					/* translators: BuddyBoss Pro purchase link */
-					__( 'Please update %1$s to version 2.1.0 to use Pusher on your site.', 'buddyboss' )
+					__( 'Please update %1$s to version 2.2.0 to use Pusher on your site.', 'buddyboss' )
 				),
 				'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
 			) .
