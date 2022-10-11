@@ -63,9 +63,9 @@ add_filter( 'bp_get_message_notice_text', 'make_clickable', 9 );
 add_filter( 'bp_get_the_thread_message_content', 'make_clickable', 9 );
 add_filter( 'bp_get_message_thread_content', 'make_clickable', 9 );
 
-add_filter( 'bp_get_message_notice_text', 'wpautop' );
-add_filter( 'bp_get_the_thread_message_content', 'wpautop' );
-add_filter( 'bp_get_message_thread_content', 'wpautop' );
+add_filter( 'bp_get_message_notice_text', 'bb_autop' );
+add_filter( 'bp_get_the_thread_message_content', 'bb_autop' );
+add_filter( 'bp_get_message_thread_content', 'bb_autop' );
 
 add_filter( 'bp_get_message_notice_subject', 'stripslashes_deep' );
 add_filter( 'bp_get_message_notice_text', 'stripslashes_deep' );
