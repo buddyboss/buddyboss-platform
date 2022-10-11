@@ -1162,10 +1162,16 @@ input#send-to-input {
 	align-items: center;
 	width: 100%;
 
-	#back-to-thread {
-		background-color: transparent;
+	#back-to-thread-li {
+		display: flex;
 		font-size: 24px;
 		font-weight: 600;
+	}
+
+	#back-to-thread {
+		background-color: transparent;
+		font-size: inherit;
+		font-weight: inherit;
 		padding: 0;
 
 		> [class*="bb-icon"] {
