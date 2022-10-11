@@ -1024,7 +1024,7 @@ function bb_messages_hide_archived_notifications( $where_conditions, $args ) {
 
 		$messages_query = $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id WHERE r.user_id IN ({$user_id_in}) AND r.is_deleted = %d AND r.is_hidden = %d", 0, 1 );
 
-		$where_conditions['archived_exclude'] = "( item_id NOT IN ({$messages_query}) AND component_name = 'messages' )";
+		$where_conditions['archived_exclude'] = "( item_id NOT IN ({$messages_query}) OR component_name = 'messages' )";
 	}
 
 	return $where_conditions;
