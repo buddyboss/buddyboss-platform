@@ -10292,10 +10292,16 @@ input#send-to-input {
   width: 100%;
 }
 
-.messages-wrapper #subnav .subnav #back-to-thread {
-  background-color: transparent;
+.messages-wrapper #subnav .subnav #back-to-thread-li {
+  display: flex;
   font-size: 24px;
   font-weight: 600;
+}
+
+.messages-wrapper #subnav .subnav #back-to-thread {
+  background-color: transparent;
+  font-size: inherit;
+  font-weight: inherit;
   padding: 0;
 }
 
