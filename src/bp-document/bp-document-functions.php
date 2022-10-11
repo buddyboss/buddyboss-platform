@@ -4382,6 +4382,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 		}
 	}
 
+	$attachment_url = user_trailingslashit( $attachment_url );
+
 	/**
 	 * Filter url here to audio url.
 	 *
