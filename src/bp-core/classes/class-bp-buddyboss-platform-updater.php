@@ -50,25 +50,6 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				return $transient;
 			}
 
-			// Check if force check exists.
-			$force_check = ! empty( $_GET['force-check'] ) ? true : false;
-
-			// Check if response exists then return existing transient.
-			// Also check if force check exists then bypass transient.
-			if ( ! $force_check ) {
-				$response_transient = get_transient( $this->_transient_name );
-				if ( ! empty( $response_transient ) ) {
-					if ( isset( $response_transient->body ) ) {
-						unset( $response_transient->body );
-						$transient->no_update[ $this->plugin_path ] = $response_transient;
-					} else {
-						$transient->response[ $this->plugin_path ] = $response_transient;
-					}
-					$transient->last_checked = time();
-					return $transient;
-				}
-			}
-
 			/**
 			 * Get plugin version from transient. If transient return false then we will get plugin version from
 			 * get_plugin_data function.
@@ -85,6 +66,30 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 
 			if ( ! $current_version ) {
 				return $transient;
+			}
+
+			// Check if force check exists.
+			$force_check = ! empty( $_GET['force-check'] ) ? true : false;
+
+			// Check if response exists then return existing transient.
+			// Also check if force check exists then bypass transient.
+			if ( ! $force_check ) {
+				$response_transient = get_transient( $this->_transient_name );
+				if ( ! empty( $response_transient ) ) {
+					if ( isset( $response_transient->body ) ) {
+						unset( $response_transient->body );
+						$transient->no_update[ $this->plugin_path ] = $response_transient;
+					} else {
+						if( $current_version === $response_transient->new_version ) {
+							$transient->no_update[ $this->plugin_path ] = $response_transient;
+							unset( $transient->response[ $this->plugin_path ] );
+						} else {
+							$transient->response[ $this->plugin_path ] = $response_transient;
+						}
+					}
+					$transient->last_checked = time();
+					return $transient;
+				}
 			}
 
 			$request_data = array(
