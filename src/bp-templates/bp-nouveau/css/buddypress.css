@@ -4515,17 +4515,15 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list {
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list {
   position: relative;
   float: right;
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item {
   padding-bottom: 50px;
   max-height: 90vh;
   min-height: 90vh;
@@ -4536,12 +4534,10 @@ span.dashicons.dashicons-admin-file:before {
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .download-media,
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .download-video,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-media,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-video,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video {
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-media,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-video {
   position: absolute;
   bottom: 0;
   z-index: 999999;
@@ -17584,7 +17580,11 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-media-length-1 .bb-activity-media-elem .entry-img {
-  padding-top: 42.56%;
+  padding-top: 0;
+}
+
+.bb-media-length-1 .bb-activity-media-elem .entry-img img {
+  position: static;
 }
 
 .bb-media-length-2 .bb-activity-media-elem .entry-img {
