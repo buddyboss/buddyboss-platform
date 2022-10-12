@@ -57,6 +57,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.1.2 =
+* Activity - Handled empty activity post issue when group description updated for the first time
+* Activity - Handled create post media upload issue when member switches post visibility from public to group
+* Profiles - Handled message member action issue that does not take to the relevant thread when username contains a dot character
+* Groups - Handled parent group label tooltip UI issue on single group screen header
+* Forums - Handled forums shortcodes medium editor toolbar styling issues
+* Media - Improved handling of GIPHY API keys in the dashboard
+* Media - Small GIPHY styling improvements in the frontend
+* Messages - Handled send message action triggers wrong notification type issue
+* Messages - Handled member name showing special character issue in the new message screen
+* Emails - Handled email invites template formatting issues when it contains a single quote
+* Moderation - Handled block member action not working issue when Activity component disabled
+* Core - Icon Pack updated with latest icons
+* Elementor - Handled view saved template not working conflict when BuddyBoss pages configured as homepage
+* Elementor - Handled activity block UI issue for video modal download button
+* Compatibility - Handled Affiliate WP compatibility issues
+
 = 2.1.1.1 =
 * Core - Handled updater critical issue by reverting the latest refactored code
 
