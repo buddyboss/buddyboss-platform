@@ -1833,7 +1833,7 @@ class BP_Messages_Thread {
 		}
 
 		if ( true === $r['exclude_active_users'] ) {
-			$where_conditions['exclude_active_users'] = 'user_id NOT IN (SELECT ID FROM ' . $wpdb->users . ')';
+			$where_conditions['exclude_active_users'] = 'r.user_id NOT IN (SELECT ID FROM ' . $wpdb->users . ')';
 		}
 
 		/* Order/orderby ********************************************/
