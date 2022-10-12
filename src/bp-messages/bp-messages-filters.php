@@ -806,7 +806,7 @@ function bp_messages_admin_repair_unread_messages_count() {
  */
 function bp_recipients_recipient_get_where_conditions_callback( $where_conditions, $r ) {
 	if ( ! empty( $r['exclude_admin_user'] ) ) {
-		$where_conditions['exclude_active_users'] = 'user_id NOT IN ( ' . implode( ', ', $r['exclude_admin_user'] ) . ' )';
+		$where_conditions['exclude_active_users'] = 'r.user_id NOT IN ( ' . implode( ', ', $r['exclude_admin_user'] ) . ' )';
 	}
 	return $where_conditions;
 }
@@ -1181,3 +1181,19 @@ function bb_digest_message_email_notifications() {
 	}
 }
 add_action( 'bb_digest_email_notifications_hook', 'bb_digest_message_email_notifications' );
+
+/**
+ * Function will add join query with group members to fetch only those members which is available in members recipients
+ * .
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $sql
+ * @param $r
+ *
+ * @return string
+ */
+function bb_recipients_recipient_get_join_sql_with_group_members( $sql, $r ) {
+	global $wpdb;
+	$sql .= ' JOIN ' . $wpdb->prefix . 'bp_groups_members gm ON ( gm.user_id = r.user_id )';
+	return $sql;
+}
