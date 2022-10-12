@@ -1183,7 +1183,7 @@ function bb_digest_message_email_notifications() {
 add_action( 'bb_digest_email_notifications_hook', 'bb_digest_message_email_notifications' );
 
 /**
- * Function will add join query with group members to fetch only those members which is available in members recipients
+ * Function will fetch only those message recipients which is available in groups.
  * .
  * @since BuddyBoss [BBVERSION]
  *
