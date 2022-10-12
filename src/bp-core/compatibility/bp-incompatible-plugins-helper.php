@@ -480,11 +480,11 @@ add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 10
 
 /**
  * Prevent MemberPress registration when nickname(username) format is not valid
- * 
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $errors		Array of error messages from memberpress signup validation
- * 
+ *
  * @return array $errors	Array of error messages from memberpress signup validation
  */
 function bb_core_validate_nickname_mepr_signup( $errors ) {
@@ -501,7 +501,7 @@ function bb_core_validate_nickname_mepr_signup( $errors ) {
 	}
 	return $errors;
 }
-  
+
 add_filter( 'mepr-validate-signup', 'bb_core_validate_nickname_mepr_signup' );
 
 /**
