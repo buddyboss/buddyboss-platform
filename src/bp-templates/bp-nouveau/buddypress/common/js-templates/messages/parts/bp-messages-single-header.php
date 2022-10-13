@@ -28,9 +28,6 @@
 
 	var threadAvatarClass = '';
 	if ( 1 === data.avatars.length ) {
-		if ( 'user' === data.avatars[0].type ) {
-			threadAvatarClass += 'bb-member-status-' + data.avatars[0].id;
-		}
 		if ( ! data.is_group_thread ) {
 			if ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) {
 				threadAvatarClass += ' bp-suspended-avatar';
