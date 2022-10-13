@@ -103,7 +103,7 @@ function bp_core_ajax_widget_members() {
 			?>
 			<li class="vcard">
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>" class="bb-member-status-<?php echo esc_attr( $members_template->member->id ) . ' ' . esc_attr( $moderation_class ); ?>">
+					<a href="<?php bp_member_permalink(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 						<?php bp_member_avatar(); ?>
 						<?php bb_user_presence_html( $members_template->member->id ); ?>
 					</a>

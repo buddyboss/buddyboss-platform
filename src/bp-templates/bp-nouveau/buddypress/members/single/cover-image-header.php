@@ -104,7 +104,7 @@ if ( bp_is_my_profile() ) {
 			$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_displayed_user_id() ) ? 'bp-user-suspended' : '';
 			$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_displayed_user_id() ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<div id="item-header-avatar" class="bb-member-status-<?php echo esc_attr( bp_displayed_user_id() ) . ' ' . esc_attr( $moderation_class ); ?>">
+			<div id="item-header-avatar" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
 				if ( $is_enabled_online_status && function_exists( 'bb_current_user_status' ) ) {
 					bb_current_user_status( bp_displayed_user_id() );
