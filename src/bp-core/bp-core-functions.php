@@ -7735,7 +7735,7 @@ function bb_validate_gravatar( $email ) {
 	$key              = base64_encode( $url );
 	$response         = get_transient( $key );
 	$has_valid_avatar = false;
-	if ( isset( $response ) && isset( $response[0] ) && preg_match( "|200|", $response[0] ) ) {
+	if ( isset( $response ) && isset( $response[0] ) && preg_match( '|200|', $response[0] ) ) {
 		$has_valid_avatar = true;
 	}
 
@@ -8098,4 +8098,35 @@ function bb_autop( $pee, $br = true ) {
 	}
 
 	return $pee;
+}
+
+/**
+ * Function to check the heartbeat enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_heartbeat_enabled() {
+	return wp_script_is( 'heartbeat', 'registered' ) && ! is_admin();
+}
+
+/**
+ * Function to return the heartbeat interval time in seconds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_heartbeat_interval() {
+	if ( ! bb_is_heartbeat_enabled() ) {
+		return 0;
+	}
+
+	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
+	$global_pulse       = 60;
+	if ( ! empty( $heartbeat_settings['interval'] ) ) {
+		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 60;
+	}
+	return $global_pulse;
 }
