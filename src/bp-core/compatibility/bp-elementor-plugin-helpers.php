@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.2
  */
 
 // Exit if accessed directly.
@@ -21,7 +21,7 @@ if ( class_exists( 'BB_Elementor_Plugin_Compatibility' ) ) {
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.2
  */
 class BB_Elementor_Plugin_Compatibility {
 
@@ -30,14 +30,14 @@ class BB_Elementor_Plugin_Compatibility {
 	 *
 	 * @var self
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.2
 	 */
 	private static $instance = null;
 
 	/**
 	 * BB_Elementor_Plugin_Compatibility constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.2
 	 */
 	public function __construct() {
 
@@ -47,7 +47,7 @@ class BB_Elementor_Plugin_Compatibility {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.2
 	 *
 	 * @return Controller|null
 	 */
@@ -64,7 +64,7 @@ class BB_Elementor_Plugin_Compatibility {
 	/**
 	 * Register the compatibility hook for the plugin
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.2
 	 *
 	 * @return void
 	 */
@@ -81,7 +81,7 @@ class BB_Elementor_Plugin_Compatibility {
 	/**
 	 * Update the current component and action for elementor saved library preview link.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.2
 	 *
 	 * @param object $bp     BuddyPress object.
 	 * @param array  $bp_uri Array of URI.
