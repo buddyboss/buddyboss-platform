@@ -1103,7 +1103,7 @@ function bb_notification_avatar() {
 				// Get the small icon for the notification which will print beside the avatar.
 				echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
 				?>
-				<?php ( isset( $user ) ? bb_current_user_status( $user->ID ) : '' ); ?>
+				<?php ( isset( $user ) ? bb_user_presence_html( $user->ID ) : '' ); ?>
 			</a>
 			<?php
 		}
