@@ -51,8 +51,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 			?>
 			<div id="item-header-avatar" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
-				if ( $is_enabled_online_status && function_exists( 'bb_current_user_status' ) ) {
-					bb_current_user_status( bp_displayed_user_id() );
+				if ( $is_enabled_online_status ) {
+					bb_user_presence_html( bp_displayed_user_id() );
 				}
 
 				if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) {

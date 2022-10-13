@@ -133,8 +133,8 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							?>
 							<a href="<?php bp_member_permalink(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 								<?php
-								if ( $enabled_online_status && function_exists( 'bb_current_user_status' ) ) {
-									bb_current_user_status( bp_get_member_user_id() );
+								if ( $enabled_online_status ) {
+									bb_user_presence_html( bp_get_member_user_id() );
 								}
 								bp_member_avatar( bp_nouveau_avatar_args() );
 								?>

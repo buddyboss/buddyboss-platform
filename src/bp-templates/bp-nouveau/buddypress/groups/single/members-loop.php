@@ -76,7 +76,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							<a href="<?php bp_group_member_domain(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 								<?php
 								if ( $enabled_online_status ) {
-									bb_current_user_status( bp_get_group_member_id() );
+									bb_user_presence_html( bp_get_group_member_id() );
 								}
 								bp_group_member_avatar();
 								?>
