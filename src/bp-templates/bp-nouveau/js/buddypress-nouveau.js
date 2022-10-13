@@ -3369,7 +3369,7 @@ window.bp = window.bp || {};
 						settings.data.search( 'action=heartbeat' ) > 0
 					) {
 						var paged_user_id = bp.Nouveau.getPageUserIDs();
-						settings.data = settings.data + '&presece_users=' + paged_user_id;
+						settings.data = settings.data + '&data[presece_users]=' + paged_user_id;
 					}
 				}
 			);
