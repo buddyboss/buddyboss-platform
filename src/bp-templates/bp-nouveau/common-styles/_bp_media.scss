@@ -68,7 +68,11 @@
 		overflow: hidden;
 
 		.bb-media-length-1 & {
-			padding-top: 42.56%;
+			padding-top: 0;
+
+			img {
+				position: static;
+			}
 		}
 
 		.bb-media-length-2 & {
