@@ -604,6 +604,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'object_nav_parent'  => '#buddypress',
 			'empty_field'        => __( 'New Field', 'buddyboss' ),
 			'close'              => __( 'Close', 'buddyboss' ),
+			'heartbeat_enabled'  => bb_is_heartbeat_enabled(),
+			'heartbeat_interval' => bb_heartbeat_interval(),
 		);
 
 		// If the Object/Item nav are in the sidebar
