@@ -2208,3 +2208,46 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 
 }
 add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
+
+/**
+ * Get member presence information.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_heartbeat_member_presence_info( $response = array(), $data = array() ) {
+	if ( ! isset( $data['presece_users'] ) ) {
+		return $response;
+	}
+
+	$presence_user_ids = wp_parse_id_list( $data['presece_users'] );
+	$presence_data     = array();
+	foreach ( array_unique( $presence_user_ids ) as $user_id ) {
+		$presence_data[] = array(
+			'id'           => $user_id,
+			'name'         => bp_core_get_user_displayname( $user_id ),
+			'profile_url'  => bp_core_get_user_domain( $user_id ),
+			'avatar'       => bp_core_fetch_avatar(
+				array(
+					'item_id' => $user_id,
+					'html'    => false,
+					'type'    => 'full',
+				)
+			),
+			'is_connected' => (
+				bp_is_active( 'friends' ) && function_exists( 'friends_check_friendship_status' )
+				? friends_check_friendship_status( get_current_user_id(), $user_id )
+				: ''
+			),
+			'status'       => bb_get_user_presence( $user_id ),
+		);
+	}
+
+	$response['presence_data'] = $presence_data;
+
+	return $response;
+}
+// Heartbeat receive for on-screen notification.
+add_filter( 'heartbeat_received', 'bb_heartbeat_member_presence_info', 11, 2 );
+add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11, 2 );
