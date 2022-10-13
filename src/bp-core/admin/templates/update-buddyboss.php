@@ -15,16 +15,85 @@ defined( 'ABSPATH' ) || exit;
 $show_overview = false;
 
 // Get release data based on plugin version from gitHub API.
-$cache_key    = 'bb_changelog_' . BP_PLATFORM_VERSION;
-$bb_changelog = wp_cache_get( $cache_key, 'bp' );
-if ( false === $bb_changelog ) {
-	$response     = wp_safe_remote_get( 'https://api.github.com/repos/buddyboss/buddyboss-platform/releases/tags/' . BP_PLATFORM_VERSION );
-	$bb_changelog = wp_remote_retrieve_body( $response );
-	if ( ! is_wp_error( $bb_changelog ) && ! empty( $bb_changelog ) ) {
-		$bb_changelog_data = json_decode( $bb_changelog, true );
-		if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
-			wp_cache_set( $cache_key, $bb_changelog, 'bp' );
+$cache_key         = 'bb_changelog_' . BP_PLATFORM_VERSION;
+$bb_changelog_data = wp_cache_get( $cache_key, 'bp' );
+error_log(print_r($bb_changelog_data, true));
+if ( false === $bb_changelog_data ) {
+	if ( ! function_exists( 'plugins_api' ) ) {
+		error_log(ABSPATH . 'wp-admin/includes/plugin-install.php');
+		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+	}
+
+	$api = plugins_api(
+		'plugin_information',
+		array(
+			'slug' => wp_unslash( 'bp-loader' ),
+		)
+	);
+
+	error_log(print_r($api, true));
+
+	if ( is_wp_error( $api ) ) {
+		wp_die( $api );
+	}
+
+	$plugins_allowedtags = array(
+		'a'          => array(
+			'href'   => array(),
+			'title'  => array(),
+			'target' => array(),
+		),
+		'abbr'       => array( 'title' => array() ),
+		'acronym'    => array( 'title' => array() ),
+		'code'       => array(),
+		'pre'        => array(),
+		'em'         => array(),
+		'strong'     => array(),
+		'div'        => array( 'class' => array() ),
+		'span'       => array( 'class' => array() ),
+		'p'          => array(),
+		'br'         => array(),
+		'ul'         => array(),
+		'ol'         => array(),
+		'li'         => array(),
+		'h1'         => array(),
+		'h2'         => array(),
+		'h3'         => array(),
+		'h4'         => array(),
+		'h5'         => array(),
+		'h6'         => array(),
+		'img'        => array(
+			'src'   => array(),
+			'class' => array(),
+			'alt'   => array(),
+		),
+		'blockquote' => array( 'cite' => true ),
+	);
+
+	// Sanitize HTML.
+	$api->sections['changelog'] = wp_kses( $api->sections['changelog'], $plugins_allowedtags );
+
+	$section_content = ! empty( $api->sections['changelog'] ) ? $api->sections['changelog'] : array();
+	if ( ! empty( $section_content ) ) {
+		$section_content = links_add_base_url( $section_content, 'https://wordpress.org/plugins/' . $api->slug . '/' );
+		$lines           = preg_split( '/[\n\r]+/', $section_content );
+		$version         = $api->version;
+		$versions        = array();
+		$changelog       = '';
+		$version_content = '';
+		foreach ( $lines as $line ) {
+			if ( empty( $line ) ) {
+				continue;
+			}
+			if ( preg_match( '/^\d/', trim( wp_strip_all_tags( $line ) ) ) ) {
+				$version = trim( wp_strip_all_tags( $line ) );
+			} else {
+				$version_content .= $line;
+			}
+			$versions[ $version ] = $version_content;
 		}
+		$bb_changelog_data = $versions[ $api->version ];
+		wp_cache_set( $cache_key, $bb_changelog_data, 'bp' );
 	}
 }
 
@@ -52,7 +121,7 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 				<li><a href="#bb-release-overview" class="bb-hello-tabs_anchor is_active" data-action="bb-release-overview"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a></li>
 				<?php
 			}
-			if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
+			if ( isset( $bb_changelog_data ) && ! empty( $bb_changelog_data ) ) {
 				?>
 				<li><a href="#bb-release-changelog" class="bb-hello-tabs_anchor" data-action="bb-release-changelog"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a></li>
 				<?php
@@ -96,11 +165,12 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 				</div>
 				<?php
 			}
-			if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
+			if ( isset( $bb_changelog_data ) && ! empty( $bb_changelog_data ) ) {
 				?>
 				<div id="bb-release-changelog" class="bb-hello-tabs_content bb-release-changelog <?php echo esc_attr( false === $show_overview ? 'is_active' : '' ); ?>">
+					<h2><?php esc_html_e( 'Changes:', 'buddyboss' ) ?></h2>
 					<?php
-					echo wp_kses_post( $bb_changelog_data['body'] );
+					echo wp_kses_post( $bb_changelog_data );
 					?>
 				</div>
 				<?php
