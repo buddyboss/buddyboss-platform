@@ -70,6 +70,9 @@ window.bp = window.bp || {};
 			// Profile Notification setting
 			this.profileNotificationSetting();
 
+			// User Presence status.
+			this.userPresenceStatus();
+
 			var _this = this;
 
 			$( document ).on( 'bb_trigger_toast_message', function ( event, title, message, type, url, autoHide ) {
@@ -2812,7 +2815,7 @@ window.bp = window.bp || {};
 				! _.isUndefined( BP_Nouveau.media.emoji ) &&
 				! $targetEl.closest( '.post-emoji' ).length &&
 				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
-				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );				
+				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 			}
 		},
 
@@ -3355,6 +3358,10 @@ window.bp = window.bp || {};
 
 			$( dropzone.element ).find( '.dz-global-progress .dz-progress').css( 'width', progress + '%' );
 			$( dropzone.element ).find( '.dz-global-progress > p').html( message );
+		},
+
+		userPresenceStatus: function() {
+
 		}
 
 	};
