@@ -1653,7 +1653,7 @@ function bp_core_cron_schedules( $schedules = array() ) {
 
 	return $schedules;
 }
-add_filter( 'cron_schedules', 'bp_core_cron_schedules' ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+add_filter( 'cron_schedules', 'bp_core_cron_schedules', 99, 1 ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
 
 /**
  * Filter to update the Avatar URL for the rest api.
