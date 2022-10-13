@@ -5268,9 +5268,9 @@ function bb_get_member_type_label_colors( $type ) {
  */
 function bb_get_user_presence( $user_id ) {
 	if ( bb_is_online_user( $user_id ) ) {
-        return 'online';
-    } else {
-        return 'offline';
+		return 'online';
+	} else {
+		return 'offline';
 	}
 }
 
@@ -5279,15 +5279,17 @@ function bb_get_user_presence( $user_id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param int $user_id User id.
+ *
  * @return string
  */
 function bb_get_user_presence_html( $user_id ) {
-    return sprintf(
-        '<span class="bb-user-presence bb-user-presence-%s" data-bb-user-id="%d" data-bb-user-presence="%s"></span>',
-        bb_get_user_presence( $user_id ),
-        $user_id,
-	    bb_get_user_presence( $user_id ),
-    );
+	return sprintf(
+		'<span class="bb-user-presence bb-user-presence-%s" data-bb-user-id="%d" data-bb-user-presence="%s"></span>',
+		bb_get_user_presence( $user_id ),
+		$user_id,
+		bb_get_user_presence( $user_id )
+	);
 }
 
 /**
@@ -5295,7 +5297,9 @@ function bb_get_user_presence_html( $user_id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string
+ * @param int $user_id User id.
+ *
+ * @return void
  */
 function bb_user_presence_html( $user_id ) {
 	echo bb_get_user_presence_html( $user_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
