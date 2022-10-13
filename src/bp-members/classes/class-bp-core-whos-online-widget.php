@@ -105,7 +105,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 						<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
 							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
 								<?php bp_member_avatar(); ?>
-								<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', bp_get_member_user_id() ) ); ?>
+								<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
 							</a>
 						</div>
 
@@ -162,7 +162,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 						<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
 							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ) . ' ' . esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
 								<?php bp_member_avatar(); ?>
-								<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', bp_get_member_user_id() ) ); ?>
+								<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
 							</a>
 						</div>
 
@@ -392,7 +392,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
 					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ) . ' ' . esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
 						<?php bp_member_avatar(); ?>
-						<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', bp_get_member_user_id() ) ); ?>
+						<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
 					</a>
 				</div>
 			<?php endwhile; ?>
@@ -443,7 +443,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
 					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip bb-member-status-<?php echo esc_attr( bp_get_member_user_id() ) . ' ' . esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
 						<?php bp_member_avatar(); ?>
-						<?php echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', bp_get_member_user_id() ) ); ?>
+						<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
 					</a>
 				</div>
 
