@@ -3361,8 +3361,34 @@ window.bp = window.bp || {};
 		},
 
 		userPresenceStatus: function() {
+			$( document ).ajaxSend(
+				function ( event, jqxhr, settings ) {
+					if (
+						settings.hasOwnProperty( 'data' ) &&
+						'string' === typeof settings.data &&
+						settings.data.search( 'action=heartbeat' ) > 0
+					) {
+						var paged_user_id = bp.Nouveau.getPageUserIDs();
+						settings.data = settings.data + '&presece_users=' + paged_user_id;
+					}
+				}
+			);
+		},
 
-		}
+		getPageUserIDs: function() {
+			var user_ids = [];
+			var all_presence = $( document ).find( '.bb-user-presence' );
+			if ( all_presence.length > 0 ) {
+				all_presence.each( function () {
+					var user_id = $( this ).attr( 'data-bb-user-id' );
+					if ( $.inArray( parseInt( user_id ), user_ids ) == -1 ) {
+						user_ids.push( parseInt( user_id ) );
+					}
+				} );
+			}
+
+			return user_ids;
+		},
 
 	};
 
