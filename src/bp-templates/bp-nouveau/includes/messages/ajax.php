@@ -1342,8 +1342,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			foreach ( $check_recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][ $count ] = array(
-						'id'         => $recipient->user_id,
-						'avatar'     => esc_url(
+						'id'            => $recipient->user_id,
+						'avatar'        => esc_url(
 							bp_core_fetch_avatar(
 								array(
 									'item_id' => $recipient->user_id,
@@ -1355,10 +1355,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 								)
 							)
 						),
-						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
-						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-						'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
+						'user_link'     => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name'     => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_deleted'    => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+						'is_you'        => bp_loggedin_user_id() === $recipient->user_id,
+						'user_presence' => 1 === count( (array) $check_recipients ) ? bb_get_user_presence_html( $recipient->user_id ) : '',
 					);
 
 					if ( bp_is_active( 'moderation' ) ) {
@@ -2488,7 +2489,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if ( empty( $recipient->is_deleted ) ) {
 				$thread->thread['recipients']['members'][ $count ] = array(
-					'avatar'     => esc_url(
+					'avatar'        => esc_url(
 						bp_core_fetch_avatar(
 							array(
 								'item_id' => $recipient->user_id,
@@ -2500,11 +2501,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 							)
 						)
 					),
-					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
-					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-					'is_you'     => $login_user_id === $recipient->user_id,
-					'id'         => $recipient->user_id,
+					'user_link'     => bp_core_get_userlink( $recipient->user_id, false, true ),
+					'user_name'     => bp_core_get_user_displayname( $recipient->user_id ),
+					'is_deleted'    => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+					'is_you'        => $login_user_id === $recipient->user_id,
+					'id'            => $recipient->user_id,
+					'user_presence' => 1 === count( (array) $thread_template->thread->recipients ) ? bb_get_user_presence_html( $recipient->user_id ) : '',
 				);
 
 				if ( bp_is_active( 'moderation' ) ) {
@@ -3519,7 +3521,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 												data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
 												data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
 												data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"
-												reported_type="<?php echo esc_attr( bp_moderation_get_report_type( $bp_moderation_type, $recipient->user_id ) );?>>"
+												reported_type="<?php echo esc_attr( bp_moderation_get_report_type( $bp_moderation_type, $recipient->user_id ) ); ?>>"
 												data-bp-report-title="<?php esc_html_e( 'Report Member', 'buddyboss' ); ?>"
 												data-bp-reported-title="<?php esc_html_e( 'Reported Member', 'buddyboss' ); ?>">
 												<?php esc_html_e( 'Report Member', 'buddyboss' ); ?>
