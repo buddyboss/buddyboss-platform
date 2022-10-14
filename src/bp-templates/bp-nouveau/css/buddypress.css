@@ -4700,7 +4700,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a {
   float: left;
-  background-color: #fff;
+  background-color: rgba(0, 0, 0, 0.8);
   border-radius: 4px;
   height: 28px;
   width: 28px;
@@ -4719,7 +4719,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a i {
   font-size: 16px;
   line-height: 28px;
-  color: #1e2132;
+  color: #fff;
   font-weight: 300;
   display: inline-block;
   margin-right: -1px;
@@ -5177,6 +5177,12 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-photo-thumb .media-action-wrap {
   top: 8px;
   right: 8px;
+}
+
+#video-stream.video .bb-item-thumb .bb-action-check-wrap,
+#media-stream.media .bb-video-thumb .bb-action-check-wrap,
+#media-stream.media .bb-photo-thumb .bb-action-check-wrap {
+  top: 10px;
 }
 
 #video-stream.video .video-list li:hover {
