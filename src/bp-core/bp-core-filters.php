@@ -2226,7 +2226,7 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 	$presence_user_ids = wp_parse_id_list( $data['presece_users'] );
 	$presence_data     = array();
 
-	$compare_time = ( bb_heartbeat_interval() ) + 5;
+	$compare_time = bb_heartbeat_interval() + 5;
 
 	foreach ( array_unique( $presence_user_ids ) as $user_id ) {
 		$presence_data[] = array(
