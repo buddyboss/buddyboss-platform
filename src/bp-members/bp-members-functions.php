@@ -4837,7 +4837,7 @@ function bp_get_hidden_member_types() {
  *
  * @return string
  */
-function bb_is_online_user( $user_id ) {
+function bb_is_online_user( $user_id, $compare_time = false ) {
 
 	if ( ! function_exists( 'bp_get_user_last_activity' ) ) {
 		return;
@@ -4849,8 +4849,13 @@ function bb_is_online_user( $user_id ) {
 		return false;
 	}
 
-	// the activity timeframe is 5 minutes.
-	$activity_timeframe = 5 * MINUTE_IN_SECONDS;
+	if ( false !== $compare_time ) {
+		$activity_timeframe = $compare_time;
+	} else {
+		// the activity timeframe is 5 minutes.
+		$activity_timeframe = 5 * MINUTE_IN_SECONDS;
+	}
+
 	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $activity_timeframe ), $user_id );
 }
 
@@ -5266,8 +5271,8 @@ function bb_get_member_type_label_colors( $type ) {
  *
  * @return string
  */
-function bb_get_user_presence( $user_id ) {
-	if ( bb_is_online_user( $user_id ) ) {
+function bb_get_user_presence( $user_id, $compare_time = false ) {
+	if ( bb_is_online_user( $user_id, $compare_time ) ) {
 		return 'online';
 	} else {
 		return 'offline';

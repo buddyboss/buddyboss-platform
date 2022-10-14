@@ -3361,18 +3361,20 @@ window.bp = window.bp || {};
 		},
 
 		userPresenceStatus: function() {
-			$( document ).ajaxSend(
-				function ( event, jqxhr, settings ) {
-					if (
-						settings.hasOwnProperty( 'data' ) &&
-						'string' === typeof settings.data &&
-						settings.data.search( 'action=heartbeat' ) > 0
-					) {
-						var paged_user_id = bp.Nouveau.getPageUserIDs();
-						settings.data = settings.data + '&data[presece_users]=' + paged_user_id;
-					}
+			jQuery( document ).on( 'heartbeat-send', function ( event, data ) {
+				var paged_user_id = bp.Nouveau.getPageUserIDs();
+				// Add user data to Heartbeat.
+				data.presece_users = paged_user_id.join(',');
+			} );
+
+			jQuery( document ).on( 'heartbeat-tick', function ( event, data ) {
+				// Check for our data, and use it.
+				if ( ! data.presence_data ) {
+					return;
 				}
-			);
+
+				bp.Nouveau.updateUsersPresence( data.presence_data );
+			});
 		},
 
 		getPageUserIDs: function() {
@@ -3389,6 +3391,22 @@ window.bp = window.bp || {};
 
 			return user_ids;
 		},
+
+		updateUsersPresence: function ( presence_data ) {
+			if ( presence_data && presence_data.length > 0 ) {
+				$.each( presence_data, function ( index, user ) {
+					bp.Nouveau.updateUserOresence( user.id, user.status );
+				} );
+			}
+		},
+
+		updateUserOresence: function( user_id, status ) {
+			$( document )
+				.find( '.bb-user-presence[data-bb-user-id="' + user_id + '"]' )
+				.removeClass( 'bb-user-presence-offline bb-user-presence-online' )
+				.addClass( 'bb-user-presence-' + status )
+				.attr( 'data-bb-user-presence', status );
+		}
 
 	};
 

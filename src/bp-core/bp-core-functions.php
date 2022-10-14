@@ -8119,8 +8119,10 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_heartbeat_interval() {
-	if ( ! bb_is_heartbeat_enabled() ) {
-		return 0;
+	static $cache = null;
+
+	if ( null !== $cache ) {
+		return $cache;
 	}
 
 	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
@@ -8128,5 +8130,8 @@ function bb_heartbeat_interval() {
 	if ( ! empty( $heartbeat_settings['interval'] ) ) {
 		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 60;
 	}
+
+	$cache = $global_pulse;
+
 	return $global_pulse;
 }

@@ -2223,6 +2223,9 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 
 	$presence_user_ids = wp_parse_id_list( $data['presece_users'] );
 	$presence_data     = array();
+
+	$compare_time = ( bb_heartbeat_interval() ) + 5;
+
 	foreach ( array_unique( $presence_user_ids ) as $user_id ) {
 		$presence_data[] = array(
 			'id'           => $user_id,
@@ -2240,7 +2243,7 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 				? friends_check_friendship_status( get_current_user_id(), $user_id )
 				: ''
 			),
-			'status'       => bb_get_user_presence( $user_id ),
+			'status'       => bb_get_user_presence( $user_id, $compare_time ),
 		);
 	}
 
