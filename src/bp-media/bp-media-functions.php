@@ -3988,7 +3988,7 @@ bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_
  *
  * @return mixed Whether the giphy key is valid or error object.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.2
  */
 function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 
