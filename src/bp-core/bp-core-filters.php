@@ -2236,22 +2236,8 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 
 	foreach ( array_unique( $presence_user_ids ) as $user_id ) {
 		$presence_data[] = array(
-			'id'           => $user_id,
-			'name'         => bp_core_get_user_displayname( $user_id ),
-			'profile_url'  => bp_core_get_user_domain( $user_id ),
-			'avatar'       => bp_core_fetch_avatar(
-				array(
-					'item_id' => $user_id,
-					'html'    => false,
-					'type'    => 'full',
-				)
-			),
-			'is_connected' => (
-				bp_is_active( 'friends' ) && function_exists( 'friends_check_friendship_status' )
-				? friends_check_friendship_status( get_current_user_id(), $user_id )
-				: ''
-			),
-			'status'       => bb_get_user_presence( $user_id, $compare_time ),
+			'id'     => $user_id,
+			'status' => bb_get_user_presence( $user_id, $compare_time ),
 		);
 	}
 
@@ -2259,6 +2245,5 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 
 	return $response;
 }
-// Heartbeat receive for on-screen notification.
 add_filter( 'heartbeat_received', 'bb_heartbeat_member_presence_info', 11, 2 );
 add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11, 2 );
