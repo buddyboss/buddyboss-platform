@@ -19,7 +19,6 @@ $cache_key         = 'bb_changelog_' . BP_PLATFORM_VERSION;
 $bb_changelog_data = wp_cache_get( $cache_key, 'bp' );
 if ( false === $bb_changelog_data ) {
 	if ( ! function_exists( 'plugins_api' ) ) {
-		error_log(ABSPATH . 'wp-admin/includes/plugin-install.php');
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 	}
 
@@ -30,10 +29,8 @@ if ( false === $bb_changelog_data ) {
 		)
 	);
 
-	error_log(print_r($api, true));
-
 	if ( is_wp_error( $api ) ) {
-		wp_die( $api );
+		wp_die( esc_attr( $api ) );
 	}
 
 	$plugins_allowedtags = array(
@@ -140,6 +137,7 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 					<p>
 						<?php
 						echo sprintf(
+							// translators: $1s% update link.
 							esc_html__( 'As this update contains a number of improvements to the theme’s colors, layouts and styling, we recommend you reconfigure your Theme Options and review any custom CSS you may have.  For more information on how to update, %1$s.', 'buddyboss' ),
 							sprintf(
 								'<a href="%1$s" target="_blank">%2$s</a>',
@@ -167,7 +165,7 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 			if ( isset( $bb_changelog_data ) && ! empty( $bb_changelog_data ) ) {
 				?>
 				<div id="bb-release-changelog" class="bb-hello-tabs_content bb-release-changelog <?php echo esc_attr( false === $show_overview ? 'is_active' : '' ); ?>">
-					<h2><?php esc_html_e( 'Changes:', 'buddyboss' ) ?></h2>
+					<h2><?php esc_html_e( 'Changes:', 'buddyboss' ); ?></h2>
 					<?php
 					echo wp_kses_post( $bb_changelog_data );
 					?>
