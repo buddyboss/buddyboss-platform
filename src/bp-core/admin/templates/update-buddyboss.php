@@ -17,7 +17,6 @@ $show_overview = false;
 // Get release data based on plugin version from gitHub API.
 $cache_key         = 'bb_changelog_' . BP_PLATFORM_VERSION;
 $bb_changelog_data = wp_cache_get( $cache_key, 'bp' );
-error_log(print_r($bb_changelog_data, true));
 if ( false === $bb_changelog_data ) {
 	if ( ! function_exists( 'plugins_api' ) ) {
 		error_log(ABSPATH . 'wp-admin/includes/plugin-install.php');
