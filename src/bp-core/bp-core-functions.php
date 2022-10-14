@@ -1568,9 +1568,11 @@ function bp_core_render_message() {
  *
  *       usermeta table.
  *
+ * @param bool $force_update IF user comes within 5 minutes and force to update.
+ *
  * @return false|null Returns false if there is nothing to do.
  */
-function bp_core_record_activity() {
+function bp_core_record_activity( $force_update = false ) {
 
 	// Bail if user is not logged in.
 	if ( ! is_user_logged_in() ) {
@@ -1612,7 +1614,7 @@ function bp_core_record_activity() {
 	}
 
 	// If it's been more than 5 minutes, record a newer last-activity time.
-	if ( empty( $activity ) || ( $current_time >= strtotime( '+5 minutes', $activity ) ) ) {
+	if ( empty( $activity ) || ( $current_time >= strtotime( '+5 minutes', $activity ) || true === $force_update ) ) {
 		bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
 	}
 }
