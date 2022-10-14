@@ -736,6 +736,7 @@ div.video-js {
 		transition: 0.3s all;
 		visibility: hidden;
 		opacity: 0;
+		pointer-events: none;
 	}
 
 	.video-js.vjs-playing.vjs-user-inactive:after {
@@ -1060,6 +1061,7 @@ div.video-js {
 			transition: 0.3s all;
 			visibility: hidden;
 			opacity: 0;
+			pointer-events: none;
 		}
 
 		.video-js.vjs-playing.vjs-user-inactive:after {

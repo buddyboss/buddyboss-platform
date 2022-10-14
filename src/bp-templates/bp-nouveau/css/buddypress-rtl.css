@@ -22810,6 +22810,7 @@ div.video-js .vjs-control-bar button .vjs-icon-placeholder:before {
 
 div.video-js .vjs-control-bar button.vjs-fullscreen-control .vjs-icon-placeholder:before {
   content: "\ee67";
+  font-size: 24px;
 }
 
 div.video-js .vjs-control-bar button:hover {
@@ -23043,6 +23044,7 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   transition: 0.3s all;
   visibility: hidden;
   opacity: 0;
+  pointer-events: none;
 }
 
 .bb-activity-video-elem .video-js.vjs-playing.vjs-user-inactive:after {
@@ -23341,6 +23343,7 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   transition: 0.3s all;
   visibility: hidden;
   opacity: 0;
+  pointer-events: none;
 }
 
 .bb-media-model-wrapper.video .bb-media-section .video-js.vjs-playing.vjs-user-inactive:after {
