@@ -8136,3 +8136,29 @@ function bb_heartbeat_interval() {
 
 	return $global_pulse;
 }
+
+/**
+ * Function to fetch the user's online status based on ids.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $users        Array of user ids.
+ * @param string $compare_time Time difference.
+ *
+ * @return array
+ */
+function bb_get_member_presence_status( $users, $compare_time ) {
+	if ( empty( $users ) || empty( $compare_time ) ) {
+		return array();
+	}
+
+	$presence_data = array();
+	foreach ( array_unique( $users ) as $user_id ) {
+		$presence_data[] = array(
+			'id'     => $user_id,
+			'status' => bb_get_user_presence( $user_id, $compare_time ),
+		);
+	}
+
+    return $presence_data;
+}
