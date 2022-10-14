@@ -3379,7 +3379,7 @@ window.bp = window.bp || {};
 
 		getPageUserIDs: function() {
 			var user_ids = [];
-			var all_presence = $( document ).find( '.bb-user-presence' );
+			var all_presence = $( document ).find( '.member-status[data-bb-user-id]' );
 			if ( all_presence.length > 0 ) {
 				all_presence.each( function () {
 					var user_id = $( this ).attr( 'data-bb-user-id' );
@@ -3402,9 +3402,9 @@ window.bp = window.bp || {};
 
 		updateUserOresence: function( user_id, status ) {
 			$( document )
-				.find( '.bb-user-presence[data-bb-user-id="' + user_id + '"]' )
-				.removeClass( 'bb-user-presence-offline bb-user-presence-online' )
-				.addClass( 'bb-user-presence-' + status )
+				.find( '.member-status[data-bb-user-id="' + user_id + '"]' )
+				.removeClass( 'offline online' )
+				.addClass( status )
 				.attr( 'data-bb-user-presence', status );
 		}
 

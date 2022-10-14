@@ -6616,7 +6616,6 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   position: relative;
 }
 
-.buddypress-wrap .members-list li .bb-user-presence,
 .buddypress-wrap .members-list li .member-status.online {
   position: absolute;
   width: 12px;
@@ -6639,7 +6638,6 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   padding: 0;
 }
 
-.buddypress-wrap .members-list:not(.grid) li .bb-user-presence,
 .buddypress-wrap .members-list:not(.grid) li .member-status.online {
   top: 4px;
   bottom: 4px;
@@ -6689,26 +6687,6 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
 .bp-user-blocked > .member-status,
 .bp-user-suspended > .member-status,
 .bp-user-blocked-by > .member-status {
-  display: none !important;
-}
-
-.bb-user-presence {
-  background-color: #edbb34;
-  border: 2px solid #fff;
-  border-radius: 100%;
-  z-index: 1;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.bb-user-presence.bb-user-presence-online {
-  opacity: 1;
-  visibility: visible;
-}
-
-.bp-user-blocked > .bb-user-presence,
-.bp-user-suspended > .bb-user-presence,
-.bp-user-blocked-by > .bb-user-presence {
   display: none !important;
 }
 
@@ -26981,7 +26959,6 @@ span.icons:before {
   margin-top: 4px;
 }
 
-#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar .bb-user-presence,
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar .member-status {
   display: none;
 }

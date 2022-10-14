@@ -5290,7 +5290,7 @@ function bb_get_user_presence( $user_id, $compare_time = false ) {
  */
 function bb_get_user_presence_html( $user_id ) {
 	return sprintf(
-		'<span class="bb-user-presence bb-user-presence-%s" data-bb-user-id="%d" data-bb-user-presence="%s"></span>',
+		'<span class="member-status %s" data-bb-user-id="%d" data-bb-user-presence="%s"></span>',
 		bb_get_user_presence( $user_id ),
 		$user_id,
 		bb_get_user_presence( $user_id )

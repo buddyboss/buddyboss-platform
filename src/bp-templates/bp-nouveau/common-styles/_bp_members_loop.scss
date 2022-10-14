@@ -100,7 +100,6 @@
 				position: relative;
 			}
 
-			.bb-user-presence,
 			.member-status.online {
 				position: absolute;
 				width: 12px;
@@ -130,7 +129,6 @@
 				margin: 0;
 				padding: 0;
 
-				.bb-user-presence,
 				.member-status.online {
 					top: 4px;
 					bottom: 4px;
@@ -191,26 +189,6 @@
 	border: 2px solid $white;
 	border-radius: 100%;
 	z-index: 1;
-
-	.bp-user-blocked > &,
-	.bp-user-suspended > &,
-	.bp-user-blocked-by > & {
-		display: none !important;
-	}
-}
-
-.bb-user-presence {
-	background-color: $golden;
-	border: 2px solid $white;
-	border-radius: 100%;
-	z-index: 1;
-	opacity: 0;
-	visibility: hidden;
-
-	&.bb-user-presence-online {
-		opacity: 1;
-		visibility: visible;
-	}
 
 	.bp-user-blocked > &,
 	.bp-user-suspended > &,

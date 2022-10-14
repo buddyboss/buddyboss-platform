@@ -3282,7 +3282,6 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   margin-top: 4px;
 }
 
-#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar .bb-user-presence,
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar .member-status {
   display: none;
 }
