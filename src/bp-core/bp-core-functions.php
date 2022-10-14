@@ -8121,11 +8121,10 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_heartbeat_interval() {
-	static $cache = null;
-
-	if ( null !== $cache ) {
-		return $cache;
-	}
+	$presence_interval = (int) bp_get_option( 'bb_presence_interval', 0 );
+	if ( 0 !== $presence_interval ) {
+		return $presence_interval;
+    }
 
 	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
 	$global_pulse       = 60;
@@ -8133,7 +8132,7 @@ function bb_heartbeat_interval() {
 		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 60;
 	}
 
-	$cache = $global_pulse;
+	bp_update_option( 'bb_presence_interval', $global_pulse );
 
 	return $global_pulse;
 }

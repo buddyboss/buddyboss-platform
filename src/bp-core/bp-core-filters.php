@@ -2223,10 +2223,16 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 
 	bp_core_record_activity( true );
 
+	$interval_time = bb_heartbeat_interval();
+	if ( isset( $_POST['interval'] ) && (int) $_POST['interval'] !== (int) $interval_time ) {
+		bp_update_option( 'bb_presence_interval', (int) $interval_time );
+		$interval_time = (int) $_POST['interval'];
+	}
+
 	$presence_user_ids = wp_parse_id_list( $data['presece_users'] );
 	$presence_data     = array();
 
-	$compare_time = bb_heartbeat_interval() + 5;
+	$compare_time = $interval_time + 5;
 
 	foreach ( array_unique( $presence_user_ids ) as $user_id ) {
 		$presence_data[] = array(
