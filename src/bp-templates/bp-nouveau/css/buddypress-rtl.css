@@ -18502,7 +18502,7 @@ img.emojioneemoji {
   content: "\ee06";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 400;
   height: 50px;
   width: 50px;
@@ -24881,6 +24881,14 @@ body > .open-popup.video-error-popup {
   color: #fff;
   z-index: 11;
   font-size: 24px;
+}
+
+.dropzone .dz-preview.dz-error .dz-progress-ring-wrap {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropzone .dz-preview.dz-error .dz-progress-ring-wrap [class*=" bb-icon-"] {
+  color: #767676;
 }
 
 .dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap {

@@ -668,6 +668,14 @@
 
 	}
 
+	&.dz-error .dz-progress-ring-wrap {
+		background-color: rgba(0, 0, 0, 0.05);
+
+		[class*=" bb-icon-"] {
+			color: $light-text;
+		}
+	}
+
 }
 
 .dropzone.document-dropzone {
