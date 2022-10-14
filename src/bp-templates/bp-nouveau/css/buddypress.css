@@ -22808,6 +22808,10 @@ div.video-js .vjs-control-bar button .vjs-icon-placeholder:before {
   filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
 }
 
+div.video-js .vjs-control-bar button.vjs-fullscreen-control .vjs-icon-placeholder:before {
+  content: "\ee67";
+}
+
 div.video-js .vjs-control-bar button:hover {
   opacity: 1;
 }

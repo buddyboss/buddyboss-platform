@@ -474,6 +474,11 @@ div.video-js {
 			filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
 		}
 
+		&.vjs-fullscreen-control .vjs-icon-placeholder:before {
+			content: "\ee67";
+			font-size: 24px;
+		}
+
 		&:hover {
 			opacity: 1;
 		}
