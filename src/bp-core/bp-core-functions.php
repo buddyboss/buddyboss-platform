@@ -8110,7 +8110,9 @@ function bb_autop( $pee, $br = true ) {
  * @return bool
  */
 function bb_is_heartbeat_enabled() {
-	return wp_script_is( 'heartbeat', 'registered' ) && ! is_admin();
+	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
+
+	return 0 !== (int) $heartbeat_disabled;
 }
 
 /**
@@ -8124,11 +8126,12 @@ function bb_heartbeat_interval() {
 	$presence_interval = (int) bp_get_option( 'bb_presence_interval', 0 );
 	if ( 0 !== $presence_interval ) {
 		return $presence_interval;
-    }
+	}
 
+	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
 	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
 	$global_pulse       = 60;
-	if ( ! empty( $heartbeat_settings['interval'] ) ) {
+	if ( ! empty( $heartbeat_settings['interval'] ) && 0 === (int) $heartbeat_disabled ) {
 		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 60;
 	}
 
@@ -8160,5 +8163,5 @@ function bb_get_member_presence_status( $users, $compare_time ) {
 		);
 	}
 
-    return $presence_data;
+	return $presence_data;
 }

@@ -185,8 +185,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS.
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS.
 		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization.
-		add_filter( 'wp_enqueue_scripts', array( $this, 'presence_localize_scripts' ), PHP_INT_MAX ); // Enqueue theme script localization.
 		add_filter( 'wp_enqueue_scripts', array( $this, 'check_heartbeat_api' ), PHP_INT_MAX );
+		add_filter( 'wp_enqueue_scripts', array( $this, 'presence_localize_scripts' ), PHP_INT_MAX ); // Enqueue theme script localization.
 
 		// Register login and forgot password popup link.
 		add_action( 'login_enqueue_scripts', array( $this, 'register_scripts' ), 2 );
