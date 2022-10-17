@@ -3401,7 +3401,7 @@ window.bp = window.bp || {};
 							 }
 						 }
 					 );
-				 }, parseInt( BB_Nouveau_Presence.heartbeat_interval ) * 1000 );
+				 }, parseInt( BB_Nouveau_Presence.presence_interval ) * 1000 );
 			 }
 		},
 

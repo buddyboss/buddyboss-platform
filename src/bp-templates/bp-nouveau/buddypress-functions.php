@@ -674,7 +674,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		$params = array(
 			'heartbeat_enabled'  => bb_is_heartbeat_enabled(),
-			'heartbeat_interval' => bb_presence_interval(),
+			'presence_interval' => bb_presence_interval(),
 			'rest_nonce'         => wp_create_nonce( 'wp_rest' ),
 		);
 
