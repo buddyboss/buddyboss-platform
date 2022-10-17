@@ -8150,8 +8150,8 @@ function bb_presence_interval() {
  *
  * @return array
  */
-function bb_get_member_presence_status( $users, $compare_time ) {
-	if ( empty( $users ) || empty( $compare_time ) ) {
+function bb_get_users_presence( $users, $compare_time = false ) {
+	if ( empty( $users ) ) {
 		return array();
 	}
 

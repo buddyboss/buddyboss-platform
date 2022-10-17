@@ -2232,7 +2232,7 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 	$presence_user_ids = wp_parse_id_list( $data['presece_users'] );
 	$compare_time      = $interval_time + 5;
 
-	$response['presence_data'] = bb_get_member_presence_status( $presence_user_ids, $compare_time );
+	$response['presence_data'] = bb_get_users_presence( $presence_user_ids, $compare_time );
 
 	return $response;
 }
