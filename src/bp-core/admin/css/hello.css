@@ -128,6 +128,10 @@ TABLE OF CONTENTS:
   z-index: 99999;
 }
 
+.bp-hello-buddyboss#bp-hello-container {
+  bottom: 0;
+}
+
 .bp-disable-scroll {
   overflow: hidden;
 }
@@ -275,6 +279,11 @@ TABLE OF CONTENTS:
   background-color: white;
 }
 
+.bp-hello-buddyboss .bp-hello-content {
+  max-height: calc(100vh - 200px);
+  overflow: auto;
+}
+
 .bp-hello-buddyboss-app .bp-hello-content {
   padding: 0;
 }
@@ -321,6 +330,12 @@ TABLE OF CONTENTS:
     z-index: 9999;
     border-radius: 3px;
   }
+  #bp-hello-container.bp-hello-buddyboss {
+    top: 50%;
+    bottom: initial;
+    max-height: calc(100% - 90px);
+    transform: translateY(-50%);
+  }
   #bp-hello-container .bp-hello-header h1 {
     line-height: inherit;
   }
@@ -359,6 +374,11 @@ TABLE OF CONTENTS:
     height: auto;
     max-height: inherit;
     padding: 6px 23px;
+  }
+  .bp-hello-buddyboss .bp-hello-footer {
+    bottom: initial;
+    left: 0;
+    right: 0;
   }
   .bp-hello-content {
     height: calc(100% - 90px);

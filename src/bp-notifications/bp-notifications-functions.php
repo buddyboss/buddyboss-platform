@@ -212,144 +212,7 @@ function bp_notifications_get_notifications_for_user( $user_id, $format = 'strin
 
 	// Calculate a renderable output for each notification type.
 	foreach ( $notifications as $notification_item ) {
-
-		$component_name = $notification_item->component_name;
-		// We prefer that extended profile component-related notifications use
-		// the component_name of 'xprofile'. However, the extended profile child
-		// object in the $bp object is keyed as 'profile', which is where we need
-		// to look for the registered notification callback.
-		if ( 'xprofile' == $notification_item->component_name ) {
-			$component_name = 'profile';
-		}
-
-		// Callback function exists.
-		if ( isset( $bp->{$component_name}->notification_callback ) && is_callable( $bp->{$component_name}->notification_callback ) ) {
-
-			// Function should return an object.
-			if ( 'object' === $format ) {
-
-				// Retrieve the content of the notification using the callback.
-				$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'array', $notification_item->id, 'web' );
-
-				$content = apply_filters(
-					'bb_notifications_get_component_notification',
-					$content,
-					$notification_item->item_id,
-					$notification_item->secondary_item_id,
-					$notification_item->total_count,
-					'array',
-					$notification_item->component_action,
-					$component_name,
-					$notification_item->id,
-					'web'
-				);
-
-				// Create the object to be returned.
-				$notification_object = $notification_item;
-
-				// Minimal backpat with non-compatible notification
-				// callback functions.
-				if ( is_string( $content ) ) {
-					$notification_object->content = $content;
-					$notification_object->href    = bp_loggedin_user_domain();
-				} else {
-					$notification_object->content = ( isset( $content ) && isset( $content['text'] ) ? $content['text'] : '' );
-					$notification_object->href    = ( isset( $content ) && isset( $content['link'] ) ? $content['link'] : '' );
-				}
-
-				$renderable[] = $notification_object;
-
-				// Return an array of content strings.
-			} else {
-
-				$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'string', $notification_item->id, 'web' );
-
-				$content = apply_filters(
-					'bb_notifications_get_component_notification',
-					$content,
-					$notification_item->item_id,
-					$notification_item->secondary_item_id,
-					$notification_item->total_count,
-					'string',
-					$notification_item->component_action,
-					$component_name,
-					$notification_item->id,
-					'web'
-				);
-
-				$renderable[] = $content;
-			}
-
-			// @deprecated format_notification_function - 1.5
-		} elseif ( isset( $bp->{$component_name}->format_notification_function ) && function_exists( $bp->{$component_name}->format_notification_function ) ) {
-			$renderable[] = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count );
-
-			// Allow non BuddyPress components to hook in.
-		} else {
-
-			// The array to reference with apply_filters_ref_array().
-			$ref_array = array(
-				$notification_item->component_action,
-				$notification_item->item_id,
-				$notification_item->secondary_item_id,
-				$notification_item->total_count,
-				$format,
-				$notification_item->component_action, // Duplicated so plugins can check the canonical action name.
-				$component_name,
-				$notification_item->id,
-				'web',
-			);
-
-			// Function should return an object.
-			if ( 'object' === $format ) {
-
-				/**
-				 * Filters the notification content for notifications created by plugins.
-				 * If your plugin extends the {@link BP_Component} class, you should use the
-				 * 'notification_callback' parameter in your extended
-				 * {@link BP_Component::setup_globals()} method instead.
-				 *
-				 * @since BuddyPress 1.9.0
-				 * @since BuddyPress 2.6.0 Added $component_action_name, $component_name, $id as parameters.
-				 *
-				 * @param string $content               Component action. Deprecated. Do not do checks against this! Use
-				 *                                      the 6th parameter instead - $component_action_name.
-				 * @param int    $item_id               Notification item ID.
-				 * @param int    $secondary_item_id     Notification secondary item ID.
-				 * @param int    $total_items           Number of notifications with the same action.
-				 * @param string $format                Format of return. Either 'string' or 'object'.
-				 * @param string $component_action_name Canonical notification action.
-				 * @param string $component_name        Notification component ID.
-				 * @param int    $id                    Notification ID.
-				 *
-				 * @return string|array If $format is 'string', return a string of the notification content.
-				 *                      If $format is 'object', return an array formatted like:
-				 *                      array( 'text' => 'CONTENT', 'link' => 'LINK' )
-				 */
-				$content = apply_filters_ref_array( 'bp_notifications_get_notifications_for_user', $ref_array );
-
-				// Create the object to be returned.
-				$notification_object = $notification_item;
-
-				// Minimal backpat with non-compatible notification
-				// callback functions.
-				if ( is_string( $content ) ) {
-					$notification_object->content = $content;
-					$notification_object->href    = bp_loggedin_user_domain();
-				} else {
-					$notification_object->content = $content['text'];
-					$notification_object->href    = $content['link'];
-				}
-
-				$renderable[] = $notification_object;
-
-				// Return an array of content strings.
-			} else {
-
-				/** This filters is documented in bp-notifications/bp-notifications-functions.php */
-				$renderable[] = apply_filters_ref_array( 'bp_notifications_get_notifications_for_user', $ref_array );
-			}
-		}
+		$renderable = bb_notification_get_renderable_notifications( $notification_item, $format, 'web' );
 	}
 
 	// If renderable is empty array, set to false.
@@ -960,7 +823,7 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
-	$querystring            = wp_parse_args( $querystring );
+	$querystring            = bp_parse_args( $querystring );
 	$querystring['is_new']  = 1;
 	$querystring['user_id'] = get_current_user_id();
 
@@ -1071,7 +934,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 		}
 	}
 
-	$notifications          = wp_parse_args( $default_by_admin, $all_notifications );
+	$notifications          = bp_parse_args( $default_by_admin, $all_notifications );
 	$excluded_actions       = array();
 	$notifications_type_key = 'enable_notification';
 	if ( in_array( $type, array( 'web', 'app' ), true ) ) {
@@ -1467,6 +1330,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 				) . '"';
 
 				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+				$excerpt = str_replace( '""', '', $excerpt );
 			}
 
 			if ( ! empty( $excerpt ) ) {
@@ -1503,4 +1367,173 @@ function bb_get_notification_conditional_icon( $notification ) {
 function bb_notification_avatar_url_args( $args ) {
 	unset( $args['s'], $args['r'] );
 	return $args;
+}
+
+/**
+ * Notification renderable.
+ *
+ * @since BuddyBoss 2.0.5
+ *
+ * @param object $notification_item Notification item.
+ * @param string $format            Format of the notification.
+ * @param string $screen            Screen of the notification.
+ *
+ * @return mixed|void
+ */
+function bb_notification_get_renderable_notifications( $notification_item, $format = 'string', $screen = 'web' ) {
+
+	$bp = buddypress();
+
+	if ( empty( $notification_item ) || ! is_object( $notification_item ) ) {
+		return;
+	}
+
+	if ( ! isset( $notification_item->total_count ) ) {
+		$notification_item->total_count = 1;
+	}
+
+	$component_name = $notification_item->component_name;
+	// We prefer that extended profile component-related notifications use
+	// the component_name of 'xprofile'. However, the extended profile child
+	// object in the $bp object is keyed as 'profile', which is where we need
+	// to look for the registered notification callback.
+	if ( 'xprofile' == $notification_item->component_name ) {
+		$component_name = 'profile';
+	}
+
+	// Callback function exists.
+	if ( isset( $bp->{$component_name}->notification_callback ) && is_callable( $bp->{$component_name}->notification_callback ) ) {
+
+		// Function should return an object.
+		if ( 'object' === $format ) {
+
+			// Retrieve the content of the notification using the callback.
+			$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'array', $notification_item->id, $screen );
+
+			$content = apply_filters(
+				'bb_notifications_get_component_notification',
+				$content,
+				$notification_item->item_id,
+				$notification_item->secondary_item_id,
+				$notification_item->total_count,
+				'array',
+				$notification_item->component_action,
+				$component_name,
+				$notification_item->id,
+				$screen
+			);
+
+			// Create the object to be returned.
+			$notification_object = $notification_item;
+
+			// Minimal backpat with non-compatible notification
+			// callback functions.
+			if ( is_string( $content ) ) {
+				$notification_object->content = $content;
+				$notification_object->href    = bp_loggedin_user_domain();
+			} else {
+				$notification_object->content = ( isset( $content ) && isset( $content['text'] ) ? $content['text'] : '' );
+				$notification_object->href    = ( isset( $content ) && isset( $content['link'] ) ? $content['link'] : '' );
+				$notification_object->title   = ( isset( $content ) && isset( $content['title'] ) ? $content['title'] : '' );
+				$notification_object->image   = ( isset( $content ) && isset( $content['image'] ) ? $content['image'] : '' );
+			}
+
+			$renderable = $notification_object;
+
+			// Return an array of content strings.
+		} else {
+
+			$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'string', $notification_item->id, $screen );
+
+			$content = apply_filters(
+				'bb_notifications_get_component_notification',
+				$content,
+				$notification_item->item_id,
+				$notification_item->secondary_item_id,
+				$notification_item->total_count,
+				'string',
+				$notification_item->component_action,
+				$component_name,
+				$notification_item->id,
+				$screen
+			);
+
+			$renderable = $content;
+		}
+
+		// @deprecated format_notification_function - 1.5
+	} elseif ( isset( $bp->{$component_name}->format_notification_function ) && function_exists( $bp->{$component_name}->format_notification_function ) ) {
+		$renderable = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count );
+
+		// Allow non BuddyPress components to hook in.
+	} else {
+
+		// The array to reference with apply_filters_ref_array().
+		$ref_array = array(
+			$notification_item->component_action,
+			$notification_item->item_id,
+			$notification_item->secondary_item_id,
+			$notification_item->total_count,
+			$format,
+			$notification_item->component_action, // Duplicated so plugins can check the canonical action name.
+			$component_name,
+			$notification_item->id,
+			$screen,
+		);
+
+		// Function should return an object.
+		if ( 'object' === $format ) {
+
+			/**
+			 * Filters the notification content for notifications created by plugins.
+			 * If your plugin extends the {@link BP_Component} class, you should use the
+			 * 'notification_callback' parameter in your extended
+			 * {@link BP_Component::setup_globals()} method instead.
+			 *
+			 * @since BuddyPress 1.9.0
+			 * @since BuddyPress 2.6.0 Added $component_action_name, $component_name, $id as parameters.
+			 *
+			 * @param string $content               Component action. Deprecated. Do not do checks against this! Use
+			 *                                      the 6th parameter instead - $component_action_name.
+			 * @param int    $item_id               Notification item ID.
+			 * @param int    $secondary_item_id     Notification secondary item ID.
+			 * @param int    $total_items           Number of notifications with the same action.
+			 * @param string $format                Format of return. Either 'string' or 'object'.
+			 * @param string $component_action_name Canonical notification action.
+			 * @param string $component_name        Notification component ID.
+			 * @param int    $id                    Notification ID.
+			 *
+			 * @return string|array If $format is 'string', return a string of the notification content.
+			 *                      If $format is 'object', return an array formatted like:
+			 *                      array( 'text' => 'CONTENT', 'link' => 'LINK' )
+			 */
+			$content = apply_filters_ref_array( 'bp_notifications_get_notifications_for_user', $ref_array );
+
+			// Create the object to be returned.
+			$notification_object = $notification_item;
+
+			// Minimal backpat with non-compatible notification
+			// callback functions.
+			if ( is_string( $content ) ) {
+				$notification_object->content = $content;
+				$notification_object->href    = bp_loggedin_user_domain();
+			} else {
+				$notification_object->content = $content['text'];
+				$notification_object->href    = $content['link'];
+				$notification_object->title   = ( isset( $content['title'] ) ? $content['title'] : '' );
+				$notification_object->image   = ( isset( $content['image'] ) ? $content['image'] : '' );
+			}
+
+			$renderable = $notification_object;
+
+			// Return an array of content strings.
+		} else {
+
+			/** This filters is documented in bp-notifications/bp-notifications-functions.php */
+			$renderable = apply_filters_ref_array( 'bp_notifications_get_notifications_for_user', $ref_array );
+		}
+	}
+
+	return $renderable;
+
 }

@@ -9,6 +9,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+global $bp;
+
 if ( empty( get_query_var( 'media-attachment-id' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
@@ -24,9 +26,15 @@ $output_file_src = '';
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
 
 	$attachment_id  = (int) $explode_arr[1];
-	$post_author_id = (int) get_post_field( 'post_author', $attachment_id );
 
-	if ( $post_author_id === get_current_user_id() && wp_attachment_is_image( $attachment_id ) ) {
+	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d AND type= %s", $attachment_id, 'photo' ) );
+
+	if ( $media ) {
+		echo '// Silence is golden.';
+		exit();
+	}
+
+	if ( wp_attachment_is_image( $attachment_id ) ) {
 
 		$attached_file_info = pathinfo( get_attached_file( $attachment_id ) );
 		$type               = get_post_mime_type( $attachment_id );

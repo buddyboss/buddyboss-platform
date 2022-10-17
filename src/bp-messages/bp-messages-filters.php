@@ -297,7 +297,7 @@ function bp_media_messages_save_group_data( &$message ) {
 			bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
 			bp_messages_update_meta( $message->id, $thread_key, $group );
 			bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
-			bp_messages_update_meta( $message->id, 'message_from', 'personal' );
+			bp_messages_update_meta( $message->id, 'message_from', 'group' );
 			bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
 		}
 	}

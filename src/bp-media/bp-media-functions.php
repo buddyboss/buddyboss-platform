@@ -883,7 +883,7 @@ function bp_get_total_media_count() {
  * @since BuddyBoss 1.1.9
  */
 function bp_media_object_results_media_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope'] = 'all';
 
@@ -902,7 +902,7 @@ function bp_media_object_results_media_all_scope( $querystring ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_object_template_results_media_personal_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'personal';
 	$querystring['page']        = 1;
@@ -919,7 +919,7 @@ function bp_media_object_template_results_media_personal_scope( $querystring ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_object_template_results_media_groups_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'groups';
 	$querystring['page']        = 1;
@@ -1270,14 +1270,14 @@ function bp_media_delete_orphaned_attachments() {
 			'relation' => 'AND',
 			array(
 				'key'   => 'bp_media_saved',
-				'value' => '0'
+				'value' => '0',
 			),
 			array(
 				'key'     => 'bb_media_draft',
 				'compare' => 'NOT EXISTS',
-				'value'   => ''
-			)
-		)
+				'value'   => '',
+			),
+		),
 	);
 
 	$media_wp_query = new WP_query( $args );
@@ -2365,7 +2365,7 @@ function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
  * @return string
  * @since BuddyBoss 1.4.4
  */
-function bp_media_default_scope( $scope ) {
+function bp_media_default_scope( $scope = 'all' ) {
 
 	$new_scope = array();
 
@@ -2398,6 +2398,8 @@ function bp_media_default_scope( $scope ) {
 		}
 	} elseif ( bp_is_user_media() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
 		$new_scope[] = 'personal';
+	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'groups';
 	}
 
 	if ( empty( $new_scope ) ) {
@@ -3972,3 +3974,37 @@ function bb_media_delete_older_symlinks() {
 }
 bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 
+/**
+ * Check the GIPHY key is valid or not.
+ *
+ * @param boolean $api_key GIPHY api key.
+ * @param boolean $message GIPHY api key validation response message.
+ *
+ * @return mixed Whether the giphy key is valid or error object.
+ *
+ * @since BuddyBoss 2.1.2
+ */
+function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
+
+	static $cache = array();
+	$api_key      = ! empty( $api_key ) ? $api_key : bp_media_get_gif_api_key();
+	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
+		if ( true === $message ) {
+			return $cache[ $api_key ];
+		}
+		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
+	}
+
+	if ( empty( $api_key ) ) {
+		return false;
+	}
+
+	$output = wp_remote_get( 'http://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
+	if ( $output ) {
+		$cache[ $api_key ] = $output;
+	}
+	if ( true === $message ) {
+		return $cache[ $api_key ];
+	}
+	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
+}
