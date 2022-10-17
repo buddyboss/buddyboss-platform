@@ -22929,6 +22929,11 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   text-align: right;
 }
 
+[dir="rtl"] .CodeMirror {
+  direction: rtl;
+  text-align: left;
+}
+
 /* PADDING */
 .CodeMirror-lines {
   padding: 4px 0;
@@ -23257,6 +23262,11 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   top: 0;
   min-height: 100%;
   z-index: 3;
+}
+
+[dir="rtl"] .CodeMirror-gutters {
+  left: 0;
+  right: inherit;
 }
 
 .CodeMirror-gutter {
