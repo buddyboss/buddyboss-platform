@@ -72,8 +72,8 @@ window.bp = window.bp || {};
 
 			var _this = this;
 
-			$( document ).on( 'bb_trigger_toast_message', function ( event, title, message, type, url, autoHide ) {
-				_this.bbToastMessage( title, message, type, url, autoHide );
+			$( document ).on( 'bb_trigger_toast_message', function ( event, title, message, type, url, autoHide, autohide_interval ) {
+				_this.bbToastMessage( title, message, type, url, autoHide, autohide_interval );
 			} );
 
 			// Check for lazy images and load them also register scroll event to load on scroll.
@@ -89,7 +89,7 @@ window.bp = window.bp || {};
 		/*
 		 *	Toast Message
 		 */
-		bbToastMessage: function ( title, message, type, url, autoHide ) {
+		bbToastMessage: function ( title, message, type, url, autoHide, autohide_interval ) {
 
 			if ( ! message || message.trim() == '' ) { // Toast Message can't be triggered without content.
 				return;
@@ -122,6 +122,9 @@ window.bp = window.bp || {};
 			var urlClass = '';
 			var bp_msg_type = '';
 			var bp_icon_type = '';
+			/* jshint ignore:start */
+			var autohide_interval = autohide_interval && typeof autohide_interval == 'number' ? ( autohide_interval * 1000 ) : 5000;
+			/* jshint ignore:end */
 
 			if ( type ) {
 				bp_msg_type = type;
@@ -158,7 +161,7 @@ window.bp = window.bp || {};
 			if ( autoHide ) {
 				setInterval( function () {
 					hideMessage();
-				}, 30000 );
+				}, autohide_interval );
 			}
 
 			$( currentEl + ' .actions .action-close' ).on( 'click', function () {
