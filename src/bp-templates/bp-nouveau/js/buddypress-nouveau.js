@@ -3423,12 +3423,12 @@ window.bp = window.bp || {};
 		updateUsersPresence: function ( presence_data ) {
 			if ( presence_data && presence_data.length > 0 ) {
 				$.each( presence_data, function ( index, user ) {
-					bp.Nouveau.updateUserOresence( user.id, user.status );
+					bp.Nouveau.updateUserPresence( user.id, user.status );
 				} );
 			}
 		},
 
-		updateUserOresence: function( user_id, status ) {
+		updateUserPresence: function( user_id, status ) {
 			$( document )
 				.find( '.member-status[data-bb-user-id="' + user_id + '"]' )
 				.removeClass( 'offline online' )
