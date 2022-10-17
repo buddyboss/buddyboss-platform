@@ -3386,7 +3386,7 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 		$attachment_url = wp_get_attachment_url( $attachment_id );
 	}
 
-	$attachment_url = user_trailingslashit( $attachment_url );
+	$attachment_url = ! empty( $attachment_url ) ? user_trailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter to get video thumb url.
