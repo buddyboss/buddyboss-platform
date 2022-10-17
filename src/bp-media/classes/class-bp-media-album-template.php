@@ -149,7 +149,7 @@ class BP_Media_Album_Template {
 			'privacy'      => false,
 			'search_terms' => false,
 		);
-		$r        = wp_parse_args( $args, $defaults );
+		$r        = bp_parse_args( $args, $defaults );
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );

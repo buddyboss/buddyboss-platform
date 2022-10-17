@@ -63,6 +63,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return string sql query
 		 */
 		public function sql( $search_term, $only_totalrow_count = false ) {
+			static $selected_xprofile_fields_cache = array();
 			global $wpdb, $bp;
 
 			$query_placeholder = array();
@@ -203,31 +204,39 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					if ( ! empty( $selected_xprofile_fields ) ) {
 
-						$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
-						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
-						$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
-						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
-						$data_clause_xprofile_table .= ') ) )';
-
-						$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
-						$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
-
+						$cache_key = maybe_serialize( $selected_xprofile_fields['char_search'] );
+						$cache_key .= $search_term;
+						$cache_key .= maybe_serialize( $selected_xprofile_fields['word_search'] );
+						$cache_key = md5( $cache_key );
 						$user_ids = array();
+						if ( ! isset( $selected_xprofile_fields_cache[ $cache_key ] ) ) {
+							$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
+							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
+							$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
+							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
+							$data_clause_xprofile_table .= ') ) )';
+							$sql_xprofile               = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+							$sql_xprofile_result        = $wpdb->get_results( $sql_xprofile );
 
-						// check visiblity for field id with current user.
-						if ( ! empty( $sql_xprofile_result ) ) {
-							foreach ( $sql_xprofile_result as $field_data ) {
-								$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
+							// check visiblity for field id with current user.
+							if ( ! empty( $sql_xprofile_result ) ) {
+								foreach ( $sql_xprofile_result as $field_data ) {
+									$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
 
-								if (
-									( ! empty( $hidden_fields )
-									  && ! in_array( $field_data->field_id, $hidden_fields )
-									)
-									|| empty( $hidden_fields )
-								) {
-									$user_ids[] = $field_data->user_id;
+									if (
+										( ! empty( $hidden_fields )
+										  && ! in_array( $field_data->field_id, $hidden_fields )
+										)
+										|| empty( $hidden_fields )
+									) {
+										$user_ids[] = $field_data->user_id;
+									}
 								}
 							}
+
+							$selected_xprofile_fields_cache[ $cache_key ] = array_unique( $user_ids );
+						} else {
+							$user_ids = $selected_xprofile_fields_cache[ $cache_key ];
 						}
 
 						// get all excluded member types.

@@ -98,7 +98,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( empty( $parse_url_data ) ) {
 			return new WP_Error(
 				'bp_rest_unknown_error',
-				__( 'Sorry! preview is not available right now. Please try again later.', 'buddyboss' ),
+				__( 'There was a problem generating a link preview.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)

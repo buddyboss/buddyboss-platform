@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Connections Requests
+ * The template for members connections requests
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/friends/requests.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 ?>
 
