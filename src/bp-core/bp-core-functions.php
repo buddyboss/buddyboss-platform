@@ -8116,13 +8116,13 @@ function bb_is_heartbeat_enabled() {
 }
 
 /**
- * Function to return the heartbeat interval time in seconds.
+ * Function to return the presence interval time in seconds.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return int
  */
-function bb_heartbeat_interval() {
+function bb_presence_interval() {
 	$presence_interval = (int) bp_get_option( 'bb_presence_interval', 0 );
 	if ( 0 !== $presence_interval ) {
 		return $presence_interval;

@@ -2223,7 +2223,7 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 
 	bp_core_record_activity( true );
 
-	$interval_time = bb_heartbeat_interval();
+	$interval_time = bb_presence_interval();
 	if ( isset( $_POST['interval'] ) && (int) $_POST['interval'] !== (int) $interval_time ) {
 		bp_update_option( 'bb_presence_interval', (int) $interval_time );
 		$interval_time = (int) $_POST['interval'];
