@@ -3111,7 +3111,7 @@ div[class*="attached-gif-container"] .gif-play-button .bb-icon-play-thin {
 }
 
 div[class*="attached-gif-container"] .gif-icon {
-  background: url(../images/gif.svg) center no-repeat;
+  background: url(../images/GIF.svg) center no-repeat;
   position: absolute;
   display: block;
   height: 28px;
@@ -4758,7 +4758,7 @@ span.dashicons.dashicons-admin-file:before {
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a,
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a {
   float: right;
-  background-color: #fff;
+  background-color: rgba(0, 0, 0, 0.8);
   border-radius: 4px;
   height: 28px;
   width: 28px;
@@ -4781,7 +4781,7 @@ span.dashicons.dashicons-admin-file:before {
 #bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a i {
   font-size: 16px;
   line-height: 28px;
-  color: #1e2132;
+  color: #fff;
   font-weight: 300;
   display: inline-block;
   margin-left: -1px;
@@ -5472,6 +5472,12 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-photo-thumb .media-action-wrap {
   top: 8px;
   left: 8px;
+}
+
+#video-stream.video .bb-item-thumb .bb-action-check-wrap,
+#media-stream.media .bb-video-thumb .bb-action-check-wrap,
+#media-stream.media .bb-photo-thumb .bb-action-check-wrap {
+  top: 10px;
 }
 
 #video-stream.video .video-list li:hover {
@@ -19542,7 +19548,7 @@ img.emojioneemoji {
   content: "\ee06";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 400;
   height: 50px;
   width: 50px;
@@ -24006,6 +24012,11 @@ div.video-js .vjs-control-bar button .vjs-icon-placeholder:before {
   filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
 }
 
+div.video-js .vjs-control-bar button.vjs-fullscreen-control .vjs-icon-placeholder:before {
+  content: "\ee67";
+  font-size: 24px;
+}
+
 div.video-js .vjs-control-bar button:hover {
   opacity: 1;
 }
@@ -24237,6 +24248,7 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   transition: 0.3s all;
   visibility: hidden;
   opacity: 0;
+  pointer-events: none;
 }
 
 .bb-activity-video-elem .video-js.vjs-playing.vjs-user-inactive:after {
@@ -24535,6 +24547,7 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   transition: 0.3s all;
   visibility: hidden;
   opacity: 0;
+  pointer-events: none;
 }
 
 .bb-media-model-wrapper.video .bb-media-section .video-js.vjs-playing.vjs-user-inactive:after {
@@ -26120,6 +26133,14 @@ body > .open-popup.video-error-popup {
   color: #fff;
   z-index: 11;
   font-size: 24px;
+}
+
+.dropzone .dz-preview.dz-error .dz-progress-ring-wrap {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropzone .dz-preview.dz-error .dz-progress-ring-wrap [class*=" bb-icon-"] {
+  color: #767676;
 }
 
 .dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap {

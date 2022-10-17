@@ -475,6 +475,11 @@ div.video-js {
 			filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
 		}
 
+		&.vjs-fullscreen-control .vjs-icon-placeholder:before {
+			content: "\ee67";
+			font-size: 24px;
+		}
+
 		&:hover {
 			opacity: 1;
 		}
@@ -732,6 +737,7 @@ div.video-js {
 		transition: 0.3s all;
 		visibility: hidden;
 		opacity: 0;
+		pointer-events: none;
 	}
 
 	.video-js.vjs-playing.vjs-user-inactive:after {
@@ -1056,6 +1062,7 @@ div.video-js {
 			transition: 0.3s all;
 			visibility: hidden;
 			opacity: 0;
+			pointer-events: none;
 		}
 
 		.video-js.vjs-playing.vjs-user-inactive:after {
