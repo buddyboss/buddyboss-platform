@@ -698,6 +698,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 */
 	public function user_data( $user, $context = 'view' ) {
 		$user_data = get_userdata( $user->ID );
+		$followers = $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) );
+		$following = $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) );
 		$data      = array(
 			'id'                 => $user->ID,
 			'name'               => $user->display_name,
@@ -711,8 +713,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
 			'xprofile'           => array(),
-			'followers'          => count( $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) ) ),
-			'following'          => count( $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) ) ),
+			'followers'          => ! empty( $followers ) ? count( $followers ) : 0,
+			'following'          => ! empty( $following ) ? count( $following ) : 0,
 			'is_wp_admin'        => false,
 		);
 

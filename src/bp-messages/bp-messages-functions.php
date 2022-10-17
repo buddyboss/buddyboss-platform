@@ -64,18 +64,35 @@ function messages_new_message( $args = '' ) {
 	);
 
 	// Bail if no sender or no content.
-	if ( empty( $r['sender_id'] ) || empty( $r['content'] ) ) {
+	if ( empty( $r['sender_id'] ) ) {
 		if ( 'wp_error' === $r['error_type'] ) {
-			if ( empty( $r['sender_id'] ) ) {
-				$error_code = 'messages_empty_sender';
-				$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddyboss' );
-			} else {
-				$error_code = 'messages_empty_content';
-				$feedback   = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
-			}
+			$error_code = 'messages_empty_sender';
+			$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddyboss' );
 
 			return new WP_Error( $error_code, $feedback );
+		} else {
+			return false;
+		}
+	}
 
+	/**
+	 * Filter to validate message content.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param bool   $validated_content True if message is valid, false otherwise.
+	 * @param string $content           Content of the message.
+	 * @param array  $_POST             POST Request Object.
+	 *
+	 * @return bool True if message is valid, false otherwise.
+	 */
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $r['content'] ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $r['content'] ) ) ) ), $r['content'], $_POST );
+
+	if ( ! $validated_content ) {
+		if ( 'wp_error' === $r['error_type'] ) {
+			$error_code = 'messages_empty_content';
+			$feedback   = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
+			return new WP_Error( $error_code, $feedback );
 		} else {
 			return false;
 		}
@@ -306,7 +323,7 @@ function messages_new_message( $args = '' ) {
 		}
 
 		if ( $previous_thread && $r['append_thread'] ) {
-			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
+			$message->thread_id = (int) $previous_thread;
 
 			// Set a default reply subject if none was sent.
 			if ( empty( $message->subject ) ) {

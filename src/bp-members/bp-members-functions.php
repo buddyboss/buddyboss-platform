@@ -569,6 +569,7 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim' );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes' );
 add_filter( 'bp_core_get_user_displayname', 'esc_html' );
+add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -683,7 +684,7 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 		return $querystring;
 	}
 
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && isset( $querystring['scope'] ) && 'following' === $querystring['scope'] ) {
 		$counts = bp_total_follow_counts();
@@ -4733,16 +4734,16 @@ function bp_member_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
-			'id'                => 'member_report',
+			'id'                => isset( $args['report_user'] ) ? 'member_report' : 'member_block',
 			'component'         => 'moderation',
 			'position'          => 50,
 			'must_be_logged_in' => true,
 			'button_attr'       => array(
 				'data-bp-content-id'   => bp_displayed_user_id(),
-				'data-bp-content-type' => BP_Moderation_Members::$moderation_type,
+				'data-bp-content-type' => isset( $args['report_user'] ) ? BP_Moderation_Members::$moderation_type_report : BP_Moderation_Members::$moderation_type,
 			),
 		)
 	);
@@ -5208,7 +5209,7 @@ function bb_core_sync_user_notification_settings( $user_id ) {
 	}
 
 	$all_notifications_keys = array_column( $all_notifications, 'default', 'key' );
-	$notifications          = wp_parse_args( $main, $all_notifications_keys );
+	$notifications          = bp_parse_args( $main, $all_notifications_keys );
 
 	foreach ( $notifications as $k => $v ) {
 		if ( ( ! isset( $default_by_admin[ $k ] ) || ( array_key_exists( $k, $default_by_admin ) && 'no' !== $default_by_admin[ $k ] ) ) && 'no' !== $v ) {
