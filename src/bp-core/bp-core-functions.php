@@ -8112,7 +8112,7 @@ function bb_autop( $pee, $br = true ) {
 function bb_is_heartbeat_enabled() {
 	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
 
-	return 0 !== (int) $heartbeat_disabled;
+	return 0 === (int) $heartbeat_disabled;
 }
 
 /**
