@@ -2254,4 +2254,4 @@ function bb_heartbeat_settings( $settings ) {
 	return $settings;
 }
 
-add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_MAX_INT, 1 );
+add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
