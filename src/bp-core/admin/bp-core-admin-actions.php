@@ -288,7 +288,7 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 /**
  * Wrapper function to check GIPHY key is valid or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.2
  */
 function bb_admin_check_valid_giphy_key() {
 	$response = array(
