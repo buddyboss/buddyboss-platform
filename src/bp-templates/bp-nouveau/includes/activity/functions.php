@@ -201,11 +201,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			);
 			$cache_key  = 'bbp_default_groups_' . md5( maybe_serialize( $group_args ) );
 			if ( ! isset( $group_query_cache[ $cache_key ] ) ) {
-				add_filter( 'bp_groups_get_join_sql', 'bp_groups_get_join_sql_for_activity', 10, 2 );
-				add_filter( 'bp_groups_get_where_conditions', 'bp_groups_get_where_conditions_for_activity', 10, 2 );
+				add_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+				add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
 				$group_query_cache[ $cache_key ] = groups_get_groups( $group_args );
-				remove_filter( 'bp_groups_get_join_sql', 'bp_groups_get_join_sql_for_activity', 10, 2 );
-				remove_filter( 'bp_groups_get_where_conditions', 'bp_groups_get_where_conditions_for_activity', 10, 2 );
+				remove_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+				remove_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
 			}
 			$groups = $group_query_cache[ $cache_key ];
 
@@ -659,7 +659,7 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
  *
  * @return string
  */
-function bp_groups_get_join_sql_for_activity( $sql, $r ) {
+function bb_groups_get_join_sql_for_activity( $sql, $r ) {
 	global $wpdb;
 	$sql .= ' LEFT JOIN ' . $wpdb->prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id )';
 
@@ -676,8 +676,10 @@ function bp_groups_get_join_sql_for_activity( $sql, $r ) {
  *
  * @return mixed
  */
-function bp_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
-	$where_conditions['exclude_where'] = ' ( ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "members" ) OR ( m.is_mod = "1" OR m.is_admin = "1" ) )';
+function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
+	$where_conditions['exclude_where'] = ' ( ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "mods" AND m.is_mod = "1" OR m.is_admin = "1" ) 
+            OR ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "admins" AND m.is_admin = "1" ) 
+            OR ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "members" ) )';
 
 	return $where_conditions;
 }
