@@ -3397,6 +3397,7 @@ input.search-query-input {
 .activity-list .activity-item .activity-header {
   margin: 0 auto;
   width: 80%;
+  word-break: break-word;
 }
 
 .activity-list .activity-item .activity-header a,
