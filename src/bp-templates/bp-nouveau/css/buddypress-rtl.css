@@ -3397,15 +3397,12 @@ input.search-query-input {
 .activity-list .activity-item .activity-header {
   margin: 0 auto;
   width: 80%;
+  word-break: break-word;
 }
 
 .activity-list .activity-item .activity-header a,
 .activity-list .activity-item .activity-header img {
   display: inline;
-}
-
-.activity-list .activity-item .activity-header p {
-  word-wrap: break-word;
 }
 
 .activity-list .activity-item .activity-header .avatar {
