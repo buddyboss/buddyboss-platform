@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
@@ -69,6 +69,12 @@ window.bp = window.bp || {};
 
 			// Profile Notification setting
 			this.profileNotificationSetting();
+
+			// Bail if not set.
+			if ( 'undefined' !== typeof BB_Nouveau_Presence ) {
+				// User Presence status.
+				this.userPresenceStatus();
+			}
 
 			var _this = this;
 
@@ -3378,6 +3384,79 @@ window.bp = window.bp || {};
 
 			$( dropzone.element ).find( '.dz-global-progress .dz-progress').css( 'width', progress + '%' );
 			$( dropzone.element ).find( '.dz-global-progress > p').html( message );
+		},
+
+		userPresenceStatus: function() {
+
+			 if ( '' !== BB_Nouveau_Presence.heartbeat_enabled ) {
+				 $( document ).on( 'heartbeat-send', function ( event, data ) {
+					 var paged_user_id  = bp.Nouveau.getPageUserIDs();
+					 // Add user data to Heartbeat.
+					 data.presece_users = paged_user_id.join( ',' );
+				 } );
+
+				 $( document ).on( 'heartbeat-tick', function ( event, data ) {
+					 // Check for our data, and use it.
+					 if ( ! data.presence_data ) {
+						 return;
+					 }
+
+					 bp.Nouveau.updateUsersPresence( data.presence_data );
+				 } );
+			 } else {
+				 setInterval( function () {
+					 var paged_user_id  = bp.Nouveau.getPageUserIDs();
+					 $.ajax(
+						 {
+							 type: 'GET',
+							 url: '/wp-json/buddyboss/v1/members/presence',
+							 data: { ids:paged_user_id },
+							 beforeSend: function( xhr ) {
+								 xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
+							 },
+							 success: function ( data ) {
+								 // Check for our data, and use it.
+								 if ( ! data ) {
+									 return;
+								 }
+
+								 bp.Nouveau.updateUsersPresence( data );
+							 }
+						 }
+					 );
+				 }, parseInt( BB_Nouveau_Presence.presence_interval ) * 1000 );
+			 }
+		},
+
+		getPageUserIDs: function() {
+			var user_ids = [];
+			var all_presence = $( document ).find( '.member-status[data-bb-user-id]' );
+			if ( all_presence.length > 0 ) {
+				all_presence.each( function () {
+					var user_id = $( this ).attr( 'data-bb-user-id' );
+					if ( $.inArray( parseInt( user_id ), user_ids ) == -1 ) {
+						user_ids.push( parseInt( user_id ) );
+					}
+				} );
+			}
+
+			return user_ids;
+		},
+
+		updateUsersPresence: function ( presence_data ) {
+			if ( presence_data && presence_data.length > 0 ) {
+				$.each( presence_data, function ( index, user ) {
+					bp.Nouveau.updateUserPresence( user.id, user.status );
+				} );
+			}
+		},
+
+		updateUserPresence: function( user_id, status ) {
+			$( document )
+				.find( '.member-status[data-bb-user-id="' + user_id + '"]' )
+				.removeClass( 'offline online' )
+				.addClass( status )
+				.attr( 'data-bb-user-presence', status );
 		}
 
 	};

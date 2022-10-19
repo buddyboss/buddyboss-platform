@@ -54,9 +54,6 @@
 
 	var threadAvatarClass = '';
 	if ( 1 === data.avatars.length ) {
-		if ( 'user' === data.avatars[0].type ) {
-			threadAvatarClass += 'bb-member-status-' + data.avatars[0].id;
-		}
 		if ( ! data.is_group_thread ) {
 			if ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) {
 				threadAvatarClass += ' bp-suspended-avatar';
@@ -186,6 +183,9 @@
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
 						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
+							<# if ( typeof( recipient.user_presence ) != "undefined" && recipient.user_presence !== null && recipient.user_presence.length > 1 ) { #>
+								{{{recipient.user_presence}}}
+							<# } #>
 							<# if ( 0 === recipient.is_deleted ) {
 								if ( recipient.is_user_blocked ) {
 									#>

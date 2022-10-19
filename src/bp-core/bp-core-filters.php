@@ -2208,3 +2208,50 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 
 }
 add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
+
+/**
+ * Get member presence information.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_heartbeat_member_presence_info( $response = array(), $data = array() ) {
+	if ( ! isset( $data['presece_users'] ) ) {
+		return $response;
+	}
+
+	bp_core_record_activity( true );
+
+	$interval_time     = bb_presence_interval();
+	$presence_user_ids = wp_parse_id_list( $data['presece_users'] );
+	$compare_time      = $interval_time + 5;
+
+	$response['presence_data'] = bb_get_users_presence( $presence_user_ids, $compare_time );
+
+	return $response;
+}
+add_filter( 'heartbeat_received', 'bb_heartbeat_member_presence_info', 11, 2 );
+add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11, 2 );
+
+
+/**
+ * Update interval time option when someone change the heartbeat interval.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $settings Array of heartbeat settings.
+ *
+ * @return mixed
+ */
+function bb_heartbeat_settings( $settings ) {
+	$interval_time = bb_presence_interval();
+
+	if ( ! empty( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
+		bp_delete_option( 'bb_presence_interval' );
+	}
+
+	return $settings;
+}
+
+add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );

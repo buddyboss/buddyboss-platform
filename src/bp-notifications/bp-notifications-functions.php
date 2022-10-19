@@ -1088,11 +1088,10 @@ function bb_notification_avatar() {
 				$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
 			}
 
-			$class            = ( isset( $user ) ? 'bb-member-status-' . $user->ID : '' );
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<a href="<?php echo esc_url( $link ); ?>" class="bb-member-status-<?php echo esc_attr( $class ) . ' ' . esc_attr( $moderation_class ); ?>">
+			<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
 				echo bp_core_fetch_avatar(
 					array(
@@ -1104,7 +1103,7 @@ function bb_notification_avatar() {
 				// Get the small icon for the notification which will print beside the avatar.
 				echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
 				?>
-				<?php ( isset( $user ) ? bb_current_user_status( $user->ID ) : '' ); ?>
+				<?php ( isset( $user ) ? bb_user_presence_html( $user->ID ) : '' ); ?>
 			</a>
 			<?php
 		}
