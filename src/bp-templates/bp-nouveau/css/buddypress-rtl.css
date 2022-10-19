@@ -3404,6 +3404,10 @@ input.search-query-input {
   display: inline;
 }
 
+.activity-list .activity-item .activity-header p {
+  word-wrap: break-word;
+}
+
 .activity-list .activity-item .activity-header .avatar {
   display: inline-block;
   margin: 0 5px;
