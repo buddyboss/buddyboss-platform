@@ -643,7 +643,8 @@ window.bp = window.bp || {};
 				is_user_suspended   : false,
 				sender_avatar : '',
 				date          : 0,
-				display_date  : ''
+				display_date  : '',
+				is_group      : false
 			}
 		}
 	);
@@ -1091,7 +1092,7 @@ window.bp = window.bp || {};
 									picker_show: function () {
 										$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
 									},
-	
+
 									picker_hide: function () {
 										$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
 									},
@@ -2127,19 +2128,35 @@ window.bp = window.bp || {};
 			messagesVideo: null,
 			messagesAttachedGifPreview: null,
 			initialize: function() {
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media_active ) {
-					this.messagesMedia = new bp.Views.MessagesMedia( {model: this.model} );
-					this.views.add( this.messagesMedia );
-				}
 
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_document_active ) {
-					this.messagesDocument = new bp.Views.MessagesDocument( {model: this.model} );
-					this.views.add( this.messagesDocument );
-				}
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.video ) && ( BP_Nouveau.video.messages_video_active ) ) {
-					this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
-					this.views.add( this.messagesVideo );
+					// Check the media.
+					if ( ! this.model.get( 'is_group' ) && BP_Nouveau.media.messages_media_active ) {
+						this.messagesMedia = new bp.Views.MessagesMedia( {model: this.model} );
+						this.views.add( this.messagesMedia );
+					} else if ( this.model.get( 'is_group' ) && BP_Nouveau.media.group_media ) {
+						this.messagesMedia = new bp.Views.MessagesMedia( {model: this.model} );
+						this.views.add( this.messagesMedia );
+					}
+
+					// Check the document.
+					if ( ! this.model.get( 'is_group' ) && BP_Nouveau.media.messages_document_active ) {
+						this.messagesDocument = new bp.Views.MessagesDocument( {model: this.model} );
+						this.views.add( this.messagesDocument );
+					} else if ( this.model.get( 'is_group' ) && BP_Nouveau.media.group_document ) {
+						this.messagesDocument = new bp.Views.MessagesDocument( {model: this.model} );
+						this.views.add( this.messagesDocument );
+					}
+
+					// Check the video.
+					if ( ! this.model.get( 'is_group' ) && BP_Nouveau.video.messages_video_active ) {
+						this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
+						this.views.add( this.messagesVideo );
+					} else if ( this.model.get( 'is_group' ) && BP_Nouveau.video.group_video ) {
+						this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
+						this.views.add( this.messagesVideo );
+					}
 				}
 
 				this.messagesAttachedGifPreview = new bp.Views.MessagesAttachedGifPreview( { model: this.model } );
@@ -3231,8 +3248,6 @@ window.bp = window.bp || {};
 
 				// Add the editor view.
 				this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
-				this.messageAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
-				this.views.add( '#bp-message-content', this.messageAttachments );
 
 				this.views.add( '#bp-message-content', new bp.Views.MessageReplyFormSubmitWrapper( { model: this.model } ) );
 
@@ -3325,6 +3340,12 @@ window.bp = window.bp || {};
 					// add scroll event for the auto load messages without user having to click the button.
 					$( '#bp-message-thread-list' ).on( 'scroll', this.messages_scrolled );
 				}
+
+				if ( 0 !== parseInt( this.options.thread.get( 'group_id' ) ) && 'private' !== this.options.thread.get( 'group_message_type' ) ) {
+					this.model.set( 'is_group', true );
+				}
+				this.messageAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
+				this.views.add( '#bp-message-content', this.messageAttachments );
 
 				if ( ! this.views.get( '#bp-message-thread-header' ) ) {
 					this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
