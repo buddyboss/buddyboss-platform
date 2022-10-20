@@ -419,12 +419,15 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( bp_is_following(
-				array(
-					'leader_id'   => $item_id,
-					'follower_id' => $user_id,
+			if (
+				function_exists( 'bp_is_following' ) &&
+				bp_is_following(
+					array(
+						'leader_id'   => $item_id,
+						'follower_id' => $user_id,
+					)
 				)
-			) ) {
+			) {
 				bp_stop_following(
 					array(
 						'leader_id'   => $item_id,
@@ -1346,6 +1349,36 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				),
 			)
 		);
+
+		// Added moderation data into group members endpoint.
+		register_rest_field(
+			'bp_group_members',
+			'can_report',
+			array(
+				'get_callback' => array( $this, 'bp_rest_member_can_report' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		register_rest_field(
+			'bp_group_members',
+			'reported',
+			array(
+				'get_callback' => array( $this, 'bp_rest_member_is_reported' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the member is reported or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
 	}
 
 	/**
@@ -1957,6 +1990,34 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			)
 		);
 
+		bp_rest_register_field(
+			'members',
+			'can_user_report',
+			array(
+				'get_callback' => array( $this, 'bp_rest_member_can_user_report' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
+		bp_rest_register_field(
+			'members',
+			'user_reported',
+			array(
+				'get_callback' => array( $this, 'bp_rest_member_is_user_reported' ),
+				'schema'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the member is reported or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+			)
+		);
+
 		add_filter( 'bp_rest_members_prepare_value', array( $this, 'bp_rest_moderation_prepare_value' ), 999, 3 );
 	}
 
@@ -1999,7 +2060,57 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $user_id, BP_Suspend_Member::$type ) ) {
+		if (
+			is_user_logged_in() &&
+			$this->bp_rest_moderation_report_exist( $user_id, BP_Suspend_Member::$type ) &&
+			! bp_moderation_is_user_suspended( $user_id )
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * The function to use to get reported of the members REST Field.
+	 *
+	 * @param WP_User $user User object.
+	 *
+	 * @return string The value of the REST Field to include into the REST response.
+	 */
+	public function bp_rest_member_is_user_reported( $user ) {
+		$user_id = $user['id'];
+
+		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type_report ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * The function to use to get can_user_report of the members REST Field.
+	 *
+	 * @param WP_User $user User object.
+	 *
+	 * @return string The value of the REST Field to include into the REST response.
+	 */
+	public function bp_rest_member_can_user_report( $user ) {
+		$user_id = $user['id'];
+
+		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		if ( ! empty( $user_id ) && ( bp_moderation_is_user_suspended( $user_id ) || bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type_report ) ) ) {
+			return false;
+		}
+
+		if ( is_user_logged_in() && bp_moderation_user_can( $user_id, BP_Moderation_Members::$moderation_type_report ) ) {
 			return true;
 		}
 

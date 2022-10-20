@@ -3138,6 +3138,38 @@ div[class*="attached-gif-container"] .gif-icon {
   width: 300px;
 }
 
+.gif-media-search-dropdown .gif-alert {
+  justify-content: center;
+  flex-flow: column;
+  min-height: 100px;
+  display: none;
+}
+
+.gif-media-search-dropdown .gif-alert.show {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
+.gif-media-search-dropdown .gif-alert [class*="bb-icon"] {
+  font-size: 30px !important;
+  color: #333 !important;
+  opacity: 0.4;
+}
+
+.gif-media-search-dropdown .gif-alert p {
+  color: #333;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  opacity: 0.4;
+}
+
 @media screen and (min-width: 768px) {
   .gif-media-search-dropdown.open {
     width: 360px;
@@ -4459,17 +4491,15 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list {
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list {
   position: relative;
   float: left;
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item {
   padding-bottom: 50px;
   max-height: 90vh;
   min-height: 90vh;
@@ -4480,12 +4510,10 @@ span.dashicons.dashicons-admin-file:before {
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .download-media,
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .download-video,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-media,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-video,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video {
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-media,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-video {
   position: absolute;
   bottom: 0;
   z-index: 999999;
@@ -4501,9 +4529,8 @@ span.dashicons.dashicons-admin-file:before {
 
 @media screen and (max-width: 767px) {
   #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
-  #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
-  #buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item,
-  #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
+  .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
+  .bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item {
     min-height: auto;
   }
 }
@@ -6329,6 +6356,7 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-results-list {
 
 form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-results ul li {
   padding: 0;
+  margin: 0 0 5px 0;
 }
 
 .bp-ac-form-cotainer {
@@ -16435,7 +16463,11 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-media-length-1 .bb-activity-media-elem .entry-img {
-  padding-top: 42.56%;
+  padding-top: 0;
+}
+
+.bb-media-length-1 .bb-activity-media-elem .entry-img img {
+  position: static;
 }
 
 .bb-media-length-2 .bb-activity-media-elem .entry-img {
@@ -21363,6 +21395,10 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   min-width: inherit;
 }
 
+.moderation-popup .modal-container .bb-model-header ~ .bp-feedback {
+  margin: -15px -20px 15px;
+}
+
 .moderation-popup .modal-container #bb-block-member,
 .moderation-popup .modal-container #bb-report-content {
   margin-bottom: 0;
@@ -21398,9 +21434,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .moderation-popup .modal-container .form-item label > textarea {
-  margin-right: 30px;
+  font-size: 14px;
   margin-bottom: 0;
-  width: calc(100% - 28px);
 }
 
 .moderation-popup .modal-container .bp-report-form-err {
@@ -26132,6 +26167,25 @@ span.icons:before {
   pointer-events: none;
 }
 
+.taxonomy-bpm_category .table-view-list.tags tbody tr td .inline-edit-wrapper .inline-edit-col .title {
+  width: 140px;
+}
+
+.taxonomy-bpm_category .table-view-list.tags tbody tr td .inline-edit-wrapper .inline-edit-col .input-text-wrap {
+  margin-right: 20px;
+  width: calc(100% - 160px);
+  float: right;
+}
+
+@media screen and (max-width: 1460px) {
+  .buddyboss_page_bp-moderation .fixed .column-date {
+    width: 150px;
+  }
+  .buddyboss_page_bp-moderation .fixed .column-reporter {
+    width: calc(100% - 150px);
+  }
+}
+
 /*
 *-----------------------------------------
 * @section 18.0 - Admin bar Notification dropdown
@@ -26192,6 +26246,247 @@ span.icons:before {
 
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
   line-height: 1.4;
+}
+
+/*
+*-----------------------------------------
+* @section 20.0 - Toast Messages
+*-----------------------------------------
+*/
+/*__ Global Styling __*/
+.bb-toast-messages-enable {
+  position: relative;
+}
+
+@media screen and (max-width: 500px) {
+  .bb-toast-messages-enable {
+    display: none;
+  }
+  .bb-toast-messages-enable.bb-toast-messages-enable-mobile-support {
+    display: block;
+  }
+}
+
+.bb-toast-messages-enable .bb-toast-messages {
+  position: fixed;
+  bottom: 25px;
+  left: 35px;
+  max-width: 360px;
+  width: 100%;
+  z-index: 1099;
+}
+
+@media screen and (min-width: 501px) {
+  .bb-onscreen-notification-enable .bb-toast-messages-enable .bb-toast-messages {
+    position: static;
+  }
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item {
+  background: #fff;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  margin: 12px 0;
+  border: solid 1px #ebe9e6;
+  border-radius: 4px;
+  transition: all linear 0.2s;
+  padding: 15px 20px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item:before {
+  content: " ";
+  right: -1px;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  background: #385dff;
+  position: absolute;
+  border-radius: 0 4px 4px 0;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item.has-url:hover {
+  background: #f7fafe;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-icon {
+  margin-left: 12px;
+  width: 18px;
+  height: 28px;
+  position: relative;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-icon .bb-icon {
+  font-family: bb-icons;
+  font-style: normal;
+  display: inline-block;
+  text-decoration: inherit;
+  text-align: center;
+  font-weight: 200;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #385dff;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-icon .bb-icon.bb-icon-exclamation-triangle {
+  font-weight: 300;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-icon .bb-icon::before {
+  margin-right: 0;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-content {
+  align-self: center;
+  width: calc(100% - 54px);
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-content span {
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-content span.toast-messages-title {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: -0.24px;
+  color: #1e2132;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-content span.toast-messages-content {
+  color: #9b9c9f;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  align-self: center;
+  height: 24px;
+  width: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .actions a {
+  transition: all linear 0.2s;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .actions a .bb-icon {
+  font-size: 24px;
+  color: #000;
+  transition: all linear 0.2s;
+}
+
+.bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-url {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0;
+}
+
+.bb-toast-messages-enable .bb-toast-messages.bb-position-right {
+  left: 35px;
+  right: inherit;
+}
+
+.bb-toast-messages-enable .bb-toast-messages.bb-position-right .bb-remove-all-toast-messages {
+  justify-content: flex-end;
+}
+
+@media screen and (max-width: 500px) {
+  .bb-toast-messages-enable .bb-toast-messages {
+    max-width: calc(100% - 30px);
+    display: flex;
+    justify-content: space-between;
+    left: 15px;
+    bottom: inherit;
+    top: 85px;
+  }
+  .bb-toast-messages-enable .bb-toast-messages.bb-position-right {
+    left: 15px;
+  }
+  .bb-toast-messages-enable .bb-toast-messages .toast-messages-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 0 0 0;
+    flex: 100%;
+    position: relative;
+  }
+  .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item {
+    margin: 0;
+    padding: 12px;
+    min-height: 67px;
+    position: absolute;
+    width: 100%;
+    right: 0;
+    top: 0;
+    display: none;
+  }
+  .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item:last-child {
+    display: flex;
+  }
+  .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-icon {
+    margin-left: 10px;
+  }
+  .bb-toast-messages-enable .bb-toast-messages .bb-remove-all-toast-messages .action-close {
+    border-radius: 5px;
+    padding: 12px 10px;
+    text-align: center;
+    width: 70px;
+  }
+  .bb-toast-messages-enable .bb-toast-messages .bb-remove-all-toast-messages .action-close .dashicons {
+    display: none;
+  }
+  .bb-toast-messages-enable .bb-toast-messages.single-notification .toast-messages-list {
+    width: 100%;
+    margin: 0;
+    flex: 0 0 100%;
+  }
+  .bb-toast-messages-enable .bb-toast-messages.single-notification .bb-remove-all-toast-messages {
+    display: none;
+  }
+  .bb-toast-messages-enable .bb-toast-messages.active-button .toast-messages-list {
+    margin-bottom: 14px;
+  }
+  .bb-toast-messages-enable .bb-toast-messages.active-button .toast-messages-list:before {
+    content: " ";
+    height: 20px;
+    width: calc(100% - 80px);
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: #fff;
+  }
+  .bb-toast-messages-enable .bb-toast-messages.active-button .bb-remove-all-toast-messages .action-close {
+    display: flex !important;
+  }
 }
 
 /*

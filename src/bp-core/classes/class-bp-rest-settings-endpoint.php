@@ -306,6 +306,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 			// Blocking Settings.
 			$results['bpm_blocking_member_blocking']        = bp_is_moderation_member_blocking_enable( false );
+			$results['bpm_blocking_member_reporting']       = bb_is_moderation_member_reporting_enable( false );
 			$results['bpm_blocking_auto_suspend']           = bp_is_moderation_auto_suspend_enable( false );
 			$results['bpm_blocking_auto_suspend_threshold'] = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
 			$results['bpm_blocking_email_notification']     = bp_is_moderation_blocking_email_notification_enable( false );
