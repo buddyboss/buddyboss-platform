@@ -185,8 +185,8 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 *
 		 * @since bbPress (r6803)
 		 *
-		 * @param int    $user_id
-		 * @param string $slug
+		 * @param int    $user_id User id.
+		 * @param string $slug    Slug of the current active page.
 		 *
 		 * @return string
 		 */
