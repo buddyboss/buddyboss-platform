@@ -75,10 +75,10 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		/** Filters ***************************************************************/
 
 		/**
-		 * Override bbPress profile URL with BuddyPress profile URL
+		 * Override Forums profile URL with BuddyBoss profile URL
 		 *
-		 * @since 2.0.0 bbPress (r3401)
-		 * @since 2.6.0 bbPress (r6320) Add engagements support
+		 * @since bbPress (r3401)
+		 * @since bbPress (r6320) Add engagements support
 		 *
 		 * @param int $user_id
 		 * @return string
@@ -88,10 +88,10 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		}
 
 		/**
-		 * Override bbPress topics created URL with BuddyPress profile URL
+		 * Override Forums topics created URL with BuddyBoss profile URL
 		 *
-		 * @since 2.6.0 bbPress (r3721)
-		 * @since 2.6.0 bbPress (r6803) Use private method
+		 * @since bbPress (r3721)
+		 * @since bbPress (r6803) Use private method
 		 *
 		 * @param int $user_id
 		 * @return string
@@ -101,10 +101,10 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		}
 
 		/**
-		 * Override bbPress replies created URL with BuddyPress profile URL
+		 * Override Forums replies created URL with BuddyBoss profile URL
 		 *
-		 * @since 2.6.0 bbPress (r3721)
-		 * @since 2.6.0 bbPress (r6803) Use private method
+		 * @since bbPress (r3721)
+		 * @since bbPress (r6803) Use private method
 		 *
 		 * @param int $user_id
 		 * @return string
@@ -114,10 +114,10 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		}
 
 		/**
-		 * Override bbPress favorites URL with BuddyPress profile URL
+		 * Override Forums favorites URL with BuddyBoss profile URL
 		 *
-		 * @since 2.1.0 bbPress (r3721)
-		 * @since 2.6.0 bbPress (r6803) Use private method
+		 * @since bbPress (r3721)
+		 * @since bbPress (r6803) Use private method
 		 *
 		 * @param int $user_id
 		 * @return string
@@ -127,10 +127,10 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		}
 
 		/**
-		 * Override bbPress subscriptions URL with BuddyPress profile URL
+		 * Override Forums subscriptions URL with BuddyBoss profile URL
 		 *
-		 * @since 2.1.0 bbPress (r3721)
-		 * @since 2.6.0 bbPress (r6803) Use private method
+		 * @since bbPress (r3721)
+		 * @since bbPress (r6803) Use private method
 		 *
 		 * @param int $user_id
 		 * @return string
@@ -143,8 +143,8 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 * Set favorites and subscriptions query variables if viewing member profile
 		 * pages.
 		 *
-		 * @since 2.3.0 bbPress (r4615)
-		 * @since 2.6.0 bbPress (r6320) Support all profile sections
+		 * @since bbPress (r4615)
+		 * @since bbPress (r6320) Support all profile sections
 		 *
 		 * @global WP_Query $wp_query
 		 * @return If not viewing your own profile
@@ -186,7 +186,7 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		/**
 		 * Private method used to concatenate user IDs and slugs into URLs
 		 *
-		 * @since 2.6.0 bbPress (r6803)
+		 * @since bbPress (r6803)
 		 *
 		 * @param int    $user_id
 		 * @param string $slug
