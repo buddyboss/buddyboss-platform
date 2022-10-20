@@ -19607,7 +19607,7 @@ img.emojioneemoji {
 .dropzone.media-dropzone .dz-preview.dz-error .dz-details {
   display: block;
   position: absolute;
-  bottom: 18px;
+  bottom: 12px;
   right: 10px;
   left: 10px;
   text-align: center;
@@ -25636,7 +25636,7 @@ body > .open-popup.video-error-popup {
   text-overflow: ellipsis;
   white-space: nowrap;
   letter-spacing: normal;
-  font-weight: 300;
+  font-weight: 400;
   margin-top: 8px;
 }
 
