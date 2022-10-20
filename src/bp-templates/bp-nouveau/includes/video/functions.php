@@ -111,7 +111,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_video'                     => bp_is_messages_video_support_enabled() && bb_user_can_create_video(),
 		'messages_video_active'              => bp_is_messages_video_support_enabled(),
-		'dropzone_video_message'             => __( 'Drop videos here to upload', 'buddyboss' ),
+		'dropzone_video_message'             => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Videos', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
 		'dropzone_video_thumbnail_message'   => __( 'Upload thumbnail', 'buddyboss' ),
 		'video_select_error'                 => __( 'This file type is not supported for video uploads.', 'buddyboss' ),
 		'empty_video_type'                   => __( 'Empty video file will not be uploaded.', 'buddyboss' ),
@@ -267,7 +267,18 @@ function bp_video_download_file( $attachment_id, $type = 'video' ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_video_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && ( bp_is_video_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'video_get_activity' === $_REQUEST['action'] ) { // phpcs:ignore
+	if (
+		isset( $buttons['activity_edit'] ) &&
+		(
+			bp_is_video_component() ||
+			! bp_is_activity_component()
+		) &&
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		(
+			'video_get_activity' === $_REQUEST['action'] || // phpcs:ignore
+			'video_get_video_description' === $_REQUEST['action'] // phpcs:ignore
+		)
+	) { // phpcs:ignore
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'video' !== $activity->privacy ) {

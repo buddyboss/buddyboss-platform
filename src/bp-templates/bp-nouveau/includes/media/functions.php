@@ -129,7 +129,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_media'                     => bp_is_messages_media_support_enabled() && bb_user_can_create_media(),
 		'messages_media_active'              => bp_is_messages_media_support_enabled(),
-		'dropzone_media_message'             => __( 'Drop images here to upload', 'buddyboss' ),
+		'dropzone_media_message'             => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Photos', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
 		'media_select_error'                 => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
 		'empty_media_type'                   => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
 		'invalid_media_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
@@ -148,6 +148,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
 		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
+		'connection_lost_error'              => __( 'Connection lost with the server.', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -261,7 +262,18 @@ function bp_nouveau_get_media_directory_nav_items() {
  * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && ( bp_is_media_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) {
+	if (
+		isset( $buttons['activity_edit'] ) &&
+		(
+			bp_is_media_component() ||
+			! bp_is_activity_component()
+		) &&
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		(
+			'media_get_activity' === $_REQUEST['action'] || // phpcs:ignore
+			'media_get_media_description' === $_REQUEST['action'] // phpcs:ignore
+		)
+	) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'media' !== $activity->privacy ) {

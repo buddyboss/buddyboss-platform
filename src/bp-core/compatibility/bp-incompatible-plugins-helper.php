@@ -1,6 +1,6 @@
 <?php
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -46,6 +46,15 @@ function bp_helper_plugins_loaded_callback() {
 	/**
 	 * Include plugin when plugin is activated
 	 *
+	 * Support Elementor
+	 */
+	if ( in_array( 'elementor/elementor.php', $bp_plugins ) ) {
+		require buddypress()->compatibility_dir . '/bp-elementor-plugin-helpers.php';
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
 	 * Support Co-Authors Plus
 	 */
 	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
@@ -75,63 +84,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support WPML Multilingual CMS
 	 */
 	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
-
-		/**
-		 * Add fix for WPML redirect issue
-		 *
-		 * @since BuddyBoss 1.4.0
-		 *
-		 * @param array $q
-		 *
-		 * @return array
-		 */
-		function bp_core_fix_wpml_redirection( $q ) {
-			if (
-				! defined( 'DOING_AJAX' )
-				&& ! bp_is_blog_page()
-				&& (bool) $q->get( 'page_id' ) === false
-				&& (bool) $q->get( 'pagename' ) === true
-			) {
-				$bp_current_component = bp_current_component();
-				$bp_pages             = bp_core_get_directory_pages();
-
-				if ( 'photos' === $bp_current_component && isset( $bp_pages->media->id ) ) {
-					$q->set( 'page_id', $bp_pages->media->id );
-				} elseif ( 'forums' === $bp_current_component && isset( $bp_pages->members->id ) ) {
-					$q->set( 'page_id', $bp_pages->members->id );
-				} elseif ( 'groups' === $bp_current_component && isset( $bp_pages->groups->id ) ) {
-					$q->set( 'page_id', $bp_pages->groups->id );
-				} elseif ( 'documents' === $bp_current_component && isset( $bp_pages->document->id ) ) {
-					$q->set( 'page_id', $bp_pages->document->id );
-				} elseif ( 'videos' === $bp_current_component && isset( $bp_pages->video->id ) ) {
-					$q->set( 'page_id', $bp_pages->video->id );
-				} else {
-					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
-					if ( $page_id ) {
-						$q->set( 'page_id', $page_id );
-					}
-				}
-			}
-
-			return $q;
-		}
-
-		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
-
-		/**
-		 * Fix for url with wpml
-		 *
-		 * @since BuddyBoss 1.2.6
-		 *
-		 * @param $url
-		 * @return string
-		 */
-		function bp_core_wpml_fix_get_root_domain( $url ) {
-			return untrailingslashit( $url );
-		}
-
-		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
-
+		require buddypress()->compatibility_dir . '/class-bb-wpml-helpers.php';
 	}
 
 	/**
@@ -168,19 +121,19 @@ function bp_helper_plugins_loaded_callback() {
 	}
 
 	if ( in_array( 'geodirectory/geodirectory.php', $bp_plugins, true ) ) {
-		
+
 		/**
 		 * Function to deregister some scripts and styles from bp component pages
-		 * 
+		 *
 		 * @since 1.8.0
 		 *
 		 * @return void
 		 */
 		function bp_exclude_geodirectory_scripts() {
 			$bp_current_component = bp_current_component();
-			
+
 			// deregister geodirectory select2 script and styles from all component pages
-			if ( $bp_current_component ) {
+			if ( $bp_current_component && 'listings' !== $bp_current_component ) {
 				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
 				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
 			}
@@ -190,7 +143,7 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Deregister and dequeue select2 script from all component pages.
-		 * 
+		 *
 		 * @since 1.8.0
 		 *
 		 * @return void
@@ -204,7 +157,7 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Deregister and dequeue styles from all component pages.
-		 * 
+		 *
 		 * @since 1.8.0
 		 *
 		 * @return void
@@ -223,7 +176,38 @@ function bp_helper_plugins_loaded_callback() {
 	if ( class_exists( 'WooCommerce' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
 	}
+
+	if ( in_array( 'the-events-calendar/the-events-calendar.php', $bp_plugins, true ) ) {
+
+		/**
+		 * Function to suppress "The Event Calendar" plugin's parse_query filter.
+		 *
+		 * @since BuddyBoss 2.0.3
+		 *
+		 * @param array $query default query variable.
+		 *
+		 * @return array|mixed
+		 */
+		function bb_core_tribe_events_parse_query( $query ) {
+
+			if ( true === is_search() ||
+			     (
+				     true === (bool) defined( 'DOING_AJAX' ) &&
+				     true === (bool) DOING_AJAX &&
+				     isset( $_REQUEST['action'] ) &&
+				     'bp_search_ajax' === $_REQUEST['action']
+			     )
+			) {
+				$query->set( 'tribe_suppress_query_filters', true );
+			}
+
+			return $query;
+		}
+
+		add_filter( 'parse_query', 'bb_core_tribe_events_parse_query' );
+	}
 }
+
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 
 /**
@@ -236,7 +220,7 @@ function bb_wp_offload_media_compatibility_helper() {
 	}
 
 }
-add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
+add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 10 );
 
 /**
  * Fix the media, video & document display compatibility issue.
@@ -609,34 +593,6 @@ add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpas
 add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
 
 /**
- * Fix elementor editor issue while bp page set as front.
- *
- * @since BuddyBoss 1.5.0
- *
- * @param boolean $bool Boolean to return.
- *
- * @return boolean
- */
-function bp_core_set_uri_elementor_show_on_front( $bool ) {
-	if (
-		isset( $_REQUEST['elementor-preview'] )
-		|| (
-			is_admin() &&
-			isset( $_REQUEST['action'] )
-			&& (
-				'elementor' === $_REQUEST['action']
-				|| 'elementor_ajax' === $_REQUEST['action']
-			)
-		)
-	) {
-		return false;
-	}
-
-	return $bool;
-}
-add_filter( 'bp_core_set_uri_show_on_front', 'bp_core_set_uri_elementor_show_on_front', 10, 3 );
-
-/**
  * Get the forum page id from settings.
  *
  * @since BuddyBoss 1.5.8
@@ -737,58 +693,6 @@ function set_yoast_meta_tags() {
 
 // Trigger before template load.
 add_action( 'bp_template_redirect', 'set_yoast_meta_tags' );
-
-/**
- * Prevent BB template redering and Redirect to the Elementor "Maintenance Mode" template.
- *
- * @since BuddyBoss 1.5.8
- *
- * @return void
- */
-function bb_get_elementor_maintenance_mode_template() {
-	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
-		return;
-	}
-
-	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
-		return;
-	}
-
-	$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
-
-	if ( $is_login_page ) {
-		return;
-	}
-
-	$user         = wp_get_current_user();
-	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
-
-	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
-		return;
-	}
-
-	if ( 'custom' === $exclude_mode ) {
-		$exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
-		$user_roles    = $user->roles;
-
-		if ( is_multisite() && is_super_admin() ) {
-			$user_roles[] = 'super_admin';
-		}
-
-		$compare_roles = array_intersect( $user_roles, $exclude_roles );
-
-		if ( ! empty( $compare_roles ) ) {
-			return;
-		}
-	}
-
-	$mode = get_option( 'elementor_maintenance_mode_mode' );
-
-	if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
-		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
-	}
-}
-add_action( 'bp_loaded', 'bb_get_elementor_maintenance_mode_template' );
 
 /**
  * Load rest compatibility.
@@ -1106,3 +1010,20 @@ function bbp_remove_page_attributes_metabox_for_forum() {
 }
 
 add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
+
+/**
+ * Function will remove template_redirect action when we view individual saved template
+ * in the Elementor plugin.
+ *
+ * @since BuddyBoss 2.1.0
+ */
+function bb_elementor_library_template() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+		return;
+	}
+
+	if ( isset( $_GET['elementor_library'] ) ) {
+		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+	}
+}
+add_action( 'bp_loaded', 'bb_elementor_library_template' );

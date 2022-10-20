@@ -869,6 +869,10 @@ class BP_Core_Members_Switching {
 				return $user_caps;
 			}
 
+			if ( ! isset( $args[2] ) ) {
+				$args[2] = array();
+			}
+
 			$user_caps['switch_to_user'] = ( user_can( $user->ID, 'edit_user', $args[2] ) && ( $args[2] !== $user->ID ) );
 		} elseif ( 'switch_off' === $args[0] ) {
 			if ( array_key_exists( 'switch_users', $user_caps ) ) {

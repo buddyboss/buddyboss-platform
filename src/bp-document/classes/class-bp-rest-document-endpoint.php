@@ -239,7 +239,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
 	 * @apiParam {String=asc,desc} [order=asc] Order sort attribute ascending or descending.
-	 * @apiParam {String=title,date_created,date_modified,group_id,privacy} [orderby=title] Order by a specific parameter.
+	 * @apiParam {String=title,date_created,date_modified,group_id,privacy,id,include} [orderby=title] Order by a specific parameter.
 	 * @apiParam {Number} [user_id] Limit result set to items created by a specific user (ID).
 	 * @apiParam {Number} [max] Maximum number of results to return.
 	 * @apiParam {Number} [folder_id] A unique numeric ID for the Folder.
@@ -299,7 +299,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['include'] ) ) {
-			$args['include'] = $request['include'];
+			$args['document_ids'] = $request['include'];
+			if (
+				! empty( $args['order_by'] )
+				&& 'include' === $args['order_by']
+			) {
+				$args['order_by'] = 'in';
+			}
 		}
 
 		if ( ! empty( $request['type'] ) ) {
@@ -1032,7 +1038,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$status = bp_document_delete( array( 'id' => $id ), true );
+		$status = bp_document_delete( array( 'id' => $id ) );
 
 		// Build the response.
 		$response = new WP_REST_Response();
@@ -1124,17 +1130,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		}
 
-		if ( WP_REST_Server::EDITABLE === $method ) {
-			$key        = 'edit';
-			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the document.', 'buddyboss' ),
-				'type'              => 'integer',
-				'required'          => true,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
-			);
-		}
-
 		$args['content'] = array(
 			'description'       => __( 'Document Content.', 'buddyboss' ),
 			'type'              => 'string',
@@ -1164,6 +1159,19 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
+		if ( WP_REST_Server::EDITABLE === $method ) {
+			$key        = 'edit';
+			$args['id'] = array(
+				'description'       => __( 'A unique numeric ID for the document.', 'buddyboss' ),
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
+			unset( $args['privacy']['default'] );
+		}
 
 		/**
 		 * Filters the method query arguments.
@@ -1328,9 +1336,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'size'                  => '',
 			'msg_preview'           => '',
 			'attachment_data'       => ( isset( $document->attachment_data ) ? $document->attachment_data : array() ),
-			'user_nicename'         => $document->user_nicename,
-			'user_login'            => $document->user_login,
-			'display_name'          => $document->display_name,
+			'user_nicename'         => get_the_author_meta( 'user_nicename', $document->user_id ),
+			'user_login'            => get_the_author_meta( 'user_login', $document->user_id ),
+			'display_name'          => bp_core_get_user_displayname( $document->user_id ),
 			'user_permissions'      => $this->get_document_current_user_permissions( $document, $request ),
 		);
 
@@ -1343,7 +1351,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					! empty( $get_activity->id ) &&
 					(
 						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-						|| empty( $get_activity->secondary_item_id ) || empty( $get_activity->item_id )
+						|| 'public' === $activity->privacy && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
 					)
 				) {
 					$data['hide_activity_actions'] = true;
@@ -1406,7 +1414,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 							'<textarea class="document-text-file-data-hidden" style="display: none;">' . wp_kses_post( $file_data ) . '</textarea>' .
 						'</div>' .
 						'<div class="document-expand">' .
-							'<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss' ) . '</a>' .
+							'<a href="#" class="document-expand-anchor"><i class="bb-icon-l bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss' ) . '</a>' .
 						'</div>' .
 					'</div>';
 
@@ -1692,7 +1700,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order documents by which attribute.', 'buddyboss' ),
 			'default'           => 'title',
 			'type'              => 'string',
-			'enum'              => array( 'title', 'date_created', 'date_modified', 'group_id', 'privacy' ),
+			'enum'              => array( 'title', 'date_created', 'date_modified', 'group_id', 'privacy', 'id', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -2311,14 +2319,25 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+		$document_id  = bp_activity_get_meta( $activity_id, 'bp_document_id', true );
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
+
+		if ( ! empty( $document_id ) ) {
+			$document_ids[] = $document_id;
+			$document_ids   = array_filter( array_unique( $document_ids ) );
+		}
 
 		if ( empty( $document_ids ) ) {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
+		$documents = $this->assemble_response_data(
+			array(
+				'document_ids' => $document_ids,
+				'sort'         => 'ASC',
+			)
+		);
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2327,7 +2346,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$retval = array();
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'activity' ) )
+				$this->prepare_item_for_response(
+					$document,
+					array(
+						'support' => 'activity',
+						'context' => 'view',
+					)
+				)
 			);
 		}
 
@@ -2505,11 +2530,22 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$component = $activity['component'];
 		$type      = 'activity_comment' === $activity['type'];
 		$item_id   = $activity['primary_item_id'];
-		if ( true === $type && ! empty( $item_id ) ) {
+
+		if ( ! empty( $item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $item_id );
-			if ( 'groups' === $parent_activity->component ) {
-				$item_id   = $parent_activity->item_id;
-				$component = 'groups';
+			if ( true === $type ) {
+				if ( 'groups' === $parent_activity->component ) {
+					$item_id   = $parent_activity->item_id;
+					$component = 'groups';
+				}
+			}
+			if ( 'blogs' === $parent_activity->component ||
+			     (
+				     ! empty( $activity['component'] ) &&
+				     'blogs' === $activity['component']
+			     )
+			) {
+				return false;
 			}
 		}
 
@@ -2587,14 +2623,25 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
+		$document_id  = bp_messages_get_meta( $message_id, 'bp_document_id', true );
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
+
+		if ( ! empty( $document_id ) ) {
+			$document_ids[] = $document_id;
+			$document_ids   = array_filter( array_unique( $document_ids ) );
+		}
 
 		if ( empty( $document_ids ) ) {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
+		$documents = $this->assemble_response_data(
+			array(
+				'document_ids' => $document_ids,
+				'sort'         => 'ASC',
+			)
+		);
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2746,14 +2793,25 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$document_ids = get_post_meta( $p_id, 'bp_document_ids', true );
+		$document_id  = get_post_meta( $p_id, 'bp_document_id', true );
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
+
+		if ( ! empty( $document_id ) ) {
+			$document_ids[] = $document_id;
+			$document_ids   = array_filter( array_unique( $document_ids ) );
+		}
 
 		if ( empty( $document_ids ) ) {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
+		$documents = $this->assemble_response_data(
+			array(
+				'document_ids' => $document_ids,
+				'sort'         => 'ASC',
+			)
+		);
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
