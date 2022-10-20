@@ -238,6 +238,9 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		$button_text          = __( 'Block', 'buddyboss' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
+	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+		$button_text          = __( 'Report Member', 'buddyboss' );
+		$reported_button_text = __( 'Report Member', 'buddyboss' );
 	} else {
 		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
 		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
@@ -269,11 +272,11 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
 
 	if ( $is_reported ) {
-		$button['link_text']                    = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
-		$button['button_attr']['class']         = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
-		$button['button_attr']['item_id']       = $item_id;
-		$button['button_attr']['item_type']     = $item_type;
-		$button['button_attr']['href']          = '#reported-content';
+		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
+		$button['button_attr']['class']     = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
+		$button['button_attr']['item_id']   = $item_id;
+		$button['button_attr']['item_type'] = $item_type;
+		$button['button_attr']['href']      = '#reported-content';
 		unset( $button['button_attr']['data-bp-content-id'] );
 		unset( $button['button_attr']['data-bp-content-type'] );
 		unset( $button['button_attr']['data-bp-nonce'] );
@@ -312,7 +315,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 }
 
 /**
- * Function to Check content Reported by current usr or not.
+ * Function to Check content Reported by current user or not.
  *
  * @since BuddyBoss 1.5.6
  *
@@ -327,7 +330,10 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
-		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
+		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && empty( $moderation->user_report ) );
+		if ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+			$response = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && ! empty( $moderation->user_report ) );
+		}
 	}
 
 	return $response;
@@ -503,6 +509,10 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 			return false;
 		}
+	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+		if ( ! bb_is_moderation_member_reporting_enable( 0 ) ) {
+			return false;
+		}
 	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 		return false;
 	}
@@ -530,12 +540,16 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		return false;
 	}
 
+	if ( in_array( $item_sub_type, array( BP_Moderation_Members::$moderation_type_report ), true ) && bp_loggedin_user_id() === $item_sub_id ) {
+		return false;
+	}
+
 	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 		return false;
 	}
 
 	$owner_ids = bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type );
-	if ( ! is_array( $owner_ids ) ){
+	if ( ! is_array( $owner_ids ) ) {
 		$owner_ids = array( $owner_ids );
 	}
 
@@ -589,7 +603,12 @@ function bp_moderation_add( $args = array() ) {
 	$response = false;
 
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		// Called member class externally when content_type = report_member.
+		if ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
+			$class = BP_Moderation_Abstract::get_class( BP_Moderation_Members::$moderation_type );
+		} else {
+			$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		}
 
 		if ( method_exists( $class, 'report' ) ) {
 			$response = $class::report( $args );
@@ -837,6 +856,48 @@ function bp_moderation_auto_suspend_threshold( $default = 5 ) {
 }
 
 /**
+ * Checks if Moderation Member reporting feature is enabled.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is member reporting enabled or not.
+ * @uses get_option() To get the bb_blocking_member_reporting option.
+ */
+function bb_is_moderation_member_reporting_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bb_is_moderation_member_reporting_enable', (bool) get_option( 'bb_blocking_member_reporting', $default ) );
+}
+
+/**
+ * Checks if Moderation Member auto suspend report feature is enabled.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is auto suspend report enabled or not.
+ * @uses get_option() To get the bb_reporting_auto_suspend option.
+ */
+function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend', $default ) );
+}
+
+/**
+ * Checks if Moderation Member auto suspend report feature is enabled.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is search autocomplete enabled or not.
+ * @uses bp_moderation_get_setting() To get the bb_reporting_auto_suspend_threshold option.
+ */
+function bb_moderation_auto_suspend_report_threshold( $default = 5 ) {
+	return apply_filters( 'bb_moderation_auto_suspend_report_threshold', (int) bp_moderation_get_setting( 'bb_reporting_auto_suspend_threshold', $default ) );
+}
+
+/**
  * Checks if Moderation Member auto suspend email notification feature is enabled.
  *
  * @since BuddyBoss 1.5.6
@@ -862,8 +923,12 @@ function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
  * @uses  get_option() To get the bp_search_autocomplete option
  */
 function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
-	// Check for folder type and content type as document.
-	if ( BP_Moderation_Folder::$moderation_type === $content_type ) {
+
+	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
+		$content_type = BP_Moderation_Members::$moderation_type_report;
+
+		// Check for folder type and content type as document.
+	} elseif ( BP_Moderation_Folder::$moderation_type === $content_type ) {
 		$content_type = BP_Moderation_Document::$moderation_type;
 
 		// Check for album type and content type as media.
@@ -872,13 +937,17 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 
 		// Check for message type and content type as user.
 	} elseif ( BP_Moderation_Message::$moderation_type === $content_type ) {
-		return bp_is_moderation_member_blocking_enable(0);
+		return bp_is_moderation_member_blocking_enable( 0 );
 	}
 
 	$settings = get_option( 'bpm_reporting_content_reporting', array() );
 
+	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
+		$settings[ $content_type ] = bb_is_moderation_member_reporting_enable();
+	}
+
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -906,7 +975,7 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
 
 	$settings = get_option( 'bpm_reporting_auto_hide', array() );
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -931,7 +1000,7 @@ function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_typ
 	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -969,7 +1038,7 @@ function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
 	$user_ids = 0;
-	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
+	$class    = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
 	if ( method_exists( $class, 'get_content_owner_id' ) ) {
 		$user_ids = $class::get_content_owner_id( $moderation_item_id );
@@ -1202,4 +1271,28 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
 	$blocked_by_members = bb_moderation_get_blocked_by_user_ids();
 
 	return ( ! empty( $blocked_by_members ) && in_array( (int) $user_id, $blocked_by_members, true ) );
+}
+/**
+ * Function to get reporting categories show when fields array.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @return array
+ */
+function bb_moderation_get_reporting_category_fields_array() {
+
+	$result = array(
+		'content'         => esc_html__( 'Content', 'buddyboss' ),
+		'members'         => esc_html__( 'Members', 'buddyboss' ),
+		'content_members' => esc_html__( 'Content & Members', 'buddyboss' ),
+	);
+
+	/**
+	 * Filters the reported button text for different components
+	 *
+	 * @since BuddyBoss 2.1.1
+	 *
+	 * @param array $result Options for show when field.
+	 */
+	return apply_filters( 'bb_moderation_get_reporting_category_fields_array', $result );
 }
