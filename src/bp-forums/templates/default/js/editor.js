@@ -32,7 +32,8 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.description,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions,
+							// toolbar: toolbarOptions,
+							toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-forum-form' ).closest( '.bbp-forum-form' ).find( '#whats-new-toolbar' )[0] } ),
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
@@ -124,7 +125,8 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.type_reply,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions,
+							// toolbar: toolbarOptions,
+							toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-reply-form' ).closest( '.bbp-reply-form' ).find( '#whats-new-toolbar' )[0] } ),
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
@@ -216,7 +218,8 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.type_topic,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions,
+							// toolbar: toolbarOptions,
+							toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-topic-form ' ).find( '#whats-new-toolbar' )[0] } ),
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
@@ -392,7 +395,8 @@ jQuery( document ).ready(
 										text: window.bbpEditorJsStrs.description,
 										hideOnClick: true
 									},
-									toolbar: toolbarOptions,
+									// toolbar: toolbarOptions,
+									toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-forum-form' ).find( '#whats-new-toolbar' )[0] } ),
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
@@ -443,7 +447,8 @@ jQuery( document ).ready(
 										text: window.bbpEditorJsStrs.type_reply,
 										hideOnClick: true
 									},
-									toolbar: toolbarOptions,
+									// toolbar: toolbarOptions,
+									toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-reply-form' ).find( '#whats-new-toolbar' )[0] } ),
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
@@ -494,7 +499,8 @@ jQuery( document ).ready(
 										text: window.bbpEditorJsStrs.type_topic,
 										hideOnClick: true
 									},
-									toolbar: toolbarOptions,
+									// toolbar: toolbarOptions,
+									toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-topic-form' ).find( '#whats-new-toolbar' )[0] } ),
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
