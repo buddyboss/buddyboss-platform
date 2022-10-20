@@ -175,9 +175,6 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 			} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) ) {
 				$wp_query->bbp_is_single_user_subs = true;
 
-				// 'engagements' action
-			} elseif ( bbp_is_engagements_active() && bp_is_current_action( bbp_get_user_engagements_slug() ) ) {
-				$wp_query->bbp_is_single_user_engagements = true;
 			}
 		}
 
