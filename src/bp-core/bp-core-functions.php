@@ -8151,8 +8151,12 @@ function bb_presence_interval() {
 	}
 
 	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
-	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
 	$global_pulse       = 60;
+
+	remove_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
+	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
+	add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
+
 	if ( ! empty( $heartbeat_settings['interval'] ) && 0 === (int) $heartbeat_disabled ) {
 		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 60;
 	}
