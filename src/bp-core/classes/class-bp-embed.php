@@ -369,6 +369,10 @@ class BP_Embed extends WP_Embed {
 			return $content;
 		}
 
+		if ( preg_match( '/<a href="(.*)">/', $content ) ) {
+			return $content;
+		}
+
 		$embed_urls = array();
 		$flag       = true;
 
