@@ -180,7 +180,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 					$group_status = bp_get_group_status( $group );
 					?>
 					<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
-					<span class="media-folder_status"><?php echo ucfirst( $group_status ); ?></span>
+					<span class="media-folder_status"><?php echo esc_html__( ucfirst( $group_status ), 'buddyboss' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText ?></span>
 					<?php
 				} else {
 					?>
