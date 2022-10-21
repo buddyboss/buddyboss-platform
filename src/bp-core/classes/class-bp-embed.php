@@ -370,7 +370,7 @@ class BP_Embed extends WP_Embed {
 		}
 
 		if ( preg_match( '/<a href="(.*)">/', $content ) ) {
-			return $content;
+			$content = preg_replace( '/<a href="(.*)">|<\/a>/i', '', $content );
 		}
 
 		$embed_urls = array();
