@@ -30,7 +30,7 @@ if ( false === $bb_changelog_data ) {
 	);
 
 	if ( is_wp_error( $api ) ) {
-		wp_die( esc_attr( $api ) );
+		wp_die( $api );
 	}
 
 	// Sanitize HTML.
