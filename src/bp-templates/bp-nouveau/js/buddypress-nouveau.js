@@ -3365,11 +3365,24 @@ window.bp = window.bp || {};
 
 		userPresenceStatus: function() {
 
+			 // setup the ideal time user check.
+			 bp.Nouveau.userPresenceChecker( 15000 );
+
 			 if ( '' !== BB_Nouveau_Presence.heartbeat_enabled ) {
 				 $( document ).on( 'heartbeat-send', function ( event, data ) {
 					 var paged_user_id  = bp.Nouveau.getPageUserIDs();
 					 // Add user data to Heartbeat.
 					 data.presence_users = paged_user_id.join( ',' );
+
+					 if (
+						 true === bp.Nouveau.isUserThreadScreen() &&
+						 'undefined' !== typeof window.bb_is_user_active &&
+						 true === window.bb_is_user_active &&
+						 'undefined' !== typeof BP_Nouveau.messages.current_thread_id &&
+						 parseInt( BP_Nouveau.messages.current_thread_id ) > 0
+					 ) {
+						 data.message_thread_id = BP_Nouveau.messages.current_thread_id;
+					 }
 				 } );
 
 				 $( document ).on( 'heartbeat-tick', function ( event, data ) {
@@ -3434,6 +3447,29 @@ window.bp = window.bp || {};
 				.removeClass( 'offline online' )
 				.addClass( status )
 				.attr( 'data-bb-user-presence', status );
+		},
+
+		isUserThreadScreen: function() {
+			if ( 'undefined' === typeof BP_Nouveau.messages ) {
+				return false;
+			} else {
+				return true;
+			}
+		},
+
+		userPresenceChecker: function (inactive_timeout) {
+
+			var wait = setTimeout( function () {
+				window.bb_is_user_active = false;
+			}, inactive_timeout );
+
+			document.onmousemove = document.mousedown = document.mouseup = document.onkeydown = document.onkeyup = document.focus = function () {
+				clearTimeout( wait );
+				wait = setTimeout( function () {
+					window.bb_is_user_active = false;
+				}, inactive_timeout );
+				window.bb_is_user_active = true;
+			};
 		}
 
 	};
