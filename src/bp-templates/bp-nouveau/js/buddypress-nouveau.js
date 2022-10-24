@@ -3395,12 +3395,24 @@ window.bp = window.bp || {};
 				} );
 			} else {
 				setInterval( function () {
-					var paged_user_id = bp.Nouveau.getPageUserIDs();
+					var params = {};
+					params.paged_user_id = bp.Nouveau.getPageUserIDs();
+
+					if (
+						true === bp.Nouveau.isUserThreadScreen() &&
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active &&
+						'undefined' !== typeof BP_Nouveau.messages.current_thread_id &&
+						parseInt( BP_Nouveau.messages.current_thread_id ) > 0
+					) {
+						params.message_thread_id = BP_Nouveau.messages.current_thread_id;
+					}
+
 					$.ajax(
 						{
 							type: 'GET',
 							url: '/wp-json/buddyboss/v1/members/presence',
-							data: { ids: paged_user_id },
+							data: params,
 							beforeSend: function ( xhr ) {
 								xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
 							},
