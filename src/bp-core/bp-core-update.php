@@ -374,7 +374,7 @@ function bp_version_updater() {
 			bb_update_to_2_1_1();
 		}
 
-		if ( $raw_db_version < 18921 ) {
+		if ( $raw_db_version < 18951 ) {
 			bb_update_to_2_2_0();
 		}
 	}
@@ -1945,6 +1945,9 @@ function bb_update_to_2_2_0() {
 
 	// Update the messages email templates.
 	bb_migrate_messages_email_templates();
+
+	// add last active column is recipient table.
+	bb_add_last_active_column_in_recipient_table();
 }
 
 /**
@@ -2062,5 +2065,23 @@ function bb_migrate_messages_email_templates() {
 				)
 			);
 		}
+	}
+}
+
+/**
+ * Add 'last_active' column to bp_messages_recipients table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_add_last_active_column_in_recipient_table() {
+	global $wpdb;
+
+	// Add 'last_active' column in 'bp_messages_messages' table.
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_messages_recipients' AND column_name = 'last_active'" ); //phpcs:ignore
+
+	if ( empty( $row ) ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_messages_recipients ADD `last_active` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `is_hidden`" ); //phpcs:ignore
 	}
 }
