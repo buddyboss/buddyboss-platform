@@ -231,6 +231,9 @@ class BP_Messages_Message {
 			bp_messages_delete_meta( $this->id );
 		}
 
+		// Update the sender member's last active time.
+		self::update_user_thread_last_active_time( $this->thread_id, $this->sender_id );
+
 		/**
 		 * Fires after the current message item has been saved.
 		 *
