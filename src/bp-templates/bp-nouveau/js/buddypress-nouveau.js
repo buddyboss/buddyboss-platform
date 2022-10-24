@@ -3369,16 +3369,16 @@ window.bp = window.bp || {};
 				 $( document ).on( 'heartbeat-send', function ( event, data ) {
 					 var paged_user_id  = bp.Nouveau.getPageUserIDs();
 					 // Add user data to Heartbeat.
-					 data.presece_users = paged_user_id.join( ',' );
+					 data.presence_users = paged_user_id.join( ',' );
 				 } );
 
 				 $( document ).on( 'heartbeat-tick', function ( event, data ) {
 					 // Check for our data, and use it.
-					 if ( ! data.presence_data ) {
+					 if ( ! data.users_presence ) {
 						 return;
 					 }
 
-					 bp.Nouveau.updateUsersPresence( data.presence_data );
+					 bp.Nouveau.updateUsersPresence( data.users_presence );
 				 } );
 			 } else {
 				 setInterval( function () {
