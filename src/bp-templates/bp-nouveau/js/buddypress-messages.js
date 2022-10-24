@@ -1394,13 +1394,6 @@ window.bp = window.bp || {};
 					nonce  : BP_Nouveau.messages.nonces.send,
 				};
 
-				if (
-					'undefined' !== typeof bp.Pusher_FrontCommon &&
-					'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
-				) {
-					params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join( ',' );
-				}
-
 				var sent = bp.ajax.post(
 					'messages_send_message',
 					_.extend(
@@ -1645,13 +1638,6 @@ window.bp = window.bp || {};
 						hash    : new Date().getTime(),
 						send_at : bp.Nouveau.Messages.getUTCDateTime()
 					};
-
-					if (
-						'undefined' !== typeof bp.Pusher_FrontCommon &&
-						'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
-					) {
-						params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join( ',' );
-					}
 
 					options.data = _.extend(
 						options.data,
