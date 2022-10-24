@@ -921,4 +921,38 @@ class BP_Messages_Message {
 	protected static function strip_leading_and( $s ) {
 		return preg_replace( '/^\s*AND\s*/', '', $s );
 	}
+
+	/**
+	 * Update the last active time of the user on thread.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $thread_id ID of the thread.
+	 * @param int $user_id  ID of the user.
+	 *
+	 * @return void
+	 */
+	public function update_user_thread_last_active_time( $thread_id, $user_id ) {
+		global $wpdb;
+
+		$bp        = buddypress();
+		$thread_id = (int) $thread_id;
+		$user_id   = (int) $user_id;
+
+		if ( empty( $thread_id ) || empty( $user_id ) ) {
+			return;
+		}
+
+		// Update the current logged in member thread last active time.
+		$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$bp->messages->table_name_recipients,
+			array(
+				'last_active' => bp_core_current_time(),
+			),
+			array(
+				'thread_id' => $thread_id,
+				'user_id'   => $user_id,
+			)
+		);
+	}
 }

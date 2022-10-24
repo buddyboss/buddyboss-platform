@@ -1616,6 +1616,9 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	$thread = bp_nouveau_get_thread_messages( $thread_id, $post );
 
+	// Update the current logged in member thread last active time.
+	BP_Messages_Message::update_user_thread_last_active_time( $thread_id, bp_loggedin_user_id() );
+
 	wp_send_json_success( $thread );
 }
 
