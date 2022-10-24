@@ -958,4 +958,31 @@ class BP_Messages_Message {
 			)
 		);
 	}
+
+	/**
+	 * Get the last active time of the user on thread.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $thread_id ID of the thread.
+	 * @param int $user_id  ID of the user.
+	 *
+	 * @return void
+	 */
+	public function get_user_thread_last_active_time( $thread_id, $user_id ) {
+		global $wpdb;
+
+		$bp        = buddypress();
+		$thread_id = (int) $thread_id;
+		$user_id   = (int) $user_id;
+
+		if ( empty( $thread_id ) || empty( $user_id ) ) {
+			return;
+		}
+
+		// get the member thread last active time.
+		$last_active = $wpdb->get_var( $wpdb->prepare( "SELECT last_active FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d AND user_id = %d", $thread_id, $user_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		return $last_active;
+	}
 }
