@@ -2237,7 +2237,6 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 		messages_is_valid_thread( (int) $data['message_thread_id'] ) &&
 		messages_check_thread_access( (int) $data['message_thread_id'], (int) bp_loggedin_user_id() )
 	) {
-		error_log( print_r( 'called', 1 ) );
 		// Update the current logged in member thread last active time.
 		BP_Messages_Message::update_user_thread_last_active_time( (int) $data['message_thread_id'], bp_loggedin_user_id() );
 	}
