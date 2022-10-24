@@ -960,7 +960,7 @@ class BP_Messages_Message {
 	 *
 	 * @return void
 	 */
-	public function get_user_thread_last_active_time( $thread_id, $user_id ) {
+	public static function get_user_thread_last_active_time( $thread_id, $user_id ) {
 		global $wpdb;
 
 		$bp        = buddypress();
