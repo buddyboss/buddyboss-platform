@@ -44,16 +44,18 @@ if ( false === $bb_changelog_data ) {
 		$versions        = array();
 		$changelog       = '';
 		$version_content = '';
-		foreach ( $lines as $line ) {
-			if ( empty( $line ) ) {
-				continue;
+		if ( ! empty( $lines ) ) {
+			foreach ( $lines as $line ) {
+				if ( empty( $line ) ) {
+					continue;
+				}
+				if ( preg_match( '/^\d/', trim( wp_strip_all_tags( $line ) ) ) ) {
+					$version = trim( wp_strip_all_tags( $line ) );
+				} else {
+					$version_content .= $line;
+				}
+				$versions[ $version ] = $version_content;
 			}
-			if ( preg_match( '/^\d/', trim( wp_strip_all_tags( $line ) ) ) ) {
-				$version = trim( wp_strip_all_tags( $line ) );
-			} else {
-				$version_content .= $line;
-			}
-			$versions[ $version ] = $version_content;
 		}
 		$bb_changelog_data = $versions[ $api->version ];
 		wp_cache_set( $cache_key, $bb_changelog_data, 'bp' );
