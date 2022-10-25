@@ -175,12 +175,6 @@ class BP_Messages_Message {
 
 		$recipient_ids = array();
 
-		$silent_recipients = array();
-
-		if ( ! empty( $_POST['silent_recipients'] ) ) {
-			$silent_recipients = array_unique( wp_parse_id_list( $_POST['silent_recipients'] ) );
-		}
-
 		if ( $new_thread ) {
 			// Add an recipient entry for all recipients.
 			foreach ( (array) $this->recipients as $recipient ) {
@@ -209,14 +203,7 @@ class BP_Messages_Message {
 
 		} else {
 			// Update the unread count for all recipients.
-			if ( ! empty( $silent_recipients ) ) {
-				if ( ! in_array( $this->sender_id, $silent_recipients, true ) ) {
-					$silent_recipients[] = $this->sender_id;
-				}
-				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id NOT IN (" . implode( ', ', $silent_recipients ) . ")", $this->thread_id ) );
-			} else {
-				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
-			}
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
 
 			if ( true === $this->mark_visible ) {
 				// Mark the thread to visible for all recipients.
@@ -230,6 +217,9 @@ class BP_Messages_Message {
 		if ( ! empty( $this->id ) && ! is_wp_error( $this->id ) ) {
 			bp_messages_delete_meta( $this->id );
 		}
+
+		// Update the sender member's last active time.
+		self::update_user_thread_last_active_time( $this->thread_id, $this->sender_id );
 
 		/**
 		 * Fires after the current message item has been saved.
@@ -920,5 +910,78 @@ class BP_Messages_Message {
 	 */
 	protected static function strip_leading_and( $s ) {
 		return preg_replace( '/^\s*AND\s*/', '', $s );
+	}
+
+	/**
+	 * Update the last active time of the user on thread.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $thread_id ID of the thread.
+	 * @param int $user_id  ID of the user.
+	 *
+	 * @return void
+	 */
+	public static function update_user_thread_last_active_time( $thread_id, $user_id ) {
+		global $wpdb;
+
+		$bp        = buddypress();
+		$thread_id = (int) $thread_id;
+		$user_id   = (int) $user_id;
+
+		if ( empty( $thread_id ) || empty( $user_id ) ) {
+			return;
+		}
+
+		$cache_key = 'bb_user_thread_activity_time_' . $thread_id . '_' . $user_id;
+
+		wp_cache_delete( $cache_key, 'bp_messages' );
+
+		// Update the current logged in member thread last active time.
+		$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$bp->messages->table_name_recipients,
+			array(
+				'last_active' => bp_core_current_time(),
+			),
+			array(
+				'thread_id' => $thread_id,
+				'user_id'   => $user_id,
+			)
+		);
+	}
+
+	/**
+	 * Get the last active time of the user on thread.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $thread_id ID of the thread.
+	 * @param int $user_id  ID of the user.
+	 *
+	 * @return void
+	 */
+	public static function get_user_thread_last_active_time( $thread_id, $user_id ) {
+		global $wpdb;
+
+		$bp        = buddypress();
+		$thread_id = (int) $thread_id;
+		$user_id   = (int) $user_id;
+
+		if ( empty( $thread_id ) || empty( $user_id ) ) {
+			return;
+		}
+
+		$cache_key = 'bb_user_thread_activity_time_' . $thread_id . '_' . $user_id;
+
+		$last_active = wp_cache_get( $cache_key, 'bp_messages' );
+
+		if ( false === $last_active ) {
+			// get the member thread last active time.
+			$last_active = $wpdb->get_var( $wpdb->prepare( "SELECT last_active FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d AND user_id = %d", $thread_id, $user_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+			wp_cache_set( $cache_key, $last_active, 'bp_messages' );
+		}
+
+		return $last_active;
 	}
 }
