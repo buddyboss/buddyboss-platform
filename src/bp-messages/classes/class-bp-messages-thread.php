@@ -757,9 +757,6 @@ class BP_Messages_Thread {
 		 */
 		do_action( 'bp_messages_thread_messages_after_update', $thread_id, $message_ids, $user_id, $update_message_ids );
 
-		// Update the current logged in member thread last active time.
-		BP_Messages_Message::update_user_thread_last_active_time( $thread_id, $user_id );
-
 		// If there is no any messages in thread then delete the complete thread.
 		$thread_delete = true;
 

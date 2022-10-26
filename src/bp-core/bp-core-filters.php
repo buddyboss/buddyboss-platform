@@ -2231,16 +2231,6 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 		$response['users_presence'] = bb_get_users_presence( $presence_user_ids, $compare_time );
 	}
 
-	if (
-		isset( $data['message_thread_id'] ) &&
-		bp_is_active( 'messages' ) &&
-		messages_is_valid_thread( (int) $data['message_thread_id'] ) &&
-		messages_check_thread_access( (int) $data['message_thread_id'], (int) bp_loggedin_user_id() )
-	) {
-		// Update the current logged in member thread last active time.
-		BP_Messages_Message::update_user_thread_last_active_time( (int) $data['message_thread_id'], bp_loggedin_user_id() );
-	}
-
 	return $response;
 }
 add_filter( 'heartbeat_received', 'bb_heartbeat_member_presence_info', 11, 2 );
