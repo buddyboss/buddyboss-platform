@@ -2221,7 +2221,10 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 		return $response;
 	}
 
-	bp_core_record_activity( true );
+	$user_presence = (bool) $data['user_presence'] ?? false;
+	if ( true === $user_presence ) {
+		bp_core_record_activity( true );
+	}
 
 	if ( isset( $data['presence_users'] ) ) {
 		$interval_time     = bb_presence_interval();
