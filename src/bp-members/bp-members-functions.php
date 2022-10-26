@@ -4833,11 +4833,12 @@ function bp_get_hidden_member_types() {
  *
  * @since BuddyPress 1.7.0
  *
- * @param int $user_id User id.
+ * @param int      $user_id User id.
+ * @param bool|int $expiry  Given time or whether to check degault timeframe.
  *
  * @return string
  */
-function bb_is_online_user( $user_id, $compare_time = false ) {
+function bb_is_online_user( $user_id, $expiry = false ) {
 
 	if ( ! function_exists( 'bp_get_user_last_activity' ) ) {
 		return;
@@ -4849,14 +4850,16 @@ function bb_is_online_user( $user_id, $compare_time = false ) {
 		return false;
 	}
 
-	if ( false !== $compare_time ) {
-		$activity_timeframe = $compare_time;
+	if ( true === $expiry ) {
+		$timeframe = apply_filters( 'bb_is_online_user_expiry', 300 ); // Default 300 seconds.
+	} elseif ( is_int( $expiry ) ) {
+		$timeframe = $expiry;
 	} else {
 		// the activity timeframe is 5 minutes.
-		$activity_timeframe = 5 * MINUTE_IN_SECONDS;
+		$timeframe = 5 * MINUTE_IN_SECONDS;
 	}
 
-	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $activity_timeframe ), $user_id );
+	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $timeframe ), $user_id );
 }
 
 /**
@@ -5271,8 +5274,8 @@ function bb_get_member_type_label_colors( $type ) {
  *
  * @return string
  */
-function bb_get_user_presence( $user_id, $compare_time = false ) {
-	if ( bb_is_online_user( $user_id, $compare_time ) ) {
+function bb_get_user_presence( $user_id, $expiry = false ) {
+	if ( bb_is_online_user( $user_id, $expiry ) ) {
 		return 'online';
 	} else {
 		return 'offline';
