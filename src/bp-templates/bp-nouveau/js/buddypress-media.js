@@ -1394,7 +1394,7 @@ window.bp = window.bp || {};
 		cancelEditAlbumTitle: function ( event ) {
 			event.preventDefault();
 
-			$( '#bb-album-title' ).hide();
+			$( '#bb-album-title' ).removeClass( 'error' ).hide();
 			$( '#bp-save-album-title,#bp-save-folder-title' ).hide();
 			$( '#bp-cancel-edit-album-title' ).hide();
 			$( '#bp-edit-album-title,#bp-edit-folder-title' ).show();
@@ -4904,7 +4904,7 @@ window.bp = window.bp || {};
 
 			this.closeUploader( event );
 			$( '#bp-media-create-album' ).hide();
-			$( '#bb-album-title' ).val( '' );
+			$( '#bb-album-title' ).val( '' ).removeClass( 'error' );
 
 		},
 
