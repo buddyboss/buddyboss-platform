@@ -2217,22 +2217,17 @@ add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_compon
  * @return array
  */
 function bb_heartbeat_member_presence_info( $response = array(), $data = array() ) {
-	if ( ! isset( $data['presence_users'] ) && ! isset( $data['message_thread_id'] ) ) {
+	if ( ! isset( $data['presence_users'] ) ) {
 		return $response;
 	}
 
-	$user_presence = (bool) $data['user_presence'] ?? false;
-	if ( true === $user_presence ) {
-		bp_core_record_activity( true );
-	}
+	bp_core_record_activity( true );
 
-	if ( isset( $data['presence_users'] ) ) {
-		$interval_time     = bb_presence_interval();
-		$presence_user_ids = wp_parse_id_list( $data['presence_users'] );
-		$compare_time      = $interval_time + 5;
+	$interval_time     = bb_presence_interval();
+	$presence_user_ids = wp_parse_id_list( $data['presence_users'] );
+	$compare_time      = $interval_time + 5;
 
-		$response['users_presence'] = bb_get_users_presence( $presence_user_ids, $compare_time );
-	}
+	$response['users_presence'] = bb_get_users_presence( $presence_user_ids, $compare_time );
 
 	return $response;
 }
