@@ -3383,6 +3383,14 @@ window.bp = window.bp || {};
 					) {
 						data.message_thread_id = BP_Nouveau.messages.current_thread_id;
 					}
+
+					if (
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active
+					) {
+						data.user_presence = window.bb_is_user_active;
+					}
+
 				} );
 
 				$( document ).on( 'heartbeat-tick', function ( event, data ) {
@@ -3398,6 +3406,7 @@ window.bp = window.bp || {};
 					var params = {};
 					params.paged_user_id = bp.Nouveau.getPageUserIDs();
 
+
 					if (
 						true === bp.Nouveau.isUserThreadScreen() &&
 						'undefined' !== typeof window.bb_is_user_active &&
@@ -3406,6 +3415,13 @@ window.bp = window.bp || {};
 						parseInt( BP_Nouveau.messages.current_thread_id ) > 0
 					) {
 						params.message_thread_id = BP_Nouveau.messages.current_thread_id;
+					}
+
+					if (
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active
+					) {
+						params.user_presence = window.bb_is_user_active;
 					}
 
 					$.ajax(
