@@ -1386,7 +1386,7 @@ class BP_Moderation {
 	public function unhide() {
 		$this->hide_sitewide = 0;
 
-		if ( ! empty( $this->report_id ) ) {
+		if ( ! empty( $this->report_id ) && ! is_admin() ) {
 			$this->delete();
 		} else {
 
