@@ -778,9 +778,9 @@ function bp_core_admin_integration_tabs( $active_tab = '' ) {
 		$tab_class  = $is_current ? $active_class : $idle_class;
 
 		if ( $i === $count ) {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+			$tabs_html .= '<li class="' . esc_attr( sanitize_key( $tab_data['name'] ) ) . '"><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
 		} else {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+			$tabs_html .= '<li class="' . esc_attr( sanitize_key( $tab_data['name'] ) ) . '"><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
 		}
 
 		$i = $i + 1;
