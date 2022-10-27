@@ -3449,7 +3449,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 		}
 	}
 
-	$attachment_url = ! empty( $attachment_url ) ? user_trailingslashit( $attachment_url ) : $attachment_url;
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filters media preview image url.
