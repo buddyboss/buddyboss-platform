@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
@@ -3365,44 +3365,63 @@ window.bp = window.bp || {};
 
 		userPresenceStatus: function() {
 
-			 if ( '' !== BB_Nouveau_Presence.heartbeat_enabled ) {
-				 $( document ).on( 'heartbeat-send', function ( event, data ) {
-					 var paged_user_id  = bp.Nouveau.getPageUserIDs();
-					 // Add user data to Heartbeat.
-					 data.presece_users = paged_user_id.join( ',' );
-				 } );
+			var ideal_interval = (BB_Nouveau_Presence.presence_interval * 1000) + 500;
 
-				 $( document ).on( 'heartbeat-tick', function ( event, data ) {
-					 // Check for our data, and use it.
-					 if ( ! data.presence_data ) {
-						 return;
-					 }
+			// setup the ideal time user check.
+			bp.Nouveau.userPresenceChecker( ideal_interval );
 
-					 bp.Nouveau.updateUsersPresence( data.presence_data );
-				 } );
-			 } else {
-				 setInterval( function () {
-					 var paged_user_id  = bp.Nouveau.getPageUserIDs();
-					 $.ajax(
-						 {
-							 type: 'GET',
-							 url: '/wp-json/buddyboss/v1/members/presence',
-							 data: { ids:paged_user_id },
-							 beforeSend: function( xhr ) {
-								 xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
-							 },
-							 success: function ( data ) {
-								 // Check for our data, and use it.
-								 if ( ! data ) {
-									 return;
-								 }
+			if ( '' !== BB_Nouveau_Presence.heartbeat_enabled ) {
+				$( document ).on( 'heartbeat-send', function ( event, data ) {
+					if (
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active
+					) {
+						var paged_user_id  = bp.Nouveau.getPageUserIDs();
+						// Add user data to Heartbeat.
+						data.presence_users = paged_user_id.join( ',' );
+					}
 
-								 bp.Nouveau.updateUsersPresence( data );
-							 }
-						 }
-					 );
-				 }, parseInt( BB_Nouveau_Presence.presence_interval ) * 1000 );
-			 }
+				} );
+
+				$( document ).on( 'heartbeat-tick', function ( event, data ) {
+					// Check for our data, and use it.
+					if ( ! data.users_presence ) {
+						return;
+					}
+
+					bp.Nouveau.updateUsersPresence( data.users_presence );
+				} );
+			} else {
+				setInterval( function () {
+					var params = {};
+
+					if (
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active
+					) {
+						params.ids = bp.Nouveau.getPageUserIDs();
+					}
+
+					$.ajax(
+						{
+							type: 'POST',
+							url: '/wp-json/buddyboss/v1/members/presence',
+							data: params,
+							beforeSend: function ( xhr ) {
+								xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
+							},
+							success: function ( data ) {
+								// Check for our data, and use it.
+								if ( ! data ) {
+									return;
+								}
+
+								bp.Nouveau.updateUsersPresence( data );
+							}
+						}
+					);
+				}, parseInt( BB_Nouveau_Presence.presence_interval ) * 1000 );
+			}
 		},
 
 		getPageUserIDs: function() {
@@ -3434,6 +3453,21 @@ window.bp = window.bp || {};
 				.removeClass( 'offline online' )
 				.addClass( status )
 				.attr( 'data-bb-user-presence', status );
+		},
+
+		userPresenceChecker: function (inactive_timeout) {
+
+			var wait = setTimeout( function () {
+				window.bb_is_user_active = false;
+			}, inactive_timeout );
+
+			document.onmousemove = document.mousedown = document.mouseup = document.onkeydown = document.onkeyup = document.focus = function () {
+				clearTimeout( wait );
+				wait = setTimeout( function () {
+					window.bb_is_user_active = false;
+				}, inactive_timeout );
+				window.bb_is_user_active = true;
+			};
 		}
 
 	};

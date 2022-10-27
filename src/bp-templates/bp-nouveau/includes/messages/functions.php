@@ -136,6 +136,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		'today'                      => __( 'Today', 'buddyboss' ),
 		'video_default_url'          => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
 		'message_url'                => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ),
+		'current_thread_id'          => (int) bp_action_variable( 0 ),
 	);
 
 	// Star private messages.

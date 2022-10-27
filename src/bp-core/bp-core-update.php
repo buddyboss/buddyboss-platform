@@ -374,7 +374,7 @@ function bp_version_updater() {
 			bb_update_to_2_1_1();
 		}
 
-		if ( $raw_db_version < 18921 ) {
+		if ( $raw_db_version < 18951 ) {
 			bb_update_to_2_2_0();
 		}
 	}
@@ -1945,6 +1945,7 @@ function bb_update_to_2_2_0() {
 
 	// Update the messages email templates.
 	bb_migrate_messages_email_templates();
+
 }
 
 /**

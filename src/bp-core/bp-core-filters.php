@@ -1653,7 +1653,7 @@ function bp_core_cron_schedules( $schedules = array() ) {
 
 	return $schedules;
 }
-add_filter( 'cron_schedules', 'bp_core_cron_schedules' ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+add_filter( 'cron_schedules', 'bp_core_cron_schedules', 99, 1 ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
 
 /**
  * Filter to update the Avatar URL for the rest api.
@@ -2217,17 +2217,17 @@ add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_compon
  * @return array
  */
 function bb_heartbeat_member_presence_info( $response = array(), $data = array() ) {
-	if ( ! isset( $data['presece_users'] ) ) {
+	if ( ! isset( $data['presence_users'] ) ) {
 		return $response;
 	}
 
 	bp_core_record_activity( true );
 
 	$interval_time     = bb_presence_interval();
-	$presence_user_ids = wp_parse_id_list( $data['presece_users'] );
+	$presence_user_ids = wp_parse_id_list( $data['presence_users'] );
 	$compare_time      = $interval_time + 5;
 
-	$response['presence_data'] = bb_get_users_presence( $presence_user_ids, $compare_time );
+	$response['users_presence'] = bb_get_users_presence( $presence_user_ids, $compare_time );
 
 	return $response;
 }
