@@ -537,4 +537,4 @@ function bb_clear_interval_on_enable_disabled_heartbeat( $old_value, $value ) {
 	}
 }
 
-do_action( 'update_option_bp_wp_heartbeat_disabled', 'bb_clear_interval_on_enable_disabled_heartbeat', 10, 2 );
+add_action( 'update_option_bp_wp_heartbeat_disabled', 'bb_clear_interval_on_enable_disabled_heartbeat', 10, 2 );
