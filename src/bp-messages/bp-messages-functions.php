@@ -77,7 +77,7 @@ function messages_new_message( $args = '' ) {
 		// Check the pusher date is not more than 5 mins.
 		if ( $send_at_timestamp <= $date_sent_timestamp && $send_at_timestamp >= $date_sent_timestamp_before ) {
 			$r['date_sent'] = $r['send_at'];
-			$send_date = true;
+			$send_date      = true;
 		}
 	}
 
@@ -415,13 +415,6 @@ function messages_new_message( $args = '' ) {
 
 	// only update after the send().
 	BP_Messages_Thread::update_last_message_status( $last_message_data );
-
-	// Silent recipients for the push notification.
-	if ( ! empty( $_POST['silent_recipients'] ) && is_int( $send ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		$silent_recipients = wp_parse_id_list( $_POST['silent_recipients'] );
-		bp_messages_update_meta( $send, 'silent_recipients', $silent_recipients );
-	}
 
 	/**
 	 * Fires after a message has been successfully sent.
@@ -1319,6 +1312,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				'is_user_blocked'    => function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $avatar_user_id ) : false,
 				'is_user_blocked_by' => function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $avatar_user_id ) : false,
 				'is_deleted'         => empty( get_userdata( $avatar_user_id ) ) ? 1 : 0,
+				'user_presence'      => 1 === count( (array) $avatars_user_ids ) ? bb_get_user_presence_html( $avatar_user_id ) : '',
 			);
 		}
 	}

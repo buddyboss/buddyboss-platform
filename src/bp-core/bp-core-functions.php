@@ -1574,9 +1574,11 @@ function bp_core_render_message() {
  *
  *       usermeta table.
  *
+ * @param bool $force_update IF user comes within 5 minutes and force to update.
+ *
  * @return false|null Returns false if there is nothing to do.
  */
-function bp_core_record_activity() {
+function bp_core_record_activity( $force_update = false ) {
 
 	// Bail if user is not logged in.
 	if ( ! is_user_logged_in() ) {
@@ -1618,7 +1620,7 @@ function bp_core_record_activity() {
 	}
 
 	// If it's been more than 5 minutes, record a newer last-activity time.
-	if ( empty( $activity ) || ( $current_time >= strtotime( '+5 minutes', $activity ) ) ) {
+	if ( empty( $activity ) || ( $current_time >= strtotime( '+5 minutes', $activity ) || true === $force_update ) ) {
 		bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
 	}
 }
@@ -7747,7 +7749,7 @@ function bb_validate_gravatar( $email ) {
 	$key              = base64_encode( $url );
 	$response         = get_transient( $key );
 	$has_valid_avatar = false;
-	if ( isset( $response ) && isset( $response[0] ) && preg_match( "|200|", $response[0] ) ) {
+	if ( isset( $response ) && isset( $response[0] ) && preg_match( '|200|', $response[0] ) ) {
 		$has_valid_avatar = true;
 	}
 
@@ -8121,4 +8123,72 @@ function bb_autop( $pee, $br = true ) {
 	}
 
 	return $pee;
+}
+
+/**
+ * Function to check the heartbeat enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_heartbeat_enabled() {
+	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
+
+	return 0 === (int) $heartbeat_disabled;
+}
+
+/**
+ * Function to return the presence interval time in seconds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_presence_interval() {
+	$presence_interval = (int) bp_get_option( 'bb_presence_interval', 0 );
+	if ( 0 !== $presence_interval ) {
+		return $presence_interval;
+	}
+
+	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
+	$global_pulse       = 60;
+
+	remove_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
+	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
+	add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
+
+	if ( ! empty( $heartbeat_settings['interval'] ) && 0 === (int) $heartbeat_disabled ) {
+		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 60;
+	}
+
+	bp_update_option( 'bb_presence_interval', $global_pulse );
+
+	return $global_pulse;
+}
+
+/**
+ * Function to fetch the user's online status based on ids.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $users        Array of user ids.
+ * @param string $compare_time Time difference.
+ *
+ * @return array
+ */
+function bb_get_users_presence( $users, $compare_time = false ) {
+	if ( empty( $users ) ) {
+		return array();
+	}
+
+	$presence_data = array();
+	foreach ( array_unique( $users ) as $user_id ) {
+		$presence_data[] = array(
+			'id'     => $user_id,
+			'status' => bb_get_user_presence( $user_id, $compare_time ),
+		);
+	}
+
+	return $presence_data;
 }

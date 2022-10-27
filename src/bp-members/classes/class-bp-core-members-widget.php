@@ -152,19 +152,9 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 					<li class="vcard">
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>"  class="bb-member-status-<?php echo esc_attr( $members_template->member->id ) . ' ' . esc_attr( $moderation_class ); ?>">
+							<a href="<?php bp_member_permalink(); ?>"  class="<?php echo esc_attr( $moderation_class ); ?>">
 								<?php bp_member_avatar(); ?>
-								<?php
-								if ( function_exists( 'bb_current_user_status' ) ) {
-									bb_current_user_status( $members_template->member->id );
-								} else {
-									$current_time = current_time( 'mysql', 1 );
-									$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
-									if ( $diff < 300 ) { // 5 minutes  =  5 * 60
-										echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', $members_template->member->id ) );
-									}
-								}
-								?>
+								<?php bb_user_presence_html( $members_template->member->id ); ?>
 							</a>
 						</div>
 
