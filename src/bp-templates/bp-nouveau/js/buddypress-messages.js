@@ -1394,13 +1394,6 @@ window.bp = window.bp || {};
 					nonce  : BP_Nouveau.messages.nonces.send,
 				};
 
-				if (
-					'undefined' !== typeof bp.Pusher_FrontCommon &&
-					'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
-				) {
-					params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join( ',' );
-				}
-
 				var sent = bp.ajax.post(
 					'messages_send_message',
 					_.extend(
@@ -1645,13 +1638,6 @@ window.bp = window.bp || {};
 						hash    : new Date().getTime(),
 						send_at : bp.Nouveau.Messages.getUTCDateTime()
 					};
-
-					if (
-						'undefined' !== typeof bp.Pusher_FrontCommon &&
-						'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
-					) {
-						params.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join( ',' );
-					}
 
 					options.data = _.extend(
 						options.data,
@@ -5465,6 +5451,10 @@ window.bp = window.bp || {};
 					thread.id = thread_id;
 				}
 
+				if ( 'undefined' !== typeof BP_Nouveau.messages.current_thread_id ) {
+					BP_Nouveau.messages.current_thread_id = parseInt( thread_id );
+				}
+
 				if ( 'undefined' !== typeof bb_pusher_vars && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
 					if ( 'undefined' !== typeof bb_pusher_vars.current_thread_id ) {
 						bb_pusher_vars.current_thread_id = parseInt( thread_id );
@@ -5500,12 +5490,12 @@ window.bp = window.bp || {};
 						bp.Pusher_FrontCommon.pusherSubscribeThreadsChannels( parseInt( thread_id ) );
 					}
 
-					if (
-						'undefined' !== bp.Pusher_FrontCommon &&
-						'function' === typeof bp.Pusher_FrontCommon.pusherPresenceChannels
-					) {
-						bp.Pusher_FrontCommon.pusherPresenceChannels( parseInt( thread_id ) );
-					}
+					// if (
+					// 	'undefined' !== bp.Pusher_FrontCommon &&
+					// 	'function' === typeof bp.Pusher_FrontCommon.pusherPresenceChannels
+					// ) {
+					// 	bp.Pusher_FrontCommon.pusherPresenceChannels( parseInt( thread_id ) );
+					// }
 				}
 
 				bp.Nouveau.Messages.singleView( thread );

@@ -365,6 +365,7 @@ function bp_core_install_private_messaging() {
 				sender_only tinyint(1) NOT NULL DEFAULT '0',
 				is_deleted tinyint(1) NOT NULL DEFAULT '0',
 				is_hidden tinyint(1) NOT NULL DEFAULT '0',
+				last_active datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				PRIMARY KEY  (id),
 				KEY user_id (user_id),
 				KEY thread_id (thread_id),

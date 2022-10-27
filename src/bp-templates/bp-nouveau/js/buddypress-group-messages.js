@@ -627,13 +627,6 @@ window.bp = window.bp || {};
 						'gif_data'     	: gif
 					};
 					
-					if (
-						'undefined' !== typeof bp.Pusher_FrontCommon &&
-						'function' === typeof bp.Pusher_FrontCommon.presenceThreadMembers
-					) {
-						data.silent_recipients = bp.Pusher_FrontCommon.presenceThreadMembers().join( ',' );
-					}
-
 					target.addClass( 'loading' ).attr( 'disabled', true );
 
 					xhr_submit_message = $.ajax(

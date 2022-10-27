@@ -374,7 +374,7 @@ function bp_version_updater() {
 			bb_update_to_2_1_1();
 		}
 
-		if ( $raw_db_version < 18901 ) {
+		if ( $raw_db_version < 18951 ) {
 			bb_update_to_2_2_0();
 		}
 	}
@@ -1922,6 +1922,10 @@ function bb_moderation_add_user_report_column() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_2_2_0() {
+
+	// Do not ignore deprecated code for existing installs.
+	bp_update_option( '_bp_ignore_deprecated_code', false );
+
 	// Create 'bp_groups_membermeta' table.
 	if ( bp_is_active( 'groups' ) ) {
 		bp_core_install_groups();
@@ -1941,6 +1945,7 @@ function bb_update_to_2_2_0() {
 
 	// Update the messages email templates.
 	bb_migrate_messages_email_templates();
+
 }
 
 /**
