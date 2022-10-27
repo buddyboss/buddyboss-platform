@@ -111,9 +111,10 @@
 		max-height: calc(100vh - 220px);
 		overflow: auto;
 		padding: 20px 30px;
+		padding-bottom: 0;
 
-		p {
-			margin-bottom: 0;
+		p:empty {
+			display: none;
 		}
 
 	}
