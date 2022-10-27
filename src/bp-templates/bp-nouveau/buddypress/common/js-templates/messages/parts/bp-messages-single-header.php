@@ -28,9 +28,6 @@
 
 	var threadAvatarClass = '';
 	if ( 1 === data.avatars.length ) {
-		if ( 'user' === data.avatars[0].type ) {
-			threadAvatarClass += 'bb-member-status-' + data.avatars[0].id;
-		}
 		if ( ! data.is_group_thread ) {
 			if ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) {
 				threadAvatarClass += ' bp-suspended-avatar';
@@ -72,6 +69,9 @@
 			<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
 			<a <# if ( ! ( recipient.is_user_suspended || recipient.is_user_blocked ) ) { #>href="{{{recipient.user_link}}}"<# } #>>
 				<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
+				<# if ( typeof( recipient.user_presence ) != "undefined" && recipient.user_presence !== null && recipient.user_presence.length > 1 ) { #>
+					{{{recipient.user_presence}}}
+				<# } #>
 				<# if ( 0 === recipient.is_deleted ) {
 					if ( recipient.is_user_blocked ) { #>
 						<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
@@ -266,9 +266,9 @@
 							<# } #>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
 								<# if ( data.recipients.count > 1 ) { #>
-                                    <li class="report_thread">
-                                        <a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
-                                    </li>
+									<li class="report_thread">
+										<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+									</li>
 								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_user_blocked ) { #>
 									<li class="reported_thread">
 										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>

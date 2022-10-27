@@ -520,3 +520,21 @@ function bb_render_notification_settings() {
 		}
 	}
 }
+
+/**
+ * Clear interval time when heartbeat enable/disabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $old_value Previous saved value.
+ * @param int $value     Newly updated value.
+ *
+ * @return void
+ */
+function bb_clear_interval_on_enable_disabled_heartbeat( $old_value, $value ) {
+	if ( $old_value !== $value ) {
+		bp_delete_option( 'bb_presence_interval' );
+	}
+}
+
+do_action( 'update_option_bp_wp_heartbeat_disabled', 'bb_clear_interval_on_enable_disabled_heartbeat', 10, 2 );

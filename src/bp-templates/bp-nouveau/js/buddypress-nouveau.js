@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
@@ -69,6 +69,12 @@ window.bp = window.bp || {};
 
 			// Profile Notification setting
 			this.profileNotificationSetting();
+
+			// Bail if not set.
+			if ( 'undefined' !== typeof BB_Nouveau_Presence ) {
+				// User Presence status.
+				this.userPresenceStatus();
+			}
 
 			var _this = this;
 
@@ -2812,7 +2818,7 @@ window.bp = window.bp || {};
 				! _.isUndefined( BP_Nouveau.media.emoji ) &&
 				! $targetEl.closest( '.post-emoji' ).length &&
 				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
-				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );				
+				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 			}
 		},
 
@@ -3355,6 +3361,113 @@ window.bp = window.bp || {};
 
 			$( dropzone.element ).find( '.dz-global-progress .dz-progress').css( 'width', progress + '%' );
 			$( dropzone.element ).find( '.dz-global-progress > p').html( message );
+		},
+
+		userPresenceStatus: function() {
+
+			var ideal_interval = (BB_Nouveau_Presence.presence_interval * 1000) + 500;
+
+			// setup the ideal time user check.
+			bp.Nouveau.userPresenceChecker( ideal_interval );
+
+			if ( '' !== BB_Nouveau_Presence.heartbeat_enabled ) {
+				$( document ).on( 'heartbeat-send', function ( event, data ) {
+					if (
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active
+					) {
+						var paged_user_id  = bp.Nouveau.getPageUserIDs();
+						// Add user data to Heartbeat.
+						data.presence_users = paged_user_id.join( ',' );
+					}
+
+				} );
+
+				$( document ).on( 'heartbeat-tick', function ( event, data ) {
+					// Check for our data, and use it.
+					if ( ! data.users_presence ) {
+						return;
+					}
+
+					bp.Nouveau.updateUsersPresence( data.users_presence );
+				} );
+			} else {
+				setInterval( function () {
+					var params = {};
+
+					if (
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active
+					) {
+						params.ids = bp.Nouveau.getPageUserIDs();
+					}
+
+					$.ajax(
+						{
+							type: 'POST',
+							url: '/wp-json/buddyboss/v1/members/presence',
+							data: params,
+							beforeSend: function ( xhr ) {
+								xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
+							},
+							success: function ( data ) {
+								// Check for our data, and use it.
+								if ( ! data ) {
+									return;
+								}
+
+								bp.Nouveau.updateUsersPresence( data );
+							}
+						}
+					);
+				}, parseInt( BB_Nouveau_Presence.presence_interval ) * 1000 );
+			}
+		},
+
+		getPageUserIDs: function() {
+			var user_ids = [];
+			var all_presence = $( document ).find( '.member-status[data-bb-user-id]' );
+			if ( all_presence.length > 0 ) {
+				all_presence.each( function () {
+					var user_id = $( this ).attr( 'data-bb-user-id' );
+					if ( $.inArray( parseInt( user_id ), user_ids ) == -1 ) {
+						user_ids.push( parseInt( user_id ) );
+					}
+				} );
+			}
+
+			return user_ids;
+		},
+
+		updateUsersPresence: function ( presence_data ) {
+			if ( presence_data && presence_data.length > 0 ) {
+				$.each( presence_data, function ( index, user ) {
+					bp.Nouveau.updateUserPresence( user.id, user.status );
+				} );
+			}
+		},
+
+		updateUserPresence: function( user_id, status ) {
+			$( document )
+				.find( '.member-status[data-bb-user-id="' + user_id + '"]' )
+				.removeClass( 'offline online' )
+				.addClass( status )
+				.attr( 'data-bb-user-presence', status );
+		},
+
+		userPresenceChecker: function (inactive_timeout) {
+
+			var wait = setTimeout( function () {
+				window.bb_is_user_active = false;
+			}, inactive_timeout );
+
+			document.onmousemove = document.mousedown = document.mouseup = document.onkeydown = document.onkeyup = document.focus = function () {
+				clearTimeout( wait );
+				wait = setTimeout( function () {
+					window.bb_is_user_active = false;
+				}, inactive_timeout );
+				window.bb_is_user_active = true;
+			};
 		}
 
 	};
