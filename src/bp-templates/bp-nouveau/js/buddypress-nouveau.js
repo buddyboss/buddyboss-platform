@@ -3388,24 +3388,22 @@ window.bp = window.bp || {};
 
 		userPresenceStatus: function() {
 
+			var ideal_interval = (BB_Nouveau_Presence.presence_interval * 1000) + 500;
+
 			// setup the ideal time user check.
-			bp.Nouveau.userPresenceChecker( 15000 ); // 15seconds.
+			bp.Nouveau.userPresenceChecker( ideal_interval );
 
 			if ( '' !== BB_Nouveau_Presence.heartbeat_enabled ) {
 				$( document ).on( 'heartbeat-send', function ( event, data ) {
-					var paged_user_id  = bp.Nouveau.getPageUserIDs();
-					// Add user data to Heartbeat.
-					data.presence_users = paged_user_id.join( ',' );
-
 					if (
-						true === bp.Nouveau.isUserThreadScreen() &&
 						'undefined' !== typeof window.bb_is_user_active &&
-						true === window.bb_is_user_active &&
-						'undefined' !== typeof BP_Nouveau.messages.current_thread_id &&
-						parseInt( BP_Nouveau.messages.current_thread_id ) > 0
+						true === window.bb_is_user_active
 					) {
-						data.message_thread_id = BP_Nouveau.messages.current_thread_id;
+						var paged_user_id  = bp.Nouveau.getPageUserIDs();
+						// Add user data to Heartbeat.
+						data.presence_users = paged_user_id.join( ',' );
 					}
+
 				} );
 
 				$( document ).on( 'heartbeat-tick', function ( event, data ) {
@@ -3419,21 +3417,17 @@ window.bp = window.bp || {};
 			} else {
 				setInterval( function () {
 					var params = {};
-					params.paged_user_id = bp.Nouveau.getPageUserIDs();
 
 					if (
-						true === bp.Nouveau.isUserThreadScreen() &&
 						'undefined' !== typeof window.bb_is_user_active &&
-						true === window.bb_is_user_active &&
-						'undefined' !== typeof BP_Nouveau.messages.current_thread_id &&
-						parseInt( BP_Nouveau.messages.current_thread_id ) > 0
+						true === window.bb_is_user_active
 					) {
-						params.message_thread_id = BP_Nouveau.messages.current_thread_id;
+						params.ids = bp.Nouveau.getPageUserIDs();
 					}
 
 					$.ajax(
 						{
-							type: 'GET',
+							type: 'POST',
 							url: '/wp-json/buddyboss/v1/members/presence',
 							data: params,
 							beforeSend: function ( xhr ) {
@@ -3482,14 +3476,6 @@ window.bp = window.bp || {};
 				.removeClass( 'offline online' )
 				.addClass( status )
 				.attr( 'data-bb-user-presence', status );
-		},
-
-		isUserThreadScreen: function() {
-			if ( 'undefined' === typeof BP_Nouveau.messages ) {
-				return false;
-			} else {
-				return true;
-			}
 		},
 
 		userPresenceChecker: function (inactive_timeout) {
