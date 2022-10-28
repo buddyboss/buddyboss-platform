@@ -636,7 +636,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$thread_template->message = current( $messages['messages'] );
 	}
 
-	$excerpt = wp_trim_words( wp_strip_all_tags( bp_get_the_thread_message_excerpt() ) );
+	$excerpt = wp_trim_words( wp_strip_all_tags( bb_get_the_thread_message_excerpt() ) );
 	if ( empty( $excerpt ) ) {
 		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
