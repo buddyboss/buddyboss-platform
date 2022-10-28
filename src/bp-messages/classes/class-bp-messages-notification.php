@@ -201,7 +201,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			$video_ids    = bp_messages_get_meta( $item_id, 'bp_video_ids', true );
 			$gif_data     = bp_messages_get_meta( $item_id, '_gif_data', true );
 
-			$excerpt = wp_strip_all_tags( $message->message );
+			$excerpt = wp_strip_all_tags( preg_replace('#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $message->message ) );
 
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';
