@@ -9256,6 +9256,7 @@ div.profile_completion_wrap .progress_text_wrap {
   position: absolute;
   right: -5px;
   bottom: -5px;
+  z-index: 1;
 }
 
 .bp-single-message-wrap .bp-avatar-wrap {
