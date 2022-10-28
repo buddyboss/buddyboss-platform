@@ -3532,7 +3532,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 												data-bp-content-id="<?php echo esc_attr( $recipient->user_id ); ?>"
 												data-bp-content-type="<?php echo esc_attr( $bp_moderation_type ); ?>"
 												data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"
-												reported_type="<?php echo esc_attr( bp_moderation_get_report_type( $bp_moderation_type, $recipient->user_id ) ); ?>>"
+												reported_type="<?php echo esc_attr( bp_moderation_get_report_type( $bp_moderation_type, $recipient->user_id ) ); ?>"
 												data-bp-report-title="<?php esc_html_e( 'Report Member', 'buddyboss' ); ?>"
 												data-bp-reported-title="<?php esc_html_e( 'Reported Member', 'buddyboss' ); ?>">
 												<?php esc_html_e( 'Report Member', 'buddyboss' ); ?>
