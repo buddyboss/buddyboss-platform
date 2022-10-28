@@ -17341,7 +17341,7 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .modal-mask.bb-white {
-  background: rgba(250, 251, 253, 0.9);
+  background: rgba(250, 251, 253, 0.5);
 }
 
 .modal-wrapper {
