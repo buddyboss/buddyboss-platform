@@ -649,37 +649,3 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 	) );
 }
 
-/**
- * Function will append join query to display group lists in the activity feed.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $sql From SQL statement.
- * @param array  $r   Array of parsed arguments for the get method.
- *
- * @return string
- */
-function bb_groups_get_join_sql_for_activity( $sql, $r ) {
-	global $wpdb;
-	$sql .= ' LEFT JOIN ' . $wpdb->prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id )';
-
-	return $sql;
-}
-
-/**
- * Function will append where condition to display group lists in the activity feed.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $where_conditions Where conditions SQL statement.
- * @param array $r                Array of parsed arguments for the get method.
- *
- * @return mixed
- */
-function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
-	$where_conditions['exclude_where'] = ' ( ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "mods" AND m.is_mod = "1" OR m.is_admin = "1" ) 
-            OR ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "admins" AND m.is_admin = "1" ) 
-            OR ( mt.meta_key = "activity_feed_status" AND mt.meta_value = "members" ) )';
-
-	return $where_conditions;
-}
