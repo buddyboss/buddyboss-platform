@@ -570,6 +570,7 @@ window.bp = window.bp || {};
 					// Add valid line breaks.
 					content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 					content = content.replace( /&nbsp;/g, ' ' );
+					content = content.replace( /<li>[\s\S]*<\/li>/g, function( index ){ return '<ul>'+index+'</ul>'; } );
 
 					var media   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val();
 					var document   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val();

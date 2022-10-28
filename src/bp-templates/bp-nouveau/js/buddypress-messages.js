@@ -3435,6 +3435,7 @@ window.bp = window.bp || {};
 				// Add valid line breaks.
 				content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content = content.replace( /&nbsp;/g, ' ' );
+				content = content.replace( /<li>[\s\S]*<\/li>/g, function( index ){ return '<ul>'+index+'</ul>'; } );
 
 				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'video' ) !== 'undefined' && ! this.model.get( 'video' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
 					errors.push( 'message_content' );

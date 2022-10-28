@@ -4718,6 +4718,7 @@ window.bp = window.bp || {};
 				var $whatsNew = this.$el.find( '#whats-new' );
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content     = content.replace( /&nbsp;/g, ' ' );
+				content     = content.replace( /<li>[\s\S]*<\/li>/g, function( index ){ return '<ul>'+index+'</ul>'; } );
 
 				if ( $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) ) {
 					this.$el.removeClass( 'focus-in--empty' );
@@ -5068,6 +5069,7 @@ window.bp = window.bp || {};
 				// Add valid line breaks.
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content     = content.replace( /&nbsp;/g, ' ' );
+				content     = content.replace( /<li>[\s\S]*<\/li>/g, function( index ){ return '<ul>'+index+'</ul>'; } );
 
 				self.model.set( 'content', content, { silent: true } );
 
