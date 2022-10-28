@@ -613,7 +613,7 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 		 * @param int $user_id      User id.
 		 * @param int $group_id     Group id.
 		 */
-		do_action( 'bp_group_messages_unbanned_member', $group_thread, $user_id, $group_id );
+		do_action( 'bb_group_messages_unbanned_member', $group_thread, $user_id, $group_id );
 
 	}
 }
