@@ -203,6 +203,7 @@ window.bp = window.bp || {};
 			// $( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
 			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member, .bb_more_options_list .mass-block-member', this.messageBlockMemberPopup );
 			$( document ).on( 'click', '#bp-message-thread-header .mass-report-member, .bb_more_options_list .mass-report-member', this.messageReportMemberPopup );
+			$( document ).on( 'click', '.moderation-popup .bbm-model-wrap', this.hideMessageReportMemberPopup );
 			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
 			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
@@ -872,6 +873,13 @@ window.bp = window.bp || {};
 			mf_content.find( '.bb-model-header h4' ).html( modalTitle );
 
 			bp.Nouveau.Messages.messageModeratorMemberList( postData, currentHref );
+		},
+
+		hideMessageReportMemberPopup: function(e) {
+			var popup = $( e.target );
+			if( popup.hasClass('bbm-model-wrap') ){
+				$( e.target ).find( '.mfp-close' ).trigger( 'click' );
+			}
 		},
 
 		messageModeratorMemberList: function ( postData, currentHref ) {

@@ -9699,6 +9699,7 @@ div.profile_completion_wrap .progress_text_wrap {
   position: absolute;
   left: -5px;
   bottom: -5px;
+  z-index: 1;
 }
 
 .bp-single-message-wrap .bp-avatar-wrap {
@@ -10903,8 +10904,8 @@ input#send-to-input {
 }
 
 .bp-user-messages-loading.loading .message-user-loading_avatar {
-  height: 53px;
-  width: 53px;
+  height: 52px;
+  width: 52px;
   border-radius: 50%;
   margin-left: 15px;
 }
@@ -17798,7 +17799,7 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .modal-mask.bb-white {
-  background: rgba(250, 251, 253, 0.9);
+  background: rgba(250, 251, 253, 0.5);
 }
 
 .modal-wrapper {
