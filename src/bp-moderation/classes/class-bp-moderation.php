@@ -1449,7 +1449,7 @@ class BP_Moderation {
 		 *
 		 * @param BP_Moderation $this Current instance of moderation item being deleted. Passed by reference.
 		 */
-		do_action_ref_array( 'bp_moderation_after_delete', array( &$this ) );
+		do_action_ref_array( 'bb_moderation_after_delete', array( &$this ) );
 
 		return ! empty( $updated_row );
 	}
