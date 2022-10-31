@@ -33,7 +33,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 *
 	 * See {@see BP_Moderation_Query::__construct()} for information on query arguments.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.3
 	 * @var array
 	 */
 	public $args = array();
