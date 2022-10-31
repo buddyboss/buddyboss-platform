@@ -181,7 +181,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Scripts
 		add_action( 'bp_enqueue_scripts', array( $this, 'register_scripts' ), 2 ); // Register theme JS
 		remove_action( 'bp_enqueue_scripts', 'bp_core_confirmation_js' );
-		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 1 ); // Enqueue theme CSS
 		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS
 		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization
@@ -368,12 +368,15 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * @param array $value Array of styles to enqueue.
 		 */
 		$styles = apply_filters( 'bp_nouveau_enqueue_styles', array(
+			'bp-nouveau-icons-map' => array(
+				'file' => 'icons/css/icons-map%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
+			),
+			'bp-nouveau-bb-icons' => array(
+				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
+			),
 			'bp-nouveau' => array(
 				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
 			),
-			'bp-nouveau-icons' => array(
-				'file' => 'icons/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
-			)
 		) );
 
 		if ( $styles ) {
@@ -396,7 +399,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 					$file = $asset['uri'];
 				}
 
-				$data = wp_parse_args( $style, array(
+				$data = bp_parse_args( $style, array(
 					'dependencies' => array(),
 					'version'      => $this->version,
 					'type'         => 'screen',
@@ -465,8 +468,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		$scripts['bp-nouveau-magnific-popup'] = array(
 			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
-			'dependencies' => array(),
-			'footer'       => true,
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
 		);
 
 		if ( bp_is_active( 'media' ) ) {
@@ -503,7 +506,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 				$file = $asset['uri'];
 			}
 
-			$data = wp_parse_args( $script, array(
+			$data = bp_parse_args( $script, array(
 				'dependencies' => array(),
 				'version'      => $this->version,
 				'footer'       => false,
@@ -820,7 +823,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( false === strpos( $uri['path'], 'customize.php' ) ) {
 			return $path;
 		} else {
-			$vars = wp_parse_args( $uri['query'], array() );
+			$vars = bp_parse_args( $uri['query'], array() );
 
 			if ( ! empty( $vars['url'] ) ) {
 				$path = str_replace( get_site_url(), '', urldecode( $vars['url'] ) );

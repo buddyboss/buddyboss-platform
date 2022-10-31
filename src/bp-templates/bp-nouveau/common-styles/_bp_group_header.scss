@@ -75,7 +75,7 @@
 					width: 34px;
 				}
 
-				.bb-icon {
+				[class*=" bb-icon-"] {
 					height: 34px;
 					width: 34px;
 					font-size: 16px;
@@ -322,7 +322,9 @@
 
 						> * {
 							min-width: auto;
-							padding: 8px 16px;
+							padding: 0 16px;
+							height: 38px;
+							line-height: 38px;
 						}
 
 					}

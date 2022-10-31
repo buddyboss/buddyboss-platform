@@ -71,6 +71,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 9999, 3 );
 		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
+
 	}
 
 	/**
@@ -231,11 +232,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( ! empty( $hidden_members ) ) {
 			$where['blocked_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
 		}
-
-		// phpcs:ignore
+// phpcs:ignore
 		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s AND ( {$this->alias}.user_suspended = 1 )", 'user' );
 		$where['suspend_where'] = '( r.user_id NOT IN( ' . $sql . ' ) )';
-
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
@@ -271,7 +270,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'      => $member_id,
@@ -327,7 +326,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'      => $member_id,

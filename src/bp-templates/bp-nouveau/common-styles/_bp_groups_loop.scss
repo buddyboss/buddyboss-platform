@@ -75,11 +75,19 @@
 
 }
 
-//Leave group confirmation popups
+//Action Popups
 .bb-action-popup {
+
+	.action-popup-overlay {
+		position: fixed;
+		inset: 0;
+	}
+
 
 	.modal-container {
 		padding-bottom: 0;
+		position: relative;
+		z-index: 1;
 	}
 
 	.bb-model-header {

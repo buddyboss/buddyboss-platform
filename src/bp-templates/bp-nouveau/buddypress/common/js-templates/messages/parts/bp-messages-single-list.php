@@ -103,7 +103,7 @@
 			<# if ( data.video ) { #>
 			<div class="bb-activity-video-wrap bb-video-length-{{data.video.length}}">
 				<# for ( i in data.video ) { #>
-				<div class="bb-activity-video-elem">
+				<div class="bb-activity-video-elem <# if ( -1 !== data.video[i].thumbnail.toLowerCase().indexOf( 'video-placeholder.jpg' ) ) { #>has-no-thumbnail<# } #>">
 					<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 					   data-id="{{data.video[i].id}}"
 					   data-attachment-id="{{data.video[i].attachment_id}}"
@@ -144,17 +144,17 @@
 								<span class="document-title">{{data.document[i].title}}.{{data.document[i].extension}}</span>
 								<span class="document-description">{{data.document[i].size}}</span>
 								{{{data.document[i].extension_description}}}
-								<span class="document-helper-text"> <span> — </span> <span class="document-helper-text-inner">{{data.document[i].download_text}}</span></span>
+								<span class="document-helper-text"> <span> - </span> <span class="document-helper-text-inner">{{data.document[i].download_text}}</span></span>
 							</a>
 						</div>
 						<div class="document-action-wrap">
-							<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="{{data.document[i].collapse}}"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
+							<a href="#" class="document-action_collapse" data-balloon-pos="up" data-tooltip-collapse="{{data.document[i].collapse}}" data-balloon="{{data.document[i].expand}}"><i class="bb-icon-merge bb-icon-l document-icon-collapse"></i></a>
 							<a href="{{data.document[i].url}}" class="document-action_download" data-balloon-pos="up" data-balloon="{{data.document[i].download}}">
-								<i class="bb-icon-download"></i>
+								<i class="bb-icon-l bb-icon-download"></i>
 							</a>
 
 							<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="{{data.document[i].more_action}}">
-								<i class="bb-icon-menu-dots-v"></i>
+								<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 							</a>
 							<div class="document-action_list">
 								<ul>
@@ -179,7 +179,7 @@
 							<source src="{{data.gif.video_url}}" type="video/mp4">
 						</video>
 						<a href="#" class="gif-play-button">
-							<span class="bb-icon-play-thin"></span>
+							<span class="bb-icon-bl bb-icon-play"></span>
 						</a>
 						<span class="gif-icon"></span>
 					</div>

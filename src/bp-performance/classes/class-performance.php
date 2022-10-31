@@ -396,7 +396,8 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 				}
 			}
 
-			$purge_nonce = filter_input( INPUT_GET, 'download_mu_file', FILTER_SANITIZE_STRING );
+			$purge_nonce = ( ! empty( $_GET['download_mu_file'] ) ) ? wp_unslash( $_GET['download_mu_file'] ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
 			if ( wp_verify_nonce( $purge_nonce, 'bp_performance_mu_download' ) && ! empty( $bp_mu_plugin_file_path ) ) {
 				if ( file_exists( $bp_mu_plugin_file_path ) ) {
 					header( 'Content-Type: application/force-download' );
