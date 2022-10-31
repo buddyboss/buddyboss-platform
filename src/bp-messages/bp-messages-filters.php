@@ -533,7 +533,7 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 		 * @param int $user_id      User id.
 		 * @param int $group_id     Group id.
 		 */
-		do_action( 'bp_group_messages_banned_member', $group_thread, $user_id, $group_id );
+		do_action( 'bb_group_messages_banned_member', $group_thread, $user_id, $group_id );
 	}
 }
 
@@ -575,7 +575,7 @@ function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
 		 * @param int $user_id      User id.
 		 * @param int $group_id     Group id.
 		 */
-		do_action( 'bp_group_messages_banned_member', $group_thread, $user_id, $group_id );
+		do_action( 'bb_group_messages_banned_member', $group_thread, $user_id, $group_id );
 
 	}
 }
@@ -614,7 +614,7 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 		 * @param int $user_id      User id.
 		 * @param int $group_id     Group id.
 		 */
-		do_action( 'bp_group_messages_unbanned_member', $group_thread, $user_id, $group_id );
+		do_action( 'bb_group_messages_unbanned_member', $group_thread, $user_id, $group_id );
 
 	}
 }
