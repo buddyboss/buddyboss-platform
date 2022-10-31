@@ -3090,6 +3090,7 @@ function bp_get_member_type_post_type_labels() {
 			'not_found_in_trash' => __( 'No Profile Types found in trash', 'buddyboss' ),
 			'search_items'       => __( 'Search Profile Types', 'buddyboss' ),
 			'singular_name'      => __( 'Profile Type', 'buddyboss' ),
+			'attributes'         => __( 'Dropdown Order', 'buddyboss' ),
 		)
 	);
 }
@@ -5305,4 +5306,36 @@ function bb_get_user_presence_html( $user_id ) {
  */
 function bb_user_presence_html( $user_id ) {
 	echo bb_get_user_presence_html( $user_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+add_filter( 'gettext', 'bb_profile_drop_down_order_metabox_translate_order_text', 10, 3 );
+
+/**
+ * Translate the order text in the Profile Drop Down Order metabox.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $translated_text   Translated text.
+ * @param string $untranslated_text Untranslated text.
+ * @param string $domain            Domain.
+ *
+ * @return mixed|string|void
+ */
+function bb_profile_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
+
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return $translated_text;
+	}
+	$current_screen = get_current_screen();
+
+	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_get_member_type_post_type' ) || bp_get_member_type_post_type() !== $current_screen->id ) {
+		return $translated_text;
+	}
+
+	if ( 'Order' === $untranslated_text ) {
+		return __( 'Number', 'buddyboss' );
+	}
+
+	return $translated_text;
+
 }
