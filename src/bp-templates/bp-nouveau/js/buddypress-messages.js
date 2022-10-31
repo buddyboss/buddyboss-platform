@@ -203,7 +203,7 @@ window.bp = window.bp || {};
 			// $( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
 			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member, .bb_more_options_list .mass-block-member', this.messageBlockMemberPopup );
 			$( document ).on( 'click', '#bp-message-thread-header .mass-report-member, .bb_more_options_list .mass-report-member', this.messageReportMemberPopup );
-			$( document ).on( 'click', '.moderation-popup .bbm-model-wrap', this.hideMessageReportMemberPopup );
+			$( document ).on( 'click', '.message-members-list .bbm-model-wrap, .moderation-popup .bbm-model-wrap', this.hideMessageReportMemberPopup );
 			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
 			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
