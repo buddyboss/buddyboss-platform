@@ -16,6 +16,7 @@
             <div class="dz-details">
 				<div class="dz-filename"><span data-dz-name></span></div>
 			</div>
+            <div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
             <div class="dz-progress-ring-wrap">
 				<i class="bb-icon-f bb-icon-video"></i>
                 <svg class="dz-progress-ring" width="54" height="54">
