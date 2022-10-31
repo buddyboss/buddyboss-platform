@@ -2222,8 +2222,8 @@ function bp_get_the_thread_message_content() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bp_the_thread_message_excerpt() {
-	echo bp_get_the_thread_message_excerpt();
+function bb_the_thread_message_excerpt() {
+	echo bb_get_the_thread_message_excerpt();
 }
 /**
  * Get the excerpt of the current message in the loop.
@@ -2232,7 +2232,7 @@ function bp_the_thread_message_excerpt() {
  *
  * @return string
  */
-function bp_get_the_thread_message_excerpt() {
+function bb_get_the_thread_message_excerpt() {
 	global $thread_template;
 
 	$content = $thread_template->message->message;
@@ -2249,7 +2249,7 @@ function bp_get_the_thread_message_excerpt() {
 	 *
 	 * @param string $message The excerpt of the current message in the loop.
 	 */
-	return apply_filters( 'bp_get_the_thread_message_excerpt', preg_replace('#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
+	return apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace('#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
 }
 
 /** Embeds *******************************************************************/
