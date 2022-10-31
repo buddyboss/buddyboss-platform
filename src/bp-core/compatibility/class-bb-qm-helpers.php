@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core\Compatibility
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.3
  */
 
 // Exit if accessed directly.
