@@ -5825,7 +5825,7 @@ function bb_activity_remove_livestamp_attribute( $new_content = '' ) {
 /**
  * Follow button.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.3
  *
  * @param array $button HTML markup for follow button.
  *
