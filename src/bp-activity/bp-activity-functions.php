@@ -5807,7 +5807,7 @@ function bb_activity_post_form_groups_per_page() {
 /**
  * Follow button.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.3
  *
  * @param array $button HTML markup for follow button.
  *
