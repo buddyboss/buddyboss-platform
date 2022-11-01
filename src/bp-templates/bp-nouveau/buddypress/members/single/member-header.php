@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 
-remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+remove_filter( 'bp_get_add_follow_button', 'bb_bp_get_add_follow_button' );
 
 if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) :
 
@@ -188,7 +188,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 		</div><!-- #item-header-cover-image -->
 	</div><!-- #cover-image-container -->
 	<?php
-	add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+	add_filter( 'bp_get_add_follow_button', 'bb_bp_get_add_follow_button' );
 
 endif;
 ?>
