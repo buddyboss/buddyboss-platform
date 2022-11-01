@@ -73,7 +73,7 @@ window.bp = window.bp || {};
 			// Bail if not set.
 			if ( 'undefined' !== typeof BB_Nouveau_Presence ) {
 				// User Presence status.
-				// this.userPresenceStatus();
+				this.userPresenceStatus();
 			}
 
 			var _this = this;
