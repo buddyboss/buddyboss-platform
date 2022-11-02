@@ -28,6 +28,8 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$this->tab_label = __( 'Notifications', 'buddyboss' );
 		$this->tab_name  = 'bp-notifications';
 		$this->tab_order = 40;
+
+		add_action( 'admin_notices', array( $this, 'bb_admin_legacy_notification_notice' ) );
 	}
 
 	public function is_active() {
@@ -119,6 +121,47 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		 * @param Object $this BB_Admin_Setting_Notifications.
 		 */
 		do_action( 'bb_admin_setting_notifications_register_fields', $this );
+	}
+
+	/**
+	 * Added admin notice when legacy mode of notification has been enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_admin_legacy_notification_notice() {
+		if ( $this->tab_name !== $this->get_active_tab() ) {
+			return;
+		}
+
+		?>
+		<div class="notice notice-info">
+			<p>
+				<?php
+				printf(
+					wp_kses_post(
+					/* translators: Tutorial link. */
+						__( 'Your site is currently using the legacy notifications system. To disable, please %s.', 'buddyboss' )
+					),
+					'<a href="' .
+					esc_url(
+						bp_get_admin_url(
+							add_query_arg(
+								array(
+									'page'    => 'bp-help',
+									'article' => 125369,
+								),
+								'admin.php'
+							)
+						)
+					) .
+					'">' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>'
+				);
+				?>
+			</p>
+		</div>
+		<?php
 	}
 }
 
