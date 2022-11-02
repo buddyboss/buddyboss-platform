@@ -21,18 +21,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bb_notification_get_settings_sections() {
 
 	$settings = array(
-		'bp_notifications'                   => array(
+		'bp_notifications' => array(
 			'page'              => 'notifications',
 			'title'             => esc_html__( 'On-screen Notifications', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_on_screen_notification_setting_tutorial',
 			'notice'            => ( ! bb_enabled_legacy_email_preference() ) ? __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ) : '',
 		),
-		'bp_notification_settings_automatic' => array(
+	);
+
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		$settings['bp_notification_settings_automatic'] = array(
 			'page'              => 'notifications',
 			'title'             => esc_html__( 'Notification Types', 'buddyboss' ),
 			'tutorial_callback' => 'bb_automatic_notifications_tutorial',
 			'notice'            => (
-				false === bb_enabled_legacy_email_preference() ?
+			false === bb_enabled_legacy_email_preference() ?
 				sprintf(
 					wp_kses_post(
 					/* translators: Tutorial link. */
@@ -43,12 +46,13 @@ function bb_notification_get_settings_sections() {
 					. '" target="_blank" >' . esc_html__( 'this tutorial', 'buddyboss' ) . '</a>'
 				) : ''
 			),
-		),
-		'bp_web_push_notification_settings'  => array(
-			'page'              => 'notifications',
-			'title'             => esc_html__( 'Web Push Notifications', 'buddyboss' ),
-			'tutorial_callback' => 'bb_web_push_notifications_tutorial',
-		),
+		);
+	}
+
+	$settings['bp_web_push_notification_settings'] = array(
+		'page'              => 'notifications',
+		'title'             => esc_html__( 'Web Push Notifications', 'buddyboss' ),
+		'tutorial_callback' => 'bb_web_push_notifications_tutorial',
 	);
 
 	return (array) apply_filters( 'bb_notification_get_settings_sections', $settings );
