@@ -46,8 +46,8 @@ function bb_notification_get_settings_sections() {
 					. '" target="_blank" >' . esc_html__( 'this tutorial', 'buddyboss' ) . '</a>'
 				) : ''
 			),
-		),
-	);
+		);
+	}
 
 	if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'messages' ) ) {
 		$settings['bp_messaging_notification_settings'] = array(
