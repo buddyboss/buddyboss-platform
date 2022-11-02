@@ -239,7 +239,7 @@ function bb_notification_get_settings_fields() {
 		);
 	} else {
 		$fields['bp_web_push_notification_settings'] = apply_filters( 'bb_notification_web_push_notification_settings', $fields['bp_web_push_notification_settings'] );
-    }
+	}
 
 	return (array) apply_filters( 'bb_notification_get_settings_fields', $fields );
 }
@@ -424,23 +424,8 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
  */
 function bb_admin_setting_callback_notification_warning() {
 	echo '<p class="description notification-information bb-lab-notice">' .
-		sprintf(
-			wp_kses_post(
-					/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
-				__( 'Enable the %1$s feature in %2$s to manage the notification types used on your site.', 'buddyboss' )
-			),
-			'<strong>' . esc_html__( 'Notification Preferences', 'buddyboss' ) . '</strong>',
-			'<a href="' .
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-settings',
-							'tab'  => 'bp-labs',
-						),
-						admin_url( 'admin.php' )
-					)
-				)
-			. '">' . esc_html__( 'BuddyBoss Labs', 'buddyboss' ) . '</a>'
+		wp_kses_post(
+			__( 'Notification Types are not supported when using the legacy notifications system.', 'buddyboss' )
 		) .
 	'</p>';
 }
@@ -505,25 +490,8 @@ function bb_admin_setting_callback_push_notification_bbp_pro_older_version_insta
  */
 function bb_admin_setting_callback_push_notification_lab_notification_preferences() {
 	echo '<p class="description notification-information bb-lab-notice">' .
-		sprintf(
-			wp_kses_post(
-				/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
-				__( 'Enable the %1$s feature in %2$s to use web push notifications on your site.', 'buddyboss' )
-			),
-			'<strong>' . esc_html__( 'Notification Preferences', 'buddyboss' ) . '</strong>',
-			'<a href="' .
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-settings',
-							'tab'  => 'bp-labs',
-						),
-						admin_url( 'admin.php' )
-					)
-				) .
-			'">' .
-				esc_html__( 'BuddyBoss Labs', 'buddyboss' ) .
-			'</a>'
+		wp_kses_post(
+			__( 'Web Push Notifications are not supported when using the legacy notifications system.', 'buddyboss' )
 		) .
 	'</p>';
 }
