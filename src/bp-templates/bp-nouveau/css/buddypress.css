@@ -9761,10 +9761,15 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 #message-threads .thread-avatar .user-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #fff;
   background-color: #767676;
   font-size: 17px;
   line-height: 1;
+  height: 26px;
+  width: 26px;
   padding: 4px;
   border-radius: 50%;
   position: absolute;
@@ -9874,7 +9879,6 @@ div.profile_completion_wrap .progress_text_wrap {
   display: inline-block;
   vertical-align: middle;
   font-size: 13px;
-  padding-left: 5px;
 }
 
 #message-threads .bp-message-link .thread-date:before {
@@ -9886,6 +9890,10 @@ div.profile_completion_wrap .progress_text_wrap {
   vertical-align: middle;
   background-color: #767676;
   margin-right: 3px;
+}
+
+#message-threads .bp-message-link .thread-excerpt + .thread-date {
+  padding-left: 5px;
 }
 
 #message-threads .bp-message-link .thread-excerpt + .thread-date:before {
