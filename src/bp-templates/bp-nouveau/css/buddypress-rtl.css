@@ -9776,10 +9776,15 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 }
 
 #message-threads .thread-avatar .user-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #fff;
   background-color: #767676;
   font-size: 17px;
   line-height: 1;
+  height: 26px;
+  width: 26px;
   padding: 4px;
   border-radius: 50%;
   position: absolute;
@@ -9889,7 +9894,6 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   display: inline-block;
   vertical-align: middle;
   font-size: 13px;
-  padding-right: 5px;
 }
 
 #message-threads .bp-message-link .thread-date:before {
@@ -9901,6 +9905,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   vertical-align: middle;
   background-color: #767676;
   margin-left: 3px;
+}
+
+#message-threads .bp-message-link .thread-excerpt + .thread-date {
+  padding-right: 5px;
 }
 
 #message-threads .bp-message-link .thread-excerpt + .thread-date:before {
