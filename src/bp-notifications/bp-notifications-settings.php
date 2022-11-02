@@ -35,7 +35,7 @@ function bb_notification_get_settings_sections() {
 			'title'             => esc_html__( 'Notification Types', 'buddyboss' ),
 			'tutorial_callback' => 'bb_automatic_notifications_tutorial',
 			'notice'            => (
-			false === bb_enabled_legacy_email_preference() ?
+			    false === bb_enabled_legacy_email_preference() ?
 				sprintf(
 					wp_kses_post(
 					/* translators: Tutorial link. */
