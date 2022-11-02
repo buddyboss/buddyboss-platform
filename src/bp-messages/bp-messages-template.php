@@ -2685,7 +2685,7 @@ function bb_get_the_thread_message_sent_time() {
 	 *
 	 * @param string $value Default text of 'Sent x hours ago'.
 	 */
-	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', strtotime( $site_sent_date ) ) ) );
+	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:iA', strtotime( $site_sent_date ) ) ) );
 }
 
 /**
