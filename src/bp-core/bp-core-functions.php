@@ -7036,7 +7036,7 @@ function bp_is_labs_notification_preferences_support_enabled( $default = 1 ) {
  * @return bool
  */
 function bb_enabled_legacy_email_preference() {
-	$retval = (bool) apply_filters_deprecated( 'bb_enabled_legacy_email_preference', array( ! bp_is_labs_notification_preferences_support_enabled() ), '2.1.4', 'bb_enable_legacy_notification_preference' );
+	$retval = apply_filters_deprecated( 'bb_enabled_legacy_email_preference', array( ! bp_is_labs_notification_preferences_support_enabled() ), '2.1.4', 'bb_enable_legacy_notification_preference' );
 
 	return (bool) apply_filters( 'bb_enable_legacy_notification_preference', $retval );
 }
