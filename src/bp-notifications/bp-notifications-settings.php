@@ -511,7 +511,7 @@ function bb_admin_setting_callback_push_notification_lab_notification_preference
 /**
  * Callback fields for the Messaging Notifications warning.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_admin_setting_callback_messaging_notification_warning() {
 	echo '<p class="description notification-information bp-new-notice-panel-notice">' .
@@ -538,7 +538,7 @@ function bb_admin_setting_callback_messaging_notification_warning() {
 /**
  * Link to Messaging Notification tutorial.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_messaging_notifications_tutorial() {
 	?>
@@ -569,7 +569,7 @@ function bb_messaging_notifications_tutorial() {
 /**
  * Callback fields for the hide message notification fields options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return void
  */

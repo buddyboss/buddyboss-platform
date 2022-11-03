@@ -524,7 +524,7 @@ function bb_render_notification_settings() {
 /**
  * Clear interval time when heartbeat enable/disabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $old_value Previous saved value.
  * @param int $value     Newly updated value.
