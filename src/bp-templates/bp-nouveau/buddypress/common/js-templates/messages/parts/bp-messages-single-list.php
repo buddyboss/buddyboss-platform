@@ -124,7 +124,7 @@
 					   data-privacy="{{data.media[i].privacy}}"
 					   href="#"
 					   >
-						<img 
+						<img
 							<# if ( image_style != '' ) { #>style="{{image_style}}"<# } #>
 							src="{{data.media[i].thumbnail}}"
 							alt="{{data.media[i].title}}"
@@ -139,7 +139,7 @@
 			<# if ( data.video && ! ( data.is_user_suspended || data.is_user_blocked ) ) { #>
 			<div class="bb-activity-video-wrap bb-video-length-{{data.video.length}}">
 				<# for ( i in data.video ) { #>
-				<div class="bb-activity-video-elem">
+				<div class="bb-activity-video-elem <# if ( -1 !== data.video[i].thumbnail.toLowerCase().indexOf( 'video-placeholder.jpg' ) ) { #>has-no-thumbnail<# } #>">
 				   <# if ( data.video[i].id && 1 === data.video.length ) { #>
 						{{{data.video[i].video_html}}}
 					<# } else if ( data.video[i].id ) { #>
