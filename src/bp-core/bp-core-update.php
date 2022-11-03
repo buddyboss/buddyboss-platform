@@ -375,7 +375,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18951 ) {
-			bb_update_to_2_2_0();
+			bb_update_to_2_1_4();
 		}
 	}
 
@@ -1921,7 +1921,7 @@ function bb_moderation_add_user_report_column() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_2_2_0() {
+function bb_update_to_2_1_4() {
 
 	// Do not ignore deprecated code for existing installs.
 	bp_update_option( '_bp_ignore_deprecated_code', false );
