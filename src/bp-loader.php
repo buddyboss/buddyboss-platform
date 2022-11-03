@@ -24,7 +24,7 @@ if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) .
 }
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '2.1.3' );
+	define( 'BP_PLATFORM_VERSION', '2.1.4' );
 }
 
 if ( ! defined( 'BP_PLATFORM_API' ) ) {
