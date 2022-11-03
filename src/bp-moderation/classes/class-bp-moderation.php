@@ -1448,7 +1448,7 @@ class BP_Moderation {
 		/**
 		 * Fires after an moderation report item has been deleted to the database.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param BP_Moderation $this Current instance of moderation item being deleted. Passed by reference.
 		 */

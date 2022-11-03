@@ -73,7 +73,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		/**
 		 * Filters the check if fetch widget data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param bool $value Fetch the data if it's true.
 		 */
@@ -347,7 +347,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 	/**
 	 * Filters the check if fetch widget data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param bool $value Fetch the data if it's true.
 	 */
