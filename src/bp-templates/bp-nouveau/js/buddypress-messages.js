@@ -3032,6 +3032,11 @@ window.bp = window.bp || {};
 					clearTimeout( this.Timeout );
 				}
 
+				if ( '' === e.target.value ) {
+					this.loadTrending();
+					return;
+				}
+
 				this.Timeout = setTimeout(
 					function() {
 						this.Timeout = null;
@@ -3048,6 +3053,8 @@ window.bp = window.bp || {};
 
 				self.clearRequests();
 				self.el.classList.add( 'loading' );
+				this.$el.find( '.gif-no-results' ).removeClass( 'show' );
+				this.$el.find( '.gif-no-connection' ).removeClass( 'show' );
 
 				var request = self.giphy.search(
 					{
@@ -3057,9 +3064,18 @@ window.bp = window.bp || {};
 						limit: this.limit
 					},
 					function( response ) {
+						if ( undefined !== response.data.length && 0 === response.data.length ) {
+							$( self.el ).find( '.gif-no-results' ).addClass( 'show' );
+						}
+						if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
+							$( self.el ).find( '.gif-no-connection' ).addClass( 'show' );
+						}
 						self.gifDataItems.reset( response.data );
 						self.total_count = response.pagination.total_count;
 						self.el.classList.remove( 'loading' );
+					},
+					function () {
+						$( self.el ).find( '.gif-no-connection' ).addClass( 'show' );
 					}
 				);
 

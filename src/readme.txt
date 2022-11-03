@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.0.2
+Tested up to: 6.0.3
 Requires PHP: 5.6.20
-Stable tag: 2.1.1.1
+Stable tag: 2.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,39 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.1.3 =
+* Media - Improved media uploading layout and styling
+* Activity - Handled post privacy update UX issues
+* Activity - Handled follower widget not showing accurate members count issue
+* Connections - Handled connection request not working issue without 'BuddyBoss Theme'
+* Moderation - Handled member showing as blocked issue when the member is reported and blocked by other members
+* Moderation - Handled reported content screen 'Unhide' action deletes entries for the content
+* Core - Handled a bunch of alignment and styling issues for the RTL language site
+* Core - Handled core pages not working in conflict with WordPress themes
+* Core - Small improvements for toast messages
+* Core - Handled emails not showing RTL content for the RTL language site
+* REST API - Handled blog post comments endpoint caching issue
+* REST API - Handled create group endpoint default group privacy issue
+* WooCommerce - Handled 'WooCommerce Memberships' conflict unable to restrict core videos page
+* Compatibility - Handled 'Query Monitor' UI compatibility issue on the Email customizer screen
+
+= 2.1.2 =
+* Activity - Handled empty activity post issue when group description updated for the first time
+* Activity - Handled create post media upload issue when member switches post visibility from public to group
+* Profiles - Handled message member action issue that does not take to the relevant thread when username contains a dot character
+* Groups - Handled parent group label tooltip UI issue on single group screen header
+* Forums - Handled forums shortcodes medium editor toolbar styling issues
+* Media - Improved handling of GIPHY API keys in the dashboard
+* Media - Small GIPHY styling improvements in the frontend
+* Messages - Handled send message action triggers wrong notification type issue
+* Messages - Handled member name showing special character issue in the new message screen
+* Emails - Handled email invites template formatting issues when it contains a single quote
+* Moderation - Handled block member action not working issue when Activity component disabled
+* Core - Icon Pack updated with latest icons
+* Elementor - Handled view saved template not working conflict when BuddyBoss pages configured as homepage
+* Elementor - Handled activity block UI issue for video modal download button
+* Compatibility - Handled Affiliate WP compatibility issues
 
 = 2.1.1.1 =
 * Core - Handled updater critical issue by reverting the latest refactored code
