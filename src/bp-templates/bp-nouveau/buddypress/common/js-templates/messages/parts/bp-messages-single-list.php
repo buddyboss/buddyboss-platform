@@ -124,7 +124,7 @@
 					   data-privacy="{{data.media[i].privacy}}"
 					   href="#"
 					   >
-						<img 
+						<img
 							<# if ( image_style != '' ) { #>style="{{image_style}}"<# } #>
 							src="{{data.media[i].thumbnail}}"
 							alt="{{data.media[i].title}}"
