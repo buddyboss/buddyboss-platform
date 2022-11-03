@@ -131,7 +131,10 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 	 * @return void
 	 */
 	public function bb_admin_legacy_notification_notice() {
-		if ( $this->tab_name !== $this->get_active_tab() ) {
+		if (
+			$this->tab_name !== $this->get_active_tab() ||
+			true !== bb_enabled_legacy_email_preference()
+		) {
 			return;
 		}
 
