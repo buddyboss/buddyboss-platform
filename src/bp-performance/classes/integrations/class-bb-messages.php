@@ -125,8 +125,12 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_messages_delete_thread( $thread_ids ) {
 		if ( ! empty( $thread_ids ) ) {
-			foreach ( $thread_ids as $thread_id ) {
-				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
+			if ( is_array( $thread_ids ) ) {
+				foreach ( $thread_ids as $thread_id ) {
+					Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
+				}
+			} else {
+				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_ids );
 			}
 		}
 	}

@@ -234,6 +234,13 @@ function bp_messages_message_sent_add_notification( $message ) {
 			}
 		}
 
+		// Disabled the notification for user who archived this thread.
+		foreach ( (array) $message->recipients as $r_key => $recipient ) {
+			if ( isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
+				unset( $message->recipients[ $r_key ] );
+			}
+		}
+
 		if (
 			function_exists( 'bb_notifications_background_enabled' ) &&
 			true === bb_notifications_background_enabled() &&

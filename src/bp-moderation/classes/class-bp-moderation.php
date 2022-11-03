@@ -1445,6 +1445,15 @@ class BP_Moderation {
 			$wpdb->update( $bp->moderation->table_name, array( 'reported' => 0 ), array( 'id' => $this->id ) ); // phpcs:ignore
 		}
 
+		/**
+		 * Fires after an moderation report item has been deleted to the database.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param BP_Moderation $this Current instance of moderation item being deleted. Passed by reference.
+		 */
+		do_action_ref_array( 'bb_moderation_after_delete', array( &$this ) );
+
 		return ! empty( $updated_row );
 	}
 
