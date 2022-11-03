@@ -3244,7 +3244,7 @@ function bp_nouveau_ajax_hide_thread() {
 		/**
 		 * Fires when messages thread was archived.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */
@@ -3599,7 +3599,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 /**
  * Function which get left/join members list.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return void|string|Object A JSON object containing html with success data.
  */
@@ -3679,7 +3679,7 @@ function bb_get_user_message_recipients() {
 /**
  * Unhide the conversation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bp_nouveau_ajax_unhide_thread() {
 	global $bp, $wpdb;
@@ -3737,7 +3737,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		/**
 		 * Fires when messages thread was un-archived.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */

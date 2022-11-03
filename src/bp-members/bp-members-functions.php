@@ -5269,7 +5269,7 @@ function bb_get_member_type_label_colors( $type ) {
 /**
  * Get the given user ID online/offline status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $user_id User id.
  *
@@ -5286,7 +5286,7 @@ function bb_get_user_presence( $user_id, $expiry = false ) {
 /**
  * Get online html string.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $user_id User id.
  *
@@ -5304,7 +5304,7 @@ function bb_get_user_presence_html( $user_id ) {
 /**
  * Get online html string.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $user_id User id.
  *

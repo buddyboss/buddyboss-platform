@@ -2997,7 +2997,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * Function will return original avatar of blocked by member.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $avatar_url     Updated avatar url.
 	 * @param string $old_avatar_url Old avatar url before updated.

@@ -3,13 +3,13 @@
  * Messages: User's "Messages > Archived" screen handler
  *
  * @package BuddyBoss\Message\Screens
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 
 /**
  * Load the Messages > Archived screen.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function messages_screen_archived() {
 
@@ -65,14 +65,14 @@ function messages_screen_archived() {
 	/**
 	 * Fires right before the loading of the Messages view screen template file.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 */
 	do_action( 'messages_screen_archived' );
 
 	/**
 	 * Filters the template to load for the Messages view screen.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */
