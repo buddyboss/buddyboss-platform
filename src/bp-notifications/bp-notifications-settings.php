@@ -580,7 +580,7 @@ function bb_messaging_notifications_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => '125638',
+						'article' => '125952',
 					),
 					'admin.php'
 				)
