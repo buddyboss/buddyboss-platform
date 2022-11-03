@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 2.1.4
  */
 
 // Exit if accessed directly.

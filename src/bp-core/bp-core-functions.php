@@ -7759,7 +7759,7 @@ function bb_validate_gravatar( $email ) {
 
 /** Function to get the client machine os.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return string
  */
@@ -7849,7 +7849,7 @@ function bb_core_get_os() {
 /**
  * Get week start date with an integer Unix timestamp.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param string $date The date to be converted.
  * @param string $type Start or end of date.
@@ -7884,7 +7884,7 @@ function bb_get_week_timestamp( $date = false, $type = 'start' ) {
 /**
  * Get user ID by their activity mention name.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param string|array $mention_names Username appropriate for @-mentions.
  *
@@ -7958,7 +7958,7 @@ function bb_is_wp_cli() {
  * A group of regex replaces used to identify text formatted with newlines.
  * The remaining line breaks after conversion become <<br />> tags, unless $br is set to '0' or 'false'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param string $pee The text which has to be formatted.
  * @param bool   $br  Optional. If set, this will convert all remaining line breaks
@@ -8129,7 +8129,7 @@ function bb_autop( $pee, $br = true ) {
 /**
  * Function to check the heartbeat enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return bool
  */
@@ -8142,7 +8142,7 @@ function bb_is_heartbeat_enabled() {
 /**
  * Function to return the presence interval time in seconds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return int
  */
@@ -8171,7 +8171,7 @@ function bb_presence_interval() {
 /**
  * Function to fetch the user's online status based on ids.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param array  $users        Array of user ids.
  * @param string $compare_time Time difference.
@@ -8197,7 +8197,7 @@ function bb_get_users_presence( $users, $compare_time = false ) {
 /**
  * Function to return the minimum pro version to show notice.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return string
  */

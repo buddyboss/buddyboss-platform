@@ -2166,7 +2166,7 @@ add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
 /**
  * Update the digest schedule event on change messages component status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param array $active_components Components to install.
  */
@@ -2212,7 +2212,7 @@ add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_compon
 /**
  * Get member presence information.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return array
  */
@@ -2238,7 +2238,7 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11
 /**
  * Update interval time option when someone change the heartbeat interval.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param array $settings Array of heartbeat settings.
  *

@@ -668,7 +668,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 *
 	 * These localizations require information that may not be loaded even by init.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 */
 	public function presence_localize_scripts() {
 
@@ -682,7 +682,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param array $params Array of key/value pairs for AJAX usage.
 		 */

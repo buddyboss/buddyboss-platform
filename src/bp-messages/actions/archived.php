@@ -3,7 +3,7 @@
  * Messages: View action handler
  *
  * @package BuddyBoss\Message\Actions
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 
 /**
@@ -39,14 +39,14 @@ function messages_action_archived() {
 	/**
 	 * Fires after processing a view request for a single message archived thread.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 */
 	do_action( 'messages_action_archived' );
 
 	/**
 	 * Filters the template to load for the Messages view screen.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */

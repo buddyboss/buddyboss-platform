@@ -1650,7 +1650,7 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 /**
  * Check last message is a joined group message.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $thread_id    Message Thread ID.
  * @param int $user_id      User ID.
@@ -1683,7 +1683,7 @@ function bb_is_last_message_group_join_message( $thread_id, $user_id ) {
 /**
  * Check last message is a left group message.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $thread_id    Message Thread ID.
  * @param int $user_id      User ID.
@@ -1716,7 +1716,7 @@ function bb_is_last_message_group_left_message( $thread_id, $user_id ) {
 /**
  * Change friend button arguments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param array $args Button arguments.
  *
@@ -1740,7 +1740,7 @@ function bb_messaged_set_friend_button_args( $args = array() ) {
 /**
  * Update meta query when fetching the threads for user unread count.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param array $meta_query Array of meta query arguments.
  * @param array $r          Array of arguments.
@@ -1788,7 +1788,7 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
 /**
  * Checks whether a message thread is archived or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $thread_id ID of the thread.
  * @param int $user_id   The user ID.
@@ -1802,7 +1802,7 @@ function messages_is_valid_archived_thread( $thread_id, $user_id = 0 ) {
 /**
  * Checks whether thread exists through the recipients.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param array $recipients Username array of the user.
  * @param int   $user_id    The user ID.
@@ -1876,7 +1876,7 @@ function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $use
 /**
  * Send digest email into background.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param array $recipient_messages Message array.
  * @param int   $thread_id          ID of the thread.
@@ -2010,7 +2010,7 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 /**
  * Get thread id from message id.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $message_id Message ID.
  *
@@ -2034,7 +2034,7 @@ function bb_get_thread_id_by_message_id( $message_id ) {
 /**
  * Function to search value by minutes from the bb_get_delay_notification_times function.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $time Notification delay time.
  *
@@ -2054,7 +2054,7 @@ function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
 /**
  * Schedule digest notification action times.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return array
  */
