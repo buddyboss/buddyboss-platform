@@ -911,8 +911,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 								<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
 							</div>
 							<div class="document-expand">
-								<a href="#" class="document-expand-anchor"><i
-											class="bb-icon-l bb-icon-expand document-icon-plus"></i> <?php esc_html_e( 'Expand', 'buddyboss' ); ?>
+								<a href="#" class="document-expand-anchor">
+									<i class="bb-icon-l bb-icon-expand document-icon-plus"></i> <?php esc_html_e( 'Expand', 'buddyboss' ); ?>
 								</a>
 							</div>
 						</div> <!-- .document-text-wrap -->
@@ -3073,8 +3073,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 									<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
 								</div>
 								<div class="document-expand">
-									<a href="#" class="document-expand-anchor"><i
-												class="bb-icon-l bb-icon-expand document-icon-plus"></i> <?php esc_html_e( 'Expand', 'buddyboss' ); ?>
+									<a href="#" class="document-expand-anchor">
+										<i class="bb-icon-l bb-icon-expand document-icon-plus"></i> <?php esc_html_e( 'Expand', 'buddyboss' ); ?>
 									</a>
 								</div>
 							</div> <!-- .document-text-wrap -->
