@@ -8191,3 +8191,14 @@ function bb_get_users_presence( $users, $compare_time = false ) {
 
 	return $presence_data;
 }
+
+/**
+ * Function to return the minimum pro version to show notice.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_pro_pusher_version() {
+	return '2.1.4';
+}
