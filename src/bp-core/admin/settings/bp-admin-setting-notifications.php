@@ -147,19 +147,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 					/* translators: Tutorial link. */
 						__( 'Your site is currently using the legacy notifications system. To disable, please %s.', 'buddyboss' )
 					),
-					'<a href="' .
-					esc_url(
-						bp_get_admin_url(
-							add_query_arg(
-								array(
-									'page'    => 'bp-help',
-									'article' => 125369,
-								),
-								'admin.php'
-							)
-						)
-					) .
-					'">' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>'
+					'<a href="https://www.buddyboss.com/resources/dev-docs/web-development/enabling-legacy-mode-for-notifications-api/" target="_blank">' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>'
 				);
 				?>
 			</p>
