@@ -146,8 +146,8 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $type, $request ) {
 		$data = array(
 			'labels'         => array(
-				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? $type->labels['name'] : '',
-				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? $type->labels['singular_name'] : '',
+				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? wp_specialchars_decode( $type->labels['name'] ) : '',
+				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? wp_specialchars_decode( $type->labels['singular_name'] ) : '',
 			),
 			'has_directory'  => ( isset( $type->has_directory ) ? $type->has_directory : false ),
 			'name'           => ( isset( $type->name ) ? $type->name : '' ),

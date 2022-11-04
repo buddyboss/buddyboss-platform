@@ -117,7 +117,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [include] An array of topic IDs to retrieve.
 	 * @apiParam {Number} [offset] The number of topics to offset before retrieval.
 	 * @apiParam {String=asc,desc} [order=asc] Designates ascending or descending order of topics.
-	 * @apiParam {Array=meta_value,date,ID,author,title,modified,parent,rand,popular,activity} [orderby] Sort retrieved topics by parameter.
+	 * @apiParam {Array=meta_value,date,ID,author,title,modified,parent,rand,popular,activity,include} [orderby] Sort retrieved topics by parameter.
 	 * @apiParam {Array=publish,private,hidden} [status=publish private] Limit result set to topic assigned a specific status.
 	 * @apiParam {Number} [parent] Forum ID to retrieve all the topics.
 	 * @apiParam {Boolean} [subscriptions] Retrieve subscribed topics by user.
@@ -189,6 +189,14 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		if ( is_array( $args['orderby'] ) ) {
 			$args['orderby'] = implode( ' ', $args['orderby'] );
+		}
+
+		if (
+			! empty( $request['include'] )
+			&& ! empty( $args['orderby'] )
+			&& 'include' === $args['orderby']
+		) {
+			$bbp_t['orderby'] = 'post__in';
 		}
 
 		/**
@@ -2069,6 +2077,21 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			: ''
 		);
 
+		if ( ! empty( $data['group'] ) ) {
+			$this->forum_endpoint->group = $data['group'];
+		}
+
+		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
+			$group_forum_extention = new BBP_Forums_Group_Extension();
+			// Allow group member to view private/hidden forums.
+			add_filter( 'bbp_map_meta_caps', array( $group_forum_extention, 'map_group_forum_meta_caps' ), 10, 4 );
+
+			// Fix issue - Group organizers and moderators can not add topic tags.
+			add_filter( 'bbp_map_topic_tag_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_assign_topic_tags_caps' ), 10, 4 );
+		}
+
+		add_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
 		// Setup subscribe/unsubscribe state.
 		$data['action_states'] = $this->get_topic_action_states( $topic->ID );
 
@@ -2077,8 +2100,22 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		// current user permission.
 		$data['current_user_permissions'] = $this->get_topic_current_user_permissions( $topic->ID );
 
+		remove_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
+		$this->forum_endpoint->group = '';
+
 		// Revisions.
 		$data['revisions'] = $this->get_topic_revisions( $topic->ID );
+
+		// Pass group ids for embedded members endpoint.
+		$group_ids = '';
+		if ( ! empty( $args['post_parent'] ) ) {
+			$group = bbp_get_forum_group_ids( $args['post_parent'] );
+			if ( ! empty( $group ) ) {
+				$group_ids = is_array( $group ) ? implode( ', ', $group ) : $group[0];
+			}
+		}
+		$request['group_id'] = $group_ids;
 
 		$data = $this->add_additional_fields_to_object( $data, $request );
 		$data = $this->filter_response_by_context( $data, $context );
@@ -2086,7 +2123,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		// @todo add prepare_links
 		$response = rest_ensure_response( $data );
 
-		$response->add_links( $this->prepare_links( $topic ) );
+		$response->add_links( $this->prepare_links( $topic, $request ) );
 
 		/**
 		 * Filter a component value returned from the API.
@@ -2487,6 +2524,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'rand',
 					'popular',
 					'activity',
+					'include'
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -2543,13 +2581,15 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param WP_Post $post Post object.
+	 * @param WP_Post         $post    Post object.
+	 * @param WP_REST_Request $request Request used to generate the response.
 	 *
 	 * @return array
 	 * @since 0.1.0
 	 */
-	protected function prepare_links( $post ) {
-		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
+	protected function prepare_links( $post, $request ) {
+		$group = ! empty( $request['group_id'] ) ? '?group_id=' . $request['group_id'] : '';
+		$base  = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 
 		// Entity meta.
 		$links = array(
@@ -2560,7 +2600,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) ),
+				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) . $group ),
 				'embeddable' => true,
 			),
 		);
@@ -2654,6 +2694,9 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$topic   = bbp_get_topic( bbp_get_topic_id( (int) $topic_id ) );
 		$form_id = bbp_get_topic_forum_id( $topic_id );
+		if ( empty( $form_id ) && ! empty( $topic_id ) ) {
+			$form_id = $topic->ID;
+		}
 
 		return array(
 			'show_replies' => $this->forum_endpoint->can_access_content( $form_id ),
@@ -2666,7 +2709,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				)
 			),
 			'moderate'     => ! empty( $topic ) && current_user_can( 'moderate', $topic_id ),
-			'reply'        => ! empty( $topic ) && bbp_current_user_can_publish_replies() && $this->forum_endpoint->can_access_content( $form_id, true ),
+			'reply'        => $this->can_reply( $topic->ID, $form_id ),
 			'trash'        => ! empty( $topic ) && current_user_can( 'delete_topic', $topic->ID ),
 		);
 	}
@@ -2848,5 +2891,30 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		// Filter & return.
 		return apply_filters( 'bbp_sanitize_search_request', $retval, $query_arg );
+	}
+
+	/**
+	 * Verify if user is able to add topic reply or not.
+	 *
+	 * @param int $topic_id Topic ID.
+	 * @param int $forum_id Forum ID.
+	 *
+	 * @return bool
+	 */
+	public function can_reply( $topic_id, $forum_id ) {
+
+		if ( empty( $topic_id ) || empty( $forum_id ) ) {
+			return false;
+		}
+
+		if ( bbp_is_user_keymaster() ) {
+			return true;
+		}
+
+		if ( ! bbp_is_topic_closed( $topic_id ) && ! bbp_is_forum_closed( $forum_id ) && bbp_current_user_can_publish_replies() && $this->forum_endpoint->can_access_content( $forum_id, true ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }
