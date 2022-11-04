@@ -1248,7 +1248,7 @@ function bb_moderation_get_reporting_category_fields_array() {
 /**
  * Fetch the user id by blocked by.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int  $user_id User id.
  * @param bool $force   Whether to bypass the static cache or not.
@@ -1282,7 +1282,7 @@ function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 /**
  * Check whether a user has been marked as a blocked by another user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $user_id The ID for the user.
  *
@@ -1302,7 +1302,7 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
  * Group organizers should be able to see the names/avatars of members in all places in their group,
  * even if they’re blocked by that member.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param string $avatar_url     Updated avatar url.
  * @param string $old_avatar_url Old avatar url before updated.
@@ -1357,7 +1357,7 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 /**
  * Function to fetch the blocked by user label.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param string $value   Current user display name.
  * @param int    $user_id User id.
@@ -1369,7 +1369,7 @@ function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
 	/**
 	 * Filter to update is_blocked_label.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $value   Current user display name.
 	 * @param int    $user_id User id.
@@ -1380,7 +1380,7 @@ function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
 /**
  * Function to fetch the blocked user label.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param string $value   Current user display name.
  * @param int    $user_id User id.
@@ -1392,7 +1392,7 @@ function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
 	/**
 	 * Filter to update has_blocked_label.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $value   Current user display name.
 	 * @param int    $user_id User id.
@@ -1403,7 +1403,7 @@ function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
 /**
  * Function to fetch the blocked by user avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int   $user_id User id.
  * @param array $args    Arguments passed to get_avatar_data(), after processing.
@@ -1415,7 +1415,7 @@ function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
 	/**
 	 * Filter to update is_blocked_avatar.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string Get default avatar image URL based on settings.
 	 * @param int   $user_id User id.
@@ -1427,7 +1427,7 @@ function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
 /**
  * Function to fetch the blocked user avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param string $avatar_url Current avatar URL.
  * @param int    $user_id    User id.
@@ -1440,7 +1440,7 @@ function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array(
 	/**
 	 * Filter to update has_blocked_avatar.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $avatar_url Current avatar URL.
 	 * @param int    $user_id    User id.
@@ -1452,7 +1452,7 @@ function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array(
 /**
  * Function to fetch the suspended by user label.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $user_id User id.
  *
@@ -1463,7 +1463,7 @@ function bb_moderation_is_suspended_label( $user_id = 0 ) {
 	/**
 	 * Filter to update is_suspended_label.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string Default suspended label.
 	 * @param int $user_id User id.
@@ -1474,7 +1474,7 @@ function bb_moderation_is_suspended_label( $user_id = 0 ) {
 /**
  * Function to fetch the suspended by user avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int   $user_id User id.
  * @param array $args    Arguments passed to get_avatar_data(), after processing.
@@ -1486,7 +1486,7 @@ function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
 	/**
 	 * Filter to update is_suspended_avatar.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string Get default avatar image URL based on settings.
 	 * @param int   $user_id User id.
