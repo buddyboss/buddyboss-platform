@@ -290,7 +290,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		/**
 		 * Filter to update blocked avatar url.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param string $retval         The URL of the avatar.
 		 * @param string $old_avatar_url URL for a originally uploaded avatar.
@@ -329,7 +329,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		/**
 		 * Filter to update blocked avatar url.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param string $avatar_url     URL for a locally uploaded avatar.
 		 * @param string $old_avatar_url URL for a originally uploaded avatar.

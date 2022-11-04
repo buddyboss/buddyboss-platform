@@ -1547,7 +1547,7 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 /**
  * Function to check the Hide messages from notifications is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return bool
  */
@@ -1558,7 +1558,7 @@ function bb_hide_messages_from_notification_enabled() {
 /**
  * Function to check the Delay email notifications for new messages is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return bool
  */
@@ -1569,7 +1569,7 @@ function bb_delay_email_notifications_enabled() {
 /**
  * Function to check the Delay email notifications for new messages is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return int
  */
@@ -1580,7 +1580,7 @@ function bb_get_delay_email_notifications_time() {
 /**
  * Function to check the Delay email notifications for new messages is enabled with pusher or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return bool
  */
