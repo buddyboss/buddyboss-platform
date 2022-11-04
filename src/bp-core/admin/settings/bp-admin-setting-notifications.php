@@ -52,8 +52,13 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
 
 		if ( ! bb_enabled_legacy_email_preference() ) {
-			$hide_message_notification = isset( $_POST['hide_message_notification'] ) ? sanitize_text_field( $_POST['hide_message_notification'] ) : 1;
+			$hide_message_notification     = isset( $_POST['hide_message_notification'] ) ? sanitize_text_field( $_POST['hide_message_notification'] ) : 0;
+			$delay_email_notification      = isset( $_POST['delay_email_notification'] ) ? sanitize_text_field( $_POST['delay_email_notification'] ) : 0;
+			$time_delay_email_notification = isset( $_POST['time_delay_email_notification'] ) ? sanitize_text_field( $_POST['time_delay_email_notification'] ) : 15;
+
 			bp_update_option( 'hide_message_notification', (int) $hide_message_notification );
+			bp_update_option( 'delay_email_notification', (int) $delay_email_notification );
+			bp_update_option( 'time_delay_email_notification', (int) $time_delay_email_notification );
 		}
 
 		bp_update_option( '_bp_on_screen_notifications_enable', $enabel );
