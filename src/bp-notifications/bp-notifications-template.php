@@ -1097,11 +1097,11 @@ function bb_on_screen_notification_template() {
 		>
 			<ul
 				class="notification-list bb-nouveau-list"
-				data-removed-items="<?php echo esc_attr( json_encode( $user_unread_notification_ids ) ); ?>"
-				data-auto-removed-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-				data-border-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-				data-flash-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-				data-animated-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
+				data-removed-items="<?php echo esc_attr( wp_json_encode( $user_unread_notification_ids ) ); ?>"
+				data-auto-removed-items="<?php echo esc_attr( wp_json_encode( array() ) ); ?>"
+				data-border-items="<?php echo esc_attr( wp_json_encode( array() ) ); ?>"
+				data-flash-items="<?php echo esc_attr( wp_json_encode( array() ) ); ?>"
+				data-animated-items="<?php echo esc_attr( wp_json_encode( array() ) ); ?>"
 			>
 			</ul>
 			<div class="bb-remove-all-notification">
