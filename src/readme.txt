@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.1.4.1 =
+* Moderation - Handled critical issue when Forum component disabled
+
 = 2.1.4 =
 * Messages - Improved UI/UX for the Private Messaging screen significantly
 * Messages - Provided option to mark conversation archive/unarchive by refactoring hide conversation flow
