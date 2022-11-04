@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Pusher
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 
 // Exit if accessed directly.
@@ -13,12 +13,12 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BB Pusher integration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_register_pusher_integration() {
 
 	if (
-		( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '2.2.0', '>=' ) ) ||
+		( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, bb_pro_pusher_version(), '>=' ) ) ||
 		class_exists( 'BB_Pusher_Integration' )
 	) {
 		return;

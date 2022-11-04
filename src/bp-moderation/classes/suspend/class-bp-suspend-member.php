@@ -72,6 +72,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 9999, 3 );
 		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
+
 	}
 
 	/**
@@ -255,7 +256,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Exclude reported members from message recipients lists.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param array $where_conditions Recipients member where sql.
 	 * @param array $args             Array of arguments of recipients query.
@@ -281,7 +282,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param array $where Query to hide suspended user's member.
 		 * @param array $class current class object.
@@ -752,7 +753,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Filter to update suspended avatar url.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param string $retval     The URL of the avatar.
 		 * @param string $old_retval URL for a originally uploaded avatar.
@@ -788,7 +789,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Filter to update suspended avatar url.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param string $avatar_url     URL for a locally uploaded avatar.
 		 * @param string $old_avatar_url URL for a originally uploaded avatar.

@@ -2072,7 +2072,7 @@ class BP_Messages_Thread {
 	/**
 	 * Checks whether a message thread is archived or not.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param int $thread_id The message thread ID.
 	 * @param int $user_id   The user ID.

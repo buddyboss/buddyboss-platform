@@ -912,7 +912,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 							</div>
 							<div class="document-expand">
 								<a href="#" class="document-expand-anchor">
-									<i class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+									<i class="bb-icon-l bb-icon-expand document-icon-plus"></i> <?php esc_html_e( 'Expand', 'buddyboss' ); ?>
 								</a>
 							</div>
 						</div> <!-- .document-text-wrap -->
@@ -949,6 +949,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'extension_description' => $extension_description,
 					'download'              => __( 'Download', 'buddyboss' ),
 					'collapse'              => __( 'Collapse', 'buddyboss' ),
+					'expand'                => __( 'Expand', 'buddyboss' ),
 					'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
 					'more_action'           => __( 'More actions', 'buddyboss' ),
 					'privacy'               => bp_get_db_document_privacy(),
@@ -3073,7 +3074,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 								</div>
 								<div class="document-expand">
 									<a href="#" class="document-expand-anchor">
-										<i class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+										<i class="bb-icon-l bb-icon-expand document-icon-plus"></i> <?php esc_html_e( 'Expand', 'buddyboss' ); ?>
 									</a>
 								</div>
 							</div> <!-- .document-text-wrap -->
@@ -3110,6 +3111,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'extension_description' => $extension_description,
 						'download'              => __( 'Download', 'buddyboss' ),
 						'collapse'              => __( 'Collapse', 'buddyboss' ),
+						'expand'                => __( 'Expand', 'buddyboss' ),
 						'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
 						'more_action'           => __( 'More actions', 'buddyboss' ),
 						'preview'               => $attachment_url,
@@ -3242,7 +3244,7 @@ function bp_nouveau_ajax_hide_thread() {
 		/**
 		 * Fires when messages thread was archived.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */
@@ -3597,7 +3599,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 /**
  * Function which get left/join members list.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return void|string|Object A JSON object containing html with success data.
  */
@@ -3677,7 +3679,7 @@ function bb_get_user_message_recipients() {
 /**
  * Unhide the conversation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bp_nouveau_ajax_unhide_thread() {
 	global $bp, $wpdb;
@@ -3735,7 +3737,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		/**
 		 * Fires when messages thread was un-archived.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */

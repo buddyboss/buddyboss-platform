@@ -2220,7 +2220,7 @@ function bp_get_the_thread_message_content() {
 /**
  * Output the excerpt of the current message in the loop.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_the_thread_message_excerpt() {
 	echo bb_get_the_thread_message_excerpt();
@@ -2228,7 +2228,7 @@ function bb_the_thread_message_excerpt() {
 /**
  * Get the excerpt of the current message in the loop.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return string
  */
@@ -2245,7 +2245,7 @@ function bb_get_the_thread_message_excerpt() {
 	/**
 	 * Filters the excerpt of the current message in the loop.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $message The excerpt of the current message in the loop.
 	 */
@@ -2323,7 +2323,7 @@ function bb_get_thread_total_recipients_count() {
 /**
  * Generate the human readable string for the current thread last message.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int|string $last_message_date The earlier time from which you're calculating
  *                                      the time elapsed. Enter either as an integer Unix timestamp,
@@ -2341,7 +2341,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	/**
 	 * Filters the value to use if the time since is unknown.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
@@ -2354,7 +2354,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	/**
 	 * Filters the value to use if the time since is right now.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
@@ -2487,7 +2487,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	/**
 	 * Filters the date sent value for the current message as a timestamp.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string     $output             Timestamp of the date sent value for the current message.
 	 * @param int|string $old_last_date     The earlier time from which you're calculating
@@ -2500,7 +2500,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 /**
  * Generate the human readable string for the current thread start date.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int|string $thread_start_date The earlier time from which you're calculating
  *                                      the time elapsed. Enter either as an integer Unix timestamp,
@@ -2519,7 +2519,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	/**
 	 * Filters the value to use if the time since is unknown.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
@@ -2532,7 +2532,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	/**
 	 * Filters the value to use if the time since is right now.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
@@ -2655,7 +2655,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	/**
 	 * Filters the date sent value for the current message as a timestamp.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string     $value             Timestamp of the date sent value for the current message.
 	 * @param int|string $old_start_date    The earlier time from which you're calculating
@@ -2669,7 +2669,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 /**
  * Generate the 'g:i A' string for the current message.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return string
  */
@@ -2681,17 +2681,17 @@ function bb_get_the_thread_message_sent_time() {
 	/**
 	 * Filters the 'Sent x hours ago' string for the current message.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $value Default text of 'Sent x hours ago'.
 	 */
-	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:i A', strtotime( $site_sent_date ) ) ) );
+	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:iA', strtotime( $site_sent_date ) ) ) );
 }
 
 /**
  * Output the archived messages component slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_messages_archived_slug() {
 	echo bb_get_messages_archived_slug();
@@ -2700,7 +2700,7 @@ function bb_messages_archived_slug() {
 /**
  * Return the archived messages component slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return string
  */
@@ -2709,7 +2709,7 @@ function bb_get_messages_archived_slug() {
 	/**
 	 * Filters the archived messages component slug.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $slug Archived messages component slug.
 	 */
@@ -2719,7 +2719,7 @@ function bb_get_messages_archived_slug() {
 /**
  * Output the archived messages component URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_messages_archived_url() {
 	echo esc_url( bb_get_messages_archived_url() );
@@ -2728,7 +2728,7 @@ function bb_messages_archived_url() {
 /**
  * Return the archived messages component URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return string
  */
@@ -2737,7 +2737,7 @@ function bb_get_messages_archived_url() {
 	/**
 	 * Filters the archived messages component URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $slug Archived messages component URL.
 	 */
@@ -2747,7 +2747,7 @@ function bb_get_messages_archived_url() {
 /**
  * Output the permalink for a particular archived thread.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $thread_id Optional. ID of the archived thread. Default: current archived thread
  *                       being iterated on in the loop.
@@ -2760,7 +2760,7 @@ function bb_message_archived_thread_view_link( $thread_id = 0, $user_id = null )
 /**
  * Get the permalink of a particular archived thread.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $thread_id Optional. ID of the archived thread. Default: current
  *                       archived thread being iterated on in the loop.
@@ -2786,7 +2786,7 @@ function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = nu
 	/**
 	 * Filters the permalink of a particular archived thread.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $value     Permalink of a particular archived thread.
 	 * @param int    $thread_id ID of the archived thread.

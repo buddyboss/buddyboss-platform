@@ -375,7 +375,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18951 ) {
-			bb_update_to_2_2_0();
+			bb_update_to_2_1_4();
 		}
 	}
 
@@ -1919,9 +1919,9 @@ function bb_moderation_add_user_report_column() {
 /**
  * Migrate group member meta table, is_deleted column in messages table and migrate existing email templates.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
-function bb_update_to_2_2_0() {
+function bb_update_to_2_1_4() {
 
 	// Do not ignore deprecated code for existing installs.
 	bp_update_option( '_bp_ignore_deprecated_code', false );
@@ -1951,7 +1951,7 @@ function bb_update_to_2_2_0() {
 /**
  * Add 'is_deleted' column to bp_messages table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return void
  */
@@ -1969,7 +1969,7 @@ function bb_messages_add_is_deleted_column() {
 /**
  * Migrate message table for is_deleted column.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return void
  */
@@ -1996,7 +1996,7 @@ function bb_messages_migrate_is_deleted_column() {
 /**
  * For existing customer set default values for Messaging Notifications metabox.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return void
  */
@@ -2008,7 +2008,7 @@ function bb_set_default_value_for_messaging_notifications_metabox() {
 /**
  * For existing customer update the messages email template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return void
  */

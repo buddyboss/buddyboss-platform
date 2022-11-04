@@ -1736,7 +1736,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token delay message
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.
@@ -2110,7 +2110,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token delay message
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.
@@ -2147,7 +2147,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token delay message
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.
@@ -2191,7 +2191,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token delay message
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.
@@ -2218,7 +2218,7 @@ class BP_Email_Tokens {
 	/**
 	 * Strip all tags from the subject.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.4
 	 *
 	 * @param string $retval Property value.
 	 * @param string $property_name Property name.

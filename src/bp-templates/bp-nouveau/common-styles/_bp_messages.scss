@@ -102,10 +102,15 @@
 	}
 
 	.thread-avatar .user-status-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		color: $white;
 		background-color: $light-text;
 		font-size: 17px;
 		line-height: 1;
+		height: 26px;
+		width: 26px;
 		padding: 4px;
 		border-radius: 50%;
 		position: absolute;
@@ -201,7 +206,6 @@
 			display: inline-block;
 			vertical-align: middle;
 			font-size: 13px;
-			padding-left: 5px;
 
 			&:before {
 				content: "";
@@ -215,8 +219,13 @@
 			}
 		}
 
-		.thread-excerpt + .thread-date:before {
-			display: inline-block;
+		.thread-excerpt + .thread-date {
+			padding-left: 5px;
+
+			&:before {
+				display: inline-block;
+			}
+
 		}
 
 		.thread-avatar {
@@ -1394,6 +1403,7 @@ input#send-to-input {
 	.bb-activity-media-wrap .bb-activity-media-elem.document-activity {
 
 		.document-action-wrap .document-action_list li {
+			background-color: transparent !important;
 			margin: 0 !important;
 			padding: 0 !important;
 		}
