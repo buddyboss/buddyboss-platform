@@ -1863,13 +1863,13 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'size'        => $size,
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
+					'full_name'   => esc_attr( basename( $file ) ),
 				);
 
 				if ( 0 === $folder_id && $document->folder_id > 0 ) {
 					$folder_id                    = $document->folder_id;
 					$activity['can_edit_privacy'] = false;
 				}
-
 			}
 		}
 
