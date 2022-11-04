@@ -98,8 +98,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 					$in = implode( '', $in );
 				}
-			} else {
-				$where[] = 'pm.post_id IS NULL';
 			}
 
 			$where[] = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\') OR pm.meta_value IN (' . trim( $in, ',' ) . ') )';

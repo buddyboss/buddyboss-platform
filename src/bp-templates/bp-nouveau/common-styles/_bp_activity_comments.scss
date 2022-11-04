@@ -60,6 +60,7 @@
 				height: 25px;
 				max-width: none;
 				width: 25px;
+				image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 			}
 		}
 

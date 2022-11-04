@@ -61,12 +61,14 @@ function bp_messages_clear_cache_on_message_save( BP_Messages_Message $message )
 	// Delete unread count for each recipient.
 	foreach ( (array) $message->recipients as $recipient ) {
 		wp_cache_delete( $recipient->user_id, 'bp_messages_unread_count' );
+		wp_cache_delete( "bb_thread_message_unread_count_{$recipient->user_id}_{$message->thread_id}", 'bp_messages_unread_count' );
 	}
 
 	// Delete thread recipient cache.
 	wp_cache_delete( 'thread_recipients_' . $message->thread_id, 'bp_messages' );
 }
 add_action( 'messages_message_after_save', 'bp_messages_clear_cache_on_message_save' );
+add_action( 'messages_message_sent', 'bp_messages_clear_cache_on_message_save', 1, 2 );
 
 /**
  * Clear message cache after a message thread is deleted.
@@ -83,6 +85,7 @@ function bp_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
 		// wp_cache_delete( $thread_id, 'bp_messages_threads' );
 		bp_messages_delete_thread_paginated_messages_cache( $thread_id );
 		wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
+		wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
 	}
 
 	// Delete unread count for logged-in user.
@@ -114,7 +117,7 @@ function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
 	BP_Messages_Thread::$noCache = true;
 	$thread_id                   = $thread_id;
 	$before                      = null;
-	$perpage                     = 10;
+	$perpage                     = apply_filters( 'bp_messages_default_per_page', 10 );
 
 	while ( wp_cache_get( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' ) ) {
 		wp_cache_delete( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' );
@@ -127,3 +130,59 @@ function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
 
 	BP_Messages_Thread::$noCache = false;
 }
+
+/**
+ * Delete the messages cache on different actions.
+ *
+ * @since BuddyBoss 1.9.0
+ */
+function bb_core_clear_message_cache() {
+	bp_core_reset_incrementor( 'bp_messages' );
+}
+
+add_action( 'messages_message_after_save', 'bb_core_clear_message_cache' );
+add_action( 'messages_delete_thread', 'bb_core_clear_message_cache' );
+add_action( 'messages_send_notice', 'bb_core_clear_message_cache' );
+add_action( 'messages_message_sent', 'bb_core_clear_message_cache' );
+add_action( 'messages_thread_mark_as_read', 'bb_core_clear_message_cache' );
+
+/**
+ * Clear cache when group messages has been disabled by admin.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param array $old_value Old values of array.
+ * @param array $value     New values of the array.
+ *
+ * @return void
+ */
+function bb_clear_cache_while_group_messsage_settings_updated( $old_value, $value ) {
+
+	if ( $old_value !== $value ) {
+		global $wp_object_cache;
+		if ( isset( $wp_object_cache->cache['bp_messages_unread_count'] ) ) {
+			unset( $wp_object_cache->cache['bp_messages_unread_count'] );
+		}
+
+		bp_core_reset_incrementor( 'bp_messages' );
+	}
+}
+
+add_action( 'update_option_bp-disable-group-messages', 'bb_clear_cache_while_group_messsage_settings_updated', 10, 2 );
+
+/**
+ * Clear unread message count cache after archive/un-archive thread.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $thread_id Thread ID.
+ * @param int $user_id   User ID.
+ *
+ * @return void
+ */
+function bp_messages_clear_message_unread_cache_on_thread_archived( $thread_id, $user_id ) {
+	wp_cache_delete( $user_id, 'bp_messages_unread_count' );
+	wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
+}
+add_action( 'bb_messages_thread_archived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
+add_action( 'bb_messages_thread_unarchived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
