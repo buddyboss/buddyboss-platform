@@ -9571,6 +9571,12 @@ div.profile_completion_wrap .progress_text_wrap {
   text-align: center;
 }
 
+html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
 .pc_detailed_progress li.completed span.completed_staus {
   color: #8a2;
 }
