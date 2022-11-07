@@ -9,8 +9,8 @@
  */
 
 ?>
-<div id="group-invites-container">
-	<?php bp_get_template_part( 'groups/single/parts/invite-subnav' ); ?>
+<?php bp_get_template_part( 'groups/single/parts/invite-subnav' ); ?>
+<div id="group-invites-container">	
 	<div class="group-invites-column">
 		<h2 class="bb-title"><?php _e( 'Pending Invites', 'buddyboss' ); ?></h2>
 		<div class="subnav-filters group-subnav-filters bp-invites-filters">
@@ -21,7 +21,7 @@
 							<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
 							<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
 							<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit">
-								<span class="bb-icons bb-icon-search" aria-hidden="true"></span>
+								<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
 								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
 							</button>
 						</form>
