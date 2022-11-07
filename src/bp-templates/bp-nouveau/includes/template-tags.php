@@ -2608,8 +2608,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			$get_term_content = bp_strip_script_and_style_tags( apply_filters( 'the_content', $get_terms->post_content ) );
-			echo apply_filters( 'bp_term_of_service_content', wp_kses_post( $get_term_content ), $get_terms->post_content );
+			echo apply_filters( 'bp_term_of_service_content', wp_kses_post( bp_strip_script_and_style_tags( apply_filters( 'the_content', $get_terms->post_content ) ) ), $get_terms->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
@@ -2617,8 +2616,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			$get_content      = bp_strip_script_and_style_tags( apply_filters( 'the_content', $get_privacy->post_content ) );
-			echo apply_filters( 'bp_privacy_policy_content', wp_kses_post( $get_content ), $get_privacy->post_content );
+			echo apply_filters( 'bp_privacy_policy_content', wp_kses_post( bp_strip_script_and_style_tags( apply_filters( 'the_content', $get_privacy->post_content ) ) ), $get_privacy->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
@@ -2642,8 +2640,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			$get_content      = bp_strip_script_and_style_tags( apply_filters( 'the_content', $get_privacy->post_content ) );
-			echo apply_filters( 'bp_privacy_policy_content', wp_kses_post( $get_content ), $get_privacy->post_content );
+			echo apply_filters( 'bp_privacy_policy_content', wp_kses_post( bp_strip_script_and_style_tags( apply_filters( 'the_content', $get_privacy->post_content ) ) ), $get_privacy->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
@@ -2668,8 +2665,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			$get_term_content = bp_strip_script_and_style_tags( apply_filters( 'the_content', $get_terms->post_content ) );
-			echo apply_filters( 'bp_term_of_service_content', wp_kses_post( $get_term_content ), $get_terms->post_content );
+			echo apply_filters( 'bp_term_of_service_content', wp_kses_post( bp_strip_script_and_style_tags( apply_filters( 'the_content', $get_terms->post_content ) ) ), $get_terms->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
