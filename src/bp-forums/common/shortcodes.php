@@ -72,7 +72,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 					'bbp-single-tag'   => array( $this, 'display_topics_of_tag' ), // Topics of Tag.
 
 					/** Replies */
-					'bbp-reply-form'   => array( $this, 'display_reply_form' ), // Reply form.
+					'bbp-reply-form'   => array( $this, 'display_reply_form' ), // Specific reply form - pass an 'id' attribute.
 					'bbp-single-reply' => array( $this, 'display_reply' ), // Specific reply - pass an 'id' attribute.
 
 					/** Views */
@@ -498,7 +498,35 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 *
 		 * @uses get_template_part()
 		 */
-		public function display_reply_form() {
+		public function display_reply_form( $attr, $content = '' ) {
+
+			// Unset globals.
+			$this->unset_globals();
+
+			// Set passed attribute to $reply_id for clarity.
+			$topic_id = bbpress()->current_topic_id = $attr['id'];
+			$forum_id = bbp_get_reply_forum_id( $topic_id );
+
+			// Bail if ID passed is not a reply.
+			if ( ! bbp_is_topic( $topic_id ) ) {
+				return $content;
+			}
+
+			// Reset the queries if not in theme compat.
+			if ( ! bbp_is_theme_compat_active() ) {
+
+				$bbp = bbpress();
+
+				// Reset necessary forum_query attributes for replys loop to function.
+				$bbp->forum_query->query_vars['post_type'] = bbp_get_forum_post_type();
+				$bbp->forum_query->in_the_loop             = true;
+				$bbp->forum_query->post                    = get_post( $forum_id );
+
+				// Reset necessary topic_query attributes for replys loop to function.
+				$bbp->topic_query->query_vars['post_type'] = bbp_get_topic_post_type();
+				$bbp->topic_query->in_the_loop             = true;
+				$bbp->topic_query->post                    = get_post( $topic_id );
+			}
 
 			// Start output buffer.
 			$this->start( 'bbp_reply_form' );
