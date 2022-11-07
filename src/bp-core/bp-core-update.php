@@ -2071,7 +2071,7 @@ function bb_migrate_messages_email_templates() {
 }
 
 /**
- * Clear message api cache on the update.
+ * Clear api cache on the update.
  *
  * @since BuddyBoss [BBVERSION]
  *
