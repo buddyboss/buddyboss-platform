@@ -9323,6 +9323,11 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   order: 3;
 }
 
+.profile-edit button.button > i {
+  font-size: 18px;
+  margin-right: 5px;
+}
+
 #btn_add_repeater_set {
   align-items: center;
   display: flex;
