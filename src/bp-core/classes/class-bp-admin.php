@@ -787,33 +787,42 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			wp_enqueue_script( 'bp-fitvids-js' );
 
-			wp_enqueue_script( 'bp-wp-api-js' );
-			wp_enqueue_script( 'bp-help-js' );
+            // phpcs:ignore
+			if ( isset( $_GET['page'] ) && 'bp-help' === $_GET['page'] ) {
+				wp_enqueue_script( 'bp-wp-api-js' );
+				wp_enqueue_script( 'bp-help-js' );
 
-			$bp_help_base_url = bp_get_admin_url(
-				add_query_arg(
+				$bp_help_base_url = bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-help',
+						),
+						'admin.php'
+					)
+				);
+
+				wp_localize_script(
+					'bp-help-js',
+					'BP_HELP',
 					array(
-						'page' => 'bp-help',
-					),
-					'admin.php'
-				)
-			);
-
-			wp_localize_script(
-				'bp-help-js',
-				'BP_HELP',
-				array(
-					'ajax_url'              => admin_url( 'admin-ajax.php' ),
-					'bb_help_url'           => $bp_help_base_url,
-					'bb_help_title'         => esc_html__( 'Docs', 'buddyboss' ),
-					'bb_help_no_network'    => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
-					'bb_display_auto_popup' => get_option( '_bb_is_update' ),
-				)
-			);
+						'ajax_url'           => admin_url( 'admin-ajax.php' ),
+						'bb_help_url'        => $bp_help_base_url,
+						'bb_help_title'      => esc_html__( 'Docs', 'buddyboss' ),
+						'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
+					)
+				);
+			}
 
 			// Hello BuddyBoss.
 			wp_enqueue_style( 'bp-hello-css' );
 			wp_enqueue_script( 'bp-hello-js' );
+			wp_localize_script(
+				'bp-hello-js',
+				'BP_HELLO',
+				array(
+					'bb_display_auto_popup' => get_option( '_bb_is_update' ),
+				)
+			);
 
 			// Enqueue only post_type is member type and group type.
 			if (

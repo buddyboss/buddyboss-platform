@@ -130,8 +130,8 @@
 				padding: 0;
 
 				.member-status.online {
-					right: 4px;
 					top: 4px;
+					bottom: 4px;
 				}
 
 			}
@@ -189,6 +189,12 @@
 	border: 2px solid $white;
 	border-radius: 100%;
 	z-index: 1;
+
+	.bp-user-blocked > &,
+	.bp-user-suspended > &,
+	.bp-user-blocked-by > & {
+		display: none !important;
+	}
 }
 
 // More option on memeber listing
