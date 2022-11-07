@@ -2073,7 +2073,7 @@ function bb_migrate_messages_email_templates() {
 /**
  * Clear api cache on the update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.5
  *
  * @return void
  */
