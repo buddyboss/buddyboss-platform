@@ -643,7 +643,7 @@ function bb_admin_setting_callback_messaging_notification_fields() {
 				<td>
 					<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bb_delay_email_notifications_enabled() ); ?> />
 					<label for="delay_email_notification"><?php esc_html_e( 'Delay email notifications for new messages', 'buddyboss' ); ?></label>
-					<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will delayed to allow time for members to read them on your site. After the delay, the emails will be only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
+					<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will be delayed to allow time for members to read them on your site. After the delay, the emails will only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
 
 					<p class="description">
 						<label for="time_delay_email_notification">
