@@ -57,6 +57,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.1.5 =
+* Messages - Handled small time formatting issue
+* REST API - Provided API support for updated messages UI/UX
+* REST API - Provided caching support for the API updates
+
 = 2.1.4.1 =
 * Moderation - Handled critical issue when Forum component disabled
 
