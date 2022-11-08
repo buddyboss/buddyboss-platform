@@ -7043,8 +7043,8 @@ function bb_check_email_type_registered( string $notification_type ) {
  *
  * @return bool Is media profile media support enabled or not.
  */
-function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) bp_get_option( 'bp_labs_notification_preferences_enabled', $default ) );
+function bp_is_labs_notification_preferences_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) $default );
 }
 
 /**
@@ -7055,7 +7055,9 @@ function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
  * @return bool
  */
 function bb_enabled_legacy_email_preference() {
-	return (bool) apply_filters( 'bb_enabled_legacy_email_preference', ! bp_is_labs_notification_preferences_support_enabled() );
+	$retval = apply_filters_deprecated( 'bb_enabled_legacy_email_preference', array( ! bp_is_labs_notification_preferences_support_enabled() ), '2.1.4', 'bb_enable_legacy_notification_preference' );
+
+	return (bool) apply_filters( 'bb_enable_legacy_notification_preference', $retval );
 }
 
 /**

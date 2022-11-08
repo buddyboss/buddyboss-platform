@@ -2470,7 +2470,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 						}
 						break;
 					case 1:
-						$output = bp_core_get_format_date( $old_last_date, 'g:iA' );
+						$output = bp_core_get_format_date( $old_last_date, 'g:i A' );
 						break;
 					default:
 						$output = $right_now_text;
@@ -2685,7 +2685,7 @@ function bb_get_the_thread_message_sent_time() {
 	 *
 	 * @param string $value Default text of 'Sent x hours ago'.
 	 */
-	return apply_filters( 'bb_get_the_thread_message_sent_time', sprintf( __( '%s', 'buddyboss' ), date_i18n( 'g:iA', strtotime( $site_sent_date ) ) ) );
+	return apply_filters( 'bb_get_the_thread_message_sent_time', date_i18n( 'g:i A', strtotime( $site_sent_date ) ) );
 }
 
 /**
