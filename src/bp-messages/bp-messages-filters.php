@@ -527,7 +527,7 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 		/**
 		 * Fired action after user banned for the message.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param int $group_thread Group thread ID.
 		 * @param int $user_id      User id.
@@ -569,7 +569,7 @@ function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
 		/**
 		 * Fired action after user banned for the message.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param int $group_thread Group thread ID.
 		 * @param int $user_id      User id.
@@ -608,7 +608,7 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 		/**
 		 * Fired action after user un-banned for the message.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param int $group_thread Group thread ID.
 		 * @param int $user_id      User id.
@@ -941,7 +941,7 @@ function messages_screen_notification_settings() {
 /**
  * Validate the thread is group thread or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $thread_id Thread ID.
  *
@@ -969,7 +969,7 @@ add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' 
 /**
  * Display the html for the notification preferences actions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return void
  */
@@ -1003,7 +1003,7 @@ add_action( 'bb_nouveau_after_nav_link_compose-action', 'bb_messages_compose_act
 /**
  * Function to exclude the archived notification for messages.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param array $where_conditions Where clause to get notifications.
  * @param array $args             Parsed arguments to get notifications.
@@ -1033,7 +1033,7 @@ function bb_messages_hide_archived_notifications( $where_conditions, $args ) {
 /**
  * Schedule an event on change notification settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_schedule_event_on_update_notification_settings() {
 
@@ -1077,7 +1077,7 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
 /**
  * Prepare the email notification content.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_digest_message_email_notifications() {
 	global $wpdb;
@@ -1186,7 +1186,7 @@ add_action( 'bb_digest_email_notifications_hook', 'bb_digest_message_email_notif
 /**
  * Function will fetch only those message recipients which is available in groups.
  * .
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param $sql
  * @param $r

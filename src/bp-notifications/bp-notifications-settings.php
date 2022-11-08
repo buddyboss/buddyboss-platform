@@ -35,7 +35,7 @@ function bb_notification_get_settings_sections() {
 			'title'             => esc_html__( 'Notification Types', 'buddyboss' ),
 			'tutorial_callback' => 'bb_automatic_notifications_tutorial',
 			'notice'            => (
-			    false === bb_enabled_legacy_email_preference() ?
+				false === bb_enabled_legacy_email_preference() ?
 				sprintf(
 					wp_kses_post(
 					/* translators: Tutorial link. */
@@ -511,7 +511,7 @@ function bb_admin_setting_callback_push_notification_lab_notification_preference
 /**
  * Callback fields for the Messaging Notifications warning.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_admin_setting_callback_messaging_notification_warning() {
 	echo '<p class="description notification-information bp-new-notice-panel-notice">' .
@@ -538,7 +538,7 @@ function bb_admin_setting_callback_messaging_notification_warning() {
 /**
  * Link to Messaging Notification tutorial.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  */
 function bb_messaging_notifications_tutorial() {
 	?>
@@ -569,7 +569,7 @@ function bb_messaging_notifications_tutorial() {
 /**
  * Callback fields for the hide message notification fields options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @return void
  */
@@ -614,7 +614,7 @@ function bb_admin_setting_callback_messaging_notification_fields() {
 				<td>
 					<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bb_delay_email_notifications_enabled() ); ?> />
 					<label for="delay_email_notification"><?php esc_html_e( 'Delay email notifications for new messages', 'buddyboss' ); ?></label>
-					<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will delayed to allow time for members to read them on your site. After the delay, the emails will be only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
+					<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will be delayed to allow time for members to read them on your site. After the delay, the emails will only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
 
 					<p class="description">
 						<label for="time_delay_email_notification">

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.0.3
 Requires PHP: 5.6.20
-Stable tag: 2.1.3
+Stable tag: 2.1.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,26 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.1.5.1 =
+* Notifications - Removed 'Notification Preferences' from labs to enable notification updates for all
+
+= 2.1.5 =
+* Messages - Handled small time formatting issue
+* REST API - Provided API support for updated messages UI/UX
+* REST API - Provided caching support for the API updates
+
+= 2.1.4.1 =
+* Moderation - Handled critical issue when Forum component disabled
+
+= 2.1.4 =
+* Messages - Improved UI/UX for the Private Messaging screen significantly
+* Messages - Provided option to mark conversation archive/unarchive by refactoring hide conversation flow
+* Messages - Improved single message thread by splitting conversations by date
+* Messages - Provided email digest option for messages with the option to delay
+* Messages - Improved the experience of joining/leaving a group for a group messages thread
+* Messages - Improved UI/UX for message dropdown in the header
+* Moderation - Small improvement for blocked and suspended members names and avatars
 
 = 2.1.3 =
 * Media - Improved media uploading layout and styling

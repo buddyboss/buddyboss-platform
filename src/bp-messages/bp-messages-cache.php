@@ -149,7 +149,7 @@ add_action( 'messages_thread_mark_as_read', 'bb_core_clear_message_cache' );
 /**
  * Clear cache when group messages has been disabled by admin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param array $old_value Old values of array.
  * @param array $value     New values of the array.
@@ -173,7 +173,7 @@ add_action( 'update_option_bp-disable-group-messages', 'bb_clear_cache_while_gro
 /**
  * Clear unread message count cache after archive/un-archive thread.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.4
  *
  * @param int $thread_id Thread ID.
  * @param int $user_id   User ID.
