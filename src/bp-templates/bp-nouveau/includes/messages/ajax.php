@@ -2869,7 +2869,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			);
 		}
 
-		if ( bp_is_active( 'moderation' ) ) {
+		if ( bp_is_active( 'moderation' ) && 'yes' !== $message_joined && 'yes' !== $message_left) {
 			$thread->messages[ $i ]['is_user_suspended']  = bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id );
 			$thread->messages[ $i ]['is_user_blocked']    = bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id );
 			$thread->messages[ $i ]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $bp_get_the_thread_message_sender_id );
