@@ -126,7 +126,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 	/**
 	 * Added admin notice when legacy mode of notification has been enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.5.1
 	 *
 	 * @return void
 	 */
