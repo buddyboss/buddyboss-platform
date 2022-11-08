@@ -2940,7 +2940,7 @@ function bb_labs_info_section_callback() {
 /**
  * Function to show the notice about the no labs features available.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.5.1
  *
  * @return void
  */
