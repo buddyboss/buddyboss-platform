@@ -46,6 +46,15 @@ function bp_helper_plugins_loaded_callback() {
 	/**
 	 * Include plugin when plugin is activated
 	 *
+	 * Support Elementor
+	 */
+	if ( in_array( 'elementor/elementor.php', $bp_plugins ) ) {
+		require buddypress()->compatibility_dir . '/bp-elementor-plugin-helpers.php';
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
 	 * Support Co-Authors Plus
 	 */
 	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
@@ -196,6 +205,13 @@ function bp_helper_plugins_loaded_callback() {
 		}
 
 		add_filter( 'parse_query', 'bb_core_tribe_events_parse_query' );
+	}
+
+	/**
+	 * Include Query Monitor compatibility.
+	 */
+	if ( class_exists( 'QueryMonitor' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-qm-helpers.php';
 	}
 }
 
@@ -584,34 +600,6 @@ add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpas
 add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
 
 /**
- * Fix elementor editor issue while bp page set as front.
- *
- * @since BuddyBoss 1.5.0
- *
- * @param boolean $bool Boolean to return.
- *
- * @return boolean
- */
-function bp_core_set_uri_elementor_show_on_front( $bool ) {
-	if (
-		isset( $_REQUEST['elementor-preview'] )
-		|| (
-			is_admin() &&
-			isset( $_REQUEST['action'] )
-			&& (
-				'elementor' === $_REQUEST['action']
-				|| 'elementor_ajax' === $_REQUEST['action']
-			)
-		)
-	) {
-		return false;
-	}
-
-	return $bool;
-}
-add_filter( 'bp_core_set_uri_show_on_front', 'bp_core_set_uri_elementor_show_on_front', 10, 3 );
-
-/**
  * Get the forum page id from settings.
  *
  * @since BuddyBoss 1.5.8
@@ -712,63 +700,6 @@ function set_yoast_meta_tags() {
 
 // Trigger before template load.
 add_action( 'bp_template_redirect', 'set_yoast_meta_tags' );
-
-/**
- * Prevent BB template redering and Redirect to the Elementor "Maintenance Mode" template.
- *
- * @since BuddyBoss 1.5.8
- *
- * @return void
- */
-function bb_get_elementor_maintenance_mode_template() {
-	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
-		return;
-	}
-
-	static $user = null;
-
-	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
-		return;
-	}
-
-	$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
-
-	if ( $is_login_page ) {
-		return;
-	}
-
-	if ( null === $user ) {
-		$user = wp_get_current_user();
-	}
-
-	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
-
-	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
-		return;
-	}
-
-	if ( 'custom' === $exclude_mode ) {
-		$exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
-		$user_roles    = $user->roles;
-
-		if ( is_multisite() && is_super_admin() ) {
-			$user_roles[] = 'super_admin';
-		}
-
-		$compare_roles = array_intersect( $user_roles, $exclude_roles );
-
-		if ( ! empty( $compare_roles ) ) {
-			return;
-		}
-	}
-
-	$mode = get_option( 'elementor_maintenance_mode_mode' );
-
-	if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
-		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
-	}
-}
-add_action( 'bp_loaded', 'bb_get_elementor_maintenance_mode_template' );
 
 /**
  * Load rest compatibility.
@@ -1086,3 +1017,20 @@ function bbp_remove_page_attributes_metabox_for_forum() {
 }
 
 add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
+
+/**
+ * Function will remove template_redirect action when we view individual saved template
+ * in the Elementor plugin.
+ *
+ * @since BuddyBoss 2.1.0
+ */
+function bb_elementor_library_template() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+		return;
+	}
+
+	if ( isset( $_GET['elementor_library'] ) ) {
+		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+	}
+}
+add_action( 'bp_loaded', 'bb_elementor_library_template' );
