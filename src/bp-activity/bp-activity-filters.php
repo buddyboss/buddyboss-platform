@@ -735,7 +735,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 function bp_activity_link_preview( $content, $activity ) {
 
 	$activity_id  = $activity->id;
-	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );	
+	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
 
 	if ( empty( $preview_data['url'] ) ) {
 		return $content;
@@ -761,7 +761,7 @@ function bp_activity_link_preview( $content, $activity ) {
 
 	$content = make_clickable( $content );
 
-	$content .= '<div class="activity-link-preview-container">';	
+	$content .= '<div class="activity-link-preview-container">';
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
 		$content  .= '<div class="activity-link-preview-image">';
@@ -1460,23 +1460,16 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 	}
 
 	// members directory
-	$qs_args = bp_parse_args( $qs );
-
-	// check if members scope is following before manipulating.
-	if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
-		$qs .= '&include=' . bp_get_following_ids(
-			array(
-				'user_id' => ( bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id() ),
-			)
-		);
-	}
-
-	if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
-		$qs .= '&include=' . bp_get_follower_ids(
-			array(
-				'user_id' => ( bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id() ),
-			)
-		);
+	if ( ! bp_is_user() && bp_is_members_directory() ) {
+		$qs_args = wp_parse_args( $qs );
+		// check if members scope is following before manipulating.
+		if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
+			$qs .= '&include=' . bp_get_following_ids(
+					array(
+						'user_id' => bp_loggedin_user_id(),
+					)
+				);
+		}
 	}
 
 	return $qs;
