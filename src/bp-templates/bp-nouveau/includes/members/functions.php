@@ -17,7 +17,6 @@ defined( 'ABSPATH' ) || exit;
  * @return array An associative array of nav items.
  */
 function bp_nouveau_get_members_directory_nav_items() {
-	global $bp;
 	$nav_items = array();
 
 	$nav_items['all'] = array(
@@ -46,19 +45,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 
 		// If follow component is active and the user is following
 		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
-			$counts = ( isset( $bp->loggedin_user->total_follow_counts ) ? $bp->loggedin_user->total_follow_counts : '' );
-
-			if ( ! empty( $counts['followers'] ) ) {
-				$nav_items['followers'] = array(
-					'component' => 'members',
-					'slug'      => 'followers', // slug is used because BP_Core_Nav requires it, but it's the scope
-					'li_class'  => array(),
-					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-followers/',
-					'text'      => __( 'Followers', 'buddyboss' ),
-					'count'     => $counts['followers'],
-					'position'  => 16,
-				);
-			}
+			$counts = bp_total_follow_counts();
 
 			if ( ! empty( $counts['following'] ) ) {
 				$nav_items['following'] = array(
@@ -68,7 +55,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-following/',
 					'text'      => __( 'Following', 'buddyboss' ),
 					'count'     => $counts['following'],
-					'position'  => 17,
+					'position'  => 16,
 				);
 			}
 		}

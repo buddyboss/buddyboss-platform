@@ -23,8 +23,7 @@
 
 	<?php endif; ?>
 
-    <?php
-    if ( ( 'members' === bp_current_component() || 'groups' === bp_current_component() || 'friends' === bp_current_component() || 'following' === bp_current_component() || 'followers' === bp_current_component() ) && ! bp_is_current_action( 'requests' ) ): ?>
+	<?php if ( ( 'members' === bp_current_component() || 'groups' === bp_current_component() || 'friends' === bp_current_component() ) && ! bp_is_current_action( 'requests' ) ): ?>
         <?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
     <?php endif; ?>
 
@@ -32,7 +31,7 @@
 		<?php bp_get_template_part( 'common/filters/directory-filters' ); ?>
 	<?php endif; ?>
 
-    <?php if ( 'members' === bp_current_component() || ( 'friends' === bp_current_component() && 'my-friends' === bp_current_action() ) || 'following' === bp_current_component() || 'followers' === bp_current_component() ): ?>
+	<?php if ( 'members' === bp_current_component() || ( 'friends' === bp_current_component() && 'my-friends' === bp_current_action() ) ): ?>
         <?php bp_get_template_part( 'common/filters/member-filters' ); ?>
     <?php endif; ?>
 
