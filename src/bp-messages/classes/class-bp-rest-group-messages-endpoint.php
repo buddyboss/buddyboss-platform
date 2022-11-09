@@ -22,7 +22,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @var BP_REST_Messages_Endpoint
 	 */
-	protected $message_endppoint;
+	protected $message_endpoint;
 
 	/**
 	 * Constructor.
@@ -30,9 +30,9 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace         = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base         = buddypress()->messages->id;
-		$this->message_endppoint = new BP_REST_Messages_Endpoint();
+		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->rest_base        = buddypress()->messages->id;
+		$this->message_endpoint = new BP_REST_Messages_Endpoint();
 	}
 
 	/**
@@ -89,6 +89,11 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 		// verification for phpcs.
 		wp_verify_nonce( wp_create_nonce( 'group_messages' ), 'group_messages' );
+
+		// Allow to send message when send only '0'.
+		if ( '0' === $request['message'] ) {
+			$message = '<p>' . $request['message'] . '</p>';
+		}
 
 		// Get Members list if "All Group Members" selected.
 		if ( 'all' === $message_users ) {
@@ -202,7 +207,8 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					! empty( $request['media_gif']['url'] ) &&
 					! empty( $request['media_gif']['mp4'] )
 				) ||
-				! empty( $request['bp_documents'] )
+				! empty( $request['bp_documents'] ) ||
+				! empty( $request['bp_videos'] )
 			)
 		) {
 			return new WP_Error(
@@ -266,8 +272,9 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Filter to validate message content if media, video, document and gif are available without any content.
 		if ( empty( $message ) ) {
-			$message = '&nbsp;';
+			add_filter( 'bp_messages_message_validated_content', array( $this->message_endpoint, 'bb_rest_is_validate_message_content' ), 10, 1 );
 		}
 
 		$_POST            = array();
@@ -275,6 +282,60 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		$_POST['type']    = $message_type;
 		$_POST['content'] = $message;
 		$_POST['group']   = $group;
+
+		if ( ! empty( $request->get_param( 'bp_media_ids' ) ) ) {
+			$media_ids = $request->get_param( 'bp_media_ids' );
+			if ( ! is_array( $media_ids ) ) {
+				$media_ids = wp_parse_id_list( explode( ',', $media_ids ) );
+			}
+
+			foreach ( $media_ids as $media_attachment_id ) {
+				$_POST['media'][] = array(
+					'id'      => $media_attachment_id,
+					'name'    => get_the_title( $media_attachment_id ),
+					'privacy' => 'message',
+				);
+			}
+		}
+
+		if ( ! empty( $request->get_param( 'media_gif' ) ) ) {
+			$object = $request->get_param( 'media_gif' );
+			$still  = ( ! empty( $object ) && array_key_exists( 'url', $object ) ) ? $object['url'] : '';
+			$mp4    = ( ! empty( $object ) && array_key_exists( 'mp4', $object ) ) ? $object['mp4'] : '';
+
+			$_POST['gif_data']['images']['480w_still']['url']   = $still;
+			$_POST['gif_data']['images']['original_mp4']['mp4'] = $mp4;
+		}
+
+		if ( ! empty( $request->get_param( 'bp_documents' ) ) ) {
+			$documents = $request->get_param( 'bp_documents' );
+			if ( ! is_array( $documents ) ) {
+				$documents = wp_parse_id_list( explode( ',', $documents ) );
+			}
+
+			foreach ( $documents as $document_attachment_id ) {
+				$_POST['document'][] = array(
+					'id'      => $document_attachment_id,
+					'name'    => get_the_title( $document_attachment_id ),
+					'privacy' => 'message',
+				);
+			}
+		}
+
+		if ( ! empty( $request->get_param( 'bp_videos' ) ) ) {
+			$videos = $request->get_param( 'bp_videos' );
+			if ( ! is_array( $videos ) ) {
+				$videos = wp_parse_id_list( explode( ',', $videos ) );
+			}
+
+			foreach ( $videos as $video_attachment_id ) {
+				$_POST['video'][] = array(
+					'id'      => $video_attachment_id,
+					'name'    => get_the_title( $video_attachment_id ),
+					'privacy' => 'message',
+				);
+			}
+		}
 
 		// If "Group Thread" selected.
 		if ( 'open' === $message_type ) {
@@ -798,6 +859,10 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				}
 			}
 
+			if ( empty( $message ) ) {
+				remove_filter( 'bp_messages_message_validated_content', array( $this->message_endpoint, 'bb_rest_is_validate_message_content' ), 10, 1 );
+			}
+
 			$error = array();
 
 			$retval = array(
@@ -897,7 +962,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			),
 		);
 
-		$schema['properties']['data']['properties'] = $this->message_endppoint->get_item_schema()['properties'];
+		$schema['properties']['data']['properties'] = $this->message_endpoint->get_item_schema()['properties'];
 
 		/**
 		 * Filters the message schema.
@@ -1070,7 +1135,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			}
 
 			$retval['data'][] = $this->prepare_response_for_collection(
-				$this->message_endppoint->prepare_item_for_response( $thread, $request )
+				$this->message_endpoint->prepare_item_for_response( $thread, $request )
 			);
 
 			$response = rest_ensure_response( $retval );

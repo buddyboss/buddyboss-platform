@@ -84,9 +84,6 @@ function bp_nouveau_groups_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-select2' );
-	if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
-		wp_enqueue_script( 'bp-select2-local' );
-	}
 	wp_enqueue_script( 'bp-nouveau-group-invites' );
 }
 
@@ -461,7 +458,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 
 	return array(
 		'id'             => $item->id,
-		'name'           => wp_specialchars_decode( $item->name ),
+		'name'           => bp_get_group_name( $item ),
 		'avatar_url'     => $item_avatar_url,
 		'object_type'    => 'group',
 		'is_public'      => ( 'public' === $item->status ),
