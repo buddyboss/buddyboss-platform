@@ -11,7 +11,9 @@
 
 remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 add_filter( 'bp_ajax_querystring', 'bb_notifications_on_screen_notifications_add', 20, 2 );
-if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
+$on_screen_notification_query_string = apply_filters( 'bb_on_screen_notification_query_string', bp_ajax_querystring( 'notifications' ) );
+
+if ( bp_has_notifications( $on_screen_notification_query_string ) ) :
 	while ( bp_the_notifications() ) :
 		bp_the_notification();
 		?>
