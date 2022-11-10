@@ -166,10 +166,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array(
-			'id'   => $upload['id'],
-			'url'  => $upload['url'],
-			'name' => $upload['name'],
-			'type' => $upload['type'],
+			'id'                => $upload['id'],
+			'url'               => $upload['url'],
+			'name'              => $upload['name'],
+			'type'              => $upload['type'],
+			'size'              => $upload['size'],
+			'extension'         => $upload['extension'],
+			'svg_icon'          => $upload['svg_icon'],
+			'svg_icon_download' => $upload['svg_icon_download'],
+			'text'              => $upload['text'],
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -2344,14 +2349,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'activity' );
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response(
 					$document,
-					array(
-						'support' => 'activity',
-						'context' => 'view',
-					)
+					$object
 				)
 			);
 		}
@@ -2648,9 +2654,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'message' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'message' ) )
+				$this->prepare_item_for_response( $document, $object )
 			);
 		}
 
@@ -2818,9 +2827,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'forums' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'forums' ) )
+				$this->prepare_item_for_response( $document, $object )
 			);
 		}
 
