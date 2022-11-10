@@ -208,7 +208,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 	global $current_blog;
 
 	// Set the default variables array and parse it against incoming $args array.
-	$params = wp_parse_args(
+	$params = bp_parse_args(
 		$args,
 		array(
 			'item_id'       => false,
@@ -695,7 +695,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 			if ( false === $response ) {
 				$gravcheck = 'https://www.gravatar.com/avatar/' . md5( strtolower( $params['email'] ) ) . '?d=404';
 				$response  = get_headers( $gravcheck );
-				set_transient( $key, $response, DAY_IN_SECONDS );
+				set_transient( $key, $response, 3 * HOUR_IN_SECONDS );
 			}
 			if ( isset( $response[0] ) && $response[0] == 'HTTP/1.1 404 Not Found' ) {
 
@@ -850,7 +850,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 		'avatar_dir' => false,
 	);
 
-	$args = wp_parse_args( $args, $defaults );
+	$args = bp_parse_args( $args, $defaults );
 	extract( $args, EXTR_SKIP );
 
 	/**
@@ -1374,7 +1374,7 @@ function bp_avatar_handle_capture( $data = '', $item_id = 0 ) {
  */
 function bp_core_avatar_handle_crop( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'object'        => 'user',
@@ -1444,7 +1444,7 @@ function bp_avatar_ajax_set() {
 	// Check the nonce.
 	check_admin_referer( 'bp_avatar_cropstore', 'nonce' );
 
-	$avatar_data = wp_parse_args(
+	$avatar_data = bp_parse_args(
 		$_POST,
 		array(
 			'crop_w' => bp_core_avatar_full_width(),

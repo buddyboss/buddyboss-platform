@@ -1981,7 +1981,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
@@ -2943,6 +2943,10 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 			// If we can't resolve the user_id, don't proceed with a zero value.
 			return array();
 		}
+	}
+
+	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+		$user_id = false;
 	}
 
 	// First, get a list of descendants (don't pass a user id--we want them all).

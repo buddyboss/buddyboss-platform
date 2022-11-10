@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
@@ -70,6 +70,18 @@ window.bp = window.bp || {};
 			// Profile Notification setting
 			this.profileNotificationSetting();
 
+			// Bail if not set.
+			if ( 'undefined' !== typeof BB_Nouveau_Presence ) {
+				// User Presence status.
+				// this.userPresenceStatus();
+			}
+
+			var _this = this;
+
+			$( document ).on( 'bb_trigger_toast_message', function ( event, title, message, type, url, autoHide, autohide_interval ) {
+				_this.bbToastMessage( title, message, type, url, autoHide, autohide_interval );
+			} );
+
 			// Check for lazy images and load them also register scroll event to load on scroll.
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -78,6 +90,90 @@ window.bp = window.bp || {};
 					bp.Nouveau.lazyLoad( '.lazy' );
 				}
 			);
+		},
+
+		/*
+		 *	Toast Message
+		 */
+		 bbToastMessage: function ( title, message, type, url, autoHide, autohide_interval ) {
+
+			if ( ! message || message.trim() == '' ) { // Toast Message can't be triggered without content.
+				return;
+			}
+
+			function getTarget() {
+				if ( $( '.bb-toast-messages-enable' ).length ) {
+					return '.bb-toast-messages-enable .toast-messages-list';
+				}
+
+				if ( $( '.bb-onscreen-notification-enable ul.notification-list' ).length ) {
+					var toastPosition = $( '.bb-onscreen-notification' ).hasClass( 'bb-position-left' ) ? 'left' : 'right';
+					var toastMessageWrapPosition = $( '<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-' + toastPosition + ' single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>' );
+					$( '.bb-onscreen-notification' ).show();
+					$( toastMessageWrapPosition ).insertBefore( '.bb-onscreen-notification-enable ul.notification-list' );
+				} else {
+					var toastMessageWrap = $( '<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-right single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>' );
+					$( 'body' ).append( toastMessageWrap );
+				}
+				return '.bb-toast-messages-enable .toast-messages-list';
+			}
+
+			function hideMessage() {
+				$( currentEl ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
+			}
+
+			// Add Toast Message
+			var unique_id = 'unique-' + Math.floor( Math.random() * 1000000 );
+			var currentEl = '.' + unique_id;
+			var urlClass = '';
+			var bp_msg_type = '';
+			var bp_icon_type = '';
+			/* jshint ignore:start */
+			var autohide_interval = autohide_interval && typeof autohide_interval == 'number' ? ( autohide_interval * 1000 ) : 5000;
+			/* jshint ignore:end */
+
+			if ( type ) {
+				bp_msg_type = type;
+				if ( bp_msg_type === 'success' ) {
+					bp_icon_type = 'check';
+				} else if ( bp_msg_type === 'warning' ) {
+					bp_icon_type = 'exclamation-triangle';
+				} else {
+					bp_icon_type = 'info';
+				}
+			}
+
+			if ( url !== null ) {
+				urlClass = 'has-url';
+			}
+
+			var messageContent = '';
+			messageContent += '<div class="toast-messages-icon"><i class="bb-icon bb-icon-' + bp_icon_type + '"></i></div>';
+			messageContent += '<div class="toast-messages-content">';
+			if ( title ) {
+				messageContent += '<span class="toast-messages-title">' + title + '</span>';
+			}
+
+			if ( message ) {
+				messageContent += '<span class="toast-messages-content">' + message + '</span>';
+			}
+
+			messageContent += '</div>';
+			messageContent += '<div class="actions"><a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="' + BP_Nouveau.close + '"><i class="bb-icon bb-icon-times" aria-hidden="true"></i></a></div>';
+			messageContent += url ? '<a class="toast-messages-url" href="' + url + '"></a>' : '';
+
+			$( getTarget() ).append( '<li class="item-list read-item pull-animation bp-message-' + bp_msg_type + ' ' + unique_id + ' ' + urlClass + '"> ' + messageContent + ' </li>' );
+
+			if ( autoHide ) {
+				setInterval( function () {
+					hideMessage();
+				}, autohide_interval );
+			}
+
+			$( currentEl + ' .actions .action-close' ).on( 'click', function () {
+				hideMessage();
+			} );
+
 		},
 
 		/**
@@ -696,12 +792,12 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseover', '.awaiting_response_friend', this, this.awaitingButtonHover );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseout', '.awaiting_response_friend', this, this.awaitingButtonHoverout );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .bp-messages-content' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '.awaiting_response_friend', this, this.awaitingButtonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '.awaiting_response_friend', this, this.awaitingButtonHoverout );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
@@ -1061,11 +1157,6 @@ window.bp = window.bp || {};
 					// After removed get, rest of the notification.
 					var items = list.find( '.read-item' );
 
-					if ( ! items.length ) {
-						list.closest( '.bb-onscreen-notification' ).hide();
-						return;
-					}
-
 					if ( items.length < 4 ) {
 						list.removeClass( 'bb-more-than-3' );
 					}
@@ -1109,7 +1200,12 @@ window.bp = window.bp || {};
 					bp.Nouveau.browserTabCountNotification();
 					bp.Nouveau.visibilityOnScreenClearButton();
 					list.closest( '.bb-onscreen-notification' ).addClass( 'close-all-items' );
-					$( '.bb-onscreen-notification' ).fadeOut( 200 );
+					$( '.toast-messages-list > li' ).each( function () {
+						$( this ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
+					} );
+					$( '.toast-messages-list > li' ).each( function () {
+						$( this ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
+					} );
 					list.removeClass( 'bb-more-than-3' );
 				}
 			);
@@ -1771,7 +1867,7 @@ window.bp = window.bp || {};
 				nonceUrl   = target.data( 'bp-nonce' ),
 				item       = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
 				item_inner = target.closest( '.list-wrap' ),
-				object     = item.data( 'bp-item-component' ), nonce = '';
+				object     = item.data( 'bp-item-component' ), nonce = '', component = item.data( 'bp-used-to-component' );
 
 			// Simply let the event fire if we don't have needed values.
 			if ( ! action || ! item_id || ! object ) {
@@ -1903,12 +1999,15 @@ window.bp = window.bp || {};
 				button_clicked = 'secondary';
 			}
 
+			component = 'undefined' === typeof component ? object : component;
+
 			self.ajax(
 				{
 					action: object + '_' + action,
 					item_id: item_id,
 					current_page: current_page,
 					button_clicked: button_clicked,
+					component: component,
 					_wpnonce: nonce
 				},
 				object,
@@ -2475,17 +2574,39 @@ window.bp = window.bp || {};
 						midClick: true,
 						callbacks: {
 							open: function () {
-								var contentId   = this.currItem.el.data( 'bp-content-id' );
+								$( '#notes-error' ).hide();
+								var contentId = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
-								var nonce       = this.currItem.el.data( 'bp-nonce' );
-								var reportType  = this.currItem.el.attr( 'reported_type' );
+								var nonce = this.currItem.el.data( 'bp-nonce' );
+								var reportType = this.currItem.el.attr( 'reported_type' );
+								$( '#bb-report-content .form-item-category' ).show();
+								if ( 'user_report' === contentType ) {
+									$( '#bb-report-content .form-item-category.content' ).hide();
+								} else {
+									$( '#bb-report-content .form-item-category.members' ).hide();
+								}
+
+								$( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' ).attr( 'checked', true );
+
+								if ( ! $( '#bb-report-content .form-item-category:visible label input[type="radio"]' ).length ) {
+									$( '#report-category-other' ).attr( 'checked', true );
+									$( '#report-category-other' ).trigger( 'click' );
+									$( 'label[for="report-category-other"]' ).hide();
+								}
+
+								var mf_content = $( '#content-report' );
+								mf_content.find( '.bp-reported-type' ).text( this.currItem.el.data( 'reported_type' ) );
 								if ( 'undefined' !== typeof reportType ) {
-									var mf_content = $( '#content-report' );
 									mf_content.find( '.bp-reported-type' ).text( reportType );
 								}
+
 								if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 									$( document ).find( '.bp-report-form-err' ).empty();
-									_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
+									_this.setFormValues( {
+										contentId: contentId,
+										contentType: contentType,
+										nonce: nonce
+									} );
 								}
 							}
 						}
@@ -2512,16 +2633,19 @@ window.bp = window.bp || {};
 				function () {
 					if ( 'other' === this.value ) {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).removeClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', true );
 					} else {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).addClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', false );
 					}
 				}
 			);
 
 			$( '#bb-report-content' ).submit(
 				function ( e ) {
+
+					if ( $( '#report-category-other' ).is( ':checked' ) && '' === $( '#report-note' ).val() ) {
+						$( '#notes-error' ).show();
+						return false;
+					}
 
 					$( '#bb-report-content' ).find( '.report-submit' ).addClass( 'loading' );
 
@@ -2546,6 +2670,10 @@ window.bp = window.bp || {};
 								_this.changeReportButtonStatus( response.data );
 								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 								$( '.mfp-close' ).trigger( 'click' );
+								jQuery( document ).trigger(
+									'bb_trigger_toast_message',
+									[ '', response.data.toast_message, 'info', null, true ]
+								);
 							} else {
 								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 								_this.handleReportError( response.data.message.errors, e.currentTarget );
@@ -2630,7 +2758,7 @@ window.bp = window.bp || {};
 						midClick: true,
 						callbacks: {
 							open: function () {
-								var contentType = this.currItem.el.attr( 'reported_type' );
+								var contentType = undefined !== this.currItem.el.attr( 'reported_type' ) ? this.currItem.el.attr( 'reported_type' ) : this.currItem.el.data( 'reported_type' );
 								if ( 'undefined' !== typeof contentType ) {
 									var mf_content = $( '#reported-content' );
 									mf_content.find( '.bp-reported-type' ).text( contentType );
@@ -2693,7 +2821,7 @@ window.bp = window.bp || {};
 				! _.isUndefined( BP_Nouveau.media.emoji ) &&
 				! $targetEl.closest( '.post-emoji' ).length &&
 				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
-				$( '.emojionearea-button.active' ).removeClass( 'active' );
+				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 			}
 		},
 
@@ -2706,7 +2834,7 @@ window.bp = window.bp || {};
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
 				if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					! _.isUndefined( BP_Nouveau.media.emoji ) ) {
-					$( '.emojionearea-button.active' ).removeClass( 'active' );
+					$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 				}
 			}
 		},
@@ -2860,6 +2988,7 @@ window.bp = window.bp || {};
 
 			} else {
 				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+				$( '.optionsOpen' ).removeClass( 'optionsOpen' );
 			}
 		},
 
@@ -3115,7 +3244,7 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '.bb-mobile-setting ul li', function( e ) {
 				e.preventDefault();
-				if( $( this ).find( 'input' ).is( ':checked' ) ) {
+				if ( $( this ).find( 'input' ).is( ':checked' ) ) {
 					$( this ).find( 'input' ).prop( 'checked', false );
 					$( $( 'input#' + $( this ).find( 'label' ).attr( 'data-for' ) ) ).trigger( 'click' );
 				} else {
@@ -3131,7 +3260,7 @@ window.bp = window.bp || {};
 			});
 
 			$( document ).on( 'click', function( e ) {
-				if( !$( e.target ).hasClass( 'bb-mobile-setting-anchor') ) {
+				if ( ! $( e.target ).hasClass( 'bb-mobile-setting-anchor' ) ) {
 					$( '.bb-mobile-setting' ).removeClass( 'active' );
 				}
 			});
@@ -3146,7 +3275,7 @@ window.bp = window.bp || {};
 				/* jshint ignore:start */
 				(function (_i) {
 					$( document ).on( 'click', '.main-notification-settings th' + node[_i] + ' input[type="checkbox"]', function() {
-						if( $( this ).is( ':checked' ) ) {
+						if ( $( this ).is( ':checked' ) ) {
 							$( '.main-notification-settings' ).find( 'td' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
 							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
 						} else {
@@ -3170,25 +3299,25 @@ window.bp = window.bp || {};
 				var available_option = '';
 				var nodeSelector = $( this ).find( 'td' ).length ? 'td' : 'th';
 				var allInputsChecked = 0;
-				$( this ).find( nodeSelector + ':not(:first-child)' ).each( function() {
-					if( $( this ).find( 'input[type="checkbox"]').length ) {
+				$( this ).find( nodeSelector + ':not(:first-child)' ).each( function () {
+					if ( $( this ).find( 'input[type="checkbox"]' ).length ) {
 						var inputText = $( this ).find( 'label' ).text();
 						var inputChecked = $( this ).find( 'input' ).is( ':checked' ) ? 'checked' : '';
 						var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
 						available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
 					}
-					if( !$( this ).find( 'input:checked' ).length ) {
+					if ( ! $( this ).find( 'input:checked' ).length ) {
 						return;
 					}
 					selected_text += selected_text === '' ? $( this ).find( 'input[type="checkbox"] + label' ).text().trim() : ', ' + $( this ).find( 'input[type="checkbox"] + label' ).text().trim();
 					allInputsChecked++;
-				});
-				if( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
+				} );
+				if ( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
 					selected_text = textAll;
 				} else {
 					selected_text = selected_text === '' ? textNone : selected_text;
 				}
-				if( $( this ).find( nodeSelector + ':first-child .bb-mobile-setting' ).length === 0 ) {
+				if ( $( this ).find( nodeSelector + ':first-child .bb-mobile-setting' ).length === 0 ) {
 					$( this ).find( nodeSelector + ':first-child' ).append( '<div class="bb-mobile-setting"><span class="bb-mobile-setting-anchor">' + selected_text + '</span><ul></ul></div>' );
 				} else {
 					$( this ).find( nodeSelector + ':first-child .bb-mobile-setting .bb-mobile-setting-anchor' ).text( selected_text );
@@ -3196,6 +3325,152 @@ window.bp = window.bp || {};
 				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).html( '' );
 				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).append( available_option );
 			});
+		},
+
+		/**
+		 *  Register Dropzone Global Progress UI
+		 *
+		 *  @param  {object} dropzone The Dropzone object.
+		 *  @return {function}
+		 */
+		 dropZoneGlobalProgress: function( dropzone ) {
+
+			if ( $( dropzone.element ).find( '.dz-global-progress' ).length == 0 ) {
+				$( dropzone.element ).append( '<div class="dz-global-progress"><div class="dz-progress-bar-full"><span class="dz-progress"></span></div><p></p><span class="bb-icon-f bb-icon-times dz-remove-all"></span></div>' );
+				$( dropzone.element ).addClass( 'dz-progress-view' );
+				$( dropzone.element ).find( '.dz-remove-all' ).click( function() {
+					$.each( dropzone.files, function( index, file ) {
+						dropzone.removeFile( file );
+					});
+				});
+			}
+
+			var message = '';
+			var progress = 0,
+				totalProgress = 0;
+			if ( dropzone.files.length == 1 ) {
+				$( dropzone.element ).addClass( 'dz-single-view' );
+				message = 'Uploading <strong>' + dropzone.files[0].name + '</strong>';
+				progress = dropzone.files[0].upload.progress;
+			} else {
+				$( dropzone.element ).removeClass( 'dz-single-view' );
+				totalProgress = 0;
+				$.each( dropzone.files, function( index, file ) {
+					totalProgress += file.upload.progress;
+				});
+				progress = totalProgress / dropzone.files.length;
+				message = 'Uploading <strong>' + dropzone.files.length + ' files</strong>';
+			}
+
+			$( dropzone.element ).find( '.dz-global-progress .dz-progress').css( 'width', progress + '%' );
+			$( dropzone.element ).find( '.dz-global-progress > p').html( message );
+		},
+
+		userPresenceStatus: function() {
+
+			var ideal_interval = (BB_Nouveau_Presence.presence_interval * 1000) + 500;
+
+			// setup the ideal time user check.
+			bp.Nouveau.userPresenceChecker( ideal_interval );
+
+			if ( '' !== BB_Nouveau_Presence.heartbeat_enabled ) {
+				$( document ).on( 'heartbeat-send', function ( event, data ) {
+					if (
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active
+					) {
+						var paged_user_id  = bp.Nouveau.getPageUserIDs();
+						// Add user data to Heartbeat.
+						data.presence_users = paged_user_id.join( ',' );
+					}
+
+				} );
+
+				$( document ).on( 'heartbeat-tick', function ( event, data ) {
+					// Check for our data, and use it.
+					if ( ! data.users_presence ) {
+						return;
+					}
+
+					bp.Nouveau.updateUsersPresence( data.users_presence );
+				} );
+			} else {
+				setInterval( function () {
+					var params = {};
+
+					if (
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active
+					) {
+						params.ids = bp.Nouveau.getPageUserIDs();
+					}
+
+					$.ajax(
+						{
+							type: 'POST',
+							url: '/wp-json/buddyboss/v1/members/presence',
+							data: params,
+							beforeSend: function ( xhr ) {
+								xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
+							},
+							success: function ( data ) {
+								// Check for our data, and use it.
+								if ( ! data ) {
+									return;
+								}
+
+								bp.Nouveau.updateUsersPresence( data );
+							}
+						}
+					);
+				}, parseInt( BB_Nouveau_Presence.presence_interval ) * 1000 );
+			}
+		},
+
+		getPageUserIDs: function() {
+			var user_ids = [];
+			var all_presence = $( document ).find( '.member-status[data-bb-user-id]' );
+			if ( all_presence.length > 0 ) {
+				all_presence.each( function () {
+					var user_id = $( this ).attr( 'data-bb-user-id' );
+					if ( $.inArray( parseInt( user_id ), user_ids ) == -1 ) {
+						user_ids.push( parseInt( user_id ) );
+					}
+				} );
+			}
+
+			return user_ids;
+		},
+
+		updateUsersPresence: function ( presence_data ) {
+			if ( presence_data && presence_data.length > 0 ) {
+				$.each( presence_data, function ( index, user ) {
+					bp.Nouveau.updateUserPresence( user.id, user.status );
+				} );
+			}
+		},
+
+		updateUserPresence: function( user_id, status ) {
+			$( document )
+				.find( '.member-status[data-bb-user-id="' + user_id + '"]' )
+				.removeClass( 'offline online' )
+				.addClass( status )
+				.attr( 'data-bb-user-presence', status );
+		},
+
+		userPresenceChecker: function (inactive_timeout) {
+
+			var wait = setTimeout( function () {
+				window.bb_is_user_active = false;
+			}, inactive_timeout );
+
+			document.onmousemove = document.mousedown = document.mouseup = document.onkeydown = document.onkeyup = document.focus = function () {
+				clearTimeout( wait );
+				wait = setTimeout( function () {
+					window.bb_is_user_active = false;
+				}, inactive_timeout );
+				window.bb_is_user_active = true;
+			};
 		}
 
 	};
