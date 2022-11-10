@@ -26,7 +26,7 @@ if ( ! empty( $filepath ) ) {
 
 	$data            = array();
 	$data['ajaxurl'] = admin_url( 'admin-ajax.php' );
-	$data            = array( 'json' => json_encode( $data ) );
+	$data            = array( 'json' => wp_json_encode( $data ) );
 	wp_localize_script( 'learndash_template_script_js', 'sfwd_data', $data );
 
 }

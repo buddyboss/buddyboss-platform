@@ -2056,13 +2056,23 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		// Revisions.
 		$data['revisions'] = $this->get_reply_revisions( $reply->ID );
 
+		// Pass group ids for embedded members endpoint.
+		$group_ids = '';
+		if ( ! empty( $args['post_parent'] ) ) {
+			$group = bbp_get_forum_group_ids( bbp_get_topic_forum_id( $args['post_parent'] ) );
+			if ( ! empty( $group ) ) {
+				$group_ids = count( $group ) > 1 ? implode( ', ', $group ) : $group[0];
+			}
+		}
+		$request['group_id'] = $group_ids;
+
 		$data = $this->add_additional_fields_to_object( $data, $request );
 		$data = $this->filter_response_by_context( $data, $context );
 
 		// @todo add prepare_links
 		$response = rest_ensure_response( $data );
 
-		$response->add_links( $this->prepare_links( $reply ) );
+		$response->add_links( $this->prepare_links( $reply, $request ) );
 
 		/**
 		 * Filter a component value returned from the API.
@@ -2423,14 +2433,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param WP_Post $post Post object.
+	 * @param WP_Post         $post    Post object.
+	 * @param WP_REST_Request $request Request used to generate the response.
 	 *
 	 * @return array
 	 * @since 0.1.0
 	 */
-	protected function prepare_links( $post ) {
-		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
-
+	protected function prepare_links( $post, $request ) {
+		$group = ! empty( $request['group_id'] ) ? '?group_id=' . $request['group_id'] : '';
+		$base  = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 		// Entity meta.
 		$links = array(
 			'self'       => array(
@@ -2440,7 +2451,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) ),
+				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) . $group ),
 				'embeddable' => true,
 			),
 		);
