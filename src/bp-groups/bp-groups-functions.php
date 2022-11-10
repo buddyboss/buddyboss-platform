@@ -188,6 +188,9 @@ function groups_create_group( $args = '' ) {
 		$member->date_modified = bp_core_current_time();
 		$member->save();
 
+		// add the Organizer to group joined date.
+		groups_update_membermeta( $member->id, 'joined_date', bp_core_current_time() );
+
 		/**
 		 * Fires after the creation of a new group and a group creator needs to be made.
 		 *
@@ -675,6 +678,18 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 		$group = $bp->groups->current_group;
 	}
 
+	// Tracking join a public group.
+	if ( 'public' === $group->status ) {
+		groups_update_membermeta( $new_member->id, 'joined_date', bp_core_current_time() );
+	} elseif ( ! empty( $_POST['bp-groups-new-members'] ) && in_array( $group->status, array( 'private', 'hidden' ), true ) ) {
+		groups_update_membermeta( $new_member->id, 'joined_date', bp_core_current_time() );
+	}
+
+	// Add meta when user added from the backend.
+	if ( ! empty( $_POST['bp-groups-new-members'] ) ) {
+		groups_update_membermeta( $new_member->id, 'joined_from', 'admin' );
+	}
+
 	// Record this in activity feeds.
 	if ( bp_is_active( 'activity' ) ) {
 		groups_record_activity(
@@ -1000,7 +1015,7 @@ function bp_group_object_template_results_groups_all_scope( $querystring, $objec
 		return $querystring;
 	}
 
-	$querystring             = wp_parse_args( $querystring );
+	$querystring             = bp_parse_args( $querystring );
 	$querystring['scope']    = 'all';
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
@@ -1728,7 +1743,7 @@ function groups_post_update( $args = '' ) {
 	}
 
 	// Record this in activity feeds.
-	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . esc_attr( $bp->groups->current_group->name ) . '</a>' );
+	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . bp_get_group_name( $bp->groups->current_group ) . '</a>' );
 	$activity_content = $content;
 
 	/**
@@ -1912,9 +1927,12 @@ function groups_invite_user( $args = '' ) {
 		'send_invite'   => $r['send_invite'],
 	);
 
-	// Create the unsent invitataion.
+	// Create the unsent invitation.
 	$invites_class = new BP_Groups_Invitation_Manager();
 	$created       = $invites_class->add_invitation( $inv_args );
+
+	// Tracking group invite.
+	invitation_add_invitemeta( $created, 'invited_date', bp_core_current_time() );
 
 	/**
 	 * Fires after the creation of a new group invite.
@@ -2285,7 +2303,8 @@ function groups_promote_member( $user_id, $group_id, $status ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	// Don't use this action. It's deprecated as of BuddyPress 1.6.
 	do_action( 'groups_premote_member', $group_id, $user_id, $status );
@@ -2301,7 +2320,14 @@ function groups_promote_member( $user_id, $group_id, $status ) {
 	 */
 	do_action( 'groups_promote_member', $group_id, $user_id, $status );
 
-	return $member->promote( $status );
+	$status_updated = $member->promote( $status );
+
+	if ( $status_updated ) {
+		// Track promoted time.
+		groups_add_membermeta( $member_id, 'promoted_' . $status . '_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /**
@@ -2319,7 +2345,8 @@ function groups_demote_member( $user_id, $group_id ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	/**
 	 * Fires before the demotion of a user to 'member'.
@@ -2331,7 +2358,14 @@ function groups_demote_member( $user_id, $group_id ) {
 	 */
 	do_action( 'groups_demote_member', $group_id, $user_id );
 
-	return $member->demote();
+	$status_updated = $member->demote();
+
+	if ( $status_updated ) {
+		// Track demoted time.
+		groups_add_membermeta( $member_id, 'demoted_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /**
@@ -2349,7 +2383,8 @@ function groups_ban_member( $user_id, $group_id ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	/**
 	 * Fires before the banning of a member from a group.
@@ -2361,7 +2396,14 @@ function groups_ban_member( $user_id, $group_id ) {
 	 */
 	do_action( 'groups_ban_member', $group_id, $user_id );
 
-	return $member->ban();
+	$status_updated = $member->ban();
+
+	if ( $status_updated ) {
+		// Track banned time.
+		groups_add_membermeta( $member_id, 'banned_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /**
@@ -2379,7 +2421,8 @@ function groups_unban_member( $user_id, $group_id ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group_id );
+	$member    = new BP_Groups_Member( $user_id, $group_id );
+	$member_id = $member->id;
 
 	/**
 	 * Fires before the unbanning of a member from a group.
@@ -2391,7 +2434,14 @@ function groups_unban_member( $user_id, $group_id ) {
 	 */
 	do_action( 'groups_unban_member', $group_id, $user_id );
 
-	return $member->unban();
+	$status_updated = $member->unban();
+
+	if ( $status_updated ) {
+		// Track unbanned time.
+		groups_add_membermeta( $member_id, 'unbanned_date', bp_core_current_time() );
+	}
+
+	return $status_updated;
 }
 
 /** Group Removal *************************************************************/
@@ -2507,6 +2557,9 @@ function groups_send_membership_request( $args = array() ) {
 	if ( $request_id && is_int( $request_id ) ) {
 		$invites_class->send_request_notification_by_id( $request_id );
 		$admins = groups_get_group_admins( $r['group_id'] );
+
+		// Tracking group invite.
+		invitation_add_invitemeta( $request_id, 'requested_date', bp_core_current_time() );
 
 		/**
 		 * Fires after the creation of a new membership request.
@@ -2897,6 +2950,120 @@ function groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev_value
 function groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = add_metadata( 'group', $group_id, $meta_key, $meta_value, $unique );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/** Group Member Meta ****************************************************************/
+
+/**
+ * Delete metadata for a member.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int         $member_id  ID of the member.
+ * @param string|bool $meta_key   The key of the row to delete.
+ * @param string|bool $meta_value Optional. Metadata value. If specified, only delete
+ *                                metadata entries with this value.
+ * @param bool        $delete_all Optional. If true, delete matching metadata entries
+ *                                for all groups. Otherwise, only delete matching
+ *                                metadata entries for the specified group.
+ *                                Default: false.
+ *
+ * @return bool True on success, false on failure.
+ */
+function groups_delete_membermeta( $member_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
+	global $wpdb;
+
+	// Legacy - if no meta_key is passed, delete all for the item.
+	if ( empty( $meta_key ) ) {
+		$table_name = buddypress()->groups->table_name_membermeta;
+		$sql        = "SELECT meta_key FROM {$table_name} WHERE member_id = %d";
+		$query      = $wpdb->prepare( $sql, $member_id );
+		$keys       = $wpdb->get_col( $query );
+
+		// With no meta_key, ignore $delete_all.
+		$delete_all = false;
+	} else {
+		$keys = array( $meta_key );
+	}
+
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	$retval = true;
+	foreach ( $keys as $key ) {
+		$retval = delete_metadata( 'member', $member_id, $key, $meta_value, $delete_all );
+	}
+
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Get a piece of member metadata.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int    $member_id ID of the member.
+ * @param string $meta_key  Metadata key.
+ * @param bool   $single    Optional. If true, return only the first value of the
+ *                          specified meta_key. This parameter has no effect if
+ *                          meta_key is empty.
+ *
+ * @return mixed Metadata value.
+ */
+function groups_get_membermeta( $member_id, $meta_key = '', $single = true ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = get_metadata( 'member', $member_id, $meta_key, $single );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Update a piece of member metadata.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int    $member_id  ID of the member.
+ * @param string $meta_key   Metadata key.
+ * @param mixed  $meta_value Value to store.
+ * @param mixed  $prev_value Optional. If specified, only update existing
+ *                           metadata entries with the specified value.
+ *                           Otherwise, update all entries.
+ *
+ * @return bool|int $retval Returns false on failure. On successful update of existing
+ *                          metadata, returns true. On successful creation of new metadata,
+ *                          returns the integer ID of the new metadata row.
+ */
+function groups_update_membermeta( $member_id, $meta_key, $meta_value, $prev_value = '' ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = update_metadata( 'member', $member_id, $meta_key, $meta_value, $prev_value );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Add a piece of member metadata.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int    $member_id  ID of the member.
+ * @param string $meta_key   Metadata key.
+ * @param mixed  $meta_value Metadata value.
+ * @param bool   $unique     Optional. Whether to enforce a single metadata value
+ *                           for the given key. If true, and the object already
+ *                           has a value for the key, no change will be made.
+ *                           Default: false.
+ *
+ * @return int|bool The meta ID on successful update, false on failure.
+ */
+function groups_add_membermeta( $member_id, $meta_key, $meta_value, $unique = false ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = add_metadata( 'member', $member_id, $meta_key, $meta_value, $unique );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
@@ -3865,7 +4032,11 @@ function bp_group_type_short_code_add_body_class( $class ) {
 		$class[] = 'groups';
 		$class[] = 'buddypress';
 		$class[] = 'buddyboss';
-		$class[] = 'bb-buddypanel';
+		/**
+		 *This class commented because this class will add when buddypanel enable
+		 *and this condition already in the theme
+		 */
+		//$class[] = 'bb-buddypanel';
 	}
 	return $class;
 }
@@ -3882,7 +4053,7 @@ function bp_group_type_short_code_add_body_class( $class ) {
  */
 function bp_groups_exclude_group_type( $qs = false, $object = false ) {
 
-	$args = wp_parse_args( $qs );
+	$args = bp_parse_args( $qs );
 
 	if ( $object !== 'groups' ) {
 		return $qs;
@@ -4679,4 +4850,74 @@ function bb_get_group_type_label_colors( $type ) {
 	}
 
 	return apply_filters( 'bb_get_group_type_label_colors', $bp_group_type_label_color );
+}
+
+/**
+ * Function will fetch all members.
+ * If groups_ids pass in args then return that group related to members.
+ * Also, if pass per_page and page in args then it will return members list based on that.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param array $args      {
+ * Array of optional arguments.
+ *
+ * @type array  $group_ids Group ids.
+ * @type int    $page      Page of members being requested. Default 1.
+ * @type int    $per_page  Members to return per page. Default 20.
+ * }
+ *
+ * @return array
+ */
+function bb_get_all_members_for_groups( $args = array() ) {
+	static $cache;
+	global $wpdb;
+	$bp = buddypress();
+	$r  = array_merge(
+		array(
+			'page'     => 1,
+			'per_page' => 20,
+		),
+		$args
+	);
+
+	$cache_key = md5( maybe_serialize( $r ) );
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		$results = $cache[ $cache_key ];
+	} else {
+		$sql['select'] = "SELECT DISTINCT user_id FROM {$bp->groups->table_name_members}";
+		$sql['where']  = array(
+			'is_confirmed = 1',
+			'is_banned = 0',
+		);
+
+		if ( ! empty( $r['group_ids'] ) ) {
+			$sql['where'][] = 'group_id IN ( ' . implode( ',', wp_parse_id_list( $r['group_ids'] ) ) . ' )';
+		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.4
+		 *
+		 * @param string $sql         From SQL statement.
+		 * @param string $column_name Column name.
+		 */
+		$sql['where'] = apply_filters( 'bb_get_all_members_for_groups_where_sql', $sql['where'], 'user_id' );
+
+		// Concatenate where statement.
+		$sql['where'] = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : '';
+
+		// Set limit query.
+		$sql['limit'] = '';
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) ) {
+			$sql['limit'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+		}
+
+		// Get the specific user ids.
+		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" );
+	}
+
+	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
 }
