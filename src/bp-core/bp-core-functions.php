@@ -660,12 +660,14 @@ function bp_core_get_directory_pages() {
  *
  * @since BuddyPress 1.7.0
  *
- * @param array  $components Components to create pages for.
- * @param string $existing   'delete' if you want to delete existing page mappings
- *                           and replace with new ones. Otherwise existing page mappings
- *                           are kept, and the gaps filled in with new pages. Default: 'keep'.
+ * @param array  $components   Components to create pages for.
+ * @param string $existing     'delete' if you want to delete existing page mappings
+ *                             and replace with new ones. Otherwise existing page mappings
+ *                             are kept, and the gaps filled in with new pages. Default: 'keep'.
+ * @param bool   $map_register Whether or not mapping the registration pages.
+ *                             Default: true
  */
-function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
+function bp_core_add_page_mappings( $components, $existing = 'keep', $map_register = true ) {
 
 	// If no value is passed, there's nothing to do.
 	if ( empty( $components ) ) {
@@ -699,8 +701,8 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 	}
 
 	// Register and Activate are not components, but need pages when
-	// registration is enabled.
-	if ( bp_get_signup_allowed() ) {
+	// registration is enabled and mapping for registration is required.
+	if ( bp_get_signup_allowed() && $map_register ) {
 		foreach ( array( 'register', 'activate' ) as $slug ) {
 			if ( ! isset( $pages[ $slug ] ) ) {
 				$pages_to_create[ $slug ] = $page_titles[ $slug ];
@@ -708,20 +710,24 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		}
 	}
 
-	// check for privacy page if already exists in WP settings > privacy.
-	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
-	$static_pages   = array( 'terms' );
+	// Mapping Policy and Term pages when registration pages required.
+	if ( $map_register ) {
 
-	if ( empty( $policy_page_id ) ) {
-		$static_pages[] = 'privacy';
-	} else {
-		$pages_to_create['privacy'] = $page_titles['privacy'];
-	}
+		// Check for privacy page if already exists in WP settings > privacy.
+		$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
+		$static_pages   = array( 'terms' );
 
-	// Create terms and privacy pages.
-	foreach ( $static_pages as $slug ) {
-		if ( ! isset( $pages[ $slug ] ) ) {
-			$pages_to_create[ $slug ] = $page_titles[ $slug ];
+		if ( empty( $policy_page_id ) ) {
+			$static_pages[] = 'privacy';
+		} else {
+			$pages_to_create['privacy'] = $page_titles['privacy'];
+		}
+
+		// Create terms and privacy pages.
+		foreach ( $static_pages as $slug ) {
+			if ( ! isset( $pages[ $slug ] ) ) {
+				$pages_to_create[ $slug ] = $page_titles[ $slug ];
+			}
 		}
 	}
 
@@ -5071,9 +5077,12 @@ function bp_core_profile_completion_steps_options() {
  *
  * @since BuddyBoss 1.4.9
  */
-function bp_core_xprofile_update_profile_completion_user_progress() {
+function bp_core_xprofile_update_profile_completion_user_progress( $user_id = '', $posted_field_ids = array(), $errors = array(), $old_values = array(), $new_values = array() ) {
 
-	$user_id            = get_current_user_id();
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
 	$steps_options      = bp_core_profile_completion_steps_options();
 	$profile_groups     = wp_list_pluck( $steps_options['profile_groups'], 'id' );
 	$profile_photo_type = array();
