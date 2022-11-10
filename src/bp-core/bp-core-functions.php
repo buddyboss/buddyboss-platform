@@ -8149,7 +8149,7 @@ function bb_is_heartbeat_enabled() {
 function bb_presence_interval() {
 	$presence_interval = (int) bp_get_option( 'bb_presence_interval', 0 );
 	if ( 0 !== $presence_interval ) {
-		return $presence_interval;
+		return apply_filters( 'bb_presence_interval', $presence_interval );
 	}
 
 	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
@@ -8165,7 +8165,8 @@ function bb_presence_interval() {
 
 	bp_update_option( 'bb_presence_interval', $global_pulse );
 
-	return $global_pulse;
+	return apply_filters( 'bb_presence_interval', $global_pulse );
+
 }
 
 /**
