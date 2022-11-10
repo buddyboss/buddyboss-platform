@@ -5253,6 +5253,37 @@ function bb_get_member_type_label_colors( $type ) {
 	return apply_filters( 'bb_get_member_type_label_colors', $bp_member_type_label_color );
 }
 
+add_filter( 'gettext', 'bb_profile_drop_down_order_metabox_translate_order_text', 10, 3 );
+
+/**
+ * Translate the order text in the Profile Drop Down Order metabox.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $translated_text   Translated text.
+ * @param string $untranslated_text Untranslated text.
+ * @param string $domain            Domain.
+ *
+ * @return mixed|string|void
+ */
+function bb_profile_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
+
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return $translated_text;
+	}
+	$current_screen = get_current_screen();
+
+	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_get_member_type_post_type' ) || bp_get_member_type_post_type() !== $current_screen->id ) {
+		return $translated_text;
+	}
+
+	if ( 'Order' === $untranslated_text ) {
+		return __( 'Number', 'buddyboss' );
+	}
+
+	return $translated_text;
+}
+
 /**
  * Get the given user ID online/offline status.
  *
@@ -5301,34 +5332,3 @@ function bb_user_presence_html( $user_id ) {
 	echo bb_get_user_presence_html( $user_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
-add_filter( 'gettext', 'bb_profile_drop_down_order_metabox_translate_order_text', 10, 3 );
-
-/**
- * Translate the order text in the Profile Drop Down Order metabox.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $translated_text   Translated text.
- * @param string $untranslated_text Untranslated text.
- * @param string $domain            Domain.
- *
- * @return mixed|string|void
- */
-function bb_profile_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
-
-	if ( ! function_exists( 'get_current_screen' ) ) {
-		return $translated_text;
-	}
-	$current_screen = get_current_screen();
-
-	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_get_member_type_post_type' ) || bp_get_member_type_post_type() !== $current_screen->id ) {
-		return $translated_text;
-	}
-
-	if ( 'Order' === $untranslated_text ) {
-		return __( 'Number', 'buddyboss' );
-	}
-
-	return $translated_text;
-
-}
