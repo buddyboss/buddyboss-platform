@@ -84,9 +84,6 @@ function bp_nouveau_groups_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-select2' );
-	if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
-		wp_enqueue_script( 'bp-select2-local' );
-	}
 	wp_enqueue_script( 'bp-nouveau-group-invites' );
 }
 

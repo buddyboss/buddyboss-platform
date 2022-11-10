@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 
-remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+remove_filter( 'bp_get_add_follow_button', 'bb_bp_get_add_follow_button' );
 
 if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) :
 
@@ -38,16 +38,21 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 	if ( bp_is_my_profile() ) {
 		$my_profile = 'my_profile';
 	}
+
 	?>
 
-	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?>">
+	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?> bb-cover-image-container">
 
 		<div id="item-header-cover-image" class="<?php echo esc_attr( bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
-			<div id="item-header-avatar">
+			<?php
+			$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_displayed_user_id() ) ? 'bp-user-suspended' : '';
+			$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_displayed_user_id() ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+			?>
+			<div id="item-header-avatar" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
-				if ( $is_enabled_online_status && function_exists( 'bb_current_user_status' ) ) {
-					bb_current_user_status( bp_displayed_user_id() );
+				if ( $is_enabled_online_status ) {
+					bb_user_presence_html( bp_displayed_user_id() );
 				}
 
 				if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) {
@@ -188,7 +193,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 		</div><!-- #item-header-cover-image -->
 	</div><!-- #cover-image-container -->
 	<?php
-	add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+	add_filter( 'bp_get_add_follow_button', 'bb_bp_get_add_follow_button' );
 
 endif;
 ?>

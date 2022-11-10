@@ -554,6 +554,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$results['bp-active-components'] = array_keys( apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) ) );
 
+		$results['bb-presence-interval'] = ( function_exists( 'bb_presence_interval' ) ? bb_presence_interval() : 0 );
+
 		return $results;
 	}
 
