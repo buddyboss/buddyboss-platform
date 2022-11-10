@@ -170,8 +170,10 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			// lets do a wp_query and generate html for all posts.
 			$qry = new WP_Query(
 				array(
-					'post_type' => $this->pt_name,
-					'post__in'  => $post_ids,
+					'post_type'      => $this->pt_name,
+					'post__in'       => $post_ids,
+					// Override global per page settings and just query with the given IDs.
+					'posts_per_page' => - 1,
 				)
 			);
 

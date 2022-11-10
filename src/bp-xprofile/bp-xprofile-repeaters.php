@@ -202,7 +202,7 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 		}
 	}
 
-	$field_set_sequence = wp_parse_id_list( $_POST['repeater_set_sequence'] );
+	$field_set_sequence = isset( $_POST['repeater_set_sequence'] ) ? wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'] ) ) : array();
 
 	// We'll take the data from all clone fields and dump it into the main/template field.
 	// This is done to ensure that search etc, work smoothly.
@@ -256,7 +256,10 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 		}
 	}
 
-	bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
+	if ( isset( $_POST['repeater_set_sequence'] ) ) {
+		bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
+	}
+
 }
 
 add_filter( 'bp_xprofile_set_field_data_pre_validate', 'bp_repeater_set_field_data_pre_validate', 10, 2 );
