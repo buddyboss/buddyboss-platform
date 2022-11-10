@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Entry
+ * The template for document entry
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/document/document-entry.php.
  *
  * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 global $document_template;
@@ -239,7 +242,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
+			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 			<div class="media-folder_action__list">
 				<ul>
 					<?php

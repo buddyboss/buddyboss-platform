@@ -111,7 +111,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_video'                     => bp_is_messages_video_support_enabled() && bb_user_can_create_video(),
 		'messages_video_active'              => bp_is_messages_video_support_enabled(),
-		'dropzone_video_message'             => __( 'Drop videos here to upload', 'buddyboss' ),
+		'dropzone_video_message'             => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Videos', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
 		'dropzone_video_thumbnail_message'   => __( 'Upload thumbnail', 'buddyboss' ),
 		'video_select_error'                 => __( 'This file type is not supported for video uploads.', 'buddyboss' ),
 		'empty_video_type'                   => __( 'Empty video file will not be uploaded.', 'buddyboss' ),
@@ -127,11 +127,12 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
-		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), number_format_i18n( bp_video_allowed_upload_video_per_batch() ) ),
+		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), bp_core_number_format( bp_video_allowed_upload_video_per_batch() ) ),
 		'thumb_dict_file_exceeded'           => __( 'You are allowed to upload only 1 thumb at a time.', 'buddyboss' ),
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
 		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed(),
 		'generating_thumb'                   => 'Generating thumbnail…',
+		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_video_album() ) {
@@ -156,7 +157,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'album_delete_error'      => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'video_delete_confirm'    => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
 		'video_enlarge_text'      => __( 'Enlarge', 'buddyboss' ),
-		'video_fullscreen_text'   => __( 'Enter fullscreen', 'buddyboss' ),
+		'video_fullscreen_text'   => __( 'Full screen', 'buddyboss' ),
 		'video_play_text'         => __( 'Play', 'buddyboss' ),
 		'video_pause_text'        => __( 'Pause', 'buddyboss' ),
 		'video_uploaded_text'     => __( 'Uploaded', 'buddyboss' ),
@@ -165,6 +166,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_speed_text'        => __( 'Speed', 'buddyboss' ),
 		'video_skip_back_text'    => __( 'Step Back (5)', 'buddyboss' ),
 		'video_skip_forward_text' => __( 'Step Forward (5)', 'buddyboss' ),
+		'video_picture_in_text'   => __( 'This video is playing in the miniplayer.', 'buddyboss' ),
 	);
 
 	return $params;
@@ -266,7 +268,18 @@ function bp_video_download_file( $attachment_id, $type = 'video' ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_video_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && ( bp_is_video_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'video_get_activity' === $_REQUEST['action'] ) { // phpcs:ignore
+	if (
+		isset( $buttons['activity_edit'] ) &&
+		(
+			bp_is_video_component() ||
+			! bp_is_activity_component()
+		) &&
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		(
+			'video_get_activity' === $_REQUEST['action'] || // phpcs:ignore
+			'video_get_video_description' === $_REQUEST['action'] // phpcs:ignore
+		)
+	) { // phpcs:ignore
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'video' !== $activity->privacy ) {

@@ -42,7 +42,121 @@
 				}
 			}
 
+			.list-wrap {
+
+				.followers-wrap,
+				.member-type {
+					font-size: 14px;
+					color: $light-text;
+					margin-bottom: 15px;
+				}
+
+				.member-type {
+					margin-bottom: 5px;
+				}
+
+				.member-name {
+					font-size: 20px;
+					margin: 0 0 10px 0;
+					padding: 0;
+
+					a {
+						text-decoration: none;
+					}
+
+				}
+
+				.last-activity {
+					color: $light-text;
+					font-size: 13px;
+					margin: 0 0 12px 0;
+				}
+
+				.item-meta .separator {
+					margin: 0 5px;
+				}
+
+			}
+
+			.item .primary-action .generic-button {
+				width: 100%;
+			}
+
+			.primary-action .generic-button,
+			.footer-button-wrap .generic-button,
+			.member-button-wrap .generic-button {
+				padding: 0 15px;
+			}
+
+			.primary-action .generic-button > *,
+			.footer-button-wrap .generic-button > *,
+			.member-button-wrap .generic-button > * {
+				display: block;
+				margin-bottom: 10px;
+			}
+
+			.item-avatar a {
+				display: inline-block;
+				position: relative;
+			}
+
+			.member-status.online {
+				position: absolute;
+				width: 12px;
+				height: 12px;
+				right: 12px;
+				top: 12px;
+			}
+
 		} // close li
+
+		&.grid li {
+
+			.only-list-view {
+				display: none;
+			}
+
+		}
+
+		&.grid.bp-list > li .item-avatar img.avatar {
+			width: 100%;
+			max-width: 126px;
+		}
+
+		&:not(.grid) {
+
+			li {
+				margin: 0;
+				padding: 0;
+
+				.member-status.online {
+					top: 4px;
+					bottom: 4px;
+				}
+
+			}
+
+			.list-wrap {
+				background: $off-white;
+				border: 1px solid $bp-border-color;
+				padding: 20px;
+				position: relative;
+			}
+
+			.list-wrap-inner .item-avatar img {
+				border-radius: 50%;
+				max-width: 70px;
+			}
+
+			.only-grid-view {
+				display: none;
+			}
+
+			.member-button-wrap.footer-button-wrap {
+				display: block;
+			}
+
+		}
 
 	} // close .members-list
 
@@ -69,6 +183,36 @@
 		}
 	}
 } // close .buddypress-wrap
+
+.member-status {
+	background-color: $golden;
+	border: 2px solid $white;
+	border-radius: 100%;
+	z-index: 1;
+
+	.bp-user-blocked > &,
+	.bp-user-suspended > &,
+	.bp-user-blocked-by > & {
+		display: none !important;
+	}
+}
+
+// More option on memeber listing
+#buddypress .members-list > li {
+	min-width: 275px;
+
+	.bb_more_options.member-dropdown {
+		position: absolute;
+		right: 15px;
+		top: 5px;
+
+		.bb_more_options_action {
+			text-decoration: none;
+		}
+
+	}
+
+}
 
 // If logged out or if the loop item is
 // current user we don't display action buttons
@@ -110,6 +254,7 @@ body:not(.logged-in) {
 	}
 
 	@include medium-max() {
+		flex-direction: column;
 
 		.bp-profile-search-widget {
 			flex: 0 0 100%;
@@ -135,9 +280,6 @@ body:not(.logged-in) {
 	}
 
 	.bps-form-title {
-		font-size: 13px;
-		font-weight: 400;
-		color: $light-text;
 		line-height: 1;
 		margin-top: 0;
 		margin-bottom: 20px;

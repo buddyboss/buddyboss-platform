@@ -83,7 +83,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 				$in = implode( '', $in );
 
-				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ') ) AND ';
+				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' INNER JOIN '. $wpdb->posts .' ON ID = post_id WHERE ( meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ')  OR  meta_key != \'_bbp_group_ids\' ) AND post_type = \'forum\' ) AND ';
 			}
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {

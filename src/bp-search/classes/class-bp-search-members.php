@@ -63,8 +63,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return string sql query
 		 */
 		public function sql( $search_term, $only_totalrow_count = false ) {
+			static $selected_xprofile_fields_cache = array();
 			global $wpdb, $bp;
-
 
 			$query_placeholder = array();
 
@@ -121,9 +121,19 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					$clause_wp_user_table = "u.id IN ( SELECT ID FROM {$wpdb->users}  WHERE ( ";
 					$clause_wp_user_table .= implode( ' OR ', $conditions_wp_user_table );
-					$clause_wp_user_table .= ' ) ) ';
+
+					// get all excluded member types.
+					$bp_member_type_ids = bp_get_hidden_member_types();
+					$member_type_sql    = $this->get_sql_clause_for_member_types( $bp_member_type_ids, 'NOT IN' );
+
+					if ( ! empty( $member_type_sql ) ) {
+						$clause_wp_user_table .= ' ) AND ' . $member_type_sql . ' ) ';
+					} else {
+						$clause_wp_user_table .= ' ) ) ';
+					}
 
 					$where_fields[] = $clause_wp_user_table;
+
 				}
 			}
 			/* _____________________________ */
@@ -194,39 +204,51 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					if ( ! empty( $selected_xprofile_fields ) ) {
 
-						$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
-						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
-						$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
-						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
-						$data_clause_xprofile_table .= ') ) )';
-
-						$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
-						$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
-
+						$cache_key = maybe_serialize( $selected_xprofile_fields['char_search'] );
+						$cache_key .= $search_term;
+						$cache_key .= maybe_serialize( $selected_xprofile_fields['word_search'] );
+						$cache_key = md5( $cache_key );
 						$user_ids = array();
+						if ( ! isset( $selected_xprofile_fields_cache[ $cache_key ] ) ) {
+							$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
+							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
+							$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
+							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
+							$data_clause_xprofile_table .= ') ) )';
+							$sql_xprofile               = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+							$sql_xprofile_result        = $wpdb->get_results( $sql_xprofile );
 
-						// check visiblity for field id with current user.
-						if ( ! empty( $sql_xprofile_result ) ) {
-							foreach ( $sql_xprofile_result as $field_data ) {
-								$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
+							// check visiblity for field id with current user.
+							if ( ! empty( $sql_xprofile_result ) ) {
+								foreach ( $sql_xprofile_result as $field_data ) {
+									$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
 
-								if (
-									( ! empty( $hidden_fields )
-									  && ! in_array( $field_data->field_id, $hidden_fields )
-									)
-									|| empty( $hidden_fields )
-								) {
-									$user_ids[] = $field_data->user_id;
+									if (
+										( ! empty( $hidden_fields )
+										  && ! in_array( $field_data->field_id, $hidden_fields )
+										)
+										|| empty( $hidden_fields )
+									) {
+										$user_ids[] = $field_data->user_id;
+									}
 								}
 							}
+
+							$selected_xprofile_fields_cache[ $cache_key ] = array_unique( $user_ids );
+						} else {
+							$user_ids = $selected_xprofile_fields_cache[ $cache_key ];
 						}
 
-						// Added user when visbility matched.
+						// get all excluded member types.
+						$bp_member_type_ids = bp_get_hidden_member_types();
+						$member_type_sql    = $this->get_sql_clause_for_member_types( $bp_member_type_ids, 'NOT IN' );
+
+						// Added user when visibility matched.
 						if ( ! empty( $user_ids ) ) {
 							$user_ids       = array_unique( $user_ids );
-							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " )";
+							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " )" . ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						} else {
-							$where_fields[] = "u.id = 0";
+							$where_fields[] = "u.id = 0". ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						}
 					}
 				}
@@ -311,13 +333,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// now we have all the posts
 			// lets do a groups loop
-			if ( bp_has_members(
-				array(
-					'search_terms' => '',
-					'include'      => $group_ids,
-					'per_page'     => count( $group_ids ),
-				)
-			) ) {
+			if ( bp_has_members( array(
+				'search_terms'        => '',
+				'include'             => $group_ids,
+				'per_page'            => count( $group_ids ),
+				'member_type__not_in' => bp_get_hidden_member_types()
+			) ) ) {
 				while ( bp_members() ) {
 					bp_the_member();
 
@@ -386,6 +407,79 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				}
 				echo '</div><!-- .xprofile-fields -->';
 			}
+		}
+
+		/**
+		 * Get a SQL clause representing member_type include/exclusion.
+		 *
+		 * @since BuddyPress 1.7.6
+		 *
+		 * @param string|array $member_types Array or comma-separated list of profile types.
+		 * @param string       $operator     'IN' or 'NOT IN'.
+		 *
+		 * @return string
+		 */
+		protected function get_sql_clause_for_member_types( $member_types, $operator ) {
+			global $wpdb;
+
+			// Sanitize.
+			if ( 'NOT IN' !== $operator ) {
+				$operator = 'IN';
+			}
+
+			// Parse and sanitize types.
+			if ( ! is_array( $member_types ) ) {
+				$member_types = preg_split( '/[,\s+]/', $member_types );
+			}
+
+			$types = array();
+			foreach ( $member_types as $mt ) {
+				if ( bp_get_member_type_object( $mt ) ) {
+					$types[] = $mt;
+				}
+			}
+
+			$tax_query = new WP_Tax_Query(
+				array(
+					array(
+						'taxonomy' => bp_get_member_type_tax_name(),
+						'field'    => 'name',
+						'operator' => $operator,
+						'terms'    => $types,
+					),
+				)
+			);
+
+			// Switch to the root blog, where profile type taxonomies live.
+			$site_id  = bp_get_taxonomy_term_site_id( bp_get_member_type_tax_name() );
+			$switched = false;
+			if ( $site_id !== get_current_blog_id() ) {
+				switch_to_blog( $site_id );
+				$switched = true;
+			}
+
+			$sql_clauses = $tax_query->get_sql( 'u', 'ID' );
+
+			$clause = '';
+
+			// The no_results clauses are the same between IN and NOT IN.
+			if ( false !== strpos( $sql_clauses['where'], '0 = 1' ) ) {
+				$clause = '0 = 1';
+
+				// The tax_query clause generated for NOT IN can be used almost as-is. We just trim the leading 'AND'.
+			} elseif ( 'NOT IN' === $operator ) {
+				$clause = preg_replace( '/^\s*AND\s*/', '', $sql_clauses['where'] );
+
+				// IN clauses must be converted to a subquery.
+			} elseif ( preg_match( '/' . $wpdb->term_relationships . '\.term_taxonomy_id IN \([0-9, ]+\)/', $sql_clauses['where'], $matches ) ) {
+				$clause = "u.ID IN ( SELECT object_id FROM $wpdb->term_relationships WHERE {$matches[0]} )";
+			}
+
+			if ( $switched ) {
+				restore_current_blog();
+			}
+
+			return $clause;
 		}
 	}
 

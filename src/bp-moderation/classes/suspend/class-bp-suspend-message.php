@@ -92,7 +92,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 
 		$action_name = current_filter();
 
-		if ( 'bp_messages_recipient_get_join_sql' === $action_name ){
+		if ( 'bp_messages_recipient_get_join_sql' === $action_name ) {
 			$join_sql .= $this->exclude_joint_query( 'r.thread_id' );
 		} else {
 			$join_sql .= $this->exclude_joint_query( 'm.thread_id' );
@@ -164,7 +164,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	public function manage_hidden_message( $message_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $message_id,
@@ -180,13 +180,15 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->hide_related_content( $message_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'hide_related_content' ),
-					'args'     => array( $message_id, $hide_sitewide, $args ),
+					array(
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $message_id, $hide_sitewide, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -206,7 +208,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	public function manage_unhidden_message( $message_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $message_id,
@@ -234,13 +236,15 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $message_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $message_id, $hide_sitewide, $force_all, $args ),
+					array(
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $message_id, $hide_sitewide, $force_all, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();

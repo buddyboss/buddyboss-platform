@@ -254,6 +254,7 @@ function bbp_forum_metabox() {
 	$post_id     = get_the_ID();
 	$post_parent = bbp_get_global_post_field( 'post_parent', 'raw' );
 	$menu_order  = bbp_get_global_post_field( 'menu_order', 'edit' );
+	$group_ids   = bbp_get_forum_group_ids( $post_id );
 
 	/** Type */
 
@@ -317,7 +318,7 @@ function bbp_forum_metabox() {
 				'options_only'       => false,
 				'show_none'          => __( '- Select Forum -', 'buddyboss' ),
 				'disable_categories' => false,
-				'disabled'           => '',
+				'disabled'           => empty( $group_ids ) ? false : true,
 			)
 		);
 		?>

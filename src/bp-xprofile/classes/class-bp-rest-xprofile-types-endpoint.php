@@ -146,8 +146,8 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $type, $request ) {
 		$data = array(
 			'labels'         => array(
-				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? $type->labels['name'] : '',
-				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? $type->labels['singular_name'] : '',
+				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? wp_specialchars_decode( $type->labels['name'] ) : '',
+				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? wp_specialchars_decode( $type->labels['singular_name'] ) : '',
 			),
 			'has_directory'  => ( isset( $type->has_directory ) ? $type->has_directory : false ),
 			'name'           => ( isset( $type->name ) ? $type->name : '' ),
@@ -187,6 +187,19 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				);
 			} else {
 				$data['enable_remove'] = false;
+			}
+		}
+
+		// Define default network search visibility property.
+		if ( isset( $schema['network_search_enable_remove'] ) ) {
+			if ( ! empty( $post_id ) ) {
+				$data['network_search_enable_remove'] = (bool) (
+				! empty( get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true ) )
+					? get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true )
+					: 0
+				);
+			} else {
+				$data['network_search_enable_remove'] = false;
 			}
 		}
 
@@ -368,6 +381,13 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 
 			$schema['properties']['enable_remove'] = array(
 				'description' => __( 'Hide all members of this type from Members Directory.', 'buddyboss' ),
+				'type'        => 'boolean',
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
+
+			$schema['properties']['network_search_enable_remove'] = array(
+				'description' => __( 'Hide all members of this type from Network Search results.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,

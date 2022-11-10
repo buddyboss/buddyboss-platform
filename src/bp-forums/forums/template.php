@@ -123,6 +123,7 @@ function bbp_get_forum_post_type_supports() {
  * @uses                     WP_Query To make query and get the forums
  */
 function bbp_has_forums( $args = '' ) {
+	static $bbp_forum_query_cache = array();
 	global $wp_rewrite;
 
 	// Forum archive only shows root
@@ -155,8 +156,15 @@ function bbp_has_forums( $args = '' ) {
 	);
 
 	// Run the query
-	$bbp              = bbpress();
-	$bbp->forum_query = new WP_Query( $bbp_f );
+	$bbp       = bbpress();
+	$cache_key = 'bbp_has_forums_' . md5( maybe_serialize( $bbp_f ) );
+	if ( ! isset( $bbp_forum_query_cache[ $cache_key ] ) ) {
+		$bbp->forum_query = new WP_Query( $bbp_f );
+
+		$bbp_forum_query_cache[ $cache_key ] = $bbp->forum_query;
+	} else {
+		$bbp->forum_query = $bbp_forum_query_cache[ $cache_key ];
+	}
 
 	// Add pagination values to query object
 	$bbp->forum_query->posts_per_page = $bbp_f['posts_per_page'];
@@ -2530,13 +2538,16 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
 	}
 
 	// Used variables
-	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
+	$tab        = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
+	$group_ids  = bbp_get_forum_group_ids( $r['forum_id'] );
+	$can_update = empty( $group_ids ) ? true : false;
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start(); ?>
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?>
+            <?php echo $can_update === false ? esc_attr( 'disabled="disabled"' ) : '' ; ?>>
 
 		<?php foreach ( bbp_get_forum_types() as $key => $label ) : ?>
 
@@ -2717,14 +2728,15 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	// Used variables
 	$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
 
-	$group_ids = bbp_get_forum_group_ids( $r['forum_id'] );
+	// Get forum visibility update status.
+	$disabled = bb_get_child_forum_group_ids( $r['forum_id'] );
 
 	// Start an output buffer, we'll finish it after the select loop
 	ob_start();
 	?>
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?> <?php echo ! empty( $group_ids ) ? 'disabled="disabled"' : ''; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo esc_attr( $tab ); ?> <?php echo $disabled ? esc_attr( 'disabled="disabled"' ) : ''; ?>>
 
 		<?php foreach ( bbp_get_forum_visibilities() as $key => $label ) : ?>
 
@@ -2876,4 +2888,38 @@ function bbp_get_forum_replies_feed_link( $forum_id = 0 ) {
 	}
 
 	return apply_filters( 'bbp_get_forum_replies_feed_link', $link, $url, $forum_id );
+}
+
+/**
+ * Get group ID's for a child forum.
+ *
+ * @since BuddyBoss 1.7.8
+ *
+ * @param int $forum_id Forum id.
+ *
+ * @uses bbp_get_forum() Get forum.
+ *
+ * @return array
+ */
+function bb_get_child_forum_group_ids( $forum_id ) {
+	if ( empty( $forum_id ) ) {
+		return array();
+	}
+
+	$parents = get_post_ancestors( $forum_id );
+
+	// Set the parameter forum_id in the parents array as its first element.
+	array_unshift( $parents, $forum_id );
+
+	if ( ! empty( $parents ) ) {
+		foreach ( $parents as $parent ) {
+			$group_ids = bbp_get_forum_group_ids( $parent );
+
+			if ( ! empty( $group_ids ) ) {
+				return $group_ids;
+			}
+		}
+	}
+
+	return array();
 }

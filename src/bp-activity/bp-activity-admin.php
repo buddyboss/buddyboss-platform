@@ -540,7 +540,7 @@ function bp_activity_admin_load() {
 				$_POST['link_url']   = ! empty( $urls[0] ) ? filter_var( $urls[0], FILTER_VALIDATE_URL ) : '';
 				$_POST['link_embed'] = true;
 			}
-			
+
 		}
 
 		// Activity primary link.
@@ -716,7 +716,7 @@ function bp_activity_admin_edit() {
 	do_action_ref_array( 'bp_activity_admin_edit', array( &$activity ) ); ?>
 
 	<div class="wrap">
-		<h1><?php printf( __( 'Editing Activity (ID #%s)', 'buddyboss' ), number_format_i18n( (int) $_REQUEST['aid'] ) ); ?></h1>
+		<h1><?php printf( __( 'Editing Activity (ID #%s)', 'buddyboss' ), bp_core_number_format( (int) $_REQUEST['aid'] ) ); ?></h1>
 
 		<?php if ( ! empty( $activity ) ) : ?>
 
@@ -1051,12 +1051,12 @@ function bp_activity_admin_index() {
 		$errors = array_values( $errors );
 
 		if ( $deleted > 0 ) {
-			$messages[] = sprintf( _n( '%s activity item has been permanently deleted.', '%s activity items have been permanently deleted.', $deleted, 'buddyboss' ), number_format_i18n( $deleted ) );
+			$messages[] = sprintf( _n( '%s activity item has been permanently deleted.', '%s activity items have been permanently deleted.', $deleted, 'buddyboss' ), bp_core_number_format( $deleted ) );
 		}
 
 		if ( ! empty( $errors ) ) {
 			if ( 1 == count( $errors ) ) {
-				$messages[] = sprintf( __( 'An error occurred when trying to update activity ID #%s.', 'buddyboss' ), number_format_i18n( $errors[0] ) );
+				$messages[] = sprintf( __( 'An error occurred when trying to update activity ID #%s.', 'buddyboss' ), bp_core_number_format( $errors[0] ) );
 
 			} else {
 				$error_msg  = __( 'Errors occurred when trying to update these activity items:', 'buddyboss' );
@@ -1065,7 +1065,7 @@ function bp_activity_admin_index() {
 				// Display each error as a list item.
 				foreach ( $errors as $error ) {
 					// Translators: This is a bulleted list of item IDs.
-					$error_msg .= '<li>' . sprintf( __( '#%s', 'buddyboss' ), number_format_i18n( $error ) ) . '</li>';
+					$error_msg .= '<li>' . sprintf( __( '#%s', 'buddyboss' ), bp_core_number_format( $error ) ) . '</li>';
 				}
 
 				$error_msg .= '</ul>';
@@ -1074,11 +1074,11 @@ function bp_activity_admin_index() {
 		}
 
 		if ( $spammed > 0 ) {
-			$messages[] = sprintf( _n( '%s activity item has been successfully spammed.', '%s activity items have been successfully spammed.', $spammed, 'buddyboss' ), number_format_i18n( $spammed ) );
+			$messages[] = sprintf( _n( '%s activity item has been successfully spammed.', '%s activity items have been successfully spammed.', $spammed, 'buddyboss' ), bp_core_number_format( $spammed ) );
 		}
 
 		if ( $unspammed > 0 ) {
-			$messages[] = sprintf( _n( '%s activity item has been successfully unspammed.', '%s activity items have been successfully unspammed.', $unspammed, 'buddyboss' ), number_format_i18n( $unspammed ) );
+			$messages[] = sprintf( _n( '%s activity item has been successfully unspammed.', '%s activity items have been successfully unspammed.', $unspammed, 'buddyboss' ), bp_core_number_format( $unspammed ) );
 		}
 
 		if ( $updated > 0 ) {
@@ -1102,7 +1102,7 @@ function bp_activity_admin_index() {
 	<div class="wrap">
 		<h1>
 			<?php if ( ! empty( $_REQUEST['aid'] ) ) : ?>
-				<?php printf( __( 'Activity related to ID #%s', 'buddyboss' ), number_format_i18n( (int) $_REQUEST['aid'] ) ); ?>
+				<?php printf( __( 'Activity related to ID #%s', 'buddyboss' ), bp_core_number_format( (int) $_REQUEST['aid'] ) ); ?>
 			<?php else : ?>
 				<?php _e( 'Activity', 'buddyboss' ); ?>
 			<?php endif; ?>

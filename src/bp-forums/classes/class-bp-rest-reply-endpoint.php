@@ -178,6 +178,18 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$thread_replies = (bool) ( bbp_thread_replies() );
 		}
 
+		if ( is_array( $args['orderby'] ) ) {
+			$args['orderby'] = implode( ' ', $args['orderby'] );
+		}
+
+		if (
+			! empty( $request['include'] )
+			&& ! empty( $args['orderby'] )
+			&& 'include' === $args['orderby']
+		) {
+			$args['orderby'] = 'post__in';
+		}
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -1041,7 +1053,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$terms = apply_filters( 'bbp_new_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
 		// Insert terms.
-		$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
+		if ( function_exists( 'bb_add_topic_tags' ) ) {
+			if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+				$terms = explode( ',', $terms );
+			} else {
+				$terms = (array) $terms;
+			}
+			$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id() );
+		}
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
@@ -1410,7 +1429,6 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-
 		if ( empty( $forum_id ) && ! empty( $topic_id ) ) {
 			$forum_id = bbp_get_topic_forum_id( $topic_id );
 		}
@@ -1568,7 +1586,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$terms = apply_filters( 'bbp_edit_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
 		// Insert terms.
-		$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
+		if ( function_exists( 'bb_add_topic_tags' ) ) {
+			if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+				$terms = explode( ',', $terms );
+			} else {
+				$terms = (array) $terms;
+			}
+			$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
+		}
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
@@ -1992,13 +2017,54 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 		/* -- Prepare content */
 
+		$forum_id = bbp_get_reply_forum_id( $reply->ID );
+
+		if ( ! empty( $forum_id ) ) {
+			$this->forum_endpoint->group = (
+				function_exists( 'bbp_is_forum_group_forum' )
+				&& bbp_is_forum_group_forum( $forum_id )
+				&& function_exists( 'groups_get_group' )
+			)
+			? (
+				! empty( bbp_get_forum_group_ids( $forum_id ) )
+				? groups_get_group( current( bbp_get_forum_group_ids( $forum_id ) ) )
+				: ''
+			)
+			: '';
+		}
+
+		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
+			$group_forum_extention = new BBP_Forums_Group_Extension();
+			// Allow group member to view private/hidden forums.
+			add_filter( 'bbp_map_meta_caps', array( $group_forum_extention, 'map_group_forum_meta_caps' ), 10, 4 );
+
+			// Fix issue - Group organizers and moderators can not add topic tags.
+			add_filter( 'bbp_map_topic_tag_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_assign_topic_tags_caps' ), 10, 4 );
+		}
+
+		add_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
 		// current user permission.
 		$data['current_user_permissions'] = $this->get_reply_current_user_permissions( $reply->ID );
 
 		$data['action_states'] = $this->get_reply_action_states( $reply->ID );
 
+		remove_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
+		$this->forum_endpoint->group = '';
+
 		// Revisions.
 		$data['revisions'] = $this->get_reply_revisions( $reply->ID );
+
+		// Pass group ids for embedded members endpoint.
+		$group_ids = '';
+		if ( ! empty( $args['post_parent'] ) ) {
+			$group = bbp_get_forum_group_ids( bbp_get_topic_forum_id( $args['post_parent'] ) );
+			if ( ! empty( $group ) ) {
+				$group_ids = count( $group ) > 1 ? implode( ', ', $group ) : $group[0];
+			}
+		}
+		$request['group_id'] = $group_ids;
 
 		$data = $this->add_additional_fields_to_object( $data, $request );
 		$data = $this->filter_response_by_context( $data, $context );
@@ -2006,7 +2072,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		// @todo add prepare_links
 		$response = rest_ensure_response( $data );
 
-		$response->add_links( $this->prepare_links( $reply ) );
+		$response->add_links( $this->prepare_links( $reply, $request ) );
 
 		/**
 		 * Filter a component value returned from the API.
@@ -2334,6 +2400,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					'modified',
 					'parent',
 					'rand',
+					'include'
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -2366,14 +2433,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param WP_Post $post Post object.
+	 * @param WP_Post         $post    Post object.
+	 * @param WP_REST_Request $request Request used to generate the response.
 	 *
 	 * @return array
 	 * @since 0.1.0
 	 */
-	protected function prepare_links( $post ) {
-		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
-
+	protected function prepare_links( $post, $request ) {
+		$group = ! empty( $request['group_id'] ) ? '?group_id=' . $request['group_id'] : '';
+		$base  = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 		// Entity meta.
 		$links = array(
 			'self'       => array(
@@ -2383,7 +2451,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) ),
+				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) . $group ),
 				'embeddable' => true,
 			),
 		);
@@ -2577,5 +2645,4 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		return apply_filters( 'bp_rest_reply_object', $reply, $request );
 	}
-
 }
