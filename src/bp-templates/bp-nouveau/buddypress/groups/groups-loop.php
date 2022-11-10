@@ -151,7 +151,7 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 						<header class="bb-model-header">
 							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
-								<span class="bb-icon bb-icon-close"></span>
+								<span class="bb-icon-l bb-icon-times"></span>
 							</a>
 						</header>
 						<div class="bb-leave-group-content bb-action-popup-content">

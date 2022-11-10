@@ -61,7 +61,6 @@ class BP_Core_Members_Widget extends WP_Widget {
 	 * @param array $instance Widget settings, as saved by the user.
 	 *
 	 * @see   WP_Widget::widget() for description of parameters.
-	 *
 	 */
 	public function widget( $args, $instance ) {
 		global $members_template;
@@ -116,89 +115,86 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 		<?php if ( bp_has_members( $members_args ) ) : ?>
 
-            <div class="item-options" id="members-list-options">
-                <a href="<?php bp_members_directory_permalink(); ?>" id="newest-members"
+			<div class="item-options" id="members-list-options">
+				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-members"
 					<?php
 					if ( 'newest' === $settings['member_default'] ) :
 						?>
-                        class="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
-                <span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-                <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-members"
+						class="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
+				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
+				<a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-members"
 					<?php
 					if ( 'active' === $settings['member_default'] ) :
 						?>
-                        class="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
+						class="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
-                    <span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-                    <a href="<?php bp_members_directory_permalink(); ?>" id="popular-members"
+					<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
+					<a href="<?php bp_members_directory_permalink(); ?>" id="popular-members"
 						<?php
 						if ( 'popular' === $settings['member_default'] ) :
 							?>
-                            class="selected"<?php endif; ?>><?php esc_html_e( 'Popular', 'buddyboss' ); ?></a>
+							class="selected"<?php endif; ?>><?php esc_html_e( 'Popular', 'buddyboss' ); ?></a>
 
 				<?php endif; ?>
 
-            </div>
+			</div>
 
-            <ul id="members-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
+			<ul id="members-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
 
 				<?php
 				while ( bp_members() ) :
 					bp_the_member();
+
+					$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $members_template->member->id ) ? 'bp-user-suspended' : '';
+					$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $members_template->member->id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 					?>
 
-                    <li class="vcard">
-                        <div class="item-avatar">
-                            <a href="<?php bp_member_permalink(); ?>">
+					<li class="vcard">
+						<div class="item-avatar">
+							<a href="<?php bp_member_permalink(); ?>"  class="<?php echo esc_attr( $moderation_class ); ?>">
 								<?php bp_member_avatar(); ?>
-								<?php
-								$current_time = current_time( 'mysql', 1 );
-								$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
-								if ( $diff < 300 ) { // 5 minutes  =  5 * 60
-									?>
-                                    <span class="member-status online"></span>
-								<?php } ?>
-                            </a>
-                        </div>
+								<?php bb_user_presence_html( $members_template->member->id ); ?>
+							</a>
+						</div>
 
-                        <div class="item">
-                            <div class="item-title fn"><a
-                                        href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
-                            <div class="item-meta">
+						<div class="item">
+							<div class="item-title fn"><a
+										href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
+							<div class="item-meta">
 								<?php if ( 'newest' == $settings['member_default'] ) : ?>
-                                    <span class="activity"
-                                          data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span>
+									<span class="activity"
+										  data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span>
 								<?php elseif ( 'active' == $settings['member_default'] ) : ?>
-                                    <span class="activity"
-                                          data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
+									<span class="activity"
+										  data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
 								<?php elseif ( bp_is_active( 'friends' ) ) : ?>
-                                    <span class="activity"><?php bp_member_total_friend_count(); ?></span>
+									<span class="activity"><?php bp_member_total_friend_count(); ?></span>
 								<?php endif; ?>
-                            </div>
-                        </div>
-                    </li>
+							</div>
+						</div>
+					</li>
 
 				<?php endwhile; ?>
 
-            </ul>
+			</ul>
 
 			<?php wp_nonce_field( 'bp_core_widget_members', '_wpnonce-members', false ); ?>
 
-            <input type="hidden" name="members_widget_max" id="members_widget_max"
-                   value="<?php echo esc_attr( $settings['max_members'] ); ?>"/>
+			<input type="hidden" name="members_widget_max" id="members_widget_max"
+				   value="<?php echo esc_attr( $settings['max_members'] ); ?>"/>
 
 			<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : 'bp-hide'; ?>">
 				<a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
-					<?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i>
+					<?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i>
 				</a>
 			</div>
 
 		<?php else : ?>
 
-            <div class="widget-error">
+			<div class="widget-error">
 				<?php esc_html_e( 'No one has signed up yet!', 'buddyboss' ); ?>
-            </div>
+			</div>
 
 		<?php endif; ?>
 
@@ -264,7 +260,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'max_members' ); ?>">
 				<?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?>
-				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo  esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>
 		</p>
 
