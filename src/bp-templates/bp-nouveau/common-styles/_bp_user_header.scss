@@ -126,7 +126,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 			&:before {
 				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 15px;
+				font-size: 18px;
 				display: inline-block;
 				margin-right: 10px;
 				vertical-align: middle;
@@ -136,56 +136,41 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 			&.reported-content:before,
 			&.report-content:before {
-				content: "\e8ea";
-			}
-
-			&:before {
-				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 15px;
-				display: inline-block;
-				margin-right: 10px;
-				vertical-align: middle;
-				width: 20px;
-				text-align: center;
+				content: "\ee9c";
 			}
 
 			&.back-to-admin:before {
-				content: "\e84c";
-				font-size: 18px;
+				content: "\ef0a";
 			}
 
 			&.view-as:before {
-				content: "\e8be";
-				font-size: 16px;
+				content: "\ee69";
 			}
 
 			&.send-message:before {
-				content: "\e910";
-				font-size: 16px;
-				color: inherit !important;
+				content: "\ee62";
 			}
 
 			&.block-member:before {
-				content: "\e8c9";
+				content: "\ee08";
 			}
 
 			&.not_friends:before,
 			&.friendship-button:before {
-				content: "\e94d";
+				content: "\ef60";
 			}
 
 			&.awaiting_response_friend:before {
-				content: "\e94e";
+				content: "\ef57";
 			}
 
 			&.follow-button:before {
-				content: "\ebba";
-				font-size: 14px;
+				content: "\ee03";
 			}
 
 			&.is_friend:before,
 			&.pending_friend:before {
-				content: "\e930";
+				content: "\ef64";
 			}
 
 		}

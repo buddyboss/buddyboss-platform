@@ -450,7 +450,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 					if ( $can_edit_btn ) {
 						?>
 						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
-							<span class="bb-icon-edit-thin"></span>
+							<span class="bb-icon-l bb-icon-edit"></span>
 							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 						</a>
@@ -905,21 +905,21 @@ function bp_nouveau_ajax_document_move() {
 					<div class="data-head data-head-name">
 				<span>
 					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-modified">
 				<span>
 					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-visibility">
 				<span>
 					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 					</div>
 				</div><!-- .document-data-table-head -->
@@ -1230,21 +1230,21 @@ function bp_nouveau_ajax_document_delete() {
 				<div class="data-head data-head-name">
 				<span>
 					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
 					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
 					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 				</div>
 			</div><!-- .document-data-table-head -->
@@ -1388,21 +1388,21 @@ function bp_nouveau_ajax_document_folder_move() {
 				<div class="data-head data-head-name">
 				<span>
 					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
 					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
 					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 				</div>
 			</div><!-- .document-data-table-head -->
