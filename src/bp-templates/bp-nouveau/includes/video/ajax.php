@@ -1134,7 +1134,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
  * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_object_template_results_albums_existing_video_query( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$caller = filter_input( INPUT_POST, 'caller', FILTER_SANITIZE_STRING );
 
@@ -1554,7 +1554,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		array(
 			'thumbnail'           => $thumbnail_url,
 			'video_attachment_id' => $video_attachment_id,
-			'video_attachments'   => json_encode( bb_video_get_attachments_symlinks( $video_attachment_id, $video_id ) ),
+			'video_attachments'   => wp_json_encode( bb_video_get_attachments_symlinks( $video_attachment_id, $video_id ) ),
 		)
 	);
 }
@@ -1624,7 +1624,7 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 		array(
 			'thumbnail'         => $thumbnail_url,
 			'thumbnail_id'      => $thumbnail_id,
-			'video_attachments' => json_encode( bb_video_get_attachments_symlinks( $attachment_id, $video_id ) ),
+			'video_attachments' => wp_json_encode( bb_video_get_attachments_symlinks( $attachment_id, $video_id ) ),
 		)
 	);
 }
