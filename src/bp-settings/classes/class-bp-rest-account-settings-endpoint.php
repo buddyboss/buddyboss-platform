@@ -76,6 +76,10 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
+		if ( ! has_action( 'bp_notification_settings' ) ) {
+			bp_core_remove_subnav_item( BP_SETTINGS_SLUG, 'notifications' );
+		}
+
 		$user_nav = buddypress()->members->nav;
 		if ( ! empty( $user_nav ) ) {
 			$navs = $user_nav->get_secondary(

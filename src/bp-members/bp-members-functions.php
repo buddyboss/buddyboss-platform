@@ -5265,7 +5265,7 @@ add_filter( 'gettext', 'bb_profile_drop_down_order_metabox_translate_order_text'
 /**
  * Translate the order text in the Profile Drop Down Order metabox.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.6
  *
  * @param string $translated_text   Translated text.
  * @param string $untranslated_text Untranslated text.
@@ -5289,7 +5289,6 @@ function bb_profile_drop_down_order_metabox_translate_order_text( $translated_te
 	}
 
 	return $translated_text;
-
 }
 
 /**
@@ -5339,3 +5338,4 @@ function bb_get_user_presence_html( $user_id ) {
 function bb_user_presence_html( $user_id ) {
 	echo bb_get_user_presence_html( $user_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
+
