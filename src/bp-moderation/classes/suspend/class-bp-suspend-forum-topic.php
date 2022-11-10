@@ -271,7 +271,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type, true ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
 			return null;
 		}
 
@@ -290,7 +290,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	public function manage_hidden_topic( $topic_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $topic_id,
@@ -334,7 +334,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	public function manage_unhidden_topic( $topic_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $topic_id,

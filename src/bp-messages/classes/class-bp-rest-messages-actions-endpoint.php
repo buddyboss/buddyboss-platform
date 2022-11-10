@@ -22,7 +22,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 	 *
 	 * @var BP_REST_Messages_Endpoint
 	 */
-	protected $message_endppoint;
+	protected $message_endpoint;
 
 	/**
 	 * Constructor.
@@ -32,7 +32,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 	public function __construct() {
 		$this->namespace         = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base         = buddypress()->messages->id;
-		$this->message_endppoint = new BP_REST_Messages_Endpoint();
+		$this->message_endpoint = new BP_REST_Messages_Endpoint();
 	}
 
 	/**
@@ -76,7 +76,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'action_items_permissions_check' ),
 					'args'                => $this->get_collection_params(),
 				),
-				'schema' => array( $this->message_endppoint, 'get_item_schema' ),
+				'schema' => array( $this->message_endpoint, 'get_item_schema' ),
 			)
 		);
 	}
@@ -126,7 +126,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 		$thread = new BP_Messages_Thread( $thread_id );
 
 		$retval = $this->prepare_response_for_collection(
-			$this->message_endppoint->prepare_item_for_response( $thread, $request )
+			$this->message_endpoint->prepare_item_for_response( $thread, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -162,7 +162,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$thread = $this->message_endppoint->get_thread_object( $request['id'] );
+		$thread = $this->message_endpoint->get_thread_object( $request['id'] );
 
 		if ( is_user_logged_in() && ! empty( $thread->thread_id ) ) {
 			$retval = true;
@@ -230,10 +230,26 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 		if ( empty( $value ) ) {
 			// phpcs:ignore
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, (int) $thread_id, bp_loggedin_user_id() ) );
+
+			/**
+			 * Fires when messages thread was marked as read.
+			 *
+			 * @param int $thread_id The message thread ID.
+			 * @param int $user_id   Logged in user ID.
+			 */
+			do_action( 'bb_messages_thread_unarchived', $thread_id, bp_loggedin_user_id() );
 			return true;
 		} elseif ( ! empty( $value ) ) {
 			// phpcs:ignore
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
+
+			/**
+			 * Fires when messages thread was marked as read.
+			 *
+			 * @param int $thread_id The message thread ID.
+			 * @param int $user_id   Logged in user ID.
+			 */
+			do_action( 'bb_messages_thread_archived', $thread_id, bp_loggedin_user_id() );
 			return true;
 		}
 

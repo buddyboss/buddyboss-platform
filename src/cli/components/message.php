@@ -74,7 +74,7 @@ class Message extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$assoc_args,
 			array(
 				'to'        => '',
@@ -259,7 +259,7 @@ class Message extends BuddypressCommand {
 	public function _list( $_, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$assoc_args,
 			array(
 				'box'    => 'sentbox',

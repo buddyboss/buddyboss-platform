@@ -361,12 +361,12 @@ function bp_has_members( $args = array() ) {
 
 	if ( empty( $member_type ) ) {
 		$member_type = bp_get_current_member_type();
-    } elseif ( is_array( $member_type ) ) {
-	    $member_type = array_merge( $member_type, bp_get_current_member_type() );
-    } elseif ( '' !== $member_type ) {
+	} elseif ( is_array( $member_type ) ) {
+		$member_type = array_merge( $member_type, bp_get_current_member_type() );
+	} elseif ( '' !== $member_type ) {
 		$member_type = explode( ',', $member_type );
 		$member_type = array_merge( $member_type, bp_get_current_member_type() );
-    }
+	}
 
 	$search_terms_default = null;
 	$search_query_arg     = bp_core_get_component_search_query_arg( 'members' );
@@ -377,15 +377,15 @@ function bp_has_members( $args = array() ) {
 	$member_type__not_in = array();
 
 	$args = bp_parse_args( $args, array() );
-	// Exclude Member Types
+	// Exclude Member Types.
 	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ( ! bp_is_user() && empty( $member_type ) && empty( $args['member_type'] ) ) ) {
-	    // get all excluded member types.
-	    $bp_member_type_ids = bp_get_removed_member_types();
-	    if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
-		    foreach ( $bp_member_type_ids as $single ) {
-			    $member_type__not_in[] = $single['name'];
-		    }
-	    }
+		// get all excluded member types.
+		$bp_member_type_ids = bp_get_removed_member_types();
+		if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+			foreach ( $bp_member_type_ids as $single ) {
+				$member_type__not_in[] = $single['name'];
+			}
+		}
 	}
 
 	// Type: active ( default ) | random | newest | popular | online | alphabetical.
@@ -824,7 +824,7 @@ function bp_get_member_avatar( $args = '' ) {
 		'alt'    => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname ),
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	/**
@@ -1098,7 +1098,7 @@ function bp_get_member_profile_data( $args = '' ) {
 		'user_id' => $default_user_id,
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// If we're in a members loop, get the data from the global.
 	if ( ! empty( $members_template->member->profile_data ) ) {
@@ -1178,7 +1178,7 @@ function bp_member_registered( $args = array() ) {
 function bp_get_member_registered( $args = array() ) {
 	global $members_template;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'relative' => true,
@@ -1536,7 +1536,7 @@ function bp_loggedin_user_avatar( $args = '' ) {
 	 */
 function bp_get_loggedin_user_avatar( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'item_id' => bp_loggedin_user_id(),
@@ -1594,7 +1594,7 @@ function bp_displayed_user_avatar( $args = '' ) {
 	 */
 function bp_get_displayed_user_avatar( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'item_id' => bp_displayed_user_id(),
@@ -1687,7 +1687,11 @@ function bp_get_last_activity( $user_id = 0 ) {
 		$user_id = bp_displayed_user_id();
 	}
 
-	$last_activity = bp_core_get_last_activity( bp_get_user_last_activity( $user_id ), __( 'active %s', 'buddyboss' ) );
+	$last_activity = bp_core_get_last_activity(
+		bp_get_user_last_activity( $user_id ),
+		/* translators: %s: The last activity human-readable date. */
+		esc_html__( 'Active %s', 'buddyboss' )
+	);
 
 	/**
 	 * Filters the 'active [x days ago]' string for a user.
@@ -2056,10 +2060,10 @@ function bp_signup_page() {
 function bp_get_signup_page() {
 	if ( bp_has_custom_signup_page() && ! bp_allow_custom_registration() ) {
 		$page = trailingslashit( bp_get_root_domain() . '/' . bp_get_signup_slug() );
-	} else if ( bp_has_custom_signup_page() && bp_allow_custom_registration() && '' === bp_custom_register_page_url() ) {
+	} elseif ( bp_has_custom_signup_page() && bp_allow_custom_registration() && '' === bp_custom_register_page_url() ) {
 		$page = trailingslashit( bp_get_root_domain() . '/' . bp_get_signup_slug() );
-	} else if ( bp_allow_custom_registration() && '' !== bp_custom_register_page_url() ) {
-	    $page = bp_custom_register_page_url();
+	} elseif ( bp_allow_custom_registration() && '' !== bp_custom_register_page_url() ) {
+		$page = bp_custom_register_page_url();
 	} else {
 		$page = bp_get_root_domain() . '/wp-signup.php';
 	}
@@ -2487,7 +2491,7 @@ function bp_get_signup_avatar( $args = '' ) {
 		'alt'   => __( 'Your Profile Photo', 'buddyboss' ),
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	// Avatar DIR is found.
@@ -2690,7 +2694,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 
 	$old_user = bp_current_member_switched();
 
-	$button_args = wp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+	$button_args = bp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
 
 	$user = get_userdata( $user_id );
 	$link = BP_Core_Members_Switching::maybe_switch_url( $user );
@@ -2707,7 +2711,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	);
 
 	if ( $old_user && ( $old_user->ID === $user->ID || bp_is_my_profile() ) ) {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_switch',
 				'component'         => 'members',
@@ -2724,7 +2728,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 			$button_args
 		);
 	} else {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_switch',
 				'component'         => 'members',
@@ -2781,4 +2785,287 @@ function bp_get_signup_confirm_email_value() {
 	 * @param string $value Email address submitted during signup.
 	 */
 	return apply_filters( 'bp_get_signup_confirm_email_value', $value );
+}
+
+/**
+ * Get user followers count.
+ *
+ * @param int|null $user_id user id to get followers count. If user id is null then get current logged-in user id.
+ *                 Default false.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @return string
+ */
+function bb_get_followers_count( $user_id = false ) {
+
+	if ( ! function_exists( 'bp_is_active' ) && ! function_exists( 'bp_is_activity_follow_active' ) ) {
+		return;
+	}
+
+	$is_follow_active = bp_is_active( 'activity' ) && bp_is_activity_follow_active();
+
+	if ( false === $user_id ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( $is_follow_active && is_user_logged_in() ) {
+		$total_followers = 0;
+		$follower_ids    = bp_get_follower_ids( array( 'user_id' => $user_id ) );
+
+		if ( ! empty( $follower_ids ) ) {
+			$total_followers = count( explode( ',', $follower_ids ) );
+		}
+
+		if ( 0 === $total_followers ) {
+			$followers = sprintf(
+				/* translators: Follower string. */
+				'<strong>0</strong> %1$s',
+				esc_html__( 'followers', 'buddyboss' ),
+			);
+		} elseif ( 1 === $total_followers ) {
+			$followers = sprintf(
+				/* translators: Follower string. */
+				'<strong>1</strong> %1$s',
+				esc_html__( 'follower', 'buddyboss' ),
+			);
+		} else {
+			$followers = sprintf(
+				/* translators: 1: Total followers count. 2: Follower string. */
+				'<strong>%1$s</strong> %2$s',
+				$total_followers,
+				esc_html__( 'followers', 'buddyboss' ),
+			);
+		}
+		?>
+
+		<div class="followers-wrap"><?php echo wp_kses_post( $followers ); ?></div>
+		<?php
+	}
+}
+
+/**
+ * Get user following count.
+ *
+ * @param int|null $user_id user id to get following count. If user id is null then get current logged-in user id.
+ *                 Default false.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @return string
+ */
+function bb_get_following_count( $user_id = false ) {
+
+	if ( ! function_exists( 'bp_is_active' ) && ! function_exists( 'bp_is_activity_follow_active' ) ) {
+		return;
+	}
+
+	$is_follow_active = bp_is_active( 'activity' ) && bp_is_activity_follow_active();
+
+	if ( false === $user_id ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( $is_follow_active && is_user_logged_in() ) {
+		$total_following = 0;
+		$following_ids   = bp_get_following_ids( array( 'user_id' => $user_id ) );
+
+		if ( ! empty( $following_ids ) ) {
+			$total_following = count( explode( ',', $following_ids ) );
+		}
+
+		if ( 0 === $total_following ) {
+			$following = sprintf(
+				/* translators: Following string. */
+				'<strong>0</strong> %1$s',
+				esc_html__( 'following', 'buddyboss' ),
+			);
+		} elseif ( 1 === $total_following ) {
+			$following = sprintf(
+				/* translators: Following string. */
+				'<strong>1</strong> %1$s',
+				esc_html__( 'following', 'buddyboss' ),
+			);
+		} else {
+			$following = sprintf(
+				/* translators: 1: Total following count. 2: Following string. */
+				'<strong>%1$s</strong> %2$s',
+				$total_following,
+				esc_html__( 'following', 'buddyboss' ),
+			);
+		}
+		?>
+
+		<div class="following-wrap"><?php echo wp_kses_post( $following ); ?></div>
+		<?php
+	}
+}
+
+
+/**
+ * Get member actions for member directories.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param int    $user_id Member ID.
+ * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
+ *                            Default false.
+ *
+ * @return array|string Return the member actions.
+ */
+function bb_member_directories_get_profile_actions( $user_id, $button_type = false ) {
+	$buttons = array();
+
+	// Member directories profile actions.
+	$enabled_follow_action  = function_exists( 'bb_enabled_member_directory_profile_action' ) ? bb_enabled_member_directory_profile_action( 'follow' ) : true;
+	$enabled_connect_action = function_exists( 'bb_enabled_member_directory_profile_action' ) ? bb_enabled_member_directory_profile_action( 'connect' ) : true;
+	$enabled_message_action = function_exists( 'bb_enabled_member_directory_profile_action' ) ? bb_enabled_member_directory_profile_action( 'message' ) : true;
+
+	// Member directories primary actions.
+	$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
+
+	// Is follow active or not?
+	$is_follow_active = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() && $enabled_follow_action;
+
+	// Show "Message" button or not?
+	$is_message_active = apply_filters( 'bb_member_loop_show_message_button', (bool) $enabled_message_action && bp_is_active( 'messages' ), $user_id, bp_loggedin_user_id() );
+
+	// Is follow active or not?
+	$is_friend_active = ( $enabled_connect_action && bp_is_active( 'friends' ) && bp_loggedin_user_id() !== $user_id );
+
+	// Get actions button arguments to add tooltips and "<i>" tag.
+	$primary_button_args   = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments() : array();
+	$secondary_button_args = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments( 'directory', 'secondary' ) : array();
+
+	if ( 'follow' === $primary_action_btn ) {
+		// Primary button.
+		$buttons['primary'] = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), $primary_button_args ) : '';
+
+		// Secondary buttons.
+		$buttons['secondary'] = $is_friend_active ? bp_get_add_friend_button( $user_id, false, $secondary_button_args ) : '';
+
+		if ( $is_message_active ) {
+			add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+			$buttons['secondary'] .= bp_get_send_message_button( $secondary_button_args );
+			remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+		}
+	} elseif ( 'connect' === $primary_action_btn ) {
+		// Primary button.
+		$buttons['primary'] = $is_friend_active ? bp_get_add_friend_button( $user_id, false, $primary_button_args ) : '';
+
+		// Secondary buttons.
+		$buttons['secondary'] = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), $secondary_button_args ) : '';
+
+		if ( $is_message_active ) {
+			add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+			$buttons['secondary'] .= bp_get_send_message_button( $secondary_button_args );
+			remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+		}
+	} elseif ( 'message' === $primary_action_btn ) {
+		// Primary button.
+		if ( $is_message_active ) {
+			add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+			$buttons['primary'] = bp_get_send_message_button( $primary_button_args );
+			remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+		}
+
+		// Secondary buttons.
+		$buttons['secondary']  = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), $secondary_button_args ) : '';
+		$buttons['secondary'] .= $is_friend_active ? bp_get_add_friend_button( $user_id, false, $secondary_button_args ) : '';
+	} else {
+		// Primary button.
+		$buttons['primary'] = '';
+
+		// Secondary buttons.
+		$buttons['secondary']  = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), $secondary_button_args ) : '';
+		$buttons['secondary'] .= $is_friend_active ? bp_get_add_friend_button( $user_id, false, $secondary_button_args ) : '';
+
+		if ( $is_message_active ) {
+			add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+			$buttons['secondary'] .= bp_get_send_message_button( $secondary_button_args );
+			remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+		}
+	}
+
+	/**
+	 * Filters the member actions for member directories.
+	 *
+	 * @since BuddyBoss 1.9.1
+	 *
+	 * @param array  $buttons     Member profile actions.
+	 * @param int    $user_id     Member ID.
+	 * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
+	 */
+	$buttons = apply_filters( 'bb_member_directories_get_profile_actions', $buttons, $user_id, $button_type );
+
+	if ( ! $button_type ) {
+		return $buttons;
+	} elseif ( 'primary' === $button_type ) {
+		return $buttons['primary'];
+	} elseif ( 'secondary' === $button_type ) {
+		return $buttons['secondary'];
+	}
+}
+
+/**
+ * Get the member last activity time.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param array $args Array of arguments.
+ *
+ * @return mixed|string|void
+ */
+function bb_get_member_last_activity_time( $args = array() ) {
+	global $members_template;
+
+	// Parse the activity format.
+	$r = bp_parse_args(
+		$args,
+		array(
+			'active_format' => true,
+			'relative'      => true,
+		)
+	);
+
+	// Backwards compatibility for anyone forcing a 'true' active_format.
+	if ( true === $r['active_format'] ) {
+		$r['active_format'] = __( '%s', 'buddyboss' );
+	}
+
+	// Member has logged in at least one time.
+	if ( isset( $members_template->member->last_activity ) ) {
+		// We do not want relative time, so return now.
+		// @todo Should the 'bp_member_last_active' filter be applied here?
+		if ( ! $r['relative'] ) {
+			return esc_attr( $members_template->member->last_activity );
+		}
+
+		// Backwards compatibility for pre 1.5 'ago' strings.
+		$last_activity = ! empty( $r['active_format'] )
+			? bp_core_get_last_activity( $members_template->member->last_activity, $r['active_format'] )
+			: bp_core_time_since( $members_template->member->last_activity );
+
+		// Member has never logged in or been active.
+	} else {
+		$last_activity = esc_html__( 'Never active', 'buddyboss' );
+	}
+
+	/**
+	 * Filters the current members last active time.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $last_activity Formatted time since last activity.
+	 * @param array  $r             Array of parsed arguments for query.
+	 */
+	return apply_filters( 'bb_get_member_last_activity_time', $last_activity, $r );
 }

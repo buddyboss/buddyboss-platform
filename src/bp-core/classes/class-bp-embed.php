@@ -79,7 +79,7 @@ class BP_Embed extends WP_Embed {
 		}
 
 		$rawattr = $attr;
-		$attr    = wp_parse_args( $attr, wp_embed_defaults() );
+		$attr    = bp_parse_args( $attr, wp_embed_defaults() );
 
 		// Use kses to convert & into &amp; and we need to undo this
 		// See https://core.trac.wordpress.org/ticket/11311.
@@ -289,7 +289,7 @@ class BP_Embed extends WP_Embed {
 							'error'       => '',
 							'wp_embed'    => true,
 						);
-						$cache_key       = 'bp_activity_oembed_' . md5( serialize( $link_embed ) );
+						$cache_key       = 'bp_activity_oembed_' . md5( maybe_serialize( $link_embed ) );
 						// set the transient.
 						set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
 					}
@@ -372,8 +372,8 @@ class BP_Embed extends WP_Embed {
 		$embed_urls = array();
 		$flag       = true;
 
-		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
-			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+		if ( preg_match( '/<a.*?<\/a>(*SKIP)(*F)|(https?:\/\/[^\s<>"]+)/i', $content ) ) {
+			preg_match_all( '/<a.*?<\/a>(*SKIP)(*F)|(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 		}
 
 		if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {

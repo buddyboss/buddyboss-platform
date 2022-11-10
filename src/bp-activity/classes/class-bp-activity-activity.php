@@ -409,7 +409,7 @@ class BP_Activity_Activity {
 		}
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'page'              => 1,               // The current page.
@@ -527,11 +527,20 @@ class BP_Activity_Activity {
 			case 'is_spam':
 				break;
 
+			case 'in':
+				$r['order_by'] = 'in';
+				break;
+
 			default:
 				$r['order_by'] = 'date_recorded';
 				break;
 		}
 		$order_by = 'a.' . $r['order_by'];
+		// Support order by fields for generally.
+		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
+			$order_by = 'FIELD(a.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
+			$sort     = '';
+		}
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
@@ -660,7 +669,6 @@ class BP_Activity_Activity {
 			// Legacy queries joined against the user table.
 			$select_sql = 'SELECT DISTINCT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name';
 			$from_sql   = " FROM {$bp->activity->table_name} a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID";
-
 			if ( ! empty( $page ) && ! empty( $per_page ) ) {
 				$pag_sql = $wpdb->prepare( 'LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page );
 
@@ -725,7 +733,6 @@ class BP_Activity_Activity {
 			 * @param array  $r                Array of arguments passed into method.
 			 */
 			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
-
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.
@@ -829,6 +836,7 @@ class BP_Activity_Activity {
 	 */
 	protected static function get_activity_data( $activity_ids = array() ) {
 		global $wpdb;
+		static $user_query_cache = array();
 
 		// Bail if no activity ID's passed.
 		if ( empty( $activity_ids ) ) {
@@ -874,13 +882,22 @@ class BP_Activity_Activity {
 			$activities[] = $activity;
 		}
 
+		$user_ids  = wp_list_pluck( $activities, 'user_id' );
+		$cache_key = 'bp_user_' . md5( maybe_serialize( $user_ids ) );
+
 		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $activities, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
+		if ( isset( $user_query_cache[ $cache_key ] ) ) {
+			$user_query = $user_query_cache[ $cache_key ];
+		} else {
+			$user_query = new BP_User_Query(
+				array(
+					'user_ids'        => $user_ids,
+					'populate_extras' => false,
+				)
+			);
+
+			$user_query_cache[ $cache_key ] = $user_query;
+		}
 
 		// Associated located user data with activity items.
 		foreach ( $activities as $a_index => $a_item ) {
@@ -1271,7 +1288,7 @@ class BP_Activity_Activity {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'id'                => false,
@@ -1773,9 +1790,17 @@ class BP_Activity_Activity {
 	public static function get_child_comments( $parent_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_get_child_comments_' . $parent_id;
+		$result    = wp_cache_get( $cache_key, 'bp_activity_comments' );
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND secondary_item_id = %d", $parent_id ) );
+		if ( false === $result ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$result = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND secondary_item_id = %d", $parent_id ) );
+			wp_cache_set( $cache_key, $result, 'bp_activity_comments' );
+		}
+
+		return $result;
 	}
 
 	/**

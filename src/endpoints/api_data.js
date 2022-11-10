@@ -1604,7 +1604,9 @@ define({ "api": [
               "date_created",
               "date_modified",
               "group_id",
-              "privacy"
+              "privacy",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -3045,7 +3047,8 @@ define({ "api": [
               "parent",
               "rand",
               "popular",
-              "activity"
+              "activity",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -3532,7 +3535,8 @@ define({ "api": [
               "menu_order",
               "relevance",
               "popular",
-              "activity"
+              "activity",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -4280,7 +4284,8 @@ define({ "api": [
               "newest",
               "alphabetical",
               "random",
-              "popular"
+              "popular",
+              "include"
             ],
             "optional": true,
             "field": "type",
@@ -4552,6 +4557,30 @@ define({ "api": [
             "field": "invite_sent",
             "defaultValue": "sent",
             "description": "<p>Limit result set to invites that have been sent, not sent, or include all.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "id",
+              "include"
+            ],
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "id",
+            "description": "<p>Order invites by which attribute.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "sort_order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
           }
         ]
       }
@@ -4785,6 +4814,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "allowedValues": [
+              "edit-details",
               "group-settings",
               "forum",
               "courses"
@@ -5754,7 +5784,9 @@ define({ "api": [
             "type": "String",
             "allowedValues": [
               "date_created",
-              "menu_order"
+              "menu_order",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -6347,7 +6379,8 @@ define({ "api": [
               "alphabetical",
               "random",
               "online",
-              "popular"
+              "popular",
+              "include"
             ],
             "optional": true,
             "field": "type",
@@ -6421,6 +6454,35 @@ define({ "api": [
       }
     },
     "filename": "src/bp-members/classes/class-bp-rest-members-endpoint.php",
+    "groupTitle": "Members"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/members/presence",
+    "title": "Member Presence State",
+    "name": "GetBBMembers-MembersPresence",
+    "group": "Members",
+    "description": "<p>Members Presence.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "ids",
+            "description": "<p>A unique numeric ID for the members</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-members/classes/class-bp-rest-members-actions-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6830,6 +6892,13 @@ define({ "api": [
             "optional": false,
             "field": "user_id",
             "description": "<p>Limit result to messages created by a specific user.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_hidden",
+            "description": "<p>List the archived threads.</p>"
           }
         ]
       }
@@ -6914,6 +6983,28 @@ define({ "api": [
             "optional": false,
             "field": "group_id",
             "description": "<p>Group id to search members.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes specific member IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
           }
         ]
       }
@@ -6950,6 +7041,13 @@ define({ "api": [
             "optional": false,
             "field": "recipient_id",
             "description": "<p>Thread recipient ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "include_group_thread",
+            "description": "<p>Include group thread or not.</p>"
           }
         ]
       }
@@ -7464,7 +7562,8 @@ define({ "api": [
               "item_id",
               "secondary_item_id",
               "component_name",
-              "component_action"
+              "component_action",
+              "include"
             ],
             "optional": true,
             "field": "order_by",
@@ -9332,7 +9431,9 @@ define({ "api": [
             "type": "String",
             "allowedValues": [
               "date_created",
-              "menu_order"
+              "menu_order",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
