@@ -234,8 +234,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
 		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
 		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss' ),
-		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
-		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
+		'commentLabel'        => _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ),
+		'commentsLabel'       => _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ),
 		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
 		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
 	);
@@ -648,4 +648,5 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //		),
 	) );
 }
+
 
