@@ -115,7 +115,6 @@ button[data-bp-tooltip] {
 		&:after {
 
 			@include opacity(1);
-
 			pointer-events: auto;
 		}
 	}

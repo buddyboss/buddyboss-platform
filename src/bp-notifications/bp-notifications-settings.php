@@ -21,13 +21,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bb_notification_get_settings_sections() {
 
 	$settings = array(
-		'bp_notifications'                   => array(
+		'bp_notifications' => array(
 			'page'              => 'notifications',
 			'title'             => esc_html__( 'On-screen Notifications', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_on_screen_notification_setting_tutorial',
 			'notice'            => ( ! bb_enabled_legacy_email_preference() ) ? __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ) : '',
 		),
-		'bp_notification_settings_automatic' => array(
+	);
+
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		$settings['bp_notification_settings_automatic'] = array(
 			'page'              => 'notifications',
 			'title'             => esc_html__( 'Notification Types', 'buddyboss' ),
 			'tutorial_callback' => 'bb_automatic_notifications_tutorial',
@@ -43,8 +46,8 @@ function bb_notification_get_settings_sections() {
 					. '" target="_blank" >' . esc_html__( 'this tutorial', 'buddyboss' ) . '</a>'
 				) : ''
 			),
-		),
-	);
+		);
+	}
 
 	if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'messages' ) ) {
 		$settings['bp_messaging_notification_settings'] = array(
@@ -433,23 +436,8 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
  */
 function bb_admin_setting_callback_notification_warning() {
 	echo '<p class="description notification-information bb-lab-notice">' .
-		sprintf(
-			wp_kses_post(
-					/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
-				__( 'Enable the %1$s feature in %2$s to manage the notification types used on your site.', 'buddyboss' )
-			),
-			'<strong>' . esc_html__( 'Notification Preferences', 'buddyboss' ) . '</strong>',
-			'<a href="' .
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-settings',
-							'tab'  => 'bp-labs',
-						),
-						admin_url( 'admin.php' )
-					)
-				)
-			. '">' . esc_html__( 'BuddyBoss Labs', 'buddyboss' ) . '</a>'
+		wp_kses_post(
+			__( 'Notification Types are not supported when using the legacy notifications system.', 'buddyboss' )
 		) .
 	'</p>';
 }
@@ -514,25 +502,8 @@ function bb_admin_setting_callback_push_notification_bbp_pro_older_version_insta
  */
 function bb_admin_setting_callback_push_notification_lab_notification_preferences() {
 	echo '<p class="description notification-information bb-lab-notice">' .
-		sprintf(
-			wp_kses_post(
-				/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
-				__( 'Enable the %1$s feature in %2$s to use web push notifications on your site.', 'buddyboss' )
-			),
-			'<strong>' . esc_html__( 'Notification Preferences', 'buddyboss' ) . '</strong>',
-			'<a href="' .
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-settings',
-							'tab'  => 'bp-labs',
-						),
-						admin_url( 'admin.php' )
-					)
-				) .
-			'">' .
-				esc_html__( 'BuddyBoss Labs', 'buddyboss' ) .
-			'</a>'
+		wp_kses_post(
+			__( 'Web Push Notifications are not supported when using the legacy notifications system.', 'buddyboss' )
 		) .
 	'</p>';
 }
@@ -643,7 +614,7 @@ function bb_admin_setting_callback_messaging_notification_fields() {
 				<td>
 					<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bb_delay_email_notifications_enabled() ); ?> />
 					<label for="delay_email_notification"><?php esc_html_e( 'Delay email notifications for new messages', 'buddyboss' ); ?></label>
-					<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will delayed to allow time for members to read them on your site. After the delay, the emails will be only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
+					<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will be delayed to allow time for members to read them on your site. After the delay, the emails will only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
 
 					<p class="description">
 						<label for="time_delay_email_notification">
