@@ -965,7 +965,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						)
 					);
 				} else {
-					$status[ $media->id ] = bp_media_delete( array( 'id' => $media->id ), true );
+					$status[ $media->id ] = bp_media_delete( array( 'id' => $media->id ) );
 				}
 			} else {
 				if ( ! bp_video_user_can_delete( $media->id ) ) {
@@ -977,7 +977,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						)
 					);
 				} else {
-					$status[ $media->id ] = bp_video_delete( array( 'id' => $media->id ), true );
+					$status[ $media->id ] = bp_video_delete( array( 'id' => $media->id ) );
 				}
 			}
 		}
@@ -1085,7 +1085,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$status = bp_media_delete( array( 'id' => $id ), true );
+		$status = bp_media_delete( array( 'id' => $id ) );
 
 		// Build the response.
 		$response = new WP_REST_Response();
@@ -1232,7 +1232,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'upload_id'    => $upload['id'],
 			'upload'       => $upload['url'],
 			'upload_thumb' => $upload['thumb'],
+			'name'         => $upload['name'],
 		);
+
+		if ( 'messages' === $request->get_param( 'component' ) && isset( $upload['msg_url'] ) ) {
+			$retval['msg_url'] = $upload['msg_url'];
+		}
 
 		$response = rest_ensure_response( $retval );
 
@@ -2177,6 +2182,66 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				),
 			)
 		);
+
+		// Added param to main activity to check the comment has access to upload gif or not.
+		bp_rest_register_field(
+			'activity',
+			'comment_upload_gif',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_gif' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload gif or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
+
+		// Added param to comment activity to check the child comment has access to upload gif or not.
+		register_rest_field(
+			'activity_comments',
+			'comment_upload_gif',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_gif' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload gif or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
+
+		// Added param to main activity to check the comment has access to upload emoji or not.
+		bp_rest_register_field(
+			'activity',
+			'comment_upload_emoji',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_emoji' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload emoji or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
+
+		// Added param to comment activity to check the child comment has access to upload emoji or not.
+		register_rest_field(
+			'activity_comments',
+			'comment_upload_emoji',
+			array(
+				'get_callback' => array( $this, 'bp_rest_user_can_comment_upload_emoji' ),
+				'schema'       => array(
+					'description' => 'Whether to check user can upload emoji or not.',
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -2250,9 +2315,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
+				$this->prepare_item_for_response( $media, $object )
 			);
 		}
 
@@ -2566,11 +2634,22 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$component = $activity['component'];
 		$type      = 'activity_comment' === $activity['type'];
 		$item_id   = $activity['primary_item_id'];
-		if ( true === $type && ! empty( $item_id ) ) {
+
+		if ( ! empty( $item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $item_id );
-			if ( 'groups' === $parent_activity->component ) {
-				$item_id   = $parent_activity->item_id;
-				$component = 'groups';
+			if ( true === $type ) {
+				if ( 'groups' === $parent_activity->component ) {
+					$item_id   = $parent_activity->item_id;
+					$component = 'groups';
+				}
+			}
+			if ( 'blogs' === $parent_activity->component ||
+			     (
+				     ! empty( $activity['component'] ) &&
+				     'blogs' === $activity['component']
+			     )
+			) {
+				return false;
 			}
 		}
 
@@ -2790,9 +2869,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array() )
+				$this->prepare_item_for_response( $media, $object )
 			);
 		}
 
@@ -3167,9 +3248,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
+				$this->prepare_item_for_response( $media, $object )
 			);
 		}
 
@@ -3564,5 +3648,113 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 */
 	public function bb_rest_disable_symlink( $retval ) {
 		return true;
+	}
+
+	/**
+	 * The function to use to set `comment_upload_gif`
+	 *
+	 * @param BP_Activity_Activity $activity  Activity Array.
+	 * @param string               $attribute The REST Field key used into the REST response.
+	 *
+	 * @return string            The value of the REST Field to include into the REST response.
+	 */
+	protected function bp_rest_user_can_comment_upload_gif( $activity, $attribute ) {
+		$activity_id = $activity['id'];
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		$component = $activity['component'];
+		$type      = 'activity_comment' === $activity['type'];
+		$item_id   = $activity['primary_item_id'];
+
+		if ( ! empty( $item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( $item_id );
+			if ( true === $type ) {
+				if ( 'groups' === $parent_activity->component ) {
+					$item_id   = $parent_activity->item_id;
+					$component = 'groups';
+				}
+			}
+			if ( 'blogs' === $parent_activity->component ||
+			     (
+				     ! empty( $activity['component'] ) &&
+				     'blogs' === $activity['component']
+			     )
+			) {
+				return false;
+			}
+		}
+
+		$user_id = bp_loggedin_user_id();
+		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		$group_id = 0;
+		if ( bp_is_active( 'groups' ) && 'groups' === $component && ! empty( $item_id ) ) {
+			$group_id = $item_id;
+		}
+
+		if ( function_exists( 'bb_user_has_access_upload_gif' ) ) {
+			return bb_user_has_access_upload_gif( $group_id, $user_id, 0, 0, 'profile' );
+		}
+
+		return false;
+	}
+
+	/**
+	 * The function to use to set `comment_upload_emoji`
+	 *
+	 * @param BP_Activity_Activity $activity  Activity Array.
+	 * @param string               $attribute The REST Field key used into the REST response.
+	 *
+	 * @return string            The value of the REST Field to include into the REST response.
+	 */
+	protected function bp_rest_user_can_comment_upload_emoji( $activity, $attribute ) {
+		$activity_id = $activity['id'];
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		$component = $activity['component'];
+		$type      = 'activity_comment' === $activity['type'];
+		$item_id   = $activity['primary_item_id'];
+
+		if ( ! empty( $item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( $item_id );
+			if ( true === $type ) {
+				if ( 'groups' === $parent_activity->component ) {
+					$item_id   = $parent_activity->item_id;
+					$component = 'groups';
+				}
+			}
+			if ( 'blogs' === $parent_activity->component ||
+			     (
+				     ! empty( $activity['component'] ) &&
+				     'blogs' === $activity['component']
+			     )
+			) {
+				return false;
+			}
+		}
+
+		$user_id = bp_loggedin_user_id();
+		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		$group_id = 0;
+		if ( bp_is_active( 'groups' ) && 'groups' === $component && ! empty( $item_id ) ) {
+			$group_id = $item_id;
+		}
+
+		if ( function_exists( 'bb_user_has_access_upload_emoji' ) ) {
+			return bb_user_has_access_upload_emoji( $group_id, $user_id, 0, 0, 'profile' );
+		}
+
+		return false;
 	}
 }

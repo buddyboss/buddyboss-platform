@@ -157,7 +157,7 @@ class BP_User_Query {
 		$this->setup_hooks();
 
 		if ( ! empty( $this->query_vars_raw ) ) {
-			$this->query_vars = wp_parse_args(
+			$this->query_vars = bp_parse_args(
 				$this->query_vars_raw,
 				array(
 					'type'                => 'newest',
@@ -286,7 +286,7 @@ class BP_User_Query {
 				 *
 				 * @param int $value Amount of minutes for threshold. Default 15.
 				 */
-				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', apply_filters( 'bp_user_query_online_interval', 15 ) );
+				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', apply_filters( 'bp_user_query_online_interval', ( bb_presence_interval() + 5 ) / 60 ) );
 				$sql['orderby'] = 'ORDER BY u.date_recorded';
 				$sql['order']   = 'DESC';
 

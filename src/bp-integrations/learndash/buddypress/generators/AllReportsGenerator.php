@@ -78,7 +78,7 @@ class AllReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatDataForDisplay( $data, $activity ) {
-		return wp_parse_args(
+		return bp_parse_args(
 			array(
 				'step' => sprintf(
 					'<a href="%s" target="_blank">%s</a>',
