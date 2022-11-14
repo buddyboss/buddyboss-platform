@@ -8192,3 +8192,15 @@ function bb_get_users_presence( $users, $compare_time = false ) {
 function bb_pro_pusher_version() {
 	return '2.1.4';
 }
+
+
+/**
+ * Function to return the extra span for the presence in seconds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_presence_extra_span() {
+	return (int) apply_filters( 'bb_presence_extra_span', 5 );
+}
