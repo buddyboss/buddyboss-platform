@@ -131,7 +131,7 @@
 		.activity-header {
 			margin: 0 auto;
 			width: 80%;
-
+			word-break: break-word;
 			// ensure elements are display inline, some themes setting avatars as block
 			a,
 			img {
@@ -735,7 +735,8 @@ ul.medium-editor-toolbar-actions {
 
 .ac-reply-toolbar,
 #whats-new-toolbar,
-#whats-new-messages-toolbar {
+#whats-new-messages-toolbar,
+#whats-new-formatting-toolbar {
 
 	.bb-icon,
 	[class*=" bb-icon-"] {
@@ -766,6 +767,20 @@ ul.medium-editor-toolbar-actions {
 	.post-elements-buttons-item.no-click {
 		pointer-events: none;
 	}
+}
+
+#whats-new-messages-toolbar {
+
+	.post-elements-buttons-item.disable,
+	.post-elements-buttons-item.disable.active {
+		opacity: 1;
+
+		a > i {
+			opacity: 0.4;
+		}
+
+	}
+
 }
 
 
@@ -1450,6 +1465,9 @@ span.dashicons.dashicons-admin-file:before {
 		margin-bottom: 10px;
 		font-size: 14px;
 		line-height: 1.5;
+		white-space: pre-wrap;
+		max-height: 105px;
+		overflow: auto;
 	}
 }
 
@@ -2127,6 +2145,7 @@ span.dashicons.dashicons-admin-file:before {
 				-ms-flex-preferred-size: 38px;
 				flex-basis: 38px;
 				width: 38px;
+				line-height: 1.5;
 				text-align: center;
 				padding: 1px 0 !important;
 				display: inline-block;
