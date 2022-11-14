@@ -1372,16 +1372,19 @@ class BP_Messages_Thread {
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $thread_id The message thread ID.
+	 * @param int $user_id   The user the thread will be marked as read.
 	 *
 	 * @return false|int Number of threads marked as read or false on error.
 	 */
-	public static function mark_as_read( $thread_id = 0 ) {
+	public static function mark_as_read( $thread_id = 0, $user_id = 0 ) {
 		global $wpdb;
 
-		$user_id =
-			bp_displayed_user_id() ?
-				bp_displayed_user_id() :
-				bp_loggedin_user_id();
+		if ( empty( $user_id ) ) {
+			$user_id =
+				bp_displayed_user_id() ?
+					bp_displayed_user_id() :
+					bp_loggedin_user_id();
+		}
 
 		$bp     = buddypress();
 		$retval = false;
@@ -1401,10 +1404,14 @@ class BP_Messages_Thread {
 			 * Fires when messages thread was marked as read.
 			 *
 			 * @since BuddyPress 2.8.0
+			 * @since BuddyBoss [BBVERSION] Added the `user_id` parameter.
+			 * @since BuddyBoss [BBVERSION] Added the `$retval` parameter.
 			 *
-			 * @param int $thread_id The message thread ID.
+			 * @param int      $thread_id The message thread ID.
+			 * @param int      $user_id   The user the thread will be marked as read.
+			 * @param bool|int $num_rows  Number of threads marked as unread or false on error.
 			 */
-			do_action( 'messages_thread_mark_as_read', $thread_id );
+			do_action( 'messages_thread_mark_as_read', $thread_id, $user_id, $retval );
 		}
 
 		return $retval;
