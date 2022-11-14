@@ -67,7 +67,7 @@ class BP_XProfile_Group {
 	/**
 	 * Static cache key for the groups.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.6
 	 *
 	 * @var array Fields of cache.
 	 */

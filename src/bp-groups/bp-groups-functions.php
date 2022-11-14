@@ -4927,7 +4927,7 @@ add_filter( 'gettext', 'bb_group_drop_down_order_metabox_translate_order_text', 
 /**
  * Translate the order text in the Group Drop Down Order metabox.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.6
  *
  * @param string $translated_text   Translated text.
  * @param string $untranslated_text Untranslated text.
