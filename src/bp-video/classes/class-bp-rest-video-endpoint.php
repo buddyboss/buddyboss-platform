@@ -198,7 +198,13 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$retval = array(
 			'upload_id' => $upload['id'],
 			'name'      => $upload['name'],
+			'url'       => $upload['url'],
+			'ext'       => $upload['ext'],
 		);
+
+		if ( 'messages' === $request->get_param( 'component' ) && isset( $upload['vid_msg_url'] ) ) {
+			$retval['vid_msg_url'] = $upload['vid_msg_url'];
+		}
 
 		$response = rest_ensure_response( $retval );
 
@@ -1830,7 +1836,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $video_id ) ) {
 			$video_ids[] = $video_id;
-			$video_ids   = array_filter( array_unique( $video_id ) );
+			$video_ids   = array_filter( array_unique( $video_ids ) );
 		}
 
 		if ( empty( $video_ids ) ) {
@@ -1849,9 +1855,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
 		foreach ( $videos['videos'] as $video ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->media_endpoint->prepare_item_for_response( $video, array() )
+				$this->media_endpoint->prepare_item_for_response( $video, $object )
 			);
 		}
 
@@ -2094,9 +2101,11 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+
 		foreach ( $videos['videos'] as $video ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->media_endpoint->prepare_item_for_response( $video, array() )
+				$this->media_endpoint->prepare_item_for_response( $video, $object )
 			);
 		}
 
@@ -2274,9 +2283,12 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $videos['videos'] as $video ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->media_endpoint->prepare_item_for_response( $video, array() )
+				$this->media_endpoint->prepare_item_for_response( $video, $object )
 			);
 		}
 
