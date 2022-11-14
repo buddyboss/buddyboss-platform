@@ -303,12 +303,6 @@ class BP_XProfile_Group {
 			)
 		);
 
-		$cache_key = 'groups_' . md5( maybe_serialize( $r ) );
-
-		if ( isset( self::$bp_xprofile_group_ids[ $cache_key ] ) ) {
-			return self::$bp_xprofile_group_ids[ $cache_key ];
-		}
-
 		// Keep track of object IDs for cache-priming.
 		$object_ids = array(
 			'group' => array(),
@@ -346,7 +340,6 @@ class BP_XProfile_Group {
 
 		// Bail if not also getting fields.
 		if ( empty( $r['fetch_fields'] ) ) {
-			self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -358,7 +351,6 @@ class BP_XProfile_Group {
 
 		// Bail if no groups found.
 		if ( empty( $group_ids ) ) {
-			self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -456,7 +448,6 @@ class BP_XProfile_Group {
 
 		// Bail if no fields.
 		if ( empty( $field_ids ) ) {
-			self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -593,7 +584,6 @@ class BP_XProfile_Group {
 			$groups = array_values( $groups );
 		}
 
-		self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 		return $groups;
 	}
 
