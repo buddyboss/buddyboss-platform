@@ -1587,3 +1587,21 @@ function bb_get_delay_email_notifications_time() {
 function bb_check_delay_email_notification() {
 	return (bool) ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() );
 }
+
+/**
+ * Function to check current user it offline for sending the push notification.
+ *
+ * @param object $notification Notification object.
+ *
+ * @return bool
+ */
+function bb_can_send_push_notification( $notification ) {
+	$user_id       = $notification->user_id; // Notification receiver user id.
+	$presence_time = (int) apply_filters( 'bb_push_notification_presence_time', 300 ); // 5 minutes.
+	$user_presence = bb_is_online_user( $user_id, $presence_time );
+	if ( true === $user_presence ) {
+		return false;
+	}
+
+	return true;
+}
