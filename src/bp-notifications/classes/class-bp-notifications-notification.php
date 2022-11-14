@@ -874,7 +874,7 @@ class BP_Notifications_Notification {
 		 * @param string $tbl_alias Table alias.
 		 * @param array  $r         Array of parsed arguments for the get method.
 		 */
-		$where_sql = apply_filters( 'bb_notifications_get_total_count_where_conditions', $where_sql, 'n', $r );
+		$where_sql = apply_filters( 'bb_notifications_get_where_conditions', $where_sql, 'n', $r );
 
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
