@@ -12514,6 +12514,7 @@ button[data-bp-close]:hover {
 .bp-feedback.warning .bp-icon,
 .bp-feedback.loading .bp-icon,
 .bp-feedback.success .bp-icon,
+.bp-feedback.success-notice .bp-icon,
 .bp-feedback.updated .bp-icon {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -12553,11 +12554,13 @@ button[data-bp-close]:hover {
   content: "\f469";
 }
 
+.bp-feedback.success-notice .bp-icon,
 .bp-feedback.success .bp-icon,
 .bp-feedback.updated .bp-icon {
   background-color: #8a2;
 }
 
+.bp-feedback.success-notice .bp-icon:before,
 .bp-feedback.success .bp-icon:before,
 .bp-feedback.updated .bp-icon:before {
   content: "\f147";
