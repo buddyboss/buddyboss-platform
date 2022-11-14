@@ -8202,5 +8202,5 @@ function bb_pro_pusher_version() {
  * @return int
  */
 function bb_presence_extra_span() {
-	return (int) apply_filters( 'bb_presence_extra_span', 5 );
+	return (int) apply_filters( 'bb_presence_extra_span', 20 );
 }

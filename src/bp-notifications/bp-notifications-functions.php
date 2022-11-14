@@ -1593,12 +1593,11 @@ function bb_check_delay_email_notification() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object $notification Notification object.
+ * @param int $user_id User ID.
  *
  * @return bool
  */
-function bb_can_send_push_notification( $notification ) {
-	$user_id       = $notification->user_id; // Notification receiver user id.
+function bb_can_send_push_notification( $user_id ) {
 	$presence_time = (int) apply_filters( 'bb_push_notification_presence_time', 300 ); // 5 minutes.
 	$user_presence = bb_is_online_user( $user_id, $presence_time );
 	if ( true === $user_presence ) {
