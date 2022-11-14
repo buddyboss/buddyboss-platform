@@ -131,7 +131,7 @@
 		.activity-header {
 			margin: 0 auto;
 			width: 80%;
-
+			word-break: break-word;
 			// ensure elements are display inline, some themes setting avatars as block
 			a,
 			img {
@@ -1465,6 +1465,9 @@ span.dashicons.dashicons-admin-file:before {
 		margin-bottom: 10px;
 		font-size: 14px;
 		line-height: 1.5;
+		white-space: pre-wrap;
+		max-height: 105px;
+		overflow: auto;
 	}
 }
 
