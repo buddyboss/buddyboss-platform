@@ -121,7 +121,7 @@ class BP_Messages_Notices_Admin {
 
 			check_admin_referer( 'new-notice', 'ns-nonce' );
 
-			$notice = wp_parse_args(
+			$notice = bp_parse_args(
 				$_POST['bp_notice'],
 				array(
 					'subject' => '',

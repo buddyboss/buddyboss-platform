@@ -29,7 +29,6 @@ if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
 
 	<?php if ( false === bb_enabled_legacy_email_preference() && ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) { ?>
 		<div class="notification_info">
-			<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss' ); ?><span class="bb-icon-chevron-down"></span></a></p>
 
 			<div class="notification_type email_notification">
 				<span class="notification_type_icon">
@@ -67,6 +66,8 @@ if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
 				</div>
 			</div><!-- .notification_type -->
 			<?php } ?>
+
+			<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss' ); ?><span class="bb-icon-chevron-down"></span></a></p>
 
 		</div><!-- .notification_info -->
 	<?php } ?>
