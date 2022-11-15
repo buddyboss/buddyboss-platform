@@ -948,7 +948,7 @@ class BP_Email_Tokens {
 		$sender_avatar = '';
 
 		if ( empty( $this->_message_sender_id ) ) {
-			$this->_message_sender_id = $tokens['sender.id'];
+			$this->_message_sender_id = ! empty( $tokens['sender.id'] ) ? $tokens['sender.id'] : 0;
 		}
 
 		if ( $this->_message_sender_id ) {

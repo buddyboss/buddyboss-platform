@@ -1086,12 +1086,6 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		$chunk_recipients = array_chunk( $recipients, 10 );
 		if ( ! empty( $chunk_recipients ) ) {
 			foreach ( $chunk_recipients as $key => $data_recipients ) {
-
-				// Check the sender is blocked by recipient or not.
-				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $data_recipients->user_id, $sender_id ) ) {
-					continue;
-				}
-
 				$bb_email_background_updater->data(
 					array(
 						array(
@@ -1106,6 +1100,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 									'message_id'  => $id,
 									'usermessage' => stripslashes( $message ),
 									'message'     => stripslashes( $message ),
+									'sender.id'   => $sender_id,
 									'sender.name' => $sender_name,
 									'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
 									'group.name'  => $group_name,
@@ -1165,6 +1160,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 						'usermessage' => stripslashes( $message ),
 						'message'     => stripslashes( $message ),
 						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+						'sender.id'   => $sender_id,
 						'sender.name' => $sender_name,
 						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
 						'group.name'  => $group_name,
@@ -1621,6 +1617,11 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 			(int) $sender_id === (int) $recipient->user_id ||
 			false === bb_is_notification_enabled( $recipient->user_id, $type_key )
 		) {
+			continue;
+		}
+
+		// Check the sender is blocked by recipient or not.
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $sender_id ) ) {
 			continue;
 		}
 
