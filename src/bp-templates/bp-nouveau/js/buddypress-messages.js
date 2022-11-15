@@ -4010,8 +4010,10 @@ window.bp = window.bp || {};
 
 								if ( $( document.body ).find( '#message-threads li.' + thread_id ).hasClass( 'current' ) ) {
 									thread.set( { unread: false } );
-								} else {
+								} else if ( parseInt( response.message.sender_id ) !== parseInt( BP_Nouveau.current.message_user_id ) ) {
 									thread.set( { unread: true } );
+								} else {
+									thread.set( { unread: false } );
 								}
 
 								thread.set( { content: response.message.content } );
