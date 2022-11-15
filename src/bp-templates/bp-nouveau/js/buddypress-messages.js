@@ -2139,6 +2139,56 @@ window.bp = window.bp || {};
 								}
 							}
 						}
+
+						// Make Shift + Enter Work same way as Enter for editor
+						if ( event.keyCode === 13 && event.shiftKey ) {
+							var MediumEditorOptDoc = bp.Nouveau.Messages.mediumEditor.options.ownerDocument;
+							var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc );
+							var MediumEditor = MediumEditor; // Redefining to avoid jshint error
+							// Do nothing if caret is in between the text
+							if( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ){
+								return;
+							}
+
+							// Make sure current node is not list item element
+							if( !MediumEditor.util.isListItem( node ) ) {
+								event.preventDefault();
+								var  p = MediumEditorOptDoc.createElement( 'p' );
+								p.innerHTML = '<br>';
+								var newP;
+								// Make sure current node is not inline element
+								if(!MediumEditor.util.isBlockContainer(node)){
+									// If next element is there add before it else add at the end
+									if(node.parentNode.nextElementSibling){
+										newP = node.parentNode.parentNode.insertBefore(p, node.parentNode.nextSibling);
+									} else {
+										newP = node.parentNode.parentNode.appendChild( p );
+									}
+								} else {
+									// If next element is there add before it else add at the end
+									if(node.nextElementSibling){
+										newP = node.parentNode.insertBefore(p, node.nextSibling);
+									} else {
+										newP = node.parentNode.appendChild( p );
+									}
+								}
+								MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP );
+								return;
+							}
+							// Add new <li> if cursore is in <ul> or <ol>
+							if( node.parentNode.tagName.toLowerCase() == 'ul' || node.parentNode.tagName.toLowerCase() == 'ol') {
+								var li = MediumEditorOptDoc.createElement('li');
+								var newLI;
+								// if next element is there sdd new <li> before next or at the end
+								if(node.nextElementSibling){
+									newLI = node.parentNode.insertBefore(li, node.nextSibling);
+								} else {
+									newLI = node.parentNode.insertBefore(li, node.parentNode.nextSibling);
+								}
+								MediumEditor.selection.moveCursor(MediumEditorOptDoc, newLI);
+								event.preventDefault();
+							}
+						}
 					} );
 
 					$( document ).on( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function ( event ) {
