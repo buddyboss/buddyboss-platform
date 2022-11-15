@@ -4868,7 +4868,7 @@ window.bp = window.bp || {};
 				) {
 					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?refresh=1', { trigger: true } );
 					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/', { trigger: true } );
-				} else if ( 'undefined' !== typeof current_thread.id && parseInt( current_thread.id ) == parseInt( thread_id ) ) {
+				} else if ( 'undefined' !== typeof current_thread && 'undefined' !== typeof current_thread.id && parseInt( current_thread.id ) == parseInt( thread_id ) ) {
 					window.location.reload();
 				}
 				window.Backbone.trigger( 'relistelements' );
