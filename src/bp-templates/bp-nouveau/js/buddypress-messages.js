@@ -2042,6 +2042,10 @@ window.bp = window.bp || {};
 					},
 					0
 				);
+				// Refocus editor
+				if(bp.Nouveau.Messages.mediumEditor.elements.length !== 0) {
+					bp.Nouveau.Messages.mediumEditor.elements[0].focus();
+				}
 			},
 
 			DisableSubmit: function () {
@@ -2054,6 +2058,10 @@ window.bp = window.bp || {};
 
 			EnableSubmit: function () {
 				window.messageUploaderInProgress = false;
+				// Refocus editor once upload completes
+				if(bp.Nouveau.Messages.mediumEditor.elements.length !== 0) {
+					bp.Nouveau.Messages.mediumEditor.elements[0].focus();
+				}
 				this.postValidate();
 			},
 
