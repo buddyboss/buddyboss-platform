@@ -4845,17 +4845,13 @@ function bb_is_online_user( $user_id, $expiry = false ) {
 		return false;
 	}
 
-	if ( true === $expiry ) {
-		$interval_time = bb_presence_interval();
-		$timeframe     = $interval_time + 5;
-	} elseif ( is_int( $expiry ) ) {
+	if ( is_int( $expiry ) && ! empty( $expiry ) ) {
 		$timeframe = $expiry;
 	} else {
-		// the activity timeframe is 5 minutes.
-		$timeframe = 5 * MINUTE_IN_SECONDS;
+		$timeframe = bb_presence_interval() + bb_presence_extra_span();
 	}
 
-    $online_time = apply_filters( 'bb_default_online_presence_time', $timeframe );
+	$online_time = apply_filters( 'bb_default_online_presence_time', $timeframe );
 
 	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $online_time ), $user_id );
 }
