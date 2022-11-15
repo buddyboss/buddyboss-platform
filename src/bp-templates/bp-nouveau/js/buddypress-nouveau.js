@@ -3368,10 +3368,10 @@ window.bp = window.bp || {};
 
 		userPresenceStatus: function() {
 
-			var ideal_interval = (BB_Nouveau_Presence.presence_interval * 1000) + 500;
+			var idle_interval = (parseInt( BB_Nouveau_Presence.presence_interval ) + parseInt( BB_Nouveau_Presence.presence_extra_span )) * 1000;
 
-			// setup the ideal time user check.
-			bp.Nouveau.userPresenceChecker( ideal_interval );
+			// setup the idle time user check.
+			bp.Nouveau.userPresenceChecker( idle_interval );
 
 			if ( '' !== BB_Nouveau_Presence.heartbeat_enabled ) {
 				$( document ).on( 'heartbeat-send', function ( event, data ) {
