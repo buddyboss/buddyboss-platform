@@ -2150,9 +2150,9 @@ function bb_get_message_response_object( $message ) {
 	if ( false === bp_core_get_core_userdata( $sender_id ) ) {
 		$content = esc_html__( 'This message was deleted', 'buddyboss' );
 	}
-	$content    = apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
+	$excerpt    = apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
 	$message_id = $message->id;
-	$excerpt    = wp_trim_words( wp_strip_all_tags( $content ) );
+	$excerpt    = wp_trim_words( wp_strip_all_tags( $excerpt ) );
 	$thread_id  = $message->thread_id;
 
 	$sender_display_name = bp_core_get_user_displayname( $sender_id );
