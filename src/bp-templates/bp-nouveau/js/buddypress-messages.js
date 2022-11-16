@@ -2143,21 +2143,20 @@ window.bp = window.bp || {};
 						// Make Shift + Enter Work same way as Enter for editor
 						if ( event.keyCode === 13 && event.shiftKey ) {
 							var MediumEditorOptDoc = bp.Nouveau.Messages.mediumEditor.options.ownerDocument;
-							var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc );
-							var MediumEditor = MediumEditor; // Redefining to avoid jshint error
+							var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc ); // jshint ignore:line
 							// Do nothing if caret is in between the text
-							if( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ){
+							if( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ){ // jshint ignore:line
 								return;
 							}
 
 							// Make sure current node is not list item element
-							if( !MediumEditor.util.isListItem( node ) ) {
+							if( !MediumEditor.util.isListItem( node ) ) { // jshint ignore:line
 								event.preventDefault();
 								var  p = MediumEditorOptDoc.createElement( 'p' );
 								p.innerHTML = '<br>';
 								var newP;
 								// Make sure current node is not inline element
-								if(!MediumEditor.util.isBlockContainer(node)){
+								if(!MediumEditor.util.isBlockContainer(node)){ // jshint ignore:line
 									// If next element is there add before it else add at the end
 									if(node.parentNode.nextElementSibling){
 										newP = node.parentNode.parentNode.insertBefore(p, node.parentNode.nextSibling);
@@ -2172,7 +2171,7 @@ window.bp = window.bp || {};
 										newP = node.parentNode.appendChild( p );
 									}
 								}
-								MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP );
+								MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
 								return;
 							}
 							// Add new <li> if cursore is in <ul> or <ol>
@@ -2185,7 +2184,7 @@ window.bp = window.bp || {};
 								} else {
 									newLI = node.parentNode.insertBefore(li, node.parentNode.nextSibling);
 								}
-								MediumEditor.selection.moveCursor(MediumEditorOptDoc, newLI);
+								MediumEditor.selection.moveCursor(MediumEditorOptDoc, newLI); // jshint ignore:line
 								event.preventDefault();
 							}
 						}
