@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.1.6.1 =
+* Messages - Handled compose message action critical issue on network with a lot of concurrent members
+
 = 2.1.6 =
 * Activity - Handled group description update auto-generated activity content overflow UI issue
 * Activity - Handled activity post word break formatting issue for list style text format
