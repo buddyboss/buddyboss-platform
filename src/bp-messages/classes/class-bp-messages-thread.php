@@ -927,6 +927,7 @@ class BP_Messages_Thread {
 				'fields'       => 'all',
 				'having_sql'   => false,
 				'thread_type'  => 'unarchived',
+				'force_cache'  => false,
 			)
 		);
 
@@ -1101,7 +1102,7 @@ class BP_Messages_Thread {
 			$participants_sql        = $wpdb->prepare( $participants_sql, $participants_args );
 			$participants_sql_cached = bp_core_get_incremented_cache( $participants_sql, 'bp_messages' );
 
-			if ( false === $participants_sql_cached ) {
+			if ( false === $participants_sql_cached || true === $r['force_cache'] ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$current_user_participants = $wpdb->get_results( $participants_sql );
 				bp_core_set_incremented_cache( $participants_sql, 'bp_messages', $current_user_participants );
@@ -1262,7 +1263,7 @@ class BP_Messages_Thread {
 
 		$thread_ids_cached = bp_core_get_incremented_cache( $qq, 'bp_messages' );
 
-		if ( false === $thread_ids_cached ) {
+		if ( false === $thread_ids_cached || true === $r['force_cache'] ) {
 			// Get thread IDs.
 			$thread_ids = $wpdb->get_results( $qq ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			bp_core_set_incremented_cache( $qq, 'bp_messages', $thread_ids );
@@ -1281,7 +1282,7 @@ class BP_Messages_Thread {
 		$total_threads_query  = implode( ' ', $sql );
 		$total_threads_cached = bp_core_get_incremented_cache( $total_threads_query, 'bp_messages' );
 
-		if ( false === $total_threads_cached ) {
+		if ( false === $total_threads_cached || true === $r['force_cache'] ) {
 			$total_threads = $wpdb->get_var( $total_threads_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			bp_core_set_incremented_cache( $total_threads_query, 'bp_messages', $total_threads );
 		} else {
