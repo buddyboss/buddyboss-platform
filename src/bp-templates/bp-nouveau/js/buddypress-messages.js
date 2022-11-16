@@ -4041,7 +4041,7 @@ window.bp = window.bp || {};
 			updateThreadsList: function ( response, hideLoader ) {
 				var hideLoader = typeof hideLoader !== 'undefined' ? hideLoader : true; // jshint ignore:line
 				var updatedThread = '';
-				if ( 'undefined' !== typeof response && 'undefined' !== typeof response.thread_id ) {
+				if ( 'undefined' !== typeof response && 'undefined' !== typeof response.thread_id && 'undefined' !== typeof response.message ) {
 					this.collection.models.forEach(
 						function ( thread ) {
 							var thread_id = parseInt( thread.id );
