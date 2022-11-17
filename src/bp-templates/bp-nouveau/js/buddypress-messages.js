@@ -477,18 +477,27 @@ window.bp = window.bp || {};
 				{
 					'page'         : 1,
 					'total_page'   : 0,
-					'search_terms' : '',
+					'search_terms' : ( collection.options && collection.options.search_terms ) ? collection.options.search_terms : '',
 					'box'          : this.box
 				}
 			);
 
 			if ( collection.length ) {
 				// Use it in the filters viex.
-				filters_view = new bp.Views.messageFilters( {model: this.filters, threads: collection} );
+				filters_view = new bp.Views.messageFilters( { model: this.filters, threads: collection } );
 
-				this.views.add( {id: 'filters', view: filters_view} );
+				this.views.add( { id: 'filters', view: filters_view } );
 
 				filters_view.inject( '.bp-messages-filters' );
+
+				if (
+					collection.options &&
+					collection.options.search_terms &&
+					collection.options.search_terms != '' &&
+					filters_view.$el
+				) {
+					$( filters_view.$el ).find( 'input[type=search]' ).val( collection.options.search_terms );
+				}
 
 				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function () {
 					var available_width = $( this ).width() - 10;
