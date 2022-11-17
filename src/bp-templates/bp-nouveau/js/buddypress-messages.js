@@ -4880,7 +4880,12 @@ window.bp = window.bp || {};
 
 				// use sent messageData here.
 				this.collection.add( first_message );
-				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
+				setTimeout(
+					function() {
+						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+					},
+					400
+				);
 			},
 
 			triggerPusherUpdateErrorMessage: function ( messagePusherData ) {
@@ -4949,8 +4954,13 @@ window.bp = window.bp || {};
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
-					// Scroll Messages to bottom
-					$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+					// Scroll Messages to bottom.
+					setTimeout(
+						function() {
+							$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 150 );
+						},
+						400
+					);
 				}
 			},
 
@@ -5132,7 +5142,6 @@ window.bp = window.bp || {};
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
-
 			},
 
 			messages_scrolled: function( event ) {
