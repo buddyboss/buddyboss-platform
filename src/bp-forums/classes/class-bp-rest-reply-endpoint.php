@@ -1149,12 +1149,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		do_action( 'bp_rest_reply_create_item', $reply, $topic_id, $forum_id, $request );
 
-		$response = $this->get_item(
-			array(
-				'id'      => $reply_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $reply_id );
+		$object->set_param( 'context', 'view' );
+
+		$response = $this->get_item( $object );
 
 		if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
 			/**
@@ -1671,12 +1670,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		do_action( 'bp_rest_reply_update_item', $reply, $request );
 
-		return $this->get_item(
-			array(
-				'id'      => $reply_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $reply_id );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 
 	}
 
