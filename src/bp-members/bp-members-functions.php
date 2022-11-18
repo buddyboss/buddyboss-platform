@@ -4848,7 +4848,7 @@ function bb_is_online_user( $user_id, $expiry = false ) {
 	if ( is_int( $expiry ) && ! empty( $expiry ) ) {
 		$timeframe = $expiry;
 	} else {
-		$timeframe = bb_presence_interval() + bb_presence_extra_span();
+		$timeframe = ( bb_presence_interval() <= 60 ? bb_presence_interval() : 60 ) + bb_presence_extra_span();
 	}
 
 	$online_time = apply_filters( 'bb_default_online_presence_time', $timeframe );

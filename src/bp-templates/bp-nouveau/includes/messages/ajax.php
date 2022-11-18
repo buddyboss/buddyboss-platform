@@ -2386,7 +2386,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'message_from'              => $message_from,
 				'group_text'                => $group_text,
 				'id'                        => $bp_get_the_thread_message_id,
-				'content'                   => $content,
+				'content'                   => preg_replace( '#(<p></p>)#', '<p><br></p>', $content ),
 				'sender_id'                 => $bp_get_the_thread_message_sender_id,
 				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
 				'sender_link'               => bp_get_the_thread_message_sender_link(),
@@ -2481,7 +2481,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			$thread->messages[ $i ] = array(
 				'id'            => $bp_get_the_thread_message_id,
-				'content'       => $content,
+				'content'       => preg_replace( '#(<p></p>)#', '<p><br></p>', $content ),
 				'sender_id'     => $bp_get_the_thread_message_sender_id,
 				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
 				'is_deleted'    => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
