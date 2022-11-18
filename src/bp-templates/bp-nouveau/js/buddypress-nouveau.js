@@ -3373,7 +3373,7 @@ window.bp = window.bp || {};
 			// setup the idle time user check.
 			bp.Nouveau.userPresenceChecker( idle_interval );
 
-			if ( '' !== BB_Nouveau_Presence.heartbeat_enabled ) {
+			if ( '' !== BB_Nouveau_Presence.heartbeat_enabled && parseInt( BB_Nouveau_Presence.presence_interval ) <= 60 ) {
 				$( document ).on( 'heartbeat-send', function ( event, data ) {
 					if (
 						'undefined' !== typeof window.bb_is_user_active &&
@@ -3423,7 +3423,7 @@ window.bp = window.bp || {};
 							}
 						}
 					);
-				}, parseInt( BB_Nouveau_Presence.presence_interval ) * 1000 );
+				}, 60000 ); // 1 min.
 			}
 		},
 
