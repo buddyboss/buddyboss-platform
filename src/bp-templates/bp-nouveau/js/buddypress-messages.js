@@ -5045,7 +5045,7 @@ window.bp = window.bp || {};
 					this.model.set( 'is_group', true );
 				}
 				this.messageAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
-				this.views.add( '#bp-message-content', this.messageAttachments );
+				this.views.add( '#bp-message-content', this.messageAttachments, { at: 1 } );
 
 				if ( ! this.views.get( '#bp-message-thread-header' ) ) {
 					this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
