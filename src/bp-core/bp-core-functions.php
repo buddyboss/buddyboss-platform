@@ -8134,26 +8134,7 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	$presence_interval = (int) bp_get_option( 'bb_presence_interval', 0 );
-	if ( 0 !== $presence_interval ) {
-		return apply_filters( 'bb_presence_interval', $presence_interval );
-	}
-
-	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
-	$global_pulse       = 60;
-
-	remove_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
-	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
-	add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
-
-	if ( ! empty( $heartbeat_settings['interval'] ) && 0 === (int) $heartbeat_disabled ) {
-		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 60;
-	}
-
-	bp_update_option( 'bb_presence_interval', $global_pulse );
-
-	return apply_filters( 'bb_presence_interval', $global_pulse );
-
+	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', 60 ) );
 }
 
 /**
@@ -8193,14 +8174,13 @@ function bb_pro_pusher_version() {
 	return '2.1.4';
 }
 
-
 /**
- * Function to return the extra span for the presence in seconds.
+ * Function to return the time span for the presence in seconds.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return int
  */
-function bb_presence_extra_span() {
-	return (int) apply_filters( 'bb_presence_extra_span', 20 );
+function bb_presence_time_span() {
+	return (int) apply_filters( 'bb_presence_time_span', 180 );
 }
