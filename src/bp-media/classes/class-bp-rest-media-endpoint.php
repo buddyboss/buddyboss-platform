@@ -1232,7 +1232,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'upload_id'    => $upload['id'],
 			'upload'       => $upload['url'],
 			'upload_thumb' => $upload['thumb'],
+			'name'         => $upload['name'],
 		);
+
+		if ( 'messages' === $request->get_param( 'component' ) && isset( $upload['msg_url'] ) ) {
+			$retval['msg_url'] = $upload['msg_url'];
+		}
 
 		$response = rest_ensure_response( $retval );
 
@@ -2310,9 +2315,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
+				$this->prepare_item_for_response( $media, $object )
 			);
 		}
 
@@ -2861,9 +2869,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array() )
+				$this->prepare_item_for_response( $media, $object )
 			);
 		}
 
@@ -3238,9 +3248,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
+				$this->prepare_item_for_response( $media, $object )
 			);
 		}
 

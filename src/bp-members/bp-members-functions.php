@@ -198,6 +198,10 @@ function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_lo
 	// Use the 'bp_core_get_user_domain' filter instead.
 	$domain = apply_filters( 'bp_core_get_user_domain_pre_cache', $domain, $user_id, $user_nicename, $user_login );
 
+	$user_data = get_userdata( $user_id );
+	if ( empty( $user_data ) ) {
+		$domain = '';
+	}
 	/**
 	 * Filters the domain for the passed user.
 	 *
@@ -569,6 +573,7 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim' );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes' );
 add_filter( 'bp_core_get_user_displayname', 'esc_html' );
+add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -3085,6 +3090,7 @@ function bp_get_member_type_post_type_labels() {
 			'not_found_in_trash' => __( 'No Profile Types found in trash', 'buddyboss' ),
 			'search_items'       => __( 'Search Profile Types', 'buddyboss' ),
 			'singular_name'      => __( 'Profile Type', 'buddyboss' ),
+			'attributes'         => __( 'Dropdown Order', 'buddyboss' ),
 		)
 	);
 }
@@ -4736,13 +4742,13 @@ function bp_member_get_report_link( $args = array() ) {
 	$args = bp_parse_args(
 		$args,
 		array(
-			'id'                => 'member_report',
+			'id'                => isset( $args['report_user'] ) ? 'member_report' : 'member_block',
 			'component'         => 'moderation',
 			'position'          => 50,
 			'must_be_logged_in' => true,
 			'button_attr'       => array(
 				'data-bp-content-id'   => bp_displayed_user_id(),
-				'data-bp-content-type' => BP_Moderation_Members::$moderation_type,
+				'data-bp-content-type' => isset( $args['report_user'] ) ? BP_Moderation_Members::$moderation_type_report : BP_Moderation_Members::$moderation_type,
 			),
 		)
 	);
@@ -4825,30 +4831,16 @@ function bp_get_hidden_member_types() {
 }
 
 /**
- * Current user online status.
- *
- * @since BuddyPress 1.7.0
- *
- * @param int $user_id User id.
- *
- * @return void
- */
-function bb_current_user_status( $user_id ) {
-	if ( bb_is_online_user( $user_id ) ) {
-		echo '<span class="member-status online"></span>';
-	}
-}
-
-/**
  * Current user online activity time.
  *
  * @since BuddyPress 1.7.0
  *
- * @param int $user_id User id.
+ * @param int      $user_id User id.
+ * @param bool|int $expiry  Given time or whether to check degault timeframe.
  *
  * @return string
  */
-function bb_is_online_user( $user_id ) {
+function bb_is_online_user( $user_id, $expiry = false ) {
 
 	if ( ! function_exists( 'bp_get_user_last_activity' ) ) {
 		return;
@@ -4860,9 +4852,16 @@ function bb_is_online_user( $user_id ) {
 		return false;
 	}
 
-	// the activity timeframe is 5 minutes.
-	$activity_timeframe = 5 * MINUTE_IN_SECONDS;
-	return ( time() - $last_activity <= $activity_timeframe );
+	if ( true === $expiry ) {
+		$timeframe = apply_filters( 'bb_is_online_user_expiry', 300 ); // Default 300 seconds.
+	} elseif ( is_int( $expiry ) ) {
+		$timeframe = $expiry;
+	} else {
+		// the activity timeframe is 5 minutes.
+		$timeframe = 5 * MINUTE_IN_SECONDS;
+	}
+
+	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $timeframe ), $user_id );
 }
 
 /**
@@ -5267,3 +5266,83 @@ function bb_get_member_type_label_colors( $type ) {
 
 	return apply_filters( 'bb_get_member_type_label_colors', $bp_member_type_label_color );
 }
+
+add_filter( 'gettext', 'bb_profile_drop_down_order_metabox_translate_order_text', 10, 3 );
+
+/**
+ * Translate the order text in the Profile Drop Down Order metabox.
+ *
+ * @since BuddyBoss 2.1.6
+ *
+ * @param string $translated_text   Translated text.
+ * @param string $untranslated_text Untranslated text.
+ * @param string $domain            Domain.
+ *
+ * @return mixed|string|void
+ */
+function bb_profile_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
+
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return $translated_text;
+	}
+	$current_screen = get_current_screen();
+
+	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_get_member_type_post_type' ) || bp_get_member_type_post_type() !== $current_screen->id ) {
+		return $translated_text;
+	}
+
+	if ( 'Order' === $untranslated_text ) {
+		return __( 'Number', 'buddyboss' );
+	}
+
+	return $translated_text;
+}
+
+/**
+ * Get the given user ID online/offline status.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $user_id User id.
+ *
+ * @return string
+ */
+function bb_get_user_presence( $user_id, $expiry = false ) {
+	if ( bb_is_online_user( $user_id, $expiry ) ) {
+		return 'online';
+	} else {
+		return 'offline';
+	}
+}
+
+/**
+ * Get online html string.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $user_id User id.
+ *
+ * @return string
+ */
+function bb_get_user_presence_html( $user_id ) {
+	return sprintf(
+		'<span class="member-status %s" data-bb-user-id="%d" data-bb-user-presence="%s"></span>',
+		bb_get_user_presence( $user_id ),
+		$user_id,
+		bb_get_user_presence( $user_id )
+	);
+}
+
+/**
+ * Get online html string.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $user_id User id.
+ *
+ * @return void
+ */
+function bb_user_presence_html( $user_id ) {
+	echo bb_get_user_presence_html( $user_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+

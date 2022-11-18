@@ -321,6 +321,16 @@ function bp_core_install_groups() {
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_groups_membermeta (
+				id bigint(20) NOT NULL AUTO_INCREMENT,
+				member_id bigint(20) NOT NULL,
+				meta_key varchar(255) DEFAULT NULL,
+				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
+				KEY member_id (member_id),
+				KEY meta_key (meta_key(191))
+			) {$charset_collate};";
+
 	dbDelta( $sql );
 }
 
@@ -340,6 +350,7 @@ function bp_core_install_private_messaging() {
 				sender_id bigint(20) NOT NULL,
 				subject varchar(200) NOT NULL,
 				message longtext NOT NULL,
+				is_deleted tinyint(1) NOT NULL DEFAULT '0',
 				date_sent datetime NOT NULL,
 				PRIMARY KEY  (id),
 				KEY sender_id (sender_id),
@@ -1131,6 +1142,17 @@ function bp_core_install_invitations() {
 		KEY invite_sent (invite_sent),
 		KEY accepted (accepted)
 		) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_invitations_invitemeta (
+		id bigint(20) NOT NULL AUTO_INCREMENT,
+		invite_id bigint(20) NOT NULL,
+		meta_key varchar(255) DEFAULT NULL,
+		meta_value longtext DEFAULT NULL,
+		PRIMARY KEY  (id),
+		KEY invite_id (invite_id),
+		KEY meta_key (meta_key(191))
+	) {$charset_collate};";
+
 	dbDelta( $sql );
 
 	/**
@@ -1164,6 +1186,7 @@ function bp_core_install_suspend() {
 	   hide_parent tinyint(1) NOT NULL,
 	   user_suspended tinyint(1) NOT NULL,
 	   reported tinyint(1) NOT NULL,
+	   user_report tinyint DEFAULT '0',
 	   last_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   blog_id bigint(20) NOT NULL,
 	   PRIMARY KEY  (id),
@@ -1205,6 +1228,7 @@ function bp_core_install_moderation() {
 	   content longtext NOT NULL,
 	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   category_id bigint(20) NOT NULL,
+	   user_report tinyint DEFAULT '0',
 	   PRIMARY KEY  (id),
 	   KEY moderation_report_id (moderation_id,user_id),
 	   KEY user_id (user_id)

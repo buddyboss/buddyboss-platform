@@ -9,6 +9,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+global $bp;
+
 if ( empty( get_query_var( 'media-attachment-id' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
@@ -21,12 +23,29 @@ $upload_dir      = wp_upload_dir();
 $upload_dir      = $upload_dir['basedir'];
 $output_file_src = '';
 
+$encode_thread_id = base64_decode( get_query_var( 'media-thread-id' ) );
+$thread_arr       = explode( 'thread_', $encode_thread_id );
+
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
 
-	$attachment_id  = (int) $explode_arr[1];
-	$post_author_id = (int) get_post_field( 'post_author', $attachment_id );
+	$attachment_id = (int) $explode_arr[1];
 
-	if ( $post_author_id === get_current_user_id() && wp_attachment_is_image( $attachment_id ) ) {
+	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d AND type= %s", $attachment_id, 'photo' ) );
+
+	if (
+		$media &&
+		 (
+			 ! isset( $thread_arr ) ||
+			 empty( $thread_arr ) ||
+			 ! isset( $thread_arr[1] ) ||
+			 (int) $thread_arr[1] <= 0
+		 )
+	) {
+		echo '// Silence is golden.';
+		exit();
+	}
+
+	if ( wp_attachment_is_image( $attachment_id ) ) {
 
 		$attached_file_info = pathinfo( get_attached_file( $attachment_id ) );
 		$type               = get_post_mime_type( $attachment_id );
@@ -49,7 +68,6 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 					$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
 				}
 			}
-
 		} elseif ( ! $file ) {
 
 			bp_media_regenerate_attachment_thumbnails( $attachment_id );
