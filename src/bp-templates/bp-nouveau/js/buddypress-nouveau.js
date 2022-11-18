@@ -3372,7 +3372,7 @@ window.bp = window.bp || {};
 
 		userPresenceStatus: function() {
 
-			var idle_interval = (parseInt( BB_Nouveau_Presence.presence_interval ) + parseInt( BB_Nouveau_Presence.presence_extra_span )) * 1000;
+			var idle_interval = parseInt( BB_Nouveau_Presence.presence_time_span ) * 1000;
 
 			// setup the idle time user check.
 			bp.Nouveau.userPresenceChecker( idle_interval );

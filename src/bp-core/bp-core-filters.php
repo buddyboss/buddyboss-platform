@@ -2244,7 +2244,9 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11
 function bb_heartbeat_settings( $settings ) {
 	$interval_time = bb_presence_interval();
 
-	if ( ! empty( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
+	if ( isset( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
+		bp_update_option( 'bb_presence_interval', absint( $settings['interval'] ) );
+	} else {
 		bp_delete_option( 'bb_presence_interval' );
 	}
 
