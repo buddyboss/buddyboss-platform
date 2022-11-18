@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.1.6.2 =
+* REST API - Handled discussion reply endpoint not working critical issue
+
 = 2.1.6.1 =
 * Messages - Handled compose message action critical issue on network with a lot of concurrent members
 
