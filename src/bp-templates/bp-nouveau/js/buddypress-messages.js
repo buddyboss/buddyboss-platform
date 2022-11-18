@@ -4063,11 +4063,19 @@ window.bp = window.bp || {};
 					this.views.add( new bp.Views.Hook( { extraContent: this.collection.options.beforeLoop, className: 'before-messages-loop' } ), { at: 0 } );
 				}
 
+				var isMobile = window.matchMedia( 'only screen and (max-width: 1080px)' ).matches;
+
 				if ( this.collection.length ) {
 					$( '.bp-messages-threads-list' ).removeClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).removeClass( 'bp-no-messages' );
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 					$( '.message-header-loading' ).addClass( 'bp-hide' );
 					bp.Nouveau.Messages.displayFilters( this.collection );
+					if ( window.location.href === BP_Nouveau.messages.message_url ) {
+						if ( isMobile ) {
+							$( '.bp-messages-container' ).removeClass( 'bp-view-message' )
+						}
+						bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+					}
 				}
 
 				this.collection.hideLoader = false;
