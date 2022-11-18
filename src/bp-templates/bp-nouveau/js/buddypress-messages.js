@@ -4872,12 +4872,13 @@ window.bp = window.bp || {};
 
 				// use sent messageData here.
 				this.collection.add( first_message );
-				setTimeout(
-					function() {
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+
+				if( $( '#bp-message-thread-list li:last-child video' ).length > 0 ){
+					$( '#bp-message-thread-list li:last-child video' ).on( 'loadedmetadata', function() {
 						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
-					},
-					400
-				);
+					});
+				}
 			},
 
 			triggerPusherUpdateErrorMessage: function ( messagePusherData ) {
@@ -4947,12 +4948,7 @@ window.bp = window.bp || {};
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
 					// Scroll Messages to bottom.
-					setTimeout(
-						function() {
-							$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 150 );
-						},
-						400
-					);
+					$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 150 );
 				}
 			},
 
