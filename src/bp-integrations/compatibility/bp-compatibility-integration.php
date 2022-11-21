@@ -50,19 +50,21 @@ class BP_Compatibility_Integration extends BP_Integration {
 			return $link;
 		}
 
-		$htmlDom = new DOMDocument;
-
-		// Parse the HTML of the page using DOMDocument::loadHTML
-		$htmlDom->loadHTML( htmlentities( $link['settings'] ) );
-
-		// Extract the links from the HTML.
-		$links = $htmlDom->getElementsByTagName( 'a' );
-
 		$extractedLinks = array();
 
-		if ( ! empty( $links ) ) {
-			foreach ( $links as $link_obj ) {
-				$extractedLinks[] = $link_obj->getAttribute( 'href' );
+		if ( class_exists( 'DOMDocument' ) ) {
+			$htmlDom = new DOMDocument;
+
+			// Parse the HTML of the page using DOMDocument::loadHTML
+			$htmlDom->loadHTML( htmlentities( $link['settings'] ) );
+
+			// Extract the links from the HTML.
+			$links = $htmlDom->getElementsByTagName( 'a' );
+
+			if ( ! empty( $links ) ) {
+				foreach ( $links as $link_obj ) {
+					$extractedLinks[] = $link_obj->getAttribute( 'href' );
+				}
 			}
 		}
 

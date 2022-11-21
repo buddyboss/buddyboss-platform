@@ -1,9 +1,8 @@
 <?php
 /**
- * @todo add description
- *
  * @package BuddyBoss\Search
- * @since BuddyBoss 1.0.0
+ * @since   BuddyBoss 1.0.0
+ * @todo    add description
  */
 
 // Exit if accessed directly.
@@ -49,7 +48,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			/*
-			 an example UNION query :-
+			an example UNION query :-
 			-----------------------------------------------------
 			(
 				SELECT
@@ -69,25 +68,35 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			global $wpdb, $bp;
 			$query_placeholder = array();
 
-			$sql = ' SELECT ';
+			$search_term = htmlspecialchars( $search_term );
+
+			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				$sql .= ' COUNT( DISTINCT g.id ) ';
+				$sql['select'] .= ' COUNT( DISTINCT g.id ) ';
 			} else {
-				$sql                .= " DISTINCT g.id, 'groups' as type, g.name LIKE %s AS relevance, gm2.meta_value as entry_date ";
-				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
+				$sql['select'] .= $wpdb->prepare( " DISTINCT g.id, 'groups' as type, g.name LIKE %s AS relevance, gm2.meta_value as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql                .= " FROM 
-						{$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name} g 
-					WHERE 
-						1=1 
-						AND g.id = gm1.group_id 
+			$sql['from'] = "FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name} g";
+
+			/**
+			 * Filter the MySQL JOIN clause for the group Search query.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 * @param string $join_sql JOIN clause.
+			 */
+			$sql['from'] = apply_filters( 'bp_group_search_join_sql', $sql['from'] );
+
+			$where_conditions                 = array( '1=1' );
+			$where_conditions['search_query'] = "g.id = gm1.group_id 
 						AND g.id = gm2.group_id 
 						AND gm2.meta_key = 'last_activity' 
 						AND gm1.meta_key = 'total_member_count' 
 						AND ( g.name LIKE %s OR g.description LIKE %s )
 				";
+
 			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 
@@ -95,21 +104,21 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 			if ( function_exists( 'bp_bpla' ) && 'yes' == bp_bpla()->option( 'enable-for-groups' ) ) {
 
-					$split_search_term = explode( ' ', $search_term );
+				$split_search_term = explode( ' ', $search_term );
 
-					$sql .= "OR g.id IN ( SELECT group_id FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = 'bbgs_group_search_string' AND ";
+				$where_conditions['search_query'] .= "OR g.id IN ( SELECT group_id FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = 'bbgs_group_search_string' ";
 
 				foreach ( $split_search_term as $k => $sterm ) {
 
 					if ( $k == 0 ) {
-						$sql                .= 'meta_value LIKE %s';
-						$query_placeholder[] = '%' . $wpdb->esc_like( $sterm ) . '%';
+						$where_conditions['search_query'] .= 'AND meta_value LIKE %s';
+						$query_placeholder[]               = '%' . $wpdb->esc_like( $sterm ) . '%';
 					} else {
-						$sql                .= 'AND meta_value LIKE %s';
-						$query_placeholder[] = '%' . $wpdb->esc_like( $sterm ) . '%';
+						$where_conditions['search_query'] .= 'AND meta_value LIKE %s';
+						$query_placeholder[]               = '%' . $wpdb->esc_like( $sterm ) . '%';
 					}
 				}
-					$sql .= ' ) ';
+				$where_conditions['search_query'] .= ' ) ';
 
 			}
 
@@ -134,11 +143,26 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 					// either gruops which are not hidden,
 					// or if hidden, only those where i am a member.
-					$sql .= " AND ( g.status != 'hidden' OR g.id IN ( {$hidden_groups_ids_csv} ) ) ";
+					$where_conditions['search_query'] .= " AND ( g.status != 'hidden' OR g.id IN ( {$hidden_groups_ids_csv} ) ) ";
 				}
 			} else {
-				$sql .= " AND g.status != 'hidden' ";
+				$where_conditions['search_query'] .= "AND g.status != 'hidden' ";
 			}
+
+			/**
+			 * Filters the MySQL WHERE conditions for the group Search query.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $search_term      Search Term.
+			 */
+			$where_conditions = apply_filters( 'bp_group_search_where_conditions', $where_conditions, $search_term );
+
+			// Join the where conditions together.
+			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 

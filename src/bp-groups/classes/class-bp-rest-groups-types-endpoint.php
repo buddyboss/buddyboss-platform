@@ -103,7 +103,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -146,8 +146,8 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $type, $request ) {
 		$data = array(
 			'labels'                => array(
-				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? $type->labels['name'] : '',
-				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? $type->labels['singular_name'] : '',
+				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? wp_specialchars_decode( $type->labels['name'] ) : '',
+				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? wp_specialchars_decode( $type->labels['singular_name'] ) : '',
 			),
 			'name'                  => ( isset( $type->name ) ? $type->name : '' ),
 			'description'           => ( isset( $type->description ) ? $type->description : '' ),
@@ -240,6 +240,12 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			} else {
 				$data['group_type_role_labels'] = array();
 			}
+		}
+
+		// Group type's label background and text color.
+		$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $data['name'] ) : '';
+		if ( ! empty( $label_color_data ) && isset( $schema['label_colors'] ) ) {
+			$data['label_colors'] = $label_color_data;
 		}
 
 		$response = rest_ensure_response( $data );
@@ -369,7 +375,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			);
 
 			$schema['properties']['member_type_join'] = array(
-				'description' => __( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ),
+				'description' => __( 'Members of the selected Profile Types below can join Private groups of the Group Type without approval.', 'buddyboss' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
@@ -378,6 +384,13 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			$schema['properties']['group_type_role_labels'] = array(
 				'description' => __( 'Rename the group member roles for groups of this type.', 'buddyboss' ),
 				'type'        => 'object',
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
+
+			$schema['properties']['label_colors'] = array(
+				'description' => __( 'Label\'s text and background colors for group types.' , 'buddyboss' ),
+				'type'        => 'array',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);

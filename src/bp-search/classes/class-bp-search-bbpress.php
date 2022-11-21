@@ -71,7 +71,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 				array(
 					'post_type'     => array( 'forum', 'topic', 'reply' ),
 					'post__in'      => $post_ids,
-					'post_status'   => array( 'publish', 'private', 'hidden' ),
+					'post_status'   => array( 'publish', 'private', 'hidden', 'closed' ),
 					'no_found_rows' => true,
 					'nopaging'      => true,
 				)
@@ -83,17 +83,18 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 				while ( $qry->have_posts() ) {
 					$qry->the_post();
 
+					$post_id = get_the_ID();
 					/**
 					 * The following will try to load loop/forum.php, loop/topic.php loop/reply.php(if reply is included).
 					 */
 					$result_item = array(
-						'id'    => get_the_ID(),
+						'id'    => $post_id,
 						'type'  => $this->type,
 						'title' => get_the_title(),
 						'html'  => bp_search_buffer_template_part( 'loop/' . $this->type, $template_type, false ),
 					);
 
-					$this->search_results['items'][ get_the_ID() ] = $result_item;
+					$this->search_results['items'][ $post_id ] = $result_item;
 				}
 			}
 			wp_reset_postdata();

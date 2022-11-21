@@ -174,7 +174,7 @@ function bp_groups_format_activity_action_activity_update( $action, $activity ) 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	$group      = groups_get_group( $activity->item_id );
-	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . bp_get_group_name( $group ) . '</a>';
 
 	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
@@ -219,14 +219,14 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 		// Name only.
-	} elseif ( ! empty( $changed['name']['old'] ) && ! empty( $changed['name']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['name']['old'] ), esc_html( $changed['name']['new'] ) );
+	} elseif ( isset( $changed['name']['old'] ) && isset( $changed['name']['new'] ) ) {
+		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['name']['old'] ), wp_strip_all_tags( $changed['name']['new'] ) );
 
 		// Description only.
-	} elseif ( ! empty( $changed['description']['old'] ) && ! empty( $changed['description']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['description']['old'] ), esc_html( $changed['description']['new'] ) );
+	} elseif ( isset( $changed['description']['old'] ) && isset( $changed['description']['new'] ) ) {
+		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['description']['old'] ), wp_strip_all_tags( $changed['description']['new'] ) );
 
-	} elseif ( ! empty( $changed['slug']['old'] ) && ! empty( $changed['slug']['new'] ) ) {
+	} elseif ( isset( $changed['slug']['old'] ) && isset( $changed['slug']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddyboss' ), $user_link, $group_link );
 
 	}
@@ -330,7 +330,15 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 	}
 
 	// Determine groups of user.
-	$groups = groups_get_user_groups( $user_id );
+	$groups = groups_get_groups(
+		array(
+			'fields'      => 'ids',
+			'per_page'    => - 1,
+			'user_id'     => $user_id,
+			'show_hidden' => true,
+		)
+	);
+
 	if ( empty( $groups['groups'] ) ) {
 		$groups = array( 'groups' => array() );
 	}
@@ -353,7 +361,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 				'value'  => 0,
 			);
 		}
-	} else if ( ! is_user_logged_in() ) {
+	} elseif ( ! is_user_logged_in() ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
@@ -657,9 +665,9 @@ function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $n
 	 * Commented cause If user not selected "Notify group members of these changes via email" option
 	 * that time activity should show in the activity area and widget area
 	 */
-	//if ( empty( $notify_members ) ) {
-	//	return;
-	//}
+	// if ( empty( $notify_members ) ) {
+	// return;
+	// }
 
 	$group = groups_get_group(
 		array(

@@ -110,6 +110,12 @@ class BP_Media_Component extends BP_Component {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function late_includes() {
+
+		if ( ! class_exists( 'BP_Media_Stream' ) ) {
+			// Include Media Streamline.
+			require $this->path . 'bp-media/classes/class-bp-media-stream.php';
+		}
+
 		// Bail if PHPUnit is running.
 		if ( defined( 'BP_TESTS_DIR' ) ) {
 			return;
@@ -177,19 +183,19 @@ class BP_Media_Component extends BP_Component {
 		);
 
 		// Fetch the default directory title.
-		$default_directory_titles         = bp_core_get_directory_page_default_titles();
-		$default_directory_title          = $default_directory_titles[ $this->id ];
+		$default_directory_titles = bp_core_get_directory_page_default_titles();
+		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for media component.
 		// Note that global_tables is included in this array.
 		parent::setup_globals(
 			array(
-				'slug'                                    => 'photos',
-				'root_slug'                               => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
-				'has_directory'                           => true,
-				'global_tables'                           => $global_tables,
-				'directory_title'                         => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
-				'search_string'                           => __( 'Search Photos&hellip;', 'buddyboss' ),
+				'slug'            => 'photos',
+				'root_slug'       => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
+				'has_directory'   => true,
+				'global_tables'   => $global_tables,
+				'directory_title' => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
+				'search_string'   => __( 'Search Photos&hellip;', 'buddyboss' ),
 			)
 		);
 
@@ -202,11 +208,10 @@ class BP_Media_Component extends BP_Component {
 			$bp->is_single_item  = true;
 			$this->current_album = albums_get_album( $album_id );
 
-		// Set current_album to 0 to prevent debug errors.
+			// Set current_album to 0 to prevent debug errors.
 		} else {
 			$this->current_album = 0;
 		}
-
 
 	}
 
@@ -255,9 +260,9 @@ class BP_Media_Component extends BP_Component {
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
-				$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
-				$class    = ( 0 === $count ) ? 'no-count' : 'count';
-				$nav_name = __( 'Photos', 'buddyboss' );
+				$count     = bp_media_get_total_media_count( bp_displayed_user_id() );
+				$class     = ( 0 === $count ) ? 'no-count' : 'count';
+				$nav_name  = __( 'Photos', 'buddyboss' );
 				$nav_name .= sprintf(
 					' <span class="%s">%s</span>',
 					esc_attr( $class ),
@@ -394,7 +399,7 @@ class BP_Media_Component extends BP_Component {
 		wp_cache_add_global_groups(
 			array(
 				'bp_media',
-				'bp_media_albums',
+				'bp_media_album',
 			)
 		);
 
@@ -409,10 +414,12 @@ class BP_Media_Component extends BP_Component {
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
-		parent::rest_api_init( array(
-			'BP_REST_Media_Endpoint',
-			'BP_REST_Media_Albums_Endpoint',
-			'BP_REST_Media_Details_Endpoint',
-		) );
+		parent::rest_api_init(
+			array(
+				'BP_REST_Media_Endpoint',
+				'BP_REST_Media_Albums_Endpoint',
+				'BP_REST_Media_Details_Endpoint',
+			)
+		);
 	}
 }

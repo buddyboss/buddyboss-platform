@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Profile Change Cover Photo
+ * The template for members profile change cover photo
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/profile/change-cover-image.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 ?>

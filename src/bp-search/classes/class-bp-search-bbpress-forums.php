@@ -25,13 +25,22 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 			$query_placeholder = array();
 
 			if ( $only_totalrow_count ) {
-				$columns = ' COUNT( DISTINCT id ) ';
+				$columns = ' COUNT( DISTINCT p.id ) ';
 			} else {
-				$columns             = " DISTINCT id , '{$this->type}' as type, post_title LIKE %s AS relevance, post_date as entry_date  ";
+				$columns             = " DISTINCT p.id , '{$this->type}' as type, p.post_title LIKE %s AS relevance, p.post_date as entry_date  ";
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
 			$from = "{$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_bbp_group_ids'";
+
+			/**
+			 * Filter the MySQL JOIN clause for the forum Search query.
+			 *
+             * @since BuddyBoss 1.5.6
+			 *
+			 * @param string $join_sql JOIN clause.
+			 */
+			$from = apply_filters( 'bp_forums_search_join_sql', $from );
 
 			$where   = array();
 			$where[] = '1=1';
@@ -58,18 +67,37 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 							'is_mod'   => null,
 						)
 					);
+
+					$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
+
+					$public_groups = groups_get_groups(
+						array(
+							'fields'   => 'ids',
+							'status'   => 'public',
+							'per_page' => - 1,
+						)
+					);
+
+					if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
+						$public_groups = $public_groups['groups'];
+					} else {
+						$public_groups = array();
+					}
+
+					$group_memberships = array_merge( $public_groups, $group_memberships );
+					$group_memberships = array_unique( $group_memberships );
 				}
 
 				if ( ! empty( $group_memberships ) ) {
-					$in = array_reduce(
-						array_keys( $group_memberships ),
-						function ( $carry, $group_id ) {
-							return $carry . ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-						}
+					$in = array_map(
+						function ( $group_id ) {
+							return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
+						},
+						$group_memberships
 					);
+
+					$in = implode( '', $in );
 				}
-			} else {
-				$where[] = 'pm.post_id IS NULL';
 			}
 
 			$where[] = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\') OR pm.meta_value IN (' . trim( $in, ',' ) . ') )';
@@ -77,8 +105,17 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 
+			/**
+			 * Filters the MySQL WHERE conditions for the forum Search query.
+			 *
+             * @since BuddyBoss 1.5.6
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 */
+			$where = apply_filters( 'bp_forums_search_where_sql', $where );
+
 			$sql   = 'SELECT ' . $columns . ' FROM ' . $from . ' WHERE ' . implode( ' AND ', $where );
-			$query = $wpdb->prepare( $sql, $query_placeholder );
+			$query = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 			return apply_filters(
 				'Bp_Search_Forums_sql',

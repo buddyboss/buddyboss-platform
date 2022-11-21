@@ -52,15 +52,25 @@ function bp_nouveau_search_enqueue_scripts() {
 		'debug'                 => true,//set it to false on production
 		'ajaxurl'               => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
 		//'search_url'    => home_url( '/' ), Now we are using form[role='search'] selector
-		'loading_msg'           => __( "Loading Suggestions", "buddyboss" ),
+		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss' ),
 		'enable_ajax_search'    => function_exists( 'bp_is_search_autocomplete_enable' ) && bp_is_search_autocomplete_enable(),
 		'per_page'              => $per_page,
 		'autocomplete_selector' => "form[role='search'], form.search-form, form.searchform, form#adminbarsearch, .bp-search-form>#search-form",
 		'form_selector'         => '',
+		'forums_autocomplete'   => false,
 	);
 
 	if ( isset( $_GET["s"] ) ) {
 		$data["search_term"] = $_GET["s"];
+	}
+
+	if ( bp_is_active( 'forums' ) ) {
+		$data['forums_autocomplete'] = (
+			bp_is_search_post_type_enable( bbp_get_forum_post_type() ) ||
+			bp_is_search_post_type_enable( bbp_get_topic_post_type() ) ||
+			bp_is_search_post_type_taxonomy_enable( bbpress()->topic_tag_tax_id, bbp_get_topic_post_type() ) ||
+			bp_is_search_post_type_enable( bbp_get_reply_post_type() )
+		);
 	}
 
 	wp_enqueue_script( 'jquery-ui-autocomplete' );

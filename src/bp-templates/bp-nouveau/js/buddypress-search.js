@@ -23,11 +23,11 @@ jQuery(document).ready(function($) {
 						distance_from_bottom = document_height - input_offset_plus;
 
 					//assuming 400px is good enough to display autocomplete ui
-					if( distance_from_bottom < 400 ){
+					if( distance_from_bottom < 400 && input_offset.top > distance_from_bottom ){
 						//but if space available on top is even less!
-						if( input_offset.top > distance_from_bottom ){
-							ac_position_prop = { collision: 'flip flip' };
-						}
+						ac_position_prop = { collision: 'flip flip' };
+					} else {
+						ac_position_prop = { my: 'left top', at: 'left bottom', collision: 'none' };
 					}
 
 					autoCompleteObjects.push( $search_field );
@@ -113,108 +113,100 @@ jQuery(document).ready(function($) {
 				}
 			});
 
-			$('#bbp-search-form, #bbp-search-index-form').each(function() {
-				var $form = $(this),
-					$search_field = $form.find('#bbp_search');
-				if ($search_field.length > 0) {
+			if ( BP_SEARCH.forums_autocomplete ) {
+				$( '#bbp-search-form, #bbp-search-index-form' ).each( function () {
+					var $form = $( this ),
+						$search_field = $form.find( '#bbp_search' );
+					if ( $search_field.length > 0 ) {
 
-					/**
-					 * If the search input is positioned towards bottom of html document,
-					 * autocomplete appearing vertically below the input isn't very effective.
-					 * Lets flip it in that case.
-					 */
-					var ac_position_prop = {},
-						input_offset = $search_field.offset(),
-						input_offset_plus = input_offset.top + $search_field.outerHeight(),
-						distance_from_bottom = document_height - input_offset_plus;
+						/**
+						 * If the search input is positioned towards bottom of html document,
+						 * autocomplete appearing vertically below the input isn't very effective.
+						 * Lets flip it in that case.
+						 */
+						var ac_position_prop = {},
+							input_offset = $search_field.offset(),
+							input_offset_plus = input_offset.top + $search_field.outerHeight(),
+							distance_from_bottom = document_height - input_offset_plus;
 
-					//assuming 400px is good enough to display autocomplete ui
-					if( distance_from_bottom < 400 ){
-						//but if space available on top is even less!
-						if( input_offset.top > distance_from_bottom ){
+						//assuming 400px is good enough to display autocomplete ui
+						if ( distance_from_bottom < 400 && input_offset.top > distance_from_bottom ) {
+							//but if space available on top is even less!
 							ac_position_prop = { collision: 'flip flip' };
+						} else {
+							ac_position_prop = { my: 'left top', at: 'left bottom', collision: 'none' };
 						}
-					}
 
-					$($search_field).autocomplete({
-						source: function(request, response) {
+						$( $search_field ).autocomplete( {
+							source: function ( request, response ) {
 
-							var term = request.term;
-							if (term in BP_SEARCH.cache) {
-								response(BP_SEARCH.cache[ term ]);
-								return;
+								var term = request.term;
+								if ( term in BP_SEARCH.cache ) {
+									response( BP_SEARCH.cache[ term ] );
+									return;
+								}
+
+								var data = {
+									'action': BP_SEARCH.action,
+									'nonce': BP_SEARCH.nonce,
+									'search_term': request.term,
+									'forum_search_term': true,
+									'per_page': 15
+								};
+
+								response( { value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span><span>' + BP_SEARCH.loading_msg + '</span></div>' } );
+
+								$.ajax( {
+									url: BP_SEARCH.ajaxurl,
+									dataType: 'json',
+									data: data,
+									success: function ( data ) {
+										BP_SEARCH.cache[ term ] = data;
+										response( data );
+									}
+								} );
+							},
+							minLength: 2,
+							select: function ( event, ui ) {
+								window.location = $( ui.item.value ).find( 'a' ).attr( 'href' );
+								return false;
+							},
+							focus: function () {
+								$( '.ui-autocomplete li' ).removeClass( 'ui-state-hover' );
+								$( '.ui-autocomplete' ).find( 'li:has(a.ui-state-focus)' ).addClass( 'ui-state-hover' );
+								return false;
+							},
+							open: function () {
+								$( '.bp-search-ac' ).outerWidth( $( this ).outerWidth() );
+							},
+							position: ac_position_prop
+						} )
+							.data( 'ui-autocomplete' )._renderItem = function ( ul, item ) {
+							ul.addClass( 'bp-search-ac' );
+
+							if ( $( 'body.forum-archive' ).length ) {
+								ul.addClass( 'bp-forum-search-ac-header' );
 							}
 
-							var data = {
-								'action': BP_SEARCH.action,
-								'nonce': BP_SEARCH.nonce,
-								'search_term': request.term,
-								'forum_search_term': true,
-								'per_page': 15
-							};
+							if ( $( '#bbp_search' ).length ) {
+								ul.addClass( 'bp-forum-search-ac-header' );
+							}
 
-							response({value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span><span>' + BP_SEARCH.loading_msg + '</span></div>'});
+							if ( $( 'body.bbp-search.forum-search' ).length ) {
+								ul.addClass( 'bp-forum-search-ac-header' );
+							}
 
-							$.ajax({
-								url:BP_SEARCH.ajaxurl,
-								dataType: 'json',
-								data: data,
-								success: function(data) {
-									BP_SEARCH.cache[ term ] = data;
-									response(data);
-								}
-							});
-						},
-						minLength: 2,
-						select: function(event, ui) {
-							window.location = $(ui.item.value).find('a').attr('href');
-							return false;
-						},
-						focus: function() {
-							$('.ui-autocomplete li').removeClass('ui-state-hover');
-							$('.ui-autocomplete').find('li:has(a.ui-state-focus)').addClass('ui-state-hover');
-							return false;
-						},
-						open: function() {
-							$('.bp-search-ac').outerWidth($(this).outerWidth());
-						},
-						position: ac_position_prop
-					})
-					                 .data('ui-autocomplete')._renderItem = function(ul, item) {
-						ul.addClass('bp-search-ac');
+							if ( item.type_label != '' ) {
+								$( ul ).data( 'current_cat', item.type );
+								return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-category' ).append( '<span class="bb-cat-title">' + item.value + '</span>' ).appendTo( ul );
+							} else {
+								return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-sub-item' ).append( '<a class="x">' + item.value + '</a>' ).appendTo( ul );
+							}
+						};
 
-						if ( $('body.forum-archive').length ) {
-							ul.addClass('bp-forum-search-ac-header');
-						}
-
-						if ( $('#bbp_search').length ) {
-							ul.addClass('bp-forum-search-ac-header');
-						}
-
-						if ( $('body.bbp-search.forum-search').length ) {
-							ul.addClass('bp-forum-search-ac-header');
-						}
-
-						if (item.type_label != '') {
-							$(ul).data('current_cat', item.type);
-							return $('<li>').attr('class', 'bbls-' + item.type + '-type bbls-category').append('<span class="bb-cat-title">' + item.value + '</span>').appendTo(ul);
-						} else {
-							return $('<li>').attr('class', 'bbls-' + item.type + '-type bbls-sub-item').append('<a class="x">' + item.value + '</a>').appendTo(ul);
-						}
-					};
-
-				}
-			});
-
-			/**
-			 * Close the suggestion box when the page scrolls
-			 */
-			window.addEventListener( 'scroll', function () {
-				var arrayLength = autoCompleteObjects.length;
-				for ( var i = 0; i < arrayLength; i ++ ) {
-					autoCompleteObjects[i].autocomplete( 'close' );
-				}
-			} );
+					}
+				} );
+			}
 		}
 	}
 	initAutoComplete();

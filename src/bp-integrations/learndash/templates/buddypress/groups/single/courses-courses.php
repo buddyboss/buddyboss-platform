@@ -44,10 +44,10 @@ if ( $count > 1 ) {
                         <div id="courses-dir-search" class="bs-dir-search" role="search"></div>
                         <div class="bb-secondary-list-tabs flex align-items-center" id="subnav" aria-label="Members directory secondary navigation" role="navigation">
                             <div class="grid-filters" data-view="ld-course">
-                                <a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip <?php echo esc_attr( $class_grid_active ); ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Grid View', 'buddyboss' ); ?>">
+                                <a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip <?php echo esc_attr( $class_grid_active ); ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Grid View', 'buddyboss' ); ?>">
                                     <i class="dashicons dashicons-screenoptions" aria-hidden="true"></i>
                                 </a>
-                                <a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip <?php echo esc_attr( $class_list_active ); ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'List View', 'buddyboss' ); ?>">
+                                <a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip <?php echo esc_attr( $class_list_active ); ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'List View', 'buddyboss' ); ?>">
                                     <i class="dashicons dashicons-menu" aria-hidden="true"></i>
                                 </a>
                             </div>

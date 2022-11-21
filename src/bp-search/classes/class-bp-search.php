@@ -122,10 +122,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		public function load_search_helpers() {
 			global $bp;
 
-			// load the helper type parent class
+			// load the helper type parent class.
 			require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-types.php';
 
-			// load and associate helpers one by one
+			// load and associate helpers one by one.
 			if ( bp_is_search_post_type_enable( 'post' ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
 				$this->search_helpers['posts'] = new Bp_Search_Posts( 'post', 'posts' );
@@ -138,23 +138,23 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->searchable_items[]      = 'pages';
 			}
 
-			if ( bp_is_active( 'forums' ) && bp_is_search_post_type_enable( 'forum' ) ) {
+			if ( bp_is_active( 'forums' ) && bp_is_search_post_type_enable( bbp_get_forum_post_type() ) ) {
 
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress.php';
 
-				if ( bp_is_search_post_type_enable( 'forum' ) ) {
+				if ( bp_is_search_post_type_enable( bbp_get_forum_post_type() ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums.php';
 					$this->search_helpers['forum'] = Bp_Search_bbPress_Forums::instance();
 					$this->searchable_items[]      = 'forum';
 				}
 
-				if ( bp_is_search_post_type_enable( 'topic' ) ) {
+				if ( bp_is_search_post_type_enable( bbp_get_topic_post_type() ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-topics.php';
 					$this->search_helpers['topic'] = Bp_Search_bbPress_Topics::instance();
 					$this->searchable_items[]      = 'topic';
 				}
 
-				if ( bp_is_search_post_type_enable( 'reply' ) ) {
+				if ( bp_is_search_post_type_enable( bbp_get_reply_post_type() ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-replies.php';
 					$this->search_helpers['reply'] = Bp_Search_bbPress_Replies::instance();
 					$this->searchable_items[]      = 'reply';
@@ -190,6 +190,12 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-documents.php';
 				$this->search_helpers['documents'] = Bp_Search_Documents::instance();
 				$this->searchable_items[]          = 'documents';
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_active( 'video' ) && bp_is_search_videos_enable() && ( bp_is_group_video_support_enabled() || bp_is_profile_video_support_enabled() ) ) {
+				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-video.php';
+				$this->search_helpers['videos'] = Bp_Search_Video::instance();
+				$this->searchable_items[]       = 'videos';
 			}
 
 			if ( bp_is_active( 'media' ) && bp_is_search_folders_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
@@ -355,7 +361,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$search_results[] = $new_row;
 				}
 
-				// Show "View All" link
+				// Show "View All" link.
 				if ( absint( $this->search_results['all']['total_match_count'] ) > absint( bp_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
 					$all_results_row  = array(
 						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss' ) . '</a></div>',
@@ -367,7 +373,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			} else {
 				// @todo give a settings screen for this field
 				$search_results[] = array(
-					'value' => '<div class="bp-search-ajax-item noresult">' . sprintf( __( "Nothing found for '%s'", 'buddyboss' ), stripslashes( $this->search_args['search_term'] ) ) . '</div>',
+					'value' => '<div class="bp-search-ajax-item ui-state-disabled noresult">' .
+						esc_html__( 'No results found.', 'buddyboss' ) .
+					'</div>',
 					'label' => $this->search_args['search_term'],
 				);
 			}
@@ -418,7 +426,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'number'        => 3,
 			);
 
-			$args = wp_parse_args( $args, $defaults );
+			$args = bp_parse_args( $args, $defaults );
 
 			if ( true === $args['forum_search'] ) {
 				$this->searchable_items = array( 'forum', 'topic', 'reply' );
@@ -501,8 +509,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
 					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
-					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " $limit ) ";
-					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'] );
+					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
+					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'], $search_type );
 				}
 
 				if ( empty( $sql_queries ) ) {
@@ -510,7 +518,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					return;
 				}
 
-				$pre_search_query = implode( ' UNION ', $sql_queries ) . ' ORDER BY relevance, type DESC, entry_date DESC ';
+				$pre_search_query = implode( ' UNION ', $sql_queries );
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
 					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
@@ -731,7 +739,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 					if ( ! isset( $total[ $search_type ] ) ) {
 						$obj               = $this->search_helpers[ $search_type ];
-						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'] );
+						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'], $search_type );
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total_match_count;
 					} else {
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total[ $search_type ];
@@ -776,7 +784,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @return array
 		 */
 		public function sanitize_args( $args = '' ) {
-			$args = wp_parse_args( $args, array() );
+			$args = bp_parse_args( $args, array() );
 
 			if ( isset( $args['search_term'] ) ) {
 				$args['search_term'] = sanitize_text_field( $args['search_term'] );

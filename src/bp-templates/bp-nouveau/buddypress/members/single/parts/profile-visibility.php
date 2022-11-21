@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Single Profile Edit Field visibility
+ * The template for members single profile edit field visibility
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/parts/profile-visibility.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 if ( empty( $GLOBALS['profile_template'] ) ) {

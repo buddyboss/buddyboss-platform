@@ -19,9 +19,15 @@ add_filter( 'sfwd_cpt_options', 'bb_ld_group_archive_slug_change', 999, 2 );
 add_filter( 'learndash_settings_fields', 'bb_ld_group_archive_backend_slug_print', 9999, 2 );
 
 /* Actions *******************************************************************/
+add_action( 'bp_core_set_uri_globals', 'bb_support_learndash_course_permalink', 10, 2 );
+
 add_action( 'add_meta_boxes', 'bp_activity_add_meta_boxes', 50 );
 
 add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
+
+// Support other lanaguages slug for LD.
+add_filter( 'bp_get_requested_url', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
+add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 
 /** Functions *****************************************************************/
 
@@ -34,11 +40,7 @@ add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
  */
 function bp_ld_popup_register_redirect( $bool ) {
 
-	if (
-		isset( $_POST )
-		&& isset( $_POST['learndash-registration-form'] )
-		&& 'true' === $_POST['learndash-registration-form']
-	) {
+	if ( isset( $_POST ) && isset( $_POST['learndash-registration-form'] ) ) {
 		return false;
 	}
 
@@ -162,7 +164,7 @@ function bp_activity_pre_transition_post_type_status( $bool, $new_status, $old_s
 function bp_activity_add_meta_boxes() {
 	global $post;
 
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bp_is_active( 'activity' ) || empty( $post ) ) {
 		return;
 	}
 
@@ -313,16 +315,25 @@ function bb_group_wp_admin_bar_updates_menu() {
  * Filter to fix conflict between Learndash Plugin groups archive page and Platform Groups page.
  *
  * @since BuddyBoss 1.4.7
- * 
+ *
  * @param array  $post_options An array of post options.
  * @param string $post_type    Post type slug.
- * 
+ *
  * @return array $post_options
  */
 function bb_ld_group_archive_slug_change( $post_options, $post_type ) {
 	$page_ids = bp_core_get_directory_page_ids();
 
-	if ( bp_is_active( 'groups') && is_array( $page_ids ) && isset( $page_ids['groups'] ) && !empty( $page_ids['groups'] ) && learndash_get_post_type_slug( 'group' ) === $post_type ) {
+	if (
+		bp_is_active( 'groups' ) &&
+		is_array( $page_ids ) &&
+		isset( $page_ids['groups'] ) &&
+		! empty( $page_ids['groups'] ) &&
+		function_exists( 'learndash_get_post_type_slug' ) &&
+		learndash_get_post_type_slug( 'group' ) === $post_type &&
+		isset( $post_options['rewrite']['slug'] ) &&
+		learndash_get_post_type_slug( 'group' ) === $post_options['rewrite']['slug']
+	) {
 		$post_options['rewrite']['slug'] = 'ld-groups';
 	}
 
@@ -334,10 +345,10 @@ function bb_ld_group_archive_slug_change( $post_options, $post_type ) {
  * Show the proper archive page link on LD domain.com/wp-admin/admin.php?page=groups-options page.
  *
  * @since BuddyBoss 1.4.7
- * 
+ *
  * @param array  $setting_option_fields Associative array of Setting field details like name,type,label,value.
  * @param string $settings_section_key Used within the Settings API to uniquely identify this section.
- * 
+ *
  * @return array $setting_option_fields
  */
 function bb_ld_group_archive_backend_slug_print( $setting_option_fields, $settings_section_key) {
@@ -352,4 +363,33 @@ function bb_ld_group_archive_backend_slug_print( $setting_option_fields, $settin
 
 	return $setting_option_fields;
 
+}
+
+/**
+ * Update the current component and action while nested URL setup from the learndash permalink.
+ * For member courses.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param object $bp     BuddyPress object.
+ * @param array  $bp_uri Array of URI.
+ */
+function bb_support_learndash_course_permalink( $bp, $bp_uri ) {
+	if ( ! empty( $bp_uri ) && implode( '/', $bp_uri ) === bb_learndash_profile_courses_slug() ) {
+		$bp->current_component = bb_learndash_profile_courses_slug();
+		$bp->current_action    = '';
+	}
+}
+
+/**
+ * Update the URL setup from the learndash permalink.
+ *
+ * @since BuddyBoss 2.1.0
+ *
+ * @param string $url URL to be redirected.
+ *
+ * @return string URL of the current page.
+ */
+function bb_support_learndash_course_other_language_permalink( $url ) {
+	return rawurldecode( $url );
 }

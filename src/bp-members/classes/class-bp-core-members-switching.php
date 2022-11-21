@@ -143,7 +143,7 @@ class BP_Core_Members_Switching {
 				// Switch user:
 				$user = bp_member_switch_to( $user_id, self::remember() );
 				if ( $user ) {
-					$redirect_to = $_GET['redirect_to'] ?: self::get_redirect( $user, $current_user );
+					$redirect_to = ( ! empty( $_GET['redirect_to'] ) ) ? $_GET['redirect_to'] : self::get_redirect( $user, $current_user );
 
 					// Redirect to the dashboard or the home URL depending on capabilities:
 					$args = array(
@@ -867,6 +867,10 @@ class BP_Core_Members_Switching {
 				$user_caps['switch_to_user'] = $user_caps['switch_users'];
 
 				return $user_caps;
+			}
+
+			if ( ! isset( $args[2] ) ) {
+				$args[2] = array();
 			}
 
 			$user_caps['switch_to_user'] = ( user_can( $user->ID, 'edit_user', $args[2] ) && ( $args[2] !== $user->ID ) );

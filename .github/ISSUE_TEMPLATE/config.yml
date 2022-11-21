@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Need Help with a Product Issue?
+    url: https://www.buddyboss.com/my-account/?tab=helpscouttickets
+    about: Please submit a support ticket in your BuddyBoss account. Available for BuddyBoss Theme and BuddyBoss App customers.
+  - name: Suggest a Feature or Improvement
+    url: https://www.buddyboss.com/roadmap/
+    about: Share your ideas and feedback for improving BuddyBoss products on our public roadmap.
+  - name: Knowledge Base
+    url: https://www.buddyboss.com/resources/docs/
+    about: Guides, tutorials, and reference material to help you learn more about BuddyBoss products.
+  - name: Release Notes
+    url: https://www.buddyboss.com/resources/release-notes/
+    about: View the release notes of all BuddyBoss products.

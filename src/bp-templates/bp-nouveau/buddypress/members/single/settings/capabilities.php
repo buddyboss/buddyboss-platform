@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Settings ( Capabilities )
+ * The template for members settings ( Capabilities )
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/capabilities.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>

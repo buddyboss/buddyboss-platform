@@ -76,7 +76,7 @@ class Settings {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function update() {
-		$oldOptions                                        = $this->options;
+		$oldOptions = $this->options;
 		bp_update_option( $this->optionKey, $this->options = $this->loader->get() );
 		do_action( 'bp_ld_sync/setting_updated', $this->options, $oldOptions );
 		return $this;
@@ -143,7 +143,7 @@ class Settings {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function installDefaultSettings() {
-		if ( ! $options = get_option( $this->optionKey ) ) {
+		if ( ! $options = bp_get_option( $this->optionKey ) ) {
 			$options = $this->defaultOptions();
 			bp_update_option( $this->optionKey, $options );
 		}

@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Member Courses
+ * The template for member courses
  *
- * @since BuddyBoss 1.2.0
- * @version 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/courses/courses.php.
+ *
+ * @since   BuddyBoss 1.2.0
+ * @version 1.2.0
  */
 
 $filepath = locate_template(
@@ -24,7 +26,7 @@ if ( ! empty( $filepath ) ) {
 
 	$data            = array();
 	$data['ajaxurl'] = admin_url( 'admin-ajax.php' );
-	$data            = array( 'json' => json_encode( $data ) );
+	$data            = array( 'json' => wp_json_encode( $data ) );
 	wp_localize_script( 'learndash_template_script_js', 'sfwd_data', $data );
 
 }

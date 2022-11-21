@@ -98,7 +98,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( empty( $parse_url_data ) ) {
 			return new WP_Error(
 				'bp_rest_unknown_error',
-				__( 'Sorry! preview is not available right now. Please try again later.', 'buddyboss' ),
+				__( 'There was a problem generating a link preview.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -132,14 +132,24 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_component_required',
+			__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
+			array(
+				'status' => '404',
+			)
+		);
 
-		if ( ! bp_is_active( 'activity' ) ) {
+		if ( bp_is_active( 'activity' ) ) {
+			$retval = true;
+		}
+
+		if ( true === $retval && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to generate link preview in the activity.', 'buddyboss' ),
 				array(
-					'status' => '404',
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -148,16 +158,6 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Link Previews is disabled.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to generate link preview in the activity.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)

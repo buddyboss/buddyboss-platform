@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Theatre
+ * The template for document theatre
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/theatre.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 ?>
@@ -26,12 +29,15 @@
 				<div class="document-preview"></div>
 
 				<div class="bb-dropdown-wrap bb-media-only-privacy">
-					<div class="bb-media-privacy-wrap" style="display: none;">
+					<div class="bb-document-privacy-wrap" style="display: none;">
 						<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="left" data-bp-tooltip=""><span class="privacy selected"></span></span>
-						<ul class="media-privacy">
+						<ul class="document-privacy">
 							<?php
 							if ( bp_is_active( 'media' ) && function_exists( 'bp_document_get_visibility_levels' ) ) {
 								foreach ( bp_document_get_visibility_levels() as $item_key => $privacy_item ) {
+									if ( 'grouponly' === $item_key ) {
+										continue;
+									}
 									?>
 									<li data-value="<?php echo esc_attr( $item_key ); ?>" class="<?php echo esc_attr( $item_key ); ?>"><?php echo esc_attr( $privacy_item ); ?></li>
 									<?php

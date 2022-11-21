@@ -149,12 +149,12 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		$count++;
 		bp_set_profile_field_set_count( $field_group->id, $user_id, $count );
 
-		$clone_fields = bp_get_repeater_clone_field_ids_subset( $field_group->id, $user_id );
+		$clone_fields = bp_get_repeater_clone_field_ids_subset( $field_group->id, $count );
 		if ( empty( $clone_fields ) ) {
 			$group_fields = bp_get_repeater_template_field_ids( $field_group->id );
 			if ( ! empty( $group_fields ) ) {
 				foreach ( $group_fields as $field_id ) {
-					bp_clone_field_for_repeater_sets( $field_id );
+					bp_clone_field_for_repeater_sets( $field_id, $field_group->id );
 				}
 			}
 		}
@@ -209,41 +209,41 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		// Get the field group before it's deleted.
-		$field_group = xprofile_get_field_group( (int) $request['id'] );
+			// Get the field group before it's deleted.
+			$field_group = xprofile_get_field_group( (int) $request->get_param( 'id' ) );
 
-		if ( true === $retval && empty( $field_group->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid Group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
+			if ( empty( $field_group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid Group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} else {
+				$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
 
-		$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
-
-		if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_repeater_id',
-				__( 'Invalid Repeater Group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+				if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_repeater_id',
+						__( 'Invalid Repeater Group ID.', 'buddyboss' ),
+						array(
+							'status' => 404,
+						)
+					);
+				}
+			}
 		}
 
 		/**
@@ -385,6 +385,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 					if ( ! is_array( $value ) ) {
 						$value = (array) $value;
+						$value = array_filter( $value );
 					}
 				}
 
@@ -408,6 +409,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 						if ( ! is_array( $value ) ) {
 							$value = (array) $value;
+							$value = array_filter( $value );
 						}
 					}
 
@@ -467,41 +469,41 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		// Get the field group before it's deleted.
-		$field_group = xprofile_get_field_group( (int) $request['id'] );
+			// Get the field group before it's deleted.
+			$field_group = xprofile_get_field_group( (int) $request['id'] );
 
-		if ( true === $retval && empty( $field_group->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid Group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
+			if ( empty( $field_group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid Group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} else {
+				$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
 
-		$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
-
-		if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_repeater_id',
-				__( 'Invalid Repeater Group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+				if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_repeater_id',
+						__( 'Invalid Repeater Group ID.', 'buddyboss' ),
+						array(
+							'status' => 404,
+						)
+					);
+				}
+			}
 		}
 
 		/**
@@ -670,41 +672,41 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		// Get the field group before it's deleted.
-		$field_group = xprofile_get_field_group( (int) $request['id'] );
+			// Get the field group before it's deleted.
+			$field_group = xprofile_get_field_group( (int) $request['id'] );
 
-		if ( true === $retval && empty( $field_group->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid Group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
+			if ( empty( $field_group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid Group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} else {
+				$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
 
-		$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
-
-		if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_repeater_id',
-				__( 'Invalid Repeater Group ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+				if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_repeater_id',
+						__( 'Invalid Repeater Group ID.', 'buddyboss' ),
+						array(
+							'status' => 404,
+						)
+					);
+				}
+			}
 		}
 
 		/**
@@ -948,9 +950,10 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 							// phpcs:ignore
 							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
 
-							if ( 'datebox' === $type ) {
-								$new_data = $new_data . ' 00:00:00';
+							if ( 'datebox' === $type && ! empty( $new_data ) ) {
+								$new_data = date( 'Y-m-d 00:00:00', strtotime( $new_data ) );
 							}
+
 							xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
 
 							if ( ! isset( $main_field_data[ $cloned_from ] ) ) {
