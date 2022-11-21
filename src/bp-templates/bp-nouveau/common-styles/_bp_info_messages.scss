@@ -159,6 +159,7 @@ button[data-bp-close]:hover {
 .bp-feedback.warning,
 .bp-feedback.loading,
 .bp-feedback.success,
+.bp-feedback.success-notice,
 .bp-feedback.updated {
 
 	.bp-icon {
@@ -202,6 +203,7 @@ button[data-bp-close]:hover {
 	}
 }
 
+.bp-feedback.success-notice,
 .bp-feedback.success,
 .bp-feedback.updated {
 
