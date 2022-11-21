@@ -9,6 +9,7 @@ form.ac-form {
 
 		img {
 			border: 1px solid #eee;
+			image-rendering: -webkit-optimize-contrast;
 		}
 	}
 
@@ -50,8 +51,15 @@ form.ac-form {
 				margin-top: 10px;
 
 				.post-elements-buttons-item {
+
+					@include center-vert();
 					margin-right: 10px;
 					position: relative;
+
+					> .emojionearea.ac-input {
+						border: 0;
+						padding: 0;
+					}
 				}
 			}
 
@@ -63,14 +71,11 @@ form.ac-form {
 
 			.gif-search-content .gif-search-results ul li {
 				padding: 0;
+				margin: 0 0 5px 0;
 			}
 		}
 
-		input {
-			margin-top: $marg-sml;
-		}
 	}
-
 }
 
 .bp-ac-form-cotainer {

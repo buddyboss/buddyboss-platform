@@ -2,8 +2,11 @@
 /**
  * BuddyBoss - Video Activity Album Move
  *
- * @since BuddyBoss 1.7.0
+ * This template can be overridden by copying it to yourtheme/buddypress/video/video-move.php.
+ *
+ * @since   BuddyBoss 1.7.0
  * @package BuddyBoss\Core
+ * @version 1.7.0
  */
 
 ?>

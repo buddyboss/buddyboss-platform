@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Privacy Change
+ * The template for document privacy change
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/document-privacy.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 $folder_privacy = '';

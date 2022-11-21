@@ -371,9 +371,16 @@ class BP_Group_Member_Query extends BP_User_Query {
 	 */
 	public function populate_group_member_extras( $query, $user_ids_sql ) {
 		global $wpdb;
+		static $cache  = array();
 
-		$bp     = buddypress();
-		$extras = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, date_modified, is_admin, is_mod, comments, user_title, invite_sent, is_confirmed, inviter_id, is_banned FROM {$bp->groups->table_name_members} WHERE user_id IN ({$user_ids_sql}) AND group_id = %d", $this->query_vars['group_id'] ) );
+		$bp        = buddypress();
+		$cache_key = 'bb_populate_group_member_extras_' . $this->query_vars['group_id'] . str_replace( ',', '_', $user_ids_sql );
+		if ( ! isset( $cache[ $cache_key ] ) ) {
+			$extras = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, date_modified, is_admin, is_mod, comments, user_title, invite_sent, is_confirmed, inviter_id, is_banned FROM {$bp->groups->table_name_members} WHERE user_id IN ({$user_ids_sql}) AND group_id = %d", $this->query_vars['group_id'] ) );
+			$cache[ $cache_key ] = $extras;
+		} else {
+			$extras = $cache[ $cache_key ];
+		}
 
 		foreach ( (array) $extras as $extra ) {
 			if ( isset( $this->results[ $extra->user_id ] ) ) {
