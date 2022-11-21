@@ -271,7 +271,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	public function get_views() {
 		$current_tab               = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		$current_tab               = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
-		$blocked_members_url_base  =  add_query_arg( array( 'page' => 'bp-moderation' ), ( is_multisite() ) ? get_admin_url( get_current_blog_id(), 'admin.php') : bp_get_admin_url( 'admin.php' ) );
+		$blocked_members_url_base  =  add_query_arg( array( 'page' => 'bp-moderation' ), ( is_multisite() ) ? get_admin_url( get_current_blog_id(), 'admin.php' ) : bp_get_admin_url( 'admin.php' ) );
 		$reported_content_url_base = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), $blocked_members_url_base ) : $blocked_members_url_base;
 
 		$moderation_views = apply_filters(
