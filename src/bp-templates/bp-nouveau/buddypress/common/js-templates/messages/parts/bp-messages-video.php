@@ -1,15 +1,27 @@
+<?php
+/**
+ * BP Nouveau messages video
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-video.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-messages-video">
-    <div class="dropzone closed" id="messages-post-video-uploader"></div>
+    <div class="dropzone closed video-dropzone" id="messages-post-video-uploader"></div>
     <div class="message-post-video-template" style="display:none;">
         <div class="dz-preview dz-file-preview well" id="dz-preview-template">
             <div class="dz-details">
 				<div class="dz-filename"><span data-dz-name></span></div>
 			</div>
+            <div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
             <div class="dz-progress-ring-wrap">
-				<i class="bb-icon bb-icon-video-fill"></i>
-				<svg class="dz-progress-ring" width="62" height="62">
-					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182" />
-				</svg>
+				<i class="bb-icon-f bb-icon-video"></i>
+				<svg class="dz-progress-ring" width="54" height="54">
+                    <circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+                </svg>
 			</div>
             <!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
             <div class="dz-error-message"><span data-dz-errormessage></span></div>
