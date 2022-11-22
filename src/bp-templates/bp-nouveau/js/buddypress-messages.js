@@ -4136,7 +4136,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.displayFilters( this.collection );
 					if ( window.location.href === BP_Nouveau.messages.message_url ) {
 						if ( isMobile ) {
-							$( '.bp-messages-container' ).removeClass( 'bp-view-message' )
+							$( '.bp-messages-container' ).removeClass( 'bp-view-message' );
 						}
 						bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
 					}
