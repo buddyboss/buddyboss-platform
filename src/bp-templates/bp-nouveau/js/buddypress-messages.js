@@ -1071,7 +1071,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.removeFeedback();
 
 					// Remove all views.
-					if ( 'delete_thread' === action ) {
+					if ( 'delete_thread' === action && ( 'undefined' === typeof bb_pusher_vars || ( 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'off' === bb_pusher_vars.is_live_messaging_enabled ) ) ) {
 						if ( bp.Nouveau.Messages.threads.length > 1 ) {
 							// bp.Nouveau.Messages.clearViews();
 							// Navigate back to current box.
