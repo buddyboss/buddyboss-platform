@@ -804,6 +804,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$( document ).on( 'click', '.show-action-popup', this.showActionPopup );
+			$( document ).on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
+			$( document ).on( 'click', '#message-threads .report-content', this.threadListReportPopup );
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 
 			$( document ).on( 'keyup', this, this.keyUp );
@@ -2565,20 +2567,94 @@ window.bp = window.bp || {};
 				);
 			}
 		},
+
+		threadListBlockPopup: function ( e ) {
+			e.preventDefault();
+			var contentId   = $( this ).data( 'bp-content-id' );
+			var contentType = $( this ).data( 'bp-content-type' );
+			var nonce       = $( this ).data( 'bp-nonce' );
+			var currentHref = $( this ).attr( 'href' );
+
+			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+				$( document ).find( '.bp-report-form-err' ).empty();
+				var mf_content = $( currentHref );
+				mf_content.find( '.bp-content-id' ).val( contentId );
+				mf_content.find( '.bp-content-type' ).val( contentType );
+				mf_content.find( '.bp-nonce' ).val( nonce );
+			}
+			if ( $( '#message-threads .block-member' ).length > 0 ) {
+				$( '#message-threads .block-member' ).magnificPopup(
+					{
+						items: {
+							src: currentHref,
+							type: 'inline'
+						},
+					}
+				).magnificPopup( 'open' );
+			}
+		},
+
+		threadListReportPopup: function ( e ) {
+			e.preventDefault();
+			var contentId   = $( this ).data( 'bp-content-id' );
+			var contentType = $( this ).data( 'bp-content-type' );
+			var nonce       = $( this ).data( 'bp-nonce' );
+			var currentHref = $( this ).attr( 'href' );
+			var reportType  = $( this ).attr( 'reported_type' );
+			var mf_content  = $( currentHref );
+
+			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+				$( document ).find( '.bp-report-form-err' ).empty();
+				mf_content.find( '.bp-content-id' ).val( contentId );
+				mf_content.find( '.bp-content-type' ).val( contentType );
+				mf_content.find( '.bp-nonce' ).val( nonce );
+			}
+			if ( $( '#message-threads .report-content' ).length > 0 ) {
+
+				$( '#bb-report-content .form-item-category' ).show();
+				if ( 'user_report' === contentType ) {
+					$( '#bb-report-content .form-item-category.content' ).hide();
+				} else {
+					$( '#bb-report-content .form-item-category.members' ).hide();
+				}
+
+				$( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' ).attr( 'checked', true );
+
+				if ( ! $( '#bb-report-content .form-item-category:visible label input[type="radio"]' ).length ) {
+					$( '#report-category-other' ).attr( 'checked', true );
+					$( '#report-category-other' ).trigger( 'click' );
+					$( 'label[for="report-category-other"]' ).hide();
+				}
+
+				if ( 'undefined' !== typeof reportType ) {
+					mf_content.find( '.bp-reported-type' ).text( reportType );
+				}
+
+				$( '#message-threads .report-content' ).magnificPopup(
+					{
+						items: {
+							src: currentHref,
+							type: 'inline'
+						},
+					}
+				).magnificPopup( 'open' );
+			}
+		},
+
 		reportPopUp: function () {
 			if ( $( '.report-content, .block-member' ).length > 0 ) {
-				var _this = this;
 				$( '.report-content, .block-member' ).magnificPopup(
 					{
 						type: 'inline',
 						midClick: true,
 						callbacks: {
 							open: function () {
+								console.log( 'called' );
 								$( '#notes-error' ).hide();
-								var contentId = this.currItem.el.data( 'bp-content-id' );
+								var contentId   = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
-								var nonce = this.currItem.el.data( 'bp-nonce' );
-								var reportType = this.currItem.el.attr( 'reported_type' );
+								var nonce       = this.currItem.el.data( 'bp-nonce' );
+								var reportType  = this.currItem.el.attr( 'reported_type' );
 								$( '#bb-report-content .form-item-category' ).show();
 								if ( 'user_report' === contentType ) {
 									$( '#bb-report-content .form-item-category.content' ).hide();
@@ -2594,19 +2670,18 @@ window.bp = window.bp || {};
 									$( 'label[for="report-category-other"]' ).hide();
 								}
 
-								var mf_content = $( '#content-report' );
-								mf_content.find( '.bp-reported-type' ).text( this.currItem.el.data( 'reported_type' ) );
+								var content_report = $( '#content-report' );
+								content_report.find( '.bp-reported-type' ).text( this.currItem.el.data( 'reported_type' ) );
 								if ( 'undefined' !== typeof reportType ) {
-									mf_content.find( '.bp-reported-type' ).text( reportType );
+									content_report.find( '.bp-reported-type' ).text( reportType );
 								}
 
 								if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 									$( document ).find( '.bp-report-form-err' ).empty();
-									_this.setFormValues( {
-										contentId: contentId,
-										contentType: contentType,
-										nonce: nonce
-									} );
+									var mf_content = $( '.mfp-content' );
+									mf_content.find( '.bp-content-id' ).val( contentId );
+									mf_content.find( '.bp-content-type' ).val( contentType );
+									mf_content.find( '.bp-nonce' ).val( nonce );
 								}
 							}
 						}
@@ -2784,12 +2859,6 @@ window.bp = window.bp || {};
 			}
 
 			jQuery( target ).closest( '.bb-report-type-wrp' ).find( '.bp-report-form-err' ).html( message );
-		},
-		setFormValues: function ( data ) {
-			var mf_content = $( '.mfp-content' );
-			mf_content.find( '.bp-content-id' ).val( data.contentId );
-			mf_content.find( '.bp-content-type' ).val( data.contentType );
-			mf_content.find( '.bp-nonce' ).val( data.nonce );
 		},
 		togglePassword: function () {
 			$( document ).on(
