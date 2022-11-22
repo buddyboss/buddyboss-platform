@@ -239,7 +239,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	public function presence_item( $request ) {
 
 		if ( isset( $request['ids'] ) ) {
-			bp_core_record_activity( true );
+			bp_core_record_activity();
 		}
 
 		$users         = $request->get_param( 'ids' );

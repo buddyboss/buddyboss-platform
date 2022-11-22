@@ -9779,13 +9779,16 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   background-color: #767676;
   font-size: 17px;
   line-height: 1;
-  height: 26px;
-  width: 26px;
   padding: 4px;
   border-radius: 50%;
   position: absolute;
   left: -5px;
   bottom: -5px;
+}
+
+#message-threads .thread-avatar .user-status-icon.bb-icon-cancel {
+  height: 26px;
+  width: 26px;
 }
 
 #message-threads .bp-message-link {

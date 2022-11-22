@@ -2221,13 +2221,10 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 		return $response;
 	}
 
-	bp_core_record_activity( true );
+	bp_core_record_activity();
 
-	$interval_time     = bb_presence_interval();
-	$presence_user_ids = wp_parse_id_list( $data['presence_users'] );
-	$compare_time      = $interval_time + 5;
-
-	$response['users_presence'] = bb_get_users_presence( $presence_user_ids, $compare_time );
+	$presence_user_ids          = wp_parse_id_list( $data['presence_users'] );
+	$response['users_presence'] = bb_get_users_presence( $presence_user_ids );
 
 	return $response;
 }
@@ -2247,7 +2244,9 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11
 function bb_heartbeat_settings( $settings ) {
 	$interval_time = bb_presence_interval();
 
-	if ( ! empty( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
+	if ( isset( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
+		bp_update_option( 'bb_presence_interval', absint( $settings['interval'] ) );
+	} else {
 		bp_delete_option( 'bb_presence_interval' );
 	}
 
