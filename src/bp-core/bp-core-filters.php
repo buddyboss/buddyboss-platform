@@ -2221,7 +2221,7 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 		return $response;
 	}
 
-	bp_core_record_activity( true );
+	bp_core_record_activity();
 
 	$presence_user_ids          = wp_parse_id_list( $data['presence_users'] );
 	$response['users_presence'] = bb_get_users_presence( $presence_user_ids );
