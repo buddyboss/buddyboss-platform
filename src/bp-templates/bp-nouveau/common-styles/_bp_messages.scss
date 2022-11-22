@@ -109,13 +109,16 @@
 		background-color: $light-text;
 		font-size: 17px;
 		line-height: 1;
-		height: 26px;
-		width: 26px;
 		padding: 4px;
 		border-radius: 50%;
 		position: absolute;
 		right: -5px;
 		bottom: -5px;
+
+		&.bb-icon-cancel {
+			height: 26px;
+			width: 26px;
+		}
 	}
 
 	// The primary list elements
