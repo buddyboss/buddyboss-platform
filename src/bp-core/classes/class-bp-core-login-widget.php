@@ -118,7 +118,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 					<label for="bp-login-widget-rememberme"><?php _e( 'Remember Me', 'buddyboss' ); ?></label>
 				</div>
 
-				<div class="bbp-submit-wrapper">					
+				<div class="bbp-submit-wrapper">
 					<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss' ); ?>" />
 				</div>
 
@@ -182,7 +182,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 	 */
 	public function form( $instance = array() ) {
 
-		$settings = wp_parse_args(
+		$settings = bp_parse_args(
 			$instance,
 			array(
 				'title' => '',

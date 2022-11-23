@@ -30,7 +30,7 @@ abstract class Integration_Abstract {
 	 *
 	 * @var bool
 	 */
-	private static $instances = false;
+	private static $instances = array();
 
 	/**
 	 * Cache endpoints.
@@ -494,7 +494,22 @@ abstract class Integration_Abstract {
 						$param_value = Route_Helper::get_parameter_from_route( $endpoint, $current_endpoint, 'id' );
 
 						if ( $args['deep_cache'] && empty( $param_value ) ) {
-							$this->do_endpoint_cache_deep( $result, $args, $server );
+							$is_endpoint_cache_deep = true;
+							if ( isset( $args['exclude_context'] ) ) {
+								if ( is_array( $args['exclude_context'] ) ) {
+									if ( in_array( $request->get_param( 'context' ), $args['exclude_context'], true ) ) {
+										$is_endpoint_cache_deep = false;
+									}
+								} else {
+									if ( $args['exclude_context'] === $request->get_param( 'context' ) ) {
+										$is_endpoint_cache_deep = false;
+									}
+								}
+							}
+
+							if ( $is_endpoint_cache_deep ) {
+								$this->do_endpoint_cache_deep( $result, $args, $server );
+							}
 						} else {
 							if ( 200 === $result->status ) {
 								$cache_group = $this->integration_name;
