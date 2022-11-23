@@ -2249,7 +2249,7 @@ function bb_get_the_thread_message_excerpt() {
 	 *
 	 * @param string $message The excerpt of the current message in the loop.
 	 */
-	return apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace('#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
+	return apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
 }
 
 /** Embeds *******************************************************************/
@@ -2672,12 +2672,12 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
  * @return string
  */
 function bb_get_the_thread_message_sent_time() {
-	$sent_date           = bp_get_the_thread_message_date_sent();
-	$sent_date_formatted = date_i18n( 'Y-m-d h:i:s', $sent_date );
-	$site_sent_date      = get_date_from_gmt( $sent_date_formatted );
-	$five_minutes        = date_i18n( 'Y-m-d h:i:s', strtotime( '+5 min', $sent_date ) );
+	global $thread_template;
 
-	if ( strtotime( 'now' ) <= strtotime( $five_minutes ) ) {
+	$sent_date_formatted = $thread_template->message->date_sent;
+	$site_sent_date      = get_date_from_gmt( $sent_date_formatted );
+
+	if ( strtotime( 'now' ) <= strtotime( '+5 min', strtotime( $sent_date_formatted ) ) ) {
 		$thread_message_sent_time = apply_filters( 'bb_thread_message_sent_time_right_now_text', __( 'Now', 'buddyboss' ) );
 	} else {
 		$thread_message_sent_time = date_i18n( 'g:i A', strtotime( $site_sent_date ) );
