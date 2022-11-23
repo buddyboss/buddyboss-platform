@@ -930,24 +930,9 @@ class BP_Messages_Thread {
 			)
 		);
 
+		$sub_query = '';
 		if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
-			if ( empty( $r['meta_query'] ) ) {
-				$r['meta_query'] = array(
-					'relation' => 'AND',
-					array(
-						'key'     => 'group_message_thread_id',
-						'compare' => 'NOT EXISTS',
-					),
-				);
-			} else {
-				$meta_query             = $r['meta_query'];
-				$meta_query[]           = array(
-					'key'     => 'group_message_thread_id',
-					'compare' => 'NOT EXISTS',
-				);
-				$meta_query['relation'] = 'AND';
-				$r['meta_query']        = $meta_query;
-			}
+			$sub_query = "AND m.id NOT IN ( SELECT DISTINCT message_id from wp_bp_messages_meta WHERE meta_key = 'group_message_users' AND meta_value = 'all' AND message_id IN ( SELECT DISTINCT message_id FROM wp_bp_messages_meta WHERE meta_key = 'group_message_type' AND meta_value = 'open' ) )";
 		} elseif ( bp_is_active( 'groups' ) ) {
 			// Determine groups of user.
 			$groups = groups_get_groups(
@@ -959,53 +944,13 @@ class BP_Messages_Thread {
 				)
 			);
 
-			$group_ids = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+			$group_ids     = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+			$group_ids_sql = implode( ',', array_unique( $group_ids ) );
 
-			if ( empty( $r['meta_query'] ) ) {
-				$r['meta_query'] = array(
-					'relation' => 'OR',
-					array(
-						'key'     => 'group_message_thread_id',
-						'compare' => 'NOT EXISTS',
-					),
-					array(
-						'relation' => 'AND',
-						array(
-							'key'     => 'group_message_thread_id',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => 'group_id',
-							'compare' => 'IN',
-							'value'   => $group_ids,
-						),
-					),
-				);
-			} else {
-				$meta_query             = $r['meta_query'];
-				$meta_query[]           = array(
-					'relation' => 'OR',
-					array(
-						'key'     => 'group_message_thread_id',
-						'compare' => 'NOT EXISTS',
-					),
-					array(
-						'relation' => 'AND',
-						array(
-							'key'     => 'group_message_thread_id',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => 'group_id',
-							'compare' => 'IN',
-							'value'   => $group_ids,
-						),
-					),
-				);
-				$meta_query['relation'] = 'AND';
-				$r['meta_query']        = $meta_query;
-			}
+			$sub_query = "AND m.id NOT IN ( SELECT DISTINCT message_id from wp_bp_messages_meta WHERE ( meta_key = 'group_id' AND meta_value NOT IN ({$group_ids_sql}) ) AND message_id IN ( SELECT DISTINCT message_id from wp_bp_messages_meta WHERE meta_key  = 'group_message_users' and meta_value = 'all' AND message_id in ( select DISTINCT message_id from wp_bp_messages_meta where meta_key  = 'group_message_type' and meta_value = 'open' ) ) )";
 		}
+
+		$sub_query = apply_filters( 'bb_messages_thread_sub_query', $sub_query, $r );
 
 		$r['meta_query'] = apply_filters( 'bb_messages_meta_query_threads_for_user', $r['meta_query'], $r );
 
@@ -1234,7 +1179,7 @@ class BP_Messages_Thread {
 			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
 		}
 
-		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id AND m.is_deleted = 0 {$meta_query_sql['join']}";
+		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id AND m.is_deleted = 0 {$sub_query} {$meta_query_sql['join']}";
 		$sql['where'] = "WHERE {$where_sql} {$meta_query_sql['where']}";
 		$sql['misc']  = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
@@ -1559,7 +1504,7 @@ class BP_Messages_Thread {
 				'is_hidden'  => 0,
 			);
 
-			add_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 2 );
+			add_filter( 'bb_messages_thread_sub_query', 'bb_messages_update_unread_count', 10, 2 );
 
 			$threads = self::get_current_threads_for_user(
 				array(
@@ -1569,7 +1514,7 @@ class BP_Messages_Thread {
 				)
 			);
 
-			remove_filter( 'bb_messages_meta_query_threads_for_user', 'bb_messages_update_unread_count', 10, 2 );
+			remove_filter( 'bb_messages_thread_sub_query', 'bb_messages_update_unread_count', 10, 2 );
 
 			if ( ! empty( $threads['threads'] ) ) {
 				$args['exclude_threads'] = $threads['threads'];
