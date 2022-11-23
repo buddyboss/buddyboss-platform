@@ -139,6 +139,15 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
+		// Exclude blocked by member's activity posts.
+		$blocked_by_query = $this->blocked_by_user_query();
+		if ( ! empty( $blocked_by_query ) ) {
+			if ( ! empty( $where ) ) {
+				$where['moderation_where'] .= ' AND ';
+			}
+			$where['moderation_where'] .= "( a.user_id NOT IN ( $blocked_by_query ))";
+		}
+
 		return $where;
 	}
 
