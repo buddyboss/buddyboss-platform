@@ -2208,10 +2208,6 @@ function bb_get_message_response_object( $message ) {
 		$sent_time = apply_filters( 'bb_get_the_thread_message_sent_time', date_i18n( 'g:i A', strtotime( $site_sent_date ) ) );
 	}
 
-    if ( isset( $_POST ) && isset( $_POST['action'] ) && in_array( $_POST['action'], array( 'messages_send_reply', 'messages_send_message', 'messages_get_thread_messages' ), true ) ) {
-        $sent_time = apply_filters( 'bb_get_the_thread_message_sent_time', date_i18n( 'g:i A', strtotime( $site_sent_date ) ) );
-    }
-
 	// Output single message template part.
 	$reply = array(
 		'id'                => $message_id,
