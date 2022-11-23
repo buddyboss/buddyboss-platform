@@ -1561,6 +1561,7 @@ window.bp = window.bp || {};
 						if ( file.media_edit_data ) {
 							self.media.push( file.media_edit_data );
 							self.model.set( 'media', self.media );
+							Backbone.trigger( 'triggerMediaChange' );
 						}
 					}
 				);
@@ -1577,6 +1578,7 @@ window.bp = window.bp || {};
 						circle.style.strokeDashoffset = circumference;
 						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 						circle.style.strokeDashoffset = offset;
+						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
 
@@ -1599,6 +1601,7 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-media-button' ) ) {
 							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
+						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
 
@@ -1654,6 +1657,15 @@ window.bp = window.bp || {};
 				);
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
+					'complete',
+					function() {
+						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+							Backbone.trigger( 'triggerMediaComplete' );
+						}
+					}
+				);
+
+				bp.Nouveau.Activity.postForm.dropzone.on(
 					'error',
 					function ( file, response ) {
 						if ( file.accepted ) {
@@ -1665,6 +1677,7 @@ window.bp = window.bp || {};
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) + '</div>' ) );
 							this.removeFile( file );
+							Backbone.trigger( 'triggerMediaChange' );
 						}
 					}
 				);
@@ -1722,6 +1735,7 @@ window.bp = window.bp || {};
 							}
 
 							bp.draft_content_changed = true;
+							Backbone.trigger( 'triggerMediaChange' );
 						}
 					}
 				);
@@ -1809,6 +1823,7 @@ window.bp = window.bp || {};
 						var filename = file.upload.filename;
 						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
 						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						Backbone.trigger( 'triggerMediaChange' );
 					}
 				);
 
@@ -1824,6 +1839,7 @@ window.bp = window.bp || {};
 						circle.style.strokeDashoffset = circumference;
 						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 						circle.style.strokeDashoffset = offset;
+						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
 
@@ -1846,6 +1862,7 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-document-button' ) ) {
 							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
+						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
 
@@ -1886,6 +1903,15 @@ window.bp = window.bp || {};
 				);
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
+					'complete',
+					function() {
+						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+							Backbone.trigger( 'triggerMediaComplete' );
+						}
+					}
+				);
+
+				bp.Nouveau.Activity.postForm.dropzone.on(
 					'accept',
 					function ( file, done ) {
 						if ( file.size == 0 ) {
@@ -1908,6 +1934,7 @@ window.bp = window.bp || {};
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_file_type + '. ' + ( response ? response : '' ) + '<div>' ) );
 							this.removeFile( file );
+							Backbone.trigger( 'triggerMediaChange' );
 						}
 					}
 				);
@@ -1958,6 +1985,7 @@ window.bp = window.bp || {};
 								}
 							}
 
+							Backbone.trigger( 'triggerMediaChange' );
 							bp.draft_content_changed = true;
 						}
 					}
@@ -2052,6 +2080,7 @@ window.bp = window.bp || {};
 							}
 
 						}
+						Backbone.trigger( 'triggerMediaChange' );
 
 					}
 				);
@@ -2075,6 +2104,7 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#activity-video-button' ) ) {
 							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
+						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
 
@@ -2095,6 +2125,7 @@ window.bp = window.bp || {};
 							circle.style.strokeDashoffset = circumference - 0.99 * circumference;
 							$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 						}
+						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
 
@@ -2143,6 +2174,15 @@ window.bp = window.bp || {};
 				);
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
+					'complete',
+					function() {
+						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+							Backbone.trigger( 'triggerMediaComplete' );
+						}
+					}
+				);
+
+				bp.Nouveau.Activity.postForm.dropzone.on(
 					'accept',
 					function ( file, done ) {
 						if ( file.size == 0 ) {
@@ -2165,6 +2205,7 @@ window.bp = window.bp || {};
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.video.invalid_video_type + '. ' + ( response ? response : '' ) + '<div>' ) );
 							this.removeFile( file );
+							Backbone.trigger( 'triggerMediaChange' );
 						}
 					}
 				);
@@ -2212,6 +2253,7 @@ window.bp = window.bp || {};
 								}
 							}
 
+							Backbone.trigger( 'triggerMediaChange' );
 							bp.draft_content_changed = true;
 						}
 					}
@@ -4636,6 +4678,9 @@ window.bp = window.bp || {};
 
 				this.listenTo(Backbone, 'onError', this.onError);
 				this.listenTo(Backbone, 'cleanFeedBack', this.cleanFeedback);
+				this.listenTo(Backbone, 'triggerMediaChange', this.postValidate);
+				this.listenTo(Backbone, 'triggerMediaInProgress', this.DisableSubmit);
+				this.listenTo(Backbone, 'triggerMediaComplete', this.EnableSubmit);
 
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
@@ -4715,6 +4760,9 @@ window.bp = window.bp || {};
 			},
 
 			postValidate: function () {
+				if ( window.activityUploaderInProgress ) {
+					return;
+				}
 				var $whatsNew = this.$el.find( '#whats-new' );
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content     = content.replace( /&nbsp;/g, ' ' );
@@ -4991,6 +5039,16 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+			},
+
+			DisableSubmit: function(){
+				window.activityUploaderInProgress = true;
+				this.$el.addClass('focus-in--empty');
+			},
+
+			EnableSubmit: function () {
+				window.activityUploaderInProgress = false;
+				this.postValidate();
 			},
 
 			displayFeedback: function ( model ) {
