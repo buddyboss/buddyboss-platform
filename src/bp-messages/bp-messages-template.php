@@ -2683,10 +2683,6 @@ function bb_get_the_thread_message_sent_time() {
 		$thread_message_sent_time = date_i18n( 'g:i A', strtotime( $site_sent_date ) );
 	}
 
-	if ( isset( $_POST ) && isset( $_POST['action'] ) && in_array( $_POST['action'], array( 'messages_send_reply', 'messages_send_message', 'messages_get_thread_messages' ), true ) ) {
-		$thread_message_sent_time = date_i18n( 'g:i A', strtotime( $site_sent_date ) );
-	}
-
 	/**
 	 * Filters the 'Sent x hours ago' string for the current message.
 	 *
