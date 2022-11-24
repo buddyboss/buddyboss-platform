@@ -1280,6 +1280,40 @@ function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 }
 
 /**
+ * Fetch the user id tht are blocked.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int  $user_id User id.
+ * @param bool $force   Whether to bypass the static cache or not.
+ *
+ * @return array|mixed
+ */
+function bb_moderation_get_blocked_user_ids( $user_id = 0, $force = false ) {
+	global $wpdb;
+	static $cache = array();
+	$bp = buddypress();
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$cache_key = 'bb_moderation_blocked_' . $user_id;
+	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
+		$type = BP_Moderation_Members::$moderation_type;
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sql  = $wpdb->prepare( "SELECT DISTINCT s.item_id FROM {$bp->moderation->table_name} s INNER JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND m.user_id = %d AND m.user_report = %d", $type, $user_id, 0 );
+		$data = $wpdb->get_col( $sql ); // phpcs:ignore
+		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
+
+		$cache[ $cache_key ] = $data;
+	} else {
+		$data = $cache[ $cache_key ];
+	}
+
+	return $data;
+}
+
+/**
  * Check whether a user has been marked as a blocked by another user.
  *
  * @since BuddyBoss 2.1.4
