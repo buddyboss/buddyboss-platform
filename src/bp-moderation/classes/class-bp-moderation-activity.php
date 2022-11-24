@@ -50,6 +50,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 
+		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_update_mentioned_link' ), 30, 2 );
+
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
 		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 
@@ -145,6 +147,40 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $where;
+	}
+
+	/**
+	 * Update mentioned link in activity content.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content   Activity content.
+	 * @param object $activity   Activity object.
+	 *
+	 * @return string
+	 */
+	public function bb_activity_content_update_mentioned_link( $content, $activity ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+		if ( $activity ) {
+
+			$usernames        = bp_activity_find_mentions( $content );
+			$blocked_users    = bb_moderation_get_blocked_user_ids( bp_loggedin_user_id(), true );
+			$blocked_by_users = bb_moderation_get_blocked_by_user_ids();
+			$mode_users       = array_unique( array_merge( $blocked_users, $blocked_by_users ) );
+			foreach ( $mode_users as $user_id ) {
+				if ( isset( $usernames[ $user_id ] ) ) {
+					preg_match_all( "'<span class=\"atwho-inserted\">(.*?)<\/span>'si", $content, $matchs, PREG_SET_ORDER );
+					foreach ( $matchs as $match ) {
+						if ( strstr( $match[0], '@' . $usernames[ $user_id ] ) ) {
+							$content = str_replace( $match[0], '@' . $usernames[ $user_id ], $content );
+						}
+					}
+				}
+			}
+		}
+		return $content;
 	}
 
 	/**
