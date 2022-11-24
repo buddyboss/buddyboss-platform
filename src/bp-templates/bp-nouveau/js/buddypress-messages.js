@@ -4811,6 +4811,8 @@ window.bp = window.bp || {};
 				var pusherMessage = _.first( messagePusherData );
 				bp.Nouveau.Messages.last = pusherMessage;
 
+				this.prepareRelistItem( pusherMessage );
+
 				var split_message = jQuery.extend( true, {}, pusherMessage );
 				var date          = split_message.date,
 					year          = date.getUTCFullYear(),
@@ -4877,10 +4879,10 @@ window.bp = window.bp || {};
 				this.collection.add( first_message );
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 
-				if( $( '#bp-message-thread-list li:last-child video' ).length > 0 ){
-					$( '#bp-message-thread-list li:last-child video' ).on( 'loadedmetadata', function() {
-						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
-					});
+				if ( $( '#bp-message-thread-list li:last-child video' ).length > 0 ) {
+					$( '#bp-message-thread-list li:last-child video' ).on( 'loadedmetadata', function () {
+						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
+					} );
 				}
 			},
 
@@ -4908,6 +4910,38 @@ window.bp = window.bp || {};
 					}
 					this.collection.sync( 'update' );
 				}
+			},
+
+			prepareRelistItem: function( pusherMessage ) {
+				pusherMessage.display_date_list = bb_pusher_vars.display_date_list;
+				if ( 'undefined' !== typeof pusherMessage.excerpt && pusherMessage.excerpt === '' ) {
+					if ( 'undefined' !== typeof pusherMessage.media && pusherMessage.media.length > 0 ) {
+						if ( pusherMessage.media.length < 2 ) {
+							pusherMessage.excerpt = BP_Nouveau.messages.i18n.single_media;
+						} else {
+							pusherMessage.excerpt = BP_Nouveau.messages.i18n.multiple_media;
+						}
+					} else if ( 'undefined' !== typeof pusherMessage.document && pusherMessage.document.length > 0 ) {
+						if ( pusherMessage.document.length < 2 ) {
+							pusherMessage.excerpt = BP_Nouveau.messages.i18n.single_document;
+						} else {
+							pusherMessage.excerpt = BP_Nouveau.messages.i18n.multiple_document;
+						}
+					} else if ( 'undefined' !== typeof pusherMessage.video && pusherMessage.video.length > 0 ) {
+						if ( pusherMessage.video.length < 2 ) {
+							pusherMessage.excerpt = BP_Nouveau.messages.i18n.single_video;
+						} else {
+							pusherMessage.excerpt = BP_Nouveau.messages.i18n.multiple_video;
+						}
+					} else if ( 'undefined' !== typeof pusherMessage.gif && pusherMessage.gif.length > 0 ) {
+						pusherMessage.excerpt = BP_Nouveau.messages.i18n.single_gif;
+					}
+				}
+				var thread_data = {
+					thread_id: pusherMessage.thread_id,
+					message: pusherMessage,
+				};
+				window.Backbone.trigger( 'relistelements', thread_data );
 			},
 
 			triggerDeleteUpdateMessage: function ( data ) {
