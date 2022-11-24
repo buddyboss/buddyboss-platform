@@ -127,7 +127,16 @@ module.exports = function (grunt) {
 					flatten: true,
 					src: ['bp-core/admin/sass/*.scss'],
 					dest: SOURCE_DIR + 'bp-core/admin/css/'
-				}
+				},
+				pusher: {
+					cwd: SOURCE_DIR,
+					expand: true,
+					extDot: 'last',
+					ext: '.css',
+					flatten: true,
+					src: ['bp-integrations/pusher/assets/css/scss/*.scss'],
+					dest: SOURCE_DIR + 'bp-integrations/pusher/assets/css/',
+				},
 			},
 			rtlcss: {
 				options: {
@@ -348,6 +357,7 @@ module.exports = function (grunt) {
 						'!**/*.min.css',
 						'!**/admin/**/*.css',
 						'!**/emojionearea-edited.css',
+						'!**/pusher/**/*.css',
 						'!**/endpoints/**/*.css'
 						]
 					)
@@ -392,7 +402,7 @@ module.exports = function (grunt) {
 			},
 			exec: {
 				cli: {
-					command: 'git add .; git commit -am "grunt release build";',
+					command: 'git add . && git commit -am "grunt release build"',
 					cwd: '.',
 					stdout: false
 				},
