@@ -402,7 +402,7 @@ function messages_new_message( $args = '' ) {
 			if ( is_wp_error( $send ) ) {
 				return $send;
 			} else {
-				return new WP_Error( 'message_generic_error', __( 'Message was not sent. Please try again.', 'buddyboss' ) );
+				return new WP_Error( 'message_generic_error', __( 'There was a problem sending your message.', 'buddyboss' ) );
 			}
 		}
 
