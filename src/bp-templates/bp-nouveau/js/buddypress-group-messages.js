@@ -627,7 +627,7 @@ window.bp = window.bp || {};
 						'type'    		: type,
 						'gif_data'     	: gif
 					};
-
+					
 					target.addClass( 'loading' ).attr( 'disabled', true );
 
 					xhr_submit_message = $.ajax(

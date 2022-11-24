@@ -978,7 +978,11 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
  */
 function bb_notification_exclude_group_message_notification( $component_names ) {
 
-	$hide_message_notification = (bool) bp_get_option( 'hide_message_notification', 1 );
+	if ( ! bp_is_active( 'messages' ) ) {
+		return $component_names;
+	}
+
+	$hide_message_notification = bb_hide_messages_from_notification_enabled();
 
 	if (
 		function_exists( 'bb_enabled_legacy_email_preference' ) &&
@@ -1084,8 +1088,10 @@ function bb_notification_avatar() {
 				$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
 			}
 
+			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
+			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<a href="<?php echo esc_url( $link ); ?>">
+			<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
 				echo bp_core_fetch_avatar(
 					array(
@@ -1097,7 +1103,7 @@ function bb_notification_avatar() {
 				// Get the small icon for the notification which will print beside the avatar.
 				echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
 				?>
-				<?php ( isset( $user ) ? bb_current_user_status( $user->ID ) : '' ); ?>
+				<?php ( isset( $user ) ? bb_user_presence_html( $user->ID ) : '' ); ?>
 			</a>
 			<?php
 		}
@@ -1535,5 +1541,49 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 	}
 
 	return $renderable;
+}
 
+
+/**
+ * Function to check the Hide messages from notifications is enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return bool
+ */
+function bb_hide_messages_from_notification_enabled() {
+	return (bool) apply_filters( 'bb_hide_messages_from_notification_enabled', bp_get_option( 'hide_message_notification', 1 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return bool
+ */
+function bb_delay_email_notifications_enabled() {
+	return (bool) apply_filters( 'bb_delay_email_notifications_enabled', bp_get_option( 'delay_email_notification', 1 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return int
+ */
+function bb_get_delay_email_notifications_time() {
+	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled with pusher or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return bool
+ */
+function bb_check_delay_email_notification() {
+	return (bool) ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() );
 }
