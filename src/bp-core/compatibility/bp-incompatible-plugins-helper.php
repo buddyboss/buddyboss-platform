@@ -213,6 +213,13 @@ function bp_helper_plugins_loaded_callback() {
 	if ( class_exists( 'QueryMonitor' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-qm-helpers.php';
 	}
+
+	/**
+	 * Include filters when tutor-pro plugin is activated.
+	 */
+	if ( function_exists( 'tutor_pro' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
