@@ -417,7 +417,7 @@ module.exports = function (grunt) {
 					stdout: false
 				},
 				composer: {
-					command: 'composer update',
+					command: 'composer install --no-dev --no-scripts && composer install-scripts',
 					cwd: SOURCE_DIR,
 					stdout: false
 				}
@@ -486,7 +486,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
-	grunt.registerTask('build', ['string-replace', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
+	grunt.registerTask('build', ['string-replace', 'exec:composer', 'clean:all', 'copy:files', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.

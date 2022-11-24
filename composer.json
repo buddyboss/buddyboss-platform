@@ -39,14 +39,23 @@
 	  "squizlabs/php_codesniffer": "^3.4.0",
 	  "wp-coding-standards/wpcs": "*"
 	},
+	"autoload": {
+		"files": [
+		]
+	},
     "scripts": {
+		"post-install-cmd": ["@install-scripts"],
+		"post-update-cmd": ["@install-scripts"],
 		"test": "vendor/bin/phpunit",
 		"test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash",
 		"lint-php": "vendor/bin/phpcs -s",
 		"lint-php-fix": "vendor/bin/phpcbf",
 		"lint-js": "grunt jsvalidate jshint",
 		"lint-css": "grunt stylelint",
-		"lint": ["@lint-php", "@lint-js", "@lint-css"]
+		"lint": ["@lint-php", "@lint-js", "@lint-css"],
+		"install-scripts": [
+			"composer dump-autoload"
+		]
 	},
 	"config": {
 		"platform-check": false
