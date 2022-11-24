@@ -1902,9 +1902,11 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 	$email_type    = 'messages-unread-digest';
 	$first_message = BP_Messages_Thread::get_first_message( $thread_id );
 	$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+	$message_users = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+	$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 	$group_name    = '';
 
-	if ( ! empty( $group_id ) ) {
+	if ( ! empty( $group_id ) && 'open' === $message_type && 'all' === $message_users ) {
 		$email_type = 'group-message-digest';
 		if ( bp_is_active( 'groups' ) ) {
 			$group      = groups_get_group( $group_id );
@@ -1922,6 +1924,8 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 		if ( ! bb_enabled_legacy_email_preference() ) {
 			$type_key = bb_get_prefences_key( 'legacy', $type_key );
 		}
+	} else {
+		$group_id = 0;
 	}
 
 	$message_slug = bp_get_messages_slug();
