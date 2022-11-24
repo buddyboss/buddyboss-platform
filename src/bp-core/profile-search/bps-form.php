@@ -201,7 +201,7 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 		}
 
 		$options = array();
-		if( isset( $f->options ) ){
+		if ( isset( $f->options ) ) {
 			foreach ( $f->options as $key => $label ) {
 				$options[ esc_attr( $key ) ] = esc_attr( $label );
 			}
