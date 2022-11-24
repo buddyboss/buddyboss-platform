@@ -550,8 +550,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$group         = '';
 	$first_message = BP_Messages_Thread::get_first_message( $thread_id );
 	$group_id      = bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
+	$message_users = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+	$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
-	if ( ! empty( $group_id ) ) {
+	if ( ! empty( $group_id ) && 'open' === $message_type && 'all' === $message_users ) {
 		$group = groups_get_group( $group_id );
 	}
 
