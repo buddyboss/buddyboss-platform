@@ -3637,7 +3637,7 @@ window.bp = window.bp || {};
 				var $input    = $( this.el ).find( '#send-to-input' );
 				var ArrayData = [];
 				if ( typeof BP_Nouveau.messages.is_blocked_by_members !== 'undefined' && BP_Nouveau.messages.is_blocked_by_members.length > 1 ) {
-					ArrayData = $.merge( ArrayData, BP_Nouveau.messages.is_blocked_by_members )
+					ArrayData = $.merge( ArrayData, BP_Nouveau.messages.is_blocked_by_members );
 				}
 				if ( $input.prop( 'tagName' ) != 'SELECT' ) {
 					this.addMentions();
