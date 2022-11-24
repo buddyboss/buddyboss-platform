@@ -625,7 +625,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 	if ( true === $title_tag_compatibility ) {
 		$bp_title_parts['site'] = $blogname;
 
-		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() ) {
+		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages()) {
 			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
 		}
 	}
@@ -685,7 +685,7 @@ function bp_modify_document_title_parts( $title = array() ) {
 	);
 
 	// Add the pagination number if needed (not sure if this is necessary).
-	if ( isset( $title['page'] ) && ! bp_is_single_activity() ) {
+	if ( isset( $title['page'] ) && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
 		$bp_title['page'] = $title['page'];
 	}
 
