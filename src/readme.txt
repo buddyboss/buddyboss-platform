@@ -57,6 +57,18 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.1.7 =
+* Activity - Handled edit activity with documents not working as expected
+* Activity - Handled auto-generated forum discussion, quick reply giphy option not working issue
+* Activity - Handled post activity to a specific group issue even when not allowed
+* Profiles - Handled a small UI issue for the repeater fieldset in the profile edit screen
+* Media - Handled video doesn't show seek forward/backward option issue in the modal
+* Media - Handled media upload not working issue in group messages when option disabled for private messages only
+* Tools - Handled 'clear default data' critical issue when the forums component is disabled
+* Updater - Improvements to updater logic and performance
+* REST API - Handled post activity to a specific group endpoint permission issue
+* Compatibility - Handled group zoom meeting date & time picker broken UI conflict with TutorLMS plugin
+
 = 2.1.6.2 =
 * REST API - Handled discussion reply endpoint not working critical issue
 
