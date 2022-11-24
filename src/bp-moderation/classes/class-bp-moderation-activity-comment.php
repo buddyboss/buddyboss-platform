@@ -46,6 +46,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
+		add_filter( 'bp_activity_comment_content', array( $this, 'bb_activity_comment_update_mentioned_link' ), 30, 2 );
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
@@ -132,6 +133,36 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		}
 
 		return $where;
+	}
+
+	/**
+	 * Update mentioned link in activity comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content   Activity comment.
+	 *
+	 * @return string
+	 */
+	public function bb_activity_comment_update_mentioned_link( $content ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+		$usernames        = bp_activity_find_mentions( $content );
+		$blocked_users    = bb_moderation_get_blocked_user_ids( bp_loggedin_user_id(), true );
+		$blocked_by_users = bb_moderation_get_blocked_by_user_ids();
+		$mode_users       = array_unique( array_merge( $blocked_users, $blocked_by_users ) );
+		foreach ( $mode_users as $user_id ) {
+			if ( isset( $usernames[ $user_id ] ) ) {
+				preg_match_all( "'<span class=\"atwho-inserted\">(.*?)<\/span>'si", $content, $matchs, PREG_SET_ORDER );
+				foreach ( $matchs as $match ) {
+					if ( strstr( $match[0], '@' . $usernames[ $user_id ] ) ) {
+						$content = str_replace( $match[0], '@' . $usernames[ $user_id ], $content );
+					}
+				}
+			}
+		}
+		return $content;
 	}
 
 	/**
