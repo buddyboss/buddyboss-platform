@@ -2831,7 +2831,7 @@ function bp_nouveau_ajax_hide_thread() {
 	global $bp, $wpdb;
 
 	$response = array(
-		'feedback' => __( 'There was a problem deleting your messages. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem archiving conversation.', 'buddyboss' ),
 		'type'     => 'error',
 	);
 
@@ -3324,7 +3324,7 @@ function bp_nouveau_ajax_unhide_thread() {
 	global $bp, $wpdb;
 
 	$response = array(
-		'feedback' => __( 'There was a problem un-archiving your messages. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem unarchiving the conversation.', 'buddyboss' ),
 		'type'     => 'error',
 	);
 
