@@ -550,8 +550,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$group         = '';
 	$first_message = BP_Messages_Thread::get_first_message( $thread_id );
 	$group_id      = bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
+	$message_users = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
+	$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
-	if ( ! empty( $group_id ) ) {
+	if ( ! empty( $group_id ) && 'open' === $message_type && 'all' === $message_users ) {
 		$group = groups_get_group( $group_id );
 	}
 
@@ -2829,7 +2831,7 @@ function bp_nouveau_ajax_hide_thread() {
 	global $bp, $wpdb;
 
 	$response = array(
-		'feedback' => __( 'There was a problem deleting your messages. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem archiving conversation.', 'buddyboss' ),
 		'type'     => 'error',
 	);
 
@@ -3322,7 +3324,7 @@ function bp_nouveau_ajax_unhide_thread() {
 	global $bp, $wpdb;
 
 	$response = array(
-		'feedback' => __( 'There was a problem un-archiving your messages. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem unarchiving the conversation.', 'buddyboss' ),
 		'type'     => 'error',
 	);
 
