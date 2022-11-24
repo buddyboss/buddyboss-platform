@@ -206,6 +206,20 @@ function bp_helper_plugins_loaded_callback() {
 
 		add_filter( 'parse_query', 'bb_core_tribe_events_parse_query' );
 	}
+
+	/**
+	 * Include Query Monitor compatibility.
+	 */
+	if ( class_exists( 'QueryMonitor' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-qm-helpers.php';
+	}
+
+	/**
+	 * Include filters when tutor-pro plugin is activated.
+	 */
+	if ( function_exists( 'tutor_pro' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
