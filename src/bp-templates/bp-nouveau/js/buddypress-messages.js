@@ -4804,7 +4804,6 @@ window.bp = window.bp || {};
 				this.listenTo( Backbone, 'onReplyReSend', this.triggerPusherUpdateReSendMessage );
 				this.listenTo( Backbone, 'onMessageDeleteSuccess', this.triggerDeleteUpdateMessage );
 				this.listenTo( Backbone, 'onMessageAjaxFail', this.triggerAjaxFailMessage );
-				this.listenTo( Backbone, 'onSidebarUpdate', this.prepareRelistItem );
 			},
 
 			triggerPusherMessage: function ( messagePusherData ) {
