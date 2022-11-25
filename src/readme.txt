@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.1.7.1 =
+* Messages - Handled SQL queries performance critical issue
+
 = 2.1.7 =
 * Activity - Handled edit activity with documents not working as expected
 * Activity - Handled auto-generated forum discussion, quick reply giphy option not working issue
