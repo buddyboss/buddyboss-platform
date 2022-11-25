@@ -29,47 +29,9 @@ add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
 add_filter( 'bp_get_requested_url', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 
-// user is removed from ld group.
+// user is added/removed from ld group.
 add_action( 'ld_removed_group_access', 'bb_ld_removed_group_access', 99, 2 );
-
-/**
- * Remove user to social group when added in LD group.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $user_id  User id.
- * @param int $group_id Group id.
- *
- * @return void
- */
-function bb_ld_removed_group_access( $user_id, $group_id ) {
-
-	if ( ! bp_is_active( 'groups' ) ) {
-		return;
-	}
-	bb_add_or_remove_user_in_social_group( $group_id, $user_id, 'leave' );
-}
-
-// user is added from ld group.
 add_action( 'ld_added_group_access', 'bb_ld_added_group_access', 99, 2 );
-
-/**
- * Add user to social group when added in LD group.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $user_id  User id.
- * @param int $group_id Group id.
- *
- * @return void
- */
-function bb_ld_added_group_access( $user_id, $group_id ) {
-
-	if ( ! bp_is_active( 'groups' ) ) {
-		return;
-	}
-	bb_add_or_remove_user_in_social_group( (int) $group_id, (int) $user_id, 'join' );
-}
 
 /** Functions *****************************************************************/
 
@@ -435,6 +397,41 @@ function bb_support_learndash_course_other_language_permalink( $url ) {
 	return rawurldecode( $url );
 }
 
+/**
+ * Remove user to social group when added in LD group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id  User id.
+ * @param int $group_id Group id.
+ *
+ * @return void
+ */
+function bb_ld_removed_group_access( $user_id, $group_id ) {
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+	bb_add_or_remove_user_in_social_group( $group_id, $user_id, 'leave' );
+}
+
+/**
+ * Add user to social group when added in LD group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id  User id.
+ * @param int $group_id Group id.
+ *
+ * @return void
+ */
+function bb_ld_added_group_access( $user_id, $group_id ) {
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+	bb_add_or_remove_user_in_social_group( (int) $group_id, (int) $user_id, 'join' );
+}
 
 /**
  * Function to fix the issue when adding/removing user from LD group
@@ -447,21 +444,26 @@ function bb_support_learndash_course_other_language_permalink( $url ) {
  *
  * @param int $group_id learndash group id.
  * @param int $user_id  user id.
- * @param int $type     'join' or 'leave' group
+ * @param int $type     'join' or 'leave' group.
  */
 function bb_add_or_remove_user_in_social_group( $group_id, $user_id, $type = 'join' ) {
 
 	$courses = learndash_get_group_courses_list( $group_id );
 
-	foreach ( $courses as $course_id ) {
+	if ( ! empty( $courses ) ) {
+		foreach ( $courses as $course_id ) {
 
-		$group_attached      = (int) get_post_meta( $course_id, 'bp_course_group', true );
-		$join_or_leave_group = 'groups_' . $type . '_group';
+			// Get social groups from the course.
+			$group_attached = (int) get_post_meta( $course_id, 'bp_course_group', true );
+			if ( 0 === $group_attached ) {
+				continue;
+			}
 
-		if ( 0 === $group_attached || false === $group_attached ) {
-			continue;
+			// Perform action to add/remove group access.
+			$join_or_leave_group = 'groups_' . $type . '_group';
+			if ( function_exists( $join_or_leave_group ) ) {
+				$join_or_leave_group( $group_attached, $user_id );
+			}
 		}
-
-		$join_or_leave_group( $group_attached, $user_id );
 	}
 }
