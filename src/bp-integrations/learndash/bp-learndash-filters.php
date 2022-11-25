@@ -82,11 +82,7 @@ function bb_ld_added_group_access( $user_id, $group_id ) {
  */
 function bp_ld_popup_register_redirect( $bool ) {
 
-	if (
-		isset( $_POST )
-		&& isset( $_POST['learndash-registration-form'] )
-		&& 'true' === $_POST['learndash-registration-form']
-	) {
+	if ( isset( $_POST ) && isset( $_POST['learndash-registration-form'] ) ) {
 		return false;
 	}
 

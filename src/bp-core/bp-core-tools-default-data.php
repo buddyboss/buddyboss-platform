@@ -243,11 +243,13 @@ function bp_dd_delete_dummy_forum() {
 	/**
 	 * Delete Forums
 	 */
-	$forums = bp_get_option( 'bp_dd_imported_forum_ids' );
-	if ( ! empty( $forums ) ) {
-		foreach ( (array) $forums as $forum_id ) {
-			wp_delete_post( $forum_id );
-			bbp_delete_forum( $forum_id );
+	if ( bp_is_active( 'forums' ) ) {
+		$forums = bp_get_option( 'bp_dd_imported_forum_ids' );
+		if ( ! empty( $forums ) ) {
+			foreach ( (array) $forums as $forum_id ) {
+				wp_delete_post( $forum_id );
+				bbp_delete_forum( $forum_id );
+			}
 		}
 	}
 }

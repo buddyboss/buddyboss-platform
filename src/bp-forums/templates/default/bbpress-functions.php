@@ -170,9 +170,6 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			wp_enqueue_script( 'bp-select2' );
-			if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
-				wp_enqueue_script( 'bp-select2-local' );
-			}
 			wp_enqueue_style( 'bp-select2' );
 
 			// Forum-specific scripts.
