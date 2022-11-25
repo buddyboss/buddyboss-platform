@@ -3162,8 +3162,8 @@ div[class*="attached-gif-container"] .gif-icon {
 }
 
 .gif-media-search-dropdown .gif-alert [class*="bb-icon"] {
-  font-size: 30px !important;
-  color: #333 !important;
+  font-size: 30px;
+  color: #333;
   opacity: 0.4;
 }
 
