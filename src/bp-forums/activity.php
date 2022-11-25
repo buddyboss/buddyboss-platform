@@ -647,18 +647,19 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_author_id = bbp_get_topic_author_id( $topic_id );
 
 				$this->topic_create( $topic_id, $forum_id, array(), $topic_author_id );
-			} else if( bbp_get_spam_status_id() === $post->post_status ){
-				
+			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
+
 				// Mark related activity as spam if topic marked as spam.
 				if ( $activity_id = $this->get_activity_id( $topic_id ) ) {
-					
+
 					$activity = new BP_Activity_Activity( $activity_id );
-					
-					if ( empty( $activity->id ) )
-					return false;
+
+					if ( empty( $activity->id ) ) {
+						return false;
+					}
 
 					do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
-					
+
 					// Mark as spam.
 					bp_activity_mark_as_spam( $activity );
 					$activity->save();									
@@ -821,18 +822,19 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$reply_author_id = bbp_get_reply_author_id( $reply_id );
 
 				$this->reply_create( $reply_id, $topic_id, $forum_id, array(), $reply_author_id );
-			} else if( bbp_get_spam_status_id() === $post->post_status ){
+			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
 				
 				// Mark related activity as spam if reply marked as spam.
 				if ( $activity_id = $this->get_activity_id( $reply_id ) ) {
-					
+
 					$activity = new BP_Activity_Activity( $activity_id );
-					
-					if ( empty( $activity->id ) )
-					return false;
+
+					if ( empty( $activity->id ) ) {
+						return false;
+					}
 
 					do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
-					
+
 					// Mark as spam.
 					bp_activity_mark_as_spam( $activity );
 					$activity->save();									
