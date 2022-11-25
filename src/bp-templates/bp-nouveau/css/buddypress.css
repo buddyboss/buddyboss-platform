@@ -6501,6 +6501,14 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   margin: 0 0 5px 0;
 }
 
+form.ac-form .ac-reply-content .dropzone.video-dropzone .dz-progress-count {
+  background-color: transparent;
+}
+
+form.ac-form .ac-reply-content input[name="ac_form_submit"][disabled] {
+  pointer-events: none;
+}
+
 .bp-ac-form-cotainer {
   display: -webkit-box;
   display: -ms-flexbox;

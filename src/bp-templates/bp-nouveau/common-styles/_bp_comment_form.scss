@@ -75,6 +75,14 @@ form.ac-form {
 			}
 		}
 
+		.dropzone.video-dropzone .dz-progress-count {
+			background-color: transparent;
+		}
+
+		input[name="ac_form_submit"][disabled] {
+			pointer-events: none;
+		}
+
 	}
 }
 

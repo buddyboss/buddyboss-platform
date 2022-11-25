@@ -2467,6 +2467,10 @@ window.bp = window.bp || {};
 
 			destroy: function ( event ) {
 				var old_gif_data = this.model.get( 'gif_data' );
+				var commentForm;
+				if( event ){
+					commentForm = $( event.currentTarget ).closest( '.ac-reply-content' );
+				}
 
 				this.model.set( 'gif_data', {} );
 				if( $( '#message-feedabck' ).hasClass( 'noMediaError') ) {
@@ -2516,6 +2520,11 @@ window.bp = window.bp || {};
 
 				if ( ! _.isUndefined( event ) && ! _.isEmpty( old_gif_data ) && _.isEmpty( this.model.get( 'gif_data' ) ) ) {
 					bp.draft_content_changed = true;
+				}
+
+				if( commentForm && commentForm.length ) {
+					var commentInput = commentForm.find( '.ac-input' ).get(0);
+					bp.Nouveau.Activity.validateCommentForm( commentInput );
 				}
 			}
 		}
@@ -2618,6 +2627,7 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				this.$el.parent().removeClass( 'open' );
 				var model = this.gifDataItems.findWhere( { id: e.currentTarget.dataset.id } );
+				var commentForm = $( e.currentTarget ).closest( '.ac-reply-content' );
 				this.model.set( 'gif_data', model.attributes );
 
 				var tool_box = this.$el.parents( '#whats-new-form' );
@@ -2642,11 +2652,17 @@ window.bp = window.bp || {};
 					tool_box_comment.find( '.ac-reply-toolbar  .ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
 
+				if( commentForm.length ){
+					commentForm.find( 'input[name="ac_form_submit"').prop( 'disabled', false );
+				}
+
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
 				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
-				whatNewScroll.stop().animate({
-					scrollTop: whatNewScroll[0].scrollHeight
-				}, 300);
+				if( whatNewScroll.length ){
+					whatNewScroll.stop().animate({
+						scrollTop: whatNewScroll[0].scrollHeight
+					}, 300);
+				}
 			},
 
 			// Add a single GifDataItem to the list by creating a view for it, and
