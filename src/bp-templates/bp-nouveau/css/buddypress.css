@@ -3397,6 +3397,7 @@ input.search-query-input {
 .activity-list .activity-item .activity-header {
   margin: 0 auto;
   width: 80%;
+  word-break: break-word;
 }
 
 .activity-list .activity-item .activity-header a,
@@ -4611,6 +4612,9 @@ span.dashicons.dashicons-admin-file:before {
   margin-bottom: 10px;
   font-size: 14px;
   line-height: 1.5;
+  white-space: pre-wrap;
+  max-height: 105px;
+  overflow: auto;
 }
 
 .bb-activity-media-wrap,
@@ -9024,6 +9028,11 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 .buddypress-wrap .profile.edit .editfield .field-visibility-settings-toggle,
 .buddypress-wrap .profile.edit .editfield .field-visibility-settings {
   order: 3;
+}
+
+.profile-edit button.button > i {
+  font-size: 18px;
+  margin-right: 5px;
 }
 
 #btn_add_repeater_set {
@@ -15071,6 +15080,10 @@ td.bbp-topic-counts {
 -------------------------------------------------------------- */
 #bbpress-forums fieldset.bbp-form {
   clear: left;
+}
+
+#bbpress-forums fieldset.bbp-form .select2-container {
+  z-index: auto;
 }
 
 #bbpress-forums fieldset.bbp-form {
