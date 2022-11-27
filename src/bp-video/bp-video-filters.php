@@ -1831,6 +1831,7 @@ function bb_setup_template_for_video_preview( $template ) {
  */
 function bb_setup_attachment_video_preview() {
 	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]', 'top' );
+	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]&video-thread-id=$matches[2]', 'top' );
 }
 
 /**
@@ -1844,6 +1845,10 @@ function bb_setup_attachment_video_preview() {
  */
 function bb_setup_attachment_video_preview_query( $query_vars ) {
 	$query_vars[] = 'video-attachment-id';
+
+	if ( bp_is_active( 'messages' ) ) {
+		$query_vars[] = 'video-thread-id';
+	}
 
 	return $query_vars;
 }
@@ -1873,3 +1878,4 @@ function bb_setup_attachment_video_preview_template( $template ) {
 
 	return $template;
 }
+
