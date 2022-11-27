@@ -3397,15 +3397,12 @@ input.search-query-input {
 .activity-list .activity-item .activity-header {
   margin: 0 auto;
   width: 80%;
+  word-break: break-word;
 }
 
 .activity-list .activity-item .activity-header a,
 .activity-list .activity-item .activity-header img {
   display: inline;
-}
-
-.activity-list .activity-item .activity-header p {
-  word-wrap: break-word;
 }
 
 .activity-list .activity-item .activity-header .avatar {
@@ -9031,6 +9028,11 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 .buddypress-wrap .profile.edit .editfield .field-visibility-settings-toggle,
 .buddypress-wrap .profile.edit .editfield .field-visibility-settings {
   order: 3;
+}
+
+.profile-edit button.button > i {
+  font-size: 18px;
+  margin-left: 5px;
 }
 
 #btn_add_repeater_set {

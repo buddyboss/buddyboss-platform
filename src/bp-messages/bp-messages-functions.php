@@ -1737,20 +1737,14 @@ function bb_messaged_set_friend_button_args( $args = array() ) {
  *
  * @since BuddyBoss 2.1.4
  *
- * @param array $meta_query Array of meta query arguments.
+ * @param array $sub_query Array of meta query arguments.
  * @param array $r          Array of arguments.
  *
  * @return array|mixed
  */
-function bb_messages_update_unread_count( $meta_query, $r ) {
+function bb_messages_update_unread_count( $sub_query, $r ) {
 	if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
-		$meta_query = array(
-			'relation' => 'AND',
-			array(
-				'key'     => 'group_message_thread_id',
-				'compare' => 'EXISTS',
-			),
-		);
+		$sub_query = "AND m.id IN ( SELECT DISTINCT message_id from wp_bp_messages_meta WHERE meta_key = 'group_message_users' AND meta_value = 'all' AND message_id IN ( SELECT DISTINCT message_id FROM wp_bp_messages_meta WHERE meta_key = 'group_message_type' AND meta_value = 'open' ) )";
 	} elseif ( bp_is_active( 'groups' ) ) {
 		// Determine groups of user.
 		$groups = groups_get_groups(
@@ -1762,22 +1756,19 @@ function bb_messages_update_unread_count( $meta_query, $r ) {
 			)
 		);
 
-		$group_ids  = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
-		$meta_query = array(
-			'relation' => 'AND',
-			array(
-				'key'     => 'group_message_thread_id',
-				'compare' => 'EXISTS',
-			),
-			array(
-				'key'     => 'group_id',
-				'compare' => 'NOT IN',
-				'value'   => $group_ids,
-			),
-		);
+		$group_ids     = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+		$group_ids_sql = '';
+
+		if ( ! empty( $group_ids ) ) {
+			$group_ids_sql = implode( ',', array_unique( $group_ids ) );
+			$group_ids_sql = "AND ( meta_key = 'group_id' AND meta_value NOT IN ({$group_ids_sql}) )";
+		}
+
+
+		$sub_query = "AND m.id IN ( SELECT DISTINCT message_id from wp_bp_messages_meta WHERE 1 =1 {$group_ids_sql} AND message_id IN ( SELECT DISTINCT message_id from wp_bp_messages_meta WHERE meta_key  = 'group_message_users' and meta_value = 'all' AND message_id in ( select DISTINCT message_id from wp_bp_messages_meta where meta_key  = 'group_message_type' and meta_value = 'open' ) ) )";
 	}
 
-	return $meta_query;
+	return $sub_query;
 }
 
 /**

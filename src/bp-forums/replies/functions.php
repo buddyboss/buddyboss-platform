@@ -2650,7 +2650,7 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 /**
  * Allow group members to have advanced priviledges in group forum topics.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.6
  *
  * @param array  $caps      Primitive capabilities required of the user.
  * @param string $cap       Capability being checked.
