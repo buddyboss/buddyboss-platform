@@ -1267,7 +1267,7 @@ function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
 		$type = BP_Moderation_Members::$moderation_type;
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql  = $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d AND s.reported != 0", $type, $user_id );
+		$sql  = $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d AND s.reported != 0 AND m.user_report != 1", $type, $user_id );
 		$data = $wpdb->get_col( $sql ); // phpcs:ignore
 		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
 
@@ -1493,4 +1493,99 @@ function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
 	 * @param array $args    Arguments passed to get_avatar_data(), after processing.
 	 */
 	return apply_filters( 'bb_moderation_is_suspended_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
+}
+
+/**
+ * Function to fetch the delete user's label.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_deleted_label() {
+
+	/**
+	 * Filter to fetch the delete user's label.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string Default delete label.
+	 */
+	return apply_filters( 'bb_moderation_is_deleted_label', esc_html__( 'Unknown Member', 'buddyboss' ) );
+}
+
+/**
+ * Function to fetch the delete users avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_deleted_avatar() {
+
+	/**
+	 * Filter to fetch the delete users avatar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string Get default avatar image URL based on settings.
+	 */
+	return apply_filters( 'bb_moderation_is_deleted_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
+}
+
+/**
+ * Function will return text when current user blocked to other user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_moderation_has_blocked_message() {
+
+	/**
+	 * Filter will return text when current user blocked to other user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	return apply_filters( 'bb_moderation_has_blocked_message', esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ) );
+}
+
+/**
+ * Function will return text when current user blocked by other user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_moderation_is_blocked_message() {
+
+	/**
+	 * Filter will return text when current user blocked by other user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	return apply_filters( 'bb_moderation_is_blocked_message', esc_html__( 'This content has been hidden as you are blocked by this member.', 'buddyboss' ) );
+}
+
+/**
+ * Function will return text when user is suspended.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_moderation_is_suspended_message() {
+
+	/**
+	 * Filter will return text when user is suspended.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	return apply_filters( 'bb_moderation_is_suspended_message', esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ) );
 }
