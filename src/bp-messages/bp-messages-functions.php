@@ -1751,8 +1751,10 @@ function bb_messaged_set_friend_button_args( $args = array() ) {
  * @return array|mixed
  */
 function bb_messages_update_unread_count( $sub_query, $r ) {
+	$bp = buddypress();
+
 	if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
-		$sub_query = "AND m.id IN ( SELECT DISTINCT message_id from wp_bp_messages_meta WHERE meta_key = 'group_message_users' AND meta_value = 'all' AND message_id IN ( SELECT DISTINCT message_id FROM wp_bp_messages_meta WHERE meta_key = 'group_message_type' AND meta_value = 'open' ) )";
+		$sub_query = "AND m.id IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE meta_key = 'group_message_users' AND meta_value = 'all' AND message_id IN ( SELECT DISTINCT message_id FROM {$bp->messages->table_name_meta} WHERE meta_key = 'group_message_type' AND meta_value = 'open' ) )";
 	} elseif ( bp_is_active( 'groups' ) ) {
 		// Determine groups of user.
 		$groups = groups_get_groups(
@@ -1772,8 +1774,7 @@ function bb_messages_update_unread_count( $sub_query, $r ) {
 			$group_ids_sql = "AND ( meta_key = 'group_id' AND meta_value NOT IN ({$group_ids_sql}) )";
 		}
 
-
-		$sub_query = "AND m.id IN ( SELECT DISTINCT message_id from wp_bp_messages_meta WHERE 1 =1 {$group_ids_sql} AND message_id IN ( SELECT DISTINCT message_id from wp_bp_messages_meta WHERE meta_key  = 'group_message_users' and meta_value = 'all' AND message_id in ( select DISTINCT message_id from wp_bp_messages_meta where meta_key  = 'group_message_type' and meta_value = 'open' ) ) )";
+		$sub_query = "AND m.id IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE 1 =1 {$group_ids_sql} AND message_id IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE meta_key  = 'group_message_users' and meta_value = 'all' AND message_id in ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} where meta_key  = 'group_message_type' and meta_value = 'open' ) ) )";
 	}
 
 	return $sub_query;
