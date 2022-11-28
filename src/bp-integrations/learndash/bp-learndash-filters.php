@@ -29,6 +29,10 @@ add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
 add_filter( 'bp_get_requested_url', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 
+// user is added/removed from ld group.
+add_action( 'ld_removed_group_access', 'bb_ld_removed_group_access', 99, 2 );
+add_action( 'ld_added_group_access', 'bb_ld_added_group_access', 99, 2 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -70,7 +74,7 @@ function bp_activity_pre_transition_post_type_status( $bool, $new_status, $old_s
 		)
 	) {
 		if (
-			!empty( $post )
+			! empty( $post )
 			&& (
 				'sfwd-lessons' == $post->post_type
 				|| 'sfwd-quiz' == $post->post_type
@@ -78,7 +82,7 @@ function bp_activity_pre_transition_post_type_status( $bool, $new_status, $old_s
 			&& (
 				empty( get_post_meta( $post->ID, 'course_id', true ) )
 				|| (
-					!empty( get_post_meta( $post->ID, 'course_id', true ) )
+					! empty( get_post_meta( $post->ID, 'course_id', true ) )
 					&& 'future' === get_post_status( get_post_meta( $post->ID, 'course_id', true ) )
 				)
 			)
@@ -87,32 +91,31 @@ function bp_activity_pre_transition_post_type_status( $bool, $new_status, $old_s
 		}
 
 		if (
-			!empty( $post )
+			! empty( $post )
 			&& (
 				'sfwd-topic' == $post->post_type
 			)
 			&& (
 				empty( get_post_meta( $post->ID, 'course_id', true ) )
 				|| (
-					!empty( get_post_meta( $post->ID, 'course_id', true ) )
+					! empty( get_post_meta( $post->ID, 'course_id', true ) )
 					&& 'future' === get_post_status( get_post_meta( $post->ID, 'course_id', true ) )
 				)
 			)
 			&& (
 				empty( get_post_meta( $post->ID, 'lesson_id', true ) )
 				|| (
-					!empty( get_post_meta( $post->ID, 'lesson_id', true ) )
+					! empty( get_post_meta( $post->ID, 'lesson_id', true ) )
 					&& 'future' === get_post_status( get_post_meta( $post->ID, 'lesson_id', true ) )
 				)
 			)
 		) {
 			return false;
 		}
-
 	} else {
 
 		if (
-			!empty( $post )
+			! empty( $post )
 			&& (
 				'sfwd-lessons' == $post->post_type
 				|| 'sfwd-quiz' == $post->post_type
@@ -120,7 +123,7 @@ function bp_activity_pre_transition_post_type_status( $bool, $new_status, $old_s
 			&& (
 				empty( get_post_meta( $post->ID, 'course_id', true ) )
 				|| (
-					!empty( get_post_meta( $post->ID, 'course_id', true ) )
+					! empty( get_post_meta( $post->ID, 'course_id', true ) )
 					&& 'future' === get_post_status( get_post_meta( $post->ID, 'course_id', true ) )
 				)
 			)
@@ -129,21 +132,21 @@ function bp_activity_pre_transition_post_type_status( $bool, $new_status, $old_s
 		}
 
 		if (
-			!empty( $post )
+			! empty( $post )
 			&& (
 				'sfwd-topic' == $post->post_type
 			)
 			&& (
 				empty( get_post_meta( $post->ID, 'course_id', true ) )
 				|| (
-					!empty( get_post_meta( $post->ID, 'course_id', true ) )
+					! empty( get_post_meta( $post->ID, 'course_id', true ) )
 					&& 'future' === get_post_status( get_post_meta( $post->ID, 'course_id', true ) )
 				)
 			)
 			&& (
 				empty( get_post_meta( $post->ID, 'lesson_id', true ) )
 				|| (
-					!empty( get_post_meta( $post->ID, 'lesson_id', true ) )
+					! empty( get_post_meta( $post->ID, 'lesson_id', true ) )
 					&& 'future' === get_post_status( get_post_meta( $post->ID, 'lesson_id', true ) )
 				)
 			)
@@ -177,7 +180,7 @@ function bp_activity_add_meta_boxes() {
 			|| 'sfwd-topic' == $post->post_type
 			|| 'sfwd-quiz' == $post->post_type
 		)
-		&& !post_type_supports( $post->post_type, 'buddypress-activity' )
+		&& ! post_type_supports( $post->post_type, 'buddypress-activity' )
 	) {
 		return;
 	}
@@ -190,24 +193,24 @@ function bp_activity_add_meta_boxes() {
 	) {
 
 		$lesson_bb = learndash_get_course_lessons_list( $post_ID );
-		$quizz = learndash_get_course_quiz_list( $post_ID );
+		$quizz     = learndash_get_course_quiz_list( $post_ID );
 
-		if ( !empty( $lesson_bb ) && post_type_supports( 'sfwd-lessons', 'buddypress-activity' ) ) {
+		if ( ! empty( $lesson_bb ) && post_type_supports( 'sfwd-lessons', 'buddypress-activity' ) ) {
 			foreach ( $lesson_bb as $lesson ) {
 				bp_activity_post_type_publish( $lesson['post']->ID, $lesson['post'] );
 			}
 		}
 
-		if ( !empty( $quizz ) && post_type_supports( 'sfwd-quiz', 'buddypress-activity' ) ) {
+		if ( ! empty( $quizz ) && post_type_supports( 'sfwd-quiz', 'buddypress-activity' ) ) {
 			foreach ( $quizz as $quiz ) {
 				bp_activity_post_type_publish( $quiz['post']->ID, $quiz['post'] );
 			}
 		}
 
-		if ( !empty( $lesson_bb ) && post_type_supports( 'sfwd-topic', 'buddypress-activity' ) ) {
+		if ( ! empty( $lesson_bb ) && post_type_supports( 'sfwd-topic', 'buddypress-activity' ) ) {
 			foreach ( $lesson_bb as $lesson ) {
 				$topics = learndash_get_topic_list( $lesson['post']->ID, $post_ID );
-				if ( !empty( $topics ) ) {
+				if ( ! empty( $topics ) ) {
 					foreach ( $topics as $topic ) {
 						bp_activity_post_type_publish( $topic->ID, $topic );
 					}
@@ -215,10 +218,10 @@ function bp_activity_add_meta_boxes() {
 			}
 		}
 
-		if ( !empty( $lesson_bb ) && post_type_supports( 'sfwd-quiz', 'buddypress-activity' ) ) {
+		if ( ! empty( $lesson_bb ) && post_type_supports( 'sfwd-quiz', 'buddypress-activity' ) ) {
 			foreach ( $lesson_bb as $lesson ) {
 				$lesson_quiz = learndash_get_lesson_quiz_list( $lesson['post']->ID );
-				if ( !empty( $lesson_quiz ) ) {
+				if ( ! empty( $lesson_quiz ) ) {
 					foreach ( $lesson_quiz as $quiz ) {
 						bp_activity_post_type_publish( $quiz['post']->ID, $quiz['post'] );
 					}
@@ -228,7 +231,7 @@ function bp_activity_add_meta_boxes() {
 	}
 
 	// Add Activity when lesson published correctly.
-	else if (
+	elseif (
 		'sfwd-lessons' == $post->post_type
 		&& $post->post_status == 'publish'
 		&& post_type_supports( 'sfwd-lessons', 'buddypress-activity' )
@@ -239,7 +242,7 @@ function bp_activity_add_meta_boxes() {
 				&& learndash_is_sample( $post_ID )
 			)
 			|| (
-				!empty( get_post_meta( $post_ID, 'course_id', true ) )
+				! empty( get_post_meta( $post_ID, 'course_id', true ) )
 				&& 'publish' == get_post_status( get_post_meta( $post_ID, 'course_id', true ) )
 			)
 			|| learndash_is_sample( $post_ID )
@@ -249,14 +252,14 @@ function bp_activity_add_meta_boxes() {
 	}
 
 	// Add Activity when topic published correctly.
-	else if (
+	elseif (
 		'sfwd-topic' == $post->post_type
 		&& $post->post_status == 'publish'
 		&& post_type_supports( 'sfwd-topic', 'buddypress-activity' )
 	) {
 		if (
-			   !empty( get_post_meta( $post_ID, 'course_id', true ) )
-			&& !empty( get_post_meta( $post_ID, 'lesson_id', true ) )
+			   ! empty( get_post_meta( $post_ID, 'course_id', true ) )
+			&& ! empty( get_post_meta( $post_ID, 'lesson_id', true ) )
 			&& 'future' === get_post_status( get_post_meta( $post_ID, 'course_id', true ) )
 			&& 'future' === get_post_status( get_post_meta( $post_ID, 'lesson_id', true ) )
 		) {
@@ -265,18 +268,18 @@ function bp_activity_add_meta_boxes() {
 	}
 
 	// Add Activity when quiz published correctly.
-	else if (
+	elseif (
 		'sfwd-quiz' == $post->post_type
 		&& $post->post_status == 'publish'
 		&& post_type_supports( 'sfwd-quiz', 'buddypress-activity' )
 	) {
 		if (
 			(
-				!empty( get_post_meta( $post_ID, 'course_id', true ) )
+				! empty( get_post_meta( $post_ID, 'course_id', true ) )
 				&& 'future' === get_post_status( get_post_meta( $post_ID, 'course_id', true ) )
 			)
 			|| (
-				!empty( get_post_meta( $post_ID, 'lesson_id', true ) )
+				! empty( get_post_meta( $post_ID, 'lesson_id', true ) )
 				&& 'future' === get_post_status( get_post_meta( $post_ID, 'lesson_id', true ) )
 			)
 		) {
@@ -295,18 +298,18 @@ function bb_group_wp_admin_bar_updates_menu() {
 	global $wp_admin_bar;
 
 	$page_ids = bp_core_get_directory_page_ids();
-	if ( bp_is_groups_directory() && is_array( $page_ids ) && isset( $page_ids['groups'] ) && !empty( $page_ids['groups'] ) ) {
+	if ( bp_is_groups_directory() && is_array( $page_ids ) && isset( $page_ids['groups'] ) && ! empty( $page_ids['groups'] ) ) {
 
-		//Get a reference to the edit node to modify.
-		$new_content_node = $wp_admin_bar->get_node('edit');
+		// Get a reference to the edit node to modify.
+		$new_content_node = $wp_admin_bar->get_node( 'edit' );
 
 		if ( isset( $new_content_node ) && ! empty( $new_content_node->href ) ) {
-			//Change href
+			// Change href
 			$new_content_node->href = get_edit_post_link( $page_ids['groups'] );
 		}
 
-		//Update Node.
-		$wp_admin_bar->add_node($new_content_node);
+		// Update Node.
+		$wp_admin_bar->add_node( $new_content_node );
 
 	}
 }
@@ -351,7 +354,7 @@ function bb_ld_group_archive_slug_change( $post_options, $post_type ) {
  *
  * @return array $setting_option_fields
  */
-function bb_ld_group_archive_backend_slug_print( $setting_option_fields, $settings_section_key) {
+function bb_ld_group_archive_backend_slug_print( $setting_option_fields, $settings_section_key ) {
 
 	if ( is_admin() && isset( $_REQUEST ) && isset( $_REQUEST['page'] ) && 'groups-options' === $_REQUEST['page'] && 'cpt_options' === $settings_section_key && is_array( $setting_option_fields ) && isset( $setting_option_fields['has_archive']['options']['yes'] ) ) {
 		$setting_option_fields['has_archive']['options']['yes'] = sprintf(
@@ -392,4 +395,75 @@ function bb_support_learndash_course_permalink( $bp, $bp_uri ) {
  */
 function bb_support_learndash_course_other_language_permalink( $url ) {
 	return rawurldecode( $url );
+}
+
+/**
+ * Remove user to social group when added in LD group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id  User id.
+ * @param int $group_id Group id.
+ *
+ * @return void
+ */
+function bb_ld_removed_group_access( $user_id, $group_id ) {
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+	bb_add_or_remove_user_in_social_group( $group_id, $user_id, 'leave' );
+}
+
+/**
+ * Add user to social group when added in LD group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id  User id.
+ * @param int $group_id Group id.
+ *
+ * @return void
+ */
+function bb_ld_added_group_access( $user_id, $group_id ) {
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+	bb_add_or_remove_user_in_social_group( (int) $group_id, (int) $user_id, 'join' );
+}
+
+/**
+ * Function to fix the issue when adding/removing user from LD group
+ * with courses from LD group is directly associated with buddyboss social groups
+ *
+ * Get all social groups from the courses associated with LD group
+ * Add or remove user from that social groups
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id learndash group id.
+ * @param int $user_id  user id.
+ * @param int $type     'join' or 'leave' group.
+ */
+function bb_add_or_remove_user_in_social_group( $group_id, $user_id, $type = 'join' ) {
+
+	$courses = learndash_get_group_courses_list( $group_id );
+
+	if ( ! empty( $courses ) ) {
+		foreach ( $courses as $course_id ) {
+
+			// Get social groups from the course.
+			$group_attached = (int) get_post_meta( $course_id, 'bp_course_group', true );
+			if ( 0 === $group_attached ) {
+				continue;
+			}
+
+			// Perform action to add/remove group access.
+			$join_or_leave_group = 'groups_' . $type . '_group';
+			if ( function_exists( $join_or_leave_group ) ) {
+				$join_or_leave_group( $group_attached, $user_id );
+			}
+		}
+	}
 }
