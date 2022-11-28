@@ -166,10 +166,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array(
-			'id'   => $upload['id'],
-			'url'  => $upload['url'],
-			'name' => $upload['name'],
-			'type' => $upload['type'],
+			'id'                => $upload['id'],
+			'url'               => $upload['url'],
+			'name'              => $upload['name'],
+			'type'              => $upload['type'],
+			'size'              => $upload['size'],
+			'extension'         => $upload['extension'],
+			'svg_icon'          => $upload['svg_icon'],
+			'svg_icon_download' => $upload['svg_icon_download'],
+			'text'              => $upload['text'],
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -1038,7 +1043,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$status = bp_document_delete( array( 'id' => $id ), true );
+		$status = bp_document_delete( array( 'id' => $id ) );
 
 		// Build the response.
 		$response = new WP_REST_Response();
@@ -2344,14 +2349,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'activity' );
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response(
 					$document,
-					array(
-						'support' => 'activity',
-						'context' => 'view',
-					)
+					$object
 				)
 			);
 		}
@@ -2530,11 +2536,22 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$component = $activity['component'];
 		$type      = 'activity_comment' === $activity['type'];
 		$item_id   = $activity['primary_item_id'];
-		if ( true === $type && ! empty( $item_id ) ) {
+
+		if ( ! empty( $item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $item_id );
-			if ( 'groups' === $parent_activity->component ) {
-				$item_id   = $parent_activity->item_id;
-				$component = 'groups';
+			if ( true === $type ) {
+				if ( 'groups' === $parent_activity->component ) {
+					$item_id   = $parent_activity->item_id;
+					$component = 'groups';
+				}
+			}
+			if ( 'blogs' === $parent_activity->component ||
+			     (
+				     ! empty( $activity['component'] ) &&
+				     'blogs' === $activity['component']
+			     )
+			) {
+				return false;
 			}
 		}
 
@@ -2637,9 +2654,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'message' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'message' ) )
+				$this->prepare_item_for_response( $document, $object )
 			);
 		}
 
@@ -2807,9 +2827,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'forums' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'forums' ) )
+				$this->prepare_item_for_response( $document, $object )
 			);
 		}
 

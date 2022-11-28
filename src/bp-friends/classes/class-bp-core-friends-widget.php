@@ -22,7 +22,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	 * @since BuddyPress 1.9.0
 	 */
 	function __construct() {
-		$widget_ops                       = array(
+		$widget_ops = array(
 			'description'                 => __( 'A list of members that are connected to the logged-in user or member profile containing the widget.', 'buddyboss' ),
 			'classname'                   => 'widget_bp_core_friends_widget buddypress widget',
 			'customize_selective_refresh' => true,
@@ -104,7 +104,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		$link              = trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() );
 		$instance['title'] = (
 			bp_loggedin_user_id() === $user_id
-			? __( "My Connections", 'buddyboss' )
+			? __( 'My Connections', 'buddyboss' )
 			: sprintf( __( "%s's Connections", 'buddyboss' ), $this->get_user_display_name( bp_displayed_user_id() ) )
 		);
 
@@ -148,39 +148,32 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 		<?php if ( bp_has_members( $members_args ) ) : ?>
 			<div class="item-options" id="friends-list-options">
-				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends"
-																 <?php
-																	if ( $instance['friend_default'] == 'newest' ) :
-																		?>
-					class="selected"<?php endif; ?>><?php _e( 'Newest', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends"
-																   <?php
-																	if ( $instance['friend_default'] == 'active' ) :
-																		?>
-					class="selected"<?php endif; ?>><?php _e( 'Active', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends"
-																   <?php
-																	if ( $instance['friend_default'] == 'popular' ) :
-																		?>
-					class="selected"<?php endif; ?>><?php _e( 'Popular', 'buddyboss' ); ?></a>
+				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends" class="<?php echo ( 'newest' === $instance['friend_default'] ? esc_attr( 'selected' ) : '' ); // phpcs:ignore ?>"><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends" class="<?php echo ( 'active' === $instance['friend_default'] ? esc_attr( 'selected' ) : '' ); // phpcs:ignore ?>"><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends" class="<?php echo ( 'popular' === $instance['friend_default'] ? esc_attr( 'selected' ) : '' ); // phpcs:ignore ?>"><?php esc_html_e( 'Popular', 'buddyboss' ); ?></a>
 			</div>
 
-			<ul id="friends-list" class="item-list">
+			<ul id="friends-list" class="item-list bb-friends-list-widget">
 				<?php
 				while ( bp_members() ) :
 					bp_the_member();
 					?>
 					<li class="vcard">
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar(); ?></a>
+							<a href="<?php bp_member_permalink(); ?>" class="bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
+								<?php
+								bp_member_avatar();
+								bb_user_presence_html( bp_get_member_user_id() );
+								?>
+							</a>
 						</div>
 
 						<div class="item">
 							<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
 							<div class="item-meta">
-								<?php if ( 'newest' == $instance['friend_default'] ) : ?>
+								<?php if ( 'newest' === $instance['friend_default'] ) : ?>
 									<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span>
-								<?php elseif ( 'active' == $instance['friend_default'] ) : ?>
+								<?php elseif ( 'active' === $instance['friend_default'] ) : ?>
 									<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
 								<?php else : ?>
 									<span class="activity"><?php bp_member_total_friend_count(); ?></span>
@@ -194,7 +187,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			<?php if ( $members_template->total_member_count > absint( $instance['max_friends'] ) ) : ?>
 				<div class="more-block">
 					<a href="<?php echo esc_url( $link ); ?>" class="count-more more-connection"><?php esc_html_e( 'See all', 'buddyboss' ); ?>
-						 <i class="bb-icon-l bb-icon-angle-right"></i>
+						<i class="bb-icon-l bb-icon-angle-right"></i>
 					</a>
 				</div>
 			<?php endif; ?>
@@ -204,7 +197,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		<?php else : ?>
 
 			<div class="widget-error">
-				<?php _e( 'Sorry, no connections were found.', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Sorry, no connections were found.', 'buddyboss' ); ?>
 			</div>
 
 		<?php endif; ?>
@@ -249,26 +242,26 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			'friend_default' => 'active',
 			'link_title'     => false,
 		);
-		$instance = wp_parse_args( (array) $instance, $defaults );
+		$instance = bp_parse_args( (array) $instance, $defaults );
 
 		$max_friends    = $instance['max_friends'];
 		$friend_default = $instance['friend_default'];
 		$link_title     = (bool) $instance['link_title'];
 		?>
 
-		<p><label for="<?php echo $this->get_field_id( 'link_title' ); ?>"><input type="checkbox" name="<?php echo $this->get_field_name( 'link_title' ); ?>" id="<?php echo $this->get_field_id( 'link_title' ); ?>" value="1" <?php checked( $link_title ); ?> /> <?php _e( 'Link widget title to Members directory', 'buddyboss' ); ?></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'link_title' ) ); ?>"><input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'link_title' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'link_title' ) ); ?>" value="1" <?php checked( $link_title ); ?> /> <?php esc_html_e( 'Link widget title to Members directory', 'buddyboss' ); ?></label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'max_friends' ); ?>"><?php esc_html_e( 'Max connections to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_friends' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_friends' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $max_friends ); ?>" style="width: 30%" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'max_friends' ) ); ?>"><?php esc_html_e( 'Max connections to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_friends' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_friends' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $max_friends ); ?>" style="width: 30%" /></label></p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'friend_default' ); ?>"><?php _e( 'Default connections to show:', 'buddyboss' ); ?></label>
-			<select name="<?php echo $this->get_field_name( 'friend_default' ); ?>" id="<?php echo $this->get_field_id( 'friend_default' ); ?>">
-				<option value="newest" <?php selected( $friend_default, 'newest' ); ?>><?php _e( 'Newest', 'buddyboss' ); ?></option>
-				<option value="active" <?php selected( $friend_default, 'active' ); ?>><?php _e( 'Active', 'buddyboss' ); ?></option>
-				<option value="popular"  <?php selected( $friend_default, 'popular' ); ?>><?php _e( 'Popular', 'buddyboss' ); ?></option>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'friend_default' ) ); ?>"><?php esc_html_e( 'Default connections to show:', 'buddyboss' ); ?></label>
+			<select name="<?php echo esc_attr( $this->get_field_name( 'friend_default' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'friend_default' ) ); ?>">
+				<option value="newest" <?php selected( $friend_default, 'newest' ); ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></option>
+				<option value="active" <?php selected( $friend_default, 'active' ); ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></option>
+				<option value="popular" <?php selected( $friend_default, 'popular' ); ?>><?php esc_html_e( 'Popular', 'buddyboss' ); ?></option>
 			</select>
 		</p>
-		<p><small><?php _e( 'Note: This widget is only displayed if a member has some connections.', 'buddyboss' ); ?></small></p>
+		<p><small><?php esc_html_e( 'Note: This widget is only displayed if a member has some connections.', 'buddyboss' ); ?></small></p>
 
 		<?php
 	}
@@ -291,7 +284,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			|| 'first_last_name' === $format
 		) {
 			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
+			$display_name  = xprofile_get_field_data( $first_name_id, $user_id );
 		} else {
 			$display_name = bp_core_get_user_displayname( $user_id );
 		}
