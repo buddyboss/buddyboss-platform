@@ -1004,3 +1004,17 @@ function bp_document_wp_stateless_get_preview_url( $attachment_url, $document_id
 
 add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview_url', PHP_INT_MAX, 5 );
 
+
+/**
+ * Helper functions for the gravity forms compatibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_wp_gravity_forms_compatibility_helper() {
+
+	if ( class_exists( 'GFForms' ) ) {
+		require buddypress()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
