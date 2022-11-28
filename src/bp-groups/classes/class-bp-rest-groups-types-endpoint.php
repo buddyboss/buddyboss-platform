@@ -242,6 +242,12 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Group type's label background and text color.
+		$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $data['name'] ) : '';
+		if ( ! empty( $label_color_data ) && isset( $schema['label_colors'] ) ) {
+			$data['label_colors'] = $label_color_data;
+		}
+
 		$response = rest_ensure_response( $data );
 
 		/**
@@ -378,6 +384,13 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			$schema['properties']['group_type_role_labels'] = array(
 				'description' => __( 'Rename the group member roles for groups of this type.', 'buddyboss' ),
 				'type'        => 'object',
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
+
+			$schema['properties']['label_colors'] = array(
+				'description' => __( 'Label\'s text and background colors for group types.' , 'buddyboss' ),
+				'type'        => 'array',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);

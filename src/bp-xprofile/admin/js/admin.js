@@ -698,6 +698,12 @@ jQuery( document ).ready(
 				}
 			);
 
+			jQuery( '.bb-delete-profile-field' ).click(
+				function( ){
+					return confirm( XProfileAdmin.confirm_delete_field );
+				}
+			);
+
 			jQuery( document ).on(
 				'change',
 				'.select-social-networks',

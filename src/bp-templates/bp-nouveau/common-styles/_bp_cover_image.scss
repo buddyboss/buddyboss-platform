@@ -29,6 +29,10 @@
 	z-index: 1;
 	overflow: hidden;
 
+	&.cover-small {
+		height: 225px;
+	}
+
 	.header-cover-img {
 		max-width: 100%;
 		min-width: 100%;
@@ -63,7 +67,7 @@
 			z-index: 119;
 			top: 50%;
 			color: #fff;
-			background-color: rgba(134, 132, 132, 0.6);
+			background-color: rgba(0, 0, 0, 0.2);
 			padding: 10px 15px;
 			border-radius: 5px;
 			pointer-events: none;
@@ -78,18 +82,19 @@
 			z-index: 1;
 			float: none;
 			margin: 12px 12px 0 0;
-			background-color: rgba(255, 255, 255, 0.9);
+			background-color: #f9f9f9;
 			color: #939597;
-			border-radius: 5px;
+			border-radius: 4px;
 			font-size: 13px;
 			line-height: 1.6;
 			padding: 6px 11px;
 			box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
 
 			&.loading:after {
-				content: "\e838";
+				content: "\ef30";
 				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 18px;
+				font-weight: 300;
 				line-height: 1;
 				margin-left: 10px;
 				text-align: center;
@@ -123,13 +128,65 @@
 #item-header-cover-image {
 	margin-bottom: 1em;
 	position: relative;
-	z-index: 2;
+
+	&.bb-disable-cover-img #item-header-content {
+
+		.users-header & {
+			margin-top: 0;
+		}
+
+	}
+
+	&.bb-disable-cover-img #item-header-avatar {
+		margin-top: 0;
+	}
 
 	#item-header-avatar {
 		margin-top: -70px;
 		padding: 0 1em;
 		position: relative;
+		z-index: 2;
+
+		img.avatar {
+			max-width: 150px;
+		}
+
 	}
+
+	#item-header-content {
+
+		.bp-group-type {
+			display: none;
+		}
+
+		.bp-group-status {
+			display: inline-block;
+		}
+
+		.group-item-actions {
+
+			@include center-vert();
+			-webkit-box-orient: horizontal;
+			-webkit-box-direction: normal;
+			-ms-flex-direction: row;
+			flex-direction: row;
+			margin: 0;
+			max-width: 100%;
+			text-align: left;
+
+			.bp-title {
+				margin: 0 $marg-xsml 0 0;
+			}
+
+			.moderators-lists .user-list,
+			.moderators-lists .user-list ul {
+				padding: 0;
+				margin-bottom: 0;
+			}
+		}
+
+	}
+
 }
 
 #item-header-avatar img {
@@ -140,10 +197,21 @@
 	margin: 0 auto;
 }
 
-.users-header #item-header-cover-image #item-header-content {
-	flex: 1;
-	margin-top: -50px;
-	min-width: 0;
+.users-header #item-header-cover-image {
+
+	#item-header-content {
+		flex: 1;
+		min-width: 0;
+	}
+
+	#item-header-avatar .bp-member-type {
+		display: none;
+	}
+
+}
+
+.users-header #cover-image-container:not(.network_profiles) .member-social-links {
+	display: none !important;
 }
 
 /*

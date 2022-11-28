@@ -243,6 +243,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		if ( function_exists( 'bb_init_email_background_updater' ) ) {
 			remove_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			remove_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
+		}
 		remove_all_actions( 'bp_actions' );
 
 		/**
@@ -263,6 +266,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		add_action( 'bp_init', 'bp_init_background_updater', 50 );
 		if ( function_exists( 'bb_init_email_background_updater' ) ) {
 			add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
+		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+			add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 		}
 
 		$_SERVER['REQUEST_URI'] = $tempurl;
@@ -862,9 +868,14 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			);
 
 			if ( has_action( 'bp_notification_settings' ) ) {
+				$title = esc_html__( 'Email Preferences', 'buddyboss' );
+				if ( function_exists( 'bb_core_notification_preferences_data' ) ) {
+					$data  = bb_core_notification_preferences_data();
+					$title = esc_html( $data['menu_title'] );
+				}
 				$item_settings['children'][] = array(
 					'ID'    => 'notifications',
-					'title' => __( 'Email Preferences', 'buddyboss' ),
+					'title' => $title,
 					'url'   => esc_url( trailingslashit( $settings_link . 'notifications' ) ),
 					'count' => '',
 				);

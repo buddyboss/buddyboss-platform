@@ -215,7 +215,7 @@ class BP_REST_Video_Details_Endpoint extends WP_REST_Controller {
 	 * @return string
 	 */
 	public function bp_rest_video_object_results_video_all_scope( $querystring ) {
-		$querystring = wp_parse_args( $querystring );
+		$querystring = bp_parse_args( $querystring );
 
 		$querystring['scope'] = $this->video_endpoint->bp_rest_video_default_scope( 'all', array() );
 
