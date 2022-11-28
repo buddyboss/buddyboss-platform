@@ -856,22 +856,26 @@ function bbp_forum_recursive_group_id( $forum_id ) {
 }
 
 /**
- * Check if there's a parent forum that is associated with private group
- * 
- *
- * @param int $forum_id
+ * Check if there's a parent forum that is associated with private group.
  *
  * @since Buddyboss [BBVERSION]
+ *
+ * @param int $forum_id Forum id.
+ *
  * @return bool
  */
 function bb_forum_has_parent_with_private_group( $forum_id ) {
-	
+
 	if ( ! bp_is_active( 'groups' ) ) {
 		return false;
-	}	
+	}
 
 	$group_id	= bbp_forum_recursive_group_id( $forum_id );
-	$group		= groups_get_group( $group_id );
+	if ( empty( $group_id ) ) {
+		$group_id = current( bbp_get_forum_group_ids( $forum_id ) );
+	}
+
+	$group = groups_get_group( $group_id );
 
 	return $group && $group->status === bbp_get_private_status_id();
 }
