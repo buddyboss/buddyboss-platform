@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.1.7\n"
+"Project-Id-Version: BuddyBoss Platform 2.1.7.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-11-24 12:40:56+00:00\n"
+"POT-Creation-Date: 2022-11-28 06:00:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15254,7 +15254,7 @@ msgstr ""
 #: bp-forums/replies/functions.php:2626 bp-members/bp-members-functions.php:558
 #: bp-messages/bp-messages-template.php:1824
 #: bp-messages/bp-messages-template.php:2089
-#: bp-messages/classes/class-bp-messages-thread.php:1676
+#: bp-messages/classes/class-bp-messages-thread.php:1626
 msgid "Deleted User"
 msgstr ""
 
@@ -23609,7 +23609,7 @@ msgid "Message was not sent. Please try again."
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:1382
-#: bp-messages/bp-messages-functions.php:1910
+#: bp-messages/bp-messages-functions.php:1902
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1499
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1770
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1161
@@ -23627,21 +23627,21 @@ msgstr ""
 msgid "Send Connection Request"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2062
-#: bp-messages/bp-messages-functions.php:2071
-#: bp-messages/bp-messages-functions.php:2080
+#: bp-messages/bp-messages-functions.php:2054
+#: bp-messages/bp-messages-functions.php:2063
+#: bp-messages/bp-messages-functions.php:2072
 #. translators: %s: The admin setting field label.
 msgid "%d mins"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2089
+#: bp-messages/bp-messages-functions.php:2081
 #. translators: %s: The admin setting field label.
 msgid "%d hour"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2098
-#: bp-messages/bp-messages-functions.php:2107
-#: bp-messages/bp-messages-functions.php:2116
+#: bp-messages/bp-messages-functions.php:2090
+#: bp-messages/bp-messages-functions.php:2099
+#: bp-messages/bp-messages-functions.php:2108
 #. translators: %s: The admin setting field label.
 msgid "%d hours"
 msgstr ""
@@ -24210,7 +24210,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1667
+#: bp-messages/classes/class-bp-messages-thread.php:1617
 msgid "%s Recipients"
 msgstr ""
 
