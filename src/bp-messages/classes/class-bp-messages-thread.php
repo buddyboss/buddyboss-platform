@@ -952,7 +952,7 @@ class BP_Messages_Thread {
 				$group_ids_sql = "AND ( meta_key = 'group_id' and meta_value NOT IN({$group_ids_sql}) )";
 			}
 
-			$sub_query = "AND m.id NOT IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE 1 = 1 {$group_ids_sql} AND message_id IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE meta_key  = 'group_message_users' and meta_value = 'all' AND message_id in ( select DISTINCT message_id from {$bp->messages->table_name_meta} where meta_key  = 'group_message_type' and meta_value = 'open' ) ) )";
+			$sub_query = "AND m.id NOT IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE 1 = 1 {$group_ids_sql} AND message_id IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE meta_key  = 'group_message_users' and meta_value = 'all' AND message_id in ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} where meta_key  = 'group_message_type' and meta_value = 'open' ) ) )";
 		}
 
 		$sub_query = apply_filters( 'bb_messages_thread_sub_query', $sub_query, $r );
