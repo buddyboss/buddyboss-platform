@@ -3862,6 +3862,11 @@ function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false )
 		$bp_classes[] = 'buddypress';
 	}
 
+	// Add is-mobile class if we are in mobile device
+	if ( wp_is_mobile() ) { // https://developer.wordpress.org/reference/functions/wp_is_mobile/
+		$bp_classes[] = 'is-mobile';
+	}
+
 	// Add the theme name/id to the body classes
 	$bp_classes[] = 'bp-' . bp_get_theme_compat_id();
 
