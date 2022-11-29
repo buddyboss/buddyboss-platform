@@ -1396,6 +1396,7 @@ window.bp = window.bp || {};
 				this.video_dropzone_obj.destroy();
 			}
 			this.dropzone_video = [];
+			$( '#bp-video-post-content' ).val('');
 
 			var currentPopup = $( event.currentTarget ).closest( '#bp-video-uploader' );
 
