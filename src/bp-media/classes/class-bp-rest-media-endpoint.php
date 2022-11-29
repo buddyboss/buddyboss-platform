@@ -1403,7 +1403,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_id'         => $media->attachment_id,
 			'user_id'               => $media->user_id,
 			'title'                 => $media->title,
-			'description'           => get_post_field( 'post_content', $media->attachment_id ),
+			'description'           => wp_specialchars_decode( get_post_field( 'post_content', $media->attachment_id ), ENT_QUOTES ),
 			'album_id'              => $media->album_id,
 			'group_id'              => $media->group_id,
 			'activity_id'           => $media->activity_id,
