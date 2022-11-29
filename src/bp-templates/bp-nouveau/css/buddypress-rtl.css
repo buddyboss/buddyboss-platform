@@ -26762,9 +26762,9 @@ span.icons:before {
 }
 
 #group-messages-container .bb-groups-messages-right .group-messages-compose:after {
-  content: "\f465";
+  content: "\ee5a";
   font-size: 20px;
-  font-family: dashicons;
+  font-family: bb-icons;
   vertical-align: top;
   text-align: center;
   transition: color 0.1s ease-in;
