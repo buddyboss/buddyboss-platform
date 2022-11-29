@@ -140,13 +140,23 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
-		// Exclude blocked by members.
-		$blocked_by_query = $this->blocked_by_user_query();
-		if ( ! empty( $blocked_by_query ) ) {
-			if ( ! empty( $where ) ) {
-				$where['moderation_where'] .= ' AND ';
+		if ( function_exists( 'bp_is_members_directory' ) && bp_is_members_directory() ) {
+			$blocked_query = $this->blocked_user_query();
+			if ( ! empty( $blocked_query ) ) {
+				if ( ! empty( $where ) ) {
+					$where['moderation_where'] .= ' AND ';
+				}
+				$where['moderation_where'] .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) ) OR {$this->alias}.id IS NULL )";
 			}
-			$where['moderation_where'] .= "( u.ID NOT IN ( $blocked_by_query ))";
+
+			// Exclude blocked by members.
+			$blocked_by_users_ids = function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids() : array();
+			if ( ! empty( $blocked_by_users_ids ) ) {
+				if ( ! empty( $where ) ) {
+					$where['moderation_where'] .= ' AND ';
+				}
+				$where['moderation_where'] .= "( u.ID NOT IN ( " . implode( ', ', $blocked_by_users_ids ) . " ))";
+			}
 		}
 
 		return $where;
