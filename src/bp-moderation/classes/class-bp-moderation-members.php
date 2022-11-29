@@ -135,20 +135,17 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
-		$sql = $this->exclude_where_query();
+		$blocked_user_query = false;
+		if ( function_exists( 'bp_is_members_directory' ) && bp_is_members_directory() ) {
+			$blocked_user_query = true;
+		}
+
+		$sql = $this->exclude_where_query( $blocked_user_query );
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
 		}
 
-		if ( function_exists( 'bp_is_members_directory' ) && bp_is_members_directory() ) {
-			$blocked_query = $this->blocked_user_query();
-			if ( ! empty( $blocked_query ) ) {
-				if ( ! empty( $where ) ) {
-					$where['moderation_where'] .= ' AND ';
-				}
-				$where['moderation_where'] .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) ) OR {$this->alias}.id IS NULL )";
-			}
-
+		if ( true === $blocked_user_query ) {
 			// Exclude blocked by members.
 			$blocked_by_users_ids = function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids() : array();
 			if ( ! empty( $blocked_by_users_ids ) ) {
