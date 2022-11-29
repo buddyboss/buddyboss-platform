@@ -10407,6 +10407,10 @@ input#send-to-input {
   font-weight: 600;
 }
 
+body.is-mobile .bp-messages-content .bp-message-content_foot_note {
+  display: none;
+}
+
 .bp-message-content-wrap .bp-message-content_foot_note {
   margin: -10px 20px 20px;
 }

@@ -1122,6 +1122,10 @@ input#send-to-input {
 	strong {
 		font-weight: 600;
 	}
+
+	body.is-mobile & { // Hide notice in mobile
+		display: none;
+	}
 }
 
 .bp-message-content-wrap .bp-message-content_foot_note {
