@@ -16,9 +16,9 @@
         "source": "https://github.com/buddyboss/buddyboss-platform"
     },
     "require": {
-        "composer/installers": "v2.2.0",
-        "php": "8.*",
-	  	"php-ffmpeg/php-ffmpeg": "v1.0.1"
+        "composer/installers": "^2",
+        "php": "^8",
+	  	"php-ffmpeg/php-ffmpeg": "^1"
     },
     "autoload": {
     },
