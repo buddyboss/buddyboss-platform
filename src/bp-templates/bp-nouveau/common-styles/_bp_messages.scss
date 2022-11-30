@@ -1070,10 +1070,10 @@ input#send-to-input {
 				padding: 10px 10px 10px 0;
 				min-width: 30px;
 				border: 0;
-				background-color: transparent !important;
+				background-color: transparent;
 
 				&.medium-editor-button-active {
-					background: none transparent !important;
+					background: none transparent;
 				}
 
 				&.medium-editor-action-close {

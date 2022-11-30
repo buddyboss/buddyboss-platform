@@ -10360,11 +10360,11 @@ input#send-to-input {
   padding: 10px 0 10px 10px;
   min-width: 30px;
   border: 0;
-  background-color: transparent !important;
+  background-color: transparent;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
-  background: none transparent !important;
+  background: none transparent;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
