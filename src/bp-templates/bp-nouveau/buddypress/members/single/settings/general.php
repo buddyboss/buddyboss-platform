@@ -25,7 +25,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 		<div class="bb-field-wrap bb-super-admin-pass">
 			<label for="pwd"><?php _e( 'Current Password <span>(required to update email or change current password)</span>', 'buddyboss' ); ?></label>
 			<div class="bb-password-wrap">
-				<a href="#" class="bb-toggle-password"><i class="bb-icon-eye"></i></a>
+				<a href="#" class="bb-toggle-password" tabindex="-1"><i class="bb-icon-l bb-icon-eye"></i></a>
 				<input type="password" name="pwd" id="pwd" size="16" value="" class="settings-input small" <?php bp_form_field_attributes( 'password' ); ?> />
 			</div>
 			<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Lost your password?', 'buddyboss' ); ?></a>
@@ -45,7 +45,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 	<div clas="bb-field-wrap">
 		<label for="pass1"><?php esc_html_e( 'Add Your New Password', 'buddyboss' ); ?></label>
 		<div class="bb-password-wrap">
-			<a href="#" class="bb-toggle-password"><i class="bb-icon-eye"></i></a>
+			<a href="#" class="bb-toggle-password" tabindex="-1"><i class="bb-icon-l bb-icon-eye"></i></a>
 			<input type="password" name="pass1" id="pass1" size="16" value="" class="settings-input small password-entry" <?php bp_form_field_attributes( 'password' ); ?> />
 		</div>
 	</div>
@@ -53,7 +53,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 	<div clas="bb-field-wrap">
 		<label for="pass2" class="repeated-pwd"><?php esc_html_e( 'Repeat Your New Password', 'buddyboss' ); ?></label>
 		<div class="bb-password-wrap">
-			<a href="#" class="bb-toggle-password"><i class="bb-icon-eye"></i></a>
+			<a href="#" class="bb-toggle-password" tabindex="-1"><i class="bb-icon-l bb-icon-eye"></i></a>
 			<input type="password" name="pass2" id="pass2" size="16" value="" class="settings-input small password-entry-confirm" <?php bp_form_field_attributes( 'password' ); ?> />
 		</div>
 	</div>

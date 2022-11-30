@@ -410,7 +410,16 @@ function bbp_get_query_template( $type, $templates = array() ) {
 	$templates = apply_filters( "bbp_get_{$type}_template", $templates );
 	$templates = bbp_set_theme_compat_templates( $templates );
 	$template  = bbp_locate_template( $templates );
-	$template  = bbp_set_theme_compat_template( $template );
+
+	/*
+	 * The current theme is using the WordPress Full Site Editing feature.
+	 * BuddyPress then needs to use the WordPress template canvas to retrieve the community content.
+	 */
+	if ( current_theme_supports( 'block-templates' ) ) {
+		$template = ABSPATH . WPINC . '/template-canvas.php';
+	}
+
+	$template = bbp_set_theme_compat_template( $template );
 
 	return apply_filters( "bbp_{$type}_template", $template );
 }
