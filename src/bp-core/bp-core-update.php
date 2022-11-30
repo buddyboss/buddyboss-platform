@@ -2099,6 +2099,7 @@ function bb_update_to_2_1_8() {
 	wp_cache_flush();
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		BuddyBoss\Performance\Cache::instance()->purge_all();
+		// Clear members API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
 	}
 }
