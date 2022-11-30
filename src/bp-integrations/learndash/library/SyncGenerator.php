@@ -531,7 +531,7 @@ class SyncGenerator {
 			$this->bpGroupId = $this->loadBpGroupId();
 		}
 
-		if ( ! $this->ldGroupId ) {
+		if ( ! $this->ldGroupId && bp_is_active( 'groups' ) ) {
 			$this->ldGroupId = $this->loadLdGroupId();
 		}
 	}
