@@ -12,12 +12,12 @@
 <script type="text/html" id="tmpl-editor-toolbar">
 		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
 			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
-				<span class="bb-icon bb-icon-text-format"></span>
+				<span class="bb-icon-l bb-icon-font"></span>
 			</a>
 		</div>
 	<div class="post-elements-buttons-item post-mention bp-tooltip" data-bp-tooltip-pos="up-right" data-bp-tooltip="<?php esc_attr_e( 'Mention someone', 'buddyboss' ); ?>">
 		<span class="toolbar-button">
-			<i class="bb-icon bb-icon-at-sign"></i>
+			<i class="bb-icon-l bb-icon-at"></i>
 		</span>
 	</div>
 	<?php

@@ -144,8 +144,11 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-		if ( $this->is_content_hidden( $comment_id, false ) ) {
-			$return = esc_html__( 'Blocked Member', 'buddyboss' );
+		$user_id = self::get_content_owner_id( $comment_id );
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			return bb_moderation_is_blocked_label( $return, $user_id );
+		} elseif ( bb_moderation_get_blocked_by_user_ids( $user_id ) ) {
+			return bb_moderation_has_blocked_label( $return, $user_id );
 		}
 
 		return $return;
@@ -177,10 +180,6 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function blocked_get_comment_author( $author, $comment_id ) {
-
-		if ( $this->is_content_hidden( $comment_id, false ) ) {
-			$author = '';
-		}
 
 		return $author;
 	}
@@ -313,7 +312,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 				)
 			);
 			if ( ! empty( $comment_report_link ) ) {
-				$link .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb_more_options_list">%s</div></div>', esc_html__( 'More Options', 'buddyboss' ), $comment_report_link );
+				$link .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list">%s</div></div>', esc_html__( 'More Options', 'buddyboss' ), $comment_report_link );
 			}
 		}
 

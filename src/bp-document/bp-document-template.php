@@ -145,7 +145,14 @@ function bp_has_document( $args = '' ) {
 
 	$group_id = false;
 	$privacy  = false;
-	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+	if (
+		bp_is_active( 'groups' ) &&
+		bp_is_group() &&
+		(
+			! isset( $_GET['action'] ) ||
+			'bp_search_ajax' !== $_GET['action']
+		)
+	) {
 		$group_id = bp_get_current_group_id();
 		$privacy  = array( 'grouponly' );
 		if ( bp_is_active( 'forums' ) && ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) ) {
@@ -2443,7 +2450,6 @@ function bp_get_document_parent_activity_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_get_document_preview_music_extensions() {
-
 	return apply_filters( 'bp_get_document_preview_music_extensions', array( 'mp3', 'wav', 'ogg' ) );
 }
 
@@ -2461,7 +2467,7 @@ function bp_get_document_preview_video_extensions() {
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4' ) );
+	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4', 'webm', 'ogg', 'mov' ) );
 }
 
 /**
