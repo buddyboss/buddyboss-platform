@@ -10,9 +10,12 @@
 	position: relative;
 
 	@media screen and (max-width: 500px) {
-		display: none;
 
-		&.bb-onscreen-notification-enable-mobile-support {
+		.bb-onscreen-notification .notification-list {
+			display: none;
+		}
+
+		&.bb-onscreen-notification-enable-mobile-support .bb-onscreen-notification .notification-list {
 			display: block;
 		}
 
@@ -70,6 +73,7 @@
 					margin-right: 22px;
 					min-width: 53px;
 					max-height: 53px;
+					position: relative;
 
 					img {
 						max-width: 53px;
@@ -90,6 +94,25 @@
 							transform: translate(14px, -25px);
 						}
 
+					}
+
+					a > i {
+						align-items: center;
+						background-color: #9b9c9f;
+						border-radius: 50%;
+						bottom: -10px;
+						color: #fff;
+						display: flex;
+						font-size: 18px;
+						justify-content: center;
+						height: 25px;
+						position: absolute;
+						right: -10px;
+						width: 25px;
+
+						&.bb-icon-calendar {
+							font-size: 17px;
+						}
 					}
 
 				}

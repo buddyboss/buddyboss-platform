@@ -500,12 +500,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 */
 		do_action( 'bp_rest_topic_get_item', $destination_topic, $source_topic, $request );
 
-		return $this->get_item(
-			array(
-				'id'      => $destination_topic->ID,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $destination_topic->ID );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
@@ -942,12 +941,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 */
 		do_action( 'bp_rest_split_get_item', $from_reply, $source_topic, $destination_topic, $request );
 
-		return $this->get_item(
-			array(
-				'id'      => $destination_topic->ID,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $destination_topic->ID );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
@@ -1044,12 +1042,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			return $retval;
 		}
 
-		return $this->get_item(
-			array(
-				'id'      => $topic_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $topic_id );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
