@@ -1538,18 +1538,22 @@ function bb_moderation_is_deleted_avatar() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param string $value Current set message.
+ *
  * @return string
  */
-function bb_moderation_has_blocked_message() {
+function bb_moderation_has_blocked_message( $value ) {
 
 	/**
 	 * Filter will return text when current user blocked to other user.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string $value Current set message.
+	 *
 	 * @return string
 	 */
-	return apply_filters( 'bb_moderation_has_blocked_message', esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ) );
+	return apply_filters( 'bb_moderation_has_blocked_message', esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ), $value );
 }
 
 /**
@@ -1557,18 +1561,22 @@ function bb_moderation_has_blocked_message() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param string $value Current set message.
+ *
  * @return string
  */
-function bb_moderation_is_blocked_message() {
+function bb_moderation_is_blocked_message( $value ) {
 
 	/**
 	 * Filter will return text when current user blocked by other user.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string $value Current set message.
+	 *
 	 * @return string
 	 */
-	return apply_filters( 'bb_moderation_is_blocked_message', esc_html__( 'This content has been hidden as you are blocked by this member.', 'buddyboss' ) );
+	return apply_filters( 'bb_moderation_is_blocked_message', $value );
 }
 
 /**
@@ -1576,16 +1584,20 @@ function bb_moderation_is_blocked_message() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param string $value Current set message.
+ *
  * @return string
  */
-function bb_moderation_is_suspended_message() {
+function bb_moderation_is_suspended_message( $value ) {
 
 	/**
 	 * Filter will return text when user is suspended.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string $value Current set message.
+	 *
 	 * @return string
 	 */
-	return apply_filters( 'bb_moderation_is_suspended_message', esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ) );
+	return apply_filters( 'bb_moderation_is_suspended_message', esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ), $value );
 }
