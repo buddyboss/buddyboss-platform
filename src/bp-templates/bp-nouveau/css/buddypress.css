@@ -10675,10 +10675,10 @@ input#send-to-input {
   min-width: 20%;
 }
 
-.bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li {
-  background-color: transparent !important;
-  margin: 0 !important;
-  padding: 0 !important;
+#bp-message-thread-list .bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
 }
 
 .bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity:last-child .document-action-wrap .document-action_list {

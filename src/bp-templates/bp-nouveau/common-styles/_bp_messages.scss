@@ -1403,9 +1403,12 @@ input#send-to-input {
 	.bb-activity-media-wrap .bb-activity-media-elem.document-activity {
 
 		.document-action-wrap .document-action_list li {
-			background-color: transparent !important;
-			margin: 0 !important;
-			padding: 0 !important;
+
+			#bp-message-thread-list & {
+				background-color: transparent;
+				margin: 0;
+				padding: 0;
+			}
 		}
 
 		&:last-child {
