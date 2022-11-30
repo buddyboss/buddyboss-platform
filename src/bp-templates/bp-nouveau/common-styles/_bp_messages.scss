@@ -1467,7 +1467,7 @@ input#send-to-input {
 			transform: translateY(-50%);
 			animation: spin 2s infinite linear;
 			height: auto;
-			background-color: transparent !important;
+			background-color: transparent;
 			left: inherit;
 		}
 	}
@@ -1760,7 +1760,7 @@ body .bp-messages-user-threads {
 		content: "\ef30";
 		font: normal normal normal 20px/1 "bb-icons";/* stylelint-disable-line */
 		speak: none;
-		display: inline-block !important;
+		display: inline-block;
 		text-decoration: inherit;
 		text-transform: none;
 		-webkit-font-smoothing: antialiased;
