@@ -212,7 +212,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		}
 
 		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
-			$comment_text = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
+			$comment_text = bb_moderation_is_suspended_message( $comment_text );
 		}
 
 		return $comment_text;

@@ -117,15 +117,18 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $comment_text;
 		}
 
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+
 		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
-			$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
 
 			if ( $is_user_blocked ) {
-				$comment_text = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
+				$comment_text = bb_moderation_has_blocked_message( $comment_text );
 			} else {
 				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
+		} elseif ( bb_moderation_is_user_blocked_by( $comment_author_id ) ) {
+			$comment_text = bb_moderation_is_blocked_message( $comment_text );
 		}
 
 		return $comment_text;
@@ -431,9 +434,9 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		}
 		$blocked_by_users_ids = function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids() : array();
 		$hidden_users_ids     = function_exists( 'bp_moderation_get_hidden_user_ids' ) ? bp_moderation_get_hidden_user_ids() : array();
+		$existing_author_ids  = ! empty( $args['author__not_in'] ) ? $args['author__not_in'] : array();
 
 		// Merge all exclude users ids based on $blocked_by_users_ids and $hidden_users_ids.
-		$existing_author_ids = ! empty( $args['author__not_in'] ) ? $args['author__not_in'] : array();
 		$exclude_user_ids = array_merge( $blocked_by_users_ids, $hidden_users_ids, $existing_author_ids );
 
 		if ( ! empty( $exclude_user_ids ) ) {
