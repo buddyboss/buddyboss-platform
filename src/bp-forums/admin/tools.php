@@ -223,6 +223,7 @@ function bbp_admin_repair_list() {
 		80 => array( 'bbp-user-forum-subscriptions', __( 'Remove trashed forums from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_forum_subscriptions' ),
 		85 => array( 'bbp-user-role-map', __( 'Remap existing users to default forum roles', 'buddyboss' ), 'bbp_admin_repair_user_roles' ),
 		90 => array( 'bbp-wp-role-restore', __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' ),
+		95 => array( 'bbp-migrate-forum-topic-subscription', __( 'Migrate user forums/topics to new systems.', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
 	);
 	ksort( $repair_list );
 
@@ -2022,6 +2023,8 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		$status = bbp_admin_repair_user_roles();
 	} elseif ( 'bbp-wp-role-restore' === $type ) {
 		$status = bbp_restore_caps_from_wp_roles();
+	} elseif ( 'bbp-migrate-forum-topic-subscription' === $type ) {
+		$status = bbp_migrate_forum_topic_subscription();
 	}
 
 	if( is_multisite() && bp_is_network_activated() ) {
@@ -2035,3 +2038,16 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	}
 }
 add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bp_admin_forum_repair_tools_wrapper_function' );
+
+/**
+ * Migrate forum/topic subscription to new systems.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bbp_migrate_forum_topic_subscription() {
+	bb_subscriptions_migrate_users_forum_topic();
+	return array(
+		'status'  => 1,
+		'message' => __( 'Complete!', 'buddyboss' ),
+	);
+}

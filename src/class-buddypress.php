@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 18981;
+		$this->db_version = 19101;
 
 		/** Loading */
 
@@ -559,6 +559,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
 		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
+		require $this->plugin_dir . 'bp-core/bp-core-subscription.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -707,6 +708,7 @@ class BuddyPress {
 			'BP_Suspend_Album'                             => 'suspend',
 			'BP_Suspend_Comment'                           => 'suspend',
 			'BP_Suspend_Message'                           => 'suspend',
+			'BP_Subscription'                              => 'core',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',

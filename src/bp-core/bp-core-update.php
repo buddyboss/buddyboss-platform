@@ -381,6 +381,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18981 ) {
 			bb_update_to_2_1_5();
 		}
+
+		if ( $raw_db_version < 19101 ) {
+			bb_update_to_2_1_8();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2082,4 +2086,18 @@ function bb_update_to_2_1_5() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
+}
+
+/**
+ * Migrate forum/topic subscription to new table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_1_8() {
+	// Create subscription table.
+	bb_core_install_subscription();
+	// Migrate the subscription data to new table.
+	bb_subscriptions_migrate_users_forum_topic();
 }
