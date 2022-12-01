@@ -490,11 +490,20 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 			return $args;
 		}
-		$suspended_members   = function_exists( 'bb_moderation_get_suspended_user_ids' ) ? bb_moderation_get_suspended_user_ids() : array();
+		$args = array(
+			'in_types' => array( BP_Moderation_Members::$moderation_type ),
+			'reported' => false,
+			'hidden'   => 1,
+		);
+		// Fetch suspended users.
+		$suspended_users = BP_Moderation::get( $args );
+		if ( ! empty( $suspended_users['moderations'] ) ) {
+			$suspended_users_ids = wp_list_pluck( $suspended_users['moderations'], 'item_id' );
+		}
 		$existing_author_ids = ! empty( $args['author__not_in'] ) ? $args['author__not_in'] : array();
-		$exclude_user_ids    = array_merge( $suspended_members, $existing_author_ids );
+		$exclude_user_ids    = array_merge( $suspended_users_ids, $existing_author_ids );
 		if ( ! empty( $exclude_user_ids ) ) {
-			$args['author__not_in'] = $suspended_members;
+			$args['author__not_in'] = $suspended_users_ids;
 		}
 
 		return $args;
