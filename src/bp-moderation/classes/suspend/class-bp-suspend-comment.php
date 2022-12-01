@@ -494,6 +494,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			'in_types' => array( BP_Moderation_Members::$moderation_type ),
 			'reported' => false,
 			'hidden'   => 1,
+			'per_page' => 0
 		);
 		// Fetch suspended users.
 		$suspended_users = BP_Moderation::get( $args );
