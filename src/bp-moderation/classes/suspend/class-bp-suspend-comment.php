@@ -490,7 +490,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 			return $args;
 		}
-		$suspended_members   = function_exists( 'bp_moderation_get_suspended_user_ids' ) ? bp_moderation_get_suspended_user_ids() : array();
+		$suspended_members   = function_exists( 'bb_moderation_get_suspended_user_ids' ) ? bb_moderation_get_suspended_user_ids() : array();
 		$existing_author_ids = ! empty( $args['author__not_in'] ) ? $args['author__not_in'] : array();
 		$exclude_user_ids    = array_merge( $suspended_members, $existing_author_ids );
 		if ( ! empty( $exclude_user_ids ) ) {

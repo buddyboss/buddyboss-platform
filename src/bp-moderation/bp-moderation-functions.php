@@ -1597,30 +1597,3 @@ function bb_moderation_is_suspended_message( $value ) {
 	 */
 	return apply_filters( 'bb_moderation_is_suspended_message', esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ), $value );
 }
-
-/**
- * Function to fetch suspended user ids..
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return array|mixed
- */
-function bp_moderation_get_suspended_user_ids() {
-	static $cache = array();
-	global $wpdb;
-	$bp = buddypress();
-
-	$cache_key = 'bb_moderation_suspended_users';
-	if ( ! isset( $cache[ $cache_key ] ) ) {
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql  = $wpdb->prepare( "SELECT DISTINCT item_id FROM {$bp->moderation->table_name} WHERE item_type = %s AND user_suspended != 0", BP_Moderation_Members::$moderation_type );
-		$data = $wpdb->get_col( $sql ); // phpcs:ignore
-		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
-
-		$cache[ $cache_key ] = $data;
-	} else {
-		$data = $cache[ $cache_key ];
-	}
-
-	return $data;
-}
