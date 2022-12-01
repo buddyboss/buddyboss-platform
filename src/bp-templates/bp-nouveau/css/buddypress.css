@@ -5801,7 +5801,7 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a:hover {
-  background-color: #f5f5f5 !important;
+  background-color: #f5f5f5;
   color: #5087e5;
 }
 
@@ -14711,16 +14711,6 @@ div.bbp-reply-header {
   height: 0;
   font-size: 0;
   visibility: hidden;
-}
-
-#bbpress-forums div.bbp-topic-content a:not(.entry-img),
-#bbpress-forums div.bbp-reply-content a:not(.entry-img) {
-  background: none;
-  border: none;
-  display: inline;
-  font-weight: 400;
-  margin: 0;
-  padding: 0;
 }
 
 #bbpress-forums div.bbp-reply-content a.bp-video-thumbnail-submit {
