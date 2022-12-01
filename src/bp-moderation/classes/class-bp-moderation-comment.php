@@ -413,7 +413,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function will exclude suspended users comment.
+	 * Function will exclude suspended users comment from Recent Comments widget.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
