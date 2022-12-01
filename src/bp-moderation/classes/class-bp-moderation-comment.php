@@ -430,12 +430,10 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$hidden_users_ids     = function_exists( 'bp_moderation_get_hidden_user_ids' ) ? bp_moderation_get_hidden_user_ids() : array();
 
 		// Merge all exclude users ids based on $blocked_by_users_ids and $hidden_users_ids.
-		$exclude_user_ids = array_merge( $blocked_by_users_ids, $hidden_users_ids );
+		$existing_author_ids = ! empty( $args['author__not_in'] ) ? $args['author__not_in'] : array();
+		$exclude_user_ids = array_merge( $blocked_by_users_ids, $hidden_users_ids, $existing_author_ids );
 
 		if ( ! empty( $exclude_user_ids ) ) {
-			if ( ! empty( $args['author__not_in'] ) ) {
-				$exclude_user_ids = array_merge( $exclude_user_ids, $args['author__not_in'] );
-			}
 			$args['author__not_in'] = $exclude_user_ids;
 		}
 		return $args;
