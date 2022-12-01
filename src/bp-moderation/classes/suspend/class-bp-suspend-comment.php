@@ -56,7 +56,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		add_filter( 'get_comment_time', array( $this, 'blocked_get_comment_time' ), 10, 5 );
 		add_filter( 'comment_reply_link', array( $this, 'blocked_comment_reply_link' ), 10, 3 );
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
-		add_filter( 'widget_comments_args', array( $this, 'bb_blocked_filter_comment_widget' ), 10, 2 );
+		add_filter( 'widget_comments_args', array( $this, 'bb_blocked_widget_comments_args' ), 10, 2 );
 	}
 
 	/**
@@ -486,7 +486,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @return mixed
 	 */
-	public function bb_blocked_filter_comment_widget( $args, $widget ) {
+	public function bb_blocked_widget_comments_args( $args, $widget ) {
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 			return $args;
 		}

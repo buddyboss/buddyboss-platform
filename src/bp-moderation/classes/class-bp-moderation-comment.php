@@ -69,7 +69,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
-		add_filter( 'widget_comments_args', array( $this, 'bb_blocked_filter_comment_widget' ), 10, 2 );
+		add_filter( 'widget_comments_args', array( $this, 'bb_blocked_widget_comments_args' ), 10, 2 );
 	}
 
 	/**
@@ -413,7 +413,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function will exclude suspended users comment from Recent Comments widget.
+	 * Function will exclude users comment( blocked users and those users who
+	 * has blocked to current users ) from Recent Comments widget.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -422,7 +423,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @return mixed
 	 */
-	public function bb_blocked_filter_comment_widget( $args, $widget ) {
+	public function bb_blocked_widget_comments_args( $args, $widget ) {
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 			return $args;
 		}
