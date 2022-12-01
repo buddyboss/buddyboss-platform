@@ -69,6 +69,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+		add_filter( 'widget_comments_args', array( $this, 'bb_blocked_filter_comment_widget' ), 10, 2 );
 	}
 
 	/**
@@ -409,5 +410,34 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function report_content_type( $content_type, $item_id ) {
 		return esc_html__( 'Comment', 'buddyboss' );
+	}
+
+	/**
+	 * Function will exclude suspended users comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args   An array of arguments used to retrieve the recent comments.
+	 * @param array $widget Array of settings for the current widget.
+	 *
+	 * @return mixed
+	 */
+	public function bb_blocked_filter_comment_widget( $args, $widget ) {
+		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return $args;
+		}
+		$blocked_by_users_ids = function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids() : array();
+		$hidden_users_ids     = function_exists( 'bp_moderation_get_hidden_user_ids' ) ? bp_moderation_get_hidden_user_ids() : array();
+
+		// Merge all exclude users ids based on $blocked_by_users_ids and $hidden_users_ids.
+		$exclude_user_ids = array_merge( $blocked_by_users_ids, $hidden_users_ids );
+
+		if ( ! empty( $exclude_user_ids ) ) {
+			if ( ! empty( $args['author__not_in'] ) ) {
+				$exclude_user_ids = array_merge( $exclude_user_ids, $args['author__not_in'] );
+			}
+			$args['author__not_in'] = $exclude_user_ids;
+		}
+		return $args;
 	}
 }

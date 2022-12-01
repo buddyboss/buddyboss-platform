@@ -56,7 +56,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		add_filter( 'get_comment_time', array( $this, 'blocked_get_comment_time' ), 10, 5 );
 		add_filter( 'comment_reply_link', array( $this, 'blocked_comment_reply_link' ), 10, 3 );
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
-
+		add_filter( 'widget_comments_args', array( $this, 'bb_blocked_filter_comment_widget' ), 10, 2 );
 	}
 
 	/**
@@ -474,5 +474,30 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Function will exclude suspended users comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args   An array of arguments used to retrieve the recent comments.
+	 * @param array $widget Array of settings for the current widget.
+	 *
+	 * @return mixed
+	 */
+	public function bb_blocked_filter_comment_widget( $args, $widget ) {
+		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return $args;
+		}
+		$suspended_members = function_exists( 'bp_moderation_get_suspended_user_ids' ) ? bp_moderation_get_suspended_user_ids() : array();
+		if ( ! empty( $suspended_members ) ) {
+			if ( ! empty( $args['author__not_in'] ) ) {
+				$suspended_members = array_merge( $suspended_members, $args['author__not_in'] );
+			}
+			$args['author__not_in'] = $suspended_members;
+		}
+
+		return $args;
 	}
 }
