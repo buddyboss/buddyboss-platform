@@ -917,12 +917,16 @@ class BP_Email_Tokens {
 		}
 
 		if ( empty( $group ) ) {
-			$group_id = $tokens['group.id'] ?? false;
+			$group_id      = $tokens['group.id'] ?? false;
+			$message_type  = '';
+			$message_users = '';
 			if ( empty( $group_id ) ) {
-				$group_id = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+				$group_id      = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual.
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private.
 			}
 
-			if ( ! empty( $group_id ) ) {
+			if ( ! empty( $group_id ) && 'open' === $message_type && 'all' === $message_users ) {
 				$group = groups_get_group( $group_id );
 			}
 		}
@@ -948,7 +952,7 @@ class BP_Email_Tokens {
 		$sender_avatar = '';
 
 		if ( empty( $this->_message_sender_id ) ) {
-			$this->_message_sender_id = $tokens['sender.id'];
+			$this->_message_sender_id = ! empty( $tokens['sender.id'] ) ? $tokens['sender.id'] : 0;
 		}
 
 		if ( $this->_message_sender_id ) {
@@ -1772,7 +1776,11 @@ class BP_Email_Tokens {
 			}
 
 			if ( ! empty( $group_id ) ) {
-				$group = groups_get_group( $group_id );
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual.
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private.
+				if ( 'open' === $message_type && 'all' === $message_users ) {
+					$group = groups_get_group( $group_id );
+				}
 			}
 		}
 
