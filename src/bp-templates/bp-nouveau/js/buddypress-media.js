@@ -252,6 +252,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#forums-video-button', this.openForumsVideoUploader.bind( this ) );
 			$( document ).on( 'click', '#forums-gif-button', this.toggleGifSelector.bind( this ) );
 			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'keyup', '.search-query-input', this.searchGif.bind( this ) );
+			$( document ).on( 'click', '.bbpress-forums-activity #whats-new-toolbar .found-media-item', this.selectGif.bind( this ) );
 			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			$( document ).find( 'form #whats-new-toolbar .gif-search-results, .forum form #whats-new-toolbar .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
 			if ( !$( '.buddypress.groups.messages' ).length ) {
@@ -2128,7 +2129,7 @@ window.bp = window.bp || {};
 		resetGroupMessagesMediaComponent: function () {
 			var self = this;
 
-			if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined', self.dropzone_obj.length ) {
+			if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined' ) {
 				self.dropzone_obj.destroy();
 			}
 			self.dropzone_media = [];

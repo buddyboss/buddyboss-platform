@@ -2844,8 +2844,9 @@ window.bp = window.bp || {};
 			$( '.video-js:not(.loaded)' ).each(
 				function () {
 
-					var self    = this;
-					var options = { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
+					var self   		= this;
+					var options 	= { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
+					var player_id 	= $( this ).attr( 'id' );
 
 					var videoIndex                   = $( this ).attr( 'id' );
 					player[ $( this ).attr( 'id' ) ] = videojs(
@@ -2872,8 +2873,8 @@ window.bp = window.bp || {};
                         }
 					);
 
-					if ( player[ $( this ).attr( 'id' ) ] !== undefined) {
-						player[ $( this ).attr( 'id' ) ].seekButtons(
+					if ( player[ player_id ] !== undefined && ( $( this ).find('.skip-back').length == 0 && $( this ).find('.skip-forward').length == 0 ) ) {
+						player[ player_id ].seekButtons(
 							{
 								forward: 5,
 								back: 5
