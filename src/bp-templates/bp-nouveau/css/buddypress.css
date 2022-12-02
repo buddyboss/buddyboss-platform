@@ -11366,6 +11366,29 @@ body .bp-messages-user-threads {
   }
 }
 
+.subnav_tab .subnav {
+  display: flex;
+  list-style: none;
+  margin: 25px 0 30px 0;
+}
+
+.subnav_tab .subnav li {
+  margin: 0 25px 0 0;
+  padding: 0;
+}
+
+.subnav_tab .subnav li a {
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid transparent;
+  padding: 0 0 5px 0;
+}
+
+.subnav_tab .subnav li.selected a {
+  border-bottom-color: #5087e5;
+}
+
 /*__ notifications __*/
 /*__ Profile visibility __*/
 /*__ Group Invites __*/
