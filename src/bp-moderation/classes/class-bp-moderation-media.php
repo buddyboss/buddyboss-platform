@@ -139,6 +139,16 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
+		$blocked_by_users_ids = function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids() : array();
+		if ( ! empty( $blocked_by_users_ids ) ) {
+			error_log(print_r($where, true));
+			error_log(print_r($blocked_by_users_ids, true));
+			if ( ! empty( $where ) ) {
+				$where['moderation_where'] .= ' AND ';
+			}
+			$where['moderation_where'] .= "( m.user_id NOT IN ( " . implode( ', ', $blocked_by_users_ids ) . " ))";
+		}
+
 		return $where;
 	}
 
