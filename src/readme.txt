@@ -57,6 +57,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.2 =
+* Notifications - Improved Web Push Notification support based on members active status
+* Core - Improved online status for members throughout the network
+* REST API - Provided Pusher Integration API support from BuddyBoss Platform Pro
+* REST API - Provided online status updates support in the API
+
 = 2.1.7.2 =
 * Messages - Handled messages table name prefix
 
