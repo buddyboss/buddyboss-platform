@@ -7197,16 +7197,16 @@ function bb_render_notification( $notification_group ) {
 function bb_core_notification_preferences_data() {
 
 	$data = array(
-		'menu_title'          => esc_html__( 'Email Preferences', 'buddyboss' ),
-		'screen_title'        => esc_html__( 'Email Preferences', 'buddyboss' ),
+		'menu_title'          => esc_html__( 'Email Settings', 'buddyboss' ),
+		'screen_title'        => esc_html__( 'Email Settings', 'buddyboss' ),
 		'screen_description'  => esc_html__( 'Choose your email notification preferences.', 'buddyboss' ),
 		'show_checkbox_label' => false,
 		'item_css_class'      => 'email-preferences',
 	);
 
 	if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
-		$data['menu_title']          = esc_html__( 'Notification Preferences', 'buddyboss' );
-		$data['screen_title']        = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['menu_title']          = esc_html__( 'Notification Settings', 'buddyboss' );
+		$data['screen_title']        = esc_html__( 'Notification Settings', 'buddyboss' );
 		$data['screen_description']  = esc_html__( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
 		$data['show_checkbox_label'] = true;
 		$data['item_css_class']      = 'notification-preferences';

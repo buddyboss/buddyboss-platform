@@ -13,9 +13,14 @@
  */
 function bp_settings_screen_notification() {
 
-	if ( bp_action_variables() ) {
+	if ( bp_action_variables() && 'subscriptions' !== bp_action_variable( 0 ) ) {
 		bp_do_404();
 		return;
+	}
+
+	$template = 'members/single/settings/notifications';
+	if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+		$template = 'members/single/settings/subscriptions';
 	}
 
 	/**
@@ -25,5 +30,5 @@ function bp_settings_screen_notification() {
 	 *
 	 * @param string $value Directory path to look in for the template file.
 	 */
-	bp_core_load_template( apply_filters( 'bp_settings_screen_notification_settings', 'members/single/settings/notifications' ) );
+	bp_core_load_template( apply_filters( 'bp_settings_screen_notification_settings', $template ) );
 }
