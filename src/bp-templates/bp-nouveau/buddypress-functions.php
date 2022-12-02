@@ -674,10 +674,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		$params = array(
 			'heartbeat_enabled'  => bb_is_heartbeat_enabled(),
-			'presence_interval' => bb_presence_interval(),
+			'presence_interval'  => bb_presence_interval(),
+			'presence_time_span' => bb_presence_time_span(),
 			'rest_nonce'         => wp_create_nonce( 'wp_rest' ),
 		);
-
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
