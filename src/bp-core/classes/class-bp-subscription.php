@@ -68,22 +68,6 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		public $date_recorded;
 
 		/**
-		 * Name of subscription table.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 * @var string
-		 */
-		public $tbl;
-
-		/**
-		 * Raw arguments passed to the constructor.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 * @var array
-		 */
-		public $args;
-
-		/**
 		 * Constructor method.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -92,8 +76,6 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		 *                       the object will be pre-populated with info about that subscriptions.
 		 */
 		public function __construct( $id = null ) {
-			$this->tbl = self::get_subscription_tbl();
-
 			if ( ! empty( $id ) ) {
 				$this->id = (int) $id;
 				$this->populate();
@@ -108,12 +90,15 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		public function populate() {
 			global $wpdb;
 
+			// Get table name.
+			$subscription_tbl = self::get_subscription_tbl();
+
 			// Check cache for subscription data.
 			$subscription = wp_cache_get( $this->id, 'bb_subscriptions' );
 
 			// Cache missed, so query the DB.
 			if ( false === $subscription ) {
-				$subscription = $wpdb->get_row( $wpdb->prepare( "SELECT s.* FROM {$this->tbl} s WHERE s.id = %d", $this->id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$subscription = $wpdb->get_row( $wpdb->prepare( "SELECT s.* FROM {$subscription_tbl} s WHERE s.id = %d", $this->id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 				wp_cache_set( $this->id, $subscription, 'bb_subscriptions' );
 			}
@@ -158,7 +143,8 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		public function save() {
 			global $wpdb;
 
-			$bp = buddypress();
+			// Get table name.
+			$subscription_tbl = self::get_subscription_tbl();
 
 			$this->user_id           = apply_filters( 'bb_subscriptions_user_id_before_save', $this->user_id, $this->id );
 			$this->type              = apply_filters( 'bb_subscriptions_type_before_save', $this->type, $this->id );
@@ -185,7 +171,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			if ( ! empty( $this->id ) ) {
 				$sql = $wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"UPDATE {$this->tbl} SET
+					"UPDATE {$subscription_tbl} SET
 					user_id = %d,
 					type = %s,
 					item_id = %d,
@@ -204,7 +190,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			} else {
 				$sql = $wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"INSERT INTO {$this->tbl} (
+					"INSERT INTO {$subscription_tbl} (
 					user_id,
 					type,
 					item_id,
@@ -254,6 +240,9 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		public function delete() {
 			global $wpdb;
 
+			// Get table name.
+			$subscription_tbl = self::get_subscription_tbl();
+
 			/**
 			 * Fires before the deletion of a subscriptions.
 			 *
@@ -267,7 +256,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			wp_cache_delete( $this->id, 'bb_subscriptions' );
 
 			// Finally, remove the subscription entry from the DB.
-			if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->tbl} WHERE id = %d", $this->id ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$subscription_tbl} WHERE id = %d", $this->id ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 				return false;
 			}
 
@@ -428,14 +417,14 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 
 			/* Order/orderby ********************************************/
 			$order           = bp_esc_sql_order( $r['order'] );
-			$order_by         = $r['order_by'];
+			$order_by        = $r['order_by'];
 			$sql['order_by'] = "ORDER BY {$order_by} {$order}";
 
 			// Random order is a special case.
 			if ( 'rand()' === $order_by ) {
 				$sql['order_by'] = 'ORDER BY rand()';
 			} elseif ( ! empty( $r['include'] ) && 'in' === $order_by ) { // Support order by fields for generally.
-				$field_data     = implode( ',', array_map( 'absint', $r['include'] ) );
+				$field_data      = implode( ',', array_map( 'absint', $r['include'] ) );
 				$sql['order_by'] = "ORDER BY FIELD(s.id, {$field_data})";
 			}
 

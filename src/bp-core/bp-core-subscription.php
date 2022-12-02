@@ -10,28 +10,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Function to get forum post type.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_get_subscription_forum_post_type() {
-	return function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
-}
-
-/**
- * Function to get topic post type.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_get_subscription_topic_post_type() {
-	return function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
-}
-
-/**
  * Migration for forums and topics in background.
  *
  * @since BuddyBoss [BBVERSION]
@@ -74,14 +52,23 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_meta ) {
 	global $wpdb;
 
 	$subscription_tbl = BP_Subscription::get_subscription_tbl();
-	$forum_post_type  = bb_get_subscription_forum_post_type();
-	$topic_post_type  = bb_get_subscription_topic_post_type();
+	$forum_key        = $wpdb->prefix . '_bbp_forum_subscriptions';
+	$topic_key        = $wpdb->prefix . '_bbp_subscriptions';
+	$forum_post_type  = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
+	$topic_post_type  = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
 
 	if ( ! empty( $subscription_meta ) ) {
 		foreach ( $subscription_meta as $user_data ) {
 
 			$place_holder_queries = array();
 			$insert_query         = "INSERT INTO {$subscription_tbl} ( user_id, type, item_id, secondary_item_id, date_recorded ) VALUES";
+
+			$subscription_type = '';
+			if ( $forum_key === $user_data->meta_key ) {
+				$subscription_type = 'forum';
+			} elseif ( $topic_key === $user_data->meta_key ) {
+				$subscription_type = 'topic';
+			}
 
 			// Get all subscribe IDs.
 			$meta_value = wp_parse_id_list( $user_data->meta_value );
@@ -93,9 +80,6 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_meta ) {
 					if ( ! in_array( $forum_topic->post_type, array( $forum_post_type, $topic_post_type ), true ) ) {
 						continue;
 					}
-
-					// Retrieve the subscription type using the post type.
-					$subscription_type = bb_get_subscription_type_by_post_type( $forum_topic->post_type );
 
 					$record_args = array(
 						'user_id'           => (int) $user_data->ID,
@@ -121,37 +105,4 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_meta ) {
 			}
 		}
 	}
-}
-
-/**
- * Function to get types of subscription.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return array
- */
-function bb_get_subscription_types() {
-	return array(
-		bb_get_subscription_forum_post_type() => 'forum',
-		bb_get_subscription_topic_post_type() => 'topic',
-	);
-}
-
-/**
- * Function to get type of subscription for particular post type.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $post_type Post type.
- *
- * @return string
- */
-function bb_get_subscription_type_by_post_type( $post_type ) {
-	$subscription_types = bb_get_subscription_types();
-
-	if ( ! empty( $subscription_types ) && isset( $subscription_types[ $post_type ] ) ) {
-		return $subscription_types[ $post_type ];
-	}
-
-	return false;
 }
