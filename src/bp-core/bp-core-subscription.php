@@ -106,3 +106,115 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_meta ) {
 		}
 	}
 }
+
+/**
+ * Retrieve all registered subscription types.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_get_subscriptions_types() {
+	return array( 'forum', 'topic' );
+}
+
+/**
+ * Retrieve user subscription by type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args {
+ *     An array of optional arguments.
+ *     @type array|string $type               Optional. Array or comma-separated list of subscription types.
+ *                                            'Forum', 'topic'.
+ *                                            Default: null.
+ *     @type int          $user_id            Optional. If provided, results will be limited to subscriptions.
+ *                                            Default: Current user ID.
+ *     @type int          $per_page           Optional. Number of items to return per page of results.
+ *                                            Default: null (no limit).
+ * }
+ * @see BP_Subscription::get()
+ *
+ * @return array {
+ *     @type array $subscriptions Array of subscription objects returned by the
+ *                                paginated query. (IDs only if `fields` is set to `ids`.)
+ *     @type int   $total         Total count of all subscriptions matching non-
+ *                                paginated query params.
+ * }
+ */
+function bb_get_subscriptions( $args = array() ) {
+	static $cache = array();
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'     => array(),
+			'user_id'  => bp_loggedin_user_id(),
+			'per_page' => null,
+			'page'     => null,
+			'no_count' => false,
+		),
+		'bb_get_subscriptions'
+	);
+
+	$cache_key = 'bb_get_subscriptions_' . md5( maybe_serialize( $r ) );
+	if ( ! isset( $cache[ $cache_key ] ) ) {
+		$subscriptions       = BP_Subscription::get( $r );
+		$cache[ $cache_key ] = $subscriptions;
+	} else {
+		$subscriptions = $cache[ $cache_key ];
+	}
+
+	return $subscriptions;
+}
+
+/**
+ * Retrieve all users by subscription type and item id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args {
+ *     An array of optional arguments.
+ *     @type array|string $type               Optional. Array or comma-separated list of subscription types.
+ *                                            'Forum', 'topic'.
+ *                                            Default: null.
+ *     @type int          $item_id            Optional. If provided, results will be limited to subscriptions.
+ *                                            Default: null.
+ *     @type int          $per_page           Optional. Number of items to return per page of results.
+ *                                            Default: null (no limit).
+ * }
+ * @see BP_Subscription::get()
+ *
+ * @return array {
+ *     @type array $subscriptions Array of subscription objects returned by the
+ *                                paginated query. (IDs only if `fields` is set to `ids`.)
+ *     @type int   $total         Total count of all subscriptions matching non-
+ *                                paginated query params.
+ * }
+ */
+function bb_get_subscription_users( $args = array() ) {
+	static $cache = array();
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'     => array(),
+			'item_id'  => 0,
+			'per_page' => null,
+			'page'     => null,
+			'fields'   => 'user_id',
+			'no_count' => false,
+		),
+		'bb_get_subscription_users'
+	);
+
+	$cache_key = 'bb_get_subscription_users_' . md5( maybe_serialize( $r ) );
+	if ( ! isset( $cache[ $cache_key ] ) ) {
+		$subscriptions       = BP_Subscription::get( $r );
+		$cache[ $cache_key ] = $subscriptions;
+	} else {
+		$subscriptions = $cache[ $cache_key ];
+	}
+
+	return $subscriptions;
+}

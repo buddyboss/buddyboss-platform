@@ -269,6 +269,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $key Property name.
+		 *
 		 * @return mixed
 		 */
 		public function __get( $key ) {
@@ -318,7 +319,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		 *                                            'Forum', 'topic', 'group', 'activity', 'activity_comment'.
 		 *                                            Default: null.
 		 *     @type int          $user_id            Optional. If provided, results will be limited to subscriptions.
-		 *                                            Default: Current user ID.
+		 *                                            Default: null.
 		 *     @type int          $item_id            Optional. If provided, results will be limited to subscriptions.
 		 *                                            Default: null.
 		 *     @type int          $secondary_item_id  Optional. If provided, results will be limited to subscriptions.
@@ -355,7 +356,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 
 			$defaults = array(
 				'type'              => array(),
-				'user_id'           => bp_loggedin_user_id(),
+				'user_id'           => 0,
 				'item_id'           => 0,
 				'secondary_item_id' => 0,
 				'order_by'          => 'date_recorded',
@@ -371,6 +372,10 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 
 			$r = bp_parse_args( $args, $defaults, 'bb_subscriptions_subscription_get' );
 
+			// Sanitize the column name.
+			$r['fields'] = self::validate_column( $r['fields'] );
+
+			// Get the database table name.
 			$subscription_tbl = self::get_subscription_tbl();
 
 			$results = array();
@@ -495,6 +500,10 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
 					$paged_subscriptions[] = new BP_Subscription( $paged_subscription_id );
 				}
+
+				if ( 'all' !== $r['fields'] ) {
+					$paged_subscriptions = array_column( $paged_subscriptions, $r['fields'] );
+				}
 			}
 			// Set in response array.
 			$results['subscriptions'] = $paged_subscriptions;
@@ -503,6 +512,9 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			if ( ! $r['no_count'] ) {
 				// Find the total number of subscriptions in the results set.
 				$total_subscriptions_sql = "SELECT COUNT(DISTINCT s.id) FROM {$sql['from']} $where";
+				if ( 'all' !== $r['fields'] || 'ids' !== $r['fields'] ) {
+					$total_subscriptions_sql = "SELECT COUNT(DISTINCT s.{$r['fields']}) FROM {$sql['from']} $where";
+				}
 
 				/**
 				 * Filters the SQL used to retrieve total subscriptions results.
@@ -531,6 +543,27 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		}
 
 		/**
+		 * Validate the column name.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $column Column name of database.
+		 *
+		 * @return string.
+		 */
+		public static function validate_column( $column ) {
+			$columns = self::get_tbl_columns();
+
+			if ( 'all' === $column ) {
+				return $column;
+			} elseif ( in_array( $column, $columns, true ) ) {
+				return $column;
+			}
+
+			return 'all';
+		}
+
+		/**
 		 * Get database table name for subscription.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -540,6 +573,25 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		public static function get_subscription_tbl() {
 			global $wpdb;
 			return "{$wpdb->prefix}bb_notifications_subscriptions";
+		}
+
+		/**
+		 * Supported DB columns.
+		 *
+		 * See the 'bb_notifications_subscriptions' DB table schema.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @return string[]
+		 */
+		public static function get_tbl_columns() {
+			return array(
+				'id',
+				'user_id',
+				'type',
+				'item_id',
+				'secondary_item_id',
+				'date_recorded',
+			);
 		}
 	}
 }
