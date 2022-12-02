@@ -8168,7 +8168,7 @@ function bb_get_users_presence( $users, $compare_time = false ) {
  * @return string
  */
 function bb_pro_pusher_version() {
-	return '2.1.4';
+	return '2.2';
 }
 
 /**
