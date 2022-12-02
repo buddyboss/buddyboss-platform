@@ -8174,7 +8174,7 @@ function bb_pro_pusher_version() {
 /**
  * Function to return the time span for the presence in seconds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2
  *
  * @return int
  */
