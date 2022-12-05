@@ -70,6 +70,15 @@ abstract class BP_Core_Notification_Abstract {
 	private $notifications_filters = array();
 
 	/**
+	 * Subscriptions.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
+	 */
+	private $subscriptions = array();
+
+	/**
 	 * Initialize.
 	 *
 	 * @since BuddyBoss 1.9.3
@@ -510,6 +519,34 @@ abstract class BP_Core_Notification_Abstract {
 			'label'              => $notification_label,
 			'notification_types' => $notification_types,
 			'position'           => $notification_position,
+		);
+	}
+
+	/**
+	 * Register Subscription Type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     An array of arguments.
+	 *     @type string $label               Used to display the subscription block title.
+	 *     @type string $subscription_type   The subscriptions types like 'forum', 'topics'.
+	 *     @type string $render_callback     To display the records in subscriptions tab.
+	 *     @type string $send_callback       This is used to render notification when trigger subscribed notifications.
+	 *     @type string $notification_type   The relation between the subscription type and notification type.
+	 *     @type string $notification_group  The group the subscription based on component.
+	 * }
+	 *
+	 * @return void
+	 */
+	final public function bb_register_subscription_type( $args ) {
+		$this->subscriptions[] = array(
+			'label'              => $args['label'],
+			'subscription_type'  => $args['subscription_type'],
+			'render_callback'    => $args['render_callback'],
+			'send_callback'      => $args['send_callback'],
+			'notification_type'  => $args['notification_type'],
+			'notification_group' => $args['notification_group'],
 		);
 	}
 
