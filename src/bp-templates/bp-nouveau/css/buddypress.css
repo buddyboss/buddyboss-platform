@@ -11394,6 +11394,154 @@ body .bp-messages-user-threads {
 }
 
 /*__ notifications __*/
+/*__ Notification Subscription __*/
+.bb-accordion {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 25px;
+}
+
+.bb-accordion .bb-accordion_head {
+  display: flex;
+  position: relative;
+  padding: 16px 22px;
+  border-bottom: 1px solid #eee;
+}
+
+.bb-accordion .bb-accordion_title {
+  font-size: 18px;
+  font-weight: 600;
+  padding-right: 42px;
+  margin: 0;
+}
+
+.buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  color: #767676;
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  height: 32px;
+  width: 32px;
+}
+
+.buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger i {
+  font-size: 24px;
+}
+
+.subscription-items {
+  list-style: none;
+  margin: 0;
+  padding: 10px 12px;
+}
+
+.subscription-items li {
+  position: relative;
+  border-radius: 4px;
+}
+
+.subscription-items li:hover {
+  background-color: #eaeaea;
+}
+
+.subscription-items .subscription-item_anchor {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+  width: 100%;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.subscription-items .subscription-item_image {
+  height: 40px;
+  margin-right: 12px;
+}
+
+.subscription-items .subscription-item_image img {
+  border-radius: 4px;
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+}
+
+.subscription-items .subscription-item_detail {
+  width: calc(100% - 98px);
+  margin-right: 12px;
+}
+
+.subscription-items .subscription-item_detail .subscription-item_title {
+  font-size: 14px;
+  display: block;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.subscription-items .subscription-item_detail .subscription-item_title a {
+  color: currentColor;
+}
+
+.subscription-items .subscription-item_detail .subscription-item_meta {
+  font-size: 13px;
+  color: #767676;
+  display: block;
+}
+
+.subscription-items .subscription-item_detail .subscription-item_meta strong {
+  font-weight: 500;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  color: #767676;
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+  height: 28px;
+  width: 28px;
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 15px;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove i {
+  font-size: 20px;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover {
+  background-color: #fff;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover i {
+  color: #333;
+}
+
+/*__ Notification Subscription __*/
 /*__ Profile visibility __*/
 /*__ Group Invites __*/
 /**

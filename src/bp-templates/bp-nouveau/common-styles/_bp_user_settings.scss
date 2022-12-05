@@ -6,6 +6,7 @@
 // 2. notifications
 // 3. Profile visibility
 // 4. group Invites
+// 5. Notification Subscription
 
 // Settings Global
 
@@ -374,6 +375,148 @@
 }
 
 /*__ notifications __*/
+
+/*__ Notification Subscription __*/
+
+.bb-accordion {
+	border: 1px solid $bp-border-color;
+	border-radius: 4px;
+	margin-bottom: 25px;
+
+	.bb-accordion_head {
+		display: flex;
+		position: relative;
+		padding: 16px 22px;
+		border-bottom: 1px solid $bp-border-color;
+	}
+
+	.bb-accordion_title {
+
+		@include font-size(18);
+		font-weight: 600;
+		padding-right: 42px;
+		margin: 0;
+	}
+
+	.bb-accordion_trigger {
+
+		.buddypress .buddypress-wrap & {
+
+			@include center-horizontal-vert();
+			color: $light-text;
+			position: absolute;
+			top: 10px;
+			right: 25px;
+			background-color: transparent;
+			border: 0;
+			padding: 0;
+			height: 32px;
+			width: 32px;
+
+			i {
+				font-size: 24px;
+			}
+		}
+	}
+
+}
+
+.subscription-items {
+	list-style: none;
+	margin: 0;
+	padding: 10px 12px;
+
+	li {
+		position: relative;
+		border-radius: 4px;
+
+		&:hover {
+			background-color: $light-grey;
+		}
+	}
+
+	.subscription-item_anchor {
+		display: flex;
+		align-items: center;
+		padding: 12px 10px;
+		width: 100%;
+		text-decoration: none;
+		box-sizing: border-box;
+	}
+
+	.subscription-item_image {
+		height: 40px;
+		margin-right: 12px;
+
+		img {
+			border-radius: 4px;
+			height: 40px;
+			width: 40px;
+			object-fit: cover;
+		}
+	}
+
+	.subscription-item_detail {
+		width: calc(100% - 98px);
+		margin-right: 12px;
+
+		.subscription-item_title {
+
+			@include font-size(14);
+			display: block;
+			font-weight: 500;
+			line-height: 1.5;
+
+			a {
+				color: currentColor;
+			}
+		}
+
+		.subscription-item_meta {
+
+			@include font-size(13);
+			color: $light-text;
+			display: block;
+
+			strong {
+				font-weight: 500;
+			}
+		}
+	}
+
+	.subscription-item_remove {
+
+		.buddypress .buddypress-wrap & {
+
+			@include center-horizontal-vert();
+			color: $light-text;
+			background-color: transparent;
+			padding: 0;
+			border: 0;
+			height: 28px;
+			width: 28px;
+			border-radius: 4px;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			right: 15px;
+
+			i {
+				font-size: 20px;
+			}
+
+			&:hover {
+				background-color: $white;
+
+				i {
+					color: $black;
+				}
+			}
+		}
+	}
+}
+
+/*__ Notification Subscription __*/
 
 
 // Profile visibility
