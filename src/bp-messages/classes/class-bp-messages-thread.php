@@ -1363,8 +1363,8 @@ class BP_Messages_Thread {
 			 * Fires when messages thread was marked as read.
 			 *
 			 * @since BuddyPress 2.8.0
-			 * @since BuddyBoss [BBVERSION] Added the `user_id` parameter.
-			 * @since BuddyBoss [BBVERSION] Added the `$retval` parameter.
+			 * @since BuddyBoss 2.2 Added the `user_id` parameter.
+			 * @since BuddyBoss 2.2 Added the `$retval` parameter.
 			 *
 			 * @param int      $thread_id The message thread ID.
 			 * @param int      $user_id   The user the thread will be marked as read.
