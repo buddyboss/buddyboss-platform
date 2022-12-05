@@ -86,6 +86,7 @@ function bp_core_install( $active_components = false ) {
 	// Discussion forums.
 	if ( ! empty( $active_components['forums'] ) ) {
 		bp_core_install_discussion_forums();
+		bb_core_install_subscription();
 	}
 
 	// Media.
