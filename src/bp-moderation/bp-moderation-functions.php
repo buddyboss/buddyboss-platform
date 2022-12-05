@@ -1258,15 +1258,12 @@ function bb_moderation_get_reporting_category_fields_array() {
 function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 	static $cache = array();
 	global $wpdb;
-	$bp = buddypress();
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
 	$cache_key = 'bb_moderation_blocked_by_' . $user_id;
 	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
-		$type = BP_Moderation_Members::$moderation_type;
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql  = bb_moderation_get_blocked_by_sql( $user_id );
 		$data = $wpdb->get_col( $sql ); // phpcs:ignore
 		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
