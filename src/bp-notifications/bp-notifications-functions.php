@@ -1591,7 +1591,7 @@ function bb_check_delay_email_notification() {
 /**
  * Function to check current user it offline for sending the push notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2
  *
  * @param int $user_id User ID.
  *

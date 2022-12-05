@@ -2131,7 +2131,7 @@ function bb_notification_get_digest_cron_times() {
 /**
  * Prepare the object for the Messsage response.
  *
- * @since  BuddyBoss [BBVERSION]
+ * @since  BuddyBoss 2.2
  *
  * @param object $message Message object.
  *
