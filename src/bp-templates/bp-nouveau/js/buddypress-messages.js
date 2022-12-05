@@ -1062,7 +1062,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.removeFeedback();
 
 					// Remove all views.
-					if ( 'delete_thread' === action ) {
+					if ( 'delete_thread' === action && ( 'undefined' === typeof bb_pusher_vars || ( 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'off' === bb_pusher_vars.is_live_messaging_enabled ) ) ) {
 						if ( bp.Nouveau.Messages.threads.length > 1 ) {
 							// bp.Nouveau.Messages.clearViews();
 							// Navigate back to current box.
@@ -2138,6 +2138,55 @@ window.bp = window.bp || {};
 								} else {
 									jQuery( document ).find( '#send_reply_button' ).trigger( 'click' );
 								}
+							}
+						}
+
+						// Make Shift + Enter Work same way as Enter for editor
+						if ( event.keyCode === 13 && event.shiftKey ) {
+							var MediumEditorOptDoc = bp.Nouveau.Messages.mediumEditor.options.ownerDocument;
+							var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc ); // jshint ignore:line
+							// Do nothing if caret is in between the text
+							if( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ){ // jshint ignore:line
+								return;
+							}
+
+							// Make sure current node is not list item element
+							if( !MediumEditor.util.isListItem( node ) ) { // jshint ignore:line
+								event.preventDefault();
+								var  p = MediumEditorOptDoc.createElement( 'p' );
+								p.innerHTML = '<br>';
+								var newP;
+								// Make sure current node is not inline element
+								if(!MediumEditor.util.isBlockContainer(node)){ // jshint ignore:line
+									// If next element is there add before it else add at the end
+									if(node.parentNode.nextElementSibling){
+										newP = node.parentNode.parentNode.insertBefore(p, node.parentNode.nextSibling);
+									} else {
+										newP = node.parentNode.parentNode.appendChild( p );
+									}
+								} else {
+									// If next element is there add before it else add at the end
+									if(node.nextElementSibling){
+										newP = node.parentNode.insertBefore(p, node.nextSibling);
+									} else {
+										newP = node.parentNode.appendChild( p );
+									}
+								}
+								MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
+								return;
+							}
+							// Add new <li> if cursore is in <ul> or <ol>
+							if( node.parentNode.tagName.toLowerCase() == 'ul' || node.parentNode.tagName.toLowerCase() == 'ol') {
+								var li = MediumEditorOptDoc.createElement('li');
+								var newLI;
+								// if next element is there sdd new <li> before next or at the end
+								if(node.nextElementSibling){
+									newLI = node.parentNode.insertBefore(li, node.nextSibling);
+								} else {
+									newLI = node.parentNode.insertBefore(li, node.parentNode.nextSibling);
+								}
+								MediumEditor.selection.moveCursor(MediumEditorOptDoc, newLI); // jshint ignore:line
+								event.preventDefault();
 							}
 						}
 					} );
@@ -3604,6 +3653,9 @@ window.bp = window.bp || {};
 			addSelect2: function() {
 				var $input    = $( this.el ).find( '#send-to-input' );
 				var ArrayData = [];
+				if ( typeof BP_Nouveau.messages.is_blocked_by_members !== 'undefined' && BP_Nouveau.messages.is_blocked_by_members.length > 1 ) {
+					ArrayData = $.merge( ArrayData, BP_Nouveau.messages.is_blocked_by_members );
+				}
 				if ( $input.prop( 'tagName' ) != 'SELECT' ) {
 					this.addMentions();
 					return;
@@ -4009,7 +4061,7 @@ window.bp = window.bp || {};
 			updateThreadsList: function ( response, hideLoader ) {
 				var hideLoader = typeof hideLoader !== 'undefined' ? hideLoader : true; // jshint ignore:line
 				var updatedThread = '';
-				if ( 'undefined' !== typeof response && 'undefined' !== typeof response.thread_id ) {
+				if ( 'undefined' !== typeof response && 'undefined' !== typeof response.thread_id && 'undefined' !== typeof response.message ) {
 					this.collection.models.forEach(
 						function ( thread ) {
 							var thread_id = parseInt( thread.id );
@@ -4023,8 +4075,10 @@ window.bp = window.bp || {};
 
 								if ( $( document.body ).find( '#message-threads li.' + thread_id ).hasClass( 'current' ) ) {
 									thread.set( { unread: false } );
-								} else {
+								} else if ( parseInt( response.message.sender_id ) !== parseInt( BP_Nouveau.current.message_user_id ) ) {
 									thread.set( { unread: true } );
+								} else {
+									thread.set( { unread: false } );
 								}
 
 								thread.set( { content: response.message.content } );
@@ -4836,7 +4890,13 @@ window.bp = window.bp || {};
 
 				// use sent messageData here.
 				this.collection.add( first_message );
-				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+
+				if( $( '#bp-message-thread-list li:last-child video' ).length > 0 ){
+					$( '#bp-message-thread-list li:last-child video' ).on( 'loadedmetadata', function() {
+						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+					});
+				}
 			},
 
 			triggerPusherUpdateErrorMessage: function ( messagePusherData ) {
@@ -4877,7 +4937,7 @@ window.bp = window.bp || {};
 				) {
 					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?refresh=1', { trigger: true } );
 					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/', { trigger: true } );
-				} else if ( 'undefined' !== typeof current_thread.id && parseInt( current_thread.id ) == parseInt( thread_id ) ) {
+				} else if ( 'undefined' !== typeof current_thread && 'undefined' !== typeof current_thread.id && parseInt( current_thread.id ) == parseInt( thread_id ) ) {
 					window.location.reload();
 				}
 				window.Backbone.trigger( 'relistelements' );
@@ -4905,8 +4965,8 @@ window.bp = window.bp || {};
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
-					// Scroll Messages to bottom
-					$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+					// Scroll Messages to bottom.
+					$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 150 );
 				}
 			},
 
@@ -5088,7 +5148,6 @@ window.bp = window.bp || {};
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
-
 			},
 
 			messages_scrolled: function( event ) {
