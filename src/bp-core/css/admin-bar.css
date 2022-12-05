@@ -95,7 +95,3 @@ li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bp-re
 .nav-tab-wrapper a.bp-buddyboss-app.nav-tab {
 	display: none !important;
 }
-
-.nav-settings-subsubsub .subsubsub li.pusher {
-	display: none;
-}
