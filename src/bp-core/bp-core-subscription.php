@@ -160,8 +160,14 @@ function bb_subscriptions_create_subscription( $args = array() ) {
 	);
 
 	if ( ! empty( $subscriptions['subscriptions'] ) ) {
-		if ( 'wp_error' === $r['user_id'] ) {
-			return new WP_Error( 'bb_subscriptions_create_exists', __( 'The subscription was already exists.', 'buddyboss' ) );
+		if ( 'wp_error' === $r['error_type'] ) {
+			return new WP_Error(
+				'bb_subscriptions_create_exists',
+				__( 'The subscription is already exists.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
 		} else {
 			return false;
 		}
