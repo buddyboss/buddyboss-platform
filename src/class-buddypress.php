@@ -768,6 +768,7 @@ class BuddyPress {
 			'BP_REST_Account_Settings_Options_Endpoint'    => 'settings',
 			'BP_REST_Moderation_Endpoint'                  => 'moderation',
 			'BP_REST_Moderation_Report_Endpoint'           => 'moderation',
+			'BP_REST_Subscriptions_Endpoint'               => 'core',
 		);
 
 		$component = null;

@@ -138,7 +138,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @return bool True on success, false on failure.
+		 * @return bool|WP_Error True on success, false on failure.
 		 */
 		public function save() {
 			global $wpdb;
@@ -163,9 +163,31 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			 */
 			do_action_ref_array( 'bb_subscriptions_before_save', array( &$this ) );
 
-			// Subscription need at least user ID, Type and Item ID.
-			if ( empty( $this->user_id ) || empty( $this->type ) || empty( $this->item_id ) ) {
-				return false;
+			// Subscription need user ID.
+			if ( empty( $this->user_id ) ) {
+				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
+					return new WP_Error( 'bb_subscriptions_empty_user_id', __( 'The user ID is required to create a subscription.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
+			// Subscription need Type.
+			if ( empty( $this->type ) ) {
+				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
+					return new WP_Error( 'bb_subscriptions_empty_type', __( 'The type is required to create a subscription.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
+			// Subscription need Item ID.
+			if ( empty( $this->item_id ) ) {
+				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
+					return new WP_Error( 'bb_subscriptions_empty_item_id', __( 'The item ID is required to create a subscription.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
 			}
 
 			if ( ! empty( $this->id ) ) {
@@ -209,7 +231,11 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			if ( false === $wpdb->query( $sql ) ) {
-				return false;
+				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
+					return new WP_Error( 'bb_subscriptions_cannot_create', __( 'There is an error while adding the subscription.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
 			}
 
 			if ( empty( $this->id ) ) {
@@ -227,7 +253,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 
 			wp_cache_delete( $this->id, 'bb_subscriptions' );
 
-			return true;
+			return $this->id;
 		}
 
 		/**

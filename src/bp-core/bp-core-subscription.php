@@ -119,6 +119,77 @@ function bb_get_subscriptions_types() {
 }
 
 /**
+ * Create user subscription.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args {
+ *     An array of arguments.
+ *     @type string        $type              The type subscription.
+ *                                            'Forum', 'topic'.
+ *     @type int          $user_id            The ID of the user who created the Subscription.
+ *     @type int          $item_id            The ID of forum/topic.
+ *     @type int          $secondary_item_id  ID of the parent forum/topic.
+ * }
+ *
+ * @return int|bool|WP_Error
+ */
+function bb_subscriptions_create_subscription( $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'              => '',
+			'user_id'           => bp_loggedin_user_id(),
+			'item_id'           => 0,
+			'secondary_item_id' => 0,
+			'date_recorded'     => bp_core_current_time(),
+			'error_type'        => 'wp_error',
+		),
+		'bb_create_subscription'
+	);
+
+	// Check if subscription is existed or not?.
+	$subscriptions = BP_Subscription::get(
+		array(
+			'type'              => $r['type'],
+			'user_id'           => $r['user_id'],
+			'item_id'           => $r['item_id'],
+			'secondary_item_id' => $r['secondary_item_id'],
+			'no_cache'          => false,
+		)
+	);
+
+	if ( ! empty( $subscriptions['subscriptions'] ) ) {
+		if ( 'wp_error' === $r['user_id'] ) {
+			return new WP_Error( 'bb_subscriptions_create_exists', __( 'The subscription was already exists.', 'buddyboss' ) );
+		} else {
+			return false;
+		}
+	}
+
+	$new_subscription                    = new BP_Subscription();
+	$new_subscription->user_id           = $r['user_id'];
+	$new_subscription->type              = $r['type'];
+	$new_subscription->item_id           = $r['item_id'];
+	$new_subscription->secondary_item_id = $r['secondary_item_id'];
+	$new_subscription->date_recorded     = $r['date_recorded'];
+	$new_subscription->error_type        = $r['error_type'];
+	$new_subscription_created            = $new_subscription->save();
+
+	/**
+	 * Fires after create a new subscription.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $r Array of argument to create a new subscription.
+	 * @param int|bool|WP_Error $new_subscription_created The ID of new subscription when it's true otherwise return error.
+	 */
+	do_action_ref_array( 'bb_subscriptions_after_save', array( $r, $new_subscription_created ) );
+
+	return $new_subscription_created;
+}
+
+/**
  * Retrieve user subscription by type.
  *
  * @since BuddyBoss [BBVERSION]

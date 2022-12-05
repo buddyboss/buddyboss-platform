@@ -426,3 +426,53 @@ function bb_input_clean( $var ) {
 		return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 	}
 }
+
+
+/**
+ * Clean up subscription type input.
+ *
+ * @param string $value Comma-separated list of group types.
+ *
+ * @return array|null
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_rest_sanitize_subscription_type( $value ) {
+	if ( empty( $value ) ) {
+		return null;
+	}
+
+	$types       = explode( ',', $value );
+	$valid_types = array_intersect( $types, bb_get_subscriptions_types() );
+
+	return empty( $valid_types ) ? null : $valid_types;
+}
+
+/**
+ * Validate subscription type input.
+ *
+ * @param mixed $value Mixed value.
+ *
+ * @return WP_Error|bool
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_rest_validate_subscription_type( $value ) {
+	if ( empty( $value ) ) {
+		return true;
+	}
+
+	$types            = explode( ',', $value );
+	$registered_types = bb_get_subscriptions_types();
+	foreach ( $types as $type ) {
+		if ( ! in_array( $type, $registered_types, true ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_subscription_type',
+				sprintf(
+				/* translators: %1$s and %2$s is replaced with the registered types */
+					__( 'The subscription type you provided, %1$s, is not one of %2$s.', 'buddyboss' ),
+					$type,
+					implode( ', ', $registered_types )
+				)
+			);
+		}
+	}
+}
