@@ -2099,5 +2099,5 @@ function bb_update_to_2_1_8() {
 	// Create subscription table.
 	bb_core_install_subscription();
 	// Migrate the subscription data to new table.
-	bb_subscriptions_migrate_users_forum_topic();
+	bb_subscriptions_migrate_users_forum_topic( true );
 }

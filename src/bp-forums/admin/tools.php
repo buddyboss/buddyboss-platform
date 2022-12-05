@@ -2024,7 +2024,7 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	} elseif ( 'bbp-wp-role-restore' === $type ) {
 		$status = bbp_restore_caps_from_wp_roles();
 	} elseif ( 'bbp-migrate-forum-topic-subscription' === $type ) {
-		$status = bbp_migrate_forum_topic_subscription();
+		$status = bb_subscriptions_migrate_users_forum_topic( false );
 	}
 
 	if( is_multisite() && bp_is_network_activated() ) {
@@ -2038,16 +2038,3 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	}
 }
 add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bp_admin_forum_repair_tools_wrapper_function' );
-
-/**
- * Migrate forum/topic subscription to new systems.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bbp_migrate_forum_topic_subscription() {
-	bb_subscriptions_migrate_users_forum_topic();
-	return array(
-		'status'  => 1,
-		'message' => __( 'Complete!', 'buddyboss' ),
-	);
-}
