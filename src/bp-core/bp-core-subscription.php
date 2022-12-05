@@ -214,7 +214,7 @@ function bb_subscriptions_create_subscription( $args = array() ) {
 			'user_id'           => $r['user_id'],
 			'item_id'           => $r['item_id'],
 			'secondary_item_id' => $r['secondary_item_id'],
-			'no_cache'          => false,
+			'no_cache'          => true,
 		)
 	);
 
