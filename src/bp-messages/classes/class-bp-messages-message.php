@@ -472,12 +472,13 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.2.9
 	 *
-	 * @param array   $recipient_ids The ID of the users in the thread.
-	 * @param integer $sender        The ID of the sender user.
+	 * @param array $recipient_ids The ID of the users in the thread.
+	 * @param int   $sender        The ID of the sender user.
+	 * @param bool  $force_cache   Whether to force a cache update.
 	 *
 	 * @return null|mixed
 	 */
-	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
+	public static function get_existing_threads( $recipient_ids, $sender = 0, $force_cache = false ) {
 		global $wpdb;
 
 		// add the sender into the recipient list and order by id ascending.
@@ -486,10 +487,11 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
-		$results    = BP_Messages_Thread::get_threads_for_user(
+		$results = BP_Messages_Thread::get_threads_for_user(
 			array(
-				'fields'     => 'select',
-				'having_sql' => $having_sql,
+				'fields'      => 'select',
+				'having_sql'  => $having_sql,
+				'force_cache' => $force_cache,
 			)
 		);
 
