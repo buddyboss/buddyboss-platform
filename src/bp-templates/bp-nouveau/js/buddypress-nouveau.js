@@ -837,6 +837,10 @@ window.bp = window.bp || {};
 
 			// Following widget more button click.
 			$( document ).on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
+
+			// Accordion open/close event
+			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
+
 		},
 
 		/**
@@ -3168,6 +3172,23 @@ window.bp = window.bp || {};
 					$( '[data-bp-scope="' + hash_text + '"] a' ).trigger( 'click' );
 					return false;
 				}
+			}
+		},
+
+		/**
+		 * [toggleAccordion description]
+		 * @return {[type]} [description]
+		 */
+		 toggleAccordion: function() {
+			var accordion = $( this ).closest( '.bb-accordion' );
+			if( accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded' ) == 'true' ) {
+				accordion.find( '.bb-accordion_panel' ).slideUp();
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'false' );
+				accordion.find( '.bb-icon-angle-up' ).removeClass( 'bb-icon-angle-up' ).addClass( 'bb-icon-angle-down' );
+			} else {
+				accordion.find( '.bb-accordion_panel' ).slideDown();
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'true' );
+				accordion.find( '.bb-icon-angle-down' ).removeClass( 'bb-icon-angle-down' ).addClass( 'bb-icon-angle-up' );
 			}
 		},
 
