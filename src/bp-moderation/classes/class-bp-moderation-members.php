@@ -186,7 +186,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
-		if ( bb_moderation_is_user_blocked_by( $user_id ) || bp_moderation_is_user_blocked( $user_id ) ) {
+		if ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
 			buddypress()->displayed_user->id = 0;
 			bp_do_404();
 
