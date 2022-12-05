@@ -52,7 +52,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		/**
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 */
-		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
@@ -127,17 +127,18 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param string $where   blocked users Where sql.
-	 * @param object $suspend suspend object.
+	 * @param array  $where       blocked users Where sql.
+	 * @param object $suspend     suspend object.
+	 * @param string $column_name Table column name.
 	 *
 	 * @return array
 	 */
-	public function update_where_sql( $where, $suspend ) {
+	public function update_where_sql( $where, $suspend, $column_name ) {
 		$this->alias = $suspend->alias;
 
-		$blocked_user_query = false;
-		if ( function_exists( 'bp_is_members_directory' ) && bp_is_members_directory() ) {
-			$blocked_user_query = true;
+		$blocked_user_query = true;
+		if ( function_exists( 'bp_is_group_members' ) && bp_is_group_members() ) {
+			$blocked_user_query = false;
 		}
 
 		$sql = $this->exclude_where_query( $blocked_user_query );
@@ -146,14 +147,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( true === $blocked_user_query ) {
-			// Exclude blocked by members.
-			$blocked_by_users_ids = function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids() : array();
-			if ( ! empty( $blocked_by_users_ids ) ) {
-				if ( ! empty( $where ) ) {
-					$where['moderation_where'] .= ' AND ';
-				}
-				$where['moderation_where'] .= "( u.ID NOT IN ( " . implode( ', ', $blocked_by_users_ids ) . " ))";
-			}
+			$where['moderation_blocked_by_where'] = "( u.{$column_name} NOT IN (" . bb_moderation_get_blocked_by_sql() . ') )';
 		}
 
 		return $where;

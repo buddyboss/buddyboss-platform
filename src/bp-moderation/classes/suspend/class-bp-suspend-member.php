@@ -194,10 +194,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param array $where Query to hide suspended user's member.
-		 * @param array $class current class object.
+		 * @param array  $where       Query to hide suspended user's member.
+		 * @param object $class       current class object.
+		 * @param string $column_name Table column name.
 		 */
-		$where = apply_filters( 'bp_suspend_member_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bp_suspend_member_get_where_conditions', $where, $this, $column_name );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
