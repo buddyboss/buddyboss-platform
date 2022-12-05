@@ -8170,13 +8170,13 @@ function bb_get_users_presence( $users, $compare_time = false ) {
  * @return string
  */
 function bb_pro_pusher_version() {
-	return '2.1.4';
+	return '2.2';
 }
 
 /**
  * Function to return the time span for the presence in seconds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2
  *
  * @return int
  */
