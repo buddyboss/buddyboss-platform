@@ -11408,6 +11408,10 @@ body .bp-messages-user-threads {
   border-bottom: 1px solid #eee;
 }
 
+.bb-accordion.is_closed .bb-accordion_head {
+  border-bottom: 0;
+}
+
 .bb-accordion .bb-accordion_title {
   font-size: 18px;
   font-weight: 600;

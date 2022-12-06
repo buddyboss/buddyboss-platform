@@ -390,6 +390,10 @@
 		border-bottom: 1px solid $bp-border-color;
 	}
 
+	&.is_closed .bb-accordion_head {
+		border-bottom: 0;
+	}
+
 	.bb-accordion_title {
 
 		@include font-size(18);

@@ -21,10 +21,8 @@ $data = bb_core_notification_preferences_data();
 			<h3 class="bb-accordion_title">
 				<?php esc_html_e( 'Forums', 'buddyboss' ); ?>
 			</h3>
-			<button aria-expanded="true" class="bb-accordion_trigger" aria-controls="bb-accordion-section-1" >
-				<span>
-					<i class="bb-icon-lined bb-icon-angle-up"></i>
-				</span>
+			<button type="button" aria-expanded="true" class="bb-accordion_trigger" aria-controls="bb-accordion-section-1" >
+				<i class="bb-icon-lined bb-icon-angle-up"></i>
 			</button>
 		</div>
 
@@ -59,10 +57,8 @@ $data = bb_core_notification_preferences_data();
 			<h3 class="bb-accordion_title">
 				<?php esc_html_e( 'Discussions', 'buddyboss' ); ?>
 			</h3>
-			<button aria-expanded="true" class="bb-accordion_trigger" aria-controls="bb-accordion-section-2" >
-				<span>
-					<i class="bb-icon-lined bb-icon-angle-up"></i>
-				</span>
+			<button type="button" aria-expanded="true" class="bb-accordion_trigger" aria-controls="bb-accordion-section-2" >
+				<i class="bb-icon-lined bb-icon-angle-up"></i>
 			</button>
 		</div>
 
