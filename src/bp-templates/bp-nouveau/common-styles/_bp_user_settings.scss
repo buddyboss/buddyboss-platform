@@ -392,11 +392,10 @@
 		display: flex;
 		position: relative;
 		padding: 16px 22px;
-		border-bottom: 1px solid $bp-border-color;
 	}
 
-	&.is_closed .bb-accordion_head {
-		border-bottom: 0;
+	.bb-accordion_panel {
+		border-top: 1px solid $bp-border-color;
 	}
 
 	.bb-accordion_title {
@@ -533,6 +532,17 @@
 				i {
 					color: $black;
 				}
+			}
+
+			&.is_loading {
+				pointer-events: none;
+
+				i:before {
+					content: "\ef30";
+					animation: spin 2s infinite linear;
+					display: inline-block;
+				}
+
 			}
 		}
 	}

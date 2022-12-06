@@ -34,6 +34,20 @@ $data = bb_core_notification_preferences_data();
 							<img src="https://source.unsplash.com/user/c_v_r/100x100" alt="" />
 						</div>
 						<div class="subscription-item_detail">
+							<span class="subscription-item_title">Ask Anything Random Here</span>
+						</div>
+					</a>
+					<button type="button" class="subscription-item_remove" aria-label="<?php esc_html_e( 'Unsubscribe', 'buddyboss' ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Unsubscribe', 'buddyboss' ) ?>">
+						<i class="bb-icon-lined bb-icon-times"></i>
+					</button>
+					
+				</li>
+				<li>
+					<a href="#" class="subscription-item_anchor">
+						<div class="subscription-item_image">
+							<img src="https://source.unsplash.com/user/c_v_r/100x100" alt="" />
+						</div>
+						<div class="subscription-item_detail">
 							<span class="subscription-item_title">TV & Movies</span>
 							<span class="subscription-item_meta">
 								<i class="bb-icon-corner-right"></i>
@@ -70,7 +84,7 @@ $data = bb_core_notification_preferences_data();
 							<img src="https://source.unsplash.com/user/c_v_r/100x100" alt="" />
 						</div>
 						<div class="subscription-item_detail">
-							<span class="subscription-item_title">Ask Anything Random Here</span>
+							<span class="subscription-item_title">What’s the biggest plot hole you’ve seen in a movie?</span>
 							<span class="subscription-item_meta">Posted by <strong>John</strong> in <strong>TV & Movies</strong></span>
 						</div>
 					</a>
@@ -79,6 +93,24 @@ $data = bb_core_notification_preferences_data();
 					</button>
 					
 				</li>
+
+				<!--  Loading state -->
+				<li>
+					<a href="#" class="subscription-item_anchor">
+						<div class="subscription-item_image">
+							<img src="https://source.unsplash.com/user/c_v_r/100x100" alt="" />
+						</div>
+						<div class="subscription-item_detail">
+							<span class="subscription-item_title">20 years of Tokyo's development through the lens of Peter M. Cook</span>
+							<span class="subscription-item_meta">Posted by <strong>Sophie</strong> in <strong>Architecture Ideas</strong></span>
+						</div>
+					</a>
+					<button type="button" class="subscription-item_remove is_loading" aria-label="<?php esc_html_e( 'Unsubscribe', 'buddyboss' ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Unsubscribe', 'buddyboss' ) ?>">
+						<i class="bb-icon-lined bb-icon-times"></i>
+					</button>
+					
+				</li>
+
 			</ul>
 		</div>
 

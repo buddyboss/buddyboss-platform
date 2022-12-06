@@ -11409,11 +11409,10 @@ body .bp-messages-user-threads {
   display: flex;
   position: relative;
   padding: 16px 22px;
-  border-bottom: 1px solid #eee;
 }
 
-.bb-accordion.is_closed .bb-accordion_head {
-  border-bottom: 0;
+.bb-accordion .bb-accordion_panel {
+  border-top: 1px solid #eee;
 }
 
 .bb-accordion .bb-accordion_title {
@@ -11557,6 +11556,16 @@ body .bp-messages-user-threads {
 
 .buddypress .buddypress-wrap .subscription-items .subscription-item_remove:focus i, .buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover i {
   color: #333;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove.is_loading {
+  pointer-events: none;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove.is_loading i:before {
+  content: "\ef30";
+  animation: spin 2s infinite linear;
+  display: inline-block;
 }
 
 /*__ Notification Subscription __*/

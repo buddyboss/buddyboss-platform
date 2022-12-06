@@ -3184,14 +3184,11 @@ window.bp = window.bp || {};
 			if( accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded' ) == 'true' ) {
 				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'false' );
 				accordion.find( '.bb-icon-angle-up' ).removeClass( 'bb-icon-angle-up' ).addClass( 'bb-icon-angle-down' );
-				accordion.find( '.bb-accordion_panel' ).slideUp( 400, function() {
-					accordion.addClass( 'is_closed' );
-				});
+				accordion.find( '.bb-accordion_panel' ).slideUp();
 			} else {
 				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'true' );
 				accordion.find( '.bb-icon-angle-down' ).removeClass( 'bb-icon-angle-down' ).addClass( 'bb-icon-angle-up' );
-				accordion.removeClass( 'is_closed' );
-				accordion.find( '.bb-accordion_panel' ).slideDown( 400 );
+				accordion.find( '.bb-accordion_panel' ).slideDown();
 			}
 		},
 
