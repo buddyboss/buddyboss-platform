@@ -206,7 +206,13 @@ function bbp_is_favorites_active( $default = 1 ) {
  * @return bool Is subscription enabled or not
  */
 function bbp_is_subscriptions_active( $default = 1 ) {
-	return (bool) apply_filters( 'bbp_is_subscriptions_active', (bool) get_option( '_bbp_enable_subscriptions', $default ) );
+
+	$is_subscription_enabled = get_option( '_bbp_enable_subscriptions', $default );
+	if ( bb_is_enabled_modern_subscriptions() ) {
+		$is_subscription_enabled = bb_is_enabled_modern_subscriptions();
+	}
+
+	return (bool) apply_filters( 'bbp_is_subscriptions_active', (bool) $is_subscription_enabled );
 }
 
 /**

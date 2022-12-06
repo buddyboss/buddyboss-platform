@@ -452,18 +452,30 @@ function bb_subscriptions_delete_subscription( $subscription_id ) {
 }
 
 /**
- * Enabled modern subscription or not.
+ * Enabled modern subscriptions or not.
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param string $type Optional. The type of subscription like 'forum', topic'.
+ *
  * @return bool
  */
-function bb_is_enabled_modern_subscriptions() {
+function bb_is_enabled_modern_subscriptions( $type = '' ) {
 	$is_enabled = false;
 
 	if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
-		if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) || bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) ) {
-			$is_enabled = true;
+		switch ( $type ) {
+			case 'forum':
+				$is_enabled = bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' );
+				break;
+			case 'topic':
+				$is_enabled = bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' );
+				break;
+			default:
+				if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) || bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) ) {
+					$is_enabled = true;
+				}
+				break;
 		}
 	}
 
