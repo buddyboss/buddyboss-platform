@@ -56,7 +56,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		add_filter( 'get_comment_time', array( $this, 'blocked_get_comment_time' ), 10, 5 );
 		add_filter( 'comment_reply_link', array( $this, 'blocked_comment_reply_link' ), 10, 3 );
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
-		add_filter( 'widget_comments_args', array( $this, 'bb_blocked_widget_comments_args' ), 10, 2 );
+		add_filter( 'comments_clauses', array( $this, 'bb_blocked_comments_pre_query' ), 10, 2 );
 	}
 
 	/**
@@ -477,37 +477,22 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	}
 
 	/**
-	 * Function will exclude suspended users comment from Recent Comments widget.
+	 * Function to exclude is_suspended users comment from recent comment widget.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $args   An array of arguments used to retrieve the recent comments.
-	 * @param array $widget Array of settings for the current widget.
+	 * @param string[] $comment_data An associative array of comment query clauses.
+	 * @param object   $query        Current instance of WP_Comment_Query (passed by reference).
 	 *
 	 * @return mixed
 	 */
-	public function bb_blocked_widget_comments_args( $args, $widget ) {
-		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
-			return $args;
-		}
-		$args = array(
-			'in_types' => array( BP_Moderation_Members::$moderation_type ),
-			'reported' => false,
-			'hidden'   => 1,
-			'per_page' => 0,
-		);
-		// Fetch suspended users.
-		$suspended_users     = BP_Moderation::get( $args );
-		$suspended_users_ids = array();
-		if ( ! empty( $suspended_users['moderations'] ) ) {
-			$suspended_users_ids = wp_list_pluck( $suspended_users['moderations'], 'item_id' );
-		}
-		$existing_author_ids = ! empty( $args['author__not_in'] ) ? $args['author__not_in'] : array();
-		$exclude_user_ids    = array_merge( $suspended_users_ids, $existing_author_ids );
-		if ( ! empty( $exclude_user_ids ) ) {
-			$args['author__not_in'] = $suspended_users_ids;
+	public function bb_blocked_comments_pre_query( $comment_data, $query ) {
+		if ( did_filter( 'widget_comments_args' ) ) {
+			global $wpdb;
+			$comment_data['join']  .= " " . $this->exclude_joint_query( $wpdb->prefix . 'comments.user_id', BP_Moderation_Members::$moderation_type );
+			$comment_data['where'] .= " AND " . $this->exclude_where_query();
 		}
 
-		return $args;
+		return $comment_data;
 	}
 }

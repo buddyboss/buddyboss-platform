@@ -69,7 +69,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
-		add_filter( 'widget_comments_args', array( $this, 'bb_blocked_widget_comments_args' ), 10, 2 );
+		add_filter( 'get_comment', array( $this, 'bb_blocked_comment_author_url' ), 10, 1 );
+		add_filter( 'comments_clauses', array( $this, 'bb_blocked_comments_pre_query' ), 10, 2 );
 	}
 
 	/**
@@ -418,30 +419,44 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function will exclude users comment( blocked users and those users who
-	 * has blocked to current users ) from Recent Comments widget.
+	 * If members url is not set then add member url in the comment.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $args   An array of arguments used to retrieve the recent comments.
-	 * @param array $widget Array of settings for the current widget.
+	 * @param object $comment Comment data.
+	 *
+	 * @return object $comment Comment data.
+	 */
+	public function bb_blocked_comment_author_url( $comment ) {
+		if ( $comment->user_id && ! $comment->comment_author_url ) {
+			$comment->comment_author_url = bp_core_get_user_domain( $comment->user_id );
+		}
+
+		return $comment;
+	}
+
+	/**
+	 * Function to exclude is_blocked and has_blocked users comment from recent comment widget.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string[] $comment_data An associative array of comment query clauses.
+	 * @param object   $query        Current instance of WP_Comment_Query (passed by reference).
 	 *
 	 * @return mixed
 	 */
-	public function bb_blocked_widget_comments_args( $args, $widget ) {
-		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
-			return $args;
+	public function bb_blocked_comments_pre_query( $comment_data, $query ) {
+		if ( did_filter( 'widget_comments_args' ) ) {
+			global $wpdb;
+			$this->alias = 's';
+			$sql         = $this->exclude_where_query();
+			if ( ! empty( $sql ) ) {
+				$comment_data['where'] .= " AND " . $sql;
+			}
+			$blocked_by_query      = bb_moderation_get_blocked_by_sql( bp_loggedin_user_id() );
+			$comment_data['where'] .= " AND " . $wpdb->prefix . "comments.user_id NOT IN ( " . $blocked_by_query . " )";
 		}
-		$blocked_by_users_ids = function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids() : array();
-		$hidden_users_ids     = function_exists( 'bp_moderation_get_hidden_user_ids' ) ? bp_moderation_get_hidden_user_ids() : array();
-		$existing_author_ids  = ! empty( $args['author__not_in'] ) ? $args['author__not_in'] : array();
 
-		// Merge all exclude users ids based on $blocked_by_users_ids and $hidden_users_ids.
-		$exclude_user_ids = array_merge( $blocked_by_users_ids, $hidden_users_ids, $existing_author_ids );
-
-		if ( ! empty( $exclude_user_ids ) ) {
-			$args['author__not_in'] = $exclude_user_ids;
-		}
-		return $args;
+		return $comment_data;
 	}
 }
