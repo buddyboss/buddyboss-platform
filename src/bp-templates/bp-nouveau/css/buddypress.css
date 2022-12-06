@@ -10410,7 +10410,7 @@ input#send-to-input {
   font-weight: 600;
 }
 
-body.is-mobile .bp-messages-content .bp-message-content_foot_note {
+body.bb-is-mobile .bp-messages-content .bp-message-content_foot_note {
   display: none;
 }
 
@@ -10920,6 +10920,7 @@ body .bp-messages-user-threads {
   position: absolute;
   top: 0;
   left: 0;
+  padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
 

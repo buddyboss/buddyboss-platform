@@ -2122,7 +2122,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if( !$( 'body' ).hasClass( 'is-mobile' ) ) {
+					if( !$( 'body' ).hasClass( 'bb-is-mobile' ) ) {
 						bp.Nouveau.Messages.mediumEditor.subscribe( 'editableKeypress', function( event ) {
 							if ( event.keyCode === 13 && ! event.shiftKey ) {
 								event.preventDefault();
