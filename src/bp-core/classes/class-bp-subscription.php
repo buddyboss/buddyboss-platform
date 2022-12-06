@@ -275,7 +275,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param BP_Subscription $this Current instance of the subscription item being deleted. Passed by reference.
-			 * @param array           $id   ID of subscription.
+			 * @param int             $id   ID of subscription.
 			 */
 			do_action_ref_array( 'bb_subscriptions_delete_subscription', array( &$this, $this->id ) );
 

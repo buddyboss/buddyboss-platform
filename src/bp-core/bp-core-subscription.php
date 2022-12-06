@@ -371,3 +371,82 @@ function bb_get_subscription_users( $args = array() ) {
 
 	return $subscriptions;
 }
+
+/**
+ * Fetch a single subscription object.
+ *
+ * When calling up a subscription object, you should always use this function instead
+ * of instantiating BP_Subscription directly, so that you will inherit cache
+ * support and pass through the bb_subscriptions_get_subscription filter.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $subscription_id ID of the subscription.
+ *
+ * @return BP_Subscription $subscription The subscription object.
+ */
+function bb_subscriptions_get_subscription( $subscription_id ) {
+	// Backward compatibility.
+	if ( ! is_numeric( $subscription_id ) ) {
+		$r = bp_parse_args(
+			$subscription_id,
+			array(
+				'subscription_id' => false,
+			),
+			'subscriptions_get_subscription'
+		);
+
+		$subscription_id = $r['subscription_id'];
+	}
+
+	$subscription = new BP_Subscription( $subscription_id );
+
+	/**
+	 * Filters a single subscription object.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Subscription $subscription Single subscription object.
+	 */
+	return apply_filters( 'bb_subscriptions_get_subscription', $subscription );
+}
+
+/**
+ * Delete a subscription.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $subscription_id ID of the subscription to delete.
+ *
+ * @return bool True on success, false on failure.
+ */
+function bb_subscriptions_delete_subscription( $subscription_id ) {
+
+	/**
+	 * Fires before the deletion of a subscription.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $subscription_id ID of the subscription to be deleted.
+	 */
+	do_action( 'bb_subscriptions_before_delete_subscription', $subscription_id );
+
+	// Get the subscription object.
+	$subscription = bb_subscriptions_get_subscription( $subscription_id );
+
+	// Bail if subscription cannot be deleted.
+	if ( ! $subscription->delete() ) {
+		return false;
+	}
+
+	/**
+	 * Fires after the deletion of a subscription.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $subscription_id ID of the subscription that was deleted.
+	 */
+	do_action( 'bb_subscriptions_delete_subscription', $subscription_id );
+
+	return true;
+}
