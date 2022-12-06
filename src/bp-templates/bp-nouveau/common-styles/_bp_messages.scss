@@ -1125,6 +1125,10 @@ input#send-to-input {
 	strong {
 		font-weight: 600;
 	}
+
+	body.bb-is-mobile & { // Hide notice in mobile
+		display: none;
+	}
 }
 
 .bp-message-content-wrap .bp-message-content_foot_note {
@@ -1658,6 +1662,7 @@ body .bp-messages-user-threads {
 	position: absolute;
 	top: 0;
 	left: 0;
+	padding: 0;
 	-webkit-tap-highlight-color: transparent;
 }
 
