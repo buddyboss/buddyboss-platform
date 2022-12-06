@@ -59,21 +59,22 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $subscription_meta Array of user subscriptions.
+ * @param array $subscription_users Array of user subscriptions.
  * @param int   $offset            Offset value.
  * @param bool  $is_background     The current process is background or not.
  *
  * @return array Return array when it called directly otherwise call recursively.
  */
-function bb_migrate_users_forum_topic_subscriptions( $subscription_meta, $offset = 0, $is_background = true ) {
+function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offset = 0, $is_background = true ) {
 	global $wpdb;
 
 	$subscription_tbl = BP_Subscription::get_subscription_tbl();
 	$forum_post_type  = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
 	$topic_post_type  = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
 
-	if ( ! empty( $subscription_meta ) ) {
-		foreach ( $subscription_meta as $user_id ) {
+	if ( ! empty( $subscription_users ) ) {
+		foreach ( $subscription_users as $subscription_user ) {
+			$user_id = $subscription_user->ID;
 
 			// Increment the current offset.
 			$offset++;
