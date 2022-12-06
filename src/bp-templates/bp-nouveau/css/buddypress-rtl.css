@@ -11385,6 +11385,10 @@ body .bp-messages-user-threads {
   padding: 0 0 5px 0;
 }
 
+.subnav_tab .subnav li a:focus-visible {
+  outline: 1px solid #5087e5;
+}
+
 .subnav_tab .subnav li:not(:last-child) {
   margin: 0 0 0 25px;
 }
@@ -11437,6 +11441,7 @@ body .bp-messages-user-threads {
   left: 25px;
   background-color: transparent;
   border: 0;
+  border-radius: 4px;
   padding: 0;
   height: 32px;
   width: 32px;
@@ -11444,6 +11449,10 @@ body .bp-messages-user-threads {
 
 .buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger i {
   font-size: 24px;
+}
+
+.buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger:focus-visible {
+  outline: 1px solid #5087e5;
 }
 
 .subscription-items {
@@ -11457,7 +11466,7 @@ body .bp-messages-user-threads {
   border-radius: 4px;
 }
 
-.subscription-items li:hover {
+.subscription-items li:focus-within, .subscription-items li:hover {
   background-color: #eaeaea;
 }
 
@@ -11537,11 +11546,11 @@ body .bp-messages-user-threads {
   font-size: 20px;
 }
 
-.buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover {
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove:focus, .buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover {
   background-color: #fff;
 }
 
-.buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover i {
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove:focus i, .buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover i {
   color: #333;
 }
 

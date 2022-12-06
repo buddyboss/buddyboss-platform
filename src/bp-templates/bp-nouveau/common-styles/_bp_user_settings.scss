@@ -360,6 +360,11 @@
 				text-decoration: none;
 				border-bottom: 1px solid transparent;
 				padding: 0 0 5px 0;
+
+				&:focus-visible {
+					outline: 1px solid $blue;
+				}
+
 			}
 
 			&:not(:last-child) {
@@ -413,6 +418,7 @@
 			right: 25px;
 			background-color: transparent;
 			border: 0;
+			border-radius: 4px;
 			padding: 0;
 			height: 32px;
 			width: 32px;
@@ -420,6 +426,11 @@
 			i {
 				font-size: 24px;
 			}
+
+			&:focus-visible {
+				outline: 1px solid $blue;
+			}
+
 		}
 	}
 
@@ -434,6 +445,7 @@
 		position: relative;
 		border-radius: 4px;
 
+		&:focus-within,
 		&:hover {
 			background-color: $light-grey;
 		}
@@ -509,6 +521,7 @@
 				font-size: 20px;
 			}
 
+			&:focus,
 			&:hover {
 				background-color: $white;
 
