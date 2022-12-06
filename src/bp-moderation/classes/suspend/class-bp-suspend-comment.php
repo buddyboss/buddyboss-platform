@@ -211,8 +211,14 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $comment_text;
 		}
 
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
-			$comment_text = bb_moderation_is_suspended_message( $comment_text );
+			$is_user_suspended = bp_moderation_is_user_suspended( $comment_author_id );
+			if ( $is_user_suspended ) {
+				$comment_text = bb_moderation_is_suspended_message( $comment_text );
+			} else {
+				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			}
 		}
 
 		return $comment_text;
@@ -464,12 +470,12 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	private function check_is_hidden( $comment_id ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
-			return true;
-		}
-
 		$author_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
-		if ( bp_moderation_is_user_suspended( $author_id ) ) {
+
+		if (
+			( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) ||
+			( ! empty( $author_id ) && bp_moderation_is_user_suspended( $author_id ) )
+		) {
 			return true;
 		}
 
