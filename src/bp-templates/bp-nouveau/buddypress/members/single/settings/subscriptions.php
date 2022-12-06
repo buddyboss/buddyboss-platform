@@ -125,5 +125,24 @@ $data = bb_core_notification_preferences_data();
 
 	</div><!-- .bb-accordion -->
 
+	<div class="bb-accordion">
+
+		<div class="bb-accordion_head" id="bb-accordion-1">
+			<h3 class="bb-accordion_title">
+				<?php esc_html_e( 'Forums', 'buddyboss' ); ?>
+			</h3>
+			<button type="button" aria-expanded="true" class="bb-accordion_trigger" aria-controls="bb-accordion-section-1" >
+				<i class="bb-icon-lined bb-icon-angle-up"></i>
+			</button>
+		</div>
+
+		<div id="bb-accordion-section-1" role="region" aria-labelledby="bb-accordion-1" class="bb-accordion_panel">
+			<div class="subscription-items">
+				<p>You are not currently subscribed to any forums.</p>
+			</div>
+		</div>
+
+	</div><!-- .bb-accordion -->
+		
 <?php
 bp_nouveau_member_hook( 'after', 'settings_template' );

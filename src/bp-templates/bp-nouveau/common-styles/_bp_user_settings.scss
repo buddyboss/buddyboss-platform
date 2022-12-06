@@ -587,6 +587,13 @@
 			}
 		}
 	}
+
+	> p {
+
+		@include font-size(14);
+		margin: 0;
+		padding: 5px 10px;
+	}
 }
 
 /*__ Notification Subscription __*/

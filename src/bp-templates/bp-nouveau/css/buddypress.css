@@ -11599,6 +11599,12 @@ body .bp-messages-user-threads {
   display: inline-block;
 }
 
+.subscription-items > p {
+  font-size: 14px;
+  margin: 0;
+  padding: 5px 10px;
+}
+
 /*__ Notification Subscription __*/
 /*__ Profile visibility __*/
 /*__ Group Invites __*/
