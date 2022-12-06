@@ -112,6 +112,15 @@ $data = bb_core_notification_preferences_data();
 				</li>
 
 			</ul>
+
+			<div class="bbp-pagination">
+				<div class="bbp-pagination-links">
+					<span aria-current="page" class="page-numbers current">1</span>
+					<a class="page-numbers" href="#">2</a>
+					<a class="next page-numbers" href="#">→</a>
+				</div>
+			</div>
+
 		</div>
 
 	</div><!-- .bb-accordion -->

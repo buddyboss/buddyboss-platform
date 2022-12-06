@@ -11422,6 +11422,14 @@ body .bp-messages-user-threads {
   margin: 0;
 }
 
+.bb-accordion .bb-accordion_panel .bbp-pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin: 15px 0 22px 22px;
+  float: none;
+  width: auto;
+}
+
 .buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger {
   display: -webkit-box;
   display: -ms-flexbox;

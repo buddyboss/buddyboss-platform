@@ -406,6 +406,18 @@
 		margin: 0;
 	}
 
+	.bb-accordion_panel {
+
+		.bbp-pagination {
+			display: flex;
+			justify-content: flex-end;
+			margin: 15px 22px 22px 0;
+			float: none;
+			width: auto;
+		}
+
+	}
+
 	.bb-accordion_trigger {
 
 		.buddypress .buddypress-wrap & {
