@@ -194,14 +194,14 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				$sql = $wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					"UPDATE {$subscription_tbl} SET
-					user_id = %d,
-					type = %s,
-					item_id = %d,
-					secondary_item_id = %d,
-					date_recorded = %s
-				WHERE
-					id = %d
-				",
+						user_id = %d,
+						type = %s,
+						item_id = %d,
+						secondary_item_id = %d,
+						date_recorded = %s
+					WHERE
+						id = %d
+					",
 					$this->user_id,
 					$this->type,
 					$this->item_id,
@@ -213,14 +213,14 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				$sql = $wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					"INSERT INTO {$subscription_tbl} (
-					user_id,
-					type,
-					item_id,
-					secondary_item_id,
-					date_recorded
-				) VALUES (
-					%d, %s, %d, %d, %s
-				)",
+						user_id,
+						type,
+						item_id,
+						secondary_item_id,
+						date_recorded
+					) VALUES (
+						%d, %s, %d, %d, %s
+					)",
 					$this->user_id,
 					$this->type,
 					$this->item_id,
@@ -364,10 +364,10 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		 *                                            Results will exclude the listed subscriptions. Default: false.
 		 *     @type string       $fields             Which fields to return. Specify 'ids' to fetch a list of IDs.
 		 *                                            Default: 'all' (return BP_Subscription objects).
-		 *     @type bool         $no_count           Optional. Fetch total count of all subscriptions matching non-
+		 *     @type bool         $count           Optional. Fetch total count of all subscriptions matching non-
 		 *                                            paginated query params when it false.
 		 *                                            Default: true.
-		 *     @type bool         $no_cache           Optional. Fetch the fresh result instead of cache when it true.
+		 *     @type bool         $cache           Optional. Fetch the fresh result instead of cache when it true.
 		 *                                            Default: false.
 		 * }
 		 * @return array {
@@ -392,8 +392,8 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				'include'           => false,
 				'exclude'           => false,
 				'fields'            => 'all',
-				'no_count'          => true,
-				'no_cache'          => false,
+				'count'             => true,
+				'cache'             => true,
 			);
 
 			$r = bp_parse_args( $args, $defaults, 'bb_subscriptions_subscription_get' );
@@ -502,7 +502,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			$paged_subscriptions_sql = apply_filters( 'bb_subscriptions_get_paged_subscriptions_sql', $paged_subscriptions_sql, $sql, $r );
 
 			$cached = bp_core_get_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions' );
-			if ( false === $cached || $r['no_cache'] ) {
+			if ( false === $cached || false === $r['cache'] ) {
 				$paged_subscription_ids = $wpdb->get_col( $paged_subscriptions_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				bp_core_set_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions', $paged_subscription_ids );
 			} else {
@@ -534,8 +534,8 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			// Set in response array.
 			$results['subscriptions'] = $paged_subscriptions;
 
-			// If no_count is false then will get total subscription counts.
-			if ( ! $r['no_count'] ) {
+			// If count is true then will get total subscription counts.
+			if ( ! empty( $r['count'] ) ) {
 				// Find the total number of subscriptions in the results set.
 				$total_subscriptions_sql = "SELECT COUNT(DISTINCT s.id) FROM {$sql['from']} $where";
 				if ( 'all' !== $r['fields'] || 'ids' !== $r['fields'] ) {
@@ -554,7 +554,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				$total_subscriptions_sql = apply_filters( 'bb_subscriptions_get_total_subscriptions_sql', $total_subscriptions_sql, $sql, $r );
 
 				$cached = bp_core_get_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions' );
-				if ( false === $cached || $r['no_cache'] ) {
+				if ( false === $cached || false === $r['cache'] ) {
 					$total_subscriptions = (int) $wpdb->get_var( $total_subscriptions_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					bp_core_set_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions', array( $total_subscriptions ) );
 				} else {

@@ -48,6 +48,9 @@ function bp_core_install( $active_components = false ) {
 	// Install the signups table.
 	bp_core_maybe_install_signups();
 
+	// Install item subscriptions.
+	bb_core_install_subscription();
+
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
 		bp_core_install_notifications();
@@ -86,7 +89,6 @@ function bp_core_install( $active_components = false ) {
 	// Discussion forums.
 	if ( ! empty( $active_components['forums'] ) ) {
 		bp_core_install_discussion_forums();
-		bb_core_install_subscription();
 	}
 
 	// Media.

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array Return array when it called directly otherwise call recursively.
  */
-function bb_subscriptions_migrate_users_forum_topic( $is_background = true ) {
+function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 	global $wpdb, $bp_background_updater;
 
 	$offset    = get_option( 'bb_subscriptions_migrate_offset', 0 );
@@ -174,7 +174,24 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_meta, $offset
  * @return array
  */
 function bb_get_subscriptions_types() {
-	return array( 'forum', 'topic' );
+	$types = array();
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) ) {
+			$types[] = 'forum';
+		}
+
+		if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) ) {
+			$types[] = 'topic';
+		}
+	} else {
+		if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
+			$types[] = 'forum';
+			$types[] = 'topic';
+		}
+	}
+
+	return $types;
 }
 
 /**
@@ -214,7 +231,7 @@ function bb_subscriptions_create_subscription( $args = array() ) {
 			'user_id'           => $r['user_id'],
 			'item_id'           => $r['item_id'],
 			'secondary_item_id' => $r['secondary_item_id'],
-			'no_cache'          => true,
+			'cache'             => false,
 		)
 	);
 
@@ -288,7 +305,7 @@ function bb_get_subscriptions( $args = array() ) {
 			'user_id'  => bp_loggedin_user_id(),
 			'per_page' => null,
 			'page'     => null,
-			'no_count' => false,
+			'count'    => false,
 		),
 		'bb_get_subscriptions'
 	);
@@ -339,7 +356,7 @@ function bb_get_subscription_users( $args = array() ) {
 			'per_page' => null,
 			'page'     => null,
 			'fields'   => 'user_id',
-			'no_count' => false,
+			'count'    => true,
 		),
 		'bb_get_subscription_users'
 	);

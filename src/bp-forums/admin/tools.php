@@ -2024,7 +2024,7 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	} elseif ( 'bbp-wp-role-restore' === $type ) {
 		$status = bbp_restore_caps_from_wp_roles();
 	} elseif ( 'bbp-migrate-forum-topic-subscription' === $type ) {
-		$status = bb_subscriptions_migrate_users_forum_topic( false );
+		$status = bb_subscriptions_migrate_users_forum_topic();
 	}
 
 	if( is_multisite() && bp_is_network_activated() ) {
