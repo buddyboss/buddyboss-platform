@@ -98,7 +98,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 
 			// Cache missed, so query the DB.
 			if ( false === $subscription ) {
-				$subscription = $wpdb->get_row( $wpdb->prepare( "SELECT s.* FROM {$subscription_tbl} s WHERE s.id = %d", $this->id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$subscription = $wpdb->get_row( $wpdb->prepare( "SELECT cs.* FROM {$subscription_tbl} sc WHERE sc.id = %d", $this->id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 				wp_cache_set( $this->id, $subscription, 'bb_subscriptions' );
 			}
@@ -406,8 +406,8 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 
 			$results = array();
 			$sql     = array(
-				'select'     => 'SELECT DISTINCT s.id',
-				'from'       => $subscription_tbl . ' s',
+				'select'     => 'SELECT DISTINCT sc.id',
+				'from'       => $subscription_tbl . ' sc',
 				'where'      => '',
 				'order_by'   => '',
 				'pagination' => '',
@@ -421,29 +421,29 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				}
 				$r['type']                = array_map( 'sanitize_title', $r['type'] );
 				$type_in                  = "'" . implode( "','", $r['type'] ) . "'";
-				$where_conditions['type'] = "s.type IN ({$type_in})";
+				$where_conditions['type'] = "sc.type IN ({$type_in})";
 			}
 
 			if ( ! empty( $r['user_id'] ) ) {
-				$where_conditions['user_id'] = $wpdb->prepare( 's.user_id = %d', $r['user_id'] );
+				$where_conditions['user_id'] = $wpdb->prepare( 'sc.user_id = %d', $r['user_id'] );
 			}
 
 			if ( ! empty( $r['item_id'] ) ) {
-				$where_conditions['item_id'] = $wpdb->prepare( 's.item_id = %d', $r['item_id'] );
+				$where_conditions['item_id'] = $wpdb->prepare( 'sc.item_id = %d', $r['item_id'] );
 			}
 
 			if ( ! empty( $r['secondary_item_id'] ) ) {
-				$where_conditions['secondary_item_id'] = $wpdb->prepare( 's.secondary_item_id = %d', $r['secondary_item_id'] );
+				$where_conditions['secondary_item_id'] = $wpdb->prepare( 'sc.secondary_item_id = %d', $r['secondary_item_id'] );
 			}
 
 			if ( ! empty( $r['include'] ) ) {
 				$include                     = implode( ',', wp_parse_id_list( $r['include'] ) );
-				$where_conditions['include'] = "s.id IN ({$include})";
+				$where_conditions['include'] = "sc.id IN ({$include})";
 			}
 
 			if ( ! empty( $r['exclude'] ) ) {
 				$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
-				$where_conditions['exclude'] = "s.id NOT IN ({$exclude})";
+				$where_conditions['exclude'] = "sc.id NOT IN ({$exclude})";
 			}
 
 			/* Order/orderby ********************************************/
@@ -456,7 +456,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				$sql['order_by'] = 'ORDER BY rand()';
 			} elseif ( ! empty( $r['include'] ) && 'in' === $order_by ) { // Support order by fields for generally.
 				$field_data      = implode( ',', array_map( 'absint', $r['include'] ) );
-				$sql['order_by'] = "ORDER BY FIELD(s.id, {$field_data})";
+				$sql['order_by'] = "ORDER BY FIELD(sc.id, {$field_data})";
 			}
 
 			if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && -1 !== $r['per_page'] ) {
@@ -516,7 +516,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				$uncached_subscription_ids = bp_get_non_cached_ids( $paged_subscription_ids, 'bb_subscriptions' );
 				if ( $uncached_subscription_ids ) {
 					$subscription_ids_sql      = implode( ',', array_map( 'intval', $uncached_subscription_ids ) );
-					$subscription_data_objects = $wpdb->get_results( "SELECT s.* FROM {$subscription_tbl} s WHERE s.id IN ({$subscription_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$subscription_data_objects = $wpdb->get_results( "SELECT sc.* FROM {$subscription_tbl} sc WHERE sc.id IN ({$subscription_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					foreach ( $subscription_data_objects as $subscription_data_object ) {
 						wp_cache_set( $subscription_data_object->id, $subscription_data_object, 'bb_subscriptions' );
 					}
@@ -537,9 +537,9 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			// If count is true then will get total subscription counts.
 			if ( ! empty( $r['count'] ) ) {
 				// Find the total number of subscriptions in the results set.
-				$total_subscriptions_sql = "SELECT COUNT(DISTINCT s.id) FROM {$sql['from']} $where";
+				$total_subscriptions_sql = "SELECT COUNT(DISTINCT sc.id) FROM {$sql['from']} $where";
 				if ( 'all' !== $r['fields'] || 'ids' !== $r['fields'] ) {
-					$total_subscriptions_sql = "SELECT COUNT(DISTINCT s.{$r['fields']}) FROM {$sql['from']} $where";
+					$total_subscriptions_sql = "SELECT COUNT(DISTINCT sc.{$r['fields']}) FROM {$sql['from']} $where";
 				}
 
 				/**
