@@ -19,7 +19,7 @@ function bp_settings_screen_notification() {
 	}
 
 	$template = 'members/single/settings/notifications';
-	if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+	if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) && ! empty( bb_get_subscriptions_types() ) ) {
 		$template = 'members/single/settings/subscriptions';
 	}
 
