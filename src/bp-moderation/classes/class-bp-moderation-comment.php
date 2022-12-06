@@ -419,7 +419,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * If members url is not set then add member url in the comment.
+	 * If members url is not set then set member url for the blog comment.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
