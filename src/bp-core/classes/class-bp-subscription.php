@@ -98,7 +98,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 
 			// Cache missed, so query the DB.
 			if ( false === $subscription ) {
-				$subscription = $wpdb->get_row( $wpdb->prepare( "SELECT cs.* FROM {$subscription_tbl} sc WHERE sc.id = %d", $this->id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$subscription = $wpdb->get_row( $wpdb->prepare( "SELECT sc.* FROM {$subscription_tbl} sc WHERE sc.id = %d", $this->id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 				wp_cache_set( $this->id, $subscription, 'bb_subscriptions' );
 			}
@@ -538,9 +538,6 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			if ( ! empty( $r['count'] ) ) {
 				// Find the total number of subscriptions in the results set.
 				$total_subscriptions_sql = "SELECT COUNT(DISTINCT sc.id) FROM {$sql['from']} $where";
-				if ( 'all' !== $r['fields'] || 'ids' !== $r['fields'] ) {
-					$total_subscriptions_sql = "SELECT COUNT(DISTINCT sc.{$r['fields']}) FROM {$sql['from']} $where";
-				}
 
 				/**
 				 * Filters the SQL used to retrieve total subscriptions results.
