@@ -266,7 +266,7 @@ function bb_subscriptions_create_subscription( $args = array() ) {
 	 * @param array $r Array of argument to create a new subscription.
 	 * @param int|bool|WP_Error $new_subscription_created The ID of new subscription when it's true otherwise return error.
 	 */
-	do_action_ref_array( 'bb_subscriptions_after_save', array( $r, $new_subscription_created ) );
+	do_action_ref_array( 'bb_subscriptions_create_subscription', array( $r, $new_subscription_created ) );
 
 	return $new_subscription_created;
 }
@@ -295,7 +295,7 @@ function bb_subscriptions_create_subscription( $args = array() ) {
  *                                paginated query params.
  * }
  */
-function bb_get_subscriptions( $args = array() ) {
+function bb_get_subscriptions( $args = array(), $force_cache = false ) {
 	static $cache = array();
 
 	$r = bp_parse_args(
@@ -311,7 +311,7 @@ function bb_get_subscriptions( $args = array() ) {
 	);
 
 	$cache_key = 'bb_get_subscriptions_' . md5( maybe_serialize( $r ) );
-	if ( ! isset( $cache[ $cache_key ] ) ) {
+	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
 		$subscriptions       = BP_Subscription::get( $r );
 		$cache[ $cache_key ] = $subscriptions;
 	} else {
@@ -345,7 +345,7 @@ function bb_get_subscriptions( $args = array() ) {
  *                                paginated query params.
  * }
  */
-function bb_get_subscription_users( $args = array() ) {
+function bb_get_subscription_users( $args = array(), $force_cache = false ) {
 	static $cache = array();
 
 	$r = bp_parse_args(
@@ -362,7 +362,7 @@ function bb_get_subscription_users( $args = array() ) {
 	);
 
 	$cache_key = 'bb_get_subscription_users_' . md5( maybe_serialize( $r ) );
-	if ( ! isset( $cache[ $cache_key ] ) ) {
+	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
 		$subscriptions       = BP_Subscription::get( $r );
 		$cache[ $cache_key ] = $subscriptions;
 	} else {

@@ -251,8 +251,6 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			 */
 			do_action_ref_array( 'bb_subscriptions_after_save', array( &$this ) );
 
-			wp_cache_delete( $this->id, 'bb_subscriptions' );
-
 			return $this->id;
 		}
 
@@ -277,14 +275,22 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			 * @param BP_Subscription $this Current instance of the subscription item being deleted. Passed by reference.
 			 * @param int             $id   ID of subscription.
 			 */
-			do_action_ref_array( 'bb_subscriptions_delete_subscription', array( &$this, $this->id ) );
-
-			wp_cache_delete( $this->id, 'bb_subscriptions' );
+			do_action_ref_array( 'bb_subscriptions_before_delete_subscription', array( &$this, $this->id ) );
 
 			// Finally, remove the subscription entry from the DB.
 			if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$subscription_tbl} WHERE id = %d", $this->id ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 				return false;
 			}
+
+			/**
+			 * Fires after the deletion of a subscriptions.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param BP_Subscription $this Current instance of the subscription item being deleted. Passed by reference.
+			 * @param int             $id   ID of subscription.
+			 */
+			do_action_ref_array( 'bb_subscriptions_after_delete_subscription', array( &$this, $this->id ) );
 
 			return true;
 		}

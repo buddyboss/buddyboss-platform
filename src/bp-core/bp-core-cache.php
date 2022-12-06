@@ -396,3 +396,33 @@ function bp_invitations_reset_cache_incrementor() {
 }
 add_action( 'bp_invitation_after_save', 'bp_invitations_reset_cache_incrementor' );
 add_action( 'bp_invitation_after_delete', 'bp_invitations_reset_cache_incrementor' );
+
+/**
+ * Reset incremental cache for add/delete subscription.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_subscriptions_reset_cache_incrementor() {
+	bp_core_reset_incrementor( 'bb_subscriptions' );
+}
+
+add_action( 'bb_subscriptions_create_subscription', 'bb_subscriptions_reset_cache_incrementor' );
+add_action( 'bb_subscriptions_delete_subscription', 'bb_subscriptions_reset_cache_incrementor' );
+
+/**
+ * Clear a cached subscription item when that item is updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Subscription $subscription Subscription object.
+ */
+function bb_subscriptions_clear_cache_for_subscription( $subscription ) {
+	if ( $subscription->id ) {
+		wp_cache_delete( $subscription->id, 'bb_subscriptions' );
+	}
+}
+
+add_action( 'bb_subscriptions_after_save', 'bb_subscriptions_clear_cache_for_subscription' );
+add_action( 'bb_subscriptions_after_delete_subscription', 'bb_subscriptions_clear_cache_for_subscription' );
