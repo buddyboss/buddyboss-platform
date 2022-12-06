@@ -450,3 +450,22 @@ function bb_subscriptions_delete_subscription( $subscription_id ) {
 
 	return true;
 }
+
+/**
+ * Enabled modern subscription or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_enabled_modern_subscriptions() {
+	$is_enabled = false;
+
+	if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+		if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) || bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) ) {
+			$is_enabled = true;
+		}
+	}
+
+	return (bool) apply_filters( 'bb_is_enabled_modern_subscriptions', $is_enabled );
+}
