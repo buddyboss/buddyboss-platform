@@ -4470,7 +4470,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .activity-list .activity-item .activity-content.video-activity-wrap,
 .activity-list .activity-item .activity-content.document-activity {
-  position: relative;
+  position: static;
 }
 
 .activity-list .activity-item .activity-content.video-activity-wrap .activity-inner,
