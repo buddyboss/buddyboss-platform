@@ -2181,11 +2181,11 @@ window.bp = window.bp || {};
 									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
 									return;
 								}
-								// Add new <li> if cursore is in <ul> or <ol>.
+								// Add new <li> if cursor is in <ul> or <ol>.
 								if ( node.parentNode.tagName.toLowerCase() == 'ul' || node.parentNode.tagName.toLowerCase() == 'ol' ) {
 									var li = MediumEditorOptDoc.createElement( 'li' );
 									var newLI;
-									// if next element is there sdd new <li> before next or at the end.
+									// if next element is there add new <li> before next or at the end.
 									if ( node.nextElementSibling ) {
 										newLI = node.parentNode.insertBefore( li, node.nextSibling );
 									} else {

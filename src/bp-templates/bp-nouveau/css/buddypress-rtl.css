@@ -11234,10 +11234,13 @@ body .bp-messages-user-threads {
 #message-new-submit #bp-messages-send,
 #message-reply-new-submit #send_reply_button {
   opacity: 0;
+  padding: 0;
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0;
+  left: 0;
+  width: auto;
+  min-width: auto;
   -webkit-tap-highlight-color: transparent;
 }
 
