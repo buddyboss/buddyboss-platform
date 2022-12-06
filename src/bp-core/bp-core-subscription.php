@@ -176,7 +176,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_meta, $offset
 function bb_get_subscriptions_types() {
 	$types = array();
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
 		if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) ) {
 			$types[] = 'forum';
 		}
