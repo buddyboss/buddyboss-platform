@@ -11454,6 +11454,29 @@ body .bp-messages-user-threads {
   outline: 1px solid #5087e5;
 }
 
+@media screen and (max-width: 767px) {
+  .bb-accordion {
+    border: 0;
+    margin-bottom: 15px;
+    border-radius: 0;
+  }
+  .bb-accordion.is_closed {
+    border-bottom: 1px solid #eee;
+  }
+  .bb-accordion.is_closed .bb-accordion_head {
+    border-bottom: 0;
+  }
+  .bb-accordion .bb-accordion_head {
+    padding: 14px 0;
+  }
+  .buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger {
+    left: 12px;
+  }
+  .bb-accordion .subscription-items {
+    padding: 15px 0 0 0;
+  }
+}
+
 .subscription-items {
   list-style: none;
   margin: 0;

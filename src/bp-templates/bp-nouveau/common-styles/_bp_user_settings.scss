@@ -433,6 +433,35 @@
 		}
 	}
 
+	@media screen and (max-width: 767px) {
+		border: 0;
+		margin-bottom: 15px;
+		border-radius: 0;
+
+		&.is_closed {
+			border-bottom: 1px solid $bp-border-color;
+
+			.bb-accordion_head {
+				border-bottom: 0;
+			}
+		}
+
+		.bb-accordion_head {
+			padding: 14px 0;
+		}
+
+		.bb-accordion_trigger {
+
+			.buddypress .buddypress-wrap & {
+				right: 12px;
+			}
+		}
+
+		.subscription-items {
+			padding: 15px 0 0 0;
+		}
+	}
+
 }
 
 .subscription-items {
