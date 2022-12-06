@@ -63,7 +63,7 @@ $data = bb_core_notification_preferences_data();
 		</div>
 
 		<div id="bb-accordion-section-2" role="region" aria-labelledby="bb-accordion-2" class="bb-accordion_panel">
-			<ul class="subscription-items">
+			<ul class="subscription-items discussion_items">
 				<li>
 					<a href="#" class="subscription-item_anchor">
 						<div class="subscription-item_image">

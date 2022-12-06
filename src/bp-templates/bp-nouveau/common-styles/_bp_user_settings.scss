@@ -472,6 +472,10 @@
 		}
 	}
 
+	&.discussion_items .subscription-item_image img {
+		border-radius: 50%;
+	}
+
 	.subscription-item_detail {
 		width: calc(100% - 98px);
 		margin-right: 12px;
@@ -491,6 +495,7 @@
 		.subscription-item_meta {
 
 			@include font-size(13);
+			line-height: 1.5;
 			color: $light-text;
 			display: block;
 
