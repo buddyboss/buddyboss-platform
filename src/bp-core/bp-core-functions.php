@@ -1617,7 +1617,7 @@ function bp_core_record_activity() {
 		do_action( 'bp_first_activity_for_member', $user_id );
 	}
 
-    // updated users last activity on each page refresh.
+	// updated users last activity on each page refresh.
 	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
 
 }
@@ -2941,6 +2941,42 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'settings' === $bp_item['slug'] && 'notifications' === $key ) {
 					$key = 'settings-notifications';
+
+					$parent_slug   = $s_nav->parent_slug . '_' . $s_nav->slug;
+					$child_nav_sub = buddypress()->members->nav->get_secondary( array( 'parent_slug' => $parent_slug ) );
+
+					if ( ! empty( $child_nav_sub ) ) {
+						$s_nav_counter_child = hexdec( uniqid() );
+
+						foreach ( $child_nav_sub as $c_nav ) {
+							$c_sub_name = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $c_nav['name'] );
+							$c_sub_name = trim( $c_sub_name );
+							$c_arr_key  = $c_nav['slug'] . '-sub';
+
+							if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+								/* translators: Navigation name */
+								$c_sub_name = sprintf( __( 'Notification %s', 'buddyboss' ), $c_sub_name );
+							} else {
+								/* translators: Navigation name */
+								$c_sub_name = sprintf( __( 'Email %s', 'buddyboss' ), $c_sub_name );
+							}
+
+							$page_args[ $c_arr_key ] =
+								(object) array(
+									'ID'             => $s_nav_counter_child,
+									'post_title'     => $c_sub_name,
+									'object_id'      => $s_nav_counter_child,
+									'post_author'    => 0,
+									'post_date'      => 0,
+									'post_excerpt'   => $c_arr_key,
+									'post_type'      => 'page',
+									'post_status'    => 'publish',
+									'comment_status' => 'closed',
+									'guid'           => $c_nav['link'],
+									'post_parent'    => $nav_counter_child,
+								);
+						}
+					}
 				}
 
 				if ( 'profile' === $key ) {
