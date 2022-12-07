@@ -250,6 +250,15 @@
 
 // Flexbox Mixins
 
+// Display Flex
+
+@mixin dis-flex() {
+	display: -webkit-box; // older
+	display: -ms-flexbox; // older
+	display: -webkit-flex; // current prefix
+	display: flex; // current specs
+}
+
 // Set display to box flex & set the direction and wrapping behavior
 // shorthand for flex-direction & flex wrap - default ( row wrap )
 
@@ -276,6 +285,24 @@
 	align-items: $align; // current specs
 }
 
+// Cross-axis Alignment
+// - applies to: flex items
+// auto | flex-start | flex-end | center | baseline | stretch
+
+@mixin align-self($value: auto) {
+	// No Webkit Box Fallback.
+	-webkit-align-self: $value;
+
+	@if $value == flex-start {
+		-ms-flex-item-align: start;
+	} @else if $value == flex-end {
+		-ms-flex-item-align: end;
+	} @else {
+		-ms-flex-item-align: $value;
+	}
+	align-self: $value;
+}
+
 // Box-order  - shuffle item order for columns
 
 @mixin box-order($box-order-number: 1) {
@@ -300,10 +327,7 @@
 // Vertical centering - all in one, this is a
 // fixed mixin for one result/requirement.
 // This class allows us to center child elements
-// using flexbox. This is a progressive enhancement,
-// it won't work in all browsers, older browser will simply
-// fall back to non centered or using older techniques.
-// N.B It would be preferable to remove the older property syntax
+// using flexbox.
 
 @mixin center-vert() {
 	display: -webkit-box; // older
@@ -314,6 +338,25 @@
 	-webkit-align-items: center;
 	-webkit-box-align: center; // old
 	align-items: center; // current specs
+}
+
+// Vertical and Horizontal centering - all in one, this is a
+// fixed mixin for one result/requirement.
+// This class allows us to center child elements
+// using flexbox.
+
+@mixin center-horizontal-vert() {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	-webkit-box-align: center;
+	align-items: center;
 }
 
 // Layout elements / lists as grids

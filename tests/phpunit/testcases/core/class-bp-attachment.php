@@ -16,7 +16,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		add_filter( 'upload_dir',                            array( $this, 'filter_upload_dir' ),      20, 1 );
 		add_filter( 'bp_attachments_cover_image_upload_dir', array( $this, 'filter_cover_image_dir' ), 10, 2 );
 		$this->upload_results = array();
-		$this->image_file = trailingslashit( buddypress()->plugin_dir ) . 'bp-core/images/mystery-man.jpg';
+		$this->image_file = trailingslashit( buddypress()->plugin_dir ) . 'bp-core/images/profile-avatar-buddyboss.png';
 		$this->original_upload_dir = array();
 	}
 
@@ -42,8 +42,8 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$upload_dir['error'] = 'fake_upload_success';
 
 		$this->upload_results = array(
-			'new_file' => $upload_dir['path'] . '/mystery-man.jpg',
-			'url'      => $upload_dir['url'] . '/mystery-man.jpg',
+			'new_file' => $upload_dir['path'] . '/profile-avatar-buddyboss.png',
+			'url'      => $upload_dir['url'] . '/profile-avatar-buddyboss.png',
 		);
 
 		return $upload_dir;
@@ -66,7 +66,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 			return array(
 				'file' => $this->upload_results['new_file'],
 				'url'  => $this->upload_results['url'],
-				'type' => 'image/jpeg',
+				'type' => 'image/png',
 			);
 		}
 	}
@@ -96,8 +96,8 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$reset_post = $_POST;
 
 		$_FILES['file'] = array(
-			'name'     => 'mystery-man.jpg',
-			'type'     => 'image/jpeg',
+			'name'     => 'profile-avatar-buddyboss.png',
+			'type'     => 'image/png',
 			'error'    => 0,
 			'size'     => 1000
 		);
@@ -150,8 +150,8 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$_POST['action'] = $attachment_class->action;
 		$_FILES[ $attachment_class->file_input ] = array(
 			'tmp_name' => $this->image_file,
-			'name'     => 'mystery-man.jpg',
-			'type'     => 'image/jpeg',
+			'name'     => 'profile-avatar-buddyboss.png',
+			'type'     => 'image/png',
 			'error'    => 0,
 			'size'     => filesize( $this->image_file ),
 		);
@@ -171,7 +171,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 
 		// Success
 		$upload = $attachment_class->upload( $_FILES );
-		$this->assertEquals( $upload['file'], $attachment_class->upload_path . '/mystery-man.jpg' );
+		$this->assertEquals( $upload['file'], $attachment_class->upload_path . '/profile-avatar-buddyboss.png' );
 
 		// clean up!
 		$_FILES = $reset_files;
@@ -194,8 +194,8 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$_POST['action'] = $attachment_class->action;
 		$_FILES[ $attachment_class->file_input ] = array(
 			'tmp_name' => $this->image_file,
-			'name'     => 'mystery-man.jpg',
-			'type'     => 'image/jpeg',
+			'name'     => 'profile-avatar-buddyboss.png',
+			'type'     => 'image/png',
 			'error'    => 0,
 			'size'     => filesize( $this->image_file ),
 		);
@@ -205,7 +205,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$upload = $attachment_class->upload( $_FILES, '', $time );
 
 		// If no base_dir was provided, default WordPress uploads dir should be used.
-		$this->assertEquals( $upload['file'], $attachment_class->upload_path . '/' . $time . '/mystery-man.jpg' );
+		$this->assertEquals( $upload['file'], $attachment_class->upload_path . '/' . $time . '/profile-avatar-buddyboss.png' );
 
 		// clean up!
 		$_FILES = $reset_files;
@@ -231,15 +231,15 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$_POST['action'] = $avatar_attachment->action;
 		$_FILES[ $avatar_attachment->file_input ] = array(
 			'tmp_name' => $this->image_file,
-			'name'     => 'mystery-man.jpg',
-			'type'     => 'image/jpeg',
+			'name'     => 'profile-avatar-buddyboss.png',
+			'type'     => 'image/png',
 			'error'    => 0,
 			'size'     => filesize( $this->image_file )
 		);
 
 		/* No error */
 		$user_avatar = $avatar_attachment->upload( $_FILES, 'xprofile_avatar_upload_dir' );
-		$this->assertEquals( $user_avatar['file'], $bp->avatar->upload_path . '/avatars/' . $u1 .'/mystery-man.jpg' );
+		$this->assertEquals( $user_avatar['file'], $bp->avatar->upload_path . '/avatars/' . $u1 .'/profile-avatar-buddyboss.png' );
 
 		/* File size error */
 		add_filter( 'bp_core_avatar_original_max_filesize', array( $this, 'max_filesize' ) );
@@ -282,14 +282,14 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$_POST['action'] = $avatar_attachment->action;
 		$_FILES[ $avatar_attachment->file_input ] = array(
 			'tmp_name' => $this->image_file,
-			'name'     => 'mystery-man.jpg',
-			'type'     => 'image/jpeg',
+			'name'     => 'profile-avatar-buddyboss.png',
+			'type'     => 'image/png',
 			'error'    => 0,
 			'size'     => filesize( $this->image_file )
 		);
 
 		$group_avatar = $avatar_attachment->upload( $_FILES, 'groups_avatar_upload_dir' );
-		$this->assertEquals( $group_avatar['file'], $bp->avatar->upload_path . '/group-avatars/' . $g .'/mystery-man.jpg' );
+		$this->assertEquals( $group_avatar['file'], $bp->avatar->upload_path . '/group-avatars/' . $g .'/profile-avatar-buddyboss.png' );
 
 		// clean up!
 		$this->clean_avatars( 'group' );
@@ -323,7 +323,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		// Image must come from the upload basedir
 		$this->assertTrue( is_wp_error( $cropped ) );
 
-		$crop_args['original_file'] = $attachment_class->upload_path . '/mystery-man.jpg';
+		$crop_args['original_file'] = $attachment_class->upload_path . '/profile-avatar-buddyboss.png';
 
 		// Image must stay in the upload basedir
 		$crop_args['dst_file'] = BP_TESTS_DIR . 'assets/error.jpg';
@@ -355,15 +355,15 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$_POST['action'] = $cover_image_attachment->action;
 		$_FILES[ $cover_image_attachment->file_input ] = array(
 			'tmp_name' => $this->image_file,
-			'name'     => 'mystery-man.jpg',
-			'type'     => 'image/jpeg',
+			'name'     => 'profile-avatar-buddyboss.png',
+			'type'     => 'image/png',
 			'error'    => 0,
 			'size'     => filesize( $this->image_file )
 		);
 
 		/* No error */
 		$cover_image = $cover_image_attachment->upload( $_FILES );
-		$this->assertEquals( $cover_image['file'], $bp->avatar->upload_path . '/buddypress/members/' . $u1 .'/cover-image/mystery-man.jpg' );
+		$this->assertEquals( $cover_image['file'], $bp->avatar->upload_path . '/buddypress/members/' . $u1 .'/cover-image/profile-avatar-buddyboss.png' );
 
 		// clean up!
 		$bp->displayed_user = $displayed_user;
@@ -491,8 +491,8 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$_POST['action'] = $attachment_class->action;
 		$_FILES[ $attachment_class->file_input ] = array(
 			'tmp_name' => $this->image_file,
-			'name'     => 'mystery-man.jpg',
-			'type'     => 'image/jpeg',
+			'name'     => 'profile-avatar-buddyboss.png',
+			'type'     => 'image/png',
 			'error'    => 0,
 			'size'     => filesize( $this->image_file ),
 		);

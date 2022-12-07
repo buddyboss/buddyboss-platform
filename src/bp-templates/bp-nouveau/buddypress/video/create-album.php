@@ -2,11 +2,15 @@
 /**
  * BuddyBoss - Video Albums Create
  *
+ * This template is used to create a new album.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/video/create-album.php.
+ *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
-
 ?>
 
 <div id="bp-video-create-album" style="display: none;">
@@ -16,12 +20,12 @@
 				<div id="boss-video-create-album-popup" class="modal-container">
 					<header class="bb-model-header">
 						<h4><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></h4>
-						<a class="bb-model-close-button" id="bp-video-create-album-close" href="#"><span class="bb-icon bb-icon-close"></span></a>
+						<a class="bb-model-close-button" id="bp-video-create-album-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 
 					<div class="bb-field-wrap">
 						<label for="bb-album-title" class="bb-label"><?php esc_attr_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-title" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>" />
+						<input id="bb-album-title" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>"/>
 					</div>
 
 					<footer class="bb-model-footer">
@@ -37,8 +41,19 @@
 									?>
 								</select>
 							</div>
-						<?php endif; ?>
-						<a class="button" id="bp-video-create-album-submit" href="#"><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></a>
+							<?php
+						endif;
+
+						if ( bp_is_group() && bp_is_group_albums_support_enabled() ) {
+							?>
+							<a class="button" id="bp-video-create-album-submit" href="#"><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></a>
+							<?php
+						} elseif ( bp_is_profile_albums_support_enabled() ) {
+							?>
+							<a class="button" id="bp-video-create-album-submit" href="#"><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></a>
+							<?php
+						}
+						?>
 					</footer>
 				</div>
 			</div>
