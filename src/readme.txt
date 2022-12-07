@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.2.1 =
+* Activity - Handled forum reply auto-generated activity minor formatting issue
+* Activity - Handled @mention name not updating issue when edited from the dashboard
+* Activity - Handled minor translation issue for string 'comment'
+* Profiles - Handled display name format issue in member profile screen title
+* Groups - Handled group not working issue for non-English language slug
+* Groups - Handled single group minor tooltip UI issue when the cover image is disabled
+* Forums - Small improvement to show descriptions on a single forum screen
+* Forums - Handled Forums widget not showing child forums correctly when parent forum id specified
+* Forums - Handled hidden forums associated with the group not showing for group members
+* Media - Handled uploaded document text file with the incorrect content issue
+* Messages - Handled Group thread join/left invalid notice when members are blocked
+* Moderation - Handled blocked member notifications doesn't show issue for all members on the network
+* Core - Small code refactoring to fix PHP warnings and notices while saving pages in the dashboard
+* REST API - Handled group photo description endpoint issue returns HTML entity for special characters
+* Compatibility - Handled 'Gravity Form - User Registration' add-on activation email conflict
 
 = 2.2 =
 * Notifications - Improved Web Push Notification support based on members active status
