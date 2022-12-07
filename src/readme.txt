@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.0.2
+Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.1.2
+Stable tag: 2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,92 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.2 =
+* Notifications - Improved Web Push Notification support based on members active status
+* Core - Improved online status for members throughout the network
+* REST API - Provided Pusher Integration API support from BuddyBoss Platform Pro
+* REST API - Provided online status updates support in the API
+
+= 2.1.7.2 =
+* Messages - Handled messages table name prefix
+
+= 2.1.7.1 =
+* Messages - Handled SQL queries performance critical issue
+
+= 2.1.7 =
+* Activity - Handled edit activity with documents not working as expected
+* Activity - Handled auto-generated forum discussion, quick reply giphy option not working issue
+* Activity - Handled post activity to a specific group issue even when not allowed
+* Profiles - Handled a small UI issue for the repeater fieldset in the profile edit screen
+* Media - Handled video doesn't show seek forward/backward option issue in the modal
+* Media - Handled media upload not working issue in group messages when option disabled for private messages only
+* Tools - Handled 'clear default data' critical issue when the forums component is disabled
+* Updater - Improvements to updater logic and performance
+* REST API - Handled post activity to a specific group endpoint permission issue
+* Compatibility - Handled group zoom meeting date & time picker broken UI conflict with TutorLMS plugin
+
+= 2.1.6.2 =
+* REST API - Handled discussion reply endpoint not working critical issue
+
+= 2.1.6.1 =
+* Messages - Handled compose message action critical issue on network with a lot of concurrent members
+
+= 2.1.6 =
+* Activity - Handled group description update auto-generated activity content overflow UI issue
+* Activity - Handled activity post word break formatting issue for list style text format
+* Activity - Handled group type 'hidden' auto-generated forum discussion activity, quick reply not working issue
+* Activity - Handled registration pages getting self-assigned issue when the activity setting is changed in the dashboard
+* Profiles - Handled Profile completion progress doesn't update issue when member updates profile type
+* Profiles - Small update in profile types settings in the dashboard renaming 'Post Attributes' to 'Dropdown Order'
+* Profiles - Handled 'gender' field 'is on of' specific search mode not working issue
+* Groups - Handled send group message upload photos option not working consistently
+* Groups - Handled group header elements option not working correctly when group cover image is disabled
+* Media - Handled media upload spacing UI issue in the profile
+* Media - Handled media 301 error before rendering when symlink disabled
+* Media - Handled media description multi-line text not working issue
+* Messages - Handled copy paste link from the web displays unwanted markup issue
+* Updater - Small code refactoring for the 'Release Notes' modal
+* Core - Handled slug option not showing issue for posts quick edit in the dashboard
+* REST API - Small notification endpoint improvement for legacy support
+* REST API - Small performance improvement to not send 'embed' additional information for media endpoint
+* Events Calendar Pro - Handled plugin conflict with tooltip UI in forum discussion and reply
+
+= 2.1.5.1 =
+* Notifications - Removed 'Notification Preferences' from labs to enable notification updates for all
+
+= 2.1.5 =
+* Messages - Handled small time formatting issue
+* REST API - Provided API support for updated messages UI/UX
+* REST API - Provided caching support for the API updates
+
+= 2.1.4.1 =
+* Moderation - Handled critical issue when Forum component disabled
+
+= 2.1.4 =
+* Messages - Improved UI/UX for the Private Messaging screen significantly
+* Messages - Provided option to mark conversation archive/unarchive by refactoring hide conversation flow
+* Messages - Improved single message thread by splitting conversations by date
+* Messages - Provided email digest option for messages with the option to delay
+* Messages - Improved the experience of joining/leaving a group for a group messages thread
+* Messages - Improved UI/UX for message dropdown in the header
+* Moderation - Small improvement for blocked and suspended members names and avatars
+
+= 2.1.3 =
+* Media - Improved media uploading layout and styling
+* Activity - Handled post privacy update UX issues
+* Activity - Handled follower widget not showing accurate members count issue
+* Connections - Handled connection request not working issue without 'BuddyBoss Theme'
+* Moderation - Handled member showing as blocked issue when the member is reported and blocked by other members
+* Moderation - Handled reported content screen 'Unhide' action deletes entries for the content
+* Core - Handled a bunch of alignment and styling issues for the RTL language site
+* Core - Handled core pages not working in conflict with WordPress themes
+* Core - Small improvements for toast messages
+* Core - Handled emails not showing RTL content for the RTL language site
+* REST API - Handled blog post comments endpoint caching issue
+* REST API - Handled create group endpoint default group privacy issue
+* WooCommerce - Handled 'WooCommerce Memberships' conflict unable to restrict core videos page
+* Compatibility - Handled 'Query Monitor' UI compatibility issue on the Email customizer screen
 
 = 2.1.2 =
 * Activity - Handled empty activity post issue when group description updated for the first time

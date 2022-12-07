@@ -371,7 +371,15 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18855 ) {
-			bb_update_to_2_1_0();
+			bb_update_to_2_1_1();
+		}
+
+		if ( $raw_db_version < 18951 ) {
+			bb_update_to_2_1_4();
+		}
+
+		if ( $raw_db_version < 18981 ) {
+			bb_update_to_2_1_5();
 		}
 	}
 
@@ -1886,10 +1894,8 @@ function migrate_notification_preferences( $user_ids ) {
  *
  * @since BuddyBoss 2.1.1
  */
-function bb_update_to_2_1_0() {
-
+function bb_update_to_2_1_1() {
 	bb_moderation_add_user_report_column();
-
 }
 
 /**
@@ -1914,4 +1920,166 @@ function bb_moderation_add_user_report_column() {
 	}
 }
 
+/**
+ * Migrate group member meta table, is_deleted column in messages table and migrate existing email templates.
+ *
+ * @since BuddyBoss 2.1.4
+ */
+function bb_update_to_2_1_4() {
 
+	// Do not ignore deprecated code for existing installs.
+	bp_update_option( '_bp_ignore_deprecated_code', false );
+
+	// Create 'bp_groups_membermeta' table.
+	if ( bp_is_active( 'groups' ) ) {
+		bp_core_install_groups();
+	}
+
+	// Create 'bp_invitations_invitemeta' table.
+	bp_core_install_invitations();
+
+	// Add 'is_deleted' column in 'bp_messages_messages' table.
+	bb_messages_add_is_deleted_column();
+
+	// Migrate the 'bp_messages_deleted' value from 'wp_bp_messages_meta' table to 'is_deleted' column in 'bp_messages_messages' table.
+	bb_messages_migrate_is_deleted_column();
+
+	// For existing customer set default values for Messaging Notifications metabox.
+	bb_set_default_value_for_messaging_notifications_metabox();
+
+	// Update the messages email templates.
+	bb_migrate_messages_email_templates();
+
+}
+
+/**
+ * Add 'is_deleted' column to bp_messages table.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return void
+ */
+function bb_messages_add_is_deleted_column() {
+	global $wpdb;
+
+	// Add 'is_deleted' column in 'bp_messages_messages' table.
+	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$wpdb->prefix}bp_messages_messages' AND column_name = 'is_deleted'" ); //phpcs:ignore
+
+	if ( empty( $row ) ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_messages_messages ADD `is_deleted` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `message`" ); //phpcs:ignore
+	}
+}
+
+/**
+ * Migrate message table for is_deleted column.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return void
+ */
+function bb_messages_migrate_is_deleted_column() {
+	global $wpdb;
+
+	$table_name = $wpdb->prefix . 'bp_messages_messages';
+	$meta_table = $wpdb->prefix . 'bp_messages_meta';
+
+	$query = $wpdb->prepare(
+		'SELECT DISTINCT `message_id` FROM `' . $meta_table . '` WHERE `meta_key` = %s',  // phpcs:ignore
+		'bp_messages_deleted'
+	);
+
+	// phpcs:ignore
+	$wpdb->query(
+		$wpdb->prepare(
+			'UPDATE  `' . $table_name . '` SET `is_deleted` = %s WHERE `id` IN ( ' . $query . ' )',  // phpcs:ignore
+			'1'
+		)
+	);
+}
+
+/**
+ * For existing customer set default values for Messaging Notifications metabox.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return void
+ */
+function bb_set_default_value_for_messaging_notifications_metabox() {
+	bp_update_option( 'delay_email_notification', 0 );
+	bp_update_option( 'time_delay_email_notification', 15 );
+}
+
+/**
+ * For existing customer update the messages email template.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return void
+ */
+function bb_migrate_messages_email_templates() {
+	$emails = get_posts(
+		array(
+			'post_status'            => 'publish',
+			'post_type'              => bp_get_email_post_type(),
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'tax_query'              => array(
+				array(
+					'taxonomy' => bp_get_email_tax_type(),
+					'field'    => 'slug',
+					'terms'    => array( 'group-message-email', 'messages-unread' ), // phpcs:ignore
+				),
+			),
+		)
+	);
+
+	if ( $emails ) {
+		foreach ( $emails as $email ) {
+
+			// First verify the content if already have 3 brackets.
+			$existing_token                      = array();
+			$existing_token['{{{sender.name}}}'] = '{{sender.name}}';
+			$existing_token['{{{group.name}}}']  = '{{group.name}}';
+
+			// Replace tokens to existing content.
+			$post_content = strtr( $email->post_content, $existing_token );
+			$post_title   = strtr( $email->post_title, $existing_token );
+			$post_excerpt = strtr( $email->post_excerpt, $existing_token );
+
+			// Generate token to replace in existing email templates.
+			$token                    = array();
+			$token['{{sender.name}}'] = '{{{sender.name}}}';
+			$token['{{group.name}}']  = '{{{group.name}}}';
+
+			// Replace actual tokens to existing content.
+			$post_content = strtr( $post_content, $token );
+			$post_title   = strtr( $post_title, $token );
+			$post_excerpt = strtr( $post_excerpt, $token );
+
+			// Update the email template.
+			wp_update_post(
+				array(
+					'ID'           => $email->ID,
+					'post_title'   => $post_title,
+					'post_content' => $post_content,
+					'post_excerpt' => $post_excerpt,
+				)
+			);
+		}
+	}
+}
+
+/**
+ * Clear api cache on the update.
+ *
+ * @since BuddyBoss 2.1.5
+ *
+ * @return void
+ */
+function bb_update_to_2_1_5() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+}
