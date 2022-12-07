@@ -478,3 +478,65 @@ function bp_nouveau_member_customizer_nav() {
 
 	return $nav->get_primary();
 }
+
+/**
+ * Enqueue the members scripts
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_nouveau_member_enqueue_scripts() {
+	if ( ! bp_is_user_settings() ) {
+		return;
+	}
+
+	if ( bp_is_user_settings_notifications() && bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+		wp_enqueue_script( 'bb-subscriptions' );
+	}
+}
+
+/**
+ * Register Scripts for the Member component
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $scripts The array of scripts to register.
+ *
+ * @return array The same array with the specific messages scripts.
+ */
+function bp_nouveau_member_register_scripts( $scripts = array() ) {
+	if ( ! isset( $scripts['bp-nouveau'] ) ) {
+		return $scripts;
+	}
+
+	return array_merge(
+		$scripts,
+		array(
+			'bb-subscriptions' => array(
+				'file'         => 'js/bb-subscriptions%s.js',
+				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-api-request' ),
+				'footer'       => true,
+			),
+		)
+	);
+}
+
+/**
+ * Localize the strings needed for the Member UI
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $params Associative array containing the JS Strings needed by scripts.
+ *
+ * @return array         The same array with specific strings for the messages UI if needed.
+ */
+function bp_nouveau_member_localize_scripts( $params = array() ) {
+	if ( ! bp_is_user_settings() ) {
+		return $params;
+	}
+
+	if ( bp_is_user_settings_notifications() && bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+		$params['subscriptions'] = array();
+	}
+
+	return $params;
+}
