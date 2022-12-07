@@ -1008,7 +1008,7 @@ add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview
 /**
  * Helper functions for the gravity forms compatibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.1
  */
 function bb_wp_gravity_forms_compatibility_helper() {
 
