@@ -348,10 +348,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		}
 
 		/**
-		 * Render the activity content for discussion activity. 
+		 * Render the activity content for discussion activity.
 		 *
 		 * @since BuddyBoss 1.7.2
-		 * 
+		 *
 		 * @param string $content  Activit content.
 		 * @param object $activity Activit data.
 		 *
@@ -452,7 +452,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => bbp_get_topic_permalink( $topic_id ),
 					),
@@ -475,10 +475,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					$topic    = bbp_get_reply( $reply_id );
 					$topic_id = $topic->post_parent;
 				}
-				
+
 				// Redirect to.
 				$redirect_to = bbp_get_redirect_to();
-		
+
 				// Get the reply URL.
 				$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
 
@@ -495,7 +495,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => $reply_url,
 					),

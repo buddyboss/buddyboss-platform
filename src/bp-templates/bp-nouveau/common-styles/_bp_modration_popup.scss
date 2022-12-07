@@ -21,10 +21,68 @@
 				box-shadow: none;
 			}
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				font-size: 24px;
 				pointer-events: none;
 			}
 		}
 	}
+}
+
+.taxonomy-bpm_category {
+
+	.table-view-list.tags {
+
+		tbody {
+
+			tr {
+
+				td {
+
+					.inline-edit-wrapper {
+
+						.inline-edit-col {
+
+							.title {
+								width: 140px;
+							}
+
+							.input-text-wrap {
+								margin-left: 20px;
+								width: calc(100% - 160px);
+								float: left;
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+.buddyboss_page_bp-moderation {
+
+	.fixed {
+
+		@media screen and (max-width: 1460px) {
+
+			.column-date {
+				width: 150px;
+			}
+
+			.column-reporter {
+				width: calc(100% - 150px);
+			}
+
+		}
+
+	}
+
 }
