@@ -348,10 +348,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		}
 
 		/**
-		 * Render the activity content for discussion activity. 
+		 * Render the activity content for discussion activity.
 		 *
 		 * @since BuddyBoss 1.7.2
-		 * 
+		 *
 		 * @param string $content  Activit content.
 		 * @param object $activity Activit data.
 		 *
@@ -396,7 +396,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$topic_permalink = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? bbp_get_reply_url( $topic->ID ) : bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 			$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
-			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s%3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
+			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
 
 			return $content;
 		}
@@ -475,10 +475,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					$topic    = bbp_get_reply( $reply_id );
 					$topic_id = $topic->post_parent;
 				}
-				
+
 				// Redirect to.
 				$redirect_to = bbp_get_redirect_to();
-		
+
 				// Get the reply URL.
 				$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
 
