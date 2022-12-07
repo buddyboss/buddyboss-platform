@@ -3500,6 +3500,10 @@ input.search-query-input {
   word-break: break-word;
 }
 
+.activity-list .activity-item .activity-inner p:empty {
+  min-height: 1em;
+}
+
 .activity-list .activity-item .activity-read-more {
   margin-right: 1em;
   white-space: nowrap;
