@@ -2942,7 +2942,7 @@ function bb_get_child_forum_group_ids( $forum_id ) {
 /**
  * Return the content of the forum
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.1
  *
  * @param int $forum_id Optional. Topic id.
  *
