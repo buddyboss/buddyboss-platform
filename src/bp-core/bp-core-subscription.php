@@ -168,6 +168,24 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 }
 
 /**
+ * Functions to get all registered subscription types.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type type string.
+ */
+function bb_register_subscriptions_types( $type = '' ) {
+
+	$subscription_type = apply_filters( 'bb_register_subscriptions_types', array() );
+
+	if ( ! empty( $type ) && isset( $subscription_type[ $type ] ) ) {
+		return $subscription_type[ $type ];
+	}
+
+	return $subscription_type;
+}
+
+/**
  * Retrieve all registered subscription types.
  *
  * @since BuddyBoss [BBVERSION]
@@ -175,20 +193,21 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
  * @return array
  */
 function bb_get_subscriptions_types() {
-	$types = array();
+	$types                   = array();
+	$all_subscriptions_types = bb_register_subscriptions_types();
 
 	if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
-		if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) ) {
-			$types[] = 'forum';
-		}
-
-		if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) ) {
-			$types[] = 'topic';
+		if ( ! empty( $all_subscriptions_types ) ) {
+			foreach ( $all_subscriptions_types as $type ) {
+				if ( bb_get_modern_notification_admin_settings_is_enabled( $type['notification_type'] ) ) {
+					$types[ $type['subscription_type'] ] = $type['label'];
+				}
+			}
 		}
 	} else {
 		if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
-			$types[] = 'forum';
-			$types[] = 'topic';
+			$types['forum'] = __( 'Forums', 'buddyboss' );
+			$types['topic'] = __( 'Discussions', 'buddyboss' );
 		}
 	}
 

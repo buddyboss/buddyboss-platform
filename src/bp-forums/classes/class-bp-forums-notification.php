@@ -113,6 +113,15 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'bb-icon-f bb-icon-reply'
 		);
 
+		$this->bb_register_subscription_type(
+			__( 'Discussions', 'buddyboss' ),
+			'topic',
+			'bb_forums_subscribed_reply',
+			'forums',
+			'bb_render_forums_subscribed_reply',
+			'bb_send_forums_subscribed_reply'
+		);
+
 	}
 
 	/**
@@ -148,6 +157,15 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'bb_forums_subscribed_discussion',
 			'bb_forums_subscribed_discussion',
 			'bb-icon-f bb-icon-comment-square-dots'
+		);
+
+		$this->bb_register_subscription_type(
+			__( 'Forums', 'buddyboss' ),
+			'forum',
+			'bb_forums_subscribed_discussion',
+			'forums',
+			'bb_render_forums_subscribed_discussion',
+			'bb_send_forums_subscribed_discussion'
 		);
 	}
 

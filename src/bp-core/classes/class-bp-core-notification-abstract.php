@@ -95,9 +95,11 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bb_notifications_get_component_notification', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
+		add_filter( 'bb_register_subscriptions_types', array( $this, 'registered_subscriptions_types' ), 99, 1 );
 
 		// Register the Notifications filters.
 		add_action( 'bp_nouveau_notifications_init_filters', array( $this, 'register_notification_filters' ) );
+
 	}
 
 	/**
@@ -202,6 +204,21 @@ abstract class BP_Core_Notification_Abstract {
 
 		return $notifications;
 
+	}
+
+	/**
+	 * Register the subscription type
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $types Subscription types.
+	 *
+	 * @return array
+	 */
+	public function registered_subscriptions_types( array $types ) {
+		$types = array_merge( $types, $this->subscriptions );
+
+		return $types;
 	}
 
 	/**
@@ -527,26 +544,23 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $args {
-	 *     An array of arguments.
-	 *     @type string $label               Used to display the subscription block title.
-	 *     @type string $subscription_type   The subscriptions types like 'forum', 'topics'.
-	 *     @type string $render_callback     To display the records in subscriptions tab.
-	 *     @type string $send_callback       This is used to render notification when trigger subscribed notifications.
-	 *     @type string $notification_type   The relation between the subscription type and notification type.
-	 *     @type string $notification_group  The group the subscription based on component.
-	 * }
+	 * @param string $label              Used to display the subscription block title.
+	 * @param string $subscription_type  The subscriptions types like 'forum', 'topic'.
+	 * @param string $notification_type  The relation between the subscription type and notification type.
+	 * @param string $notification_group The group the subscription based on component.
+	 * @param string $render_callback    To display the records in subscriptions tab.
+	 * @param string $send_callback      This is used to render notification when trigger subscribed notifications.
 	 *
 	 * @return void
 	 */
-	final public function bb_register_subscription_type( $args ) {
-		$this->subscriptions[] = array(
-			'label'              => $args['label'],
-			'subscription_type'  => $args['subscription_type'],
-			'render_callback'    => $args['render_callback'],
-			'send_callback'      => $args['send_callback'],
-			'notification_type'  => $args['notification_type'],
-			'notification_group' => $args['notification_group'],
+	final public function bb_register_subscription_type( $label, $subscription_type, $notification_type, $notification_group, $render_callback, $send_callback ) {
+		$this->subscriptions[$subscription_type] = array(
+			'label'              => $label,
+			'subscription_type'  => $subscription_type,
+			'render_callback'    => $render_callback,
+			'send_callback'      => $send_callback,
+			'notification_type'  => $notification_type,
+			'notification_group' => $notification_group,
 		);
 	}
 
