@@ -267,7 +267,7 @@ function bb_subscriptions_create_subscription( $args = array() ) {
 	 * @param array $r Array of argument to create a new subscription.
 	 * @param int|bool|WP_Error $new_subscription_created The ID of new subscription when it's true otherwise return error.
 	 */
-	do_action_ref_array( 'bb_subscriptions_create_subscription', array( $r, $new_subscription_created ) );
+	do_action_ref_array( 'bb_subscriptions_create_subscriptionx', array( $r, $new_subscription_created ) );
 
 	return $new_subscription_created;
 }
@@ -287,6 +287,8 @@ function bb_subscriptions_create_subscription( $args = array() ) {
  *     @type int          $per_page           Optional. Number of items to return per page of results.
  *                                            Default: null (no limit).
  * }
+ * @param bool  $force_cache bypass the cache if true.
+ *
  * @see BP_Subscription::get()
  *
  * @return array {
@@ -337,6 +339,8 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
  *     @type int          $per_page           Optional. Number of items to return per page of results.
  *                                            Default: null (no limit).
  * }
+ * @param bool  $force_cache bypass the cache if true.
+ *
  * @see BP_Subscription::get()
  *
  * @return array {
