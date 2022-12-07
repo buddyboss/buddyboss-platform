@@ -291,7 +291,8 @@ function groups_edit_base_group_details( $args = array() ) {
 	if ( $r['name'] ) {
 		$group->name = $r['name'];
 	}
-	if ( $r['slug'] && $r['slug'] != $group->slug ) {
+
+	if ( $r['slug'] && ( strtolower( rawurlencode( $r['slug'] ) ) !== strtolower( $group->slug ) ) ) {
 		$group->slug = groups_check_slug( $r['slug'] );
 	}
 
