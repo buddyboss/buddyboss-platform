@@ -57,6 +57,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		add_filter( 'comment_reply_link', array( $this, 'blocked_comment_reply_link' ), 10, 3 );
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
 		add_filter( 'comments_clauses', array( $this, 'bb_blocked_comments_pre_query' ), 10, 2 );
+		add_filter( 'get_comment_excerpt', array( $this, 'bb_blocked_get_comment_excerpt' ), 10, 3 );
 	}
 
 	/**
@@ -240,7 +241,10 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$return = bb_moderation_is_suspended_label( $user_id );
+			$is_user_suspended = bp_moderation_is_user_suspended( $user_id );
+			if ( $is_user_suspended ) {
+				$return = bb_moderation_is_suspended_label( $user_id );
+			}
 		}
 
 		return $return;
@@ -260,7 +264,10 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$author = bb_moderation_is_suspended_label( $user_id );
+			$is_user_suspended = bp_moderation_is_user_suspended( $user_id );
+			if ( $is_user_suspended ) {
+				$author = bb_moderation_is_suspended_label( $user_id );
+			}
 		}
 
 		return $author;
@@ -500,5 +507,34 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		}
 
 		return $comment_data;
+	}
+
+	/**
+	 * Update comment excerpt text for blocked comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string     $excerpt    The comment excerpt text.
+	 * @param string     $comment_id The comment ID as a numeric string.
+	 * @param WP_Comment $comment    The comment object.
+	 *
+	 * @return mixed|string
+	 */
+	public function bb_blocked_get_comment_excerpt( $excerpt, $comment_id, $comment ) {
+		if ( ! $comment instanceof WP_Comment ) {
+			return $excerpt;
+		}
+
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+		if ( $this->check_is_hidden( $comment_id ) ) {
+			$is_user_suspended = bp_moderation_is_user_suspended( $comment_author_id );
+			if ( $is_user_suspended ) {
+				$excerpt = bb_moderation_is_suspended_message( $excerpt );
+			} else {
+				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			}
+		}
+
+		return $excerpt;
 	}
 }
