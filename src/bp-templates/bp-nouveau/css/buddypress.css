@@ -9030,6 +9030,11 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   order: 3;
 }
 
+.profile-edit button.button > i {
+  font-size: 18px;
+  margin-right: 5px;
+}
+
 #btn_add_repeater_set {
   align-items: center;
   display: flex;
@@ -9475,13 +9480,16 @@ div.profile_completion_wrap .progress_text_wrap {
   background-color: #767676;
   font-size: 17px;
   line-height: 1;
-  height: 26px;
-  width: 26px;
   padding: 4px;
   border-radius: 50%;
   position: absolute;
   right: -5px;
   bottom: -5px;
+}
+
+#message-threads .thread-avatar .user-status-icon.bb-icon-cancel {
+  height: 26px;
+  width: 26px;
 }
 
 #message-threads .bp-message-link {

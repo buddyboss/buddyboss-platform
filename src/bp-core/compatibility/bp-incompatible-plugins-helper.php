@@ -213,6 +213,13 @@ function bp_helper_plugins_loaded_callback() {
 	if ( class_exists( 'QueryMonitor' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-qm-helpers.php';
 	}
+
+	/**
+	 * Include filters when tutor-pro plugin is activated.
+	 */
+	if ( function_exists( 'tutor_pro' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -1034,3 +1041,17 @@ function bb_elementor_library_template() {
 	}
 }
 add_action( 'bp_loaded', 'bb_elementor_library_template' );
+
+/**
+ * Helper functions for the gravity forms compatibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_wp_gravity_forms_compatibility_helper() {
+
+	if ( class_exists( 'GFForms' ) ) {
+		require buddypress()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
