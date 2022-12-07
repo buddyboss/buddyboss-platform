@@ -2533,6 +2533,13 @@ window.bp = window.bp || {};
 					},
 					1000
 				);
+
+				this.$el.closest( '.gif-media-search' ).find( '#activity-gif-button' ).blur();
+				
+				if ( e.key === 'Enter' || e.keyCode === 13 ) {
+					this.$el.closest( '.gif-media-search-dropdown' ).addClass( 'open' );
+				}
+				
 			},
 
 			searchGif: function ( q ) {
@@ -2544,6 +2551,10 @@ window.bp = window.bp || {};
 				self.el.classList.add( 'loading' );
 				this.$el.find( '.gif-no-results' ).removeClass( 'show' );
 				this.$el.find( '.gif-no-connection' ).removeClass( 'show' );
+				
+				if ( q.key === 'Enter' || q.keyCode === 13 ) {
+					this.$el.closest( '.gif-media-search-dropdown' ).addClass( 'open' );
+				}
 
 				var request = self.giphy.search(
 					{
@@ -4202,6 +4213,7 @@ window.bp = window.bp || {};
 					this.$self.removeClass( 'open' );
 				} else {
 					this.$self.addClass( 'open' );
+					this.$self.blur();
 				}
 				if ( e.type !== 'bp_activity_edit' ) {
 					this.$gifPickerEl.toggleClass( 'open' );
