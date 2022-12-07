@@ -308,16 +308,21 @@
 			list-style: none;
 		}
 
-		&.loading .bb_more_options_action {
-			pointer-events: none;
+		&.loading {
+			display: block;
 
-			> i {
-				opacity: 1;
+			.bb_more_options_action {
+				pointer-events: none;
 
-				&:before {
-					content: "\ef30";
-					animation: spin 2s infinite linear;
-					display: inline-block;
+				> i {
+					opacity: 1;
+
+					&:before {
+						content: "\ef30";
+						animation: spin 2s infinite linear;
+						display: inline-block;
+					}
+
 				}
 
 			}

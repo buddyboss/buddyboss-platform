@@ -9690,6 +9690,10 @@ div.profile_completion_wrap .progress_text_wrap {
   list-style: none;
 }
 
+#message-threads .message-thread-options.loading {
+  display: block;
+}
+
 #message-threads .message-thread-options.loading .bb_more_options_action {
   pointer-events: none;
 }
