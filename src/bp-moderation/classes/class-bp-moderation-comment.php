@@ -454,8 +454,10 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			if ( ! empty( $sql ) ) {
 				$comment_data['where'] .= " AND " . $sql;
 			}
-			$blocked_by_query      = bb_moderation_get_blocked_by_sql( bp_loggedin_user_id() );
-			$comment_data['where'] .= " AND " . $wpdb->prefix . "comments.user_id NOT IN ( " . $blocked_by_query . " )";
+			$blocked_by_query = bb_moderation_get_blocked_by_sql( bp_loggedin_user_id() );
+			if ( ! empty( $blocked_by_query ) ) {
+				$comment_data['where'] .= " AND " . $wpdb->prefix . "comments.user_id NOT IN ( " . $blocked_by_query . " )";
+			}
 		}
 
 		return $comment_data;
