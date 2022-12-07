@@ -623,7 +623,7 @@
 
 			.activity-content {
 				margin: 0;
-				position: relative;
+				position: static;
 
 				&:after {
 					clear: both;

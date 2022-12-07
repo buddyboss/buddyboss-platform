@@ -3039,13 +3039,17 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .bb-media-model-container .bb-media-privacy-wrap .activity-privacy {
-  right: auto;
-  left: -20px;
+  right: -5px;
+  left: auto;
 }
 
 .bb-media-model-container .bb-media-privacy-wrap .activity-privacy:before {
-  right: auto;
-  left: 44px;
+  right: 20px;
+  left: auto;
+}
+
+.bb-media-model-container .bb-media-privacy-wrap .activity-privacy a {
+  font-weight: 400;
 }
 
 .gif-media-search {
@@ -3814,7 +3818,7 @@ input.search-query-input {
   }
   .activity-list .activity-item .activity-content {
     margin: 0;
-    position: relative;
+    position: static;
   }
   .activity-list .activity-item .activity-content:after {
     clear: both;
