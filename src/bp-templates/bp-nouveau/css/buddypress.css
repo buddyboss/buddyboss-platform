@@ -15276,6 +15276,12 @@ p.form-allowed-tags {
   margin-top: 15px;
 }
 
+#bbpress-forums .bbp-topic-content p:empty,
+#bbpress-forums .bbp-reply-content p:empty,
+#bbpress-forums .bbp-reply-content p:empty {
+  min-height: 1em;
+}
+
 [dir="rtl"] #bbpress-forums .replies-content [dir="ltr"], [dir="rtl"]
 #bbpress-forums .bbp-topic-content [dir="ltr"], [dir="rtl"]
 #bbpress-forums .bbp-reply-content [dir="ltr"], [dir="rtl"]
