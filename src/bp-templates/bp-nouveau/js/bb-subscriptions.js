@@ -93,9 +93,11 @@ window.bp = window.bp || {};
 			model: bp.Models.subscriptionItem,
 			options: {},
 			subscription_items: null,
+			total_pages: 1,
+			per_page: 5,
 
 			initialize : function() {
-				this.options = { page: 1, per_page: 5, _embed: true };
+				this.options = { page: 1, per_page: this.per_page, _embed: true };
 			},
 
 			sync: function( method, model, options ) {
@@ -111,7 +113,8 @@ window.bp = window.bp || {};
 				);
 
 				bp.apiRequest( options ).done(
-					function( data ) {
+					function ( data, status, request ) {
+						this.total_pages        = request.getResponseHeader( 'x-wp-totalpages' );
 						this.subscription_items = data;
 					}
 				).fail(
@@ -126,6 +129,7 @@ window.bp = window.bp || {};
 			parse: function( resp ) {
 				return resp;
 			},
+
 		}
 	);
 
@@ -196,6 +200,9 @@ window.bp = window.bp || {};
 				if ( this.loader ) {
 					this.loader.remove();
 				}
+
+				console.log( 'this.collection.total_pages' );
+				console.log( this.collection.total_pages );
 			},
 
 			subscriptionFetchError: function() {
@@ -206,7 +213,7 @@ window.bp = window.bp || {};
 
 			removeSubscription: function ( event ) {
 				var current = $( event.currentTarget ),
-					 id = current.data( 'subscription-id' );
+					 id     = current.data( 'subscription-id' );
 
 				if ( ! id ) {
 					return event;
