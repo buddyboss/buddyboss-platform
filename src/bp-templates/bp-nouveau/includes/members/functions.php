@@ -535,7 +535,10 @@ function bp_nouveau_member_localize_scripts( $params = array() ) {
 	}
 
 	if ( bp_is_user_settings_notifications() && bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
-		$params['subscriptions'] = array();
+		$params['subscriptions'] = array(
+			'unsubscribe' => __( 'You\'ve been unsubscribed from ', 'buddyboss' ),
+			'error'       => __( 'There was a problem unsubscribing from ', 'buddyboss' ),
+		);
 	}
 
 	return $params;

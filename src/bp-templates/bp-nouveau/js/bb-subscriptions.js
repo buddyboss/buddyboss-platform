@@ -153,7 +153,7 @@ window.bp = window.bp || {};
 			tagName  : 'div',
 			className  : 'subscription-items-main',
 			events: {
-
+				'click .subscription-item_remove' : 'removeSubscription',
 			},
 			loader : false,
 
@@ -202,6 +202,75 @@ window.bp = window.bp || {};
 				if ( this.loader ) {
 					this.loader.remove();
 				}
+			},
+
+			removeSubscription: function ( event ) {
+				var current = $( event.currentTarget ),
+					 id = current.data( 'subscription-id' );
+
+				if ( ! id ) {
+					return event;
+				}
+
+				event.preventDefault();
+
+				var options    = {};
+				options.path   = 'buddyboss/v1/subscription/' + id;
+				options.method = 'DELETE';
+				options.data   = {};
+
+				var title = current
+					.parents( '.bb-subscription-item' )
+					.find( '.subscription-item_title' )
+					.text();
+
+				current.addClass( 'is_loading' );
+
+				bp.apiRequest( options ).done(
+					function( data ) {
+						if ( ! _.isUndefined( data.deleted ) ) {
+							jQuery( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + BP_Nouveau.subscriptions.unsubscribe + '<strong>' + title + '</strong>.</div>',
+									'info',
+									null,
+									true
+								]
+							);
+							current.removeClass( 'is_loading' );
+							current.parents( '.bb-subscription-item' ).remove();
+						} else {
+							current.removeClass( 'is_loading' );
+							jQuery( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + BP_Nouveau.subscriptions.error + '<strong>' + title + '</strong>.</div>',
+									'error',
+									null,
+									true
+								]
+							);
+						}
+					}
+				).fail(
+					function() {
+						jQuery( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								'<div>' + BP_Nouveau.subscriptions.error + '<strong>' + title + '</strong>.</div>',
+								'error',
+								null,
+								true
+							]
+						);
+						current.removeClass( 'is_loading' );
+					}
+				);
+
 			},
 		}
 	);
