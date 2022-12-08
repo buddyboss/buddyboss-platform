@@ -93,11 +93,10 @@ window.bp = window.bp || {};
 			model: bp.Models.subscriptionItem,
 			options: {},
 			subscription_items: null,
-			total_pages: 1,
 			per_page: 5,
 
 			initialize : function() {
-				this.options = { page: 1, per_page: this.per_page, _embed: true };
+				this.options = { page: 1, per_page: this.per_page, _embed: true, total_pages: 1 };
 			},
 
 			sync: function( method, model, options ) {
@@ -114,8 +113,8 @@ window.bp = window.bp || {};
 
 				bp.apiRequest( options ).done(
 					function ( data, status, request ) {
-						this.total_pages        = request.getResponseHeader( 'x-wp-totalpages' );
-						this.subscription_items = data;
+						this.options.total_pages = request.getResponseHeader( 'x-wp-totalpages' );
+						this.subscription_items  = data;
 					}
 				).fail(
 					function( error ) {
@@ -196,13 +195,25 @@ window.bp = window.bp || {};
 				this.views.add( '.subscription-items', new bp.Views.SubscriptionItem( { item: item.attributes } ) );
 			},
 
-			subscriptionFetched: function() {
+			subscriptionFetched: function () {
 				if ( this.loader ) {
 					this.loader.remove();
 				}
 
-				console.log( 'this.collection.total_pages' );
-				console.log( this.collection.total_pages );
+				var self = this;
+
+				setTimeout( function () {
+					if ( self.collection.options.total_pages > 1 ) {
+						self.views.add( new bp.Views.SubscriptionPager( { options: self.collection.options } ), { at: 1 } );
+					}
+				}, 100 );
+
+			},
+
+			addPagination: function ( item ) {
+				console.log( 'addPagination' );
+				console.log( item );
+				this.views.add( '.subscription-items', new bp.Views.SubscriptionPager( { options: this.collection.options } ) );
 			},
 
 			subscriptionFetchError: function() {
@@ -303,6 +314,21 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			className: '',
 			template  : bp.template( 'bb-member-subscription-loading' )
+		}
+	);
+
+	bp.Views.SubscriptionPager = bp.Nouveau.Subscriptions.View.extend(
+		{
+			tagName: 'div',
+			className: 'bbp-pagination',
+			template  : bp.template( 'bb-member-subscription-pagination' ),
+			// initialize: function() {
+			// 	this.model = new Backbone.Model(
+			// 		{
+			// 			item: this.options.item
+			// 		}
+			// 	);
+			// }
 		}
 	);
 

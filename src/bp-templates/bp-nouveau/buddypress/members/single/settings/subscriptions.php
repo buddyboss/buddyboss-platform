@@ -69,6 +69,7 @@ $template_parts = apply_filters(
 	array(
 		'bb-member-subscription-loading',
 		'bb-subscription-item',
+		'bb-member-subscription-pagination',
 	)
 );
 
