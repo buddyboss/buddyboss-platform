@@ -83,6 +83,7 @@ window.bp = window.bp || {};
 				item_id: 0,
 				secondary_item_id: '',
 				date_recorded: '',
+				_embedded: {},
 			}
 		}
 	);
@@ -94,7 +95,7 @@ window.bp = window.bp || {};
 			subscription_items: null,
 
 			initialize : function() {
-				this.options = { page: 1, per_page: 5 };
+				this.options = { page: 1, per_page: 5, _embed: true };
 			},
 
 			sync: function( method, model, options ) {
@@ -106,9 +107,7 @@ window.bp = window.bp || {};
 
 				options.data = _.extend(
 					options.data,
-					{
-						'_embed': true
-					}
+					this.options
 				);
 
 				bp.apiRequest( options ).done(
@@ -182,7 +181,7 @@ window.bp = window.bp || {};
 			requestSubscriptions: function() {
 				this.collection.fetch(
 					{
-						data    : _.pick( this.options, ['type'] ),
+						data    : _.pick( this.options, ['type', 'page', 'per_page' ] ),
 						success : _.bind( this.subscriptionFetched, this ),
 						error   : _.bind( this.subscriptionFetchError, this )
 					}
@@ -190,7 +189,7 @@ window.bp = window.bp || {};
 			},
 
 			addThread: function( item ) {
-				this.views.add( '.subscription-items', new bp.Views.SubscriptionItem( { model: item } ) );
+				this.views.add( '.subscription-items', new bp.Views.SubscriptionItem( { item: item.attributes } ) );
 			},
 
 			subscriptionFetched: function() {
@@ -199,7 +198,7 @@ window.bp = window.bp || {};
 				}
 			},
 
-			subscriptionFetchError: function( collection, response ) {
+			subscriptionFetchError: function() {
 				if ( this.loader ) {
 					this.loader.remove();
 				}
@@ -212,7 +211,13 @@ window.bp = window.bp || {};
 			tagName: 'li',
 			className: 'bb-subscription-item',
 			template  : bp.template( 'bb-subscription-item' ),
-			initialize: function() {}
+			initialize: function() {
+				this.model = new Backbone.Model(
+					{
+						item: this.options.item
+					}
+				);
+			}
 		}
 	);
 
