@@ -1041,3 +1041,17 @@ function bb_elementor_library_template() {
 	}
 }
 add_action( 'bp_loaded', 'bb_elementor_library_template' );
+
+/**
+ * Helper functions for the gravity forms compatibility.
+ *
+ * @since BuddyBoss 2.2.1
+ */
+function bb_wp_gravity_forms_compatibility_helper() {
+
+	if ( class_exists( 'GFForms' ) ) {
+		require buddypress()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
