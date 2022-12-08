@@ -32,8 +32,9 @@ window.bp = window.bp || {};
 		 */
 		start: function () {
 			this.views         = new Backbone.Collection();
-			this.subscriptions = new bp.Collections.Subscriptions();
-			this.types         = [];
+			this.subscriptions = [];
+			// this.subscription_types = [];
+			this.types = [];
 
 			// Listen to events ("Add hooks!").
 			this.addListeners();
@@ -48,14 +49,28 @@ window.bp = window.bp || {};
 		},
 
 		Initialize: function() {
-			this.types = $( '.subscription-views .bb-accordion' );
+			this.types            = $( '.subscription-views .bb-accordion' );
+			var subscription_list = [];
+			var self              = this;
 
-			// Create the loop view.
-			var subscription_list = new bp.Views.SubscriptionItems( { collection: this.subscriptions, type: 'forum' } );
+			if ( this.types.length > 0 ) {
+				_.each(
+					this.types,
+					function ( item ) {
+						var subscription_type = $( item ).data( 'type' );
+						if ( '' !== subscription_type ) {
+							this.subscriptions[subscription_type] = new bp.Collections.Subscriptions();
 
-			this.views.add( { id: 'subscriptions', view: subscription_list } );
+							// Create the loop view.
+							subscription_list[subscription_type] = new bp.Views.SubscriptionItems( { collection: this.subscriptions[subscription_type], type: subscription_type } );
+							self.views.add( { id: 'subscriptions_' + subscription_type, view: subscription_list[subscription_type] } );
 
-			subscription_list.inject( '.bb-accordion_panel' );
+							var current_panel = $( item ).find( '.bb-accordion_panel' ).get( 0 );
+							subscription_list[subscription_type].inject( current_panel );
+						}
+					}
+				);
+			}
 		},
 	};
 
@@ -92,6 +107,7 @@ window.bp = window.bp || {};
 				options.data = _.extend(
 					options.data,
 					{
+						'_embed': true
 					}
 				);
 
