@@ -48,7 +48,7 @@ window.bp = window.bp || {};
 		},
 
 		Initialize: function() {
-			this.types = $('.subscription-views .bb-accordion');
+			this.types = $( '.subscription-views .bb-accordion' );
 
 			// Create the loop view.
 			var subscription_list = new bp.Views.SubscriptionItems( { collection: this.subscriptions, type: 'forum' } );
@@ -87,7 +87,7 @@ window.bp = window.bp || {};
 				options.context = this;
 				options.data    = options.data || {};
 				options.path    = 'buddyboss/v1/subscription';
-				// options.type    = 'GET';
+				options.method  = 'GET';
 
 				options.data = _.extend(
 					options.data,
@@ -164,13 +164,9 @@ window.bp = window.bp || {};
 			},
 
 			requestSubscriptions: function() {
-				if ( _.isUndefined( this.options.type ) ) {
-					this.options.data.type = this.options.type;
-				}
-
 				this.collection.fetch(
 					{
-						data    : _.pick( this.options ),
+						data    : _.pick( this.options, ['type'] ),
 						success : _.bind( this.subscriptionFetched, this ),
 						error   : _.bind( this.subscriptionFetchError, this )
 					}
