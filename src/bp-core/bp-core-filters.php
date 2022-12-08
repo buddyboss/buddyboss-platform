@@ -2254,3 +2254,48 @@ function bb_heartbeat_settings( $settings ) {
 }
 
 add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
+
+/**
+ * Function to update menu order for Theme Options and License Key in the BuddyBoss menu.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $menu_order Menu order.
+ *
+ * @return array
+ */
+function buddyboss_menu_order( $menu_order ) {
+	global $submenu;
+	$buddyboss_theme_options_menu     = array();
+	$buddyboss_theme_options_position = '';
+	$buddyboss_updater_menu           = array();
+	$buddyboss_updater_position       = '';
+	if ( ! empty( $submenu['buddyboss-platform'] ) ) {
+		foreach ( $submenu['buddyboss-platform'] as $key => $val ) {
+			if ( isset( $val[2] ) ) {
+				if ( 'buddyboss_theme_options' === $val[2] ) {
+					$buddyboss_theme_options_menu[] = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+				}
+				if ( 'bp-plugin-seperator' === $val[2] ) {
+					$buddyboss_theme_options_position = -- $key;
+					$buddyboss_updater_position       = $key + 2;
+				}
+				if ( 'buddyboss-updater' === $val[2] ) {
+					$buddyboss_updater_menu[] = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+				}
+			}
+		}
+		if ( ! empty( $buddyboss_theme_options_menu ) && ! empty( $buddyboss_theme_options_position ) ) {
+			array_splice( $submenu['buddyboss-platform'], $buddyboss_theme_options_position, 0, $buddyboss_theme_options_menu );
+		}
+		if ( ! empty( $buddyboss_updater_menu ) && ! empty( $buddyboss_updater_position ) ) {
+			array_splice( $submenu['buddyboss-platform'], $buddyboss_updater_position, 0, $buddyboss_updater_menu );
+		}
+	}
+
+	return $menu_order;
+}
+
+add_filter( 'menu_order', 'buddyboss_menu_order' );
