@@ -2101,5 +2101,7 @@ function bb_update_to_2_1_8() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear members API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
+		// Clear blog API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
 	}
 }
