@@ -836,6 +836,7 @@
 		clear: both;
 		overflow: hidden;
 		margin: 0 auto;
+		position: relative;
 
 		p {
 			margin-bottom: 8px;
@@ -884,6 +885,17 @@
 
 		a:before {
 			font-size: 18px;
+		}
+	}
+}
+
+.bp-message-content-wrap {
+
+	blockquote.wp-embedded-content {
+
+		+ p iframe.wp-embedded-content {
+			min-height: 0;
+			height: 0;
 		}
 	}
 }
