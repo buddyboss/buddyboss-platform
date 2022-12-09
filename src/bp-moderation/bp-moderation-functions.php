@@ -1569,12 +1569,12 @@ function bb_moderation_has_blocked_message( $value ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $ret_val Current message.
-	 * @param string $value   Original content.
+	 * @param string $retval Current message.
+	 * @param string $value  Original content.
 	 */
-	$ret_val = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
+	$retval = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
 
-	return apply_filters( 'bb_moderation_has_blocked_message', $ret_val, $value );
+	return apply_filters( 'bb_moderation_has_blocked_message', $retval, $value );
 }
 
 /**
@@ -1614,10 +1614,10 @@ function bb_moderation_is_suspended_message( $value ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $ret_val Current message.
-	 * @param string $value   Original content.
+	 * @param string $retval Current message.
+	 * @param string $value  Original content.
 	 */
-	$ret_val = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
+	$retval = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
 
-	return apply_filters( 'bb_moderation_is_suspended_message', $ret_val, $value );
+	return apply_filters( 'bb_moderation_is_suspended_message', $retval, $value );
 }
