@@ -11521,7 +11521,7 @@ body .bp-messages-user-threads {
   object-fit: cover;
 }
 
-.subscription-items.discussion_items .subscription-item_image img {
+[data-type="topic"] .subscription-items .subscription-item_image img {
   border-radius: 50%;
 }
 

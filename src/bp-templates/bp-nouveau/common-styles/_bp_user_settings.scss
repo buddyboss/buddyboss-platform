@@ -512,7 +512,7 @@
 		}
 	}
 
-	&.discussion_items .subscription-item_image img {
+	[data-type="topic"] & .subscription-item_image img {
 		border-radius: 50%;
 	}
 
