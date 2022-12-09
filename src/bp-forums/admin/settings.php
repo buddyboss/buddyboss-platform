@@ -400,7 +400,7 @@ function bbp_admin_get_settings_fields() {
 		)
 	);
 
-	if ( bb_is_enabled_modern_subscriptions() ) {
+	if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
 		unset( $fields['bbp_settings_features']['_bbp_enable_subscriptions'] );
 	}
 

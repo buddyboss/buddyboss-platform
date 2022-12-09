@@ -764,7 +764,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		public function ajax_forum_subscription() {
 
 			// Bail if subscriptions are not active.
-			if ( ! bbp_is_subscriptions_active() ) {
+			if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
 			}
 
@@ -900,7 +900,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		public function ajax_subscription() {
 
 			// Bail if subscriptions are not active.
-			if ( ! bbp_is_subscriptions_active() ) {
+			if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
 			}
 

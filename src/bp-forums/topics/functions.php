@@ -971,9 +971,20 @@ function bbp_update_topic( $topic_id = 0, $forum_id = 0, $anonymous_data = false
 		}
 	}
 
+	// Get the post type.
+	$post_type = get_post_type( $topic_id );
+	if ( empty( $post_type ) ) {
+		return;
+	}
+
+	$subscribe_type = 'topic';
+	if ( bbp_get_forum_post_type() === $post_type ) {
+		$subscribe_type = 'forum';
+	}
+
 	// Handle Subscription Checkbox.
 	// Make sure the form is being submitted from frontend.
-	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) && ( ! isset( $_POST['action'] ) || 'editpost' !== $_POST['action'] ) ) {
+	if ( bb_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ( ! isset( $_POST['action'] ) || 'editpost' !== $_POST['action'] ) ) {
 		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 
@@ -1342,7 +1353,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 		foreach ( (array) $subscribers as $subscriber ) {
 
 			// Shift the subscriber if told to.
-			if ( ! empty( $_POST['bbp_topic_subscribers'] ) && ( '1' === $_POST['bbp_topic_subscribers'] ) && bbp_is_subscriptions_active() ) {
+			if ( ! empty( $_POST['bbp_topic_subscribers'] ) && ( '1' === $_POST['bbp_topic_subscribers'] ) && bb_is_enabled_subscription( 'topic' ) ) {
 				bbp_add_user_subscription( $subscriber, $destination_topic->ID );
 			}
 
@@ -1737,7 +1748,7 @@ function bbp_split_topic_handler( $action = '' ) {
 	/** Subscriptions */
 
 	// Copy the subscribers.
-	if ( ! empty( $_POST['bbp_topic_subscribers'] ) && '1' === $_POST['bbp_topic_subscribers'] && bbp_is_subscriptions_active() ) {
+	if ( ! empty( $_POST['bbp_topic_subscribers'] ) && '1' === $_POST['bbp_topic_subscribers'] && bb_is_enabled_subscription( 'topic' ) ) {
 
 		// Get the subscribers.
 		$subscribers = bbp_get_topic_subscribers( $source_topic->ID );
@@ -2449,7 +2460,7 @@ function bbp_remove_topic_from_all_favorites( $topic_id = 0 ) {
 function bbp_remove_topic_from_all_subscriptions( $topic_id = 0 ) {
 
 	// Subscriptions are not active.
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 		return;
 	}
 

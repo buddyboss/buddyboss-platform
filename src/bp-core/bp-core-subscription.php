@@ -505,3 +505,28 @@ function bb_is_enabled_modern_subscriptions( $type = '' ) {
 
 	return (bool) apply_filters( 'bb_is_enabled_modern_subscriptions', $is_enabled );
 }
+
+/**
+ * Check the particular subscription is enabled or not for modern or legacy.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type Optional. The type of subscription like 'forum', topic'.
+ *
+ * @return bool
+ */
+function bb_is_enabled_subscription( $type = '' ) {
+	$is_enabled = false;
+
+	if (
+		! bb_enabled_legacy_email_preference() &&
+		bp_is_active( 'notifications' ) &&
+		bb_is_enabled_modern_subscriptions( $type )
+	) {
+		$is_enabled = true;
+	} elseif ( in_array( $type, array( 'forum', 'topic' ), true ) && function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
+		$is_enabled = true;
+	}
+
+	return (bool) apply_filters( 'bb_is_enabled_subscription', $is_enabled );
+}

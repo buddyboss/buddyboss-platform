@@ -1128,7 +1128,7 @@ function bbp_get_do_not_reply_address() {
 function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $reply_author = 0 ) {
 
 	// Bail if subscriptions are turned off.
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 		return false;
 	}
 
@@ -1313,7 +1313,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_data = false, $topic_author = 0 ) {
 
 	// Bail if subscriptions are turned off.
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 		return false;
 	}
 

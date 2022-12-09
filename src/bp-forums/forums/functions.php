@@ -1036,8 +1036,8 @@ function bbp_repair_forum_visibility() {
  */
 function bbp_remove_forum_from_all_subscriptions( $forum_id = 0 ) {
 
-	// Subscriptions are not active
-	if ( ! bbp_is_subscriptions_active() ) {
+	// Bail if subscriptions are turned off.
+	if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 		return;
 	}
 

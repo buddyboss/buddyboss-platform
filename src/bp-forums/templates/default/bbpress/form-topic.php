@@ -152,7 +152,7 @@
 
 					<?php endif; ?>
 
-					<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_topic_edit() || ( bbp_is_topic_edit() && ! bbp_is_topic_anonymous() ) ) ) : ?>
+					<?php if ( bb_is_enabled_subscription( 'forum' ) && ! bbp_is_anonymous() && ( ! bbp_is_topic_edit() || ( bbp_is_topic_edit() && ! bbp_is_topic_anonymous() ) ) ) : ?>
 
 						<?php
 						if (

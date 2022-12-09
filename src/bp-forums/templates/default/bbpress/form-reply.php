@@ -91,7 +91,7 @@
 
 					<?php endif; ?>
 
-					<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_reply_edit() || ( bbp_is_reply_edit() && ! bbp_is_reply_anonymous() ) ) ) : ?>
+					<?php if ( bb_is_enabled_subscription( 'topic' ) && ! bbp_is_anonymous() && ( ! bbp_is_reply_edit() || ( bbp_is_reply_edit() && ! bbp_is_reply_anonymous() ) ) ) : ?>
 
 						<?php
 						if (

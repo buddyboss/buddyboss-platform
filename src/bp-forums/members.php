@@ -101,10 +101,6 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 					// 'favorites' action
 				} elseif ( bbp_is_favorites_active() && bp_is_current_action( bbp_get_user_favorites_slug() ) ) {
 					$profile_url = $this->get_favorites_permalink( '', $user_id );
-
-					// 'subscriptions' action
-				} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) && bp_loggedin_user_id() === $user_id ) {
-					$profile_url = $this->get_subscriptions_permalink( '', $user_id );
 				} else {
 					$profile_url = bp_core_get_user_domain( $user_id );
 				}
@@ -166,10 +162,6 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 			// 'favorites' action
 			if ( bbp_is_favorites_active() && bp_is_current_action( bbp_get_user_favorites_slug() ) ) {
 				$wp_query->bbp_is_single_user_favs = true;
-
-				// 'subscriptions' action
-			} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) ) {
-				$wp_query->bbp_is_single_user_subs = true;
 
 				// 'replies' action
 			} elseif ( bp_is_current_action( bbp_get_reply_archive_slug() ) ) {

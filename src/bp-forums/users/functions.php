@@ -1215,7 +1215,7 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
  */
 function bbp_forum_subscriptions_handler( $action = '' ) {
 
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 		return false;
 	}
 
@@ -1322,7 +1322,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
  */
 function bbp_subscriptions_handler( $action = '' ) {
 
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 		return false;
 	}
 

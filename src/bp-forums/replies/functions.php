@@ -977,8 +977,19 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
 		}
 	}
 
+	// Get the post type.
+	$post_type = get_post_type( $topic_id );
+	if ( empty( $post_type ) ) {
+		return;
+	}
+
+	$subscribe_type = 'topic';
+	if ( bbp_get_forum_post_type() === $post_type ) {
+		$subscribe_type = 'forum';
+	}
+
 	// Handle Subscription Checkbox.
-	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) && ! empty( $topic_id ) ) {
+	if ( bb_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ! empty( $topic_id ) ) {
 		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 
