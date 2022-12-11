@@ -538,6 +538,7 @@ function bp_nouveau_member_localize_scripts( $params = array() ) {
 		$params['subscriptions'] = array(
 			'unsubscribe' => __( 'You\'ve been unsubscribed from ', 'buddyboss' ),
 			'error'       => __( 'There was a problem unsubscribing from ', 'buddyboss' ),
+			'per_page'    => apply_filters( 'bb_subscriptions_per_page', 6 ),
 		);
 	}
 

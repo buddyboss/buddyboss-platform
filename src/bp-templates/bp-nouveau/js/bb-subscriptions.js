@@ -93,7 +93,7 @@ window.bp = window.bp || {};
 			model: bp.Models.subscriptionItem,
 			options: {},
 			subscription_items: null,
-			per_page: 5,
+			per_page: BP_Nouveau.subscriptions.per_page,
 
 			initialize : function() {
 				this.options = { page: 1, per_page: this.per_page, _embed: true, total_pages: 1 };
@@ -157,8 +157,19 @@ window.bp = window.bp || {};
 			className  : 'subscription-items-main',
 			events: {
 				'click .subscription-item_remove' : 'removeSubscription',
+				'click a.prev': 'previousPage',
+				'click a.page': 'gotoPage',
+				'click a.next': 'nextPage',
 			},
 			loader : false,
+			pagination_params: {
+				total_page     : 0,
+				current_active : 1,
+				left_dots      : false,
+				right_dots     : false,
+				nav_begin      : 0,
+				nav_end        : 0,
+			},
 
 			initialize: function() {
 				this.loader = new bp.Views.SubscriptionLoading();
@@ -205,12 +216,64 @@ window.bp = window.bp || {};
 				setTimeout(
 					function () {
 						if ( self.collection.options.total_pages > 1 ) {
-							self.views.add( new bp.Views.SubscriptionPager( { options: self.collection.options } ), { at: 1 } );
+							self.getPaginationParams();
+							self.views.add(
+								new bp.Views.SubscriptionPager(
+									self.pagination_params
+								),
+								{ at: 1 }
+							);
 						}
 					},
 					100
 				);
 
+			},
+
+			getPaginationParams: function() {
+				var self = this;
+
+				if (self.collection.options.total_pages <= BP_Nouveau.subscriptions.per_page) {
+					BP_Nouveau.subscriptions.per_page = self.collection.options.total_pages;
+				}
+
+				var range     = Math.floor( BP_Nouveau.subscriptions.per_page / 2 );
+				var nav_begin = self.collection.options.page - range;
+				if (BP_Nouveau.subscriptions.per_page % 2 === 0) { // If an even number.
+					nav_begin++;
+				}
+				var nav_end    = self.collection.options.page + range;
+				var left_dots  = true;
+				var right_dots = true;
+
+				if (nav_begin <= 2) {
+					nav_end = BP_Nouveau.subscriptions.per_page;
+					if (nav_begin === 2) {
+						nav_end++;
+					}
+					nav_begin = 1;
+					left_dots = false;
+				}
+
+				if (nav_end >= self.collection.options.total_pages - 1 ) {
+					nav_begin = self.collection.options.total_pages - BP_Nouveau.subscriptions.per_page + 1;
+					if (self.pagination_params === self.collection.options.total_pages - 1) {
+						nav_begin--;
+					}
+					nav_end    = self.collection.options.total_pages;
+					right_dots = false;
+				}
+
+				self.pagination_params = {
+					total_page     : self.collection.options.total_pages,
+					current_active : 1,
+					left_dots      : left_dots,
+					right_dots     : right_dots,
+					nav_begin      : nav_begin,
+					nav_end        : nav_end,
+				}
+
+				return self.pagination_params;
 			},
 
 			addPagination: function ( item ) {
@@ -293,6 +356,20 @@ window.bp = window.bp || {};
 				);
 
 			},
+
+			gotoPage: function( event ) {
+				var current = $( event.currentTarget ),
+					page    = current.data( 'page' );
+
+				if ( ! page ) {
+					return event;
+				}
+
+				event.preventDefault();
+				this.collection.options.page = page;
+				this.requestSubscriptions();
+
+			}
 		}
 	);
 
@@ -325,13 +402,14 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			className: 'bbp-pagination',
 			template  : bp.template( 'bb-member-subscription-pagination' ),
-			// initialize: function() {
-			// this.model = new Backbone.Model(
-			// {
-			// item: this.options.item
-			// }
-			// );
-			// }
+
+			initialize: function() {
+				this.model = new Backbone.Model(
+					{
+						options: this.options
+					}
+				);
+			},
 		}
 	);
 
