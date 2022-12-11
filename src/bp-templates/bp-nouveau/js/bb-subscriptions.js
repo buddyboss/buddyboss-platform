@@ -202,11 +202,14 @@ window.bp = window.bp || {};
 
 				var self = this;
 
-				setTimeout( function () {
-					if ( self.collection.options.total_pages > 1 ) {
-						self.views.add( new bp.Views.SubscriptionPager( { options: self.collection.options } ), { at: 1 } );
-					}
-				}, 100 );
+				setTimeout(
+					function () {
+						if ( self.collection.options.total_pages > 1 ) {
+							self.views.add( new bp.Views.SubscriptionPager( { options: self.collection.options } ), { at: 1 } );
+						}
+					},
+					100
+				);
 
 			},
 
@@ -224,7 +227,7 @@ window.bp = window.bp || {};
 
 			removeSubscription: function ( event ) {
 				var current = $( event.currentTarget ),
-					 id     = current.data( 'subscription-id' );
+					id      = current.data( 'subscription-id' );
 
 				if ( ! id ) {
 					return event;
@@ -323,11 +326,11 @@ window.bp = window.bp || {};
 			className: 'bbp-pagination',
 			template  : bp.template( 'bb-member-subscription-pagination' ),
 			// initialize: function() {
-			// 	this.model = new Backbone.Model(
-			// 		{
-			// 			item: this.options.item
-			// 		}
-			// 	);
+			// this.model = new Backbone.Model(
+			// {
+			// item: this.options.item
+			// }
+			// );
 			// }
 		}
 	);
