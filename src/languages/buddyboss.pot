@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-11-24 11:23:50+00:00\n"
+"POT-Creation-Date: 2022-12-12 5:44:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25398,11 +25398,11 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress-functions.php:602
-msgid "New Field"
+msgid "Paste or type a link"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress-functions.php:603
-msgid "Paste or type a link"
+msgid "New Field"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:116

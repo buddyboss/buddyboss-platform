@@ -599,8 +599,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'show_x_comments'     	=> __( 'View previous comments', 'buddyboss' ),
 			'unsaved_changes'     	=> __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 			'object_nav_parent'   	=> '#buddypress',
-			'empty_field' 			=> __( 'New Field', 'buddyboss' ),
 			'anchorPlaceholderText' => __( 'Paste or type a link', 'buddyboss' ),
+			'empty_field' 			=> __( 'New Field', 'buddyboss' ),
 		);
 
 		// If the Object/Item nav are in the sidebar
