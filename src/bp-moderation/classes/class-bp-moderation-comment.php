@@ -122,7 +122,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 
 		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
-			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
+			$is_user_blocked = bp_moderation_is_user_blocked( $comment_author_id );
 
 			if ( $is_user_blocked ) {
 				$comment_text = bb_moderation_has_blocked_message( $comment_text );
@@ -450,11 +450,11 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			$this->alias = 's';
 			$sql         = $this->exclude_where_query();
 			if ( ! empty( $sql ) ) {
-				$comment_data['where'] .= " AND " . $sql;
+				$comment_data['where'] .= ' AND ' . $sql;
 			}
 			$blocked_by_query = bb_moderation_get_blocked_by_sql( bp_loggedin_user_id() );
 			if ( ! empty( $blocked_by_query ) ) {
-				$comment_data['where'] .= " AND " . $wpdb->prefix . "comments.user_id NOT IN ( " . $blocked_by_query . " )";
+				$comment_data['where'] .= ' AND ' . $wpdb->prefix . 'comments.user_id NOT IN ( ' . $blocked_by_query . ' )';
 			}
 		}
 
@@ -480,7 +480,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 
 		if ( $this->is_content_hidden( $comment_id ) ) {
-			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
+			$is_user_blocked = bp_moderation_is_user_blocked( $comment_author_id );
 
 			if ( $is_user_blocked ) {
 				$excerpt = bb_moderation_has_blocked_message( $excerpt );
