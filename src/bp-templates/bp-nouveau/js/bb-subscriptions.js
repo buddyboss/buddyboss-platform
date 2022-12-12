@@ -239,6 +239,30 @@ window.bp = window.bp || {};
 
 				setTimeout(
 					function () {
+
+						if ( 1 > self.collection.length ) {
+
+							_.each(
+								self.views._views,
+								function( view ){
+									if ( ! _.isUndefined( _.first( view ) ) ) {
+										_.first( view ).remove();
+									}
+
+								}
+							);
+
+							var subscription_label = $( '.bb-accordion[data-type=' + self.options.type + ']' ).data( 'label' );
+
+							self.views.add(
+								new bp.Views.MemberNoSubscription(
+									{
+										type:  subscription_label
+									}
+								)
+							);
+						}
+
 						if ( self.collection.options.total_pages > 1 ) {
 							self.getPaginationParams();
 							self.views.add(
@@ -465,6 +489,22 @@ window.bp = window.bp || {};
 					}
 				);
 			},
+		}
+	);
+
+	// No Subscription view.
+	bp.Views.MemberNoSubscription = bp.Nouveau.Subscriptions.View.extend(
+		{
+			tagName: 'div',
+			className: 'subscription-items',
+			template  : bp.template( 'bb-member-no-subscription' ),
+			initialize: function() {
+				this.model = new Backbone.Model(
+					{
+						type: this.options.type || 'forum',
+					}
+				);
+			}
 		}
 	);
 

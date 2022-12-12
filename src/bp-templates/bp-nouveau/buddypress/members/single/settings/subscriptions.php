@@ -21,7 +21,7 @@ $data = bb_core_notification_preferences_data();
 		if ( ! empty( $types ) ) {
 			foreach ( $types as $sub_type => $label ) {
 				?>
-				<div class="bb-accordion" data-type="<?php echo esc_attr( $sub_type ); ?>">
+				<div class="bb-accordion" data-type="<?php echo esc_attr( $sub_type ); ?>"  data-label="<?php echo esc_attr( $label ); ?>">
 					<div class="bb-accordion_head" id="bb-accordion-<?php echo esc_attr( $sub_type ); ?>">
 						<h3 class="bb-accordion_title">
 							<?php echo esc_html( $label ); ?>
@@ -70,6 +70,7 @@ $template_parts = apply_filters(
 		'bb-member-subscription-loading',
 		'bb-subscription-item',
 		'bb-member-subscription-pagination',
+		'bb-member-no-subscription',
 	)
 );
 
