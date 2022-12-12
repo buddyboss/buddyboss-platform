@@ -67,9 +67,9 @@ add_filter( 'bp_get_message_notice_text', 'bb_autop' );
 add_filter( 'bp_get_the_thread_message_content', 'bb_autop' );
 add_filter( 'bp_get_message_thread_content', 'bb_autop' );
 
-add_filter( 'bp_get_message_thread_excerpt', 'bp_messages_make_nofollow_filter' );
-add_filter( 'bp_get_the_thread_message_content', 'bp_messages_make_nofollow_filter' );
-add_filter( 'bp_get_message_thread_content', 'bp_messages_make_nofollow_filter' );
+add_filter( 'bp_get_message_thread_excerpt', 'bb_messages_make_nofollow_filter' );
+add_filter( 'bp_get_the_thread_message_content', 'bb_messages_make_nofollow_filter' );
+add_filter( 'bp_get_message_thread_content', 'bb_messages_make_nofollow_filter' );
 
 add_filter( 'bp_get_message_notice_subject', 'stripslashes_deep' );
 add_filter( 'bp_get_message_notice_text', 'stripslashes_deep' );
@@ -188,41 +188,42 @@ function maybe_redirects_to_previous_thread_message() {
 /**
  * Catch links in messages text so target="_blank" and rel=nofollow can be added.
  *
- * @since BuddyPress 1.2.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $text Messages text.
+ *
  * @return string $text Text with rel=nofollow added to any links.
  */
-function bp_messages_make_nofollow_filter( $text ) {
-	return preg_replace_callback( '|<a (.+?)>|i', 'bp_messages_make_nofollow_filter_callback', $text );
+function bb_messages_make_nofollow_filter( $text ) {
+	return preg_replace_callback( '|<a (.+?)>|i', 'bb_messages_make_nofollow_filter_callback', $text );
 }
 
-	/**
-	 * Add rel=nofollow to a link.
-	 *
-	 * @since BuddyPress 1.2.0
-	 *
-	 * @param array $matches Items matched by preg_replace_callback() in bp_messages_make_nofollow_filter().
-	 * @return string $text Link with rel=nofollow added.
-	 */
-function bp_messages_make_nofollow_filter_callback( $matches ) {
+/**
+ * Add rel=nofollow to a link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $matches Items matched by preg_replace_callback() in bb_messages_make_nofollow_filter_callback().
+ *
+ * @return string $text Link with rel=nofollow added.
+ */
+function bb_messages_make_nofollow_filter_callback( $matches ) {
 	$text = $matches[1];
 	$text = str_replace( array( ' rel="nofollow"', " rel='nofollow'" ), '', $text );
 
-	// Extract URL from href
+	// Extract URL from href.
 	preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match );
 
-	$url_host      = ( isset( $match[0] ) && isset( $match[0][0] ) ? parse_url( $match[0][0], PHP_URL_HOST ) : '' );
-	$base_url_host = parse_url( site_url(), PHP_URL_HOST );
+	$url_host      = ( isset( $match[0] ) && isset( $match[0][0] ) ? wp_parse_url( $match[0][0], PHP_URL_HOST ) : '' );
+	$base_url_host = wp_parse_url( site_url(), PHP_URL_HOST );
 
 	// If site link then nothing to do.
-	if ( $url_host == $base_url_host || empty( $url_host ) ) {
+	if ( $url_host === $base_url_host || empty( $url_host ) ) {
 		return "<a $text rel=\"nofollow\">";
 		// Else open in new tab.
 	} else {
 		return "<a target='_blank' $text rel=\"nofollow\">";
 	}
-
 }
 
 /**
