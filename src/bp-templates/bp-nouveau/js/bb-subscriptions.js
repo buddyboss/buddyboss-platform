@@ -157,9 +157,9 @@ window.bp = window.bp || {};
 			className  : 'subscription-items-main',
 			events: {
 				'click .subscription-item_remove' : 'removeSubscription',
-				'click a.prev': 'previousPage',
+				'click a.prev': 'gotoPage',
 				'click a.page': 'gotoPage',
-				'click a.next': 'nextPage',
+				'click a.next': 'gotoPage',
 			},
 			loader : false,
 			pagination_params: {
@@ -190,9 +190,22 @@ window.bp = window.bp || {};
 				);
 
 				this.collection.on( 'add', this.addThread, this );
+				this.collection.on( 'reset', this.cleanContent, this );
 			},
 
-			requestSubscriptions: function() {
+			requestSubscriptions: function( hideLoader ) {
+				hideLoader = typeof hideLoader !== 'undefined' ? hideLoader : false;
+				hideLoader = ( 'undefined' !== typeof this.collection.hideLoader && false !== this.collection.hideLoader ) ? this.collection.hideLoader : hideLoader;
+
+				if ( hideLoader !== true ) {
+					this.collection.reset();
+				} else {
+					this.collection.models     = [];
+					this.collection.length     = 0;
+					this.collection.options    = {};
+					this.collection._byId      = [];
+					this.collection.hideLoader = hideLoader;
+				}
 				this.collection.fetch(
 					{
 						data    : _.pick( this.options, ['type', 'page', 'per_page' ] ),
@@ -204,6 +217,17 @@ window.bp = window.bp || {};
 
 			addThread: function( item ) {
 				this.views.add( '.subscription-items', new bp.Views.SubscriptionItem( { item: item.attributes } ) );
+			},
+
+			cleanContent: function() {
+				_.each(
+					this.views._views['.subscription-items'],
+					function( view ) {
+						view.remove();
+					}
+				);
+
+				$( '#subscription-items' ).html( '' );
 			},
 
 			subscriptionFetched: function () {
@@ -219,7 +243,9 @@ window.bp = window.bp || {};
 							self.getPaginationParams();
 							self.views.add(
 								new bp.Views.SubscriptionPager(
-									self.pagination_params
+									{
+										options: self.pagination_params
+									}
 								),
 								{ at: 1 }
 							);
@@ -228,6 +254,24 @@ window.bp = window.bp || {};
 					100
 				);
 
+			},
+
+			cleanPagination: function() {
+				_.each(
+					this.views._views,
+					function( views ) {
+						if ( ! _.isUndefined( views ) ) {
+							_.each(
+								views,
+								function( view ) {
+									if ( ! _.isUndefined( view ) && 'subscription-pagination' === view.el.id ) {
+										view.remove();
+									}
+								}
+							);
+						}
+					}
+				);
 			},
 
 			getPaginationParams: function() {
@@ -264,22 +308,21 @@ window.bp = window.bp || {};
 					right_dots = false;
 				}
 
+				var current_active = 1;
+				if ( 'undefined' !== typeof self.collection.options.current_active ) {
+					current_active = self.collection.options.current_active;
+				}
+
 				self.pagination_params = {
-					total_page     : self.collection.options.total_pages,
-					current_active : 1,
+					total_page     : parseInt( self.collection.options.total_pages ),
+					current_active : parseInt( current_active ),
 					left_dots      : left_dots,
 					right_dots     : right_dots,
-					nav_begin      : nav_begin,
-					nav_end        : nav_end,
+					nav_begin      : parseInt( nav_begin ),
+					nav_end        : parseInt( nav_end ),
 				}
 
 				return self.pagination_params;
-			},
-
-			addPagination: function ( item ) {
-				console.log( 'addPagination' );
-				console.log( item );
-				this.views.add( '.subscription-items', new bp.Views.SubscriptionPager( { options: this.collection.options } ) );
 			},
 
 			subscriptionFetchError: function() {
@@ -366,8 +409,19 @@ window.bp = window.bp || {};
 				}
 
 				event.preventDefault();
-				this.collection.options.page = page;
-				this.requestSubscriptions();
+				this.collection.reset();
+				this.cleanPagination();
+				this.loader = new bp.Views.SubscriptionLoading();
+				this.views.add( this.loader );
+				this.collection.options.page           = page;
+				this.collection.options.current_active = page;
+				this.collection.fetch(
+					{
+						data    : _.pick( this.options, ['type', 'page', 'per_page' ] ),
+						success : _.bind( this.subscriptionFetched, this ),
+						error   : _.bind( this.subscriptionFetchError, this )
+					}
+				);
 
 			}
 		}
@@ -400,7 +454,8 @@ window.bp = window.bp || {};
 	bp.Views.SubscriptionPager = bp.Nouveau.Subscriptions.View.extend(
 		{
 			tagName: 'div',
-			className: 'bbp-pagination',
+			id: 'subscription-pagination',
+			className: 'bbp-pagination subscription-pagination',
 			template  : bp.template( 'bb-member-subscription-pagination' ),
 
 			initialize: function() {
