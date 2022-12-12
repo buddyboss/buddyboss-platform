@@ -3397,6 +3397,7 @@ input.search-query-input {
 .activity-list .activity-item .activity-header {
   margin: 0 auto;
   width: 80%;
+  word-break: break-word;
 }
 
 .activity-list .activity-item .activity-header a,
@@ -4611,6 +4612,9 @@ span.dashicons.dashicons-admin-file:before {
   margin-bottom: 10px;
   font-size: 14px;
   line-height: 1.5;
+  white-space: pre-wrap;
+  max-height: 105px;
+  overflow: auto;
 }
 
 .bb-activity-media-wrap,
@@ -9026,6 +9030,11 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   order: 3;
 }
 
+.profile-edit button.button > i {
+  font-size: 18px;
+  margin-right: 5px;
+}
+
 #btn_add_repeater_set {
   align-items: center;
   display: flex;
@@ -9471,13 +9480,16 @@ div.profile_completion_wrap .progress_text_wrap {
   background-color: #767676;
   font-size: 17px;
   line-height: 1;
-  height: 26px;
-  width: 26px;
   padding: 4px;
   border-radius: 50%;
   position: absolute;
   right: -5px;
   bottom: -5px;
+}
+
+#message-threads .thread-avatar .user-status-icon.bb-icon-cancel {
+  height: 26px;
+  width: 26px;
 }
 
 #message-threads .bp-message-link {
@@ -15073,6 +15085,10 @@ td.bbp-topic-counts {
   clear: left;
 }
 
+#bbpress-forums fieldset.bbp-form .select2-container {
+  z-index: auto;
+}
+
 #bbpress-forums fieldset.bbp-form {
   border: 1px solid #eee;
   padding: 10px 20px;
@@ -15387,7 +15403,6 @@ fieldset div.avatar {
 .activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap .bb-reply-lable {
   color: #7f868f;
   font-weight: 400;
-  margin-right: 5px;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-post-title a,
