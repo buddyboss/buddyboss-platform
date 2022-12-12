@@ -660,7 +660,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
 		if ( empty( $username_visible ) && bp_moderation_is_user_suspended( $user_id ) ) {
-			if ( is_singular() && current_user_can( 'manage_options' ) ) {
+			if ( current_user_can( 'manage_options' ) ) {
 				$edit_link = add_query_arg( array( 'action' => 'edit' ), admin_url( 'user-edit.php?user_id=' . $user_id ) );
 				return $edit_link;
 			}

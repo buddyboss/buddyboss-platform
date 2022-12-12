@@ -280,7 +280,9 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $link;
 		}
 
-		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
+		$user_id = self::get_content_owner_id( $comment->comment_ID );
+
+		if ( $this->is_content_hidden( $comment->comment_ID ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
 			$link = '';
 		}
 
