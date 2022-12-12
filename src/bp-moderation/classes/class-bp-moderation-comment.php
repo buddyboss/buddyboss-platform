@@ -206,9 +206,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $link;
 		}
 
-		$user_id = self::get_content_owner_id( $comment->comment_ID );
-
-		if ( $this->is_content_hidden( $comment->comment_ID ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
+		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
 			$link = '';
 		}
 
@@ -282,9 +280,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $link;
 		}
 
-		$user_id = self::get_content_owner_id( $comment->comment_ID );
-
-		if ( $this->is_content_hidden( $comment->comment_ID ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
+		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
 			$link = '';
 		}
 
