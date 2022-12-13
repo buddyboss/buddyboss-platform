@@ -976,7 +976,7 @@ function bbp_add_user_forum_subscription( $user_id = 0, $forum_id = 0 ) {
 		return false;
 	}
 
-	$subscription_id = bb_subscriptions_create_subscription(
+	$subscription_id = bb_create_subscription(
 		array(
 			'user_id'           => $user_id,
 			'item_id'           => $forum_id,
@@ -1019,7 +1019,7 @@ function bbp_add_user_topic_subscription( $user_id = 0, $topic_id = 0 ) {
 		return false;
 	}
 
-	$subscription_id = bb_subscriptions_create_subscription(
+	$subscription_id = bb_create_subscription(
 		array(
 			'user_id'           => $user_id,
 			'item_id'           => $topic_id,
@@ -1129,7 +1129,7 @@ function bbp_remove_user_forum_subscription( $user_id, $forum_id ) {
 	$subscription = current( $subscriptions['subscriptions'] );
 
 	// Delete the subscription.
-	bb_subscriptions_delete_subscription( $subscription->id );
+	bb_delete_subscription( $subscription->id );
 
 	wp_cache_delete( 'bbp_get_forum_subscribers_' . $forum_id, 'bbpress_users' );
 
@@ -1182,7 +1182,7 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
 	$subscription = current( $subscriptions['subscriptions'] );
 
 	// Delete the subscription.
-	bb_subscriptions_delete_subscription( $subscription->id );
+	bb_delete_subscription( $subscription->id );
 
 	wp_cache_delete( 'bbp_get_topic_subscribers_' . $topic_id, 'bbpress_users' );
 

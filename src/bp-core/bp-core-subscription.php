@@ -230,7 +230,7 @@ function bb_get_subscriptions_types() {
  *
  * @return int|bool|WP_Error
  */
-function bb_subscriptions_create_subscription( $args = array() ) {
+function bb_create_subscription( $args = array() ) {
 	$r = bp_parse_args(
 		$args,
 		array(
@@ -286,7 +286,7 @@ function bb_subscriptions_create_subscription( $args = array() ) {
 	 * @param array $r Array of argument to create a new subscription.
 	 * @param int|bool|WP_Error $new_subscription_created The ID of new subscription when it's true otherwise return error.
 	 */
-	do_action_ref_array( 'bb_subscriptions_create_subscriptionx', array( $r, $new_subscription_created ) );
+	do_action_ref_array( 'bb_create_subscription', array( $r, $new_subscription_created ) );
 
 	return $new_subscription_created;
 }
@@ -444,7 +444,7 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
  *
  * @return bool True on success, false on failure.
  */
-function bb_subscriptions_delete_subscription( $subscription_id ) {
+function bb_delete_subscription( $subscription_id ) {
 
 	/**
 	 * Fires before the deletion of a subscription.
@@ -470,7 +470,7 @@ function bb_subscriptions_delete_subscription( $subscription_id ) {
 	 *
 	 * @param int $subscription_id ID of the subscription that was deleted.
 	 */
-	do_action( 'bb_subscriptions_delete_subscription', $subscription_id );
+	do_action( 'bb_delete_subscription', $subscription_id );
 
 	return true;
 }

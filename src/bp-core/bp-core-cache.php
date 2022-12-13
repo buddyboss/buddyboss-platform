@@ -408,8 +408,8 @@ function bb_subscriptions_reset_cache_incrementor() {
 	bp_core_reset_incrementor( 'bb_subscriptions' );
 }
 
-add_action( 'bb_subscriptions_create_subscription', 'bb_subscriptions_reset_cache_incrementor' );
-add_action( 'bb_subscriptions_delete_subscription', 'bb_subscriptions_reset_cache_incrementor' );
+add_action( 'bb_create_subscription', 'bb_subscriptions_reset_cache_incrementor' );
+add_action( 'bb_delete_subscription', 'bb_subscriptions_reset_cache_incrementor' );
 
 /**
  * Clear a cached subscription item when that item is updated.
