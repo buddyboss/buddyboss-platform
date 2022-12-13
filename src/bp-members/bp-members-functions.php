@@ -4852,16 +4852,15 @@ function bb_is_online_user( $user_id, $expiry = false ) {
 		return false;
 	}
 
-	if ( true === $expiry ) {
-		$timeframe = apply_filters( 'bb_is_online_user_expiry', 300 ); // Default 300 seconds.
-	} elseif ( is_int( $expiry ) ) {
+	if ( is_int( $expiry ) && ! empty( $expiry ) ) {
 		$timeframe = $expiry;
 	} else {
-		// the activity timeframe is 5 minutes.
-		$timeframe = 5 * MINUTE_IN_SECONDS;
+		$timeframe = bb_presence_time_span();
 	}
 
-	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $timeframe ), $user_id );
+	$online_time = apply_filters( 'bb_default_online_presence_time', $timeframe );
+
+	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $online_time ), $user_id );
 }
 
 /**
@@ -5272,7 +5271,7 @@ add_filter( 'gettext', 'bb_profile_drop_down_order_metabox_translate_order_text'
 /**
  * Translate the order text in the Profile Drop Down Order metabox.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.6
  *
  * @param string $translated_text   Translated text.
  * @param string $untranslated_text Untranslated text.
@@ -5320,16 +5319,17 @@ function bb_get_user_presence( $user_id, $expiry = false ) {
  *
  * @since BuddyBoss 2.1.4
  *
- * @param int $user_id User id.
+ * @param int  $user_id User id.
+ * @param bool $expiry  Consider expiry time.
  *
  * @return string
  */
-function bb_get_user_presence_html( $user_id ) {
+function bb_get_user_presence_html( $user_id, $expiry = true ) {
 	return sprintf(
 		'<span class="member-status %s" data-bb-user-id="%d" data-bb-user-presence="%s"></span>',
-		bb_get_user_presence( $user_id ),
+		bb_get_user_presence( $user_id, $expiry ),
 		$user_id,
-		bb_get_user_presence( $user_id )
+		bb_get_user_presence( $user_id, $expiry )
 	);
 }
 
@@ -5338,11 +5338,12 @@ function bb_get_user_presence_html( $user_id ) {
  *
  * @since BuddyBoss 2.1.4
  *
- * @param int $user_id User id.
+ * @param int  $user_id User id.
+ * @param bool $expiry  Consider expiry time.
  *
  * @return void
  */
-function bb_user_presence_html( $user_id ) {
-	echo bb_get_user_presence_html( $user_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+function bb_user_presence_html( $user_id, $expiry = true ) {
+	echo bb_get_user_presence_html( $user_id, $expiry ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 

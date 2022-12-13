@@ -1408,7 +1408,7 @@ function bb_xprofile_set_social_network_param( $args = array() ) {
 /**
  * Function trigger when fieldset is added or deleted or field deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.6
  */
 function bb_core_xprofile_clear_group_cache() {
 	BP_XProfile_Group::$bp_xprofile_group_ids = array();

@@ -3397,15 +3397,12 @@ input.search-query-input {
 .activity-list .activity-item .activity-header {
   margin: 0 auto;
   width: 80%;
+  word-break: break-word;
 }
 
 .activity-list .activity-item .activity-header a,
 .activity-list .activity-item .activity-header img {
   display: inline;
-}
-
-.activity-list .activity-item .activity-header p {
-  word-wrap: break-word;
 }
 
 .activity-list .activity-item .activity-header .avatar {
@@ -9033,6 +9030,11 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   order: 3;
 }
 
+.profile-edit button.button > i {
+  font-size: 18px;
+  margin-left: 5px;
+}
+
 #btn_add_repeater_set {
   align-items: center;
   display: flex;
@@ -9478,13 +9480,16 @@ div.profile_completion_wrap .progress_text_wrap {
   background-color: #767676;
   font-size: 17px;
   line-height: 1;
-  height: 26px;
-  width: 26px;
   padding: 4px;
   border-radius: 50%;
   position: absolute;
   left: -5px;
   bottom: -5px;
+}
+
+#message-threads .thread-avatar .user-status-icon.bb-icon-cancel {
+  height: 26px;
+  width: 26px;
 }
 
 #message-threads .bp-message-link {
@@ -15398,7 +15403,6 @@ fieldset div.avatar {
 .activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap .bb-reply-lable {
   color: #7f868f;
   font-weight: 400;
-  margin-left: 5px;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-post-title a,
