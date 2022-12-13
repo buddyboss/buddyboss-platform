@@ -223,7 +223,7 @@ function bbp_admin_repair_list() {
 		80 => array( 'bbp-user-forum-subscriptions', __( 'Remove trashed forums from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_forum_subscriptions' ),
 		85 => array( 'bbp-user-role-map', __( 'Remap existing users to default forum roles', 'buddyboss' ), 'bbp_admin_repair_user_roles' ),
 		90 => array( 'bbp-wp-role-restore', __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' ),
-		95 => array( 'bbp-migrate-forum-topic-subscription', __( 'Migrate user forums/topics to new systems.', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
+		95 => array( 'bbp-migrate-forum-topic-subscription', __( 'Migrate BBPress forum and discussion subscriptions to BuddyBoss.', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
 	);
 	ksort( $repair_list );
 
