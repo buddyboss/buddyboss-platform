@@ -172,13 +172,16 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function() {
+				var subscription_type = this.getSubscriptionType();
+
+				// Initialise the loader.
 				this.loader = new bp.Views.SubscriptionLoading();
 				this.views.add( this.loader );
 
 				this.requestSubscriptions();
 
 				var Views = [
-					new bp.Nouveau.Subscriptions.View( { tagName: 'ul', id: 'subscription-items', className: 'subscription-items' } )
+					new bp.Nouveau.Subscriptions.View( { tagName: 'ul', id: 'subscription-items-' + subscription_type, className: 'subscription-items' } )
 				];
 
 				_.each(
@@ -220,6 +223,7 @@ window.bp = window.bp || {};
 			},
 
 			cleanContent: function() {
+				console.log( 'cleanContent' );
 				_.each(
 					this.views._views['.subscription-items'],
 					function( view ) {
@@ -227,7 +231,11 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( '#subscription-items' ).html( '' );
+				var subscription_type = this.getSubscriptionType();
+
+				if ( subscription_type ) {
+					$( '#subscription-items-' + subscription_type ).html( '' );
+				}
 			},
 
 			subscriptionFetched: function () {
@@ -257,7 +265,7 @@ window.bp = window.bp || {};
 							self.views.add(
 								new bp.Views.MemberNoSubscription(
 									{
-										type:  subscription_label
+										type: subscription_label
 									}
 								)
 							);
@@ -447,6 +455,16 @@ window.bp = window.bp || {};
 					}
 				);
 
+			},
+
+			getSubscriptionType: function() {
+				var subscription_type = _.pick( this.options, 'type' );
+
+				if ( ! _.isUndefined( subscription_type.type ) ) {
+					return subscription_type.type;
+				}
+
+				return false;
 			}
 		}
 	);

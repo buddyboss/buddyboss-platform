@@ -48,7 +48,7 @@
 				}
 
 				if ( jQuery.inArray( 2, links ) == -1 ) {
-					#><span aria-current="page" class="page-numbers disabled dots">...</span><#
+					#><span aria-current="page" class="page-numbers disabled">...</span><#
 				}
 			}
 
