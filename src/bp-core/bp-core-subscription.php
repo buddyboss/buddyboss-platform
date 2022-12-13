@@ -524,7 +524,7 @@ function bb_is_enabled_subscription( $type = '' ) {
 		bb_is_enabled_modern_subscriptions( $type )
 	) {
 		$is_enabled = true;
-	} elseif ( in_array( $type, array( 'forum', 'topic' ), true ) && function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
+	} elseif ( bb_enabled_legacy_email_preference() && in_array( $type, array( 'forum', 'topic' ), true ) && function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
 		$is_enabled = true;
 	}
 
