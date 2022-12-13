@@ -248,26 +248,7 @@ window.bp = window.bp || {};
 					function () {
 
 						if ( 1 > self.collection.length ) {
-
-							_.each(
-								self.views._views,
-								function( view ){
-									if ( ! _.isUndefined( _.first( view ) ) ) {
-										_.first( view ).remove();
-									}
-
-								}
-							);
-
-							var subscription_label = $( '.bb-accordion[data-type=' + self.options.type + ']' ).data( 'label' );
-
-							self.views.add(
-								new bp.Views.MemberNoSubscription(
-									{
-										type: subscription_label
-									}
-								)
-							);
+							self.addNoSubscriptionView( self.options.type );
 						}
 
 						if ( self.collection.options.total_pages > 1 ) {
@@ -329,7 +310,8 @@ window.bp = window.bp || {};
 
 			removeSubscription: function ( event ) {
 				var current = $( event.currentTarget ),
-					id      = current.data( 'subscription-id' );
+					id      = current.data( 'subscription-id' ),
+					self    = this;
 
 				if ( ! id ) {
 					return event;
@@ -340,7 +322,12 @@ window.bp = window.bp || {};
 				var options    = {};
 				options.path   = 'buddyboss/v1/subscription/' + id;
 				options.method = 'DELETE';
-				options.data   = {};
+				options.data   = {
+					type        : self.options.type,
+					page        : self.collection.options.page,
+					per_page    : self.collection.options.per_page,
+					total_pages : self.collection.options.total_pages,
+				};
 
 				var title = current
 					.parents( '.bb-subscription-item' )
@@ -352,6 +339,17 @@ window.bp = window.bp || {};
 				bp.apiRequest( options ).done(
 					function( data ) {
 						if ( ! _.isUndefined( data.deleted ) ) {
+
+							if ( ! _.isUndefined( data.page ) ) {
+								self.getSubscriptionByPage( data.page );
+							} else {
+								current.removeClass( 'is_loading' );
+								current.parents( '.bb-subscription-item' ).remove();
+								if ( 0 === $( '#subscription-items-forum li' ).length ) {
+									self.addNoSubscriptionView( self.options.type );
+								}
+							}
+
 							jQuery( document ).trigger(
 								'bb_trigger_toast_message',
 								[
@@ -362,8 +360,6 @@ window.bp = window.bp || {};
 									true
 								]
 							);
-							current.removeClass( 'is_loading' );
-							current.parents( '.bb-subscription-item' ).remove();
 						} else {
 							current.removeClass( 'is_loading' );
 							jQuery( document ).trigger(
@@ -405,6 +401,10 @@ window.bp = window.bp || {};
 				}
 
 				event.preventDefault();
+				this.getSubscriptionByPage( page );
+			},
+
+			getSubscriptionByPage: function( page ) {
 				this.collection.reset();
 				this.cleanPagination();
 				this.loader = new bp.Views.SubscriptionLoading();
@@ -418,7 +418,30 @@ window.bp = window.bp || {};
 						error   : _.bind( this.subscriptionFetchError, this )
 					}
 				);
+			},
 
+			addNoSubscriptionView: function( type ) {
+				var self = this;
+
+				_.each(
+					self.views._views,
+					function( view ){
+						if ( ! _.isUndefined( _.first( view ) ) ) {
+							_.first( view ).remove();
+						}
+
+					}
+				);
+
+				var subscription_label = $( '.bb-accordion[data-type=' + type + ']' ).data( 'label' );
+
+				self.views.add(
+					new bp.Views.MemberNoSubscription(
+						{
+							type: subscription_label
+						}
+					)
+				);
 			},
 
 			getSubscriptionType: function() {
