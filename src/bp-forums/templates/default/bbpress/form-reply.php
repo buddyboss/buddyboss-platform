@@ -108,13 +108,21 @@
 
 								<?php if ( bbp_is_reply_edit() && ( bbp_get_reply_author_id() !== bbp_get_current_user_id() ) ) : ?>
 
-									<label for="bbp_topic_subscription"><?php _e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
 
-								<?php else : ?>
-
-									<label for="bbp_topic_subscription"><?php _e( 'Notify me of follow-up replies via email', 'buddyboss' ); ?></label>
-
-								<?php endif; ?>
+									<?php
+								else :
+									if ( function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference() ) {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss' ); ?></label>
+										<?php
+									} else {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss' ); ?></label>
+										<?php
+									}
+								endif;
+								?>
 
 							</p>
 
