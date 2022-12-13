@@ -223,7 +223,6 @@ window.bp = window.bp || {};
 			},
 
 			cleanContent: function() {
-				console.log( 'cleanContent' );
 				_.each(
 					this.views._views['.subscription-items'],
 					function( view ) {
@@ -309,37 +308,6 @@ window.bp = window.bp || {};
 			getPaginationParams: function() {
 				var self = this;
 
-				if (self.collection.options.total_pages <= BP_Nouveau.subscriptions.per_page) {
-					BP_Nouveau.subscriptions.per_page = self.collection.options.total_pages;
-				}
-
-				var range     = Math.floor( BP_Nouveau.subscriptions.per_page / 2 );
-				var nav_begin = self.collection.options.page - range;
-				if (BP_Nouveau.subscriptions.per_page % 2 === 0) { // If an even number.
-					nav_begin++;
-				}
-				var nav_end    = self.collection.options.page + range;
-				var left_dots  = true;
-				var right_dots = true;
-
-				if (nav_begin <= 2) {
-					nav_end = BP_Nouveau.subscriptions.per_page;
-					if (nav_begin === 2) {
-						nav_end++;
-					}
-					nav_begin = 1;
-					left_dots = false;
-				}
-
-				if (nav_end >= self.collection.options.total_pages - 1 ) {
-					nav_begin = self.collection.options.total_pages - BP_Nouveau.subscriptions.per_page + 1;
-					if (self.pagination_params === self.collection.options.total_pages - 1) {
-						nav_begin--;
-					}
-					nav_end    = self.collection.options.total_pages;
-					right_dots = false;
-				}
-
 				var current_active = 1;
 				if ( 'undefined' !== typeof self.collection.options.current_active ) {
 					current_active = self.collection.options.current_active;
@@ -348,10 +316,6 @@ window.bp = window.bp || {};
 				self.pagination_params = {
 					total_page     : parseInt( self.collection.options.total_pages ),
 					current_active : parseInt( current_active ),
-					left_dots      : left_dots,
-					right_dots     : right_dots,
-					nav_begin      : parseInt( nav_begin ),
-					nav_end        : parseInt( nav_end ),
 				}
 
 				return self.pagination_params;
