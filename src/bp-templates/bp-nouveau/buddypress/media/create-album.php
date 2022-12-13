@@ -17,7 +17,7 @@
 
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></h4>
-						<a class="bb-model-close-button" id="bp-media-create-album-close" href="#"><span class="bb-icon bb-icon-close"></span></a>
+						<a class="bb-model-close-button" id="bp-media-create-album-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 
 					<div class="bb-field-wrap">
@@ -45,7 +45,7 @@
 											<div class="dz-size" data-dz-size></div>
 										</div>
 										<div class="dz-progress-ring-wrap">
-											<i class="bb-icon bb-icon-camera-fill"></i>
+											<i class="bb-icon-f bb-icon-camera"></i>
 											<svg class="dz-progress-ring" width="54" height="54">
 												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 											</svg>
