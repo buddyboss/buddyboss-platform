@@ -9480,13 +9480,16 @@ div.profile_completion_wrap .progress_text_wrap {
   background-color: #767676;
   font-size: 17px;
   line-height: 1;
-  height: 26px;
-  width: 26px;
   padding: 4px;
   border-radius: 50%;
   position: absolute;
   left: -5px;
   bottom: -5px;
+}
+
+#message-threads .thread-avatar .user-status-icon.bb-icon-cancel {
+  height: 26px;
+  width: 26px;
 }
 
 #message-threads .bp-message-link {
@@ -15400,7 +15403,6 @@ fieldset div.avatar {
 .activity-list li.blogs .activity-content .activity-inner .activity-discussion-title-wrap .bb-reply-lable {
   color: #7f868f;
   font-weight: 400;
-  margin-left: 5px;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-post-title a,
