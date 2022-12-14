@@ -5838,6 +5838,8 @@ function bb_bp_get_add_follow_button( $button ) {
  */
 function bp_activity_posted_followers_update( $content, $user_id, $activity_id ) {
 	global $bp_activity_edit;
+
+	// Return if $activity_id empty or edit activity.
 	if ( empty( $activity_id ) || $bp_activity_edit ) {
 		return;
 	}
@@ -5849,7 +5851,6 @@ function bp_activity_posted_followers_update( $content, $user_id, $activity_id )
 	if (
 		empty( $activity ) ||
 		'activity' !== $activity->component ||
-		'activity_comment' === $activity->type ||
 		in_array( $activity->privacy, array( 'document', 'media', 'video' ), true ) ||
 		empty( $followers_user )
 	) {
@@ -5898,8 +5899,10 @@ function bp_activity_posted_followers_update( $content, $user_id, $activity_id )
 	foreach ( (array) $followers_user as $followers_user_id ) {
 		$followers_user_id = (int) $followers_user_id;
 		if (
-			false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
-			false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id
+			true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) ||
+			(
+				false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
+				false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id )
 			)
 		) {
 			continue;

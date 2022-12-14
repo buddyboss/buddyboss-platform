@@ -583,13 +583,14 @@ function bp_activity_post_add_notification( $activity, $followers_user ) {
 	$component_action = 'bb_activity_following_post';
 
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
 		count( $followers_user ) > 20
 	) {
 		global $bb_notifications_background_updater;
-		$user_ids   = wp_list_pluck( $followers_user, 'user_id' );
+		$user_ids = wp_list_pluck( $followers_user, 'user_id' );
 		$bb_notifications_background_updater->data(
 			array(
 				array(
