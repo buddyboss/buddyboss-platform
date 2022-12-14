@@ -553,7 +553,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @return void
 	 */
-	final public function bb_register_subscription_type( string $label, string $subscription_type, string $notification_type, string $notification_group, string $render_callback, string $send_callback ) {
+	final public function bb_register_subscription_type( string $label, string $subscription_type, string $notification_type, string $notification_group, string|array $render_callback, string $send_callback ) {
 		$this->subscriptions[ $subscription_type ] = array(
 			'label'              => $label,
 			'subscription_type'  => $subscription_type,

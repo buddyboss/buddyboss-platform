@@ -118,7 +118,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'topic',
 			'bb_forums_subscribed_reply',
 			'forums',
-			'bb_render_forums_subscribed_reply',
+			array( $this, 'bb_render_forums_subscribed_reply' ),
 			'bb_send_forums_subscribed_reply'
 		);
 
@@ -164,7 +164,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'forum',
 			'bb_forums_subscribed_discussion',
 			'forums',
-			'bb_render_forums_subscribed_discussion',
+			array( $this, 'bb_render_forums_subscribed_discussion' ),
 			'bb_send_forums_subscribed_discussion'
 		);
 	}
@@ -468,4 +468,73 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		return $content;
 	}
+
+	/**
+	 * Render callback function on frontend.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Subscription $item Subscription object.
+	 *
+	 * @return array
+	 */
+	public function bb_render_forums_subscribed_discussion( $item ) {
+		$subscription = bp_parse_args(
+			$item,
+			array(
+				'id'                => 0,
+				'user_id'           => 0,
+				'item_id'           => 0,
+				'secondary_item_id' => 0,
+			)
+		);
+
+		if (
+			empty( $subscription['id'] ) ||
+			empty( $subscription['item_id'] )
+		) {
+			return array();
+		}
+
+		$data = array(
+			'avatar'      => array(),
+			'title'       => bbp_get_forum_title( $subscription['item_id'] ),
+			'description' => '',
+			'link'        => bbp_get_forum_permalink( $subscription['item_id'] ),
+		);
+
+		$data['avatar']['full'] = (string) (
+			function_exists( 'bbp_get_forum_thumbnail_src' )
+			? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'full', 'full' )
+			: get_the_post_thumbnail_url( $subscription['item_id'], 'full' )
+		);
+
+		$data['avatar']['thumb'] = (string) (
+			function_exists( 'bbp_get_forum_thumbnail_src' )
+			? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'thumbnail', 'large' )
+			: get_the_post_thumbnail_url( $subscription['item_id'], 'thumbnail' )
+		);
+
+		if ( ! empty( $subscription['secondary_item_id'] ) ) {
+			$data['description'] = bbp_get_forum_title( $subscription['secondary_item_id'] );
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Render callback function on frontend.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Subscription $item Subscription object.
+	 *
+	 * @return array
+	 */
+	public function bb_render_forums_subscribed_reply( $item ) {
+
+		return array();
+	}
+
+
 }
