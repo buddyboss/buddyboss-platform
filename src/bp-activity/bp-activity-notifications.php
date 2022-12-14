@@ -537,7 +537,7 @@ function bb_activity_add_notification_metas( $notification ) {
 		empty( $notification->id ) ||
 		empty( $notification->item_id ) ||
 		empty( $notification->component_action ) ||
-		! in_array( $notification->component_action, array( 'bb_new_mention', 'bb_activity_comment' ), true )
+		! in_array( $notification->component_action, array( 'bb_new_mention', 'bb_activity_comment', 'bb_activity_following_post' ), true )
 	) {
 		return;
 	}
@@ -569,4 +569,61 @@ function bb_activity_add_notification_metas( $notification ) {
 	}
 }
 
+/**
+ * Notify a member when activity posted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Activity_Activity $activity       The original activity.
+ * @param array                $followers_user Get followers for current user.
+ */
+function bp_activity_post_add_notification( $activity, $followers_user ) {
 
+	// Specify the Notification type.
+	$component_action = 'bb_activity_following_post';
+
+	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	if (
+		function_exists( 'bb_notifications_background_enabled' ) &&
+		true === bb_notifications_background_enabled() &&
+		count( $followers_user ) > 20
+	) {
+		global $bb_notifications_background_updater;
+		$user_ids   = wp_list_pluck( $followers_user, 'user_id' );
+		$bb_notifications_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_add_background_notifications',
+					'args'     => array(
+						$user_ids,
+						$activity->id,
+						$activity->user_id,
+						buddypress()->activity->id,
+						$component_action,
+						bp_core_current_time(),
+						true,
+					),
+				),
+			)
+		);
+		$bb_notifications_background_updater->save()->dispatch();
+	} else {
+		foreach ( (array) $followers_user as $user_id ) {
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $activity->id,
+					'secondary_item_id' => $activity->user_id,
+					'component_name'    => buddypress()->activity->id,
+					'component_action'  => $component_action,
+					'date_notified'     => bp_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
+		}
+	}
+
+	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+
+}
+add_action( 'bp_activity_post_notification', 'bp_activity_post_add_notification', 10, 3 );
