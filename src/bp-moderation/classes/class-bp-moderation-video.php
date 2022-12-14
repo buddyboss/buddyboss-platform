@@ -46,7 +46,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
-		add_filter( 'bp_suspend_video_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_suspend_video_get_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
@@ -128,11 +128,16 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 *
 	 * @param string $where   videos Where sql.
 	 * @param object $suspend suspend object.
+	 * @param array  $args    args array.
 	 *
 	 * @return array
 	 */
-	public function update_where_sql( $where, $suspend ) {
+	public function update_where_sql( $where, $suspend, $args ) {
 		$this->alias = $suspend->alias;
+
+		if( isset( $args['group'] ) ) {
+			return $where;
+		}
 
 		$sql = $this->exclude_where_query();
 		if ( ! empty( $sql ) ) {
@@ -144,7 +149,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 			if ( ! empty( $where ) ) {
 				$where['moderation_where'] .= ' AND ';
 			}
-			$where['moderation_where'] .= "( m.user_id NOT IN ( " . implode( ', ', $blocked_by_users_ids ) . " ))";
+			$where['moderation_where'] .= "( m.user_id NOT IN ( " . implode( ', ', $blocked_by_users_ids ) . " ) OR m.privacy IN ( 'grouponly' ) )";
 		}
 
 		return $where;
