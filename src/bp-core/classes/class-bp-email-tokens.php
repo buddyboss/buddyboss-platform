@@ -2260,18 +2260,16 @@ class BP_Email_Tokens {
 	 * @return string html for the output
 	 */
 	public function token__activity_content( $bp_email, $formatted_tokens, $tokens ) {
-		$output = '';
-
-		$settings = bp_email_get_appearance_settings();
-
+		$output         = '';
+		$settings       = bp_email_get_appearance_settings();
 		$activity       = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
 		$followers_user = bp_get_followers( array( 'user_id' => bp_loggedin_user_id() ) );
+
 		if (
-			(
-				is_object( $activity ) &&
-				! empty( $activity->item_id ) &&
-				! empty( $activity->secondary_item_id )
-			) ||
+			empty( $activity ) ||
+			'activity' !== $activity->component ||
+			'activity_comment' === $activity->type ||
+			in_array( $activity->privacy, array( 'document', 'media', 'video' ), true ) ||
 			empty( $followers_user )
 		) {
 			return $output;

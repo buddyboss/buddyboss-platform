@@ -5837,7 +5837,8 @@ function bb_bp_get_add_follow_button( $button ) {
  * @param int    $activity_id ID of the activity item being updated.
  */
 function bp_activity_posted_followers_update( $content, $user_id, $activity_id ) {
-	if ( empty( $activity_id ) ) {
+	global $bp_activity_edit;
+	if ( empty( $activity_id ) || $bp_activity_edit ) {
 		return;
 	}
 
@@ -5868,7 +5869,6 @@ function bp_activity_posted_followers_update( $content, $user_id, $activity_id )
 	$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 	$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
-	$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
 
 	if ( $media_ids ) {
 		$media_ids = array_filter( explode( ',', $media_ids ) );
@@ -5876,6 +5876,20 @@ function bp_activity_posted_followers_update( $content, $user_id, $activity_id )
 			$text = __( 'some photos', 'buddyboss' );
 		} else {
 			$text = __( 'a photo', 'buddyboss' );
+		}
+	} elseif ( $document_ids ) {
+		$document_ids = array_filter( explode( ',', $document_ids ) );
+		if ( count( $document_ids ) > 1 ) {
+			$text = __( 'some documents', 'buddyboss' );
+		} else {
+			$text = __( 'a document', 'buddyboss' );
+		}
+	}  elseif ( $video_ids ) {
+		$video_ids = array_filter( explode( ',', $video_ids ) );
+		if ( count( $video_ids ) > 1 ) {
+			$text = __( 'some videos', 'buddyboss' );
+		} else {
+			$text = __( 'a video', 'buddyboss' );
 		}
 	} else {
 		$text = __( 'an update', 'buddyboss' );
@@ -5885,7 +5899,7 @@ function bp_activity_posted_followers_update( $content, $user_id, $activity_id )
 		$followers_user_id = (int) $followers_user_id;
 		if (
 			false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
-			true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id
+			false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id
 			)
 		) {
 			continue;
@@ -5924,7 +5938,7 @@ function bp_activity_posted_followers_update( $content, $user_id, $activity_id )
 	 * @param BP_Activity_Activity $activity       The original activity.
 	 * @param array                $followers_user Get followers for current user.
 	 */
-	//	do_action( 'bp_activity_post_notification', $activity, $followers_user );
+	//do_action( 'bp_activity_post_notification', $activity, $followers_user );
 }
 
 add_action( 'bp_activity_posted_update', 'bp_activity_posted_followers_update', 10, 3 );
