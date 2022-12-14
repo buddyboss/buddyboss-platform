@@ -140,6 +140,7 @@ class BP_Messages_Message {
 		$this->date_sent    = apply_filters( 'messages_message_date_sent_before_save', $this->date_sent, $this->id );
 		$this->is_hidden    = apply_filters( 'messages_message_is_hidden_before_save', $this->is_hidden, $this->id );
 		$this->mark_visible = apply_filters( 'messages_message_mark_visible_before_save', $this->mark_visible, $this->id );
+		$this->mark_read    = apply_filters( 'messages_message_mark_read_before_save', $this->mark_read, $this->id );
 
 		/**
 		 * Fires before the current message item gets saved.
