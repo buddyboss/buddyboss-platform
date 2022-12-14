@@ -5898,19 +5898,20 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 
 	// Try to find mentions.
 	$usernames = bp_activity_find_mentions( $content );
-
-	foreach ( (array) $followers_user as $followers_user_id ) {
+	foreach ( (array) $followers_user as $key => $followers_user_id ) {
 		$followers_user_id = (int) $followers_user_id;
 		if (
-			(
-				true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) &&
-				! empty( $usernames )
-			) ||
-			(
-				false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
-				false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id )
-			)
+			false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
+			false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id )
 		) {
+			continue;
+		}
+
+		if (
+			true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) &&
+			array_key_exists( $followers_user_id, $usernames )
+		) {
+			unset( $followers_user[ $key ] );
 			continue;
 		}
 
