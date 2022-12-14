@@ -75,7 +75,7 @@ class BP_Messages_Message {
 	 *
 	 * @var bool
 	 */
-	public $group_join_left;
+	public $mark_read;
 
 	/**
 	 * Message recipients.
@@ -201,7 +201,7 @@ class BP_Messages_Message {
 			do_action_ref_array( 'messages_message_new_thread_save', array( &$this ) );
 
 		} else {
-			if ( false === $this->group_join_left ) {
+			if ( false === $this->mark_read ) {
 				// Update the unread count for all recipients.
 				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
 			}

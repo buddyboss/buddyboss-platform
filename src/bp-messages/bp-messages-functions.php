@@ -52,19 +52,19 @@ function messages_new_message( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'sender_id'       => bp_loggedin_user_id(),
-			'thread_id'       => false,   // False for a new message, thread id for a reply to a thread.
-			'recipients'      => array(), // Can be an array of usernames, user_ids or mixed.
-			'subject'         => false,
-			'content'         => false,
-			'date_sent'       => $current_sent_time,
-			'append_thread'   => true,
-			'is_hidden'       => false,
-			'mark_visible'    => false,
-			'group_thread'    => false,
-			'error_type'      => 'bool',
-			'send_at'         => false,
-			'group_join_left' => false,
+			'sender_id'     => bp_loggedin_user_id(),
+			'thread_id'     => false,   // False for a new message, thread id for a reply to a thread.
+			'recipients'    => array(), // Can be an array of usernames, user_ids or mixed.
+			'subject'       => false,
+			'content'       => false,
+			'date_sent'     => $current_sent_time,
+			'append_thread' => true,
+			'is_hidden'     => false,
+			'mark_visible'  => false,
+			'group_thread'  => false,
+			'error_type'    => 'bool',
+			'send_at'       => false,
+			'mark_read'     => false,
 		),
 		'messages_new_message'
 	);
@@ -154,15 +154,15 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// Create a new message object.
-	$message                  = new BP_Messages_Message();
-	$message->thread_id       = $r['thread_id'];
-	$message->sender_id       = $r['sender_id'];
-	$message->subject         = $r['subject'];
-	$message->message         = $r['content'];
-	$message->date_sent       = $r['date_sent'];
-	$message->is_hidden       = $r['is_hidden'];
-	$message->mark_visible    = $r['mark_visible'];
-	$message->group_join_left = $r['group_join_left'];
+	$message               = new BP_Messages_Message();
+	$message->thread_id    = $r['thread_id'];
+	$message->sender_id    = $r['sender_id'];
+	$message->subject      = $r['subject'];
+	$message->message      = $r['content'];
+	$message->date_sent    = $r['date_sent'];
+	$message->is_hidden    = $r['is_hidden'];
+	$message->mark_visible = $r['mark_visible'];
+	$message->mark_read    = $r['mark_read'];
 
 	$new_reply       = false;
 	$is_group_thread = isset( $r['group_thread'] ) ? (bool) $r['group_thread'] : false;
