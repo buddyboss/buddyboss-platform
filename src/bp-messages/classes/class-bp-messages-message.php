@@ -71,6 +71,13 @@ class BP_Messages_Message {
 	public $mark_visible;
 
 	/**
+	 * Flag for group join/left.
+	 *
+	 * @var bool
+	 */
+	public $group_join_left;
+
+	/**
 	 * Message recipients.
 	 *
 	 * @var bool|array
@@ -194,8 +201,10 @@ class BP_Messages_Message {
 			do_action_ref_array( 'messages_message_new_thread_save', array( &$this ) );
 
 		} else {
-			// Update the unread count for all recipients.
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			if ( false === $this->group_join_left ) {
+				// Update the unread count for all recipients.
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			}
 
 			if ( true === $this->mark_visible ) {
 				// Mark the thread to visible for all recipients.

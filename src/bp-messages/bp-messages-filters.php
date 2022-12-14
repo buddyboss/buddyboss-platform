@@ -218,12 +218,13 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 		remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
 		$new_reply = messages_new_message(
 			array(
-				'thread_id'  => $group_thread,
-				'sender_id'  => $user_id,
-				'subject'    => false,
-				'content'    => '<p> </p>',
-				'date_sent'  => $date_sent = bp_core_current_time(),
-				'error_type' => 'wp_error',
+				'thread_id'       => $group_thread,
+				'sender_id'       => $user_id,
+				'subject'         => false,
+				'content'         => '<p> </p>',
+				'date_sent'       => $date_sent = bp_core_current_time(),
+				'error_type'      => 'wp_error',
+				'group_join_left' => true,
 			)
 		);
 
@@ -359,12 +360,13 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 		remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
 		$new_reply = messages_new_message(
 			array(
-				'thread_id'  => $group_thread,
-				'sender_id'  => $user_id,
-				'subject'    => false,
-				'content'    => '<p> </p>',
-				'date_sent'  => bp_core_current_time(),
-				'error_type' => 'wp_error',
+				'thread_id'       => $group_thread,
+				'sender_id'       => $user_id,
+				'subject'         => false,
+				'content'         => '<p> </p>',
+				'date_sent'       => bp_core_current_time(),
+				'error_type'      => 'wp_error',
+				'group_join_left' => true,
 			)
 		);
 		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -414,12 +416,13 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 		remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
 		$new_reply = messages_new_message(
 			array(
-				'sender_id'  => $user_id,
-				'thread_id'  => $group_thread,
-				'subject'    => false,
-				'content'    => '<p> </p>',
-				'date_sent'  => bp_core_current_time(),
-				'error_type' => 'wp_error',
+				'sender_id'       => $user_id,
+				'thread_id'       => $group_thread,
+				'subject'         => false,
+				'content'         => '<p> </p>',
+				'date_sent'       => bp_core_current_time(),
+				'error_type'      => 'wp_error',
+				'group_join_left' => true,
 			)
 		);
 		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -473,12 +476,13 @@ function bp_group_messages_accept_new_member( $user_id, $group_id ) {
 		remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
 		$new_reply = messages_new_message(
 			array(
-				'thread_id'  => $group_thread,
-				'sender_id'  => $user_id,
-				'subject'    => false,
-				'content'    => '<p> </p>',
-				'date_sent'  => $date_sent = bp_core_current_time(),
-				'error_type' => 'wp_error',
+				'thread_id'       => $group_thread,
+				'sender_id'       => $user_id,
+				'subject'         => false,
+				'content'         => '<p> </p>',
+				'date_sent'       => $date_sent = bp_core_current_time(),
+				'error_type'      => 'wp_error',
+				'group_join_left' => true,
 			)
 		);
 
@@ -656,12 +660,13 @@ function bp_messages_add_user_to_group_message_thread( $group_id, $user_id ) {
 			remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
 			$new_reply = messages_new_message(
 				array(
-					'thread_id'  => $group_thread,
-					'sender_id'  => $user_id,
-					'subject'    => false,
-					'content'    => '<p> </p>',
-					'date_sent'  => bp_core_current_time(),
-					'error_type' => 'wp_error',
+					'thread_id'       => $group_thread,
+					'sender_id'       => $user_id,
+					'subject'         => false,
+					'content'         => '<p> </p>',
+					'date_sent'       => bp_core_current_time(),
+					'error_type'      => 'wp_error',
+					'group_join_left' => true,
 				)
 			);
 			add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -717,12 +722,13 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
 			remove_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
 			$new_reply = messages_new_message(
 				array(
-					'sender_id'  => $user_id,
-					'thread_id'  => $group_thread,
-					'subject'    => false,
-					'content'    => '<p> </p>',
-					'date_sent'  => bp_core_current_time(),
-					'error_type' => 'wp_error',
+					'sender_id'       => $user_id,
+					'thread_id'       => $group_thread,
+					'subject'         => false,
+					'content'         => '<p> </p>',
+					'date_sent'       => bp_core_current_time(),
+					'error_type'      => 'wp_error',
+					'group_join_left' => true,
 				)
 			);
 			add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
