@@ -5836,7 +5836,7 @@ function bb_bp_get_add_follow_button( $button ) {
  * @param int    $user_id     ID of the user posting the activity update.
  * @param int    $activity_id ID of the activity item being updated.
  */
-function bp_activity_posted_followers_update( $content, $user_id, $activity_id ) {
+function bb_activity_send_email_to_followers( $content, $user_id, $activity_id ) {
 	global $bp_activity_edit;
 
 	// Return if $activity_id empty or edit activity.
@@ -5896,10 +5896,16 @@ function bp_activity_posted_followers_update( $content, $user_id, $activity_id )
 		$text = __( 'an update', 'buddyboss' );
 	}
 
+	// Try to find mentions.
+	$usernames = bp_activity_find_mentions( $content );
+
 	foreach ( (array) $followers_user as $followers_user_id ) {
 		$followers_user_id = (int) $followers_user_id;
 		if (
-			true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) ||
+			(
+				true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) &&
+				! empty( $usernames )
+			) ||
 			(
 				false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
 				false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id )
@@ -5941,7 +5947,7 @@ function bp_activity_posted_followers_update( $content, $user_id, $activity_id )
 	 * @param BP_Activity_Activity $activity       The original activity.
 	 * @param array                $followers_user Get followers for current user.
 	 */
-	//do_action( 'bp_activity_post_notification', $activity, $followers_user );
+	do_action( 'bb_activity_followers_notification', $activity, $followers_user );
 }
 
-add_action( 'bp_activity_posted_update', 'bp_activity_posted_followers_update', 10, 3 );
+add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_followers', 10, 3 );

@@ -619,34 +619,34 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				if ( ! empty( $activity_excerpt ) ) {
 					$text = sprintf(
 					/* translators: Activity content. */
-						__( 'Replied: %s', 'buddyboss' ),
+						__( 'Posted an update: %s', 'buddyboss' ),
 						$activity_excerpt
 					);
 				} elseif ( $media_ids ) {
 					$media_ids = array_filter( explode( ',', $media_ids ) );
 					if ( count( $media_ids ) > 1 ) {
-						$text = __( 'Replied: some photos', 'buddyboss' );
+						$text = __( 'Posted some photos', 'buddyboss' );
 					} else {
-						$text = __( 'Replied: a photo', 'buddyboss' );
+						$text = __( 'Posted a photo', 'buddyboss' );
 					}
 				} elseif ( $document_ids ) {
 					$document_ids = array_filter( explode( ',', $document_ids ) );
 					if ( count( $document_ids ) > 1 ) {
-						$text = __( 'Replied: some documents', 'buddyboss' );
+						$text = __( 'Posted some documents', 'buddyboss' );
 					} else {
-						$text = __( 'Replied: a document', 'buddyboss' );
+						$text = __( 'Posted a document', 'buddyboss' );
 					}
 				} elseif ( $video_ids ) {
 					$video_ids = array_filter( explode( ',', $video_ids ) );
 					if ( count( $video_ids ) > 1 ) {
-						$text = __( 'Replied: some videos', 'buddyboss' );
+						$text = __( 'Posted some videos', 'buddyboss' );
 					} else {
-						$text = __( 'Replied: a video', 'buddyboss' );
+						$text = __( 'Posted a video', 'buddyboss' );
 					}
 				} elseif ( ! empty( $gif_data ) ) {
-					$text = __( 'Replied: a gif', 'buddyboss' );
+					$text = __( 'Posted a gif', 'buddyboss' );
 				} else {
-					$text = __( 'Replied', 'buddyboss' );
+					$text = __( 'Posted', 'buddyboss' );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
