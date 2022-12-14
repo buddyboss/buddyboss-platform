@@ -563,7 +563,7 @@ function bb_post_topic_reply_draft() {
 /**
  * Function add pop up for single page forum content.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.1
  */
 function bb_forum_add_content_popup() {
 	?>
