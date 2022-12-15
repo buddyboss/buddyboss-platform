@@ -312,7 +312,7 @@ function bb_create_subscription( $args = array() ) {
  *
  * @return array {
  *     @type array $subscriptions Array of subscription objects returned by the
- *                                paginated query. (IDs only if `fields` is set to `ids`.)
+ *                                paginated query. (IDs only if `fields` is set to `id`.)
  *     @type int   $total         Total count of all subscriptions matching non-
  *                                paginated query params.
  * }
@@ -364,7 +364,7 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
  *
  * @return array {
  *     @type array $subscriptions Array of subscription objects returned by the
- *                                paginated query. (IDs only if `fields` is set to `ids`.)
+ *                                paginated query. (IDs only if `fields` is set to `id`.)
  *     @type int   $total         Total count of all subscriptions matching non-
  *                                paginated query params.
  * }
@@ -471,6 +471,60 @@ function bb_delete_subscription( $subscription_id ) {
 	 * @param int $subscription_id ID of the subscription that was deleted.
 	 */
 	do_action( 'bb_delete_subscription', $subscription_id );
+
+	return true;
+}
+
+/**
+ * Delete user subscriptions by item ID and type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type    Type of the subscription to delete.
+ * @param int    $item_id Item ID of the subscription to delete.
+ *
+ * @return bool True on success, false on failure.
+ */
+function bb_delete_item_subscriptions( $type, $item_id ) {
+
+	// Get the subscriptions.
+	$all_subscriptions = bb_get_subscription_users(
+		array(
+			'type'    => $type,
+			'item_id' => $item_id,
+			'fields'  => 'id',
+			'count'   => false,
+		)
+	);
+	$subscriptions     = ! empty( $all_subscriptions['subscriptions'] ) ? $all_subscriptions['subscriptions'] : array();
+
+	/**
+	 * Fires before the deletion of subscriptions.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $subscriptions Array of subscriptions to delete.
+	 * @param string $type          Type of the subscription to delete.
+	 * @param int    $item_id       Item ID of the subscription to delete.
+	 */
+	do_action( 'bb_subscriptions_before_delete_item_subscriptions', $subscriptions, $type, $item_id );
+
+	if ( ! empty( $subscriptions ) ) {
+		foreach ( $subscriptions as $subscription ) {
+			bb_delete_subscription( $subscription );
+		}
+	}
+
+	/**
+	 * Fires after the deletion of subscriptions.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $subscriptions Array of subscriptions to delete.
+	 * @param string $type          Type of the subscription to delete.
+	 * @param int    $item_id       Item ID of the subscription to delete.
+	 */
+	do_action( 'bb_subscriptions_after_delete_item_subscriptions', $subscriptions, $type, $item_id );
 
 	return true;
 }

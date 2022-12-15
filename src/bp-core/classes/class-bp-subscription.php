@@ -449,7 +449,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		 *                                            Results will exclude the listed subscriptions. Default: false.
 		 *     @type array|string $exclude            Optional. Array or comma-separated list of subscription IDs.
 		 *                                            Results will exclude the listed subscriptions. Default: false.
-		 *     @type string       $fields             Which fields to return. Specify 'ids' to fetch a list of IDs.
+		 *     @type string       $fields             Which fields to return. Specify 'id' to fetch a list of IDs.
 		 *                                            Default: 'all' (return BP_Subscription objects).
 		 *     @type bool         $count           Optional. Fetch total count of all subscriptions matching non-
 		 *                                            paginated query params when it false.
@@ -459,7 +459,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		 * }
 		 * @return array {
 		 *     @type array $subscriptions Array of subscription objects returned by the
-		 *                                paginated query. (IDs only if `fields` is set to `ids`.)
+		 *                                paginated query. (IDs only if `fields` is set to `id`.)
 		 *     @type int   $total         Total count of all subscriptions matching non-
 		 *                                paginated query params.
 		 * }
@@ -596,7 +596,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				$paged_subscription_ids = $cached;
 			}
 
-			if ( 'ids' === $r['fields'] ) {
+			if ( 'id' === $r['fields'] ) {
 				// We only want the IDs.
 				$paged_subscriptions = array_map( 'intval', $paged_subscription_ids );
 			} else {
