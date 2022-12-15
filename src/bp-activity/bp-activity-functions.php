@@ -5857,8 +5857,8 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 		return;
 	}
 
-	$poster_name = bp_core_get_user_displayname( $user_id );
-	$thread_link = bp_activity_get_permalink( $activity->id );
+	$poster_name   = bp_core_get_user_displayname( $user_id );
+	$activity_link = bp_activity_get_permalink( $activity->id );
 
 	// Notification and email key.
 	$type_key   = 'bb_activity_following_post';
@@ -5926,7 +5926,7 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 				'activity.type'             => $text,
 				'original_activity.user_id' => $user_id,
 				'poster.name'               => $poster_name,
-				'thread.url'                => esc_url( $thread_link ),
+				'activity.url'              => esc_url( $activity_link ),
 				'unsubscribe'               => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 			),
 		);
