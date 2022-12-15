@@ -118,7 +118,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'label'              => __( 'Discussions', 'buddyboss' ),
 				'subscription_type'  => 'topic',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_reply' ),
-				'send_callback'      => 'bb_send_forums_subscribed_reply',
+				'send_callback'      => array( $this, 'bb_send_forums_subscribed_reply' ),
 				'notification_type'  => 'bb_forums_subscribed_reply',
 				'notification_group' => 'forums',
 			)
@@ -166,7 +166,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'label'              => __( 'Forums', 'buddyboss' ),
 				'subscription_type'  => 'forum',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_discussion' ),
-				'send_callback'      => 'bb_send_forums_subscribed_discussion',
+				'send_callback'      => array( $this, 'bb_send_forums_subscribed_discussion' ),
 				'notification_type'  => 'bb_forums_subscribed_discussion',
 				'notification_group' => 'forums',
 			)
@@ -540,5 +540,66 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		return array();
 	}
 
+	/**
+	 * Send callback function for forum type notification.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return bool|void
+	 */
+	public function bb_send_forums_subscribed_discussion( $args ) {
+
+		$r = bp_parse_args(
+			$args,
+			array(
+				'type'              => '',
+				'item_id'           => '',
+				'data'              => array(),
+				'notification_type' => '',
+				'user_ids'          => array(),
+			)
+		);
+
+		if ( empty( $r['user_ids'] ) ) {
+			return;
+		}
+
+		// @todo needs to perform code for send notification and email.
+
+		return true;
+	}
+
+	/**
+	 * Send callback function for topic type notification.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return bool|void
+	 */
+	public function bb_send_forums_subscribed_reply( $args ) {
+
+		$r = bp_parse_args(
+			$args,
+			array(
+				'type'              => '',
+				'item_id'           => '',
+				'data'              => array(),
+				'notification_type' => '',
+				'user_ids'          => array(),
+			)
+		);
+
+		if ( empty( $r['user_ids'] ) ) {
+			return;
+		}
+
+		// @todo needs to perform code for send notification and email.
+
+		return true;
+	}
 
 }

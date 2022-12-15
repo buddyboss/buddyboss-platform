@@ -530,3 +530,93 @@ function bb_is_enabled_subscription( $type = '' ) {
 
 	return (bool) apply_filters( 'bb_is_enabled_subscription', $is_enabled );
 }
+
+/**
+ * Function to verify that subscription background process enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_subscription_background_enabled() {
+	return class_exists( 'BP_Background_Updater' ) && apply_filters( 'bb_subscription_background_enabled', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
+}
+
+function bb_send_notifications_to_subscribers( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'    => '',
+			'item_id' => 0,
+			'data'    => array(),
+		)
+	);
+
+	$type    = $r['type'];
+	$item_id = $r['item_id'];
+
+	if ( empty( $type ) || empty( $item_id ) ) {
+		return;
+	}
+
+	$type_data = bb_register_subscriptions_types( $type );
+
+	if (
+		empty( $type_data ) ||
+		empty( $type_data['notification_type'] ) ||
+		empty( $type_data['send_callback'] ) ||
+		! is_callable( $type_data['send_callback'] )
+	) {
+		return;
+	}
+
+	$notification_type = $type_data['notification_type'];
+	$send_callback     = $type_data['send_callback'];
+	$subscriptions     = bb_get_subscription_users(
+		array(
+			'type'    => $type,
+			'item_id' => $item_id,
+		)
+	);
+
+	if ( empty( $subscriptions['subscriptions'] ) ) {
+		return;
+	}
+
+	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
+
+	$parse_args = array(
+		'type'              => $type,
+		'item_id'           => $item_id,
+		'data'              => $r['data'],
+		'notification_type' => $notification_type,
+	);
+
+	if (
+		isset( $subscriptions['total'] ) &&
+		$subscriptions['total'] > $min_count &&
+		bb_subscription_background_enabled()
+	) {
+		global $bp_background_updater;
+		$chunk_user_ids = array_chunk( $subscriptions['subscriptions'], $min_count );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $key => $user_ids ) {
+				$parse_args['user_ids'] = $user_ids;
+				$bp_background_updater->push_to_queue(
+					array(
+						'callback' => $send_callback,
+						'args'     => array( $parse_args ),
+					)
+				);
+
+				$bp_background_updater->save()->schedule_event();
+			}
+		}
+	} else {
+		$parse_args['user_ids'] = $subscriptions['subscriptions'];
+		call_user_func(
+			$send_callback,
+			$parse_args
+		);
+	}
+}
