@@ -544,23 +544,34 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $label              Used to display the subscription block title.
-	 * @param string $subscription_type  The subscriptions types like 'forum', 'topic'.
-	 * @param string $notification_type  The relation between the subscription type and notification type.
-	 * @param string $notification_group The group the subscription based on component.
-	 * @param string $render_callback    To display the records in subscriptions tab.
-	 * @param string $send_callback      This is used to render notification when trigger subscribed notifications.
+	 * @param array $args Used to display the subscription block title.
 	 *
 	 * @return void
 	 */
-	final public function bb_register_subscription_type( string $label, string $subscription_type, string $notification_type, string $notification_group, string|array $render_callback, string $send_callback ) {
-		$this->subscriptions[ $subscription_type ] = array(
-			'label'              => $label,
-			'subscription_type'  => $subscription_type,
-			'render_callback'    => $render_callback,
-			'send_callback'      => $send_callback,
-			'notification_type'  => $notification_type,
-			'notification_group' => $notification_group,
+	final public function bb_register_subscription_type( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'label'              => '',
+				'subscription_type'  => '',
+				'items_callback'     => '',
+				'send_callback'      => '',
+				'notification_type'  => '',
+				'notification_group' => '',
+			)
+		);
+
+		if ( empty( $r['subscription_type'] ) || empty( $r['notification_type'] ) ) {
+			return;
+		}
+
+		$this->subscriptions[ $r['subscription_type'] ] = array(
+			'label'              => ( ! empty( $r['label'] ) ? $r['label'] : $r['subscription_type'] ),
+			'subscription_type'  => $r['subscription_type'],
+			'items_callback'     => $r['items_callback'],
+			'send_callback'      => $r['send_callback'],
+			'notification_type'  => $r['notification_type'],
+			'notification_group' => $r['notification_group'],
 		);
 	}
 

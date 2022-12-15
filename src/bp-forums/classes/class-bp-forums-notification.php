@@ -114,12 +114,14 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->bb_register_subscription_type(
-			__( 'Discussions', 'buddyboss' ),
-			'topic',
-			'bb_forums_subscribed_reply',
-			'forums',
-			array( $this, 'bb_render_forums_subscribed_reply' ),
-			'bb_send_forums_subscribed_reply'
+			array(
+				'label'              => __( 'Discussions', 'buddyboss' ),
+				'subscription_type'  => 'topic',
+				'items_callback'     => array( $this, 'bb_render_forums_subscribed_reply' ),
+				'send_callback'      => 'bb_send_forums_subscribed_reply',
+				'notification_type'  => 'bb_forums_subscribed_reply',
+				'notification_group' => 'forums',
+			)
 		);
 
 	}
@@ -160,12 +162,14 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->bb_register_subscription_type(
-			__( 'Forums', 'buddyboss' ),
-			'forum',
-			'bb_forums_subscribed_discussion',
-			'forums',
-			array( $this, 'bb_render_forums_subscribed_discussion' ),
-			'bb_send_forums_subscribed_discussion'
+			array(
+				'label'              => __( 'Forums', 'buddyboss' ),
+				'subscription_type'  => 'forum',
+				'items_callback'     => array( $this, 'bb_render_forums_subscribed_discussion' ),
+				'send_callback'      => 'bb_send_forums_subscribed_discussion',
+				'notification_type'  => 'bb_forums_subscribed_discussion',
+				'notification_group' => 'forums',
+			)
 		);
 	}
 
