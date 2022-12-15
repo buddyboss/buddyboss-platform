@@ -524,7 +524,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Register notification for new activity post.
+	 * Register notification for followers when new activity posted.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -568,7 +568,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Format the notifications for activity post.
+	 * Format the notifications for followers when new activity posted.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

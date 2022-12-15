@@ -574,7 +574,7 @@ function bb_activity_add_notification_metas( $notification ) {
 }
 
 /**
- * Notify a member when activity posted.
+ * Notify to followers when new activity posted.
  *
  * @since BuddyBoss [BBVERSION]
  *

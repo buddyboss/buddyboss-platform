@@ -144,7 +144,7 @@ class BP_Email_Tokens {
 			),
 			'activity.content'     => array(
 				'function'    => array( $this, 'token__activity_content' ),
-				'description' => __( 'Display the post to update, along with member\'s photo and name.', 'buddyboss' ),
+				'description' => __( 'Display the activity post content, along with member\'s photo and name.', 'buddyboss' ),
 			),
 		);
 
@@ -2249,9 +2249,9 @@ class BP_Email_Tokens {
 	}
 
 	/**
-	 * Generate the output for token activity_reply
+	 * Generate the output for token activity.content
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens
