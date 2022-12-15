@@ -2352,7 +2352,7 @@ class BP_Email_Tokens {
 
 														$video_ids       = '';
 														$total_video_ids = 0;
-														if ( bp_is_active( 'media' ) && bp_is_profile_video_support_enabled()() ) {
+														if ( bp_is_active( 'media' ) && bp_is_profile_video_support_enabled() ) {
 															$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 															if ( ! empty( $video_ids ) ) {
