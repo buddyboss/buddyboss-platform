@@ -2494,8 +2494,8 @@ class BP_Email_Tokens {
 
 														if ( ! empty( $gif_data ) ) {
 															?>
-															<div class="activity-attached-gif-container">
-																<div class="gif-image-container">
+															<div>
+																<div>
 																	<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" class="gif-play-button">
 																		<?php if ( is_int( $gif_data['still'] ) ) { ?>
 																			<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>"/>
