@@ -555,7 +555,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			'activity',
 			'bb_activity_following_post',
 			'bb_activity_following_post',
-			'bb-icon-f bb-icon-comment-activity'
+			'bb-icon-f bb-icon-activity'
 		);
 
 		$this->register_notification_filter(
