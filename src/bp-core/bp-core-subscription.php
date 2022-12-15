@@ -595,6 +595,23 @@ function bb_subscription_background_enabled() {
 	return class_exists( 'BP_Background_Updater' ) && apply_filters( 'bb_subscription_background_enabled', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
 }
 
+/**
+ * Trigger subscription notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args {
+ *     An array of arguments.
+ *     @type string       $type               Required. The type of subscription.
+ *                                            'forum', 'topic'.
+ *                                            Default: null.
+ *     @type int          $item_id            Required. The ID of item.
+ *                                            Default: null.
+ *     @type array        $data               Optional. Additional data for notification.
+ * }
+ *
+ * @return void
+ */
 function bb_send_notifications_to_subscribers( $args ) {
 	$r = bp_parse_args(
 		$args,
