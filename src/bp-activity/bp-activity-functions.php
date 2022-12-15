@@ -5909,7 +5909,7 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 
 		if (
 			true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) &&
-			array_key_exists( $followers_user_id, $usernames )
+			! empty( $usernames ) && array_key_exists( $followers_user_id, $usernames )
 		) {
 			unset( $followers_user[ $key ] );
 			continue;

@@ -643,7 +643,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						$text = __( 'Posted a video', 'buddyboss' );
 					}
 				} elseif ( ! empty( $gif_data ) ) {
-					$text = __( 'Posted a gif', 'buddyboss' );
+					$text = __( 'Posted an update', 'buddyboss' );
 				} else {
 					$text = __( 'Posted', 'buddyboss' );
 				}
