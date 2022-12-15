@@ -571,7 +571,7 @@ abstract class BP_Core_Notification_Abstract {
 		$this->subscriptions[ $r['subscription_type'] ] = array(
 			'label'              => array(
 				'singular' => ( ! empty( $r['label']['singular'] ) ? $r['label']['singular'] : $r['subscription_type'] ),
-				'plural'   => $r['label']['plural'],
+				'plural'   => ( ! empty( $r['label']['plural'] ) ? $r['label']['plural'] : $r['subscription_type'] ),
 			),
 			'subscription_type'  => $r['subscription_type'],
 			'items_callback'     => $r['items_callback'],
