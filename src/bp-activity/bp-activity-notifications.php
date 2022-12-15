@@ -583,6 +583,9 @@ function bb_activity_add_notification_metas( $notification ) {
  */
 function bb_activity_followers_add_notification( $activity, $followers_user ) {
 
+	if ( empty( $followers_user ) ) {
+		return;
+	}
 	// Specify the Notification type.
 	$component_action = 'bb_activity_following_post';
 

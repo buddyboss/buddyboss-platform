@@ -5897,9 +5897,25 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 	}
 
 	// Try to find mentions.
-	$usernames = bp_activity_find_mentions( $content );
+	$usernames          = bp_activity_find_mentions( $content );
+	$followers_user_arr = array();
 	foreach ( (array) $followers_user as $key => $followers_user_id ) {
 		$followers_user_id = (int) $followers_user_id;
+
+		if (
+			(
+				false === (bool) bb_is_notification_enabled( $followers_user_id, 'bb_new_mention', 'web' ) &&
+				true === (bool) bb_is_notification_enabled( $followers_user_id, 'bb_activity_following_post', 'web' )
+			) ||
+			(
+				true === (bool) bb_is_notification_enabled( $followers_user_id, 'bb_new_mention', 'web' ) &&
+				true === (bool) bb_is_notification_enabled( $followers_user_id, 'bb_activity_following_post', 'web' ) &&
+				! array_key_exists( $followers_user_id, $usernames )
+			)
+		) {
+			$followers_user_arr[] = $followers_user_id;
+		}
+
 		if (
 			false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
 			false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id )
@@ -5911,7 +5927,6 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 			true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) &&
 			! empty( $usernames ) && array_key_exists( $followers_user_id, $usernames )
 		) {
-			unset( $followers_user[ $key ] );
 			continue;
 		}
 
@@ -5945,10 +5960,10 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param BP_Activity_Activity $activity       The original activity.
-	 * @param array                $followers_user Get followers for current user.
+	 * @param BP_Activity_Activity $activity           The original activity.
+	 * @param array                $followers_user_arr Get followers for current user.
 	 */
-	do_action( 'bb_activity_followers_notification', $activity, $followers_user );
+	do_action( 'bb_activity_followers_notification', $activity, $followers_user_arr );
 }
 
 add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_followers', 10, 3 );
