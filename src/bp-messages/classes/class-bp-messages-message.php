@@ -71,7 +71,7 @@ class BP_Messages_Message {
 	public $mark_visible;
 
 	/**
-	 * Flag for group join/left.
+	 * Flag for posted message as a read for all recipients.
 	 *
 	 * @var bool
 	 */
