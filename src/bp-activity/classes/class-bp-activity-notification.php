@@ -568,7 +568,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Format the notifications.
+	 * Format the notifications for activity post.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -583,16 +583,15 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function bb_render_activity_following_post_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
-		$notification           = bp_notifications_get_notification( $notification_id );
-		$user_id                = $secondary_item_id;
-		$user_fullname          = bp_core_get_user_displayname( $user_id );
+		$notification  = bp_notifications_get_notification( $notification_id );
+		$user_id       = $secondary_item_id;
+		$user_fullname = bp_core_get_user_displayname( $user_id );
 
 		if ( ! empty( $notification ) && 'bb_activity_following_post' === $notification->component_action ) {
 
 			$notification_link = bp_get_notifications_permalink();
-
-			$activity         = new BP_Activity_Activity( $item_id );
-			$activity_excerpt = '"' . bp_create_excerpt(
+			$activity          = new BP_Activity_Activity( $item_id );
+			$activity_excerpt  = '"' . bp_create_excerpt(
 					wp_strip_all_tags( $activity->content ),
 					50,
 					array(
@@ -653,7 +652,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
 					$text              = sprintf(
 					/* translators: %s: Total reply count. */
-						__( 'You have %1$d new replies', 'buddyboss' ),
+						__( 'You have %1$d new posts', 'buddyboss' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
