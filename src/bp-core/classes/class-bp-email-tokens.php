@@ -2313,7 +2313,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td>
-					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>;">
 						<tbody>
 						<tr>
 							<td>
@@ -2466,7 +2466,7 @@ class BP_Email_Tokens {
 															)
 														) {
 															?>
-															<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+															<div class="bb-activity-media-wrap">
 																<?php
 																while ( bp_document() ) {
 																	bp_the_document();
@@ -2475,7 +2475,7 @@ class BP_Email_Tokens {
 																	$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
 																	$extension     = bp_get_document_extension();
 																	?>
-																	<div class="bb-activity-media-elem">
+																	<div class="bb-activity-media-elem" style="width:100%">
 																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" style="font-size:14px; text-decoration:none;">
 																			<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
 																			<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( strtolower( $size ) ); ?></span>
