@@ -59,7 +59,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function load() {
 
-		if ( function_exists( 'bbp_is_subscriptions_active' ) && true == bbp_is_subscriptions_active() ) {
+		if ( function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
 			$this->register_notification_group(
 				'forums',
 				esc_html__( 'Discussion Forums', 'buddyboss' ),
