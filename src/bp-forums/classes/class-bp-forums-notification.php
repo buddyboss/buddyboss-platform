@@ -566,7 +566,55 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			return;
 		}
 
-		// @todo needs to perform code for send notification and email.
+		$type_key = 'notification_forums_following_topic';
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		}
+
+		$topic_id     = ! empty( $r['data']['topic_id'] ) ? $r['data']['topic_id'] : 0;
+		$author_id    = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bbp_get_topic_author_id( $topic_id );
+		$email_tokens = ! empty( $r['data']['email_tokens'] ) ? $r['data']['email_tokens'] : array();
+
+		if ( ! empty( $author_id ) ) {
+			// Remove topic author from the users.
+			$unset_topic_key = array_search( $author_id, $r['user_ids'], true );
+			if ( false !== $unset_topic_key ) {
+				unset( $r['user_ids'][ $unset_topic_key ] );
+			}
+		}
+
+		foreach ( $r['user_ids'] as $user_id ) {
+			// Bail if member opted out of receiving this email.
+			// Check the sender is blocked by recipient or not.
+			if (
+				true === bb_is_notification_enabled( $user_id, $type_key ) &&
+				true !== (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id )
+			) {
+				$unsubscribe_args = array(
+					'user_id'           => $user_id,
+					'notification_type' => 'bbp-new-forum-topic',
+				);
+
+				$email_tokens['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+				// Send notification email.
+				bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $email_tokens );
+			}
+
+			if ( bp_is_active( 'notifications' ) ) {
+				bp_notifications_add_notification(
+					array(
+						'user_id'           => $user_id,
+						'item_id'           => $topic_id,
+						'secondary_item_id' => $author_id,
+						'component_name'    => bbp_get_component_name(),
+						'component_action'  => 'bb_forums_subscribed_discussion',
+						'date_notified'     => bp_core_current_time(),
+						'is_new'            => 1,
+					)
+				);
+			}
+		}
 
 		return true;
 	}
