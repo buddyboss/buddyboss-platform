@@ -564,7 +564,7 @@ abstract class BP_Core_Notification_Abstract {
 			)
 		);
 
-		if ( empty( $r['subscription_type'] ) || empty( $r['notification_type'] ) ) {
+		if ( empty( $r['subscription_type'] ) || empty( $r['notification_type'] ) || ! is_array( $r['label'] ) ) {
 			return;
 		}
 
