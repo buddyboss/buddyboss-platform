@@ -478,52 +478,77 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param BP_Subscription $item Subscription object.
+	 * @param array $items Array of subscription list.
 	 *
 	 * @return array
 	 */
-	public function bb_render_forums_subscribed_discussion( $item ) {
-		$subscription = bp_parse_args(
-			$item,
-			array(
-				'id'                => 0,
-				'user_id'           => 0,
-				'item_id'           => 0,
-				'secondary_item_id' => 0,
-			)
-		);
+	public function bb_render_forums_subscribed_discussion( $items ) {
 
-		if (
-			empty( $subscription['id'] ) ||
-			empty( $subscription['item_id'] )
-		) {
-			return array();
+		if ( ! empty( $items ) ) {
+			foreach ( $items as $item_key => $item ) {
+				$subscription = bp_parse_args(
+					$item,
+					array(
+						'id'                => 0,
+						'user_id'           => 0,
+						'item_id'           => 0,
+						'secondary_item_id' => 0,
+					)
+				);
+
+				if (
+					empty( $subscription['id'] ) ||
+					empty( $subscription['item_id'] )
+				) {
+					continue;
+				}
+
+				$data = array(
+					'title'            => bbp_get_forum_title( $subscription['item_id'] ),
+					'description_html' => '',
+					'parent_html'      => '',
+					'icon'             => array(),
+					'link'             => bbp_get_forum_permalink( $subscription['item_id'] ),
+				);
+
+				$data['icon']['full'] = (string) (
+				function_exists( 'bbp_get_forum_thumbnail_src' )
+					? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'full', 'full' )
+					: get_the_post_thumbnail_url( $subscription['item_id'], 'full' )
+				);
+
+				$data['icon']['thumb'] = (string) (
+				function_exists( 'bbp_get_forum_thumbnail_src' )
+					? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'thumbnail', 'large' )
+					: get_the_post_thumbnail_url( $subscription['item_id'], 'thumbnail' )
+				);
+
+				if ( empty( $data['icon']['full'] ) ) {
+					$data['icon']['full'] = bb_attachments_get_default_profile_group_avatar_image(
+						array(
+							'object' => 'user',
+						)
+					);
+				}
+
+				if ( empty( $data['icon']['thumb'] ) ) {
+					$data['icon']['thumb'] = bb_attachments_get_default_profile_group_avatar_image(
+						array(
+							'object' => 'user',
+							'size'   => 'thumbnail',
+						)
+					);
+				}
+
+				if ( ! empty( $subscription['secondary_item_id'] ) ) {
+					$data['parent_html'] = bbp_get_forum_title( $subscription['secondary_item_id'] );
+				}
+
+				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+			}
 		}
 
-		$data = array(
-			'avatar'      => array(),
-			'title'       => bbp_get_forum_title( $subscription['item_id'] ),
-			'description' => '',
-			'link'        => bbp_get_forum_permalink( $subscription['item_id'] ),
-		);
-
-		$data['avatar']['full'] = (string) (
-			function_exists( 'bbp_get_forum_thumbnail_src' )
-			? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'full', 'full' )
-			: get_the_post_thumbnail_url( $subscription['item_id'], 'full' )
-		);
-
-		$data['avatar']['thumb'] = (string) (
-			function_exists( 'bbp_get_forum_thumbnail_src' )
-			? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'thumbnail', 'large' )
-			: get_the_post_thumbnail_url( $subscription['item_id'], 'thumbnail' )
-		);
-
-		if ( ! empty( $subscription['secondary_item_id'] ) ) {
-			$data['description'] = bbp_get_forum_title( $subscription['secondary_item_id'] );
-		}
-
-		return $data;
+		return $items;
 	}
 
 	/**
@@ -531,13 +556,80 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param BP_Subscription $item Subscription object.
+	 * @param array $items Array of subscription list.
 	 *
 	 * @return array
 	 */
-	public function bb_render_forums_subscribed_reply( $item ) {
+	public function bb_render_forums_subscribed_reply( $items ) {
 
-		return array();
+		if ( ! empty( $items ) ) {
+			foreach ( $items as $item_key => $item ) {
+				$subscription = bp_parse_args(
+					$item,
+					array(
+						'id'                => 0,
+						'user_id'           => 0,
+						'item_id'           => 0,
+						'secondary_item_id' => 0,
+					)
+				);
+
+				if (
+					empty( $subscription['id'] ) ||
+					empty( $subscription['item_id'] )
+				) {
+					continue;
+				}
+
+				$data = array(
+					'title'            => bbp_get_topic_title( $subscription['item_id'] ),
+					'description_html' => '',
+					'parent_html'      => '',
+					'icon'             => array(),
+					'link'             => bbp_get_topic_permalink( $subscription['item_id'] ),
+				);
+
+				$data['icon']['full'] = (string) bp_core_fetch_avatar(
+					array(
+						'item_id' => $subscription['user_id'],
+						'html'    => false,
+						'type'    => 'full',
+					)
+				);
+
+				$data['icon']['thumb'] = (string) bp_core_fetch_avatar(
+					array(
+						'item_id' => $subscription['user_id'],
+						'html'    => false,
+					)
+				);
+
+				if ( empty( $data['icon']['full'] ) ) {
+					$data['icon']['full'] = (string) bb_attachments_get_default_profile_group_avatar_image(
+						array(
+							'object' => 'user',
+						)
+					);
+				}
+
+				if ( empty( $data['icon']['thumb'] ) ) {
+					$data['icon']['thumb'] = (string) bb_attachments_get_default_profile_group_avatar_image(
+						array(
+							'object' => 'user',
+							'size'   => 'thumbnail',
+						)
+					);
+				}
+
+				if ( ! empty( $subscription['secondary_item_id'] ) ) {
+					$data['parent_html'] = bbp_get_topic_title( $subscription['secondary_item_id'] );
+				}
+
+				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+			}
+		}
+
+		return $items;
 	}
 
 	/**

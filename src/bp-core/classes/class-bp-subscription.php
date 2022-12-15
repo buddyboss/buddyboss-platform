@@ -68,17 +68,62 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		public $date_recorded;
 
 		/**
+		 * Title of the subscription item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @var string
+		 */
+		public $title;
+
+		/**
+		 * Description of the subscription item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @var string
+		 */
+		public $description_html;
+
+		/**
+		 * Parent of the subscription item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @var string
+		 */
+		public $parent_html;
+
+		/**
+		 * Image of the subscription item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @var string
+		 */
+		public $icon;
+
+		/**
+		 * Link of the subscription item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @var string
+		 */
+		public $link;
+
+		/**
 		 * Constructor method.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int|null $id   Optional. If the ID of an existing subscriptions is provided,
-		 *                       the object will be pre-populated with info about that subscriptions.
+		 * @param int|null $id              Optional. If the ID of an existing subscriptions is provided,
+		 *                                  the object will be pre-populated with info about that subscriptions.
+		 * @param bool     $populate_extras Whether to fetch extra information. Default: true.
 		 */
-		public function __construct( $id = null ) {
+		public function __construct( $id = null, $populate_extras = true ) {
 			if ( ! empty( $id ) ) {
 				$this->id = (int) $id;
 				$this->populate();
+
+				if ( ! empty( $populate_extras ) ) {
+					$this->populate_extras();
+				}
 			}
 		}
 
@@ -131,6 +176,42 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			$this->item_id           = (int) $subscription->item_id;
 			$this->secondary_item_id = (int) $subscription->secondary_item_id;
 			$this->date_recorded     = $subscription->date_recorded;
+		}
+
+		/**
+		 * Populates extra fields such as render data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function populate_extras() {
+
+			if ( ! empty( $this->type ) ) {
+				return;
+			}
+
+			$type_data = bb_register_subscriptions_types( $this->type );
+
+			if (
+				! empty( $type_data ) &&
+				! empty( $type_data['items_callback'] ) &&
+				is_callable( $type_data['items_callback'] )
+			) {
+				$item_data = call_user_func(
+					$type_data['items_callback'],
+					array(
+						'id'                => $this->id,
+						'user_id'           => $this->user_id,
+						'item_id'           => $this->item_id,
+						'secondary_item_id' => $this->secondary_item_id,
+					)
+				);
+
+				$this->title            = $item_data->title;
+				$this->description_html = $item_data->description_html;
+				$this->parent_html      = $item_data->parent_html;
+				$this->icon             = $item_data->icon;
+				$this->link             = $item_data->link;
+			}
 		}
 
 		/**
@@ -528,9 +609,33 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 					}
 				}
 
-				$paged_subscriptions = array();
+				$all_subscriptions = array();
 				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
-					$paged_subscriptions[] = new BP_Subscription( $paged_subscription_id );
+					$all_subscriptions[] = new BP_Subscription( $paged_subscription_id, false );
+				}
+
+				$present_types = array();
+				if ( ! empty( $all_subscriptions ) ) {
+					foreach ( $all_subscriptions as $additional_subscription ) {
+						$present_types[ $additional_subscription->type ][] = (array) $additional_subscription;
+					}
+				}
+
+				$paged_subscriptions = array();
+				if ( ! empty( $present_types ) ) {
+					foreach ( $present_types as $type => $items ) {
+
+						$type_data = bb_register_subscriptions_types( $type );
+
+						if (
+							! empty( $type_data ) &&
+							! empty( $type_data['items_callback'] ) &&
+							is_callable( $type_data['items_callback'] )
+						) {
+							$items_data          = call_user_func( $type_data['items_callback'], $items );
+							$paged_subscriptions = array_merge( $paged_subscriptions, $items_data );
+						}
+					}
 				}
 
 				if ( 'all' !== $r['fields'] ) {
