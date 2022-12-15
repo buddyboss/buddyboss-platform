@@ -200,7 +200,7 @@ function bb_get_subscriptions_types() {
 		if ( ! empty( $all_subscriptions_types ) ) {
 			foreach ( $all_subscriptions_types as $type ) {
 				if ( bb_get_modern_notification_admin_settings_is_enabled( $type['notification_type'] ) ) {
-					$types[ $type['subscription_type'] ] = $type['label'];
+					$types[ $type['subscription_type'] ] = $type['label']['plural'];
 				}
 			}
 		}
