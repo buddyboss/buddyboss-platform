@@ -43,7 +43,7 @@ $course_price      = @$meta['sfwd-courses_course_price'];
 			<div class="entry-summary">
 				<?php
 				if ( get_the_excerpt( $course_id ) ) {
-					echo mb_strimwidth( get_the_excerpt( $course_id ), 0, 100 ) . '...';
+					echo wp_kses_post( get_the_excerpt( $course_id ) );
 				}
 				?>
 			</div>
