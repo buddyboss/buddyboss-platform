@@ -582,8 +582,6 @@ function bb_activity_followers_add_notification( $activity, $followers_user ) {
 	// Specify the Notification type.
 	$component_action = 'bb_activity_following_post';
 
-	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
-
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
@@ -623,8 +621,6 @@ function bb_activity_followers_add_notification( $activity, $followers_user ) {
 			);
 		}
 	}
-
-	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 
 }
 add_action( 'bb_activity_followers_notification', 'bb_activity_followers_add_notification', 10, 3 );
