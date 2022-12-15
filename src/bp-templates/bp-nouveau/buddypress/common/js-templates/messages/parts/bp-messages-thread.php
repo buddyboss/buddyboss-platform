@@ -223,22 +223,20 @@
 				<div class="typing-indicator bp-hide"></div>
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 					<span class="thread-excerpt">
-						<span class="last-message-sender">
-							<#
-							var checkedContent = data.content.replace(/<\/?[^>]+(>|$)/g, '').replace(/^\s+|\s+$/gm,'');
-							if ( data.sender_is_you && '' !== checkedContent ) { #>
-								<?php esc_html_e( 'You', 'buddyboss' ); ?>:
-							<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
-								<?php esc_html_e( 'You', 'buddyboss' ); ?>
-							<# } else { #>
-								<# if ( senderName && '' !== checkedContent ) { #>
-									{{ senderName }}:
-								<# } else if ( senderName && '' === checkedContent )  { #>
-									{{ senderName }}
-								<# } #>
+						<#
+						var checkedContent = data.content.replace(/<\/?[^>]+(>|$)/g, '').replace(/^\s+|\s+$/gm,'');
+						if ( data.sender_is_you && '' !== checkedContent ) { #>
+							<span class="last-message-sender"><?php esc_html_e( 'You', 'buddyboss' ); ?>:</span>
+						<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
+							<span class="last-message-sender"><?php esc_html_e( 'You', 'buddyboss' ); ?></span>
+						<# } else { #>
+							<# if ( senderName && '' !== checkedContent ) { #>
+								<span class="last-message-sender">{{ senderName }}:</span>
+							<# } else if ( senderName && '' === checkedContent )  { #>
+								<span class="last-message-sender">{{ senderName }}</span>
 							<# } #>
-							</span>
-						{{{data.excerpt}}}
+						<# } #>
+						<span class="last-message-step">{{{data.excerpt}}}</span>
 					</span>
 				<# } #>
 				<div class="thread-date">

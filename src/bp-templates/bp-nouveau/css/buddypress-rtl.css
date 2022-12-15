@@ -9652,6 +9652,10 @@ div.profile_completion_wrap .progress_text_wrap {
   right: 17px;
 }
 
+#message-threads .bp-message-link .last-message-sender + .last-message-step .last-message-step__media {
+  text-transform: lowercase;
+}
+
 #message-threads .bp-message-link:hover .thread-multiple-avatar img.avatar,
 #message-threads .current .bp-message-link .thread-multiple-avatar img.avatar {
   border-color: #f5f6f7;

@@ -264,6 +264,13 @@
 				}
 			}
 		}
+
+		.last-message-sender + .last-message-step {
+
+			.last-message-step__media {
+				text-transform: lowercase;
+			}
+		}
 	}
 
 	.bp-message-link:hover,
