@@ -58,24 +58,28 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		$this->register_notification_group(
-			'forums',
-			esc_html__( 'Discussion Forums', 'buddyboss' ),
-			esc_html__( 'Discussion Forums', 'buddyboss' ),
-			15
-		);
 
-		// Creates discussion in a forum you are subscribed.
-		$this->register_notification_for_forums_following_topic();
+		if ( function_exists( 'bbp_is_subscriptions_active' ) && true == bbp_is_subscriptions_active() ) {
+			$this->register_notification_group(
+				'forums',
+				esc_html__( 'Discussion Forums', 'buddyboss' ),
+				esc_html__( 'Discussion Forums', 'buddyboss' ),
+				15
+			);
 
-		// Replies to a discussion you are subscribed.
-		$this->register_notification_for_forums_following_reply();
+			// Creates discussion in a forum you are subscribed.
+			$this->register_notification_for_forums_following_topic();
 
-		$this->register_notification_filter(
-			esc_html__( 'Forum subscriptions', 'buddyboss' ),
-			array( 'bb_forums_subscribed_discussion', 'bb_forums_subscribed_reply' ),
-			110
-		);
+			// Replies to a discussion you are subscribed.
+			$this->register_notification_for_forums_following_reply();
+
+			$this->register_notification_filter(
+				esc_html__( 'Forum subscriptions', 'buddyboss' ),
+				array( 'bb_forums_subscribed_discussion', 'bb_forums_subscribed_reply' ),
+				110
+			);
+
+		}
 	}
 
 	/**
@@ -395,12 +399,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			$notification = bp_notifications_get_notification( $notification_id );
 			$topic_id     = bbp_get_topic_id( $item_id );
 			$topic_title  = '"' . bp_create_excerpt(
-					wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
-					50,
-					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
-					)
-				) . '"';
+				wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			) . '"';
 
 			$topic_title = str_replace( '&hellip;"', '&hellip;', $topic_title );
 
