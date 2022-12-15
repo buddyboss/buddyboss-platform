@@ -552,7 +552,10 @@ abstract class BP_Core_Notification_Abstract {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'label'              => '',
+				'label'              => array(
+					'singular' => '',
+					'plural'   => '',
+				),
 				'subscription_type'  => '',
 				'items_callback'     => '',
 				'send_callback'      => '',
@@ -566,7 +569,10 @@ abstract class BP_Core_Notification_Abstract {
 		}
 
 		$this->subscriptions[ $r['subscription_type'] ] = array(
-			'label'              => ( ! empty( $r['label'] ) ? $r['label'] : $r['subscription_type'] ),
+			'label'              => array(
+				'singular' => ( ! empty( $r['label']['singular'] ) ? $r['label']['singular'] : $r['subscription_type'] ),
+				'plural'   => $r['label']['plural'],
+			),
 			'subscription_type'  => $r['subscription_type'],
 			'items_callback'     => $r['items_callback'],
 			'send_callback'      => $r['send_callback'],

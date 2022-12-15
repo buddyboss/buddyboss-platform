@@ -119,7 +119,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		$this->bb_register_subscription_type(
 			array(
-				'label'              => __( 'Discussions', 'buddyboss' ),
+				'label'              => array(
+					'singular' => __( 'Discussion', 'buddyboss' ),
+					'plural'   => __( 'Discussions', 'buddyboss' ),
+				),
 				'subscription_type'  => 'topic',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_reply' ),
 				'send_callback'      => array( $this, 'bb_send_forums_subscribed_reply' ),
@@ -167,7 +170,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		$this->bb_register_subscription_type(
 			array(
-				'label'              => __( 'Forums', 'buddyboss' ),
+				'label'              => array(
+					'singular' => __( 'Forum', 'buddyboss' ),
+					'plural'   => __( 'Forums', 'buddyboss' ),
+				),
 				'subscription_type'  => 'forum',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_discussion' ),
 				'send_callback'      => array( $this, 'bb_send_forums_subscribed_discussion' ),
@@ -487,6 +493,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function bb_render_forums_subscribed_discussion( $items ) {
+		$type_data = bb_register_subscriptions_types( 'forum' );
 
 		if ( ! empty( $items ) ) {
 			foreach ( $items as $item_key => $item ) {
@@ -507,47 +514,72 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					continue;
 				}
 
-				$data = array(
-					'title'            => bbp_get_forum_title( $subscription['item_id'] ),
-					'description_html' => '',
-					'parent_html'      => '',
-					'icon'             => array(),
-					'link'             => bbp_get_forum_permalink( $subscription['item_id'] ),
+				$default_forum_full_image  = bb_attachments_get_default_profile_group_avatar_image(
+					array(
+						'object' => 'user',
+					)
+				);
+				$default_forum_thumb_image = bb_attachments_get_default_profile_group_avatar_image(
+					array(
+						'object' => 'user',
+					)
 				);
 
-				$data['icon']['full'] = (string) (
-				function_exists( 'bbp_get_forum_thumbnail_src' )
-					? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'full', 'full' )
-					: get_the_post_thumbnail_url( $subscription['item_id'], 'full' )
-				);
+				// Get the post to check the forum is exists or not?
+				$forum = get_post( $subscription['item_id'] );
 
-				$data['icon']['thumb'] = (string) (
-				function_exists( 'bbp_get_forum_thumbnail_src' )
-					? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'thumbnail', 'large' )
-					: get_the_post_thumbnail_url( $subscription['item_id'], 'thumbnail' )
-				);
-
-				if ( empty( $data['icon']['full'] ) ) {
-					$data['icon']['full'] = bb_attachments_get_default_profile_group_avatar_image(
-						array(
-							'object' => 'user',
-						)
+				$data = array();
+				if ( empty( $forum ) || is_wp_error( $forum ) ) {
+					$data['link']          = '';
+					$data['icon']['full']  = $default_forum_full_image;
+					$data['icon']['thumb'] = $default_forum_thumb_image;
+					$data['title']         = sprintf(
+					/* translators: Subscription label. */
+						__( 'Deleted %s', 'buddyboss' ),
+						$type_data['label']['singular']
 					);
-				}
+				} else {
+					$data['title'] = bbp_get_forum_title( $subscription['item_id'] );
+					$data['link']  = bbp_get_forum_permalink( $subscription['item_id'] );
 
-				if ( empty( $data['icon']['thumb'] ) ) {
-					$data['icon']['thumb'] = bb_attachments_get_default_profile_group_avatar_image(
-						array(
-							'object' => 'user',
-							'size'   => 'thumbnail',
-						)
+					$data['icon']['full'] = (string) (
+						function_exists( 'bbp_get_forum_thumbnail_src' )
+						? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'full', 'full' )
+						: get_the_post_thumbnail_url( $subscription['item_id'], 'full' )
 					);
+
+					$data['icon']['thumb'] = (string) (
+						function_exists( 'bbp_get_forum_thumbnail_src' )
+						? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'thumbnail', 'large' )
+						: get_the_post_thumbnail_url( $subscription['item_id'], 'thumbnail' )
+					);
+
+					if ( empty( $data['icon']['full'] ) ) {
+						$data['icon']['full'] = $default_forum_full_image;
+					}
+
+					if ( empty( $data['icon']['thumb'] ) ) {
+						$data['icon']['thumb'] = $default_forum_thumb_image;
+					}
+
+					if ( ! empty( $subscription['secondary_item_id'] ) ) {
+						$data['parent_html'] = '<strong>' . bbp_get_forum_title( $subscription['secondary_item_id'] ) . '</strong>';
+					}
 				}
 
-				if ( ! empty( $subscription['secondary_item_id'] ) ) {
-					$data['parent_html'] = bbp_get_forum_title( $subscription['secondary_item_id'] );
-				}
+				// Parse the data.
+				$data = bp_parse_args(
+					$data,
+					array(
+						'title'            => '',
+						'description_html' => '',
+						'parent_html'      => '',
+						'icon'             => array(),
+						'link'             => '',
+					)
+				);
 
+				// Reassign the extra data to exist object.
 				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
 			}
 		}
@@ -565,6 +597,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function bb_render_forums_subscribed_reply( $items ) {
+		$type_data = bb_register_subscriptions_types( 'topic' );
 
 		if ( ! empty( $items ) ) {
 			foreach ( $items as $item_key => $item ) {
@@ -585,49 +618,80 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					continue;
 				}
 
-				$data = array(
-					'title'            => bbp_get_topic_title( $subscription['item_id'] ),
-					'description_html' => '',
-					'parent_html'      => '',
-					'icon'             => array(),
-					'link'             => bbp_get_topic_permalink( $subscription['item_id'] ),
-				);
-
-				$data['icon']['full'] = (string) bp_core_fetch_avatar(
+				$default_user_full_image  = bb_attachments_get_default_profile_group_avatar_image(
 					array(
-						'item_id' => $subscription['user_id'],
-						'html'    => false,
-						'type'    => 'full',
+						'object' => 'user',
+					)
+				);
+				$default_user_thumb_image = bb_attachments_get_default_profile_group_avatar_image(
+					array(
+						'object' => 'user',
+						'size'   => 'thumbnail',
 					)
 				);
 
-				$data['icon']['thumb'] = (string) bp_core_fetch_avatar(
+				// Get the post to check the forum is exists or not?
+				$topic = get_post( $subscription['item_id'] );
+
+				$data = array();
+				if ( empty( $topic ) || is_wp_error( $topic ) ) {
+					$data['link']          = '';
+					$data['icon']['full']  = $default_user_full_image;
+					$data['icon']['thumb'] = $default_user_thumb_image;
+					$data['title']         = sprintf(
+					/* translators: Subscription label. */
+						__( 'Deleted %s', 'buddyboss' ),
+						$type_data['label']['singular']
+					);
+				} else {
+					$data['title'] = bbp_get_topic_title( $subscription['item_id'] );
+					$data['link']  = bbp_get_topic_permalink( $subscription['item_id'] );
+
+					$data['icon']['full'] = (string) bp_core_fetch_avatar(
+						array(
+							'item_id' => $subscription['user_id'],
+							'html'    => false,
+							'type'    => 'full',
+						)
+					);
+
+					$data['icon']['thumb'] = (string) bp_core_fetch_avatar(
+						array(
+							'item_id' => $subscription['user_id'],
+							'html'    => false,
+						)
+					);
+
+					if ( empty( $data['icon']['full'] ) ) {
+						$data['icon']['full'] = $default_user_full_image;
+					}
+
+					if ( empty( $data['icon']['thumb'] ) ) {
+						$data['icon']['thumb'] = $default_user_thumb_image;
+					}
+
+					if ( ! empty( $subscription['user_id'] ) ) {
+						$data['description_html'] = esc_html__( 'Posted by', 'buddyboss' ) . ' <strong>' . bp_core_get_user_displayname( $subscription['user_id'] ) . '</strong>';
+					}
+
+					// Get topic forum.
+					$forum_id = bbp_get_topic_forum_id( $subscription['item_id'] );
+					if ( ! empty( $forum_id ) ) {
+						$data['description_html'] .= ' ' . esc_html__( 'in', 'buddyboss' ) . ' <strong>' . bbp_get_forum_title( $forum_id ) . '</strong>';
+					}
+				}
+
+				// Parse the data.
+				$data = bp_parse_args(
+					$data,
 					array(
-						'item_id' => $subscription['user_id'],
-						'html'    => false,
+						'title'            => '',
+						'description_html' => '',
+						'parent_html'      => '',
+						'icon'             => array(),
+						'link'             => '',
 					)
 				);
-
-				if ( empty( $data['icon']['full'] ) ) {
-					$data['icon']['full'] = (string) bb_attachments_get_default_profile_group_avatar_image(
-						array(
-							'object' => 'user',
-						)
-					);
-				}
-
-				if ( empty( $data['icon']['thumb'] ) ) {
-					$data['icon']['thumb'] = (string) bb_attachments_get_default_profile_group_avatar_image(
-						array(
-							'object' => 'user',
-							'size'   => 'thumbnail',
-						)
-					);
-				}
-
-				if ( ! empty( $subscription['secondary_item_id'] ) ) {
-					$data['parent_html'] = bbp_get_topic_title( $subscription['secondary_item_id'] );
-				}
 
 				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
 			}
