@@ -487,13 +487,13 @@ function bb_delete_subscription( $subscription_id ) {
 function bb_is_enabled_modern_subscriptions( $type = '' ) {
 	$is_enabled = false;
 
-	if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+	if ( ! bb_enabled_legacy_email_preference() ) {
 		switch ( $type ) {
 			case 'forum':
-				$is_enabled = bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' );
+				$is_enabled = function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' );
 				break;
 			case 'topic':
-				$is_enabled = bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' );
+				$is_enabled = function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' );
 				break;
 			default:
 				if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) || bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) ) {
@@ -520,11 +520,10 @@ function bb_is_enabled_subscription( $type = '' ) {
 
 	if (
 		! bb_enabled_legacy_email_preference() &&
-		bp_is_active( 'notifications' ) &&
 		bb_is_enabled_modern_subscriptions( $type )
 	) {
 		$is_enabled = true;
-	} elseif ( bb_enabled_legacy_email_preference() && in_array( $type, array( 'forum', 'topic' ), true ) && function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
+	} elseif ( ( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) ) && in_array( $type, array( 'forum', 'topic' ), true ) && function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
 		$is_enabled = true;
 	}
 

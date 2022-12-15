@@ -642,6 +642,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 					$paged_subscriptions = array_column( $paged_subscriptions, $r['fields'] );
 				}
 			}
+
 			// Set in response array.
 			$results['subscriptions'] = $paged_subscriptions;
 

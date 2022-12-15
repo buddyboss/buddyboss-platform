@@ -658,7 +658,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			)
 		);
 
-		if ( empty( $r['user_ids'] ) ) {
+		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
 			return;
 		}
 
