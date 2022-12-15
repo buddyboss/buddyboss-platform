@@ -11512,6 +11512,15 @@ body .bp-messages-user-threads {
 .subscription-items .subscription-item_image {
   height: 40px;
   margin-left: 12px;
+  position: relative;
+}
+
+.subscription-items .subscription-item_image:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 1.6875px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
 }
 
 .subscription-items .subscription-item_image img {
@@ -11579,6 +11588,8 @@ body .bp-messages-user-threads {
 
 .buddypress .buddypress-wrap .subscription-items .subscription-item_remove i {
   font-size: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .buddypress .buddypress-wrap .subscription-items .subscription-item_remove:focus, .buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover {

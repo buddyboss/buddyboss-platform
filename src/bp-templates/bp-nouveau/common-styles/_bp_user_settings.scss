@@ -503,6 +503,15 @@
 	.subscription-item_image {
 		height: 40px;
 		margin-right: 12px;
+		position: relative;
+
+		&:before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			box-shadow: inset 0 0 1.6875px rgba(0, 0, 0, 0.08);
+			border-radius: 4px;
+		}
 
 		img {
 			border-radius: 4px;
@@ -564,6 +573,8 @@
 
 			i {
 				font-size: 20px;
+				display: flex;
+				align-items: center;
 			}
 
 			&:focus,
