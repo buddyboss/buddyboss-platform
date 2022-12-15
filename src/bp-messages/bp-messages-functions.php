@@ -64,6 +64,7 @@ function messages_new_message( $args = '' ) {
 			'group_thread'  => false,
 			'error_type'    => 'bool',
 			'send_at'       => false,
+			'mark_read'     => false,
 		),
 		'messages_new_message'
 	);
@@ -162,6 +163,7 @@ function messages_new_message( $args = '' ) {
 	$message->date_sent    = $r['date_sent'];
 	$message->is_hidden    = $r['is_hidden'];
 	$message->mark_visible = $r['mark_visible'];
+	$message->mark_read    = $r['mark_read'];
 
 	$new_reply       = false;
 	$is_group_thread = isset( $r['group_thread'] ) ? (bool) $r['group_thread'] : false;
