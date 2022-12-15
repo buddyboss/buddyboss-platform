@@ -541,7 +541,7 @@ function bb_activity_add_notification_metas( $notification ) {
 		empty( $notification->id ) ||
 		empty( $notification->item_id ) ||
 		empty( $notification->component_action ) ||
-		! in_array( $notification->component_action, array( 'bb_new_mention', 'bb_activity_comment', 'bb_activity_following_post' ), true )
+		! in_array( $notification->component_action, array( 'bb_new_mention', 'bb_activity_comment' ), true )
 	) {
 		return;
 	}
