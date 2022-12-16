@@ -210,10 +210,6 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 		$component_action = 'bb_new_mention';
 	}
 
-	if ( false === bb_is_notification_enabled( $receiver_user_id, $component_action, 'web' ) ) {
-		return;
-	}
-
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 
 	bp_notifications_add_notification(
