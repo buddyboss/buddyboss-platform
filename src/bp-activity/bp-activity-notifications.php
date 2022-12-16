@@ -569,3 +569,4 @@ function bb_activity_add_notification_metas( $notification ) {
 	}
 }
 
+
