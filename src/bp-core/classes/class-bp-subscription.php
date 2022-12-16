@@ -446,15 +446,19 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		 *                                            Default: null (no limit).
 		 *     @type int          $page               Optional. Page offset of results to return.
 		 *     @type array|string $include            Optional. Array or comma-separated list of subscription IDs.
-		 *                                            Results will exclude the listed subscriptions. Default: false.
+		 *                                            Results will include the listed subscriptions. Default: false.
 		 *     @type array|string $exclude            Optional. Array or comma-separated list of subscription IDs.
 		 *                                            Results will exclude the listed subscriptions. Default: false.
 		 *     @type string       $fields             Which fields to return. Specify 'id' to fetch a list of IDs.
 		 *                                            Default: 'all' (return BP_Subscription objects).
-		 *     @type bool         $count           Optional. Fetch total count of all subscriptions matching non-
+		 *     @type array|string $include_items      Optional. Array or comma-separated list of subscription item IDs.
+		 *                                            Results will include the listed subscriptions. Default: false.
+		 *     @type array|string $exclude_items      Optional. Array or comma-separated list of subscription item IDs.
+		 *                                            Results will exclude the listed subscriptions. Default: false.
+		 *     @type bool         $count              Optional. Fetch total count of all subscriptions matching non-
 		 *                                            paginated query params when it false.
 		 *                                            Default: true.
-		 *     @type bool         $cache           Optional. Fetch the fresh result instead of cache when it true.
+		 *     @type bool         $cache              Optional. Fetch the fresh result instead of cache when it true.
 		 *                                            Default: false.
 		 * }
 		 * @return array {
@@ -479,6 +483,8 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				'include'           => false,
 				'exclude'           => false,
 				'fields'            => 'all',
+				'include_items'     => false,
+				'exclude_items'     => false,
 				'count'             => true,
 				'cache'             => true,
 			);
@@ -531,6 +537,16 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			if ( ! empty( $r['exclude'] ) ) {
 				$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
 				$where_conditions['exclude'] = "sc.id NOT IN ({$exclude})";
+			}
+
+			if ( ! empty( $r['include_items'] ) ) {
+				$include                           = implode( ',', wp_parse_id_list( $r['include_items'] ) );
+				$where_conditions['include_items'] = "sc.item_id IN ({$include})";
+			}
+
+			if ( ! empty( $r['exclude_items'] ) ) {
+				$exclude                           = implode( ',', wp_parse_id_list( $r['exclude_items'] ) );
+				$where_conditions['exclude_items'] = "sc.item_id NOT IN ({$exclude})";
 			}
 
 			/* Order/orderby ********************************************/
