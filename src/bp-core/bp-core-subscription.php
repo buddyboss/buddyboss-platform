@@ -190,9 +190,11 @@ function bb_register_subscriptions_types( $type = '' ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param bool $singular Return the singular label if true otherwise plural.
+ *
  * @return array
  */
-function bb_get_subscriptions_types() {
+function bb_get_subscriptions_types( $singular = false ) {
 	$types                   = array();
 	$all_subscriptions_types = bb_register_subscriptions_types();
 
@@ -200,14 +202,14 @@ function bb_get_subscriptions_types() {
 		if ( ! empty( $all_subscriptions_types ) ) {
 			foreach ( $all_subscriptions_types as $type ) {
 				if ( bb_get_modern_notification_admin_settings_is_enabled( $type['notification_type'] ) ) {
-					$types[ $type['subscription_type'] ] = $type['label']['plural'];
+					$types[ $type['subscription_type'] ] = ( $singular ? $type['label']['singular'] : $type['label']['plural'] );
 				}
 			}
 		}
 	} else {
 		if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
-			$types['forum'] = __( 'Forums', 'buddyboss' );
-			$types['topic'] = __( 'Discussions', 'buddyboss' );
+			$types['forum'] = ( $singular ? __( 'Forum', 'buddyboss' ) : __( 'Forums', 'buddyboss' ) );
+			$types['topic'] = ( $singular ? __( 'Discussion', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) );
 		}
 	}
 
