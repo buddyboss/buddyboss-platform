@@ -514,16 +514,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					continue;
 				}
 
-				$default_forum_full_image  = bb_attachments_get_default_profile_group_avatar_image(
-					array(
-						'object' => 'user',
-					)
-				);
-				$default_forum_thumb_image = bb_attachments_get_default_profile_group_avatar_image(
-					array(
-						'object' => 'user',
-					)
-				);
+				$default_forum_full_image  = bb_get_forum_default_image();
+				$default_forum_thumb_image = bb_get_forum_default_image( 'thumb' );
 
 				// Get the post to check the forum is exists or not?
 				$forum = get_post( $subscription['item_id'] );
