@@ -2320,14 +2320,14 @@ class BP_Email_Tokens {
 								<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 									<tbody>
 									<tr>
-										<td height="30px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+										<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
 									</tr>
 									<tr>
 										<td align="center">
 											<table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
 												<tbody>
 												<tr>
-													<td width="88%" style="vertical-align: top;padding-bottom:20px;">
+													<td width="88%" style="vertical-align: top;">
 														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 															<?php
 															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ) ) ) {
@@ -2390,7 +2390,7 @@ class BP_Email_Tokens {
 															)
 														) {
 															?>
-															<div class="bb-activity-media-wrap" style="padding: 10px 0; width: 250px; height: 200px;">
+															<div class="bb-activity-media-wrap" style="padding: 15px 0; width: 250px; height: 200px;">
 																<?php
 																while ( bp_media() ) {
 																	bp_the_media();
@@ -2427,7 +2427,7 @@ class BP_Email_Tokens {
 															)
 														) {
 															?>
-															<div class="bb-activity-media-wrap" style="padding: 10px 0; width: 250px;">
+															<div class="bb-activity-media-wrap" style="padding: 15px 0; width: 250px;">
 																<?php
 																while ( bp_video() ) {
 																	bp_the_video();
@@ -2466,7 +2466,7 @@ class BP_Email_Tokens {
 															)
 														) {
 															?>
-															<div class="bb-activity-media-wrap">
+															<div class="bb-activity-media-wrap" style="padding: 15px 0 15px 0; width: 250px;">
 																<?php
 																while ( bp_document() ) {
 																	bp_the_document();
@@ -2494,7 +2494,7 @@ class BP_Email_Tokens {
 
 														if ( ! empty( $gif_data ) ) {
 															?>
-															<div>
+															<div style="padding: 15px 0;">
 																<div>
 																	<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" class="gif-play-button">
 																		<?php if ( is_int( $gif_data['still'] ) ) { ?>
@@ -2511,7 +2511,7 @@ class BP_Email_Tokens {
 													</td>
 												</tr>
 												<tr>
-													<td height="20px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+													<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
 												</tr>
 												</tbody>
 											</table>
