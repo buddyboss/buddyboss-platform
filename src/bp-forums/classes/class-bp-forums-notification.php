@@ -753,7 +753,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $email_tokens );
 			}
 
-			if ( bp_is_active( 'notifications' ) ) {
+			if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
 				bp_notifications_add_notification(
 					array(
 						'user_id'           => $user_id,
@@ -832,7 +832,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $email_tokens );
 			}
 
-			if ( bp_is_active( 'notifications' ) ) {
+			if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
 				$reply_to_id = bbp_get_reply_to( $reply_id );
 				if ( ! empty( $reply_to_id ) ) {
 					$reply_to_author_id = bbp_get_reply_author_id( $reply_to_id );
