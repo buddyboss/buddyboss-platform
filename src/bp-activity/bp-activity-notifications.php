@@ -581,7 +581,7 @@ function bb_activity_add_notification_metas( $notification ) {
  * @param BP_Activity_Activity $activity       The original activity.
  * @param array                $followers_user Get followers for current user.
  */
-function bb_activity_followers_add_notification( $activity, $followers_user ) {
+function bb_activity_add_notification_to_following_post( $activity, $followers_user ) {
 
 	if ( empty( $followers_user ) ) {
 		return;
@@ -630,4 +630,4 @@ function bb_activity_followers_add_notification( $activity, $followers_user ) {
 	}
 
 }
-add_action( 'bb_activity_followers_notification', 'bb_activity_followers_add_notification', 10, 3 );
+add_action( 'bb_activity_notification_to_following_post', 'bb_activity_add_notification_to_following_post', 10, 3 );

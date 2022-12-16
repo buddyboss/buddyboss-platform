@@ -5828,7 +5828,7 @@ function bb_bp_get_add_follow_button( $button ) {
 }
 
 /**
- * Helper method to map action arguments to function parameters.
+ * Function will send notification to followers when activity posted.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -5836,7 +5836,7 @@ function bb_bp_get_add_follow_button( $button ) {
  * @param int    $user_id     ID of the user posting the activity update.
  * @param int    $activity_id ID of the activity item being updated.
  */
-function bb_activity_send_email_to_followers( $content, $user_id, $activity_id ) {
+function bb_activity_send_email_to_following_post( $content, $user_id, $activity_id ) {
 	global $bp_activity_edit;
 
 	// Return if $activity_id empty or edit activity.
@@ -5958,14 +5958,14 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 	}
 
 	/**
-	 * Fires at the point that notifications should be sent for newly created activity posts.
+	 * Fires at the point that notifications should be sent to followers for newly created activity posts.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param BP_Activity_Activity $activity           The original activity.
 	 * @param array                $followers_user_arr Get followers for current user.
 	 */
-	do_action( 'bb_activity_followers_notification', $activity, $followers_user_arr );
+	do_action( 'bb_activity_notification_to_following_post', $activity, $followers_user_arr );
 }
 
-add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_followers', 10, 3 );
+add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
