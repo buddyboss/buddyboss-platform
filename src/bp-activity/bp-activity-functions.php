@@ -5858,7 +5858,7 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 	}
 
 	$min_count  = (int) apply_filters( 'bb_email_queue_min_count', 20 );
-	$usernames  = bp_activity_find_mentions( $content );
+	$usernames  = bp_activity_do_mentions() ? bp_activity_find_mentions( $content ) : array();
 	$parse_args = array(
 		'activity'  => $activity,
 		'usernames' => $usernames,
@@ -5909,7 +5909,7 @@ function bb_activity_following_post_notification( $args ) {
 		$args,
 		array(
 			'activity'  => '',
-			'usernames' => '',
+			'usernames' => array(),
 			'item_id'   => '',
 			'user_ids'  => array(),
 		)
