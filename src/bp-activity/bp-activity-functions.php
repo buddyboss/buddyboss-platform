@@ -5902,6 +5902,7 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 	foreach ( (array) $followers_user as $key => $followers_user_id ) {
 		$followers_user_id = (int) $followers_user_id;
 
+		// Condition will consider only those users to whom the notification will be sent.
 		if (
 			(
 				false === (bool) bb_is_notification_enabled( $followers_user_id, 'bb_new_mention', 'web' ) &&
@@ -5916,10 +5917,12 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 			$followers_user_arr[] = $followers_user_id;
 		}
 
+		// It will check some condition to following notification disable, user blocked , mention notification enable
+		// and mention available in post for follower user.
 		if (
 			(
 				false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
-			    false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id )
+				false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id )
 			) ||
 			(
 				true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) &&
