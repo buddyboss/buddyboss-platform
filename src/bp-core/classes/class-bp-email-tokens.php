@@ -2327,7 +2327,7 @@ class BP_Email_Tokens {
 													<td width="88%" style="vertical-align: top;">
 														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 															<?php
-															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ) ) ) {
+															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
 																$activity->content = '';
 															}
 															echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );

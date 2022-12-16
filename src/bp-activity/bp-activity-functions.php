@@ -5857,15 +5857,68 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 		return;
 	}
 
-	$poster_name   = bp_core_get_user_displayname( $user_id );
-	$activity_link = bp_activity_get_permalink( $activity->id );
+	$min_count  = (int) apply_filters( 'bb_email_queue_min_count', 20 );
+	$usernames  = bp_activity_find_mentions( $content );
+	$parse_args = array(
+		'activity'  => $activity,
+		'usernames' => $usernames,
+		'item_id'   => $user_id,
+	);
 
-	// check if it has enough recipients to use batch emails.
-	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $followers_user );
+	if ( $min_count && count( $follower_users ) > $min_count ) {
+		global $bp_background_updater;
+		$chunk_user_ids = array_chunk( $follower_users, $min_count );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $key => $user_ids ) {
+				$parse_args['user_ids'] = $user_ids;
+				$bp_background_updater->data(
+					array(
+						array(
+							'callback' => 'bb_activity_following_post_notification',
+							'args'     => array( $parse_args ),
+						),
+					)
+				);
 
-	$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-	$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+				$bp_background_updater->save();
+			}
+		}
+
+		$bp_background_updater->dispatch();
+	} else {
+		$parse_args['user_ids'] = $follower_users;
+		call_user_func(
+			'bb_activity_following_post_notification',
+			$parse_args
+		);
+	}
+}
+
+add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
+
+
+function bb_activity_following_post_notification( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'activity'  => '',
+			'usernames' => '',
+			'item_id'   => '',
+			'user_ids'  => array(),
+		)
+	);
+
+	if ( empty( $r['user_ids'] ) || empty( $r['activity'] ) ) {
+		return;
+	}
+
+	$activity_id      = $r['activity']->id;
+	$activity_user_id = ! empty( $r['item_id'] ) ? $r['item_id'] : $r['activity']->user_id;
+	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
+	$activity_link    = bp_activity_get_permalink( $activity_id );
+	$media_ids        = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+	$document_ids     = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
 	if ( $media_ids ) {
 		$media_ids = array_filter( explode( ',', $media_ids ) );
@@ -5892,32 +5945,27 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 		$text = __( 'an update', 'buddyboss' );
 	}
 
-	// Try to find mentions.
-	$usernames         = bp_activity_find_mentions( $content );
-	$follower_user_ids = $follower_users;
-
 	$args = array(
 		'tokens' => array(
-			'activity'                  => $activity,
-			'activity.type'             => $text,
-			'original_activity.user_id' => $user_id,
-			'poster.name'               => $poster_name,
-			'activity.url'              => esc_url( $activity_link ),
+			'activity'      => $r['activity'],
+			'activity.type' => $text,
+			'poster.name'   => $poster_name,
+			'activity.url'  => esc_url( $activity_link ),
 		),
 	);
 
-	foreach ( (array) $follower_users as $key => $follower_user_id ) {
-		$follower_user_id = (int) $follower_user_id;
+	foreach ( $r['user_ids'] as $key => $user_id ) {
+		$user_id = (int) $user_id;
 
-		if ( ! empty( $usernames ) && isset( $usernames[ $follower_user_id ] ) ) {
+		if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
 			if (
-				true === bb_is_notification_enabled( $follower_user_id, 'bb_new_mention', 'web' ) &&
-				true === bb_is_notification_enabled( $follower_user_id, 'bb_new_mention', 'app' )
+				true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'web' ) &&
+				true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'app' )
 			) {
-				unset( $follower_user_ids[ $key ] );
+				unset( $r['user_ids'][ $key ] );
 			}
 
-			if ( true === bb_is_notification_enabled( $follower_user_id, 'bb_new_mention' ) ) {
+			if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
 				continue;
 			}
 		}
@@ -5925,37 +5973,32 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 		// It will check some condition to following notification disable, user blocked , mention notification enable
 		// and mention available in post for follower user.
 		if (
-			false === bb_is_notification_enabled( $follower_user_id, 'bb_activity_following_post' ) &&
-			false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $follower_user_id, $user_id )
+			false === bb_is_notification_enabled( $user_id, 'bb_activity_following_post' ) &&
+			false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $activity_user_id )
 		) {
 			continue;
 		}
 
 		$unsubscribe_args = array(
-			'user_id'           => $follower_user_id,
+			'user_id'           => $user_id,
 			'notification_type' => 'bb_activity_following_post',
 		);
 
 		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-			bb_email_queue()->add_record( 'new-activity-following', $follower_user_id, $args );
-			// call email background process.
-			bb_email_queue()->bb_email_background_process();
-		} else {
-			bp_send_email( 'new-activity-following', $follower_user_id, $args );
-		}
+		// Send notification email.
+		bp_send_email( 'new-activity-following', $user_id, $args );
+
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => $user_id,
+				'item_id'           => $activity_id,
+				'secondary_item_id' => $activity_user_id,
+				'component_name'    => buddypress()->activity->id,
+				'component_action'  => 'bb_activity_following_post',
+				'date_notified'     => bp_core_current_time(),
+				'is_new'            => 1,
+			)
+		);
 	}
-
-	/**
-	 * Fires at the point that notifications should be sent to followers for newly created activity posts.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param BP_Activity_Activity $activity          The original activity.
-	 * @param array                $follower_user_ids Get followers for current user.
-	 */
-	do_action( 'bb_activity_notification_to_following_post', $activity, $follower_user_ids );
 }
-
-add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
