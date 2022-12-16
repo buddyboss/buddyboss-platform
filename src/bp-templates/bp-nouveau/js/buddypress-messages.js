@@ -5550,6 +5550,11 @@ window.bp = window.bp || {};
 						bp.Nouveau.Messages
 					);
 				}
+
+				var isMobile = window.matchMedia( 'only screen and (max-width: 1080px)' ).matches;
+				if ( isMobile ) {
+					$( '.bp-messages-container' ).addClass( 'bp-compose-message' );
+				}
 			},
 
 			viewMessage: function( thread_id ) {
