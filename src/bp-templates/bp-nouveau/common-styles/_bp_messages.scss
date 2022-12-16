@@ -265,11 +265,8 @@
 			}
 		}
 
-		.last-message-sender + .last-message-step {
-
-			.last-message-step__media {
-				text-transform: lowercase;
-			}
+		.last-message-sender + .last-message-step.has-inline-sender {
+			text-transform: lowercase;
 		}
 	}
 

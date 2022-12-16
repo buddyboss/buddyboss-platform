@@ -2161,9 +2161,9 @@ function bb_get_message_response_object( $message ) {
 			if ( ! empty( $media_ids ) ) {
 				$media_ids = explode( ',', $media_ids );
 				if ( count( $media_ids ) < 2 ) {
-					$excerpt = __( '<span class="last-message-step__media">Sent a photo</span>', 'buddyboss' );
+					$excerpt = __( 'Sent a photo', 'buddyboss' );
 				} else {
-					$excerpt = __( '<span class="last-message-step__media">Sent some photos</span>', 'buddyboss' );
+					$excerpt = __( 'Sent some photos', 'buddyboss' );
 				}
 			}
 		}
@@ -2174,9 +2174,9 @@ function bb_get_message_response_object( $message ) {
 			if ( ! empty( $video_ids ) ) {
 				$video_ids = explode( ',', $video_ids );
 				if ( count( $video_ids ) < 2 ) {
-					$excerpt = __( '<span class="last-message-step__media">Sent a video</span>', 'buddyboss' );
+					$excerpt = __( 'Sent a video', 'buddyboss' );
 				} else {
-					$excerpt = __( '<span class="last-message-step__media">Sent some videos</span>', 'buddyboss' );
+					$excerpt = __( 'Sent some videos', 'buddyboss' );
 				}
 			}
 		}
@@ -2187,9 +2187,9 @@ function bb_get_message_response_object( $message ) {
 			if ( ! empty( $document_ids ) ) {
 				$document_ids = explode( ',', $document_ids );
 				if ( count( $document_ids ) < 2 ) {
-					$excerpt = __( '<span class="last-message-step__media">Sent a document</span>', 'buddyboss' );
+					$excerpt = __( 'Sent a document', 'buddyboss' );
 				} else {
-					$excerpt = __( '<span class="last-message-step__media">Sent some documents</span>', 'buddyboss' );
+					$excerpt = __( 'Sent some documents', 'buddyboss' );
 				}
 			}
 		}
@@ -2198,7 +2198,7 @@ function bb_get_message_response_object( $message ) {
 			$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
-				$excerpt = __( '<span class="last-message-step__media">sent a GIF</span>', 'buddyboss' );
+				$excerpt = __( 'sent a GIF', 'buddyboss' );
 			}
 		}
 	}

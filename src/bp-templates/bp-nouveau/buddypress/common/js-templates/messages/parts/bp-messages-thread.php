@@ -223,20 +223,40 @@
 				<div class="typing-indicator bp-hide"></div>
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 					<span class="thread-excerpt">
-						<#
-						var checkedContent = data.content.replace(/<\/?[^>]+(>|$)/g, '').replace(/^\s+|\s+$/gm,'');
-						if ( data.sender_is_you && '' !== checkedContent ) { #>
-							<span class="last-message-sender"><?php esc_html_e( 'You', 'buddyboss' ); ?>:</span>
-						<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
-							<span class="last-message-sender"><?php esc_html_e( 'You', 'buddyboss' ); ?></span>
-						<# } else { #>
-							<# if ( senderName && '' !== checkedContent ) { #>
-								<span class="last-message-sender">{{ senderName }}:</span>
-							<# } else if ( senderName && '' === checkedContent )  { #>
-								<span class="last-message-sender">{{ senderName }}</span>
+						<span class="last-message-sender">
+							<#
+							var displayName = false;
+							var checkedContent = data.content.replace(/<\/?[^>]+(>|$)/g, '').replace(/^\s+|\s+$/gm,'');
+							if ( data.sender_is_you && '' !== checkedContent ) { 
+								displayName = true;
+								#>
+								<?php esc_html_e( 'You', 'buddyboss' ); ?>:
+							<# } else if ( data.sender_is_you && '' === checkedContent )  { 
+								displayName = true;
+								#>
+								<?php esc_html_e( 'You', 'buddyboss' ); ?>
+							<# } else { #>
+								<# if ( senderName && senderName!== '' && '' !== checkedContent ) { 
+									displayName = true;
+									#>
+									{{ senderName }}:
+								<# } else if ( senderName && senderName!== '' && '' === checkedContent )  { 
+									displayName = true;
+									#>
+									{{ senderName }}
+								<# } #>
 							<# } #>
-						<# } #>
-						<span class="last-message-step">{{{data.excerpt}}}</span>
+							<# 
+							if (displayName = true && (data.sender_is_you || senderName!== '')) {
+								var displayNameCheck = 'has-inline-sender';
+							} else {
+								var displayNameCheck = 'no-inline-sender';
+							}
+							#>
+						</span>
+						<span class="last-message-step {{displayNameCheck}}">
+							{{{data.excerpt}}}
+						</span>
 					</span>
 				<# } #>
 				<div class="thread-date">
