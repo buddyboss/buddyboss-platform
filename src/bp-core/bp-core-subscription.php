@@ -587,17 +587,6 @@ function bb_is_enabled_subscription( $type = '' ) {
 }
 
 /**
- * Function to verify that subscription background process enabled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool
- */
-function bb_subscription_background_enabled() {
-	return class_exists( 'BP_Background_Updater' ) && apply_filters( 'bb_subscription_background_enabled', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
-}
-
-/**
  * Trigger subscription notifications.
  *
  * @since BuddyBoss [BBVERSION]
@@ -666,24 +655,27 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 	if (
 		isset( $subscriptions['total'] ) &&
-		$subscriptions['total'] > $min_count &&
-		bb_subscription_background_enabled()
+		$subscriptions['total'] > $min_count
 	) {
 		global $bp_background_updater;
 		$chunk_user_ids = array_chunk( $subscriptions['subscriptions'], $min_count );
 		if ( ! empty( $chunk_user_ids ) ) {
 			foreach ( $chunk_user_ids as $key => $user_ids ) {
 				$parse_args['user_ids'] = $user_ids;
-				$bp_background_updater->push_to_queue(
+				$bp_background_updater->data(
 					array(
-						'callback' => $send_callback,
-						'args'     => array( $parse_args ),
+						array(
+							'callback' => $send_callback,
+							'args'     => array( $parse_args ),
+						),
 					)
 				);
 
-				$bp_background_updater->save()->schedule_event();
+				$bp_background_updater->save();
 			}
 		}
+
+		$bp_background_updater->dispatch();
 	} else {
 		$parse_args['user_ids'] = $subscriptions['subscriptions'];
 		call_user_func(
