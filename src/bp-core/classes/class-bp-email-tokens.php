@@ -2292,7 +2292,7 @@ class BP_Email_Tokens {
 										)
 									);
 									?>
-									<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+									<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"/>
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
@@ -2338,7 +2338,7 @@ class BP_Email_Tokens {
 														$total_media_ids = 0;
 
 														if ( bp_is_active( 'media' ) && bp_is_profile_media_support_enabled() ) {
-															$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+															$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
 															if ( ! empty( $media_ids ) ) {
 																$media_ids       = explode( ',', $media_ids );
@@ -2350,7 +2350,7 @@ class BP_Email_Tokens {
 														$video_ids       = '';
 														$total_video_ids = 0;
 														if ( bp_is_active( 'media' ) && bp_is_profile_video_support_enabled() ) {
-															$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+															$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 															if ( ! empty( $video_ids ) ) {
 																$video_ids       = explode( ',', $video_ids );
@@ -2380,9 +2380,9 @@ class BP_Email_Tokens {
 															! empty( $media_ids ) &&
 															bp_has_media(
 																array(
-																	'include' => $media_ids,
+																	'include'  => $media_ids,
 																	'order_by' => 'menu_order',
-																	'sort' => 'ASC',
+																	'sort'     => 'ASC',
 																)
 															)
 														) {
@@ -2392,13 +2392,13 @@ class BP_Email_Tokens {
 																while ( bp_media() ) {
 																	bp_the_media();
 
-																	$media_id       = 'forbidden_' . bp_get_media_id();
-																	$attachment_id  = 'forbidden_' . bp_get_media_attachment_id();
+																	$media_id      = 'forbidden_' . bp_get_media_id();
+																	$attachment_id = 'forbidden_' . bp_get_media_attachment_id();
 																	$media_url     = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id );
 																	?>
-																	<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;">
+																	<div class="bb-activity-media-elem" style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;">
 																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>">
-																			<img style="border-radius: 4px; min-width: 100%; min-height: 100%; max-width: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																			<img style="border-radius: 4px; min-width: 100%; min-height: 100%; max-width: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
 																		</a>
 																	</div>
 																	<?php if ( $total_media_ids > 1 ) : ?>
@@ -2410,16 +2410,16 @@ class BP_Email_Tokens {
 																}
 																?>
 															</div>
-														<?php
+															<?php
 														}
 
 														if (
 															! empty( $video_ids ) &&
 															bp_has_video(
 																array(
-																	'include' => $video_ids,
+																	'include'  => $video_ids,
 																	'order_by' => 'menu_order',
-																	'sort' => 'ASC',
+																	'sort'     => 'ASC',
 																)
 															)
 														) {
@@ -2444,7 +2444,9 @@ class BP_Email_Tokens {
 																	<?php if ( $total_video_ids > 1 ) : ?>
 																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;width:100%;background-color: #b5b7bb;padding:0;"></p>
 																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;width:100%;background-color: #e1e4e8;padding:0;"></p>
-																	<?php endif; ?><?php
+																		<?php
+																	endif;
+
 																	break;
 																}
 																?>
@@ -2456,9 +2458,9 @@ class BP_Email_Tokens {
 															! empty( $document_ids ) &&
 															bp_has_document(
 																array(
-																	'include' => $document_ids,
+																	'include'  => $document_ids,
 																	'order_by' => 'menu_order',
-																	'sort' => 'ASC',
+																	'sort'     => 'ASC',
 																)
 															)
 														) {
@@ -2528,7 +2530,8 @@ class BP_Email_Tokens {
 			</tr>
 
 			<tr>
-				<td><a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
+				<td><a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" target="_blank" rel="nofollow"
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
 			</tr>
 		</table>
 		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>

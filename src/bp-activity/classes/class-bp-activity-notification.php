@@ -186,12 +186,12 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 			$activity         = new BP_Activity_Activity( $item_id );
 			$activity_excerpt = '"' . bp_create_excerpt(
-					wp_strip_all_tags( $activity->content ),
-					50,
-					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
-					)
-				) . '"';
+				wp_strip_all_tags( $activity->content ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			) . '"';
 
 			if ( '&nbsp;' === $activity_excerpt ) {
 				$activity_excerpt = '';
@@ -201,12 +201,12 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				$activity_excerpt = bp_blogs_activity_comment_content_with_read_more( '', $activity );
 
 				$activity_excerpt = '"' . bp_create_excerpt(
-						wp_strip_all_tags( $activity_excerpt ),
-						50,
-						array(
-							'ending' => __( '&hellip;', 'buddyboss' ),
-						)
-					) . '"';
+					wp_strip_all_tags( $activity_excerpt ),
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				) . '"';
 
 				if ( '&nbsp;' === $activity_excerpt ) {
 					$activity_excerpt = '';
@@ -583,21 +583,21 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function bb_render_activity_following_post_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
-		$notification  = bp_notifications_get_notification( $notification_id );
-		$user_id       = $secondary_item_id;
-		$user_fullname = bp_core_get_user_displayname( $user_id );
+		$notification = bp_notifications_get_notification( $notification_id );
 
 		if ( ! empty( $notification ) && 'bb_activity_following_post' === $notification->component_action ) {
 
+			$user_id           = $secondary_item_id;
+			$user_fullname     = bp_core_get_user_displayname( $user_id );
 			$notification_link = bp_get_notifications_permalink();
 			$activity          = new BP_Activity_Activity( $item_id );
 			$activity_excerpt  = '"' . bp_create_excerpt(
-					wp_strip_all_tags( $activity->content ),
-					50,
-					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
-					)
-				) . '"';
+				wp_strip_all_tags( $activity->content ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			) . '"';
 
 			if ( '&nbsp;' === $activity_excerpt ) {
 				$activity_excerpt = '';
@@ -651,7 +651,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				if ( (int) $total_items > 1 ) {
 					$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
 					$text              = sprintf(
-					/* translators: %s: Total reply count. */
+						/* translators: %s: Total reply count. */
 						__( 'You have %1$d new posts', 'buddyboss' ),
 						(int) $total_items
 					);
