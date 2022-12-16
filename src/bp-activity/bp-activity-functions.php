@@ -5896,8 +5896,15 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 
 add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 
-
+/**
+ * Function to send email and notification to followers when new activity post created.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Array of arguments.
+ */
 function bb_activity_following_post_notification( $args ) {
+
 	$r = bp_parse_args(
 		$args,
 		array(
