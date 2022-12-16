@@ -11,7 +11,7 @@
 
 <script type="text/html" id="tmpl-bb-subscription-item">
 	<# var item = data.item; #>
-	<a href="{{ item.link }}" class="subscription-item_anchor" data-item="{{ item.item_id }}" data-id="{{ item.id }}">
+	<a <# if ( ! _.isUndefined( item.link ) && ! _.isEmpty( item.link ) ) { #> href="{{ item.link }}" <# } #> class="subscription-item_anchor" data-item="{{ item.item_id }}" data-id="{{ item.id }}">
 		<div class="subscription-item_image">
 			<img src="{{ item.icon.thumb }}" alt="{{ item.title }}" />
 		</div>
