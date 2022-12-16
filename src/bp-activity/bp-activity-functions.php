@@ -5917,15 +5917,14 @@ function bb_activity_send_email_to_followers( $content, $user_id, $activity_id )
 		}
 
 		if (
-			false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
-			false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id )
-		) {
-			continue;
-		}
-
-		if (
-			true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) &&
-			! empty( $usernames ) && array_key_exists( $followers_user_id, $usernames )
+			(
+				false === bb_is_notification_enabled( $followers_user_id, $type_key ) &&
+			    false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $followers_user_id, $user_id )
+			) ||
+			(
+				true === bb_is_notification_enabled( $followers_user_id, 'bb_new_mention' ) &&
+				! empty( $usernames ) && array_key_exists( $followers_user_id, $usernames )
+			)
 		) {
 			continue;
 		}
