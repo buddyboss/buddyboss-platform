@@ -793,11 +793,68 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			)
 		);
 
-		if ( empty( $r['user_ids'] ) ) {
+		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
 			return;
 		}
 
-		// @todo needs to perform code for send notification and email.
+		$type_key = 'notification_forums_following_reply';
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		}
+
+		$reply_id     = ! empty( $r['data']['reply_id'] ) ? $r['data']['reply_id'] : 0;
+		$author_id    = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bbp_get_reply_author_id( $reply_id );
+		$email_tokens = ! empty( $r['data']['email_tokens'] ) ? $r['data']['email_tokens'] : array();
+
+		if ( ! empty( $author_id ) ) {
+			// Remove topic author from the users.
+			$unset_reply_key = array_search( $author_id, $r['user_ids'], true );
+			if ( false !== $unset_reply_key ) {
+				unset( $r['user_ids'][ $unset_reply_key ] );
+			}
+		}
+
+		foreach ( $r['user_ids'] as $user_id ) {
+			// Bail if member opted out of receiving this email.
+			// Check the sender is blocked by recipient or not.
+			if (
+				true === bb_is_notification_enabled( $user_id, $type_key ) &&
+				true !== (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id )
+			) {
+				$unsubscribe_args = array(
+					'user_id'           => $user_id,
+					'notification_type' => 'bbp-new-forum-reply',
+				);
+
+				$email_tokens['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+				// Send notification email.
+				bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $email_tokens );
+			}
+
+			if ( bp_is_active( 'notifications' ) ) {
+				$reply_to_id = bbp_get_reply_to( $reply_id );
+				if ( ! empty( $reply_to_id ) ) {
+					$reply_to_author_id = bbp_get_reply_author_id( $reply_to_id );
+
+					if ( $reply_to_author_id === $user_id ) {
+						continue;
+					}
+				}
+
+				bp_notifications_add_notification(
+					array(
+						'user_id'           => $user_id,
+						'item_id'           => $reply_id,
+						'secondary_item_id' => $author_id,
+						'component_name'    => bbp_get_component_name(),
+						'component_action'  => 'bb_forums_subscribed_reply',
+						'date_notified'     => bp_core_current_time(),
+						'is_new'            => 1,
+					)
+				);
+			}
+		}
 
 		return true;
 	}
