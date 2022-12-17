@@ -5963,17 +5963,18 @@ function bb_activity_following_post_notification( $args ) {
 
 	foreach ( $r['user_ids'] as $key => $user_id ) {
 		$user_id = (int) $user_id;
-
+		$send_mail         = true;
+		$send_notification = true;
 		if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
 			if (
 				true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'web' ) &&
 				true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'app' )
 			) {
-				unset( $r['user_ids'][ $key ] );
+				$send_notification = false;
 			}
 
 			if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
-				continue;
+				$send_mail = false;
 			}
 		}
 
@@ -5983,29 +5984,34 @@ function bb_activity_following_post_notification( $args ) {
 			false === bb_is_notification_enabled( $user_id, 'bb_activity_following_post' ) &&
 			false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $activity_user_id )
 		) {
-			continue;
+			$send_notification = false;
+			$send_mail         = false;
 		}
 
-		$unsubscribe_args = array(
-			'user_id'           => $user_id,
-			'notification_type' => 'bb_activity_following_post',
-		);
-
-		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
-
-		// Send notification email.
-		bp_send_email( 'new-activity-following', $user_id, $args );
-
-		bp_notifications_add_notification(
-			array(
+		if ( true === $send_mail ) {
+			$unsubscribe_args = array(
 				'user_id'           => $user_id,
-				'item_id'           => $activity_id,
-				'secondary_item_id' => $activity_user_id,
-				'component_name'    => buddypress()->activity->id,
-				'component_action'  => 'bb_activity_following_post',
-				'date_notified'     => bp_core_current_time(),
-				'is_new'            => 1,
-			)
-		);
+				'notification_type' => 'bb_activity_following_post',
+			);
+
+			$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+			// Send notification email.
+			bp_send_email( 'new-activity-following', $user_id, $args );
+		}
+
+		if ( true === $send_notification ) {
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $activity_id,
+					'secondary_item_id' => $activity_user_id,
+					'component_name'    => buddypress()->activity->id,
+					'component_action'  => 'bb_activity_following_post',
+					'date_notified'     => bp_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
+		}
 	}
 }
