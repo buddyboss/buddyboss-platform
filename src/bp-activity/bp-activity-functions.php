@@ -5962,7 +5962,7 @@ function bb_activity_following_post_notification( $args ) {
 	);
 
 	foreach ( $r['user_ids'] as $key => $user_id ) {
-		$user_id = (int) $user_id;
+		$user_id           = (int) $user_id;
 		$send_mail         = true;
 		$send_notification = true;
 		if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
