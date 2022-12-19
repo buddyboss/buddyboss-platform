@@ -5826,4 +5826,3 @@ function bb_bp_get_add_follow_button( $button ) {
 
 	return $button;
 }
-
