@@ -1241,6 +1241,10 @@ class BP_Messages_Thread {
 
 		// Sort threads by date_sent.
 		foreach ( (array) $thread_ids as $thread ) {
+			$last_message = self::get_last_message( $thread->thread_id );
+			if ( ! empty( $last_message ) && ! empty( $last_message->date_sent ) && $last_message->date_sent !== $thread->date_sent ) {
+				$thread->date_sent = $last_message->date_sent;
+			}
 			$sorted_threads[ $thread->thread_id ] = strtotime( $thread->date_sent );
 		}
 
