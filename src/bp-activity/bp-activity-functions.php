@@ -5909,6 +5909,16 @@ function bb_activity_following_post_notification( $args ) {
 			}
 		}
 
+		if (
+			'friends' === $r['activity']->privacy &&
+			bp_is_active( 'friends' ) &&
+			(int) $user_id !== (int) $activity_user_id &&
+			! friends_check_friendship( $user_id, $activity_user_id )
+		) {
+			$send_notification = false;
+			$send_mail         = false;
+		}
+
 		// It will check some condition to following notification disable, user blocked , mention notification enable
 		// and mention available in post for follower user.
 		if (
