@@ -3321,7 +3321,7 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 	if (
 		empty( $activity ) ||
 		'activity' !== $activity->component ||
-		in_array( $activity->privacy, array( 'document', 'media', 'video' ), true ) ||
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
 		empty( $follower_users )
 	) {
 		return;
