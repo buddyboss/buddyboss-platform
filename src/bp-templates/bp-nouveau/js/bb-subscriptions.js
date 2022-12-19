@@ -297,7 +297,7 @@ window.bp = window.bp || {};
 				self.pagination_params = {
 					total_page     : parseInt( self.collection.options.total_pages ),
 					current_active : parseInt( current_active ),
-				}
+				};
 
 				return self.pagination_params;
 			},
