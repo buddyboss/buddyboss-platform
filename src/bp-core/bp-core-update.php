@@ -2100,6 +2100,7 @@ function bb_update_to_2_1_8() {
 		'post_status' => 'publish',
 		'post_type'   => bp_get_email_post_type(),
 	);
+
 	$email = array(
 		/* translators: do not remove {} brackets or translate its contents. */
 		'post_title'   => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}.', 'buddyboss' ),
