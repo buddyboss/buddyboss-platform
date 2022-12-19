@@ -3415,6 +3415,10 @@ table tbody td .bb-description {
 			.manage-defaults-hide {
 				display: none;
 			}
+
+			input[readonly="readonly"] {
+				pointer-events: none;
+			}
 		}
 	}
 }
@@ -3800,7 +3804,7 @@ table.moderations .column-member {
 
 	&[data-bp-tooltip] {
 		display: inline-block;
-	
+
 		&::after {
 			min-width: 140px;
 			white-space: normal;
