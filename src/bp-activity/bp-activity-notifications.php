@@ -568,3 +568,5 @@ function bb_activity_add_notification_metas( $notification ) {
 		bp_notifications_update_meta( $notification->id, 'type', 'activity_post' );
 	}
 }
+
+
