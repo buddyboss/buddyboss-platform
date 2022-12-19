@@ -461,21 +461,26 @@ function bb_activate_notification( $field, $checked ) {
 	?>
 
 	<input name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="hidden" value="no" />
-	<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?>
+	<span
+		class="forum-subscription-input"
 		<?php
-		if ( ! empty( $field['notification_read_only'] ) && 'yes' === $field['notification_read_only'] ) {
-			echo ' readonly="readonly"';
-		}
+			if ( ! empty( $tooltip_pos ) ) {
+				echo ' data-bp-tooltip-pos="' . esc_attr( $tooltip_pos ) . '"';
+			}
 
-		if ( ! empty( $tooltip_pos ) ) {
-			echo ' data-bp-tooltip-pos="' . esc_attr( $tooltip_pos ) . '"';
-		}
-
-		if ( ! empty( $tooltip_text ) ) {
-			echo ' data-bp-tooltip="' . esc_attr( $tooltip_text ) . '"';
-		}
+			if ( ! empty( $tooltip_text ) ) {
+				echo ' data-bp-tooltip="' . esc_attr( $tooltip_text ) . '"';
+			}
 		?>
-	/>
+	>
+		<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?>
+			<?php
+			if ( ! empty( $field['notification_read_only'] ) && 'yes' === $field['notification_read_only'] ) {
+				echo ' readonly="readonly"';
+			}
+			?>
+		/>
+	</span>
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 
 	<?php

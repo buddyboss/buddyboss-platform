@@ -3494,3 +3494,14 @@ table.moderations .column-member img {
   border-radius: 3px;
   padding: 15px;
 }
+
+.forum-subscription-input[data-bp-tooltip] {
+  display: inline-block;
+}
+
+.forum-subscription-input[data-bp-tooltip]::after {
+  min-width: 140px;
+  white-space: normal;
+  padding: 7px 12px;
+  text-align: center;
+}
