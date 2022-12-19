@@ -8131,7 +8131,7 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', 60 ) );
+	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
 }
 
 /**
@@ -8180,4 +8180,15 @@ function bb_pro_pusher_version() {
  */
 function bb_presence_time_span() {
 	return (int) apply_filters( 'bb_presence_time_span', 180 );
+}
+
+/**
+ * Function to return the presence default interval time in seconds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_presence_default_interval() {
+	return apply_filters( 'bb_presence_default_interval', 60 );
 }
