@@ -636,12 +636,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						$type_data['label']['singular']
 					);
 				} else {
+					$author_id     = $topic->post_author;
 					$data['title'] = bbp_get_topic_title( $subscription['item_id'] );
 					$data['link']  = bbp_get_topic_permalink( $subscription['item_id'] );
 
 					$data['icon']['full'] = (string) bp_core_fetch_avatar(
 						array(
-							'item_id' => $subscription['user_id'],
+							'item_id' => $author_id,
 							'html'    => false,
 							'type'    => 'full',
 						)
@@ -649,7 +650,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 					$data['icon']['thumb'] = (string) bp_core_fetch_avatar(
 						array(
-							'item_id' => $subscription['user_id'],
+							'item_id' => $author_id,
 							'html'    => false,
 						)
 					);
@@ -662,8 +663,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						$data['icon']['thumb'] = $default_user_thumb_image;
 					}
 
-					if ( ! empty( $subscription['user_id'] ) ) {
-						$data['description_html'] = esc_html__( 'Posted by', 'buddyboss' ) . ' <strong>' . bp_core_get_user_displayname( $subscription['user_id'] ) . '</strong>';
+					if ( ! empty( $author_id ) ) {
+						$data['description_html'] = esc_html__( 'Posted by', 'buddyboss' ) . ' <strong>' . bp_core_get_user_displayname( $author_id ) . '</strong>';
 					}
 
 					// Get topic forum.
