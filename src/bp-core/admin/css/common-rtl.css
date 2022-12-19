@@ -3505,3 +3505,7 @@ table.moderations .column-member img {
   padding: 7px 12px;
   text-align: center;
 }
+
+.forum-subscription-input input[readonly="readonly"] {
+  pointer-events: none;
+}
