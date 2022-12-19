@@ -59,27 +59,24 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function load() {
 
-		if ( function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
-			$this->register_notification_group(
-				'forums',
-				esc_html__( 'Discussion Forums', 'buddyboss' ),
-				esc_html__( 'Discussion Forums', 'buddyboss' ),
-				15
-			);
+		$this->register_notification_group(
+			'forums',
+			esc_html__( 'Discussion Forums', 'buddyboss' ),
+			esc_html__( 'Discussion Forums', 'buddyboss' ),
+			15
+		);
 
-			// Creates discussion in a forum you are subscribed.
-			$this->register_notification_for_forums_following_topic();
+		// Creates discussion in a forum you are subscribed.
+		$this->register_notification_for_forums_following_topic();
 
-			// Replies to a discussion you are subscribed.
-			$this->register_notification_for_forums_following_reply();
+		// Replies to a discussion you are subscribed.
+		$this->register_notification_for_forums_following_reply();
 
-			$this->register_notification_filter(
-				esc_html__( 'Forum subscriptions', 'buddyboss' ),
-				array( 'bb_forums_subscribed_discussion', 'bb_forums_subscribed_reply' ),
-				110
-			);
-
-		}
+		$this->register_notification_filter(
+			esc_html__( 'Forum subscriptions', 'buddyboss' ),
+			array( 'bb_forums_subscribed_discussion', 'bb_forums_subscribed_reply' ),
+			110
+		);
 	}
 
 	/**
@@ -88,14 +85,31 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_forums_following_reply() {
+		$notification_read_only    = false;
+		$notification_tooltip_text = '';
+
+		if ( false === bbp_is_subscriptions_active() ) {
+			$notification_read_only   = true;
+			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+			if (
+				! empty( $enabled_all_notification['bb_forums_subscribed_reply']['main'] ) &&
+				'yes' === $enabled_all_notification['bb_forums_subscribed_reply']['main']
+			) {
+				$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
+			} else {
+				$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
+			}
+		}
+
 		$this->register_notification_type(
 			'bb_forums_subscribed_reply',
 			__( 'New reply in a discussion you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new reply in a discussion a member is subscribed to', 'buddyboss' ),
 			'forums',
 			true,
-			true,
-			'Requires forum subscriptions to enable'
+			$notification_read_only,
+			$notification_tooltip_text
 		);
 
 		$this->register_email_type(
@@ -142,14 +156,31 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_forums_following_topic() {
+		$notification_read_only    = false;
+		$notification_tooltip_text = '';
+
+		if ( false === bbp_is_subscriptions_active() ) {
+			$notification_read_only   = true;
+			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+			if (
+				! empty( $enabled_all_notification['bb_forums_subscribed_discussion']['main'] ) &&
+				'yes' === $enabled_all_notification['bb_forums_subscribed_discussion']['main']
+			) {
+				$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
+			} else {
+				$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
+			}
+		}
+
 		$this->register_notification_type(
 			'bb_forums_subscribed_discussion',
 			__( 'New discussion in a forum you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new discussion in a forum a member is subscribed to', 'buddyboss' ),
 			'forums',
 			true,
-			true,
-			'Required by forum subscriptions'
+			$notification_read_only,
+			$notification_tooltip_text
 		);
 
 		$this->register_email_type(
