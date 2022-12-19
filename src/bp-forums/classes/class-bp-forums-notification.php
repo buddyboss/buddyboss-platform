@@ -92,7 +92,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'bb_forums_subscribed_reply',
 			__( 'New reply in a discussion you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new reply in a discussion a member is subscribed to', 'buddyboss' ),
-			'forums'
+			'forums',
+			true,
+			true,
+			'Requires forum subscriptions to enable'
 		);
 
 		$this->register_email_type(
@@ -143,7 +146,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'bb_forums_subscribed_discussion',
 			__( 'New discussion in a forum you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new discussion in a forum a member is subscribed to', 'buddyboss' ),
-			'forums'
+			'forums',
+			true,
+			true,
+			'Required by forum subscriptions'
 		);
 
 		$this->register_email_type(

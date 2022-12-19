@@ -451,11 +451,31 @@ function bb_admin_setting_callback_notification_warning() {
  * @param bool  $checked Is checked or not.
  */
 function bb_activate_notification( $field, $checked ) {
-	$label = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
+	$label        = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
+	$tooltip_pos  = '';
+	$tooltip_text = '';
+	if ( ! empty( $field['notification_tooltip_text'] ) ) {
+		$tooltip_pos  = 'up';
+		$tooltip_text = $field['notification_tooltip_text'];
+	}
 	?>
 
 	<input name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="hidden" value="no" />
-	<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?> />
+	<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?>
+		<?php
+		if ( ! empty( $field['notification_read_only'] ) && 'yes' === $field['notification_read_only'] ) {
+			echo ' readonly="readonly"';
+		}
+
+		if ( ! empty( $tooltip_pos ) ) {
+			echo ' data-bp-tooltip-pos="' . esc_attr( $tooltip_pos ) . '"';
+		}
+
+		if ( ! empty( $tooltip_text ) ) {
+			echo ' data-bp-tooltip="' . esc_attr( $tooltip_text ) . '"';
+		}
+		?>
+	/>
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 
 	<?php
