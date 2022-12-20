@@ -185,7 +185,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 		 */
 		public function populate_extras() {
 
-			if ( ! empty( $this->type ) ) {
+			if ( empty( $this->type ) ) {
 				return;
 			}
 
@@ -198,19 +198,25 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			) {
 				$item_data = call_user_func(
 					$type_data['items_callback'],
-					array(
-						'id'                => $this->id,
-						'user_id'           => $this->user_id,
-						'item_id'           => $this->item_id,
-						'secondary_item_id' => $this->secondary_item_id,
-					)
+					array( $this )
 				);
 
-				$this->title            = $item_data->title;
-				$this->description_html = $item_data->description_html;
-				$this->parent_html      = $item_data->parent_html;
-				$this->icon             = $item_data->icon;
-				$this->link             = $item_data->link;
+				$item_extra = array(
+					'title'            => '',
+					'description_html' => '',
+					'parent_html'      => '',
+					'icon'             => array(),
+					'link'             => '',
+				);
+				if ( ! empty( $item_data ) && ! empty( current( $item_data ) ) ) {
+					$item_extra = bp_parse_args( (array) current( $item_data ), $item_extra );
+				}
+
+				$this->title            = $item_extra['title'];
+				$this->description_html = $item_extra['description_html'];
+				$this->parent_html      = $item_extra['parent_html'];
+				$this->icon             = $item_extra['icon'];
+				$this->link             = $item_extra['link'];
 			}
 		}
 
