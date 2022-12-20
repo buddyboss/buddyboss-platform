@@ -433,12 +433,15 @@ window.bp = window.bp || {};
 					}
 				);
 
-				var subscription_label = $( '.bb-accordion[data-type=' + type + ']' ).data( 'label' );
+				var subscription_div            = $( '.bb-accordion[data-type=' + type + ']' ),
+					subscription_singular_label = subscription_div.data( 'singular-label' ),
+					subscription_plural_label   = subscription_div.data( 'plural-label' );
 
 				self.views.add(
 					new bp.Views.MemberNoSubscription(
 						{
-							type: subscription_label
+							singularLabel: subscription_singular_label,
+							pluralLabel  : subscription_plural_label,
 						}
 					)
 				);
@@ -506,7 +509,8 @@ window.bp = window.bp || {};
 			initialize: function() {
 				this.model = new Backbone.Model(
 					{
-						type: this.options.type || 'forum',
+						singularLabel: this.options.singularLabel,
+						pluralLabel  : this.options.pluralLabel,
 					}
 				);
 			}

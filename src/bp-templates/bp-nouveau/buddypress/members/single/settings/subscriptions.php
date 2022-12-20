@@ -17,11 +17,12 @@ $data = bb_core_notification_preferences_data();
 
 	<div class="subscription-views">
 		<?php
-		$types = bb_get_subscriptions_types();
+		$types               = bb_get_subscriptions_types();
+		$types_with_singular = bb_get_subscriptions_types( true );
 		if ( ! empty( $types ) ) {
 			foreach ( $types as $sub_type => $label ) {
 				?>
-				<div class="bb-accordion" data-type="<?php echo esc_attr( $sub_type ); ?>"  data-label="<?php echo esc_attr( $label ); ?>">
+				<div class="bb-accordion" data-type="<?php echo esc_attr( $sub_type ); ?>" data-plural-label="<?php echo esc_attr( $label ); ?>" data-singular-label="<?php echo ( ! empty( $types_with_singular[ $sub_type ] ) ) ? esc_attr( $types_with_singular[ $sub_type ] ) : ''; ?>">
 					<div class="bb-accordion_head" id="bb-accordion-<?php echo esc_attr( $sub_type ); ?>">
 						<h3 class="bb-accordion_title">
 							<?php echo esc_html( $label ); ?>
