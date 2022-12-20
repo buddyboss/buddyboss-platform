@@ -2154,11 +2154,13 @@ function bb_get_message_response_object( $message ) {
 	}
 	$sender_display_name = apply_filters( 'bp_get_the_thread_message_sender_name', $sender_display_name );
 
+	$has_media = false;
 	if ( empty( $excerpt ) ) {
 		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 			$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) ) {
+				$has_media = true;
 				$media_ids = explode( ',', $media_ids );
 				if ( count( $media_ids ) < 2 ) {
 					$excerpt = __( 'Sent a photo', 'buddyboss' );
@@ -2172,6 +2174,7 @@ function bb_get_message_response_object( $message ) {
 			$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
 
 			if ( ! empty( $video_ids ) ) {
+				$has_media = true;
 				$video_ids = explode( ',', $video_ids );
 				if ( count( $video_ids ) < 2 ) {
 					$excerpt = __( 'Sent a video', 'buddyboss' );
@@ -2185,6 +2188,7 @@ function bb_get_message_response_object( $message ) {
 			$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) ) {
+				$has_media    = true;
 				$document_ids = explode( ',', $document_ids );
 				if ( count( $document_ids ) < 2 ) {
 					$excerpt = __( 'Sent a document', 'buddyboss' );
@@ -2198,7 +2202,8 @@ function bb_get_message_response_object( $message ) {
 			$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
-				$excerpt = __( 'sent a GIF', 'buddyboss' );
+				$has_media = true;
+				$excerpt   = __( 'Sent a GIF', 'buddyboss' );
 			}
 		}
 	}
@@ -2243,6 +2248,7 @@ function bb_get_message_response_object( $message ) {
 		'sent_date'         => ucfirst( bb_get_thread_start_date( $message->date_sent ) ),
 		'sent_split_date'   => date_i18n( 'Y-m-d', strtotime( $message->date_sent ) ),
 		'refresh_element'   => true,
+		'has_media'         => $has_media,
 	);
 
 	$get_thread_recipients = BP_Messages_Thread::get_recipients_for_thread( (int) $thread_id );

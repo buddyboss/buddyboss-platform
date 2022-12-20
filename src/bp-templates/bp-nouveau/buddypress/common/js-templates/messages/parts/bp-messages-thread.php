@@ -227,27 +227,27 @@
 							<#
 							var displayName = false;
 							var checkedContent = data.content.replace(/<\/?[^>]+(>|$)/g, '').replace(/^\s+|\s+$/gm,'');
-							if ( data.sender_is_you && '' !== checkedContent ) { 
+							if ( data.sender_is_you && '' !== checkedContent ) {
 								displayName = true;
 								#>
 								<?php esc_html_e( 'You', 'buddyboss' ); ?>:
-							<# } else if ( data.sender_is_you && '' === checkedContent )  { 
+							<# } else if ( data.sender_is_you && '' === checkedContent ) {
 								displayName = true;
 								#>
 								<?php esc_html_e( 'You', 'buddyboss' ); ?>
 							<# } else { #>
-								<# if ( senderName && senderName!== '' && '' !== checkedContent ) { 
+								<# if ( senderName && '' !== senderName && '' !== checkedContent ) {
 									displayName = true;
 									#>
 									{{ senderName }}:
-								<# } else if ( senderName && senderName!== '' && '' === checkedContent )  { 
+								<# } else if ( senderName && '' !== senderName && '' === checkedContent ) {
 									displayName = true;
 									#>
 									{{ senderName }}
 								<# } #>
 							<# } #>
-							<# 
-							if (displayName = true && (data.sender_is_you || senderName!== '')) {
+							<#
+							if ( displayName = true && data.has_media && ( data.sender_is_you || '' !== senderName ) ) {
 								var displayNameCheck = 'has-inline-sender';
 							} else {
 								var displayNameCheck = 'no-inline-sender';
