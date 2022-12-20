@@ -2,8 +2,8 @@
 /**
  * Subscription Functions.
  *
+ * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Subscription
- * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -45,6 +45,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 			/* translators: Status of current action. */
 			$statement = __( 'Migrated user forums/topics to new systems&hellip; %s', 'buddyboss' );
 			$result    = __( 'Complete!', 'buddyboss' );
+
 			// All done!
 			return array(
 				'status'  => 1,
@@ -60,8 +61,8 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $subscription_users Array of user subscriptions.
- * @param int   $offset            Offset value.
- * @param bool  $is_background     The current process is background or not.
+ * @param int   $offset             Offset value.
+ * @param bool  $is_background      The current process is background or not.
  *
  * @return array Return array when it called directly otherwise call recursively.
  */
@@ -77,7 +78,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 			$user_id = $subscription_user->ID;
 
 			// Increment the current offset.
-			$offset++;
+			$offset ++;
 
 			$place_holder_queries = array();
 			$insert_query         = "INSERT INTO {$subscription_tbl} ( user_id, type, item_id, secondary_item_id, date_recorded ) VALUES";
@@ -158,6 +159,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 			__( 'The forums/topics successfully migrated for %s members.', 'buddyboss' ),
 			bp_core_number_format( $offset )
 		);
+
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -285,7 +287,7 @@ function bb_create_subscription( $args = array() ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $r Array of argument to create a new subscription.
+	 * @param array             $r                        Array of argument to create a new subscription.
 	 * @param int|bool|WP_Error $new_subscription_created The ID of new subscription when it's true otherwise return error.
 	 */
 	do_action_ref_array( 'bb_create_subscription', array( $r, $new_subscription_created ) );
@@ -309,8 +311,6 @@ function bb_create_subscription( $args = array() ) {
  *                                            Default: null (no limit).
  * }
  * @param bool  $force_cache bypass the cache if true.
- *
- * @see BP_Subscription::get()
  *
  * @return array {
  *     @type array $subscriptions Array of subscription objects returned by the
@@ -361,8 +361,6 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
  *                                            Default: null (no limit).
  * }
  * @param bool  $force_cache bypass the cache if true.
- *
- * @see BP_Subscription::get()
  *
  * @return array {
  *     @type array $subscriptions Array of subscription objects returned by the
@@ -579,7 +577,11 @@ function bb_is_enabled_subscription( $type = '' ) {
 		bb_is_enabled_modern_subscriptions( $type )
 	) {
 		$is_enabled = true;
-	} elseif ( ( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) ) && in_array( $type, array( 'forum', 'topic' ), true ) && function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
+	} elseif (
+		( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) ) &&
+		in_array( $type, array( 'forum', 'topic' ), true ) &&
+		function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active()
+	) {
 		$is_enabled = true;
 	}
 
