@@ -1,21 +1,21 @@
 <?php
 /**
- * Subscription class
+ * Subscriptions class
  *
- * @package BuddyBoss\Subscription
+ * @package BuddyBoss\Subscriptions
  * @since BuddyBoss [BBVERSION]
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Subscription' ) ) {
+if ( ! class_exists( 'BP_Subscriptions' ) ) {
 
 	/**
-	 * BuddyBoss Subscription object.
+	 * BuddyBoss Subscriptions object.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	class BP_Subscription {
+	class BP_Subscriptions {
 
 		/**
 		 * ID of the subscriptions.
@@ -157,7 +157,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			/**
 			 * Pre validate the subscription before fetch.
 			 *
-			 * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param boolean $validate     Whether to check the subscriptions is valid or not.
 			 * @param object  $subscription Subscription object.
@@ -246,7 +246,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscription $this Current instance of the subscription item being saved. Passed by reference.
+			 * @param BP_Subscriptions $this Current instance of the subscription item being saved. Passed by reference.
 			 */
 			do_action_ref_array( 'bb_subscriptions_before_save', array( &$this ) );
 
@@ -316,7 +316,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 				);
 			}
 
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			if ( false === $wpdb->query( $sql ) ) {
 				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
 					return new WP_Error( 'bb_subscriptions_cannot_create', __( 'There is an error while adding the subscription.', 'buddyboss' ) );
@@ -334,7 +334,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscription $this Current instance of the subscription item that was saved. Passed by reference.
+			 * @param BP_Subscriptions $this Current instance of the subscription item that was saved. Passed by reference.
 			 */
 			do_action_ref_array( 'bb_subscriptions_after_save', array( &$this ) );
 
@@ -359,13 +359,13 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscription $this Current instance of the subscription item being deleted. Passed by reference.
-			 * @param int             $id   ID of subscription.
+			 * @param BP_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
+			 * @param int              $id   ID of subscription.
 			 */
 			do_action_ref_array( 'bb_subscriptions_before_delete_subscription', array( &$this, $this->id ) );
 
 			// Finally, remove the subscription entry from the DB.
-			if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$subscription_tbl} WHERE id = %d", $this->id ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$subscription_tbl} WHERE id = %d", $this->id ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				return false;
 			}
 
@@ -374,8 +374,8 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscription $this Current instance of the subscription item being deleted. Passed by reference.
-			 * @param int             $id   ID of subscription.
+			 * @param BP_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
+			 * @param int              $id   ID of subscription.
 			 */
 			do_action_ref_array( 'bb_subscriptions_after_delete_subscription', array( &$this, $this->id ) );
 
@@ -633,7 +633,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 
 				$all_subscriptions = array();
 				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
-					$all_subscriptions[] = new BP_Subscription( $paged_subscription_id, false );
+					$all_subscriptions[] = new BP_Subscriptions( $paged_subscription_id, false );
 				}
 
 				$present_types = array();

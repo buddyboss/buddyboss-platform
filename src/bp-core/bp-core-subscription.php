@@ -1,6 +1,6 @@
 <?php
 /**
- * Subscription Functions.
+ * Subscriptions Functions.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Subscription
@@ -69,7 +69,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offset = 0, $is_background = true ) {
 	global $wpdb;
 
-	$subscription_tbl = BP_Subscription::get_subscription_tbl();
+	$subscription_tbl = BP_Subscriptions::get_subscription_tbl();
 	$forum_post_type  = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
 	$topic_post_type  = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
 
@@ -102,7 +102,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					);
 
 					// Get subscription from new table.
-					$subscription_exists = BP_Subscription::get( $record_args );
+					$subscription_exists = BP_Subscriptions::get( $record_args );
 
 					if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
 						continue;
@@ -131,7 +131,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					);
 
 					// Get subscription from new table.
-					$subscription_exists = BP_Subscription::get( $record_args );
+					$subscription_exists = BP_Subscriptions::get( $record_args );
 
 					if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
 						continue;
@@ -249,7 +249,7 @@ function bb_create_subscription( $args = array() ) {
 	);
 
 	// Check if subscription is existed or not?.
-	$subscriptions = BP_Subscription::get(
+	$subscriptions = BP_Subscriptions::get(
 		array(
 			'type'              => $r['type'],
 			'user_id'           => $r['user_id'],
@@ -273,7 +273,7 @@ function bb_create_subscription( $args = array() ) {
 		}
 	}
 
-	$new_subscription                    = new BP_Subscription();
+	$new_subscription                    = new BP_Subscriptions();
 	$new_subscription->user_id           = $r['user_id'];
 	$new_subscription->type              = $r['type'];
 	$new_subscription->item_id           = $r['item_id'];
@@ -336,7 +336,7 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
 
 	$cache_key = 'bb_get_subscriptions_' . md5( maybe_serialize( $r ) );
 	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
-		$subscriptions       = BP_Subscription::get( $r );
+		$subscriptions       = BP_Subscriptions::get( $r );
 		$cache[ $cache_key ] = $subscriptions;
 	} else {
 		$subscriptions = $cache[ $cache_key ];
@@ -387,7 +387,7 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
 
 	$cache_key = 'bb_get_subscription_users_' . md5( maybe_serialize( $r ) );
 	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
-		$subscriptions       = BP_Subscription::get( $r );
+		$subscriptions       = BP_Subscriptions::get( $r );
 		$cache[ $cache_key ] = $subscriptions;
 	} else {
 		$subscriptions = $cache[ $cache_key ];
@@ -407,7 +407,7 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
  *
  * @param int $subscription_id ID of the subscription.
  *
- * @return BP_Subscription $subscription The subscription object.
+ * @return BP_Subscriptions $subscription The subscription object.
  */
 function bb_subscriptions_get_subscription( $subscription_id ) {
 	// Backward compatibility.
@@ -423,14 +423,14 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
 		$subscription_id = $r['subscription_id'];
 	}
 
-	$subscription = new BP_Subscription( $subscription_id );
+	$subscription = new BP_Subscriptions( $subscription_id );
 
 	/**
 	 * Filters a single subscription object.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param BP_Subscription $subscription Single subscription object.
+	 * @param BP_Subscriptions $subscription Single subscription object.
 	 */
 	return apply_filters( 'bb_subscriptions_get_subscription', $subscription );
 }

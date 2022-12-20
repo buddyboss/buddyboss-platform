@@ -709,7 +709,7 @@ class BuddyPress {
 			'BP_Suspend_Album'                             => 'suspend',
 			'BP_Suspend_Comment'                           => 'suspend',
 			'BP_Suspend_Message'                           => 'suspend',
-			'BP_Subscription'                              => 'core',
+			'BP_Subscriptions'                             => 'core',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',

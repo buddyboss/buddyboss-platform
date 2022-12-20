@@ -103,7 +103,7 @@ window.bp = window.bp || {};
 				options         = options || {};
 				options.context = this;
 				options.data    = options.data || {};
-				options.path    = 'buddyboss/v1/subscription';
+				options.path    = 'buddyboss/v1/subscriptions';
 				options.method  = 'GET';
 
 				options.data = _.extend(
@@ -320,7 +320,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				var options    = {};
-				options.path   = 'buddyboss/v1/subscription/' + id;
+				options.path   = 'buddyboss/v1/subscriptions/' + id;
 				options.method = 'DELETE';
 				options.data   = {
 					type        : self.options.type,
