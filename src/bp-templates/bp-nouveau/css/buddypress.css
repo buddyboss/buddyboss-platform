@@ -10454,6 +10454,7 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   clear: both;
   overflow: hidden;
   margin: 0 auto;
+  position: relative;
 }
 
 #bp-message-thread-list .bp-message-content-wrap p {
@@ -10498,6 +10499,11 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 
 #bp-message-thread-list .actions a:before {
   font-size: 18px;
+}
+
+.bp-message-content-wrap blockquote.wp-embedded-content + p iframe.wp-embedded-content {
+  min-height: 0;
+  height: 0;
 }
 
 div.bp-navs#subsubnav.bp-messages-filters .user-messages-bulk-actions {
