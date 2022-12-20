@@ -7143,13 +7143,17 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
-		$notification_fields_read_only = array_filter( array_column( $options['fields'], 'notification_read_only' ) );
+		$notification_fields_read_only = array_filter( array_column( $options['fields'], 'notification_read_only', null ) );
+		$options['fields']             = ( ! empty( $notification_fields_read_only ) ? array_diff_key( $options['fields'], $notification_fields_read_only ) : $options['fields'] );
+	}
+
+	if ( ! empty( $options['fields'] ) ) {
 		?>
 
 		<table class="main-notification-settings">
 			<tbody>
 
-			<?php if ( ! empty( $options['label'] ) && in_array( 'no', $notification_fields_read_only, true ) ) { ?>
+			<?php if ( ! empty( $options['label'] ) ) { ?>
 				<tr class="notification_heading">
 					<td class="title" colspan="<?php echo esc_attr( $column_count ); ?>"><?php echo esc_html( $options['label'] ); ?></td>
 				</tr>
@@ -7158,7 +7162,7 @@ function bb_render_notification( $notification_group ) {
 
 			foreach ( $options['fields'] as $field ) {
 
-				if ( ! empty( $field['notification_read_only'] ) && 'yes' === $field['notification_read_only'] ) {
+				if ( ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'] ) {
 					continue;
 				}
 

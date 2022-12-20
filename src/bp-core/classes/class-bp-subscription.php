@@ -689,7 +689,7 @@ if ( ! class_exists( 'BP_Subscription' ) ) {
 					$total_subscriptions = (int) $wpdb->get_var( $total_subscriptions_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					bp_core_set_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions', array( $total_subscriptions ) );
 				} else {
-					$total_subscriptions = (int) $cached[0];
+					$total_subscriptions = (int) ( ! empty( $cached ) ? current( $cached ) : 0 );
 				}
 
 				// Set in response array.

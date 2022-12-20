@@ -164,7 +164,7 @@ abstract class BP_Core_Notification_Abstract {
 					'default'                   => ( true === $preference['notification_default'] ? 'yes' : 'no' ),
 					'notifications'             => ( ! empty( $all_notifications ) && isset( $all_notifications[ $preference['notification_type'] ] ) ) ? $all_notifications[ $preference['notification_type'] ] : array(),
 					'email_types'               => ( ! empty( $all_email_types ) && isset( $all_email_types[ $preference['notification_type'] ] ) ) ? $all_email_types[ $preference['notification_type'] ] : array(),
-					'notification_read_only'    => ( true === $preference['notification_read_only'] ? 'yes' : 'no' ),
+					'notification_read_only'    => (bool) $preference['notification_read_only'],
 					'notification_tooltip_text' => $preference['notification_tooltip_text'],
 				);
 

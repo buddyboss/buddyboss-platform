@@ -668,7 +668,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					$data['icon']['full']  = $default_user_full_image;
 					$data['icon']['thumb'] = $default_user_thumb_image;
 					$data['title']         = sprintf(
-					/* translators: Subscription label. */
+						/* translators: Subscription label. */
 						__( 'Deleted %s', 'buddyboss' ),
 						$type_data['label']['singular']
 					);
@@ -718,7 +718,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						'title'            => '',
 						'description_html' => '',
 						'parent_html'      => '',
-						'icon'             => array(),
+						'icon'             => array(
+							'full'  => '',
+							'thumb' => '',
+						),
 						'link'             => '',
 					)
 				);
