@@ -246,16 +246,14 @@
 									{{ senderName }}
 								<# } #>
 							<# } #>
-							<#
-							if ( displayName = true && data.has_media && ( data.sender_is_you || '' !== senderName ) ) {
-								var displayNameCheck = 'has-inline-sender';
-							} else {
-								var displayNameCheck = 'no-inline-sender';
-							}
-							#>
 						</span>
-						<span class="last-message-step {{displayNameCheck}}">
-							{{{data.excerpt}}}
+						<span class="last-message-step">
+							<#
+							var dataExcerpt = data.excerpt;
+							if ( dataExcerpt && true === displayName && data.has_media && ( data.sender_is_you || '' !== senderName ) ) {
+							  dataExcerpt = dataExcerpt.charAt(0).toLowerCase() + dataExcerpt.slice(1);
+							} #>
+							{{{dataExcerpt}}}
 						</span>
 					</span>
 				<# } #>
