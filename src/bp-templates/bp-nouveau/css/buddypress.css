@@ -10410,6 +10410,10 @@ input#send-to-input {
   font-weight: 600;
 }
 
+body.bb-is-mobile .bp-messages-content .bp-message-content_foot_note {
+  display: none;
+}
+
 .bp-message-content-wrap .bp-message-content_foot_note {
   margin: -10px 20px 20px;
 }
@@ -10913,9 +10917,13 @@ body .bp-messages-user-threads {
 #message-new-submit #bp-messages-send,
 #message-reply-new-submit #send_reply_button {
   opacity: 0;
+  padding: 0;
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  width: auto;
+  min-width: auto;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -12522,6 +12530,7 @@ button[data-bp-close]:hover {
 .bp-feedback.warning .bp-icon,
 .bp-feedback.loading .bp-icon,
 .bp-feedback.success .bp-icon,
+.bp-feedback.success-notice .bp-icon,
 .bp-feedback.updated .bp-icon {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -12561,11 +12570,13 @@ button[data-bp-close]:hover {
   content: "\f469";
 }
 
+.bp-feedback.success-notice .bp-icon,
 .bp-feedback.success .bp-icon,
 .bp-feedback.updated .bp-icon {
   background-color: #8a2;
 }
 
+.bp-feedback.success-notice .bp-icon:before,
 .bp-feedback.success .bp-icon:before,
 .bp-feedback.updated .bp-icon:before {
   content: "\f147";
