@@ -374,43 +374,29 @@ class BP_Messages_Thread {
 
 		$is_group_thread  = self::get_first_message( $thread_id );
 		$message_group_id = (int) bp_messages_get_meta( $is_group_thread->id, 'group_id', true ); // group id.
-		if ( $message_group_id > 0 ) {
-			$args = array(
-				'include_threads' => $thread_id,
-				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-					'relation' => 'AND',
-					array(
-						'key'     => 'bp_messages_deleted',
-						'compare' => 'NOT EXISTS',
-					),
+
+		$args = array(
+			'include_threads' => $thread_id,
+			'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'relation' => 'AND',
+				array(
+					'key'     => 'bp_messages_deleted',
+					'compare' => 'NOT EXISTS',
 				),
-				'per_page'        => 1,
-				'page'            => 1,
-				'count_total'     => false,
+			),
+			'per_page'        => 1,
+			'page'            => 1,
+			'count_total'     => false,
+		);
+
+		if ( $message_group_id > 0 && false === $include_join_left_message ) {
+			$args['meta_query'][] = array(
+				'key'     => 'group_message_group_joined',
+				'compare' => 'NOT EXISTS',
 			);
-			if ( false === $include_join_left_message ) {
-				$args['meta_query'][] = array(
-					'key'     => 'group_message_group_joined',
-					'compare' => 'NOT EXISTS',
-				);
-				$args['meta_query'][] = array(
-					'key'     => 'group_message_group_left',
-					'compare' => 'NOT EXISTS',
-				);
-			}
-		} else {
-			$args = array(
-				'include_threads' => $thread_id,
-				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-					'relation' => 'AND',
-					array(
-						'key'     => 'bp_messages_deleted',
-						'compare' => 'NOT EXISTS',
-					),
-				),
-				'per_page'        => 1,
-				'page'            => 1,
-				'count_total'     => false,
+			$args['meta_query'][] = array(
+				'key'     => 'group_message_group_left',
+				'compare' => 'NOT EXISTS',
 			);
 		}
 
