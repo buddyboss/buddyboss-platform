@@ -960,6 +960,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'display_date'                    => bb_get_thread_sent_date(),
 			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 			'is_private_thread'               => $is_private_thread,
+			'has_media'                       => false,
 		);
 
 		if ( (int) bp_action_variable( 0 ) === (int) $bp_get_message_thread_id ) {
@@ -1085,16 +1086,16 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		}
 
 		if ( empty( $threads->threads[ $i ]['excerpt'] ) ) {
-
 			if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 				$media_ids = bp_messages_get_meta( $last_message_id, 'bp_media_ids', true );
 
 				if ( ! empty( $media_ids ) ) {
-					$media_ids = explode( ',', $media_ids );
+					$threads->threads[ $i ]['has_media'] = true;
+					$media_ids                           = explode( ',', $media_ids );
 					if ( count( $media_ids ) < 2 ) {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent a photo', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a photo', 'buddyboss' );
 					} else {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent some photos', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some photos', 'buddyboss' );
 					}
 				}
 			}
@@ -1103,11 +1104,12 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
 
 				if ( ! empty( $video_ids ) ) {
-					$video_ids = explode( ',', $video_ids );
+					$threads->threads[ $i ]['has_media'] = true;
+					$video_ids                           = explode( ',', $video_ids );
 					if ( count( $video_ids ) < 2 ) {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent a video', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a video', 'buddyboss' );
 					} else {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent some videos', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some videos', 'buddyboss' );
 					}
 				}
 			}
@@ -1116,11 +1118,12 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				$document_ids = bp_messages_get_meta( $last_message_id, 'bp_document_ids', true );
 
 				if ( ! empty( $document_ids ) ) {
-					$document_ids = explode( ',', $document_ids );
+					$threads->threads[ $i ]['has_media'] = true;
+					$document_ids                        = explode( ',', $document_ids );
 					if ( count( $document_ids ) < 2 ) {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent a document', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a document', 'buddyboss' );
 					} else {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent some documents', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some documents', 'buddyboss' );
 					}
 				}
 			}
@@ -1129,10 +1132,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
 
 				if ( ! empty( $gif_data ) ) {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent a GIF', 'buddyboss' );
+					$threads->threads[ $i ]['has_media'] = true;
+					$threads->threads[ $i ]['excerpt']   = __( 'Sent a GIF', 'buddyboss' );
 				}
 			}
-
 		}
 
 		if ( bp_is_active( 'moderation' ) ) {
