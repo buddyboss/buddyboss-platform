@@ -2203,7 +2203,7 @@ function bb_get_message_response_object( $message ) {
 
 			if ( ! empty( $gif_data ) ) {
 				$has_media = true;
-				$excerpt   = __( 'Sent a GIF', 'buddyboss' );
+				$excerpt   = __( 'Sent a gif', 'buddyboss' );
 			}
 		}
 	}

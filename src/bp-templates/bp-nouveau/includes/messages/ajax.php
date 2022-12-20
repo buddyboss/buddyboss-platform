@@ -1133,7 +1133,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 				if ( ! empty( $gif_data ) ) {
 					$threads->threads[ $i ]['has_media'] = true;
-					$threads->threads[ $i ]['excerpt']   = __( 'Sent a GIF', 'buddyboss' );
+					$threads->threads[ $i ]['excerpt']   = __( 'Sent a gif', 'buddyboss' );
 				}
 			}
 		}
