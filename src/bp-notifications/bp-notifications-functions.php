@@ -1587,3 +1587,22 @@ function bb_get_delay_email_notifications_time() {
 function bb_check_delay_email_notification() {
 	return (bool) ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() );
 }
+
+/**
+ * Function to check current user it offline for sending the push notification.
+ *
+ * @since BuddyBoss 2.2
+ *
+ * @param int $user_id User ID.
+ *
+ * @return bool
+ */
+function bb_can_send_push_notification( $user_id ) {
+	$presence_time = (int) apply_filters( 'bb_push_notification_presence_time', 300 ); // 5 minutes.
+	$user_presence = bb_is_online_user( $user_id, $presence_time );
+	if ( true === $user_presence ) {
+		return false;
+	}
+
+	return true;
+}
