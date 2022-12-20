@@ -120,6 +120,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Boolean} [enable_forum] Whether the Group has a forum enabled or not.
 	 * @apiParam {Boolean} [show_hidden] Whether results should include hidden Groups.
 	 * @apiParam {String=all,personal} [scope=all] Limit result set to items with a specific scope.
+	 * @apiParam {Boolean} [can_post] Fetch current users groups which can post activity in it.
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -138,6 +139,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'per_page'     => $request['per_page'],
 			'status'       => $request['status'],
 			'page'         => $request['page'],
+			'can_post'     => (bool) $request['can_post'],
 		);
 
 		if ( empty( $request['parent_id'] ) ) {
@@ -198,8 +200,15 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		$args = apply_filters( 'bp_rest_groups_get_items_query_args', $args, $request );
 
 		// Actually, query it.
+		if ( true === $args['can_post'] && function_exists( 'bb_groups_get_join_sql_for_activity' ) && function_exists( 'bb_groups_get_where_conditions_for_activity' ) ) {
+			add_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+			add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
+		}
 		$groups = groups_get_groups( $args );
-
+		if ( true === $args['can_post'] && function_exists( 'bb_groups_get_join_sql_for_activity' ) && function_exists( 'bb_groups_get_where_conditions_for_activity' ) ) {
+			remove_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+			remove_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
+		}
 		// Users need (at least, should we be more restrictive ?) to be logged in to use the edit context.
 		if ( 'edit' === $request->get_param( 'context' ) && ! is_user_logged_in() ) {
 			$request->set_param( 'context', 'view' );
@@ -1140,6 +1149,10 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
 		$key  = 'get_item';
 
+		if ( isset( $args['can_post'] ) && WP_REST_Server::READABLE !== $method ) {
+			unset( $args['can_post'] );
+		}
+
 		if ( WP_REST_Server::CREATABLE === $method || WP_REST_Server::EDITABLE === $method ) {
 			$key                         = 'create_item';
 			$args['description']['type'] = 'string';
@@ -1664,6 +1677,14 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'default'           => 'all',
 			'enum'              => array( 'all', 'personal' ),
 			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['can_post'] = array(
+			'description'       => __( 'Fetch current users groups which can post activity in it.', 'buddyboss' ),
+			'default'           => false,
+			'type'              => 'boolean',
+			'sanitize_callback' => 'rest_sanitize_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
