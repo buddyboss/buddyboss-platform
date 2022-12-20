@@ -93,6 +93,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 			if (
+				isset( $enabled_all_notification['bb_forums_subscribed_reply'] ) &&
 				! empty( $enabled_all_notification['bb_forums_subscribed_reply']['main'] ) &&
 				'yes' === $enabled_all_notification['bb_forums_subscribed_reply']['main']
 			) {
@@ -164,6 +165,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 			if (
+				isset( $enabled_all_notification['bb_forums_subscribed_discussion'] ) &&
 				! empty( $enabled_all_notification['bb_forums_subscribed_discussion']['main'] ) &&
 				'yes' === $enabled_all_notification['bb_forums_subscribed_discussion']['main']
 			) {
