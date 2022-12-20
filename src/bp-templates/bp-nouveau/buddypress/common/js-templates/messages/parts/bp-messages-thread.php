@@ -247,14 +247,13 @@
 								<# } #>
 							<# } #>
 						</span>
-						<span class="last-message-step">
-							<#
-							var dataExcerpt = data.excerpt;
-							if ( dataExcerpt && true === displayName && data.has_media && ( data.sender_is_you || '' !== senderName ) ) {
-							  dataExcerpt = dataExcerpt.charAt(0).toLowerCase() + dataExcerpt.slice(1);
-							} #>
-							{{{dataExcerpt}}}
-						</span>
+						<#
+						var dataExcerpt = data.excerpt;
+						if ( dataExcerpt && true === displayName && 'undefined' !== typeof data.has_media && data.has_media ) {
+							dataExcerpt = dataExcerpt.toLowerCase();
+						}
+						#>
+						{{{dataExcerpt}}}
 					</span>
 				<# } #>
 				<div class="thread-date">
