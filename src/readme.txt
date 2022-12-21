@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.1
+Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.1.6
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,68 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.2.2 =
+* Activity - Handled draft activity UI issue in the responsive view
+* Groups - Handled invalid notice shows in frontend when group updated from the dashboard
+* Forums - Handled discussion tags option in the dashboard not showing compatibility issue with the 'BuddyBoss App' plugin
+* Forums - Handled forum listing with image and big description UI issue in the dashboard
+* Forums - Handled discussion spam option removes document critical issue
+* Media - Handled add video form small draft content issue
+* Messages - Handled the 'Return to send' message issue by removing the option for mobile devices
+* Messages - Handled newline option not working issue after photo selected in the editor
+* Messages - Handled performance issues on a big network when creating a thread for multiple recipients
+* Messages - Handled 'send message' action from members directory UX issue in the responsive view
+* Core - Handled 'BuddyBoss' string translation critical issue in the Dashboard theme options screen from 'BuddyBoss Theme'
+* Core - Handled medium editor duplicate text issue for android devices across the network
+* REST API - Handled send individual message endpoint in group API issues
+
+= 2.2.1 =
+* Activity - Handled forum reply auto-generated activity minor formatting issue
+* Activity - Handled @mention name not updating issue when edited from the dashboard
+* Activity - Handled minor translation issue for string 'comment'
+* Profiles - Handled display name format issue in member profile screen title
+* Groups - Handled group not working issue for non-English language slug
+* Groups - Handled single group minor tooltip UI issue when the cover image is disabled
+* Forums - Small improvement to show descriptions on a single forum screen
+* Forums - Handled Forums widget not showing child forums correctly when parent forum id specified
+* Forums - Handled hidden forums associated with the group not showing for group members
+* Media - Handled uploaded document text file with the incorrect content issue
+* Messages - Handled Group thread join/left invalid notice when members are blocked
+* Moderation - Handled blocked member notifications doesn't show issue for all members on the network
+* Core - Small code refactoring to fix PHP warnings and notices while saving pages in the dashboard
+* REST API - Handled group photo description endpoint issue returns HTML entity for special characters
+* Compatibility - Handled 'Gravity Form - User Registration' add-on activation email conflict
+
+= 2.2 =
+* Notifications - Improved Web Push Notification support based on members active status
+* Core - Improved online status for members throughout the network
+* REST API - Provided Pusher Integration API support from BuddyBoss Platform Pro
+* REST API - Provided online status updates support in the API
+
+= 2.1.7.2 =
+* Messages - Handled messages table name prefix
+
+= 2.1.7.1 =
+* Messages - Handled SQL queries performance critical issue
+
+= 2.1.7 =
+* Activity - Handled edit activity with documents not working as expected
+* Activity - Handled auto-generated forum discussion, quick reply giphy option not working issue
+* Activity - Handled post activity to a specific group issue even when not allowed
+* Profiles - Handled a small UI issue for the repeater fieldset in the profile edit screen
+* Media - Handled video doesn't show seek forward/backward option issue in the modal
+* Media - Handled media upload not working issue in group messages when option disabled for private messages only
+* Tools - Handled 'clear default data' critical issue when the forums component is disabled
+* Updater - Improvements to updater logic and performance
+* REST API - Handled post activity to a specific group endpoint permission issue
+* Compatibility - Handled group zoom meeting date & time picker broken UI conflict with TutorLMS plugin
+
+= 2.1.6.2 =
+* REST API - Handled discussion reply endpoint not working critical issue
+
+= 2.1.6.1 =
+* Messages - Handled compose message action critical issue on network with a lot of concurrent members
 
 = 2.1.6 =
 * Activity - Handled group description update auto-generated activity content overflow UI issue

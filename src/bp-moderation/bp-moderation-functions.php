@@ -1267,7 +1267,7 @@ function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
 		$type = BP_Moderation_Members::$moderation_type;
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql  = $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d AND s.reported != 0", $type, $user_id );
+		$sql  = $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d AND s.reported != 0 AND m.user_report != 1", $type, $user_id );
 		$data = $wpdb->get_col( $sql ); // phpcs:ignore
 		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
 
