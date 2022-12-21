@@ -69,9 +69,12 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offset = 0, $is_background = true ) {
 	global $wpdb;
 
-	$subscription_tbl = BP_Subscriptions::get_subscription_tbl();
-	$forum_post_type  = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
-	$topic_post_type  = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
+	$subscription_tbl  = BP_Subscriptions::get_subscription_tbl();
+	$forum_post_type   = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
+	$topic_post_type   = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
+	$spam_post_type    = function_exists( 'bbp_get_spam_status_id' ) ? bbp_get_spam_status_id() : apply_filters( 'bbp_spam_post_status', 'spam' );
+	$trash_post_type   = function_exists( 'bbp_get_trash_status_id' ) ? bbp_get_trash_status_id() : apply_filters( 'bbp_trash_post_status', 'trash' );
+	$pending_post_type = function_exists( 'bbp_get_pending_status_id' ) ? bbp_get_pending_status_id() : apply_filters( 'bbp_pending_post_status', 'pending' );
 
 	if ( ! empty( $subscription_users ) ) {
 		foreach ( $subscription_users as $subscription_user ) {
@@ -81,7 +84,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 			$offset ++;
 
 			$place_holder_queries = array();
-			$insert_query         = "INSERT INTO {$subscription_tbl} ( user_id, type, item_id, secondary_item_id, date_recorded ) VALUES";
+			$insert_query         = "INSERT INTO {$subscription_tbl} ( user_id, type, item_id, secondary_item_id, status, date_recorded ) VALUES";
 
 			$forum_subscriptions = get_user_option( '_bbp_forum_subscriptions', $user_id );
 			$forum_subscriptions = array_filter( wp_parse_id_list( $forum_subscriptions ) );
@@ -108,7 +111,12 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						continue;
 					}
 
-					$place_holder_queries[] = $wpdb->prepare( '(%d, %s, %d, %d, %s)', $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], bp_core_current_time() );
+					$subscription_status = 1;
+					if ( ! empty( $forum->post_status ) && in_array( $forum->post_status, array( $spam_post_type, $trash_post_type, $pending_post_type ), true ) ) {
+						$subscription_status = 0;
+					}
+
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %s, %d, %d, %d, %s)', $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
 				}
 			}
 
@@ -137,7 +145,12 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						continue;
 					}
 
-					$place_holder_queries[] = $wpdb->prepare( '(%d, %s, %d, %d, %s)', $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], bp_core_current_time() );
+					$subscription_status = 1;
+					if ( ! empty( $topic->post_status ) && in_array( $topic->post_status, array( $spam_post_type, $trash_post_type, $pending_post_type ), true ) ) {
+						$subscription_status = 0;
+					}
+
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %s, %d, %d, %d, %s)', $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
 				}
 			}
 
