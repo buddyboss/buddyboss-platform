@@ -257,6 +257,7 @@ function bb_create_subscription( $args = array() ) {
 			'secondary_item_id' => 0,
 			'date_recorded'     => bp_core_current_time(),
 			'error_type'        => 'wp_error',
+			'status'            => true,
 		),
 		'bb_create_subscription'
 	);
@@ -268,6 +269,7 @@ function bb_create_subscription( $args = array() ) {
 			'user_id'           => $r['user_id'],
 			'item_id'           => $r['item_id'],
 			'secondary_item_id' => $r['secondary_item_id'],
+			'status'            => null,
 			'cache'             => false,
 		)
 	);
@@ -293,6 +295,7 @@ function bb_create_subscription( $args = array() ) {
 	$new_subscription->secondary_item_id = $r['secondary_item_id'];
 	$new_subscription->date_recorded     = $r['date_recorded'];
 	$new_subscription->error_type        = $r['error_type'];
+	$new_subscription->status            = $r['status'];
 	$new_subscription_created            = $new_subscription->save();
 
 	/**
@@ -460,21 +463,7 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
  * @return bool True on success, false on failure.
  */
 function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status ) {
-
-	$update_subscription_status = ( new BP_Subscriptions() )->update_status( $type, $item_id, $status );
-
-	/**
-	 * Fires after the update status of a subscription items.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $type    Subscription type.
-	 * @param int    $item_id Subscription item ID.
-	 * @param int    $status  Subscription item status.
-	 */
-	do_action( 'bb_delete_subscription', array( $type, $item_id, $status ) );
-
-	return $update_subscription_status;
+	return BP_Subscriptions::update_status( $type, $item_id, $status );
 }
 
 /**

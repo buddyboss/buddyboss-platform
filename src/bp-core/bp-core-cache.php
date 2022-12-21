@@ -426,3 +426,31 @@ function bb_subscriptions_clear_cache_for_subscription( $subscription ) {
 
 add_action( 'bb_subscriptions_after_save', 'bb_subscriptions_clear_cache_for_subscription' );
 add_action( 'bb_subscriptions_after_delete_subscription', 'bb_subscriptions_clear_cache_for_subscription' );
+
+function bb_subscriptions_clear_cache_after_update_status( $type, $item_id ) {
+
+	if ( empty( $type ) || empty( $item_id ) ) {
+		return;
+	}
+
+	$subscription_ids = bb_get_subscriptions(
+		array(
+			'type'    => $type,
+			'item_id' => $item_id,
+			'user_id' => false,
+			'fields'  => 'id',
+			'status'  => null,
+		),
+		true
+	);
+
+	if ( ! empty( $subscription_ids['subscriptions'] ) ) {
+		bp_core_reset_incrementor( 'bb_subscriptions' );
+
+		foreach ( $subscription_ids['subscriptions'] as $id ) {
+			wp_cache_delete( $id, 'bb_subscriptions' );
+		}
+	}
+}
+
+add_action( 'bb_subscriptions_after_update_subscription_status', 'bb_subscriptions_clear_cache_after_update_status', 10, 2 );

@@ -405,9 +405,9 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		 * @param int    $item_id The subscription item ID.
 		 * @param int    $status  The subscription item status.
 		 *
-		 * @return bool True on success, false on failure.
+		 * @return bool
 		 */
-		public function update_status( $type, $item_id, $status ) {
+		public static function update_status( $type, $item_id, $status ) {
 			global $wpdb;
 
 			// Get table name.
@@ -418,8 +418,9 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
-			 * @param int              $id   ID of subscription.
+			 * @param string $type    Type subscription item.
+			 * @param int    $item_id The subscription item ID.
+			 * @param int    $status  The subscription item status.
 			 */
 			do_action_ref_array( 'bb_subscriptions_before_update_subscription_status', array( $type, $item_id, $status ) );
 
@@ -444,8 +445,9 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
-			 * @param int              $id   ID of subscription.
+			 * @param string $type    Type subscription item.
+			 * @param int    $item_id The subscription item ID.
+			 * @param int    $status  The subscription item status.
 			 */
 			do_action_ref_array( 'bb_subscriptions_after_update_subscription_status', array( $type, $item_id, $status ) );
 
