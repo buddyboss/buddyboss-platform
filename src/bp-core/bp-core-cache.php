@@ -427,6 +427,16 @@ function bb_subscriptions_clear_cache_for_subscription( $subscription ) {
 add_action( 'bb_subscriptions_after_save', 'bb_subscriptions_clear_cache_for_subscription' );
 add_action( 'bb_subscriptions_after_delete_subscription', 'bb_subscriptions_clear_cache_for_subscription' );
 
+/**
+ * Clear cache while updating the status of the subscriptions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type    Type subscription item.
+ * @param int    $item_id The subscription item ID.
+ *
+ * @return void
+ */
 function bb_subscriptions_clear_cache_after_update_status( $type, $item_id ) {
 
 	if ( empty( $type ) || empty( $item_id ) ) {
