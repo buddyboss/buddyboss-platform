@@ -449,6 +449,35 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
 }
 
 /**
+ * Update the subscription item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type    Subscription type.
+ * @param int    $item_id Subscription item ID.
+ * @param int    $status  Subscription item status.
+ *
+ * @return bool True on success, false on failure.
+ */
+function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status ) {
+
+	$update_subscription_status = ( new BP_Subscriptions() )->update_status( $type, $item_id, $status );
+
+	/**
+	 * Fires after the update status of a subscription items.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $type    Subscription type.
+	 * @param int    $item_id Subscription item ID.
+	 * @param int    $status  Subscription item status.
+	 */
+	do_action( 'bb_delete_subscription', array( $type, $item_id, $status ) );
+
+	return $update_subscription_status;
+}
+
+/**
  * Delete a subscription.
  *
  * @since BuddyBoss [BBVERSION]

@@ -44,7 +44,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		public $type;
 
 		/**
-		 * ID of forum/topic.
+		 * ID of subscription item.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 * @var int
@@ -52,12 +52,20 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		public $item_id;
 
 		/**
-		 * ID of parent forum.
+		 * ID of parent item.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 * @var int
 		 */
 		public $secondary_item_id;
+
+		/**
+		 * Status of the subscription item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @var int
+		 */
+		public $status;
 
 		/**
 		 * Date the subscription was created.
@@ -175,6 +183,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			$this->type              = $subscription->type;
 			$this->item_id           = (int) $subscription->item_id;
 			$this->secondary_item_id = (int) $subscription->secondary_item_id;
+			$this->status            = (int) $subscription->status;
 			$this->date_recorded     = $subscription->date_recorded;
 		}
 
@@ -237,6 +246,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			$this->type              = apply_filters( 'bb_subscriptions_type_before_save', $this->type, $this->id );
 			$this->item_id           = apply_filters( 'bb_subscriptions_item_id_before_save', $this->item_id, $this->id );
 			$this->secondary_item_id = apply_filters( 'bb_subscriptions_secondary_item_id_before_save', $this->secondary_item_id, $this->id );
+			$this->status            = apply_filters( 'bb_subscriptions_status_before_save', $this->status, $this->id );
 			$this->date_recorded     = apply_filters( 'bb_subscriptions_date_recorded_before_save', $this->date_recorded, $this->id );
 
 			/**
@@ -285,6 +295,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 						type = %s,
 						item_id = %d,
 						secondary_item_id = %d,
+						status = %d,
 						date_recorded = %s
 					WHERE
 						id = %d
@@ -293,6 +304,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 					$this->type,
 					$this->item_id,
 					$this->secondary_item_id,
+					$this->status,
 					$this->date_recorded,
 					$this->id
 				);
@@ -304,14 +316,16 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 						type,
 						item_id,
 						secondary_item_id,
+						status,
 						date_recorded
 					) VALUES (
-						%d, %s, %d, %d, %s
+						%d, %s, %d, %d, %d, %s
 					)",
 					$this->user_id,
 					$this->type,
 					$this->item_id,
 					$this->secondary_item_id,
+					$this->status,
 					$this->date_recorded
 				);
 			}
@@ -383,6 +397,62 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		}
 
 		/**
+		 * Update the subscription items status.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $type    Type subscription item.
+		 * @param int    $item_id The subscription item ID.
+		 * @param int    $status  The subscription item status.
+		 *
+		 * @return bool True on success, false on failure.
+		 */
+		public function update_status( $type, $item_id, $status ) {
+			global $wpdb;
+
+			// Get table name.
+			$subscription_tbl = self::get_subscription_tbl();
+
+			/**
+			 * Fires before the update status of a subscriptions.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param BP_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
+			 * @param int              $id   ID of subscription.
+			 */
+			do_action_ref_array( 'bb_subscriptions_before_update_subscription_status', array( $type, $item_id, $status ) );
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$is_updated = $wpdb->update(
+				$subscription_tbl,
+				array(
+					'status' => $status,
+				),
+				array(
+					'type'    => $type,
+					'item_id' => $item_id,
+				)
+			);
+
+			if ( ! is_int( $is_updated ) ) {
+				return false;
+			}
+
+			/**
+			 * Fires after the update status of a subscriptions.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param BP_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
+			 * @param int              $id   ID of subscription.
+			 */
+			do_action_ref_array( 'bb_subscriptions_after_update_subscription_status', array( $type, $item_id, $status ) );
+
+			return true;
+		}
+
+		/**
 		 * Magic getter.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -443,7 +513,9 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		 *                                            Default: null.
 		 *     @type int          $secondary_item_id  Optional. If provided, results will be limited to subscriptions.
 		 *                                            Default: null.
-		 *      @type string      $order_by           Optional. Property to sort by. 'date_recorded', 'item_id',
+		 *     @type bool         $status             Optional. Get all active subscription if true otherwise return inactive.
+		 *                                            Default: true.
+		 *     @type string       $order_by           Optional. Property to sort by. 'date_recorded', 'item_id',
 		 *                                            'secondary_item_id', 'user_id', 'id', 'type'
 		 *                                            'total_subscription_count', 'random', 'include'.
 		 *                                            Default: 'date_recorded'.
@@ -482,6 +554,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				'user_id'           => 0,
 				'item_id'           => 0,
 				'secondary_item_id' => 0,
+				'status'            => true,
 				'order_by'          => 'date_recorded',
 				'order'             => 'DESC',
 				'per_page'          => null,
@@ -533,6 +606,10 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 
 			if ( ! empty( $r['secondary_item_id'] ) ) {
 				$where_conditions['secondary_item_id'] = $wpdb->prepare( 'sc.secondary_item_id = %d', $r['secondary_item_id'] );
+			}
+
+			if ( null !== $r['status'] ) {
+				$where_conditions['status'] = $wpdb->prepare( 'sc.status = %d', (int) $r['status'] );
 			}
 
 			if ( ! empty( $r['include'] ) ) {

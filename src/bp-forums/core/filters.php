@@ -318,3 +318,31 @@ function _bbp_has_replies_query( $args = array() ) {
 	return apply_filters( 'bbp_has_replies_query', $args );
 }
 add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
+
+/**
+ * Fires when a forum/topic is transitioned from one status to another.
+ *
+ * @since [BBVERSION]
+ *
+ * @param string  $new_status New post status.
+ * @param string  $old_status Old post status.
+ * @param WP_Post $post       Post object.
+ */
+function bb_forums_update_subscription_status( $new_status, $old_status, $post ) {
+	if ( ! empty( $post->post_type ) && in_array( $post->post_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ), true ) ) {
+
+		$subscription_status = 1;
+		if ( ! empty( $new_status ) && in_array( $new_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) {
+			$subscription_status = 0;
+		}
+
+		$subscription_type = 'topic';
+		if ( bbp_get_forum_post_type() === $post->post_type ) {
+			$subscription_type = 'forum';
+		}
+
+		bb_subscriptions_update_subscriptions_status( $subscription_type, $post->ID, $subscription_status );
+	}
+}
+
+add_action( 'transition_post_status', 'bb_forums_update_subscription_status', 999, 3 );
