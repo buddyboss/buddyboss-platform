@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 	global $wpdb, $bp_background_updater;
 
-	$offset    = get_option( 'bb_subscriptions_migrate_offset', 0 );
+	$offset    = get_site_option( 'bb_subscriptions_migrate_offset', 0 );
 	$forum_key = $wpdb->prefix . '_bbp_forum_subscriptions';
 	$topic_key = $wpdb->prefix . '_bbp_subscriptions';
 	$results   = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC LIMIT %d OFFSET %d", $forum_key, $topic_key, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -39,7 +39,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 			return bb_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
 		}
 	} else {
-		delete_option( 'bb_subscriptions_migrate_offset' );
+		delete_site_option( 'bb_subscriptions_migrate_offset' );
 
 		if ( ! $is_background ) {
 			/* translators: Status of current action. */
@@ -76,6 +76,9 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	$trash_post_type   = function_exists( 'bbp_get_trash_status_id' ) ? bbp_get_trash_status_id() : apply_filters( 'bbp_trash_post_status', 'trash' );
 	$pending_post_type = function_exists( 'bbp_get_pending_status_id' ) ? bbp_get_pending_status_id() : apply_filters( 'bbp_pending_post_status', 'pending' );
 
+	$site_id  = bp_get_root_blog_id();
+	$switched = is_multisite() && switch_to_blog( $site_id );
+
 	if ( ! empty( $subscription_users ) ) {
 		foreach ( $subscription_users as $subscription_user ) {
 			$user_id = $subscription_user->ID;
@@ -84,7 +87,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 			$offset ++;
 
 			$place_holder_queries = array();
-			$insert_query         = "INSERT INTO {$subscription_tbl} ( user_id, type, item_id, secondary_item_id, status, date_recorded ) VALUES";
+			$insert_query         = "INSERT INTO {$subscription_tbl} ( blog_id, user_id, type, item_id, secondary_item_id, status, date_recorded ) VALUES";
 
 			$forum_subscriptions = get_user_option( '_bbp_forum_subscriptions', $user_id );
 			$forum_subscriptions = array_filter( wp_parse_id_list( $forum_subscriptions ) );
@@ -116,7 +119,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						$subscription_status = 0;
 					}
 
-					$place_holder_queries[] = $wpdb->prepare( '(%d, %s, %d, %d, %d, %s)', $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $site_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
 				}
 			}
 
@@ -150,7 +153,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						$subscription_status = 0;
 					}
 
-					$place_holder_queries[] = $wpdb->prepare( '(%d, %s, %d, %d, %d, %s)', $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $site_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
 				}
 			}
 
@@ -175,7 +178,12 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	}
 
 	// Update the migration offset.
-	update_option( 'bb_subscriptions_migrate_offset', $offset );
+	update_site_option( 'bb_subscriptions_migrate_offset', $offset );
+
+	// Switch back to current blog if site is multisite.
+	if ( $switched ) {
+		restore_current_blog();
+	}
 
 	if ( $is_background ) {
 		bb_subscriptions_migrate_users_forum_topic( $is_background );
