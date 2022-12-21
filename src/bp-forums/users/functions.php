@@ -1204,7 +1204,7 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
  *
  * @param string $action The requested action to compare this function to.
  *
- * @uses  bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses  bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses  bbp_get_user_id() To get the user id
  * @uses  bbp_verify_nonce_request() To verify the nonce and check the request
  * @uses  current_user_can() To check if the current user can edit the user
@@ -1311,7 +1311,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
  *
  * @param string $action The requested action to compare this function to
  *
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_user_id() To get the user id
  * @uses bbp_verify_nonce_request() To verify the nonce and check the request
  * @uses current_user_can() To check if the current user can edit the user

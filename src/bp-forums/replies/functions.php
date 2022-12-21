@@ -908,7 +908,7 @@ function bbp_edit_reply_handler( $action = '' ) {
  * @uses update_post_meta() To update the reply metas
  * @uses set_transient() To update the flood check transient for the ip
  * @uses bbp_update_user_last_posted() To update the users last posted time
- * @uses bbp_is_subscriptions_active() To check if the subscriptions feature is
+ * @uses bb_is_enabled_subscription() To check if the subscriptions feature is
  *                                      activated or not
  * @uses bbp_is_user_subscribed() To check if the user is subscribed
  * @uses bbp_remove_user_subscription() To remove the user's subscription

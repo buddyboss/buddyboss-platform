@@ -1029,7 +1029,7 @@ function bbp_repair_forum_visibility() {
  * @since bbPress (r5156)
  *
  * @param int $forum_id Get the forum ID to remove
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_forum_id To get the forum id
  * @uses bbp_get_forum_subscribers() To get the forum subscribers
  * @uses bbp_remove_user_subscription() To remove the user subscription

@@ -1101,7 +1101,7 @@ function bbp_get_do_not_reply_address() {
  * @param mixed $anonymous_data Array of anonymous user data
  * @param int   $reply_author ID of the topic author ID
  *
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_reply_id() To validate the reply ID
  * @uses bbp_get_topic_id() To validate the topic ID
  * @uses bbp_get_forum_id() To validate the forum ID
@@ -1234,7 +1234,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
  * @param mixed $anonymous_data Array of anonymous user data
  * @param int   $topic_author ID of the topic author ID
  *
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_topic_id() To validate the topic ID
  * @uses bbp_get_forum_id() To validate the forum ID
  * @uses bbp_is_topic_published() To make sure the topic is published

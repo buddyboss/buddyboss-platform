@@ -1064,7 +1064,7 @@ function bbp_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
  *  - after: After the link
  * @param int   $user_id Optional. User id.
  * @param bool  $wrap Optional. If you want to wrap the link in <span id="subscription-toggle">.
- * @uses bbp_is_subscriptions_active() to check if subscriptions are active
+ * @uses bb_is_enabled_subscription() to check if subscriptions are active
  * @uses bbp_get_user_id() To get the user id
  * @uses bbp_get_user_id() To get the user id
  * @uses bbp_get_topic_id() To get the topic id

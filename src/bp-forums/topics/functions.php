@@ -904,7 +904,7 @@ function bbp_edit_topic_handler( $action = '' ) {
  * @uses update_post_meta() To update the topic metas
  * @uses set_transient() To update the flood check transient for the ip
  * @uses bbp_update_user_last_posted() To update the users last posted time
- * @uses bbp_is_subscriptions_active() To check if the subscriptions feature is
+ * @uses bb_is_enabled_subscription() To check if the subscriptions feature is
  *                                      activated or not
  * @uses bbp_is_user_subscribed() To check if the user is subscribed
  * @uses bbp_remove_user_subscription() To remove the user's subscription
@@ -2452,7 +2452,7 @@ function bbp_remove_topic_from_all_favorites( $topic_id = 0 ) {
  * @since bbPress (r2652)
  *
  * @param int $topic_id Get the topic id to remove
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_topic_id To get the topic id
  * @uses bbp_get_topic_subscribers() To get the topic subscribers
  * @uses bbp_remove_user_subscription() To remove the user subscription
