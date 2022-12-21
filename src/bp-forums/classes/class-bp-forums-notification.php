@@ -560,7 +560,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				$forum = get_post( $subscription['item_id'] );
 
 				$data = array();
-				if ( empty( $forum ) || is_wp_error( $forum ) ) {
+				if ( empty( $forum ) || is_wp_error( $forum ) || ( ! empty( $forum->post_status ) && in_array( $forum->post_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) ) {
 					$data['link']          = '';
 					$data['icon']['full']  = $default_forum_full_image;
 					$data['icon']['thumb'] = $default_forum_thumb_image;
@@ -665,7 +665,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				$topic = get_post( $subscription['item_id'] );
 
 				$data = array();
-				if ( empty( $topic ) || is_wp_error( $topic ) ) {
+				if ( empty( $topic ) || is_wp_error( $topic ) || ( ! empty( $topic->post_status ) && in_array( $topic->post_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) ) {
 					$data['link']          = '';
 					$data['icon']['full']  = $default_user_full_image;
 					$data['icon']['thumb'] = $default_user_thumb_image;
