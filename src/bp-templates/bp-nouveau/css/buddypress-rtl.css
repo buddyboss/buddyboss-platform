@@ -10007,6 +10007,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   list-style: none;
 }
 
+#message-threads .message-thread-options.loading {
+  display: block;
+}
+
 #message-threads .message-thread-options.loading .bb_more_options_action {
   pointer-events: none;
 }
