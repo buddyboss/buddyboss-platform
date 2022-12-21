@@ -774,6 +774,7 @@ function bb_delete_user_subscriptions( $user_id ) {
 		array(
 			'user_id' => $user_id,
 			'fields'  => 'id',
+			'status'  => null,
 			'cache'   => false,
 		),
 		true
