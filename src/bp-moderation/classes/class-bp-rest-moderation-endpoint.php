@@ -2643,6 +2643,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		$is_user_suspended = bp_moderation_is_user_suspended( $recipient->user_id );
 		$is_user_blocked   = bp_moderation_is_user_blocked( $recipient->user_id );
+		$is_user_reported  = $this->bp_rest_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
 
 		if ( ! empty( $recipient->user_id ) && ( bp_moderation_is_user_suspended( $recipient->user_id ) || bp_moderation_is_user_blocked( $recipient->user_id ) ) ) {
 			$data['current_user_permissions']['can_report'] = false;
@@ -2652,16 +2653,17 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			$data['current_user_permissions']['can_report'] = true;
 		}
 
-		if ( ( bp_moderation_is_user_suspended( $recipient->user_id ) || bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report ) ) ) {
-			$data['current_user_permissions']['can_user_report'] = false;
-		}
-
-		if ( is_user_logged_in() && ! user_can( $recipient->user_id, 'administrator' ) && bp_moderation_user_can( $recipient->user_id, BP_Moderation_Members::$moderation_type_report ) ) {
+		if ( is_user_logged_in() && ! user_can( $recipient->user_id, 'administrator' ) && bp_moderation_user_can( $recipient->user_id, BP_Moderation_Members::$moderation_type_report ) && ! $is_user_reported ) {
 			$data['current_user_permissions']['can_user_report'] = true;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report ) ) {
+		if ( is_user_logged_in() && $is_user_reported ) {
 			$data['current_user_permissions']['user_reported'] = true;
+		}
+
+		if ( $is_user_suspended ) {
+			$data['current_user_permissions']['can_user_report'] = false;
+			$data['current_user_permissions']['user_reported']   = true;
 		}
 
 		if ( ! empty( $recipient->user_id ) ) {

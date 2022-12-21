@@ -603,6 +603,16 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
+	@media screen and (max-width: 480px) {
+
+		.has-draft .whats-new-form-footer {
+			flex-direction: column;
+			align-items: center;
+			padding-top: $pad-med;
+		}
+
+	}
+
 	#whats-new-toolbar .post-elements-buttons-item.disable,
 	#whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) {
 		pointer-events: initial;
