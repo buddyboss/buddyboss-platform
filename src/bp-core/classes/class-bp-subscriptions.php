@@ -556,7 +556,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				'user_id'           => 0,
 				'item_id'           => 0,
 				'secondary_item_id' => 0,
-				'status'            => true,
+				'status'            => null,
 				'order_by'          => 'date_recorded',
 				'order'             => 'DESC',
 				'per_page'          => null,

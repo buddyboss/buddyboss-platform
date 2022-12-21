@@ -1120,6 +1120,7 @@ function bbp_remove_user_forum_subscription( $user_id, $forum_id ) {
 			'secondary_item_id' => $forum->post_parent,
 			'count'             => false,
 			'cache'             => false,
+			'status'            => null,
 		),
 		true
 	);
@@ -1175,6 +1176,7 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
 			'secondary_item_id' => $topic->post_parent,
 			'count'             => false,
 			'cache'             => false,
+			'status'            => null,
 		),
 		true
 	);

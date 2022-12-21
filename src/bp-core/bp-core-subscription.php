@@ -269,7 +269,6 @@ function bb_create_subscription( $args = array() ) {
 			'user_id'           => $r['user_id'],
 			'item_id'           => $r['item_id'],
 			'secondary_item_id' => $r['secondary_item_id'],
-			'status'            => null,
 			'cache'             => false,
 		)
 	);
@@ -346,6 +345,7 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
 			'per_page' => null,
 			'page'     => null,
 			'count'    => false,
+			'status'   => true,
 		),
 		'bb_get_subscriptions'
 	);
@@ -670,6 +670,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		array(
 			'type'    => $type,
 			'item_id' => $item_id,
+			'status'  => true,
 		)
 	);
 
