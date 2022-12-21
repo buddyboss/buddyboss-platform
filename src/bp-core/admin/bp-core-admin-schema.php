@@ -1324,12 +1324,14 @@ function bb_core_install_subscription() {
 	   type varchar(255) NOT NULL,
 	   item_id bigint(20) NOT NULL,
 	   secondary_item_id bigint(20) NOT NULL,
+	   status tinyint(1) NOT NULL DEFAULT '1',
 	   date_recorded datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   PRIMARY KEY  (id),
 	   KEY user_id (user_id),
 	   KEY type (type),
 	   KEY item_id (item_id),
 	   KEY secondary_item_id (secondary_item_id),
+	   KEY status (status),
 	   KEY date_recorded (date_recorded)
    	) {$charset_collate};";
 
