@@ -1320,6 +1320,7 @@ function bb_core_install_subscription() {
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bb_notifications_subscriptions (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   blog_id bigint(20) NOT NULL,
 	   user_id bigint(20) NOT NULL,
 	   type varchar(255) NOT NULL,
 	   item_id bigint(20) NOT NULL,
@@ -1327,6 +1328,7 @@ function bb_core_install_subscription() {
 	   status tinyint(1) NOT NULL DEFAULT '1',
 	   date_recorded datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   PRIMARY KEY  (id),
+	   KEY blog_id (blog_id),
 	   KEY user_id (user_id),
 	   KEY type (type),
 	   KEY item_id (item_id),
