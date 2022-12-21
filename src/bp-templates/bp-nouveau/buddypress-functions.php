@@ -341,6 +341,15 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function enqueue_styles() {
+		global $pagenow;
+
+		if (
+			! empty( $pagenow ) &&
+			in_array( $pagenow, array( 'plugin-editor.php', 'theme-editor.php' ), true )
+		) {
+			return;
+		}
+
 		$min = bp_core_get_minified_asset_suffix();
 		$rtl = '';
 
