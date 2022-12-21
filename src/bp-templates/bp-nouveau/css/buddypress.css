@@ -3509,6 +3509,10 @@ input.search-query-input {
   word-break: break-word;
 }
 
+.activity-list .activity-item .activity-inner p:empty {
+  min-height: 1em;
+}
+
 .activity-list .activity-item .activity-read-more {
   margin-left: 1em;
   white-space: nowrap;
@@ -15596,6 +15600,12 @@ p.form-allowed-tags {
 #bbpress-forums .bbp-reply-content .bb-activity-media-wrap + ul.bbp-topic-revision-log,
 #bbpress-forums .bbp-reply-content .bb-activity-media-wrap + .bbp-reply-revision-log {
   margin-top: 15px;
+}
+
+#bbpress-forums .bbp-topic-content p:empty,
+#bbpress-forums .bbp-reply-content p:empty,
+#bbpress-forums .bbp-reply-content p:empty {
+  min-height: 1em;
 }
 
 [dir="rtl"] #bbpress-forums .replies-content [dir="ltr"], [dir="rtl"]

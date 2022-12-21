@@ -253,6 +253,10 @@
 			p {
 				word-break: break-word;
 			}
+
+			p:empty {
+				min-height: 1em;
+			}
 		}
 
 		.activity-read-more {
