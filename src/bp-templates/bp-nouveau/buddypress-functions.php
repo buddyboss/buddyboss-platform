@@ -340,9 +340,13 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 *
 	 * @since BuddyPress 3.0.0
 	 */
-	public function enqueue_styles( $page ) {
+	public function enqueue_styles() {
+		global $pagenow;
 
-		if ( $page === 'plugin-editor.php' || $page === 'theme-editor.php' ) {
+		if (
+			! empty( $pagenow ) &&
+			in_array( $pagenow, array( 'plugin-editor.php', 'theme-editor.php' ), true )
+		) {
 			return;
 		}
 
