@@ -214,9 +214,7 @@ add_action( 'bbp_trash_topic', 'bbp_remove_topic_from_all_favorites' );
 add_action( 'bbp_delete_topic', 'bbp_remove_topic_from_all_favorites' );
 
 // Subscriptions.
-add_action( 'bbp_trash_topic', 'bbp_remove_topic_from_all_subscriptions' );
 add_action( 'bbp_delete_topic', 'bbp_remove_topic_from_all_subscriptions' );
-add_action( 'bbp_trash_forum', 'bbp_remove_forum_from_all_subscriptions' );
 add_action( 'bbp_delete_forum', 'bbp_remove_forum_from_all_subscriptions' );
 add_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 9999, 5 );
 add_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );

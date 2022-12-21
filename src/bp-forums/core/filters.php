@@ -329,7 +329,7 @@ add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
  * @param WP_Post $post       Post object.
  */
 function bb_forums_update_subscription_status( $new_status, $old_status, $post ) {
-	if ( ! empty( $post->post_type ) && in_array( $post->post_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ), true ) ) {
+	if ( $new_status !== $old_status && ! empty( $post->post_type ) && in_array( $post->post_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ), true ) ) {
 
 		$subscription_status = 1;
 		if ( ! empty( $new_status ) && in_array( $new_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) {
