@@ -548,7 +548,7 @@ add_action( 'update_option_bp_wp_heartbeat_disabled', 'bb_clear_interval_on_enab
  */
 function bb_forums_subscriptions_redirect() {
 
-	if ( bp_is_my_profile() || function_exists( 'bbp_get_user_subscriptions_slug' ) ) {
+	if ( bp_is_my_profile() && function_exists( 'bbp_get_user_subscriptions_slug' ) ) {
 		global $wp;
 		$url = explode( '/', untrailingslashit( $wp->request ) );
 		if (
