@@ -146,7 +146,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
 			$where['moderation_where'] .= ' AND ';
 		}
-		$where['moderation_where'] .= "( m.user_id NOT IN ( " . bb_moderation_get_blocked_by_sql() . " ) OR m.privacy IN ( 'grouponly' ) )";
+		$where['moderation_where'] .= "( m.user_id NOT IN ( " . bb_moderation_get_blocked_by_sql() . " ) )";
 
 		return $where;
 	}
