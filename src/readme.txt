@@ -57,6 +57,21 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.2.2 =
+* Activity - Handled draft activity UI issue in the responsive view
+* Groups - Handled invalid notice shows in frontend when group updated from the dashboard
+* Forums - Handled discussion tags option in the dashboard not showing compatibility issue with the 'BuddyBoss App' plugin
+* Forums - Handled forum listing with image and big description UI issue in the dashboard
+* Forums - Handled discussion spam option removes document critical issue
+* Media - Handled add video form small draft content issue
+* Messages - Handled the 'Return to send' message issue by removing the option for mobile devices
+* Messages - Handled newline option not working issue after photo selected in the editor
+* Messages - Handled performance issues on a big network when creating a thread for multiple recipients
+* Messages - Handled 'send message' action from members directory UX issue in the responsive view
+* Core - Handled 'BuddyBoss' string translation critical issue in the Dashboard theme options screen from 'BuddyBoss Theme'
+* Core - Handled medium editor duplicate text issue for android devices across the network
+* REST API - Handled send individual message endpoint in group API issues
+
 = 2.2.1 =
 * Activity - Handled forum reply auto-generated activity minor formatting issue
 * Activity - Handled @mention name not updating issue when edited from the dashboard
