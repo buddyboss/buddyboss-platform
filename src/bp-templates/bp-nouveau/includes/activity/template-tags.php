@@ -159,7 +159,12 @@ function bp_nouveau_activity_member_post_form() {
 	 */
 	do_action( 'bp_before_member_activity_post_form' );
 
-	$is_main_tab = ! bp_current_action() || strpos( bp_current_action(), 'just-me' ) !== false;
+	if ( bp_is_activity_tabs_active() ) {
+		$is_main_tab = ! bp_current_action() || in_array( bp_current_action(), array( 'favorites', 'just-me', 'friends', 'groups', 'mentions', 'following' ), true );
+	} else {
+		$is_main_tab = ! bp_current_action() || ( strpos( bp_current_action(), 'just-me' ) !== false || strpos( bp_current_action(), 'following' ) !== false || strpos( bp_current_action(), 'mentions' ) !== false || strpos( bp_current_action(), 'friends' ) !== false || strpos( bp_current_action(), 'groups' ) !== false );
+	}
+
 	if ( is_user_logged_in() && $is_main_tab ) {
 		bp_get_template_part( 'activity/post-form' );
 	}
