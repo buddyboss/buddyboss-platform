@@ -231,6 +231,10 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
+		if( isset( $where_conditions['group'] ) && ! empty( $where_conditions['group'] ) ) {
+			return $where_conditions;
+		}
+
 		$where                  = array();
 		$where['suspend_where'] = $this->exclude_where_query();
 
