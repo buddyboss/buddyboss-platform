@@ -75,9 +75,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	$spam_post_type    = function_exists( 'bbp_get_spam_status_id' ) ? bbp_get_spam_status_id() : apply_filters( 'bbp_spam_post_status', 'spam' );
 	$trash_post_type   = function_exists( 'bbp_get_trash_status_id' ) ? bbp_get_trash_status_id() : apply_filters( 'bbp_trash_post_status', 'trash' );
 	$pending_post_type = function_exists( 'bbp_get_pending_status_id' ) ? bbp_get_pending_status_id() : apply_filters( 'bbp_pending_post_status', 'pending' );
-
-	$site_id  = bp_get_root_blog_id();
-	$switched = is_multisite() && switch_to_blog( $site_id );
+	$blog_id           = bp_get_root_blog_id();
 
 	if ( ! empty( $subscription_users ) ) {
 		foreach ( $subscription_users as $subscription_user ) {
@@ -103,6 +101,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					$record_args = array(
 						'user_id'           => (int) $user_id,
 						'item_id'           => (int) $forum_id,
+						'blog_id'           => (int) $blog_id,
 						'secondary_item_id' => (int) $forum->post_parent,
 						'type'              => 'forum',
 					);
@@ -119,7 +118,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						$subscription_status = 0;
 					}
 
-					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $site_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $blog_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
 				}
 			}
 
@@ -137,6 +136,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					$record_args = array(
 						'user_id'           => (int) $user_id,
 						'item_id'           => (int) $topic_id,
+						'blog_id'           => (int) $blog_id,
 						'secondary_item_id' => (int) $topic->post_parent,
 						'type'              => 'topic',
 					);
@@ -153,7 +153,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						$subscription_status = 0;
 					}
 
-					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $site_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $blog_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
 				}
 			}
 
@@ -179,11 +179,6 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 
 	// Update the migration offset.
 	update_site_option( 'bb_subscriptions_migrate_offset', $offset );
-
-	// Switch back to current blog if site is multisite.
-	if ( $switched ) {
-		restore_current_blog();
-	}
 
 	if ( $is_background ) {
 		bb_subscriptions_migrate_users_forum_topic( $is_background );
@@ -261,6 +256,7 @@ function bb_get_subscriptions_types( $singular = false ) {
  *     An array of arguments.
  *     @type string        $type              The type subscription.
  *                                            'Forum', 'topic'.
+ *     @type int          $blog_id            Optional. Get subscription site wise. Default current site ID.
  *     @type int          $user_id            The ID of the user who created the Subscription.
  *     @type int          $item_id            The ID of forum/topic.
  *     @type int          $secondary_item_id  ID of the parent forum/topic.
@@ -272,6 +268,7 @@ function bb_create_subscription( $args = array() ) {
 	$r = bp_parse_args(
 		$args,
 		array(
+			'blog_id'           => bp_get_root_blog_id(),
 			'type'              => '',
 			'user_id'           => bp_loggedin_user_id(),
 			'item_id'           => 0,
@@ -287,6 +284,7 @@ function bb_create_subscription( $args = array() ) {
 	$subscriptions = BP_Subscriptions::get(
 		array(
 			'type'              => $r['type'],
+			'blog_id'           => $r['blog_id'],
 			'user_id'           => $r['user_id'],
 			'item_id'           => $r['item_id'],
 			'secondary_item_id' => $r['secondary_item_id'],
@@ -309,6 +307,7 @@ function bb_create_subscription( $args = array() ) {
 	}
 
 	$new_subscription                    = new BP_Subscriptions();
+	$new_subscription->blog_id           = $r['blog_id'];
 	$new_subscription->user_id           = $r['user_id'];
 	$new_subscription->type              = $r['type'];
 	$new_subscription->item_id           = $r['item_id'];
@@ -343,6 +342,7 @@ function bb_create_subscription( $args = array() ) {
  *                                            Default: null.
  *     @type int          $user_id            Optional. If provided, results will be limited to subscriptions.
  *                                            Default: Current user ID.
+ *     @type int          $blog_id            Optional. Get subscription site wise. Default current site ID.
  *     @type int          $per_page           Optional. Number of items to return per page of results.
  *                                            Default: null (no limit).
  * }
@@ -361,6 +361,7 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
 	$r = bp_parse_args(
 		$args,
 		array(
+			'blog_id'  => bp_get_root_blog_id(),
 			'type'     => array(),
 			'user_id'  => bp_loggedin_user_id(),
 			'per_page' => null,
@@ -394,6 +395,7 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
  *                                            Default: null.
  *     @type int          $item_id            Optional. If provided, results will be limited to subscriptions.
  *                                            Default: null.
+ *     @type int          $blog_id            Optional. Get subscription site wise. Default current site ID.
  *     @type int          $per_page           Optional. Number of items to return per page of results.
  *                                            Default: null (no limit).
  * }
@@ -412,6 +414,7 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
 	$r = bp_parse_args(
 		$args,
 		array(
+			'blog_id'  => bp_get_root_blog_id(),
 			'type'     => array(),
 			'item_id'  => 0,
 			'per_page' => null,
@@ -480,11 +483,12 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
  * @param string $type    Subscription type.
  * @param int    $item_id Subscription item ID.
  * @param int    $status  Subscription item status.
+ * @param int    $blog_id Optional. Get subscription site wise. Default current site ID.
  *
  * @return bool True on success, false on failure.
  */
-function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status ) {
-	return BP_Subscriptions::update_status( $type, $item_id, $status );
+function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id ) {
+	return BP_Subscriptions::update_status( $type, $item_id, $status, $blog_id );
 }
 
 /**
@@ -534,16 +538,22 @@ function bb_delete_subscription( $subscription_id ) {
  *
  * @param string $type    Type of the subscription to delete.
  * @param int    $item_id Item ID of the subscription to delete.
+ * @param int    $blog_id Optional. Get subscription site wise. Default current site ID.
  *
  * @return bool True on success, false on failure.
  */
-function bb_delete_item_subscriptions( $type, $item_id ) {
+function bb_delete_item_subscriptions( $type, $item_id, $blog_id = 0 ) {
+
+	if ( empty( $blog_id ) ) {
+		$blog_id = bp_get_root_blog_id();
+	}
 
 	// Get the subscriptions.
 	$all_subscriptions = bb_get_subscription_users(
 		array(
 			'type'    => $type,
 			'item_id' => $item_id,
+			'blog_id' => $blog_id,
 			'fields'  => 'id',
 			'count'   => false,
 		)
@@ -652,6 +662,7 @@ function bb_is_enabled_subscription( $type = '' ) {
  *                                            Default: null.
  *     @type int          $item_id            Required. The ID of item.
  *                                            Default: null.
+ *     @type int          $blog_id            Optional. Get subscription site wise. Default current site ID.
  *     @type array        $data               Optional. Additional data for notification.
  * }
  *
@@ -663,12 +674,14 @@ function bb_send_notifications_to_subscribers( $args ) {
 		array(
 			'type'    => '',
 			'item_id' => 0,
+			'blog_id' => bp_get_root_blog_id(),
 			'data'    => array(),
 		)
 	);
 
 	$type    = $r['type'];
 	$item_id = $r['item_id'];
+	$blog_id = $r['blog_id'];
 
 	if ( empty( $type ) || empty( $item_id ) ) {
 		return;
@@ -691,6 +704,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		array(
 			'type'    => $type,
 			'item_id' => $item_id,
+			'blog_id' => $blog_id,
 			'status'  => true,
 		)
 	);
@@ -704,6 +718,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 	$parse_args = array(
 		'type'              => $type,
 		'item_id'           => $item_id,
+		'blog_id'           => $blog_id,
 		'data'              => $r['data'],
 		'notification_type' => $notification_type,
 	);

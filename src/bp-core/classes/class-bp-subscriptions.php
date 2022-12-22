@@ -26,6 +26,14 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		public $id;
 
 		/**
+		 * Blog site ID.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @var int
+		 */
+		public $blog_id;
+
+		/**
 		 * User ID.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -177,8 +185,9 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				return;
 			}
 
-			// Subscription found so setup the object variables.
+			// Subscription found so set up the object variables.
 			$this->id                = (int) $subscription->id;
+			$this->blog_id           = (int) $subscription->blog_id;
 			$this->user_id           = (int) $subscription->user_id;
 			$this->type              = $subscription->type;
 			$this->item_id           = (int) $subscription->item_id;
@@ -242,6 +251,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			// Get table name.
 			$subscription_tbl = self::get_subscription_tbl();
 
+			$this->blog_id           = apply_filters( 'bb_subscriptions_blog_id_before_save', $this->blog_id, $this->id );
 			$this->user_id           = apply_filters( 'bb_subscriptions_user_id_before_save', $this->user_id, $this->id );
 			$this->type              = apply_filters( 'bb_subscriptions_type_before_save', $this->type, $this->id );
 			$this->item_id           = apply_filters( 'bb_subscriptions_item_id_before_save', $this->item_id, $this->id );
@@ -291,6 +301,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				$sql = $wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					"UPDATE {$subscription_tbl} SET
+						blog_id = %d,
 						user_id = %d,
 						type = %s,
 						item_id = %d,
@@ -300,6 +311,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 					WHERE
 						id = %d
 					",
+					$this->blog_id,
 					$this->user_id,
 					$this->type,
 					$this->item_id,
@@ -312,6 +324,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				$sql = $wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					"INSERT INTO {$subscription_tbl} (
+						blog_id,
 						user_id,
 						type,
 						item_id,
@@ -319,8 +332,9 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 						status,
 						date_recorded
 					) VALUES (
-						%d, %s, %d, %d, %d, %s
+						%d, %d, %s, %d, %d, %d, %s
 					)",
+					$this->blog_id,
 					$this->user_id,
 					$this->type,
 					$this->item_id,
@@ -404,11 +418,17 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		 * @param string $type    Type subscription item.
 		 * @param int    $item_id The subscription item ID.
 		 * @param int    $status  The subscription item status.
+		 * @param int    $blog_id The site ID. Default current site ID.
 		 *
 		 * @return bool
 		 */
-		public static function update_status( $type, $item_id, $status ) {
+		public static function update_status( $type, $item_id, $status, $blog_id = 0 ) {
 			global $wpdb;
+
+			// Check the site ID is empty then get current site ID.
+			if ( empty( $blog_id ) ) {
+				$blog_id = bp_get_root_blog_id();
+			}
 
 			// Get table name.
 			$subscription_tbl = self::get_subscription_tbl();
@@ -433,6 +453,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				array(
 					'type'    => $type,
 					'item_id' => $item_id,
+					'blog_id' => $blog_id,
 				)
 			);
 
@@ -509,6 +530,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		 *     @type array|string $type               Optional. Array or comma-separated list of subscription types.
 		 *                                            'Forum', 'topic', 'group', 'activity', 'activity_comment'.
 		 *                                            Default: null.
+		 *     @type int          $blog_id            Optional. Get subscription site wise. Default current site ID.
 		 *     @type int          $user_id            Optional. If provided, results will be limited to subscriptions.
 		 *                                            Default: null.
 		 *     @type int          $item_id            Optional. If provided, results will be limited to subscriptions.
@@ -553,6 +575,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 
 			$defaults = array(
 				'type'              => array(),
+				'blog_id'           => bp_get_root_blog_id(),
 				'user_id'           => 0,
 				'item_id'           => 0,
 				'secondary_item_id' => 0,
@@ -596,6 +619,10 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				$r['type']                = array_map( 'sanitize_title', $r['type'] );
 				$type_in                  = "'" . implode( "','", $r['type'] ) . "'";
 				$where_conditions['type'] = "sc.type IN ({$type_in})";
+			}
+
+			if ( ! empty( $r['blog_id'] ) ) {
+				$where_conditions['blog_id'] = $wpdb->prepare( 'sc.blog_id = %d', $r['blog_id'] );
 			}
 
 			if ( ! empty( $r['user_id'] ) ) {
@@ -822,10 +849,12 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		public static function get_tbl_columns() {
 			return array(
 				'id',
+				'blog_id',
 				'user_id',
 				'type',
 				'item_id',
 				'secondary_item_id',
+				'status',
 				'date_recorded',
 			);
 		}
