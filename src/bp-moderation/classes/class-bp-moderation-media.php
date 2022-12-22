@@ -134,7 +134,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend, $args ) {
 		$this->alias = $suspend->alias;
 
-		if( isset( $args['group'] ) ) {
+		if( isset( $args['group'] ) && ! empty( $args['group'] ) ) {
 			return $where;
 		}
 
