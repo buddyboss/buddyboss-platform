@@ -666,18 +666,20 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 				$data = array();
 				if ( empty( $topic ) || is_wp_error( $topic ) || ( ! empty( $topic->post_status ) && in_array( $topic->post_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) ) {
-					$data['link']          = '';
-					$data['icon']['full']  = $default_user_full_image;
-					$data['icon']['thumb'] = $default_user_thumb_image;
-					$data['title']         = sprintf(
-						/* translators: Subscription label. */
+					$data['link']             = '';
+					$data['icon']['full']     = $default_user_full_image;
+					$data['icon']['thumb']    = $default_user_thumb_image;
+					$data['description_html'] = '';
+					$data['title']            = sprintf(
+					/* translators: Subscription label. */
 						__( 'Deleted %s', 'buddyboss' ),
 						$type_data['label']['singular']
 					);
 				} else {
-					$author_id     = $topic->post_author;
-					$data['title'] = bbp_get_topic_title( $subscription['item_id'] );
-					$data['link']  = bbp_get_topic_permalink( $subscription['item_id'] );
+					$author_id                = $topic->post_author;
+					$data['title']            = bbp_get_topic_title( $subscription['item_id'] );
+					$data['link']             = bbp_get_topic_permalink( $subscription['item_id'] );
+					$data['description_html'] = '';
 
 					$data['icon']['full'] = (string) bp_core_fetch_avatar(
 						array(
@@ -703,7 +705,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					}
 
 					if ( ! empty( $author_id ) ) {
-						$data['description_html'] = esc_html__( 'Posted by', 'buddyboss' ) . ' <strong>' . bp_core_get_user_displayname( $author_id ) . '</strong>';
+						$data['description_html'] .= esc_html__( 'Posted by', 'buddyboss' ) . ' <strong>' . bp_core_get_user_displayname( $author_id ) . '</strong>';
 					}
 
 					// Get topic forum.
