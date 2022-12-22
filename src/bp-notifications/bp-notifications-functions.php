@@ -1354,6 +1354,44 @@ function bb_get_notification_conditional_icon( $notification ) {
 			}
 
 			break;
+		case 'bb_activity_following_post':
+			$item_id      = $notification->item_id;
+			$activity     = new BP_Activity_Activity( $item_id );
+			$media_ids    = bp_activity_get_meta( $item_id, 'bp_media_ids', true );
+			$document_ids = bp_activity_get_meta( $item_id, 'bp_document_ids', true );
+			$video_ids    = bp_activity_get_meta( $item_id, 'bp_video_ids', true );
+			$gif_data     = bp_activity_get_meta( $item_id, '_gif_data', true );
+			$excerpt      = wp_strip_all_tags( $activity->content );
+
+			if ( '&nbsp;' === $excerpt ) {
+				$excerpt = '';
+			} else {
+				$excerpt = '"' . bp_create_excerpt(
+						$excerpt,
+						50,
+						array(
+							'ending' => __( '&hellip;', 'buddyboss' ),
+						)
+					) . '"';
+
+				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+				$excerpt = str_replace( '""', '', $excerpt );
+			}
+
+			if ( ! empty( $excerpt ) ) {
+				$icon_class = 'bb-icon-f bb-icon-activity';
+			} elseif ( $media_ids ) {
+				$icon_class = 'bb-icon-f bb-icon-image';
+			} elseif ( $document_ids ) {
+				$icon_class = 'bb-icon-f bb-icon-file-doc';
+			} elseif ( $video_ids ) {
+				$icon_class = 'bb-icon-f bb-icon-video';
+			} elseif ( ! empty( $gif_data ) ) {
+				$icon_class = 'bb-icon-f bb-icon-activity';
+			} else {
+				$icon_class = 'bb-icon-f bb-icon-activity';
+			}
+			break;
 
 	}
 
