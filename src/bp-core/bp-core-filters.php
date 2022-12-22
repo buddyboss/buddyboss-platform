@@ -2258,7 +2258,7 @@ add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
 /**
  * Function to update menu order for Theme Options and License Key in the BuddyBoss menu.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.2
  *
  * @param array $menu_order Menu order.
  *
