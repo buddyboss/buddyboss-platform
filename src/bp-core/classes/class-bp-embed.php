@@ -145,12 +145,7 @@ class BP_Embed extends WP_Embed {
 		}
 
 		$oembed_obj = _wp_oembed_get_object();
-		if ( $oembed_obj ) {
-			$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
-			if ( ! $embed_code ) {
-				return $this->maybe_make_link( $url );
-			}
-		}
+
 		// If oEmbed discovery is true, skip oEmbed provider check.
 		$is_oembed_link = false;
 		if ( ! $attr['discover'] ) {

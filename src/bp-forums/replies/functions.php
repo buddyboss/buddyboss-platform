@@ -2072,7 +2072,7 @@ function bbp_reply_content_autoembed() {
 	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
 		add_filter( 'bbp_get_reply_content', 'bb_validate_reply_embed', 1 );
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
-//		add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 );
+		add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 );
 	}
 }
 
@@ -2086,44 +2086,17 @@ function bbp_reply_content_autoembed() {
  * @return mixed
  */
 function bb_validate_reply_embed( $content ) {
+	global $wp_embed;
 
 	if ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) {
 		return $content;
 	}
 
-	if ( strpos( $content, '<iframe' ) !== false ) {
-		return $content;
+	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
+		add_filter( 'bbp_get_reply_content', array( $wp_embed, 'autoembed' ), 2 );
 	}
 
-	$embed_urls = $embeds_array = array();
-	$flag       = true;
-
-	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
-		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
-	}
-
-	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
-		$embed_urls = array_filter( $embed_urls[0] );
-		$embed_urls = array_unique( $embed_urls );
-
-		foreach ( $embed_urls as $url ) {
-			if ( $flag == false ) {
-				continue;
-			}
-
-			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
-			if ( ! $embed ) {
-				return $content;
-			}
-			if ( $embed ) {
-				$flag           = false;
-				$embeds_array[] = wpautop( $embed );
-			}
-		}
-	}
-
-	// Put the line breaks back.
-	return $content . implode( '', $embeds_array );
+	return $content;
 }
 
 /**
