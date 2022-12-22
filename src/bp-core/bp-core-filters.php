@@ -2370,4 +2370,4 @@ function bb_loom_oembed_discover_support( $retval, $url ) {
 	return $retval;
 }
 
-add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support' );
+add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10, 2 );
