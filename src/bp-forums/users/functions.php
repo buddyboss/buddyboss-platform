@@ -1278,7 +1278,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
 	do_action( 'bbp_subscriptions_handler', $success, $user_id, $forum_id, $action );
 
 	// Success!
-	if ( true === $success ) {
+	if ( $success ) {
 
 		// Redirect back from whence we came
 		if ( bbp_is_subscriptions() ) {
@@ -1385,7 +1385,7 @@ function bbp_subscriptions_handler( $action = '' ) {
 	do_action( 'bbp_subscriptions_handler', $success, $user_id, $topic_id, $action );
 
 	// Success!
-	if ( true === $success ) {
+	if ( $success ) {
 
 		// Redirect back from whence we came
 		if ( bbp_is_subscriptions() ) {
