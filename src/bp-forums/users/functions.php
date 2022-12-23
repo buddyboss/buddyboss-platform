@@ -910,10 +910,10 @@ function bbp_is_user_subscribed_to_topic( $user_id = 0, $topic_id = 0, $subscrib
  *
  * @since bbPress (r5156)
  *
- * @param int $user_id  Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id   Optional. User id.
+ * @param int $object_id Optional. Topic id.
  *
- * @return bool Always true
+ * @return bool|int Return subscription item ID if true otherwise false.
  * @uses  get_post() To get the post object
  * @uses  bbp_get_user_subscribed_forum_ids() To get the user's forum subscriptions
  * @uses  bbp_get_user_subscribed_topic_ids() To get the user's topic subscriptions
@@ -927,7 +927,7 @@ function bbp_add_user_subscription( $user_id = 0, $object_id = 0 ) {
 		return false;
 	}
 
-	// Get the post type
+	// Get the post type.
 	$post_type = get_post_type( $object_id );
 	if ( empty( $post_type ) ) {
 		return false;
@@ -935,21 +935,21 @@ function bbp_add_user_subscription( $user_id = 0, $object_id = 0 ) {
 
 	switch ( $post_type ) {
 
-		// Forum
+		// Forum.
 		case bbp_get_forum_post_type():
-			bbp_add_user_forum_subscription( $user_id, $object_id );
+			$subscription_id = bbp_add_user_forum_subscription( $user_id, $object_id );
 			break;
 
-		// Topic
+		// Topic.
 		case bbp_get_topic_post_type():
 		default:
-			bbp_add_user_topic_subscription( $user_id, $object_id );
+			$subscription_id = bbp_add_user_topic_subscription( $user_id, $object_id );
 			break;
 	}
 
 	do_action( 'bbp_add_user_subscription', $user_id, $object_id, $post_type );
 
-	return true;
+	return $subscription_id;
 }
 
 /**
@@ -960,7 +960,7 @@ function bbp_add_user_subscription( $user_id = 0, $object_id = 0 ) {
  * @param int $user_id  Optional. User id.
  * @param int $forum_id Optional. forum id.
  *
- * @return bool Always true
+ * @return bool|int Return subscription item ID if true otherwise false.
  * @uses  bbp_get_forum() To get the forum
  * @uses  update_user_option() To update the user's subscriptions
  * @uses  do_action() Calls 'bbp_add_user_subscription' with the user & forum id
@@ -992,7 +992,7 @@ function bbp_add_user_forum_subscription( $user_id = 0, $forum_id = 0 ) {
 
 	do_action( 'bbp_add_user_forum_subscription', $user_id, $forum_id );
 
-	return true;
+	return $subscription_id;
 }
 
 /**
@@ -1003,7 +1003,7 @@ function bbp_add_user_forum_subscription( $user_id = 0, $forum_id = 0 ) {
  * @param int $user_id  Optional. User id.
  * @param int $topic_id Optional. Topic id.
  *
- * @return bool Always true
+ * @return bool|int Return subscription item ID if true otherwise false.
  * @uses  bbp_get_topic() To get the topic
  * @uses  update_user_option() To update the user's subscriptions
  * @uses  do_action() Calls 'bbp_add_user_subscription' with the user & topic id
@@ -1035,7 +1035,7 @@ function bbp_add_user_topic_subscription( $user_id = 0, $topic_id = 0 ) {
 
 	do_action( 'bbp_add_user_topic_subscription', $user_id, $topic_id );
 
-	return true;
+	return $subscription_id;
 }
 
 /**
