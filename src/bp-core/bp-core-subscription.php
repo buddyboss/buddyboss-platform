@@ -43,7 +43,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 
 		if ( ! $is_background ) {
 			/* translators: Status of current action. */
-			$statement = __( 'Migrated user forums/topics to new systems&hellip; %s', 'buddyboss' );
+			$statement = __( 'Migrated BBPress forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
 			$result    = __( 'Complete!', 'buddyboss' );
 
 			// All done!
@@ -185,7 +185,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	} else {
 		$records_updated = sprintf(
 		/* translators: total members */
-			__( 'The forums/topics successfully migrated for %s members.', 'buddyboss' ),
+			__( 'The BBPress forum and discussion subscriptions successfully migrated to BuddyBoss for %s members.', 'buddyboss' ),
 			bp_core_number_format( $offset )
 		);
 
