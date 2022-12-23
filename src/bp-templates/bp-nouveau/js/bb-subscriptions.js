@@ -345,7 +345,7 @@ window.bp = window.bp || {};
 							} else {
 								current.removeClass( 'is_loading' );
 								current.parents( '.bb-subscription-item' ).remove();
-								if ( 0 === $( '#subscription-items-forum li' ).length ) {
+								if ( 0 === $( '#subscription-items-' + self.options.type + ' li' ).length ) {
 									self.addNoSubscriptionView( self.options.type );
 								}
 							}
