@@ -181,8 +181,8 @@ window.bp = window.bp || {};
 
 		displayEditActivity: function ( activity_data ) {
 			bp.draft_activity.allow_delete_media = true;
-			bp.draft_activity.display_post = 'edit';
-			var self = this;
+			bp.draft_activity.display_post       = 'edit';
+			var self                             = this;
 
 			// reset post form before editing.
 			self.postForm.$el.trigger( 'reset' );
@@ -355,6 +355,7 @@ window.bp = window.bp || {};
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
 			var $singleActivityFormWrap  = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+			var $tabActivityFormWrap     = $( '#bp-nouveau-activity-form' );
 
 			// unwrap hw wrapped content section.
 			if ( $( '#whats-new-content' ).parent().is( '.edit-activity-content-wrap' ) ) {
@@ -365,6 +366,10 @@ window.bp = window.bp || {};
 
 			if ( $singleActivityFormWrap.length ) {
 				$singleActivityFormWrap.hide();
+			}
+
+			if ( $tabActivityFormWrap.hasClass( 'is-bp-hide' ) ) {
+				$tabActivityFormWrap.addClass( 'bp-hide' );
 			}
 		},
 
@@ -386,6 +391,7 @@ window.bp = window.bp || {};
 		displayEditDraftActivityData: function ( activity_data, bpActivityEvent ) {
 			var self = this;
 
+			self.postForm.$el.parent( '#bp-nouveau-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
 			var element = self.postForm.$el.find( '#whats-new' ).get( 0 );
 			element.focus();
@@ -1500,6 +1506,11 @@ window.bp = window.bp || {};
 				// Post activity hide modal
 				var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
 				$singleActivityFormWrap.hide();
+
+				var $tabActivityFormWrap = $( '#bp-nouveau-activity-form' );
+				if ( $tabActivityFormWrap.hasClass( 'is-bp-hide' ) ) {
+					$tabActivityFormWrap.addClass( 'bp-hide' );
+				}
 
 				this.resetMultiMediaOptions();
 			},
@@ -3563,7 +3574,7 @@ window.bp = window.bp || {};
 					} else {
 						$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 					}
-					
+
 				}
 			}
 		}
@@ -4332,7 +4343,7 @@ window.bp = window.bp || {};
 						}
 					}
 					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
-					$( '#show-toolbar-button' ).removeClass( 'active' );										
+					$( '#show-toolbar-button' ).removeClass( 'active' );
 					$( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip', $( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
 				}
 			}
@@ -5784,7 +5795,7 @@ window.bp = window.bp || {};
 							$( '#editor-toolbar .post-emoji' ).removeClass('post-emoji-hide');
 						}
 					}
-					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );																																																		
+					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				}
 			},
 
