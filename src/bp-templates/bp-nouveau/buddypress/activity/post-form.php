@@ -12,7 +12,20 @@
  * Template tag to prepare the activity post form checks capability and enqueue needed scripts.
  */
 bp_nouveau_before_activity_post_form();
-$bp_hide_class = ( ! empty( bp_current_action() ) && ( bp_current_action() !== 'just-me' && bp_current_action() !== 'activity' ) ) ? 'bp-hide is-bp-hide' : '';
+
+$current_action = bp_current_action();
+
+if ( bp_is_user_activity() && ! bp_is_activity_tabs_active() && ! empty( $current_action ) ) {
+	$current_action = explode( ',', $current_action );
+}
+
+$bp_hide_class = (
+	! empty( $current_action ) &&
+	! is_array( $current_action ) &&
+	'just-me' !== $current_action &&
+	'activity' !== $current_action
+) ? 'bp-hide is-bp-hide' : '';
+
 ?>
 
 <h2 class="bp-screen-reader-text"><?php esc_html_e( 'Post Update', 'buddyboss' ); ?></h2>
