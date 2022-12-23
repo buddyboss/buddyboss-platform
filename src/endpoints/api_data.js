@@ -4398,6 +4398,13 @@ define({ "api": [
             "field": "scope",
             "defaultValue": "all",
             "description": "<p>Limit result set to items with a specific scope.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "can_post",
+            "description": "<p>Fetch current users groups which can post activity in it.</p>"
           }
         ]
       }
@@ -6458,6 +6465,35 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/wp-json/buddyboss/v1/members/presence",
+    "title": "Member Presence State",
+    "name": "GetBBMembers-MembersPresence",
+    "group": "Members",
+    "description": "<p>Members Presence.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "ids",
+            "description": "<p>A unique numeric ID for the members</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-members/classes/class-bp-rest-members-actions-endpoint.php",
+    "groupTitle": "Members"
+  },
+  {
+    "type": "POST",
     "url": "/wp-json/buddyboss/v1/members/action/:user_id",
     "title": "Member Action",
     "name": "GetBBMembers-UpdateMembersAction",
@@ -6863,6 +6899,13 @@ define({ "api": [
             "optional": false,
             "field": "user_id",
             "description": "<p>Limit result to messages created by a specific user.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_hidden",
+            "description": "<p>List the archived threads.</p>"
           }
         ]
       }
@@ -6947,6 +6990,28 @@ define({ "api": [
             "optional": false,
             "field": "group_id",
             "description": "<p>Group id to search members.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes specific member IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
           }
         ]
       }

@@ -189,6 +189,7 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 			'group'                => $group,
 			'group.name'           => $group->name,
 			'group.id'             => $group_id,
+			'group.url'            => esc_url( bp_get_group_permalink( $group ) ),
 			'group-requests.url'   => esc_url( bp_get_group_permalink( $group ) . 'admin/membership-requests' ),
 			'membership.id'        => $membership_id,
 			'profile.url'          => esc_url( bp_core_get_user_domain( $requesting_user_id ) ),

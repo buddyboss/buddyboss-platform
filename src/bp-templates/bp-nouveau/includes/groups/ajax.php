@@ -347,7 +347,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		wp_send_json_error( $response );
 	}
 
-	$request = wp_parse_args(
+	$request = bp_parse_args(
 		$_POST,
 		array(
 			'scope' => 'members',
@@ -1079,18 +1079,30 @@ function bp_nouveau_ajax_groups_send_message() {
 	$video    = filter_input( INPUT_POST, 'video', FILTER_DEFAULT );
 	$message  = '';
 
+	if ( isset( $_POST['gif_data'] ) ) {
+		unset( $_POST['gif_data'] );
+	}
 	if ( isset( $gif_data ) && '' !== $gif_data ) {
 		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $gif_data ), true );
 	}
 
+	if ( isset( $_POST['media'] ) ) {
+		unset( $_POST['media'] );
+	}
 	if ( isset( $media ) && '' !== $media ) {
 		$_POST['media'] = json_decode( wp_kses_stripslashes( $media ), true );
 	}
 
+	if ( isset( $_POST['document'] ) ) {
+		unset( $_POST['document'] );
+	}
 	if ( isset( $document ) && '' !== $document ) {
 		$_POST['document'] = json_decode( wp_kses_stripslashes( $document ), true );
 	}
 
+	if ( isset( $_POST['video'] ) ) {
+		unset( $_POST['video'] );
+	}
 	if ( isset( $video ) && '' !== $video ) {
 		$_POST['video'] = json_decode( wp_kses_stripslashes( $video ), true );
 	}
@@ -1100,11 +1112,11 @@ function bp_nouveau_ajax_groups_send_message() {
 	/**
 	 * Filter to validate message content.
 	 *
-	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param bool   $validated_content True if message is valid, false otherwise.
 	 * @param string $content           Content of the message.
 	 * @param array  $_POST             POST Request Object.
 	 *
-	 * @return bool True if message is not valid, false otherwise.
+	 * @return bool True if message is valid, false otherwise.
 	 */
 	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
 
@@ -1363,7 +1375,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				$new_reply = bp_groups_messages_new_message(
 					array(
 						'thread_id'    => $group_thread_id,
-						'subject'      => wp_trim_words( $content, messages_get_default_subject_length() ),
+						'subject'      => false,
 						'content'      => $content,
 						'date_sent'    => bp_core_current_time(),
 						'mark_visible' => true,
@@ -1691,7 +1703,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				$new_reply = bp_groups_messages_new_message(
 					array(
 						'thread_id'    => $individual_thread_id,
-						'subject'      => wp_trim_words( $content, messages_get_default_subject_length() ),
+						'subject'      => false,
 						'content'      => $content,
 						'date_sent'    => bp_core_current_time(),
 						'mark_visible' => true,
@@ -1707,6 +1719,13 @@ function bp_nouveau_ajax_groups_send_message() {
 	} else {
 
 		if ( ! empty( $members ) ) {
+
+			// Comma separated members list to find in meta query.
+			$message_users_ids = implode( ',', $members );
+
+			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
+			$_POST['message_meta_users_list'] = $message_users_ids;
+
 			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
 				$chunk_members = array_chunk( $members, 10 );
 				if ( ! empty( $chunk_members ) ) {
