@@ -500,7 +500,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 * @return mixed
 	 */
 	public function bb_blocked_comments_pre_query( $comment_data, $query ) {
-		if ( did_filter( 'widget_comments_args' ) ) {
+		if ( function_exists( 'did_filter' ) && did_filter( 'widget_comments_args' ) ) {
 			global $wpdb;
 			$comment_data['join']  .= ' ' . $this->exclude_joint_query( $wpdb->prefix . 'comments.user_id', BP_Moderation_Members::$moderation_type );
 			$comment_data['where'] .= ' AND ' . $this->exclude_where_query();
