@@ -319,7 +319,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		if( isset( $where_conditions['group'] ) && ! empty( $where_conditions['group'] ) ) {
+		if( isset( $args['scope'] ) && 'groups' === $args['scope'] ) {
 			return $where_conditions;
 		}
 
