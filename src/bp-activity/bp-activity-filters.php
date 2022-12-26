@@ -3430,3 +3430,72 @@ function bb_rest_mention_post_type_comment( $comment ) {
 }
 
 add_action( 'rest_after_insert_comment', 'bb_rest_mention_post_type_comment', 10, 1 );
+
+/**
+ * Function will send notification to followers when activity posted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content     Content of the activity post update.
+ * @param int    $user_id     ID of the user posting the activity update.
+ * @param int    $activity_id ID of the activity item being updated.
+ */
+function bb_activity_send_email_to_following_post( $content, $user_id, $activity_id ) {
+	global $bp_activity_edit;
+
+	// Return if $activity_id empty or edit activity.
+	if ( empty( $activity_id ) || $bp_activity_edit ) {
+		return;
+	}
+
+	$follower_users = bp_get_followers( array( 'user_id' => bp_loggedin_user_id() ) );
+	$activity       = new BP_Activity_Activity( $activity_id );
+
+	// Return if main activity post not found or followers empty.
+	if (
+		empty( $activity ) ||
+		'activity' !== $activity->component ||
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
+		empty( $follower_users )
+	) {
+		return;
+	}
+
+	$min_count  = (int) apply_filters( 'bb_following_queue_min_count', 20 );
+	$usernames  = bp_activity_do_mentions() ? bp_activity_find_mentions( $content ) : array();
+	$parse_args = array(
+		'activity'  => $activity,
+		'usernames' => $usernames,
+		'item_id'   => $user_id,
+	);
+
+	if ( $min_count && count( $follower_users ) > $min_count ) {
+		global $bp_background_updater;
+		$chunk_user_ids = array_chunk( $follower_users, $min_count );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $key => $user_ids ) {
+				$parse_args['user_ids'] = $user_ids;
+				$bp_background_updater->data(
+					array(
+						array(
+							'callback' => 'bb_activity_following_post_notification',
+							'args'     => array( $parse_args ),
+						),
+					)
+				);
+
+				$bp_background_updater->save();
+			}
+		}
+
+		$bp_background_updater->dispatch();
+	} else {
+		$parse_args['user_ids'] = $follower_users;
+		call_user_func(
+			'bb_activity_following_post_notification',
+			$parse_args
+		);
+	}
+}
+
+add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
