@@ -445,7 +445,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function bb_blocked_comments_pre_query( $comment_data, $query ) {
-		if ( did_filter( 'widget_comments_args' ) ) {
+		if ( function_exists( 'did_filter' ) && did_filter( 'widget_comments_args' ) ) {
 			global $wpdb;
 			$this->alias = 's';
 			$sql         = $this->exclude_where_query();
