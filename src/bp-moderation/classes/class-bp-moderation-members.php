@@ -52,7 +52,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		/**
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 */
-		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
@@ -127,17 +127,37 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param string $where   blocked users Where sql.
-	 * @param object $suspend suspend object.
+	 * @param array  $where       blocked users Where sql.
+	 * @param object $suspend     suspend object.
+	 * @param string $column_name Table column name.
 	 *
 	 * @return array
 	 */
-	public function update_where_sql( $where, $suspend ) {
+	public function update_where_sql( $where, $suspend, $column_name ) {
 		$this->alias = $suspend->alias;
 
-		$sql = $this->exclude_where_query();
+		$blocked_user_query = true;
+
+		if (
+			(
+				function_exists( 'bp_is_group_members' ) &&
+				bp_is_group_members()
+			) ||
+			(
+				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
+				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches )
+			)
+		) {
+			$blocked_user_query = false;
+		}
+
+		$sql = $this->exclude_where_query( $blocked_user_query );
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
+		}
+
+		if ( true === $blocked_user_query ) {
+			$where['moderation_blocked_by_where'] = "( u.{$column_name} NOT IN (" . bb_moderation_get_blocked_by_sql() . ') )';
 		}
 
 		return $where;
@@ -170,7 +190,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
-		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+		if ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
 			buddypress()->displayed_user->id = 0;
 			bp_do_404();
 
@@ -191,7 +211,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public function bp_core_get_user_domain( $domain, $user_id ) {
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) && bp_moderation_is_user_blocked( $user_id ) ) {
+		if ( empty( $username_visible ) && ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
 			return '';
 		}
 
