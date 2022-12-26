@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.2.1\n"
+"Project-Id-Version: BuddyBoss Platform 2.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-12-07 07:50:46+00:00\n"
+"POT-Creation-Date: 2022-12-22 09:21:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10540,23 +10540,23 @@ msgstr ""
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:720
+#: bp-forums/activity.php:738
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:854
+#: bp-forums/activity.php:890
 msgid "%1$s started a new discussion in the forum %2$s"
 msgstr ""
 
-#: bp-forums/activity.php:895
+#: bp-forums/activity.php:931
 msgid "%1$s replied to a discussion in the forum %2$s"
 msgstr ""
 
-#: bp-forums/activity.php:925
+#: bp-forums/activity.php:961
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:957
+#: bp-forums/activity.php:993
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
@@ -12881,11 +12881,11 @@ msgid_plural "Hidden <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/classes/class-bbpress.php:680
+#: bp-forums/classes/class-bbpress.php:681
 msgid "Most popular discussions"
 msgstr ""
 
-#: bp-forums/classes/class-bbpress.php:695
+#: bp-forums/classes/class-bbpress.php:696
 msgid "Unanswered discussions"
 msgstr ""
 
@@ -15263,7 +15263,7 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2153
 #: bp-messages/bp-messages-template.php:1824
 #: bp-messages/bp-messages-template.php:2089
-#: bp-messages/classes/class-bp-messages-thread.php:1634
+#: bp-messages/classes/class-bp-messages-thread.php:1642
 msgid "Deleted User"
 msgstr ""
 
@@ -24292,7 +24292,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1625
+#: bp-messages/classes/class-bp-messages-thread.php:1633
 msgid "%s Recipients"
 msgstr ""
 
