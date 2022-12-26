@@ -461,7 +461,13 @@ add_action( 'admin_menu', 'bp_invites_add_sub_menu_page_admin_menu', 10 );
 function bb_invites_modify_posts_distinct_request( $distinct, $query ) {
 	global $wpdb;
 
-	if ( ! is_admin() || bp_get_invite_post_type() !== $query->query['post_type'] || ! $query->is_main_query() ) {
+	if (
+		! is_admin() ||
+		! $query->is_main_query() ||
+		! isset( $query->query ) ||
+		! isset( $query->query['post_type'] ) ||
+		bp_get_invite_post_type() !== $query->query['post_type']
+	) {
 		return $distinct;
 	}
 
@@ -486,7 +492,13 @@ function bb_invites_modify_posts_distinct_request( $distinct, $query ) {
 function bb_invites_modify_posts_join_request( $join, $query ) {
 	global $wpdb;
 
-	if ( ! is_admin() || bp_get_invite_post_type() !== $query->query['post_type'] || ! $query->is_main_query() ) {
+	if (
+		! is_admin() ||
+		! $query->is_main_query() ||
+		! isset( $query->query ) ||
+		! isset( $query->query['post_type'] ) ||
+		bp_get_invite_post_type() !== $query->query['post_type']
+	) {
 		return $join;
 	}
 
@@ -511,7 +523,13 @@ function bb_invites_modify_posts_join_request( $join, $query ) {
 function bb_invites_modify_posts_where_request( $where, $query ) {
 	global $wpdb;
 
-	if ( ! is_admin() || bp_get_invite_post_type() !== $query->query['post_type'] || ! $query->is_main_query() ) {
+	if (
+		! is_admin() ||
+		! $query->is_main_query() ||
+		! isset( $query->query ) ||
+		! isset( $query->query['post_type'] ) ||
+		bp_get_invite_post_type() !== $query->query['post_type']
+	) {
 		return $where;
 	}
 
