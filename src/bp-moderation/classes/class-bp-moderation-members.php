@@ -137,7 +137,17 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		$this->alias = $suspend->alias;
 
 		$blocked_user_query = true;
-		if ( function_exists( 'bp_is_group_members' ) && bp_is_group_members() ) {
+
+		if (
+			(
+				function_exists( 'bp_is_group_members' ) &&
+				bp_is_group_members()
+			) ||
+			(
+				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
+				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches )
+			)
+		) {
 			$blocked_user_query = false;
 		}
 
