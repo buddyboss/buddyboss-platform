@@ -70,6 +70,15 @@ abstract class BP_Core_Notification_Abstract {
 	private $notifications_filters = array();
 
 	/**
+	 * Subscriptions.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
+	 */
+	private $subscriptions = array();
+
+	/**
 	 * Initialize.
 	 *
 	 * @since BuddyBoss 1.9.3
@@ -86,9 +95,11 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bb_notifications_get_component_notification', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
+		add_filter( 'bb_register_subscriptions_types', array( $this, 'registered_subscriptions_types' ), 99, 1 );
 
 		// Register the Notifications filters.
 		add_action( 'bp_nouveau_notifications_init_filters', array( $this, 'register_notification_filters' ) );
+
 	}
 
 	/**
@@ -195,6 +206,34 @@ abstract class BP_Core_Notification_Abstract {
 
 		return $notifications;
 
+	}
+
+	/**
+	 * Register the subscription type
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $types Subscription types.
+	 *
+	 * @return array
+	 */
+	public function registered_subscriptions_types( array $types ) {
+
+		if ( ! empty( $this->subscriptions ) ) {
+			$notification_preferences = array_column( $this->preferences, 'notification_read_only', 'notification_type' );
+
+			foreach ( $this->subscriptions as $type ) {
+				if (
+					! empty( $type['notification_type'] ) &&
+					isset( $notification_preferences[ $type['notification_type'] ] ) &&
+					empty( $notification_preferences[ $type['notification_type'] ] )
+				) {
+					$types[ $type['subscription_type'] ] = $type;
+				}
+			}
+		}
+
+		return $types;
 	}
 
 	/**
@@ -516,6 +555,48 @@ abstract class BP_Core_Notification_Abstract {
 			'label'              => $notification_label,
 			'notification_types' => $notification_types,
 			'position'           => $notification_position,
+		);
+	}
+
+	/**
+	 * Register Subscription Type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Used to display the subscription block title.
+	 *
+	 * @return void
+	 */
+	final public function bb_register_subscription_type( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'label'              => array(
+					'singular' => '',
+					'plural'   => '',
+				),
+				'subscription_type'  => '',
+				'items_callback'     => '',
+				'send_callback'      => '',
+				'notification_type'  => '',
+				'notification_group' => '',
+			)
+		);
+
+		if ( empty( $r['subscription_type'] ) || empty( $r['notification_type'] ) || ! is_array( $r['label'] ) ) {
+			return;
+		}
+
+		$this->subscriptions[ $r['subscription_type'] ] = array(
+			'label'              => array(
+				'singular' => ( ! empty( $r['label']['singular'] ) ? $r['label']['singular'] : $r['subscription_type'] ),
+				'plural'   => ( ! empty( $r['label']['plural'] ) ? $r['label']['plural'] : $r['subscription_type'] ),
+			),
+			'subscription_type'  => $r['subscription_type'],
+			'items_callback'     => $r['items_callback'],
+			'send_callback'      => $r['send_callback'],
+			'notification_type'  => $r['notification_type'],
+			'notification_group' => $r['notification_group'],
 		);
 	}
 
