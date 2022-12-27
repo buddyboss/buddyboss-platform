@@ -135,10 +135,6 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend, $args ) {
 		$this->alias = $suspend->alias;
 
-		if( isset( $args['group'] ) && ! empty( $args['group'] ) ) {
-			return $where;
-		}
-
 		$sql = $this->exclude_where_query();
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
