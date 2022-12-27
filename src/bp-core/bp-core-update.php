@@ -382,6 +382,10 @@ function bp_version_updater() {
 			bb_update_to_2_1_5();
 		}
 
+		if ( $raw_db_version < 19081 ) {
+			bb_update_to_2_1_8();
+		}
+
 		if ( $raw_db_version < 19181 ) {
 			bb_update_to_2_2_4();
 			bb_migrate_subscriptions_2_2_4();
@@ -2158,6 +2162,8 @@ function bb_update_to_2_2_4() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear members API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
+		// Clear blog API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
 	}
 }
 
