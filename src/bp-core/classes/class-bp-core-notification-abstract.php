@@ -218,7 +218,20 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function registered_subscriptions_types( array $types ) {
-		$types = array_merge( $types, $this->subscriptions );
+
+		if ( ! empty( $this->subscriptions ) ) {
+			$notification_preferences = array_column( $this->preferences, 'notification_read_only', 'notification_type' );
+
+			foreach ( $this->subscriptions as $type ) {
+				if (
+					! empty( $type['notification_type'] ) &&
+					isset( $notification_preferences[ $type['notification_type'] ] ) &&
+					empty( $notification_preferences[ $type['notification_type'] ] )
+				) {
+					$types[ $type['subscription_type'] ] = $type;
+				}
+			}
+		}
 
 		return $types;
 	}
