@@ -562,9 +562,9 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}.', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}.\n\n{{{activity.content}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n\n{{{activity.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} posted {{activity.type}}.\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{poster.name}} posted {{activity.type}}:\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'New activity post by someone a member is following', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone you are following posts an update.', 'buddyboss' ),
 			),
