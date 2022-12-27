@@ -46,7 +46,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
-		add_filter( 'bp_suspend_document_get_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
+		add_filter( 'bp_suspend_document_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
@@ -128,11 +128,10 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 *
 	 * @param string $where   documents Where sql.
 	 * @param object $suspend suspend object.
-	 * @param array  $args    args array.
 	 *
 	 * @return array
 	 */
-	public function update_where_sql( $where, $suspend, $args ) {
+	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
 		$sql = $this->exclude_where_query();
