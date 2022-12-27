@@ -532,8 +532,18 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
 		if ( ! bp_is_activity_follow_active() ) {
-			$notification_read_only    = true;
-			$notification_tooltip_text = __( 'Required by Activity Follow', 'buddyboss' );
+			$notification_read_only   = true;
+			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+			if (
+				isset( $enabled_all_notification['bb_activity_following_post'] ) &&
+				! empty( $enabled_all_notification['bb_activity_following_post']['main'] ) &&
+				'yes' === $enabled_all_notification['bb_activity_following_post']['main']
+			) {
+				$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
+			} else {
+				$notification_tooltip_text = __( 'Requires activity follow to enable', 'buddyboss' );
+			}
 		}
 
 		$this->register_notification_type(
