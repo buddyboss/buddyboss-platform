@@ -5955,14 +5955,13 @@ function bb_activity_following_post_notification( $args ) {
 
 		// It will check some condition to following notification disable, user blocked , mention notification enable
 		// and mention available in post for follower user.
-		if (
-			false === bb_is_notification_enabled( $user_id, 'bb_activity_following_post' ) &&
-			false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $activity_user_id )
-		) {
+		if ( false === bb_is_notification_enabled( $user_id, 'bb_activity_following_post' ) ) {
+			$send_mail = false;
+		}
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $activity_user_id ) ) {
 			$send_notification = false;
 			$send_mail         = false;
 		}
-
 		if ( true === $send_mail ) {
 			$unsubscribe_args = array(
 				'user_id'           => $user_id,
