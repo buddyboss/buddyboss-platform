@@ -2105,9 +2105,9 @@ function bb_update_to_2_1_8() {
 		/* translators: do not remove {} brackets or translate its contents. */
 		'post_title'   => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}.', 'buddyboss' ),
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}.\n\n{{{activity.content}}}", 'buddyboss' ),
+		'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n\n{{{activity.content}}}", 'buddyboss' ),
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_excerpt' => __( "{{poster.name}} posted {{activity.type}}.\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+		'post_excerpt' => __( "{{poster.name}} posted {{activity.type}}:\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
 	);
 
 	$id = 'new-activity-following';
