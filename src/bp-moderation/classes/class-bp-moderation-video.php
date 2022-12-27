@@ -128,7 +128,6 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 *
 	 * @param string $where   videos Where sql.
 	 * @param object $suspend suspend object.
-	 * @param array  $args    args array.
 	 *
 	 * @return array
 	 */
