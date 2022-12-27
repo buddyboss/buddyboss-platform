@@ -3323,6 +3323,19 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   line-height: 1.4;
 }
 
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th + td {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#bp_web_push_notification_settings table.form-table .no-padding {
+  padding: 0;
+}
+
 /*------------------------------------------------------------------------------
  * 16.0 Moderation
  *----------------------------------------------------------------------------*/
@@ -3497,6 +3510,21 @@ table.moderations .column-member img {
   border: 1px solid #ccd0d4;
   border-radius: 3px;
   padding: 15px;
+}
+
+.bb-notification-input-tooltip[data-bp-tooltip] {
+  display: inline-block;
+}
+
+.bb-notification-input-tooltip[data-bp-tooltip]::after {
+  min-width: 140px;
+  white-space: normal;
+  padding: 7px 12px;
+  text-align: center;
+}
+
+.bb-notification-input-tooltip input[readonly="readonly"] {
+  pointer-events: none;
 }
 
 .forum-subscription-input[data-bp-tooltip] {
