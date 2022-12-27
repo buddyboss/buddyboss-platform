@@ -334,7 +334,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's video.
 		 * @param array $class current class object.
 		 */
-		$where = apply_filters( 'bp_suspend_video_get_where_conditions', $where, $this, $where_conditions );
+		$where = apply_filters( 'bp_suspend_video_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';

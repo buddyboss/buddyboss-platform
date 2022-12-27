@@ -246,7 +246,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's document.
 		 * @param array $class current class object.
 		 */
-		$where = apply_filters( 'bp_suspend_document_get_where_conditions', $where, $this, $where_conditions );
+		$where = apply_filters( 'bp_suspend_document_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
