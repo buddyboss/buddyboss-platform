@@ -3328,7 +3328,7 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 	global $bp_activity_edit;
 
 	// Return if $activity_id empty or edit activity.
-	if ( empty( $activity_id ) || $bp_activity_edit || ! bp_is_activity_follow_active() ) {
+	if ( empty( $activity_id ) || $bp_activity_edit ) {
 		return;
 	}
 

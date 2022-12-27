@@ -6709,6 +6709,14 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		$all_notifications
 	);
 
+	$read_only_notifications = array_column( array_filter( $all_notifications ), 'notification_read_only', 'key' );
+	if (
+		isset( $read_only_notifications[ $notification_type ] ) &&
+		true === (bool) $read_only_notifications[ $notification_type ]
+	) {
+		return false;
+	}
+
 	$main = array();
 
 	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
