@@ -532,7 +532,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
 		if ( ! bp_is_activity_follow_active() ) {
-			$notification_read_only   = true;
+			$notification_read_only    = true;
 			$notification_tooltip_text = __( 'Required by Activity Follow', 'buddyboss' );
 		}
 
