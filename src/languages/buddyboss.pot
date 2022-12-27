@@ -32434,4 +32434,3 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:284
 msgctxt "placeholder: activity comments count"
 msgid "%d Comments"
-msgstr ""
