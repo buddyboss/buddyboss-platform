@@ -384,6 +384,7 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 19181 ) {
 			bb_update_to_2_2_4();
+			bb_migrate_subscriptions_2_2_4();
 		}
 	}
 
@@ -2151,3 +2152,17 @@ function bb_update_to_2_2_4() {
 	}
 }
 
+
+/**
+ * Migrate forum/topic subscription to new table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_migrate_subscriptions_2_2_4() {
+	// Create subscription table.
+	bb_core_install_subscription();
+	// Migrate the subscription data to new table.
+	bb_subscriptions_migrate_users_forum_topic( true );
+}

@@ -75,6 +75,9 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
 			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
+
+		// Update the where condition for forum Subscriptions.
+		add_filter( 'bb_subscriptions_suspend_topic_get_where_conditions', array( $this, 'bb_subscriptions_moderation_where_conditions' ), 10, 2 );
 	}
 
 	/**
@@ -264,5 +267,31 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		$report_button = bp_moderation_get_report_button( $args, false );
 
 		return $report_button;
+	}
+
+	/**
+	 * Update where query remove hidden/blocked user's topic subscriptions.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $where   Subscription topic Where sql.
+	 * @param object $suspend suspend object.
+	 *
+	 * @return array
+	 */
+	public function bb_subscriptions_moderation_where_conditions( $where, $suspend ) {
+		$moderation_where = 'hide_parent = 1 OR hide_sitewide = 1';
+
+		$blocked_query = $this->blocked_user_query();
+		if ( ! empty( $blocked_query ) ) {
+			if ( ! empty( $moderation_where ) ) {
+				$moderation_where .= ' OR ';
+			}
+			$moderation_where .= "( id IN ( $blocked_query ) )";
+		}
+
+		$where['moderation_where'] = $moderation_where;
+
+		return $where;
 	}
 }
