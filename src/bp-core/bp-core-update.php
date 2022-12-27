@@ -382,8 +382,8 @@ function bp_version_updater() {
 			bb_update_to_2_1_5();
 		}
 
-		if ( $raw_db_version < 19101 ) {
-			bb_update_to_2_1_8();
+		if ( $raw_db_version < 19181 ) {
+			bb_update_to_2_2_4();
 		}
 	}
 
@@ -2095,7 +2095,7 @@ function bb_update_to_2_1_5() {
  *
  * @return void
  */
-function bb_update_to_2_1_8() {
+function bb_update_to_2_2_4() {
 	// Create subscription table.
 	bb_core_install_subscription();
 	// Migrate the subscription data to new table.
