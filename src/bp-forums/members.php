@@ -136,8 +136,7 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 * @return string
 		 */
 		public function get_subscriptions_permalink( $url, $user_id ) {
-			$component_slug = bbpress()->extend->buddypress->slug;
-			$url            = trailingslashit( bp_core_get_user_domain( $user_id ) . $component_slug . '/' . bbp_get_user_subscriptions_slug() );
+			$url = trailingslashit( bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() ) . 'notifications/subscriptions';
 			return $url;
 		}
 

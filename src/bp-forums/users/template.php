@@ -996,41 +996,19 @@ function bbp_subscriptions_permalink( $user_id = 0 ) {
 function bbp_get_subscriptions_permalink( $user_id = 0 ) {
 	global $wp_rewrite;
 
-	// Use displayed user ID if there is one, and one isn't requested
+	// Use displayed user ID if there is one, and one isn't requested.
 	$user_id = bbp_get_user_id( $user_id );
 	if ( empty( $user_id ) ) {
 		return false;
 	}
 
-	// Allow early overriding of the profile URL to cut down on processing
+	// Allow early overriding of the profile URL to cut down on processing.
 	$early_profile_url = apply_filters( 'bbp_pre_get_subscriptions_permalink', (int) $user_id );
 	if ( is_string( $early_profile_url ) ) {
 		return $early_profile_url;
 	}
 
-	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url  = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/%' . bbp_get_user_subscriptions_rewrite_id() . '%';
-		$user = get_userdata( $user_id );
-		if ( ! empty( $user->user_nicename ) ) {
-			$user_nicename = $user->user_nicename;
-		} else {
-			$user_nicename = $user->user_login;
-		}
-		$url = str_replace( '%' . bbp_get_user_rewrite_id() . '%', $user_nicename, $url );
-		$url = str_replace( '%' . bbp_get_user_subscriptions_rewrite_id() . '%', bbp_get_user_subscriptions_slug(), $url );
-		$url = home_url( user_trailingslashit( $url ) );
-
-		// Unpretty permalinks
-	} else {
-		$url = add_query_arg(
-			array(
-				bbp_get_user_rewrite_id()               => $user_id,
-				bbp_get_user_subscriptions_rewrite_id() => bbp_get_user_subscriptions_slug(),
-			),
-			home_url( '/' )
-		);
-	}
+	$url = trailingslashit( bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() ) . 'notifications/subscriptions';
 
 	return apply_filters( 'bbp_get_subscriptions_permalink', $url, $user_id );
 }
