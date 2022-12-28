@@ -463,7 +463,7 @@ function bb_activate_notification( $field, $checked ) {
 	?>
 
 	<input name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="hidden" value="no" />
-	<span class="bb-notification-input-tooltip"
+	<span class="notification-settings-input"
 		<?php
 		if ( ! empty( $tooltip_pos ) ) {
 			echo ' data-bp-tooltip-pos="' . esc_attr( $tooltip_pos ) . '"';

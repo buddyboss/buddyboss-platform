@@ -166,11 +166,17 @@
 							<p class="checkbox bp-checkbox-wrap">
 								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe" <?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 
-								<?php if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) : ?>
-
-									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
-
-									<?php
+								<?php
+								if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) :
+									if ( function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference() ) {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
+										<?php
+									} else {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss' ); ?></label>
+										<?php
+									}
 								else :
 									if ( function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference() ) {
 										?>

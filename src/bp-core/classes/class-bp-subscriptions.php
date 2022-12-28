@@ -2,7 +2,7 @@
 /**
  * Subscriptions class
  *
- * @package BuddyBoss\Subscriptions
+ * @package BuddyBoss\Core
  * @since BuddyBoss [BBVERSION]
  */
 
@@ -164,7 +164,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				wp_cache_set( $this->id, $subscription, 'bb_subscriptions' );
 			}
 
-			// No subscription found so set the ID and bail.
+			// Bail if no subscription is found.
 			if ( empty( $subscription ) || is_wp_error( $subscription ) ) {
 				$this->id = 0;
 				return;
@@ -417,18 +417,13 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		 *
 		 * @param string $type    Type subscription item.
 		 * @param int    $item_id The subscription item ID.
-		 * @param int    $status  The subscription item status.
+		 * @param int    $status  The subscription item status, 1 = active, 0 = inactive.
 		 * @param int    $blog_id The site ID. Default current site ID.
 		 *
 		 * @return bool
 		 */
 		public static function update_status( $type, $item_id, $status, $blog_id = 0 ) {
 			global $wpdb;
-
-			// Check the site ID is empty then get current site ID.
-			if ( empty( $blog_id ) ) {
-				$blog_id = bp_get_root_blog_id();
-			}
 
 			// Get table name.
 			$subscription_tbl = self::get_subscription_tbl();
@@ -444,17 +439,22 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 */
 			do_action_ref_array( 'bb_subscriptions_before_update_subscription_status', array( $type, $item_id, $status ) );
 
+			$where = array(
+				'type'    => $type,
+				'item_id' => $item_id,
+			);
+
+			if ( ! empty( $blog_id ) ) {
+				$where['blog_id'] = $blog_id;
+			}
+
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$is_updated = $wpdb->update(
 				$subscription_tbl,
 				array(
 					'status' => $status,
 				),
-				array(
-					'type'    => $type,
-					'item_id' => $item_id,
-					'blog_id' => $blog_id,
-				)
+				$where
 			);
 
 			if ( ! is_int( $is_updated ) ) {
@@ -468,7 +468,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 *
 			 * @param string $type    Type subscription item.
 			 * @param int    $item_id The subscription item ID.
-			 * @param int    $status  The subscription item status.
+			 * @param int    $status  The subscription item status, 1 = active, 0 = inactive.
 			 */
 			do_action_ref_array( 'bb_subscriptions_after_update_subscription_status', array( $type, $item_id, $status ) );
 
@@ -528,7 +528,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		 *     Array of parameters. All items are optional.
 		 *
 		 *     @type array|string $type               Optional. Array or comma-separated list of subscription types.
-		 *                                            'Forum', 'topic', 'group', 'activity', 'activity_comment'.
+		 *                                            'Forum', 'topic', etc...
 		 *                                            Default: null.
 		 *     @type int          $blog_id            Optional. Get subscription site wise. Default current site ID.
 		 *     @type int          $user_id            Optional. If provided, results will be limited to subscriptions.
@@ -705,6 +705,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			$sql['from'] = apply_filters( 'bb_subscriptions_get_join_sql', $sql['from'], $r );
 
 			$paged_subscriptions_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['order_by']} {$sql['pagination']}";
+
 			/**
 			 * Filters the pagination SQL statement.
 			 *
