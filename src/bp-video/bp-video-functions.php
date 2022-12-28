@@ -532,6 +532,7 @@ function bp_video_get_specific( $args = '' ) {
 		'privacy'  => $r['privacy'],
 		'album_id' => $r['album_id'],
 		'user_id'  => $r['user_id'],
+		'group_id' => $r['group_id'],
 	);
 
 	/**
