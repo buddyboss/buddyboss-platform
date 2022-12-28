@@ -591,7 +591,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.7.0.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.8.6.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.1.4.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.2.2.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.2.4.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
