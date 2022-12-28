@@ -849,6 +849,31 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		$querystring['excluded_action'] = $excluded_user_component_actions;
 	}
 
+	$meta_query = $querystring['meta_query'];
+
+	$new_meta_query = array(
+		'relation' => 'AND',
+		array(
+			'key'     => 'not_send_web',
+			'compare' => 'NOT EXISTS',
+		),
+		array(
+			'key'     => 'not_send_web',
+			'value'   => 'true',
+			'compare' => '!=',
+		),
+	);
+
+	if ( empty( $meta_query ) ) {
+		$querystring['meta_query'] = $meta_query;
+	} else {
+		$querystring['meta_query'] = array(
+			$new_meta_query,
+			$meta_query,
+			'relation' => 'AND',
+		);
+	}
+
 	return http_build_query( $querystring );
 }
 
@@ -1367,12 +1392,12 @@ function bb_get_notification_conditional_icon( $notification ) {
 				$excerpt = '';
 			} else {
 				$excerpt = '"' . bp_create_excerpt(
-						$excerpt,
-						50,
-						array(
-							'ending' => __( '&hellip;', 'buddyboss' ),
-						)
-					) . '"';
+					$excerpt,
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				) . '"';
 
 				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
 				$excerpt = str_replace( '""', '', $excerpt );
@@ -1644,3 +1669,71 @@ function bb_can_send_push_notification( $user_id ) {
 
 	return true;
 }
+
+/**
+ * Update notification meta on after save.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Notifications_Notification $notification Notification object.
+ */
+function bb_notification_after_save_meta( $notification ) {
+	if (
+		! empty( $notification->id ) &&
+		! empty( $notification->component_action ) &&
+		'bb_activity_following_post' === $notification->component_action &&
+		bp_is_active( 'activity' )
+	) {
+		$activity = new BP_Activity_Activity( $notification->item_id );
+		if ( ! empty( $activity ) && ! empty( $activity->content ) ) {
+			$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
+			if ( ! empty( $usernames ) ) {
+				$user_id     = $notification->user_id;
+				$mention_web = false;
+				$mention_app = false;
+				if ( isset( $usernames[ $user_id ] ) ) {
+					$mention_web = bb_web_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'web' );
+					$mention_app = bb_app_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'app' );
+				}
+
+				bp_notifications_update_meta( $notification->id, 'not_send_app', $mention_app );
+				bp_notifications_update_meta( $notification->id, 'not_send_web', $mention_web );
+			}
+		}
+	}
+}
+
+/**
+ * Manage App push notifation base on mention.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content           Component action.
+ * @param string $component_name    Notification component ID.
+ * @param string $component_action  Canonical notification action.
+ * @param int    $item_id           Notification item ID.
+ * @param int    $secondary_item_id Notification secondary item ID.
+ * @param int    $notification_id   Notification ID.
+ * @param string $format            Format of return. Either 'string' or 'object'.
+ * @param string $screen            Notification Screen type.
+ *
+ * @return array|mixed
+ */
+function bb_notification_manage_app_push_notification( $content, $component_name, $component_action, $item_id, $secondary_item_id, $notification_id, $format = 'object', $screen = 'web' ) {
+	if (
+		'app_push' !== $screen ||
+		empty( $notification_id ) ||
+		empty( $component_action ) ||
+		'bb_activity_following_post' !== $component_action
+	) {
+		return $content;
+	}
+
+	if ( true === bp_notifications_get_meta( $notification_id, 'not_send_app', true ) ) {
+		return array();
+	}
+
+	return $content;
+}
+
+add_filter( 'bbapp_get_notification_output', 'bb_notification_manage_app_push_notification', 999, 8 );

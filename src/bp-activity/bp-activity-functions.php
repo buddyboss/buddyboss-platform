@@ -5930,14 +5930,8 @@ function bb_activity_following_post_notification( $args ) {
 		$user_id           = (int) $user_id;
 		$send_mail         = true;
 		$send_notification = true;
-		if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
-			if (
-				true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'web' ) &&
-				true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'app' )
-			) {
-				$send_notification = false;
-			}
 
+		if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
 			if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
 				$send_mail = false;
 			}
@@ -5958,10 +5952,12 @@ function bb_activity_following_post_notification( $args ) {
 		if ( false === bb_is_notification_enabled( $user_id, 'bb_activity_following_post' ) ) {
 			$send_mail = false;
 		}
+
 		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $activity_user_id ) ) {
 			$send_notification = false;
 			$send_mail         = false;
 		}
+
 		if ( true === $send_mail ) {
 			$unsubscribe_args = array(
 				'user_id'           => $user_id,
@@ -5975,6 +5971,7 @@ function bb_activity_following_post_notification( $args ) {
 		}
 
 		if ( true === $send_notification && bp_is_active( 'notifications' ) ) {
+			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			bp_notifications_add_notification(
 				array(
 					'user_id'           => $user_id,
@@ -5986,6 +5983,7 @@ function bb_activity_following_post_notification( $args ) {
 					'is_new'            => 1,
 				)
 			);
+			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
 }
