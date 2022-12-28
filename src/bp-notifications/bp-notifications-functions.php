@@ -849,31 +849,6 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		$querystring['excluded_action'] = $excluded_user_component_actions;
 	}
 
-	$meta_query = $querystring['meta_query'];
-
-	$new_meta_query = array(
-		'relation' => 'AND',
-		array(
-			'key'     => 'not_send_web',
-			'compare' => 'NOT EXISTS',
-		),
-		array(
-			'key'     => 'not_send_web',
-			'value'   => 'true',
-			'compare' => '!=',
-		),
-	);
-
-	if ( empty( $meta_query ) ) {
-		$querystring['meta_query'] = $meta_query;
-	} else {
-		$querystring['meta_query'] = array(
-			$new_meta_query,
-			$meta_query,
-			'relation' => 'AND',
-		);
-	}
-
 	return http_build_query( $querystring );
 }
 
@@ -1221,12 +1196,12 @@ function bb_notification_avatar_url( $notification = '' ) {
  *
  * @since BuddyBoss 2.0.2
  *
- * @param string $size         Size of the notification icon, 'full' or 'thumb'.
- * @param object $notification Notification object.
+ * @param string        $size         Size of the notification icon, 'full' or 'thumb'.
+ * @param object|string $notification Notification object.
  *
  * @return void
  */
-function bb_get_default_notification_avatar( $size = 'full', $notification ) {
+function bb_get_default_notification_avatar( $size = 'full', $notification = '' ) {
 	if ( ! in_array( $size, array( 'thumb', 'full' ), true ) ) {
 		$size = 'full';
 	}
@@ -1737,3 +1712,21 @@ function bb_notification_manage_app_push_notification( $content, $component_name
 }
 
 add_filter( 'bbapp_get_notification_output', 'bb_notification_manage_app_push_notification', 999, 8 );
+
+/**
+ * Added where condition to exclude not send onscreen notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $where_sql Notifications Where sql.
+ * @param string $tbl_alias Table alias.
+ * @param object $r         Query arguments.
+ *
+ * @return string
+ */
+function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias, $r ) {
+	global $bp;
+	$where_sql .= " AND {$tbl_alias}.id NOT IN ( SELECT DISTINCT notification_id from {$bp->notifications->table_name_meta} WHERE meta_key = 'not_send_web' and meta_value = 1 )";
+
+	return $where_sql;
+}
