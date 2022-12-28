@@ -4301,6 +4301,15 @@ window.bp = window.bp || {};
 					}
 
 					this.$gifPickerEl.removeClass( 'open' );
+
+					$( document ).on(
+						'keyup',
+						function ( event ) {
+							if ( event.key === 'Enter' || event.keyCode === 13 ) {
+								$( '.search-query-input' ).closest( '.gif-media-search-dropdown' ).addClass( 'open' );
+							}
+						}
+					);
 				}
 
 			},
