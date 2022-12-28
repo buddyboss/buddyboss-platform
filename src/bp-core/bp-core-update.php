@@ -2100,4 +2100,6 @@ function bb_migrate_subscriptions_2_2_4() {
 	bb_core_install_subscription();
 	// Migrate the subscription data to new table.
 	bb_subscriptions_migrate_users_forum_topic( true );
+	// Flush the bbpress users group cache.
+	wp_cache_flush_group( 'bbpress_users' );
 }

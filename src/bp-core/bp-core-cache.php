@@ -398,6 +398,29 @@ add_action( 'bp_invitation_after_save', 'bp_invitations_reset_cache_incrementor'
 add_action( 'bp_invitation_after_delete', 'bp_invitations_reset_cache_incrementor' );
 
 /**
+ * Clear bbpress subscriptions cache.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $subscription_id The subscription ID.
+ *
+ * @return void
+ */
+function bb_subscriptions_clear_bbpress_cache( $subscription_id ) {
+	if ( $subscription_id ) {
+		// Delete the bbpress subscription cache.
+		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		if ( ! empty( $subscription->item_id ) ) {
+			if ( 'forum' === $subscription->type ) {
+				wp_cache_delete( 'bbp_get_forum_subscribers_' . $subscription->item_id, 'bbpress_users' );
+			} elseif ( 'topic' === $subscription->type ) {
+				wp_cache_delete( 'bbp_get_topic_subscribers_' . $subscription->item_id, 'bbpress_users' );
+			}
+		}
+	}
+}
+
+/**
  * Reset incremental cache for add/delete subscription.
  *
  * @since BuddyBoss [BBVERSION]
@@ -416,11 +439,14 @@ add_action( 'bb_delete_subscription', 'bb_subscriptions_reset_cache_incrementor'
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param BP_Subscription $subscription Subscription object.
+ * @param BP_Subscriptions $subscription Subscription object.
  */
 function bb_subscriptions_clear_cache_for_subscription( $subscription ) {
 	if ( $subscription->id ) {
 		wp_cache_delete( $subscription->id, 'bb_subscriptions' );
+
+		// Delete the existing subscription cache.
+		bb_subscriptions_clear_bbpress_cache( $subscription->id );
 	}
 }
 
@@ -459,6 +485,9 @@ function bb_subscriptions_clear_cache_after_update_status( $type, $item_id ) {
 
 		foreach ( $subscription_ids['subscriptions'] as $id ) {
 			wp_cache_delete( $id, 'bb_subscriptions' );
+
+			// Delete the existing subscription cache.
+			bb_subscriptions_clear_bbpress_cache( $id );
 		}
 	}
 }
