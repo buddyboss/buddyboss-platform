@@ -1704,7 +1704,7 @@ function bb_notification_manage_app_push_notification( $content, $component_name
 		return $content;
 	}
 
-	if ( true === bp_notifications_get_meta( $notification_id, 'not_send_app', true ) ) {
+	if ( true === (bool) bp_notifications_get_meta( $notification_id, 'not_send_app', true ) ) {
 		return array();
 	}
 
