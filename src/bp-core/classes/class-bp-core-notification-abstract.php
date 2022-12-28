@@ -561,11 +561,16 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register Subscription Type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @param array $args {
+	 *     Used to display the subscription block.
 	 *
-	 * @param array $args Used to display the subscription block title.
-	 *
-	 * @return void
+	 *     @type array  $label               Required. Array of labels with singular and plural.
+	 *     @type string $subscription_type   Required. Subscription type key.
+	 *     @type string $items_callback      Optional. The render callback function.
+	 *     @type string $send_callback       Optional. To send notification callback function.
+	 *     @type string $notification_type   Required. Notification type key.
+	 *     @type string $notification_group  Optional. Notification group key.
+	 * }
 	 */
 	final public function bb_register_subscription_type( $args ) {
 		$r = bp_parse_args(

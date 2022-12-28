@@ -3,7 +3,7 @@
  * Subscriptions Functions.
  *
  * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Subscription
+ * @package BuddyBoss\Core
  */
 
 // Exit if accessed directly.
@@ -487,7 +487,7 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
  *
  * @return bool True on success, false on failure.
  */
-function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id ) {
+function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id = 0 ) {
 	return BP_Subscriptions::update_status( $type, $item_id, $status, $blog_id );
 }
 

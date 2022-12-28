@@ -5,6 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/members/single/parts/notification-subnav.php.
  *
  * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 ?>
 

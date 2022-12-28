@@ -5,6 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/subscriptions.php.
  *
  * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 bp_nouveau_member_hook( 'before', 'settings_template' );
