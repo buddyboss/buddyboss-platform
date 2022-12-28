@@ -383,7 +383,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 19081 ) {
-			bb_update_to_2_1_8();
+			bb_update_to_2_2_3();
 		}
 
 		if ( $raw_db_version < 19181 ) {
@@ -2099,7 +2099,7 @@ function bb_update_to_2_1_5() {
  *
  * @return void
  */
-function bb_update_to_2_1_8() {
+function bb_update_to_2_2_3() {
 	$defaults = array(
 		'post_status' => 'publish',
 		'post_type'   => bp_get_email_post_type(),
