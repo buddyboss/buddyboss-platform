@@ -469,7 +469,7 @@ function bb_activate_notification( $field, $checked ) {
 	?>
 
 	<input name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="hidden" value="no" />
-	<span class="forum-subscription-input"
+	<span class="notification-settings-input"
 		<?php
 		if ( ! empty( $tooltip_pos ) ) {
 			echo ' data-bp-tooltip-pos="' . esc_attr( $tooltip_pos ) . '"';
@@ -480,12 +480,12 @@ function bb_activate_notification( $field, $checked ) {
 		}
 		?>
 	>
-		<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" 
-		   <?php
+		<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes"
+			<?php
 			checked( $checked, 1 );
 			disabled( $disabled, 1 );
 			?>
-		 />
+		/>
 	</span>
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 

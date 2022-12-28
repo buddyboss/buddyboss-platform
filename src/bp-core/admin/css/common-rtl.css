@@ -3187,6 +3187,10 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   display: none;
 }
 
+#bp_notification_settings_automatic .field-set .field-block input[readonly="readonly"] {
+  pointer-events: none;
+}
+
 #bp_notification_settings_automatic table.form-table.dynamic-notification-after tbody tr th {
   min-width: 200px;
   padding: 15px 0 0 20px;
@@ -3504,4 +3508,8 @@ table.moderations .column-member img {
   white-space: normal;
   padding: 7px 12px;
   text-align: center;
+}
+
+.notification-settings-input input[readonly="readonly"] {
+  pointer-events: none;
 }
