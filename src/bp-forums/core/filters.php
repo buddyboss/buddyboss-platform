@@ -331,6 +331,11 @@ add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
 function bb_forums_update_subscription_status( $new_status, $old_status, $post ) {
 	if ( $new_status !== $old_status && ! empty( $post->post_type ) && in_array( $post->post_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ), true ) ) {
 
+		$blog_id = 0;
+		if ( is_multisite() ) {
+			$blog_id = get_current_blog_id();
+		}
+
 		$subscription_status = 1;
 		if ( ! empty( $new_status ) && in_array( $new_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) {
 			$subscription_status = 0;
@@ -341,7 +346,7 @@ function bb_forums_update_subscription_status( $new_status, $old_status, $post )
 			$subscription_type = 'forum';
 		}
 
-		bb_subscriptions_update_subscriptions_status( $subscription_type, $post->ID, $subscription_status );
+		bb_subscriptions_update_subscriptions_status( $subscription_type, $post->ID, $subscription_status, $blog_id );
 	}
 }
 
