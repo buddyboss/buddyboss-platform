@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.2.3 =
+* Notifications - Provided new notification type for new activity posts by someone member is following
+
 = 2.2.2 =
 * Activity - Handled draft activity UI issue in the responsive view
 * Groups - Handled invalid notice shows in frontend when group updated from the dashboard
