@@ -253,7 +253,7 @@ function bp_activity_save_link_data( $activity ) {
 	if ( isset( $_POST['action'] ) && $_POST['action'] === 'activity_update_privacy' ) {
 		return;
 	}
-	
+
 	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
@@ -296,7 +296,7 @@ function bp_activity_save_link_data( $activity ) {
 		}
 	}
 
-	$preview_data['link_image_index_save'] = isset(  $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
+	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
 
 	if ( ! empty( $link_title ) ) {
 		$preview_data['title'] = $link_title;
@@ -642,7 +642,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 function bp_activity_link_preview( $content, $activity ) {
 
 	$activity_id  = $activity->id;
-	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );	
+	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
 
 	if ( empty( $preview_data['url'] ) ) {
 		return $content;
@@ -668,7 +668,7 @@ function bp_activity_link_preview( $content, $activity ) {
 
 	$content = make_clickable( $content );
 
-	$content .= '<div class="activity-link-preview-container">';	
+	$content .= '<div class="activity-link-preview-container">';
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
 		$content  .= '<div class="activity-link-preview-image">';
@@ -678,7 +678,7 @@ function bp_activity_link_preview( $content, $activity ) {
 		$content  .= '</div>';
 	} elseif ( ! empty( $preview_data['image_url'] ) ) {
 		$content .= '<div class="activity-link-preview-image">';
-		$content  .= '<div class="activity-link-preview-image-cover">';
+		$content .= '<div class="activity-link-preview-image-cover">';
 		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
 		$content .= '</div>';
 		$content .= '</div>';
@@ -1832,7 +1832,9 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 				)
 			);
 		} else {
+			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+			add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 		}
 
 		// save media meta for activity.
@@ -1886,6 +1888,10 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 						}
 					}
 				}
+			}
+
+			if ( ! empty( $main_activity->id ) ) {
+				do_action( 'bb_media_after_create_parent_activity', $main_activity->content, $main_activity->user_id, $main_activity->id );
 			}
 		}
 	}
@@ -2202,7 +2208,9 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 				)
 			);
 		} else {
+			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+			add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 		}
 
 		// save document meta for activity.
@@ -2257,6 +2265,10 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 						}
 					}
 				}
+			}
+
+			if ( ! empty( $main_activity->id ) ) {
+				do_action( 'bb_document_after_create_parent_activity', $main_activity->content, $main_activity->user_id, $main_activity->id );
 			}
 		}
 	}
@@ -2822,7 +2834,9 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 				)
 			);
 		} else {
+			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+			add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 		}
 
 		// save video meta for activity.
@@ -2876,6 +2890,10 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 						}
 					}
 				}
+			}
+
+			if ( ! empty( $main_activity->id ) ) {
+				do_action( 'bb_video_after_create_parent_activity', $main_activity->content, $main_activity->user_id, $main_activity->id );
 			}
 		}
 	}
@@ -3296,3 +3314,78 @@ function bb_rest_mention_post_type_comment( $comment ) {
 }
 
 add_action( 'rest_after_insert_comment', 'bb_rest_mention_post_type_comment', 10, 1 );
+
+/**
+ * Function will send notification to followers when activity posted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content     Content of the activity post update.
+ * @param int    $user_id     ID of the user posting the activity update.
+ * @param int    $activity_id ID of the activity item being updated.
+ */
+function bb_activity_send_email_to_following_post( $content, $user_id, $activity_id ) {
+	global $bp_activity_edit;
+
+	// Return if $activity_id empty or edit activity.
+	if ( empty( $activity_id ) || $bp_activity_edit || ! bp_is_activity_follow_active() ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	// Return if main activity post not found or followers empty.
+	if (
+		empty( $activity ) ||
+		'activity' !== $activity->component ||
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+	) {
+		return;
+	}
+
+	$follower_users = bp_get_followers( array( 'user_id' => bp_loggedin_user_id() ) );
+	if ( empty( $follower_users ) ) {
+		return;
+	}
+
+	$min_count  = (int) apply_filters( 'bb_following_queue_min_count', 20 );
+	$usernames  = bp_activity_do_mentions() ? bp_activity_find_mentions( $content ) : array();
+	$parse_args = array(
+		'activity'  => $activity,
+		'usernames' => $usernames,
+		'item_id'   => $user_id,
+	);
+
+	if ( $min_count && count( $follower_users ) > $min_count ) {
+		global $bp_background_updater;
+		$chunk_user_ids = array_chunk( $follower_users, $min_count );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $key => $user_ids ) {
+				$parse_args['user_ids'] = $user_ids;
+				$bp_background_updater->data(
+					array(
+						array(
+							'callback' => 'bb_activity_following_post_notification',
+							'args'     => array( $parse_args ),
+						),
+					)
+				);
+
+				$bp_background_updater->save();
+			}
+		}
+
+		$bp_background_updater->dispatch();
+	} else {
+		$parse_args['user_ids'] = $follower_users;
+		call_user_func(
+			'bb_activity_following_post_notification',
+			$parse_args
+		);
+	}
+}
+
+add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
+add_action( 'bb_media_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
+add_action( 'bb_document_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
+add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
