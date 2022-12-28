@@ -836,7 +836,16 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		 */
 		public static function get_subscription_tbl() {
 			global $wpdb;
-			return "{$wpdb->prefix}bb_notifications_subscriptions";
+
+			if ( is_multisite() ) {
+				switch_to_blog( 1 );
+				$subscription_tbl = $wpdb->prefix . 'bb_notifications_subscriptions';
+				restore_current_blog();
+			} else {
+				$subscription_tbl = $wpdb->prefix . 'bb_notifications_subscriptions';
+			}
+
+			return $subscription_tbl;
 		}
 
 		/**
