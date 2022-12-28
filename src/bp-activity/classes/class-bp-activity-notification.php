@@ -548,7 +548,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification_type(
 			'bb_activity_following_post',
-			esc_html__( 'New post by a member you\'re following', 'buddyboss' ),
+			__( 'New post by a member you\'re following', 'buddyboss' ),
 			esc_html__( 'A new post by someone a member is following', 'buddyboss' ),
 			'activity',
 			true,
