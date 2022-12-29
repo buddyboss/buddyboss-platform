@@ -226,6 +226,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 					'icon'             => array(),
 					'link'             => '',
 				);
+
 				if ( ! empty( $item_data ) && ! empty( current( $item_data ) ) ) {
 					$item_extra = bp_parse_args( (array) current( $item_data ), $item_extra );
 				}
@@ -681,7 +682,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			/**
 			 * Filters the Where SQL statement.
 			 *
-			 * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param array $r                Array of parsed arguments for the get method.
 			 * @param array $where_conditions Where conditions SQL statement.
@@ -697,7 +698,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			/**
 			 * Filters the From SQL statement.
 			 *
-			 * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param array $r    Array of parsed arguments for the get method.
 			 * @param string $sql From SQL statement.

@@ -88,7 +88,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
 
-		if ( false === bbp_is_subscriptions_active() ) {
+		if ( ! function_exists( 'bbp_is_subscriptions_active' ) || false === bbp_is_subscriptions_active() ) {
 			$notification_read_only   = true;
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
@@ -160,7 +160,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
 
-		if ( false === bbp_is_subscriptions_active() ) {
+		if ( ! function_exists( 'bbp_is_subscriptions_active' ) || false === bbp_is_subscriptions_active() ) {
 			$notification_read_only   = true;
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
