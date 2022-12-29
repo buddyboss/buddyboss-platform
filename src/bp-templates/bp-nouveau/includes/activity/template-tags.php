@@ -1926,12 +1926,6 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	}
 	
 	if ( bp_activity_user_can_delete() ) {
-		
-		if ( 'button' === $button_element ) {			
-			$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
-		} else {
-			$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
-		}
 	
 		$buttons['activity_comment_delete'] = array(
 			'id'                => 'activity_comment_delete',
