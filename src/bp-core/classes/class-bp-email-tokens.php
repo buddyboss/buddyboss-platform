@@ -2251,7 +2251,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token activity.content
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.3
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens

@@ -1648,7 +1648,7 @@ function bb_can_send_push_notification( $user_id ) {
 /**
  * Update notification meta on after save.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.3
  *
  * @param BP_Notifications_Notification $notification Notification object.
  */
@@ -1681,7 +1681,7 @@ function bb_notification_after_save_meta( $notification ) {
 /**
  * Manage App push notifation base on mention.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.3
  *
  * @param string $content           Component action.
  * @param string $component_name    Notification component ID.
@@ -1716,7 +1716,7 @@ add_filter( 'bbapp_get_notification_output', 'bb_notification_manage_app_push_no
 /**
  * Added where condition to exclude not send onscreen notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.3
  *
  * @param string $where_sql Notifications Where sql.
  * @param string $tbl_alias Table alias.
