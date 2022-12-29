@@ -28,7 +28,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 		delete_site_option( 'bb_subscriptions_migrate_offset' );
 
 		$offset  = get_site_option( 'bb_subscriptions_migrate_offset', 0 );
-		$results = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC", $forum_key, $topic_key ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$results = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC", $forum_key, $topic_key ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( ! empty( $results ) ) {
 			$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 10 );
@@ -59,7 +59,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 		}
 	} else {
 		$offset  = get_site_option( 'bb_subscriptions_migrate_offset', 0 );
-		$results = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC LIMIT %d OFFSET %d", $forum_key, $topic_key, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$results = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC LIMIT %d OFFSET %d", $forum_key, $topic_key, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( ! empty( $results ) ) {
 			return bb_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
@@ -104,23 +104,24 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	$blog_id           = bp_get_root_blog_id();
 
 	if ( ! empty( $subscription_users ) ) {
-		foreach ( $subscription_users as $subscription_user ) {
-			$user_id = $subscription_user->ID;
+		foreach ( $subscription_users as $user_id ) {
 
 			// Increment the current offset.
 			$offset ++;
 
 			$place_holder_queries = array();
-			$insert_query         = "INSERT INTO {$subscription_tbl} ( blog_id, user_id, type, item_id, secondary_item_id, status, date_recorded ) VALUES";
 
-			$forum_subscriptions = get_user_option( '_bbp_forum_subscriptions', $user_id );
+			$insert_query = "INSERT INTO {$subscription_tbl} ( blog_id, user_id, type, item_id, secondary_item_id, status, date_recorded ) VALUES";
+
+			$form_key            = $wpdb->prefix . '_bbp_forum_subscriptions';
+			$forum_subscriptions = get_user_meta( $user_id, $form_key, true );
 			$forum_subscriptions = array_filter( wp_parse_id_list( $forum_subscriptions ) );
 			if ( ! empty( $forum_subscriptions ) ) {
 				foreach ( $forum_subscriptions as $forum_id ) {
 					// Get the forum.
 					$forum = get_post( $forum_id );
 
-					if ( $forum_post_type !== $forum->post_type ) {
+					if ( $forum_post_type !== $forum->post_type || empty( $forum->ID ) ) {
 						continue;
 					}
 
@@ -130,6 +131,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						'blog_id'           => (int) $blog_id,
 						'secondary_item_id' => (int) $forum->post_parent,
 						'type'              => 'forum',
+						'cache'             => false,
 					);
 
 					// Get subscription from new table.
@@ -148,14 +150,15 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 				}
 			}
 
-			$topic_subscriptions = get_user_option( '_bbp_subscriptions', $user_id );
+			$topic_key           = $wpdb->prefix . '_bbp_subscriptions';
+			$topic_subscriptions = get_user_meta( $user_id, $topic_key, true );
 			$topic_subscriptions = array_filter( wp_parse_id_list( $topic_subscriptions ) );
 			if ( ! empty( $topic_subscriptions ) ) {
 				foreach ( $topic_subscriptions as $topic_id ) {
-					// Get the forum.
+					// Get the topic.
 					$topic = get_post( $topic_id );
 
-					if ( $topic_post_type !== $topic->post_type ) {
+					if ( $topic_post_type !== $topic->post_type || empty( $topic->ID ) ) {
 						continue;
 					}
 
@@ -165,6 +168,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						'blog_id'           => (int) $blog_id,
 						'secondary_item_id' => (int) $topic->post_parent,
 						'type'              => 'topic',
+						'cache'             => false,
 					);
 
 					// Get subscription from new table.
@@ -187,22 +191,24 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 				$place_holder_queries = implode( ', ', $place_holder_queries );
 				$wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
 			}
+
+			// Update the migration offset.
+			update_site_option( 'bb_subscriptions_migrate_offset', $offset );
 		}
 	}
 
-	// Update the migration offset.
-	update_site_option( 'bb_subscriptions_migrate_offset', $offset );
+	$latest_offset = get_site_option( 'bb_subscriptions_migrate_offset', 0 );
 
 	if ( ! $is_background ) {
 		$records_updated = sprintf(
 		/* translators: total members */
 			__( 'The BBPress forum and discussion subscriptions successfully migrated to BuddyBoss for %s members.', 'buddyboss' ),
-			bp_core_number_format( $offset )
+			bp_core_number_format( $latest_offset )
 		);
 
 		return array(
 			'status'  => 'running',
-			'offset'  => $offset,
+			'offset'  => $latest_offset,
 			'records' => $records_updated,
 		);
 	} else {

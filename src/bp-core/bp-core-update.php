@@ -2164,6 +2164,7 @@ function bb_migrate_subscriptions_2_2_4() {
 	set_transient( 'bb_migrate_subscriptions_2_2_4', 'yes', HOUR_IN_SECONDS );
 	// Create subscription table.
 	bb_core_install_subscription();
+
 	// Migrate the subscription data to new table.
 	bb_subscriptions_migrate_users_forum_topic( true );
 	// @todo need to add logic to clear bbpress_user cache for the subscriptions.
