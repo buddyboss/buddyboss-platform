@@ -3467,7 +3467,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 	// Now we can build the BP Title Parts
 	// Is there a displayed user, and do they have a name?
-	$displayed_user_name = bp_get_displayed_user_fullname();
+	$displayed_user_name = bp_core_get_user_displayname( bp_displayed_user_id() );
 
 	// Displayed user.
 	if ( ! empty( $displayed_user_name ) && ! is_404() ) {
@@ -3860,6 +3860,11 @@ function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false )
 	// Add BuddyPress class if we are within a BuddyPress page.
 	if ( ! bp_is_blog_page() ) {
 		$bp_classes[] = 'buddypress';
+	}
+
+	// Add bb-is-mobile class if we are in mobile device
+	if ( wp_is_mobile() ) { // https://developer.wordpress.org/reference/functions/wp_is_mobile/
+		$bp_classes[] = 'bb-is-mobile';
 	}
 
 	// Add the theme name/id to the body classes
@@ -4592,4 +4597,3 @@ function bb_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum_id
 	return false;
 
 }
-

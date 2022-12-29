@@ -4398,6 +4398,13 @@
             "field": "scope",
             "defaultValue": "all",
             "description": "<p>Limit result set to items with a specific scope.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "can_post",
+            "description": "<p>Fetch current users groups which can post activity in it.</p>"
           }
         ]
       }
