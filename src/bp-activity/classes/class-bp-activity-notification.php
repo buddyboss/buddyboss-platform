@@ -526,7 +526,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for followers when new activity posted.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.3
 	 */
 	public function register_notification_for_activity_post_following() {
 		$notification_read_only    = false;
@@ -590,7 +590,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format the notifications for followers when new activity posted.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.3
 	 *
 	 * @param string $content           Notification content.
 	 * @param int    $item_id           Notification item ID.

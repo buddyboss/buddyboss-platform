@@ -2095,7 +2095,7 @@ function bb_update_to_2_1_5() {
 /**
  * Install email template for activity following post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.3
  *
  * @return void
  */

@@ -5864,7 +5864,7 @@ function bb_bp_get_add_follow_button( $button ) {
 /**
  * Function to send email and notification to followers when new activity post created.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.3
  *
  * @param array $args Array of arguments.
  */
