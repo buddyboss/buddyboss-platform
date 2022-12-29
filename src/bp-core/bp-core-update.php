@@ -2156,6 +2156,12 @@ function bb_update_to_2_2_3() {
  * @return void
  */
 function bb_migrate_subscriptions_2_2_4() {
+	$is_already_run = get_transient( 'bb_migrate_subscriptions_2_2_4' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_subscriptions_2_2_4', 'yes', HOUR_IN_SECONDS );
 	// Create subscription table.
 	bb_core_install_subscription();
 	// Migrate the subscription data to new table.

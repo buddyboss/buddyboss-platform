@@ -21,36 +21,62 @@ defined( 'ABSPATH' ) || exit;
 function bb_subscriptions_migrate_users_forum_topic( $is_background = false ) {
 	global $wpdb, $bp_background_updater;
 
-	$offset    = get_site_option( 'bb_subscriptions_migrate_offset', 0 );
 	$forum_key = $wpdb->prefix . '_bbp_forum_subscriptions';
 	$topic_key = $wpdb->prefix . '_bbp_subscriptions';
-	$results   = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC LIMIT %d OFFSET %d", $forum_key, $topic_key, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-	if ( ! empty( $results ) ) {
-		if ( $is_background ) {
-			$bp_background_updater->push_to_queue(
-				array(
-					'callback' => 'bb_migrate_users_forum_topic_subscriptions',
-					'args'     => array( $results, $offset, $is_background ),
-				)
-			);
-			$bp_background_updater->save()->schedule_event();
-		} else {
-			return bb_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
-		}
-	} else {
+	if ( $is_background ) {
 		delete_site_option( 'bb_subscriptions_migrate_offset' );
 
-		if ( ! $is_background ) {
-			/* translators: Status of current action. */
-			$statement = __( 'Migrated BBPress forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
-			$result    = __( 'Complete!', 'buddyboss' );
+		$offset  = get_site_option( 'bb_subscriptions_migrate_offset', 0 );
+		$results = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC", $forum_key, $topic_key ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-			// All done!
-			return array(
-				'status'  => 1,
-				'message' => sprintf( $statement, $result ),
-			);
+		if ( ! empty( $results ) ) {
+			$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 10 );
+
+			if (
+				count( $results ) > $min_count
+			) {
+				$chunk_results = array_chunk( $results, $min_count );
+				if ( ! empty( $chunk_results ) ) {
+					foreach ( $chunk_results as $chunk_result ) {
+						$bp_background_updater->data(
+							array(
+								array(
+									'callback' => 'bb_migrate_users_forum_topic_subscriptions',
+									'args'     => array( $chunk_result, $offset, $is_background ),
+								),
+							)
+						);
+
+						$bp_background_updater->save();
+					}
+				}
+
+				$bp_background_updater->dispatch();
+			} else {
+				bb_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
+			}
+		}
+	} else {
+		$offset  = get_site_option( 'bb_subscriptions_migrate_offset', 0 );
+		$results = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC LIMIT %d OFFSET %d", $forum_key, $topic_key, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		if ( ! empty( $results ) ) {
+			return bb_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
+		} else {
+			delete_site_option( 'bb_subscriptions_migrate_offset' );
+
+			if ( ! $is_background ) {
+				/* translators: Status of current action. */
+				$statement = __( 'Migrated BBPress forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
+				$result    = __( 'Complete!', 'buddyboss' );
+
+				// All done!
+				return array(
+					'status'  => 1,
+					'message' => sprintf( $statement, $result ),
+				);
+			}
 		}
 	}
 }
@@ -167,9 +193,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	// Update the migration offset.
 	update_site_option( 'bb_subscriptions_migrate_offset', $offset );
 
-	if ( $is_background ) {
-		bb_subscriptions_migrate_users_forum_topic( $is_background );
-	} else {
+	if ( ! $is_background ) {
 		$records_updated = sprintf(
 		/* translators: total members */
 			__( 'The BBPress forum and discussion subscriptions successfully migrated to BuddyBoss for %s members.', 'buddyboss' ),
@@ -181,6 +205,9 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 			'offset'  => $offset,
 			'records' => $records_updated,
 		);
+	} else {
+		// Delete migration transient.
+		delete_transient( 'bb_migrate_subscriptions_2_2_4' );
 	}
 
 }
