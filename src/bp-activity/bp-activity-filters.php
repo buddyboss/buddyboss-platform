@@ -3318,7 +3318,7 @@ add_action( 'rest_after_insert_comment', 'bb_rest_mention_post_type_comment', 10
 /**
  * Function will send notification to followers when activity posted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.3
  *
  * @param string $content     Content of the activity post update.
  * @param int    $user_id     ID of the user posting the activity update.
