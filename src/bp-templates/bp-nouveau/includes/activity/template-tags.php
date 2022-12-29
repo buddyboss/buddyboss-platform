@@ -1924,12 +1924,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	} else {
 		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );		
 	}
-
 	
-	/**
-	 * If there was an activity of the user before one af another
-	 * user as we're updating buttons, we need to unset the delete link
-	 */
 	if ( bp_activity_user_can_delete() ) {
 		
 		if ( 'button' === $button_element ) {			
