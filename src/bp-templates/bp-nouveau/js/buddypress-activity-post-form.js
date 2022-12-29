@@ -4147,6 +4147,7 @@ window.bp = window.bp || {};
 
 			initialize: function () {
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
+				document.addEventListener( 'keyup', _.bind( this.blockPickersClose, this ) );
 				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
 			},
 
@@ -4168,6 +4169,13 @@ window.bp = window.bp || {};
 				},0);
 
 				return this;
+			},
+
+			blockPickersClose: function ( event ) {
+				if ( event.key === 'Enter' || event.keyCode === 13 ) {
+					$( '.search-query-input' ).closest( '.gif-media-search-dropdown' ).addClass( 'open' );
+					$( '.search-query-input' ).focus();
+				}
 			},
 
 			toggleURLInput: function ( e ) {
@@ -4301,15 +4309,6 @@ window.bp = window.bp || {};
 					}
 
 					this.$gifPickerEl.removeClass( 'open' );
-
-					$( document ).on(
-						'keyup',
-						function ( event ) {
-							if ( event.key === 'Enter' || event.keyCode === 13 ) {
-								$( '.search-query-input' ).closest( '.gif-media-search-dropdown' ).addClass( 'open' );
-							}
-						}
-					);
 				}
 
 			},
