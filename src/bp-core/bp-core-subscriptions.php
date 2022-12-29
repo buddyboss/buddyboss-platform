@@ -159,20 +159,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 
 			if ( ! empty( $place_holder_queries ) ) {
 				$place_holder_queries = implode( ', ', $place_holder_queries );
-				$is_inserted = $wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
-				if ( $is_inserted ) {
-					$forum_key = $wpdb->prefix . '_bbp_forum_subscriptions';
-					$topic_key = $wpdb->prefix . '_bbp_subscriptions';
-					// phpcs:ignore
-					$wpdb->query(
-						$wpdb->prepare(
-							"DELETE FROM $wpdb->usermeta WHERE ( `meta_key` = %s OR `meta_key` = %s ) AND `user_id` = %d",
-							$forum_key,
-							$topic_key,
-							$user_id
-						)
-					);
-				}
+				$wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
 			}
 		}
 	}
