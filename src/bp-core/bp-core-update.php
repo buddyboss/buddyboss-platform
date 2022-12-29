@@ -2093,21 +2093,6 @@ function bb_update_to_2_1_5() {
 }
 
 /**
- * Migrate forum/topic subscription to new table.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_migrate_subscriptions_2_2_4() {
-	// Create subscription table.
-	bb_core_install_subscription();
-	// Migrate the subscription data to new table.
-	bb_subscriptions_migrate_users_forum_topic( true );
-	// @todo need to add logic to clear bbpress_user cache for the subscriptions.
-}
-
-/**
  * Install email template for activity following post.
  *
  * @since BuddyBoss 2.2.3
@@ -2161,4 +2146,19 @@ function bb_update_to_2_2_3() {
 			)
 		);
 	}
+}
+
+/**
+ * Migrate forum/topic subscription to new table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_migrate_subscriptions_2_2_4() {
+	// Create subscription table.
+	bb_core_install_subscription();
+	// Migrate the subscription data to new table.
+	bb_subscriptions_migrate_users_forum_topic( true );
+	// @todo need to add logic to clear bbpress_user cache for the subscriptions.
 }
