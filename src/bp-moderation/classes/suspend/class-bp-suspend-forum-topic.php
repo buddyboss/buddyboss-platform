@@ -524,10 +524,12 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $where Query to hide suspended user's topic.
-		 * @param array $class current class object.
+		 * @param array $where            Query to hide suspended user's topic.
+		 * @param array $class            current class object.
+		 * @param array $where_conditions Subscription topic Where sql.
+		 * @param array $r                Array of subscription arguments.
 		 */
-		$where = apply_filters( 'bb_subscriptions_suspend_topic_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bb_subscriptions_suspend_topic_get_where_conditions', $where, $this, $where_conditions, $r );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_topic_where'] = "sc.item_id NOT IN ( SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = 'forum_topic' AND ( " . implode( ' OR ', $where ) . ' ) )';
