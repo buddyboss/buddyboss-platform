@@ -218,7 +218,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 				bb_moderation_is_user_blocked_by( $user_id )
 			)
 		) {
-			return '';
+			return ' '; //To allow to make this function working bp_core_get_userlink().
 		}
 
 		return $domain;
