@@ -504,6 +504,10 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	public function bb_subscriptions_topic_where_conditions( $where_conditions, $r ) {
 		global $bp;
 
+		if ( isset( $r['bypass_moderation'] ) && true === (bool) $r['bypass_moderation'] ) {
+			return $where_conditions;
+		}
+
 		if ( ! empty( $r['type'] ) ) {
 			if ( ! is_array( $r['type'] ) ) {
 				$r['type'] = preg_split( '/[\s,]+/', $r['type'] );
