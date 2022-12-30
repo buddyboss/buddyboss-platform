@@ -786,9 +786,9 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				 *
 				 * @since BuddyBoss [BBVERSION]
 				 *
-				 * @param string $t_sql     Concatenated SQL statement used for retrieving total subscriptions results.
-				 * @param array  $total_sql Array of SQL parts for the query.
-				 * @param array  $r         Array of parsed arguments for the get method.
+				 * @param string $total_subscriptions_sql Concatenated SQL statement used for retrieving total subscriptions results.
+				 * @param array  $sql                     Array of SQL parts for the query.
+				 * @param array  $r                       Array of parsed arguments for the get method.
 				 */
 				$total_subscriptions_sql = apply_filters( 'bb_subscriptions_get_total_subscriptions_sql', $total_subscriptions_sql, $sql, $r );
 

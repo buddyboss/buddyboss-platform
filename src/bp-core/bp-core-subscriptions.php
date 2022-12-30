@@ -224,6 +224,8 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $type type string.
+ *
+ * @return array Return subscription type if exists otherwise return all subscription types.
  */
 function bb_register_subscriptions_types( $type = '' ) {
 
