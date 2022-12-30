@@ -142,7 +142,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
 			$where['moderation_where'] .= ' AND ';
 		}
-		$where['moderation_where'] .= "( m.user_id NOT IN ( " . bb_moderation_get_blocked_by_sql() . " ) )";
+		$where['moderation_where'] .= '( m.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 
 		return $where;
 	}
@@ -225,8 +225,8 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.7.7
 	 *
-	 * @param array $report_button Activity report button
-	 * @param array $args          Arguments
+	 * @param array $report_button Activity report button.
+	 * @param array $args          Arguments.
 	 *
 	 * @return array|string
 	 */
@@ -252,7 +252,8 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 					'bbp_forum_create',
 					'bbp_topic_create',
 					'bbp_reply_create',
-				)
+				),
+				true
 			)
 		) {
 			$explode_videos = explode( ',', $video_ids );
