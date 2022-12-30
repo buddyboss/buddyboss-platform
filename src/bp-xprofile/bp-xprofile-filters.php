@@ -105,7 +105,7 @@ add_action( 'xprofile_avatar_uploaded', 'bp_core_xprofile_update_profile_complet
 add_action( 'xprofile_cover_image_uploaded', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When cover photo uploaded from profile in Frontend.
 add_action( 'bp_core_delete_existing_avatar', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When profile photo deleted from profile in Frontend.
 add_action( 'xprofile_cover_image_deleted', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When cover photo deleted from profile in Frontend.
-add_action( 'xprofile_updated_profile', 'bp_core_xprofile_update_profile_completion_user_progress' ); // On Profile updated from frontend.
+add_action( 'xprofile_updated_profile', 'bp_core_xprofile_update_profile_completion_user_progress', 20, 5 ); // On Profile updated from frontend.
 add_action( 'wp_ajax_xprofile_reorder_fields', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When fields inside fieldset are dragged and dropped in wp-admin > buddybpss > profile.
 
 // Profile Completion Admin Actions.
@@ -115,6 +115,9 @@ add_action( 'xprofile_fields_deleted_field', 'bp_core_xprofile_clear_all_user_pr
 add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On profile group deleted in wp-admin.
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
+add_action( 'xprofile_groups_saved_group', 'bb_core_xprofile_clear_group_cache' );
+add_action( 'xprofile_groups_deleted_group', 'bb_core_xprofile_clear_group_cache' );
+add_action( 'xprofile_fields_deleted_field', 'bb_core_xprofile_clear_group_cache' );
 
 // Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
@@ -1400,4 +1403,13 @@ function bb_xprofile_set_social_network_param( $args = array() ) {
 	}
 
 	return $args;
+}
+
+/**
+ * Function trigger when fieldset is added or deleted or field deleted.
+ *
+ * @since BuddyBoss 2.1.6
+ */
+function bb_core_xprofile_clear_group_cache() {
+	BP_XProfile_Group::$bp_xprofile_group_ids = array();
 }

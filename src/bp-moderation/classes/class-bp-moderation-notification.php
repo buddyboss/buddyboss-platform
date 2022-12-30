@@ -95,7 +95,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 
 		if ( bp_is_moderation_member_blocking_enable( 0 ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$moderation_query = $wpdb->prepare( "SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE ( hide_parent = %d OR hide_sitewide = %d OR reported = %d ) AND item_type = %s", 1, 1, 1, 'user' );
+			$moderation_query = $wpdb->prepare( "SELECT item_id FROM {$bp->table_prefix}bp_suspend s INNER JOIN {$bp->table_prefix}bp_moderation mr ON mr.moderation_id = s.id WHERE mr.user_id = %d AND mr.user_report = %d AND ( hide_parent = %d OR hide_sitewide = %d OR reported = %d ) AND item_type = %s", bp_loggedin_user_id(), 0, 1, 1, 1, 'user' );
 
 			// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
 			$sql_where .= " AND {$tbl_alias}.secondary_item_id NOT IN ( " . $moderation_query . " )";
