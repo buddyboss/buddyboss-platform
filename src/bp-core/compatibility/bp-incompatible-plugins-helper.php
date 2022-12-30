@@ -275,7 +275,7 @@ add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
  */
 function bb_core_allow_activity_page_content_restriction_memberpress() {
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
+	if ( bp_is_active( 'activity' ) && bp_is_activity_component() && function_exists('is_bbpress') && is_bbpress() ) {
 		remove_filter( 'mepr-pre-run-rule-content', 'MeprBbPressIntegration::dont_block_the_content', 11, 3 );
 	}
 
