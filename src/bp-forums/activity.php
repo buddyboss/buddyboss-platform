@@ -174,6 +174,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Meta button for activity discussion.
 			add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
+
+			// Allow slash in topic reply.
+			add_filter( 'bbp_activity_topic_create_excerpt', 'addslashes', 5 );
+			add_filter( 'bbp_activity_reply_create_excerpt', 'addslashes', 5 );
 		}
 
 		/**
