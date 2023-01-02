@@ -179,6 +179,10 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
+		if ( ( isset( $args['scope'] ) && 'groups' === $args['scope'] ) || ! empty( $args['group_id'] ) ) {
+			return $where_conditions;
+		}
+
 		$where                  = array();
 		$where['suspend_where'] = $this->exclude_where_query();
 
