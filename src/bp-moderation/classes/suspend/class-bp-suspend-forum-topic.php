@@ -529,7 +529,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array $where            Query to hide suspended user's topic.
-		 * @param array $class            current class object.
+		 * @param array $this             current class object.
 		 * @param array $where_conditions Subscription topic Where sql.
 		 * @param array $r                Array of subscription arguments.
 		 */
