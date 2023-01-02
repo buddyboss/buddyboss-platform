@@ -206,6 +206,11 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			return $join_sql;
 		}
 
+		// Exclude moderation table join for the group medias.
+		if ( ( isset( $args['scope'] ) && 'groups' === $args['scope'] ) || ! empty( $args['group_id'] ) ) {
+			return $join_sql;
+		}
+
 		$join_sql .= $this->exclude_joint_query( 'm.id' );
 
 		/**
@@ -254,7 +259,17 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+
+			$exclude_group_sql = '';
+			// Allow group medias from blocked/suspended users.
+			if ( ! empty( $args['scope'] ) && bp_is_active( 'groups' ) ) {
+				$scope = wp_parse_list( $args['scope'] );
+				if ( ! empty( $scope ) && in_array( 'groups', $scope, true ) ) {
+					$exclude_group_sql = ' OR m.privacy = "grouponly" ';
+				}
+			}
+
+			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}
 
 		return $where_conditions;
