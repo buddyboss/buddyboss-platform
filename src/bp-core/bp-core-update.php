@@ -381,6 +381,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18981 ) {
 			bb_update_to_2_1_5();
 		}
+
+		if ( $raw_db_version < 19081 ) {
+			bb_update_to_2_2_3();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2081,5 +2085,61 @@ function bb_update_to_2_1_5() {
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+}
+
+/**
+ * Install email template for activity following post.
+ *
+ * @since BuddyBoss 2.2.3
+ *
+ * @return void
+ */
+function bb_update_to_2_2_3() {
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$email = array(
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_title'   => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}.', 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n\n{{{activity.content}}}", 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_excerpt' => __( "{{poster.name}} posted {{activity.type}}:\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+	);
+
+	$id = 'new-activity-following';
+
+	if (
+		term_exists( $id, bp_get_email_tax_type() ) &&
+		get_terms(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'slug'     => $id,
+				'fields'   => 'count',
+			)
+		) > 0
+	) {
+		return;
+	}
+
+	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+
+	foreach ( $tt_ids as $tt_id ) {
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		wp_update_term(
+			(int) $term->term_id,
+			bp_get_email_tax_type(),
+			array(
+				'description' => esc_html__( 'New activity post by someone a member is following', 'buddyboss' ),
+			)
+		);
 	}
 }
