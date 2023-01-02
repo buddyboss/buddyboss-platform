@@ -625,7 +625,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 	if ( true === $title_tag_compatibility ) {
 		$bp_title_parts['site'] = $blogname;
 
-		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages()) {
+		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
 			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
 		}
 	}
@@ -2254,3 +2254,78 @@ function bb_heartbeat_settings( $settings ) {
 }
 
 add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
+
+/**
+ * Function to update menu order for Theme Options and License Key in the BuddyBoss menu.
+ *
+ * @since BuddyBoss 2.2.2
+ *
+ * @param array $menu_order Menu order.
+ *
+ * @return array
+ */
+function buddyboss_menu_order( $menu_order ) {
+	global $submenu;
+	$buddyboss_theme_options_menu = array();
+	$buddyboss_theme_font_menu    = array();
+	$buddyboss_updater_menu       = array();
+	$sep_position                 = 0;
+
+	$after_sep = array();
+
+	if ( ! empty( $submenu['buddyboss-platform'] ) ) {
+		foreach ( $submenu['buddyboss-platform'] as $key => $val ) {
+			if ( isset( $val[2] ) ) {
+
+				if ( 'buddyboss_theme_options' === $val[2] ) {
+					$buddyboss_theme_options_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				if ( 'edit.php?post_type=buddyboss_fonts' === $val[2] ) {
+					$buddyboss_theme_font_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				if ( 'buddyboss-updater' === $val[2] ) {
+					$buddyboss_updater_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				if ( 0 !== $sep_position ) {
+					$after_sep[] = $val;
+					unset( $submenu['buddyboss-platform'][ $key ] );
+				}
+
+				if ( 'bp-plugin-seperator' === $val[2] && 0 === $sep_position ) {
+					$sep_position = $key;
+				}
+			}
+		}
+
+		if ( ! empty( $buddyboss_theme_options_menu ) ) {
+			$submenu['buddyboss-platform'][ ++ $sep_position ] = $buddyboss_theme_options_menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		}
+
+		if ( ! empty( $buddyboss_theme_font_menu ) ) {
+			$submenu['buddyboss-platform'][ ++ $sep_position ] = $buddyboss_theme_font_menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		}
+
+		if ( ! empty( $after_sep ) ) {
+			foreach ( $after_sep as $menu ) {
+				$submenu['buddyboss-platform'][ ++ $sep_position ] = $menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			}
+		}
+
+		if ( ! empty( $buddyboss_updater_menu ) ) {
+			$submenu['buddyboss-platform'][ ++ $sep_position ] = $buddyboss_updater_menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		}
+	}
+
+	return $menu_order;
+}
+
+add_filter( 'menu_order', 'buddyboss_menu_order' );
