@@ -109,13 +109,16 @@
 		background-color: $light-text;
 		font-size: 17px;
 		line-height: 1;
-		height: 26px;
-		width: 26px;
 		padding: 4px;
 		border-radius: 50%;
 		position: absolute;
 		right: -5px;
 		bottom: -5px;
+
+		&.bb-icon-cancel {
+			height: 26px;
+			width: 26px;
+		}
 	}
 
 	// The primary list elements
@@ -1122,6 +1125,10 @@ input#send-to-input {
 	strong {
 		font-weight: 600;
 	}
+
+	body.bb-is-mobile & { // Hide notice in mobile
+		display: none;
+	}
 }
 
 .bp-message-content-wrap .bp-message-content_foot_note {
@@ -1652,9 +1659,13 @@ body .bp-messages-user-threads {
 #message-new-submit #bp-messages-send,
 #message-reply-new-submit #send_reply_button {
 	opacity: 0;
+	padding: 0;
 	position: absolute;
 	top: 0;
 	left: 0;
+	right: 0;
+	width: auto;
+	min-width: auto;
 	-webkit-tap-highlight-color: transparent;
 }
 
