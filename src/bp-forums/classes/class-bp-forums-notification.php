@@ -544,6 +544,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			$args,
 			array(
 				'type'              => '',
+				'blog_id'           => get_current_blog_id(),
 				'item_id'           => 0,
 				'secondary_item_id' => 0,
 			)
@@ -551,6 +552,14 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		// Initially set is true.
 		$response = true;
+
+		$switch = false;
+
+		// Switch to given blog_id if current blog is not same.
+		if ( get_current_blog_id() !== $r['blog_id'] ) {
+			switch_to_blog( $r['blog_id'] );
+			$switch = true;
+		}
 
 		if ( empty( $r['item_id'] ) ) {
 			$response = new WP_Error(
@@ -593,6 +602,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					);
 				}
 			}
+		}
+
+		// Restore current blog.
+		if ( $switch ) {
+			restore_current_blog();
 		}
 
 		return $response;

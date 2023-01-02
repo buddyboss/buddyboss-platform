@@ -620,6 +620,7 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function bb_subscriptions_validate_request( $response, $subscriptions ) {
 		$type              = $subscriptions->type ?? '';
+		$blog_id           = isset( $subscriptions->blog_id ) ? (int) $subscriptions->blog_id : get_current_blog_id();
 		$item_id           = isset( $subscriptions->item_id ) ? (int) $subscriptions->item_id : 0;
 		$secondary_item_id = isset( $subscriptions->secondary_item_id ) ? (int) $subscriptions->secondary_item_id : 0;
 
@@ -651,6 +652,7 @@ abstract class BP_Core_Notification_Abstract {
 					$type_data['validate_callback'],
 					array(
 						'type'              => $type,
+						'blog_id'           => $blog_id,
 						'item_id'           => $item_id,
 						'secondary_item_id' => $secondary_item_id,
 					)

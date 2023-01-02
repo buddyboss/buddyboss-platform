@@ -590,7 +590,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 
 			$defaults = array(
 				'type'              => array(),
-				'blog_id'           => bp_get_root_blog_id(),
+				'blog_id'           => get_current_blog_id(),
 				'user_id'           => 0,
 				'item_id'           => 0,
 				'secondary_item_id' => 0,

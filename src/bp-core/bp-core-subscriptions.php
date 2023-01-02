@@ -107,7 +107,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	$spam_post_type    = function_exists( 'bbp_get_spam_status_id' ) ? bbp_get_spam_status_id() : apply_filters( 'bbp_spam_post_status', 'spam' );
 	$trash_post_type   = function_exists( 'bbp_get_trash_status_id' ) ? bbp_get_trash_status_id() : apply_filters( 'bbp_trash_post_status', 'trash' );
 	$pending_post_type = function_exists( 'bbp_get_pending_status_id' ) ? bbp_get_pending_status_id() : apply_filters( 'bbp_pending_post_status', 'pending' );
-	$blog_id           = bp_get_root_blog_id();
+	$blog_id           = get_current_blog_id();
 
 	if ( ! empty( $subscription_users ) ) {
 		foreach ( $subscription_users as $user_id ) {
@@ -270,7 +270,7 @@ function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = fa
 		}
 	} else {
 		if ( ! $blog_id ) {
-			$blog_id = bp_get_root_blog_id();
+			$blog_id = get_current_blog_id();
 		}
 		$response = bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $blog_id );
 	}
@@ -557,7 +557,7 @@ function bb_create_subscription( $args = array() ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'blog_id'           => bp_get_root_blog_id(),
+			'blog_id'           => get_current_blog_id(),
 			'type'              => '',
 			'user_id'           => bp_loggedin_user_id(),
 			'item_id'           => 0,
@@ -666,7 +666,7 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'blog_id'  => bp_get_root_blog_id(),
+			'blog_id'  => get_current_blog_id(),
 			'type'     => array(),
 			'user_id'  => bp_loggedin_user_id(),
 			'per_page' => null,
@@ -719,7 +719,7 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'blog_id'  => bp_get_root_blog_id(),
+			'blog_id'  => get_current_blog_id(),
 			'type'     => array(),
 			'item_id'  => 0,
 			'per_page' => null,
@@ -850,7 +850,7 @@ function bb_delete_subscription( $subscription_id ) {
 function bb_delete_item_subscriptions( $type, $item_id, $blog_id = 0 ) {
 
 	if ( empty( $blog_id ) ) {
-		$blog_id = bp_get_root_blog_id();
+		$blog_id = get_current_blog_id();
 	}
 
 	// Get the subscriptions.
@@ -979,7 +979,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		array(
 			'type'    => '',
 			'item_id' => 0,
-			'blog_id' => bp_get_root_blog_id(),
+			'blog_id' => get_current_blog_id(),
 			'data'    => array(),
 		)
 	);
