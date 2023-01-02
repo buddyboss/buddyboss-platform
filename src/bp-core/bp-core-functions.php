@@ -660,12 +660,14 @@ function bp_core_get_directory_pages() {
  *
  * @since BuddyPress 1.7.0
  *
- * @param array  $components Components to create pages for.
- * @param string $existing   'delete' if you want to delete existing page mappings
- *                           and replace with new ones. Otherwise existing page mappings
- *                           are kept, and the gaps filled in with new pages. Default: 'keep'.
+ * @param array  $components   Components to create pages for.
+ * @param string $existing     'delete' if you want to delete existing page mappings
+ *                             and replace with new ones. Otherwise existing page mappings
+ *                             are kept, and the gaps filled in with new pages. Default: 'keep'.
+ * @param bool   $map_register Whether or not mapping the registration pages.
+ *                             Default: true
  */
-function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
+function bp_core_add_page_mappings( $components, $existing = 'keep', $map_register = true ) {
 
 	// If no value is passed, there's nothing to do.
 	if ( empty( $components ) ) {
@@ -699,8 +701,8 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 	}
 
 	// Register and Activate are not components, but need pages when
-	// registration is enabled.
-	if ( bp_get_signup_allowed() ) {
+	// registration is enabled and mapping for registration is required.
+	if ( bp_get_signup_allowed() && $map_register ) {
 		foreach ( array( 'register', 'activate' ) as $slug ) {
 			if ( ! isset( $pages[ $slug ] ) ) {
 				$pages_to_create[ $slug ] = $page_titles[ $slug ];
@@ -708,20 +710,24 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		}
 	}
 
-	// check for privacy page if already exists in WP settings > privacy.
-	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
-	$static_pages   = array( 'terms' );
+	// Mapping Policy and Term pages when registration pages required.
+	if ( $map_register ) {
 
-	if ( empty( $policy_page_id ) ) {
-		$static_pages[] = 'privacy';
-	} else {
-		$pages_to_create['privacy'] = $page_titles['privacy'];
-	}
+		// Check for privacy page if already exists in WP settings > privacy.
+		$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
+		$static_pages   = array( 'terms' );
 
-	// Create terms and privacy pages.
-	foreach ( $static_pages as $slug ) {
-		if ( ! isset( $pages[ $slug ] ) ) {
-			$pages_to_create[ $slug ] = $page_titles[ $slug ];
+		if ( empty( $policy_page_id ) ) {
+			$static_pages[] = 'privacy';
+		} else {
+			$pages_to_create['privacy'] = $page_titles['privacy'];
+		}
+
+		// Create terms and privacy pages.
+		foreach ( $static_pages as $slug ) {
+			if ( ! isset( $pages[ $slug ] ) ) {
+				$pages_to_create[ $slug ] = $page_titles[ $slug ];
+			}
 		}
 	}
 
@@ -1567,7 +1573,7 @@ function bp_core_render_message() {
  * @since BuddyPress 1.0.0
  *
  *       usermeta table.
- *
+ * *
  * @return false|null Returns false if there is nothing to do.
  */
 function bp_core_record_activity() {
@@ -1611,10 +1617,9 @@ function bp_core_record_activity() {
 		do_action( 'bp_first_activity_for_member', $user_id );
 	}
 
-	// If it's been more than 5 minutes, record a newer last-activity time.
-	if ( empty( $activity ) || ( $current_time >= strtotime( '+5 minutes', $activity ) ) ) {
-		bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
-	}
+    // updated users last activity on each page refresh.
+	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
+
 }
 add_action( 'wp_head', 'bp_core_record_activity' );
 
@@ -2854,6 +2859,21 @@ function bp_nav_menu_get_loggedin_pages() {
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',
 				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose',
+				'post_parent'    => $nav_counter,
+			);
+
+			// Add archived menu to display archived threads.
+			$page_args['archived-messages'] = (object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Archived', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'archived-messages',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'archived',
 				'post_parent'    => $nav_counter,
 			);
 
@@ -5054,9 +5074,12 @@ function bp_core_profile_completion_steps_options() {
  *
  * @since BuddyBoss 1.4.9
  */
-function bp_core_xprofile_update_profile_completion_user_progress() {
+function bp_core_xprofile_update_profile_completion_user_progress( $user_id = '', $posted_field_ids = array(), $errors = array(), $old_values = array(), $new_values = array() ) {
 
-	$user_id            = get_current_user_id();
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
 	$steps_options      = bp_core_profile_completion_steps_options();
 	$profile_groups     = wp_list_pluck( $steps_options['profile_groups'], 'id' );
 	$profile_photo_type = array();
@@ -6433,6 +6456,8 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 			 * Avatar Display = unchecked.
 			 * Profile Avatars = WordPress.
 			 */
+		} elseif ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' !== bp_get_option( 'avatar_default', 'mystery' ) ) {
+			$avatar_image_url = $avatar = get_avatar_url( '', array( 'size' => $size ) );
 		} elseif ( ! $show_avatar && 'WordPress' === $profile_avatar_type ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 		}
@@ -6683,6 +6708,14 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		},
 		$all_notifications
 	);
+
+	$read_only_notifications = array_column( array_filter( $all_notifications ), 'notification_read_only', 'key' );
+	if (
+		isset( $read_only_notifications[ $notification_type ] ) &&
+		true === (bool) $read_only_notifications[ $notification_type ]
+	) {
+		return false;
+	}
 
 	$main = array();
 
@@ -7024,8 +7057,8 @@ function bb_check_email_type_registered( string $notification_type ) {
  *
  * @return bool Is media profile media support enabled or not.
  */
-function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) bp_get_option( 'bp_labs_notification_preferences_enabled', $default ) );
+function bp_is_labs_notification_preferences_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) $default );
 }
 
 /**
@@ -7036,7 +7069,9 @@ function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
  * @return bool
  */
 function bb_enabled_legacy_email_preference() {
-	return (bool) apply_filters( 'bb_enabled_legacy_email_preference', ! bp_is_labs_notification_preferences_support_enabled() );
+	$retval = apply_filters_deprecated( 'bb_enabled_legacy_email_preference', array( ! bp_is_labs_notification_preferences_support_enabled() ), '2.1.4', 'bb_enable_legacy_notification_preference' );
+
+	return (bool) apply_filters( 'bb_enable_legacy_notification_preference', $retval );
 }
 
 /**
@@ -7080,6 +7115,11 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
+		$notification_fields_read_only = array_filter( array_column( $options['fields'], 'notification_read_only', null ) );
+		$options['fields']             = ( ! empty( $notification_fields_read_only ) ? array_diff_key( $options['fields'], $notification_fields_read_only ) : $options['fields'] );
+	}
+
+	if ( ! empty( $options['fields'] ) ) {
 		?>
 
 		<table class="main-notification-settings">
@@ -7093,6 +7133,10 @@ function bb_render_notification( $notification_group ) {
 			}
 
 			foreach ( $options['fields'] as $field ) {
+
+				if ( ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'] ) {
+					continue;
+				}
 
 				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
 				?>
@@ -7690,6 +7734,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
+		case 'bp_messaging_notification_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
+			break;
 		case 'bp_web_push_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
@@ -7715,9 +7762,439 @@ function bb_validate_gravatar( $email ) {
 	$key              = base64_encode( $url );
 	$response         = get_transient( $key );
 	$has_valid_avatar = false;
-	if ( isset( $response ) && isset( $response[0] ) && preg_match( "|200|", $response[0] ) ) {
+	if ( isset( $response ) && isset( $response[0] ) && preg_match( '|200|', $response[0] ) ) {
 		$has_valid_avatar = true;
 	}
 
 	return $has_valid_avatar;
+}
+
+/** Function to get the client machine os.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return string
+ */
+function bb_core_get_os() {
+
+	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+	$os_platform = '';
+	$os_array    = array(
+		'/windows nt 10/i'      => 'Windows 10',
+		'/windows nt 6.3/i'     => 'Windows 8.1',
+		'/windows nt 6.2/i'     => 'Windows 8',
+		'/windows nt 6.1/i'     => 'Windows 7',
+		'/windows nt 6.0/i'     => 'Windows Vista',
+		'/windows nt 5.2/i'     => 'Windows Server 2003/XP x64',
+		'/windows nt 5.1/i'     => 'Windows XP',
+		'/windows xp/i'         => 'Windows XP',
+		'/windows nt 5.0/i'     => 'Windows 2000',
+		'/windows me/i'         => 'Windows ME',
+		'/win98/i'              => 'Windows 98',
+		'/win95/i'              => 'Windows 95',
+		'/win16/i'              => 'Windows 3.11',
+		'/macintosh|mac os x/i' => 'Mac OS X',
+		'/mac_powerpc/i'        => 'Mac OS 9',
+		'/linux/i'              => 'Linux',
+		'/ubuntu/i'             => 'Ubuntu',
+		'/iphone/i'             => 'iPhone',
+		'/ipod/i'               => 'iPod',
+		'/ipad/i'               => 'iPad',
+		'/android/i'            => 'Android',
+		'/blackberry/i'         => 'BlackBerry',
+		'/webos/i'              => 'Mobile',
+	);
+
+	foreach ( $os_array as $regex => $value ) {
+		if ( preg_match( $regex, $user_agent ) ) {
+			$os_platform = $value;
+		}
+	}
+
+	switch ( $os_platform ) {
+		case 'Windows 10':
+		case 'Windows 8.1':
+		case 'Windows 8':
+		case 'Windows 7':
+		case 'Windows Vista':
+		case 'Windows Server 2003/XP x64':
+		case 'Windows XP':
+		case 'Windows 2000':
+		case 'Windows ME':
+		case 'Windows 98':
+		case 'Windows 3.11':
+		case 'Windows 95':
+			$os_platform = 'window';
+			break;
+		case 'Mac OS X':
+		case 'Mac OS 9':
+			$os_platform = 'mac';
+			break;
+		case 'Linux':
+		case 'Ubuntu':
+			$os_platform = 'ubuntu';
+			break;
+		case 'iPhone':
+		case 'iPod':
+		case 'iPad':
+			$os_platform = 'ios_device';
+			break;
+		case 'Android':
+			$os_platform = 'android_device';
+			break;
+		case 'BlackBerry':
+			$os_platform = 'BlackBerry';
+			break;
+		case 'Mobile':
+			$os_platform = 'Mobile';
+			break;
+		default:
+			$os_platform = 'window';
+
+			break;
+	}
+
+	return $os_platform;
+}
+
+/**
+ * Get week start date with an integer Unix timestamp.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param string $date The date to be converted.
+ * @param string $type Start or end of date.
+ *
+ * @return int
+ */
+function bb_get_week_timestamp( $date = false, $type = 'start' ) {
+
+	if ( empty( $date ) ) {
+		$date = 'monday this week';
+		if ( 'end' === $type ) {
+			$date = 'sunday this week';
+		}
+	}
+
+	// Set based on $type.
+	$time = ' 00:00:00';
+	if ( 'end' === $type ) {
+		$time = ' 23:59:59';
+	}
+
+	$start_week      = strtotime( $date );
+	$start_week_date = date_i18n( 'Y-m-d', $start_week );
+	$start_week_date = $start_week_date . $time;
+
+	$time_chunks = explode( ':', str_replace( ' ', ':', $start_week_date ) );
+	$date_chunks = explode( '-', str_replace( ' ', '-', $start_week_date ) );
+
+	return gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
+}
+
+/**
+ * Get user ID by their activity mention name.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param string|array $mention_names Username appropriate for @-mentions.
+ *
+ * @return array
+ */
+function bb_get_user_id_by_activity_mentionname( $mention_names ) {
+	$mention_user_ids = array();
+
+	if ( empty( $mention_names ) ) {
+		return $mention_user_ids;
+	}
+
+	if ( is_string( $mention_names ) ) {
+		$mention_names = array( $mention_names );
+	}
+
+	$mention_names = array_map(
+		function ( $username ) {
+			return trim( $username, '@' );
+		},
+		$mention_names
+	);
+
+	// Loop the recipients and convert all usernames to user_ids where needed.
+	foreach ( (array) $mention_names as $mention_user ) {
+
+		// Trim spaces and skip if empty.
+		$mention_user = trim( $mention_user );
+		if ( empty( $mention_user ) ) {
+			continue;
+		}
+
+		// Check user_login / nicename columns first
+		// @see http://buddypress.trac.wordpress.org/ticket/5151.
+		if ( bp_is_username_compatibility_mode() ) {
+			$user_id = bp_core_get_userid( urldecode( $mention_user ) );
+		} else {
+			$user_id = bp_core_get_userid_from_nicename( $mention_user );
+		}
+
+		// Check against user ID column if no match and if passed user is numeric.
+		if ( empty( $user_id ) && is_numeric( $mention_user ) ) {
+			if ( bp_core_get_core_userdata( (int) $mention_user ) ) {
+				$user_id = (int) $mention_user;
+			}
+		}
+
+		// If $user_id still blank then try last time to find $user_id via the nickname field.
+		if ( empty( $user_id ) ) {
+			$user_id = bp_core_get_userid_from_nickname( $mention_user );
+		}
+
+		$mention_user_ids[] = (int) $user_id;
+	}
+
+	return $mention_user_ids;
+}
+
+/**
+ * A group of regex replaces used to identify text formatted with newlines.
+ * The remaining line breaks after conversion become <<br />> tags, unless $br is set to '0' or 'false'.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param string $pee The text which has to be formatted.
+ * @param bool   $br  Optional. If set, this will convert all remaining line breaks
+ *                    after paragraphing. Line breaks within `<script>`, `<style>`,
+ *                    and `<svg>` tags are not affected. Default true.
+ *
+ * @return string Text which has been converted into correct paragraph tags.
+ */
+function bb_autop( $pee, $br = true ) {
+	$pre_tags = array();
+
+	if ( trim( $pee ) === '' ) {
+		return '';
+	}
+
+	// Just to make things a little easier, pad the end.
+	$pee = $pee . "\n";
+
+	/*
+	 * Pre tags shouldn't be touched by autop.
+	 * Replace pre tags with placeholders and bring them back after autop.
+	 */
+	if ( strpos( $pee, '<pre' ) !== false ) {
+		$pee_parts = explode( '</pre>', $pee );
+		$last_pee  = array_pop( $pee_parts );
+		$pee       = '';
+		$i         = 0;
+
+		foreach ( $pee_parts as $pee_part ) {
+			$start = strpos( $pee_part, '<pre' );
+
+			// Malformed HTML?
+			if ( false === $start ) {
+				$pee .= $pee_part;
+				continue;
+			}
+
+			$name              = "<pre wp-pre-tag-$i></pre>";
+			$pre_tags[ $name ] = substr( $pee_part, $start ) . '</pre>';
+
+			$pee .= substr( $pee_part, 0, $start ) . $name;
+			$i++;
+		}
+
+		$pee .= $last_pee;
+	}
+
+	$allblocks = '(?:table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|form|map|area|blockquote|address|math|style|p|h[1-6]|hr|fieldset|legend|section|article|aside|hgroup|header|footer|nav|figure|figcaption|details|menu|summary)';
+
+	// Add a double line break above block-level opening tags.
+	$pee = preg_replace( '!(<' . $allblocks . '[\s/>])!', "\n\n$1", $pee );
+
+	// Add a double line break below block-level closing tags.
+	$pee = preg_replace( '!(</' . $allblocks . '>)!', "$1\n\n", $pee );
+
+	// Add a double line break after hr tags, which are self closing.
+	$pee = preg_replace( '!(<hr\s*?/?>)!', "$1\n\n", $pee );
+
+	// Standardize newline characters to "\n".
+	$pee = str_replace( array( "\r\n", "\r" ), "\n", $pee );
+
+	// Find newlines in all elements and add placeholders.
+	$pee = wp_replace_in_html_tags( $pee, array( "\n" => ' <!-- wpnl --> ' ) );
+
+	// Collapse line breaks before and after <option> elements so they don't get autop'd.
+	if ( strpos( $pee, '<option' ) !== false ) {
+		$pee = preg_replace( '|\s*<option|', '<option', $pee );
+		$pee = preg_replace( '|</option>\s*|', '</option>', $pee );
+	}
+
+	/*
+	 * Collapse line breaks inside <object> elements, before <param> and <embed> elements
+	 * so they don't get autop'd.
+	 */
+	if ( strpos( $pee, '</object>' ) !== false ) {
+		$pee = preg_replace( '|(<object[^>]*>)\s*|', '$1', $pee );
+		$pee = preg_replace( '|\s*</object>|', '</object>', $pee );
+		$pee = preg_replace( '%\s*(</?(?:param|embed)[^>]*>)\s*%', '$1', $pee );
+	}
+
+	/*
+	 * Collapse line breaks inside <audio> and <video> elements,
+	 * before and after <source> and <track> elements.
+	 */
+	if ( strpos( $pee, '<source' ) !== false || strpos( $pee, '<track' ) !== false ) {
+		$pee = preg_replace( '%([<\[](?:audio|video)[^>\]]*[>\]])\s*%', '$1', $pee );
+		$pee = preg_replace( '%\s*([<\[]/(?:audio|video)[>\]])%', '$1', $pee );
+		$pee = preg_replace( '%\s*(<(?:source|track)[^>]*>)\s*%', '$1', $pee );
+	}
+
+	// Collapse line breaks before and after <figcaption> elements.
+	if ( strpos( $pee, '<figcaption' ) !== false ) {
+		$pee = preg_replace( '|\s*(<figcaption[^>]*>)|', '$1', $pee );
+		$pee = preg_replace( '|</figcaption>\s*|', '</figcaption>', $pee );
+	}
+
+	// Remove more than two contiguous line breaks.
+	$pee = preg_replace( "/\n\n+/", "\n\n", $pee );
+
+	// Split up the contents into an array of strings, separated by double line breaks.
+	$pees = preg_split( '/\n\s*\n/', $pee, -1, PREG_SPLIT_NO_EMPTY );
+
+	// Reset $pee prior to rebuilding.
+	$pee = '';
+
+	// Rebuild the content as a string, wrapping every bit with a <p>.
+	foreach ( $pees as $tinkle ) {
+		$pee .= '<p>' . trim( $tinkle, "\n" ) . "</p>\n";
+	}
+
+	// Under certain strange conditions it could create a P of entirely whitespace.
+	$pee = preg_replace( '|<p>\s*</p>|', '', $pee );
+
+	// Add a closing <p> inside <div>, <address>, or <form> tag if missing.
+	$pee = preg_replace( '!<p>([^<]+)</(div|address|form)>!', '<p>$1</p></$2>', $pee );
+
+	// If an opening or closing block element tag is wrapped in a <p>, unwrap it.
+	$pee = preg_replace( '!<p>\s*(</?' . $allblocks . '[^>]*>)\s*</p>!', '$1', $pee );
+
+	// In some cases <li> may get wrapped in <p>, fix them.
+	$pee = preg_replace( '|<p>(<li.+?)</p>|', '$1', $pee );
+
+	// If a <blockquote> is wrapped with a <p>, move it inside the <blockquote>.
+	$pee = preg_replace( '|<p><blockquote([^>]*)>|i', '<blockquote$1><p>', $pee );
+	$pee = str_replace( '</blockquote></p>', '</p></blockquote>', $pee );
+
+	// If an opening or closing block element tag is preceded by an opening <p> tag, remove it.
+	$pee = preg_replace( '!<p>\s*(</?' . $allblocks . '[^>]*>)!', '$1', $pee );
+
+	// If an opening or closing block element tag is followed by a closing <p> tag, remove it.
+	$pee = preg_replace( '!(</?' . $allblocks . '[^>]*>)\s*</p>!', '$1', $pee );
+
+	// Optionally insert line breaks.
+	if ( $br ) {
+		// Replace newlines that shouldn't be touched with a placeholder.
+		$pee = preg_replace_callback( '/<(script|style|svg).*?<\/\\1>/s', '_autop_newline_preservation_helper', $pee );
+
+		// Normalize <br>.
+		$pee = str_replace( array( '<br>', '<br/>' ), '<br />', $pee );
+
+		// Replace any new line characters that aren't preceded by a <br /> with a <br />.
+		$pee = preg_replace( '|(?<!<br />)\s*\n|', "<br />\n", $pee );
+
+		// Replace newline placeholders with newlines.
+		$pee = str_replace( '<WPPreserveNewline />', "\n", $pee );
+	}
+
+	// If a <br /> tag is after an opening or closing block tag, remove it.
+	$pee = preg_replace( '!(</?' . $allblocks . '[^>]*>)\s*<br />!', '$1', $pee );
+
+	// If a <br /> tag is before a subset of opening or closing block tags, remove it.
+	$pee = preg_replace( '!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)!', '$1', $pee );
+	$pee = preg_replace( "|\n</p>$|", '</p>', $pee );
+
+	// Replace placeholder <pre> tags with their original content.
+	if ( ! empty( $pre_tags ) ) {
+		$pee = str_replace( array_keys( $pre_tags ), array_values( $pre_tags ), $pee );
+	}
+
+	// Restore newlines in all elements.
+	if ( false !== strpos( $pee, '<!-- wpnl -->' ) ) {
+		$pee = str_replace( array( ' <!-- wpnl --> ', '<!-- wpnl -->' ), "\n", $pee );
+	}
+
+	return $pee;
+}
+
+/**
+ * Function to check the heartbeat enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return bool
+ */
+function bb_is_heartbeat_enabled() {
+	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
+
+	return 0 === (int) $heartbeat_disabled;
+}
+
+/**
+ * Function to return the presence interval time in seconds.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return int
+ */
+function bb_presence_interval() {
+	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', 60 ) );
+}
+
+/**
+ * Function to fetch the user's online status based on ids.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param array  $users        Array of user ids.
+ * @param string $compare_time Time difference.
+ *
+ * @return array
+ */
+function bb_get_users_presence( $users, $compare_time = false ) {
+	if ( empty( $users ) ) {
+		return array();
+	}
+
+	$presence_data = array();
+	foreach ( array_unique( $users ) as $user_id ) {
+		$presence_data[] = array(
+			'id'     => $user_id,
+			'status' => bb_get_user_presence( $user_id, $compare_time ),
+		);
+	}
+
+	return $presence_data;
+}
+
+/**
+ * Function to return the minimum pro version to show notice.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return string
+ */
+function bb_pro_pusher_version() {
+	return '2.2';
+}
+
+/**
+ * Function to return the time span for the presence in seconds.
+ *
+ * @since BuddyBoss 2.2
+ *
+ * @return int
+ */
+function bb_presence_time_span() {
+	return (int) apply_filters( 'bb_presence_time_span', 180 );
 }
