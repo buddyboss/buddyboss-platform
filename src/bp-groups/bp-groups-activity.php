@@ -786,7 +786,7 @@ add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity',
 /**
  * Function will append join query to display group lists in the activity feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.7
  *
  * @param string $sql From SQL statement.
  * @param array  $r   Array of parsed arguments for the get method.
@@ -803,7 +803,7 @@ function bb_groups_get_join_sql_for_activity( $sql, $r ) {
 /**
  * Function will append where condition to display group lists in the activity feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.7
  *
  * @param array $where_conditions Where conditions SQL statement.
  * @param array $r                Array of parsed arguments for the get method.

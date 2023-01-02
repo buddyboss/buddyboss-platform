@@ -1392,6 +1392,7 @@ window.bp = window.bp || {};
 				this.video_dropzone_obj.destroy();
 			}
 			this.dropzone_video = [];
+			$( '#bp-video-post-content' ).val('');
 
 			var currentPopup = $( event.currentTarget ).closest( '#bp-video-uploader' );
 
@@ -1713,7 +1714,7 @@ window.bp = window.bp || {};
 
 			this.closeUploader( event );
 			$( '#bp-video-create-album' ).hide();
-			$( '#bb-album-title' ).val( '' );
+			$( '#bb-album-title' ).val( '' ).removeClass( 'error' );
 
 		},
 
