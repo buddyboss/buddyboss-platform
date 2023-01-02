@@ -144,6 +144,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'subscription_type'  => 'topic',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_reply' ),
 				'send_callback'      => array( $this, 'bb_send_forums_subscribed_reply' ),
+				'validate_callback'  => array( $this, 'bb_validate_forums_topics_subscription_request' ),
 				'notification_type'  => 'bb_forums_subscribed_reply',
 				'notification_group' => 'forums',
 			)
@@ -216,6 +217,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'subscription_type'  => 'forum',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_discussion' ),
 				'send_callback'      => array( $this, 'bb_send_forums_subscribed_discussion' ),
+				'validate_callback'  => array( $this, 'bb_validate_forums_topics_subscription_request' ),
 				'notification_type'  => 'bb_forums_subscribed_discussion',
 				'notification_group' => 'forums',
 			)
@@ -520,6 +522,80 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Validate callback function for forum type subscription.
+	 *
+	 * @param array $args {
+	 *     Used to validate the subscription request.
+	 *
+	 *     @type string $type                   Required. The subscription type.
+	 *     @type string $item_id                Required. The subscription item ID.
+	 *     @type string $secondary_item_id      Required. The subscription parent item ID.
+	 * }
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function bb_validate_forums_topics_subscription_request( $args ) {
+
+		// Parse the arguments.
+		$r = bp_parse_args(
+			$args,
+			array(
+				'type'              => '',
+				'item_id'           => 0,
+				'secondary_item_id' => 0,
+			)
+		);
+
+		// Initially set is true.
+		$response = true;
+
+		if ( empty( $r['item_id'] ) ) {
+			$response = new WP_Error(
+				'bb_subscription_required_item_id',
+				__( 'The item ID is required.', 'buddypress' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} elseif ( empty( $r['type'] ) ) {
+			$response = new WP_Error(
+				'bb_subscription_required_item_type',
+				__( 'The item type is required.', 'buddypress' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} else {
+			// Get the forum/topic.
+			$post = get_post( $r['item_id'] );
+
+			// Validate the item type is correct or not?
+			if ( $post->post_type !== $r['type'] ) {
+				$response = new WP_Error(
+					'bb_subscription_invalid_item_id_or_type',
+					__( 'The item id is not matching with the type.', 'buddypress' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} else {
+				// Validate the secondary item if exists.
+				if ( ! empty( $r['secondary_item_id'] ) && $r['secondary_item_id'] !== $post->post_parent ) {
+					$response = new WP_Error(
+						'bb_subscription_invalid_secondary_item_id',
+						__( 'The secondary item ID is not valid.', 'buddypress' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			}
+		}
+
+		return $response;
 	}
 
 	/**

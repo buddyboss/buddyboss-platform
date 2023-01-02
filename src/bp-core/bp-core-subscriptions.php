@@ -606,6 +606,22 @@ function bb_create_subscription( $args = array() ) {
 	$new_subscription->status            = $r['status'];
 	$new_subscription_created            = $new_subscription->save();
 
+	// Return if not create a subscription.
+	if ( is_wp_error( $new_subscription_created ) || ! $new_subscription_created ) {
+		$error_message = is_wp_error( $new_subscription_created ) ? $new_subscription_created->get_error_message() : __( 'There is an error while adding the subscription.', 'buddyboss' );
+		if ( 'wp_error' === $r['error_type'] ) {
+			return new WP_Error(
+				'bb_subscription_invalid_item_request',
+				$error_message,
+				array(
+					'status' => 400,
+				)
+			);
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * Fires after create a new subscription.
 	 *

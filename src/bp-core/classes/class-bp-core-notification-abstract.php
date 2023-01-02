@@ -100,6 +100,8 @@ abstract class BP_Core_Notification_Abstract {
 		// Register the Notifications filters.
 		add_action( 'bp_nouveau_notifications_init_filters', array( $this, 'register_notification_filters' ) );
 
+		// Register callback function validate subscription request.
+		add_filter( 'bb_subscriptions_validate_before_save', array( $this, 'bb_subscriptions_validate_request' ), 10, 2 );
 	}
 
 	/**
@@ -568,6 +570,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *     @type string $subscription_type   Required. Subscription type key.
 	 *     @type string $items_callback      Optional. The render callback function.
 	 *     @type string $send_callback       Optional. To send notification callback function.
+	 *     @type string $validate_callback   Required. To validate request callback function.
 	 *     @type string $notification_type   Required. Notification type key.
 	 *     @type string $notification_group  Optional. Notification group key.
 	 * }
@@ -583,12 +586,13 @@ abstract class BP_Core_Notification_Abstract {
 				'subscription_type'  => '',
 				'items_callback'     => '',
 				'send_callback'      => '',
+				'validate_callback'  => '',
 				'notification_type'  => '',
 				'notification_group' => '',
 			)
 		);
 
-		if ( empty( $r['subscription_type'] ) || empty( $r['notification_type'] ) || ! is_array( $r['label'] ) ) {
+		if ( empty( $r['subscription_type'] ) || empty( $r['notification_type'] ) || ! is_array( $r['label'] ) || empty( $r['validate_callback'] ) ) {
 			return;
 		}
 
@@ -600,9 +604,87 @@ abstract class BP_Core_Notification_Abstract {
 			'subscription_type'  => $r['subscription_type'],
 			'items_callback'     => $r['items_callback'],
 			'send_callback'      => $r['send_callback'],
+			'validate_callback'  => $r['validate_callback'],
 			'notification_type'  => $r['notification_type'],
 			'notification_group' => $r['notification_group'],
 		);
+	}
+
+	/**
+	 * Register validate callback function for subscription.
+	 *
+	 * @param bool             $response      True when subscription request correct otherwise false/WP_Error.
+	 * @param BP_Subscriptions $subscriptions Current instance of the subscription item being saved.
+	 *
+	 * @return bool|WP_Error True on success, false on failure.
+	 */
+	public function bb_subscriptions_validate_request( $response, $subscriptions ) {
+		$type              = $subscriptions->type ?? '';
+		$item_id           = isset( $subscriptions->item_id ) ? (int) $subscriptions->item_id : 0;
+		$secondary_item_id = isset( $subscriptions->secondary_item_id ) ? (int) $subscriptions->secondary_item_id : 0;
+
+		if ( empty( $item_id ) ) {
+			$response = new WP_Error(
+				'bb_subscription_required_item_id',
+				__( 'The item ID is required.', 'buddypress' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} elseif ( empty( $type ) ) {
+			$response = new WP_Error(
+				'bb_subscription_required_item_type',
+				__( 'The item type is required.', 'buddypress' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} else {
+			$type_data = bb_register_subscriptions_types( $type );
+
+			if (
+				! empty( $type_data ) &&
+				! empty( $type_data['validate_callback'] ) &&
+				is_callable( $type_data['validate_callback'] )
+			) {
+				$validate_item = call_user_func(
+					$type_data['validate_callback'],
+					array(
+						'type'              => $type,
+						'item_id'           => $item_id,
+						'secondary_item_id' => $secondary_item_id,
+					)
+				);
+
+				if ( is_wp_error( $validate_item ) ) {
+					$response = new WP_Error(
+						'bb_subscription_invalid_item_request',
+						$validate_item->get_error_message(),
+						array(
+							'status' => 400,
+						)
+					);
+				} elseif ( ! $validate_item ) {
+					$response = new WP_Error(
+						'bb_subscription_invalid_item_request',
+						__( 'The request for subscription item is not valid.', 'buddypress' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			} else {
+				$response = new WP_Error(
+					'bb_subscription_invalid_item_type',
+					__( 'The item type is not valid.', 'buddypress' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		return $response;
 	}
 
 }

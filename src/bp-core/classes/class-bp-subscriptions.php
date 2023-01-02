@@ -278,24 +278,38 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				} else {
 					return false;
 				}
-			}
 
-			// Subscription need Type.
-			if ( empty( $this->type ) ) {
+				// Subscription need Type.
+			} elseif ( empty( $this->type ) ) {
 				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
 					return new WP_Error( 'bb_subscriptions_empty_type', __( 'The type is required to create a subscription.', 'buddyboss' ) );
 				} else {
 					return false;
 				}
-			}
 
-			// Subscription need Item ID.
-			if ( empty( $this->item_id ) ) {
+				// Subscription need Item ID.
+			} elseif ( empty( $this->item_id ) ) {
 				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
 					return new WP_Error( 'bb_subscriptions_empty_item_id', __( 'The item ID is required to create a subscription.', 'buddyboss' ) );
 				} else {
 					return false;
 				}
+			}
+
+			/**
+			 * Fires before the current subscription item gets saved.
+			 *
+			 * Please use this filter to validate subscription request. Each part will be passed in.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param bool             $is_validate True when subscription request correct otherwise false/WP_Error. Default true.
+			 * @param BP_Subscriptions $this        Current instance of the subscription item being saved.
+			 */
+			$is_validate = apply_filters( 'bb_subscriptions_validate_before_save', true, $this );
+
+			if ( ! $is_validate || is_wp_error( $is_validate ) ) {
+				return $is_validate;
 			}
 
 			if ( ! empty( $this->id ) ) {
