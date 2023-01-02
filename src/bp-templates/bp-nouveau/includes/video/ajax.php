@@ -1260,7 +1260,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 				'include'  => $video_id,
 				'album_id' => 'existing-video',
 			);
-			if( ! empty( $video->group_id ) ) {
+			if ( ! empty( $video->group_id ) ) {
 				$args['group_id'] = $video->group_id;
 			}
 			ob_start();
