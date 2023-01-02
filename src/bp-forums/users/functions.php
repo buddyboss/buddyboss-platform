@@ -951,7 +951,7 @@ function bbp_add_user_subscription( $user_id = 0, $object_id = 0 ) {
 
 	do_action( 'bbp_add_user_subscription', $user_id, $object_id, $post_type );
 
-	return is_int( $subscription_id );
+	return $subscription_id;
 }
 
 /**
