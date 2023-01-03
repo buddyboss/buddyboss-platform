@@ -554,9 +554,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$response = true;
 
 		$switch = false;
-
 		// Switch to given blog_id if current blog is not same.
-		if ( get_current_blog_id() !== $r['blog_id'] ) {
+		if ( is_multisite() && get_current_blog_id() !== $r['blog_id'] ) {
 			switch_to_blog( $r['blog_id'] );
 			$switch = true;
 		}
@@ -625,11 +624,23 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$type_data = bb_register_subscriptions_types( 'forum' );
 
 		if ( ! empty( $items ) ) {
+
+			$blog_ids = array_unique( wp_list_pluck( $items, 'blog_id' ) );
+			$blog_id  = ! empty( $blog_ids ) ? current( $blog_ids ) : get_current_blog_id();
+
+			$switch = false;
+			// Switch to given blog_id if current blog is not same.
+			if ( is_multisite() && get_current_blog_id() !== $blog_id ) {
+				switch_to_blog( $blog_id );
+				$switch = true;
+			}
+
 			foreach ( $items as $item_key => $item ) {
 				$subscription = bp_parse_args(
 					$item,
 					array(
 						'id'                => 0,
+						'blog_id'           => get_current_blog_id(),
 						'user_id'           => 0,
 						'item_id'           => 0,
 						'secondary_item_id' => 0,
@@ -703,6 +714,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				// Reassign the extra data to exist object.
 				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
 			}
+
+			// Restore current blog.
+			if ( $switch ) {
+				restore_current_blog();
+			}
 		}
 
 		return $items;
@@ -721,6 +737,16 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$type_data = bb_register_subscriptions_types( 'topic' );
 
 		if ( ! empty( $items ) ) {
+
+			$blog_ids = array_unique( wp_list_pluck( $items, 'blog_id' ) );
+			$blog_id  = ! empty( $blog_ids ) ? current( $blog_ids ) : get_current_blog_id();
+
+			$switch = false;
+			// Switch to given blog_id if current blog is not same.
+			if ( is_multisite() && get_current_blog_id() !== $blog_id ) {
+				switch_to_blog( $blog_id );
+				$switch = true;
+			}
 			foreach ( $items as $item_key => $item ) {
 				$subscription = bp_parse_args(
 					$item,
@@ -821,6 +847,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				);
 
 				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+			}
+
+			// Restore current blog.
+			if ( $switch ) {
+				restore_current_blog();
 			}
 		}
 
