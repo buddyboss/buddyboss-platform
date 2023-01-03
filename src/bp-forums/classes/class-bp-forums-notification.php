@@ -550,8 +550,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			)
 		);
 
-		// Initially set is true.
-		$response = true;
+		// Initially set is false.
+		$retval = false;
 
 		$switch = false;
 		// Switch to given blog_id if current blog is not same.
@@ -561,7 +561,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		if ( empty( $r['item_id'] ) ) {
-			$response = new WP_Error(
+			$retval = new WP_Error(
 				'bb_subscription_required_item_id',
 				__( 'The item ID is required.', 'buddyboss' ),
 				array(
@@ -569,7 +569,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				)
 			);
 		} elseif ( empty( $r['type'] ) ) {
-			$response = new WP_Error(
+			$retval = new WP_Error(
 				'bb_subscription_required_item_type',
 				__( 'The item type is required.', 'buddyboss' ),
 				array(
@@ -582,7 +582,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 			// Validate the item type is correct or not?
 			if ( $post->post_type !== $r['type'] ) {
-				$response = new WP_Error(
+				$retval = new WP_Error(
 					'bb_subscription_invalid_item_id_or_type',
 					__( 'The item id is not matching with the type.', 'buddyboss' ),
 					array(
@@ -592,13 +592,15 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			} else {
 				// Validate the secondary item if exists.
 				if ( ! empty( $r['secondary_item_id'] ) && $r['secondary_item_id'] !== $post->post_parent ) {
-					$response = new WP_Error(
+					$retval = new WP_Error(
 						'bb_subscription_invalid_secondary_item_id',
 						__( 'The secondary item ID is not valid.', 'buddyboss' ),
 						array(
 							'status' => 400,
 						)
 					);
+				} else {
+					$retval = true;
 				}
 			}
 		}
@@ -608,7 +610,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			restore_current_blog();
 		}
 
-		return $response;
+		return $retval;
 	}
 
 	/**
