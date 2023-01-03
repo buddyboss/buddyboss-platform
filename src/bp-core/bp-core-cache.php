@@ -442,7 +442,7 @@ add_action( 'bb_delete_subscription', 'bb_subscriptions_reset_cache_incrementor'
  * @param BP_Subscriptions $subscription Subscription object.
  */
 function bb_subscriptions_clear_cache_for_subscription( $subscription ) {
-	if ( $subscription->id ) {
+	if ( ! empty( $subscription->id ) ) {
 		wp_cache_delete( $subscription->id, 'bb_subscriptions' );
 
 		// Delete the existing subscription cache.

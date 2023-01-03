@@ -88,7 +88,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
 
-		if ( false === bbp_is_subscriptions_active() ) {
+		if ( ! function_exists( 'bbp_is_subscriptions_active' ) || false === bbp_is_subscriptions_active() ) {
 			$notification_read_only   = true;
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
@@ -144,6 +144,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'subscription_type'  => 'topic',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_reply' ),
 				'send_callback'      => array( $this, 'bb_send_forums_subscribed_reply' ),
+				'validate_callback'  => array( $this, 'bb_validate_forums_topics_subscription_request' ),
 				'notification_type'  => 'bb_forums_subscribed_reply',
 				'notification_group' => 'forums',
 			)
@@ -160,7 +161,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
 
-		if ( false === bbp_is_subscriptions_active() ) {
+		if ( ! function_exists( 'bbp_is_subscriptions_active' ) || false === bbp_is_subscriptions_active() ) {
 			$notification_read_only   = true;
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
@@ -216,6 +217,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'subscription_type'  => 'forum',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_discussion' ),
 				'send_callback'      => array( $this, 'bb_send_forums_subscribed_discussion' ),
+				'validate_callback'  => array( $this, 'bb_validate_forums_topics_subscription_request' ),
 				'notification_type'  => 'bb_forums_subscribed_discussion',
 				'notification_group' => 'forums',
 			)
@@ -523,6 +525,95 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
+	 * Validate callback function for forum type subscription.
+	 *
+	 * @param array $args {
+	 *     Used to validate the subscription request.
+	 *
+	 *     @type string $type                   Required. The subscription type.
+	 *     @type string $item_id                Required. The subscription item ID.
+	 *     @type string $secondary_item_id      Required. The subscription parent item ID.
+	 * }
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function bb_validate_forums_topics_subscription_request( $args ) {
+
+		// Parse the arguments.
+		$r = bp_parse_args(
+			$args,
+			array(
+				'type'              => '',
+				'blog_id'           => get_current_blog_id(),
+				'item_id'           => 0,
+				'secondary_item_id' => 0,
+			)
+		);
+
+		// Initially set is false.
+		$retval = false;
+
+		$switch = false;
+		// Switch to given blog_id if current blog is not same.
+		if ( is_multisite() && get_current_blog_id() !== $r['blog_id'] ) {
+			switch_to_blog( $r['blog_id'] );
+			$switch = true;
+		}
+
+		if ( empty( $r['item_id'] ) ) {
+			$retval = new WP_Error(
+				'bb_subscription_required_item_id',
+				__( 'The item ID is required.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} elseif ( empty( $r['type'] ) ) {
+			$retval = new WP_Error(
+				'bb_subscription_required_item_type',
+				__( 'The item type is required.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} else {
+			// Get the forum/topic.
+			$post = get_post( $r['item_id'] );
+
+			// Validate the item type is correct or not?
+			if ( $post->post_type !== $r['type'] ) {
+				$retval = new WP_Error(
+					'bb_subscription_invalid_item_id_or_type',
+					__( 'The item id is not matching with the type.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} else {
+				// Validate the secondary item if exists.
+				if ( ! empty( $r['secondary_item_id'] ) && $r['secondary_item_id'] !== $post->post_parent ) {
+					$retval = new WP_Error(
+						'bb_subscription_invalid_secondary_item_id',
+						__( 'The secondary item ID is not valid.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				} else {
+					$retval = true;
+				}
+			}
+		}
+
+		// Restore current blog.
+		if ( $switch ) {
+			restore_current_blog();
+		}
+
+		return $retval;
+	}
+
+	/**
 	 * Render callback function on frontend.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -535,11 +626,23 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$type_data = bb_register_subscriptions_types( 'forum' );
 
 		if ( ! empty( $items ) ) {
+
+			$blog_ids = array_unique( wp_list_pluck( $items, 'blog_id' ) );
+			$blog_id  = ! empty( $blog_ids ) ? current( $blog_ids ) : get_current_blog_id();
+
+			$switch = false;
+			// Switch to given blog_id if current blog is not same.
+			if ( is_multisite() && get_current_blog_id() !== $blog_id ) {
+				switch_to_blog( $blog_id );
+				$switch = true;
+			}
+
 			foreach ( $items as $item_key => $item ) {
 				$subscription = bp_parse_args(
 					$item,
 					array(
 						'id'                => 0,
+						'blog_id'           => get_current_blog_id(),
 						'user_id'           => 0,
 						'item_id'           => 0,
 						'secondary_item_id' => 0,
@@ -613,6 +716,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				// Reassign the extra data to exist object.
 				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
 			}
+
+			// Restore current blog.
+			if ( $switch ) {
+				restore_current_blog();
+			}
 		}
 
 		return $items;
@@ -631,6 +739,16 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$type_data = bb_register_subscriptions_types( 'topic' );
 
 		if ( ! empty( $items ) ) {
+
+			$blog_ids = array_unique( wp_list_pluck( $items, 'blog_id' ) );
+			$blog_id  = ! empty( $blog_ids ) ? current( $blog_ids ) : get_current_blog_id();
+
+			$switch = false;
+			// Switch to given blog_id if current blog is not same.
+			if ( is_multisite() && get_current_blog_id() !== $blog_id ) {
+				switch_to_blog( $blog_id );
+				$switch = true;
+			}
 			foreach ( $items as $item_key => $item ) {
 				$subscription = bp_parse_args(
 					$item,
@@ -731,6 +849,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				);
 
 				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+			}
+
+			// Restore current blog.
+			if ( $switch ) {
+				restore_current_blog();
 			}
 		}
 

@@ -8,6 +8,12 @@
  * @version 1.0.0
  */
 
+// Added this condition for theme backward compatibility.
+if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+	bp_get_template_part( 'members/single/settings/subscriptions' );
+	return;
+}
+
 bp_nouveau_member_hook( 'before', 'settings_template' );
 
 $data  = bb_core_notification_preferences_data();

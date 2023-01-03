@@ -387,7 +387,6 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 19181 ) {
-			bb_update_to_2_2_4();
 			bb_migrate_subscriptions_2_2_4();
 		}
 	}
@@ -2167,7 +2166,6 @@ function bb_update_to_2_2_4() {
 	}
 }
 
-
 /**
  * Migrate forum/topic subscription to new table.
  *
@@ -2176,10 +2174,19 @@ function bb_update_to_2_2_4() {
  * @return void
  */
 function bb_migrate_subscriptions_2_2_4() {
+	$is_already_run = get_transient( 'bb_migrate_subscriptions_2_2_4' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_subscriptions_2_2_4', 'yes', HOUR_IN_SECONDS );
 	// Create subscription table.
 	bb_core_install_subscription();
+
 	// Migrate the subscription data to new table.
-	bb_subscriptions_migrate_users_forum_topic( true );
-	// Flush the bbpress users group cache.
-	wp_cache_flush_group( 'bbpress_users' );
+	bb_subscriptions_migrate_users_forum_topic( true, true );
+
+	// Flush the cache to delete all old cached subscriptions.
+	wp_cache_flush();
 }
+

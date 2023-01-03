@@ -12,18 +12,18 @@
 <script type="text/html" id="tmpl-bb-member-subscription-pagination">
 	<#
 	var options = data.options.options;
-	if ( options.total_page > 1 ) {
+	if ( 1 < options.total_page ) {
 
 		var paged = options.current_active;
 		var max   = options.total_page;
 		var links = [];
 
-		if ( paged >= 1 ) {
+		if ( 1 <= paged ) {
 			links.push( paged );
 		}
 
 		/** Add the pages around the current page to the array */
-		if ( paged >= 3 ) {
+		if ( 3 <= paged ) {
 			links.push( parseInt( paged - 1 ) );
 			links.push( parseInt( paged - 2 ) );
 		}
@@ -36,18 +36,18 @@
 
 		<div class="bbp-pagination-links">
 			<#
-			if ( paged > 1 ) { #>
+			if ( 1 < paged ) { #>
 				<a class="prev page-numbers" data-page="{{ options.current_active-1 }}" href="#"><</a>
 			<# }
 
-			if ( jQuery.inArray( 1, links ) == -1 ) {
+			if ( -1 == jQuery.inArray( 1, links ) ) {
 				if ( paged == 1) {
 					#><span aria-current="page" class="page-numbers current">1</span><#
 				} else {
 					#><a class="page-numbers page" data-page="1" href="#">1</a><#
 				}
 
-				if ( jQuery.inArray( 2, links ) == -1 ) {
+				if ( -1 == jQuery.inArray( 2, links ) ) {
 					#><span aria-current="page" class="page-numbers disabled">...</span><#
 				}
 			}
@@ -64,8 +64,8 @@
 				}
 			}
 
-			if ( jQuery.inArray( max, links ) == -1 ) {
-				if ( jQuery.inArray( max - 1, links )  == -1 ) {
+			if ( -1 == jQuery.inArray( max, links ) ) {
+				if ( -1 == jQuery.inArray( max - 1, links ) ) {
 					#><span aria-current="page" class="page-numbers disabled">...</span><#
 				}
 

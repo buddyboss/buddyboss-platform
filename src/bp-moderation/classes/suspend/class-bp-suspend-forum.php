@@ -477,6 +477,10 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public function bb_subscriptions_forum_where_conditions( $where_conditions, $r ) {
 		global $bp;
 
+		if ( isset( $r['bypass_moderation'] ) && true === (bool) $r['bypass_moderation'] ) {
+			return $where_conditions;
+		}
+
 		if ( ! empty( $r['type'] ) ) {
 			if ( ! is_array( $r['type'] ) ) {
 				$r['type'] = preg_split( '/[\s,]+/', $r['type'] );
@@ -497,10 +501,12 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $where Query to hide suspended user's forum.
-		 * @param array $class current class object.
+		 * @param array $where            Query to hide suspended user's forum.
+		 * @param array $this             current class object.
+		 * @param array $where_conditions Subscription Where sql.
+		 * @param array $r                Array of subscription arguments.
 		 */
-		$where = apply_filters( 'bb_subscriptions_suspend_forum_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bb_subscriptions_suspend_forum_get_where_conditions', $where, $this, $where_conditions, $r );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_forum_where'] = "sc.item_id NOT IN ( SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = 'forum' AND ( " . implode( ' OR ', $where ) . ' ) )';

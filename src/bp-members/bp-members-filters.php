@@ -817,12 +817,10 @@ add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
  * @return bool Returns false on failure.
  */
 function bb_delete_user_subscriptions( $user_id ) {
-	$site_id  = bp_get_root_blog_id();
-	$switched = is_multisite() && switch_to_blog( $site_id );
-
 	// Get the user subscriptions.
 	$all_subscriptions = bb_get_subscriptions(
 		array(
+			'blog_id' => false,
 			'user_id' => $user_id,
 			'fields'  => 'id',
 			'status'  => null,
@@ -836,11 +834,6 @@ function bb_delete_user_subscriptions( $user_id ) {
 		foreach ( $subscriptions as $subscription ) {
 			bb_delete_subscription( $subscription );
 		}
-	}
-
-	// Switch back to current blog if site is multisite.
-	if ( $switched ) {
-		restore_current_blog();
 	}
 
 	return true;

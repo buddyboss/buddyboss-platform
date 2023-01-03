@@ -517,7 +517,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Launch BP Nouveau Groups.
+	// Launch BP Nouveau Subscriptions.
 	bp.Nouveau.Subscriptions.start();
 
 } )( bp, jQuery );

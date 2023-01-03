@@ -330,7 +330,7 @@ function forums_notification_settings() {
 	}
 
 	// Bail out if legacy method not enabled.
-	if ( false === bb_enabled_legacy_email_preference() ) {
+	if ( false === bb_enabled_legacy_email_preference() || ! bbp_is_subscriptions_active() ) {
 		return;
 	}
 

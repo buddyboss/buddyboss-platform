@@ -531,7 +531,8 @@ function bbp_get_forum_subscribers( $forum_id = 0 ) {
 				'item_id' => $forum_id,
 				'type'    => 'forum',
 				'count'   => false,
-			)
+			),
+			true
 		);
 
 		$users = array();
@@ -568,7 +569,8 @@ function bbp_get_topic_subscribers( $topic_id = 0 ) {
 				'item_id' => $topic_id,
 				'type'    => 'topic',
 				'count'   => false,
-			)
+			),
+			true
 		);
 
 		$users = array();
@@ -913,7 +915,7 @@ function bbp_is_user_subscribed_to_topic( $user_id = 0, $topic_id = 0, $subscrib
  * @param int $user_id   Optional. User id.
  * @param int $object_id Optional. Topic id.
  *
- * @return bool|int Return subscription item ID if true otherwise false.
+ * @return bool Return true otherwise false.
  * @uses  get_post() To get the post object
  * @uses  bbp_get_user_subscribed_forum_ids() To get the user's forum subscriptions
  * @uses  bbp_get_user_subscribed_topic_ids() To get the user's topic subscriptions
@@ -960,7 +962,7 @@ function bbp_add_user_subscription( $user_id = 0, $object_id = 0 ) {
  * @param int $user_id  Optional. User id.
  * @param int $forum_id Optional. forum id.
  *
- * @return bool|int Return subscription item ID if true otherwise false.
+ * @return bool Return true if subscribed otherwise false.
  * @uses  bbp_get_forum() To get the forum
  * @uses  update_user_option() To update the user's subscriptions
  * @uses  do_action() Calls 'bbp_add_user_subscription' with the user & forum id
@@ -992,7 +994,7 @@ function bbp_add_user_forum_subscription( $user_id = 0, $forum_id = 0 ) {
 
 	do_action( 'bbp_add_user_forum_subscription', $user_id, $forum_id );
 
-	return $subscription_id;
+	return is_int( $subscription_id );
 }
 
 /**
@@ -1003,7 +1005,7 @@ function bbp_add_user_forum_subscription( $user_id = 0, $forum_id = 0 ) {
  * @param int $user_id  Optional. User id.
  * @param int $topic_id Optional. Topic id.
  *
- * @return bool|int Return subscription item ID if true otherwise false.
+ * @return bool Return true if subscribed otherwise false.
  * @uses  bbp_get_topic() To get the topic
  * @uses  update_user_option() To update the user's subscriptions
  * @uses  do_action() Calls 'bbp_add_user_subscription' with the user & topic id
@@ -1035,7 +1037,7 @@ function bbp_add_user_topic_subscription( $user_id = 0, $topic_id = 0 ) {
 
 	do_action( 'bbp_add_user_topic_subscription', $user_id, $topic_id );
 
-	return $subscription_id;
+	return is_int( $subscription_id );
 }
 
 /**

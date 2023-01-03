@@ -226,6 +226,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 					'icon'             => array(),
 					'link'             => '',
 				);
+
 				if ( ! empty( $item_data ) && ! empty( current( $item_data ) ) ) {
 					$item_extra = bp_parse_args( (array) current( $item_data ), $item_extra );
 				}
@@ -277,24 +278,38 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				} else {
 					return false;
 				}
-			}
 
-			// Subscription need Type.
-			if ( empty( $this->type ) ) {
+				// Subscription need Type.
+			} elseif ( empty( $this->type ) ) {
 				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
 					return new WP_Error( 'bb_subscriptions_empty_type', __( 'The type is required to create a subscription.', 'buddyboss' ) );
 				} else {
 					return false;
 				}
-			}
 
-			// Subscription need Item ID.
-			if ( empty( $this->item_id ) ) {
+				// Subscription need Item ID.
+			} elseif ( empty( $this->item_id ) ) {
 				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
 					return new WP_Error( 'bb_subscriptions_empty_item_id', __( 'The item ID is required to create a subscription.', 'buddyboss' ) );
 				} else {
 					return false;
 				}
+			}
+
+			/**
+			 * Fires before the current subscription item gets saved.
+			 *
+			 * Please use this filter to validate subscription request. Each part will be passed in.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param bool             $is_validate True when subscription request correct otherwise false/WP_Error. Default true.
+			 * @param BP_Subscriptions $this        Current instance of the subscription item being saved.
+			 */
+			$is_validate = apply_filters( 'bb_subscriptions_validate_before_save', true, $this );
+
+			if ( ! $is_validate || is_wp_error( $is_validate ) ) {
+				return $is_validate;
 			}
 
 			if ( ! empty( $this->id ) ) {
@@ -575,7 +590,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 
 			$defaults = array(
 				'type'              => array(),
-				'blog_id'           => bp_get_root_blog_id(),
+				'blog_id'           => get_current_blog_id(),
 				'user_id'           => 0,
 				'item_id'           => 0,
 				'secondary_item_id' => 0,
@@ -681,7 +696,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			/**
 			 * Filters the Where SQL statement.
 			 *
-			 * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param array $r                Array of parsed arguments for the get method.
 			 * @param array $where_conditions Where conditions SQL statement.
@@ -697,7 +712,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			/**
 			 * Filters the From SQL statement.
 			 *
-			 * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param array $r    Array of parsed arguments for the get method.
 			 * @param string $sql From SQL statement.
@@ -785,9 +800,9 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 				 *
 				 * @since BuddyBoss [BBVERSION]
 				 *
-				 * @param string $t_sql     Concatenated SQL statement used for retrieving total subscriptions results.
-				 * @param array  $total_sql Array of SQL parts for the query.
-				 * @param array  $r         Array of parsed arguments for the get method.
+				 * @param string $total_subscriptions_sql Concatenated SQL statement used for retrieving total subscriptions results.
+				 * @param array  $sql                     Array of SQL parts for the query.
+				 * @param array  $r                       Array of parsed arguments for the get method.
 				 */
 				$total_subscriptions_sql = apply_filters( 'bb_subscriptions_get_total_subscriptions_sql', $total_subscriptions_sql, $sql, $r );
 
@@ -836,7 +851,16 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		 */
 		public static function get_subscription_tbl() {
 			global $wpdb;
-			return "{$wpdb->prefix}bb_notifications_subscriptions";
+
+			if ( is_multisite() ) {
+				switch_to_blog( 1 );
+				$subscription_tbl = $wpdb->prefix . 'bb_notifications_subscriptions';
+				restore_current_blog();
+			} else {
+				$subscription_tbl = $wpdb->prefix . 'bb_notifications_subscriptions';
+			}
+
+			return $subscription_tbl;
 		}
 
 		/**
