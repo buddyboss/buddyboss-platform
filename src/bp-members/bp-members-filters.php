@@ -804,3 +804,37 @@ function bb_load_member_type_label_custom_css() {
 	}
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
+
+/**
+ * Remove all subscription associations for a given user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID whose subscription data should be removed.
+ *
+ * @return bool Returns false on failure.
+ */
+function bb_delete_user_subscriptions( $user_id ) {
+	// Get the user subscriptions.
+	$all_subscriptions = bb_get_subscriptions(
+		array(
+			'blog_id' => false,
+			'user_id' => $user_id,
+			'fields'  => 'id',
+			'status'  => null,
+			'cache'   => false,
+		),
+		true
+	);
+	$subscriptions     = ! empty( $all_subscriptions['subscriptions'] ) ? $all_subscriptions['subscriptions'] : array();
+
+	if ( ! empty( $subscriptions ) ) {
+		foreach ( $subscriptions as $subscription ) {
+			bb_delete_subscription( $subscription );
+		}
+	}
+
+	return true;
+}
+add_action( 'wpmu_delete_user', 'bb_delete_user_subscriptions' );
+add_action( 'delete_user', 'bb_delete_user_subscriptions' );

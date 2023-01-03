@@ -135,8 +135,9 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 * @param int $user_id
 		 * @return string
 		 */
-		public function get_subscriptions_permalink( $user_id = 0 ) {
-			return $this->get_profile_url( $user_id, bbp_get_user_subscriptions_slug() );
+		public function get_subscriptions_permalink( $url, $user_id ) {
+			$url = trailingslashit( bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() ) . 'notifications/subscriptions';
+			return $url;
 		}
 
 		/**
@@ -170,11 +171,6 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 				// 'favorites' action
 			} elseif ( bbp_is_favorites_active() && bp_is_current_action( bbp_get_user_favorites_slug() ) ) {
 				$wp_query->bbp_is_single_user_favs = true;
-
-				// 'subscriptions' action
-			} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) ) {
-				$wp_query->bbp_is_single_user_subs = true;
-
 			}
 		}
 
