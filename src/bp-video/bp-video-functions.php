@@ -518,7 +518,6 @@ function bp_video_get_specific( $args = '' ) {
 			'privacy'   => false,      // privacy to filter.
 			'album_id'  => false,      // Album ID.
 			'user_id'   => false,      // User ID.
-			'group_id'  => false,      // Group ID.
 		),
 		'video_get_specific'
 	);
@@ -533,7 +532,6 @@ function bp_video_get_specific( $args = '' ) {
 		'privacy'  => $r['privacy'],
 		'album_id' => $r['album_id'],
 		'user_id'  => $r['user_id'],
-		'group_id' => $r['group_id'],
 	);
 
 	/**

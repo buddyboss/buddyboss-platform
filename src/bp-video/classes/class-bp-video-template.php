@@ -178,7 +178,6 @@ class BP_Video_Template {
 					'user_id'     => $user_id,
 					'album_id'    => $album_id,
 					'privacy'     => $privacy,
-					'group_id'    => $group_id,
 				)
 			);
 
