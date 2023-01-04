@@ -331,6 +331,10 @@
 
 	}
 
+	.thread-item.unread .bb_more_options.loading + .bp-message-link:after {
+		opacity: 0;
+	}
+
 	.optionsOpen  .message-thread-options .bb_more_options_action i {
 		opacity: 1;
 	}
