@@ -173,7 +173,7 @@ class BP_Moderation {
 
 			$report_type = ( BP_Moderation_Members::$moderation_type_report === $item_type ) ? BP_Moderation_Members::$moderation_type : $this->item_type;
 
-			$id = self::check_moderation_exist( $this->item_id, $report_type, true, BP_Moderation_Members::$moderation_type_report === $item_type );
+			$id = self::check_moderation_exist( $this->item_id, $report_type, false, BP_Moderation_Members::$moderation_type_report === $item_type );
 			if ( ! empty( $id ) ) {
 				$this->id = (int) $id;
 				$this->populate( $item_type );
