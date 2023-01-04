@@ -1,14 +1,14 @@
-# Copyright (C) 2022 BuddyBoss
+# Copyright (C) 2023 BuddyBoss
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.2.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-12-29 02:34:23+00:00\n"
+"POT-Creation-Date: 2023-01-04 15:15:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
 "Language: en\n"
@@ -1802,13 +1802,13 @@ msgid "A new post by someone a member is following"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:563
-#: bp-core/bp-core-update.php:2106
+#: bp-core/bp-core-update.php:2110
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}}."
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:565
-#: bp-core/bp-core-update.php:2108
+#: bp-core/bp-core-update.php:2112
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n"
@@ -1817,7 +1817,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:567
-#: bp-core/bp-core-update.php:2110
+#: bp-core/bp-core-update.php:2114
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} posted {{activity.type}}:\n"
@@ -1828,7 +1828,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:568
-#: bp-core/bp-core-update.php:2141
+#: bp-core/bp-core-update.php:2145
 msgid "New activity post by someone a member is following"
 msgstr ""
 
@@ -2779,7 +2779,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-component.php:281
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:119
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:187
-#: bp-core/bp-core-functions.php:788 bp-core/bp-core-update.php:913
+#: bp-core/bp-core-functions.php:788 bp-core/bp-core-update.php:917
 msgid "Sites"
 msgstr ""
 
@@ -4718,7 +4718,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:129
 #: bp-core/admin/settings/bp-admin-setting-groups.php:229
 #: bp-core/bp-core-functions.php:789 bp-core/bp-core-template.php:561
-#: bp-core/bp-core-update.php:915 bp-core/classes/class-bp-email-tokens.php:440
+#: bp-core/bp-core-update.php:919 bp-core/classes/class-bp-email-tokens.php:440
 #: bp-forums/admin/topics.php:679 bp-groups/bp-groups-admin.php:1426
 #: bp-groups/bp-groups-admin.php:2083 bp-groups/bp-groups-functions.php:4304
 #: bp-groups/bp-groups-functions.php:4323
@@ -4779,7 +4779,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:120
 #: bp-core/admin/settings/bp-admin-setting-groups.php:24
 #: bp-core/bp-core-functions.php:787 bp-core/bp-core-template.php:565
-#: bp-core/bp-core-update.php:914
+#: bp-core/bp-core-update.php:918
 #: bp-core/compatibility/bp-rankmath-plugin-helpers.php:38
 #: bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:37
@@ -5169,7 +5169,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-document.php:22
 #: bp-moderation/classes/class-bp-moderation-activity.php:512
 #: bp-moderation/classes/class-bp-moderation-activity.php:519
-#: bp-moderation/classes/class-bp-moderation-document.php:215
+#: bp-moderation/classes/class-bp-moderation-document.php:220
 msgid "Document"
 msgstr ""
 
@@ -5502,7 +5502,7 @@ msgstr ""
 #: bp-document/bp-document-functions.php:2037
 #: bp-moderation/classes/class-bp-moderation-activity.php:526
 #: bp-moderation/classes/class-bp-moderation-activity.php:533
-#: bp-moderation/classes/class-bp-moderation-video.php:215
+#: bp-moderation/classes/class-bp-moderation-video.php:220
 #: bp-video/bp-video-functions.php:2572
 msgid "Video"
 msgstr ""
@@ -7326,7 +7326,7 @@ msgstr ""
 msgid "Activate a new account and site"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3957 bp-core/bp-core-update.php:1809
+#: bp-core/bp-core-functions.php:3957 bp-core/bp-core-update.php:1813
 msgid "A member is mentioned in an activity post"
 msgstr ""
 
@@ -7334,7 +7334,7 @@ msgstr ""
 msgid "You will no longer receive emails when someone mentions you in an update."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3965 bp-core/bp-core-update.php:1810
+#: bp-core/bp-core-functions.php:3965 bp-core/bp-core-update.php:1814
 msgid "A member is mentioned in a group activity post"
 msgstr ""
 
@@ -7659,35 +7659,35 @@ msgstr ""
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:912
+#: bp-core/bp-core-update.php:916
 msgid "Site-Wide Activity"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1283
+#: bp-core/bp-core-update.php:1287
 #: bp-templates/bp-nouveau/includes/video/functions.php:312
 msgid "MP4"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1291
+#: bp-core/bp-core-update.php:1295
 #: bp-templates/bp-nouveau/includes/video/functions.php:320
 msgid "WebM"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1299
+#: bp-core/bp-core-update.php:1303
 #: bp-templates/bp-nouveau/includes/video/functions.php:328
 msgid "Ogg"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1307
+#: bp-core/bp-core-update.php:1311
 #: bp-templates/bp-nouveau/includes/video/functions.php:336
 msgid "Quicktime"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1811
+#: bp-core/bp-core-update.php:1815
 msgid "A Zoom meeting is scheduled in a group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1812
+#: bp-core/bp-core-update.php:1816
 msgid "A Zoom webinar is scheduled in a group"
 msgstr ""
 
@@ -16137,6 +16137,7 @@ msgid "You must be logged in to create new discussions."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:39
+#: bp-moderation/bp-moderation-functions.php:1620
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1295
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1965
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2702
@@ -16149,6 +16150,7 @@ msgid "This content has been hidden as the member is suspended."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:41
+#: bp-moderation/bp-moderation-functions.php:1575
 #: bp-moderation/classes/class-bp-moderation-comment.php:124
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1297
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1967
@@ -18210,7 +18212,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:955
 #: bp-moderation/classes/class-bp-moderation-activity.php:498
 #: bp-moderation/classes/class-bp-moderation-activity.php:505
-#: bp-moderation/classes/class-bp-moderation-media.php:215
+#: bp-moderation/classes/class-bp-moderation-media.php:220
 msgid "Photo"
 msgstr ""
 
@@ -25190,7 +25192,8 @@ msgstr ""
 msgid "Content & Members"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1471
+#: bp-moderation/bp-moderation-functions.php:1491
+#: bp-moderation/bp-moderation-functions.php:1534
 msgid "Unknown Member"
 msgstr ""
 
@@ -25312,19 +25315,19 @@ msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-activity.php:409
 #: bp-moderation/classes/class-bp-moderation-activity.php:416
-#: bp-moderation/classes/class-bp-moderation-media.php:201
+#: bp-moderation/classes/class-bp-moderation-media.php:206
 msgid "Report Photo"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-activity.php:423
 #: bp-moderation/classes/class-bp-moderation-activity.php:430
-#: bp-moderation/classes/class-bp-moderation-document.php:201
+#: bp-moderation/classes/class-bp-moderation-document.php:206
 msgid "Report Document"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-activity.php:437
 #: bp-moderation/classes/class-bp-moderation-activity.php:444
-#: bp-moderation/classes/class-bp-moderation-video.php:201
+#: bp-moderation/classes/class-bp-moderation-video.php:206
 msgid "Report Video"
 msgstr ""
 
