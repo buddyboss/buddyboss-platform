@@ -428,6 +428,7 @@ function bp_document_get_specific( $args = '' ) {
 			'folder'       => false,
 			'meta_query'   => false,
 			'privacy'      => false,      // privacy to filter.
+			'group_id'     => false,      // privacy to filter.
 		),
 		'document_get_specific'
 	);
@@ -443,6 +444,7 @@ function bp_document_get_specific( $args = '' ) {
 		'folder'     => $r['folder'],
 		'privacy'    => $r['privacy'],      // privacy to filter.
 		'meta_query' => $r['meta_query'],
+		'group_id'   => $r['group_id'],
 	);
 
 	/**
