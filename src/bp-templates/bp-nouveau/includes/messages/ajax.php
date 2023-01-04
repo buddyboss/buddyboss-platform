@@ -640,17 +640,6 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	$message_response = bb_get_message_response_object( $thread_template->message );
 
-	if ( ! empty( $message_response ) && ! empty( $message_response['messages'] ) ) {
-		foreach ( $message_response['messages'] as $message_key => $message ) {
-
-			$sent_date_formatted = date_i18n( 'Y-m-d h:i:s', ( $message['date'] / 1000 ) );
-			$site_sent_date      = get_date_from_gmt( $sent_date_formatted );
-			$sent_time           = apply_filters( 'bb_get_the_thread_message_sent_time', date_i18n( 'g:i A', strtotime( $site_sent_date ) ) );
-
-			$message_response['messages'][ $message_key ]['display_date'] = $sent_time;
-		}
-	}
-
 	$message_response['started_date_mysql'] = $thread_template->thread->first_message_date;
 
 	// Clean up the loop.
