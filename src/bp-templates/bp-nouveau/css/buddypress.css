@@ -10027,6 +10027,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   display: inline-block;
 }
 
+#message-threads .thread-item.unread .bb_more_options.loading + .bp-message-link:after {
+  opacity: 0;
+}
+
 #message-threads .optionsOpen .message-thread-options .bb_more_options_action i {
   opacity: 1;
 }
