@@ -642,7 +642,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	$message_response['started_date_mysql'] = $thread_template->thread->first_message_date;
 
-    // Clean up the loop.
+	// Clean up the loop.
 	bp_thread_messages();
 
 	// Remove the bp_current_action() override.
