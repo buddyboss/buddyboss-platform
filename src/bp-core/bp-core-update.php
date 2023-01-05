@@ -393,6 +393,9 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19181 ) {
 			bb_migrate_subscriptions_2_2_4();
 		}
+		if ( $raw_db_version < 19281 ) {
+			bb_update_to_2_2_5();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2159,6 +2162,25 @@ function bb_update_to_2_2_3() {
  *
  * @return void
  */
+function bb_update_to_2_2_5() {
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear medias API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
+	}
+}
+
+/**
+ * Clear web and api cache on the update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
 function bb_update_to_2_2_4() {
 	wp_cache_flush();
 	// Purge all the cache for API.
@@ -2191,3 +2213,4 @@ function bb_migrate_subscriptions_2_2_4() {
 	// Flush the cache to delete all old cached subscriptions.
 	wp_cache_flush();
 }
+

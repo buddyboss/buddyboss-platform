@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 19181;
+		$this->db_version = 19281;
 
 		/** Loading */
 
@@ -938,3 +938,4 @@ class BuddyPress {
 		bp_setup_theme_compat( bp_get_theme_package_id() );
 	}
 }
+
