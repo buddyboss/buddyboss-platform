@@ -69,7 +69,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification_for_activity_post_following();
 
-		$this->register_notification_for_activity_following();
+		$this->register_notification_for_following();
 	}
 
 	/**
@@ -794,7 +794,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_notification_for_activity_following() {
+	public function register_notification_for_following() {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
 		if ( ! bp_is_activity_follow_active() ) {
