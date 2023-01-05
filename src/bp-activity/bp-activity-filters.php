@@ -3561,28 +3561,34 @@ add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_
  */
 function bb_send_email_to_follower( $follower ) {
 
-	if ( empty( $follower ) ) {
+	if ( empty( $follower ) || ! bp_is_activity_follow_active() ) {
 		return;
 	}
 
 	$user_id = ! empty( $follower->leader_id ) ? $follower->leader_id : '';
 
-	if ( empty( $user_id ) ) {
+	if (
+		empty( $user_id ) ||
+		(
+			bp_is_active( 'moderation' ) &&
+			bb_moderation_is_user_blocked_by( $user_id )
+		)
+	) {
 		return;
 	}
 
-	$args = array(
-		'tokens' => array(
-			'follower.id'   => $follower->follower_id,
-			'follower.name' => bp_core_get_user_displayname( $follower->follower_id ),
-			'follower.url'  => esc_url( bp_core_get_user_domain( $follower->follower_id ) ),
-			'unsubscribe'   => array(
-				'user_id'           => $user_id,
-				'notification_type' => 'bb_following_new',
-			),
-		),
-	);
 	if ( true === bb_is_notification_enabled( $user_id, 'bb_following_new' ) ) {
+		$args = array(
+			'tokens' => array(
+				'follower.id'   => $follower->follower_id,
+				'follower.name' => bp_core_get_user_displayname( $follower->follower_id ),
+				'follower.url'  => esc_url( bp_core_get_user_domain( $follower->follower_id ) ),
+				'unsubscribe'   => array(
+					'user_id'           => $user_id,
+					'notification_type' => 'bb_following_new',
+				),
+			),
+		);
 		// Send notification email.
 		bp_send_email( 'new-follow', $user_id, $args );
 	}
