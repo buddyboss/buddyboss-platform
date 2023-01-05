@@ -2168,6 +2168,7 @@ function bb_update_to_2_2_5() {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
 	}
 }
 
