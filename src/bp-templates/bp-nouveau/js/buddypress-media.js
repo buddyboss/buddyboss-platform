@@ -3147,6 +3147,7 @@ window.bp = window.bp || {};
 									kind: 'document',
 									upload: {
 										name: edit_documents[ d ].name,
+										filename: edit_documents[ d ].name,
 										title: edit_documents[ d ].name,
 										size: edit_documents[ d ].size,
 										uuid: edit_documents[ d ].id
