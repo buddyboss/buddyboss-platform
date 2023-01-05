@@ -2580,27 +2580,47 @@ class BP_Email_Tokens {
 							<td>
 								<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 									<tbody>
-									<tr>
-										<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
-									</tr>
-									<tr>
-										<td align="center">
-											<table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
-												<tbody>
-												<tr>
-													<td width="88%" style="vertical-align: top;">
-														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-															Test
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
-												</tr>
-												</tbody>
-											</table>
-										</td>
-									</tr>
+										<tr>
+											<td align="center">
+												<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
+													<tbody>
+													<tr>
+														<td width="88%" style="vertical-align: top;">
+															<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+																<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
+																	<tbody>
+																		<tr>
+																			<td style="width: 140px;">
+																				<img src="https://i.pravatar.cc/300" width="140" height="140" style="width: 140px; height:140px;border-radius: 4px 0 0 4px; float: left;" />
+																			</td>
+																			<td style="padding: 15px;">
+																				<h2 style="font-size: 20px; font-weight: 500; line-height: 1.3; margin: 0 0 8px 0; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;">Chris</h2>
+																				<p style="font-weight: 400; font-size: 13px; line-height: 1.3; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">@chris</p>
+																				<div style="font-weight: 400; font-size: 13px; line-height: 1.3; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 38px 0 0 0;">
+																					<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
+																						<tbody>
+																							<tr>
+																								<td style="width: 50%;">
+																									<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; margin-right: 2px;">8</span> connections
+																								</td>
+																								<td style="width: 50%; text-align: right;">
+																									<a href="#" style="margin-right: 4px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none;">View Profile</a>
+																								</td>
+																							</tr>
+																						</tbody>
+																					</table>
+																				</div>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
 									</tbody>
 								</table>
 							</td>
