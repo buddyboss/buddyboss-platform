@@ -80,7 +80,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 			</div>
 
 			<div class="bp-login-widget-user-links">
-				<div class="bp-login-widget-user-link"><?php echo bp_core_get_userlink( bp_loggedin_user_id() ); ?></div>
+				<h4 class="bp-login-widget-user-link"><?php echo bp_core_get_userlink( bp_loggedin_user_id() ); ?></h4>
 				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo wp_logout_url( bp_get_requested_url() ); ?>"><?php _e( 'Log Out', 'buddyboss' ); ?></a></div>
 			</div>
 
@@ -118,7 +118,9 @@ class BP_Core_Login_Widget extends WP_Widget {
 					<label for="bp-login-widget-rememberme"><?php _e( 'Remember Me', 'buddyboss' ); ?></label>
 				</div>
 
-				<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss' ); ?>" />
+				<div class="bbp-submit-wrapper">
+					<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss' ); ?>" />
+				</div>
 
 				<?php if ( bp_get_signup_allowed() ) : ?>
 
@@ -180,7 +182,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 	 */
 	public function form( $instance = array() ) {
 
-		$settings = wp_parse_args(
+		$settings = bp_parse_args(
 			$instance,
 			array(
 				'title' => '',

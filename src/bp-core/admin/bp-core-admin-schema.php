@@ -37,6 +37,11 @@ function bp_core_install( $active_components = false ) {
 		}
 	}
 
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		// Install email queue table.
+		bb_email_queue()::create_db_table();
+	}
+
 	// Install Activity Feeds even when inactive (to store last_activity data).
 	bp_core_install_activity_streams();
 
@@ -78,15 +83,18 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_blog_tracking();
 	}
 
-	// Discussion forums
+	// Discussion forums.
 	if ( ! empty( $active_components['forums'] ) ) {
 		bp_core_install_discussion_forums();
 	}
 
-	// Media
+	// Media.
 	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 		bp_core_install_document();
+		if ( false === bp_get_option( 'bp_media_symlink_support', false ) ) {
+			bp_update_option( 'bp_media_symlink_support', 1 );
+		}
 	}
 
 	if ( ! empty( $active_components['moderation'] ) ) {
@@ -95,6 +103,9 @@ function bp_core_install( $active_components = false ) {
 	}
 
 	do_action( 'bp_core_install', $active_components );
+
+	// Needs to flush all cache when component activate/deactivate.
+	wp_cache_flush();
 
 	// Reset the permalink to fix the 404 on some pages.
 	flush_rewrite_rules();
@@ -123,7 +134,7 @@ function bp_core_install_notifications() {
 	$bp_prefix       = bp_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_notifications (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				user_id bigint(20) NOT NULL,
 				item_id bigint(20) NOT NULL,
 				secondary_item_id bigint(20),
@@ -131,6 +142,7 @@ function bp_core_install_notifications() {
 				component_action varchar(75) NOT NULL,
 				date_notified datetime NOT NULL,
 				is_new bool NOT NULL DEFAULT 0,
+				PRIMARY KEY  (id),
 				KEY item_id (item_id),
 				KEY secondary_item_id (secondary_item_id),
 				KEY user_id (user_id),
@@ -141,10 +153,11 @@ function bp_core_install_notifications() {
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_notifications_meta (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				notification_id bigint(20) NOT NULL,
 				meta_key varchar(255) DEFAULT NULL,
 				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
 				KEY notification_id (notification_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
@@ -163,7 +176,7 @@ function bp_core_install_activity_streams() {
 	$bp_prefix       = bp_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_activity (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				user_id bigint(20) NOT NULL,
 				component varchar(75) NOT NULL,
 				type varchar(75) NOT NULL,
@@ -178,6 +191,7 @@ function bp_core_install_activity_streams() {
 				mptt_right int(11) NOT NULL DEFAULT 0,
 				is_spam tinyint(1) NOT NULL DEFAULT 0,
 				privacy varchar(75) NOT NULL DEFAULT 'public',
+				PRIMARY KEY  (id),
 				KEY date_recorded (date_recorded),
 				KEY user_id (user_id),
 				KEY item_id (item_id),
@@ -191,10 +205,11 @@ function bp_core_install_activity_streams() {
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_activity_meta (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				activity_id bigint(20) NOT NULL,
 				meta_key varchar(255) DEFAULT NULL,
 				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
 				KEY activity_id (activity_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
@@ -213,12 +228,13 @@ function bp_core_install_friends() {
 	$bp_prefix       = bp_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_friends (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				initiator_user_id bigint(20) NOT NULL,
 				friend_user_id bigint(20) NOT NULL,
 				is_confirmed bool DEFAULT 0,
 				is_limited bool DEFAULT 0,
 				date_created datetime NOT NULL,
+				PRIMARY KEY  (id),
 				KEY initiator_user_id (initiator_user_id),
 				KEY friend_user_id (friend_user_id)
 			) {$charset_collate};";
@@ -237,10 +253,11 @@ function bp_core_install_follow() {
 	$bp_prefix       = bp_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_follow (
-			id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+			id bigint(20) NOT NULL AUTO_INCREMENT,
 			leader_id bigint(20) NOT NULL,
 			follower_id bigint(20) NOT NULL,
-		        KEY followers (leader_id, follower_id)
+			PRIMARY KEY  (id),
+			KEY followers (leader_id, follower_id)
 		) {$charset_collate};";
 
 	dbDelta( $sql );
@@ -257,7 +274,7 @@ function bp_core_install_groups() {
 	$bp_prefix       = bp_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_groups (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				creator_id bigint(20) NOT NULL,
 				name varchar(100) NOT NULL,
 				slug varchar(200) NOT NULL,
@@ -266,13 +283,14 @@ function bp_core_install_groups() {
 				parent_id bigint(20) NOT NULL DEFAULT 0,
 				enable_forum tinyint(1) NOT NULL DEFAULT '1',
 				date_created datetime NOT NULL,
+				PRIMARY KEY  (id),
 				KEY creator_id (creator_id),
 				KEY status (status),
 				KEY parent_id (parent_id)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_groups_members (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				group_id bigint(20) NOT NULL,
 				user_id bigint(20) NOT NULL,
 				inviter_id bigint(20) NOT NULL,
@@ -284,6 +302,7 @@ function bp_core_install_groups() {
 				is_confirmed tinyint(1) NOT NULL DEFAULT '0',
 				is_banned tinyint(1) NOT NULL DEFAULT '0',
 				invite_sent tinyint(1) NOT NULL DEFAULT '0',
+				PRIMARY KEY  (id),
 				KEY group_id (group_id),
 				KEY is_admin (is_admin),
 				KEY is_mod (is_mod),
@@ -293,11 +312,22 @@ function bp_core_install_groups() {
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_groups_groupmeta (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				group_id bigint(20) NOT NULL,
 				meta_key varchar(255) DEFAULT NULL,
 				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
 				KEY group_id (group_id),
+				KEY meta_key (meta_key(191))
+			) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_groups_membermeta (
+				id bigint(20) NOT NULL AUTO_INCREMENT,
+				member_id bigint(20) NOT NULL,
+				meta_key varchar(255) DEFAULT NULL,
+				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
+				KEY member_id (member_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
@@ -315,24 +345,27 @@ function bp_core_install_private_messaging() {
 	$bp_prefix       = bp_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_messages_messages (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				thread_id bigint(20) NOT NULL,
 				sender_id bigint(20) NOT NULL,
 				subject varchar(200) NOT NULL,
 				message longtext NOT NULL,
+				is_deleted tinyint(1) NOT NULL DEFAULT '0',
 				date_sent datetime NOT NULL,
+				PRIMARY KEY  (id),
 				KEY sender_id (sender_id),
 				KEY thread_id (thread_id)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_messages_recipients (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				user_id bigint(20) NOT NULL,
 				thread_id bigint(20) NOT NULL,
 				unread_count int(10) NOT NULL DEFAULT '0',
 				sender_only tinyint(1) NOT NULL DEFAULT '0',
 				is_deleted tinyint(1) NOT NULL DEFAULT '0',
 				is_hidden tinyint(1) NOT NULL DEFAULT '0',
+				PRIMARY KEY  (id),
 				KEY user_id (user_id),
 				KEY thread_id (thread_id),
 				KEY is_deleted (is_deleted),
@@ -342,19 +375,21 @@ function bp_core_install_private_messaging() {
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_messages_notices (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				subject varchar(200) NOT NULL,
 				message longtext NOT NULL,
 				date_sent datetime NOT NULL,
 				is_active tinyint(1) NOT NULL DEFAULT '0',
+				PRIMARY KEY  (id),
 				KEY is_active (is_active)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_messages_meta (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				message_id bigint(20) NOT NULL,
 				meta_key varchar(255) DEFAULT NULL,
 				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
 				KEY message_id (message_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
@@ -373,16 +408,17 @@ function bp_core_install_extended_profiles() {
 	$bp_prefix       = bp_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_xprofile_groups (
-				id bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 				name varchar(150) NOT NULL,
 				description mediumtext NOT NULL,
 				group_order bigint(20) NOT NULL DEFAULT '0',
 				can_delete tinyint(1) NOT NULL,
+				PRIMARY KEY  (id),
 				KEY can_delete (can_delete)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_xprofile_fields (
-				id bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 				group_id bigint(20) unsigned NOT NULL,
 				parent_id bigint(20) unsigned NOT NULL,
 				type varchar(150) NOT NULL,
@@ -394,6 +430,7 @@ function bp_core_install_extended_profiles() {
 				option_order bigint(20) NOT NULL DEFAULT '0',
 				order_by varchar(15) NOT NULL DEFAULT '',
 				can_delete tinyint(1) NOT NULL DEFAULT '1',
+				PRIMARY KEY  (id),
 				KEY group_id (group_id),
 				KEY parent_id (parent_id),
 				KEY field_order (field_order),
@@ -402,21 +439,23 @@ function bp_core_install_extended_profiles() {
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_xprofile_data (
-				id bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 				field_id bigint(20) unsigned NOT NULL,
 				user_id bigint(20) unsigned NOT NULL,
 				value longtext NOT NULL,
 				last_updated datetime NOT NULL,
+				PRIMARY KEY  (id),
 				KEY field_id (field_id),
 				KEY user_id (user_id)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_xprofile_meta (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				object_id bigint(20) NOT NULL,
 				object_type varchar(150) NOT NULL,
 				meta_key varchar(255) DEFAULT NULL,
 				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
 				KEY object_id (object_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
@@ -629,18 +668,20 @@ function bp_core_install_blog_tracking() {
 	$bp_prefix       = bp_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_user_blogs (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				user_id bigint(20) NOT NULL,
 				blog_id bigint(20) NOT NULL,
+				PRIMARY KEY  (id),
 				KEY user_id (user_id),
 				KEY blog_id (blog_id)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_user_blogs_blogmeta (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				blog_id bigint(20) NOT NULL,
 				meta_key varchar(255) DEFAULT NULL,
 				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
 				KEY blog_id (blog_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
@@ -704,6 +745,7 @@ function bp_core_install_media() {
 		group_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
 		privacy varchar(50) NULL DEFAULT 'public',
+		type varchar(50) NULL DEFAULT 'photo',
 		menu_order bigint(20) NULL DEFAULT 0 ,
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),
@@ -736,10 +778,11 @@ function bp_core_install_document() {
    ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_folder_meta (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				folder_id bigint(20) NOT NULL,
 				meta_key varchar(255) DEFAULT NULL,
 				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
 				KEY folder_id (folder_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
@@ -766,10 +809,11 @@ function bp_core_install_document() {
 	) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_meta (
-				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				id bigint(20) NOT NULL AUTO_INCREMENT,
 				document_id bigint(20) NOT NULL,
 				meta_key varchar(255) DEFAULT NULL,
 				meta_value longtext DEFAULT NULL,
+				PRIMARY KEY  (id),
 				KEY document_id (document_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
@@ -1075,7 +1119,7 @@ function bp_core_install_invitations() {
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
 	$bp_prefix       = bp_core_get_table_prefix();
 	$sql[]           = "CREATE TABLE {$bp_prefix}bp_invitations (
-		id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		id bigint(20) NOT NULL AUTO_INCREMENT,
 		user_id bigint(20) NOT NULL,
 		inviter_id bigint(20) NOT NULL,
 		invitee_email varchar(100) DEFAULT NULL,
@@ -1087,6 +1131,7 @@ function bp_core_install_invitations() {
 		date_modified datetime NOT NULL,
 		invite_sent tinyint(1) NOT NULL DEFAULT '0',
 		accepted tinyint(1) NOT NULL DEFAULT '0',
+		PRIMARY KEY  (id),
 		KEY user_id (user_id),
 		KEY inviter_id (inviter_id),
 		KEY invitee_email (invitee_email),
@@ -1097,6 +1142,17 @@ function bp_core_install_invitations() {
 		KEY invite_sent (invite_sent),
 		KEY accepted (accepted)
 		) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_invitations_invitemeta (
+		id bigint(20) NOT NULL AUTO_INCREMENT,
+		invite_id bigint(20) NOT NULL,
+		meta_key varchar(255) DEFAULT NULL,
+		meta_value longtext DEFAULT NULL,
+		PRIMARY KEY  (id),
+		KEY invite_id (invite_id),
+		KEY meta_key (meta_key(191))
+	) {$charset_collate};";
+
 	dbDelta( $sql );
 
 	/**
@@ -1130,6 +1186,7 @@ function bp_core_install_suspend() {
 	   hide_parent tinyint(1) NOT NULL,
 	   user_suspended tinyint(1) NOT NULL,
 	   reported tinyint(1) NOT NULL,
+	   user_report tinyint DEFAULT '0',
 	   last_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   blog_id bigint(20) NOT NULL,
 	   PRIMARY KEY  (id),
@@ -1171,16 +1228,18 @@ function bp_core_install_moderation() {
 	   content longtext NOT NULL,
 	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   category_id bigint(20) NOT NULL,
+	   user_report tinyint DEFAULT '0',
 	   PRIMARY KEY  (id),
 	   KEY moderation_report_id (moderation_id,user_id),
 	   KEY user_id (user_id)
    	) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation_meta (
-		id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		id bigint(20) NOT NULL AUTO_INCREMENT,
 		moderation_id bigint(20) NOT NULL,
 		meta_key varchar(255) DEFAULT NULL,
 		meta_value longtext DEFAULT NULL,
+		PRIMARY KEY  (id),
 		KEY moderation_id (moderation_id),
 		KEY meta_key (meta_key(191))
 	) {$charset_collate};";

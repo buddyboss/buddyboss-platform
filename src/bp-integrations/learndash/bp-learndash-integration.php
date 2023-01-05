@@ -63,6 +63,22 @@ class BP_Learndash_Integration extends BP_Integration {
 	}
 
 	/**
+	 * Setup cache.
+	 *
+	 * @since BuddyBoss 1.9.0
+	 */
+	public function setup_cache_groups() {
+		// Global groups.
+		wp_cache_add_global_groups(
+			array(
+				'ld_courses_progress',
+			)
+		);
+
+		parent::setup_cache_groups();
+	}
+
+	/**
 	 * Init the BuddyBoss REST API.
 	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.

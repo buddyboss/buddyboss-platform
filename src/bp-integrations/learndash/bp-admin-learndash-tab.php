@@ -99,7 +99,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-buddypress',
-			__( 'Social groups <span>&rarr; LearnDash groups</span>', 'buddyboss' )
+			__( 'Social groups <span>&rarr; LearnDash groups</span>', 'buddyboss' ),
+			'',
+			'bb_tutorial_social_group_sync'
 		);
 
 		$this->add_checkbox_field(
@@ -107,18 +109,44 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__( 'Social Group Sync', 'buddyboss' ),
 			array(
 				'input_text'   => sprintf(
-					__( 'Enable group sync functionality <b>FROM</b> <a href="%1$s">BuddyBoss Social Groups</a> <b>TO</b> <a href="%2$s">LearnDash Groups</a>', 'buddyboss' ),
-					add_query_arg(
-						array(
-							'page' => 'bp-groups',
-						),
-						admin_url( 'admin.php' )
+				/* translators: 1. From text. 2. Group link. 3. To text link. 4. post type group link. */
+					'%1$s %2$s %3$s %4$s %5$s',
+					esc_html__( 'Enable group sync functionality ', 'buddyboss' ),
+					sprintf(
+					/* translators: 1. From text. */
+						'<strong><em>%s</em></strong>',
+						esc_html__( 'from', 'buddyboss' )
 					),
-					add_query_arg(
-						array(
-							'post_type' => 'groups',
+					sprintf(
+					/* translators: 1. Group link. 2. Group Text. */
+						'<a href="%1$s">%2$s</a>',
+						esc_url(
+							add_query_arg(
+								array(
+									'page' => 'bp-groups',
+								),
+								admin_url( 'admin.php' )
+							)
 						),
-						admin_url( 'edit.php' )
+						esc_html__( 'BuddyBoss Social Groups', 'buddyboss' )
+					),
+					sprintf(
+					/* translators: 1. To text. */
+						'<strong><em>%s</em></strong>',
+						esc_html__( 'to', 'buddyboss' )
+					),
+					sprintf(
+					/* translators: 1. Post type group link. 2. Post type group text. */
+						'<a href="%1$s">%2$s</a>',
+						esc_url(
+							add_query_arg(
+								array(
+									'post_type' => 'groups',
+								),
+								admin_url( 'edit.php' )
+							)
+						),
+						esc_html__( 'LearnDash Groups', 'buddyboss' )
 					)
 				),
 				'input_run_js' => 'buddypress_enabled',
@@ -223,32 +251,6 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'class'             => 'js-show-on-buddypress_enabled',
 			)
 		);
-
-		// Social Group Sync View Tutorial button.
-		$this->add_field( 'bp-tutorial-social-group-sync', '', array( $this, 'bp_tutorial_social_group_sync' ) );
-	}
-
-	/**
-	 * Social Group Sync View Tutorial button.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	public function bp_tutorial_social_group_sync() {
-		?>
-
-		<p>
-			<a class="button" href="<?php echo bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 62877,
-					),
-					'admin.php'
-				)
-			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-		</p>
-
-		<?php
 	}
 
 	/**
@@ -261,7 +263,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-learndash',
-			__( 'LearnDash groups <span>&rarr; Social groups</span>', 'buddyboss' )
+			__( 'LearnDash groups <span>&rarr; Social groups</span>', 'buddyboss' ),
+			'',
+			'bb_tutorial_learndash_group_sync'
 		);
 
 		$this->add_checkbox_field(
@@ -269,18 +273,44 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__( 'LearnDash Group Sync', 'buddyboss' ),
 			array(
 				'input_text'   => sprintf(
-					__( 'Enable group sync functionality <b>FROM</b> <a href="%1$s">LearnDash Groups</a> <b>TO</b> <a href="%2$s">BuddyBoss Social Groups</a>', 'buddyboss' ),
-					add_query_arg(
-						array(
-							'post_type' => 'groups',
-						),
-						admin_url( 'edit.php' )
+				/* translators: 1. From text. 2. Group link. 3. To text link. 4. post type group link. */
+					'%1$s %2$s %3$s %4$s %5$s',
+					esc_html__( 'Enable group sync functionality ', 'buddyboss' ),
+					sprintf(
+					/* translators: 1. From text. */
+						'<strong><em>%s</em></strong>',
+						esc_html__( 'from', 'buddyboss' )
 					),
-					add_query_arg(
-						array(
-							'page' => 'bp-groups',
+					sprintf(
+					/* translators: 1. Post type group link. 2. Post type group text. */
+						'<a href="%1$s">%2$s</a>',
+						esc_url(
+							add_query_arg(
+								array(
+									'post_type' => 'groups',
+								),
+								admin_url( 'edit.php' )
+							)
 						),
-						admin_url( 'admin.php' )
+						esc_html__( 'LearnDash Groups', 'buddyboss' )
+					),
+					sprintf(
+					/* translators: 1. To text. */
+						'<strong><em>%s</em></strong>',
+						esc_html__( 'to', 'buddyboss' )
+					),
+					sprintf(
+					/* translators: 1. Group link. 2. Group Text. */
+						'<a href="%1$s">%2$s</a>',
+						esc_url(
+							add_query_arg(
+								array(
+									'page' => 'bp-groups',
+								),
+								admin_url( 'admin.php' )
+							)
+						),
+						esc_html__( 'BuddyBoss Social Groups', 'buddyboss' )
 					)
 				),
 				'input_run_js' => 'learndash_enabled',
@@ -366,32 +396,6 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'class'             => 'js-show-on-learndash_enabled',
 			)
 		);
-
-		// LearnDash Group Sync View Tutorial button.
-		$this->add_field( 'bp-tutorial-learndash-group-sync', '', array( $this, 'bp_tutorial_learndash_group_sync' ) );
-	}
-
-	/**
-	 * LearnDash Group Sync View Tutorial button.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	public function bp_tutorial_learndash_group_sync() {
-		?>
-
-		<p>
-			<a class="button" href="<?php echo bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 62877,
-					),
-					'admin.php'
-				)
-			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-		</p>
-
-		<?php
 	}
 
 	/**
@@ -450,7 +454,10 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$this->current_section = 'course';
 		$this->add_section(
 			'bp_ld_course_tab-buddypress',
-			__('Profiles', 'buddyboss')
+			__('Profiles', 'buddyboss'),
+			'',
+			'bb_profiles_tutorial_my_courses'
+			
 		);
 		$this->add_checkbox_field(
 			'courses_visibility',
@@ -460,32 +467,6 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'input_description' => __( 'Adds a tab to the logged in member\'s profile displaying all courses they are enrolled in, and a matching link in the profile dropdown. If any certificates have been created, adds a sub-tab showing all certificates the member has earned.', 'buddyboss' ),
 			]
 		);
-
-		// My Courses Tab View Tutorial button.
-		$this->add_field( 'bp-tutorial-my-courses-tab', '', array( $this, 'bp_profiles_tutorial_my_courses' ) );
-	}
-
-	/**
-	 * My Courses Tab View Tutorial button.
-	 *
-	 * @since BuddyBoss 1.2.3
-	 */
-	public function bp_profiles_tutorial_my_courses() {
-		?>
-
-		<p>
-			<a class="button" href="<?php echo bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 83110,
-					),
-					'admin.php'
-				)
-			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-		</p>
-
-		<?php
 	}
 
 	/**

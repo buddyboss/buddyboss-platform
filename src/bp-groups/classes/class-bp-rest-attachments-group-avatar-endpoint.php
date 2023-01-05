@@ -223,7 +223,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/groups/:group_id/avatar Create Group Avatar
 	 * @apiName        CreateBBGroupAvatar
 	 * @apiGroup       Groups
-	 * @apiDescription Create group avatar
+	 * @apiDescription Create group avatar. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} group_id A unique numeric ID for the Group.
@@ -297,28 +297,26 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = $this->get_item_permissions_check( $request );
 
-		if ( true === $retval && ( bp_disable_group_avatar_uploads() || ! buddypress()->avatar->show_avatars ) ) {
-			$retval = new WP_Error(
-				'bp_rest_attachments_group_avatar_disabled',
-				__( 'Sorry, group avatar upload is disabled.', 'buddyboss' ),
-				array(
-					'status' => 500,
-				)
-			);
-		}
-
-		if (
-			true === $retval
-			&& ! groups_is_user_admin( bp_loggedin_user_id(), $this->group->id )
-			&& ! current_user_can( 'bp_moderate' )
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( ! is_wp_error( $retval ) ) {
+			if ( bp_disable_group_avatar_uploads() || false === buddypress()->avatar->show_avatars ) {
+				$retval = new WP_Error(
+					'bp_rest_attachments_group_avatar_disabled',
+					__( 'Sorry, group avatar upload is disabled.', 'buddyboss' ),
+					array(
+						'status' => 500,
+					)
+				);
+			} elseif ( groups_is_user_admin( bp_loggedin_user_id(), $this->group->id ) || current_user_can( 'bp_moderate' ) ) {
+				$retval = true;
+			} else {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**

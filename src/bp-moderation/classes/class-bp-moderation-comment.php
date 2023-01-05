@@ -62,6 +62,13 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 	}
 
 	/**
@@ -137,8 +144,11 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-		if ( $this->is_content_hidden( $comment_id, false ) ) {
-			$return = esc_html__( 'Blocked Member', 'buddyboss' );
+		$user_id = self::get_content_owner_id( $comment_id );
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			return bb_moderation_is_blocked_label( $return, $user_id );
+		} elseif ( bb_moderation_get_blocked_by_user_ids( $user_id ) ) {
+			return bb_moderation_has_blocked_label( $return, $user_id );
 		}
 
 		return $return;
@@ -170,10 +180,6 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function blocked_get_comment_author( $author, $comment_id ) {
-
-		if ( $this->is_content_hidden( $comment_id, false ) ) {
-			$author = '';
-		}
 
 		return $author;
 	}
@@ -293,7 +299,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		}
 
 		if ( ! empty( $link ) && bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
-			$link .= bp_moderation_get_report_button(
+			$comment_report_link = bp_moderation_get_report_button(
 				array(
 					'id'                => 'comment_report',
 					'component'         => 'moderation',
@@ -305,6 +311,9 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 					),
 				)
 			);
+			if ( ! empty( $comment_report_link ) ) {
+				$link .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list">%s</div></div>', esc_html__( 'More Options', 'buddyboss' ), $comment_report_link );
+			}
 		}
 
 		return $link;
@@ -365,10 +374,38 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$author_id = self::get_content_owner_id( $item_id );
 
 		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
-		     ( $check_hidden && $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+			 ( $check_hidden && $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+		return esc_html__( 'Report Comment', 'buddyboss' );
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+		return esc_html__( 'Comment', 'buddyboss' );
 	}
 }

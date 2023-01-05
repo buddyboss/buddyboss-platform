@@ -182,7 +182,8 @@ add_filter( 'bp_user_query_uid_clauses', 'bp_ps_uid_clauses', 99, 2 );
 function bp_ps_uid_clauses( $sql, $object ) {
 	$code  = $object->query_vars['type'];
 	$order = 'ASC';
-	if ( $code[0] == '-' ) {
+
+	if ( isset( $code[0] ) && $code[0] == '-' ) {
 		$code  = substr( $code, 1 );
 		$order = 'DESC';
 	}

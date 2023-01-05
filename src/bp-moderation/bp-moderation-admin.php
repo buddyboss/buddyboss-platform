@@ -45,8 +45,8 @@ function bp_moderation_admin_scripts( $hook ) {
 					'unhide_confirm_msg'     => esc_js( __( 'Please confirm you want to unhide this content. It will be open for all members in your network.', 'buddyboss' ) ),
 					'hide_label'             => esc_js( __( 'Hide Content', 'buddyboss' ) ),
 					'unhide_label'           => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
-					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),
-					'unsuspend_label'        => esc_js( __( 'Unsuspend', 'buddyboss' ) ),
+					'suspend_label'          => esc_js( __( 'Suspend Member', 'buddyboss' ) ),
+					'unsuspend_label'        => esc_js( __( 'Unsuspend Member', 'buddyboss' ) ),
 					'suspend_author_label'   => esc_js( __( 'Suspend Owner', 'buddyboss' ) ),
 					'unsuspend_author_label' => esc_js( __( 'Unsuspend Owner', 'buddyboss' ) ),
 				),
@@ -381,7 +381,7 @@ function bp_moderation_admin() {
 				if ( 'reported-content' === $current_tab ) {
 					bp_core_admin_moderation_tabs( esc_html__( 'Reported Content', 'buddyboss' ) );
 				} else {
-					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
+					bp_core_admin_moderation_tabs( esc_html__( 'Flagged Members', 'buddyboss' ) );
 				}
 				?>
 			</h2>
@@ -452,15 +452,16 @@ function bp_moderation_admin_index() {
 	$bp_moderation_list_table->prepare_items();
 	?>
 	<div class="wrap">
-		<h1>
+		<h1 class="wp-heading-inline">
 			<?php
 			if ( 'reported-content' === $current_tab ) {
 				esc_html_e( 'Reported Content', 'buddyboss' );
 			} else {
-				esc_html_e( 'Blocked Members', 'buddyboss' );
+				esc_html_e( 'Flagged Members', 'buddyboss' );
 			}
 			?>
 		</h1>
+		<hr class="wp-header-end">
 		<?php if ( ! empty( $messages ) ) : ?>
 			<div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>"> <?php //phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 				<p><?php echo wp_kses_post( implode( "<br/>\n", $messages ) ); ?></p>
@@ -546,6 +547,10 @@ function bp_moderation_admin_view() {
 	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
 	$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
 
+	if ( empty( $moderation_request_data->id ) ) {
+		$moderation_request_data = new BP_Moderation( $moderation_id, BP_Moderation_Members::$moderation_type_report );
+	}
+
 	/**
 	 * Fires before moderation edit form is displays so plugins can modify the activity.
 	 *
@@ -576,3 +581,4 @@ function bp_moderation_admin_category_listing_add_tab() {
 }
 
 add_action( 'admin_notices', 'bp_moderation_admin_category_listing_add_tab' );
+

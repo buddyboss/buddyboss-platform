@@ -62,6 +62,8 @@ $width = wp_is_mobile() ? '100%' : '600px';
 		body {
 			margin: 0 !important;
 			padding: 0 !important;
+			direction: <?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;
+			unicode-bidi: embed;
 			<?php echo wp_is_mobile() ? "width:{$width} !important" : ""; ?>;
 		}
 
@@ -262,8 +264,8 @@ $width = wp_is_mobile() ? '100%' : '600px';
 	</style>
 </head>
 
-<body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
-	<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
+<body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;direction: <?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;unicode-bidi: embed;" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
+	<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;direction: <?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;unicode-bidi: embed;" class="email_bg" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
 		<tbody>
 			<tr>
 				<td valign="top">

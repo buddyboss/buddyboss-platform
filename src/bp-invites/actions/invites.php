@@ -80,6 +80,10 @@ function bp_member_invite_submit() {
 		}
 	}
 	$query_string = array();
+
+	// check if it has enough recipients to use batch emails.
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $invite_correct_array );
+
 	foreach ( $invite_correct_array as $key => $value ) {
 
 		if ( true === bp_disable_invite_member_email_subject() ) {
@@ -115,7 +119,7 @@ function bp_member_invite_submit() {
 
 		// Set both variable which will use in email.
 		$_POST['custom_user_name']   = $name;
-		$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+		$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
 
 		$accept_link = add_query_arg(
 			array(
@@ -141,7 +145,13 @@ function bp_member_invite_submit() {
 		 */
 		add_filter( 'bp_email_get_salutation', '__return_false' );
 		// Send invitation email.
-		bp_send_email( 'invites-member-invite', $email, $args );
+		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+			bb_email_queue()->add_record( 'invites-member-invite', $email, $args );
+			// call email background process.
+			bb_email_queue()->bb_email_background_process();
+		} else {
+			bp_send_email( 'invites-member-invite', $email, $args );
+		}
 
 		$insert_post_args = array(
 			'post_author'  => $bp->loggedin_user->id,
@@ -214,7 +224,7 @@ add_filter( 'bp_email_set_subject', 'bp_invites_member_invite_filter_subject', 9
 function bp_invites_member_invite_filter_content( $content, $email ) {
 
 	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) {
-		$content = bp_get_member_invites_wildcard_replace( wp_kses( $_POST['bp_member_invites_custom_content'], bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
+		$content = bp_get_member_invites_wildcard_replace( wp_kses( stripslashes( $_POST['bp_member_invites_custom_content'] ), bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
 	}
 
 	if ( 'invites-member-invite' === $email->get( 'type' ) ) {
@@ -243,7 +253,7 @@ add_filter( 'bp_email_set_content_html', 'bp_invites_member_invite_filter_conten
 function bp_invites_member_invite_filter_content_plaintext( $content, $email ) {
 
 	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) {
-		$content = bp_get_member_invites_wildcard_replace( wp_kses( $_POST['bp_member_invites_custom_content'], bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
+		$content = bp_get_member_invites_wildcard_replace( wp_kses( stripslashes( $_POST['bp_member_invites_custom_content'] ), bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
 	}
 
 	if ( 'invites-member-invite' === $email->get( 'type' ) ) {

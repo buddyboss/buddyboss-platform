@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Entry
+ * The template for document entry
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/document/document-entry.php.
  *
  * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 global $document_template;
@@ -11,7 +14,6 @@ global $document_template;
 $attachment_id       = bp_get_document_attachment_id();
 $extension           = '';
 $can_download        = false;
-$can_manage          = false;
 $can_view            = false;
 $attachment_url      = '';
 $text_attachment_url = '';
@@ -22,9 +24,13 @@ $document_id         = bp_get_document_id();
 $filename            = basename( get_attached_file( $attachment_id ) );
 $mirror_text         = '';
 $audio_url           = '';
+$video_url           = '';
 $can_add             = false;
+$can_move            = false;
+$can_edit            = false;
 $data_action         = '';
 $is_comment_doc      = false;
+
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
 	$svg_icon            = bp_document_svg_icon( $extension, $attachment_id );
@@ -33,17 +39,18 @@ if ( $attachment_id ) {
 	$move_class          = 'ac-document-move';
 	$listing_class       = 'ac-document-list';
 	$document_type       = 'document';
-	$document_privacy    = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
-	$can_download        = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-	$can_manage          = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
-	$can_view            = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
-	$can_add             = ( true === (bool) $document_privacy['can_add'] ) ? true : false;
+	$document_privacy    = bb_media_user_can_access( bp_get_document_id(), 'document' );
+	$can_download        = true === (bool) $document_privacy['can_download'];
+	$can_edit            = true === (bool) $document_privacy['can_edit'];
+	$can_view            = true === (bool) $document_privacy['can_view'];
+	$can_add             = true === (bool) $document_privacy['can_add'];
+	$can_delete          = true === (bool) $document_privacy['can_delete'];
+	$can_move            = true === (bool) $document_privacy['can_move'];
 	$group_id            = bp_get_document_group_id();
-	// $document_title   = basename( get_attached_file( $attachment_id ) );
-	$document_title = bp_get_document_title();
-	$data_action    = 'document';
-	$mirror_text    = bp_document_mirror_text( $attachment_id );
-	$is_comment_doc = bp_document_is_activity_comment_document( $document_template->document );
+	$document_title      = bp_get_document_title();
+	$data_action         = 'document';
+	$mirror_text         = bp_document_mirror_text( $attachment_id );
+	$is_comment_doc      = bp_document_is_activity_comment_document( $document_template->document );
 
 	if ( $group_id > 0 ) {
 		$move_id   = $group_id;
@@ -52,11 +59,10 @@ if ( $attachment_id ) {
 		$move_id   = bp_get_document_user_id();
 		$move_type = 'profile';
 	}
-	$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 
-	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-		$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
-	}
+	$attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-image-preview-activity-image' );
+	$video_url      = bb_document_video_get_symlink( bp_get_document_id() );
+
 } else {
 	$svg_icon       = bp_document_svg_icon( 'folder' );
 	$download_link  = bp_document_folder_download_link( bp_get_document_folder_id() );
@@ -64,11 +70,13 @@ if ( $attachment_id ) {
 	$move_class     = 'ac-folder-move';
 	$listing_class  = 'ac-folder-list';
 	$document_type  = 'folder';
-	$folder_privacy = bp_document_user_can_manage_folder( bp_get_document_folder_id(), bp_loggedin_user_id() );
-	$can_manage     = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
-	$can_view       = ( true === (bool) $folder_privacy['can_view'] ) ? true : false;
-	$can_download   = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
-	$can_add        = ( true === (bool) $folder_privacy['can_add'] ) ? true : false;
+	$folder_privacy = bb_media_user_can_access( bp_get_document_folder_id(), 'folder' );
+	$can_edit       = true === (bool) $folder_privacy['can_edit'];
+	$can_view       = true === (bool) $folder_privacy['can_view'];
+	$can_download   = true === (bool) $folder_privacy['can_download'];
+	$can_add        = true === (bool) $folder_privacy['can_add'];
+	$can_delete     = true === (bool) $folder_privacy['can_delete'];
+	$can_move       = true === (bool) $folder_privacy['can_move'];
 	$group_id       = bp_get_document_folder_group_id();
 	$document_title = bp_get_folder_title();
 	$data_action    = 'folder';
@@ -81,9 +89,9 @@ if ( $attachment_id ) {
 	}
 }
 
-$document_id = bp_get_document_id();
-$link        = ( $attachment_id ) ? $download_link : $folder_link;
-$class       = '';
+$document_id          = bp_get_document_id();
+$document_folder_link = ( $attachment_id ) ? $download_link : $folder_link;
+$class                = '';
 
 if ( $attachment_id ) {
 	$class = 'bb-open-document-theatre';
@@ -95,23 +103,25 @@ data-group-id="<?php bp_document_group_id(); ?>" data-activity-id="<?php bp_docu
 data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>"
 id="div-listing-<?php bp_document_id(); ?>">
 	<div class="media-folder_icon">
-		<a href="<?php echo esc_url( $link ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
+		<a href="<?php echo esc_url( $document_folder_link ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
 	</div>
 	<div class="media-folder_details">
-		<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $link ); ?>"
+		<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $document_folder_link ); ?>"
 		data-id="<?php bp_document_id(); ?>" data-attachment-full=""
 		data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 		data-privacy="<?php bp_db_document_privacy(); ?>"
 		data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>"
 		data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
 		data-activity-id="<?php bp_document_activity_id(); ?>" data-author="<?php bp_document_user_id(); ?>"
-		data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
-		data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
-		data-mp3-preview="<?php echo $audio_url ? esc_url( $audio_url ) : ''; ?>"
+		data-preview="<?php bp_document_attachment_url(); ?>"
+		data-full-preview="<?php bp_document_attachment_url(); ?>"
+		data-text-preview="<?php bp_document_attachment_url(); ?>"
+		data-mp3-preview="<?php bp_document_attachment_url(); ?>"
+		data-video-preview="<?php echo $video_url ? esc_url( $video_url ) : ''; ?>"
 		data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>"
 		data-document-title="<?php echo esc_html( $filename ); ?>"
 		data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
-        data-can-edit="<?php echo esc_attr( bp_document_user_can_edit( bp_get_document_id() ) ); ?>"
+		data-can-edit="<?php echo esc_attr( bp_document_user_can_edit( bp_get_document_id() ) ); ?>"
 		data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 			<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
 			<i class="media-document-id" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>"
@@ -148,7 +158,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 			if ( ! bp_is_user() ) {
 				?>
 				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a
-							href="<?php echo trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ); ?>"><?php bp_document_author(); ?></a></span>
+							href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>"><?php bp_document_author(); ?></a></span>
 				<?php
 			}
 			?>
@@ -190,8 +200,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 				$group_id = bp_get_document_group_id();
 				if ( $group_id > 0 ) {
 					?>
-					<span class="bp-tooltip" data-bp-tooltip-pos="down"
-					data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>"><?php bp_document_privacy(); ?></span>
+					<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>"><?php bp_document_privacy(); ?></span>
 					<?php
 				} else {
 					?>
@@ -225,7 +234,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 		$show = true;
 	} elseif ( $can_download ) {
 		$show = true;
-	} elseif ( $can_manage ) {
+	} elseif ( $can_edit ) {
 		$show = true;
 	}
 	?>
@@ -233,7 +242,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
+			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 			<div class="media-folder_action__list">
 				<ul>
 					<?php
@@ -247,7 +256,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 						</li>
 						<?php
 					}
-					if ( $can_manage ) {
+					if ( $can_edit ) {
 						if ( ( 'document' === $document_type || 'folder' === $document_type ) && 0 === $group_id && 0 === bp_get_document_parent_id() ) {
 							$url            = '#';
 							$child_activity = '';
@@ -287,44 +296,43 @@ id="div-listing-<?php bp_document_id(); ?>">
 							   class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
 						</li>
 						<?php
-						if ( $can_add ) {
-						    if ( $is_comment_doc ) {
-							    ?>
-                                <li class="move_file disabled-move" data-balloon-pos="down"
-	                                data-balloon="<?php esc_html_e( 'Documents added in comment cannot be moved', 'buddyboss' ); ?>">
-                                    <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                                </li>
-							    <?php
-						    } else {
-							    ?>
-                                <li class="move_file">
-                                    <a href="#" data-action="<?php echo esc_attr( $data_action ); ?>"
-                                    data-parent-id="<?php echo esc_attr( bp_get_document_parent_id() ); ?>"
-                                    data-id="<?php echo esc_attr( $document_id ); ?>"
-                                    data-type="<?php echo esc_attr( $move_type ); ?>"
-                                    id="<?php echo esc_attr( $move_id ); ?>"
-                                    class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-                                </li>
-							    <?php
-						    }
+						if ( $can_move ) {
+							if ( $is_comment_doc ) {
+								?>
+								<li class="move_file disabled-move" data-balloon-pos="down"
+									data-balloon="<?php esc_html_e( 'Documents added in comment cannot be moved', 'buddyboss' ); ?>">
+									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+								</li>
+								<?php
+							} else {
+								?>
+								<li class="move_file">
+									<a href="#" data-action="<?php echo esc_attr( $data_action ); ?>"
+									data-parent-id="<?php echo esc_attr( bp_get_document_parent_id() ); ?>"
+									data-id="<?php echo esc_attr( $document_id ); ?>"
+									data-type="<?php echo esc_attr( $move_type ); ?>"
+									id="<?php echo esc_attr( $move_id ); ?>"
+									class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+								</li>
+								<?php
+							}
 						}
-
 					}
 
 					$report_btn = bp_document_get_report_link( array( 'id' => bp_get_document_id() ) );
 					if ( $report_btn && 'document' === $document_type ) {
 						?>
-                        <li class="report_file">
+						<li class="report_file">
 							<?php echo $report_btn; ?>
-                        </li>
+						</li>
 						<?php
 					}
 
-					if ( $can_manage ) {
+					if ( $can_delete ) {
 						?>
 						<li class="delete_file">
 							<a class="document-file-delete" data-item-from="listing"
-							data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>"
+							data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>"
 							data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>"
 							data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>"
 							data-type="<?php echo esc_attr( $document_type ); ?>"

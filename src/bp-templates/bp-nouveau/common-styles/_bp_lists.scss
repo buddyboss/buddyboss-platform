@@ -59,7 +59,6 @@
 				clear: none; // some WP themes state clear:both
 
 				@include responsive-font(26);
-				font-weight: 400;
 				line-height: 1.1;
 				margin: 0 auto;
 			}
@@ -159,6 +158,420 @@
 
 } // close .bp-list
 
+//Group Lists
+.buddypress-wrap ul.bp-list.groups-dir-list {
+
+	> li {
+		min-width: 300px;
+	}
+
+	.bs-group-cover {
+
+		&.cover-large a {
+			padding-top: 145px;
+		}
+
+		a {
+			position: relative;
+			display: block;
+			height: 100%;
+			padding-top: 95px;
+			border-radius: 3px 3px 0 0;
+			overflow: hidden;
+		}
+
+		img {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			object-fit: cover;
+			height: 100%;
+			width: 100%;
+		}
+
+	}
+
+	.list-wrap {
+		padding-top: 0;
+
+		.item {
+			padding: 0 20px;
+
+			.item-block {
+
+				@include dis-flex;
+				@include flex-align(flex-start);
+				-webkit-box-orient: vertical;
+				-webkit-box-direction: normal;
+				-ms-flex-flow: column;
+				flex-flow: column;
+
+				* {
+					line-height: 1.4;
+					padding: 0;
+					text-align: left;
+				}
+
+			}
+
+			.list-title {
+				margin: $marg-med 0 $marg-xsml;
+				font-size: 20px;
+
+				a {
+					text-decoration: none;
+					font-size: 19px;
+				}
+
+			}
+
+		}
+
+		.item-meta-wrap .item-meta {
+			clear: none;
+			display: inline;
+			float: none;
+
+			+ .item-meta.last-activity:before,
+			.group-visibility + .group-type:before {
+				background-color: #8d8f97;
+				border-radius: 100%;
+				content: "";
+				display: inline-block;
+				height: 4px;
+				margin: 0 6px 0 5px;
+				vertical-align: middle;
+				width: 4px;
+			}
+
+			&.meta-privacy-hidden .group-visibility,
+			&.meta-group-type-hidden .group-type,
+			&.meta-privacy-hidden .group-type:before,
+			&.meta-privacy-hidden.meta-group-type-hidden + .last-activity:before {
+				display: none;
+			}
+
+		}
+
+		.group-footer-wrap {
+
+			&.group-members-hidden {
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+
+				.group-members-wrap {
+					display: none;
+				}
+
+			}
+
+			&.group-join-button-hidden {
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+			}
+
+			&.group-members-hidden.group-join-button-hidden {
+				display: none !important;
+			}
+
+		}
+
+	}
+
+	li.item-entry {
+		margin-bottom: $marg-med;
+
+		.item-avatar {
+
+			@include dis-flex;
+			-webkit-box-pack: start;
+			-ms-flex-pack: start;
+			justify-content: flex-start;
+			width: 100%;
+			text-align: initial;
+		}
+
+		.group-avatar-wrap {
+
+			img.avatar {
+				width: auto;
+				max-width: 75px;
+				position: relative;
+				border-radius: 0;
+			}
+
+		}
+
+	}
+
+	//Group Lists Grid
+	&.grid {
+
+		.only-list-view {
+			display: none;
+		}
+
+		&.bb-cover-enabled .group-avatar-wrap img.avatar {
+			margin-top: -47px;
+		}
+
+		.group-avatar-wrap {
+			margin-left: $marg-lrg;
+
+			img.avatar {
+				margin-top: $marg-med;
+			}
+
+		}
+
+		.list-wrap {
+			border-radius: 4px;
+		}
+
+	}
+
+	//Group Lists List
+	&:not(.grid) {
+
+		@include dis-flex;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-ms-flex-flow: column;
+		flex-flow: column;
+
+		.only-grid-view {
+			display: none;
+		}
+
+		.item-entry {
+			border-bottom: 0;
+			margin: 0;
+			padding: 0;
+
+			&:first-child .list-wrap {
+				border-radius: 3px 3px 0 0;
+			}
+
+			&:last-child .list-wrap {
+				border-radius: 0 0 3px 3px;
+			}
+
+			.list-wrap {
+
+				@include dis-flex;
+				background: #fafafa;
+				border: 1px solid #eee;
+				padding: 15px;
+				border-radius: 0;
+			}
+
+			.item-avatar {
+				margin-right: $marg-xsml;
+				width: auto;
+			}
+
+			.item {
+
+				@include dis-flex;
+				@include flex-align(center);
+				-webkit-box-pack: justify;
+				-ms-flex-pack: justify;
+				justify-content: space-between;
+				width: calc(100% - 100px);
+				padding-right: 0;
+				overflow: initial;
+
+				.group-item-wrap {
+					-webkit-box-flex: 0;
+					-ms-flex: 0 0 calc(100% - 220px);
+					flex: 0 0 calc(100% - 220px);
+				}
+
+				.list-title {
+					margin-top: 0;
+					margin-bottom: 0;
+				}
+
+				.group-members-wrap {
+					margin-right: $marg-med;
+				}
+
+				.footer-button-wrap .generic-button {
+					margin-bottom: 0;
+				}
+
+			}
+
+			&.group-no-avatar .item {
+				width: 100%;
+			}
+
+			.item-block {
+				padding-right: 15px;
+
+				.last-activity {
+					margin-bottom: 0;
+				}
+			}
+
+			.item-desc {
+				flex: 1;
+				padding-right: 20px;
+				margin-top: $marg-xsml;
+
+				&:empty {
+					display: none;
+				}
+
+				p {
+					font-size: 14px;
+					line-height: 1.4;
+				}
+
+			}
+
+			.group-footer-wrap {
+
+				@include dis-flex;
+				-webkit-box-pack: justify;
+				-ms-flex-pack: justify;
+				justify-content: space-between;
+				margin-bottom: 0;
+			}
+
+			@media screen and (max-width: 1000px) {
+
+				.item {
+					flex-direction: column;
+
+					@include flex-align(flex-start);
+
+					.group-footer-wrap {
+
+						@include flex-align(flex-start);
+						margin-bottom: $marg-med;
+						flex-direction: column;
+					}
+
+					.footer-button-wrap,
+					.group-members-wrap {
+						margin-top: $marg-sml;
+					}
+
+				}
+
+			}
+
+			@media screen and (max-width: 375px) {
+
+				.item-avatar {
+					width: 100%;
+					margin-bottom: $marg-sml;
+				}
+
+				.list-wrap {
+					flex-wrap: wrap;
+
+					.item {
+						padding-left: 0;
+						width: 100%;
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	.bs-group-members {
+
+		@include dis-flex;
+		margin-bottom: $marg-med;
+		padding-right: 10px;
+		margin-right: 5px;
+
+		.bs-group-member {
+			max-width: 28px;
+			float: left;
+			margin-right: -9px;
+			position: relative;
+			z-index: 1;
+
+			a {
+				text-decoration: none;
+			}
+
+			img {
+				border: 2px solid transparent;
+				background-color: #fff;
+				border-radius: 50%;
+				float: left;
+				max-width: 100%;
+				image-rendering: -webkit-optimize-contrast;
+				display: block;
+			}
+
+			[class*=" bb-icon-"] {
+				height: 28px;
+				width: 28px;
+				font-size: 16px;
+				color: #c3c4c8;
+				line-height: 28px;
+				border-radius: 50%;
+				background-color: #f9f9f9;
+				border: 2px solid #fff;
+
+				@include dis-flex;
+				@include flex-align(center);
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+
+				&:hover {
+					background-color: #e3e3e3;
+				}
+
+			}
+
+		}
+
+	}
+
+	.group-footer-wrap:not(.group-join-button-hidden) .bs-group-members {
+		margin-left: -4px;
+	}
+
+	.footer-button-wrap {
+
+		@include dis-flex;
+
+		.action {
+			width: 100%;
+
+			.generic-button {
+				float: left;
+			}
+
+		}
+
+	}
+
+	@media screen and (max-width: 375px) {
+
+		> li {
+			min-width: 280px;
+		}
+
+	}
+
+}
+
 // Ensure there's space between parent act list wrapper and filters bar
 @include medium-small-up() {
 
@@ -230,7 +643,7 @@
 	clear: both;
 	padding-top: $pad-med;
 
-	.bb-sort-by-date .notifications-order-actions a .bb-icon {
+	.bb-sort-by-date .notifications-order-actions a [class*=" bb-icon-"] {
 		width: 20px;
 		text-align: center;
 	}

@@ -2,8 +2,10 @@
 /**
  * BP Nouveau Group's edit settings template.
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/admin/group-settings.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 ?>
 
@@ -120,7 +122,7 @@
 		<fieldset class="radio group-media">
 			<legend><?php esc_html_e( 'Group Photos', 'buddyboss' ); ?></legend>
 
-			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage photos?', 'buddyboss' ); ?></p>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload photos?', 'buddyboss' ); ?></p>
 
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-media-status" id="group-media-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_media_status_setting( 'members' ); ?> />
@@ -145,7 +147,7 @@
 		<fieldset class="radio group-albums">
 			<legend><?php esc_html_e( 'Group Albums', 'buddyboss' ); ?></legend>
 
-			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage albums?', 'buddyboss' ); ?></p>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to create albums?', 'buddyboss' ); ?></p>
 
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-album-status" id="group-albums-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_albums_status_setting( 'members' ); ?> />
@@ -170,7 +172,7 @@
 		<fieldset class="radio group-document">
 			<legend><?php esc_html_e( 'Group Documents', 'buddyboss' ); ?></legend>
 
-			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage documents?', 'buddyboss' ); ?></p>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload documents?', 'buddyboss' ); ?></p>
 
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-document-status" id="group-document-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_document_status_setting( 'members' ); ?> />
@@ -185,6 +187,31 @@
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-document-status" id="group-document-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_document_status_setting( 'admins' ); ?> />
 				<label for="group-document-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
+			</div>
+		</fieldset>
+
+	<?php endif; ?>
+
+	<?php if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) : ?>
+
+		<fieldset class="radio group-video">
+			<legend><?php esc_html_e( 'Group Videos', 'buddyboss' ); ?></legend>
+
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload videos?', 'buddyboss' ); ?></p>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-video-status" id="group-video-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_video_status_setting( 'members' ); ?> />
+				<label for="group-video-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
+			</div>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-video-status" id="group-video-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_video_status_setting( 'mods' ); ?> />
+				<label for="group-video-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+			</div>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-video-status" id="group-video-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_video_status_setting( 'admins' ); ?> />
+				<label for="group-video-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 			</div>
 		</fieldset>
 

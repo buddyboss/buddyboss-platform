@@ -157,7 +157,14 @@ class BP_XProfile_ProfileData {
 	public function is_valid_field() {
 		global $wpdb;
 		$table  = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-		$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$table} WHERE id = %d", $this->field_id ) );
+
+		$cache_key = 'bp_xprofile_is_valid_field_' . $this->field_id;
+		$retval    = wp_cache_get( $cache_key, 'bp_xprofile' );
+
+		if ( false === $retval ) {
+			$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$table} WHERE id = %d", $this->field_id ) );
+			wp_cache_set( $cache_key, $retval, 'bp_xprofile' );
+		}
 
 		/**
 		 * Filters whether or not data is for a valid field.
@@ -666,7 +673,13 @@ class BP_XProfile_ProfileData {
 
 		$bp = buddypress();
 
-		$last_updated = $wpdb->get_var( $wpdb->prepare( "SELECT last_updated FROM {$bp->profile->table_name_data} WHERE user_id = %d ORDER BY last_updated LIMIT 1", $user_id ) );
+		$cache_key    = 'bp_get_last_updated_' . $user_id;
+		$last_updated = wp_cache_get( $cache_key, 'bp_xprofile' );
+
+		if ( false === $last_updated ) {
+			$last_updated = $wpdb->get_var( $wpdb->prepare( "SELECT last_updated FROM {$bp->profile->table_name_data} WHERE user_id = %d ORDER BY last_updated LIMIT 1", $user_id ) );
+			wp_cache_set( $cache_key, $last_updated, 'bp_xprofile' );
+		}
 
 		return $last_updated;
 	}

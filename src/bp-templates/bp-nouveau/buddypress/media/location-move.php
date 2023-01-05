@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Media Location Move
+ * The template for media location move
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/media/location-move.php.
  *
  * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Core
+ * @version 1.5.6
  */
 
 ?>
@@ -17,7 +20,7 @@
 			<div class="breadcrumbs-append-ul-li">
 				<div class="breadcrumb">
 					<div class="item">
-						<span data-id="0"><?php esc_html_e( 'Album', 'buddyboss' ); ?></span>
+						<span data-id="0"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></span>
 					</div>
 				</div>
 			</div>
