@@ -386,8 +386,8 @@ function bp_version_updater() {
 			bb_update_to_2_2_3();
 		}
 
-		if ( $raw_db_version < 19181 ) {
-			bb_update_to_2_2_4();
+		if ( $raw_db_version < 19281 ) {
+			bb_update_to_2_2_5();
 		}
 	}
 
@@ -2155,7 +2155,7 @@ function bb_update_to_2_2_3() {
  *
  * @return void
  */
-function bb_update_to_2_2_4() {
+function bb_update_to_2_2_5() {
 	wp_cache_flush();
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
