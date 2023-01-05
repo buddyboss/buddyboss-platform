@@ -69,6 +69,9 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+		add_filter( 'get_comment', array( $this, 'bb_blocked_comment_author_url' ), 10, 1 );
+		add_filter( 'comments_clauses', array( $this, 'bb_blocked_comments_pre_query' ), 10, 2 );
+		add_filter( 'get_comment_excerpt', array( $this, 'bb_blocked_get_comment_excerpt' ), 10, 3 );
 	}
 
 	/**
@@ -116,15 +119,18 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $comment_text;
 		}
 
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+
 		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
-			$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
-			$is_user_blocked   = bp_moderation_is_user_blocked( $comment_author_id );
+			$is_user_blocked = bp_moderation_is_user_blocked( $comment_author_id );
 
 			if ( $is_user_blocked ) {
-				$comment_text = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
+				$comment_text = bb_moderation_has_blocked_message( $comment_text );
 			} else {
 				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
+		} elseif ( bb_moderation_is_user_blocked_by( $comment_author_id ) ) {
+			$comment_text = bb_moderation_is_blocked_message( $comment_text );
 		}
 
 		return $comment_text;
@@ -147,7 +153,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$user_id = self::get_content_owner_id( $comment_id );
 		if ( bp_moderation_is_user_blocked( $user_id ) ) {
 			return bb_moderation_is_blocked_label( $return, $user_id );
-		} elseif ( bb_moderation_get_blocked_by_user_ids( $user_id ) ) {
+		} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
 			return bb_moderation_has_blocked_label( $return, $user_id );
 		}
 
@@ -274,7 +280,9 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $link;
 		}
 
-		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
+		$user_id = self::get_content_owner_id( $comment->comment_ID );
+
+		if ( $this->is_content_hidden( $comment->comment_ID ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
 			$link = '';
 		}
 
@@ -407,5 +415,82 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function report_content_type( $content_type, $item_id ) {
 		return esc_html__( 'Comment', 'buddyboss' );
+	}
+
+	/**
+	 * If members url is not set then set member url for the blog comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $comment Comment data.
+	 *
+	 * @return object $comment Comment data.
+	 */
+	public function bb_blocked_comment_author_url( $comment ) {
+		if ( $comment->user_id && ! $comment->comment_author_url ) {
+			$comment->comment_author_url = bp_core_get_user_domain( $comment->user_id );
+		}
+
+		return $comment;
+	}
+
+	/**
+	 * Function to exclude is_blocked and has_blocked users comment from recent comment widget.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string[] $comment_data An associative array of comment query clauses.
+	 * @param object   $query        Current instance of WP_Comment_Query (passed by reference).
+	 *
+	 * @return mixed
+	 */
+	public function bb_blocked_comments_pre_query( $comment_data, $query ) {
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'widget_comments_args' ) ) {
+			global $wpdb;
+			$this->alias = 's';
+			$sql         = $this->exclude_where_query();
+			if ( ! empty( $sql ) ) {
+				$comment_data['where'] .= ' AND ' . $sql;
+			}
+			$blocked_by_query = bb_moderation_get_blocked_by_sql( bp_loggedin_user_id() );
+			if ( ! empty( $blocked_by_query ) ) {
+				$comment_data['where'] .= ' AND ' . $wpdb->prefix . 'comments.user_id NOT IN ( ' . $blocked_by_query . ' )';
+			}
+		}
+
+		return $comment_data;
+	}
+
+	/**
+	 * Update comment excerpt text for blocked comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string     $excerpt    The comment excerpt text.
+	 * @param string     $comment_id The comment ID as a numeric string.
+	 * @param WP_Comment $comment    The comment object.
+	 *
+	 * @return mixed|string
+	 */
+	public function bb_blocked_get_comment_excerpt( $excerpt, $comment_id, $comment ) {
+		if ( ! $comment instanceof WP_Comment ) {
+			return $excerpt;
+		}
+
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+
+		if ( $this->is_content_hidden( $comment_id ) ) {
+			$is_user_blocked = bp_moderation_is_user_blocked( $comment_author_id );
+
+			if ( $is_user_blocked ) {
+				$excerpt = bb_moderation_has_blocked_message( $excerpt );
+			} else {
+				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			}
+		} elseif ( bb_moderation_is_user_blocked_by( $comment_author_id ) ) {
+			$excerpt = bb_moderation_is_blocked_message( $excerpt );
+		}
+
+		return $excerpt;
 	}
 }

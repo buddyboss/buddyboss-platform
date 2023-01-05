@@ -212,7 +212,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) && ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
+		if (
+			empty( $username_visible ) &&
+			( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
 			return ' '; //To allow to make this function working bp_core_get_userlink().
 		}
 
