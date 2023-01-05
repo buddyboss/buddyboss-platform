@@ -3397,7 +3397,7 @@ add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_
  *
  * @param object $follower Contains following data.
  */
-function bb_send_email_to_following( $follower ) {
+function bb_send_email_to_follower( $follower ) {
 
 	if ( empty( $follower ) ) {
 		return;
@@ -3437,4 +3437,4 @@ function bb_send_email_to_following( $follower ) {
 		);
 	}
 }
-add_action( 'bp_start_following', 'bb_send_email_to_following' );
+add_action( 'bp_start_following', 'bb_send_email_to_follower' );
