@@ -3420,8 +3420,10 @@ function bb_send_email_to_follower( $follower ) {
 			),
 		),
 	);
-	// Send notification email.
-	bp_send_email( 'new-follow', $user_id, $args );
+	if ( true === bb_is_notification_enabled( $user_id, 'bb_following_new' ) ) {
+		// Send notification email.
+		bp_send_email( 'new-follow', $user_id, $args );
+	}
 
 	if ( bp_is_active( 'notifications' ) ) {
 		bp_notifications_add_notification(
