@@ -3415,18 +3415,18 @@ function bb_send_email_to_follower( $follower ) {
 		return;
 	}
 
-	$args = array(
-		'tokens' => array(
-			'follower.id'   => $follower->follower_id,
-			'follower.name' => bp_core_get_user_displayname( $follower->follower_id ),
-			'follower.url'  => esc_url( bp_core_get_user_domain( $follower->follower_id ) ),
-			'unsubscribe'   => array(
-				'user_id'           => $user_id,
-				'notification_type' => 'bb_following_new',
-			),
-		),
-	);
 	if ( true === bb_is_notification_enabled( $user_id, 'bb_following_new' ) ) {
+		$args = array(
+			'tokens' => array(
+				'follower.id'   => $follower->follower_id,
+				'follower.name' => bp_core_get_user_displayname( $follower->follower_id ),
+				'follower.url'  => esc_url( bp_core_get_user_domain( $follower->follower_id ) ),
+				'unsubscribe'   => array(
+					'user_id'           => $user_id,
+					'notification_type' => 'bb_following_new',
+				),
+			),
+		);
 		// Send notification email.
 		bp_send_email( 'new-follow', $user_id, $args );
 	}
