@@ -133,7 +133,6 @@ body.buddypress {
 			.entry-title {
 
 				@include responsive-font(34);
-				font-weight: inherit;
 				color: $primary-headings;
 			}
 		}

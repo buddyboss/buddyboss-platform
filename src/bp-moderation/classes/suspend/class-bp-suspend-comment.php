@@ -109,7 +109,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public function manage_hidden_comment( $comment_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $comment_id,
@@ -153,7 +153,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public function manage_unhidden_comment( $comment_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $comment_id,
@@ -232,8 +232,9 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
+		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$return = esc_html__( 'Suspended Member', 'buddyboss' );
+			$return = bb_moderation_is_suspended_label( $user_id );
 		}
 
 		return $return;
@@ -251,8 +252,9 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author( $author, $comment_id ) {
 
+		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$author = esc_html__( 'Suspended Member', 'buddyboss' );
+			$author = bb_moderation_is_suspended_label( $user_id );
 		}
 
 		return $author;
