@@ -3405,7 +3405,13 @@ function bb_send_email_to_follower( $follower ) {
 
 	$user_id = ! empty( $follower->leader_id ) ? $follower->leader_id : '';
 
-	if ( empty( $user_id ) ) {
+	if (
+		empty( $user_id ) ||
+		(
+			bp_is_active( 'moderation' ) &&
+			bb_moderation_is_user_blocked_by( $user_id )
+		)
+	) {
 		return;
 	}
 
