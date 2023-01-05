@@ -146,10 +146,6 @@ class BP_Email_Tokens {
 				'function'    => array( $this, 'token__activity_content' ),
 				'description' => __( 'Display the activity post content, along with member\'s photo and name.', 'buddyboss' ),
 			),
-			'member.card'     => array(
-				'function'    => array( $this, 'token__member_card' ),
-				'description' => __( 'Display the members details', 'buddyboss' ),
-			),
 		);
 
 		return $tokens;
@@ -1270,6 +1266,9 @@ class BP_Email_Tokens {
 				break;
 			case 'groups-invitation':
 				$member_id = isset( $tokens['inviter.id'] ) ? $tokens['inviter.id'] : false;
+				break;
+			case 'new-follow':
+				$member_id = isset( $tokens['follower.id'] ) ? $tokens['follower.id'] : false;
 				break;
 		}
 
@@ -2536,131 +2535,6 @@ class BP_Email_Tokens {
 			<tr>
 				<td><a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" target="_blank" rel="nofollow"
 					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
-			</tr>
-		</table>
-		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
-		<?php
-		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
-
-		return $output;
-	}
-
-	/**
-	 * Generate the output for token member.card.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param \BP_Email $bp_email
-	 * @param array     $formatted_tokens
-	 * @param array     $tokens
-	 *
-	 * @return string html for the output
-	 */
-	public function token__member_card( $bp_email, $formatted_tokens, $tokens ) {
-		$output   = '';
-		$settings = bp_email_get_appearance_settings();
-		$follower = isset( $tokens['follower'] ) ? $tokens['follower'] : '';
-
-		if ( empty( $follower )) {
-			return $output;
-		}
-
-		ob_start();
-		?>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">
-			<tr>
-				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
-			</tr>
-
-			<tr>
-				<td>
-					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>;">
-						<tbody>
-						<tr>
-							<td>
-								<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
-									<tbody>
-										<tr>
-											<td align="center">
-												<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
-													<tbody>
-													<tr>
-														<td width="88%" style="vertical-align: top;">
-															<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-																<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
-																	<tbody>
-																		<tr>
-																			<td style="width: 140px;">
-																				<?php
-																				$avatar_url = bp_core_fetch_avatar(
-																					array(
-																						'item_id' => $follower->follower_id,
-																						'type'    => 'full',
-																						'html'    => false,
-																					)
-																				);
-																				?>
-																				<img src="<?php echo esc_url( $avatar_url ); ?>" width="140" height="140" style="width: 140px; height:140px;border-radius: 4px 0 0 4px; float: left;" />
-																			</td>
-																			<td style="padding: 15px;">
-																				<h2 style="font-size: 20px; font-weight: 500; line-height: 1.3; margin: 0 0 8px 0; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;">
-																					<?php echo bp_core_get_user_displayname( $follower->follower_id ); ?>
-																				</h2>
-																				<p style="font-weight: 400; font-size: 13px; line-height: 1.3; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
-																					<?php
-																					$user = get_user_by( 'id', $follower->follower_id );
-																					if ( ! empty( $user->ID ) ) {
-																						echo '@' . $user->user_login;
-																					}
-																					?>
-																				</p>
-																				<div style="font-weight: 400; font-size: 13px; line-height: 1.3; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 38px 0 0 0;">
-																					<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
-																						<tbody>
-																							<tr>
-																								<?php
-																								if ( bp_is_active( 'friends' ) ) {
-																									?>
-																									<td style="width: 50%;">
-																										<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; margin-right: 2px;">
-																											<?php
-																												echo sprintf( __( '%d connections', 'buddyboss' ), friends_get_total_friend_count( $follower->follower_id ) );
-																											?>
-																									</td>
-																									<?php
-																								}
-																								?>
-																								<td style="width: 50%; text-align: right;">
-																									<a href="<?php echo esc_url( $tokens['follower.url'] ); ?>" style="margin-right: 4px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none;">
-																										<?php echo __( 'View Profile', 'buddyboss' ); ?>
-																									</a>
-																								</td>
-																							</tr>
-																						</tbody>
-																					</table>
-																				</div>
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</td>
-													</tr>
-													</tbody>
-												</table>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-
-			<tr>
-				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
 			</tr>
 		</table>
 		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>

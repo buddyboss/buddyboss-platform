@@ -3411,7 +3411,7 @@ function bb_send_email_to_follower( $follower ) {
 
 	$args = array(
 		'tokens' => array(
-			'follower'      => $follower,
+			'follower.id'   => $follower->follower_id,
 			'follower.name' => bp_core_get_user_displayname( $follower->follower_id ),
 			'follower.url'  => esc_url( bp_core_get_user_domain( $follower->follower_id ) ),
 			'unsubscribe'   => array(
