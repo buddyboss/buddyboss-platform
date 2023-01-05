@@ -1272,10 +1272,10 @@ function bp_nouveau_get_nav_link_text() {
  * @return bool
  */
 function bp_nouveau_nav_has_count() {
-	$bp_nouveau     = bp_nouveau();
-	$nav_item       = $bp_nouveau->current_nav_item;
-	$count          = false;
-	$courses_slug   = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
+	$bp_nouveau   = bp_nouveau();
+	$nav_item     = $bp_nouveau->current_nav_item;
+	$count        = false;
+	$courses_slug = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
 
 	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
 		$count = $nav_item->count;
@@ -1326,10 +1326,10 @@ function bp_nouveau_nav_count() {
 	 * @return int The count attribute for the nav item.
 	 */
 function bp_nouveau_get_nav_count() {
-	$bp_nouveau     = bp_nouveau();
-	$nav_item       = $bp_nouveau->current_nav_item;
-	$count          = 0;
-	$courses_slug   = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
+	$bp_nouveau   = bp_nouveau();
+	$nav_item     = $bp_nouveau->current_nav_item;
+	$count        = 0;
+	$courses_slug = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = (int) str_replace( ',', '', $nav_item->count );
