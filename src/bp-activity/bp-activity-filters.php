@@ -3551,3 +3551,52 @@ add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_po
 add_action( 'bb_media_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_document_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
+
+/**
+ * Function will send notification to following user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $follower Contains following data.
+ */
+function bb_send_email_to_follower( $follower ) {
+
+	if ( empty( $follower ) ) {
+		return;
+	}
+
+	$user_id = ! empty( $follower->leader_id ) ? $follower->leader_id : '';
+
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	$args = array(
+		'tokens' => array(
+			'follower.id'   => $follower->follower_id,
+			'follower.name' => bp_core_get_user_displayname( $follower->follower_id ),
+			'follower.url'  => esc_url( bp_core_get_user_domain( $follower->follower_id ) ),
+			'unsubscribe'   => array(
+				'user_id'           => $user_id,
+				'notification_type' => 'bb_following_new',
+			),
+		),
+	);
+	// Send notification email.
+	bp_send_email( 'new-follow', $user_id, $args );
+
+	if ( bp_is_active( 'notifications' ) ) {
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => $user_id,
+				'item_id'           => $follower->id,
+				'secondary_item_id' => $follower->follower_id,
+				'component_name'    => buddypress()->activity->id,
+				'component_action'  => 'bb_following_new',
+				'date_notified'     => bp_core_current_time(),
+				'is_new'            => 1,
+			)
+		);
+	}
+}
+add_action( 'bp_start_following', 'bb_send_email_to_follower' );
