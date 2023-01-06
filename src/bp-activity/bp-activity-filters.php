@@ -3414,7 +3414,7 @@ function bb_send_email_to_follower( $follower ) {
 				'follower.url'  => esc_url( bp_core_get_user_domain( $user_id ) ),
 				'unsubscribe'   => array(
 					'user_id'           => $following_user_id,
-					'notification_type' => 'bb_following_new',
+					'notification_type' => 'new-follow',
 				),
 			),
 		);
