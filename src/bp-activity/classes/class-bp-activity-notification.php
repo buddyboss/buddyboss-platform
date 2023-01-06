@@ -533,7 +533,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_activity_post_following() {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
-		if ( ! bp_is_activity_follow_active() ) {
+		if ( function_exists( 'bp_is_activity_follow_active' ) && ! bp_is_activity_follow_active() ) {
 			$notification_read_only   = true;
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
@@ -797,7 +797,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_following() {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
-		if ( ! bp_is_activity_follow_active() ) {
+		if ( function_exists( 'bp_is_activity_follow_active' ) && ! bp_is_activity_follow_active() ) {
 			$notification_read_only   = true;
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
@@ -814,7 +814,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification_type(
 			'bb_following_new',
-			__( 'A member starts following you', 'buddyboss' ),
+			esc_html__( 'A member starts following you', 'buddyboss' ),
 			esc_html__( 'A member is followed by someone', 'buddyboss' ),
 			'activity',
 			true,
