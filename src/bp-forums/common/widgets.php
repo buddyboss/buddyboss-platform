@@ -913,12 +913,15 @@ class BBP_Topics_Widget extends WP_Widget {
 							'size'    => 14,
 						)
 					);
+					$author_related_class = 'bbp-topic-has-avatar';
+				else :
+					$author_related_class = 'bbp-topic-no-avatar';
 				endif;
 
 				$author_url = bbp_get_topic_author_url( $topic_id );
 				?>
 
-				<li>
+				<li class="<?php echo $author_related_class; ?>">
 					<span class="bbp-topic-author-wrapper">
 						<?php if ( ! empty( $author_link ) ) : ?>
 							<a href="<?php echo esc_url( $author_url ); ?>"><?php echo bbp_get_topic_author_avatar( $topic_id ); ?></a>
@@ -934,7 +937,7 @@ class BBP_Topics_Widget extends WP_Widget {
 
 					<?php if ( ! empty( $settings['show_date'] ) ) : ?>
 
-						<div><?php bbp_topic_last_active_time( $topic_id ); ?></div>
+						<div class="bbp-topic-time"><?php bbp_topic_last_active_time( $topic_id ); ?></div>
 
 					<?php endif; ?>
 
@@ -1323,40 +1326,21 @@ class BBP_Replies_Widget extends WP_Widget {
 
 				?>
 
-				<li class="<?php echo $author_related_class; ?>-list">
+				<li class="<?php echo $author_related_class; ?>">
 
 					<?php
-
-					// Verify the reply ID.
-					$reply_id   = bbp_get_reply_id( $widget_query->post->ID );
-					$reply_link = '<a class="bbp-reply-topic-title" href="' . esc_url( bbp_get_reply_url( $reply_id ) ) . '" title="' . esc_attr( bbp_get_reply_excerpt( $reply_id, 50 ) ) . '">' . bbp_get_reply_topic_title( $reply_id ) . '</a>';
-
-					// Only query user if showing them.
-					if ( ! empty( $settings['show_user'] ) ) :
-						$author_link          = bbp_get_reply_author_link(
-							array(
-								'post_id' => $reply_id,
-								'type'    => 'both',
-								'size'    => 14,
-							)
-						);
-						$author_related_class = 'bbp-reply-topic-has-avatar';
-					else :
-						$author_link          = false;
-						$author_related_class = 'bbp-reply-topic-no-avatar';
-					endif;
 
 					// Reply author, link, and timestamp.
 					if ( ! empty( $settings['show_date'] ) && ! empty( $author_link ) ) :
 
 						// translators: 1: reply author, 2: reply link, 3: reply timestamp.
-						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div class="' . esc_attr( $author_related_class ) . '">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
+						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div class="bbp-reply-topic-time">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
 
 						// Reply link and timestamp.
 					elseif ( ! empty( $settings['show_date'] ) ) :
 
 						// translators: 1: reply link, 2: reply timestamp.
-						printf( __( '%1$s %2$s', 'buddyboss' ), $reply_link, '<div>' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
+						printf( __( '%1$s %2$s', 'buddyboss' ), $reply_link, '<div class="bbp-reply-topic-time">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
 
 						// Reply author and title.
 					elseif ( ! empty( $author_link ) ) :
