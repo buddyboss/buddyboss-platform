@@ -60,7 +60,6 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
 		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 
-		add_action( 'bp_follow_before_save', array( $this, 'bb_follow_before_save' ) );
 	}
 
 	/**
@@ -526,18 +525,5 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 */
 	public function add_pre_validate_check() {
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
-	}
-
-	/**
-	 * Function to prevent following that user who's suspend.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param BP_Activity_Follow $follow Contains following data.
-	 */
-	public function bb_follow_before_save( $follow ) {
-		if ( bp_moderation_is_user_suspended( $follow->leader_id ) ) {
-			$follow->leader_id = '';
-		}
 	}
 }

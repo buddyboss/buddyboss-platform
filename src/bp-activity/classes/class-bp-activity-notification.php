@@ -149,10 +149,9 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
-		$notification = bp_notifications_get_notification( $notification_id );
 
-		if ( ! empty( $notification ) && 'bb_following_new' === $notification->component_action ) {
-
+		if ( 'activity' === $component_name && 'bb_following_new' === $component_action_name ) {
+			$notification      = bp_notifications_get_notification( $notification_id );
 			$user_id           = $secondary_item_id;
 			$user_fullname     = bp_core_get_user_displayname( $user_id );
 			$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_core_get_user_domain( $user_id ) );
