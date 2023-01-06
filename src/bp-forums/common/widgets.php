@@ -1300,7 +1300,30 @@ class BBP_Replies_Widget extends WP_Widget {
 				$widget_query->the_post();
 				?>
 
-				<li>
+				<?php
+
+				// Verify the reply ID.
+				$reply_id   = bbp_get_reply_id( $widget_query->post->ID );
+				$reply_link = '<a class="bbp-reply-topic-title" href="' . esc_url( bbp_get_reply_url( $reply_id ) ) . '" title="' . esc_attr( bbp_get_reply_excerpt( $reply_id, 50 ) ) . '">' . bbp_get_reply_topic_title( $reply_id ) . '</a>';
+
+				// Only query user if showing them.
+				if ( ! empty( $settings['show_user'] ) ) :
+					$author_link          = bbp_get_reply_author_link(
+						array(
+							'post_id' => $reply_id,
+							'type'    => 'both',
+							'size'    => 14,
+						)
+					);
+					$author_related_class = 'bbp-reply-topic-has-avatar';
+				else :
+					$author_link          = false;
+					$author_related_class = 'bbp-reply-topic-no-avatar';
+				endif;
+
+				?>
+
+				<li class="<?php echo $author_related_class; ?>-list">
 
 					<?php
 
