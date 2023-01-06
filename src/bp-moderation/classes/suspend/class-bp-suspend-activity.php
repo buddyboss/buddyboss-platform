@@ -59,7 +59,6 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
 		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
-
 	}
 
 	/**
