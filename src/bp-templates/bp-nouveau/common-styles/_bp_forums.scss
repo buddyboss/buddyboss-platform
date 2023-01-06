@@ -860,6 +860,14 @@ p.form-allowed-tags {
 
 }
 
+ul.bbp-lead-topic .item-description {
+
+	p:empty {
+		min-height: 1em;
+	}
+
+}
+
 #bbpress-forums {
 
 	.replies-content,
