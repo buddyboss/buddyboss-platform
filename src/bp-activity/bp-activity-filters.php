@@ -3399,44 +3399,35 @@ add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_
  */
 function bb_send_email_to_follower( $follower ) {
 
-	if ( empty( $follower ) || ! bp_is_activity_follow_active() ) {
+	if ( empty( $follower ) || ! bp_is_activity_follow_active() || empty( $follower->leader_id ) ) {
 		return;
 	}
 
-	$user_id = ! empty( $follower->leader_id ) ? $follower->leader_id : '';
+	$user_id           = $follower->follower_id; // Current user id.
+	$following_user_id = $follower->leader_id; // Following user id.
 
-	if (
-		empty( $user_id ) ||
-		(
-			bp_is_active( 'moderation' ) &&
-			bb_moderation_is_user_blocked_by( $user_id )
-		)
-	) {
-		return;
-	}
-
-	if ( true === bb_is_notification_enabled( $user_id, 'bb_following_new' ) ) {
+	if ( true === bb_is_notification_enabled( $following_user_id, 'bb_following_new' ) ) {
 		$args = array(
 			'tokens' => array(
-				'follower.id'   => $follower->follower_id,
-				'follower.name' => bp_core_get_user_displayname( $follower->follower_id ),
-				'follower.url'  => esc_url( bp_core_get_user_domain( $follower->follower_id ) ),
+				'follower.id'   => $user_id,
+				'follower.name' => bp_core_get_user_displayname( $user_id ),
+				'follower.url'  => esc_url( bp_core_get_user_domain( $user_id ) ),
 				'unsubscribe'   => array(
-					'user_id'           => $user_id,
+					'user_id'           => $following_user_id,
 					'notification_type' => 'bb_following_new',
 				),
 			),
 		);
 		// Send notification email.
-		bp_send_email( 'new-follow', $user_id, $args );
+		bp_send_email( 'new-follow', $following_user_id, $args );
 	}
 
 	if ( bp_is_active( 'notifications' ) ) {
 		bp_notifications_add_notification(
 			array(
-				'user_id'           => $user_id,
+				'user_id'           => $following_user_id,
 				'item_id'           => $follower->id,
-				'secondary_item_id' => $follower->follower_id,
+				'secondary_item_id' => $user_id,
 				'component_name'    => buddypress()->activity->id,
 				'component_action'  => 'bb_following_new',
 				'date_notified'     => bp_core_current_time(),
