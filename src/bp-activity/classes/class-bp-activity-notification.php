@@ -865,7 +865,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{follower.name}} started following you.\n\nTo learn more about them, visit their profile: {{{follower.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a new follower', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone follows you', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone follows you.', 'buddyboss' ),
 			),
 			'bb_following_new'
 		);

@@ -3407,17 +3407,18 @@ function bb_send_email_to_follower( $follower ) {
 	$following_user_id = $follower->leader_id; // Following user id.
 
 	if ( true === bb_is_notification_enabled( $following_user_id, 'bb_following_new' ) ) {
-		$args = array(
+		$args                          = array(
 			'tokens' => array(
 				'follower.id'   => $user_id,
 				'follower.name' => bp_core_get_user_displayname( $user_id ),
 				'follower.url'  => esc_url( bp_core_get_user_domain( $user_id ) ),
-				'unsubscribe'   => array(
-					'user_id'           => $following_user_id,
-					'notification_type' => 'new-follow',
-				),
 			),
 		);
+		$unsubscribe_args              = array(
+			'user_id'           => $following_user_id,
+			'notification_type' => 'new-follow',
+		);
+		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 		// Send notification email.
 		bp_send_email( 'new-follow', $following_user_id, $args );
 	}
