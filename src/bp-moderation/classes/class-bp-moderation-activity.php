@@ -541,7 +541,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to prevent follow that user who's bocked and blocked by.
+	 * Function to prevent following to that user who has blocked and who is blocked the current user.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

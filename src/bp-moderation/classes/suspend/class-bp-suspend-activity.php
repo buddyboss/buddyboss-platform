@@ -529,7 +529,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	}
 
 	/**
-	 * Function to prevent follow that user who's suspend.
+	 * Function to prevent following that user who's suspend.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
