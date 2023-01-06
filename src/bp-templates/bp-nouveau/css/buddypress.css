@@ -9722,6 +9722,27 @@ div.profile_completion_wrap .progress_text_wrap {
   display: block;
 }
 
+#message-threads .thread-item.can-not-send-msg .thread-avatar:before {
+  content: "\ee08";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background-color: #767676;
+  font-size: 17px;
+  line-height: 1;
+  padding: 4px;
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  z-index: 11;
+}
+
 #message-form-submit-wrapper,
 #message-reply-form-submit-wrapper {
   display: flex;
