@@ -15883,6 +15883,10 @@ p.form-allowed-tags {
   min-height: 1em;
 }
 
+ul.bbp-lead-topic .item-description p:empty {
+  min-height: 1em;
+}
+
 [dir="rtl"] #bbpress-forums .replies-content [dir="ltr"], [dir="rtl"]
 #bbpress-forums .bbp-topic-content [dir="ltr"], [dir="rtl"]
 #bbpress-forums .bbp-reply-content [dir="ltr"], [dir="rtl"]
