@@ -3523,3 +3523,52 @@ add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_po
 add_action( 'bb_media_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_document_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
+
+/**
+ * Function will send notification to following user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Activity_Follow $follower Contains following data.
+ */
+function bb_send_email_to_follower( $follower ) {
+
+	if ( empty( $follower ) || ! bp_is_activity_follow_active() || empty( $follower->leader_id ) ) {
+		return;
+	}
+
+	$user_id           = $follower->follower_id; // Current user id.
+	$following_user_id = $follower->leader_id; // Following user id.
+
+	if ( true === bb_is_notification_enabled( $following_user_id, 'bb_following_new' ) ) {
+		$args                          = array(
+			'tokens' => array(
+				'follower.id'   => $user_id,
+				'follower.name' => bp_core_get_user_displayname( $user_id ),
+				'follower.url'  => esc_url( bp_core_get_user_domain( $user_id ) ),
+			),
+		);
+		$unsubscribe_args              = array(
+			'user_id'           => $following_user_id,
+			'notification_type' => 'new-follow',
+		);
+		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+		// Send notification email.
+		bp_send_email( 'new-follow', $following_user_id, $args );
+	}
+
+	if ( bp_is_active( 'notifications' ) ) {
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => $following_user_id,
+				'item_id'           => $follower->id,
+				'secondary_item_id' => $user_id,
+				'component_name'    => buddypress()->activity->id,
+				'component_action'  => 'bb_following_new',
+				'date_notified'     => bp_core_current_time(),
+				'is_new'            => 1,
+			)
+		);
+	}
+}
+add_action( 'bp_start_following', 'bb_send_email_to_follower' );
