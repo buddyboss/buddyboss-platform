@@ -660,6 +660,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'public'                => true,
 						'show_ui'               => bbp_allow_topic_tags() && current_user_can( 'bbp_topic_tags_admin' ),
 						'show_in_menu'          => false,
+						'show_in_rest'          => true,
 						'source'                => 'bbpress',
 					)
 				)
