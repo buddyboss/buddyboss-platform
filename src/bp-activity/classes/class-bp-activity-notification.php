@@ -149,6 +149,39 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
+		$notification = bp_notifications_get_notification( $notification_id );
+
+		if ( ! empty( $notification ) && 'bb_following_new' === $notification->component_action ) {
+
+			$user_id           = $secondary_item_id;
+			$user_fullname     = bp_core_get_user_displayname( $user_id );
+			$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_core_get_user_domain( $user_id ) );
+
+			if ( 'web_push' === $screen ) {
+				$text = esc_html__( 'Started following you', 'buddyboss' );
+			} else {
+				$text = sprintf(
+				/* translators: %s: User full name. */
+					__( '%1$s started following you', 'buddyboss' ),
+					$user_fullname
+				);
+			}
+
+			$content = apply_filters(
+				'bb_activity_single_' . $notification->component_action . '_notification',
+				array(
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => $user_fullname,
+					'image' => bb_notification_avatar_url( $notification ),
+				),
+				$notification,
+				$notification_link,
+				$text,
+				$screen
+			);
+		}
+
 		return $content;
 	}
 
@@ -849,82 +882,5 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			array( 'bb_following_new' ),
 			17
 		);
-
-		add_filter( 'bp_activity_bb_following_new_notification', array( $this, 'bb_activity_bb_following_new_notification' ), 10, 7 );
-	}
-
-	/**
-	 * Format the notifications for following.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $content           Notification content.
-	 * @param int    $item_id           Notification item ID.
-	 * @param int    $secondary_item_id Notification secondary item ID.
-	 * @param int    $total_items       Number of notifications with the same action.
-	 * @param string $format            Format of return. Either 'string' or 'object'.
-	 * @param int    $notification_id   Notification ID.
-	 * @param string $screen            Notification Screen type.
-	 *
-	 * @return array|string
-	 */
-	public function bb_activity_bb_following_new_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
-		$notification = bp_notifications_get_notification( $notification_id );
-
-		if ( ! empty( $notification ) && 'bb_following_new' === $notification->component_action ) {
-
-			$user_id           = $secondary_item_id;
-			$user_fullname     = bp_core_get_user_displayname( $user_id );
-			$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_core_get_user_domain( $user_id ) );
-
-			if ( 'web_push' === $screen ) {
-				$text = __( 'Started following you', 'buddyboss' );
-			} else {
-				$text = sprintf(
-				/* translators: %s: User full name. */
-					__( '%1$s started following you', 'buddyboss' ),
-					$user_fullname
-				);
-			}
-
-			$content = apply_filters(
-				'bb_activity_single_' . $notification->component_action . '_notification',
-				array(
-					'link'  => $notification_link,
-					'text'  => $text,
-					'title' => $user_fullname,
-					'image' => bb_notification_avatar_url( $notification ),
-				),
-				$notification,
-				$notification_link,
-				$text,
-				$screen
-			);
-		}
-
-		// Validate the return value & return if validated.
-		if (
-			! empty( $content ) &&
-			is_array( $content ) &&
-			isset( $content['text'] ) &&
-			isset( $content['link'] )
-		) {
-			if ( 'string' === $format ) {
-				if ( empty( $content['link'] ) ) {
-					$content = esc_html( $content['text'] );
-				} else {
-					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
-				}
-			} else {
-				$content = array(
-					'text'  => $content['text'],
-					'link'  => $content['link'],
-					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
-					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
-				);
-			}
-		}
-
-		return $content;
 	}
 }

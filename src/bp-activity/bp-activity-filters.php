@@ -3395,7 +3395,7 @@ add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object $follower Contains following data.
+ * @param BP_Activity_Follow $follower Contains following data.
  */
 function bb_send_email_to_follower( $follower ) {
 
