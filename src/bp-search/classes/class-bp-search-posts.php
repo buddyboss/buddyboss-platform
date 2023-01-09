@@ -301,7 +301,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param string $search_term Search string.
-		 * @param string $search_type
+		 * @param string $search_type Search type.
 		 *
 		 * @return int Total result count.
 		 */
