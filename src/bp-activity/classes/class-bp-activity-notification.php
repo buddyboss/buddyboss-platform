@@ -570,9 +570,11 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 			if (
-				isset( $enabled_all_notification['bb_activity_following_post'] ) &&
-				! empty( $enabled_all_notification['bb_activity_following_post']['main'] ) &&
-				'yes' === $enabled_all_notification['bb_activity_following_post']['main']
+				( isset( $enabled_all_notification['bb_activity_following_post'] ) &&
+				  ! empty( $enabled_all_notification['bb_activity_following_post']['main'] ) &&
+				  'yes' === $enabled_all_notification['bb_activity_following_post']['main']
+				) ||
+				! isset( $enabled_all_notification['bb_following_new'] )
 			) {
 				$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
 			} else {
@@ -834,9 +836,12 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 			if (
-				isset( $enabled_all_notification['bb_following_new'] ) &&
-				! empty( $enabled_all_notification['bb_following_new']['main'] ) &&
-				'yes' === $enabled_all_notification['bb_following_new']['main']
+				(
+					isset( $enabled_all_notification['bb_following_new'] ) &&
+					! empty( $enabled_all_notification['bb_following_new']['main'] ) &&
+					'yes' === $enabled_all_notification['bb_following_new']['main']
+				) ||
+				! isset( $enabled_all_notification['bb_following_new'] )
 			) {
 				$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
 			} else {
