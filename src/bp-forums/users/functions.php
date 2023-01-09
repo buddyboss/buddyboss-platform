@@ -1116,13 +1116,12 @@ function bbp_remove_user_forum_subscription( $user_id, $forum_id ) {
 	// Check if subscription is existed or not?.
 	$subscriptions = bb_get_subscriptions(
 		array(
-			'type'              => 'forum',
-			'user_id'           => $user_id,
-			'item_id'           => $forum_id,
-			'secondary_item_id' => $forum->post_parent,
-			'count'             => false,
-			'cache'             => false,
-			'status'            => null,
+			'type'    => 'forum',
+			'user_id' => $user_id,
+			'item_id' => $forum_id,
+			'count'   => false,
+			'cache'   => false,
+			'status'  => null,
 		),
 		true
 	);
@@ -1172,13 +1171,12 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
 	// Check if subscription is existed or not?.
 	$subscriptions = bb_get_subscriptions(
 		array(
-			'type'              => 'topic',
-			'user_id'           => $user_id,
-			'item_id'           => $topic_id,
-			'secondary_item_id' => $topic->post_parent,
-			'count'             => false,
-			'cache'             => false,
-			'status'            => null,
+			'type'    => 'topic',
+			'user_id' => $user_id,
+			'item_id' => $topic_id,
+			'count'   => false,
+			'cache'   => false,
+			'status'  => null,
 		),
 		true
 	);
