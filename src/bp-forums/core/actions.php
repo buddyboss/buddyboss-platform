@@ -304,6 +304,8 @@ add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 
 add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
 
+add_action( 'wp_footer', 'bb_forum_add_content_popup' );
+
 /**
  * Register the forum notifications.
  *
@@ -556,4 +558,34 @@ function bb_post_topic_reply_draft() {
 			'draft_activity' => $draft_topic_reply,
 		)
 	);
+}
+
+/**
+ * Function add pop up for single page forum content.
+ *
+ * @since BuddyBoss 2.2.1
+ */
+function bb_forum_add_content_popup() {
+	?>
+	<!-- Forum description popup -->
+	<div class="bb-action-popup" id="single-forum-description-popup" style="display: none">
+		<transition name="modal">
+			<div class="modal-mask bb-white bbm-model-wrap">
+				<div class="modal-wrapper">
+					<div class="modal-container">
+						<header class="bb-model-header">
+							<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
+							<a class="bb-close-action-popup bb-model-close-button" href="#">
+								<span class="bb-icon-l bb-icon-times"></span>
+							</a>
+						</header>
+						<div class="bb-action-popup-content">
+							<?php bbp_forum_content(); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</transition>
+	</div> <!-- .bb-action-popup -->
+	<?php
 }

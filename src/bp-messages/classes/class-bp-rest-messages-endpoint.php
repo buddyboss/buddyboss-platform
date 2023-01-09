@@ -628,7 +628,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( ! isset( $message->id ) || ! is_int( $message->id ) ) {
 			return new WP_Error(
 				'bp_rest_messages_create_failed',
-				__( 'There was an error trying to create the message.', 'buddyboss' ),
+				__( 'There was a problem sending your message.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -800,6 +800,14 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request->get_param( 'exclude' ) ) ) {
 			$args['exclude'] = $request->get_param( 'exclude' );
+		}
+
+		$is_blocked_by_users = function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids( get_current_user_id() ) : array();
+		if ( ! empty( $is_blocked_by_users ) ) {
+			if ( ! empty( $request->get_param( 'exclude' ) ) ) {
+				$is_blocked_by_users = array_merge( $is_blocked_by_users, $request->get_param( 'exclude' ) );
+			}
+			$args['exclude'] = $is_blocked_by_users;
 		}
 
 		if ( ! empty( $group_id ) ) {
@@ -1262,7 +1270,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( ! in_array( $user_id, $recipient_ids, true ) ) {
 			return new WP_Error(
 				'bp_rest_messages_delete_thread_failed',
-				__( 'There was an error trying to delete the thread.', 'buddyboss' ),
+				__( 'There was a problem deleting your conversation.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -1305,7 +1313,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				}
 			}
 		}
-
 
 		if ( bp_is_active( 'notifications' ) ) {
 			// Delete Message Notifications.
@@ -1547,6 +1554,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 		add_filter( 'embed_post_id', array( $this, 'bb_get_the_thread_message_id' ) );
 
+		$message_rendered = apply_filters( 'bp_get_the_thread_message_content', $message->message );
+		$message_rendered = preg_replace( '#(<p></p>)#', '<p><br></p>', $message_rendered );
+
 		$data = array(
 			'id'                        => (int) $message->id,
 			'thread_id'                 => (int) $message->thread_id,
@@ -1557,7 +1567,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			),
 			'message'                   => array(
 				'raw'      => wp_strip_all_tags( $message->message ),
-				'rendered' => apply_filters( 'bp_get_the_thread_message_content', $message->message ),
+				'rendered' => $message_rendered,
 			),
 			'date_sent'                 => bp_rest_prepare_date_response( $message->date_sent ),
 			'display_date'              => bp_core_time_since( $message->date_sent ),
@@ -1738,7 +1748,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 		$excerpt = '';
 		if ( isset( $thread->last_message_content ) ) {
-			$excerpt = wp_trim_words( wp_strip_all_tags( preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', bp_create_excerpt( $thread->last_message_content, 75, array( 'ending' => '&hellip;' ) ) ) ) );
+			// Added fallback support from api, if first line does not wrap with paragraph tag.
+			$excerpt = apply_filters( 'bp_get_message_thread_content', $thread->last_message_content );
+			$excerpt = wp_trim_words( wp_strip_all_tags( preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', bp_create_excerpt( $excerpt, 75, array( 'ending' => '&hellip;' ) ) ) ) );
 		}
 
 		$group_id      = bp_messages_get_meta( $thread->last_message_id, 'group_id', true );
@@ -1873,6 +1885,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		// Total recipients counts.
 		$total_recipients = ( isset( $thread->total_recipients_count ) ? $thread->total_recipients_count : ( ( isset( $thread->recipients ) && count( $thread->recipients ) > 1 ) ? count( $thread->recipients ) - ( isset( $request['user_id'] ) && ! empty( $request['user_id'] ) ? 1 : 0 ) : 0 ) );
 
+		$message_rendered = apply_filters( 'bp_get_message_thread_content', $thread->last_message_content );
+		$message_rendered = preg_replace( '#(<p></p>)#', '<p><br></p>', $message_rendered );
+
 		$data = array(
 			'id'                        => $thread->thread_id,
 			'message_id'                => $thread->last_message_id,
@@ -1887,7 +1902,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			),
 			'message'                   => array(
 				'raw'      => $thread->last_message_content,
-				'rendered' => apply_filters( 'bp_get_message_thread_content', $thread->last_message_content ),
+				'rendered' => $message_rendered,
 			),
 			'date'                      => bp_rest_prepare_date_response( $thread->last_message_date ),
 			'start_date'                => bp_rest_prepare_date_response( ( isset( $thread->first_message_date ) ? $thread->first_message_date : $thread->last_message_date ) ),
@@ -2877,6 +2892,15 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 		$current_recepient = isset( $recepients[ $user_id ] ) ? $recepients[ $user_id ] : false;
 
+		// Prioritise the archived notice for the app.
+		if ( ! empty( $current_recepient ) && $current_recepient->is_hidden ) {
+			return new WP_Error(
+				'bp_rest_archived_conversation',
+				__( 'You can\'t send messages in conversations you\'ve archived.', 'buddyboss' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
 		$is_group_message_thread = bb_messages_is_group_thread( (int) $thread_id );
 		if ( $is_group_message_thread ) {
 			$first_message = BP_Messages_Thread::get_first_message( $thread_id );
@@ -2969,14 +2993,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					}
 				}
 			}
-		}
-
-		if ( ! empty( $current_recepient ) && $current_recepient->is_hidden ) {
-			return new WP_Error(
-				'bp_rest_archived_conversation',
-				__( 'You can\'t send messages in conversations you\'ve archived.', 'buddyboss' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
 		}
 
 		$user_can_send_message = ( $is_group_message_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : bb_user_can_send_messages( true, $recepients );
