@@ -861,7 +861,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_email_type(
-			'new-follow',
+			'new-follower',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_title'         => __( '[{{{site.name}}}] {{follower.name}} started following you', 'buddyboss' ),

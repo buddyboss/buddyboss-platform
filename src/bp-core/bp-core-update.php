@@ -2185,7 +2185,7 @@ function bb_update_to_2_2_5() {
 		'post_excerpt' => __( "{{follower.name}} started following you.\n\nTo learn more about them, visit their profile: {{{follower.url}}}", 'buddyboss' ),
 	);
 
-	$id = 'new-follow';
+	$id = 'new-follower';
 
 	if (
 		term_exists( $id, bp_get_email_tax_type() ) &&
