@@ -574,7 +574,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				  ! empty( $enabled_all_notification['bb_activity_following_post']['main'] ) &&
 				  'yes' === $enabled_all_notification['bb_activity_following_post']['main']
 				) ||
-				! isset( $enabled_all_notification['bb_following_new'] )
+				! isset( $enabled_all_notification['bb_activity_following_post'] )
 			) {
 				$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
 			} else {
