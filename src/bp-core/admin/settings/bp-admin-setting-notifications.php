@@ -54,7 +54,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
 
 		// Do not change settings when follow is disabled from the Settings -> Activity.
-		if ( false === bp_is_activity_follow_active() ) {
+		if ( function_exists( 'bp_is_activity_follow_active' ) && false === bp_is_activity_follow_active() ) {
 			unset( $enabled_notification['bb_activity_following_post'] );
 			unset( $enabled_notification['bb_following_new'] );
 		}
