@@ -277,17 +277,6 @@ class BP_Messages_Component extends BP_Component {
 				'user_has_access' => $access,
 			);
 
-			// Show "Archived" on the logged-in user's profile only.
-			$sub_nav[] = array(
-				'name'            => __( 'Archived', 'buddyboss' ),
-				'slug'            => 'archived',
-				'parent_url'      => $messages_link,
-				'parent_slug'     => $slug,
-				'screen_function' => 'messages_screen_archived',
-				'position'        => 35,
-				'user_has_access' => $access,
-			);
-
 			/*
 			 * Show "Notices" on the logged-in user's profile only
 			 * and then only if the user can create notices.
