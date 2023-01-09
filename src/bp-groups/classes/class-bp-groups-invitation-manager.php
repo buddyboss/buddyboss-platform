@@ -74,7 +74,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 			return true;
 		}
 
-		// Create the new membership
+		// Create the new membership.
 		$member = new BP_Groups_Member( $r['user_id'], $r['item_id'] );
 
 		if ( 'request' === $type ) {
@@ -87,7 +87,25 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 			return false;
 		}
 
+		// Get the invitation.
+		$r['type']                  = $type;
+		$invites                    = groups_get_invites( $r );
+		$current_invite             = new stdClass();
+		$current_invite->id         = 0;
+		$current_invite->inviter_id = 0;
+		if ( $invites ) {
+			$current_invite = current( $invites );
+		}
+
+		// Tracking group invitation accept.
+		groups_update_membermeta( $member->id, 'membership_accept_date', bp_core_current_time() );
+
 		if ( 'request' === $type ) {
+
+			// Migrate the requested date from invite meta to group member meta.
+			$requested_date = invitation_get_invitemeta( $current_invite->id, 'requested_date' );
+			groups_update_membermeta( $member->id, 'membership_requested_date', $requested_date );
+
 			/**
 			 * Fires after a group membership request has been accepted.
 			 *
@@ -99,12 +117,10 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 			 */
 			do_action( 'groups_membership_accepted', $r['user_id'], $r['item_id'], true );
 		} else {
-			// Get an inviter_id from the invitation.
-			$invites = groups_get_invites( $r );
-			$inviter_id = 0;
-			if ( $invites ) {
-				$inviter_id = current( $invites )->inviter_id;
-			}
+
+			// Migrate the invited date from invite meta to group member meta.
+			$invited_date = invitation_get_invitemeta( $current_invite->id, 'invited_date' );
+			groups_update_membermeta( $member->id, 'membership_invited_date', $invited_date );
 
 			/**
 			 * Fires after a user has accepted a group invite.
@@ -116,7 +132,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 			 * @param int $group_id   ID of the group being accepted to.
 			 * @param int $inviter_id ID of the user who invited this user to the group.
 			 */
-			do_action( 'groups_accept_invite', $r['user_id'], $r['item_id'], $inviter_id );
+			do_action( 'groups_accept_invite', $r['user_id'], $r['item_id'], $current_invite->inviter_id );
 		}
 
 		// Modify group meta.

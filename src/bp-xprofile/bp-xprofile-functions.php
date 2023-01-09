@@ -253,7 +253,7 @@ function bp_xprofile_create_field_type( $type ) {
  */
 function xprofile_insert_field( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'field_id'          => null,
@@ -2133,11 +2133,11 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 				 * Need to check $profile_url is send 200 status or not.
 				 */
 				remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
-				$profile_url      = get_avatar_url( $user_id, array( 'default' => '404' ) );
+				$profile_url = get_avatar_url( $user_id, array( 'default' => '404' ) );
 				add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
 
-				$headers = get_headers($profile_url, 1);
-				if ($headers[0] === 'HTTP/1.1 200 OK') {
+				$headers = get_headers( $profile_url, 1 );
+				if ( $headers[0] === 'HTTP/1.1 200 OK' && isset( $headers['Link'] ) ) {
 					$is_profile_photo_uploaded = 1;
 					++ $grand_completed_fields;
 				}
