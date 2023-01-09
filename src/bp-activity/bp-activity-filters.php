@@ -3416,11 +3416,11 @@ function bb_send_email_to_follower( $follower ) {
 		);
 		$unsubscribe_args              = array(
 			'user_id'           => $following_user_id,
-			'notification_type' => 'new-follow',
+			'notification_type' => 'new-follower',
 		);
 		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 		// Send notification email.
-		bp_send_email( 'new-follow', $following_user_id, $args );
+		bp_send_email( 'new-follower', $following_user_id, $args );
 	}
 
 	if ( bp_is_active( 'notifications' ) ) {
