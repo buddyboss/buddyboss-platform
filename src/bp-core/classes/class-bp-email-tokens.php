@@ -1267,7 +1267,7 @@ class BP_Email_Tokens {
 			case 'groups-invitation':
 				$member_id = isset( $tokens['inviter.id'] ) ? $tokens['inviter.id'] : false;
 				break;
-			case 'new-follow':
+			case 'new-follower':
 				$member_id = isset( $tokens['follower.id'] ) ? $tokens['follower.id'] : false;
 				break;
 		}
