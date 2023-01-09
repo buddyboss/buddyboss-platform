@@ -59,6 +59,12 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 			unset( $enabled_notification['bb_forums_subscribed_reply'] );
 		}
 
+		// Do not change settings when follow is disabled from the Settings -> Activity.
+		if ( function_exists( 'bp_is_activity_follow_active' ) && false === bp_is_activity_follow_active() ) {
+			unset( $enabled_notification['bb_activity_following_post'] );
+			unset( $enabled_notification['bb_following_new'] );
+		}
+
 		if ( ! bb_enabled_legacy_email_preference() ) {
 			$hide_message_notification     = isset( $_POST['hide_message_notification'] ) ? sanitize_text_field( $_POST['hide_message_notification'] ) : 0;
 			$delay_email_notification      = isset( $_POST['delay_email_notification'] ) ? sanitize_text_field( $_POST['delay_email_notification'] ) : 0;
