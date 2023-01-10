@@ -57,6 +57,32 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.2.4 =
+* Activity - Handled activity form not showing issue when media options are disabled
+* Profiles - Handled profile completion widget count UI issue for the RTL language site
+* Profiles - Small improvement to not show unsupported files when uploading profile and cover photo
+* Profiles - Handled the activity feed edit not working issue in the profile > groups tab
+* Profiles - Handled warning and notices issues when gravatar is enabled and profile updated
+* Groups - Handled group member count issue in the dashboard when members get deleted from the network
+* Forums - Small improvements to show pagination for sub-forums on a single forum screen
+* Forums - Handled forum discussion and reply attached documents getting deleted issue after edit
+* Forums - Handled invalid links issue for Forum discussion and replies post author in the profile
+* Media - Small improvements to giphy picker UI and layout
+* Media - Handled video thumbnail not showing issue
+* Media - Handled move document action not working issue when group component is disabled
+* Media - Handled small translation issue for group status on the documents directory screen
+* Messages - Handled join/leave group marks the group message thread unread for all group members
+* Messages - Small improvements to show the loading icon on performing any action on the thread from the messages sidebar
+* Messages - Small formatting improvements for the last message in the messages sidebar and header dropdown
+* Messages - Handled small layout issue when the site URL was posted in the message
+* Messages - Small improvement for external links to open in a new tab
+* Email Invites - Small improvement to allow all invites by email id in the dashboard
+* Moderation - Improved the 'block member' logic for member's profile and directory screen
+* Network Search - Handled search forum discussions by tag not working issue in the search results screen
+* Core - Small improvements for logged-in member's online/offline status
+* LearnDash - Small code refactoring to fix warnings and notices on group courses screen
+* Compatibility - Handled email conflict issue with the 'Instructor Role for LearnDash' plugin
+
 = 2.2.3 =
 * Notifications - Provided new notification type for new activity posts by someone member is following
 
