@@ -110,6 +110,7 @@ window.bp = window.bp || {};
 			},
 
 			sync: function ( method, model, options ) {
+				self            = this;
 				options         = options || {};
 				options.context = this;
 				options.data    = options.data || {};
@@ -118,7 +119,7 @@ window.bp = window.bp || {};
 
 				options.data = _.extend(
 					options.data,
-					this.options
+					self.options
 				);
 
 				var subscription_type = '';
@@ -130,12 +131,12 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Subscriptions.fetchXhr[subscription_type] = bp.apiRequest( options ).done(
 					function ( data, status, request ) {
-						this.options.total_pages = request.getResponseHeader( 'x-wp-totalpages' );
-						this.subscription_items  = data;
+						self.options.total_pages = request.getResponseHeader( 'x-wp-totalpages' );
+						self.subscription_items  = data;
 					}
 				).fail(
 					function ( error ) {
-						this.subscription_items = error;
+						self.subscription_items = error;
 					}
 				);
 
@@ -144,17 +145,7 @@ window.bp = window.bp || {};
 
 			parse: function ( resp ) {
 				return resp;
-			},
-
-				var subscription_type = _.pick( this.options, 'type' );
-
-				if ( ! _.isUndefined( subscription_type.type ) ) {
-					return subscription_type.type;
-				}
-
-				return false;
 			}
-
 		}
 	);
 
@@ -244,7 +235,7 @@ window.bp = window.bp || {};
 				if (
 					! _.isUndefined( bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] ) &&
 					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] !== null &&
-					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].state() != 'resolved'
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].state() !== 'resolved'
 				) {
 					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].abort();
 				}
@@ -355,13 +346,11 @@ window.bp = window.bp || {};
 					id      = current.data( 'subscription-id' ),
 					self    = this;
 
-				// if ( ! id || self.is_delete_request ) {
-				// 	return event;
-				// }
+				if ( ! id ) {
+					return event;
+				}
 
 				event.preventDefault();
-
-				self.is_delete_request = true;
 
 				var options    = {};
 				options.path   = 'buddyboss/v1/subscriptions/' + id;
@@ -413,7 +402,6 @@ window.bp = window.bp || {};
 								]
 							);
 						}
-						// self.is_delete_request = false;
 					}
 				).fail(
 					function () {
@@ -428,7 +416,6 @@ window.bp = window.bp || {};
 							]
 						);
 						current.removeClass( 'is_loading' );
-						// self.is_delete_request = false;
 					}
 				);
 

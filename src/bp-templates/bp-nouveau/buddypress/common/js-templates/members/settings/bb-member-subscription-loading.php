@@ -10,7 +10,7 @@
 ?>
 
 <script type="text/html" id="tmpl-bb-member-subscription-loading">
-	<div class="subscription-items is_loading">
+	<div class="subscription-items-loader is_loading">
 		<div class="subscription-items_loading">
 			<div class="subscription-items-image_loading bb-loading-bg"></div>
 
