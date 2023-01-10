@@ -165,10 +165,6 @@ window.bp = window.bp || {};
 			pagination_params: {
 				total_page     : 0,
 				current_active : 1,
-				left_dots      : false,
-				right_dots     : false,
-				nav_begin      : 0,
-				nav_end        : 0,
 			},
 			is_delete_request: false,
 
