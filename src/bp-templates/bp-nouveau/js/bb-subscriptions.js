@@ -34,6 +34,7 @@ window.bp = window.bp || {};
 			this.views         = new Backbone.Collection();
 			this.subscriptions = [];
 			this.types         = [];
+			this.fetchXhr      = [];
 
 			// Listen to events ("Add hooks!").
 			this.addListeners();
@@ -105,7 +106,7 @@ window.bp = window.bp || {};
 			per_page: BP_Nouveau.subscriptions.per_page,
 
 			initialize: function () {
-				this.options = { page: 1, per_page: this.per_page, _embed: true, total_pages: 1 };
+				this.options = { page: 1, per_page: this.per_page, total_pages: 1 };
 			},
 
 			sync: function ( method, model, options ) {
@@ -120,7 +121,14 @@ window.bp = window.bp || {};
 					this.options
 				);
 
-				bp.apiRequest( options ).done(
+				var subscription_type = '';
+
+				var subscription_options = _.pick( options.data, [ 'type' ] );
+				if ( ! _.isUndefined( subscription_options.type ) ) {
+					subscription_type = subscription_options.type;
+				}
+
+				bp.Nouveau.Subscriptions.fetchXhr[subscription_type] = bp.apiRequest( options ).done(
 					function ( data, status, request ) {
 						this.options.total_pages = request.getResponseHeader( 'x-wp-totalpages' );
 						this.subscription_items  = data;
@@ -137,6 +145,15 @@ window.bp = window.bp || {};
 			parse: function ( resp ) {
 				return resp;
 			},
+
+				var subscription_type = _.pick( this.options, 'type' );
+
+				if ( ! _.isUndefined( subscription_type.type ) ) {
+					return subscription_type.type;
+				}
+
+				return false;
+			}
 
 		}
 	);
@@ -171,6 +188,7 @@ window.bp = window.bp || {};
 				'click a.next': 'gotoPage',
 			},
 			loader: false,
+			ul_view: false,
 			pagination_params: {
 				total_page: 0,
 				current_active: 1,
@@ -186,7 +204,7 @@ window.bp = window.bp || {};
 
 				this.requestSubscriptions();
 
-				var Views = [
+				this.ul_view = [
 					new bp.Nouveau.Subscriptions.View(
 						{
 							tagName: 'ul',
@@ -197,7 +215,7 @@ window.bp = window.bp || {};
 				];
 
 				_.each(
-					Views,
+					this.ul_view,
 					function ( view ) {
 						this.views.add( view );
 					},
@@ -221,6 +239,16 @@ window.bp = window.bp || {};
 					this.collection._byId      = [];
 					this.collection.hideLoader = hideLoader;
 				}
+
+				// Stop pending fetch.
+				if (
+					! _.isUndefined( bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] ) &&
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] !== null &&
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].state() != 'resolved'
+				) {
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].abort();
+				}
+
 				this.collection.fetch(
 					{
 						data: _.pick( this.options, [ 'type', 'page', 'per_page' ] ),
@@ -255,6 +283,8 @@ window.bp = window.bp || {};
 				}
 
 				var self = this;
+
+				this.cleanPagination();
 
 				setTimeout(
 					function () {
@@ -325,9 +355,9 @@ window.bp = window.bp || {};
 					id      = current.data( 'subscription-id' ),
 					self    = this;
 
-				if ( ! id || self.is_delete_request ) {
-					return event;
-				}
+				// if ( ! id || self.is_delete_request ) {
+				// 	return event;
+				// }
 
 				event.preventDefault();
 
@@ -357,11 +387,7 @@ window.bp = window.bp || {};
 							if ( ! _.isUndefined( data.page ) ) {
 								self.getSubscriptionByPage( data.page );
 							} else {
-								current.removeClass( 'is_loading' );
-								current.parents( '.bb-subscription-item' ).remove();
-								if ( 0 === $( '#subscription-items-' + self.options.type + ' li' ).length ) {
-									self.addNoSubscriptionView( self.options.type );
-								}
+								self.getSubscriptionByPage( 1 );
 							}
 
 							jQuery( document ).trigger(
@@ -387,7 +413,7 @@ window.bp = window.bp || {};
 								]
 							);
 						}
-						self.is_delete_request = false;
+						// self.is_delete_request = false;
 					}
 				).fail(
 					function () {
@@ -402,7 +428,7 @@ window.bp = window.bp || {};
 							]
 						);
 						current.removeClass( 'is_loading' );
-						self.is_delete_request = false;
+						// self.is_delete_request = false;
 					}
 				);
 
@@ -421,12 +447,31 @@ window.bp = window.bp || {};
 			},
 
 			getSubscriptionByPage: function ( page ) {
+				// Stop pending fetch.
+				if (
+					! _.isUndefined( bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] ) &&
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] !== null &&
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].state() != 'resolved'
+				) {
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].abort();
+				}
+
 				this.collection.reset();
 				this.cleanPagination();
-				this.loader = new bp.Views.SubscriptionLoading();
-				this.views.add( this.loader );
+
+				var subscription_type = this.getSubscriptionType();
+
+				if ( subscription_type ) {
+					$( '#subscription-items-' + subscription_type ).html( '' );
+				}
+
+				if ( _.isUndefined( this.views.get( this.loader ) ) ) {
+					this.views.add( this.loader );
+				}
+
 				this.collection.options.page           = page;
 				this.collection.options.current_active = page;
+
 				this.collection.fetch(
 					{
 						data: _.pick( this.options, [ 'type', 'page', 'per_page' ] ),
