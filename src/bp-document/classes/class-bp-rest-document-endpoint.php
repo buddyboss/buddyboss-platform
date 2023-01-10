@@ -166,10 +166,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array(
-			'id'   => $upload['id'],
-			'url'  => $upload['url'],
-			'name' => $upload['name'],
-			'type' => $upload['type'],
+			'id'                => $upload['id'],
+			'url'               => $upload['url'],
+			'name'              => $upload['name'],
+			'type'              => $upload['type'],
+			'size'              => $upload['size'],
+			'extension'         => $upload['extension'],
+			'svg_icon'          => $upload['svg_icon'],
+			'svg_icon_download' => $upload['svg_icon_download'],
+			'text'              => $upload['text'],
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -1038,7 +1043,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$status = bp_document_delete( array( 'id' => $id ), true );
+		$status = bp_document_delete( array( 'id' => $id ) );
 
 		// Build the response.
 		$response = new WP_REST_Response();
@@ -1130,17 +1135,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		}
 
-		if ( WP_REST_Server::EDITABLE === $method ) {
-			$key        = 'edit';
-			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the document.', 'buddyboss' ),
-				'type'              => 'integer',
-				'required'          => true,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
-			);
-		}
-
 		$args['content'] = array(
 			'description'       => __( 'Document Content.', 'buddyboss' ),
 			'type'              => 'string',
@@ -1170,6 +1164,19 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
+		if ( WP_REST_Server::EDITABLE === $method ) {
+			$key        = 'edit';
+			$args['id'] = array(
+				'description'       => __( 'A unique numeric ID for the document.', 'buddyboss' ),
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
+			unset( $args['privacy']['default'] );
+		}
 
 		/**
 		 * Filters the method query arguments.
@@ -1358,7 +1365,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $document->attachment_id ) ) {
-			$data['description']  = get_post_field( 'post_content', $document->attachment_id );
+			$data['description']  = wp_specialchars_decode( get_post_field( 'post_content', $document->attachment_id ), ENT_QUOTES );
 			$data['download_url'] = bp_document_download_link( $document->attachment_id, $document->id );
 			$data['extension']    = bp_document_extension( $document->attachment_id );
 			$data['svg_icon']     = bp_document_svg_icon( $data['extension'], $document->attachment_id, 'svg' );
@@ -1412,7 +1419,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 							'<textarea class="document-text-file-data-hidden" style="display: none;">' . wp_kses_post( $file_data ) . '</textarea>' .
 						'</div>' .
 						'<div class="document-expand">' .
-							'<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss' ) . '</a>' .
+							'<a href="#" class="document-expand-anchor"><i class="bb-icon-l bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss' ) . '</a>' .
 						'</div>' .
 					'</div>';
 
@@ -2317,23 +2324,41 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+		$document_id  = bp_activity_get_meta( $activity_id, 'bp_document_id', true );
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
+
+		if ( ! empty( $document_id ) ) {
+			$document_ids[] = $document_id;
+			$document_ids   = array_filter( array_unique( $document_ids ) );
+		}
 
 		if ( empty( $document_ids ) ) {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
+		$documents = $this->assemble_response_data(
+			array(
+				'document_ids' => $document_ids,
+				'sort'         => 'ASC',
+			)
+		);
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'activity' );
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'activity', 'context' => 'view' ) )
+				$this->prepare_item_for_response(
+					$document,
+					$object
+				)
 			);
 		}
 
@@ -2511,11 +2536,22 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$component = $activity['component'];
 		$type      = 'activity_comment' === $activity['type'];
 		$item_id   = $activity['primary_item_id'];
-		if ( true === $type && ! empty( $item_id ) ) {
+
+		if ( ! empty( $item_id ) ) {
 			$parent_activity = new BP_Activity_Activity( $item_id );
-			if ( 'groups' === $parent_activity->component ) {
-				$item_id   = $parent_activity->item_id;
-				$component = 'groups';
+			if ( true === $type ) {
+				if ( 'groups' === $parent_activity->component ) {
+					$item_id   = $parent_activity->item_id;
+					$component = 'groups';
+				}
+			}
+			if ( 'blogs' === $parent_activity->component ||
+			     (
+				     ! empty( $activity['component'] ) &&
+				     'blogs' === $activity['component']
+			     )
+			) {
+				return false;
 			}
 		}
 
@@ -2593,23 +2629,37 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
+		$document_id  = bp_messages_get_meta( $message_id, 'bp_document_id', true );
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
+
+		if ( ! empty( $document_id ) ) {
+			$document_ids[] = $document_id;
+			$document_ids   = array_filter( array_unique( $document_ids ) );
+		}
 
 		if ( empty( $document_ids ) ) {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
+		$documents = $this->assemble_response_data(
+			array(
+				'document_ids' => $document_ids,
+				'sort'         => 'ASC',
+			)
+		);
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'message' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'message' ) )
+				$this->prepare_item_for_response( $document, $object )
 			);
 		}
 
@@ -2752,23 +2802,37 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$document_ids = get_post_meta( $p_id, 'bp_document_ids', true );
+		$document_id  = get_post_meta( $p_id, 'bp_document_id', true );
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
+
+		if ( ! empty( $document_id ) ) {
+			$document_ids[] = $document_id;
+			$document_ids   = array_filter( array_unique( $document_ids ) );
+		}
 
 		if ( empty( $document_ids ) ) {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
+		$documents = $this->assemble_response_data(
+			array(
+				'document_ids' => $document_ids,
+				'sort'         => 'ASC',
+			)
+		);
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'forums' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'forums' ) )
+				$this->prepare_item_for_response( $document, $object )
 			);
 		}
 

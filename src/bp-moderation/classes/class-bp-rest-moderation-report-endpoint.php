@@ -85,11 +85,13 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$reports_terms = get_terms( 'bpm_category', array( 'hide_empty' => false ) );
 		if ( ! empty( $reports_terms ) ) {
 			foreach ( $reports_terms as $reports_term ) {
+				$show_when           = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
 				$fields['options'][] = array(
 					'id'                => $reports_term->term_id,
 					'type'              => 'option',
-					'name'              => esc_html( $reports_term->name ),
-					'description'       => esc_html( $reports_term->description ),
+					'name'              => wp_specialchars_decode( $reports_term->name ),
+					'description'       => wp_specialchars_decode( $reports_term->description ),
+					'show_when'         => ! empty( $show_when ) ? $show_when : 'content',
 					'is_default_option' => ( 1 === $count++ ),
 					'value'             => esc_attr( $reports_term->term_id ),
 				);
@@ -101,6 +103,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			'type'              => 'option',
 			'name'              => esc_html__( 'Other', 'buddyboss' ),
 			'description'       => '',
+			'show_when'         => 'content_members',
 			'is_default_option' => ( 1 === $count ),
 			'value'             => 'other',
 		);
@@ -271,9 +274,12 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
+			$message = ( BP_Moderation_Members::$moderation_type_report === $item_sub_type ) ?
+			__( 'You have already reported this Member.', 'buddyboss' ) :
+			__( 'Sorry, Already reported this item.', 'buddyboss' );
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
-				__( 'Sorry, Already reported this item.', 'buddyboss' ),
+				$message,
 				array(
 					'status' => 400,
 				)
@@ -282,6 +288,10 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 
 		$args['content_id']   = $item_sub_id;
 		$args['content_type'] = $item_sub_type;
+
+		if ( BP_Moderation_Members::$moderation_type_report === $item_sub_type ) {
+			$args['user_report'] = 1;
+		}
 
 		$report = bp_moderation_add( $args );
 
@@ -431,6 +441,8 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $video->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $video->activity_id, BP_Suspend_Activity::$type );
 			}
+		} elseif ( BP_Moderation_Members::$moderation_type_report === $request['item_type'] ) {
+			$report_links = $this->prepare_report_link( $request['item_id'], $request['item_type'] );
 		}
 
 		$links = array_merge( (array) $report_links, (array) $request_links );
@@ -520,6 +532,21 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			case BP_Suspend_Video::$type:
 				$links['video'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/video/' . $item_id ),
+					'embeddable' => true,
+				);
+				break;
+			case BP_Moderation_Members::$moderation_type_report:
+				$links['member'] = array(
+					'href'       => add_query_arg(
+						array( 'username_visible' => 1 ),
+						rest_url( bp_rest_get_user_url( $item_id ) )
+					),
+					'embeddable' => true,
+				);
+				break;
+			case BP_Suspend_Comment::$type:
+				$links['comment'] = array(
+					'href'       => rest_url( '/wp/v2/comments/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
