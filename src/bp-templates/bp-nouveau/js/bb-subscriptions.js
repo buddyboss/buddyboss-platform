@@ -441,8 +441,8 @@ window.bp = window.bp || {};
 				self.views.add(
 					new bp.Views.MemberNoSubscription(
 						{
-							singularLabel: subscription_singular_label,
-							pluralLabel  : subscription_plural_label,
+							singularLabel: subscription_singular_label.toLowerCase(),
+							pluralLabel  : subscription_plural_label.toLowerCase(),
 						}
 					)
 				);
