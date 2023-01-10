@@ -225,20 +225,35 @@
 					<span class="thread-excerpt">
 						<span class="last-message-sender">
 							<#
+							var displayName = false;
 							var checkedContent = data.content.replace(/<\/?[^>]+(>|$)/g, '').replace(/^\s+|\s+$/gm,'');
-							if ( data.sender_is_you && '' !== checkedContent ) { #>
+							if ( data.sender_is_you && '' !== checkedContent ) {
+								displayName = true;
+								#>
 								<?php esc_html_e( 'You', 'buddyboss' ); ?>:
-							<# } else if ( data.sender_is_you && '' === checkedContent )  { #>
+							<# } else if ( data.sender_is_you && '' === checkedContent ) {
+								displayName = true;
+								#>
 								<?php esc_html_e( 'You', 'buddyboss' ); ?>
 							<# } else { #>
-								<# if ( senderName && '' !== checkedContent ) { #>
+								<# if ( senderName && '' !== senderName && '' !== checkedContent ) {
+									displayName = true;
+									#>
 									{{ senderName }}:
-								<# } else if ( senderName && '' === checkedContent )  { #>
+								<# } else if ( senderName && '' !== senderName && '' === checkedContent ) {
+									displayName = true;
+									#>
 									{{ senderName }}
 								<# } #>
 							<# } #>
-							</span>
-						{{{data.excerpt}}}
+						</span>
+						<#
+						var dataExcerpt = data.excerpt;
+						if ( dataExcerpt && true === displayName && 'undefined' !== typeof data.has_media && data.has_media ) {
+							dataExcerpt = dataExcerpt.toLowerCase();
+						}
+						#>
+						{{{dataExcerpt}}}
 					</span>
 				<# } #>
 				<div class="thread-date">
