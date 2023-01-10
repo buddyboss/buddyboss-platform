@@ -3492,7 +3492,7 @@ window.bp = window.bp || {};
 							}
 						}
 					);
-				}, 60000 ); // 1 min.
+				}, parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 ); // 1 min.
 			}
 		},
 
