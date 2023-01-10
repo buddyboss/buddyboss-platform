@@ -222,20 +222,24 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
+	 * @param bool $blocked_user_query If true then blocked user query will fire.
+	 *
 	 * @return string|void
 	 */
-	protected function exclude_where_query() {
+	protected function exclude_where_query( $blocked_user_query = true ) {
 		$where = '';
 
 		$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
 		( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
 
-		$blocked_query = $this->blocked_user_query();
-		if ( ! empty( $blocked_query ) ) {
-			if ( ! empty( $where ) ) {
-				$where .= ' AND ';
+		if ( true === $blocked_user_query ) {
+			$blocked_query = $this->blocked_user_query();
+			if ( ! empty( $blocked_query ) ) {
+				if ( ! empty( $where ) ) {
+					$where .= ' AND ';
+				}
+				$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) ) OR {$this->alias}.id IS NULL )";
 			}
-			$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) ) OR {$this->alias}.id IS NULL )";
 		}
 
 		return $where;
