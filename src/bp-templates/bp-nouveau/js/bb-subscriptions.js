@@ -438,19 +438,13 @@ window.bp = window.bp || {};
 				if (
 					! _.isUndefined( bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] ) &&
 					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] !== null &&
-					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].state() != 'resolved'
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].state() !== 'resolved'
 				) {
 					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].abort();
 				}
 
 				this.collection.reset();
 				this.cleanPagination();
-
-				var subscription_type = this.getSubscriptionType();
-
-				if ( subscription_type ) {
-					$( '#subscription-items-' + subscription_type ).html( '' );
-				}
 
 				if ( _.isUndefined( this.views.get( this.loader ) ) ) {
 					this.views.add( this.loader );
