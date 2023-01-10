@@ -1267,7 +1267,7 @@ function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
 		$type = BP_Moderation_Members::$moderation_type;
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql  = $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d AND s.reported != 0", $type, $user_id );
+		$sql  = $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d AND s.reported != 0 AND m.user_report != 1", $type, $user_id );
 		$data = $wpdb->get_col( $sql ); // phpcs:ignore
 		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
 
@@ -1316,7 +1316,7 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 		bp_is_active( 'groups' ) &&
 		(
 			bp_is_group_members() ||
-			bbp_is_forum_group_forum()
+			( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum() )
 		)
 	) {
 		$group_id = bp_get_current_group_id();
