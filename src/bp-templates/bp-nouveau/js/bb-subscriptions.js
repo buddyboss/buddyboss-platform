@@ -165,11 +165,8 @@ window.bp = window.bp || {};
 			pagination_params: {
 				total_page     : 0,
 				current_active : 1,
-				left_dots      : false,
-				right_dots     : false,
-				nav_begin      : 0,
-				nav_end        : 0,
 			},
+			is_delete_request: false,
 
 			initialize: function() {
 				var subscription_type = this.getSubscriptionType();
@@ -313,11 +310,13 @@ window.bp = window.bp || {};
 					id      = current.data( 'subscription-id' ),
 					self    = this;
 
-				if ( ! id ) {
+				if ( ! id || self.is_delete_request ) {
 					return event;
 				}
 
 				event.preventDefault();
+
+				self.is_delete_request = true;
 
 				var options    = {};
 				options.path   = 'buddyboss/v1/subscriptions/' + id;
@@ -373,6 +372,7 @@ window.bp = window.bp || {};
 								]
 							);
 						}
+						self.is_delete_request = false;
 					}
 				).fail(
 					function() {
@@ -387,6 +387,7 @@ window.bp = window.bp || {};
 							]
 						);
 						current.removeClass( 'is_loading' );
+						self.is_delete_request = false;
 					}
 				);
 
@@ -440,8 +441,8 @@ window.bp = window.bp || {};
 				self.views.add(
 					new bp.Views.MemberNoSubscription(
 						{
-							singularLabel: subscription_singular_label,
-							pluralLabel  : subscription_plural_label,
+							singularLabel: subscription_singular_label.toLowerCase(),
+							pluralLabel  : subscription_plural_label.toLowerCase(),
 						}
 					)
 				);
