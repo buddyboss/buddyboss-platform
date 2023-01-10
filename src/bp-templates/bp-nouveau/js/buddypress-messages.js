@@ -2043,6 +2043,10 @@ window.bp = window.bp || {};
 					},
 					0
 				);
+				// Refocus editor
+				if(bp.Nouveau.Messages.mediumEditor.elements.length !== 0) {
+					bp.Nouveau.Messages.mediumEditor.elements[0].focus();
+				}
 			},
 
 			DisableSubmit: function () {
@@ -2055,6 +2059,10 @@ window.bp = window.bp || {};
 
 			EnableSubmit: function () {
 				window.messageUploaderInProgress = false;
+				// Refocus editor once upload completes
+				if(bp.Nouveau.Messages.mediumEditor.elements.length !== 0) {
+					bp.Nouveau.Messages.mediumEditor.elements[0].focus();
+				}
 				this.postValidate();
 			},
 
@@ -2122,74 +2130,76 @@ window.bp = window.bp || {};
 						}
 					);
 
-					bp.Nouveau.Messages.mediumEditor.subscribe( 'editableKeypress', function( event ) {
-						if ( event.keyCode === 13 && ! event.shiftKey ) {
-							event.preventDefault();
-
-							var content = bp.Nouveau.Messages.mediumEditor.getContent();
-							// Add valid line breaks.
-							content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-							content = content.replace( /&nbsp;/g, ' ' );
-
-							var content_text = $( content ).text();
-							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0  ) {
-								if ( jQuery( document ).find( '#bp-messages-send' ).length > 0 ) {
-									jQuery( document ).find( '#bp-messages-send' ).trigger( 'click' );
-								} else {
-									jQuery( document ).find( '#send_reply_button' ).trigger( 'click' );
-								}
-							}
-						}
-
-						// Make Shift + Enter Work same way as Enter for editor
-						if ( event.keyCode === 13 && event.shiftKey ) {
-							var MediumEditorOptDoc = bp.Nouveau.Messages.mediumEditor.options.ownerDocument;
-							var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc ); // jshint ignore:line
-							// Do nothing if caret is in between the text
-							if( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ){ // jshint ignore:line
-								return;
-							}
-
-							// Make sure current node is not list item element
-							if( !MediumEditor.util.isListItem( node ) ) { // jshint ignore:line
+					if ( ! $( 'body' ).hasClass( 'bb-is-mobile' ) ) {
+						bp.Nouveau.Messages.mediumEditor.subscribe( 'editableKeypress', function ( event ) {
+							if ( event.keyCode === 13 && ! event.shiftKey ) {
 								event.preventDefault();
-								var  p = MediumEditorOptDoc.createElement( 'p' );
-								p.innerHTML = '<br>';
-								var newP;
-								// Make sure current node is not inline element
-								if(!MediumEditor.util.isBlockContainer(node)){ // jshint ignore:line
-									// If next element is there add before it else add at the end
-									if(node.parentNode.nextElementSibling){
-										newP = node.parentNode.parentNode.insertBefore(p, node.parentNode.nextSibling);
+
+								var content = bp.Nouveau.Messages.mediumEditor.getContent();
+								// Add valid line breaks.
+								content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+								content = content.replace( /&nbsp;/g, ' ' );
+
+								var content_text = $( content ).text();
+								if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+									if ( jQuery( document ).find( '#bp-messages-send' ).length > 0 ) {
+										jQuery( document ).find( '#bp-messages-send' ).trigger( 'click' );
 									} else {
-										newP = node.parentNode.parentNode.appendChild( p );
-									}
-								} else {
-									// If next element is there add before it else add at the end
-									if(node.nextElementSibling){
-										newP = node.parentNode.insertBefore(p, node.nextSibling);
-									} else {
-										newP = node.parentNode.appendChild( p );
+										jQuery( document ).find( '#send_reply_button' ).trigger( 'click' );
 									}
 								}
-								MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
-								return;
 							}
-							// Add new <li> if cursore is in <ul> or <ol>
-							if( node.parentNode.tagName.toLowerCase() == 'ul' || node.parentNode.tagName.toLowerCase() == 'ol') {
-								var li = MediumEditorOptDoc.createElement('li');
-								var newLI;
-								// if next element is there sdd new <li> before next or at the end
-								if(node.nextElementSibling){
-									newLI = node.parentNode.insertBefore(li, node.nextSibling);
-								} else {
-									newLI = node.parentNode.insertBefore(li, node.parentNode.nextSibling);
+
+							// Make Shift + Enter Work same way as Enter for editor.
+							if ( event.keyCode === 13 && event.shiftKey ) {
+								var MediumEditorOptDoc = bp.Nouveau.Messages.mediumEditor.options.ownerDocument;
+								var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc ); // jshint ignore:line
+								// Do nothing if caret is in between the text.
+								if ( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ) { // jshint ignore:line
+									return;
 								}
-								MediumEditor.selection.moveCursor(MediumEditorOptDoc, newLI); // jshint ignore:line
-								event.preventDefault();
+
+								// Make sure current node is not list item element.
+								if ( ! MediumEditor.util.isListItem( node ) ) { // jshint ignore:line
+									event.preventDefault();
+									var p = MediumEditorOptDoc.createElement( 'p' );
+									p.innerHTML = '<br>';
+									var newP;
+									// Make sure current node is not inline element.
+									if ( ! MediumEditor.util.isBlockContainer( node ) ) { // jshint ignore:line
+										// If next element is there add before it else add at the end.
+										if ( node.parentNode.nextElementSibling ) {
+											newP = node.parentNode.parentNode.insertBefore( p, node.parentNode.nextSibling );
+										} else {
+											newP = node.parentNode.parentNode.appendChild( p );
+										}
+									} else {
+										// If next element is there add before it else add at the end.
+										if ( node.nextElementSibling ) {
+											newP = node.parentNode.insertBefore( p, node.nextSibling );
+										} else {
+											newP = node.parentNode.appendChild( p );
+										}
+									}
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
+									return;
+								}
+								// Add new <li> if cursor is in <ul> or <ol>.
+								if ( node.parentNode.tagName.toLowerCase() == 'ul' || node.parentNode.tagName.toLowerCase() == 'ol' ) {
+									var li = MediumEditorOptDoc.createElement( 'li' );
+									var newLI;
+									// if next element is there add new <li> before next or at the end.
+									if ( node.nextElementSibling ) {
+										newLI = node.parentNode.insertBefore( li, node.nextSibling );
+									} else {
+										newLI = node.parentNode.insertBefore( li, node.parentNode.nextSibling );
+									}
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newLI ); // jshint ignore:line
+									event.preventDefault();
+								}
 							}
-						}
-					} );
+						} );
+					}
 
 					$( document ).on( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function ( event ) {
 
@@ -4080,6 +4090,8 @@ window.bp = window.bp || {};
 								} else {
 									thread.set( { unread: false } );
 								}
+								
+								thread.set( { has_media: response.message.has_media } );
 
 								thread.set( { content: response.message.content } );
 								thread.set( { excerpt: response.message.excerpt } );
@@ -4134,11 +4146,19 @@ window.bp = window.bp || {};
 					this.views.add( new bp.Views.Hook( { extraContent: this.collection.options.beforeLoop, className: 'before-messages-loop' } ), { at: 0 } );
 				}
 
+				var isMobile = window.matchMedia( 'only screen and (max-width: 1080px)' ).matches;
+
 				if ( this.collection.length ) {
 					$( '.bp-messages-threads-list' ).removeClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).removeClass( 'bp-no-messages' );
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 					$( '.message-header-loading' ).addClass( 'bp-hide' );
 					bp.Nouveau.Messages.displayFilters( this.collection );
+					if ( window.location.href === BP_Nouveau.messages.message_url ) {
+						if ( isMobile ) {
+							$( '.bp-messages-container' ).removeClass( 'bp-view-message' );
+						}
+						bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+					}
 				}
 
 				this.collection.hideLoader = false;
@@ -5533,6 +5553,11 @@ window.bp = window.bp || {};
 						},
 						bp.Nouveau.Messages
 					);
+				}
+
+				var isMobile = window.matchMedia( 'only screen and (max-width: 1080px)' ).matches;
+				if ( isMobile ) {
+					$( '.bp-messages-container' ).addClass( 'bp-compose-message' );
 				}
 			},
 

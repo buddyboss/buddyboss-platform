@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.1
  */
 class BB_GFForms_Plugin_Compatibility {
 
@@ -19,7 +19,7 @@ class BB_GFForms_Plugin_Compatibility {
 	 *
 	 * @var self
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.1
 	 */
 	private static $instance = null;
 
@@ -34,7 +34,7 @@ class BB_GFForms_Plugin_Compatibility {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.1
 	 *
 	 * @return Controller|null
 	 */
@@ -60,7 +60,7 @@ class BB_GFForms_Plugin_Compatibility {
 	/**
 	 * Function to fix the gravity form user registration email activation conflict
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.1
 	 */
 	public function bb_fix_gfforms_gfur_email_activation_conflict() {
 
