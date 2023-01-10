@@ -535,6 +535,10 @@
 			display: block;
 			font-weight: 500;
 			line-height: 1.5;
+			white-space: nowrap;
+			max-width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
 
 			a {
 				color: currentColor;
@@ -547,6 +551,10 @@
 			line-height: 1.5;
 			color: $light-text;
 			display: block;
+			white-space: nowrap;
+			max-width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
 
 			strong {
 				font-weight: 500;

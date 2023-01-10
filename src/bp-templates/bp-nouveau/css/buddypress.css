@@ -11888,6 +11888,10 @@ body .bp-messages-user-threads {
   display: block;
   font-weight: 500;
   line-height: 1.5;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .subscription-items .subscription-item_detail .subscription-item_title a {
@@ -11899,6 +11903,10 @@ body .bp-messages-user-threads {
   line-height: 1.5;
   color: #767676;
   display: block;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .subscription-items .subscription-item_detail .subscription-item_meta strong {
