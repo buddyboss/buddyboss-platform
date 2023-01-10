@@ -4756,7 +4756,7 @@ function bp_core_parse_url( $url ) {
 
 	$embed_code = '';
 	$oembed_obj = _wp_oembed_get_object();
-	$is_oembed = $oembed_obj->get_data( $url, array( 'discover' => false ) );
+	$is_oembed  = $oembed_obj->get_data( $url, array( 'discover' => false ) );
 
 	if ( $is_oembed ) {
 		$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
