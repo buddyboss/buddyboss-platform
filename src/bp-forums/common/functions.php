@@ -2217,10 +2217,30 @@ function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
 	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
 }
 
-/*
+/**
+ * Return array of bbPress registered post types
+ *
+ * @since 2.6.0 bbPress (r6813)
+ *
+ * @param array $args Array of arguments to pass into `get_post_types()`
+ *
+ * @return array
+ */
+function bbp_get_post_types( $args = array() ) {
+
+	// Parse args
+	$r = bbp_parse_args( $args, array(
+		'source' => 'bbpress'
+	), 'get_post_types' );
+
+	// Return post types
+	return get_post_types( $r );
+}
+
+/**
  * Assist pagination by returning correct page number for sub-forums.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @uses  get_query_var() To get the 'forum-paged' value.
  *
@@ -2247,24 +2267,4 @@ function bb_get_forum_paged() {
 
 	// Default to first page.
 	return 1;
-}
-
-/**
- * Return array of bbPress registered post types
- *
- * @since 2.6.0 bbPress (r6813)
- *
- * @param array $args Array of arguments to pass into `get_post_types()`
- *
- * @return array
- */
-function bbp_get_post_types( $args = array() ) {
-
-	// Parse args
-	$r = bbp_parse_args( $args, array(
-		'source' => 'bbpress'
-	), 'get_post_types' );
-
-	// Return post types
-	return get_post_types( $r );
 }

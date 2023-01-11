@@ -8278,13 +8278,14 @@ function bb_presence_time_span() {
 /**
  * Function to return the presence default interval time in seconds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @return int
  */
 function bb_presence_default_interval() {
 	return apply_filters( 'bb_presence_default_interval', 60 );
 }
+
 /**
  * Retrieves the number of times a filter has been applied during the current request.
  *
