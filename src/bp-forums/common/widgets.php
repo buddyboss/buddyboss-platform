@@ -655,23 +655,23 @@ class BBP_Forums_Widget extends WP_Widget {
 						?>
 					</span>
 					<?php
+					if ( 0 !== $parent_id ) {
+						$r = array(
+							'before'           => '<ul class="bb-sidebar-forums">',
+							'after'            => '</ul>',
+							'link_before'      => '<li class="bbp-sub-forum">',
+							'link_after'       => '</li>',
+							'count_before'     => ' (',
+							'count_after'      => ')',
+							'count_sep'        => ', ',
+							'separator'        => ' ',
+							'forum_id'         => $widget_query->post->ID,
+							'show_topic_count' => false,
+							'show_reply_count' => false,
+						);
 
-					$r = array(
-						'before'           => '<ul class="bb-sidebar-forums">',
-						'after'            => '</ul>',
-						'link_before'      => '<li class="bbp-sub-forum">',
-						'link_after'       => '</li>',
-						'count_before'     => ' (',
-						'count_after'      => ')',
-						'count_sep'        => ', ',
-						'separator'        => ' ',
-						'forum_id'         => $widget_query->post->ID,
-						'show_topic_count' => false,
-						'show_reply_count' => false,
-					);
-
-					bbp_list_forums( $r );
-
+						bbp_list_forums( $r );
+					}
 					?>
 				</li>
 
