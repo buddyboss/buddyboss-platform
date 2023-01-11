@@ -531,4 +531,4 @@ function bb_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
 	}
 }
 
-add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions_clear_cache_after_update_secondary_item_id', 10, 2 );
+add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions_clear_cache_after_update_secondary_item_id', 10 );

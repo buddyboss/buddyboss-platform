@@ -434,7 +434,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 *
 			 * @param array $r Subscription arguments.
 			 */
-			do_action_ref_array( 'bb_subscriptions_after_update_secondary_item_id', $r );
+			do_action_ref_array( 'bb_subscriptions_after_update_secondary_item_id', array( $r ) );
 
 			return true;
 		}
