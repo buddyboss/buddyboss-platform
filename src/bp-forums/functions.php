@@ -1035,3 +1035,43 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	return $params;
 }
 add_filter( 'bp_core_get_js_strings', 'bb_nouveau_forum_localize_scripts', 10, 1 );
+
+/**
+ * Update the forum/topic subscription when topic and forum merge/split/update parent.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int     $post_id Post ID.
+ * @param WP_Post $post    Post object.
+ */
+function bb_subscription_update_secondary_item( $post_id, $post ) {
+	if ( empty( $post_id ) || empty( $post ) ) {
+		return;
+	}
+
+	// Check the post type.
+	if ( empty( $post->post_type ) || ! in_array( $post->post_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ), true ) ) {
+		return;
+	}
+
+	$subscription_type = '';
+	if ( bbp_get_forum_post_type() === $post->post_type ) {
+		$subscription_type = 'forum';
+	} elseif ( bbp_get_topic_post_type() === $post->post_type ) {
+		$subscription_type = 'topic';
+	}
+
+	if ( empty( $subscription_type ) ) {
+		return;
+	}
+
+	// Update the secondary item ID.
+	BP_Subscriptions::update_secondary_item_id(
+		array(
+			'type'              => $subscription_type,
+			'item_id'           => $post->ID,
+			'secondary_item_id' => $post->post_parent,
+		)
+	);
+}
+add_action( 'edit_post', 'bb_subscription_update_secondary_item', 999 );

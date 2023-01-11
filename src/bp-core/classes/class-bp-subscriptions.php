@@ -385,6 +385,61 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 		}
 
 		/**
+		 * Update the subscription secondary item ID.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Subscription arguments.
+		 *
+		 * @return bool True on success, false on failure.
+		 */
+		public static function update_secondary_item_id( $args = array() ) {
+			global $wpdb;
+
+			$r = bp_parse_args(
+				$args,
+				array(
+					'blog_id'           => get_current_blog_id(),
+					'type'              => '',
+					'item_id'           => 0,
+					'secondary_item_id' => 0,
+				),
+				'bb_update_subscription'
+			);
+
+			// Get table name.
+			$subscription_tbl = self::get_subscription_tbl();
+
+			// phpcs:ignore
+			$update = $wpdb->update(
+				$subscription_tbl,
+				array(
+					'secondary_item_id' => $r['secondary_item_id'],
+				),
+				array(
+					'blog_id' => $r['blog_id'],
+					'type'    => $r['type'],
+					'item_id' => $r['item_id'],
+				)
+			);
+
+			if ( false === $update ) {
+				return false;
+			}
+
+			/**
+			 * Fires after the subscription secondary item ID has been updated.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $r Subscription arguments.
+			 */
+			do_action_ref_array( 'bb_subscriptions_after_update_secondary_item_id', $r );
+
+			return true;
+		}
+
+		/**
 		 * Delete the current subscription.
 		 *
 		 * @since BuddyBoss [BBVERSION]
