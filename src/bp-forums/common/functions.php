@@ -2351,7 +2351,7 @@ function bbp_get_post_types( $args = array() ) {
 /**
  * Assist pagination by returning correct page number for sub-forums.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @uses  get_query_var() To get the 'forum-paged' value.
  *

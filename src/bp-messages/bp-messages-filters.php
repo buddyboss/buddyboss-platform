@@ -188,7 +188,7 @@ function maybe_redirects_to_previous_thread_message() {
 /**
  * Catch links in messages text so target="_blank" and rel=nofollow can be added.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @param string $text Messages text.
  *
@@ -201,7 +201,7 @@ function bb_messages_make_nofollow_filter( $text ) {
 /**
  * Add rel=nofollow to a link.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @param array $matches Items matched by preg_replace_callback() in bb_messages_make_nofollow_filter_callback().
  *
