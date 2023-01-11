@@ -324,7 +324,7 @@ add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
 /**
  * Search forum discussion by tag when enabled the 'Discussion Tags' from the Network search.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @param string $where    Where statement query.
  * @param object $wp_query WP_Query object.

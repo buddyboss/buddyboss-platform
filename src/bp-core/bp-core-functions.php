@@ -8204,7 +8204,7 @@ function bb_presence_time_span() {
 /**
  * Function to return the presence default interval time in seconds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @return int
  */
