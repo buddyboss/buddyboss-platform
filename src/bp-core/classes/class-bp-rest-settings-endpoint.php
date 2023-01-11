@@ -556,7 +556,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$results['bb-presence-interval'] = (
 			function_exists( 'bb_presence_interval' ) ?
-			( bb_presence_interval() <= 60 ? bb_presence_interval() : 60 )
+			( bb_presence_interval() <= 60 ? bb_presence_interval() : bb_presence_default_interval() )
 			: 0
 		);
 
