@@ -373,12 +373,6 @@ window.bp = window.bp || {};
 					function ( data ) {
 						if ( ! _.isUndefined( data.deleted ) ) {
 
-							if ( ! _.isUndefined( data.page ) ) {
-								self.getSubscriptionByPage( data.page );
-							} else {
-								self.getSubscriptionByPage( 1 );
-							}
-
 							jQuery( document ).trigger(
 								'bb_trigger_toast_message',
 								[
@@ -389,6 +383,12 @@ window.bp = window.bp || {};
 									true
 								]
 							);
+
+							if ( ! _.isUndefined( data.page ) ) {
+								self.getSubscriptionByPage( data.page );
+							} else {
+								self.getSubscriptionByPage( 1 );
+							}
 						} else {
 							current.removeClass( 'is_loading' );
 							jQuery( document ).trigger(
