@@ -223,7 +223,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 		);
 	} else {
 		// Delete migration transient.
-		delete_transient( 'bb_migrate_subscriptions_2_2_4' );
+		delete_transient( 'bb_migrate_subscriptions' );
 	}
 }
 
@@ -468,7 +468,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 		bp_core_number_format( $latest_offset )
 	);
 	// Delete migration transient.
-	delete_transient( 'bb_migrate_subscriptions_2_2_4' );
+	delete_transient( 'bb_migrate_subscriptions' );
 
 	// Restore current blog.
 	if ( $switch ) {

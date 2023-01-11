@@ -391,7 +391,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 19251 ) {
-			bb_migrate_subscriptions_2_2_4();
+			bb_update_to_2_2_5();
 		}
 	}
 
@@ -2169,19 +2169,30 @@ function bb_update_to_2_2_4() {
 }
 
 /**
+ * Migrate the subscription.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_5() {
+	bb_migrate_subscriptions();
+}
+
+/**
  * Migrate forum/topic subscription to new table.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
-function bb_migrate_subscriptions_2_2_4() {
-	$is_already_run = get_transient( 'bb_migrate_subscriptions_2_2_4' );
+function bb_migrate_subscriptions() {
+	$is_already_run = get_transient( 'bb_migrate_subscriptions' );
 	if ( $is_already_run ) {
 		return;
 	}
 
-	set_transient( 'bb_migrate_subscriptions_2_2_4', 'yes', HOUR_IN_SECONDS );
+	set_transient( 'bb_migrate_subscriptions', 'yes', HOUR_IN_SECONDS );
 	// Create subscription table.
 	bb_core_install_subscription();
 
