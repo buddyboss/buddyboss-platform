@@ -47,9 +47,17 @@ if ( $is_comment_vid ) {
 		}
 	}
 }
+
+$has_no_thumbnail = '';
+$attachment_full  = bp_get_video_popup_thumb();
+$poster_full      = bp_get_video_activity_thumb();
+
+if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== strpos( $poster_full, 'video-placeholder.jpg' ) ) {
+	$has_no_thumbnail = ' has-no-thumbnail';
+}
 ?>
 
-<div class="bb-activity-video-elem 
+<div class="bb-activity-video-elem
 <?php
 echo esc_attr( bp_get_video_id() ) . ' ';
 echo $video_template->current_video > 2 ? esc_attr( 'hide ' ) : '';
@@ -58,6 +66,7 @@ echo $video_template->video_count > 1 && $video_template->current_video > 0 ? es
 echo $width > $height ? esc_attr( 'bb-horizontal-layout' ) : '';
 echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) : '';
 echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_more_option ' ) : '';
+echo esc_attr( $has_no_thumbnail );
 ?>
 " data-id="<?php echo esc_attr( bp_get_video_id() ); ?>">
 	<div class="video-action-wrap item-action-wrap">
@@ -108,15 +117,15 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 	</div>
 
 	<?php if ( 1 === $video_template->video_count ) { ?>
-		<video playsinline id="video-<?php bp_video_id(); ?>" class="video-js single-activity-video" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" controls poster="<?php bp_video_activity_thumb(); ?>" data-setup='{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2], "fullscreenToggle" : false }'>
+		<video playsinline id="video-<?php bp_video_id(); ?>" class="video-js single-activity-video" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php echo esc_url( $attachment_full ); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" controls poster="<?php echo esc_url( $poster_full ); ?>" data-setup='{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2], "fullscreenToggle" : false }'>
 			<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
 		</video>
 		<p class="bb-video-loader"></p>
 		<?php if ( ! empty( bp_get_video_length() ) ) { ?>
 		<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 		<?php } ?>
-		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
-			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php bp_video_activity_thumb(); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
+		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php echo esc_url( $attachment_full ); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php echo esc_url( $poster_full ); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
 			<?php
 			if ( $video_template->video_count > 3 && 2 === $video_template->current_video ) {
 				$count = $video_template->video_count - 3;
@@ -130,8 +139,8 @@ echo ( $more_video && 2 === $video_template->current_video ) ? esc_attr( ' no_mo
 			<?php } ?>
 		</a>
 	<?php } else { ?>
-		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
-			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php bp_video_activity_thumb(); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
+		<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php echo esc_url( $attachment_full ); ?>" data-activity-id="<?php bp_video_activity_id(); ?>" data-privacy="<?php bp_video_privacy(); ?>" data-parent-activity-id="<?php bp_video_parent_activity_id(); ?>" data-album-id="<?php bp_video_album_id(); ?>" data-group-id="<?php bp_video_group_id(); ?>" data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
+			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php echo esc_url( $poster_full ); ?>" alt="<?php bp_video_title(); ?>" class="lazy" />
 			<?php
 			if ( $video_template->video_count > 3 && 2 === $video_template->current_video ) {
 				$count = $video_template->video_count - 3;
