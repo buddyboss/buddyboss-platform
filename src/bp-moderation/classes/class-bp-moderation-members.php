@@ -215,7 +215,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		if (
 			empty( $username_visible ) &&
 			( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
-			return ' '; //To allow to make this function working bp_core_get_userlink().
+			return '';
 		}
 
 		return $domain;
