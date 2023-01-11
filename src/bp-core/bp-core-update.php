@@ -388,6 +388,9 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 19181 ) {
 			bb_update_to_2_2_4();
+		}
+
+		if ( $raw_db_version < 19251 ) {
 			bb_migrate_subscriptions_2_2_4();
 		}
 	}
