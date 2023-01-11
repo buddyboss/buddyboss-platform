@@ -613,6 +613,9 @@
 		margin: 0;
 		padding: 5px 10px;
 	}
+}
+
+.subscription-items-loader {
 
 	&.is_loading {
 
@@ -637,6 +640,7 @@
 		}
 
 	}
+
 }
 
 /*__ Notification Subscription __*/

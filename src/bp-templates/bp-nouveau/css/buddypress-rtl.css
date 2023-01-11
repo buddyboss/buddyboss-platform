@@ -11962,20 +11962,20 @@ body .bp-messages-user-threads {
   padding: 5px 10px;
 }
 
-.subscription-items.is_loading .subscription-items_loading {
+.subscription-items-loader.is_loading .subscription-items_loading {
   display: flex;
   align-items: center;
   padding: 12px 10px;
 }
 
-.subscription-items.is_loading .subscription-items_loading .subscription-items-image_loading {
+.subscription-items-loader.is_loading .subscription-items_loading .subscription-items-image_loading {
   height: 40px;
   width: 40px;
   margin-left: 12px;
   border-radius: 4px;
 }
 
-.subscription-items.is_loading .subscription-items_loading .subscription-items-text_loading {
+.subscription-items-loader.is_loading .subscription-items_loading .subscription-items-text_loading {
   height: 14px;
   flex: 1;
   max-width: 160px;
@@ -24231,7 +24231,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {

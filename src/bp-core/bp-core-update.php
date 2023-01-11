@@ -387,7 +387,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 19181 ) {
-			bb_migrate_subscriptions_2_2_4();
+			bb_update_to_2_2_4();
 		}
 
 		if ( $raw_db_version < 19281 ) {
@@ -2155,7 +2155,7 @@ function bb_update_to_2_2_3() {
 /**
  * Clear web and api cache on the update.
  *
- * @since BuddyBoss 2.2.4
+ * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
@@ -2217,6 +2217,8 @@ function bb_update_to_2_2_5() {
 			)
 		);
 	}
+
+	bb_migrate_subscriptions();
 }
 
 /**
@@ -2244,13 +2246,13 @@ function bb_update_to_2_2_4() {
  *
  * @return void
  */
-function bb_migrate_subscriptions_2_2_4() {
-	$is_already_run = get_transient( 'bb_migrate_subscriptions_2_2_4' );
+function bb_migrate_subscriptions() {
+	$is_already_run = get_transient( 'bb_migrate_subscriptions' );
 	if ( $is_already_run ) {
 		return;
 	}
 
-	set_transient( 'bb_migrate_subscriptions_2_2_4', 'yes', HOUR_IN_SECONDS );
+	set_transient( 'bb_migrate_subscriptions', 'yes', HOUR_IN_SECONDS );
 	// Create subscription table.
 	bb_core_install_subscription();
 
@@ -2260,5 +2262,3 @@ function bb_migrate_subscriptions_2_2_4() {
 	// Flush the cache to delete all old cached subscriptions.
 	wp_cache_flush();
 }
-
-

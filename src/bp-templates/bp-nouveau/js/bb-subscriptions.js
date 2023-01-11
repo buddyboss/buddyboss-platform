@@ -4,7 +4,7 @@
 window.wp = window.wp || {};
 window.bp = window.bp || {};
 
-( function( exports, $ ) {
+(function ( exports, $ ) {
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -33,8 +33,8 @@ window.bp = window.bp || {};
 		start: function () {
 			this.views         = new Backbone.Collection();
 			this.subscriptions = [];
-			// this.subscription_types = [];
-			this.types = [];
+			this.types         = [];
+			this.fetchXhr      = [];
 
 			// Listen to events ("Add hooks!").
 			this.addListeners();
@@ -48,7 +48,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 		},
 
-		Initialize: function() {
+		Initialize: function () {
 			this.types            = $( '.subscription-views .bb-accordion' );
 			var subscription_list = [];
 			var self              = this;
@@ -59,14 +59,24 @@ window.bp = window.bp || {};
 					function ( item ) {
 						var subscription_type = $( item ).data( 'type' );
 						if ( '' !== subscription_type ) {
-							this.subscriptions[subscription_type] = new bp.Collections.Subscriptions();
+							this.subscriptions[ subscription_type ] = new bp.Collections.Subscriptions();
 
 							// Create the loop view.
-							subscription_list[subscription_type] = new bp.Views.SubscriptionItems( { collection: this.subscriptions[subscription_type], type: subscription_type } );
-							self.views.add( { id: 'subscriptions_' + subscription_type, view: subscription_list[subscription_type] } );
+							subscription_list[ subscription_type ] = new bp.Views.SubscriptionItems(
+								{
+									collection: this.subscriptions[ subscription_type ],
+									type: subscription_type
+								}
+							);
+							self.views.add(
+								{
+									id: 'subscriptions_' + subscription_type,
+									view: subscription_list[ subscription_type ]
+								}
+							);
 
 							var current_panel = $( item ).find( '.bb-accordion_panel' ).get( 0 );
-							subscription_list[subscription_type].inject( current_panel );
+							subscription_list[ subscription_type ].inject( current_panel );
 						}
 					}
 				);
@@ -95,11 +105,12 @@ window.bp = window.bp || {};
 			subscription_items: null,
 			per_page: BP_Nouveau.subscriptions.per_page,
 
-			initialize : function() {
-				this.options = { page: 1, per_page: this.per_page, _embed: true, total_pages: 1 };
+			initialize: function () {
+				this.options = { page: 1, per_page: this.per_page, total_pages: 1 };
 			},
 
-			sync: function( method, model, options ) {
+			sync: function ( method, model, options ) {
+				var self        = this;
 				options         = options || {};
 				options.context = this;
 				options.data    = options.data || {};
@@ -108,40 +119,46 @@ window.bp = window.bp || {};
 
 				options.data = _.extend(
 					options.data,
-					this.options
+					self.options
 				);
 
-				bp.apiRequest( options ).done(
+				var subscription_type = '';
+
+				var subscription_options = _.pick( options.data, [ 'type' ] );
+				if ( ! _.isUndefined( subscription_options.type ) ) {
+					subscription_type = subscription_options.type;
+				}
+
+				bp.Nouveau.Subscriptions.fetchXhr[subscription_type] = bp.apiRequest( options ).done(
 					function ( data, status, request ) {
-						this.options.total_pages = request.getResponseHeader( 'x-wp-totalpages' );
-						this.subscription_items  = data;
+						self.options.total_pages = request.getResponseHeader( 'x-wp-totalpages' );
+						self.subscription_items  = data;
 					}
 				).fail(
-					function( error ) {
-						this.subscription_items = error;
+					function ( error ) {
+						self.subscription_items = error;
 					}
 				);
 
 				return this.subscription_items;
 			},
 
-			parse: function( resp ) {
+			parse: function ( resp ) {
 				return resp;
-			},
-
+			}
 		}
 	);
 
 	// Extend wp.Backbone.View with .prepare() and .inject().
 	bp.Nouveau.Subscriptions.View = bp.Backbone.View.extend(
 		{
-			inject: function( selector ) {
+			inject: function ( selector ) {
 				this.render();
 				$( selector ).html( this.el );
 				this.views.ready();
 			},
 
-			prepare: function() {
+			prepare: function () {
 				if ( ! _.isUndefined( this.model ) && _.isFunction( this.model.toJSON ) ) {
 					return this.model.toJSON();
 				} else {
@@ -153,22 +170,23 @@ window.bp = window.bp || {};
 
 	bp.Views.SubscriptionItems = bp.Nouveau.Subscriptions.View.extend(
 		{
-			tagName  : 'div',
-			className  : 'subscription-items-main',
+			tagName: 'div',
+			className: 'subscription-items-main',
 			events: {
-				'click .subscription-item_remove' : 'removeSubscription',
+				'click .subscription-item_remove': 'removeSubscription',
 				'click a.prev': 'gotoPage',
 				'click a.page': 'gotoPage',
 				'click a.next': 'gotoPage',
 			},
-			loader : false,
+			loader: false,
+			ul_view: false,
 			pagination_params: {
-				total_page     : 0,
-				current_active : 1,
+				total_page: 0,
+				current_active: 1,
 			},
 			is_delete_request: false,
 
-			initialize: function() {
+			initialize: function () {
 				var subscription_type = this.getSubscriptionType();
 
 				// Initialise the loader.
@@ -177,13 +195,19 @@ window.bp = window.bp || {};
 
 				this.requestSubscriptions();
 
-				var Views = [
-					new bp.Nouveau.Subscriptions.View( { tagName: 'ul', id: 'subscription-items-' + subscription_type, className: 'subscription-items' } )
+				this.ul_view = [
+					new bp.Nouveau.Subscriptions.View(
+						{
+							tagName: 'ul',
+							id: 'subscription-items-' + subscription_type,
+							className: 'subscription-items'
+						}
+					)
 				];
 
 				_.each(
-					Views,
-					function( view ) {
+					this.ul_view,
+					function ( view ) {
 						this.views.add( view );
 					},
 					this
@@ -193,9 +217,9 @@ window.bp = window.bp || {};
 				this.collection.on( 'reset', this.cleanContent, this );
 			},
 
-			requestSubscriptions: function( hideLoader ) {
+			requestSubscriptions: function ( hideLoader ) {
 				hideLoader = typeof hideLoader !== 'undefined' ? hideLoader : false;
-				hideLoader = ( 'undefined' !== typeof this.collection.hideLoader && false !== this.collection.hideLoader ) ? this.collection.hideLoader : hideLoader;
+				hideLoader = ('undefined' !== typeof this.collection.hideLoader && false !== this.collection.hideLoader) ? this.collection.hideLoader : hideLoader;
 
 				if ( hideLoader !== true ) {
 					this.collection.reset();
@@ -206,23 +230,33 @@ window.bp = window.bp || {};
 					this.collection._byId      = [];
 					this.collection.hideLoader = hideLoader;
 				}
+
+				// Stop pending fetch.
+				if (
+					! _.isUndefined( bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] ) &&
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] !== null &&
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].state() !== 'resolved'
+				) {
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].abort();
+				}
+
 				this.collection.fetch(
 					{
-						data    : _.pick( this.options, ['type', 'page', 'per_page' ] ),
-						success : _.bind( this.subscriptionFetched, this ),
-						error   : _.bind( this.subscriptionFetchError, this )
+						data: _.pick( this.options, [ 'type', 'page', 'per_page' ] ),
+						success: _.bind( this.subscriptionFetched, this ),
+						error: _.bind( this.subscriptionFetchError, this )
 					}
 				);
 			},
 
-			addThread: function( item ) {
+			addThread: function ( item ) {
 				this.views.add( '.subscription-items', new bp.Views.SubscriptionItem( { item: item.attributes } ) );
 			},
 
-			cleanContent: function() {
+			cleanContent: function () {
 				_.each(
-					this.views._views['.subscription-items'],
-					function( view ) {
+					this.views._views[ '.subscription-items' ],
+					function ( view ) {
 						view.remove();
 					}
 				);
@@ -240,6 +274,8 @@ window.bp = window.bp || {};
 				}
 
 				var self = this;
+
+				this.cleanPagination();
 
 				setTimeout(
 					function () {
@@ -265,14 +301,14 @@ window.bp = window.bp || {};
 
 			},
 
-			cleanPagination: function() {
+			cleanPagination: function () {
 				_.each(
 					this.views._views,
-					function( views ) {
+					function ( views ) {
 						if ( ! _.isUndefined( views ) ) {
 							_.each(
 								views,
-								function( view ) {
+								function ( view ) {
 									if ( ! _.isUndefined( view ) && 'subscription-pagination' === view.el.id ) {
 										view.remove();
 									}
@@ -283,7 +319,7 @@ window.bp = window.bp || {};
 				);
 			},
 
-			getPaginationParams: function() {
+			getPaginationParams: function () {
 				var self = this;
 
 				var current_active = 1;
@@ -292,14 +328,14 @@ window.bp = window.bp || {};
 				}
 
 				self.pagination_params = {
-					total_page     : parseInt( self.collection.options.total_pages ),
-					current_active : parseInt( current_active ),
+					total_page: parseInt( self.collection.options.total_pages ),
+					current_active: parseInt( current_active ),
 				};
 
 				return self.pagination_params;
 			},
 
-			subscriptionFetchError: function() {
+			subscriptionFetchError: function () {
 				if ( this.loader ) {
 					this.loader.remove();
 				}
@@ -310,22 +346,20 @@ window.bp = window.bp || {};
 					id      = current.data( 'subscription-id' ),
 					self    = this;
 
-				if ( ! id || self.is_delete_request ) {
+				if ( ! id ) {
 					return event;
 				}
 
 				event.preventDefault();
 
-				self.is_delete_request = true;
-
 				var options    = {};
 				options.path   = 'buddyboss/v1/subscriptions/' + id;
 				options.method = 'DELETE';
 				options.data   = {
-					type        : self.options.type,
-					page        : self.collection.options.page,
-					per_page    : self.collection.options.per_page,
-					total_pages : self.collection.options.total_pages,
+					type: self.options.type,
+					page: self.collection.options.page,
+					per_page: self.collection.options.per_page,
+					total_pages: self.collection.options.total_pages,
 				};
 
 				var title = current
@@ -336,18 +370,8 @@ window.bp = window.bp || {};
 				current.addClass( 'is_loading' );
 
 				bp.apiRequest( options ).done(
-					function( data ) {
+					function ( data ) {
 						if ( ! _.isUndefined( data.deleted ) ) {
-
-							if ( ! _.isUndefined( data.page ) ) {
-								self.getSubscriptionByPage( data.page );
-							} else {
-								current.removeClass( 'is_loading' );
-								current.parents( '.bb-subscription-item' ).remove();
-								if ( 0 === $( '#subscription-items-' + self.options.type + ' li' ).length ) {
-									self.addNoSubscriptionView( self.options.type );
-								}
-							}
 
 							jQuery( document ).trigger(
 								'bb_trigger_toast_message',
@@ -359,6 +383,12 @@ window.bp = window.bp || {};
 									true
 								]
 							);
+
+							if ( ! _.isUndefined( data.page ) ) {
+								self.getSubscriptionByPage( data.page );
+							} else {
+								self.getSubscriptionByPage( 1 );
+							}
 						} else {
 							current.removeClass( 'is_loading' );
 							jQuery( document ).trigger(
@@ -372,10 +402,9 @@ window.bp = window.bp || {};
 								]
 							);
 						}
-						self.is_delete_request = false;
 					}
 				).fail(
-					function() {
+					function () {
 						jQuery( document ).trigger(
 							'bb_trigger_toast_message',
 							[
@@ -387,13 +416,12 @@ window.bp = window.bp || {};
 							]
 						);
 						current.removeClass( 'is_loading' );
-						self.is_delete_request = false;
 					}
 				);
 
 			},
 
-			gotoPage: function( event ) {
+			gotoPage: function ( event ) {
 				var current = $( event.currentTarget ),
 					page    = current.data( 'page' );
 
@@ -405,28 +433,41 @@ window.bp = window.bp || {};
 				this.getSubscriptionByPage( page );
 			},
 
-			getSubscriptionByPage: function( page ) {
+			getSubscriptionByPage: function ( page ) {
+				// Stop pending fetch.
+				if (
+					! _.isUndefined( bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] ) &&
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ] !== null &&
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].state() !== 'resolved'
+				) {
+					bp.Nouveau.Subscriptions.fetchXhr[ this.getSubscriptionType() ].abort();
+				}
+
 				this.collection.reset();
 				this.cleanPagination();
-				this.loader = new bp.Views.SubscriptionLoading();
-				this.views.add( this.loader );
+
+				if ( _.isUndefined( this.views.get( this.loader ) ) ) {
+					this.views.add( this.loader );
+				}
+
 				this.collection.options.page           = page;
 				this.collection.options.current_active = page;
+
 				this.collection.fetch(
 					{
-						data    : _.pick( this.options, ['type', 'page', 'per_page' ] ),
-						success : _.bind( this.subscriptionFetched, this ),
-						error   : _.bind( this.subscriptionFetchError, this )
+						data: _.pick( this.options, [ 'type', 'page', 'per_page' ] ),
+						success: _.bind( this.subscriptionFetched, this ),
+						error: _.bind( this.subscriptionFetchError, this )
 					}
 				);
 			},
 
-			addNoSubscriptionView: function( type ) {
+			addNoSubscriptionView: function ( type ) {
 				var self = this;
 
 				_.each(
 					self.views._views,
-					function( view ){
+					function ( view ) {
 						if ( ! _.isUndefined( _.first( view ) ) ) {
 							_.first( view ).remove();
 						}
@@ -442,13 +483,13 @@ window.bp = window.bp || {};
 					new bp.Views.MemberNoSubscription(
 						{
 							singularLabel: subscription_singular_label.toLowerCase(),
-							pluralLabel  : subscription_plural_label.toLowerCase(),
+							pluralLabel: subscription_plural_label.toLowerCase(),
 						}
 					)
 				);
 			},
 
-			getSubscriptionType: function() {
+			getSubscriptionType: function () {
 				var subscription_type = _.pick( this.options, 'type' );
 
 				if ( ! _.isUndefined( subscription_type.type ) ) {
@@ -464,8 +505,8 @@ window.bp = window.bp || {};
 		{
 			tagName: 'li',
 			className: 'bb-subscription-item',
-			template  : bp.template( 'bb-subscription-item' ),
-			initialize: function() {
+			template: bp.template( 'bb-subscription-item' ),
+			initialize: function () {
 				this.model = new Backbone.Model(
 					{
 						item: this.options.item
@@ -480,7 +521,7 @@ window.bp = window.bp || {};
 		{
 			tagName: 'div',
 			className: '',
-			template  : bp.template( 'bb-member-subscription-loading' )
+			template: bp.template( 'bb-member-subscription-loading' )
 		}
 	);
 
@@ -489,9 +530,9 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			id: 'subscription-pagination',
 			className: 'bbp-pagination subscription-pagination',
-			template  : bp.template( 'bb-member-subscription-pagination' ),
+			template: bp.template( 'bb-member-subscription-pagination' ),
 
-			initialize: function() {
+			initialize: function () {
 				this.model = new Backbone.Model(
 					{
 						options: this.options
@@ -506,12 +547,12 @@ window.bp = window.bp || {};
 		{
 			tagName: 'div',
 			className: 'subscription-items',
-			template  : bp.template( 'bb-member-no-subscription' ),
-			initialize: function() {
+			template: bp.template( 'bb-member-no-subscription' ),
+			initialize: function () {
 				this.model = new Backbone.Model(
 					{
 						singularLabel: this.options.singularLabel,
-						pluralLabel  : this.options.pluralLabel,
+						pluralLabel: this.options.pluralLabel,
 					}
 				);
 			}
@@ -521,4 +562,4 @@ window.bp = window.bp || {};
 	// Launch BP Nouveau Subscriptions.
 	bp.Nouveau.Subscriptions.start();
 
-} )( bp, jQuery );
+})( bp, jQuery );
