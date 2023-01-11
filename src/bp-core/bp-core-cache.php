@@ -493,3 +493,42 @@ function bb_subscriptions_clear_cache_after_update_status( $type, $item_id ) {
 }
 
 add_action( 'bb_subscriptions_after_update_subscription_status', 'bb_subscriptions_clear_cache_after_update_status', 10, 2 );
+
+
+/**
+ * Clear cache while updating the secondary item ID of the subscriptions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $r Subscription arguments.
+ *
+ * @return void
+ */
+function bb_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
+
+	if ( empty( $r ) ) {
+		return;
+	}
+
+	$subscription_ids = bb_get_subscriptions(
+		array(
+			'type'    => $r['type'],
+			'item_id' => $r['item_id'],
+			'fields'  => 'id',
+		),
+		true
+	);
+
+	if ( ! empty( $subscription_ids['subscriptions'] ) ) {
+		bp_core_reset_incrementor( 'bb_subscriptions' );
+
+		foreach ( $subscription_ids['subscriptions'] as $id ) {
+			wp_cache_delete( $id, 'bb_subscriptions' );
+
+			// Delete the existing subscription cache.
+			bb_subscriptions_clear_bbpress_cache( $id );
+		}
+	}
+}
+
+add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions_clear_cache_after_update_secondary_item_id', 10 );
