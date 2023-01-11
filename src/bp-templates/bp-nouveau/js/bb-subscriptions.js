@@ -110,7 +110,7 @@ window.bp = window.bp || {};
 			},
 
 			sync: function ( method, model, options ) {
-				self            = this;
+				var self        = this;
 				options         = options || {};
 				options.context = this;
 				options.data    = options.data || {};
