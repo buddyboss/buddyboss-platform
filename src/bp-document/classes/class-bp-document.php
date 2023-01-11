@@ -674,7 +674,7 @@ class BP_Document {
 					if ( 'hidden' === $status || 'private' === $status ) {
 						$visibility = esc_html__( 'Group Members', 'buddyboss' );
 					} else {
-						$visibility = ucfirst( $status );
+						$visibility = esc_html__( ucfirst( $status ), 'buddyboss' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
 					}
 				} else {
 					$visibility = '';
