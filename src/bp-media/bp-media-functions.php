@@ -51,15 +51,19 @@ function bp_media_upload() {
 	$name = $attachment->post_title;
 
 	// Generate document attachment preview link.
-	$attachment_id        = base64_encode( 'forbidden_' . $attachment->ID );
-	$attachment_url       = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
-	$attachment_thumb_url = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
+	$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
+	$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
+	$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
+	$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
+	$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
 
 	$result = array(
-		'id'    => (int) $attachment->ID,
-		'thumb' => $attachment_thumb_url,
-		'url'   => $attachment_url,
-		'name'  => esc_attr( $name ),
+		'id'      => (int) $attachment->ID,
+		'thumb'   => $attachment_thumb_url,
+		'medium'  => $attachment_medium,
+		'url'     => $attachment_url,
+		'msg_url' => $attachment_message_url,
+		'name'    => esc_attr( $name ),
 	);
 
 	return $result;
@@ -2793,8 +2797,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity media own.
-					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+					$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2867,8 +2871,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity media own.
-							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+							$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -3448,6 +3452,8 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 			}
 		}
 	}
+
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filters media preview image url.

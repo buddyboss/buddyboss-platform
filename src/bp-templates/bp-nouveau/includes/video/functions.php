@@ -157,7 +157,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'album_delete_error'      => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'video_delete_confirm'    => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
 		'video_enlarge_text'      => __( 'Enlarge', 'buddyboss' ),
-		'video_fullscreen_text'   => __( 'Enter fullscreen', 'buddyboss' ),
+		'video_fullscreen_text'   => __( 'Full screen', 'buddyboss' ),
 		'video_play_text'         => __( 'Play', 'buddyboss' ),
 		'video_pause_text'        => __( 'Pause', 'buddyboss' ),
 		'video_uploaded_text'     => __( 'Uploaded', 'buddyboss' ),
@@ -166,6 +166,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_speed_text'        => __( 'Speed', 'buddyboss' ),
 		'video_skip_back_text'    => __( 'Step Back (5)', 'buddyboss' ),
 		'video_skip_forward_text' => __( 'Step Forward (5)', 'buddyboss' ),
+		'video_picture_in_text'   => __( 'This video is playing in the miniplayer.', 'buddyboss' ),
 	);
 
 	return $params;
