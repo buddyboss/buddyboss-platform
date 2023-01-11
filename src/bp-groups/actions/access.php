@@ -16,6 +16,8 @@ function bp_groups_group_access_protection() {
 		return;
 	}
 
+	global $wp;
+
 	$current_group   = groups_get_current_group();
 	$user_has_access = $current_group->user_has_access;
 	$is_visible      = $current_group->is_visible;
@@ -26,47 +28,18 @@ function bp_groups_group_access_protection() {
 
 		// Always allow access to request-membership.
 		if ( bp_is_current_action( 'request-membership' ) && ! is_user_logged_in() ) {
-			$redirect = bp_get_group_permalink( $current_group );
 
+			$redirect        = bp_get_group_permalink( $current_group );
 			$current_actions = bp_action_variables();
-			if ( bp_is_active( 'forums' ) && ! empty( $current_actions ) && 2 >= count( $current_actions ) && function_exists( 'bbp_get_topic_post_type' ) ) {
-
-				// Get topic.
-				if ( in_array( get_option( '_bbp_topic_slug', 'discussion' ), $current_actions, true ) ) {
-
-					remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
-
-					$topics = get_posts(
-						array(
-							'name'      => bp_action_variable( 1 ),
-							'post_type' => bbp_get_topic_post_type(),
-							'per_page'  => 1,
-						)
-					);
-
-					if ( ! empty( $topics ) && isset( $topics[0] ) ) {
-						$redirect = bbp_get_topic_permalink( $topics[0]->ID );
-					}
-
-					add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
-				} elseif ( function_exists( 'bbp_get_forum_post_type' ) && function_exists( 'bbp_get_public_status_id' ) && function_exists( 'bbp_get_private_status_id' ) && function_exists( 'bbp_get_hidden_status_id' ) ) {
-
-					remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
-					$forums = get_posts(
-						array(
-							'name'        => bp_action_variable( 0 ),
-							'post_type'   => bbp_get_forum_post_type(),
-							'per_page'    => 1,
-							'post_status' => array( bbp_get_public_status_id(), bbp_get_private_status_id(), bbp_get_hidden_status_id() ),
-						)
-					);
-
-					if ( ! empty( $forums ) && isset( $forums[0] ) ) {
-						$redirect = bbp_get_forum_permalink( $forums[0]->ID );
-					}
-
-					add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
-				}
+			if (
+				bp_is_active( 'forums' ) &&
+				! empty( $current_actions ) &&
+				(
+					in_array( get_option( '_bbp_topic_slug', 'discussion' ), $current_actions, true ) ||
+					in_array( get_option( '_bbp_forum_slug', 'forum' ), $current_actions, true )
+				)
+			) {
+				$redirect = str_replace( 'request-membership', get_option( '_bbp_forum_slug', 'forum' ), home_url( $wp->request ) );
 			}
 
 			bp_core_redirect(
