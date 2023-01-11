@@ -451,7 +451,7 @@ add_action( 'admin_menu', 'bp_invites_add_sub_menu_page_admin_menu', 10 );
 /**
  * Function to modify the distinct query.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @param string   $distinct The DISTINCT clause of the query.
  * @param WP_Query $query    The WP_Query instance (passed by reference).
@@ -482,7 +482,7 @@ function bb_invites_modify_posts_distinct_request( $distinct, $query ) {
 /**
  * Function to modify the join query.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @param string   $join  The JOIN clause of the query.
  * @param WP_Query $query The WP_Query instance (passed by reference).
@@ -513,7 +513,7 @@ function bb_invites_modify_posts_join_request( $join, $query ) {
 /**
  * Function to modify the join query.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @param string   $where The WHERE clause of the query.
  * @param WP_Query $query The WP_Query instance (passed by reference).
