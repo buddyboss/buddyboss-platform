@@ -401,6 +401,11 @@ window.bp = window.bp || {};
 		}
 	);
 
+	// Allow only image files
+	BP_Uploader.settings.defaults.filters = _.extend(BP_Uploader.settings.defaults.filters, {mime_types : [
+		{ title : 'Image files', extensions : 'jpg,jpeg,png,gif' },
+	]});
+
 	// BuddyPress Uploader main view
 	bp.Views.Uploader = bp.View.extend(
 		{
