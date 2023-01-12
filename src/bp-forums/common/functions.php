@@ -2276,3 +2276,106 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 		bp_send_email( $email_type, (int) $user_id, $args );
 	}
 }
+
+/**
+ * Function will get all parent ids of the topic replies.
+ *
+ * @since BuddyBoss 2.0.6
+ *
+ * @param int    $topic_id  Topic ID.
+ * @param string $post_type Post type.
+ *
+ * @return array Array of topic parent reply ids.
+ */
+function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
+	global $wpdb;
+
+	// Bail if nothing passed.
+	if ( empty( $topic_id ) ) {
+		return false;
+	}
+	$cache_id   = 'bb_parent_all_' . $topic_id . '_type_' . $post_type . '_parent_ids';
+	$parent_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
+
+	// If nothing is found, build the object.
+	if ( false === $parent_ids ) {
+		$post_status = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
+		// WP_Query arguments.
+		$args               = array(
+			'fields'         => 'ids',
+			'post_parent'    => $topic_id,
+			'posts_per_page' => - 1,
+			'post_type'      => $post_type,
+			'post_status'    => $post_status,
+			'meta_query'     => array(
+				array(
+					'key'     => '_bbp_reply_to',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		);
+
+		$get_replies_parent = new WP_Query( $args );
+
+		if ( ! is_wp_error( $get_replies_parent ) && $get_replies_parent->have_posts() ) {
+			$parent_ids = $get_replies_parent->posts;
+			// Cache the whole WP_Query object in the cache.
+			wp_cache_set( $cache_id, $parent_ids, 'bbpress_posts' );
+		}
+	}
+
+	// Filter and return.
+	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
+}
+
+/**
+ * Return array of bbPress registered post types
+ *
+ * @since 2.6.0 bbPress (r6813)
+ *
+ * @param array $args Array of arguments to pass into `get_post_types()`
+ *
+ * @return array
+ */
+function bbp_get_post_types( $args = array() ) {
+
+	// Parse args
+	$r = bbp_parse_args( $args, array(
+		'source' => 'bbpress'
+	), 'get_post_types' );
+
+	// Return post types
+	return get_post_types( $r );
+}
+
+/**
+ * Assist pagination by returning correct page number for sub-forums.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @uses  get_query_var() To get the 'forum-paged' value.
+ *
+ * @return int Current page number
+ */
+function bb_get_forum_paged() {
+	global $wp_query;
+
+	// Check the query var.
+	if ( get_query_var( 'forum-paged' ) ) {
+		$paged = get_query_var( 'forum-paged' );
+
+		// Check query paged.
+	} elseif ( ! empty( $wp_query->query['forum-paged'] ) ) {
+		$paged = $wp_query->query['forum-paged'];
+	} elseif ( isset( $_GET['forum-paged'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$paged = intval( $_GET['forum-paged'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	}
+
+	// Paged found.
+	if ( ! empty( $paged ) ) {
+		return (int) $paged;
+	}
+
+	// Default to first page.
+	return 1;
+}

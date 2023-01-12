@@ -190,13 +190,20 @@ function bp_document_activity_append_document( $content, $activity ) {
 
 	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
+	$args = array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+	);
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
+		$args['privacy'] = array( 'grouponly' );
+		if ( 'activity_comment' === $activity->type ) {
+			$args['privacy'][] = 'comment';
+		}
+	}
+
+	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		ob_start();
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
@@ -1856,13 +1863,13 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'size'        => $size,
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
+					'full_name'   => esc_attr( basename( $file ) ),
 				);
 
 				if ( 0 === $folder_id && $document->folder_id > 0 ) {
 					$folder_id                    = $document->folder_id;
 					$activity['can_edit_privacy'] = false;
 				}
-
 			}
 		}
 

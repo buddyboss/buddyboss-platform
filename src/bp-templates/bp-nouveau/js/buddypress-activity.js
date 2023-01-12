@@ -1075,6 +1075,14 @@ window.bp = window.bp || {};
 								emojibtn_click: function () {
 									$( '#ac-input-' + activity_id )[0].emojioneArea.hidePicker();
 								},
+
+								picker_show: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+								},
+
+								picker_hide: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+								},
 							}
 						}
 					);

@@ -603,6 +603,16 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
+	@media screen and (max-width: 480px) {
+
+		.has-draft .whats-new-form-footer {
+			flex-direction: column;
+			align-items: center;
+			padding-top: $pad-med;
+		}
+
+	}
+
 	#whats-new-toolbar .post-elements-buttons-item.disable,
 	#whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) {
 		pointer-events: initial;
@@ -871,7 +881,8 @@
 }
 
 #whats-new-toolbar,
-#whats-new-messages-toolbar {
+#whats-new-messages-toolbar,
+#whats-new-formatting-toolbar {
 	position: relative;
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -1022,6 +1033,11 @@
 			.medium-editor-action-more-button b:before {
 				content: "\ee5c";
 				font-family: 'bb-icons'; /* stylelint-disable-line */
+				font-weight: 300;
+			}
+
+			.medium-editor-action-more-button.active b:before {
+				color: #000;
 			}
 
 			> ul {
@@ -1031,10 +1047,10 @@
 				left: 10px;
 				transform: translateX(-50%);
 				background: #fff;
-				border: 1px solid #e7e9eb;
+				border: 1px solid #e1e3e6;
 				box-sizing: border-box;
-				box-shadow: 0 0 6px rgba(0, 0, 0, 0.1), 0 6px 14px rgba(0, 0, 0, 0.16);
-				border-radius: 3px;
+				box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.13);
+				border-radius: 4px;
 				display: none;
 
 				&:after {
@@ -1056,6 +1072,7 @@
 					-webkit-transition: all linear 0.2s;
 					transition: all linear 0.2s;
 					z-index: 101;
+					display: none;
 				}
 
 				button {
@@ -1665,17 +1682,19 @@ div[class*="attached-gif-container"] {
 		video {
 			margin: 0;
 			max-width: 100%;
+			border-radius: 4px;
 		}
 	}
 
 	.gif-play-button {
-		height: 80px;
-		width: 80px;
+		height: 60px;
+		width: 60px;
+		font-size: 60px;
 		position: absolute;
 		left: 50%;
-		margin-left: -40px;
+		margin-left: -30px;
 		top: 50%;
-		margin-top: -40px;
+		margin-top: -30px;
 
 		.bb-icon-play-thin {
 			font-size: 80px;
@@ -1687,16 +1706,18 @@ div[class*="attached-gif-container"] {
 	}
 
 	.gif-icon {
-		background: url(../images/gif-symbol.png) bottom left no-repeat;
+		background: url(../images/GIF.svg) center no-repeat;
 		position: absolute;
-		width: 100%;
-		height: 100%;
 		display: block;
-		bottom: 30px;
-		left: 10px;
-		background-size: 40px 30px;
-		max-width: 40px;
-		max-height: 30px;
+		height: 28px;
+		width: 44px;
+		bottom: 0;
+		left: 0;
+		border-radius: 0 4px 0 0;
+		background-size: 28px;
+		padding: 8px;
+		background-color: #000;
+		opacity: 0.45;
 	}
 }
 
@@ -1716,12 +1737,41 @@ div[class*="attached-gif-container"] {
 		display: block;
 		width: 300px;
 	}
+
+	.gif-alert {
+		justify-content: center;
+		flex-flow: column;
+		min-height: 100px;
+		display: none;
+
+		&.show {
+
+			@include center-vert();
+		}
+
+		[class*="bb-icon"] {
+			// !important used to have these styles globally for all components
+			font-size: 30px !important;
+			color: $black !important;
+			opacity: 0.4;
+		}
+
+		p {
+			color: $black;
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 1.5;
+			opacity: 0.4;
+		}
+
+	}
+
 }
 
 @media screen and (min-width: 768px) {
 
 	.gif-media-search-dropdown.open {
-		width: 360px;
+		width: 320px;
 	}
 
 }

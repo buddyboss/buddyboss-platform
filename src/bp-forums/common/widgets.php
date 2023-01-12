@@ -614,8 +614,7 @@ class BBP_Forums_Widget extends WP_Widget {
 		$widget_query = new WP_Query(
 			array(
 				'post_type'           => bbp_get_forum_post_type(),
-				// 'post_parent'         => $settings['parent_forum'],
-				'post_parent'         => 0,
+				'post_parent'         => $settings['parent_forum'],
 				'post_status'         => bbp_get_public_status_id(),
 				'posts_per_page'      => bbp_get_forums_per_page(),
 				'ignore_sticky_posts' => true,
@@ -648,7 +647,7 @@ class BBP_Forums_Widget extends WP_Widget {
 					<a class="bbp-forum-title" href="<?php bbp_forum_permalink( $widget_query->post->ID ); ?>"><?php bbp_forum_title( $widget_query->post->ID ); ?></a>
 					<span class="topics-count">
 						<?php
-						echo (int) bbp_get_forum_topic_count( $widget_query->post->ID );
+						echo bbp_get_forum_topic_count( $widget_query->post->ID );
 						?>
 					</span>
 					<?php

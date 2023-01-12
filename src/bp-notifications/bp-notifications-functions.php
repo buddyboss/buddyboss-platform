@@ -978,7 +978,11 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
  */
 function bb_notification_exclude_group_message_notification( $component_names ) {
 
-	$hide_message_notification = (bool) bp_get_option( 'hide_message_notification', 1 );
+	if ( ! bp_is_active( 'messages' ) ) {
+		return $component_names;
+	}
+
+	$hide_message_notification = bb_hide_messages_from_notification_enabled();
 
 	if (
 		function_exists( 'bb_enabled_legacy_email_preference' ) &&
@@ -1084,8 +1088,10 @@ function bb_notification_avatar() {
 				$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
 			}
 
+			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
+			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<a href="<?php echo esc_url( $link ); ?>">
+			<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
 				echo bp_core_fetch_avatar(
 					array(
@@ -1097,7 +1103,7 @@ function bb_notification_avatar() {
 				// Get the small icon for the notification which will print beside the avatar.
 				echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
 				?>
-				<?php ( isset( $user ) ? bb_current_user_status( $user->ID ) : '' ); ?>
+				<?php ( isset( $user ) ? bb_user_presence_html( $user->ID ) : '' ); ?>
 			</a>
 			<?php
 		}
@@ -1190,12 +1196,12 @@ function bb_notification_avatar_url( $notification = '' ) {
  *
  * @since BuddyBoss 2.0.2
  *
- * @param string $size         Size of the notification icon, 'full' or 'thumb'.
- * @param object $notification Notification object.
+ * @param string        $size         Size of the notification icon, 'full' or 'thumb'.
+ * @param object|string $notification Notification object.
  *
  * @return void
  */
-function bb_get_default_notification_avatar( $size = 'full', $notification ) {
+function bb_get_default_notification_avatar( $size = 'full', $notification = '' ) {
 	if ( ! in_array( $size, array( 'thumb', 'full' ), true ) ) {
 		$size = 'full';
 	}
@@ -1347,6 +1353,44 @@ function bb_get_notification_conditional_icon( $notification ) {
 				$icon_class = 'bb-icon-f bb-icon-comment-square';
 			}
 
+			break;
+		case 'bb_activity_following_post':
+			$item_id      = $notification->item_id;
+			$activity     = new BP_Activity_Activity( $item_id );
+			$media_ids    = bp_activity_get_meta( $item_id, 'bp_media_ids', true );
+			$document_ids = bp_activity_get_meta( $item_id, 'bp_document_ids', true );
+			$video_ids    = bp_activity_get_meta( $item_id, 'bp_video_ids', true );
+			$gif_data     = bp_activity_get_meta( $item_id, '_gif_data', true );
+			$excerpt      = wp_strip_all_tags( $activity->content );
+
+			if ( '&nbsp;' === $excerpt ) {
+				$excerpt = '';
+			} else {
+				$excerpt = '"' . bp_create_excerpt(
+					$excerpt,
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				) . '"';
+
+				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+				$excerpt = str_replace( '""', '', $excerpt );
+			}
+
+			if ( ! empty( $excerpt ) ) {
+				$icon_class = 'bb-icon-f bb-icon-activity';
+			} elseif ( $media_ids ) {
+				$icon_class = 'bb-icon-f bb-icon-image';
+			} elseif ( $document_ids ) {
+				$icon_class = 'bb-icon-f bb-icon-file-doc';
+			} elseif ( $video_ids ) {
+				$icon_class = 'bb-icon-f bb-icon-video';
+			} elseif ( ! empty( $gif_data ) ) {
+				$icon_class = 'bb-icon-f bb-icon-activity';
+			} else {
+				$icon_class = 'bb-icon-f bb-icon-activity';
+			}
 			break;
 
 	}
@@ -1535,5 +1579,154 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 	}
 
 	return $renderable;
+}
 
+
+/**
+ * Function to check the Hide messages from notifications is enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return bool
+ */
+function bb_hide_messages_from_notification_enabled() {
+	return (bool) apply_filters( 'bb_hide_messages_from_notification_enabled', bp_get_option( 'hide_message_notification', 1 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return bool
+ */
+function bb_delay_email_notifications_enabled() {
+	return (bool) apply_filters( 'bb_delay_email_notifications_enabled', bp_get_option( 'delay_email_notification', 1 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return int
+ */
+function bb_get_delay_email_notifications_time() {
+	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
+}
+
+/**
+ * Function to check the Delay email notifications for new messages is enabled with pusher or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return bool
+ */
+function bb_check_delay_email_notification() {
+	return (bool) ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() );
+}
+
+/**
+ * Function to check current user it offline for sending the push notification.
+ *
+ * @since BuddyBoss 2.2
+ *
+ * @param int $user_id User ID.
+ *
+ * @return bool
+ */
+function bb_can_send_push_notification( $user_id ) {
+	$presence_time = (int) apply_filters( 'bb_push_notification_presence_time', 300 ); // 5 minutes.
+	$user_presence = bb_is_online_user( $user_id, $presence_time );
+	if ( true === $user_presence ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Update notification meta on after save.
+ *
+ * @since BuddyBoss 2.2.3
+ *
+ * @param BP_Notifications_Notification $notification Notification object.
+ */
+function bb_notification_after_save_meta( $notification ) {
+	if (
+		! empty( $notification->id ) &&
+		! empty( $notification->component_action ) &&
+		'bb_activity_following_post' === $notification->component_action &&
+		bp_is_active( 'activity' )
+	) {
+		$activity = new BP_Activity_Activity( $notification->item_id );
+		if ( ! empty( $activity ) && ! empty( $activity->content ) ) {
+			$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
+			if ( ! empty( $usernames ) ) {
+				$user_id     = $notification->user_id;
+				$mention_web = false;
+				$mention_app = false;
+				if ( isset( $usernames[ $user_id ] ) ) {
+					$mention_web = bb_web_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'web' );
+					$mention_app = bb_app_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'app' );
+				}
+
+				bp_notifications_update_meta( $notification->id, 'not_send_app', $mention_app );
+				bp_notifications_update_meta( $notification->id, 'not_send_web', $mention_web );
+			}
+		}
+	}
+}
+
+/**
+ * Manage App push notifation base on mention.
+ *
+ * @since BuddyBoss 2.2.3
+ *
+ * @param string $content           Component action.
+ * @param string $component_name    Notification component ID.
+ * @param string $component_action  Canonical notification action.
+ * @param int    $item_id           Notification item ID.
+ * @param int    $secondary_item_id Notification secondary item ID.
+ * @param int    $notification_id   Notification ID.
+ * @param string $format            Format of return. Either 'string' or 'object'.
+ * @param string $screen            Notification Screen type.
+ *
+ * @return array|mixed
+ */
+function bb_notification_manage_app_push_notification( $content, $component_name, $component_action, $item_id, $secondary_item_id, $notification_id, $format = 'object', $screen = 'web' ) {
+	if (
+		'app_push' !== $screen ||
+		empty( $notification_id ) ||
+		empty( $component_action ) ||
+		'bb_activity_following_post' !== $component_action
+	) {
+		return $content;
+	}
+
+	if ( true === (bool) bp_notifications_get_meta( $notification_id, 'not_send_app', true ) ) {
+		return array();
+	}
+
+	return $content;
+}
+
+add_filter( 'bbapp_get_notification_output', 'bb_notification_manage_app_push_notification', 999, 8 );
+
+/**
+ * Added where condition to exclude not send onscreen notification.
+ *
+ * @since BuddyBoss 2.2.3
+ *
+ * @param string $where_sql Notifications Where sql.
+ * @param string $tbl_alias Table alias.
+ * @param object $r         Query arguments.
+ *
+ * @return string
+ */
+function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias, $r ) {
+	global $bp;
+	$where_sql .= " AND {$tbl_alias}.id NOT IN ( SELECT DISTINCT notification_id from {$bp->notifications->table_name_meta} WHERE meta_key = 'not_send_web' and meta_value = 1 )";
+
+	return $where_sql;
 }

@@ -1197,6 +1197,12 @@ function bp_private_network_template_redirect() {
 				}
 			}
 
+			// If account activate url then it should return.
+			if ( $activate ) {
+				return;
+			}
+
+			// Get excluded list from the settings
 			// Allow the media preview when the Symbolic Links is disabled.
 			$site_url    = get_site_url();
 			$request_url = home_url( add_query_arg( array(), $wp->request ) );

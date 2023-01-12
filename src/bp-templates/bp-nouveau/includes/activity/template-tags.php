@@ -159,8 +159,7 @@ function bp_nouveau_activity_member_post_form() {
 	 */
 	do_action( 'bp_before_member_activity_post_form' );
 
-	$is_main_tab = ! bp_current_action() || strpos( bp_current_action(), 'just-me' ) !== false;
-	if ( is_user_logged_in() && $is_main_tab ) {
+	if ( is_user_logged_in() && bp_is_user_activity() ) {
 		bp_get_template_part( 'activity/post-form' );
 	}
 
@@ -281,9 +280,9 @@ function bp_nouveau_activity_state() {
 				<span class="comments-count">
 					<?php
 					if ( $comment_count > 1 ) {
-						echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
+						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
 					} else {
-						echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
+						printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count );
 					}
 					?>
 				</span>

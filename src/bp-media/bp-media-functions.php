@@ -51,15 +51,19 @@ function bp_media_upload() {
 	$name = $attachment->post_title;
 
 	// Generate document attachment preview link.
-	$attachment_id        = base64_encode( 'forbidden_' . $attachment->ID );
-	$attachment_url       = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
-	$attachment_thumb_url = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
+	$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
+	$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
+	$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
+	$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
+	$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
 
 	$result = array(
-		'id'    => (int) $attachment->ID,
-		'thumb' => $attachment_thumb_url,
-		'url'   => $attachment_url,
-		'name'  => esc_attr( $name ),
+		'id'      => (int) $attachment->ID,
+		'thumb'   => $attachment_thumb_url,
+		'medium'  => $attachment_medium,
+		'url'     => $attachment_url,
+		'msg_url' => $attachment_message_url,
+		'name'    => esc_attr( $name ),
 	);
 
 	return $result;
@@ -1270,14 +1274,14 @@ function bp_media_delete_orphaned_attachments() {
 			'relation' => 'AND',
 			array(
 				'key'   => 'bp_media_saved',
-				'value' => '0'
+				'value' => '0',
 			),
 			array(
 				'key'     => 'bb_media_draft',
 				'compare' => 'NOT EXISTS',
-				'value'   => ''
-			)
-		)
+				'value'   => '',
+			),
+		),
 	);
 
 	$media_wp_query = new WP_query( $args );
@@ -2365,7 +2369,7 @@ function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
  * @return string
  * @since BuddyBoss 1.4.4
  */
-function bp_media_default_scope( $scope ) {
+function bp_media_default_scope( $scope = 'all' ) {
 
 	$new_scope = array();
 
@@ -2398,6 +2402,8 @@ function bp_media_default_scope( $scope ) {
 		}
 	} elseif ( bp_is_user_media() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
 		$new_scope[] = 'personal';
+	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'groups';
 	}
 
 	if ( empty( $new_scope ) ) {
@@ -2791,8 +2797,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity media own.
-					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+					$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2865,8 +2871,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity media own.
-							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+							$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -3447,6 +3453,8 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 		}
 	}
 
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
+
 	/**
 	 * Filters media preview image url.
 	 *
@@ -3972,3 +3980,37 @@ function bb_media_delete_older_symlinks() {
 }
 bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 
+/**
+ * Check the GIPHY key is valid or not.
+ *
+ * @param boolean $api_key GIPHY api key.
+ * @param boolean $message GIPHY api key validation response message.
+ *
+ * @return mixed Whether the giphy key is valid or error object.
+ *
+ * @since BuddyBoss 2.1.2
+ */
+function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
+
+	static $cache = array();
+	$api_key      = ! empty( $api_key ) ? $api_key : bp_media_get_gif_api_key();
+	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
+		if ( true === $message ) {
+			return $cache[ $api_key ];
+		}
+		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
+	}
+
+	if ( empty( $api_key ) ) {
+		return false;
+	}
+
+	$output = wp_remote_get( 'http://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
+	if ( $output ) {
+		$cache[ $api_key ] = $output;
+	}
+	if ( true === $message ) {
+		return $cache[ $api_key ];
+	}
+	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
+}
