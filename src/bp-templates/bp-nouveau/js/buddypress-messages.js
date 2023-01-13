@@ -211,6 +211,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#mass-user-block-list a.report-content', this.messageReportMember );
 			$( document ).on( 'click', '.message_action__list a.reported-content', this.messageReportedMember );
 			$( document ).on( 'click', '.message_action__list .archived-messages a.archived-page', this.openArchivedPage );
+			$( document ).on( 'click', '#no-messages-archived-link a', this.openArchivedPage );
 
 		},
 
@@ -1142,7 +1143,7 @@ window.bp = window.bp || {};
 						if ( bp.Nouveau.Messages.threads.length > 1 ) {
 							// Navigate back to current box.
 							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( thread_id ) );
-							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							bp.Nouveau.Messages.router.navigate( 'archived/view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
 							$( '.bp-messages-container' ).removeClass( 'bp-view-message bp-compose-message' );
 						} else {
 							window.Backbone.trigger( 'relistelements' );
@@ -1299,11 +1300,11 @@ window.bp = window.bp || {};
 
 			// Clear all views.
 			_.each(
-				self.bp.Nouveau.Messages.views.models,
+				bp.Nouveau.Messages.views.models,
 				function( model ) {
 					model.get( 'view' ).remove();
 				},
-				self.bp.Nouveau.Messages
+				bp.Nouveau.Messages
 			);
 
 			// Setup global variables.
@@ -1413,7 +1414,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			// Setup global variables.
-			bp.Nouveau.Messages.is_thread_list_loading = false;
+			bp.Nouveau.Messages.is_thread_list_loading = true;
 			BP_Nouveau.messages.hasThreads             = true;
 			bp.Nouveau.Messages.threadType             = 'archived';
 
@@ -4268,17 +4269,20 @@ window.bp = window.bp || {};
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 					$( '.bp-messages.bp-user-messages-loading' ).remove();
 					$( '.message-header-loading' ).addClass( 'bp-hide' );
+					$( '#subsubnav' ).addClass( 'bp-hide' );
 
 					if ( 'archived' === bp.Nouveau.Messages.threadType ) {
 						this.views.add( new bp.Views.MessagesNoArchivedThreads() );
 					} else {
 						this.views.add( new bp.Views.MessagesNoThreads() );
+						bp.Nouveau.Messages.displayLinkInNoThreads( 'archived' );
 					}
 				} else if ( ! collection.length && ( 'undefined' !== typeof collection.hideLoader && true === collection.hideLoader ) ) {
 					if ( 'archived' === bp.Nouveau.Messages.threadType ) {
 						this.views.add( new bp.Views.MessagesNoArchivedThreads() );
 					} else {
 						this.views.add( new bp.Views.MessagesNoThreads() );
+						bp.Nouveau.Messages.displayLinkInNoThreads( 'archived' );
 					}
 				}
 			},
@@ -5514,7 +5518,7 @@ window.bp = window.bp || {};
 			},
 
 			unhideConversation: function ( event ) {
-				var action = $( event.currentTarget ).data( 'bp-action' ), options = {},
+				var action = $( event.currentTarget ).data( 'bp-action' ),
 					id     = $( event.currentTarget ).data( 'bp-thread-id' );
 
 				if ( ! action ) {
@@ -5523,40 +5527,12 @@ window.bp = window.bp || {};
 
 				event.preventDefault();
 
-				bp.Nouveau.Messages.removeFeedback();
+				// Set thread ID in the modal.
+				this.model.set( 'id', id, { silent: true } );
 
-				$( event.currentTarget ).addClass( 'bp-hide' );
-				$( event.currentTarget ).parent().addClass( 'loading' );
-
-				options.data = {
-					'is_current_thread' : 'yes'
-				};
-
-				bp.Nouveau.Messages.threads.doAction( action, id, options ).done(
-					function ( response ) {
-						if ( ! _.isUndefined( response.toast_message ) && ! _.isEmpty( response.toast_message ) ) {
-							bp.Nouveau.Messages.createCookie( 'bb-thread-unarchive', response.toast_message, 5 );
-						}
-						bp.Nouveau.Messages.createCookie( 'bb-show-detail-page', 'yes', 5 );
-						window.location.href = response.thread_link;
-					}
-				).fail(
-					function ( response ) {
-						jQuery( document ).trigger(
-							'bb_trigger_toast_message',
-							[
-								'',
-								response.feedback,
-								'error',
-								null,
-								true
-							]
-						);
-
-						$( event.currentTarget ).removeClass( 'bp-hide' );
-						$( event.currentTarget ).parent().removeClass( 'loading' );
-					}
-				);
+				// Call action function.
+				bp.Nouveau.Messages.threadAction( event, this );
+				return false;
 			}
 		}
 	);
