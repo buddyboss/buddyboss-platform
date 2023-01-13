@@ -362,10 +362,15 @@ window.bp = window.bp || {};
 					total_pages: self.collection.options.total_pages,
 				};
 
-				var title = current
-					.parents( '.bb-subscription-item' )
-					.find( '.subscription-item_title' )
-					.text();
+				var title = current.parents( '.bb-subscription-item' ).
+							find( '.subscription-item_title' ).
+							text();
+
+				if ( 25 < title.length ) {
+					title = title.substring( 0, 25 ) + '...';
+				} else {
+					title = title + '.';
+				}
 
 				current.addClass( 'is_loading' );
 
@@ -377,7 +382,7 @@ window.bp = window.bp || {};
 								'bb_trigger_toast_message',
 								[
 									'',
-									'<div>' + BP_Nouveau.subscriptions.unsubscribe + '<strong>' + title + '</strong>.</div>',
+									'<div>' + BP_Nouveau.subscriptions.unsubscribe + '<strong>' + title + '</strong></div>',
 									'info',
 									null,
 									true
@@ -395,7 +400,7 @@ window.bp = window.bp || {};
 								'bb_trigger_toast_message',
 								[
 									'',
-									'<div>' + BP_Nouveau.subscriptions.error + '<strong>' + title + '</strong>.</div>',
+									'<div>' + BP_Nouveau.subscriptions.error + '<strong>' + title + '</strong></div>',
 									'error',
 									null,
 									true
