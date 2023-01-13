@@ -10,13 +10,11 @@
 ?>
 
 <script type="text/html" id="tmpl-bb-member-no-subscription">
-	<div class="subscription-items">
-		<p>
-			<#
-				var no_results = BP_Nouveau.subscriptions.no_result;
-					no_results = no_results.replace( "%s", data.pluralLabel );
-				print( no_results );
-			#>
-		</p>
-	</div>
+	<p>
+		<#
+			var no_results = BP_Nouveau.subscriptions.no_result;
+				no_results = no_results.replace( "%s", data.pluralLabel );
+			print( no_results );
+		#>
+	</p>
 </script>
