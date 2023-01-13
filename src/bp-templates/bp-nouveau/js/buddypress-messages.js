@@ -4091,6 +4091,8 @@ window.bp = window.bp || {};
 								} else {
 									thread.set( { unread: false } );
 								}
+								
+								thread.set( { has_media: response.message.has_media } );
 
 								thread.set( { content: response.message.content } );
 								thread.set( { excerpt: response.message.excerpt } );
