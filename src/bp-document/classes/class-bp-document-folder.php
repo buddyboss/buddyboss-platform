@@ -222,7 +222,7 @@ class BP_Document_Folder {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'page'         => 1,               // The current page.
@@ -315,7 +315,7 @@ class BP_Document_Folder {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "f.group_id = {$r['group_id']}";
+			$where_conditions['group'] = "f.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -536,27 +536,6 @@ class BP_Document_Folder {
 			$folders[] = $folder;
 		}
 
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $folders, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with folders.
-		foreach ( $folders as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$folders[ $a_index ]->user_email    = $a_user->user_email;
-				$folders[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$folders[ $a_index ]->user_login    = $a_user->user_login;
-				$folders[ $a_index ]->display_name  = $a_user->display_name;
-			}
-		}
-
 		return $folders;
 	}
 
@@ -620,7 +599,7 @@ class BP_Document_Folder {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'id'           => false,

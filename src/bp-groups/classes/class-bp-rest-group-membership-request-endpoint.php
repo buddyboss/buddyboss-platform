@@ -494,7 +494,6 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-
 		/**
 		 * Filter the group membership request `create_item` permissions check.
 		 *
@@ -681,6 +680,8 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		$user  = bp_rest_get_user( $group_request->user_id );
 		$group = $this->groups_endpoint->get_group_object( $group_request->item_id );
 
+		$response->add_links( $this->prepare_links( $group_request ) );
+
 		/**
 		 * Fires after a group membership request is rejected via the REST API.
 		 *
@@ -705,7 +706,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval        = new WP_Error(
+		$retval = new WP_Error(
 			'bp_rest_authorization_required',
 			__( 'Sorry, you need to be logged in to delete a request.', 'buddyboss' ),
 			array(
@@ -782,7 +783,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
 
-		$response->add_links( $this->prepare_links( $invite, $request ) );
+		$response->add_links( $this->prepare_links( $invite ) );
 
 		/**
 		 * Filter a group invite value returned from the API.
@@ -808,7 +809,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 		$url  = $base . $invite->id;
 
-		$group_id = ( ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) ? $request['group_id'] : 0 );
+		$group_id = ( ! empty( $invite->item_id ) ? $invite->item_id : 0 );
 
 		// Entity meta.
 		$links = array(

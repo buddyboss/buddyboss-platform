@@ -57,10 +57,8 @@ add_action( 'bp_admin_init', 'bp_register_admin_integrations' );
 add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 );
 add_action( 'bp_admin_init', 'bp_check_for_legacy_theme' );
 
-// Hide the Gravatar metabox from the WordPress discussion page.
-if ( function_exists( 'bp_enable_profile_gravatar ' ) && false === bp_enable_profile_gravatar() ) {
-	add_action( 'admin_head', 'bp_remove_avatar_settings_from_options_discussion_page' );
-}
+// Show notice when Profile Avatars is BuddyBoss.
+add_action( 'bp_admin_head', 'bb_discussion_page_show_notice_in_avatar_section' );
 
 // Add a new separator.
 add_action( 'bp_admin_menu', 'bp_admin_separator' );
@@ -292,3 +290,53 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
 	}
 }
+
+/**
+ * Wrapper function to check GIPHY key is valid or not.
+ *
+ * @since BuddyBoss 2.1.2
+ */
+function bb_admin_check_valid_giphy_key() {
+	$response = array(
+		'code'    => 403,
+		'message' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+	);
+
+	$key = filter_input( INPUT_POST, 'key', FILTER_DEFAULT );
+
+	if ( empty( $key ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! bp_is_active( 'media' )  ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['nonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_DEFAULT );
+	$check = 'bb-giphy-connect';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$result = bb_check_valid_giphy_api_key( $key, true );
+
+	if ( $result ) {
+		wp_send_json_success( $result['response'] );
+	}
+
+	wp_send_json_error( $response );
+
+}
+add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giphy_key' );

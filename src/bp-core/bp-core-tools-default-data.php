@@ -24,49 +24,49 @@ function bp_admin_tools_default_data_save() {
 			bp_dd_delete_dummy_members_related_data();
 			bp_delete_option( 'bp_dd_import_users' );
 			$users             = bp_dd_import_users();
-			$imported['users'] = sprintf( __( '%s new members', 'buddyboss' ), number_format_i18n( count( $users ) ) );
+			$imported['users'] = sprintf( __( '%s new members', 'buddyboss' ), bp_core_number_format( count( $users ) ) );
 			bp_dd_update_import( 'users', 'users' );
 		}
 
 		if ( isset( $_POST['bp']['import-profile'] ) && ! bp_dd_is_imported( 'users', 'xprofile' ) ) {
 			$profile             = bp_dd_import_users_profile();
-			$imported['profile'] = sprintf( __( '%s profile field entries', 'buddyboss' ), number_format_i18n( $profile ) );
+			$imported['profile'] = sprintf( __( '%s profile field entries', 'buddyboss' ), bp_core_number_format( $profile ) );
 			bp_dd_update_import( 'users', 'xprofile' );
 		}
 
 		if ( isset( $_POST['bp']['import-friends'] ) && ! bp_dd_is_imported( 'users', 'friends' ) ) {
 			$friends             = bp_dd_import_users_friends();
-			$imported['friends'] = sprintf( __( '%s member connections', 'buddyboss' ), number_format_i18n( $friends ) );
+			$imported['friends'] = sprintf( __( '%s member connections', 'buddyboss' ), bp_core_number_format( $friends ) );
 			bp_dd_update_import( 'users', 'friends' );
 		}
 
 		if ( isset( $_POST['bp']['import-messages'] ) && ! bp_dd_is_imported( 'users', 'messages' ) ) {
 			$messages             = bp_dd_import_users_messages();
-			$imported['messages'] = sprintf( __( '%s private messages', 'buddyboss' ), number_format_i18n( count( $messages ) ) );
+			$imported['messages'] = sprintf( __( '%s private messages', 'buddyboss' ), bp_core_number_format( count( $messages ) ) );
 			bp_dd_update_import( 'users', 'messages' );
 		}
 
 		if ( isset( $_POST['bp']['import-activity'] ) && ! bp_dd_is_imported( 'users', 'activity' ) ) {
 			$activity             = bp_dd_import_users_activity();
-			$imported['activity'] = sprintf( __( '%s personal activity items', 'buddyboss' ), number_format_i18n( $activity ) );
+			$imported['activity'] = sprintf( __( '%s personal activity items', 'buddyboss' ), bp_core_number_format( $activity ) );
 			bp_dd_update_import( 'users', 'activity' );
 		}
 
 		// Import groups
 		if ( isset( $_POST['bp']['import-groups'] ) && ! bp_dd_is_imported( 'groups', 'groups' ) ) {
 			$groups             = bp_dd_import_groups();
-			$imported['groups'] = sprintf( __( '%s new social groups', 'buddyboss' ), number_format_i18n( count( $groups ) ) );
+			$imported['groups'] = sprintf( __( '%s new social groups', 'buddyboss' ), bp_core_number_format( count( $groups ) ) );
 			bp_dd_update_import( 'groups', 'groups' );
 		}
 		if ( isset( $_POST['bp']['import-g-members'] ) && ! bp_dd_is_imported( 'groups', 'members' ) ) {
 			$g_members             = bp_dd_import_groups_members();
-			$imported['g_members'] = sprintf( __( '%s group members (1 user can be in several groups)', 'buddyboss' ), number_format_i18n( count( $g_members ) ) );
+			$imported['g_members'] = sprintf( __( '%s group members (1 user can be in several groups)', 'buddyboss' ), bp_core_number_format( count( $g_members ) ) );
 			bp_dd_update_import( 'groups', 'members' );
 		}
 
 		if ( isset( $_POST['bp']['import-g-activity'] ) && ! bp_dd_is_imported( 'groups', 'activity' ) ) {
 			$g_activity             = bp_dd_import_groups_activity();
-			$imported['g_activity'] = sprintf( __( '%s group activity items', 'buddyboss' ), number_format_i18n( $g_activity ) );
+			$imported['g_activity'] = sprintf( __( '%s group activity items', 'buddyboss' ), bp_core_number_format( $g_activity ) );
 			bp_dd_update_import( 'groups', 'activity' );
 		}
 
@@ -243,11 +243,13 @@ function bp_dd_delete_dummy_forum() {
 	/**
 	 * Delete Forums
 	 */
-	$forums = bp_get_option( 'bp_dd_imported_forum_ids' );
-	if ( ! empty( $forums ) ) {
-		foreach ( (array) $forums as $forum_id ) {
-			wp_delete_post( $forum_id );
-			bbp_delete_forum( $forum_id );
+	if ( bp_is_active( 'forums' ) ) {
+		$forums = bp_get_option( 'bp_dd_imported_forum_ids' );
+		if ( ! empty( $forums ) ) {
+			foreach ( (array) $forums as $forum_id ) {
+				wp_delete_post( $forum_id );
+				bbp_delete_forum( $forum_id );
+			}
 		}
 	}
 }

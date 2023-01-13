@@ -58,7 +58,8 @@ div.bp-cover-image-status .bp-bar {
 /* stylelint-disable selector-id-pattern */
 #buddypress p.warning,
 body.users_page_bp-profile-edit.modal-open #TB_ajaxContent p.warning,
-body.profile_page_bp-profile-edit.modal-open #TB_ajaxContent p.warning {
+body.profile_page_bp-profile-edit.modal-open #TB_ajaxContent p.warning,
+table.form-table td .bb-wordpress-profile-gravatar-warning p.warning {
 	background-color: #ffd;
 	border: 1px solid #cb2;
 	color: #440;
@@ -357,6 +358,11 @@ div.bp-avatar-nav {
 
 /** Admin Profile **/
 /* stylelint-disable selector-id-pattern */
+body.users_page_bp-profile-edit.modal-open #TB_window {
+	width: 830px !important;
+	max-width: 90%;
+}
+
 body.users_page_bp-profile-edit.modal-open #TB_ajaxContent,
 body.profile_page_bp-profile-edit.modal-open #TB_ajaxContent {
 	height: 95% !important;

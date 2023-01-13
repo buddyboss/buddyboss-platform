@@ -1,10 +1,13 @@
 <?php
 /**
- * BuddyBoss Activity templates
+ * The template for BuddyBoss Activity templates
  *
- * @since BuddyPress 2.3.0
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/activity/index.php.
+ *
+ * @since   BuddyPress 2.3.0
+ * @version 1.0.0
  */
+
 ?>
 
 	<?php bp_nouveau_before_activity_directory_content(); ?>

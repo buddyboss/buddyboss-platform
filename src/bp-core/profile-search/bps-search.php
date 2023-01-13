@@ -291,7 +291,7 @@ function bp_ps_filter_members( $qs, $object ) {
 
 	$results = bp_ps_search( $request );
 	if ( $results['validated'] ) {
-		$args  = wp_parse_args( $qs );
+		$args  = bp_parse_args( $qs );
 		$users = $results['users'];
 
 		if ( isset( $args['include'] ) ) {
@@ -330,7 +330,7 @@ function bp_ps_search( $request, $users = null ) {
 		if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
 			continue;
 		}
-		
+
 		if ( ! isset( $f->filter ) ) {
 			continue;
 		}
@@ -344,7 +344,7 @@ function bp_ps_search( $request, $users = null ) {
 		$found = apply_filters( 'bp_ps_field_search_results', $found, $f );
 
 		$copied_arr = $found;
-		if ( isset( $copied_arr ) && ! empty( $copied_arr ) ) {
+		if ( isset( $copied_arr, $f->id ) && ! empty( $copied_arr ) ) {
 			foreach ( $copied_arr as $key => $user ) {
 				$field_visibility = xprofile_get_field_visibility_level( intval( $f->id ), intval( $user ) );
 				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
