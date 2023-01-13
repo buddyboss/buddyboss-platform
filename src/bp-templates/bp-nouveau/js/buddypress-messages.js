@@ -5527,6 +5527,9 @@ window.bp = window.bp || {};
 
 				event.preventDefault();
 
+				$( event.currentTarget ).addClass( 'bp-hide' );
+				$( event.currentTarget ).parent().addClass( 'loading' );
+
 				// Set thread ID in the modal.
 				this.model.set( 'id', id, { silent: true } );
 
