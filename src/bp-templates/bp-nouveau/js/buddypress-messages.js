@@ -1084,7 +1084,7 @@ window.bp = window.bp || {};
 							window.Backbone.trigger( 'relistelements' );
 							BP_Nouveau.messages.hasThreads = false;
 							bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
-							$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+							bp.Nouveau.Messages.displayLinkInNoThreads( 'archived' );
 						}
 					} else if ( 'delete' === action ) {
 
@@ -1101,7 +1101,7 @@ window.bp = window.bp || {};
 							window.Backbone.trigger( 'relistelements' );
 							BP_Nouveau.messages.hasThreads = false;
 							bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
-							$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+							bp.Nouveau.Messages.displayLinkInNoThreads( 'archived' );
 						}
 					} else if ( 'hide_thread' === action ) {
 
@@ -1115,7 +1115,7 @@ window.bp = window.bp || {};
 							window.Backbone.trigger( 'relistelements' );
 							BP_Nouveau.messages.hasThreads = false;
 							bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
-							$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+							bp.Nouveau.Messages.displayLinkInNoThreads( 'archived' );
 						}
 
 						if ( 'undefined' !== typeof window.wp.heartbeat ) {
@@ -1314,6 +1314,7 @@ window.bp = window.bp || {};
 			// Show loader.
 			$( '.bp-messages-container' ).find( '.bp-messages-nav-panel' ).addClass( 'loading' );
 			$( '.message-header-loading' ).removeClass( 'bp-hide' );
+			$( '#subsubnav' ).addClass( 'bp-hide' );
 
 			// Navigate to the un-archived page.
 			bp.Nouveau.Messages.router.navigate( '/', { trigger: true } );
@@ -1429,6 +1430,16 @@ window.bp = window.bp || {};
 
 		stripTrailingSlash: function( str ) {
 			return str.endsWith( '/' ) ? str.slice( 0, -1 ) : str;
+		},
+
+		displayLinkInNoThreads: function( type ) {
+			if ( 'archived' === type ) {
+				$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+				$( '#no-messages-unarchived-link' ).addClass( 'bp-hide' );
+			} else {
+				$( '#no-messages-archived-link' ).addClass( 'bp-hide' );
+				$( '#no-messages-unarchived-link' ).removeClass( 'bp-hide' );
+			}
 		}
 	};
 
@@ -4088,6 +4099,7 @@ window.bp = window.bp || {};
 				if ( bp.Nouveau.Messages.is_thread_list_loading ) {
 					this.loadingFeedback = new bp.Views.MessagesLoading();
 					this.views.add( this.loadingFeedback );
+					bp.Nouveau.Messages.is_thread_list_loading = false;
 				}
 
 				// Load threads for the active view.
@@ -4118,7 +4130,7 @@ window.bp = window.bp || {};
 				$( '.bp-messages.bp-user-messages-loading' ).remove();
 				$( '.bb-messages-no-thread-found' ).remove();
 
-				if ( hideLoader !== true ) {
+				if ( hideLoader !== true && false === this.loadingFeedback ) {
 					$( '.message-header-loading' ).removeClass( 'bp-hide' );
 					this.loadingFeedback = new bp.Views.MessagesLoading();
 					this.views.add( this.loadingFeedback );
@@ -5630,7 +5642,7 @@ window.bp = window.bp || {};
 				$( 'body' ).removeClass( 'view' ).removeClass( 'inbox' ).addClass( 'compose' );
 
 				if ( ! _.isUndefined( BP_Nouveau.archived_threads ) && 0 < BP_Nouveau.archived_threads.length ) {
-					$( '#no-messages-archived-link' ).removeClass( 'bp-hide' );
+					bp.Nouveau.Messages.displayLinkInNoThreads( 'archived' );
 				}
 
 				// Clear filter view.
