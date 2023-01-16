@@ -4273,6 +4273,7 @@ window.bp = window.bp || {};
 
 					if ( 'archived' === bp.Nouveau.Messages.threadType ) {
 						this.views.add( new bp.Views.MessagesNoArchivedThreads() );
+						$( '.bp-messages-content' ).removeClass( 'bp-hide' );
 					} else {
 						this.views.add( new bp.Views.MessagesNoThreads() );
 						bp.Nouveau.Messages.displayLinkInNoThreads( 'archived' );
@@ -4280,6 +4281,7 @@ window.bp = window.bp || {};
 				} else if ( ! collection.length && ( 'undefined' !== typeof collection.hideLoader && true === collection.hideLoader ) ) {
 					if ( 'archived' === bp.Nouveau.Messages.threadType ) {
 						this.views.add( new bp.Views.MessagesNoArchivedThreads() );
+						$( '.bp-messages-content' ).removeClass( 'bp-hide' );
 					} else {
 						this.views.add( new bp.Views.MessagesNoThreads() );
 						bp.Nouveau.Messages.displayLinkInNoThreads( 'archived' );
