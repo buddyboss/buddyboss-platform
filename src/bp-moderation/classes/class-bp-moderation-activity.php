@@ -70,6 +70,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		add_action( 'bp_follow_before_save', array( $this, 'bb_follow_before_save' ) );
 	}
 
 	/**
@@ -536,5 +538,21 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $content_type;
+	}
+
+	/**
+	 * Function to prevent following to that user who has blocked and who is blocked the current user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Activity_Follow $follow Contains following data.
+	 */
+	public function bb_follow_before_save( $follow ) {
+		if (
+			bb_moderation_is_user_blocked_by( $follow->leader_id ) ||
+			bp_moderation_is_user_blocked( $follow->leader_id )
+		) {
+			$follow->leader_id = '';
+		}
 	}
 }
