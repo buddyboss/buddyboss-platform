@@ -521,12 +521,10 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	 * for each entry of the loop, it's a convenient way to make
 	 * sure the right button will be displayed.
 	 */
-	
+
 	// Add the Comment button if the user can comment.
-	if ( bp_activity_can_comment() && $activity_type === 'activity_comment' ) {
-		
-	
-		if ( $activity_type === 'activity_comment' ) {
+	if ( bp_activity_can_comment() ) {
+		if ( 'activity_comment' === $activity_type ) {
 			$buttons['activity_conversation'] = array(
 				'id'                => 'activity_conversation',
 				'position'          => 5,
@@ -570,7 +568,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				'button_attr'       => array(
 					'id'            => 'acomment-comment-' . $activity_id,
 					'class'         => 'button acomment-reply bp-primary-action',
-					// 'data-bp-tooltip' => __( 'Comment', 'buddyboss' ),
 					'aria-expanded' => 'false',
 				),
 				'link_text'         => sprintf(
@@ -620,7 +617,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	if ( ! $return ) {
 		return array();
 	}
-	
 
 	/**
 	 * Leave a chance to adjust the $return
@@ -1613,7 +1609,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	if ( ! empty( $args['button_element'] ) ) {
 		$button_element = $args['button_element'];
 	}
-	
+
 	// Add the Edit button if the user can edit.
 	if ( bp_activity_user_can_edit() ) {
 		if ( $activity_type !== 'activity_comment' ) {
@@ -1639,15 +1635,15 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 					),
 				);
 			}
-		}	
+		}
 	}
 
 	// The delete button is always created, and removed later on if needed.
 	$delete_args = array();
-	
+
 	// Add the Delete button if the user can delete.
 	if ( bp_activity_user_can_delete() ) {
-				
+
 		/*
 		* As the delete link is filterable we need this workaround
 		* to try to intercept the edits the filter made and build
@@ -1691,7 +1687,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				'link_class'      => 'button item-button bp-secondary-action delete-activity confirm',
 				'link_rel'        => 'nofollow',
 				'data_bp_tooltip' => __( 'Delete', 'buddyboss' ),
-				'link_text'       => __( 'Delete', 'buddyboss' ),				
+				'link_text'       => __( 'Delete', 'buddyboss' ),
 			);
 
 			// If button element set add nonce link to data-attr attr.
@@ -1703,7 +1699,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				$delete_args['data-attr'] = '';
 			}
 		}
-		
+
 		$buttons['activity_delete'] = array(
 			'id'                => 'activity_delete',
 			'component'         => 'activity',
@@ -1724,9 +1720,9 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				esc_html( $delete_args['data_bp_tooltip'] )
 			),
 		);
-		
-	}	
-	
+
+	}
+
 	if ( bp_is_active( 'moderation' ) ) {
 		$buttons['activity_report'] = bp_activity_get_report_link(
 			array(
@@ -1774,7 +1770,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				}
 			}
 		}
-	}	
+	}
 
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
@@ -1919,13 +1915,13 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 
 	// If button element set add nonce link to data-attr attr
 	if ( 'button' === $button_element ) {
-		$buttons['activity_comment_reply']['button_attr']['data-bp-act-reply-nonce']         = sprintf( '#acomment-%s', $activity_comment_id );		
+		$buttons['activity_comment_reply']['button_attr']['data-bp-act-reply-nonce']         = sprintf( '#acomment-%s', $activity_comment_id );
 	} else {
-		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );		
+		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );
 	}
-	
+
 	if ( bp_activity_user_can_delete() ) {
-	
+
 		$buttons['activity_comment_delete'] = array(
 			'id'                => 'activity_comment_delete',
 			'component'         => 'activity',
@@ -1979,7 +1975,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 		return array();
 	}
 
-	
+
 
 	/**
 	 * Leave a chance to adjust the $return
