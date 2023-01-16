@@ -1610,117 +1610,89 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		$button_element = $args['button_element'];
 	}
 
-	// Add the Edit button if the user can edit.
-	if ( bp_activity_user_can_edit() ) {
-		if ( $activity_type !== 'activity_comment' ) {
-			// Add activity edit button.
-			if ( bp_is_activity_edit_enabled() ) {
-				$buttons['activity_edit'] = array(
-					'id'                => 'activity_edit',
-					'position'          => 30,
-					'component'         => 'activity',
-					'parent_element'    => $parent_element,
-					'parent_attr'       => $parent_attr,
-					'must_be_logged_in' => true,
-					'button_element'    => $button_element,
-					'button_attr'       => array(
-						'href'  => '#',
-						'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
-						'title' => __( 'Edit Activity', 'buddyboss' ),
-					),
-					'link_text'         => sprintf(
-						'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
-						__( 'Edit Activity', 'buddyboss' ),
-						__( 'Edit', 'buddyboss' )
-					),
-				);
-			}
+	if ( $activity_type !== 'activity_comment' ) {
+		// Add activity edit button.
+		if ( bp_is_activity_edit_enabled() ) {
+			$buttons['activity_edit'] = array(
+				'id'                => 'activity_edit',
+				'position'          => 30,
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'href'  => '#',
+					'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
+					'title' => __( 'Edit Activity', 'buddyboss' ),
+				),
+				'link_text'         => sprintf(
+					'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
+					__( 'Edit Activity', 'buddyboss' ),
+					__( 'Edit', 'buddyboss' )
+				),
+			);
 		}
 	}
 
 	// The delete button is always created, and removed later on if needed.
 	$delete_args = array();
 
-	// Add the Delete button if the user can delete.
-	if ( bp_activity_user_can_delete() ) {
+	/*
+	 * As the delete link is filterable we need this workaround
+	 * to try to intercept the edits the filter made and build
+	 * a button out of it.
+	 */
+	if ( has_filter( 'bp_get_activity_delete_link' ) ) {
+		preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', bp_get_activity_delete_link(), $link );
 
-		/*
-		* As the delete link is filterable we need this workaround
-		* to try to intercept the edits the filter made and build
-		* a button out of it.
-		*/
-		if ( has_filter( 'bp_get_activity_delete_link' ) ) {
-			preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', bp_get_activity_delete_link(), $link );
-
-			if ( ! empty( $link[0] ) && ! empty( $link[1] ) ) {
-				$delete_args['link_text'] = $link[1];
-				$subject                  = str_replace( $delete_args['link_text'], '', $link[0] );
-			}
-
-			preg_match_all( '/([\w\-]+)=([^"\'> ]+|([\'"]?)(?:[^\3]|\3+)+?\3)/', $subject, $attrs );
-
-			if ( ! empty( $attrs[1] ) && ! empty( $attrs[2] ) ) {
-				foreach ( $attrs[1] as $key_attr => $key_value ) {
-					$delete_args[ 'link_' . $key_value ] = trim( $attrs[2][ $key_attr ], '"' );
-				}
-			}
-
-			$delete_args = bp_parse_args(
-				$delete_args,
-				array(
-					'link_text'   => '',
-					'button_attr' => array(
-						'link_id'         => '',
-						'link_href'       => '',
-						'link_class'      => '',
-						'link_rel'        => 'nofollow',
-						'data_bp_tooltip' => '',
-					),
-				)
-			);
+		if ( ! empty( $link[0] ) && ! empty( $link[1] ) ) {
+			$delete_args['link_text'] = $link[1];
+			$subject                  = str_replace( $delete_args['link_text'], '', $link[0] );
 		}
 
-		if ( empty( $delete_args['link_href'] ) ) {
-			$delete_args = array(
-				'button_element'  => $button_element,
-				'link_id'         => '',
-				'link_class'      => 'button item-button bp-secondary-action delete-activity confirm',
-				'link_rel'        => 'nofollow',
-				'data_bp_tooltip' => __( 'Delete', 'buddyboss' ),
-				'link_text'       => __( 'Delete', 'buddyboss' ),
-			);
+		preg_match_all( '/([\w\-]+)=([^"\'> ]+|([\'"]?)(?:[^\3]|\3+)+?\3)/', $subject, $attrs );
 
-			// If button element set add nonce link to data-attr attr.
-			if ( 'button' === $button_element ) {
-				$delete_args['data-attr'] = bp_get_activity_delete_url();
-				$delete_args['link_href'] = '';
-			} else {
-				$delete_args['link_href'] = bp_get_activity_delete_url();
-				$delete_args['data-attr'] = '';
+		if ( ! empty( $attrs[1] ) && ! empty( $attrs[2] ) ) {
+			foreach ( $attrs[1] as $key_attr => $key_value ) {
+				$delete_args[ 'link_' . $key_value ] = trim( $attrs[2][ $key_attr ], '"' );
 			}
 		}
 
-		$buttons['activity_delete'] = array(
-			'id'                => 'activity_delete',
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'id'            => $delete_args['link_id'],
-				'href'          => $delete_args['link_href'],
-				'class'         => $delete_args['link_class'],
-				//'data-bp-tooltip' => $delete_args['data_bp_tooltip'],
-				'data-bp-nonce' => $delete_args['data-attr'],
-			),
-			'link_text'         => sprintf(
-				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-				esc_html( $delete_args['data_bp_tooltip'] ),
-				esc_html( $delete_args['data_bp_tooltip'] )
-			),
+		$delete_args = bp_parse_args(
+			$delete_args,
+			array(
+				'link_text'   => '',
+				'button_attr' => array(
+					'link_id'         => '',
+					'link_href'       => '',
+					'link_class'      => '',
+					'link_rel'        => 'nofollow',
+					'data_bp_tooltip' => '',
+				),
+			)
+		);
+	}
+
+	if ( empty( $delete_args['link_href'] ) ) {
+		$delete_args = array(
+			'button_element'  => $button_element,
+			'link_id'         => '',
+			'link_class'      => 'button item-button bp-secondary-action delete-activity confirm',
+			'link_rel'        => 'nofollow',
+			'data_bp_tooltip' => __( 'Delete', 'buddyboss' ),
+			'link_text'       => __( 'Delete', 'buddyboss' ),
+			'link_href'       => bp_get_activity_delete_url(),
 		);
 
+		// If button element set add nonce link to data-attr attr.
+		if ( 'button' === $button_element ) {
+			$delete_args['data-attr'] = bp_get_activity_delete_url();
+			$delete_args['link_href'] = '';
+		} else {
+			$delete_args['link_href'] = bp_get_activity_delete_url();
+			$delete_args['data-attr'] = '';
+		}
 	}
 
 	if ( bp_is_active( 'moderation' ) ) {
@@ -1772,6 +1744,27 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
+	$buttons['activity_delete'] = array(
+		'id'                => 'activity_delete',
+		'component'         => 'activity',
+		'parent_element'    => $parent_element,
+		'parent_attr'       => $parent_attr,
+		'must_be_logged_in' => true,
+		'button_element'    => $button_element,
+		'button_attr'       => array(
+			'id'            => $delete_args['link_id'],
+			'href'          => $delete_args['link_href'],
+			'class'         => $delete_args['link_class'],
+		//'data-bp-tooltip' => $delete_args['data_bp_tooltip'],
+			'data-bp-nonce' => $delete_args['data-attr'],
+		),
+		'link_text'         => sprintf(
+			'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+			esc_html( $delete_args['data_bp_tooltip'] ),
+			esc_html( $delete_args['data_bp_tooltip'] )
+		),
+	);
+
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
@@ -1801,6 +1794,16 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 	if ( ! $return ) {
 		return array();
+	}
+
+	// Remove the Edit button if the user can't edit.
+	if ( ! bp_activity_user_can_edit() ) {
+		unset( $return['activity_edit'] );
+	}
+
+	// Remove the Delete button if the user can't delete.
+	if ( ! bp_activity_user_can_delete() ) {
+		unset( $return['activity_delete'] );
 	}
 
 	/**
