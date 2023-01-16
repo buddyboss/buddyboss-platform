@@ -1062,7 +1062,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.removeFeedback();
 
 					// Remove all views.
-					if ( 'delete_thread' === action ) {
+					if ( 'delete_thread' === action && ( 'undefined' === typeof bb_pusher_vars || ( 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'off' === bb_pusher_vars.is_live_messaging_enabled ) ) ) {
 						if ( bp.Nouveau.Messages.threads.length > 1 ) {
 							// bp.Nouveau.Messages.clearViews();
 							// Navigate back to current box.
@@ -1480,7 +1480,8 @@ window.bp = window.bp || {};
 				is_user_suspended   : false,
 				sender_avatar : '',
 				date          : 0,
-				display_date  : ''
+				display_date  : '',
+				is_group      : false
 			}
 		}
 	);
@@ -2042,6 +2043,10 @@ window.bp = window.bp || {};
 					},
 					0
 				);
+				// Refocus editor
+				if(bp.Nouveau.Messages.mediumEditor.elements.length !== 0) {
+					bp.Nouveau.Messages.mediumEditor.elements[0].focus();
+				}
 			},
 
 			DisableSubmit: function () {
@@ -2054,6 +2059,10 @@ window.bp = window.bp || {};
 
 			EnableSubmit: function () {
 				window.messageUploaderInProgress = false;
+				// Refocus editor once upload completes
+				if(bp.Nouveau.Messages.mediumEditor.elements.length !== 0) {
+					bp.Nouveau.Messages.mediumEditor.elements[0].focus();
+				}
 				this.postValidate();
 			},
 
@@ -2121,25 +2130,76 @@ window.bp = window.bp || {};
 						}
 					);
 
-					bp.Nouveau.Messages.mediumEditor.subscribe( 'editableKeypress', function( event ) {
-						if ( event.keyCode === 13 && ! event.shiftKey ) {
-							event.preventDefault();
+					if ( ! $( 'body' ).hasClass( 'bb-is-mobile' ) ) {
+						bp.Nouveau.Messages.mediumEditor.subscribe( 'editableKeypress', function ( event ) {
+							if ( event.keyCode === 13 && ! event.shiftKey ) {
+								event.preventDefault();
 
-							var content = bp.Nouveau.Messages.mediumEditor.getContent();
-							// Add valid line breaks.
-							content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-							content = content.replace( /&nbsp;/g, ' ' );
+								var content = bp.Nouveau.Messages.mediumEditor.getContent();
+								// Add valid line breaks.
+								content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+								content = content.replace( /&nbsp;/g, ' ' );
 
-							var content_text = $( content ).text();
-							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0  ) {
-								if ( jQuery( document ).find( '#bp-messages-send' ).length > 0 ) {
-									jQuery( document ).find( '#bp-messages-send' ).trigger( 'click' );
-								} else {
-									jQuery( document ).find( '#send_reply_button' ).trigger( 'click' );
+								var content_text = $( content ).text();
+								if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+									if ( jQuery( document ).find( '#bp-messages-send' ).length > 0 ) {
+										jQuery( document ).find( '#bp-messages-send' ).trigger( 'click' );
+									} else {
+										jQuery( document ).find( '#send_reply_button' ).trigger( 'click' );
+									}
 								}
 							}
-						}
-					} );
+
+							// Make Shift + Enter Work same way as Enter for editor.
+							if ( event.keyCode === 13 && event.shiftKey ) {
+								var MediumEditorOptDoc = bp.Nouveau.Messages.mediumEditor.options.ownerDocument;
+								var node = MediumEditor.selection.getSelectionStart( MediumEditorOptDoc ); // jshint ignore:line
+								// Do nothing if caret is in between the text.
+								if ( MediumEditor.selection.getCaretOffsets( node ).right !== 0 ) { // jshint ignore:line
+									return;
+								}
+
+								// Make sure current node is not list item element.
+								if ( ! MediumEditor.util.isListItem( node ) ) { // jshint ignore:line
+									event.preventDefault();
+									var p = MediumEditorOptDoc.createElement( 'p' );
+									p.innerHTML = '<br>';
+									var newP;
+									// Make sure current node is not inline element.
+									if ( ! MediumEditor.util.isBlockContainer( node ) ) { // jshint ignore:line
+										// If next element is there add before it else add at the end.
+										if ( node.parentNode.nextElementSibling ) {
+											newP = node.parentNode.parentNode.insertBefore( p, node.parentNode.nextSibling );
+										} else {
+											newP = node.parentNode.parentNode.appendChild( p );
+										}
+									} else {
+										// If next element is there add before it else add at the end.
+										if ( node.nextElementSibling ) {
+											newP = node.parentNode.insertBefore( p, node.nextSibling );
+										} else {
+											newP = node.parentNode.appendChild( p );
+										}
+									}
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newP ); // jshint ignore:line
+									return;
+								}
+								// Add new <li> if cursor is in <ul> or <ol>.
+								if ( node.parentNode.tagName.toLowerCase() == 'ul' || node.parentNode.tagName.toLowerCase() == 'ol' ) {
+									var li = MediumEditorOptDoc.createElement( 'li' );
+									var newLI;
+									// if next element is there add new <li> before next or at the end.
+									if ( node.nextElementSibling ) {
+										newLI = node.parentNode.insertBefore( li, node.nextSibling );
+									} else {
+										newLI = node.parentNode.insertBefore( li, node.parentNode.nextSibling );
+									}
+									MediumEditor.selection.moveCursor( MediumEditorOptDoc, newLI ); // jshint ignore:line
+									event.preventDefault();
+								}
+							}
+						} );
+					}
 
 					$( document ).on( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function ( event ) {
 
@@ -3419,19 +3479,35 @@ window.bp = window.bp || {};
 			messagesVideo: null,
 			messagesAttachedGifPreview: null,
 			initialize: function() {
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media_active ) {
-					this.messagesMedia = new bp.Views.MessagesMedia( {model: this.model} );
-					this.views.add( this.messagesMedia );
-				}
 
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_document_active ) {
-					this.messagesDocument = new bp.Views.MessagesDocument( {model: this.model} );
-					this.views.add( this.messagesDocument );
-				}
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 
-				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.video ) && ( BP_Nouveau.video.messages_video_active ) ) {
-					this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
-					this.views.add( this.messagesVideo );
+					// Check the media.
+					if ( ! this.model.get( 'is_group' ) && BP_Nouveau.media.messages_media_active ) {
+						this.messagesMedia = new bp.Views.MessagesMedia( {model: this.model} );
+						this.views.add( this.messagesMedia );
+					} else if ( this.model.get( 'is_group' ) && BP_Nouveau.media.group_media ) {
+						this.messagesMedia = new bp.Views.MessagesMedia( {model: this.model} );
+						this.views.add( this.messagesMedia );
+					}
+
+					// Check the document.
+					if ( ! this.model.get( 'is_group' ) && BP_Nouveau.media.messages_document_active ) {
+						this.messagesDocument = new bp.Views.MessagesDocument( {model: this.model} );
+						this.views.add( this.messagesDocument );
+					} else if ( this.model.get( 'is_group' ) && BP_Nouveau.media.group_document ) {
+						this.messagesDocument = new bp.Views.MessagesDocument( {model: this.model} );
+						this.views.add( this.messagesDocument );
+					}
+
+					// Check the video.
+					if ( ! this.model.get( 'is_group' ) && BP_Nouveau.video.messages_video_active ) {
+						this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
+						this.views.add( this.messagesVideo );
+					} else if ( this.model.get( 'is_group' ) && BP_Nouveau.video.group_video ) {
+						this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
+						this.views.add( this.messagesVideo );
+					}
 				}
 
 				this.messagesAttachedGifPreview = new bp.Views.MessagesAttachedGifPreview( { model: this.model } );
@@ -3587,6 +3663,9 @@ window.bp = window.bp || {};
 			addSelect2: function() {
 				var $input    = $( this.el ).find( '#send-to-input' );
 				var ArrayData = [];
+				if ( typeof BP_Nouveau.messages.is_blocked_by_members !== 'undefined' && BP_Nouveau.messages.is_blocked_by_members.length > 1 ) {
+					ArrayData = $.merge( ArrayData, BP_Nouveau.messages.is_blocked_by_members );
+				}
 				if ( $input.prop( 'tagName' ) != 'SELECT' ) {
 					this.addMentions();
 					return;
@@ -3992,7 +4071,7 @@ window.bp = window.bp || {};
 			updateThreadsList: function ( response, hideLoader ) {
 				var hideLoader = typeof hideLoader !== 'undefined' ? hideLoader : true; // jshint ignore:line
 				var updatedThread = '';
-				if ( 'undefined' !== typeof response && 'undefined' !== typeof response.thread_id ) {
+				if ( 'undefined' !== typeof response && 'undefined' !== typeof response.thread_id && 'undefined' !== typeof response.message ) {
 					this.collection.models.forEach(
 						function ( thread ) {
 							var thread_id = parseInt( thread.id );
@@ -4006,9 +4085,13 @@ window.bp = window.bp || {};
 
 								if ( $( document.body ).find( '#message-threads li.' + thread_id ).hasClass( 'current' ) ) {
 									thread.set( { unread: false } );
-								} else {
+								} else if ( parseInt( response.message.sender_id ) !== parseInt( BP_Nouveau.current.message_user_id ) ) {
 									thread.set( { unread: true } );
+								} else {
+									thread.set( { unread: false } );
 								}
+								
+								thread.set( { has_media: response.message.has_media } );
 
 								thread.set( { content: response.message.content } );
 								thread.set( { excerpt: response.message.excerpt } );
@@ -4063,11 +4146,19 @@ window.bp = window.bp || {};
 					this.views.add( new bp.Views.Hook( { extraContent: this.collection.options.beforeLoop, className: 'before-messages-loop' } ), { at: 0 } );
 				}
 
+				var isMobile = window.matchMedia( 'only screen and (max-width: 1080px)' ).matches;
+
 				if ( this.collection.length ) {
 					$( '.bp-messages-threads-list' ).removeClass( 'bp-no-messages' ).closest( '.bp-messages-container' ).removeClass( 'bp-no-messages' );
 					$( '.bp-messages-container' ).find( '.bp-messages-nav-panel.loading' ).removeClass( 'loading' );
 					$( '.message-header-loading' ).addClass( 'bp-hide' );
 					bp.Nouveau.Messages.displayFilters( this.collection );
+					if ( window.location.href === BP_Nouveau.messages.message_url ) {
+						if ( isMobile ) {
+							$( '.bp-messages-container' ).removeClass( 'bp-view-message' );
+						}
+						bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+					}
 				}
 
 				this.collection.hideLoader = false;
@@ -4728,8 +4819,6 @@ window.bp = window.bp || {};
 
 				// Add the editor view.
 				this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
-				this.messageAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
-				this.views.add( '#bp-message-content', this.messageAttachments );
 
 				this.views.add( '#bp-message-content', new bp.Views.MessageReplyFormSubmitWrapper( { model: this.model } ) );
 
@@ -4821,7 +4910,13 @@ window.bp = window.bp || {};
 
 				// use sent messageData here.
 				this.collection.add( first_message );
-				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' ) }, 0 );
+				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+
+				if( $( '#bp-message-thread-list li:last-child video' ).length > 0 ){
+					$( '#bp-message-thread-list li:last-child video' ).on( 'loadedmetadata', function() {
+						$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+					});
+				}
 			},
 
 			triggerPusherUpdateErrorMessage: function ( messagePusherData ) {
@@ -4862,7 +4957,7 @@ window.bp = window.bp || {};
 				) {
 					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?refresh=1', { trigger: true } );
 					bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/', { trigger: true } );
-				} else if ( 'undefined' !== typeof current_thread.id && parseInt( current_thread.id ) == parseInt( thread_id ) ) {
+				} else if ( 'undefined' !== typeof current_thread && 'undefined' !== typeof current_thread.id && parseInt( current_thread.id ) == parseInt( thread_id ) ) {
 					window.location.reload();
 				}
 				window.Backbone.trigger( 'relistelements' );
@@ -4890,8 +4985,8 @@ window.bp = window.bp || {};
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'error' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'error' );
 					}
-					// Scroll Messages to bottom
-					$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
+					// Scroll Messages to bottom.
+					$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 150 );
 				}
 			},
 
@@ -5026,6 +5121,12 @@ window.bp = window.bp || {};
 				// add scroll event for the auto load messages without user having to click the button.
 				$( '#bp-message-thread-list' ).on( 'scroll', this.messages_scrolled );
 
+				if ( 0 !== parseInt( this.options.thread.get( 'group_id' ) ) && 'private' !== this.options.thread.get( 'group_message_type' ) ) {
+					this.model.set( 'is_group', true );
+				}
+				this.messageAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
+				this.views.add( '#bp-message-content', this.messageAttachments, { at: 1 } );
+
 				if ( ! this.views.get( '#bp-message-thread-header' ) ) {
 					this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
 				}
@@ -5067,7 +5168,6 @@ window.bp = window.bp || {};
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
-
 			},
 
 			messages_scrolled: function( event ) {
@@ -5453,6 +5553,11 @@ window.bp = window.bp || {};
 						},
 						bp.Nouveau.Messages
 					);
+				}
+
+				var isMobile = window.matchMedia( 'only screen and (max-width: 1080px)' ).matches;
+				if ( isMobile ) {
+					$( '.bp-messages-container' ).addClass( 'bp-compose-message' );
 				}
 			},
 
