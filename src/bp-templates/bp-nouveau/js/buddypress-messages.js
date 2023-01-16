@@ -5322,6 +5322,9 @@ window.bp = window.bp || {};
 				if ( 'undefined' !== typeof bb_pusher_vars && 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
 					this.resetReplyForm();
 				}
+
+				// Reset medium editor toolbar action buttons
+				this.$el.find( '.medium-editor-button-active' ).removeClass( 'medium-editor-button-active' );
 			},
 
 			replySent: function( response ) {
