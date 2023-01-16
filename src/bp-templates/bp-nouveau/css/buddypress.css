@@ -3186,7 +3186,7 @@ div[class*="attached-gif-container"] .gif-icon {
 
 @media screen and (min-width: 768px) {
   .gif-media-search-dropdown.open {
-    width: 360px;
+    width: 320px;
   }
 }
 
@@ -9292,6 +9292,12 @@ div.profile_completion_wrap .progress_text_wrap {
   text-align: center;
 }
 
+html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
 .pc_detailed_progress li.completed span.completed_staus {
   color: #8a2;
 }
@@ -9699,6 +9705,10 @@ div.profile_completion_wrap .progress_text_wrap {
   list-style: none;
 }
 
+#message-threads .message-thread-options.loading {
+  display: block;
+}
+
 #message-threads .message-thread-options.loading .bb_more_options_action {
   pointer-events: none;
 }
@@ -9711,6 +9721,10 @@ div.profile_completion_wrap .progress_text_wrap {
   content: "\ef30";
   animation: spin 2s infinite linear;
   display: inline-block;
+}
+
+#message-threads .thread-item.unread .bb_more_options.loading + .bp-message-link:after {
+  opacity: 0;
 }
 
 #message-threads .optionsOpen .message-thread-options .bb_more_options_action i {
@@ -10155,6 +10169,7 @@ div.profile_completion_wrap .progress_text_wrap {
   clear: both;
   overflow: hidden;
   margin: 0 auto;
+  position: relative;
 }
 
 #bp-message-thread-list .bp-message-content-wrap p {
@@ -10199,6 +10214,11 @@ div.profile_completion_wrap .progress_text_wrap {
 
 #bp-message-thread-list .actions a:before {
   font-size: 18px;
+}
+
+.bp-message-content-wrap blockquote.wp-embedded-content + p iframe.wp-embedded-content {
+  min-height: 0;
+  height: 0;
 }
 
 div.bp-navs#subsubnav.bp-messages-filters .user-messages-bulk-actions {
