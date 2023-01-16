@@ -1610,29 +1610,27 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		$button_element = $args['button_element'];
 	}
 
-	if ( $activity_type !== 'activity_comment' ) {
-		// Add activity edit button.
-		if ( bp_is_activity_edit_enabled() ) {
-			$buttons['activity_edit'] = array(
-				'id'                => 'activity_edit',
-				'position'          => 30,
-				'component'         => 'activity',
-				'parent_element'    => $parent_element,
-				'parent_attr'       => $parent_attr,
-				'must_be_logged_in' => true,
-				'button_element'    => $button_element,
-				'button_attr'       => array(
-					'href'  => '#',
-					'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
-					'title' => __( 'Edit Activity', 'buddyboss' ),
-				),
-				'link_text'         => sprintf(
-					'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
-					__( 'Edit Activity', 'buddyboss' ),
-					__( 'Edit', 'buddyboss' )
-				),
-			);
-		}
+	// Add activity edit button.
+	if ( 'activity_comment' !== $activity_type && bp_activity_user_can_edit() && bp_is_activity_edit_enabled() ) {
+		$buttons['activity_edit'] = array(
+			'id'                => 'activity_edit',
+			'position'          => 30,
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'href'  => '#',
+				'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
+				'title' => __( 'Edit Activity', 'buddyboss' ),
+			),
+			'link_text'         => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
+				__( 'Edit Activity', 'buddyboss' ),
+				__( 'Edit', 'buddyboss' )
+			),
+		);
 	}
 
 	// The delete button is always created, and removed later on if needed.
@@ -1794,11 +1792,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 	if ( ! $return ) {
 		return array();
-	}
-
-	// Remove the Edit button if the user can't edit.
-	if ( ! bp_activity_user_can_edit() ) {
-		unset( $return['activity_edit'] );
 	}
 
 	// Remove the Delete button if the user can't delete.
