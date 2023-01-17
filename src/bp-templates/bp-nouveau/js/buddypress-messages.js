@@ -1672,7 +1672,11 @@ window.bp = window.bp || {};
 
 					return bp.ajax.send( options ).done(
 						function( response ) {
-							if ( ! _.isUndefined( response.type ) && 'success' === response.type ) {
+							if (
+								! _.isUndefined( response.type ) &&
+								'success' === response.type &&
+								( 'undefined' === typeof bb_pusher_vars || ( 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'off' === bb_pusher_vars.is_live_messaging_enabled ) )
+							) {
 								window.Backbone.trigger(
 									'relistelements',
 									{
