@@ -87,6 +87,12 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$this->register_notification_for_group_user_messages();
 		}
 
+		// Registered notification for group activity subscription.
+		$this->register_notification_for_group_activity_subscriptions();
+
+		// Registered notification for group discussion subscription.
+		$this->register_notification_for_group_discussion_subscriptions();
+
 		$this->register_notification_filter(
 			esc_html__( 'Group invitations and requests', 'buddyboss' ),
 			array( 'bb_groups_new_invite', 'bb_groups_new_request', 'bb_groups_request_accepted', 'bb_groups_request_rejected' ),
@@ -753,5 +759,127 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Register notification for group activity subscriptions.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function register_notification_for_group_activity_subscriptions() {
+		$notification_read_only    = false;
+		$notification_tooltip_text = '';
+
+		if ( ! function_exists( 'bb_enable_group_subscriptions' ) || false === bb_enable_group_subscriptions() ) {
+			$notification_read_only   = true;
+			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+			if (
+				(
+					isset( $enabled_all_notification['bb_groups_subscribed_activity'] ) &&
+					! empty( $enabled_all_notification['bb_groups_subscribed_activity']['main'] ) &&
+					'yes' === $enabled_all_notification['bb_groups_subscribed_activity']['main']
+				) ||
+				! isset( $enabled_all_notification['bb_groups_subscribed_activity'] )
+			) {
+				$notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
+			} else {
+				$notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+			}
+		}
+
+		$this->register_notification_type(
+			'bb_groups_subscribed_activity',
+			esc_html__( 'New post in a group you\'re subscribed to', 'buddyboss' ),
+			esc_html__( 'A new activity post in a group a member is subscribed to', 'buddyboss' ),
+			'groups',
+			true,
+			$notification_read_only,
+			$notification_tooltip_text
+		);
+
+		// @todo change the email content.
+		$this->register_email_type(
+			'groups-new-post',
+			array(
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}"', 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_content'       => __( "{{poster.name}} posted an update in {{{group.name}}}.\n\n{{{activity.content}}}", 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_plain_content' => __( "{{poster.name}} posted an update in {{{group.name}}}.\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'New activity post by someone a member is following', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+			),
+			'bb_groups_subscribed_activity'
+		);
+
+		$this->register_notification(
+			'groups',
+			'bb_groups_subscribed_activity',
+			'bb_groups_subscribed_activity',
+			'bb-icon-f bb-icon-comment'
+		);
+	}
+
+	/**
+	 * Register notification for group activity subscriptions.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function register_notification_for_group_discussion_subscriptions() {
+		$notification_read_only    = false;
+		$notification_tooltip_text = '';
+
+		if ( ! function_exists( 'bb_enable_group_subscriptions' ) || false === bb_enable_group_subscriptions() ) {
+			$notification_read_only   = true;
+			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+			if (
+				(
+					isset( $enabled_all_notification['bb_groups_subscribed_discussion'] ) &&
+					! empty( $enabled_all_notification['bb_groups_subscribed_discussion']['main'] ) &&
+					'yes' === $enabled_all_notification['bb_groups_subscribed_discussion']['main']
+				) ||
+				! isset( $enabled_all_notification['bb_groups_subscribed_discussion'] )
+			) {
+				$notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
+			} else {
+				$notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+			}
+		}
+
+		$this->register_notification_type(
+			'bb_groups_subscribed_discussion',
+			esc_html__( 'New discussion in a group you\'re subscribed to', 'buddyboss' ),
+			esc_html__( 'A new discussion in a group a member is subscribed to', 'buddyboss' ),
+			'groups',
+			true,
+			$notification_read_only,
+			$notification_tooltip_text
+		);
+
+		// @todo change the email content.
+		$this->register_email_type(
+			'groups-new-forum-topic',
+			array(
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}"', 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_content'       => __( "{{poster.name}} posted an update in {{{group.name}}}.\n\n{{{activity.content}}}", 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_plain_content' => __( "{{poster.name}} posted an update in {{{group.name}}}.\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'New activity post by someone a member is following', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+			),
+			'bb_groups_subscribed_discussion'
+		);
+
+		$this->register_notification(
+			'groups',
+			'bb_groups_subscribed_discussion',
+			'bb_groups_subscribed_discussion',
+			'bb-icon-f bb-icon-comment'
+		);
 	}
 }
