@@ -60,7 +60,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		}
 
 		// Do not change settings(bb_forums_subscribed_discussion, bb_forums_subscribed_reply) when subscription is disabled from the Settings -> Forum.
-		if ( false === bbp_is_subscriptions_active() ) {
+		if ( function_exists( 'bbp_is_subscriptions_active' ) && false === bbp_is_subscriptions_active() ) {
 			unset( $enabled_notification['bb_forums_subscribed_discussion'] );
 			unset( $enabled_notification['bb_forums_subscribed_reply'] );
 		}
