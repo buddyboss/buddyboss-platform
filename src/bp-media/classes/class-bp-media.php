@@ -1193,12 +1193,15 @@ class BP_Media {
 
 						// Deleting an activity.
 					} else {
-						if ( 'activity' !== $from && bp_activity_delete(
-							array(
-								'id'      => $activity->id,
-								'user_id' => $activity->user_id,
+						if (
+							! empty( $activity->secondary_item_id ) &&
+							'activity' !== $from && bp_activity_delete(
+								array(
+									'id'      => $activity->id,
+									'user_id' => $activity->user_id,
+								)
 							)
-						) ) {
+						) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
