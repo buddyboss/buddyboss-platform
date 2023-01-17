@@ -77,6 +77,10 @@
 
 } // close .bp-navs
 
+.bp-navs__dropdown {
+	display: none;
+}
+
 .main-navs.dir-navs {
 	margin-bottom: $marg-lrg;
 }

@@ -76,6 +76,9 @@ window.bp = window.bp || {};
 				this.userPresenceStatus();
 			}
 
+			// Mobile dropdown navigation
+			this.bpNavDropDown();
+
 			var _this = this;
 
 			$( document ).on( 'bb_trigger_toast_message', function ( event, title, message, type, url, autoHide, autohide_interval ) {
@@ -3494,6 +3497,12 @@ window.bp = window.bp || {};
 					);
 				}, parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 ); // 1 min.
 			}
+		},
+
+		bpNavDropDown: function() {
+			$( 'nav .bp-navs__dropdown' ).change( function() {
+				window.location = $( this ).find( 'option:selected' ).val();
+			});
 		},
 
 		getPageUserIDs: function() {
