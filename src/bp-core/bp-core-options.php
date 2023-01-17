@@ -96,6 +96,9 @@ function bp_get_default_options() {
 		// Group Types.
 		'bp-disable-group-type-creation'             => false,
 
+		// Group Subscriptions.
+		'bb_enable_group_subscriptions'              => true,
+
 		// Auto Group Membership Approval.
 		'bp-enable-group-auto-join'                  => false,
 

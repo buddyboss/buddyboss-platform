@@ -393,6 +393,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19281 ) {
 			bb_update_to_2_2_5();
 		}
+
+		if ( $raw_db_version < 19381 ) {
+			bb_update_to_2_2_6();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2201,4 +2205,16 @@ function bb_migrate_subscriptions() {
 
 	// Flush the cache to delete all old cached subscriptions.
 	wp_cache_flush();
+}
+
+/**
+ * Migrate when update the platform to the latest version.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_6() {
+	// Default enabled the group subscriptions.
+	bp_update_option( 'bb_enable_group_subscriptions', 1 );
 }
