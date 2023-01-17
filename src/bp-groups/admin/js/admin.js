@@ -47,7 +47,7 @@
 
 				$( 'input#save' ).on(
 					'click',
-					function() {
+					function( e ) {
 						/* Check for users to add */
 						var users_to_add = [];
 
@@ -60,6 +60,18 @@
 						/* There are users to add, include a comma separated list of users login in the main field */
 						if ( users_to_add.length ) {
 							$( '#bp-groups-new-members' ).val( '' ).val( users_to_add.join( ', ' ) );
+						}
+
+						var connected_forum_id = parseInt( $( '#bbp_group_forum_id' ).val() );
+						if (
+							'undefined' !== typeof BP_Group_Admin.group_connected_forum_id &&
+							! isNaN( connected_forum_id ) &&
+							parseInt( BP_Group_Admin.group_connected_forum_id ) !== connected_forum_id
+						) {
+							if ( ! confirm( BP_Group_Admin.warn_on_attach_forum ) ) {
+								e.preventDefault();
+								return false;
+							}
 						}
 
 						window.warn_on_leave = false;

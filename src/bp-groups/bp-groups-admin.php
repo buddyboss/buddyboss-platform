@@ -248,15 +248,31 @@ function bp_groups_admin_load() {
 
 	$bp = buddypress();
 
+	$group_localize_arr = array(
+		'add_member_placeholder' => __( 'Start typing a username to add a new member.', 'buddyboss' ),
+		'warn_on_leave'          => __( 'If you leave this page, you will lose any unsaved changes you have made to the group.', 'buddyboss' ),
+		'warn_on_attach_forum'   => __( 'Members cannot subscribe individually to forums inside a group, only to the group itself. By moving this forum into a group, all existing subscriptions to the forum will be removed.', 'buddyboss' ),
+	);
+
+	if ( isset( $_GET['page'], $_GET['gid'] ) && 'bp-groups' === $_GET['page'] && ! empty( $_GET['gid'] ) ) {
+		$connected_forum_id  = 0;
+		$requested_group_id  = (int) sanitize_text_field( wp_unslash( $_GET['gid'] ) );
+		$connected_forum_ids = bbp_get_group_forum_ids( $requested_group_id );
+
+		// Get the first forum ID.
+		if ( ! empty( $connected_forum_ids ) ) {
+			$connected_forum_id = (int) is_array( $connected_forum_ids ) ? $connected_forum_ids[0] : $connected_forum_ids;
+		}
+
+		$group_localize_arr['group_connected_forum_id'] = $connected_forum_id;
+	}
+
 	// Enqueue CSS and JavaScript.
 	wp_enqueue_script( 'bp_groups_admin_js', $bp->plugin_url . "bp-groups/admin/js/admin{$min}.js", array( 'jquery', 'wp-ajax-response', 'jquery-ui-autocomplete' ), bp_get_version(), true );
 	wp_localize_script(
 		'bp_groups_admin_js',
 		'BP_Group_Admin',
-		array(
-			'add_member_placeholder' => __( 'Start typing a username to add a new member.', 'buddyboss' ),
-			'warn_on_leave'          => __( 'If you leave this page, you will lose any unsaved changes you have made to the group.', 'buddyboss' ),
-		)
+		$group_localize_arr
 	);
 	wp_enqueue_style( 'bp_groups_admin_css', $bp->plugin_url . "bp-groups/admin/css/admin{$min}.css", array(), bp_get_version() );
 
