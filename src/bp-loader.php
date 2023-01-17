@@ -300,7 +300,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 
 	// Required PHP version.
-	define( 'BP_REQUIRED_PHP_VERSION', '5.3.0' );
+	define( 'BP_REQUIRED_PHP_VERSION', '7.3' );
 
 	/**
 	 * The main function responsible for returning the one true BuddyBoss Instance to functions everywhere.
