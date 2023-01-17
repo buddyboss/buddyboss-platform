@@ -108,6 +108,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-group-messages', esc_html__( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
 		}
 
+		// Allow group subscriptions setting.
+		$this->add_field( 'bb_enabled_group_subscription', esc_html__( 'Subscriptions', 'buddyboss' ), 'bb_admin_setting_callback_group_subscription', 'intval' );
+
 		// Group avatar and cover.
 		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
 
