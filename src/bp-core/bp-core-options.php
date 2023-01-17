@@ -2273,7 +2273,7 @@ function bb_get_default_custom_upload_group_cover() {
  *
  * @return bool True if group subscription is enabled, otherwise false.
  */
-function bb_enabled_group_subscription( $default = true ) {
+function bb_enable_group_subscriptions( $default = true ) {
 
 	/**
 	 * Filters whether group subscription is turned off.
@@ -2282,5 +2282,5 @@ function bb_enabled_group_subscription( $default = true ) {
 	 *
 	 * @param bool $value Whether group subscription is turned off.
 	 */
-	return (bool) apply_filters( 'bb_enabled_group_subscription', (bool) bp_get_option( 'bb_enabled_group_subscription', $default ) );
+	return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
 }
