@@ -1573,12 +1573,10 @@ function bp_core_render_message() {
  * @since BuddyPress 1.0.0
  *
  *       usermeta table.
- *
- * @param bool $force_update IF user comes within 5 minutes and force to update.
- *
+ * *
  * @return false|null Returns false if there is nothing to do.
  */
-function bp_core_record_activity( $force_update = false ) {
+function bp_core_record_activity() {
 
 	// Bail if user is not logged in.
 	if ( ! is_user_logged_in() ) {
@@ -1619,10 +1617,9 @@ function bp_core_record_activity( $force_update = false ) {
 		do_action( 'bp_first_activity_for_member', $user_id );
 	}
 
-	// If it's been more than 5 minutes, record a newer last-activity time.
-	if ( empty( $activity ) || ( $current_time >= strtotime( '+5 minutes', $activity ) || true === $force_update ) ) {
-		bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
-	}
+    // updated users last activity on each page refresh.
+	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
+
 }
 add_action( 'wp_head', 'bp_core_record_activity' );
 
@@ -6712,6 +6709,14 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		$all_notifications
 	);
 
+	$read_only_notifications = array_column( array_filter( $all_notifications ), 'notification_read_only', 'key' );
+	if (
+		isset( $read_only_notifications[ $notification_type ] ) &&
+		true === (bool) $read_only_notifications[ $notification_type ]
+	) {
+		return false;
+	}
+
 	$main = array();
 
 	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
@@ -7110,6 +7115,11 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
+		$notification_fields_read_only = array_filter( array_column( $options['fields'], 'notification_read_only', null ) );
+		$options['fields']             = ( ! empty( $notification_fields_read_only ) ? array_diff_key( $options['fields'], $notification_fields_read_only ) : $options['fields'] );
+	}
+
+	if ( ! empty( $options['fields'] ) ) {
 		?>
 
 		<table class="main-notification-settings">
@@ -7123,6 +7133,10 @@ function bb_render_notification( $notification_group ) {
 			}
 
 			foreach ( $options['fields'] as $field ) {
+
+				if ( ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'] ) {
+					continue;
+				}
 
 				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
 				?>
@@ -8134,25 +8148,7 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	$presence_interval = (int) bp_get_option( 'bb_presence_interval', 0 );
-	if ( 0 !== $presence_interval ) {
-		return $presence_interval;
-	}
-
-	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
-	$global_pulse       = 60;
-
-	remove_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
-	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
-	add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
-
-	if ( ! empty( $heartbeat_settings['interval'] ) && 0 === (int) $heartbeat_disabled ) {
-		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 60;
-	}
-
-	bp_update_option( 'bb_presence_interval', $global_pulse );
-
-	return $global_pulse;
+	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
 }
 
 /**
@@ -8189,5 +8185,27 @@ function bb_get_users_presence( $users, $compare_time = false ) {
  * @return string
  */
 function bb_pro_pusher_version() {
-	return '2.1.4';
+	return '2.2';
+}
+
+/**
+ * Function to return the time span for the presence in seconds.
+ *
+ * @since BuddyBoss 2.2
+ *
+ * @return int
+ */
+function bb_presence_time_span() {
+	return (int) apply_filters( 'bb_presence_time_span', 180 );
+}
+
+/**
+ * Function to return the presence default interval time in seconds.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @return int
+ */
+function bb_presence_default_interval() {
+	return apply_filters( 'bb_presence_default_interval', 60 );
 }
