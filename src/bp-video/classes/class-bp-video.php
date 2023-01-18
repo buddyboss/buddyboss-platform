@@ -1130,9 +1130,17 @@ class BP_Video {
 
 						// Deleting an activity.
 					} else {
+						$activity_delete = false;
 						if (
-							! empty( $activity->secondary_item_id ) &&
-							'activity' !== $from &&
+							'activity' !== $from ||
+							(
+								'activity' === $from && ! empty( $activity->secondary_item_id )
+							)
+						) {
+							$activity_delete = true;
+						}
+						if (
+							true === $activity_delete &&
 							bp_activity_delete(
 								array(
 									'id'      => $activity->id,
