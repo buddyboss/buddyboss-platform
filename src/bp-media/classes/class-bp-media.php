@@ -1196,7 +1196,7 @@ class BP_Media {
 						$activity_delete = false;
 						if (
 							(
-								'activity' !== $from && empty( $activity->content )
+								'activity' !== $from && empty( wp_strip_all_tags( $activity->content, true ) )
 							) ||
 							(
 								'activity' === $from && ! empty( $activity->secondary_item_id )
