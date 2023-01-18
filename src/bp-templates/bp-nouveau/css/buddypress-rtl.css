@@ -16039,14 +16039,15 @@ h2.bbp-form-title.entry-title {
 }
 
 /* Forum submit button*/
-#new-post .bbp-form #bbp_reply_submit {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
 #new-post.has-media .bbp-form #bbp_reply_submit, #new-post.has-content .bbp-form #bbp_reply_submit {
   opacity: 1;
   pointer-events: initial;
+}
+
+#new-post.media-uploading .bbp-form #bbp_reply_submit,
+#new-post .bbp-form #bbp_reply_submit {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 /* Forum Video*/

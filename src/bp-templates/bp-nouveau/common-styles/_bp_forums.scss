@@ -1623,11 +1623,6 @@ h2.bbp-form-title.entry-title {
 
 #new-post {
 
-	.bbp-form #bbp_reply_submit {
-		opacity: 0.4;
-		pointer-events: none;
-	}
-
 	&.has-media,
 	&.has-content {
 
@@ -1636,6 +1631,12 @@ h2.bbp-form-title.entry-title {
 			pointer-events: initial;
 		}
 
+	}
+
+	&.media-uploading .bbp-form #bbp_reply_submit,
+	.bbp-form #bbp_reply_submit {
+		opacity: 0.4;
+		pointer-events: none;
 	}
 
 }
