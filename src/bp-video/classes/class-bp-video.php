@@ -1132,7 +1132,9 @@ class BP_Video {
 					} else {
 						$activity_delete = false;
 						if (
-							'activity' !== $from ||
+							(
+								'activity' !== $from && empty( $activity->content )
+							) ||
 							(
 								'activity' === $from && ! empty( $activity->secondary_item_id )
 							)
