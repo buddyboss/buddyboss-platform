@@ -2250,6 +2250,7 @@ window.bp = window.bp || {};
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
 							var tool_box = target.closest( 'form' );
+							tool_box.addClass( 'has-media' );
 							if ( tool_box.find( '#forums-document-button' ) ) {
 								tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -2268,6 +2269,8 @@ window.bp = window.bp || {};
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'uploadprogress',
 						function( element ) {
+							var formElement = target.closest( 'form' );
+							formElement.addClass( 'media-uploading' );
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
@@ -2293,6 +2296,8 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
+								var formElement = target.closest( 'form' );
+								formElement.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -2343,6 +2348,7 @@ window.bp = window.bp || {};
 
 								if ( ! _.isNull( self.dropzone_obj[ dropzone_obj_key ].files ) && self.dropzone_obj[ dropzone_obj_key ].files.length === 0 ) {
 									var tool_box = target.closest( 'form' );
+									tool_box.removeClass( 'has-media' );
 									if ( tool_box.find( '#forums-document-button' ) ) {
 										tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 									}
@@ -2357,6 +2363,17 @@ window.bp = window.bp || {};
 									}
 								}
 
+							}
+						}
+					);
+
+					// Enable submit button when all medias are uploaded
+					self.dropzone_obj[ dropzone_obj_key ].on(
+						'complete',
+						function() {
+							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+								var formElement = target.closest( 'form' );
+								formElement.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -2975,6 +2992,7 @@ window.bp = window.bp || {};
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
 							var tool_box = target.closest( 'form' );
+							tool_box.addClass( 'has-media' );
 							if ( tool_box.find( '#forums-media-button' ) ) {
 								tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -2993,6 +3011,8 @@ window.bp = window.bp || {};
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'uploadprogress',
 						function( element ) {
+							var formElement = target.closest( 'form' );
+							formElement.addClass( 'media-uploading' );
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
@@ -3018,6 +3038,8 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
+								var formElement = target.closest( 'form' );
+								formElement.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -3085,6 +3107,7 @@ window.bp = window.bp || {};
 
 								if ( ! _.isNull( self.dropzone_obj[ dropzone_obj_key ].files ) && self.dropzone_obj[ dropzone_obj_key ].files.length === 0 ) {
 									var tool_box = target.closest( 'form' );
+									tool_box.removeClass( 'has-media' );
 									if ( tool_box.find( '#forums-media-button' ) ) {
 										tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 									}
@@ -3099,6 +3122,17 @@ window.bp = window.bp || {};
 									}
 								}
 
+							}
+						}
+					);
+
+					// Enable submit button when all documents are uploaded
+					self.dropzone_obj[ dropzone_obj_key ].on(
+						'complete',
+						function() {
+							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+								var formElement = target.closest( 'form' );
+								formElement.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -3223,6 +3257,7 @@ window.bp = window.bp || {};
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
 							var tool_box = target.closest( 'form' );
+							tool_box.addClass( 'has-media' );
 							if ( tool_box.find( '#forums-media-button' ) ) {
 								tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -3252,6 +3287,8 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup forum-video-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
+								var formElement = target.closest( 'form' );
+								formElement.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -3288,6 +3325,8 @@ window.bp = window.bp || {};
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'uploadprogress',
 						function( element ) {
+							var formElement = target.closest( 'form' );
+							formElement.addClass( 'media-uploading' );
 							var circle = $( element.previewElement ).find('.dz-progress-ring circle')[0];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
@@ -3364,6 +3403,7 @@ window.bp = window.bp || {};
 
 								if ( ! _.isNull( self.dropzone_obj[ dropzone_obj_key ].files ) && self.dropzone_obj[ dropzone_obj_key ].files.length === 0 ) {
 									var tool_box = target.closest( 'form' );
+									tool_box.removeClass( 'has-media' );
 									if ( tool_box.find( '#forums-media-button' ) ) {
 										tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 									}
@@ -3378,6 +3418,17 @@ window.bp = window.bp || {};
 									}
 								}
 
+							}
+						}
+					);
+
+					// Enable submit button when all videos are uploaded
+					self.dropzone_obj[ dropzone_obj_key ].on(
+						'complete',
+						function() {
+							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+								var formElement = target.closest( 'form' );
+								formElement.removeClass( 'media-uploading' );
 							}
 						}
 					);
