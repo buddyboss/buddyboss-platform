@@ -439,7 +439,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 						$document_ids[] = $document_id;
 					}
 					if ( ! in_array( $document_id, $document_ids ) ) {
-						bp_document_delete( array( 'id' => $document_id ) );
+						bp_document_delete( array( 'id' => $document_id ), 'activity' );
 					}
 				}
 
