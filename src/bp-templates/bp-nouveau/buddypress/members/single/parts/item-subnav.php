@@ -59,6 +59,9 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 		if ( 'archived' === $nav_item->slug ) {
 			continue;
 		}
+		if ( 'public-personal-li' === bp_nouveau_get_nav_id() ) {
+			continue;
+		}
 		?>
 
 			<option value="<?php bp_nouveau_nav_link(); ?>" <?php echo ( str_contains( bp_nouveau_get_nav_classes(), 'selected' ) ) ? 'selected' : ''; ?>>
