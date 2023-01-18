@@ -52,20 +52,27 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 	<select class="bp-navs__dropdown">
 
 	<?php
-		while ( bp_nouveau_nav_items() ) :
-			bp_nouveau_nav_item();
+	while ( bp_nouveau_nav_items() ) :
+		bp_nouveau_nav_item();
 
-			$nav_item = bp_nouveau()->current_nav_item;
-			if ( 'archived' === $nav_item->slug ) {
-				continue;
-			}
-			?>
+		$nav_item = bp_nouveau()->current_nav_item;
+		if ( 'archived' === $nav_item->slug ) {
+			continue;
+		}
+		?>
 
-			<option value="<?php bp_nouveau_nav_link(); ?>" <?php echo ( str_contains(bp_nouveau_get_nav_classes(), 'selected') ) ? 'selected' : ''; ?>>
-				<?php bp_nouveau_nav_link_text(); ?>
-				<?php if ( bp_nouveau_nav_has_count() ) : ?>
+			<option value="<?php bp_nouveau_nav_link(); ?>" <?php echo ( str_contains( bp_nouveau_get_nav_classes(), 'selected' ) ) ? 'selected' : ''; ?>>
+				<?php
+				bp_nouveau_nav_link_text();
+
+				if ( bp_nouveau_nav_has_count() ) :
+					?>
 					<span class="count"><?php bp_nouveau_nav_count(); ?></span>
-				<?php endif; ?>
+					<?php
+				endif;
+
+				do_action( 'bb_nouveau_after_nav_link' . '_' . bp_nouveau_get_nav_link_id() );
+				?>
 			</option>
 
 		<?php endwhile; ?>
