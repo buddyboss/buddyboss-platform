@@ -901,11 +901,12 @@ function bb_delete_item_subscriptions( $type, $item_id, $blog_id = 0 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $type Optional. The type of subscription like 'forum', topic'.
+ * @param string $type              Optional. The type of subscription like 'forum', topic'.
+ * @param string $notification_type The type of notification.
  *
  * @return bool
  */
-function bb_is_enabled_modern_subscriptions( $type = '' ) {
+function bb_is_enabled_modern_subscriptions( $type = '', $notification_type = '' ) {
 	$is_enabled = false;
 
 	if ( ! bb_enabled_legacy_email_preference() ) {
@@ -917,14 +918,14 @@ function bb_is_enabled_modern_subscriptions( $type = '' ) {
 				$is_enabled = function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' );
 				break;
 			default:
-				if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) || bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) ) {
-					$is_enabled = true;
+				if ( ! empty( $notification_type ) ) {
+					$is_enabled = bb_get_modern_notification_admin_settings_is_enabled( $notification_type );
 				}
 				break;
 		}
 	}
 
-	return (bool) apply_filters( 'bb_is_enabled_modern_subscriptions', $is_enabled );
+	return (bool) apply_filters( 'bb_is_enabled_modern_subscriptions', $is_enabled, $type, $notification_type );
 }
 
 /**
@@ -932,16 +933,17 @@ function bb_is_enabled_modern_subscriptions( $type = '' ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $type Optional. The type of subscription like 'forum', topic'.
+ * @param string $type              The type of subscription like 'forum', topic'.
+ * @param string $notification_type The type of notification.
  *
  * @return bool
  */
-function bb_is_enabled_subscription( $type = '' ) {
+function bb_is_enabled_subscription( $type, $notification_type = '' ) {
 	$is_enabled = false;
 
 	if (
 		! bb_enabled_legacy_email_preference() &&
-		bb_is_enabled_modern_subscriptions( $type )
+		bb_is_enabled_modern_subscriptions( $type, $notification_type )
 	) {
 		$is_enabled = true;
 	} elseif (
@@ -952,7 +954,7 @@ function bb_is_enabled_subscription( $type = '' ) {
 		$is_enabled = true;
 	}
 
-	return (bool) apply_filters( 'bb_is_enabled_subscription', $is_enabled );
+	return (bool) apply_filters( 'bb_is_enabled_subscription', $is_enabled, $type, $notification_type );
 }
 
 /**
