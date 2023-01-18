@@ -1054,3 +1054,57 @@ function bb_load_group_type_label_custom_css() {
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
 
+/**
+ * Send subscription notification to users after post an activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content     The content of the update.
+ * @param int    $user_id     ID of the user posting the update.
+ * @param int    $group_id    ID of the group being posted to.
+ * @param bool   $activity_id Whether the activity recording succeeded.
+ *
+ * @return void
+ */
+function bb_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) {
+	// Bail if subscriptions are turned off.
+	if ( ! bb_is_enabled_subscription( 'group' ) ) {
+		return;
+	}
+
+	if ( empty( $user_id ) || empty( $group_id ) || empty( $activity_id ) ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	if ( empty( $activity ) || ( ! empty( $activity->item_id ) && $activity->item_id !== (int) $group_id ) ) {
+		return;
+	}
+
+	$activity_user_id = $activity->user_id;
+	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
+	$activity_link    = bp_activity_get_permalink( $activity_id );
+
+	$args = array(
+		'tokens' => array(
+			'activity'     => $activity,
+			'poster.name'  => $poster_name,
+			'activity.url' => esc_url( $activity_link ),
+		),
+	);
+
+	bb_send_notifications_to_subscribers(
+		array(
+			'type'              => 'group',
+			'item_id'           => $group_id,
+			'notification_type' => 'bb_groups_subscribed_activity',
+			'data'              => array(
+				'activity_id'  => $activity_id,
+				'author_id'    => $activity_user_id,
+				'email_tokens' => $args,
+			),
+		)
+	);
+}
+add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );

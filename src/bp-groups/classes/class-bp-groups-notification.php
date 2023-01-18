@@ -820,6 +820,21 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'bb_groups_subscribed_activity',
 			'bb-icon-f bb-icon-comment'
 		);
+
+		$this->bb_register_subscription_type(
+			array(
+				'label'              => array(
+					'singular' => __( 'Group', 'buddyboss' ),
+					'plural'   => __( 'Groups', 'buddyboss' ),
+				),
+				'subscription_type'  => 'group',
+				'items_callback'     => array( $this, 'bb_render_subscribed_groups' ),
+				'send_callback'      => array( $this, 'bb_send_subscribed_group_notifications' ),
+				'validate_callback'  => array( $this, 'bb_validate_group_subscription_request' ),
+				'notification_type'  => array( 'bb_groups_subscribed_activity', 'bb_groups_subscribed_discussion' ),
+				'notification_group' => 'groups',
+			)
+		);
 	}
 
 	/**
@@ -881,5 +896,306 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'bb_groups_subscribed_discussion',
 			'bb-icon-f bb-icon-comment'
 		);
+	}
+
+	/**
+	 * Validate callback function for group type subscription.
+	 *
+	 * @param array $args {
+	 *     Used to validate the subscription request.
+	 *
+	 *     @type string $type                   Required. The subscription type.
+	 *     @type string $item_id                Required. The subscription item ID.
+	 *     @type string $secondary_item_id      Required. The subscription parent item ID.
+	 * }
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function bb_validate_group_subscription_request( $args ) {
+		// Parse the arguments.
+		$r = bp_parse_args(
+			$args,
+			array(
+				'type'              => '',
+				'blog_id'           => 1,
+				'item_id'           => 0,
+				'secondary_item_id' => 0,
+			)
+		);
+
+		// Initially set is false.
+		$retval = false;
+
+		$switch = false;
+		// Switch to given blog_id if current blog is not same.
+		if ( is_multisite() && 1 !== $r['blog_id'] ) {
+			switch_to_blog( $r['blog_id'] );
+			$switch = true;
+		}
+
+		if ( empty( $r['item_id'] ) ) {
+			$retval = new WP_Error(
+				'bb_subscription_required_item_id',
+				__( 'The item ID is required.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} elseif ( empty( $r['type'] ) ) {
+			$retval = new WP_Error(
+				'bb_subscription_required_item_type',
+				__( 'The item type is required.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} elseif ( 'group' !== $r['type'] ) {
+			$retval = new WP_Error(
+				'bb_subscription_invalid_item_id_or_type',
+				__( 'The item id is not matching with the type.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} else {
+			// Get group.
+			$group = groups_get_group( $r['item_id'] );
+
+			// Validate the secondary item if exists.
+			if ( ! empty( $r['secondary_item_id'] ) && $r['secondary_item_id'] !== $group->parent_id ) {
+				$retval = new WP_Error(
+					'bb_subscription_invalid_secondary_item_id',
+					__( 'The secondary item ID is not valid.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} else {
+				$retval = true;
+			}
+		}
+
+		// Restore current blog.
+		if ( $switch ) {
+			restore_current_blog();
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Render callback function on frontend.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $items Array of subscription list.
+	 *
+	 * @return array
+	 */
+	public function bb_render_subscribed_groups( $items ) {
+		$type_data = bb_register_subscriptions_types( 'group' );
+
+		if ( ! empty( $items ) ) {
+			$blog_id = 1;
+
+			$switch = false;
+			// Switch to given blog_id if current blog is not same.
+			if ( is_multisite() && get_current_blog_id() !== $blog_id ) {
+				switch_to_blog( $blog_id );
+				$switch = true;
+			}
+
+			foreach ( $items as $item_key => $item ) {
+				$subscription = bp_parse_args(
+					$item,
+					array(
+						'id'                => 0,
+						'blog_id'           => get_current_blog_id(),
+						'user_id'           => 0,
+						'item_id'           => 0,
+						'secondary_item_id' => 0,
+					)
+				);
+
+				if (
+					empty( $subscription['id'] ) ||
+					empty( $subscription['item_id'] )
+				) {
+					continue;
+				}
+
+				$group_full_image  = bp_core_fetch_avatar(
+					array(
+						'html'    => false,
+						'object'  => 'group',
+						'item_id' => $subscription['item_id'],
+						'type'    => 'full',
+					)
+				);
+				$group_thumb_image = bp_core_fetch_avatar(
+					array(
+						'html'    => false,
+						'object'  => 'group',
+						'item_id' => $subscription['item_id'],
+						'type'    => 'thumb',
+					)
+				);
+
+				// Get group.
+				$group = groups_get_group( $subscription['item_id'] );
+
+				$data = array();
+				if ( empty( $group ) || empty( $group->id ) ) {
+					$data['link']          = '';
+					$data['icon']['full']  = $group_full_image;
+					$data['icon']['thumb'] = $group_thumb_image;
+					$data['title']         = sprintf(
+					/* translators: Subscription label. */
+						__( 'Deleted %s', 'buddyboss' ),
+						$type_data['label']['singular']
+					);
+				} else {
+					$data['title']         = $group->name;
+					$data['link']          = bp_get_group_permalink( $group );
+					$data['icon']['full']  = (string) $group_full_image;
+					$data['icon']['thumb'] = (string) $group_thumb_image;
+				}
+
+				// Parse the data.
+				$data = bp_parse_args(
+					$data,
+					array(
+						'title'            => '',
+						'description_html' => '',
+						'parent_html'      => '',
+						'icon'             => array(),
+						'link'             => '',
+					)
+				);
+
+				// Reassign the extra data to exist object.
+				$items[ $item_key ] = (object) array_merge( (array) $item, $data );
+			}
+
+			// Restore current blog.
+			if ( $switch ) {
+				restore_current_blog();
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Send callback function for group type notification.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return bool|void
+	 */
+	public function bb_send_subscribed_group_notifications( $args ) {
+
+		// Bail if Legacy mode is enabled.
+		if ( bb_enabled_legacy_email_preference() ) {
+			return false;
+		}
+
+		$r = bp_parse_args(
+			$args,
+			array(
+				'type'              => '',
+				'item_id'           => '',
+				'data'              => array(),
+				'notification_type' => '',
+				'user_ids'          => array(),
+			)
+		);
+
+		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || empty( $r['notification_type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
+			return false;
+		}
+
+		$data_id                 = 0;
+		$author_id               = 0;
+		$type_key                = '';
+		$email_notification_type = '';
+		if ( 'bb_groups_subscribed_activity' === $r['notification_type'] ) {
+
+			// Bail if component is not activated.
+			if ( ! bp_is_active( 'activity' ) ) {
+				return false;
+			}
+
+			$data_id  = ! empty( $r['data']['activity_id'] ) ? $r['data']['activity_id'] : 0;
+			$activity = new BP_Activity_Activity( $data_id );
+
+			if ( empty( $activity ) ) {
+				return false;
+			}
+
+			$type_key                = 'bb_groups_subscribed_activity';
+			$email_notification_type = 'groups-new-post';
+			$author_id               = ! empty( $activity->user_id ) ? $activity->user_id : 0;
+		} elseif ( 'bb_groups_subscribed_discussion' === $r['notification_type'] ) {
+
+			// Bail if component is not activated.
+			if ( ! bp_is_active( 'forums' ) ) {
+				return false;
+			}
+
+			$data_id                 = ! empty( $r['data']['topic_id'] ) ? $r['data']['topic_id'] : 0;
+			$type_key                = 'bb_groups_subscribed_discussion';
+			$email_notification_type = 'groups-new-forum-topic';
+			$author_id               = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bbp_get_topic_author_id( $data_id );
+		}
+
+		if ( empty( $data_id ) || empty( $author_id ) || empty( $type_key ) || empty( $email_notification_type ) ) {
+			return false;
+		}
+
+		$email_tokens = ! empty( $r['data']['email_tokens'] ) ? $r['data']['email_tokens'] : array();
+
+		// Remove author from the users.
+		$unset_post_key = array_search( $author_id, $r['user_ids'], true );
+		if ( false !== $unset_post_key ) {
+			unset( $r['user_ids'][ $unset_post_key ] );
+		}
+
+		foreach ( $r['user_ids'] as $user_id ) {
+			// Bail if member opted out of receiving this email.
+			// Check the sender is blocked by recipient or not.
+			if (
+				true === bb_is_notification_enabled( $user_id, $type_key ) &&
+				true !== (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id )
+			) {
+				$unsubscribe_args = array(
+					'user_id'           => $user_id,
+					'notification_type' => $email_notification_type,
+				);
+
+				$email_tokens['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+				// Send notification email.
+				bp_send_email( $email_notification_type, (int) $user_id, $email_tokens );
+			}
+
+			if ( bp_is_active( 'notifications' ) ) {
+				bp_notifications_add_notification(
+					array(
+						'user_id'           => $user_id,
+						'item_id'           => $data_id,
+						'secondary_item_id' => $author_id,
+						'component_name'    => buddypress()->groups->id,
+						'component_action'  => $r['notification_type'],
+						'date_notified'     => bp_core_current_time(),
+						'is_new'            => 1,
+					)
+				);
+			}
+		}
+
+		return true;
 	}
 }

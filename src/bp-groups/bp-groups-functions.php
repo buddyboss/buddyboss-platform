@@ -702,6 +702,22 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 		);
 	}
 
+	// Create a group subscription.
+	if ( $new_member->is_confirmed ) {
+		// Get group parent.
+		$parent_group_id = bp_get_parent_group_id( $new_member->group_id );
+
+		bb_create_subscription(
+			array(
+				'blog_id'           => 1,
+				'user_id'           => $new_member->user_id,
+				'item_id'           => $new_member->group_id,
+				'type'              => 'group',
+				'secondary_item_id' => $parent_group_id,
+			)
+		);
+	}
+
 	/**
 	 * Fires after a user joins a group.
 	 *

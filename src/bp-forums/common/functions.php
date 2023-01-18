@@ -1284,11 +1284,6 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		return false;
 	}
 
-	// Bail if discussion is attached in a group.
-	if ( function_exists( 'bbp_get_forum_group_ids' ) && ! empty( bbp_get_forum_group_ids( $forum_id ) ) ) {
-		return false;
-	}
-
 	// Poster name.
 	$topic_author_name = bbp_get_topic_author_display_name( $topic_id );
 
@@ -1332,10 +1327,22 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 	do_action( 'bbp_pre_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
 
+	$type    = 'forum';
+	$item_id = $forum_id;
+	// Check if discussion is attached in a group then send group subscription notifications.
+	if ( function_exists( 'bbp_get_forum_group_ids' ) && ! empty( bbp_get_forum_group_ids( $r['item_id'] ) ) ) {
+		$item_id = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+		$type    = 'group';
+	}
+
+	if ( empty( $item_id ) ) {
+		return false;
+	}
+
 	bb_send_notifications_to_subscribers(
 		array(
-			'type'    => 'forum',
-			'item_id' => $forum_id,
+			'type'    => $type,
+			'item_id' => $item_id,
 			'data'    => array(
 				'topic_id'     => $topic_id,
 				'author_id'    => $topic_author,
