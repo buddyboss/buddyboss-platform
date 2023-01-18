@@ -243,7 +243,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
 
 			// Remove class to display draft.
-			$( '#new-post' ).removeClass( 'has-draft has-content' );
+			$( '#new-post' ).removeClass( 'has-draft has-content has-media' );
 		},
 
 		resetTopicReplyDraftPostForm: function() {
@@ -582,7 +582,9 @@ window.bp = window.bp || {};
 				var element = $editor.get( 0 );
 				element.focus();
 				$form.find( '#bbp_topic_content' ).val( activity_data.bbp_topic_content );
-				$form.addClass( 'has-content' );
+				if( $( element ).text() !== '' ) {
+					$form.addClass( 'has-content' );
+				}
 			}
 
 			// Stick topic.
@@ -642,7 +644,9 @@ window.bp = window.bp || {};
 				var element = $editor.get( 0 );
 				element.focus();
 				$form.find( '#bbp_reply_content' ).val( activity_data.bbp_reply_content );
-				$form.addClass( 'has-content' );
+				if( $( element ).text() !== '' ) {
+					$form.addClass( 'has-content' );
+				}
 			}
 
 			// Subscribe notify.
@@ -742,6 +746,8 @@ window.bp = window.bp || {};
 						}
 					}
 
+					$form.addClass( 'has-media' );
+
 				}
 			}
 
@@ -811,6 +817,8 @@ window.bp = window.bp || {};
 							$form.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
 					}
+
+					$form.addClass( 'has-media' );
 
 				}
 			}
@@ -882,6 +890,8 @@ window.bp = window.bp || {};
 						}
 					}
 
+					$form.addClass( 'has-media' );
+
 				}
 			}
 
@@ -911,6 +921,7 @@ window.bp = window.bp || {};
 						if ( $form.find( '#forums-media-button' ) ) {
 							$form.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
+						$form.addClass( 'has-media' );
 					}
 				}
 			}
