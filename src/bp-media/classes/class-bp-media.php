@@ -1203,7 +1203,8 @@ class BP_Media {
 							$activity_delete = true;
 						}
 						if (
-							true === $activity_delete && bp_activity_delete(
+							true === $activity_delete &&
+							bp_activity_delete(
 								array(
 									'id'      => $activity->id,
 									'user_id' => $activity->user_id,
