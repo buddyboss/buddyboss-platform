@@ -521,7 +521,13 @@ function bb_get_subscriptions_types( $singular = false ) {
 	if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
 		if ( ! empty( $all_subscriptions_types ) ) {
 			foreach ( $all_subscriptions_types as $type ) {
-				if ( bb_get_modern_notification_admin_settings_is_enabled( $type['notification_type'] ) ) {
+				if (
+					is_array( $type['notification_type'] ) &&
+					1 < count( $type['notification_type'] ) &&
+					! empty( array_filter( array_map( 'bb_get_modern_notification_admin_settings_is_enabled', $type['notification_type'] ) ) )
+				) {
+					$types[ $type['subscription_type'] ] = ( $singular ? $type['label']['singular'] : $type['label']['plural'] );
+				} elseif ( bb_get_modern_notification_admin_settings_is_enabled( $type['notification_type'] ) ) {
 					$types[ $type['subscription_type'] ] = ( $singular ? $type['label']['singular'] : $type['label']['plural'] );
 				}
 			}
