@@ -1619,6 +1619,27 @@ h2.bbp-form-title.entry-title {
 }
 
 
+/* Forum submit button*/
+
+#new-post {
+
+	.bbp-form #bbp_reply_submit {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
+	&.has-content {
+
+		.bbp-form #bbp_reply_submit {
+			opacity: 1;
+			pointer-events: initial;
+		}
+
+	}
+
+}
+
+
 /* Forum Video*/
 
 #bbpress-forums .bb-activity-media-wrap.forums-video-wrap {

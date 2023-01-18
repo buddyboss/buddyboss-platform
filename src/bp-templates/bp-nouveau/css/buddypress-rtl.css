@@ -16038,6 +16038,17 @@ h2.bbp-form-title.entry-title {
   opacity: 0.7;
 }
 
+/* Forum submit button*/
+#new-post .bbp-form #bbp_reply_submit {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+#new-post.has-content .bbp-form #bbp_reply_submit {
+  opacity: 1;
+  pointer-events: initial;
+}
+
 /* Forum Video*/
 #bbpress-forums .bb-activity-media-wrap.forums-video-wrap .bb-activity-video-elem {
   padding: 3px;
