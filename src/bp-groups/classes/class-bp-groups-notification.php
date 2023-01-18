@@ -798,18 +798,17 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$notification_tooltip_text
 		);
 
-		// @todo change the email content.
 		$this->register_email_type(
 			'groups-new-post',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}"', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "{{poster.name}} posted an update in {{{group.name}}}.\n\n{{{activity.content}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{activity.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} posted an update in {{{group.name}}}.\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'New activity post by someone a member is following', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+				'email_plain_content' => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}.\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails of new posts in groups your subscribed to.', 'buddyboss' ),
 			),
 			'bb_groups_subscribed_activity'
 		);
@@ -874,18 +873,17 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$notification_tooltip_text
 		);
 
-		// @todo change the email content.
 		$this->register_email_type(
 			'groups-new-forum-topic',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "{{poster.name}} posted an update in {{{group.name}}}.\n\n{{{activity.content}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in the forum <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} posted an update in {{{group.name}}}.\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'New activity post by someone a member is following', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+				'email_plain_content' => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
+				'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer recieve emails of new discussions in groups your subscribed to.', 'buddyboss' ),
 			),
 			'bb_groups_subscribed_discussion'
 		);
