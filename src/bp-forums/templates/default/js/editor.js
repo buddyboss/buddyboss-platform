@@ -175,6 +175,15 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_reply_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery(element).text();
+
+							if( $reply_content.trim() !== '' ){
+								jQuery(element).closest('form').addClass( 'has-content')
+							} else {
+								jQuery(element).closest('form').removeClass( 'has-content')
+							}
 						}
 					);
 

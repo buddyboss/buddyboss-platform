@@ -243,7 +243,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
 
 			// Remove class to display draft.
-			$( '#new-post' ).removeClass( 'has-draft' );
+			$( '#new-post' ).removeClass( 'has-draft has-content' );
 		},
 
 		resetTopicReplyDraftPostForm: function() {
@@ -348,7 +348,7 @@ window.bp = window.bp || {};
 			target[0].reset();
 
 			// Remove class to display draft.
-			target.removeClass( 'has-draft' );
+			target.removeClass( ' has-content' );
 		},
 
 		collectTopicReplyDraftActivity: function() {
@@ -582,6 +582,7 @@ window.bp = window.bp || {};
 				var element = $editor.get( 0 );
 				element.focus();
 				$form.find( '#bbp_topic_content' ).val( activity_data.bbp_topic_content );
+				$form.addClass( 'has-content' );
 			}
 
 			// Stick topic.
@@ -641,6 +642,7 @@ window.bp = window.bp || {};
 				var element = $editor.get( 0 );
 				element.focus();
 				$form.find( '#bbp_reply_content' ).val( activity_data.bbp_reply_content );
+				$form.addClass( 'has-content' );
 			}
 
 			// Subscribe notify.
