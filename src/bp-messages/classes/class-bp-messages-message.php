@@ -71,6 +71,13 @@ class BP_Messages_Message {
 	public $mark_visible;
 
 	/**
+	 * Flag for posted message as a read for all recipients.
+	 *
+	 * @var bool
+	 */
+	public $mark_read;
+
+	/**
 	 * Message recipients.
 	 *
 	 * @var bool|array
@@ -133,6 +140,7 @@ class BP_Messages_Message {
 		$this->date_sent    = apply_filters( 'messages_message_date_sent_before_save', $this->date_sent, $this->id );
 		$this->is_hidden    = apply_filters( 'messages_message_is_hidden_before_save', $this->is_hidden, $this->id );
 		$this->mark_visible = apply_filters( 'messages_message_mark_visible_before_save', $this->mark_visible, $this->id );
+		$this->mark_read    = apply_filters( 'messages_message_mark_read_before_save', $this->mark_read, $this->id );
 
 		/**
 		 * Fires before the current message item gets saved.
@@ -194,8 +202,10 @@ class BP_Messages_Message {
 			do_action_ref_array( 'messages_message_new_thread_save', array( &$this ) );
 
 		} else {
-			// Update the unread count for all recipients.
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			if ( false === $this->mark_read ) {
+				// Update the unread count for all recipients.
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			}
 
 			if ( true === $this->mark_visible ) {
 				// Mark the thread to visible for all recipients.
