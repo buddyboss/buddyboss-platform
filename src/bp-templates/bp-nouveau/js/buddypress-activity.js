@@ -1041,6 +1041,15 @@ window.bp = window.bp || {};
 							var text = e.clipboardData.getData( 'text/plain' );
 							document.execCommand( 'insertText', false, text );
 						} );
+
+						//Register keyup event
+						div_editor.addEventListener( 'keyup', function ( e ) {
+							if( jQuery( e.currentTarget ).text().trim() !== '' ) {
+								jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-content' );
+							} else {
+								jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
+							}
+						} );
 						self.InitiatedCommentForms.push( $(div_editor).attr( 'id' ) );//Add this Comment form in initiated comment form list
 					}
 				}
