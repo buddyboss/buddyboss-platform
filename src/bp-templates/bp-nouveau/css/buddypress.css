@@ -16061,6 +16061,12 @@ h2.bbp-form-title.entry-title {
   pointer-events: none;
 }
 
+.topic-edit #new-post .bbp-form #bbp_topic_submit,
+.reply-edit #new-post .bbp-form #bbp_reply_submit {
+  opacity: 1;
+  pointer-events: initial;
+}
+
 /* Forum Video*/
 #bbpress-forums .bb-activity-media-wrap.forums-video-wrap .bb-activity-video-elem {
   padding: 3px;

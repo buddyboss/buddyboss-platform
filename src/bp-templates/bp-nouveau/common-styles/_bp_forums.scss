@@ -1674,6 +1674,12 @@ h2.bbp-form-title.entry-title {
 
 }
 
+.topic-edit #new-post .bbp-form #bbp_topic_submit,
+.reply-edit #new-post .bbp-form #bbp_reply_submit {
+	opacity: 1;
+	pointer-events: initial;
+}
+
 
 /* Forum Video*/
 
