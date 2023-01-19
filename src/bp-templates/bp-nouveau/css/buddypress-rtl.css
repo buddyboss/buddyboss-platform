@@ -6401,6 +6401,17 @@ span.dashicons.dashicons-admin-file:before {
   display: none;
 }
 
+.buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content input[name="ac_form_submit"], .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content input[name="ac_form_submit"] {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+.buddypress-wrap .activity-comments .ac-form.media-uploading .ac-reply-content input[name="ac_form_submit"],
+.buddypress-wrap .activity-comments .ac-form .ac-reply-content input[name="ac_form_submit"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .buddypress-wrap .mini .activity-comments {
   clear: both;
   margin-top: 0;
@@ -16036,6 +16047,29 @@ h2.bbp-form-title.entry-title {
 
 .bbp-reply-content.bs-forum-suspended-content {
   opacity: 0.7;
+}
+
+/* Forum submit button*/
+#new-post.has-gif .bbp-form #bbp_reply_submit, #new-post.has-media .bbp-form #bbp_reply_submit, #new-post.has-content .bbp-form #bbp_reply_submit {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+#new-post.media-uploading .bbp-form #bbp_reply_submit,
+#new-post .bbp-form #bbp_reply_submit {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+#new-post.has-title.has-gif .bbp-form #bbp_topic_submit, #new-post.has-title.has-media .bbp-form #bbp_topic_submit, #new-post.has-title.has-content .bbp-form #bbp_topic_submit {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+#new-post.media-uploading.has-title .bbp-form #bbp_topic_submit,
+#new-post .bbp-form #bbp_topic_submit {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 /* Forum Video*/
