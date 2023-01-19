@@ -243,7 +243,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
 
 			// Remove class to display draft.
-			$( '#new-post' ).removeClass( 'has-draft has-content has-media' );
+			$( '#new-post' ).removeClass( 'has-draft has-content has-media has-gif' );
 		},
 
 		resetTopicReplyDraftPostForm: function() {
@@ -921,7 +921,7 @@ window.bp = window.bp || {};
 						if ( $form.find( '#forums-media-button' ) ) {
 							$form.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
-						$form.addClass( 'has-media' );
+						$form.addClass( 'has-gif' );
 					}
 				}
 			}

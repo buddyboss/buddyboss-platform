@@ -16039,7 +16039,7 @@ h2.bbp-form-title.entry-title {
 }
 
 /* Forum submit button*/
-#new-post.has-media .bbp-form #bbp_reply_submit, #new-post.has-content .bbp-form #bbp_reply_submit {
+#new-post.has-gif .bbp-form #bbp_reply_submit, #new-post.has-media .bbp-form #bbp_reply_submit, #new-post.has-content .bbp-form #bbp_reply_submit {
   opacity: 1;
   pointer-events: initial;
 }

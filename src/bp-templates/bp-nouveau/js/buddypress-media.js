@@ -1617,6 +1617,7 @@ window.bp = window.bp || {};
 				}
 
 				var tool_box = target.closest( 'form' );
+				tool_box.addClass('has-gif');
 				if ( tool_box.find( '#forums-document-button' ) ) {
 					tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
@@ -1693,6 +1694,7 @@ window.bp = window.bp || {};
 			}
 
 			var tool_box = target.closest( 'form' );
+			tool_box.removeClass('has-gif');
 			if ( tool_box.find( '#forums-document-button' ) ) {
 				tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 			}
@@ -1701,6 +1703,9 @@ window.bp = window.bp || {};
 			}
 			if ( tool_box.find( '#forums-video-button' ) ) {
 				tool_box.find( '#forums-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+			}
+			if ( tool_box.find( '#forums-gif-button' ) ) {
+				tool_box.find( '#forums-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 			}
 		},
 
