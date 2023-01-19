@@ -2353,7 +2353,6 @@ window.bp = window.bp || {};
 
 								if ( ! _.isNull( self.dropzone_obj[ dropzone_obj_key ].files ) && self.dropzone_obj[ dropzone_obj_key ].files.length === 0 ) {
 									var tool_box = target.closest( 'form' );
-									tool_box.removeClass( 'has-media' );
 									if ( tool_box.find( '#forums-document-button' ) ) {
 										tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 									}
@@ -2368,6 +2367,11 @@ window.bp = window.bp || {};
 									}
 								}
 
+							}
+
+							if ( ! _.isNull( self.dropzone_obj[ dropzone_obj_key ].files ) && self.dropzone_obj[ dropzone_obj_key ].files.length === 0 ) {
+								var targetForm = target.closest( 'form' );
+								targetForm.removeClass( 'has-media' );
 							}
 						}
 					);
@@ -3112,7 +3116,6 @@ window.bp = window.bp || {};
 
 								if ( ! _.isNull( self.dropzone_obj[ dropzone_obj_key ].files ) && self.dropzone_obj[ dropzone_obj_key ].files.length === 0 ) {
 									var tool_box = target.closest( 'form' );
-									tool_box.removeClass( 'has-media' );
 									if ( tool_box.find( '#forums-media-button' ) ) {
 										tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 									}
@@ -3127,6 +3130,11 @@ window.bp = window.bp || {};
 									}
 								}
 
+							}
+
+							if ( ! _.isNull( self.dropzone_obj[ dropzone_obj_key ].files ) && self.dropzone_obj[ dropzone_obj_key ].files.length === 0 ) {
+								var targetForm = target.closest( 'form' );
+								targetForm.removeClass( 'has-media' );
 							}
 						}
 					);
@@ -3408,7 +3416,6 @@ window.bp = window.bp || {};
 
 								if ( ! _.isNull( self.dropzone_obj[ dropzone_obj_key ].files ) && self.dropzone_obj[ dropzone_obj_key ].files.length === 0 ) {
 									var tool_box = target.closest( 'form' );
-									tool_box.removeClass( 'has-media' );
 									if ( tool_box.find( '#forums-media-button' ) ) {
 										tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 									}
@@ -3423,6 +3430,11 @@ window.bp = window.bp || {};
 									}
 								}
 
+							}
+
+							if ( ! _.isNull( self.dropzone_obj[ dropzone_obj_key ].files ) && self.dropzone_obj[ dropzone_obj_key ].files.length === 0 ) {
+								var targetForm = target.closest( 'form' );
+								targetForm.removeClass( 'has-media' );
 							}
 						}
 					);
