@@ -4113,7 +4113,28 @@ window.bp = window.bp || {};
 
 								thread.set( { content: response.message.content } );
 								if ( response.message.excerpt == '' ) {
-									// @todo setup the excerpt base on media/document/video and GIF.
+									// setup the excerpt base on media/document/video and GIF.
+									if ( undefined !== response.message.media ) {
+										response.message.excerpt = BP_Nouveau.messages.single_media;
+										if ( response.message.media.length > 1 ) {
+											response.message.excerpt = BP_Nouveau.messages.multiple_media;
+										}
+									}
+									if ( undefined !== response.message.video ) {
+										response.message.excerpt = BP_Nouveau.messages.single_video;
+										if ( response.message.video.length > 1 ) {
+											response.message.excerpt = BP_Nouveau.messages.multiple_video;
+										}
+									}
+									if ( undefined !== response.message.document ) {
+										response.message.excerpt = BP_Nouveau.messages.single_document;
+										if ( response.message.document.length > 1 ) {
+											response.message.excerpt = BP_Nouveau.messages.multiple_document;
+										}
+									}
+									if ( undefined !== response.message.gif ) {
+										response.message.excerpt = BP_Nouveau.messages.gif_media;
+									}
 								}
 								thread.set( { excerpt: response.message.excerpt } );
 								thread.set( { sender_name: response.message.sender_name } );

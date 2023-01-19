@@ -138,10 +138,13 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		'message_url'                => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ),
 		'current_thread_id'          => (int) bp_action_variable( 0 ),
 		'is_blocked_by_members'      => function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids( get_current_user_id() ) : array(),
-		'single_media'               => '',
-		'multiple_media'             => '',
-		'single_video'               => '',
-		'multiple_video'             => '',
+		'gif_media'                  => __( 'Sent a gif', 'buddyboss' ),
+		'single_media'               => __( 'Sent a photo', 'buddyboss' ),
+		'multiple_media'             => __( 'Sent some photos', 'buddyboss' ),
+		'single_video'               => __( 'Sent a video', 'buddyboss' ),
+		'multiple_video'             => __( 'Sent some videos', 'buddyboss' ),
+		'single_document'            => __( 'Sent a document', 'buddyboss' ),
+		'multiple_document'          => __( 'Sent some documents', 'buddyboss' ),
 	);
 
 	// Star private messages.
