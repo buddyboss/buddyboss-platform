@@ -86,24 +86,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_reply() {
 		$notification_read_only    = false;
-		$notification_tooltip_text = '';
+		$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
 
 		if ( ! function_exists( 'bbp_is_subscriptions_active' ) || false === bbp_is_subscriptions_active() ) {
-			$notification_read_only   = true;
-			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
-
-			if (
-				(
-					isset( $enabled_all_notification['bb_forums_subscribed_reply'] ) &&
-					! empty( $enabled_all_notification['bb_forums_subscribed_reply']['main'] ) &&
-					'yes' === $enabled_all_notification['bb_forums_subscribed_reply']['main']
-				) ||
-				! isset( $enabled_all_notification['bb_forums_subscribed_reply'] )
-			) {
-				$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
-			} else {
-				$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
-			}
+			$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
+			$notification_read_only    = true;
 		}
 
 		$this->register_notification_type(
@@ -162,24 +149,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_topic() {
 		$notification_read_only    = false;
-		$notification_tooltip_text = '';
+		$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
 
 		if ( ! function_exists( 'bbp_is_subscriptions_active' ) || false === bbp_is_subscriptions_active() ) {
-			$notification_read_only   = true;
-			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
-
-			if (
-				(
-					isset( $enabled_all_notification['bb_forums_subscribed_discussion'] ) &&
-					! empty( $enabled_all_notification['bb_forums_subscribed_discussion']['main'] ) &&
-					'yes' === $enabled_all_notification['bb_forums_subscribed_discussion']['main']
-				) ||
-				! isset( $enabled_all_notification['bb_forums_subscribed_discussion'] )
-			) {
-				$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
-			} else {
-				$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
-			}
+			$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
+			$notification_read_only    = true;
 		}
 
 		$this->register_notification_type(
