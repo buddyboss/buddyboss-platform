@@ -16055,7 +16055,7 @@ h2.bbp-form-title.entry-title {
   pointer-events: initial;
 }
 
-#new-post.media-uploading .bbp-form #bbp_topic_submit,
+#new-post.media-uploading.has-title .bbp-form #bbp_topic_submit,
 #new-post .bbp-form #bbp_topic_submit {
   opacity: 0.4;
   pointer-events: none;
