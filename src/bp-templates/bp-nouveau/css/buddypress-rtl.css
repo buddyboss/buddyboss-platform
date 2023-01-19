@@ -16050,6 +16050,17 @@ h2.bbp-form-title.entry-title {
   pointer-events: none;
 }
 
+#new-post.has-title.has-gif .bbp-form #bbp_topic_submit, #new-post.has-title.has-media .bbp-form #bbp_topic_submit, #new-post.has-title.has-content .bbp-form #bbp_topic_submit {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+#new-post.media-uploading .bbp-form #bbp_topic_submit,
+#new-post .bbp-form #bbp_topic_submit {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 /* Forum Video*/
 #bbpress-forums .bb-activity-media-wrap.forums-video-wrap .bb-activity-video-elem {
   padding: 3px;

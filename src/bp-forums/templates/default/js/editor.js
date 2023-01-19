@@ -279,6 +279,15 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_topic_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery(element).text();
+
+							if( $reply_content.trim() !== '' ){
+								jQuery(element).closest('form').addClass( 'has-content')
+							} else {
+								jQuery(element).closest('form').removeClass( 'has-content')
+							}
 						}
 					);
 
@@ -353,6 +362,14 @@ jQuery( document ).ready(
 			}
 		);
 
+		jQuery( document ).on( 'keyup', '#bbp_topic_title', function( e ) {
+			if( jQuery( e.currentTarget ).val().trim() !== '' ) {
+				jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-title' );
+			} else {
+				jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-title' );
+			}	
+		});
+		
 		/* Shift + tab from topic tags */
 		jQuery( '#bbp_topic_tags' ).bind(
 			'keydown.editor-focus',

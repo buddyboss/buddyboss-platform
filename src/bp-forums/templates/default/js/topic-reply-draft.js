@@ -265,6 +265,7 @@ window.bp = window.bp || {};
 				$medium_editor.setContent( '' );
 				target.find( '#bbp_topic_content' ).val( '' );
 				target.find( '#bbp_topic_title' ).val( '' );
+				target.removeClass( 'has-title' );
 			} else if ( 'reply' === this.topic_reply_draft.object ) {
 				$medium_editor = window.forums_medium_reply_editor[editor_key];
 
@@ -574,6 +575,7 @@ window.bp = window.bp || {};
 			// Title.
 			if ( 'undefined' !== typeof activity_data.bbp_topic_title ) {
 				$form.find( '#bbp_topic_title' ).val( activity_data.bbp_topic_title );
+				$form.addClass( 'has-title' );
 			}
 
 			// Content.
