@@ -38,6 +38,7 @@ window.bp = window.bp || {};
 			this.box          = 'inbox';
 			this.mediumEditor = false;
 			this.divider      = [];
+			this.has_history  = [];
 			this.previous     = '';
 			this.last         = '';
 			this.threadType   = 'unarchived';
@@ -1674,8 +1675,7 @@ window.bp = window.bp || {};
 						function( response ) {
 							if (
 								! _.isUndefined( response.type ) &&
-								'success' === response.type &&
-								( 'undefined' === typeof bb_pusher_vars || ( 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'off' === bb_pusher_vars.is_live_messaging_enabled ) )
+								'success' === response.type
 							) {
 								window.Backbone.trigger(
 									'relistelements',
@@ -4081,6 +4081,19 @@ window.bp = window.bp || {};
 							var thread_id = parseInt( thread.id );
 							if ( thread_id === parseInt( response.thread_id ) ) {
 
+								var previous_hash = ! _.isUndefined( bp.Nouveau.Messages.has_history[ thread_id ] ) ? bp.Nouveau.Messages.has_history[ thread_id ] : [];
+
+								if ( 'undefined' !== typeof response.hash && -1 !== $.inArray( response.hash, previous_hash ) ) {
+									updatedThread = thread_id;
+									return;
+								} else if ( 'undefined' !== typeof response.hash ) {
+									if ( _.isUndefined( bp.Nouveau.Messages.has_history[ thread_id ] ) ) {
+										bp.Nouveau.Messages.has_history[ thread_id ] = [];
+									}
+									bp.Nouveau.Messages.has_history[ thread_id ].push( response.hash );
+								}
+
+
 								if ( parseInt( response.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
 									thread.set( { sender_is_you: true } );
 								} else {
@@ -4097,7 +4110,11 @@ window.bp = window.bp || {};
 								
 								thread.set( { has_media: response.message.has_media } );
 
+
 								thread.set( { content: response.message.content } );
+								if ( response.message.excerpt == '' ) {
+									// @todo setup the excerpt base on media/document/video and GIF.
+								}
 								thread.set( { excerpt: response.message.excerpt } );
 								thread.set( { sender_name: response.message.sender_name } );
 								if ( 'undefined' !== typeof response.message.display_date_list ) {
