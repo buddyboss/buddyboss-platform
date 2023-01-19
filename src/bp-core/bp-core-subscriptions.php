@@ -524,10 +524,10 @@ function bb_get_subscriptions_types( $singular = false ) {
 				if (
 					is_array( $type['notification_type'] ) &&
 					1 < count( $type['notification_type'] ) &&
-					! empty( array_filter( array_map( 'bb_get_modern_notification_admin_settings_is_enabled', $type['notification_type'] ) ) )
+					! empty( array_filter( array_map( 'bb_is_enabled_subscription', $type['subscription_type'] ) ) )
 				) {
 					$types[ $type['subscription_type'] ] = ( $singular ? $type['label']['singular'] : $type['label']['plural'] );
-				} elseif ( bb_get_modern_notification_admin_settings_is_enabled( $type['notification_type'] ) ) {
+				} elseif ( bb_is_enabled_subscription( $type['subscription_type'] ) ) {
 					$types[ $type['subscription_type'] ] = ( $singular ? $type['label']['singular'] : $type['label']['plural'] );
 				}
 			}
@@ -917,11 +917,9 @@ function bb_is_enabled_modern_subscriptions( $type = '', $notification_type = ''
 
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		switch ( $type ) {
-			case 'forum':
-				$is_enabled = function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' );
-				break;
 			case 'topic':
-				$is_enabled = function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' );
+			case 'forum':
+				$is_enabled = function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active();
 				break;
 			default:
 				if ( ! empty( $notification_type ) ) {
@@ -947,11 +945,8 @@ function bb_is_enabled_modern_subscriptions( $type = '', $notification_type = ''
 function bb_is_enabled_subscription( $type, $notification_type = '' ) {
 	$is_enabled = false;
 
-	if (
-		! bb_enabled_legacy_email_preference() &&
-		bb_is_enabled_modern_subscriptions( $type, $notification_type )
-	) {
-		$is_enabled = true;
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$is_enabled = bb_is_enabled_modern_subscriptions( $type, $notification_type );
 	} elseif (
 		( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) ) &&
 		in_array( $type, array( 'forum', 'topic' ), true ) &&

@@ -222,42 +222,14 @@ abstract class BP_Core_Notification_Abstract {
 	public function registered_subscriptions_types( array $types ) {
 
 		if ( ! empty( $this->subscriptions ) ) {
-			$notification_preferences = array_column( $this->preferences, 'notification_read_only', 'notification_type' );
-
 			foreach ( $this->subscriptions as $type ) {
-				if (
-					! empty( $type['notification_type'] ) &&
-					! is_array( $type['notification_type'] ) &&
-					isset( $notification_preferences[ $type['notification_type'] ] ) &&
-					empty( $notification_preferences[ $type['notification_type'] ] )
-				) {
-					$types[ $type['subscription_type'] ] = $type;
-				} elseif (
-					! empty( $type['notification_type'] ) &&
-					is_array( $type['notification_type'] ) &&
-					! key_exists( $type['subscription_type'], $types ) &&
-					array_filter( array_map( array( $this, 'bb_filter_read_only_subscription' ), $type['notification_type'] ) )
-				) {
+				if ( ! empty( $type['notification_type'] ) && ! isset( $types[ $type['subscription_type'] ] ) ) {
 					$types[ $type['subscription_type'] ] = $type;
 				}
 			}
 		}
 
 		return $types;
-	}
-
-	/**
-	 * Check the subscription is enabled or not from preferences.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $notification_type Notification type.
-	 *
-	 * @return bool
-	 */
-	protected function bb_filter_read_only_subscription( $notification_type ) {
-		$notification_preferences = array_column( $this->preferences, 'notification_read_only', 'notification_type' );
-		return isset( $notification_preferences[ $notification_type ] ) && empty( $notification_preferences[ $notification_type ] );
 	}
 
 	/**

@@ -53,9 +53,11 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$browser_tab          = empty( $_POST['_bp_on_screen_notifications_browser_tab'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_browser_tab'] );
 		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
 
-		// Do not change settings(bb_forums_subscribed_discussion, bb_forums_subscribed_reply) when subscription is disabled from the Settings -> Forum.
-		if ( function_exists( 'bbp_is_subscriptions_active' ) && false === bbp_is_subscriptions_active() ) {
+		// Do not change settings(bb_forums_subscribed_discussion, bb_forums_subscribed_reply) because it's depend on subscription from the Settings -> Forum.
+		if ( isset( $enabled_notification['bb_forums_subscribed_discussion'] ) ) {
 			unset( $enabled_notification['bb_forums_subscribed_discussion'] );
+		}
+		if ( isset( $enabled_notification['bb_forums_subscribed_reply'] ) ) {
 			unset( $enabled_notification['bb_forums_subscribed_reply'] );
 		}
 
