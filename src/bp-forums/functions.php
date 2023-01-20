@@ -1089,7 +1089,7 @@ function bb_subscription_update_secondary_item( $post_id, $post ) {
 	}
 
 	// Update the secondary item ID.
-	BP_Subscriptions::update_secondary_item_id(
+	BB_Subscriptions::update_secondary_item_id(
 		array(
 			'type'              => $subscription_type,
 			'item_id'           => $post->ID,

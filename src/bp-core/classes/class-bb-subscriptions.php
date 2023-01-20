@@ -8,14 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Subscriptions' ) ) {
+if ( ! class_exists( 'BB_Subscriptions' ) ) {
 
 	/**
 	 * BuddyBoss Subscriptions object.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	class BP_Subscriptions {
+	class BB_Subscriptions {
 
 		/**
 		 * ID of the subscriptions.
@@ -267,7 +267,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscriptions $this Current instance of the subscription item being saved. Passed by reference.
+			 * @param BB_Subscriptions $this Current instance of the subscription item being saved. Passed by reference.
 			 */
 			do_action_ref_array( 'bb_subscriptions_before_save', array( &$this ) );
 
@@ -304,7 +304,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param bool             $is_validate True when subscription request correct otherwise false/WP_Error. Default true.
-			 * @param BP_Subscriptions $this        Current instance of the subscription item being saved.
+			 * @param BB_Subscriptions $this        Current instance of the subscription item being saved.
 			 */
 			$is_validate = apply_filters( 'bb_subscriptions_validate_before_save', true, $this );
 
@@ -377,7 +377,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscriptions $this Current instance of the subscription item that was saved. Passed by reference.
+			 * @param BB_Subscriptions $this Current instance of the subscription item that was saved. Passed by reference.
 			 */
 			do_action_ref_array( 'bb_subscriptions_after_save', array( &$this ) );
 
@@ -457,7 +457,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
+			 * @param BB_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
 			 * @param int              $id   ID of subscription.
 			 */
 			do_action_ref_array( 'bb_subscriptions_before_delete_subscription', array( &$this, $this->id ) );
@@ -472,7 +472,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param BP_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
+			 * @param BB_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
 			 * @param int              $id   ID of subscription.
 			 */
 			do_action_ref_array( 'bb_subscriptions_after_delete_subscription', array( &$this, $this->id ) );
@@ -810,7 +810,7 @@ if ( ! class_exists( 'BP_Subscriptions' ) ) {
 
 				$all_subscriptions = array();
 				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
-					$all_subscriptions[] = new BP_Subscriptions( $paged_subscription_id, false );
+					$all_subscriptions[] = new BB_Subscriptions( $paged_subscription_id, false );
 				}
 
 				$present_types = array();

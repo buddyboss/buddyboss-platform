@@ -439,7 +439,7 @@ add_action( 'bb_delete_subscription', 'bb_subscriptions_reset_cache_incrementor'
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param BP_Subscriptions $subscription Subscription object.
+ * @param BB_Subscriptions $subscription Subscription object.
  */
 function bb_subscriptions_clear_cache_for_subscription( $subscription ) {
 	if ( ! empty( $subscription->id ) ) {
