@@ -4114,7 +4114,7 @@ window.bp = window.bp || {};
 								thread.set( { content: response.message.content } );
 								if ( response.message.excerpt == '' ) {
 									// setup the excerpt base on media/document/video and GIF.
-									if ( undefined !== response.message.media ) {
+									if ( ! _.isUndefined( response.message.media )  ) {
 										response.message.excerpt = BP_Nouveau.messages.single_media;
 										if ( response.message.media.length > 1 ) {
 											response.message.excerpt = BP_Nouveau.messages.multiple_media;
