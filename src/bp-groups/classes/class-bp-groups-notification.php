@@ -765,12 +765,9 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_subscriptions() {
 		// Register the group activity subscription notifications.
-		$activity_notification_read_only    = false;
-		$activity_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
-
-		if ( ! function_exists( 'bb_enable_group_subscriptions' ) || false === bb_enable_group_subscriptions() ) {
-			$activity_notification_read_only    = true;
-			$activity_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+		$activity_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+		if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
+			$activity_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
 		}
 
 		$this->register_notification_type(
@@ -778,8 +775,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			esc_html__( 'New post in a group you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new activity post in a group a member is subscribed to', 'buddyboss' ),
 			'groups',
+			function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
 			true,
-			$activity_notification_read_only,
 			$activity_notification_tooltip_text
 		);
 
@@ -806,12 +803,9 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		// Register the group discussion subscription notifications.
-		$discussion_notification_read_only    = false;
-		$discussion_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
-
-		if ( ! function_exists( 'bb_enable_group_subscriptions' ) || false === bb_enable_group_subscriptions() ) {
-			$discussion_notification_read_only    = true;
-			$discussion_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+		$discussion_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+		if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
+			$discussion_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
 		}
 
 		$this->register_notification_type(
@@ -819,8 +813,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			esc_html__( 'New discussion in a group you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new discussion in a group a member is subscribed to', 'buddyboss' ),
 			'groups',
+			function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
 			true,
-			$discussion_notification_read_only,
 			$discussion_notification_tooltip_text
 		);
 

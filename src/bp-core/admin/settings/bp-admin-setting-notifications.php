@@ -61,8 +61,11 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 			unset( $enabled_notification['bb_forums_subscribed_reply'] );
 		}
 
-		if ( function_exists( 'bb_enable_group_subscriptions' ) && false === bb_enable_group_subscriptions() ) {
+		// Do not change settings(bb_groups_subscribed_activity, bb_groups_subscribed_discussion) because it's depend on subscription from the Settings -> Group.
+		if ( isset( $enabled_notification['bb_groups_subscribed_activity'] ) ) {
 			unset( $enabled_notification['bb_groups_subscribed_activity'] );
+		}
+		if ( isset( $enabled_notification['bb_groups_subscribed_discussion'] ) ) {
 			unset( $enabled_notification['bb_groups_subscribed_discussion'] );
 		}
 
