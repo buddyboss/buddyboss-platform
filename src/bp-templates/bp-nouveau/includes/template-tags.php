@@ -1702,10 +1702,6 @@ function bp_nouveau_get_single_item_subnav_classes() {
 		$classes[] = 'bb-subnav-plain';
 	}
 
-	if ( bp_is_settings_component() || bp_is_user_profile() ) {
-		$classes[] = 'bb-subnav-private';
-	}
-
 	$class = array_map( 'sanitize_html_class', $classes );
 
 	/**
