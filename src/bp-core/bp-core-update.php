@@ -2200,16 +2200,6 @@ function bb_migrate_subscriptions() {
 	// Create subscription table.
 	bb_core_install_subscription();
 
-	// Remove modern notification setting.
-	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
-	if ( isset( $enabled_all_notification['bb_forums_subscribed_discussion'] ) ) {
-		unset( $enabled_all_notification['bb_forums_subscribed_discussion'] );
-	}
-	if ( isset( $enabled_all_notification['bb_forums_subscribed_reply'] ) ) {
-		unset( $enabled_all_notification['bb_forums_subscribed_reply'] );
-	}
-	bp_update_option( 'bb_enabled_notification', $enabled_all_notification );
-
 	// Migrate the subscription data to new table.
 	bb_subscriptions_migrate_users_forum_topic( true, true );
 
