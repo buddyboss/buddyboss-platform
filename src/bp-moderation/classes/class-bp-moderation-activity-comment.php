@@ -66,6 +66,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		add_filter( 'bp_activity_comment_content', array( $this, 'bb_activity_comment_remove_mentioned_link' ), 30, 2 );
 	}
 
 	/**
@@ -277,5 +279,43 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$content_type = esc_html__( 'Comment', 'buddyboss' );
 
 		return $content_type;
+	}
+
+	/**
+	 * Remove mentioned link in activity comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content Activity comment.
+	 *
+	 * @return string
+	 */
+	public function bb_activity_comment_remove_mentioned_link( $content ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+		$usernames = bp_activity_find_mentions( $content );
+
+		// No mentions? Stop now!
+		if ( empty( $usernames ) ) {
+			return $content;
+		}
+
+		foreach ( (array) $usernames as $user_id => $username ) {
+			if (
+				bp_moderation_is_user_blocked( $user_id ) ||
+				bb_moderation_is_user_blocked_by( $user_id ) ||
+				bp_moderation_is_user_suspended( $user_id )
+			) {
+				preg_match_all( '/(<a.*?(?!<\/a>)@' . $usernames[ $user_id ] . '.*?<\/a>)/', $content, $content_matches );
+				if ( ! empty( $content_matches[1] ) ) {
+					foreach ( $content_matches[1] as $replacement ) {
+						$content = str_replace( $replacement, '@' . $usernames[ $user_id ], $content );
+					}
+				}
+			}
+		}
+
+		return $content;
 	}
 }
