@@ -666,7 +666,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * Register validate callback function for subscription.
 	 *
 	 * @param bool             $response      True when subscription request correct otherwise false/WP_Error.
-	 * @param BP_Subscriptions $subscriptions Current instance of the subscription item being saved.
+	 * @param BB_Subscriptions $subscriptions Current instance of the subscription item being saved.
 	 *
 	 * @return bool|WP_Error True on success, false on failure.
 	 */
