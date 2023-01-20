@@ -529,13 +529,11 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss 2.2.3
 	 */
 	public function register_notification_for_activity_post_following() {
-		$default                   = false;
 		$notification_read_only    = true;
 		$notification_tooltip_text = __( 'Requires following to enable', 'buddyboss' );
 
 		if ( function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active() ) {
 			$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
-			$default                   = true;
 			$notification_read_only    = false;
 		}
 
@@ -544,7 +542,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			__( 'New post by a member you\'re following', 'buddyboss' ),
 			esc_html__( 'A new post by someone a member is following', 'buddyboss' ),
 			'activity',
-			$default,
+			function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active(),
 			$notification_read_only,
 			$notification_tooltip_text
 		);

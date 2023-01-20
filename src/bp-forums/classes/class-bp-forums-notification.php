@@ -85,12 +85,9 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_forums_following_reply() {
-		$default                   = false;
 		$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
-
 		if ( function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
 			$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
-			$default                   = true;
 		}
 
 		$this->register_notification_type(
@@ -98,7 +95,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			__( 'New reply in a discussion you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new reply in a discussion a member is subscribed to', 'buddyboss' ),
 			'forums',
-			$default,
+			function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active(),
 			true,
 			$notification_tooltip_text,
 		);
@@ -148,12 +145,9 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_forums_following_topic() {
-		$default                   = false;
 		$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
-
 		if ( function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
 			$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
-			$default                   = true;
 		}
 
 		$this->register_notification_type(
@@ -161,7 +155,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			__( 'New discussion in a forum you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new discussion in a forum a member is subscribed to', 'buddyboss' ),
 			'forums',
-			$default,
+			function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active(),
 			true,
 			$notification_tooltip_text
 		);
