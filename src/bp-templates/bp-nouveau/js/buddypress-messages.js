@@ -4120,7 +4120,7 @@ window.bp = window.bp || {};
 											response.message.excerpt = BP_Nouveau.messages.multiple_media;
 										}
 									}
-									if ( undefined !== response.message.video ) {
+									if ( ! _.isUndefined( response.message.video ) ) {
 										response.message.excerpt = BP_Nouveau.messages.single_video;
 										if ( response.message.video.length > 1 ) {
 											response.message.excerpt = BP_Nouveau.messages.multiple_video;
