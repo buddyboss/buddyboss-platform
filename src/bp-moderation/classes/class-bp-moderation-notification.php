@@ -105,6 +105,11 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 				// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
 				$sql_where .= " AND ( {$tbl_alias}.item_id NOT IN ( " . implode( ',', $hidden_users_ids ) . " ) )";
 			}
+
+			$blocked_by_members = bb_moderation_get_blocked_by_user_ids();
+			if ( ! empty( $blocked_by_members ) ) {
+				$sql_where .= " AND ( {$tbl_alias}.secondary_item_id NOT IN (" . bb_moderation_get_blocked_by_sql() . ') )';
+			}
 		}
 
 		/**
