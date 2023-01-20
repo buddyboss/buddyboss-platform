@@ -6745,10 +6745,13 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		$all_notifications
 	);
 
-	$read_only_notifications = array_column( array_filter( $all_notifications ), 'notification_read_only', 'key' );
+	$read_only_notifications = array_column( $all_notifications, null, 'key' );
 	if (
+		! empty( $read_only_notifications ) &&
 		isset( $read_only_notifications[ $notification_type ] ) &&
-		true === (bool) $read_only_notifications[ $notification_type ]
+		! empty( $read_only_notifications[ $notification_type ]['notification_read_only'] ) &&
+		! empty( $read_only_notifications[ $notification_type ]['default'] ) &&
+		'no' === $read_only_notifications[ $notification_type ]['default']
 	) {
 		return false;
 	}
