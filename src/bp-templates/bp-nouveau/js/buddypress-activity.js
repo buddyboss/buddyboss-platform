@@ -1044,7 +1044,13 @@ window.bp = window.bp || {};
 
 						//Register keyup event
 						div_editor.addEventListener( 'keyup', function ( e ) {
-							if( jQuery( e.currentTarget ).text().trim() !== '' ) {
+							var $activity_comment_content   = jQuery( e.currentTarget ).html();
+
+							content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							content = content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( e.currentTarget ).text().trim();
+							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 								jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-content' );
 							} else {
 								jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
@@ -1083,6 +1089,18 @@ window.bp = window.bp || {};
 							events: {
 								emojibtn_click: function () {
 									$( '#ac-input-' + activity_id )[0].emojioneArea.hidePicker();
+
+									// Check if emoji is added then enable submit button
+									var $activity_comment_input = $( '#ac-form-' + activity_id + ' #ac-input-' + activity_id );
+									var $activity_comment_content   = $activity_comment_input.html();
+									content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+									content = content.replace( /&nbsp;/g, ' ' );
+									var content_text = $activity_comment_input.text();
+									if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+										$activity_comment_input.closest( 'form' ).addClass( 'has-content' );
+									} else {
+										$activity_comment_input.closest( 'form' ).removeClass( 'has-content' );
+									}
 								},
 
 								picker_show: function () {
