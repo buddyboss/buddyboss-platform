@@ -897,18 +897,21 @@ function bb_delete_item_subscriptions( $type, $item_id, $blog_id = 0 ) {
 }
 
 /**
- * Enabled modern subscriptions or not.
+ * Check the particular subscription is enabled or not for modern or legacy.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $type              Optional. The type of subscription like 'forum', topic'.
+ * @param string $type              The type of subscription like 'forum', topic'.
  * @param string $notification_type The type of notification.
  *
  * @return bool
  */
-function bb_is_enabled_modern_subscriptions( $type = '', $notification_type = '' ) {
-	$is_enabled = false;
+function bb_is_enabled_subscription( $type, $notification_type = '' ) {
+	if ( empty( $type ) ) {
+		return false;
+	}
 
+	$is_enabled = false;
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		switch ( $type ) {
 			case 'topic':
@@ -921,26 +924,6 @@ function bb_is_enabled_modern_subscriptions( $type = '', $notification_type = ''
 				}
 				break;
 		}
-	}
-
-	return (bool) apply_filters( 'bb_is_enabled_modern_subscriptions', $is_enabled, $type, $notification_type );
-}
-
-/**
- * Check the particular subscription is enabled or not for modern or legacy.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $type              The type of subscription like 'forum', topic'.
- * @param string $notification_type The type of notification.
- *
- * @return bool
- */
-function bb_is_enabled_subscription( $type, $notification_type = '' ) {
-	$is_enabled = false;
-
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		$is_enabled = bb_is_enabled_modern_subscriptions( $type, $notification_type );
 	} elseif (
 		( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) ) &&
 		in_array( $type, array( 'forum', 'topic' ), true ) &&
