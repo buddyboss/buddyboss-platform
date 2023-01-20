@@ -6401,7 +6401,7 @@ span.dashicons.dashicons-admin-file:before {
   display: none;
 }
 
-.buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content input[name="ac_form_submit"], .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content input[name="ac_form_submit"] {
+.buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content input[name="ac_form_submit"], .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content input[name="ac_form_submit"], .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content input[name="ac_form_submit"] {
   opacity: 1;
   pointer-events: initial;
 }
