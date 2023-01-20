@@ -304,8 +304,8 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 					<?php
 					if ( ! empty( $field_group['fields'] ) ) {
 						echo '<div class="field-set">';
-						foreach ( $field_group['fields'] as $field ) {
-							$checked = isset( $field['default'] ) && 'yes' === $field['default'] ? true : false;
+                        foreach ( $field_group['fields'] as $field ) {
+							$checked = isset( $field['default'] ) && 'yes' === $field['default'];
 							?>
 								<div class="field-block">
 									<div class="field-render">
@@ -395,7 +395,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 
 										if ( ! empty( $options ) ) {
 											foreach ( $options as $key => $v ) {
-												$parent_disabled = ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'];
+												$parent_disabled = ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'] && empty( $field['notification_default'] );
 												$is_disabled     = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', ! $checked );
 												$is_render       = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
 												if ( $is_render ) {
@@ -459,7 +459,11 @@ function bb_activate_notification( $field, $checked ) {
 		$tooltip_pos  = 'up';
 		$tooltip_text = $field['notification_tooltip_text'];
 	}
-	$disabled = ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'];
+	$disabled = ! empty( $field['notification_read_only'] );
+
+	if ( ! empty( $field['notification_read_only'] ) && ! empty( $field['default'] ) && 'no' === $field['default'] ) {
+		$checked = false;
+	}
 	?>
 
 	<input name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="hidden" value="no" />

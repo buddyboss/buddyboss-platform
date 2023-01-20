@@ -222,14 +222,15 @@ abstract class BP_Core_Notification_Abstract {
 	public function registered_subscriptions_types( array $types ) {
 
 		if ( ! empty( $this->subscriptions ) ) {
-			$notification_preferences = array_column( $this->preferences, 'notification_read_only', 'notification_type' );
+
+			$filtered_preferences     = $this->bb_get_subscription_filtered_notification_preferences();
+			$notification_preferences = array_column( $filtered_preferences, 'notification_read_only', 'notification_type' );
 
 			foreach ( $this->subscriptions as $type ) {
 				if (
 					! empty( $type['notification_type'] ) &&
 					! is_array( $type['notification_type'] ) &&
-					isset( $notification_preferences[ $type['notification_type'] ] ) &&
-					empty( $notification_preferences[ $type['notification_type'] ] )
+					isset( $notification_preferences[ $type['notification_type'] ] )
 				) {
 					$types[ $type['subscription_type'] ] = $type;
 				} elseif (
@@ -256,8 +257,37 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return bool
 	 */
 	protected function bb_filter_read_only_subscription( $notification_type ) {
-		$notification_preferences = array_column( $this->preferences, 'notification_read_only', 'notification_type' );
-		return isset( $notification_preferences[ $notification_type ] ) && empty( $notification_preferences[ $notification_type ] );
+		$filtered_preferences     = $this->bb_get_subscription_filtered_notification_preferences();
+		$notification_preferences = array_column( $filtered_preferences, 'notification_read_only', 'notification_type' );
+		return isset( $notification_preferences[ $notification_type ] );
+	}
+
+	/**
+	 * Filtered the notification preferences to use for subscription.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array
+	 */
+	protected function bb_get_subscription_filtered_notification_preferences() {
+		return array_map(
+			function ( $preference ) {
+				if (
+					(
+						isset( $preference['notification_read_only'], $preference['notification_default'] ) &&
+						true === (bool) $preference['notification_read_only'] &&
+						true === (bool) $preference['notification_default']
+					) ||
+					(
+						! isset( $preference['notification_read_only'] ) ||
+						false === (bool) $preference['notification_read_only']
+					)
+				) {
+					return $preference;
+				}
+			},
+			$this->preferences
+		);
 	}
 
 	/**
