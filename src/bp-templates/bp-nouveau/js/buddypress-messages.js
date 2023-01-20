@@ -4132,7 +4132,7 @@ window.bp = window.bp || {};
 											response.message.excerpt = BP_Nouveau.messages.multiple_document;
 										}
 									}
-									if ( undefined !== response.message.gif ) {
+									if ( ! _.isUndefined( response.message.gif ) ) {
 										response.message.excerpt = BP_Nouveau.messages.gif_media;
 									}
 								}
