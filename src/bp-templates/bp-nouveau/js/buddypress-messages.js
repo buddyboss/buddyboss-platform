@@ -4126,7 +4126,7 @@ window.bp = window.bp || {};
 											response.message.excerpt = BP_Nouveau.messages.multiple_video;
 										}
 									}
-									if ( undefined !== response.message.document ) {
+									if ( ! _.isUndefined( response.message.document ) ) {
 										response.message.excerpt = BP_Nouveau.messages.single_document;
 										if ( response.message.document.length > 1 ) {
 											response.message.excerpt = BP_Nouveau.messages.multiple_document;
