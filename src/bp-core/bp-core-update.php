@@ -389,6 +389,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19181 ) {
 			bb_update_to_2_2_4();
 		}
+
+		if ( $raw_db_version < 19381 ) {
+			bb_update_to_2_2_6();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2162,4 +2166,15 @@ function bb_update_to_2_2_4() {
 		// Clear members API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
 	}
+}
+
+/**
+ * Clear web cache on the update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_6() {
+	wp_cache_flush();
 }
