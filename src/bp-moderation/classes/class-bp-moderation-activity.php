@@ -71,7 +71,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 
-		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_update_mentioned_link' ), 30, 2 );
+		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mentioned_link' ), 30, 2 );
 	}
 
 	/**
@@ -550,7 +550,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @return string
 	 */
-	public function bb_activity_content_update_mentioned_link( $content, $activity ) {
+	public function bb_activity_content_remove_mentioned_link( $content, $activity ) {
 		if ( empty( $content ) ) {
 			return $content;
 		}
