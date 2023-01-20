@@ -304,7 +304,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 					<?php
 					if ( ! empty( $field_group['fields'] ) ) {
 						echo '<div class="field-set">';
-                        foreach ( $field_group['fields'] as $field ) {
+						foreach ( $field_group['fields'] as $field ) {
 							$checked = isset( $field['default'] ) && 'yes' === $field['default'];
 							?>
 								<div class="field-block">
