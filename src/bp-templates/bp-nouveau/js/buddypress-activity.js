@@ -1529,6 +1529,8 @@ window.bp = window.bp || {};
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
 							var tool_box = target.parents( '.ac-reply-toolbar' );
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-document-button' ) ) {
 								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -1547,6 +1549,9 @@ window.bp = window.bp || {};
 					self.dropzone_obj.on(
 						'uploadprogress',
 						function( element ) {
+
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'media-uploading' );
 
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 							var radius        = circle.r.baseVal.value;
@@ -1611,6 +1616,8 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -1634,6 +1641,8 @@ window.bp = window.bp || {};
 
 							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
 								var tool_box = target.parents( '.ac-reply-toolbar' );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'has-media' );
 								if ( tool_box.find( '.ac-reply-document-button' ) ) {
 									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
@@ -1646,6 +1655,17 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
+							}
+						}
+					);
+
+					// Enable submit button when all medias are uploaded
+					self.dropzone_obj.on(
+						'complete',
+						function() {
+							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -1724,6 +1744,8 @@ window.bp = window.bp || {};
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
 							var tool_box = target.parents( '.ac-reply-toolbar' );
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -1742,6 +1764,9 @@ window.bp = window.bp || {};
 					self.dropzone_document_obj.on(
 						'uploadprogress',
 						function( element ) {
+
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'media-uploading' );
 
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 							var radius        = circle.r.baseVal.value;
@@ -1806,6 +1831,8 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-document"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -1827,8 +1854,10 @@ window.bp = window.bp || {};
 								}
 							}
 
-							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
+							if ( ! _.isNull( self.dropzone_document_obj ) && ! _.isNull( self.dropzone_document_obj.files ) && self.dropzone_document_obj.files.length === 0 ) {
 								var tool_box = target.parents( '.ac-reply-toolbar' );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'has-media' );
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
@@ -1841,6 +1870,17 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-document-button' ) ) {
 									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
+							}
+						}
+					);
+
+					// Enable submit button when all medias are uploaded
+					self.dropzone_document_obj.on(
+						'complete',
+						function() {
+							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -1910,6 +1950,8 @@ window.bp = window.bp || {};
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
 							var tool_box = target.parents( '.ac-reply-toolbar' );
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -1955,6 +1997,10 @@ window.bp = window.bp || {};
 					self.dropzone_video_obj.on(
 						'uploadprogress',
 						function( element ) {
+
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'media-uploading' );
+
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
@@ -2021,6 +2067,8 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-video"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -2042,8 +2090,11 @@ window.bp = window.bp || {};
 								}
 							}
 
-							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
+							if ( ! _.isNull( self.dropzone_video_obj ) && ! _.isNull( self.dropzone_video_obj.files ) && self.dropzone_video_obj.files.length === 0 ) {
 								var tool_box = target.parents( '.ac-reply-toolbar' );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'has-media' );
+
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
@@ -2056,6 +2107,17 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-video-button' ) ) {
 									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
+							}
+						}
+					);
+
+					// Enable submit button when all medias are uploaded
+					self.dropzone_video_obj.on(
+						'complete',
+						function() {
+							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
