@@ -3377,7 +3377,6 @@ window.bp = window.bp || {};
 				} else {
 					this.$self.addClass( 'open' );
 					$( e.currentTarget ).addClass( 'active' );
-					this.$self.blur();
 				}
 				this.$gifPickerEl.toggleClass( 'open' );
 			},

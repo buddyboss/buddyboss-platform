@@ -4221,7 +4221,6 @@ window.bp = window.bp || {};
 					this.$self.removeClass( 'open' );
 				} else {
 					this.$self.addClass( 'open' );
-					this.$self.blur();
 				}
 				if ( e.type !== 'bp_activity_edit' ) {
 					this.$gifPickerEl.toggleClass( 'open' );
