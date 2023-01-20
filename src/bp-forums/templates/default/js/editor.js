@@ -177,9 +177,13 @@ jQuery( document ).ready(
 							bbp_reply_content.val( jQuery(dummy_element).html() );
 
 							// Enable submit button if content is available.
-							var $reply_content   = jQuery(element).text();
+							var $reply_content   = jQuery(element).html();
 
-							if( $reply_content.trim() !== '' ){
+							content = $.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							content = content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = $( content ).text();
+							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 								jQuery(element).closest('form').addClass( 'has-content')
 							} else {
 								jQuery(element).closest('form').removeClass( 'has-content')
@@ -281,9 +285,13 @@ jQuery( document ).ready(
 							bbp_topic_content.val( jQuery(dummy_element).html() );
 
 							// Enable submit button if content is available.
-							var $reply_content   = jQuery(element).text();
+							var $reply_content   = jQuery(element).html();
 
-							if( $reply_content.trim() !== '' ){
+							content = $.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							content = content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = $( content ).text();
+							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 								jQuery(element).closest('form').addClass( 'has-content')
 							} else {
 								jQuery(element).closest('form').removeClass( 'has-content')
