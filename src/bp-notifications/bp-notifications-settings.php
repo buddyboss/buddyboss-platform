@@ -304,7 +304,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 					<?php
 					if ( ! empty( $field_group['fields'] ) ) {
 						echo '<div class="field-set">';
-						foreach ( $field_group['fields'] as $field ) {
+                        foreach ( $field_group['fields'] as $field ) {
 							$checked = isset( $field['default'] ) && 'yes' === $field['default'];
 							?>
 								<div class="field-block">
@@ -459,7 +459,11 @@ function bb_activate_notification( $field, $checked ) {
 		$tooltip_pos  = 'up';
 		$tooltip_text = $field['notification_tooltip_text'];
 	}
-	$disabled = ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'] && empty( $field['notification_default'] );
+	$disabled = ! empty( $field['notification_read_only'] );
+
+	if ( ! empty( $field['notification_read_only'] ) && ! empty( $field['default'] ) && 'no' === $field['default'] ) {
+		$checked = false;
+	}
 	?>
 
 	<input name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="hidden" value="no" />
