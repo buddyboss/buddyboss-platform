@@ -2502,7 +2502,7 @@ window.bp = window.bp || {};
 			q: null,
 			requests: [],
 			events: {
-				'keyup .search-query-input': 'search',
+				'keydown .search-query-input': 'search',
 				'click .found-media-item': 'select'
 			},
 
@@ -2526,6 +2526,13 @@ window.bp = window.bp || {};
 			},
 
 			search: function ( e ) {
+				
+				// Prevent search dropdown from closing with enter key
+				if ( e.key === 'Enter' || e.keyCode === 13 ) {
+					e.preventDefault();
+					return false;
+				}
+
 				var self = this;
 
 				if ( this.Timeout != null ) {
@@ -2544,12 +2551,6 @@ window.bp = window.bp || {};
 					},
 					1000
 				);
-
-				this.$el.closest( '.gif-media-search' ).find( '#activity-gif-button' ).blur();
-				
-				if ( e.key === 'Enter' || e.keyCode === 13 ) {
-					this.$el.closest( '.gif-media-search-dropdown' ).addClass( 'open' );
-				}
 				
 			},
 
@@ -2562,10 +2563,6 @@ window.bp = window.bp || {};
 				self.el.classList.add( 'loading' );
 				this.$el.find( '.gif-no-results' ).removeClass( 'show' );
 				this.$el.find( '.gif-no-connection' ).removeClass( 'show' );
-				
-				if ( q.key === 'Enter' || q.keyCode === 13 ) {
-					this.$el.closest( '.gif-media-search-dropdown' ).addClass( 'open' );
-				}
 
 				var request = self.giphy.search(
 					{
@@ -4158,7 +4155,6 @@ window.bp = window.bp || {};
 
 			initialize: function () {
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
-				document.addEventListener( 'keyup', _.bind( this.blockPickersClose, this ) );
 				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
 			},
 
@@ -4180,13 +4176,6 @@ window.bp = window.bp || {};
 				},0);
 
 				return this;
-			},
-
-			blockPickersClose: function ( event ) {
-				if ( event.key === 'Enter' || event.keyCode === 13 ) {
-					$( '.search-query-input' ).closest( '.gif-media-search-dropdown' ).addClass( 'open' );
-					$( '.search-query-input' ).focus();
-				}
 			},
 
 			toggleURLInput: function ( e ) {
