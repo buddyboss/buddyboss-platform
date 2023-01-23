@@ -125,12 +125,12 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			$is_user_blocked = bp_moderation_is_user_blocked( $comment_author_id );
 
 			if ( $is_user_blocked ) {
-				$comment_text = bb_moderation_has_blocked_message( $comment_text );
+				$comment_text = bb_moderation_has_blocked_message( $comment_text, $comment->comment_ID, $this->item_type );
 			} else {
 				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
 		} elseif ( bb_moderation_is_user_blocked_by( $comment_author_id ) ) {
-			$comment_text = bb_moderation_is_blocked_message( $comment_text );
+			$comment_text = bb_moderation_is_blocked_message( $comment_text, $comment->comment_ID, $this->item_type );
 		}
 
 		return $comment_text;
@@ -483,12 +483,12 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			$is_user_blocked = bp_moderation_is_user_blocked( $comment_author_id );
 
 			if ( $is_user_blocked ) {
-				$excerpt = bb_moderation_has_blocked_message( $excerpt );
+				$excerpt = bb_moderation_has_blocked_message( $excerpt, $comment->comment_ID, $this->item_type );
 			} else {
 				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
 		} elseif ( bb_moderation_is_user_blocked_by( $comment_author_id ) ) {
-			$excerpt = bb_moderation_is_blocked_message( $excerpt );
+			$excerpt = bb_moderation_is_blocked_message( $excerpt, $comment->comment_ID, $this->item_type );
 		}
 
 		return $excerpt;

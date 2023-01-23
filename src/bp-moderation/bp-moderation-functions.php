@@ -1558,23 +1558,25 @@ function bb_moderation_is_deleted_avatar() {
  *
  * @since BuddyBoss 2.2.4
  *
- * @param string $value Current set message.
+ * @param string $value     Current content.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
+ * @param string $item_type Moderation type.
  *
  * @return string
  */
-function bb_moderation_has_blocked_message( $value ) {
+function bb_moderation_has_blocked_message( $value, $item_id = 0, $item_type = '' ) {
 
 	/**
 	 * Filter will return text when current user blocked to other user.
 	 *
 	 * @since BuddyBoss 2.2.4
 	 *
-	 * @param string $retval Current message.
-	 * @param string $value  Original content.
+	 * @param string $value     Current content.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
+	 * @param string $item_type Moderation type.
 	 */
-	$retval = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
 
-	return apply_filters( 'bb_moderation_has_blocked_message', $retval, $value );
+	return apply_filters( 'bb_moderation_has_blocked_message', $value, $item_id, $item_type );
 }
 
 /**
@@ -1582,20 +1584,24 @@ function bb_moderation_has_blocked_message( $value ) {
  *
  * @since BuddyBoss 2.2.4
  *
- * @param string $value Current set message.
+ * @param string $value     Current content.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
+ * @param string $item_type Moderation type.
  *
  * @return string
  */
-function bb_moderation_is_blocked_message( $value ) {
+function bb_moderation_is_blocked_message( $value, $item_id = 0, $item_type = '' ) {
 
 	/**
 	 * Filter will return text when current user blocked by other user.
 	 *
 	 * @since BuddyBoss 2.2.4
 	 *
-	 * @param string $value Current set message.
+	 * @param string $value     Current content.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
+	 * @param string $item_type Moderation type.
 	 */
-	return apply_filters( 'bb_moderation_is_blocked_message', $value );
+	return apply_filters( 'bb_moderation_is_blocked_message', $value, $item_id, $item_type );
 }
 
 /**
@@ -1603,21 +1609,23 @@ function bb_moderation_is_blocked_message( $value ) {
  *
  * @since BuddyBoss 2.2.4
  *
- * @param string $value Current set message.
+ * @param string $value     Current content.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
+ * @param string $item_type Moderation type.
  *
  * @return string
  */
-function bb_moderation_is_suspended_message( $value ) {
+function bb_moderation_is_suspended_message( $value, $item_id = 0, $item_type = '' ) {
 
 	/**
 	 * Filter will return text when user is suspended.
 	 *
 	 * @since BuddyBoss 2.2.4
 	 *
-	 * @param string $retval Current message.
-	 * @param string $value  Original content.
+	 * @param string $value     Current content.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
+	 * @param string $item_type Moderation type.
 	 */
-	$retval = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
 
-	return apply_filters( 'bb_moderation_is_suspended_message', $retval, $value );
+	return apply_filters( 'bb_moderation_is_suspended_message', $value, $item_id, $item_type );
 }
