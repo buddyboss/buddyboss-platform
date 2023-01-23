@@ -270,10 +270,7 @@ function bp_messages_message_sent_add_notification( $message ) {
 		} else {
 			foreach ( (array) $message->recipients as $recipient ) {
 				// Check the sender is blocked by/blocked/suspended/deleted recipient or not.
-				if (
-					true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, get_current_user_id() ) ||
-					bp_is_user_inactive( $recipient->user_id )
-				) {
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $message->sender_id ) ) {
 					continue;
 				}
 				bp_notifications_add_notification(
