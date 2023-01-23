@@ -240,6 +240,10 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  */
 function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
 
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $activity->user_id, $commenter_id ) ) {
+		return;
+	}
+
 	// Specify the Notification type.
 	$component_action = 'update_reply';
 	if ( ! bb_enabled_legacy_email_preference() ) {
@@ -275,6 +279,10 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  * @param int                  $commenter_id     ID of the user who made the comment.
  */
 function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id ) {
+
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $activity_comment->user_id, $commenter_id ) ) {
+		return;
+	}
 
 	// Specify the Notification type.
 	$component_action = 'comment_reply';
