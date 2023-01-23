@@ -6291,6 +6291,7 @@ window.bp = window.bp || {};
 			$(document).on('click', '#bb-media-model-container .bb-document-section span.privacy', bp.Nouveau, this.toggleDocumentPrivacyDropdown.bind(this));
 			$(document).on('click', '.bp-add-media-activity-description', this.openMediaActivityDescription.bind(this));
 			$(document).on('click', '#bp-activity-description-new-reset', this.closeMediaActivityDescription.bind(this));
+			$(document).on('keyup', '.bp-edit-media-activity-description #add-activity-description', this.MediaActivityDescriptionUpdate.bind(this));
 			$(document).on('click', '#bp-activity-description-new-submit', this.submitMediaActivityDescription.bind(this));
 			$(document).click(this.togglePopupDropdown);
 
@@ -7281,6 +7282,14 @@ window.bp = window.bp || {};
 			target.parents( '.activity-media-description' ).find( '.bp-media-activity-description' ).show();
 			target.parents( '.activity-media-description' ).find( '#add-activity-description' ).val( default_value );
 			target.parents( '.activity-media-description' ).find( '.bp-edit-media-activity-description' ).hide().removeClass( 'open' );
+		},
+
+		MediaActivityDescriptionUpdate: function( event ) {
+			if( $( event.currentTarget ).val().trim() !== '' ) {
+				$( event.currentTarget ).closest( '.bp-edit-media-activity-description' ).addClass( 'has-content' );
+			} else {
+				$( event.currentTarget ).closest( '.bp-edit-media-activity-description' ).removeClass( 'has-content' );
+			}
 		},
 
 		submitMediaActivityDescription: function ( event ) {

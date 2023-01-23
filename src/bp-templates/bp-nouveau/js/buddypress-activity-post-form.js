@@ -2772,6 +2772,7 @@ window.bp = window.bp || {};
 				}
 
 				var tool_box_comment = this.$el.parents( '.ac-reply-content' );
+				this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
 				if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
@@ -2926,6 +2927,8 @@ window.bp = window.bp || {};
 				}
 
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
+				this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
+
 				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
 				whatNewScroll.stop().animate({
 					scrollTop: whatNewScroll[0].scrollHeight
