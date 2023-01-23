@@ -1080,7 +1080,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$author_id               = 0;
 		$type_key                = '';
 		$email_notification_type = '';
-		if ( 'bb_groups_subscribed_activity' === $r['notification_type'] ) {
+		if ( in_array( 'bb_groups_subscribed_activity', $r['notification_type'], true ) ) {
 
 			// Bail if component is not activated.
 			if ( ! bp_is_active( 'activity' ) ) {
@@ -1088,16 +1088,20 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$data_id  = ! empty( $r['data']['activity_id'] ) ? $r['data']['activity_id'] : 0;
-			$activity = new BP_Activity_Activity( $data_id );
+			$activity = ! empty( $r['data']['email_tokens']['tokens']['activity'] ) ? $r['data']['email_tokens']['tokens']['activity'] : '';
 
 			if ( empty( $activity ) ) {
+				$activity = new BP_Activity_Activity( $data_id );
+			}
+
+			if ( empty( $activity ) || 'groups' !== $activity->component ) {
 				return false;
 			}
 
 			$type_key                = 'bb_groups_subscribed_activity';
 			$email_notification_type = 'groups-new-post';
 			$author_id               = ! empty( $activity->user_id ) ? $activity->user_id : 0;
-		} elseif ( 'bb_groups_subscribed_discussion' === $r['notification_type'] ) {
+		} elseif ( in_array( 'bb_groups_subscribed_discussion', $r['notification_type'], true ) ) {
 
 			// Bail if component is not activated.
 			if ( ! bp_is_active( 'forums' ) ) {
@@ -1147,7 +1151,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						'item_id'           => $data_id,
 						'secondary_item_id' => $author_id,
 						'component_name'    => buddypress()->groups->id,
-						'component_action'  => $r['notification_type'],
+						'component_action'  => $type_key,
 						'date_notified'     => bp_core_current_time(),
 						'is_new'            => 1,
 					)

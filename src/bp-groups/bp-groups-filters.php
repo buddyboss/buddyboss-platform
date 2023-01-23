@@ -1085,12 +1085,16 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	$activity_user_id = $activity->user_id;
 	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
 	$activity_link    = bp_activity_get_permalink( $activity_id );
+	$group            = groups_get_group( $group_id );
 
 	$args = array(
 		'tokens' => array(
-			'activity'     => $activity,
-			'poster.name'  => $poster_name,
-			'activity.url' => esc_url( $activity_link ),
+			'activity'      => $activity,
+			'poster.name'   => $poster_name,
+			'activity.url'  => esc_url( $activity_link ),
+			'group.url'     => esc_url( bp_get_group_permalink( $group ) ),
+			'group.name'    => bp_get_group_name( $group ),
+			'activity.type' => bb_get_activity_type( $activity_id ),
 		),
 	);
 
