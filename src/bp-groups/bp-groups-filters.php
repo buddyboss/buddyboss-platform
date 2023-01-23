@@ -1086,6 +1086,36 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
 	$activity_link    = bp_activity_get_permalink( $activity_id );
 	$group            = groups_get_group( $group_id );
+	$media_ids        = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+	$document_ids     = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+	$gif_data         = bp_activity_get_meta( $activity_id, '_gif_data', true );
+
+	$activity_type = __( 'an update', 'buddyboss' );
+	if ( $media_ids ) {
+		$media_ids = array_filter( explode( ',', $media_ids ) );
+		if ( count( $media_ids ) > 1 ) {
+			$activity_type = __( 'some photos', 'buddyboss' );
+		} else {
+			$activity_type = __( 'a photo', 'buddyboss' );
+		}
+	} elseif ( $document_ids ) {
+		$document_ids = array_filter( explode( ',', $document_ids ) );
+		if ( count( $document_ids ) > 1 ) {
+			$activity_type = __( 'some documents', 'buddyboss' );
+		} else {
+			$activity_type = __( 'a document', 'buddyboss' );
+		}
+	} elseif ( $video_ids ) {
+		$video_ids = array_filter( explode( ',', $video_ids ) );
+		if ( count( $video_ids ) > 1 ) {
+			$activity_type = __( 'some videos', 'buddyboss' );
+		} else {
+			$activity_type = __( 'a video', 'buddyboss' );
+		}
+	} elseif ( $gif_data ) {
+		$activity_type = __( 'a gif', 'buddyboss' );
+	}
 
 	$args = array(
 		'tokens' => array(
@@ -1094,7 +1124,7 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 			'activity.url'  => esc_url( $activity_link ),
 			'group.url'     => esc_url( bp_get_group_permalink( $group ) ),
 			'group.name'    => bp_get_group_name( $group ),
-			'activity.type' => bb_get_activity_type( $activity_id ),
+			'activity.type' => $activity_type,
 		),
 	);
 
