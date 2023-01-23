@@ -1241,14 +1241,8 @@ function bp_private_network_template_redirect() {
 
 				if ( ! empty( $exclude_arr_url ) && is_array( $exclude_arr_url ) ) {
 					foreach ( $exclude_arr_url as $url ) {
-						$check_is_full_url = filter_var( $url, FILTER_VALIDATE_URL );
-
-						// Remove the trailingslash if it is full url.
-						if ( true === $check_is_full_url ) {
-							$un_trailing_slash_it_url = untrailingslashit( $url );
-						} else {
-							$un_trailing_slash_it_url = $url;
-						}
+						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
+						$un_trailing_slash_it_url = untrailingslashit( $url );
 
 						// Match request URL(actual/actual with slash) to public URL.
 						if ( ! empty( $actual_url ) && ! empty( $actual_slash_url ) && ! empty( $un_trailing_slash_it_url ) && ( ( $actual_url === $un_trailing_slash_it_url ) || ( $actual_slash_url === $un_trailing_slash_it_url ) ) ) {
@@ -1262,7 +1256,6 @@ function bp_private_network_template_redirect() {
 							return;
 						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
 							$fragments = explode( '/', $request_url );
-
 							// Allow to view if fragment matched.
 							foreach ( $fragments as $fragment ) {
 								if ( trim( $url, '/' ) === $fragment ) {
@@ -1277,7 +1270,7 @@ function bp_private_network_template_redirect() {
 							}
 
 							// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
-							if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+							if ( strpos( trailingslashit( $request_url ), trailingslashit( $un_trailing_slash_it_url ) ) !== false ) {
 								return;
 							}
 
