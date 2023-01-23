@@ -687,6 +687,11 @@ function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
 		$bb_notifications_background_updater->save()->dispatch();
 	} else {
 		foreach ( $user_ids as $user_id ) {
+			// Check the sender is blocked by/blocked/suspended recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $topic_author_id ) ) {
+				continue;
+			}
+
 			bp_notifications_add_notification(
 				array(
 					'user_id'           => $user_id,
@@ -765,6 +770,10 @@ function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
 		$bb_notifications_background_updater->save()->dispatch();
 	} else {
 		foreach ( $user_ids as $user_id ) {
+			// Check the sender is blocked by/blocked/suspended recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $reply_author_id ) ) {
+				continue;
+			}
 			bp_notifications_add_notification(
 				array(
 					'user_id'           => $user_id,
