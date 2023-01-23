@@ -105,7 +105,6 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 				// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
 				$sql_where .= " AND ( {$tbl_alias}.item_id NOT IN ( " . implode( ',', $hidden_users_ids ) . " ) )";
 			}
-
 		}
 
 		/**
