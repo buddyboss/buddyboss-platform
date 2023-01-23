@@ -1559,12 +1559,12 @@ function bb_moderation_is_deleted_avatar() {
  * @since BuddyBoss 2.2.4
  *
  * @param string $value     Current content.
- * @param int    $item_id   Item id for the content. i.e - comment_id etc
  * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
  *
  * @return string
  */
-function bb_moderation_has_blocked_message( $value, $item_id = 0, $item_type = '' ) {
+function bb_moderation_has_blocked_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when current user blocked to other user.
@@ -1572,11 +1572,11 @@ function bb_moderation_has_blocked_message( $value, $item_id = 0, $item_type = '
 	 * @since BuddyBoss 2.2.4
 	 *
 	 * @param string $value     Current content.
-	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 */
 
-	return apply_filters( 'bb_moderation_has_blocked_message', $value, $item_id, $item_type );
+	return apply_filters( 'bb_moderation_has_blocked_message', $value, $item_type, $item_id );
 }
 
 /**
@@ -1585,12 +1585,12 @@ function bb_moderation_has_blocked_message( $value, $item_id = 0, $item_type = '
  * @since BuddyBoss 2.2.4
  *
  * @param string $value     Current content.
- * @param int    $item_id   Item id for the content. i.e - comment_id etc
  * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
  *
  * @return string
  */
-function bb_moderation_is_blocked_message( $value, $item_id = 0, $item_type = '' ) {
+function bb_moderation_is_blocked_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when current user blocked by other user.
@@ -1598,10 +1598,10 @@ function bb_moderation_is_blocked_message( $value, $item_id = 0, $item_type = ''
 	 * @since BuddyBoss 2.2.4
 	 *
 	 * @param string $value     Current content.
-	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 */
-	return apply_filters( 'bb_moderation_is_blocked_message', $value, $item_id, $item_type );
+	return apply_filters( 'bb_moderation_is_blocked_message', $value, $item_type, $item_id );
 }
 
 /**
@@ -1610,12 +1610,12 @@ function bb_moderation_is_blocked_message( $value, $item_id = 0, $item_type = ''
  * @since BuddyBoss 2.2.4
  *
  * @param string $value     Current content.
- * @param int    $item_id   Item id for the content. i.e - comment_id etc
  * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
  *
  * @return string
  */
-function bb_moderation_is_suspended_message( $value, $item_id = 0, $item_type = '' ) {
+function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when user is suspended.
@@ -1623,9 +1623,9 @@ function bb_moderation_is_suspended_message( $value, $item_id = 0, $item_type = 
 	 * @since BuddyBoss 2.2.4
 	 *
 	 * @param string $value     Current content.
-	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 */
 
-	return apply_filters( 'bb_moderation_is_suspended_message', $value, $item_id, $item_type );
+	return apply_filters( 'bb_moderation_is_suspended_message', $value, $item_type, $item_id );
 }
