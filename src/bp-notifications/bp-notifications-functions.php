@@ -1355,6 +1355,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 
 			break;
 		case 'bb_activity_following_post':
+		case 'bb_groups_subscribed_activity':
 			$item_id      = $notification->item_id;
 			$activity     = new BP_Activity_Activity( $item_id );
 			$media_ids    = bp_activity_get_meta( $item_id, 'bp_media_ids', true );
