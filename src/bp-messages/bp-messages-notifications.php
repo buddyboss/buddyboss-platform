@@ -236,7 +236,15 @@ function bp_messages_message_sent_add_notification( $message ) {
 
 		// Disabled the notification for user who archived this thread.
 		foreach ( (array) $message->recipients as $r_key => $recipient ) {
-			if ( isset( $recipient->is_hidden ) && $recipient->is_hidden ) {
+			if (
+				(
+					isset( $recipient->is_hidden ) &&
+					$recipient->is_hidden
+				) ||
+				// Check the sender is blocked by/ blocked recipient or not.
+				true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, get_current_user_id() ) ||
+				bp_is_user_inactive( $recipient->user_id )
+			) {
 				unset( $message->recipients[ $r_key ] );
 			}
 		}
