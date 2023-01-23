@@ -261,6 +261,7 @@ function bp_messages_message_sent_add_notification( $message ) {
 							$action,
 							bp_core_current_time(),
 							true,
+							$message->sender_id,
 						),
 					),
 				)

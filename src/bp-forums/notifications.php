@@ -680,6 +680,7 @@ function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
 						'bb_forums_subscribed_discussion',
 						bp_core_current_time(),
 						true,
+						$topic_author_id,
 					),
 				),
 			)
@@ -763,6 +764,7 @@ function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
 						$action,
 						bp_core_current_time(),
 						true,
+						$reply_author_id,
 					),
 				),
 			)

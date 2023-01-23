@@ -756,8 +756,9 @@ function bb_notifications_background_enabled() {
  * @param string $component_action  Notification component action.
  * @param string $date_notified     Notification date.
  * @param bool   $is_new            Setup the notification is unread or read.
+ * @param int    $sender_id         Sender user id.
  */
-function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true ) {
+function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true, $sender_id = 0 ) {
 	if (
 		empty( $user_ids ) ||
 		empty( $item_id ) ||
@@ -775,6 +776,14 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 	foreach ( $user_ids as $user_id ) {
 
 		if ( empty( $user_id ) ) {
+			continue;
+		}
+
+		// Check the sender is blocked by/blocked/suspended recipient or not.
+		if (
+			! empty( $sender_id ) &&
+			true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $sender_id )
+		) {
 			continue;
 		}
 
