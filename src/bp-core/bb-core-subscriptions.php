@@ -101,7 +101,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offset = 0, $is_background = true ) {
 	global $wpdb;
 
-	$subscription_tbl  = BP_Subscriptions::get_subscription_tbl();
+	$subscription_tbl  = BB_Subscriptions::get_subscription_tbl();
 	$forum_post_type   = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
 	$topic_post_type   = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
 	$spam_post_type    = function_exists( 'bbp_get_spam_status_id' ) ? bbp_get_spam_status_id() : apply_filters( 'bbp_spam_post_status', 'spam' );
@@ -143,7 +143,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					);
 
 					// Get subscription from new table.
-					$subscription_exists = BP_Subscriptions::get( $record_args );
+					$subscription_exists = BB_Subscriptions::get( $record_args );
 
 					if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
 						continue;
@@ -182,7 +182,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					);
 
 					// Get subscription from new table.
-					$subscription_exists = BP_Subscriptions::get( $record_args );
+					$subscription_exists = BB_Subscriptions::get( $record_args );
 
 					if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
 						continue;
@@ -371,7 +371,7 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog_id = 0, $offset = 0, $is_background = true ) {
 	global $wpdb;
 
-	$subscription_tbl  = BP_Subscriptions::get_subscription_tbl();
+	$subscription_tbl  = BB_Subscriptions::get_subscription_tbl();
 	$forum_post_type   = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
 	$topic_post_type   = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
 	$spam_post_type    = function_exists( 'bbp_get_spam_status_id' ) ? bbp_get_spam_status_id() : apply_filters( 'bbp_spam_post_status', 'spam' );
@@ -439,7 +439,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 					);
 
 					// Get subscription from new table.
-					$subscription_exists = BP_Subscriptions::get( $record_args );
+					$subscription_exists = BB_Subscriptions::get( $record_args );
 
 					if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
 						continue;
@@ -570,7 +570,7 @@ function bb_create_subscription( $args = array() ) {
 	);
 
 	// Check if subscription is existed or not?.
-	$subscriptions = BP_Subscriptions::get(
+	$subscriptions = BB_Subscriptions::get(
 		array(
 			'type'              => $r['type'],
 			'blog_id'           => $r['blog_id'],
@@ -595,7 +595,7 @@ function bb_create_subscription( $args = array() ) {
 		}
 	}
 
-	$new_subscription                    = new BP_Subscriptions();
+	$new_subscription                    = new BB_Subscriptions();
 	$new_subscription->blog_id           = $r['blog_id'];
 	$new_subscription->user_id           = $r['user_id'];
 	$new_subscription->type              = $r['type'];
@@ -679,7 +679,7 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
 
 	$cache_key = 'bb_get_subscriptions_' . md5( maybe_serialize( $r ) );
 	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
-		$subscriptions       = BP_Subscriptions::get( $r );
+		$subscriptions       = BB_Subscriptions::get( $r );
 		$cache[ $cache_key ] = $subscriptions;
 	} else {
 		$subscriptions = $cache[ $cache_key ];
@@ -732,7 +732,7 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
 
 	$cache_key = 'bb_get_subscription_users_' . md5( maybe_serialize( $r ) );
 	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
-		$subscriptions       = BP_Subscriptions::get( $r );
+		$subscriptions       = BB_Subscriptions::get( $r );
 		$cache[ $cache_key ] = $subscriptions;
 	} else {
 		$subscriptions = $cache[ $cache_key ];
@@ -752,7 +752,7 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
  *
  * @param int $subscription_id ID of the subscription.
  *
- * @return BP_Subscriptions $subscription The subscription object.
+ * @return BB_Subscriptions $subscription The subscription object.
  */
 function bb_subscriptions_get_subscription( $subscription_id ) {
 	// Backward compatibility.
@@ -768,14 +768,14 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
 		$subscription_id = $r['subscription_id'];
 	}
 
-	$subscription = new BP_Subscriptions( $subscription_id );
+	$subscription = new BB_Subscriptions( $subscription_id );
 
 	/**
 	 * Filters a single subscription object.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param BP_Subscriptions $subscription Single subscription object.
+	 * @param BB_Subscriptions $subscription Single subscription object.
 	 */
 	return apply_filters( 'bb_subscriptions_get_subscription', $subscription );
 }
@@ -793,7 +793,7 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
  * @return bool True on success, false on failure.
  */
 function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id = 0 ) {
-	return BP_Subscriptions::update_status( $type, $item_id, $status, $blog_id );
+	return BB_Subscriptions::update_status( $type, $item_id, $status, $blog_id );
 }
 
 /**

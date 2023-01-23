@@ -559,7 +559,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
 		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
-		require $this->plugin_dir . 'bp-core/bp-core-subscriptions.php';
+		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -609,7 +609,7 @@ class BuddyPress {
 	public function autoload( $class ) {
 		$class_parts = explode( '_', strtolower( $class ) );
 
-		if ( 'bp' !== $class_parts[0] ) {
+		if ( 'bp' !== $class_parts[0] && 'bb' !== $class_parts[0] ) {
 			return;
 		}
 
@@ -709,7 +709,7 @@ class BuddyPress {
 			'BP_Suspend_Album'                             => 'suspend',
 			'BP_Suspend_Comment'                           => 'suspend',
 			'BP_Suspend_Message'                           => 'suspend',
-			'BP_Subscriptions'                             => 'core',
+			'BB_Subscriptions'                             => 'core',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
@@ -769,7 +769,7 @@ class BuddyPress {
 			'BP_REST_Account_Settings_Options_Endpoint'    => 'settings',
 			'BP_REST_Moderation_Endpoint'                  => 'moderation',
 			'BP_REST_Moderation_Report_Endpoint'           => 'moderation',
-			'BP_REST_Subscriptions_Endpoint'               => 'core',
+			'BB_REST_Subscriptions_Endpoint'               => 'core',
 		);
 
 		$component = null;

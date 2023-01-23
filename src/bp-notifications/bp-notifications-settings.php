@@ -304,7 +304,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 					<?php
 					if ( ! empty( $field_group['fields'] ) ) {
 						echo '<div class="field-set">';
-                        foreach ( $field_group['fields'] as $field ) {
+						foreach ( $field_group['fields'] as $field ) {
 							$checked = isset( $field['default'] ) && 'yes' === $field['default'];
 							?>
 								<div class="field-block">
@@ -395,7 +395,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 
 										if ( ! empty( $options ) ) {
 											foreach ( $options as $key => $v ) {
-												$parent_disabled = ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'] && empty( $field['notification_default'] );
+												$parent_disabled = ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'];
 												$is_disabled     = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', ! $checked );
 												$is_render       = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
 												if ( $is_render ) {
