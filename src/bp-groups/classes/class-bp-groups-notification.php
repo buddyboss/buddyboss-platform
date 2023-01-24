@@ -857,6 +857,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'notification_group' => 'groups',
 			)
 		);
+
+		add_filter( 'bp_groups_bb_groups_subscribed_discussion_notification', array( $this, 'bb_format_groups_activity_notification' ), 10, 7 );
 	}
 
 	/**
@@ -1210,6 +1212,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 			$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
 			$amount       = 'single';
+			$group        = groups_get_group( $activity->item_id );
+			$group_name   = bp_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
 				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
@@ -1289,8 +1293,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					$amount = 'multiple';
 				} else {
 					$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
-					$group             = groups_get_group( $activity->item_id );
-					$group_name        = bp_get_group_name( $group );
+
 					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
 						/* translators: 1: User full name, 2: Group name, 3: Activity content. */
@@ -1372,7 +1375,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					array(
 						'link'  => $notification_link,
 						'text'  => $text,
-						'title' => $user_fullname,
+						'title' => $group_name,
 						'image' => bb_notification_avatar_url( $notification ),
 					),
 					$notification,
@@ -1381,6 +1384,79 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					$screen
 				);
 			}
+		}
+
+		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_subscribed_discussion' === $notification->component_action ) {
+
+			$user_id           = $secondary_item_id;
+			$user_fullname     = bp_core_get_user_displayname( $user_id );
+			$amount            = 'single';
+			$discussion_title  = '"' . bp_create_excerpt(
+				wp_strip_all_tags( bbp_get_topic_title( $item_id ) ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			) . '"';
+			$notification_link = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action'   => 'bbp_mark_read',
+						'topic_id' => $item_id,
+					),
+					bbp_get_topic_permalink( $item_id )
+				),
+				'bbp_mark_topic_' . $item_id
+			);
+
+			// Get the topic.
+			$topic = get_post( $item_id );
+
+			// Get forum group IDs.
+			$group_ids  = function_exists( 'bbp_get_forum_group_ids' ) && ! empty( $topic->post_parent ) ? bbp_get_forum_group_ids( $topic->post_parent ) : array();
+			$group_id   = ( ! empty( current( $group_ids ) ) ? current( $group_ids ) : 0 );
+			$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+
+			if ( 'web_push' === $screen ) {
+				$text = sprintf(
+				/* translators: 1: User full name, 2: Group name, 3: Discussion Title. */
+					__( '%1$s started a discussion%2$s', 'buddyboss' ),
+					$user_fullname,
+					! empty( $discussion_title ) ? ': ' . $discussion_title : ''
+				);
+			} else {
+				if ( (int) $total_items > 1 ) {
+					$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
+					$text              = sprintf(
+					/* translators: %s: Total reply count. */
+						__( 'You have %1$d new discussions', 'buddyboss' ),
+						(int) $total_items
+					);
+					$amount = 'multiple';
+				} else {
+					$text = sprintf(
+					/* translators: 1: User full name, 2: Group name, 3: Discussion Title. */
+						__( '%1$s started a discussion%2$s%3$s', 'buddyboss' ),
+						$user_fullname,
+						! empty( $group_name ) ? ' in ' . $group_name : '',
+						! empty( $discussion_title ) ? ': ' . $discussion_title : ''
+					);
+				}
+			}
+
+			$content = apply_filters(
+				'bb_groups_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => $group_name,
+					'image' => bb_notification_avatar_url( $notification ),
+				),
+				$notification,
+				$notification_link,
+				$text,
+				$screen
+			);
 		}
 
 		// Validate the return value & return if validated.
