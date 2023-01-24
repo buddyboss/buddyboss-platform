@@ -1070,11 +1070,12 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'item_id'           => '',
 				'data'              => array(),
 				'notification_type' => '',
+				'notification_from' => '',
 				'user_ids'          => array(),
 			)
 		);
 
-		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || empty( $r['notification_type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
+		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || empty( $r['notification_type'] ) || ! bb_is_enabled_subscription( $r['type'] ) || empty( $r['notification_from'] ) ) {
 			return false;
 		}
 
@@ -1082,8 +1083,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$author_id               = 0;
 		$type_key                = '';
 		$email_notification_type = '';
-		if ( in_array( 'bb_groups_subscribed_activity', $r['notification_type'], true ) ) {
-
+		if ( 'bb_groups_subscribed_activity' === $r['notification_from'] ) {
 			// Bail if component is not activated.
 			if ( ! bp_is_active( 'activity' ) ) {
 				return false;
@@ -1103,8 +1103,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$type_key                = 'bb_groups_subscribed_activity';
 			$email_notification_type = 'groups-new-post';
 			$author_id               = ! empty( $activity->user_id ) ? $activity->user_id : 0;
-		} elseif ( in_array( 'bb_groups_subscribed_discussion', $r['notification_type'], true ) ) {
-
+		} elseif ( 'bb_groups_subscribed_discussion' === $r['notification_from'] ) {
 			// Bail if component is not activated.
 			if ( ! bp_is_active( 'forums' ) ) {
 				return false;

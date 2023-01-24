@@ -1132,7 +1132,7 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 		array(
 			'type'              => 'group',
 			'item_id'           => $group_id,
-			'notification_type' => 'bb_groups_subscribed_activity',
+			'notification_from' => 'bb_groups_subscribed_activity',
 			'data'              => array(
 				'activity_id'  => $activity_id,
 				'author_id'    => $activity_user_id,

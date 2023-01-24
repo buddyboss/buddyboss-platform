@@ -960,10 +960,11 @@ function bb_send_notifications_to_subscribers( $args ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'type'    => '',
-			'item_id' => 0,
-			'blog_id' => get_current_blog_id(),
-			'data'    => array(),
+			'type'              => '',
+			'item_id'           => 0,
+			'notification_from' => '',
+			'blog_id'           => get_current_blog_id(),
+			'data'              => array(),
 		)
 	);
 
@@ -1009,6 +1010,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		'blog_id'           => $blog_id,
 		'data'              => $r['data'],
 		'notification_type' => $notification_type,
+		'notification_from' => $r['notification_from'],
 	);
 
 	if (
