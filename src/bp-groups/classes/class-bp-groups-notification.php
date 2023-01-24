@@ -802,7 +802,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'bb-icon-f bb-icon-comment'
 		);
 
-		add_filter( 'bp_groups_bb_groups_subscribed_activity_notification', array( $this, 'bb_format_groups_activity_notification' ), 10, 7 );
+		add_filter( 'bp_groups_bb_groups_subscribed_activity_notification', array( $this, 'bb_format_groups_subscription_notification' ), 10, 7 );
 
 		// Register the group discussion subscription notifications.
 		$discussion_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
@@ -858,7 +858,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			)
 		);
 
-		add_filter( 'bp_groups_bb_groups_subscribed_discussion_notification', array( $this, 'bb_format_groups_activity_notification' ), 10, 7 );
+		add_filter( 'bp_groups_bb_groups_subscribed_discussion_notification', array( $this, 'bb_format_groups_subscription_notification' ), 10, 7 );
 	}
 
 	/**
@@ -1180,7 +1180,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @return array
 	 */
-	public function bb_format_groups_activity_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
+	public function bb_format_groups_subscription_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
 
 		$notification = bp_notifications_get_notification( $notification_id );
 
