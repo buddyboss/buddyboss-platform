@@ -74,7 +74,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
-				$statement = __( 'Updating forum and discussion to new BuddyBoss subscription api&hellip; %s', 'buddyboss' );
+				$statement = __( 'Migrating BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
 				$result    = __( 'Complete!', 'buddyboss' );
 
 				// All done!
@@ -212,7 +212,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	if ( ! $is_background ) {
 		$records_updated = sprintf(
 		/* translators: total members */
-			__( 'The BBPress forum and discussion subscriptions successfully migrated to BuddyBoss for %s members.', 'buddyboss' ),
+			__( 'The BBPress (up to v2.5.14) forum and discussion subscriptions successfully migrated to BuddyBoss for %s members.', 'buddyboss' ),
 			bp_core_number_format( $latest_offset )
 		);
 
@@ -342,7 +342,7 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
-				$statement = __( 'Migrating BBPress forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
+				$statement = __( 'Migrating BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
 				$result    = __( 'Complete!', 'buddyboss' );
 
 				// All done!
@@ -464,7 +464,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 	$latest_offset   = get_site_option( 'bb_subscriptions_migrate_bbpress_offset', 0 );
 	$records_updated = sprintf(
 	/* translators: total members */
-		__( 'The BBPress forum and discussion subscriptions successfully migrated to BuddyBoss for %s forums/discussions.', 'buddyboss' ),
+		__( 'The total %s BBPress (v2.6+) forum and discussion subscriptions successfully migrated to BuddyBoss.', 'buddyboss' ),
 		bp_core_number_format( $latest_offset )
 	);
 	// Delete migration transient.
