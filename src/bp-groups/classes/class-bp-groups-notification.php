@@ -839,7 +839,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups',
 			'bb_groups_subscribed_discussion',
 			'bb_groups_subscribed_discussion',
-			'bb-icon-f bb-icon-comment'
+			'bb-icon-f bb-icon-comment-square-dots'
 		);
 
 		// Register the subscription for group activity and discussion.
