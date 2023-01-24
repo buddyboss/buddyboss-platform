@@ -1356,14 +1356,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					} elseif ( ! empty( $gif_data ) ) {
 						$text = sprintf(
 						/* translators: User full name, 2: Group name. */
-							__( '%1$s posted an update in %2$s', 'buddyboss' ),
+							__( '%1$s posted a gif in %2$s', 'buddyboss' ),
 							$user_fullname,
 							$group_name
 						);
 					} else {
 						$text = sprintf(
 						/* translators: %s: User full name, 2: Group name. */
-							__( '%1$s posted in %2$s', 'buddyboss' ),
+							__( '%1$s posted an update in %2$s', 'buddyboss' ),
 							$user_fullname,
 							$group_name
 						);
