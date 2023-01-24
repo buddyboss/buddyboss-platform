@@ -458,6 +458,9 @@ class BP_Groups_Member {
 		// Update the group's member count.
 		self::refresh_total_member_count_for_group( $this->group_id );
 
+		// Delete group subscription.
+		self::bb_remove_group_subscription( $this->user_id, $this->group_id );
+
 		/**
 		 * Fires after a member is removed from a group.
 		 *
@@ -530,6 +533,9 @@ class BP_Groups_Member {
 
 		// Update the group's member count.
 		self::refresh_total_member_count_for_group( $group_id );
+
+		// Delete group subscription.
+		self::bb_remove_group_subscription( $user_id, $group_id );
 
 		/**
 		 * Fires after a member is removed from a group.
@@ -1540,5 +1546,39 @@ class BP_Groups_Member {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Delete group subscription when remove member from the group.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id  ID of the user.
+	 * @param int $group_id ID of the group.
+	 *
+	 * @return bool|int True on success, false on failure.
+	 */
+	public static function bb_remove_group_subscription( $user_id, $group_id ) {
+		// Check if subscription is existed or not?.
+		$subscriptions = bb_get_subscriptions(
+			array(
+				'type'    => 'group',
+				'user_id' => $user_id,
+				'item_id' => $group_id,
+				'count'   => false,
+				'cache'   => false,
+				'status'  => null,
+			),
+			true
+		);
+		if ( empty( $subscriptions['subscriptions'] ) ) {
+			return false;
+		}
+
+		// Get current one.
+		$subscription = current( $subscriptions['subscriptions'] );
+
+		// Delete the subscription.
+		return bb_delete_subscription( $subscription->id );
 	}
 }
