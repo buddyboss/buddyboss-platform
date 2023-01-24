@@ -1617,7 +1617,7 @@ window.bp = window.bp || {};
 				}
 
 				var tool_box = target.closest( 'form' );
-				tool_box.addClass('has-gif');
+				tool_box.addClass( 'has-gif' );
 				if ( tool_box.find( '#forums-document-button' ) ) {
 					tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
@@ -1694,7 +1694,7 @@ window.bp = window.bp || {};
 			}
 
 			var tool_box = target.closest( 'form' );
-			tool_box.removeClass('has-gif');
+			tool_box.removeClass( 'has-gif' );
 			if ( tool_box.find( '#forums-document-button' ) ) {
 				tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 			}
