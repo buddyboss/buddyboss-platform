@@ -349,7 +349,7 @@ window.bp = window.bp || {};
 			target[0].reset();
 
 			// Remove class to display draft.
-			target.removeClass( ' has-content' );
+			target.removeClass( 'has-content' );
 		},
 
 		collectTopicReplyDraftActivity: function() {
