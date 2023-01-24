@@ -370,14 +370,6 @@ jQuery( document ).ready(
 			}
 		);
 
-		jQuery( document ).on( 'keyup', '#bbp_topic_title', function ( e ) {
-			if ( jQuery( e.currentTarget ).val().trim() !== '' ) {
-				jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-title' );
-			} else {
-				jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-title' );
-			}
-		} );
-
 		/* Shift + tab from topic tags */
 		jQuery( '#bbp_topic_tags' ).bind(
 			'keydown.editor-focus',
