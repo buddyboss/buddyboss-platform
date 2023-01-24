@@ -147,12 +147,14 @@ abstract class BP_Core_Notification_Abstract {
 		if ( ! empty( $this->preferences ) ) {
 			foreach ( $this->preferences as $preference ) {
 				$notifications[ $preference['notification_group'] ]['fields'][] = array(
-					'key'           => $preference['notification_type'],
-					'label'         => $preference['notification_label'],
-					'admin_label'   => ( isset( $preference['notification_admin_label'] ) && ! empty( $preference['notification_admin_label'] ) ? $preference['notification_admin_label'] : $preference['notification_label'] ),
-					'default'       => ( true === $preference['notification_default'] ? 'yes' : 'no' ),
-					'notifications' => ( ! empty( $all_notifications ) && isset( $all_notifications[ $preference['notification_type'] ] ) ) ? $all_notifications[ $preference['notification_type'] ] : array(),
-					'email_types'   => ( ! empty( $all_email_types ) && isset( $all_email_types[ $preference['notification_type'] ] ) ) ? $all_email_types[ $preference['notification_type'] ] : array(),
+					'key'                       => $preference['notification_type'],
+					'label'                     => $preference['notification_label'],
+					'admin_label'               => ( isset( $preference['notification_admin_label'] ) && ! empty( $preference['notification_admin_label'] ) ? $preference['notification_admin_label'] : $preference['notification_label'] ),
+					'default'                   => ( true === $preference['notification_default'] ? 'yes' : 'no' ),
+					'notifications'             => ( ! empty( $all_notifications ) && isset( $all_notifications[ $preference['notification_type'] ] ) ) ? $all_notifications[ $preference['notification_type'] ] : array(),
+					'email_types'               => ( ! empty( $all_email_types ) && isset( $all_email_types[ $preference['notification_type'] ] ) ) ? $all_email_types[ $preference['notification_type'] ] : array(),
+					'notification_read_only'    => (bool) $preference['notification_read_only'],
+					'notification_tooltip_text' => $preference['notification_tooltip_text'],
 				);
 
 				if ( 'other' === $preference['notification_group'] ) {
@@ -362,21 +364,25 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 1.9.3
 	 *
-	 * @param string $notification_type        Notification Type key.
-	 * @param string $notification_label       Notification label.
-	 * @param string $notification_admin_label Notification admin label.
-	 * @param string $notification_group       Notification group.
-	 * @param bool   $default                  Default status.
+	 * @param string $notification_type         Notification Type key.
+	 * @param string $notification_label        Notification label.
+	 * @param string $notification_admin_label  Notification admin label.
+	 * @param string $notification_group        Notification group.
+	 * @param bool   $default                   Default status.
+	 * @param bool   $notification_read_only    Notification is read only or not.
+	 * @param string $notification_tooltip_text Notification setting tooltip text.
 	 *
 	 * @return void
 	 */
-	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
+	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true, bool $notification_read_only = false, string $notification_tooltip_text = '' ) {
 		$this->preferences[] = array(
-			'notification_type'        => $notification_type,
-			'notification_label'       => $notification_label,
-			'notification_admin_label' => $notification_admin_label,
-			'notification_group'       => $notification_group,
-			'notification_default'     => $default,
+			'notification_type'         => $notification_type,
+			'notification_label'        => $notification_label,
+			'notification_admin_label'  => $notification_admin_label,
+			'notification_group'        => $notification_group,
+			'notification_default'      => $default,
+			'notification_read_only'    => $notification_read_only,
+			'notification_tooltip_text' => $notification_tooltip_text,
 		);
 	}
 
