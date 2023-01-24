@@ -541,7 +541,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Remove mentioned link in activity post.
+	 * Remove mentioned link from activity post.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -568,10 +568,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 					bb_moderation_is_user_blocked_by( $user_id ) ||
 					bp_moderation_is_user_suspended( $user_id )
 				) {
-					preg_match_all( '/(<a.*?(?!<\/a>)@' . $usernames[ $user_id ] . '.*?<\/a>)/', $content, $content_matches );
-					if ( ! empty( $content_matches[1] ) ) {
-						foreach ( $content_matches[1] as $replacement ) {
-							$content = str_replace( $replacement, '@' . $usernames[ $user_id ], $content );
+					preg_match_all( "'<span class=\"atwho-inserted\">(.*?)<\/span>'si", $content, $content_matches, PREG_SET_ORDER );
+					if ( ! empty( $content_matches ) ) {
+						foreach ( $content_matches as $match ) {
+							if ( strstr( $match[0], '@' . $username ) ) {
+								$content = str_replace( $match[0], '@' . $username, $content );
+							}
 						}
 					}
 				}

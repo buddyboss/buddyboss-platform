@@ -75,6 +75,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
 			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
+
+		add_filter( 'bbp_get_reply_content', array( $this, 'bb_reply_content_remove_mentioned_link' ), 10, 2 );
 	}
 
 	/**
@@ -281,5 +283,46 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		$report_button = bp_moderation_get_report_button( $args, false );
 
 		return $report_button;
+	}
+
+	/**
+	 * Remove mentioned link from discussion's reply.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content  Reply content.
+	 * @param int    $reply_id Reply id.
+	 *
+	 * @return string
+	 */
+	public function bb_reply_content_remove_mentioned_link( $content, $reply_id ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$usernames = bp_activity_find_mentions( $content );
+
+		// No mentions? Stop now!
+		if ( empty( $usernames ) ) {
+			return $content;
+		}
+		foreach ( (array) $usernames as $user_id => $username ) {
+			if (
+				bp_moderation_is_user_blocked( $user_id ) ||
+				bb_moderation_is_user_blocked_by( $user_id ) ||
+				bp_moderation_is_user_suspended( $user_id )
+			) {
+				preg_match_all( "'<span class=\"atwho-inserted\">(.*?)<\/span>'si", $content, $content_matches, PREG_SET_ORDER );
+				if ( ! empty( $content_matches ) ) {
+					foreach ( $content_matches as $match ) {
+						if ( strstr( $match[0], '@' . $username ) ) {
+							$content = str_replace( $match[0], '@' . $username, $content );
+						}
+					}
+				}
+			}
+		}
+
+		return $content;
 	}
 }
