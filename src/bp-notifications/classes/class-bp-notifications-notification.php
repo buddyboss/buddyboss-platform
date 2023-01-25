@@ -804,6 +804,7 @@ class BP_Notifications_Notification {
 			$results[ $key ]->item_id           = (int) $results[ $key ]->item_id;
 			$results[ $key ]->secondary_item_id = (int) $results[ $key ]->secondary_item_id;
 			$results[ $key ]->is_new            = (int) $results[ $key ]->is_new;
+			$results[ $key ]->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $results[ $key ] ) : false;
 		}
 
 		// Update meta cache.
