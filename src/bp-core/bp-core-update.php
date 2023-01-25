@@ -2353,7 +2353,12 @@ function bb_migrating_group_member_subscriptions( $groups = array() ) {
 				if ( ! empty( $forum_ids ) ) {
 					$forum_ids = implode( ',', wp_parse_id_list( $forum_ids ) );
 					$user_ids  = implode( ',', wp_parse_id_list( array_filter( array_column( $members, 'user_id' ) ) ) );
-					// $wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND user_id IN ({$user_ids}) AND type = 'forum'" ); // phpcs:ignore
+
+					// Delete the group forums.
+					// $wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND type = 'forum'" ); // phpcs:ignore
+
+					// Delete the group forum topics.
+					// $wpdb->query( "DELETE FROM {$subscription_tbl} WHERE secondary_item_id IN ({$forum_ids}) AND type = 'topic'" ); // phpcs:ignore
 				}
 			}
 		}
