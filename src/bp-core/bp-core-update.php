@@ -2218,3 +2218,144 @@ function bb_update_to_2_2_6() {
 	// Default enabled the group subscriptions.
 	bp_update_option( 'bb_enable_group_subscriptions', 1 );
 }
+
+/**
+ * Migrate group subscription when update the platform to the latest version.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_migrate_group_subscription() {
+	global $bp_background_updater;
+
+//	$is_already_run = get_transient( 'bb_migrate_group_subscriptions' );
+//	if ( $is_already_run ) {
+//		return;
+//	}
+
+	set_transient( 'bb_migrate_group_subscriptions', 'yes', HOUR_IN_SECONDS );
+	// Fetch public groups.
+	$groups = groups_get_groups(
+		array(
+			'fields'   => 'ids',
+			'per_page' => - 1,
+		)
+	);
+
+	$all_groups = array();
+	if ( ! empty( $groups['groups'] ) ) {
+		$all_groups = $groups['groups'];
+	}
+
+	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 10 );
+
+	if (
+		count( $all_groups ) > $min_count
+	) {
+		$chunk_results = array_chunk( $all_groups, $min_count );
+		if ( ! empty( $chunk_results ) ) {
+			foreach ( $chunk_results as $chunk_result ) {
+				$bp_background_updater->data(
+					array(
+						array(
+							'callback' => 'bb_migrating_group_member_subscriptions',
+							'args'     => array( $chunk_result ),
+						),
+					)
+				);
+
+				$bp_background_updater->save();
+			}
+		}
+
+		$bp_background_updater->dispatch();
+	} else {
+		bb_migrating_group_member_subscriptions( $all_groups );
+	}
+}
+add_action( 'wp_ajax_bb_migrate_group_subscription', 'bb_migrate_group_subscription' );
+
+/**
+ * Migrating group subscription and remove group forums and topics subscriptions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $groups Array of group IDs.
+ *
+ * @return void
+ */
+function bb_migrating_group_member_subscriptions( $groups = array() ) {
+	global $wpdb;
+
+	$bp = buddypress();
+
+	if ( ! empty( $groups ) ) {
+
+		$subscription_tbl     = BB_Subscriptions::get_subscription_tbl();
+		$place_holder_queries = array();
+		$insert_query         = "INSERT INTO {$subscription_tbl} ( blog_id, user_id, type, item_id, secondary_item_id, status, date_recorded ) VALUES";
+
+		foreach ( $groups as $group_id ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$members = $wpdb->get_results(
+				$wpdb->prepare(
+				// phpcs:ignore
+					"SELECT user_id, is_confirmed FROM {$bp->groups->table_name_members} WHERE group_id = %d",
+					$group_id
+				)
+			);
+
+			if ( ! empty( $members ) ) {
+				foreach ( $members as $member ) {
+
+					$record_args = array(
+						'user_id'           => (int) $member->user_id,
+						'item_id'           => (int) $group_id,
+						'blog_id'           => 1,
+						'type'              => 'group',
+						'count'             => false,
+						'cache'             => false,
+						'bypass_moderation' => true,
+					);
+
+					// Get subscription from new table.
+					$subscription_exists = BB_Subscriptions::get( $record_args );
+
+					if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
+						continue;
+					}
+
+					$secondary_item_id   = bp_get_parent_group_id( $group_id );
+					$subscription_status = 1;
+					if ( ! empty( $member->is_confirmed ) && 0 === (int) $member->is_confirmed ) {
+						$subscription_status = 0;
+					}
+
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', 1, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $secondary_item_id, $subscription_status, bp_core_current_time() );
+				}
+			}
+
+			if ( ! empty( $place_holder_queries ) ) {
+				$place_holder_queries = implode( ', ', $place_holder_queries );
+				// $wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
+				unset( $place_holder_queries );
+			}
+
+			// Delete existing group forums subscriptions.
+			if (
+				bp_is_active( 'forums' ) &&
+				function_exists( 'bbp_is_group_forums_active' ) &&
+				bbp_is_group_forums_active() &&
+				! empty( $members )
+			) {
+				$forum_ids = bbp_get_group_forum_ids( $group_id );
+				if ( ! empty( $forum_ids ) ) {
+					$forum_ids = implode( ',', wp_parse_id_list( $forum_ids ) );
+					$user_ids  = implode( ',', wp_parse_id_list( array_filter( array_column( $members, 'user_id' ) ) ) );
+					// $wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND user_id IN ({$user_ids}) AND type = 'forum'" ); // phpcs:ignore
+				}
+			}
+		}
+	}
+}
