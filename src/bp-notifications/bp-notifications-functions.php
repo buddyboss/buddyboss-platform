@@ -1587,7 +1587,7 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 		}
 	}
 
-	return $renderable;
+	return apply_filters( 'bb_notification_get_renderable_notifications', $renderable, $notification_item, $format, $screen );
 }
 
 
@@ -1738,4 +1738,66 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
 	$where_sql .= " AND {$tbl_alias}.id NOT IN ( SELECT DISTINCT notification_id from {$bp->notifications->table_name_meta} WHERE meta_key = 'not_send_web' and meta_value = 1 )";
 
 	return $where_sql;
+}
+
+
+add_filter(
+	'bb_notification_get_renderable_notifications',
+	function( $renderable, $notification, $format, $screen ) {
+
+		if ( true === bb_notification_is_read_only( $notification ) ) {
+			if ( 'string' === $format ) {
+				$renderable = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $renderable );
+			} elseif ( 'object' === $format || 'array' === $format ) {
+				if ( is_object( $renderable ) ) {
+					$renderable->href = '';
+				} else {
+					$renderable['href'] = '';
+				}
+			}
+		}
+
+		return $renderable;
+	},
+	99,
+	4
+);
+
+add_filter(
+	'bp_get_the_notification_description',
+	function( $description, $notification ) {
+
+		if ( true === bb_notification_is_read_only( $notification ) ) {
+			$description = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $description );
+		}
+
+		return $description;
+
+	},
+	99,
+	2
+);
+
+function bb_notification_is_read_only( $notification ) {
+	$retval = ! empty( $notification ) &&
+			  (
+				  (
+					  ! empty( $notification->secondary_item_id ) &&
+					  bp_is_user_inactive( $notification->secondary_item_id )
+				  ) || (
+					  bp_is_active( 'moderation' ) &&
+					  (
+						  (
+							  ! empty( $notification->secondary_item_id ) &&
+							  bb_moderation_moderated_user_ids( $notification->secondary_item_id )
+						  ) ||
+						  (
+							  ! empty( $notification->user_id ) &&
+							  bb_moderation_moderated_user_ids( $notification->user_id )
+						  )
+					  )
+				  )
+			  );
+
+	return (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
 }
