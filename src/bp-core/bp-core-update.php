@@ -2169,7 +2169,7 @@ function bb_update_to_2_2_4() {
 }
 
 /**
- * Clear web and api cache on the update.
+ * Install email template for following.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2179,11 +2179,6 @@ function bb_update_to_2_2_5() {
 	wp_cache_flush();
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear medias API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
 	}
 
@@ -2232,6 +2227,25 @@ function bb_update_to_2_2_5() {
 				'description' => esc_html__( 'A member receives a new follower', 'buddyboss' ),
 			)
 		);
+	}
+}
+
+/**
+ * Clear web and api cache on the update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_6() {
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear medias API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
 	}
 
 	bb_migrate_subscriptions();
