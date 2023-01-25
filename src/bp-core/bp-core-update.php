@@ -2176,9 +2176,10 @@ function bb_update_to_2_2_4() {
  * @return void
  */
 function bb_update_to_2_2_6() {
+
 	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'notifications' ) ) {
 		global $bp, $wpdb;
-		$select_sql = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
+		$select_sql  = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
 		$select_sql .= ' WHERE is_new = 1';
 
 		$select_sql_where = array();
@@ -2192,7 +2193,7 @@ function bb_update_to_2_2_6() {
 		$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' )';
 
 		$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ( {$select_sql} )";
-		$wpdb->query( $update_query );
+		$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		global $wp_object_cache;
 		if ( isset( $wp_object_cache->cache['bp_notifications'] ) ) {
@@ -2206,5 +2207,3 @@ function bb_update_to_2_2_6() {
 		}
 	}
 }
-
-//add_action( 'bp_init', 'bb_update_to_2_2_6', 999 );
