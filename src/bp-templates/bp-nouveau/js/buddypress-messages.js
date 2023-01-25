@@ -3707,7 +3707,7 @@ window.bp = window.bp || {};
 						ajax: {
 							url: bp.ajax.settings.url,
 							dataType: 'json',
-							delay: 250,
+							delay: 900,
 							data: function(params) {
 								return $.extend(
 									{},
