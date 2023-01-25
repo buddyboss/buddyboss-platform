@@ -93,6 +93,15 @@ class BP_Notifications_Notification {
 	public $inserted = false;
 
 	/**
+	 * Is notification read only of link able?
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var bool
+	 */
+	public $readonly;
+
+	/**
 	 * Columns in the notifications table.
 	 */
 	public static $columns = array(
@@ -225,6 +234,7 @@ class BP_Notifications_Notification {
 			$this->component_action  = $notification->component_action;
 			$this->date_notified     = $notification->date_notified;
 			$this->is_new            = (int) $notification->is_new;
+			$this->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $notification ) : false;
 		}
 	}
 
