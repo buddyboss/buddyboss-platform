@@ -2176,12 +2176,35 @@ function bb_update_to_2_2_4() {
  * @return void
  */
 function bb_update_to_2_2_6() {
-	global $wp_object_cache;
-	unset( $wp_object_cache->cache['bp_notifications'] );
+	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'notifications' ) ) {
+		global $bp, $wpdb;
+		$select_sql = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
+		$select_sql .= ' WHERE is_new = 1';
 
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear members API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+		$select_sql_where = array();
+		$all_users        = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
+
+		if ( ! empty( $all_users ) ) {
+			$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $all_users ) . ' )';
+		}
+		$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
+
+		$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' )';
+
+		$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ( {$select_sql} )";
+		$wpdb->query( $update_query );
+
+		global $wp_object_cache;
+		if ( isset( $wp_object_cache->cache['bp_notifications'] ) ) {
+			unset( $wp_object_cache->cache['bp_notifications'] );
+		}
+
+		// Purge all the cache for API.
+		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+			// Clear members API cache.
+			BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+		}
 	}
 }
+
+//add_action( 'bp_init', 'bb_update_to_2_2_6', 999 );
