@@ -987,3 +987,54 @@ function bb_moderation_after_activity_entry_callback() {
 add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );
+
+/**
+ * Function will remove link from notification description.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $renderable   Notification details.
+ * @param object $notification Notification item.
+ * @param string $format       Format of the notification.
+ * @param string $screen       Screen of the notification.
+ *
+ * @return string|string[]|null
+ */
+function bb_notification_get_renderable_notifications_callback( $renderable, $notification, $format, $screen ) {
+
+	if ( true === bb_notification_is_read_only( $notification ) ) {
+		if ( 'string' === $format ) {
+			$renderable = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $renderable );
+		} elseif ( 'object' === $format || 'array' === $format ) {
+			if ( is_object( $renderable ) ) {
+				$renderable->href = '';
+			} else {
+				$renderable['href'] = '';
+			}
+		}
+	}
+
+	return $renderable;
+}
+add_filter( 'bb_notification_get_renderable_notifications', 'bb_notification_get_renderable_notifications_callback', 99, 4 );
+
+/**
+ * Function will remove link from notification description.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $description  Notification details.
+ * @param object $notification Notification item.
+ *
+ * @return string|string[]|null
+ */
+function bp_get_the_notification_description_callback( $description, $notification ) {
+
+	if ( true === bb_notification_is_read_only( $notification ) ) {
+		$description = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $description );
+	}
+
+	return $description;
+
+}
+add_filter( 'bp_get_the_notification_description', 'bp_get_the_notification_description_callback', 99, 2 );

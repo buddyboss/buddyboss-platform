@@ -1637,7 +1637,7 @@ function bb_moderation_get_suspended_user_ids( $force = false ) {
 
 	$cache_key = 'bb_moderation_suspended_user_ids';
 	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT item_id FROM {$bp->moderation->table_name} WHERE item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
+		$result = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT item_id FROM {$bp->moderation->table_name} WHERE item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
 		$data   = ! empty( $result ) ? array_map( 'intval', $result ) : array();
 
 		$cache[ $cache_key ] = $data;
@@ -1658,7 +1658,7 @@ function bb_moderation_get_suspended_user_ids( $force = false ) {
  * @return array|bool
  */
 function bb_moderation_moderated_user_ids( $user_id = 0 ) {
-	$hidden_users_ids   = bp_moderation_get_hidden_user_ids(); // blocked user_ids.
+	$hidden_users_ids   = bp_moderation_get_hidden_user_ids(); // Blocked user_ids.
 	$blocked_by_members = bb_moderation_get_blocked_by_user_ids(); // Blocked by user_ids.
 	$suspended_user_id  = bb_moderation_get_suspended_user_ids();
 

@@ -1740,44 +1740,16 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
 	return $where_sql;
 }
 
-
-add_filter(
-	'bb_notification_get_renderable_notifications',
-	function( $renderable, $notification, $format, $screen ) {
-
-		if ( true === bb_notification_is_read_only( $notification ) ) {
-			if ( 'string' === $format ) {
-				$renderable = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $renderable );
-			} elseif ( 'object' === $format || 'array' === $format ) {
-				if ( is_object( $renderable ) ) {
-					$renderable->href = '';
-				} else {
-					$renderable['href'] = '';
-				}
-			}
-		}
-
-		return $renderable;
-	},
-	99,
-	4
-);
-
-add_filter(
-	'bp_get_the_notification_description',
-	function( $description, $notification ) {
-
-		if ( true === bb_notification_is_read_only( $notification ) ) {
-			$description = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $description );
-		}
-
-		return $description;
-
-	},
-	99,
-	2
-);
-
+/**
+ * Function to check if notification triggered by blocked/blocked by/suspended/deleted member
+ * then this notification will only for read only purpose.
+ *
+ * @since BussyBoss [BBVERSION]
+ *
+ * @param object $notification Notification item.
+ *
+ * @return bool
+ */
 function bb_notification_is_read_only( $notification ) {
 	$retval = ! empty( $notification ) &&
 			  (
