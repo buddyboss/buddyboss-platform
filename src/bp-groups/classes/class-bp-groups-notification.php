@@ -1148,6 +1148,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			if ( bp_is_active( 'notifications' ) ) {
+				add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 				bp_notifications_add_notification(
 					array(
 						'user_id'           => $user_id,
@@ -1159,6 +1160,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						'is_new'            => 1,
 					)
 				);
+				remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			}
 		}
 
