@@ -2176,5 +2176,12 @@ function bb_update_to_2_2_4() {
  * @return void
  */
 function bb_update_to_2_2_6() {
-	wp_cache_flush();
+	global $wp_object_cache;
+	unset( $wp_object_cache->cache['bp_notifications'] );
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear members API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+	}
 }
