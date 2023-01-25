@@ -173,7 +173,7 @@ class BP_Moderation {
 
 			$report_type = ( BP_Moderation_Members::$moderation_type_report === $item_type ) ? BP_Moderation_Members::$moderation_type : $this->item_type;
 
-			$id = self::check_moderation_exist( $this->item_id, $report_type, true, BP_Moderation_Members::$moderation_type_report === $item_type );
+			$id = self::check_moderation_exist( $this->item_id, $report_type, false, BP_Moderation_Members::$moderation_type_report === $item_type );
 			if ( ! empty( $id ) ) {
 				$this->id = (int) $id;
 				$this->populate( $item_type );
@@ -273,9 +273,9 @@ class BP_Moderation {
 		 * Fetch User Report data
 		 */
 		$bp        = buddypress();
-		$cache_key = 'bp_moderation_populate_' . $this->id . '_' . $this->user_id . '_' . $user_report;
-		if ( ! isset( $bb_report_row_query[ time() ] ) ) {
-			if( BP_Moderation_Members::$moderation_type_report === $user_report ) {
+		$cache_key = 'bp_moderation_populate_' . $this->id . '_' . $this->user_id . '_' . ( ! empty( $user_report ) ? $user_report : $this->item_type );
+		if ( ! isset( $bb_report_row_query[ $cache_key ] ) ) {
+			if ( BP_Moderation_Members::$moderation_type_report === $user_report ) {
 				$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d and user_report = 1", $this->id, $this->user_id ) ); // phpcs:ignore
 			} else {
 				$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d AND user_report = 0", $this->id, $this->user_id ) ); // phpcs:ignore
@@ -437,7 +437,7 @@ class BP_Moderation {
 			$user_ids                    = implode( ',', wp_parse_id_list( $r['user_id'] ) );
 			$where_conditions['user_id'] = "mr.user_id IN ({$user_ids})";
 			if ( ! isset( $r['user_report'] ) ) {
-				$where_conditions['user_id'] .= " and mr.user_report = 0 ";
+				$where_conditions['user_id'] .= ' and mr.user_report = 0 ';
 			}
 		}
 
@@ -888,10 +888,10 @@ class BP_Moderation {
 			$select_sql = "SELECT * FROM {$bp->moderation->table_name_reports} mr";
 
 			// Where conditions.
-			$where_conditions[] = $wpdb->prepare( "mr.moderation_id = %d", $moderation_id ); // phpcs:ignore
+			$where_conditions[] = $wpdb->prepare( 'mr.moderation_id = %d', $moderation_id ); // phpcs:ignore
 
 			if ( ! empty( $args['user_id'] ) ) {
-				$where_conditions[] = $wpdb->prepare( "mr.user_id = %d", $args['user_id'] ); // phpcs:ignore
+				$where_conditions[] = $wpdb->prepare( 'mr.user_id = %d', $args['user_id'] ); // phpcs:ignore
 			}
 
 			if ( isset( $args['user_repoted'] ) ) {
@@ -1112,8 +1112,8 @@ class BP_Moderation {
 			$this->last_updated = current_time( 'mysql' );
 
 			// Update count and check $threshold for auto hide/suspended and send email notification if auto hide/suspended.
-			$this->count         = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
-			$this->count_report  = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
+			$this->count        = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
+			$this->count_report = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
 			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->user_report ) ) {
 				$this->count_report += 1;
 			} else {
@@ -1185,7 +1185,7 @@ class BP_Moderation {
 
 		$bp = buddypress();
 
-		if( $user_report ) {
+		if ( $user_report ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d and mr.user_report = 1", $moderation_id, $user_id ) ); // phpcs:ignore
 		} else {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d and mr.user_report = 0", $moderation_id, $user_id ) ); // phpcs:ignore
@@ -1255,7 +1255,7 @@ class BP_Moderation {
 
 			bp_moderation_update_meta( $this->id, '_count', $this->count );
 			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
-		} else if ( ! empty( $this->report_id ) ) {
+		} elseif ( ! empty( $this->report_id ) ) {
 			$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d, user_report = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->user_report, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
 			bp_moderation_update_meta( $this->id, '_count', $this->count );
 			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
