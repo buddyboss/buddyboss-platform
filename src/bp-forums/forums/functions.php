@@ -2569,11 +2569,16 @@ function bbp_get_forums_per_page( $default = 15 ) {
 	return (int) apply_filters( 'bbp_get_forums_per_page', $retval, $default );
 }
 
-function bb_get_forums_hierarchy( $forum_id ) {
-	return bb_get_recursive_subforums( $forum_id );
-}
-
-function bb_get_recursive_subforums( $forum_id ) {
+/**
+ * Return al sub forums by parent forum ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $forum_id The ID of forum.
+ *
+ * @return array
+ */
+function bb_get_all_nested_subforums( $forum_id ) {
 	$retval     = array();
 	$sub_forums = bbp_forum_get_subforums(
 		array(
@@ -2586,7 +2591,7 @@ function bb_get_recursive_subforums( $forum_id ) {
 
 	if ( ! empty( $sub_forums ) ) {
 		foreach ( $sub_forums as $forum_id ) {
-			$gchildren = bb_get_recursive_subforums( $forum_id );
+			$gchildren = bb_get_all_nested_subforums( $forum_id );
 			if ( ! empty( $gchildren ) ) {
 				$retval = array_merge( $retval, $gchildren );
 			}

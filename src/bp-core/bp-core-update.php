@@ -2226,7 +2226,7 @@ function bb_update_to_2_2_6() {
 	bp_update_option( 'bb_enable_group_subscriptions', 1 );
 
 	// Migrate group subscriptions.
-	// bb_migrate_group_subscription();
+	bb_migrate_group_subscription();
 }
 
 /**
@@ -2244,10 +2244,10 @@ function bb_migrate_group_subscription() {
 
 	$groups = groups_get_groups(
 		array(
-			'fields'           => 'ids',
-			'per_page'         => 10,
-			'page'             => get_site_option( 'bb_group_subscriptions_migrate_page', 1 ),
-			'show_hidden'      => true,
+			'fields'      => 'ids',
+			'per_page'    => 10,
+			'page'        => get_site_option( 'bb_group_subscriptions_migrate_page', 1 ),
+			'show_hidden' => true,
 		)
 	);
 
@@ -2260,6 +2260,7 @@ function bb_migrate_group_subscription() {
 		bb_migrating_group_member_subscriptions( $all_groups );
 	} else {
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
+		delete_transient( 'bb_migrate_group_subscriptions' );
 	}
 }
 
@@ -2320,43 +2321,7 @@ function bb_migrating_group_member_subscriptions( $groups = array() ) {
 				}
 			}
 
-			if ( bp_is_active( 'forums' ) ) {
-				$forum_ids = bbp_get_group_forum_ids( $group_id );
-				if ( ! empty( $forum_ids ) ) {
-					foreach ( $forum_ids as $forum_id ) {
-						// @todo remove the function and write sql.
-						bb_delete_item_subscriptions( 'forum', $forum_id );
-						$child_forums = bb_get_forums_hierarchy( $forum_id );
-						foreach ( $child_forums as $forum_id ) {
-							$topics = bbp_get_all_child_ids( $forum_id, bbp_get_topic_post_type() );
-							if ( ! empty( $topics ) ) {
-								foreach ( $topics as $topic_id ) {
-
-									// @todo remove the function and write sql.
-									bb_delete_item_subscriptions( 'topic', $topic_id );
-								}
-							}
-						};
-					}
-				}
-
-				// Clear subscription cache.
-				global $wp_object_cache;
-				if ( isset( $wp_object_cache->cache['bbpress_users'] ) ) {
-					unset( $wp_object_cache->cache['bbpress_users'] );
-				}
-				if ( isset( $wp_object_cache->cache['bb_subscriptions'] ) ) {
-					unset( $wp_object_cache->cache['bb_subscriptions'] );
-				}
-				bp_core_reset_incrementor( 'bb_subscriptions' );
-
-				// Purge all the cache for API.
-				if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-					BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bb-subscriptions' );
-					BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-forums' );
-					BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
-				}
-			}
+			bb_delete_group_forum_topic_subscriptions( $group_id );
 		}
 	}
 
