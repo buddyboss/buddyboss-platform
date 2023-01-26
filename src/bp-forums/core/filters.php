@@ -388,71 +388,47 @@ function bb_forums_update_subscription_status( $new_status, $old_status, $post )
 
 add_action( 'transition_post_status', 'bb_forums_update_subscription_status', 999, 3 );
 
-function bb_remove_group_forum_topic_subscriptions( $group_id, $meta_key, $meta_value ) {
-	global $wpdb;
-
-	// Delete existing group forums subscriptions.
+/**
+ * Remove forum and topic subscriptions when add forum to group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $group_id   The ID of group.
+ * @param string $meta_key   The meta key of group.
+ * @param string $meta_value The meta value of group.
+ *
+ * @return void
+ */
+function bb_remove_group_forum_topic_subscriptions_add_group_meta( $group_id, $meta_key, $meta_value ) {
 	if (
 		! empty( $group_id ) &&
 		'forum_id' === $meta_key &&
-		bp_is_active( 'forums' ) &&
-		function_exists( 'bbp_is_group_forums_active' ) &&
-		bbp_is_group_forums_active()
+		bp_is_active( 'forums' )
 	) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
-		if ( ! empty( $forum_ids ) ) {
-			$forum_ids = wp_parse_id_list( $forum_ids );
-
-			if ( ! empty( $forum_ids ) ) {
-				foreach ( $forum_ids as $forum_id ) {
-
-					// Delete forum subscriptions.
-					bb_delete_item_subscriptions( 'forum', $forum_id );
-
-					// phpcs:ignore
-					$sub_forums = $wpdb->get_col(
-						$wpdb->prepare(
-							"SELECT {$wpdb->posts}.ID FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_type = %s AND (({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'hidden' OR {$wpdb->posts}.post_status = 'private')) ORDER BY {$wpdb->posts}.menu_order ASC, {$wpdb->posts}.post_title ASC",
-							$forum_id,
-							'forum'
-						)
-					);
-					if ( ! empty( $sub_forums ) ) {
-						foreach ( $sub_forums as $sub_forum ) {
-							// Delete forum subscriptions.
-							bb_delete_item_subscriptions( 'forum', $sub_forum );
-						}
-					}
-
-					// Get all topics.
-					$forums_topics = $wpdb->get_col(
-						$wpdb->prepare(
-							"SELECT {$wpdb->posts}.ID FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_parent = %d AND (({$wpdb->posts}.post_type = %s AND ({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'closed' OR {$wpdb->posts}.post_status = 'graded' OR {$wpdb->posts}.post_status = 'not_graded' OR {$wpdb->posts}.post_status = 'private' OR {$wpdb->posts}.post_status = 'hidden'))) GROUP BY {$wpdb->posts}.ID",
-							$forum_id,
-							'topic'
-						)
-					);
-
-					if ( ! empty( $forums_topics ) ) {
-						foreach ( $forums_topics as $topic ) {
-							// Delete topic subscriptions.
-							bb_delete_item_subscriptions( 'topic', $topic );
-						}
-					}
-
-				}
-			}
-
-			$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
-			// Delete the group forums.
-			$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND type = 'forum' AND blog_id = 1" ); // phpcs:ignore
-
-			// Delete the group forum topics.
-			$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE secondary_item_id IN ({$forum_ids}) AND type = 'topic' AND blog_id = 1" ); // phpcs:ignore
-		}
+		bb_delete_group_forum_topic_subscriptions( $group_id );
 	}
 }
-add_action( 'add_group_meta', 'bb_remove_group_forum_topic_subscriptions', 10, 3 );
-add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions', 10, 3 );
-//do_action( "updated_{$meta_type}_meta", $meta_id, $object_id, $meta_key, $_meta_value );
-//do_action( "add_{$meta_type}_meta", $object_id, $meta_key, $_meta_value );
+add_action( 'add_group_meta', 'bb_remove_group_forum_topic_subscriptions_add_group_meta', 10, 3 );
+
+/**
+ * Remove forum and topic subscriptions when update forum to group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $meta_id    The ID of group meta.
+ * @param int    $group_id   The ID of group.
+ * @param string $meta_key   The meta key of group.
+ * @param string $meta_value The meta value of group.
+ *
+ * @return void
+ */
+function bb_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, $group_id, $meta_key, $meta_value ) {
+	if (
+		! empty( $group_id ) &&
+		'forum_id' === $meta_key &&
+		bp_is_active( 'forums' )
+	) {
+		bb_delete_group_forum_topic_subscriptions( $group_id );
+	}
+}
+add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_update_group_meta', 10, 4 );
