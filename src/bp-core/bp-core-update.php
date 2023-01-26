@@ -2237,14 +2237,17 @@ function bb_update_to_2_2_6() {
  * @return void
  */
 function bb_migrate_group_subscription() {
-	global $bp_background_updater;
 
-	$page   = get_site_option( 'bb_group_subscriptions_migrate_page', 1 );
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
 	$groups = groups_get_groups(
 		array(
-			'fields'   => 'ids',
-			'per_page' => 10,
-			'page'     => $page,
+			'fields'           => 'ids',
+			'per_page'         => 10,
+			'page'             => get_site_option( 'bb_group_subscriptions_migrate_page', 1 ),
+			'show_hidden'      => true,
 		)
 	);
 
@@ -2253,30 +2256,8 @@ function bb_migrate_group_subscription() {
 		$all_groups = $groups['groups'];
 	}
 
-	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 10 );
-
 	if ( ! empty( $all_groups ) ) {
-		if ( count( $all_groups ) > $min_count ) {
-			$chunk_results = array_chunk( $all_groups, $min_count );
-			if ( ! empty( $chunk_results ) ) {
-				foreach ( $chunk_results as $chunk_result ) {
-					$bp_background_updater->data(
-						array(
-							array(
-								'callback' => 'bb_migrating_group_member_subscriptions',
-								'args'     => array( $chunk_result, $page ),
-							),
-						)
-					);
-
-					$bp_background_updater->save();
-				}
-			}
-
-			$bp_background_updater->dispatch();
-		} else {
-			bb_migrating_group_member_subscriptions( $all_groups, $page );
-		}
+		bb_migrating_group_member_subscriptions( $all_groups );
 	} else {
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
 	}
@@ -2288,16 +2269,18 @@ function bb_migrate_group_subscription() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $groups Array of group IDs.
- * @param int   $page   The current page.
  *
  * @return void
  */
-function bb_migrating_group_member_subscriptions( $groups = array(), $page = 1 ) {
+function bb_migrating_group_member_subscriptions( $groups = array() ) {
 	global $wpdb, $bp_background_updater;
 
-	$bp = buddypress();
+	if ( empty( $groups ) ) {
+		delete_site_option( 'bb_group_subscriptions_migrate_page' );
+		return;
+	}
 
-	$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
+	$bp = buddypress();
 	if ( ! empty( $groups ) ) {
 		foreach ( $groups as $group_id ) {
 
@@ -2305,7 +2288,7 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $page = 1 )
 			$member_ids = $wpdb->get_col(
 				$wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"SELECT user_id as user_id FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = %d AND is_banned = %d",
+					"SELECT DISTINCT user_id FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = %d AND is_banned = %d",
 					$group_id,
 					1,
 					0
@@ -2313,12 +2296,8 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $page = 1 )
 			);
 
 			if ( ! empty( $member_ids ) ) {
-
-				$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 10 );
-
-				if (
-					count( $member_ids ) > $min_count
-				) {
+				$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
+				if ( count( $member_ids ) > $min_count ) {
 					$chunk_results = array_chunk( $member_ids, $min_count );
 					if ( ! empty( $chunk_results ) ) {
 						foreach ( $chunk_results as $chunk_result ) {
@@ -2341,28 +2320,48 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $page = 1 )
 				}
 			}
 
-			// Delete existing group forums subscriptions.
-			if (
-				bp_is_active( 'forums' ) &&
-				function_exists( 'bbp_is_group_forums_active' ) &&
-				bbp_is_group_forums_active()
-			) {
+			if ( bp_is_active( 'forums' ) ) {
 				$forum_ids = bbp_get_group_forum_ids( $group_id );
 				if ( ! empty( $forum_ids ) ) {
-					$forum_ids = implode( ',', wp_parse_id_list( $forum_ids ) );
+					foreach ( $forum_ids as $forum_id ) {
+						// @todo remove the function and write sql.
+						bb_delete_item_subscriptions( 'forum', $forum_id );
+						$child_forums = bb_get_forums_hierarchy( $forum_id );
+						foreach ( $child_forums as $forum_id ) {
+							$topics = bbp_get_all_child_ids( $forum_id, bbp_get_topic_post_type() );
+							if ( ! empty( $topics ) ) {
+								foreach ( $topics as $topic_id ) {
 
-					// Delete the group forums.
-					$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND type = 'forum'" ); // phpcs:ignore
+									// @todo remove the function and write sql.
+									bb_delete_item_subscriptions( 'topic', $topic_id );
+								}
+							}
+						};
+					}
+				}
 
-					// Delete the group forum topics.
-					$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE secondary_item_id IN ({$forum_ids}) AND type = 'topic'" ); // phpcs:ignore
+				// Clear subscription cache.
+				global $wp_object_cache;
+				if ( isset( $wp_object_cache->cache['bbpress_users'] ) ) {
+					unset( $wp_object_cache->cache['bbpress_users'] );
+				}
+				if ( isset( $wp_object_cache->cache['bb_subscriptions'] ) ) {
+					unset( $wp_object_cache->cache['bb_subscriptions'] );
+				}
+				bp_core_reset_incrementor( 'bb_subscriptions' );
+
+				// Purge all the cache for API.
+				if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+					BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bb-subscriptions' );
+					BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-forums' );
+					BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
 				}
 			}
 		}
 	}
 
 	// Update the migration offset.
-	$page++;
+	$page = get_site_option( 'bb_group_subscriptions_migrate_page', 1 ) + 1;
 	update_site_option( 'bb_group_subscriptions_migrate_page', $page );
 
 	// Call recursive until group not found.
@@ -2382,17 +2381,21 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $page = 1 )
 function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = array() ) {
 	global $wpdb;
 
+	if ( ! bp_is_active( 'groups' ) || empty( $group_id ) ) {
+		return;
+	}
+
 	$subscription_tbl     = BB_Subscriptions::get_subscription_tbl();
 	$place_holder_queries = array();
 	$insert_query         = "INSERT INTO {$subscription_tbl} ( blog_id, user_id, type, item_id, secondary_item_id, status, date_recorded ) VALUES";
 
-	if ( ! empty( $member_ids ) && ! empty( $group_id ) ) {
+	if ( ! empty( $member_ids ) ) {
 		foreach ( $member_ids as $member_id ) {
 
 			$record_args = array(
 				'user_id'           => (int) $member_id,
 				'item_id'           => (int) $group_id,
-				'blog_id'           => 1,
+				'blog_id'           => get_current_blog_id(),
 				'type'              => 'group',
 				'count'             => false,
 				'cache'             => false,

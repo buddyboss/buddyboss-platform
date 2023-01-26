@@ -973,32 +973,32 @@ function bbp_repair_forum_visibility() {
 	// Next, get all the private and hidden forums
 	$private_forums = new WP_Query(
 		array(
-			'suppress_filters' => true,
-			'nopaging'         => true,
-			'post_type'        => bbp_get_forum_post_type(),
-			'post_status'      => bbp_get_private_status_id(),
-			'fields'           => 'ids',
+			'suppress_filters'       => true,
+			'nopaging'               => true,
+			'post_type'              => bbp_get_forum_post_type(),
+			'post_status'            => bbp_get_private_status_id(),
+			'fields'                 => 'ids',
 
 			// Performance
 			'update_post_term_cache' => false,
 			'update_post_meta_cache' => false,
 			'ignore_sticky_posts'    => true,
-			'no_found_rows'          => true
+			'no_found_rows'          => true,
 		)
 	);
 
 	$hidden_forums = new WP_Query(
 		array(
-			'suppress_filters' => true,
-			'nopaging'         => true,
-			'post_type'        => bbp_get_forum_post_type(),
-			'post_status'      => bbp_get_hidden_status_id(),
-			'fields'           => 'ids',
+			'suppress_filters'       => true,
+			'nopaging'               => true,
+			'post_type'              => bbp_get_forum_post_type(),
+			'post_status'            => bbp_get_hidden_status_id(),
+			'fields'                 => 'ids',
 
 			'update_post_term_cache' => false,
 			'update_post_meta_cache' => false,
 			'ignore_sticky_posts'    => true,
-			'no_found_rows'          => true
+			'no_found_rows'          => true,
 		)
 	);
 
@@ -2567,4 +2567,31 @@ function bbp_get_forums_per_page( $default = 15 ) {
 
 	// Filter and return
 	return (int) apply_filters( 'bbp_get_forums_per_page', $retval, $default );
+}
+
+function bb_get_forums_hierarchy( $forum_id ) {
+	return bb_get_recursive_subforums( $forum_id );
+}
+
+function bb_get_recursive_subforums( $forum_id ) {
+	$retval     = array();
+	$sub_forums = bbp_forum_get_subforums(
+		array(
+			'post_parent'      => $forum_id,
+			'post_status'      => array( bbp_get_public_status_id(), bbp_get_private_status_id(), bbp_get_hidden_status_id() ),
+			'fields'           => 'ids',
+			'moderation_query' => true,
+		)
+	);
+
+	if ( ! empty( $sub_forums ) ) {
+		foreach ( $sub_forums as $forum_id ) {
+			$gchildren = bb_get_recursive_subforums( $forum_id );
+			if ( ! empty( $gchildren ) ) {
+				$retval = array_merge( $retval, $gchildren );
+			}
+		}
+	}
+
+	return array_merge( $retval, $sub_forums );
 }
