@@ -1044,3 +1044,79 @@ function bb_send_notifications_to_subscribers( $args ) {
 		);
 	}
 }
+
+function bb_delete_group_forum_subscriptions( $group_id ) {
+	if (
+		! empty( $group_id ) &&
+		bp_is_active( 'forums' ) &&
+		function_exists( 'bbp_is_group_forums_active' ) &&
+		bbp_is_group_forums_active()
+	) {
+		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = wp_parse_id_list( $forum_ids );
+
+		if ( ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $forum_id ) {
+				// Delete forum subscriptions.
+				bb_delete_item_subscriptions( 'forum', $forum_id );
+
+				// Delete sub forum subscriptions.
+				bb_delete_group_sub_forum_subscriptions( $forum_id );
+
+				// Delete forum topic subscriptions.
+				bb_delete_group_forum_topic_subscriptions( $forum_id );
+			}
+		}
+	}
+}
+
+function bb_delete_group_sub_forum_subscriptions( $forum_id ) {
+	global $wpdb, $bp_background_updater;
+	if (
+		! empty( $forum_id ) &&
+		bp_is_active( 'forums' )
+	) {
+		// phpcs:ignore
+		$sub_forums = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT {$wpdb->posts}.ID FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_type = %s AND (({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'hidden' OR {$wpdb->posts}.post_status = 'private')) ORDER BY {$wpdb->posts}.menu_order ASC, {$wpdb->posts}.post_title ASC",
+				$forum_id,
+				'forum'
+			)
+		);
+		if ( ! empty( $sub_forums ) ) {
+			foreach ( $sub_forums as $sub_forum ) {
+				// Delete forum subscriptions.
+				bb_delete_item_subscriptions( 'forum', $sub_forum );
+
+				// Delete forum topic subscriptions.
+				bb_delete_group_forum_topic_subscriptions( $sub_forum );
+			}
+		}
+	}
+}
+
+
+function bb_delete_group_forum_topic_subscriptions( $forum_id ) {
+	global $wpdb;
+	if (
+		! empty( $forum_id ) &&
+		bp_is_active( 'forums' )
+	) {
+		// phpcs:ignore
+		$forums_topics = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT {$wpdb->posts}.ID FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_parent = %d AND (({$wpdb->posts}.post_type = %s AND ({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'closed' OR {$wpdb->posts}.post_status = 'graded' OR {$wpdb->posts}.post_status = 'not_graded' OR {$wpdb->posts}.post_status = 'private' OR {$wpdb->posts}.post_status = 'hidden'))) GROUP BY {$wpdb->posts}.ID",
+				$forum_id,
+				'topic'
+			)
+		);
+
+		if ( ! empty( $forums_topics ) ) {
+			foreach ( $forums_topics as $topic ) {
+				// Delete topic subscriptions.
+				bb_delete_item_subscriptions( 'topic', $topic );
+			}
+		}
+	}
+}
