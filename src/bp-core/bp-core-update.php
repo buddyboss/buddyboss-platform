@@ -2281,7 +2281,6 @@ function bb_migrate_group_subscription() {
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
 	}
 }
-add_action( 'wp_ajax_bb_migrate_group_subscription', 'bb_migrate_group_subscription' );
 
 /**
  * Migrating group subscription and remove group forums and topics subscriptions.
@@ -2296,10 +2295,23 @@ add_action( 'wp_ajax_bb_migrate_group_subscription', 'bb_migrate_group_subscript
 function bb_migrating_group_member_subscriptions( $groups = array(), $page = 1 ) {
 	global $wpdb, $bp_background_updater;
 
+	$bp = buddypress();
+
 	$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
 	if ( ! empty( $groups ) ) {
 		foreach ( $groups as $group_id ) {
-			$member_ids = BP_Groups_Member::get_group_member_ids( $group_id );
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$member_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT user_id as user_id FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = %d AND is_banned = %d",
+					$group_id,
+					1,
+					0
+				)
+			);
+
 			if ( ! empty( $member_ids ) ) {
 
 				$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 10 );
