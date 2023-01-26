@@ -492,7 +492,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Function to exclude is_suspended users comment from recent comment widget.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 *
 	 * @param string[] $comment_data An associative array of comment query clauses.
 	 * @param object   $query        Current instance of WP_Comment_Query (passed by reference).
@@ -512,7 +512,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment excerpt text for blocked comment.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 *
 	 * @param string     $excerpt    The comment excerpt text.
 	 * @param string     $comment_id The comment ID as a numeric string.

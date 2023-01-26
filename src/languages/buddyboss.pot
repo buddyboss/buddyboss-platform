@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.2.4\n"
+"Project-Id-Version: BuddyBoss Platform 2.2.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-01-25 13:28:29+00:00\n"
+"POT-Creation-Date: 2023-01-26 09:23:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1957,13 +1957,13 @@ msgid "A member is followed by someone"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:855
-#: bp-core/bp-core-update.php:2209
+#: bp-core/bp-core-update.php:2192
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{follower.name}} started following you"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:857
-#: bp-core/bp-core-update.php:2211
+#: bp-core/bp-core-update.php:2194
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n"
@@ -1972,7 +1972,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:859
-#: bp-core/bp-core-update.php:2213
+#: bp-core/bp-core-update.php:2196
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{follower.name}} started following you.\n"
@@ -1981,7 +1981,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:860
-#: bp-core/bp-core-update.php:2244
+#: bp-core/bp-core-update.php:2227
 msgid "A member receives a new follower"
 msgstr ""
 

@@ -2,8 +2,8 @@
 Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
-Requires PHP: 7.3
-Stable tag: 2.2.4
+Requires PHP: 5.6.20
+Stable tag: 2.2.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,7 @@ BuddyBoss Platform helps site builders & developers add community features to th
 
 To run BuddyBoss Platform, we recommend your host supports:
 
-* PHP version 7.3 or greater.
+* PHP version 7.2 or greater.
 * MySQL version 5.6 or greater, or, MariaDB version 10.0 or greater.
 * HTTPS support.
 

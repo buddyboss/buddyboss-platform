@@ -543,7 +543,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Function to prevent following to that user who has blocked and who is blocked the current user.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 *
 	 * @param BP_Activity_Follow $follow Contains following data.
 	 */
