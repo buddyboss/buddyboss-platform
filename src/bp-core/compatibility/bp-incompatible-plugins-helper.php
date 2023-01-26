@@ -112,6 +112,7 @@ function bp_helper_plugins_loaded_callback() {
 
 			if ( is_array( $exclude_posts ) ) {
 				$exclude_posts[] = 'bp-group-type';
+				$exclude_posts[] = 'bp-email';
 			}
 
 			return $exclude_posts;

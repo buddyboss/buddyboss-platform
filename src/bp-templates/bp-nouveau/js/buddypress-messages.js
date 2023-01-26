@@ -3707,7 +3707,7 @@ window.bp = window.bp || {};
 						ajax: {
 							url: bp.ajax.settings.url,
 							dataType: 'json',
-							delay: 250,
+							delay: 900,
 							data: function(params) {
 								return $.extend(
 									{},
@@ -4090,6 +4090,8 @@ window.bp = window.bp || {};
 								} else {
 									thread.set( { unread: false } );
 								}
+								
+								thread.set( { has_media: response.message.has_media } );
 
 								thread.set( { content: response.message.content } );
 								thread.set( { excerpt: response.message.excerpt } );
@@ -5319,6 +5321,9 @@ window.bp = window.bp || {};
 				if ( 'undefined' !== typeof bb_pusher_vars && 'undefined' !== typeof bb_pusher_vars.is_live_messaging_enabled && 'on' === bb_pusher_vars.is_live_messaging_enabled ) {
 					this.resetReplyForm();
 				}
+
+				// Reset medium editor toolbar action buttons
+				this.$el.find( '.medium-editor-button-active' ).removeClass( 'medium-editor-button-active' );
 			},
 
 			replySent: function( response ) {
