@@ -2226,7 +2226,7 @@ function bb_update_to_2_2_6() {
 	bp_update_option( 'bb_enable_group_subscriptions', 1 );
 
 	// Migrate group subscriptions.
-	bb_migrate_group_subscription();
+	// bb_migrate_group_subscription();
 }
 
 /**
