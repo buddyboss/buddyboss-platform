@@ -2155,7 +2155,23 @@ function bb_update_to_2_2_3() {
 /**
  * Clear web and api cache on the update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
+ *
+ * @return void
+ */
+function bb_update_to_2_2_4() {
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear members API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
+	}
+}
+
+/**
+ * Install email template for following.
+ *
+ * @since BuddyBoss 2.2.5
  *
  * @return void
  */
@@ -2163,11 +2179,6 @@ function bb_update_to_2_2_5() {
 	wp_cache_flush();
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear medias API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
 	}
 
@@ -2217,8 +2228,6 @@ function bb_update_to_2_2_5() {
 			)
 		);
 	}
-
-	bb_migrate_subscriptions();
 }
 
 /**
@@ -2228,13 +2237,18 @@ function bb_update_to_2_2_5() {
  *
  * @return void
  */
-function bb_update_to_2_2_4() {
+function bb_update_to_2_2_6() {
 	wp_cache_flush();
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear members API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
+		// Clear medias API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
 	}
+
+	bb_migrate_subscriptions();
 }
 
 /**

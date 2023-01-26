@@ -420,7 +420,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	/**
 	 * If members url is not set then set member url for the blog comment.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 *
 	 * @param object $comment Comment data.
 	 *
@@ -437,7 +437,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Function to exclude is_blocked and has_blocked users comment from recent comment widget.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 *
 	 * @param string[] $comment_data An associative array of comment query clauses.
 	 * @param object   $query        Current instance of WP_Comment_Query (passed by reference).
@@ -464,7 +464,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Update comment excerpt text for blocked comment.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 *
 	 * @param string     $excerpt    The comment excerpt text.
 	 * @param string     $comment_id The comment ID as a numeric string.

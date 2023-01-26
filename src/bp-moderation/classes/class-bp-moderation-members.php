@@ -214,20 +214,30 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
 		if ( empty( $username_visible ) && ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
-			return ' ';
+			return ' '; // To allow to make this function working bp_core_get_userlink() which update using below function.
 		}
 
 		return $domain;
 	}
 
-	public function bp_core_get_userlink( $domain, $user_id ) {
+	/**
+	 * Filters the link text for the passed in user.
+	 *
+	 * @since BuddyBoss 2.2.5
+	 *
+	 * @param string $value   Link text based on passed parameters.
+	 * @param int    $user_id ID of the user to check.
+	 *
+	 * @return string
+	 */
+	public function bp_core_get_userlink( $value, $user_id ) {
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
 		if ( empty( $username_visible ) && ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
 			return '<a>' . bp_core_get_user_displayname( $user_id ) . '</a>';
 		}
 
-		return $domain;
+		return $value;
 	}
 
 	/**
@@ -393,4 +403,3 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		return $retval;
 	}
 }
-

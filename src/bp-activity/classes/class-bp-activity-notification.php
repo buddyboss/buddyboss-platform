@@ -815,7 +815,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for following users.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 */
 	public function register_notification_for_following() {
 		$notification_read_only    = false;
