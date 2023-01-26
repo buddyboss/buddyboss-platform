@@ -1824,7 +1824,7 @@ add_filter( 'bb_notification_get_renderable_notifications', 'bb_notification_get
  *
  * @return string|string[]|null
  */
-function bp_get_the_notification_description_callback( $description, $notification ) {
+function bb_get_the_notification_description_callback( $description, $notification ) {
 
 	if ( true === bb_notification_is_read_only( $notification ) ) {
 		$description = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $description );
@@ -1833,7 +1833,7 @@ function bp_get_the_notification_description_callback( $description, $notificati
 	return $description;
 
 }
-add_filter( 'bp_get_the_notification_description', 'bp_get_the_notification_description_callback', 99, 2 );
+add_filter( 'bp_get_the_notification_description', 'bb_get_the_notification_description_callback', 99, 2 );
 
 /**
  * Function will forcely read notification which triggered by blocked/blocked by/suspended member.
