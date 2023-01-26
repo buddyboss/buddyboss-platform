@@ -36,7 +36,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 				while ( bp_the_notifications() ) :
 					bp_the_notification();
 					$bp       = buddypress();
-					$readonly = $bp->notifications->query_loop->notification->readonly;
+					$readonly = isset( $bp->notifications->query_loop->notification->readonly ) ? $bp->notifications->query_loop->notification->readonly : false;
 				?>
 
 					<tr>
