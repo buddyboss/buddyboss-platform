@@ -153,7 +153,8 @@ class BP_Document_Template {
 			'user_directory'      => true,
 			'meta_query_document' => false,
 			'meta_query_folder'   => false,
-			'meta_query'          => false
+			'meta_query'          => false,
+			'moderation_query'    => true,
 		);
 
 		$r = bp_parse_args( $args, $defaults );
@@ -184,6 +185,7 @@ class BP_Document_Template {
 					'user_directory' => $user_directory,
 					'meta_query'     => $meta_query,
 					'privacy'        => $privacy,
+					'moderation_query'    => $moderation_query
 				)
 			);
 

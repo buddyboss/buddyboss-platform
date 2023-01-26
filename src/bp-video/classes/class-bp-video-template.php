@@ -152,6 +152,7 @@ class BP_Video_Template {
 			'album_id'     => false,
 			'group_id'     => false,
 			'privacy'      => false,
+			'moderation_query' => true
 		);
 
 		$r = bp_parse_args( $args, $defaults );
@@ -178,6 +179,7 @@ class BP_Video_Template {
 					'user_id'     => $user_id,
 					'album_id'    => $album_id,
 					'privacy'     => $privacy,
+					'moderation_query' => true
 				)
 			);
 
