@@ -148,7 +148,7 @@ function xprofile_screen_edit_profile() {
 			/**
 			 * Fires after getting error while updating the profile.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.2.5
 			 *
 			 * @param int   $value            Displayed user ID.
 			 * @param array $posted_field_ids Array of field IDs that were edited.
