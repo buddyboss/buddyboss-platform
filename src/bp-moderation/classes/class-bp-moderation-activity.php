@@ -551,34 +551,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function bb_activity_content_remove_mentioned_link( $content, $activity ) {
-		if ( empty( $content ) ) {
+		if ( empty( $activity ) || empty( $content ) ) {
 			return $content;
 		}
-		if ( $activity ) {
-			$usernames = bp_activity_find_mentions( $content );
 
-			// No mentions? Stop now!
-			if ( empty( $usernames ) ) {
-				return $content;
-			}
+		$content = bb_remove_mention_link_from_content( $content );
 
-			foreach ( (array) $usernames as $user_id => $username ) {
-				if (
-					bp_moderation_is_user_blocked( $user_id ) ||
-					bb_moderation_is_user_blocked_by( $user_id ) ||
-					bp_moderation_is_user_suspended( $user_id )
-				) {
-					preg_match_all( "'<span class=\"atwho-inserted\">(.*?)<\/span>'si", $content, $content_matches, PREG_SET_ORDER );
-					if ( ! empty( $content_matches ) ) {
-						foreach ( $content_matches as $match ) {
-							if ( strstr( $match[0], '@' . $username ) ) {
-								$content = str_replace( $match[0], '@' . $username, $content );
-							}
-						}
-					}
-				}
-			}
-		}
 		return $content;
 	}
 }

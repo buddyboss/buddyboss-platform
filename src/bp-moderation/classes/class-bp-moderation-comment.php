@@ -116,27 +116,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $comment_text;
 		}
 
-		$usernames = bp_activity_find_mentions( $comment_text );
-		// No mentions? Stop now!
-		if ( empty( $usernames ) ) {
-			return $comment_text;
-		}
-		foreach ( (array) $usernames as $user_id => $username ) {
-			if (
-				bp_moderation_is_user_blocked( $user_id ) ||
-				bb_moderation_is_user_blocked_by( $user_id ) ||
-				bp_moderation_is_user_suspended( $user_id )
-			) {
-				preg_match_all( "'<a class=.*?bp-suggestions-mention.*?.*?>(.*?)<\/a>'si", $comment_text, $content_matches, PREG_SET_ORDER );
-				if ( ! empty( $content_matches ) ) {
-					foreach ( $content_matches as $match ) {
-						if ( strstr( $match[0], '@' . $username ) ) {
-							$comment_text = str_replace( $match[0], '@' . $username, $comment_text );
-						}
-					}
-				}
-			}
-		}
+		$comment_text = bb_remove_mention_link_from_content( $comment_text );
 
 		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
 			$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;

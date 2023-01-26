@@ -283,28 +283,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 			return $content;
 		}
 
-		$usernames = bp_activity_find_mentions( $content );
-
-		// No mentions? Stop now!
-		if ( empty( $usernames ) ) {
-			return $content;
-		}
-		foreach ( (array) $usernames as $user_id => $username ) {
-			if (
-				bp_moderation_is_user_blocked( $user_id ) ||
-				bb_moderation_is_user_blocked_by( $user_id ) ||
-				bp_moderation_is_user_suspended( $user_id )
-			) {
-				preg_match_all( "'<span class=\"atwho-inserted\">(.*?)<\/span>'si", $content, $content_matches, PREG_SET_ORDER );
-				if ( ! empty( $content_matches ) ) {
-					foreach ( $content_matches as $match ) {
-						if ( strstr( $match[0], '@' . $username ) ) {
-							$content = str_replace( $match[0], '@' . $username, $content );
-						}
-					}
-				}
-			}
-		}
+		$content = bb_remove_mention_link_from_content( $content );
 
 		return $content;
 	}
