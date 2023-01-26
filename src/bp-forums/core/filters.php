@@ -387,3 +387,72 @@ function bb_forums_update_subscription_status( $new_status, $old_status, $post )
 }
 
 add_action( 'transition_post_status', 'bb_forums_update_subscription_status', 999, 3 );
+
+function bb_remove_group_forum_topic_subscriptions( $group_id, $meta_key, $meta_value ) {
+	global $wpdb;
+
+	// Delete existing group forums subscriptions.
+	if (
+		! empty( $group_id ) &&
+		'forum_id' === $meta_key &&
+		bp_is_active( 'forums' ) &&
+		function_exists( 'bbp_is_group_forums_active' ) &&
+		bbp_is_group_forums_active()
+	) {
+		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		if ( ! empty( $forum_ids ) ) {
+			$forum_ids = wp_parse_id_list( $forum_ids );
+
+			if ( ! empty( $forum_ids ) ) {
+				foreach ( $forum_ids as $forum_id ) {
+
+					// Delete forum subscriptions.
+					bb_delete_item_subscriptions( 'forum', $forum_id );
+
+					// phpcs:ignore
+					$sub_forums = $wpdb->get_col(
+						$wpdb->prepare(
+							"SELECT {$wpdb->posts}.ID FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_type = %s AND (({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'hidden' OR {$wpdb->posts}.post_status = 'private')) ORDER BY {$wpdb->posts}.menu_order ASC, {$wpdb->posts}.post_title ASC",
+							$forum_id,
+							'forum'
+						)
+					);
+					if ( ! empty( $sub_forums ) ) {
+						foreach ( $sub_forums as $sub_forum ) {
+							// Delete forum subscriptions.
+							bb_delete_item_subscriptions( 'forum', $sub_forum );
+						}
+					}
+
+					// Get all topics.
+					$forums_topics = $wpdb->get_col(
+						$wpdb->prepare(
+							"SELECT {$wpdb->posts}.ID FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_parent = %d AND (({$wpdb->posts}.post_type = %s AND ({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'closed' OR {$wpdb->posts}.post_status = 'graded' OR {$wpdb->posts}.post_status = 'not_graded' OR {$wpdb->posts}.post_status = 'private' OR {$wpdb->posts}.post_status = 'hidden'))) GROUP BY {$wpdb->posts}.ID",
+							$forum_id,
+							'topic'
+						)
+					);
+
+					if ( ! empty( $forums_topics ) ) {
+						foreach ( $forums_topics as $topic ) {
+							// Delete topic subscriptions.
+							bb_delete_item_subscriptions( 'topic', $topic );
+						}
+					}
+
+				}
+			}
+
+			$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
+			// Delete the group forums.
+			$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND type = 'forum' AND blog_id = 1" ); // phpcs:ignore
+
+			// Delete the group forum topics.
+			$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE secondary_item_id IN ({$forum_ids}) AND type = 'topic' AND blog_id = 1" ); // phpcs:ignore
+		}
+	}
+}
+add_action( 'add_group_meta', 'bb_remove_group_forum_topic_subscriptions', 10, 3 );
+add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions', 10, 3 );
+//do_action( "updated_{$meta_type}_meta", $meta_id, $object_id, $meta_key, $_meta_value );
+//do_action( "add_{$meta_type}_meta", $object_id, $meta_key, $_meta_value );
