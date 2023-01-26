@@ -1752,9 +1752,9 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
 
 /**
  * Function to check if notification triggered by blocked/blocked by/suspended/deleted member
- * then this notification will only for read only purpose.
+ * then this notification will only for read purpose.
  *
- * @since BussyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param object $notification Notification item.
  *
