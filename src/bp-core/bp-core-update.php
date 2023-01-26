@@ -2215,8 +2215,18 @@ function bb_migrate_subscriptions() {
  * @return void
  */
 function bb_update_to_2_2_6() {
+	$is_already_run = get_transient( 'bb_migrate_group_subscriptions' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_group_subscriptions', 'yes', HOUR_IN_SECONDS );
+
 	// Default enabled the group subscriptions.
 	bp_update_option( 'bb_enable_group_subscriptions', 1 );
+
+	// Migrate group subscriptions.
+	bb_migrate_group_subscription();
 }
 
 /**
@@ -2229,18 +2239,12 @@ function bb_update_to_2_2_6() {
 function bb_migrate_group_subscription() {
 	global $bp_background_updater;
 
-//	$is_already_run = get_transient( 'bb_migrate_group_subscriptions' );
-//	if ( $is_already_run ) {
-//		return;
-//	}
-
-	set_transient( 'bb_migrate_group_subscriptions', 'yes', HOUR_IN_SECONDS );
-
-	$page   = get_site_option( 'bb_group_subscriptions_migrate_page', 0 );
+	$page   = get_site_option( 'bb_group_subscriptions_migrate_page', 1 );
 	$groups = groups_get_groups(
 		array(
-			'fields' => 'ids',
-			'page'   => $page,
+			'fields'   => 'ids',
+			'per_page' => 10,
+			'page'     => $page,
 		)
 	);
 
@@ -2290,14 +2294,12 @@ add_action( 'wp_ajax_bb_migrate_group_subscription', 'bb_migrate_group_subscript
  * @return void
  */
 function bb_migrating_group_member_subscriptions( $groups = array(), $page = 1 ) {
-	global $bp_background_updater;
+	global $wpdb, $bp_background_updater;
 
+	$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
 	if ( ! empty( $groups ) ) {
 		foreach ( $groups as $group_id ) {
-			remove_filter( 'bp_user_query_where_sql', array( new BP_Suspend_Member(), 'update_where_sql' ), 10, 2 );
 			$member_ids = BP_Groups_Member::get_group_member_ids( $group_id );
-			add_filter( 'bp_user_query_where_sql', array( new BP_Suspend_Member(), 'update_where_sql' ), 10, 2 );
-
 			if ( ! empty( $member_ids ) ) {
 
 				$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 10 );
@@ -2331,18 +2333,17 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $page = 1 )
 			if (
 				bp_is_active( 'forums' ) &&
 				function_exists( 'bbp_is_group_forums_active' ) &&
-				bbp_is_group_forums_active() &&
-				! empty( $members )
+				bbp_is_group_forums_active()
 			) {
 				$forum_ids = bbp_get_group_forum_ids( $group_id );
 				if ( ! empty( $forum_ids ) ) {
 					$forum_ids = implode( ',', wp_parse_id_list( $forum_ids ) );
 
 					// Delete the group forums.
-					// $wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND type = 'forum'" ); // phpcs:ignore
+					$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND type = 'forum'" ); // phpcs:ignore
 
 					// Delete the group forum topics.
-					// $wpdb->query( "DELETE FROM {$subscription_tbl} WHERE secondary_item_id IN ({$forum_ids}) AND type = 'topic'" ); // phpcs:ignore
+					$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE secondary_item_id IN ({$forum_ids}) AND type = 'topic'" ); // phpcs:ignore
 				}
 			}
 		}
@@ -2351,6 +2352,9 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $page = 1 )
 	// Update the migration offset.
 	$page++;
 	update_site_option( 'bb_group_subscriptions_migrate_page', $page );
+
+	// Call recursive until group not found.
+	bb_migrate_group_subscription();
 }
 
 /**
@@ -2398,7 +2402,7 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
 
 	if ( ! empty( $place_holder_queries ) ) {
 		$place_holder_queries = implode( ', ', $place_holder_queries );
-		// $wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
+		$wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
 		unset( $place_holder_queries );
 	}
 }
