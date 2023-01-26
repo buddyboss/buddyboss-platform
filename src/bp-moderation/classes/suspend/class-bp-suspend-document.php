@@ -246,12 +246,6 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-			$exclude_message_sql = '';
-			// Allow message medias from blocked/suspended users.
-			if ( bp_is_active( 'messages' ) ) {
-				$exclude_message_sql = ' OR d.privacy = "message" ';
-			}
-			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_message_sql . ' )';
 		}
 
 		return $where_conditions;
