@@ -179,7 +179,7 @@ class BP_Video_Template {
 					'user_id'     => $user_id,
 					'album_id'    => $album_id,
 					'privacy'     => $privacy,
-					'moderation_query' => true
+					'moderation_query' => $moderation_query
 				)
 			);
 
