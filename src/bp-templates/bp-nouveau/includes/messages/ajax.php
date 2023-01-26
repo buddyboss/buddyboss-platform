@@ -1891,7 +1891,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 			$thread->feedback_error = array(
-				'feedback' => __( 'Unable to send new messages at this time.', 'buddyboss' ),
+				'feedback' => __( 'Unable to send new messages to this member.', 'buddyboss' ),
 				'type'     => 'notice',
 			);
 		} elseif ( bb_moderation_is_user_blocked_by( $recipient_id ) ) {
@@ -2526,9 +2526,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if( 'yes' !== $message_joined && 'yes' !== $message_left ) {
 				if ( bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id ) ) {
-					$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ) . '</p>';
+					$thread->messages[ $i ]['content'] = bb_moderation_is_suspended_message( $content, BP_Moderation_Members::$moderation_type, $bp_get_the_thread_message_sender_id );
+				} elseif ( bb_moderation_is_user_blocked_by( $bp_get_the_thread_message_sender_id ) ) {
+					$thread->messages[ $i ]['content'] = bb_moderation_has_blocked_message( $content, BP_Moderation_Members::$moderation_type, $bp_get_the_thread_message_sender_id );
 				} elseif ( bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id ) ) {
-					$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ) . '</p>';
+					$thread->messages[ $i ]['content'] = bb_moderation_is_suspended_message( $content, BP_Moderation_Members::$moderation_type, $bp_get_the_thread_message_sender_id );
 				}
 			}
 		}
