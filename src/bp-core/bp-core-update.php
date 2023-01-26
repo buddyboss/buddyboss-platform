@@ -2169,23 +2169,6 @@ function bb_update_to_2_2_4() {
 }
 
 /**
- * Install email template for following.
- * Clear web and api cache on the update.
- *
- * @since BuddyBoss 2.2.4
- *
- * @return void
- */
-function bb_update_to_2_2_4() {
-	wp_cache_flush();
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear members API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
-	}
-}
-
-/**
  * Clear web and api cache on the update.
  *
  * @since BuddyBoss [BBVERSION]
