@@ -8213,7 +8213,7 @@ function bb_presence_default_interval() {
 /**
  * Retrieves the number of times a filter has been applied during the current request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.5
  *
  * @global int[] $wp_filters Stores the number of times each filter was triggered.
  *

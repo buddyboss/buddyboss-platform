@@ -222,7 +222,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Filters the link text for the passed in user.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 *
 	 * @param string $value   Link text based on passed parameters.
 	 * @param int    $user_id ID of the user to check.
