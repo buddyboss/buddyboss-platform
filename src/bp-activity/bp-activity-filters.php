@@ -3527,7 +3527,7 @@ add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_
 /**
  * Function will send notification to following user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.5
  *
  * @param BP_Activity_Follow $follower Contains following data.
  */
