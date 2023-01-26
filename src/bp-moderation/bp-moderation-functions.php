@@ -1621,3 +1621,45 @@ function bb_moderation_is_suspended_message( $value ) {
 
 	return apply_filters( 'bb_moderation_is_suspended_message', $retval, $value );
 }
+
+/**
+ * Function will remove mention link from content if mentioned member is blocked/blokedby/suspended.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $content Content.
+ *
+ * @return mixed
+ */
+function bb_remove_mention_link_from_content( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	$usernames = bp_activity_find_mentions( $content );
+
+	// No mentions? Stop now!
+	if ( empty( $usernames ) ) {
+		return $content;
+	}
+
+	foreach ( (array) $usernames as $user_id => $username ) {
+		if (
+			bp_moderation_is_user_blocked( $user_id ) ||
+			bb_moderation_is_user_blocked_by( $user_id ) ||
+			bp_moderation_is_user_suspended( $user_id )
+		) {
+			preg_match_all( "'<a class=.*?bp-suggestions-mention.*?.*?>(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
+			if ( ! empty( $content_matches ) ) {
+				foreach ( $content_matches as $match ) {
+					if ( strstr( $match[0], '@' . $username ) ) {
+						$content = str_replace( $match[0], '@' . $username, $content );
+					}
+				}
+			}
+		}
+	}
+
+	return $content;
+}
