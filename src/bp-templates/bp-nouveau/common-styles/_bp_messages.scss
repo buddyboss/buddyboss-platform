@@ -847,6 +847,7 @@
 		margin: 0 auto;
 		position: relative;
 
+		span,
 		p {
 			margin-bottom: 8px;
 
@@ -855,6 +856,7 @@
 			}
 
 			&.blocked,
+			&.suspended,
 			&.deleted-message {
 				display: inline-block;
 				font-size: 13px;
