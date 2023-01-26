@@ -250,7 +250,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';		
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 		}
 
 		return $where_conditions;
