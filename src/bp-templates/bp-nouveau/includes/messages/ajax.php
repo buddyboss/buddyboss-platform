@@ -2526,11 +2526,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if( 'yes' !== $message_joined && 'yes' !== $message_left ) {
 				if ( bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id ) ) {
-					$thread->messages[ $i ]['content'] = bb_moderation_is_suspended_message( $content, BP_Moderation_Members::$moderation_type, $bp_get_the_thread_message_sender_id );
+					$thread->messages[ $i ]['content'] = bb_moderation_is_suspended_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
 				} elseif ( bb_moderation_is_user_blocked_by( $bp_get_the_thread_message_sender_id ) ) {
-					$thread->messages[ $i ]['content'] = bb_moderation_has_blocked_message( $content, BP_Moderation_Members::$moderation_type, $bp_get_the_thread_message_sender_id );
+					$thread->messages[ $i ]['content'] = bb_moderation_is_blocked_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
 				} elseif ( bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id ) ) {
-					$thread->messages[ $i ]['content'] = bb_moderation_is_suspended_message( $content, BP_Moderation_Members::$moderation_type, $bp_get_the_thread_message_sender_id );
+					$thread->messages[ $i ]['content'] = bb_moderation_has_blocked_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
 				}
 			}
 		}
