@@ -156,7 +156,7 @@ window.bp = window.bp || {};
 		 */
 		checkSelectAllOrNot: function( e ) {
 			var unChecked 	= 0;
-			if ( true === $( this ).attr( 'data-readonly' ) ) {
+			if ( '1' === $( this ).attr( 'data-readonly' ) ) {
 				$( this ).blur();
 				e.preventDefault();
 			}
