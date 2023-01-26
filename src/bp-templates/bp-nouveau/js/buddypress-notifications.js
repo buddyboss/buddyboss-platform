@@ -117,19 +117,17 @@ window.bp = window.bp || {};
 			$( '#notification-bulk-manage' ).prop( 'disabled', $( event.currentTarget ).val().length <= 0 );
 			
 			if ( true === $( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( 'checked' ) ) {
-				if ( 'unread' === $( event.currentTarget ).val() || '' === $( event.currentTarget ).val() ) {
-					$.each( $( '.notification-check' ), function ( cb, checkbox ) {
+				$.each( $( '.notification-check' ), function ( cb, checkbox ) {
+					if ( 'unread' === $( event.currentTarget ).val() || '' === $( event.currentTarget ).val() ) {
 						if ( '' === $( checkbox ).attr( 'data-readonly' ) ) {
 							$( checkbox ).prop( 'checked', true );
 						} else {
 							$( checkbox ).prop( 'checked', false );
 						}
-					} );
-				} else {
-					$.each( $( '.notification-check' ), function ( cb, checkbox ) {
+					} else {
 						$( checkbox ).prop( 'checked', true );
-					} );
-				}
+					}
+				} );
 			}
 		},
 
@@ -140,17 +138,15 @@ window.bp = window.bp || {};
 		 */
 		selectAll: function( event ) {
 			var selectedNotificationValue = $( '#notification-select' ).val();
-			if ( 'unread' === selectedNotificationValue || '' === selectedNotificationValue ) {
-				$.each( $( '.notification-check' ), function ( cb, checkbox ) {
+			$.each( $( '.notification-check' ), function ( cb, checkbox ) {
+				if ( 'unread' === selectedNotificationValue || '' === selectedNotificationValue ) {
 					if ( '' === $( checkbox ).attr( 'data-readonly' ) ) {
 						$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
 					}
-				} );
-			} else {
-				$.each( $( '.notification-check' ), function ( cb, checkbox ) {
+				} else {
 					$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
-				} );
-			}
+				}
+			} );
 		},
 
 		/**
