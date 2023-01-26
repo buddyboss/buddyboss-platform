@@ -1587,6 +1587,16 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 		}
 	}
 
+	/**
+	 * Filter will return notifications data which will render.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed  $renderable        Notifications data which will render.
+	 * @param string $notification_item Notifications item.
+	 * @param string $format            Format of the notification.
+	 * @param string $screen            Screen of the notification.
+	 */
 	return apply_filters( 'bb_notification_get_renderable_notifications', $renderable, $notification_item, $format, $screen );
 }
 
