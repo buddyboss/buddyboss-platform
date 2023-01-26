@@ -436,6 +436,9 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 		// Only add a notification if comment author is a registered user.
 		// @todo Should we remove this restriction?
 		if ( ! empty( $post_type_comment->user_id ) ) {
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $post_type_comment->post->post_author, $post_type_comment->user_id ) ) {
+				return;
+			}
 			if ( ! empty( $post_type_comment->comment_parent ) ) {
 				$parent_comment = get_comment( $post_type_comment->comment_parent );
 				if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $post_type_comment->post->post_author ) {
@@ -472,6 +475,11 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 		$parent_comment = get_comment( $post_type_comment->comment_parent );
 
 		if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $activity_args['user_id'] ) {
+
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $post_type_comment->user_id ) ) {
+				return;
+			}
+
 			bp_notifications_add_notification(
 				array(
 					'user_id'           => $parent_comment->user_id,

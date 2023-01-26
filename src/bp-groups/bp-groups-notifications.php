@@ -293,6 +293,10 @@ add_action( 'groups_membership_rejected', 'groups_notification_membership_reques
  */
 function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
+		return;
+	}
+
 	// What type of promotion is this?
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
 		$promoted_to = get_group_role_label( $group_id, 'organizer_singular_label_name' );
@@ -374,6 +378,11 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 		$invited_user_id = $member;
 	}
 
+	// Check the sender is blocked by recipient or not.
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $invited_user_id, $inviter_user_id ) ) {
+		return;
+	}
+
 	// Bail if member has already been invited.
 	if ( ! empty( $member->invite_sent ) ) {
 		return;
@@ -405,11 +414,6 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 
 	// Bail if member opted out of receiving this email.
 	if ( false === bb_is_notification_enabled( $invited_user_id, $type_key ) ) {
-		return;
-	}
-
-	// Check the sender is blocked by recipient or not.
-	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $invited_user_id, $inviter_user_id ) ) {
 		return;
 	}
 
