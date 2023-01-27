@@ -1637,7 +1637,7 @@ function bb_remove_mention_link_from_content( $content ) {
 		return $content;
 	}
 
-	$usernames = bp_activity_find_mentions( $content );
+	$usernames = bp_find_mentions_by_at_sign( array(), $content );
 
 	// No mentions? Stop now!
 	if ( empty( $usernames ) ) {
