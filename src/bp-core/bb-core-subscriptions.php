@@ -1110,3 +1110,213 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 		}
 	}
 }
+
+/**
+ * Migrate group subscription when update the platform to the latest version.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $is_background Migration run in background or not.
+ *
+ * @return array|void Return array when it called directly otherwise call recursively.
+ */
+function bb_migrate_group_subscription( $is_background = false ) {
+	static $cache = array();
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	$page = (int) get_site_option( 'bb_group_subscriptions_migrate_page', 1 );
+	$args = array(
+		'fields'      => 'ids',
+		'per_page'    => 10,
+		'page'        => $page,
+		'show_hidden' => true,
+	);
+
+	if ( ! $is_background ) {
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		$args['meta_query'] = array(
+			array(
+				'key'     => 'bb_subscription_migrated_v2',
+				'compare' => 'NOT EXISTS',
+			),
+		);
+	}
+
+	$groups = groups_get_groups( $args );
+	error_log( print_r( $args, 1 ) );
+	error_log( print_r( $groups, 1 ) );
+
+	$all_groups = array();
+	if ( ! empty( $groups['groups'] ) ) {
+		$all_groups = $groups['groups'];
+	}
+
+	if ( ! empty( $all_groups ) ) {
+		$response = bb_migrating_group_member_subscriptions( $all_groups, $is_background );
+		if ( $response && ! $is_background ) {
+
+			$total = count( $all_groups );
+			if ( isset( $cache['total'] ) ) {
+				$total = $cache['total'] + $total;
+			}
+			$cache['total'] = $total;
+
+			$records_updated = sprintf(
+			/* translators: total groups */
+				__( '%s groups subscriptions updated successfully.', 'buddyboss' ),
+				bp_core_number_format( $cache['total'] )
+			);
+			return array(
+				'status'  => 'running',
+				'offset'  => $cache['total'],
+				'records' => $records_updated,
+			);
+		}
+	} else {
+		delete_site_option( 'bb_group_subscriptions_migrate_page' );
+		delete_transient( 'bb_migrate_group_subscriptions' );
+
+		/* translators: Status of current action. */
+		$statement = __( 'Repairing groups subscriptions&hellip; %s', 'buddyboss' );
+
+		// All done!
+		return array(
+			'status'  => 1,
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
+}
+
+/**
+ * Migrating group subscription and remove group forums and topics subscriptions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $groups        Array of group IDs.
+ * @param bool  $is_background Migration run in background or not.
+ *
+ * @return bool|void Return array when it called directly otherwise run in background.
+ */
+function bb_migrating_group_member_subscriptions( $groups = array(), $is_background = false ) {
+	global $wpdb, $bp_background_updater;
+
+	if ( empty( $groups ) ) {
+		delete_site_option( 'bb_group_subscriptions_migrate_page' );
+		delete_transient( 'bb_migrate_group_subscriptions' );
+		return;
+	}
+
+	$bp = buddypress();
+	if ( ! empty( $groups ) ) {
+		foreach ( $groups as $group_id ) {
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$member_ids = $wpdb->get_col(
+				$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT DISTINCT user_id FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = %d AND is_banned = %d",
+					$group_id,
+					1,
+					0
+				)
+			);
+
+			if ( ! empty( $member_ids ) ) {
+				$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
+				if ( $is_background && count( $member_ids ) > $min_count ) {
+					$chunk_results = array_chunk( $member_ids, $min_count );
+					if ( ! empty( $chunk_results ) ) {
+						foreach ( $chunk_results as $chunk_result ) {
+							$bp_background_updater->data(
+								array(
+									array(
+										'callback' => 'bb_create_group_member_subscriptions',
+										'args'     => array( $group_id, $chunk_result ),
+									),
+								)
+							);
+
+							$bp_background_updater->save();
+						}
+					}
+
+					$bp_background_updater->dispatch();
+				} else {
+					bb_create_group_member_subscriptions( $group_id, $member_ids );
+				}
+			}
+
+			bb_delete_group_forum_topic_subscriptions( $group_id );
+		}
+	}
+
+	// Update the migration offset.
+	$page = get_site_option( 'bb_group_subscriptions_migrate_page', 1 ) + 1;
+	update_site_option( 'bb_group_subscriptions_migrate_page', $page );
+
+	if ( $is_background ) {
+		// Call recursive until group not found.
+		bb_migrate_group_subscription( $is_background );
+	} else {
+		return true;
+	}
+}
+
+/**
+ * Create group subscriptions for groups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $group_id   The group ID.
+ * @param array $member_ids Array of member IDs.
+ *
+ * @return void|bool
+ */
+function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = array() ) {
+	global $wpdb;
+
+	if ( ! bp_is_active( 'groups' ) || empty( $group_id ) ) {
+		return;
+	}
+
+	$subscription_tbl     = BB_Subscriptions::get_subscription_tbl();
+	$place_holder_queries = array();
+	$insert_query         = "INSERT INTO {$subscription_tbl} ( blog_id, user_id, type, item_id, secondary_item_id, status, date_recorded ) VALUES";
+
+	if ( ! empty( $member_ids ) ) {
+		foreach ( $member_ids as $member_id ) {
+
+			$record_args = array(
+				'user_id'           => (int) $member_id,
+				'item_id'           => (int) $group_id,
+				'blog_id'           => get_current_blog_id(),
+				'type'              => 'group',
+				'count'             => false,
+				'cache'             => false,
+				'bypass_moderation' => true,
+			);
+
+			// Get subscription from new table.
+			$subscription_exists = BB_Subscriptions::get( $record_args );
+
+			if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
+				continue;
+			}
+
+			$secondary_item_id = bp_get_parent_group_id( $group_id );
+
+			$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', 1, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $secondary_item_id, 1, bp_core_current_time() );
+		}
+	}
+
+	if ( ! empty( $place_holder_queries ) ) {
+		$place_holder_queries = implode( ', ', $place_holder_queries );
+		$wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
+		unset( $place_holder_queries );
+	}
+
+	groups_update_groupmeta( $group_id, 'bb_subscription_migrated_v2', 'yes' );
+	return true;
+}

@@ -95,6 +95,8 @@ add_filter( 'bp_get_group_description', 'html_entity_decode' );
 // Load Group Notifications.
 add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
 
+add_filter( 'bp_repair_list', 'bb_groups_repair_group_subscriptions', 11 );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -1142,3 +1144,24 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	);
 }
 add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+
+/**
+ * Add group subscription repair list item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $repair_list Repair list.
+ *
+ * @return array Repair list items.
+ */
+function bb_groups_repair_group_subscriptions( $repair_list ) {
+	if ( bp_is_active( 'groups' ) ) {
+		$repair_list[] = array(
+			'bb-repair-group-subscription',
+			esc_html__( 'Repair Groups Subscriptions', 'buddyboss' ),
+			'bb_migrate_group_subscription',
+		);
+	}
+
+	return $repair_list;
+}
