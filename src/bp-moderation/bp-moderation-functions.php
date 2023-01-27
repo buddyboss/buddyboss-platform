@@ -344,7 +344,7 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int $user_id          The ID for the current user
+ * @param int $user_id          The ID for the current user.
  * @param int $blocking_user_id The ID for the user who blocked user.
  *
  * @return bool True if suspended, otherwise false.

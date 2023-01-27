@@ -93,7 +93,7 @@ class BP_Notifications_Notification {
 	public $inserted = false;
 
 	/**
-	 * Is notification read only of linkable?
+	 * Is notification read only or linkable?
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

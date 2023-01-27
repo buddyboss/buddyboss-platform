@@ -1847,7 +1847,7 @@ function bb_notification_read_for_moderated_members() {
 		return;
 	}
 
-	$read_notification_migration = bp_get_user_meta( $current_user_id, 'read_notification_migration', true );
+	$read_notification_migration = bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 
 	if ( $read_notification_migration ) {
 		return;
@@ -1867,9 +1867,10 @@ function bb_notification_read_for_moderated_members() {
 
 	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' )';
 
-	$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ( {$select_sql} )";
+	$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ({$select_sql})";
 	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-	bp_update_user_meta( $current_user_id, 'read_notification_migration', true );
+	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 }
+
 add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
