@@ -8148,7 +8148,7 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', 60 ) );
+	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
 }
 
 /**
@@ -8197,4 +8197,36 @@ function bb_pro_pusher_version() {
  */
 function bb_presence_time_span() {
 	return (int) apply_filters( 'bb_presence_time_span', 180 );
+}
+
+/**
+ * Function to return the presence default interval time in seconds.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @return int
+ */
+function bb_presence_default_interval() {
+	return apply_filters( 'bb_presence_default_interval', 60 );
+}
+
+/**
+ * Retrieves the number of times a filter has been applied during the current request.
+ *
+ * @since BuddyBoss 2.2.5
+ *
+ * @global int[] $wp_filters Stores the number of times each filter was triggered.
+ *
+ * @param string $hook_name  The name of the filter hook.
+ *
+ * @return int The number of times the filter hook has been applied.
+ */
+function bb_did_filter( $hook_name ) {
+	global $wp_filters;
+
+	if ( ! isset( $wp_filters[ $hook_name ] ) ) {
+		return 0;
+	}
+
+	return $wp_filters[ $hook_name ];
 }

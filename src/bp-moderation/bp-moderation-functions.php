@@ -1279,7 +1279,7 @@ function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 /**
  * Return SQL to fetch the query for blocked by users.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @param int $user_id User ID.
  *
@@ -1518,7 +1518,7 @@ function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
 /**
  * Function to fetch the delete user's label.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @return mixed|void
  */
@@ -1527,7 +1527,7 @@ function bb_moderation_is_deleted_label() {
 	/**
 	 * Filter to fetch the delete user's label.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.4
 	 *
 	 * @param string Default delete label.
 	 */
@@ -1537,7 +1537,7 @@ function bb_moderation_is_deleted_label() {
 /**
  * Function to fetch the delete users avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
  * @return mixed|void
  */
@@ -1546,7 +1546,7 @@ function bb_moderation_is_deleted_avatar() {
 	/**
 	 * Filter to fetch the delete users avatar.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.4
 	 *
 	 * @param string Get default avatar image URL based on settings.
 	 */
@@ -1556,68 +1556,76 @@ function bb_moderation_is_deleted_avatar() {
 /**
  * Function will return text when current user blocked to other user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
- * @param string $value Current set message.
+ * @param string $value     Current content.
+ * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
  *
  * @return string
  */
-function bb_moderation_has_blocked_message( $value ) {
+function bb_moderation_has_blocked_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when current user blocked to other user.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.4
 	 *
-	 * @param string $retval Current message.
-	 * @param string $value  Original content.
+	 * @param string $value     Current content.
+	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 */
-	$retval = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
 
-	return apply_filters( 'bb_moderation_has_blocked_message', $retval, $value );
+	return apply_filters( 'bb_moderation_has_blocked_message', $value, $item_type, $item_id );
 }
 
 /**
  * Function will return text when current user blocked by other user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
- * @param string $value Current set message.
+ * @param string $value     Current content.
+ * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
  *
  * @return string
  */
-function bb_moderation_is_blocked_message( $value ) {
+function bb_moderation_is_blocked_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when current user blocked by other user.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.4
 	 *
-	 * @param string $value Current set message.
+	 * @param string $value     Current content.
+	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 */
-	return apply_filters( 'bb_moderation_is_blocked_message', $value );
+	return apply_filters( 'bb_moderation_is_blocked_message', $value, $item_type, $item_id );
 }
 
 /**
  * Function will return text when user is suspended.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.4
  *
- * @param string $value Current set message.
+ * @param string $value     Current content.
+ * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
  *
  * @return string
  */
-function bb_moderation_is_suspended_message( $value ) {
+function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when user is suspended.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.4
 	 *
-	 * @param string $retval Current message.
-	 * @param string $value  Original content.
+	 * @param string $value     Current content.
+	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 */
-	$retval = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
 
-	return apply_filters( 'bb_moderation_is_suspended_message', $retval, $value );
+	return apply_filters( 'bb_moderation_is_suspended_message', $value, $item_type, $item_id );
 }
