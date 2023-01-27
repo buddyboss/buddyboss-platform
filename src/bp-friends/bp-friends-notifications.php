@@ -237,6 +237,11 @@ add_action( 'friends_friendship_rejected', 'bp_friends_mark_friendship_rejected_
  * @param int $friend_user_id    The friendship request receiver user ID.
  */
 function bp_friends_add_friendship_accepted_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
+
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $initiator_user_id, $friend_user_id ) ) {
+		return;
+	}
+
 	// Remove the friend request notice.
 	bp_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, buddypress()->friends->id, 'friendship_request' );
 	bp_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, buddypress()->friends->id, 'bb_connections_new_request' );
