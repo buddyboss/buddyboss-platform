@@ -395,7 +395,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 19381 ) {
-			bb_update_to_2_2_6();
+			bb_update_to_2_2_7();
 		}
 	}
 
@@ -2277,7 +2277,7 @@ function bb_migrate_subscriptions() {
  *
  * @return void
  */
-function bb_update_to_2_2_6() {
+function bb_update_to_2_2_7() {
 	$is_already_run = get_transient( 'bb_migrate_group_subscriptions' );
 	if ( $is_already_run ) {
 		return;
