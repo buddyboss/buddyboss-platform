@@ -505,9 +505,10 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 *
 			 * @param string $type    Type subscription item.
 			 * @param int    $item_id The subscription item ID.
-			 * @param int    $status  The subscription item status.
+			 * @param int    $status  The subscription item status, 1 = active, 0 = inactive.
+			 * @param int    $blog_id The site ID.
 			 */
-			do_action_ref_array( 'bb_subscriptions_before_update_subscription_status', array( $type, $item_id, $status ) );
+			do_action_ref_array( 'bb_subscriptions_before_update_subscription_status', array( $type, $item_id, $status, $blog_id ) );
 
 			$where = array(
 				'type'    => $type,
@@ -539,8 +540,9 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 * @param string $type    Type subscription item.
 			 * @param int    $item_id The subscription item ID.
 			 * @param int    $status  The subscription item status, 1 = active, 0 = inactive.
+			 * @param int    $blog_id The site ID.
 			 */
-			do_action_ref_array( 'bb_subscriptions_after_update_subscription_status', array( $type, $item_id, $status ) );
+			do_action_ref_array( 'bb_subscriptions_after_update_subscription_status', array( $type, $item_id, $status, $blog_id ) );
 
 			return true;
 		}

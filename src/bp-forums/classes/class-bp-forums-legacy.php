@@ -66,6 +66,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 				// Create or delete legacy forum and topic subscriptions.
 				add_action( 'bb_create_subscription', array( $this, 'bb_create_legacy_forum_subscriptions' ), 10, 1 );
 				add_action( 'bb_subscriptions_before_delete_subscription', array( $this, 'bb_delete_legacy_forum_subscriptions' ), 10, 1 );
+				add_action( 'bb_subscriptions_after_update_subscription_status', array( $this, 'bb_add_remove_all_legacy_forum_subscriptions' ), 10, 4 );
 			}
 		}
 
@@ -138,6 +139,66 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 			}
 
 			return false;
+		}
+
+		/**
+		 * Create/delete legacy forum and topic subscriptions.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param string $type    Subscription type.
+		 * @param int    $item_id Forum/topic ID.
+		 * @param int    $status  Status of forum/topic.
+		 * @param int    $blog_id The site ID.
+		 *
+		 * @return void|bool
+		 */
+		public function bb_add_remove_all_legacy_forum_subscriptions( $type, $item_id, $status, $blog_id ) {
+
+			// Return if not forum/topic subscriptions.
+			if ( ! in_array( $type, array( 'forum', 'topic' ), true ) ) {
+				return false;
+			}
+
+			// Get user meta key for subscriptions.
+			$user_meta_key = self::bb_get_user_legacy_subscription_key( $item_id );
+			if ( empty( $user_meta_key ) ) {
+				return false;
+			}
+
+			$get_subscriptions = bb_get_subscription_users(
+				array(
+					'blog_id' => $blog_id,
+					'item_id' => $item_id,
+					'type'    => $type,
+					'count'   => false,
+				),
+				true
+			);
+
+			$subscribe_user_ids = array();
+			if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
+				$subscribe_user_ids = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
+			}
+
+			// Users exist.
+			if ( ! empty( $subscribe_user_ids ) ) {
+
+				// Loop through users.
+				if ( 1 === (int) $status ) {
+					foreach ( $subscribe_user_ids as $user_id ) {
+						// Add each user.
+						self::bb_add_user_legacy_subscription( $user_id, $item_id );
+					}
+				} else {
+					foreach ( $subscribe_user_ids as $user_id ) {
+						// Remove each user.
+						self::bb_delete_user_legacy_subscription( $user_id, $item_id );
+					}
+				}
+			}
+
+			return true;
 		}
 
 		/**
