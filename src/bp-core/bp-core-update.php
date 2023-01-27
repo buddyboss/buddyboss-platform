@@ -393,6 +393,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19281 ) {
 			bb_update_to_2_2_5();
 		}
+
+		if ( $raw_db_version < 19381 ) {
+			bb_update_to_2_2_6();
+		}
 	}
 
 	/* All done! *************************************************************/
