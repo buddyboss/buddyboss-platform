@@ -293,10 +293,6 @@ add_action( 'groups_membership_rejected', 'groups_notification_membership_reques
  */
 function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 
-	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
-		return;
-	}
-
 	// What type of promotion is this?
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
 		$promoted_to = get_group_role_label( $group_id, 'organizer_singular_label_name' );
