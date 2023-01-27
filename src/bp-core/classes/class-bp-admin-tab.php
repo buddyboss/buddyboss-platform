@@ -498,23 +498,30 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '', $notice = '' ) {
-			global $wp_settings_sections;
-			add_settings_section( $id, $title, $callback, $this->tab_name );
-			$this->active_section = $id;
-			if ( ! empty( $tutorial_callback ) ) {
-				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
-			}
-			if ( ! empty( $notice ) ) {
-				$wp_settings_sections[ $this->tab_name ][ $id ]['notice'] = $notice;
-			}
-			if ( function_exists( 'bb_admin_icons' ) ) {
-				$meta_icon = bb_admin_icons( $id );
-				if ( ! empty( $meta_icon ) ) {
-					$wp_settings_sections[ $this->tab_name ][ $id ]['icon'] = $meta_icon;
-				}
-			}
-			return $this;
-		}
+		        global $wp_settings_sections;
+		        add_settings_section( $id, $title, $callback, $this->tab_name );
+		        $this->active_section = $id;
+		        if ( ! empty( $tutorial_callback ) ) {
+		            $wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
+		        }
+		        if ( ! empty( $notice ) ) {
+		            $wp_settings_sections[ $this->tab_name ][ $id ]['notice'] = $notice;
+		        }
+		        if ( function_exists( 'bb_admin_icons' ) ) {
+		            $meta_icon = bb_admin_icons( $id );
+		            if ( ! empty( $meta_icon ) ) {
+		                $wp_settings_sections[ $this->tab_name ][ $id ]['icon'] = $meta_icon;
+		            }
+		        }
+		        return $this;
+		    }
+
+		    public function __set($name, $value)
+		    {
+		        if (property_exists($this, $name)) {
+		            $this->$name = $value;
+		        }
+		    }
 
 		/**
 		 * Add a wp setting field to a wp setting section. Chainable
