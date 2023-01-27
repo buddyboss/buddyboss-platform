@@ -116,6 +116,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 	public function bb_get_the_notification_mark_unread_link_callback( $retval, $user_id ) {
 		$notification = buddypress()->notifications->query_loop->notification;
 		if (
+			! empty( $notification ) &&
 			isset( $notification->is_new ) &&
 			empty( $notification->is_new ) &&
 			isset( $notification->readonly ) &&
