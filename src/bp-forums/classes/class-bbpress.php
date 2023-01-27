@@ -330,6 +330,9 @@ if ( ! class_exists( 'bbPress' ) ) :
 			require $this->includes_dir . 'core/actions.php';
 			require $this->includes_dir . 'core/filters.php';
 
+			// Legacy subscriptions.
+			require $this->includes_dir . 'classes/class-bp-forums-legacy.php';
+
 			/** Admin */
 
 			// Quick admin check and load if needed
