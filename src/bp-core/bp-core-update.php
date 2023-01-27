@@ -2242,10 +2242,13 @@ function bb_update_to_2_2_5() {
  * @return void
  */
 function bb_update_to_2_2_6() {
-	// Clear notifications cache.
-	global $wp_object_cache;
-	if ( isset( $wp_object_cache->cache['bp_notifications'] ) ) {
-		unset( $wp_object_cache->cache['bp_notifications'] );
+	if ( version_compare( $GLOBALS['wp_version'], '6.1.0', '>=' ) ) {
+		error_log( 'if');
+		// Clear notifications cache.
+		wp_cache_flush_group( 'bp-notifications' );
+	} else {
+		error_log( 'else');
+		wp_cache_flush();
 	}
 
 	// Purge all the cache for API.
