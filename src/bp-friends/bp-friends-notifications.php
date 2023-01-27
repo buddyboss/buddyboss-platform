@@ -190,6 +190,10 @@ add_action( 'friends_screen_my_friends', 'bp_friends_mark_friendship_accepted_no
  */
 function bp_friends_friendship_requested_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
 
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $friend_user_id, $initiator_user_id ) ) {
+		return;
+	}
+
 	$action = 'friendship_request';
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$action = 'bb_connections_new_request';
