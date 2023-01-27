@@ -496,6 +496,11 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				continue;
 			}
 
+			// Moderated member found then prevent to send email/notifications.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
+				continue;
+			}
+
 			add_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
 
 			bp_notifications_add_notification( $args );
@@ -504,11 +509,6 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
-
-				// Check the sender is blocked by recipient or not.
-				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
-					continue;
-				}
 
 				$topic_id = bbp_get_topic_id( $topic_id );
 				$forum_id = bbp_get_forum_id( $forum_id );
