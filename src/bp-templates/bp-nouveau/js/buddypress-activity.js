@@ -446,6 +446,11 @@ window.bp = window.bp || {};
 						return;
 					}
 
+					// Check if URL has specific comment to show.
+					if ( $( 'body' ).hasClass( 'activity-singular' ) && window.location.hash !== '' && $( window.location.hash ).length && $( window.location.hash ).closest( '.activity-comments' ).length !== 0 ) {
+						return;
+					}
+
 					// Get the activity id.
 					activity_item = $( comment ).closest( '.activity-item' );
 
@@ -1047,6 +1052,21 @@ window.bp = window.bp || {};
 							var text = e.clipboardData.getData( 'text/plain' );
 							document.execCommand( 'insertText', false, text );
 						} );
+
+						//Register keyup event
+						div_editor.addEventListener( 'keyup', function ( e ) {
+							var $activity_comment_content   = jQuery( e.currentTarget ).html();
+
+							content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							content = content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( e.currentTarget ).text().trim();
+							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-content' );
+							} else {
+								jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
+							}
+						} );
 						self.InitiatedCommentForms.push( $(div_editor).attr( 'id' ) );//Add this Comment form in initiated comment form list
 					}
 				}
@@ -1080,6 +1100,18 @@ window.bp = window.bp || {};
 							events: {
 								emojibtn_click: function () {
 									$( '#ac-input-' + activity_id )[0].emojioneArea.hidePicker();
+
+									// Check if emoji is added then enable submit button
+									var $activity_comment_input = $( '#ac-form-' + activity_id + ' #ac-input-' + activity_id );
+									var $activity_comment_content   = $activity_comment_input.html();
+									content = $.trim( $activity_comment_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+									content = content.replace( /&nbsp;/g, ' ' );
+									var content_text = $activity_comment_input.text();
+									if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
+										$activity_comment_input.closest( 'form' ).addClass( 'has-content' );
+									} else {
+										$activity_comment_input.closest( 'form' ).removeClass( 'has-content' );
+									}
 								},
 
 								picker_show: function () {
@@ -1526,6 +1558,8 @@ window.bp = window.bp || {};
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
 							var tool_box = target.parents( '.ac-reply-toolbar' );
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-document-button' ) ) {
 								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -1544,6 +1578,9 @@ window.bp = window.bp || {};
 					self.dropzone_obj.on(
 						'uploadprogress',
 						function( element ) {
+
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'media-uploading' );
 
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 							var radius        = circle.r.baseVal.value;
@@ -1608,6 +1645,8 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -1631,6 +1670,8 @@ window.bp = window.bp || {};
 
 							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
 								var tool_box = target.parents( '.ac-reply-toolbar' );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'has-media' );
 								if ( tool_box.find( '.ac-reply-document-button' ) ) {
 									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
@@ -1643,6 +1684,17 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
+							}
+						}
+					);
+
+					// Enable submit button when all medias are uploaded
+					self.dropzone_obj.on(
+						'complete',
+						function() {
+							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -1721,6 +1773,8 @@ window.bp = window.bp || {};
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
 							var tool_box = target.parents( '.ac-reply-toolbar' );
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -1739,6 +1793,9 @@ window.bp = window.bp || {};
 					self.dropzone_document_obj.on(
 						'uploadprogress',
 						function( element ) {
+
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'media-uploading' );
 
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 							var radius        = circle.r.baseVal.value;
@@ -1803,6 +1860,8 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-document"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -1824,8 +1883,10 @@ window.bp = window.bp || {};
 								}
 							}
 
-							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
+							if ( ! _.isNull( self.dropzone_document_obj ) && ! _.isNull( self.dropzone_document_obj.files ) && self.dropzone_document_obj.files.length === 0 ) {
 								var tool_box = target.parents( '.ac-reply-toolbar' );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'has-media' );
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
@@ -1838,6 +1899,17 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-document-button' ) ) {
 									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
+							}
+						}
+					);
+
+					// Enable submit button when all medias are uploaded
+					self.dropzone_document_obj.on(
+						'complete',
+						function() {
+							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -1907,6 +1979,8 @@ window.bp = window.bp || {};
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
 							var tool_box = target.parents( '.ac-reply-toolbar' );
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'has-media' );
 							if ( tool_box.find( '.ac-reply-media-button' ) ) {
 								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
@@ -1952,6 +2026,10 @@ window.bp = window.bp || {};
 					self.dropzone_video_obj.on(
 						'uploadprogress',
 						function( element ) {
+
+							var commentForm = target.closest( '.ac-form');
+							commentForm.addClass( 'media-uploading' );
+
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
@@ -2018,6 +2096,8 @@ window.bp = window.bp || {};
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-video"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -2039,8 +2119,11 @@ window.bp = window.bp || {};
 								}
 							}
 
-							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
+							if ( ! _.isNull( self.dropzone_video_obj ) && ! _.isNull( self.dropzone_video_obj.files ) && self.dropzone_video_obj.files.length === 0 ) {
 								var tool_box = target.parents( '.ac-reply-toolbar' );
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'has-media' );
+
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
@@ -2053,6 +2136,17 @@ window.bp = window.bp || {};
 								if ( tool_box.find( '.ac-reply-video-button' ) ) {
 									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
+							}
+						}
+					);
+
+					// Enable submit button when all medias are uploaded
+					self.dropzone_video_obj.on(
+						'complete',
+						function() {
+							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+								var commentForm = target.closest( '.ac-form');
+								commentForm.removeClass( 'media-uploading' );
 							}
 						}
 					);
@@ -2266,8 +2360,9 @@ window.bp = window.bp || {};
 				if ( window.location.hash ) {
 
 					var id = window.location.hash;
+					var adminBar = $( '#wpadminbar' ).length !== 0 ? $( '#wpadminbar' ).innerHeight() : 0;
 					if ( $( id ).length > 0 ) {
-						$( 'html, body' ).animate( { scrollTop: parseInt( $( id ).offset().top ) - 50 }, 0 );
+						$( 'html, body' ).animate( { scrollTop: parseInt( $( id ).offset().top ) - (80 + adminBar) }, 0 );
 					}
 				}
 

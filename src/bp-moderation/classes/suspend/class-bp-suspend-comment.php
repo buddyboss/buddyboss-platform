@@ -216,7 +216,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$is_user_suspended = bp_moderation_is_user_suspended( $comment_author_id );
 			if ( $is_user_suspended ) {
-				$comment_text = bb_moderation_is_suspended_message( $comment_text );
+				$comment_text = bb_moderation_is_suspended_message( $comment_text, $this->item_type, $comment->comment_ID );
 			} else {
 				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
@@ -492,7 +492,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Function to exclude is_suspended users comment from recent comment widget.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 *
 	 * @param string[] $comment_data An associative array of comment query clauses.
 	 * @param object   $query        Current instance of WP_Comment_Query (passed by reference).
@@ -512,7 +512,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment excerpt text for blocked comment.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.5
 	 *
 	 * @param string     $excerpt    The comment excerpt text.
 	 * @param string     $comment_id The comment ID as a numeric string.
@@ -529,7 +529,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		if ( $this->check_is_hidden( $comment_id ) ) {
 			$is_user_suspended = bp_moderation_is_user_suspended( $comment_author_id );
 			if ( $is_user_suspended ) {
-				$excerpt = bb_moderation_is_suspended_message( $excerpt );
+				$excerpt = bb_moderation_is_suspended_message( $excerpt, $this->item_type, $comment->comment_ID );
 			} else {
 				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}

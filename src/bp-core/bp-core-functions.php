@@ -6763,10 +6763,13 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		$all_notifications
 	);
 
-	$read_only_notifications = array_column( array_filter( $all_notifications ), 'notification_read_only', 'key' );
+	$read_only_notifications = array_column( $all_notifications, null, 'key' );
 	if (
+		! empty( $read_only_notifications ) &&
 		isset( $read_only_notifications[ $notification_type ] ) &&
-		true === (bool) $read_only_notifications[ $notification_type ]
+		! empty( $read_only_notifications[ $notification_type ]['notification_read_only'] ) &&
+		! empty( $read_only_notifications[ $notification_type ]['default'] ) &&
+		'no' === $read_only_notifications[ $notification_type ]['default']
 	) {
 		return false;
 	}
@@ -7169,8 +7172,26 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
-		$notification_fields_read_only = array_filter( array_column( $options['fields'], 'notification_read_only', null ) );
-		$options['fields']             = ( ! empty( $notification_fields_read_only ) ? array_diff_key( $options['fields'], $notification_fields_read_only ) : $options['fields'] );
+		$options['fields'] = array_filter(
+			array_map(
+				function ( $fields ) {
+					if (
+						(
+							isset( $fields['notification_read_only'], $fields['default'] ) &&
+							true === (bool) $fields['notification_read_only'] &&
+							'yes' === (string) $fields['default']
+						) ||
+						(
+							! isset( $fields['notification_read_only'] ) ||
+							false === (bool) $fields['notification_read_only']
+						)
+					) {
+						return $fields;
+					}
+				},
+				$options['fields']
+			)
+		);
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
@@ -7188,7 +7209,11 @@ function bb_render_notification( $notification_group ) {
 
 			foreach ( $options['fields'] as $field ) {
 
-				if ( ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'] ) {
+				if (
+					! empty( $field['notification_read_only'] ) &&
+					true === $field['notification_read_only'] &&
+					'no' === (string) $field['default']
+				) {
 					continue;
 				}
 
@@ -8289,7 +8314,7 @@ function bb_presence_default_interval() {
 /**
  * Retrieves the number of times a filter has been applied during the current request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.5
  *
  * @global int[] $wp_filters Stores the number of times each filter was triggered.
  *
