@@ -296,17 +296,19 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 	// Notify the topic author if not the current reply author.
 	if ( $author_id !== $topic_author_id && $topic_author_id !== $reply_to_item_id ) {
-		$args['secondary_item_id'] = $secondary_item_id;
-
-		bp_notifications_add_notification( $args );
+		if ( false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $topic_author_id, $author_id ) ) {
+			$args['secondary_item_id'] = $secondary_item_id;
+			bp_notifications_add_notification( $args );
+		}
 	}
 
 	// Notify the immediate reply author if not the current reply author.
 	if ( ! empty( $reply_to ) && ( $author_id !== $reply_to_item_id ) ) {
-		$args['user_id']           = $reply_to_item_id;
-		$args['secondary_item_id'] = $secondary_item_id;
-
-		bp_notifications_add_notification( $args );
+		if ( false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $reply_to_item_id, $author_id ) ) {
+			$args['user_id']           = $reply_to_item_id;
+			$args['secondary_item_id'] = $secondary_item_id;
+			bp_notifications_add_notification( $args );
+		}
 	}
 
 	// If our temporary variable doesn't exist, stop now.
@@ -360,6 +362,11 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				continue;
 			}
 
+			// Moderated member found then prevent to send email/notifications.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
+				continue;
+			}
+
 			add_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
 
 			bp_notifications_add_notification( $args );
@@ -368,11 +375,6 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
-
-				// Check the sender is blocked by recipient or not.
-				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
-					continue;
-				}
 
 				$reply_id = bbp_get_reply_id( $reply_id );
 				$topic_id = bbp_get_topic_id( $topic_id );
