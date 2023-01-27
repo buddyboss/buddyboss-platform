@@ -2243,7 +2243,7 @@ function bb_update_to_2_2_5() {
  */
 function bb_update_to_2_2_6() {
 	// Clear notifications cache.
-	if ( version_compare( $GLOBALS['wp_version'], '6.1.0', '>=' ) ) {
+	if ( function_exists( 'wp_cache_flush_group' ) ) {
 		wp_cache_flush_group( 'bp-notifications' );
 	} else {
 		wp_cache_flush();
