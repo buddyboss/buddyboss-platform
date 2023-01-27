@@ -46,6 +46,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 		 */
 		add_filter( 'bb_notifications_get_where_conditions', array( $this, 'update_where_sql' ), 9999, 3 );
 
+		add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_get_the_notification_mark_unread_link_callback' ), 10, 2 );
 	}
 
 	/**
@@ -100,5 +101,29 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 		 * @param array  $class     current class object.
 		 */
 		return apply_filters( 'bp_moderation_notification_get_where_conditions', $sql_where, $this );
+	}
+
+	/**
+	 * Function to remove unread notification link for moderated members from read notification screen.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $retval  HTML for the mark unread link for the current notification.
+	 * @param int    $user_id The user ID.
+	 *
+	 * @return string
+	 */
+	public function bb_get_the_notification_mark_unread_link_callback( $retval, $user_id ) {
+		$notification = buddypress()->notifications->query_loop->notification;
+		if (
+			isset( $notification->is_new ) &&
+			empty( $notification->is_new ) &&
+			isset( $notification->readonly ) &&
+			true === $notification->readonly
+		) {
+			$retval = '';
+		}
+
+		return $retval;
 	}
 }
