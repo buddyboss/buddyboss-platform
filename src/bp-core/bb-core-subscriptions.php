@@ -847,7 +847,7 @@ function bb_delete_subscription( $subscription_id ) {
  *
  * @return bool True on success, false on failure.
  */
-function bb_delete_item_subscriptions( $type, $item_id, $blog_id = 0 ) {
+function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 
 	if ( empty( $blog_id ) ) {
 		$blog_id = get_current_blog_id();
