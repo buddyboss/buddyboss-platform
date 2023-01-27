@@ -49,3 +49,22 @@ var addReply = {
 		return document.getElementById( e );
 	}
 };
+
+jQuery( document ).ready(
+	function() {
+
+		if ( typeof window.MediumEditor == 'undefined' ) {
+
+			jQuery( document ).on ( 'keyup', '#bbpress-forums .bbp-the-content', function( event ) {
+
+				var id = jQuery( this ).attr( 'id' );
+				var bbp_reply_content = jQuery( this ).closest('form').find( '#bbp_reply_content' );
+				var content = document.getElementById(id).innerHTML;
+				bbp_reply_content.val( content );
+
+			});
+
+		}
+
+	}
+);
