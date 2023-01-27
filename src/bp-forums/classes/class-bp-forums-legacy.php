@@ -333,4 +333,17 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 			return $user_meta_key;
 		}
 	}
+
+	/**
+	 * Call forum subscription instance.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return BP_Forums_Legacy
+	 */
+	function bb_forum_legacy_subscription() {
+		return BP_Forums_Legacy::instance();
+	}
+
+	bb_forum_legacy_subscription();
 }

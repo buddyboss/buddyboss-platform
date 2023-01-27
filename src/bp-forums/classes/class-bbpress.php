@@ -332,7 +332,6 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Legacy subscriptions.
 			require $this->includes_dir . 'classes/class-bp-forums-legacy.php';
-			BP_Forums_Legacy::instance();
 
 			/** Admin */
 
