@@ -60,14 +60,10 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		 * @since [BBVERSION]
 		 */
 		public function setup_actions() {
-
-			// Check the legacy forum and topic subscriptions is enabled or not.
-			if ( $this->bb_forums_enabled_forums_legacy() ) {
-				// Create or delete legacy forum and topic subscriptions.
-				add_action( 'bb_create_subscription', array( $this, 'bb_create_legacy_forum_subscriptions' ), 10, 1 );
-				add_action( 'bb_subscriptions_before_delete_subscription', array( $this, 'bb_delete_legacy_forum_subscriptions' ), 10, 1 );
-				add_action( 'bb_subscriptions_after_update_subscription_status', array( $this, 'bb_add_remove_all_legacy_forum_subscriptions' ), 10, 4 );
-			}
+			// Create or delete legacy forum and topic subscriptions.
+			add_action( 'bb_create_subscription', array( $this, 'bb_create_legacy_forum_subscriptions' ), 10, 1 );
+			add_action( 'bb_subscriptions_before_delete_subscription', array( $this, 'bb_delete_legacy_forum_subscriptions' ), 10, 1 );
+			add_action( 'bb_subscriptions_after_update_subscription_status', array( $this, 'bb_add_remove_all_legacy_forum_subscriptions' ), 10, 4 );
 		}
 
 		/**
@@ -78,7 +74,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		 * @return bool True if forums legacy is enabled otherwise false.
 		 */
 		public function bb_forums_enabled_forums_legacy() {
-			return (bool) apply_filters( 'bb_lagecy_forums_subscriptions_data_v1', true );
+			return (bool) apply_filters( 'bb_legacy_forums_subscriptions_data_v1', true );
 		}
 
 		/**
@@ -91,6 +87,11 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		 * @return void|bool
 		 */
 		public function bb_create_legacy_forum_subscriptions( $args ) {
+			// Check the legacy forum and topic subscriptions is enabled or not.
+			if ( ! $this->bb_forums_enabled_forums_legacy() ) {
+				return;
+			}
+
 			$r = bp_parse_args(
 				$args,
 				array(
@@ -121,6 +122,10 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		 * @return void|bool
 		 */
 		public function bb_delete_legacy_forum_subscriptions( $subscription_id ) {
+			// Check the legacy forum and topic subscriptions is enabled or not.
+			if ( ! $this->bb_forums_enabled_forums_legacy() ) {
+				return;
+			}
 
 			if ( ! empty( $subscription_id ) ) {
 				// Get the subscription object.
@@ -154,6 +159,10 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		 * @return void|bool
 		 */
 		public function bb_add_remove_all_legacy_forum_subscriptions( $type, $item_id, $status, $blog_id ) {
+			// Check the legacy forum and topic subscriptions is enabled or not.
+			if ( ! $this->bb_forums_enabled_forums_legacy() ) {
+				return;
+			}
 
 			// Return if not forum/topic subscriptions.
 			if ( ! in_array( $type, array( 'forum', 'topic' ), true ) ) {
