@@ -1,0 +1,266 @@
+<?php
+/**
+ * BuddyBoss Forum Legacy.
+ *
+ * @package BuddyBoss\Forums
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
+	/**
+	 * Setup the bp forums legacy class.
+	 *
+	 * @since [BBVERSION]
+	 */
+	class BP_Forums_Legacy {
+
+		/**
+		 * The single instance of the class.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @var self
+		 */
+		private static $instance = null;
+
+		/**
+		 * Forum legacy Constructor.
+		 *
+		 * @since [BBVERSION]
+		 */
+		public function __construct() {
+
+			// Include the code.
+			$this->setup_actions();
+		}
+
+		/**
+		 * Get the instance of this class.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @return object Instance.
+		 */
+		public static function instance() {
+
+			if ( null === self::$instance ) {
+				$class_name     = __CLASS__;
+				self::$instance = new $class_name();
+			}
+
+			return self::$instance;
+		}
+
+		/**
+		 * Setup actions for Profile Settings.
+		 *
+		 * @since [BBVERSION]
+		 */
+		public function setup_actions() {
+
+			// Check the legacy forum and topic subscriptions is enabled or not.
+			if ( $this->bb_forums_enabled_forums_legacy() ) {
+				// Create or delete legacy forum and topic subscriptions.
+				add_action( 'bb_create_subscription', array( $this, 'bb_create_legacy_forum_subscriptions' ), 10, 1 );
+				add_action( 'bb_subscriptions_before_delete_subscription', array( $this, 'bb_delete_legacy_forum_subscriptions' ), 10, 1 );
+			}
+		}
+
+		/**
+		 * Function to check the forums legacy is enabled or not.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @return bool True if forums legacy is enabled otherwise false.
+		 */
+		public function bb_forums_enabled_forums_legacy() {
+			return (bool) apply_filters( 'bb_lagecy_forums_subscriptions_data_v1', true );
+		}
+
+		/**
+		 * Create legacy forum and topic subscriptions.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param array $args Array of argument to create a new subscription.
+		 *
+		 * @return void|bool
+		 */
+		public function bb_create_legacy_forum_subscriptions( $args ) {
+			$r = bp_parse_args(
+				$args,
+				array(
+					'type'    => '',
+					'user_id' => bp_loggedin_user_id(),
+					'item_id' => 0,
+				),
+				'bb_create_legacy_subscription'
+			);
+
+			if (
+				( empty( $r['type'] ) || empty( $r['item_id'] ) ) ||
+				( ! in_array( $r['type'], array( 'forum', 'topic' ), true ) )
+			) {
+				return false;
+			}
+
+			return self::bb_add_user_legacy_subscription( $r['user_id'], $r['item_id'] );
+		}
+
+		/**
+		 * Create legacy forum and topic subscriptions.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param int $subscription_id New modern subscription ID.
+		 *
+		 * @return void|bool
+		 */
+		public function bb_delete_legacy_forum_subscriptions( $subscription_id ) {
+
+			if ( ! empty( $subscription_id ) ) {
+				// Get the subscription object.
+				$subscription = bb_subscriptions_get_subscription( $subscription_id );
+
+				if (
+					( empty( $subscription->type ) || empty( $subscription->item_id ) ) ||
+					( ! in_array( $subscription->type, array( 'forum', 'topic' ), true ) )
+				) {
+					return false;
+				}
+
+				self::bb_delete_user_legacy_subscription( $subscription->user_id, $subscription->item_id );
+
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Create legacy forum/topic subscriptions.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param int $user_id ID of user.
+		 * @param int $item_id ID of forum/topic.
+		 *
+		 * @return void|bool
+		 */
+		public static function bb_add_user_legacy_subscription( $user_id, $item_id ) {
+			// Get user meta key for subscriptions.
+			$user_meta_key = self::bb_get_user_legacy_subscription_key( $item_id );
+			if ( empty( $user_meta_key ) ) {
+				return false;
+			}
+
+			$subscriptions = self::bb_get_user_legacy_subscription( $user_id, $item_id );
+
+			if ( ! in_array( $item_id, $subscriptions, true ) ) {
+				$subscriptions[] = $item_id;
+				$subscriptions   = implode( ',', wp_parse_id_list( array_filter( $subscriptions ) ) );
+				update_user_meta( $user_id, $user_meta_key, $subscriptions );
+			}
+
+			return true;
+		}
+
+		/**
+		 * Delete legacy forum/topic subscriptions.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param int $user_id ID of user.
+		 * @param int $item_id ID of forum/topic.
+		 *
+		 * @return void|bool
+		 */
+		public static function bb_delete_user_legacy_subscription( $user_id, $item_id ) {
+			// Get user meta key for subscriptions.
+			$user_meta_key = self::bb_get_user_legacy_subscription_key( $item_id );
+			if ( empty( $user_meta_key ) ) {
+				return false;
+			}
+
+			$subscriptions = self::bb_get_user_legacy_subscription( $user_id, $item_id );
+
+			$pos = array_search( $item_id, $subscriptions, true );
+			if ( false === $pos ) {
+				return false;
+			}
+
+			array_splice( $subscriptions, $pos, 1 );
+			$subscriptions = array_filter( $subscriptions );
+			if ( ! empty( $subscriptions ) ) {
+				$subscriptions = implode( ',', wp_parse_id_list( $subscriptions ) );
+				update_user_meta( $user_id, $user_meta_key, $subscriptions );
+			} else {
+				delete_user_meta( $user_id, $user_meta_key );
+			}
+
+			return true;
+		}
+
+		/**
+		 * Get legacy forum/topic subscriptions.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param int $user_id ID of user.
+		 * @param int $item_id ID of forum.
+		 *
+		 * @return array
+		 */
+		public static function bb_get_user_legacy_subscription( $user_id, $item_id ) {
+			$subscriptions = array();
+
+			// Get user meta key for subscriptions.
+			$user_meta_key = self::bb_get_user_legacy_subscription_key( $item_id );
+			if ( empty( $user_meta_key ) ) {
+				return $subscriptions;
+			}
+
+			$subscriptions = get_user_meta( $user_id, $user_meta_key, true );
+
+			return array_filter( wp_parse_id_list( $subscriptions ) );
+		}
+
+		/**
+		 * Get legacy forum/topic subscriptions key.
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param int $item_id ID of forum/topic.
+		 *
+		 * @return string
+		 */
+		public static function bb_get_user_legacy_subscription_key( $item_id ) {
+			global $wpdb;
+
+			// Get the post type.
+			$post_type = get_post_type( $item_id );
+			if ( empty( $post_type ) ) {
+				return false;
+			}
+
+			switch ( $post_type ) {
+
+				// Forum.
+				case bbp_get_forum_post_type():
+					$user_meta_key = $wpdb->prefix . '_bbp_forum_subscriptions';
+					break;
+
+				// Topic.
+				case bbp_get_topic_post_type():
+				default:
+					$user_meta_key = $wpdb->prefix . '_bbp_subscriptions';
+					break;
+			}
+
+			return $user_meta_key;
+		}
+	}
+}

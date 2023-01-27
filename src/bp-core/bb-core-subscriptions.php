@@ -873,8 +873,9 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 	 * @param array  $subscriptions Array of subscriptions to delete.
 	 * @param string $type          Type of the subscription to delete.
 	 * @param int    $item_id       Item ID of the subscription to delete.
+	 * @param int    $blog_id       Site ID.
 	 */
-	do_action( 'bb_subscriptions_before_delete_item_subscriptions', $subscriptions, $type, $item_id );
+	do_action( 'bb_subscriptions_before_delete_item_subscriptions', $subscriptions, $type, $item_id, $blog_id );
 
 	if ( ! empty( $subscriptions ) ) {
 		foreach ( $subscriptions as $subscription ) {
@@ -890,8 +891,9 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 	 * @param array  $subscriptions Array of subscriptions to delete.
 	 * @param string $type          Type of the subscription to delete.
 	 * @param int    $item_id       Item ID of the subscription to delete.
+	 * @param int    $blog_id       Site ID.
 	 */
-	do_action( 'bb_subscriptions_after_delete_item_subscriptions', $subscriptions, $type, $item_id );
+	do_action( 'bb_subscriptions_after_delete_item_subscriptions', $subscriptions, $type, $item_id, $blog_id );
 
 	return true;
 }
