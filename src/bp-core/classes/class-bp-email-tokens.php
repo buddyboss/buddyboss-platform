@@ -1267,6 +1267,9 @@ class BP_Email_Tokens {
 			case 'groups-invitation':
 				$member_id = isset( $tokens['inviter.id'] ) ? $tokens['inviter.id'] : false;
 				break;
+			case 'new-follower':
+				$member_id = isset( $tokens['follower.id'] ) ? $tokens['follower.id'] : false;
+				break;
 		}
 
 		// maybe search for some other token
@@ -1299,7 +1302,7 @@ class BP_Email_Tokens {
 												);
 											?>
 											<a class="avatar-wrap mobile-center" href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" style="display: block; border-radius: 3px; width: 140px;">
-												<img alt="" src="<?php echo esc_url( $avatar_src ); ?>" width="140" height="140" style="margin:0; padding:0; border:none; display:block;" border="0" />
+												<img alt="" src="<?php echo esc_url( $avatar_src ); ?>" width="140" height="140" style="margin:0; padding:0; border:none;float:left;" border="0" />
 											</a>
 										</td>
 										<td width="4%" class="mobile-hide">&nbsp;</td>
