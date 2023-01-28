@@ -319,6 +319,20 @@ class BP_Notifications_Component extends BP_Component {
 	}
 
 	/**
+	 * Defining the "query_loop" property.
+	 *
+	 */
+	protected $query_loop;
+
+    public function set_query_loop($query_loop) {
+        $this->query_loop = $query_loop;
+    }
+
+    public function get_query_loop() {
+        return $this->query_loop;
+    }
+
+	/**
 	 * Init the BuddyBoss REST API.
 	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
