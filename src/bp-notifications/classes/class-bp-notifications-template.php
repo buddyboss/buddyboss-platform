@@ -140,6 +140,13 @@ class BP_Notifications_Template {
 	public $query_vars;
 
 	/**
+	 * Boolean of a notification being new or not
+	 *
+	 * @var bool
+	 */
+	public $is_new;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @see bp_has_notifications() For information on the array format.
