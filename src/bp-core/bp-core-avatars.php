@@ -431,9 +431,11 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 	// Use an alias to leave the param unchanged.
 	$avatar_classes = $params['class'];
-	if ( ! is_array( $avatar_classes ) ) {
+	if ( ! is_array( $avatar_classes ) && ! is_null( $avatar_classes ) ) {
 		$avatar_classes = explode( ' ', $avatar_classes );
-	}
+	} else {
+		$avatar_classes = array();
+	}	
 
 	// Merge classes.
 	$avatar_classes = array_merge(
