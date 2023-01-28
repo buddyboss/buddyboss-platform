@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.9.0
  */
 class BP_Notifications_Template {
+	public $notification_count;
 
 	/**
 	 * The loop iterator.
@@ -215,7 +216,7 @@ class BP_Notifications_Template {
 		$this->notifications            = BP_Notifications_Notification::get( $this->query_vars );
 		$this->total_notification_count = BP_Notifications_Notification::get_total_count( $this->query_vars );
 
-		if ( empty( $this->notifications ) ) {
+		if ( property_exists($this, 'notifications') && empty( $this->notifications ) ) {
 			$this->notification_count       = 0;
 			$this->total_notification_count = 0;
 
