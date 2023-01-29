@@ -29,6 +29,13 @@ class BP_Activity_Component extends BP_Component {
 	public $visibility_levels = array();
 
 	/**
+	 * Initializing an empty array for the Actions
+	 * 
+	 * @var array
+	 */
+	public $actions = array();
+
+	/**
 	 * Start the activity component setup process.
 	 *
 	 * @since BuddyPress 1.5.0
