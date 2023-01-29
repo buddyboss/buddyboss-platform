@@ -138,6 +138,14 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 * @var string
 		 */
 		public $search_query_arg = 's';
+		
+		/**
+		 * Static property for the Directory Title
+		 *
+		 * @var string
+		 */
+		public $directory_title = '';
+
 
 		/** Methods ***************************************************************/
 
