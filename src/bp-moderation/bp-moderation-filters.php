@@ -864,7 +864,7 @@ add_filter( 'manage_edit-bpm_category_columns', 'bb_category_show_when_reporting
  *
  * @return mixed Term meta data.
  */
-function bb_category_show_when_reporting_column_display( $string = '', $column_name, $term_id ) {
+function bb_category_show_when_reporting_column_display( $column_name, $term_id, $string = '' ) {
 	$value             = get_term_meta( $term_id, $column_name, true );
 	$show_when_options = bb_moderation_get_reporting_category_fields_array();
 	return ( isset( $show_when_options[ $value ] ) ? esc_attr( $show_when_options[ $value ] ) : esc_attr__( 'Content', 'buddyboss' ) );
