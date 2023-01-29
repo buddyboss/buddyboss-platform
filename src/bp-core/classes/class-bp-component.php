@@ -151,9 +151,26 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 *
 		 * @var string
 		 */
+		public $table_name = '';
 		public $table_name_meta = '';
     	public $table_name_friends = '';
     	public $table_name_friendship_meta = '';
+		public $table_name_recipients = '';
+		public $table_name_notices = '';
+		public $table_name_messages = '';
+		public $table_name_membermeta = '';
+		public $table_name_groupmeta = '';
+		public $table_name_follow = '';
+		public $table_name_reports = '';
+		public $table_name_last_activity = '';
+		public $table_name_signups = '';
+		public $table_name_data = '';
+		public $table_name_groups = '';
+		public $table_name_fields = '';
+		public $table_name_albums = '';
+		public $table_name_folder = '';
+		public $table_name_folder_meta = '';
+		public $table_name_members = '';
 
 
 		/** Methods ***************************************************************/
