@@ -17,6 +17,12 @@ defined( 'ABSPATH' ) || exit;
 class BP_Members_Component extends BP_Component {
 
 	/**
+	 * Adding the nav as a public property
+	 *
+	 */
+	public $nav;
+
+	/**
 	 * Profile types.
 	 *
 	 * @see bp_register_member_type()
