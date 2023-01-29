@@ -138,13 +138,22 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 * @var string
 		 */
 		public $search_query_arg = 's';
-		
+
 		/**
-		 * Static property for the Directory Title
+		 * Public property for the Directory Title
 		 *
 		 * @var string
 		 */
 		public $directory_title = '';
+
+		/**
+		 * Public property for the Table names
+		 *
+		 * @var string
+		 */
+		public $table_name_meta = '';
+    	public $table_name_friends = '';
+    	public $table_name_friendship_meta = '';
 
 
 		/** Methods ***************************************************************/
