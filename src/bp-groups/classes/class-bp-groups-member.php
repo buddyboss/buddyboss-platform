@@ -1600,7 +1600,13 @@ class BP_Groups_Member {
 			);
 
 			if ( ! empty( $subscriptions['subscriptions'] ) && ! empty( current( $subscriptions['subscriptions'] ) ) ) {
-				$record_args['id']     = current( $subscriptions['subscriptions'] )->id;
+				$subscription = current( $subscriptions['subscriptions'] );
+
+				if ( $subscription->status !== $status ) {
+					return $retval;
+				}
+
+				$record_args['id']     = $subscription->id;
 				$record_args['status'] = ! $status;
 			} else {
 				return $retval;
