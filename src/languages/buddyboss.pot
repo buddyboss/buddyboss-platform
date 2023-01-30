@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.2.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-01-30 14:22:14+00:00\n"
+"POT-Creation-Date: 2023-01-30 19:33:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24091,36 +24091,43 @@ msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2168
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1100
+#: bp-templates/bp-nouveau/includes/messages/functions.php:152
 msgid "Sent a photo"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2170
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1102
+#: bp-templates/bp-nouveau/includes/messages/functions.php:153
 msgid "Sent some photos"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2182
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1114
+#: bp-templates/bp-nouveau/includes/messages/functions.php:154
 msgid "Sent a video"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2184
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1116
+#: bp-templates/bp-nouveau/includes/messages/functions.php:155
 msgid "Sent some videos"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2196
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1128
+#: bp-templates/bp-nouveau/includes/messages/functions.php:156
 msgid "Sent a document"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2198
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1130
+#: bp-templates/bp-nouveau/includes/messages/functions.php:157
 msgid "Sent some documents"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2208
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1140
+#: bp-templates/bp-nouveau/includes/messages/functions.php:151
 msgid "Sent a gif"
 msgstr ""
 
@@ -24197,32 +24204,32 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-messages/bp-messages-star.php:108
-#: bp-templates/bp-nouveau/includes/messages/functions.php:159
+#: bp-templates/bp-nouveau/includes/messages/functions.php:166
 msgid "Unstar"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:109
-#: bp-templates/bp-nouveau/includes/messages/functions.php:160
+#: bp-templates/bp-nouveau/includes/messages/functions.php:167
 msgid "Star"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:110
-#: bp-templates/bp-nouveau/includes/messages/functions.php:161
+#: bp-templates/bp-nouveau/includes/messages/functions.php:168
 msgid "Starred"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:111
-#: bp-templates/bp-nouveau/includes/messages/functions.php:162
+#: bp-templates/bp-nouveau/includes/messages/functions.php:169
 msgid "Not starred"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:112
-#: bp-templates/bp-nouveau/includes/messages/functions.php:163
+#: bp-templates/bp-nouveau/includes/messages/functions.php:170
 msgid "Remove all starred messages in this thread"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:113
-#: bp-templates/bp-nouveau/includes/messages/functions.php:164
+#: bp-templates/bp-nouveau/includes/messages/functions.php:171
 msgid "Star the first message in this thread"
 msgstr ""
 
@@ -30547,11 +30554,11 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:287
+#: bp-templates/bp-nouveau/includes/messages/functions.php:294
 msgid "New sitewide notice"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:519
+#: bp-templates/bp-nouveau/includes/messages/functions.php:526
 msgid "New private messages"
 msgstr ""
 
