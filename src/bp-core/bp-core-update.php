@@ -393,6 +393,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19281 ) {
 			bb_update_to_2_2_5();
 		}
+
+		if ( $raw_db_version < 19481 ) {
+			bb_update_to_2_2_7();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2227,5 +2231,22 @@ function bb_update_to_2_2_5() {
 				'description' => esc_html__( 'A member receives a new follower', 'buddyboss' ),
 			)
 		);
+	}
+}
+
+/**
+ * Clear web and api cache on the update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_7() {
+	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear all API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-' );
 	}
 }
