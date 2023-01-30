@@ -880,7 +880,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$args,
 			array(
 				'type'              => '',
-				'blog_id'           => 1,
+				'blog_id'           => get_current_blog_id(),
 				'item_id'           => 0,
 				'secondary_item_id' => 0,
 			)
@@ -891,7 +891,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 		$switch = false;
 		// Switch to given blog_id if current blog is not same.
-		if ( is_multisite() && 1 !== $r['blog_id'] ) {
+		if ( is_multisite() && get_current_blog_id() !== $r['blog_id'] ) {
 			switch_to_blog( $r['blog_id'] );
 			$switch = true;
 		}
@@ -959,7 +959,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$type_data = bb_register_subscriptions_types( 'group' );
 
 		if ( ! empty( $items ) ) {
-			$blog_id = 1;
+			$blog_id = get_current_blog_id();
 
 			$switch = false;
 			// Switch to given blog_id if current blog is not same.

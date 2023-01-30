@@ -1587,7 +1587,7 @@ class BP_Groups_Member {
 
 		return bb_create_subscription(
 			array(
-				'blog_id'           => 1,
+				'blog_id'           => get_current_blog_id(),
 				'user_id'           => $user_id,
 				'item_id'           => $group_id,
 				'type'              => 'group',
