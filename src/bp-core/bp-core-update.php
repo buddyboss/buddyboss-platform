@@ -397,6 +397,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19381 ) {
 			bb_update_to_2_2_6();
 		}
+
+		if ( $raw_db_version < 19481 ) {
+			bb_update_to_2_2_7();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2241,7 +2245,7 @@ function bb_update_to_2_2_5() {
  *
  * @return void
  */
-function bb_update_to_2_2_6() {
+function bb_update_to_2_2_7() {
 	// Clear notifications cache.
 	if ( function_exists( 'wp_cache_flush_group' ) ) {
 		wp_cache_flush_group( 'bp-notifications' );
