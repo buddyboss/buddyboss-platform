@@ -878,12 +878,14 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id ) ) {
+				continue;
+			}
+
 			// Bail if member opted out of receiving this email.
 			// Check the sender is blocked by recipient or not.
-			if (
-				true === bb_is_notification_enabled( $user_id, $type_key ) &&
-				true !== (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id )
-			) {
+			if ( true === bb_is_notification_enabled( $user_id, $type_key ) ) {
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
 					'notification_type' => 'bbp-new-forum-topic',
@@ -957,12 +959,14 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id ) ) {
+				continue;
+			}
+
 			// Bail if member opted out of receiving this email.
 			// Check the sender is blocked by recipient or not.
-			if (
-				true === bb_is_notification_enabled( $user_id, $type_key ) &&
-				true !== (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id )
-			) {
+			if ( true === bb_is_notification_enabled( $user_id, $type_key ) ) {
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
 					'notification_type' => 'bbp-new-forum-reply',
