@@ -1585,7 +1585,9 @@ class BP_Groups_Member {
 		// Get group parent.
 		$parent_group_id = bp_get_parent_group_id( $group_id );
 
-		return bb_create_subscription(
+		BP_Core_Notification_Abstract::$no_validate = true;
+
+		$retval = bb_create_subscription(
 			array(
 				'blog_id'           => get_current_blog_id(),
 				'user_id'           => $user_id,
@@ -1594,6 +1596,10 @@ class BP_Groups_Member {
 				'secondary_item_id' => $parent_group_id,
 			)
 		);
+
+		BP_Core_Notification_Abstract::$no_validate = false;
+
+		return $retval;
 	}
 
 	/**
