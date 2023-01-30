@@ -2238,6 +2238,42 @@ function bb_update_to_2_2_5() {
 	}
 }
 
+
+/**
+ * Migrate the subscription.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_6() {
+	bb_migrate_subscriptions();
+}
+
+/**
+ * Migrate forum/topic subscription to new table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_migrate_subscriptions() {
+	$is_already_run = get_transient( 'bb_migrate_subscriptions' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_subscriptions', 'yes', HOUR_IN_SECONDS );
+	// Create subscription table.
+	bb_core_install_subscription();
+
+	// Migrate the subscription data to new table.
+	bb_subscriptions_migrate_users_forum_topic( true, true );
+
+	// Flush the cache to delete all old cached subscriptions.
+	wp_cache_flush();
+}
+
 /**
  * Clear web cache on the update.
  *
