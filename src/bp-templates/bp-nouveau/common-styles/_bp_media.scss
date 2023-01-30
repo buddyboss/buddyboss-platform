@@ -3179,6 +3179,11 @@ div.dropzone .dz-preview {
 		line-height: 1.3;
 		color: #4d5c6d;
 
+		> span {
+			display: inline-block;
+			vertical-align: middle;
+		}
+
 		#bb-folder-privacy {
 			max-width: 100%;
 		}
