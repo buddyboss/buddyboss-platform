@@ -261,10 +261,12 @@ function bp_nouveau_ajax_messages_send_message() {
 					}
 				}
 
-				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
+				$all_recipients = $messages_template->thread->get_recipients();
+
+				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
 				$un_access_users = array();
 				if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-					foreach ( (array) $messages_template->thread->recipients as $recipient ) {
+					foreach ( (array) $all_recipients as $recipient ) {
 						if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 							if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
 								$un_access_users[] = false;
@@ -642,7 +644,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	$message_response['started_date_mysql'] = $thread_template->thread->first_message_date;
 
-    // Clean up the loop.
+	// Clean up the loop.
 	bp_thread_messages();
 
 	// Remove the bp_current_action() override.
@@ -879,10 +881,12 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			continue;
 		}
 
-		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
+		$all_recipients = $messages_template->thread->get_recipients();
+
+		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
 		$un_access_users = array();
 		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() && count( $messages_template->thread->recipients ) < 3 ) {
-			foreach ( (array) $messages_template->thread->recipients as $recipient ) {
+			foreach ( (array) $all_recipients as $recipient ) {
 				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
 						$un_access_users[] = false;
@@ -2100,8 +2104,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		)
 	);
 
+	$all_recipients = $thread_template->thread->get_recipients();
+
 	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
-	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
+	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $all_recipients );
 	$un_access_users = array();
 
 	$thread->thread = array(
@@ -2822,7 +2828,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->next_messages_timestamp         = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
 	$thread->group_id                        = $group_id;
 	$thread->is_group_thread                 = $is_group_thread;
-	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
+	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->get_recipients() );
 	$thread->user_can_upload_media           = bb_user_has_access_upload_media( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_document        = bb_user_has_access_upload_document( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_video           = bb_user_has_access_upload_video( 0, $login_user_id, 0, $thread_id, 'message' );
