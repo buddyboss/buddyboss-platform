@@ -1658,7 +1658,7 @@ function bb_remove_mention_link_from_content( $content ) {
 			bb_moderation_is_user_blocked_by( $user_id ) ||
 			bp_moderation_is_user_suspended( $user_id )
 		) {
-			preg_match_all( "'<a class=.*?bp-suggestions-mention.*?.*?>(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
+			preg_match_all( "'<a.*?.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
 			if ( ! empty( $content_matches ) ) {
 				foreach ( $content_matches as $match ) {
 					if ( false !== strpos( $match[0], '@' . $username ) ) {
@@ -1695,7 +1695,7 @@ function bb_remove_mention_deleted_user_link_from_content( $content ) {
 
 	foreach ( (array) $usernames as $user_id => $username ) {
 		if ( bp_is_user_inactive( $user_id ) ) {
-			preg_match_all( "'<a class=.*?bp-suggestions-mention.*?.*?>(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
+			preg_match_all( "'<a.*?.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
 			if ( ! empty( $content_matches ) ) {
 				foreach ( $content_matches as $match ) {
 					if ( false !== strpos( $match[0], '@' . $username ) ) {
