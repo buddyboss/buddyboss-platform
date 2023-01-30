@@ -1126,11 +1126,10 @@ function bb_migrate_group_subscription( $is_background = false ) {
 		return;
 	}
 
-	$page = (int) get_site_option( 'bb_group_subscriptions_migrate_page', 1 );
 	$args = array(
 		'fields'      => 'ids',
 		'per_page'    => 10,
-		'page'        => $page,
+		'page'        => get_site_option( 'bb_group_subscriptions_migrate_page', 1 ),
 		'show_hidden' => true,
 	);
 
@@ -1145,8 +1144,6 @@ function bb_migrate_group_subscription( $is_background = false ) {
 	}
 
 	$groups = groups_get_groups( $args );
-	error_log( print_r( $args, 1 ) );
-	error_log( print_r( $groups, 1 ) );
 
 	$all_groups = array();
 	if ( ! empty( $groups['groups'] ) ) {
@@ -1164,10 +1161,11 @@ function bb_migrate_group_subscription( $is_background = false ) {
 			$cache['total'] = $total;
 
 			$records_updated = sprintf(
-			/* translators: total groups */
-				__( '%s groups subscriptions updated successfully.', 'buddyboss' ),
+			/* translators: total topics */
+				_n( '%d group subscriptions updated successfully', '%d groups subscriptions updated successfully', bp_core_number_format( $cache['total'] ), 'buddyboss' ),
 				bp_core_number_format( $cache['total'] )
 			);
+
 			return array(
 				'status'  => 'running',
 				'offset'  => $cache['total'],
@@ -1177,6 +1175,7 @@ function bb_migrate_group_subscription( $is_background = false ) {
 	} else {
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
 		delete_transient( 'bb_migrate_group_subscriptions' );
+		unset( $cache['total'] );
 
 		/* translators: Status of current action. */
 		$statement = __( 'Repairing groups subscriptions&hellip; %s', 'buddyboss' );
