@@ -8209,3 +8209,42 @@ function bb_presence_time_span() {
 function bb_presence_default_interval() {
 	return apply_filters( 'bb_presence_default_interval', 60 );
 }
+
+/**
+ * Locate deleted usernames in an content string, as designated by an @ sign.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param string $content         Content
+ *
+ * @return array|bool Associative array with username as key and username as
+ *                    value for deleted user. Boolean false if no mentions found.
+ */
+function bb_find_deleted_user_by_at_sign( $mentioned_users, $content ) {
+	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
+	preg_match_all( $pattern, $content, $usernames );
+
+	// Make sure there's only one instance of each username.
+	$usernames = array_unique( $usernames[1] );
+
+	// Bail if no usernames.
+	if ( empty( $usernames ) ) {
+		return $mentioned_users;
+	}
+
+	// We've found some mentions! Check to see if users exist.
+	foreach ( (array) array_values( $usernames ) as $username ) {
+		$user_id = bp_get_userid_from_mentionname( trim( $username ) );
+
+		if ( empty( $user_id ) ) {
+			$mentioned_users[ $username ] = $username;
+		}
+	}
+
+	if ( empty( $mentioned_users ) ) {
+		return $mentioned_users;
+	}
+
+	return $mentioned_users;
+}
