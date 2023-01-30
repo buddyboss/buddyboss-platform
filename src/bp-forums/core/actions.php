@@ -566,6 +566,9 @@ function bb_post_topic_reply_draft() {
  * @since BuddyBoss 2.2.1
  */
 function bb_forum_add_content_popup() {
+	if ( ! bbp_is_single_forum() ) {
+		return;
+	}
 	?>
 	<!-- Forum description popup -->
 	<div class="bb-action-popup" id="single-forum-description-popup" style="display: none">
