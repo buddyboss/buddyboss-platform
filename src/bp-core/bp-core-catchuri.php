@@ -1256,7 +1256,6 @@ function bp_private_network_template_redirect() {
 							return;
 						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
 							$fragments = explode( '/', $request_url );
-
 							// Allow to view if fragment matched.
 							foreach ( $fragments as $fragment ) {
 								if ( trim( $url, '/' ) === $fragment ) {
@@ -1271,7 +1270,7 @@ function bp_private_network_template_redirect() {
 							}
 
 							// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
-							if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+							if ( strpos( trailingslashit( $request_url ), trailingslashit( $un_trailing_slash_it_url ) ) !== false ) {
 								return;
 							}
 
