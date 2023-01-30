@@ -8211,6 +8211,27 @@ function bb_presence_default_interval() {
 }
 
 /**
+ * Retrieves the number of times a filter has been applied during the current request.
+ *
+ * @since BuddyBoss 2.2.5
+ *
+ * @global int[] $wp_filters Stores the number of times each filter was triggered.
+ *
+ * @param string $hook_name  The name of the filter hook.
+ *
+ * @return int The number of times the filter hook has been applied.
+ */
+function bb_did_filter( $hook_name ) {
+	global $wp_filters;
+
+	if ( ! isset( $wp_filters[ $hook_name ] ) ) {
+		return 0;
+	}
+
+	return $wp_filters[ $hook_name ];
+}
+
+/**
  * Locate deleted usernames in an content string, as designated by an @ sign.
  *
  * @since BuddyBoss [BBVERSION]
