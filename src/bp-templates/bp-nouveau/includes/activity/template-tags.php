@@ -159,8 +159,7 @@ function bp_nouveau_activity_member_post_form() {
 	 */
 	do_action( 'bp_before_member_activity_post_form' );
 
-	$is_main_tab = ! bp_current_action() || strpos( bp_current_action(), 'just-me' ) !== false;
-	if ( is_user_logged_in() && $is_main_tab ) {
+	if ( is_user_logged_in() && bp_is_user_activity() ) {
 		bp_get_template_part( 'activity/post-form' );
 	}
 
@@ -272,8 +271,10 @@ function bp_nouveau_activity_state() {
 				<?php echo $like_text ?: ''; ?>
 			</span>
 		</a>
-		<span class="ac-state-separator">&middot;</span>
 		<?php if ( bp_activity_can_comment() ) :
+			?>
+			<span class="ac-state-separator">&middot;</span>
+			<?php
 			$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
 			$activity_state_class            = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
 			?>

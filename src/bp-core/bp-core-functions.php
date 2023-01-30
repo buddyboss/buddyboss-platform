@@ -6709,6 +6709,14 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		$all_notifications
 	);
 
+	$read_only_notifications = array_column( array_filter( $all_notifications ), 'notification_read_only', 'key' );
+	if (
+		isset( $read_only_notifications[ $notification_type ] ) &&
+		true === (bool) $read_only_notifications[ $notification_type ]
+	) {
+		return false;
+	}
+
 	$main = array();
 
 	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
@@ -7107,6 +7115,11 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
+		$notification_fields_read_only = array_filter( array_column( $options['fields'], 'notification_read_only', null ) );
+		$options['fields']             = ( ! empty( $notification_fields_read_only ) ? array_diff_key( $options['fields'], $notification_fields_read_only ) : $options['fields'] );
+	}
+
+	if ( ! empty( $options['fields'] ) ) {
 		?>
 
 		<table class="main-notification-settings">
@@ -7120,6 +7133,10 @@ function bb_render_notification( $notification_group ) {
 			}
 
 			foreach ( $options['fields'] as $field ) {
+
+				if ( ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'] ) {
+					continue;
+				}
 
 				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
 				?>
@@ -8131,7 +8148,7 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', 60 ) );
+	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
 }
 
 /**
@@ -8180,4 +8197,36 @@ function bb_pro_pusher_version() {
  */
 function bb_presence_time_span() {
 	return (int) apply_filters( 'bb_presence_time_span', 180 );
+}
+
+/**
+ * Function to return the presence default interval time in seconds.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @return int
+ */
+function bb_presence_default_interval() {
+	return apply_filters( 'bb_presence_default_interval', 60 );
+}
+
+/**
+ * Retrieves the number of times a filter has been applied during the current request.
+ *
+ * @since BuddyBoss 2.2.5
+ *
+ * @global int[] $wp_filters Stores the number of times each filter was triggered.
+ *
+ * @param string $hook_name  The name of the filter hook.
+ *
+ * @return int The number of times the filter hook has been applied.
+ */
+function bb_did_filter( $hook_name ) {
+	global $wp_filters;
+
+	if ( ! isset( $wp_filters[ $hook_name ] ) ) {
+		return 0;
+	}
+
+	return $wp_filters[ $hook_name ];
 }
