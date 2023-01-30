@@ -20623,6 +20623,12 @@ div.dropzone .dz-preview .dz-filename {
   color: #4d5c6d;
 }
 
+.search-document-list .media-folder_items .media-folder_details__bottom > span,
+#media-folder-document-data-table .media-folder_items .media-folder_details__bottom > span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .search-document-list .media-folder_items .media-folder_details__bottom #bb-folder-privacy,
 #media-folder-document-data-table .media-folder_items .media-folder_details__bottom #bb-folder-privacy {
   max-width: 100%;
