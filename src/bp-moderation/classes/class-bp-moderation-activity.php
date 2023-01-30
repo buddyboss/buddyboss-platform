@@ -74,7 +74,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_action( 'bp_follow_before_save', array( $this, 'bb_follow_before_save' ) );
 
 		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mentioned_link' ), 10, 2 );
-		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mentioned_link_for_deleted_user' ), 10, 2 );
 	}
 
 	/**
@@ -575,25 +574,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		$content = bb_remove_mention_link_from_content( $content );
-
-		return $content;
-	}
-
-	/**
-	 * Remove mentioned link for deleted user from activity post.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $content  Activity content.
-	 * @param object $activity Activity object.
-	 *
-	 * @return string
-	 */
-	public function bb_activity_content_remove_mentioned_link_for_deleted_user( $content, $activity ) {
-		if ( empty( $activity ) || empty( $content ) ) {
-			return $content;
-		}
-
 		$content = bb_remove_mention_deleted_user_link_from_content( $content );
 
 		return $content;

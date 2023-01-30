@@ -120,6 +120,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		}
 
 		$comment_text = bb_remove_mention_link_from_content( $comment_text );
+		$comment_text = bb_remove_mention_deleted_user_link_from_content( $comment_text );
 
 		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 
