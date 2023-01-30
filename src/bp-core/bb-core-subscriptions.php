@@ -1093,12 +1093,11 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 		}
 
 		// Clear subscription cache.
-		global $wp_object_cache;
-		if ( isset( $wp_object_cache->cache['bbpress_users'] ) ) {
-			unset( $wp_object_cache->cache['bbpress_users'] );
-		}
-		if ( isset( $wp_object_cache->cache['bb_subscriptions'] ) ) {
-			unset( $wp_object_cache->cache['bb_subscriptions'] );
+		if ( function_exists( 'wp_cache_flush_group' ) ) {
+			wp_cache_flush_group( 'bbpress_users' );
+			wp_cache_flush_group( 'bb_subscriptions' );
+		} else {
+			wp_cache_flush();
 		}
 		bp_core_reset_incrementor( 'bb_subscriptions' );
 
