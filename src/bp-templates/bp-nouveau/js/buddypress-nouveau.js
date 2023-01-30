@@ -3411,7 +3411,11 @@ window.bp = window.bp || {};
 					allInputsChecked++;
 				} );
 				if ( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
-					selected_text = textAll;
+					if ( $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length == 1 ) {
+						selected_text = selected_text;
+					} else {
+						selected_text = textAll;
+					}
 				} else {
 					selected_text = selected_text === '' ? textNone : selected_text;
 				}
