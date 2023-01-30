@@ -126,6 +126,39 @@ function xprofile_screen_edit_profile() {
 			}
 		}
 
+		if ( ! empty( $errors ) ) {
+
+			// Now we've checked for required fields, lets save the values.
+			$old_values = $new_values = array();
+			foreach ( (array) $posted_field_ids as $field_id ) {
+
+				$field_visibility = xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() );
+
+				$old_values[ $field_id ] = array(
+					'value'      => xprofile_get_field_data( $field_id, bp_displayed_user_id() ),
+					'visibility' => $field_visibility,
+				);
+
+				$new_values[ $field_id ] = array(
+					'value'      => $_POST[ 'field_' . $field_id ] ?? '',
+					'visibility' => $field_visibility,
+				);
+			}
+
+			/**
+			 * Fires after getting error while updating the profile.
+			 *
+			 * @since BuddyBoss 2.2.5
+			 *
+			 * @param int   $value            Displayed user ID.
+			 * @param array $posted_field_ids Array of field IDs that were edited.
+			 * @param bool  $errors           Whether or not any errors occurred.
+			 * @param array $old_values       Array of original values before updated.
+			 * @param array $new_values       Array of newly saved values after update.
+			 */
+			do_action( 'bb_xprofile_error_on_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
+		}
+
 		// There are validation errors.
 		if ( ! empty( $errors ) && $validations ) {
 			foreach ( $validations as $validation ) {
