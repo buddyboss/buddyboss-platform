@@ -2242,11 +2242,22 @@ function bb_update_to_2_2_5() {
  * @return void
  */
 function bb_update_to_2_2_7() {
-	wp_cache_flush();
+	// Clear cache.
+	if ( function_exists( 'wp_cache_flush_group' ) ) {
+		wp_cache_flush_group( 'bp_activity' );
+		wp_cache_flush_group( 'bp_groups' );
+		wp_cache_flush_group( 'bbpress_posts' );
+		wp_cache_flush_group( 'post_comment' );
+	} else {
+		wp_cache_flush();
+	}
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear all API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-' );
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_groups' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbpress_posts' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
 	}
 }
