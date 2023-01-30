@@ -1679,8 +1679,7 @@ function bb_remove_mention_deleted_user_link_from_content( $content ) {
 		return $content;
 	}
 
-	$usernames = bp_find_mentions_by_at_sign( array(), $content );
-
+	$usernames = bb_find_deleted_user_by_at_sign( array(), $content );
 	// No mentions? Stop now!
 	if ( empty( $usernames ) ) {
 		return $content;
