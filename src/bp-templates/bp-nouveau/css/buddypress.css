@@ -11597,9 +11597,11 @@ body .bp-messages-user-threads {
   min-width: 48px;
 }
 
-.main-notification-settings .email:last-child label {
-  font-size: 0 !important;
-  line-height: 20px !important;
+@media screen and (min-width: 900px) {
+  #buddypress .bb-bp-settings-content .main-notification-settings .email:last-child label {
+    font-size: 0;
+    line-height: 20px;
+  }
 }
 
 @media screen and (min-width: 901px) {
