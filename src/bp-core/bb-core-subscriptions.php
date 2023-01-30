@@ -557,6 +557,7 @@ function bb_create_subscription( $args = array() ) {
 	$r = bp_parse_args(
 		$args,
 		array(
+			'id'                => 0,
 			'blog_id'           => get_current_blog_id(),
 			'type'              => '',
 			'user_id'           => bp_loggedin_user_id(),
@@ -582,10 +583,39 @@ function bb_create_subscription( $args = array() ) {
 	);
 
 	if ( ! empty( $subscriptions['subscriptions'] ) ) {
+		if ( empty( $r['id'] ) ) {
+			if ( 'wp_error' === $r['error_type'] ) {
+				return new WP_Error(
+					'bb_subscriptions_create_exists',
+					__( 'The subscription is already exists.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} else {
+				return false;
+			}
+		} else {
+			$subscription = current( $subscriptions['subscriptions'] );
+			if ( ! empty( $subscription ) && $r['id'] !== $subscription->id ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error(
+						'bb_subscriptions_id_not_match',
+						__( 'The subscription ID is not match.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				} else {
+					return false;
+				}
+			}
+		}
+	} elseif ( ! empty( $r['id'] ) ) {
 		if ( 'wp_error' === $r['error_type'] ) {
 			return new WP_Error(
-				'bb_subscriptions_create_exists',
-				__( 'The subscription is already exists.', 'buddyboss' ),
+				'bb_subscriptions_not_found',
+				__( 'The subscription does\'t exists.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -596,6 +626,7 @@ function bb_create_subscription( $args = array() ) {
 	}
 
 	$new_subscription                    = new BB_Subscriptions();
+	$new_subscription->id                = $r['id'];
 	$new_subscription->blog_id           = $r['blog_id'];
 	$new_subscription->user_id           = $r['user_id'];
 	$new_subscription->type              = $r['type'];

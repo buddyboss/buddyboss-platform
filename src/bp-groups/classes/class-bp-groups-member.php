@@ -318,7 +318,9 @@ class BP_Groups_Member {
 
 		// Create a group subscription.
 		if ( $is_member_add && 1 === (int) $this->is_confirmed ) {
-			self::bb_create_group_subscription( $this->user_id, $this->group_id );
+			self::bb_create_group_subscription( $this->user_id, $this->group_id, null );
+		} else {
+			self::bb_create_group_subscription( $this->user_id, $this->group_id, $this->is_banned );
 		}
 
 		/**
@@ -1560,45 +1562,54 @@ class BP_Groups_Member {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $user_id  ID of the user.
-	 * @param int $group_id ID of the group.
+	 * @param int  $user_id  ID of the user.
+	 * @param int  $group_id ID of the group.
+	 * @param bool $status   Status of the member in the group.
 	 *
 	 * @return bool|int True on success, false on failure.
 	 */
-	public static function bb_create_group_subscription( $user_id, $group_id ) {
-		// Check if subscription is existed or not?.
-		$subscriptions = bb_get_subscriptions(
-			array(
-				'type'    => 'group',
-				'user_id' => $user_id,
-				'item_id' => $group_id,
-				'count'   => false,
-				'cache'   => false,
-				'status'  => null,
-			),
-			true
-		);
-		if ( ! empty( $subscriptions['subscriptions'] ) ) {
-			return false;
-		}
+	public static function bb_create_group_subscription( $user_id, $group_id, $status = null ) {
+		$retval = false;
+
+		// Forcefully create the group subscription.
+		BP_Core_Notification_Abstract::$no_validate = true;
 
 		// Get group parent.
 		$parent_group_id = bp_get_parent_group_id( $group_id );
 
-		BP_Core_Notification_Abstract::$no_validate = true;
-
-		$retval = bb_create_subscription(
-			array(
-				'blog_id'           => get_current_blog_id(),
-				'user_id'           => $user_id,
-				'item_id'           => $group_id,
-				'type'              => 'group',
-				'secondary_item_id' => $parent_group_id,
-			)
+		$record_args = array(
+			'blog_id'           => get_current_blog_id(),
+			'user_id'           => $user_id,
+			'item_id'           => $group_id,
+			'type'              => 'group',
+			'secondary_item_id' => $parent_group_id,
 		);
 
-		BP_Core_Notification_Abstract::$no_validate = false;
+		if ( null !== $status ) {
+			// Check if subscription is existed or not?.
+			$subscriptions = bb_get_subscriptions(
+				array(
+					'type'    => 'group',
+					'user_id' => $user_id,
+					'item_id' => $group_id,
+					'count'   => false,
+					'cache'   => false,
+					'status'  => null,
+				),
+				true
+			);
 
+			if ( ! empty( $subscriptions['subscriptions'] ) && ! empty( current( $subscriptions['subscriptions'] ) ) ) {
+				$record_args['id']     = current( $subscriptions['subscriptions'] )->id;
+				$record_args['status'] = ! $status;
+			} else {
+				return $retval;
+			}
+		}
+
+		$retval = bb_create_subscription( $record_args );
+
+		BP_Core_Notification_Abstract::$no_validate = false;
 		return $retval;
 	}
 
