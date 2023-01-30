@@ -77,6 +77,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 
 		add_filter( 'bbp_get_reply_content', array( $this, 'bb_reply_content_remove_mentioned_link' ), 10, 2 );
+		add_filter( 'bbp_get_reply_content', array( $this, 'bb_reply_content_remove_mentioned_link_for_deleted_user' ), 10, 2 );
 	}
 
 	/**
@@ -301,6 +302,26 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 
 		$content = bb_remove_mention_link_from_content( $content );
+
+		return $content;
+	}
+
+	/**
+	 * Remove mentioned link for deleted user from discussion's reply.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content  Reply content.
+	 * @param int    $reply_id Reply id.
+	 *
+	 * @return string
+	 */
+	public function bb_reply_content_remove_mentioned_link_for_deleted_user( $content, $reply_id ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$content = bb_remove_mention_deleted_user_link_from_content( $content );
 
 		return $content;
 	}
