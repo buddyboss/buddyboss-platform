@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau, Dropzone, videojs */
+/* global bp, BP_Nouveau, Dropzone, videojs, bp_media_dropzone */
 /* @version 3.1.0 */
 window.bp = window.bp || {};
 
@@ -1502,6 +1502,7 @@ window.bp = window.bp || {};
 						url                 		: BP_Nouveau.ajaxurl,
 						timeout             		: 3 * 60 * 60 * 1000,
 						dictFileTooBig          : BP_Nouveau.media.dictFileTooBig,
+						dictInvalidFileType     : bp_media_dropzone.dictInvalidFileType,
 						dictDefaultMessage  		: BP_Nouveau.media.dropzone_media_message,
 						acceptedFiles       		: 'image/*',
 						autoProcessQueue    		: true,
