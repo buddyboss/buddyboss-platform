@@ -119,6 +119,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $comment_text;
 		}
 
+		$comment_text = bb_moderation_remove_mention_link( $comment_text );
+
 		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 
 		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
