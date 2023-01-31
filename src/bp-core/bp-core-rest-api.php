@@ -436,14 +436,14 @@ function bb_input_clean( $var ) {
  *
  * @return string $content
  */
-function bb_remove_mentioned_link_from_content_raw( $content ) {
+function bb_rest_raw_content( $content ) {
 
 	if ( empty( $content ) ) {
 		return $content;
 	}
 
-	$content = function_exists( 'bb_remove_mention_link_from_content' ) ? bb_remove_mention_link_from_content( $content ) : '';
-	$content = function_exists( 'bb_remove_mention_deleted_user_link_from_content' ) ? bb_remove_mention_deleted_user_link_from_content( $content ) : '';
+	$content = function_exists( 'bb_moderation_remove_mention_link' ) ? bb_moderation_remove_mention_link( $content ) : '';
+	$content = function_exists( 'bb_mention_remove_deleted_users_link' ) ? bb_mention_remove_deleted_users_link( $content ) : '';
 
 	/**
 	 * Function will return content without mentioned link for moderated/deleted members.
@@ -452,5 +452,5 @@ function bb_remove_mentioned_link_from_content_raw( $content ) {
 	 *
 	 * @param string $content Content.
 	 */
-	return apply_filters( 'bb_remove_mentioned_link_from_content_raw', $content );
+	return apply_filters( 'bb_rest_raw_content', $content );
 }

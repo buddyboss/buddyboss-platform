@@ -1639,7 +1639,7 @@ function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id =
  *
  * @return mixed
  */
-function bb_remove_mention_link_from_content( $content ) {
+function bb_moderation_remove_mention_link( $content ) {
 
 	if ( empty( $content ) ) {
 		return $content;

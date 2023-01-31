@@ -8242,7 +8242,7 @@ function bb_did_filter( $hook_name ) {
  * @return array|bool Associative array with username as key and username as
  *                    value for deleted user. Boolean false if no mentions found.
  */
-function bb_find_deleted_user_by_at_sign( $mentioned_users, $content ) {
+function bb_mention_deleted_users( $mentioned_users, $content ) {
 	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
 	preg_match_all( $pattern, $content, $usernames );
 
@@ -8279,13 +8279,13 @@ function bb_find_deleted_user_by_at_sign( $mentioned_users, $content ) {
  *
  * @return mixed
  */
-function bb_remove_mention_deleted_user_link_from_content( $content ) {
+function bb_mention_remove_deleted_users_link( $content ) {
 
 	if ( empty( $content ) ) {
 		return $content;
 	}
 
-	$usernames = bb_find_deleted_user_by_at_sign( array(), $content );
+	$usernames = bb_mention_deleted_users( array(), $content );
 	// No mentions? Stop now!
 	if ( empty( $usernames ) ) {
 		return $content;

@@ -53,6 +53,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
 		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 
+		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mentioned_link' ), 10, 2 );
+		add_filter( 'bp_get_activity_content', array( $this, 'bb_activity_content_remove_mentioned_link' ), 10, 2 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -72,9 +75,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 
 		add_action( 'bp_follow_before_save', array( $this, 'bb_follow_before_save' ) );
-
-		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mentioned_link' ), 10, 2 );
-		add_filter( 'bp_get_activity_content', array( $this, 'bb_activity_content_remove_mentioned_link' ), 10, 2 );
 	}
 
 	/**
@@ -574,8 +574,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return $content;
 		}
 
-		$content = bb_remove_mention_link_from_content( $content );
-		$content = bb_remove_mention_deleted_user_link_from_content( $content );
+		$content = bb_moderation_remove_mention_link( $content );
+		$content = bb_mention_remove_deleted_users_link( $content );
 
 		return $content;
 	}

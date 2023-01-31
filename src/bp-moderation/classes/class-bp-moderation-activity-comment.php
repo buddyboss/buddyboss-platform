@@ -49,6 +49,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
+		add_filter( 'bp_activity_comment_content', array( $this, 'bb_activity_comment_remove_mentioned_link' ), 10, 2 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -66,8 +68,6 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
-
-		add_filter( 'bp_activity_comment_content', array( $this, 'bb_activity_comment_remove_mentioned_link' ), 10, 2 );
 	}
 
 	/**
@@ -295,8 +295,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $content;
 		}
 
-		$content = bb_remove_mention_link_from_content( $content );
-		$content = bb_remove_mention_deleted_user_link_from_content( $content );
+		$content = bb_moderation_remove_mention_link( $content );
+		$content = bb_mention_remove_deleted_users_link( $content );
 
 		return $content;
 	}

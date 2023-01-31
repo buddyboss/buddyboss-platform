@@ -53,6 +53,8 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_forum_topic_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bbp_get_topic', array( $this, 'restrict_single_item' ), 10, 2 );
 
+		add_filter( 'bbp_get_topic_content', array( $this, 'bb_topic_content_remove_mentioned_link' ), 10, 2 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -75,8 +77,6 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
 			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
-
-		add_filter( 'bbp_get_topic_content', array( $this, 'bb_topic_content_remove_mentioned_link' ), 10, 2 );
 	}
 
 	/**
@@ -283,8 +283,8 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 			return $content;
 		}
 
-		$content = bb_remove_mention_link_from_content( $content );
-		$content = bb_remove_mention_deleted_user_link_from_content( $content );
+		$content = bb_moderation_remove_mention_link( $content );
+		$content = bb_mention_remove_deleted_users_link( $content );
 
 		return $content;
 	}
