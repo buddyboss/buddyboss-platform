@@ -8269,3 +8269,40 @@ function bb_find_deleted_user_by_at_sign( $mentioned_users, $content ) {
 
 	return $mentioned_users;
 }
+
+/**
+ * Function will remove mention link from content if mentioned member is deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $content Content.
+ *
+ * @return mixed
+ */
+function bb_remove_mention_deleted_user_link_from_content( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	$usernames = bb_find_deleted_user_by_at_sign( array(), $content );
+	// No mentions? Stop now!
+	if ( empty( $usernames ) ) {
+		return $content;
+	}
+
+	foreach ( (array) $usernames as $user_id => $username ) {
+		if ( bp_is_user_inactive( $user_id ) ) {
+			preg_match_all( "'<a.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
+			if ( ! empty( $content_matches ) ) {
+				foreach ( $content_matches as $match ) {
+					if ( false !== strpos( $match[0], '@' . $username ) ) {
+						$content = str_replace( $match[0], '@' . $username, $content );
+					}
+				}
+			}
+		}
+	}
+
+	return $content;
+}
