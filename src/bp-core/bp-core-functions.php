@@ -4514,6 +4514,21 @@ function bp_find_mentions_by_at_sign( $mentioned_users, $content ) {
 	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
 	preg_match_all( $pattern, $content, $usernames );
 
+	// Get urls from content that contains @ sign.
+	preg_match_all( '#\bhttps?://[^\s]+@[^\s]+#', $content, $usernames_with_url );
+
+	// Remove the username which is part of url.
+	if ( ! empty( $usernames_with_url[0] ) && ! empty( $usernames[1] ) ) {
+		foreach ( $usernames_with_url[0] as $url ) {
+			$username = explode( '@', $url );
+			$username = end( $username );
+			$key      = array_search( $username, $usernames[1] );
+			if ( false !== $key ) {
+				unset( $usernames[1][ $key ] );
+			}
+		}
+	}
+
 	// Make sure there's only one instance of each username.
 	$usernames = array_unique( $usernames[1] );
 
