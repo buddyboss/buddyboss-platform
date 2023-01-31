@@ -68,6 +68,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_for_reply();
 
 		$this->register_notification_for_activity_post_following();
+
+		$this->register_notification_for_following();
 	}
 
 	/**
@@ -147,6 +149,38 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
+
+		if ( 'activity' === $component_name && 'bb_following_new' === $component_action_name ) {
+			$notification      = bp_notifications_get_notification( $notification_id );
+			$user_id           = $secondary_item_id;
+			$user_fullname     = bp_core_get_user_displayname( $user_id );
+			$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_core_get_user_domain( $user_id ) );
+
+			if ( 'web_push' === $screen ) {
+				$text = esc_html__( 'Started following you', 'buddyboss' );
+			} else {
+				$text = sprintf(
+				/* translators: %s: User full name. */
+					__( '%1$s started following you', 'buddyboss' ),
+					$user_fullname
+				);
+			}
+
+			$content = apply_filters(
+				'bb_activity_single_' . $notification->component_action . '_notification',
+				array(
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => $user_fullname,
+					'image' => bb_notification_avatar_url( $notification ),
+				),
+				$notification,
+				$notification_link,
+				$text,
+				$screen
+			);
+		}
+
 		return $content;
 	}
 
@@ -531,14 +565,17 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_activity_post_following() {
 		$notification_read_only    = false;
 		$notification_tooltip_text = '';
-		if ( ! bp_is_activity_follow_active() ) {
+		if ( function_exists( 'bp_is_activity_follow_active' ) && ! bp_is_activity_follow_active() ) {
 			$notification_read_only   = true;
 			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 			if (
-				isset( $enabled_all_notification['bb_activity_following_post'] ) &&
-				! empty( $enabled_all_notification['bb_activity_following_post']['main'] ) &&
-				'yes' === $enabled_all_notification['bb_activity_following_post']['main']
+				(
+					isset( $enabled_all_notification['bb_activity_following_post'] ) &&
+					! empty( $enabled_all_notification['bb_activity_following_post']['main'] ) &&
+					'yes' === $enabled_all_notification['bb_activity_following_post']['main']
+				) ||
+				! isset( $enabled_all_notification['bb_activity_following_post'] )
 			) {
 				$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
 			} else {
@@ -785,5 +822,70 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Register notification for following users.
+	 *
+	 * @since BuddyBoss 2.2.5
+	 */
+	public function register_notification_for_following() {
+		$notification_read_only    = false;
+		$notification_tooltip_text = '';
+		if ( function_exists( 'bp_is_activity_follow_active' ) && ! bp_is_activity_follow_active() ) {
+			$notification_read_only   = true;
+			$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+			if (
+				(
+					isset( $enabled_all_notification['bb_following_new'] ) &&
+					! empty( $enabled_all_notification['bb_following_new']['main'] ) &&
+					'yes' === $enabled_all_notification['bb_following_new']['main']
+				) ||
+				! isset( $enabled_all_notification['bb_following_new'] )
+			) {
+				$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
+			} else {
+				$notification_tooltip_text = __( 'Requires activity follow to enable', 'buddyboss' );
+			}
+		}
+
+		$this->register_notification_type(
+			'bb_following_new',
+			esc_html__( 'A member starts following you', 'buddyboss' ),
+			esc_html__( 'A member is followed by someone', 'buddyboss' ),
+			'activity',
+			true,
+			$notification_read_only,
+			$notification_tooltip_text
+		);
+
+		$this->register_email_type(
+			'new-follower',
+			array(
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_title'         => __( '[{{{site.name}}}] {{follower.name}} started following you', 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_content'       => __( "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n\n{{{member.card}}}", 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_plain_content' => __( "{{follower.name}} started following you.\n\nTo learn more about them, visit their profile: {{{follower.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'A member receives a new follower', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone follows you.', 'buddyboss' ),
+			),
+			'bb_following_new'
+		);
+
+		$this->register_notification(
+			'activity',
+			'bb_following_new',
+			'bb_following_new',
+			''
+		);
+
+		$this->register_notification_filter(
+			esc_html__( 'New Follower', 'buddyboss' ),
+			array( 'bb_following_new' ),
+			17
+		);
 	}
 }
