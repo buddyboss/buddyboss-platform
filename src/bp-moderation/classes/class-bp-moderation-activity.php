@@ -53,8 +53,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
 		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 
-		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mentioned_link' ), 10, 2 );
-		add_filter( 'bp_get_activity_content', array( $this, 'bb_activity_content_remove_mentioned_link' ), 10, 2 );
+		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mention_link' ), 10, 1 );
+		add_filter( 'bp_get_activity_content', array( $this, 'bb_activity_content_remove_mention_link' ), 10, 1 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
@@ -569,8 +569,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @return string
 	 */
-	public function bb_activity_content_remove_mentioned_link( $content, $activity ) {
-		if ( empty( $activity ) || empty( $content ) ) {
+	public function bb_activity_content_remove_mention_link( $content ) {
+		if ( empty( $content ) ) {
 			return $content;
 		}
 

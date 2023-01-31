@@ -53,7 +53,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_forum_reply_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
-		add_filter( 'bbp_get_reply_content', array( $this, 'bb_reply_content_remove_mentioned_link' ), 10, 2 );
+		add_filter( 'bbp_get_reply_content', array( $this, 'bb_reply_content_remove_mention_link' ), 10, 2 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
@@ -295,7 +295,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 *
 	 * @return string
 	 */
-	public function bb_reply_content_remove_mentioned_link( $content, $reply_id ) {
+	public function bb_reply_content_remove_mention_link( $content, $reply_id ) {
 		if ( empty( $content ) ) {
 			return $content;
 		}
