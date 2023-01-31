@@ -11,7 +11,7 @@
 ?>
 
 <input type="hidden" id="thread-id" value="" />
-<div class="bp-messages-container">
+<div class="bp-messages-container bp-view-message">
 	<div class="bp-messages-nav-panel loading">
 		<div class="message-header-loading bp-hide">
 			<div class="message-header-loading_top">
