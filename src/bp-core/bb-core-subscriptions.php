@@ -1259,6 +1259,7 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 
 	if ( empty( $groups ) ) {
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
+		delete_site_option( 'bb_group_subscriptions_migrated_count' );
 		delete_transient( 'bb_migrate_group_subscriptions' );
 		return;
 	}
