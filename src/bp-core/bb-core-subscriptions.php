@@ -1180,7 +1180,6 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
  * @return array|void Return array when it called directly otherwise call recursively.
  */
 function bb_migrate_group_subscription( $is_background = false ) {
-	static $cache = array();
 	if ( ! bp_is_active( 'groups' ) ) {
 		return;
 	}
@@ -1212,28 +1211,27 @@ function bb_migrate_group_subscription( $is_background = false ) {
 	if ( ! empty( $all_groups ) ) {
 		bb_migrating_group_member_subscriptions( $all_groups, $is_background );
 		if ( ! $is_background ) {
-			$total = count( $all_groups );
-			if ( isset( $cache['total'] ) ) {
-				$total = $cache['total'] + $total;
-			}
-			$cache['total'] = $total;
+			$total      = count( $all_groups );
+			$last_total = get_site_option( 'bb_group_subscriptions_migrated_count', 0 );
+			$total      = (int) $last_total + $total;
+			update_site_option( 'bb_group_subscriptions_migrated_count', $total );
 
 			$records_updated = sprintf(
 			/* translators: total topics */
-				_n( '%d group forum and discussion subscriptions migrated successfully', '%d groups forum and discussion subscriptions migrated successfully', bp_core_number_format( $cache['total'] ), 'buddyboss' ),
-				bp_core_number_format( $cache['total'] )
+				_n( '%d group forum and discussion subscriptions migrated successfully', '%d groups forum and discussion subscriptions migrated successfully', bp_core_number_format( $total ), 'buddyboss' ),
+				bp_core_number_format( $total )
 			);
 
 			return array(
 				'status'  => 'running',
-				'offset'  => $cache['total'],
+				'offset'  => $total,
 				'records' => $records_updated,
 			);
 		}
 	} else {
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
+		delete_site_option( 'bb_group_subscriptions_migrated_count' );
 		delete_transient( 'bb_migrate_group_subscriptions' );
-		unset( $cache['total'] );
 
 		/* translators: Status of current action. */
 		$statement = __( 'Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s', 'buddyboss' );
@@ -1309,11 +1307,11 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 		}
 	}
 
-	// Update the migration offset.
-	$page = get_site_option( 'bb_group_subscriptions_migrate_page', 1 ) + 1;
-	update_site_option( 'bb_group_subscriptions_migrate_page', $page );
-
 	if ( $is_background ) {
+		// Update the migration offset.
+		$page = get_site_option( 'bb_group_subscriptions_migrate_page', 1 ) + 1;
+		update_site_option( 'bb_group_subscriptions_migrate_page', $page );
+
 		// Call recursive until group not found.
 		bb_migrate_group_subscription( $is_background );
 	}
