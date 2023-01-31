@@ -1181,9 +1181,8 @@ function bb_migrate_group_subscription( $is_background = false ) {
 	}
 
 	if ( ! empty( $all_groups ) ) {
-		$response = bb_migrating_group_member_subscriptions( $all_groups, $is_background );
-		if ( $response && ! $is_background ) {
-
+		bb_migrating_group_member_subscriptions( $all_groups, $is_background );
+		if ( ! $is_background ) {
 			$total = count( $all_groups );
 			if ( isset( $cache['total'] ) ) {
 				$total = $cache['total'] + $total;
@@ -1234,7 +1233,7 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 	if ( empty( $groups ) ) {
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
 		delete_transient( 'bb_migrate_group_subscriptions' );
-		return;
+		return false;
 	}
 
 	$bp = buddypress();
