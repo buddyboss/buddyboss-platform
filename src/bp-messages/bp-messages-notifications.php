@@ -261,6 +261,7 @@ function bp_messages_message_sent_add_notification( $message ) {
 							$action,
 							bp_core_current_time(),
 							true,
+							$message->sender_id,
 						),
 					),
 				)
@@ -268,6 +269,10 @@ function bp_messages_message_sent_add_notification( $message ) {
 			$bb_notifications_background_updater->save()->dispatch();
 		} else {
 			foreach ( (array) $message->recipients as $recipient ) {
+				// Check the sender is blocked by/blocked/suspended/deleted recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $message->sender_id ) ) {
+					continue;
+				}
 				bp_notifications_add_notification(
 					array(
 						'user_id'           => $recipient->user_id,

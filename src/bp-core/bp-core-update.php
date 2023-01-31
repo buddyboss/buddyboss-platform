@@ -397,6 +397,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19381 ) {
 			bb_update_to_2_2_6();
 		}
+
+		if ( $raw_db_version < 19481 ) {
+			bb_update_to_2_2_7();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2277,4 +2281,26 @@ function bb_migrate_subscriptions() {
 
 	// Flush the cache to delete all old cached subscriptions.
 	wp_cache_flush();
+}
+
+/**
+ * Clear web cache on the update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_7() {
+	// Clear notifications cache.
+	if ( function_exists( 'wp_cache_flush_group' ) ) {
+		wp_cache_flush_group( 'bp-notifications' );
+	} else {
+		wp_cache_flush();
+	}
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear notifications API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+	}
 }

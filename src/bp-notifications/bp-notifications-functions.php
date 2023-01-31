@@ -756,8 +756,9 @@ function bb_notifications_background_enabled() {
  * @param string $component_action  Notification component action.
  * @param string $date_notified     Notification date.
  * @param bool   $is_new            Setup the notification is unread or read.
+ * @param int    $sender_id         Sender user id.
  */
-function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true ) {
+function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true, $sender_id = 0 ) {
 	if (
 		empty( $user_ids ) ||
 		empty( $item_id ) ||
@@ -775,6 +776,14 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 	foreach ( $user_ids as $user_id ) {
 
 		if ( empty( $user_id ) ) {
+			continue;
+		}
+
+		// Check the sender is blocked by/blocked/suspended recipient or not.
+		if (
+			! empty( $sender_id ) &&
+			true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $sender_id )
+		) {
 			continue;
 		}
 
@@ -1578,7 +1587,17 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 		}
 	}
 
-	return $renderable;
+	/**
+	 * Filter will return notifications data which will render.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed  $renderable        Notifications data which will render.
+	 * @param string $notification_item Notifications item.
+	 * @param string $format            Format of the notification.
+	 * @param string $screen            Screen of the notification.
+	 */
+	return apply_filters( 'bb_notification_get_renderable_notifications', $renderable, $notification_item, $format, $screen );
 }
 
 
@@ -1730,3 +1749,128 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
 
 	return $where_sql;
 }
+
+/**
+ * Function to check if notification triggered by blocked/blocked by/suspended/deleted member
+ * then this notification will only for read purpose.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $notification Notification item.
+ *
+ * @return bool
+ */
+function bb_notification_is_read_only( $notification ) {
+	$retval = ! empty( $notification ) &&
+			  (
+				  (
+					  ! empty( $notification->secondary_item_id ) &&
+					  bp_is_user_inactive( $notification->secondary_item_id )
+				  ) || (
+					  bp_is_active( 'moderation' ) &&
+					  (
+						  (
+							  ! empty( $notification->secondary_item_id ) &&
+							  bb_moderation_moderated_user_ids( $notification->secondary_item_id )
+						  ) ||
+						  (
+							  ! empty( $notification->user_id ) &&
+							  bb_moderation_moderated_user_ids( $notification->user_id )
+						  )
+					  )
+				  )
+			  );
+
+	return (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
+}
+
+/**
+ * Function will remove link from notification description.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $renderable   Notification details.
+ * @param object $notification Notification item.
+ * @param string $format       Format of the notification.
+ * @param string $screen       Screen of the notification.
+ *
+ * @return string|string[]|null
+ */
+function bb_notification_get_renderable_notifications_callback( $renderable, $notification, $format, $screen ) {
+
+	if ( true === bb_notification_is_read_only( $notification ) ) {
+		if ( 'string' === $format ) {
+			$renderable = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $renderable );
+		} elseif ( 'object' === $format || 'array' === $format ) {
+			if ( is_object( $renderable ) ) {
+				$renderable->href = '';
+			} else {
+				$renderable['href'] = '';
+			}
+		}
+	}
+
+	return $renderable;
+}
+add_filter( 'bb_notification_get_renderable_notifications', 'bb_notification_get_renderable_notifications_callback', 99, 4 );
+
+/**
+ * Function will remove link from notification description.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $description  Notification details.
+ * @param object $notification Notification item.
+ *
+ * @return string|string[]|null
+ */
+function bb_get_the_notification_description_callback( $description, $notification ) {
+
+	if ( true === bb_notification_is_read_only( $notification ) ) {
+		$description = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $description );
+	}
+
+	return $description;
+
+}
+add_filter( 'bp_get_the_notification_description', 'bb_get_the_notification_description_callback', 99, 2 );
+
+/**
+ * Function will forcely read notification which triggered by blocked/blocked by/suspended member.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_notification_read_for_moderated_members() {
+	$current_user_id = bp_loggedin_user_id();
+
+	if ( ! $current_user_id ) {
+		return;
+	}
+
+	$read_notification_migration = bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+
+	if ( $read_notification_migration ) {
+		return;
+	}
+
+	global $bp, $wpdb;
+	$select_sql  = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
+	$select_sql .= ' WHERE is_new = 1';
+
+	$select_sql_where = array();
+	$all_users        = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
+
+	if ( ! empty( $all_users ) ) {
+		$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $all_users ) . ' )';
+	}
+	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
+
+	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' )';
+
+	$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ({$select_sql})";
+	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+}
+
+add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
