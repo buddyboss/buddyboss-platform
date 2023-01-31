@@ -85,6 +85,7 @@ window.bp = window.bp || {};
 				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 				thumbnailWidth				 : 140,
 				thumbnailHeight				 : 140,
+				dictInvalidFileType      : bp_media_dropzone.dictInvalidFileType,
 				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
 				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
