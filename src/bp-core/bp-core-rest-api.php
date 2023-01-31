@@ -445,5 +445,12 @@ function bb_remove_mentioned_link_from_content_raw( $content ) {
 	$content = bb_remove_mention_link_from_content( $content );
 	$content = bb_remove_mention_deleted_user_link_from_content( $content );
 
-	return $content;
+	/**
+	 * Function will return content without mentioned link for moderated/deleted members.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content Content.
+	 */
+	return apply_filters( 'bb_remove_mentioned_link_from_content_raw', $content );
 }
