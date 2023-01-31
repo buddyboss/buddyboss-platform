@@ -1233,7 +1233,7 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 	if ( empty( $groups ) ) {
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
 		delete_transient( 'bb_migrate_group_subscriptions' );
-		return false;
+		return;
 	}
 
 	$bp = buddypress();
@@ -1287,8 +1287,6 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 	if ( $is_background ) {
 		// Call recursive until group not found.
 		bb_migrate_group_subscription( $is_background );
-	} else {
-		return true;
 	}
 }
 
@@ -1346,5 +1344,4 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
 	}
 
 	groups_update_groupmeta( $group_id, 'bb_subscription_migrated_v2', 'yes' );
-	return true;
 }
