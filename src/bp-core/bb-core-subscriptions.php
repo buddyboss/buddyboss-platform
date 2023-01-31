@@ -131,6 +131,12 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						continue;
 					}
 
+					// Check if forum is group forum or not?
+					$group_ids = function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+					if ( ! empty( $group_ids ) ) {
+						continue;
+					}
+
 					$record_args = array(
 						'user_id'           => (int) $user_id,
 						'item_id'           => (int) $forum_id,
@@ -167,6 +173,15 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					$topic = get_post( $topic_id );
 
 					if ( $topic_post_type !== $topic->post_type || empty( $topic->ID ) ) {
+						continue;
+					}
+
+					// Get forum id.
+					$forum_id = function_exists( 'bbp_get_topic_forum_id' ) ? bbp_get_topic_forum_id( $topic_id ) : $topic->post_parent;
+
+					// Check if forum is group forum or not?
+					$group_ids = function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+					if ( ! empty( $group_ids ) ) {
 						continue;
 					}
 
@@ -406,14 +421,28 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 
 			// Get subscription type by post type.
 			$subscription_type = '';
+			$forum_id          = '';
 			if ( $post->post_type === $forum_post_type ) {
 				$subscription_type = 'forum';
+
+				// Get forum id.
+				$forum_id = $post_id;
+
 			} elseif ( $post->post_type === $topic_post_type ) {
 				$subscription_type = 'topic';
+
+				// Get forum id.
+				$forum_id = function_exists( 'bbp_get_topic_forum_id' ) ? bbp_get_topic_forum_id( $post_id ) : $post->post_parent;
 			}
 
 			// Bail if subscription type is empty.
-			if ( empty( $subscription_type ) ) {
+			if ( empty( $subscription_type ) || empty( $forum_id ) ) {
+				continue;
+			}
+
+			// Check if forum is group forum or not?
+			$group_ids = function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+			if ( ! empty( $group_ids ) ) {
 				continue;
 			}
 
