@@ -442,8 +442,8 @@ function bb_rest_raw_content( $content ) {
 		return $content;
 	}
 
-	$content = function_exists( 'bb_moderation_remove_mention_link' ) ? bb_moderation_remove_mention_link( $content ) : '';
-	$content = function_exists( 'bb_mention_remove_deleted_users_link' ) ? bb_mention_remove_deleted_users_link( $content ) : '';
+	$content = function_exists( 'bb_moderation_remove_mention_link' ) ? bb_moderation_remove_mention_link( $content ) : $content;
+	$content = function_exists( 'bb_mention_remove_deleted_users_link' ) ? bb_mention_remove_deleted_users_link( $content ) : $content;
 
 	/**
 	 * Function will return content without mentioned link for moderated/deleted members.
