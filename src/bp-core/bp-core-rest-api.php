@@ -442,8 +442,8 @@ function bb_remove_mentioned_link_from_content_raw( $content ) {
 		return $content;
 	}
 
-	$content = bb_remove_mention_link_from_content( $content );
-	$content = bb_remove_mention_deleted_user_link_from_content( $content );
+	$content = function_exists( 'bb_remove_mention_link_from_content' ) ? bb_remove_mention_link_from_content( $content ) : '';
+	$content = function_exists( 'bb_remove_mention_deleted_user_link_from_content' ) ? bb_remove_mention_deleted_user_link_from_content( $content ) : '';
 
 	/**
 	 * Function will return content without mentioned link for moderated/deleted members.
