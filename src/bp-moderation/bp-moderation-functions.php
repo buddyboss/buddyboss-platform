@@ -344,7 +344,7 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int $user_id          The ID for the user.
+ * @param int $user_id          The ID for the current user.
  * @param int $blocking_user_id The ID for the user who blocked user.
  *
  * @return bool True if suspended, otherwise false.
@@ -1628,4 +1628,64 @@ function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id =
 	 */
 
 	return apply_filters( 'bb_moderation_is_suspended_message', $value, $item_type, $item_id );
+}
+
+/**
+ * Fetch all suspended user_ids.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $force Bypass cache or not.
+ *
+ * @return array|mixed
+ */
+function bb_moderation_get_suspended_user_ids( $force = false ) {
+	static $cache = array();
+	global $wpdb, $bp;
+
+	$cache_key = 'bb_moderation_suspended_user_ids';
+	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
+		$result = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT item_id FROM {$bp->moderation->table_name} WHERE item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
+		$data   = ! empty( $result ) ? array_map( 'intval', $result ) : array();
+
+		$cache[ $cache_key ] = $data;
+	} else {
+		$data = $cache[ $cache_key ];
+	}
+
+	return $data;
+}
+
+/**
+ * Fetch all moderated user or check the user is moderated or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ *
+ * @return array|bool
+ */
+function bb_moderation_moderated_user_ids( $user_id = 0 ) {
+	$hidden_users_ids   = bp_moderation_get_hidden_user_ids(); // Blocked user_ids.
+	$blocked_by_members = bb_moderation_get_blocked_by_user_ids(); // Blocked by user_ids.
+	$suspended_user_id  = bb_moderation_get_suspended_user_ids();
+
+	$all_users = array();
+	if ( ! empty( $hidden_users_ids ) ) {
+		$all_users = array_unique( array_merge( $hidden_users_ids, $all_users ) );
+	}
+
+	if ( ! empty( $blocked_by_members ) ) {
+		$all_users = array_unique( array_merge( $blocked_by_members, $all_users ) );
+	}
+
+	if ( ! empty( $suspended_user_id ) ) {
+		$all_users = array_unique( array_merge( $suspended_user_id, $all_users ) );
+	}
+
+	if ( empty( $user_id ) ) {
+		return $all_users;
+	}
+
+	return in_array( $user_id, $all_users, true );
 }
