@@ -1158,7 +1158,7 @@ function bb_groups_repair_group_subscriptions( $repair_list ) {
 	if ( bp_is_active( 'groups' ) ) {
 		$repair_list[] = array(
 			'bb-repair-group-subscription',
-			esc_html__( 'Repair Groups Subscriptions', 'buddyboss' ),
+			esc_html__( 'Migrate Group forum and discussion subscriptions data structure to the new subscription flow', 'buddyboss' ),
 			'bb_migrate_group_subscription',
 		);
 	}

@@ -1191,7 +1191,7 @@ function bb_migrate_group_subscription( $is_background = false ) {
 
 			$records_updated = sprintf(
 			/* translators: total topics */
-				_n( '%d group subscriptions updated successfully', '%d groups subscriptions updated successfully', bp_core_number_format( $cache['total'] ), 'buddyboss' ),
+				_n( '%d group forum and discussion subscriptions migrated successfully', '%d groups forum and discussion subscriptions migrated successfully', bp_core_number_format( $cache['total'] ), 'buddyboss' ),
 				bp_core_number_format( $cache['total'] )
 			);
 
@@ -1207,7 +1207,7 @@ function bb_migrate_group_subscription( $is_background = false ) {
 		unset( $cache['total'] );
 
 		/* translators: Status of current action. */
-		$statement = __( 'Repairing groups subscriptions&hellip; %s', 'buddyboss' );
+		$statement = __( 'Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s', 'buddyboss' );
 
 		// All done!
 		return array(
