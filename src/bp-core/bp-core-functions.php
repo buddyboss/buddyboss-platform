@@ -4520,11 +4520,16 @@ function bp_find_mentions_by_at_sign( $mentioned_users, $content ) {
 	// Remove the username which is part of url.
 	if ( ! empty( $usernames_with_url[0] ) && ! empty( $usernames[1] ) ) {
 		foreach ( $usernames_with_url[0] as $url ) {
+			// Remove tags if any in url.
+			$url = strip_tags( $url );
+
+			// Get username from url.
 			$username = explode( '@', $url );
 			$username = end( $username );
 			$key      = array_search( $username, $usernames[1] );
 			if ( false !== $key ) {
 				unset( $usernames[1][ $key ] );
+				unset( $usernames[0][ $key ] );
 			}
 		}
 	}
