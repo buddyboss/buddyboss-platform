@@ -74,6 +74,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_action( 'bp_follow_before_save', array( $this, 'bb_follow_before_save' ) );
 
 		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mentioned_link' ), 10, 2 );
+		add_filter( 'bp_get_activity_content', array( $this, 'bb_activity_content_remove_mentioned_link' ), 10, 2 );
 	}
 
 	/**
