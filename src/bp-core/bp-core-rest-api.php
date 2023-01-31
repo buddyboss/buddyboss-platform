@@ -426,3 +426,24 @@ function bb_input_clean( $var ) {
 		return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 	}
 }
+
+/**
+ * Function to remove mentioned link for moderated and deleted members from content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content.
+ *
+ * @return string $content
+ */
+function bb_remove_mentioned_link_from_content_raw( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	$content = bb_remove_mention_link_from_content( $content );
+	$content = bb_remove_mention_deleted_user_link_from_content( $content );
+
+	return $content;
+}
