@@ -219,6 +219,18 @@
 		bottom: 0;
 		width: 36%;
 	}
+
+	@media screen and (max-width: 544px) {
+
+		.act-grid-1-1.bb-vertical-layout + div,
+		.act-grid-1-1.bb-vertical-layout + div + div,
+		.act-grid-1-1.bb-vertical-layout + div + div + div {
+			position: static;
+			width: 100%;
+		}
+
+	}
+
 }
 
 .bb-activity-media-wrap.bb-media-length-4 {
