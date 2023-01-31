@@ -8237,7 +8237,7 @@ function bb_did_filter( $hook_name ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param array  $mentioned_users Associative array with user IDs as keys and usernames as values.
- * @param string $content         Content
+ * @param string $content         Content.
  *
  * @return array|bool Associative array with username as key and username as
  *                    value for deleted user. Boolean false if no mentions found.
@@ -8247,7 +8247,7 @@ function bb_find_deleted_user_by_at_sign( $mentioned_users, $content ) {
 	preg_match_all( $pattern, $content, $usernames );
 
 	// Make sure there's only one instance of each username.
-	$usernames = array_unique( $usernames[1] );
+	$usernames = ! empty( $usernames[1] ) ? array_unique( $usernames[1] ) : array();
 
 	// Bail if no usernames.
 	if ( empty( $usernames ) ) {
