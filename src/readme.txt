@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2.4
+Stable tag: 2.2.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,31 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.2.5 =
+* Notifications - Provided new notification type to trigger when members on the network follow other members
+* Profiles - Handled duplicate profile fieldset issue when updated from the dashboard
+* Profiles - Handled fieldset saving empty fields and not getting deleted issues
+* Forums - Handled 'Recent Replies' widget layout and alignment issue
+* Forums - Handled edit reply option not working critical issue
+* Forums - Handled auto-generated activity for discussion issues when comments were added from the dashboard
+* Forums - Handled auto-generated activity for discussion backslash not showing issue when it exists
+* Forums - Handled forum widget 'Parent forum ID' not working issue
+* Private Network - Handled private website 'Public Website Content' not working as expected
+* Media - Handled upload photos modal in album, 'select photos' load more not working issue
+* Media - Handled media upload textarea not showing issue when forum component is disabled
+* Messages - Small improvements to show restrict icon for members not allowed to send a message based on access control rules
+* Messages - Handled exact time not showing issue next to the avatar in a single message thread
+* Messages - Handled compose message search recipient small UX issue
+* Messages - Handled 'blockquote' formatting UX issue on message send action
+* Moderation - Improved the suspended and blocked members comments content logic on blog posts and comments widget
+* Moderation - Small performance improvement by removing multiple moderation queries
+* Network Search - Handled search performance issues for posts in a big network
+* Network Search - Handled forum replies issue in search results not linking to the main content
+* Core - Handled emoji picker modal layout issue in the responsive view
+* Core - Handled plugin editor not working issue in the dashboard
+* Coding Standards - Small code refactoring to handle template issues with third-party themes
+* REST API - Provided API support for improved suspended and blocked members blog comments content logic
 
 = 2.2.4 =
 * Activity - Handled activity form not showing issue when media options are disabled
