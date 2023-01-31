@@ -243,18 +243,22 @@
 		}
 	}
 
-	.act-grid-1-1.bb-vertical-layout + div {
+	.act-grid-1-1.bb-vertical-layout + div,
+	.act-grid-1-1.bb-vertical-layout + div + div,
+	.act-grid-1-1.bb-vertical-layout + div + div + div {
 		position: absolute;
 		right: 0;
-		top: 33.4%;
+		top: 0;
 		width: 36%;
 	}
 
 	.act-grid-1-1.bb-vertical-layout + div + div {
-		position: absolute;
-		right: 0;
+		top: 33.4%;
+	}
+
+	.act-grid-1-1.bb-vertical-layout + div + div + div {
+		top: initial;
 		bottom: 0;
-		width: 36%;
 	}
 }
 
