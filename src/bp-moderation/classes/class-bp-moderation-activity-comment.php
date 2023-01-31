@@ -296,7 +296,6 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		}
 
 		$content = bb_moderation_remove_mention_link( $content );
-		$content = bb_mention_remove_deleted_users_link( $content );
 
 		return $content;
 	}
