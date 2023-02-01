@@ -2558,10 +2558,20 @@ function bb_messages_get_group_join_leave_text( $args ) {
 			'thread_id'  => 0,
 			'message_id' => 0,
 			'user_id'    => get_current_user_id(),
+			'sender_id'  => 0,
 			'group_name' => '',
 			'type'       => 'joined',
 		)
 	);
+
+	// Set default message if meta doesn't exist.
+	if ( ! empty( $r['sender_id'] ) ) {
+		/* translators: 1. Member Name. */
+		$content = sprintf(
+			( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss' ) : __( '%1$s joined the group.', 'buddyboss' ) ),
+			'<strong>' . bp_core_get_user_displayname( $r['sender_id'] ) . '</strong>'
+		);
+	}
 
 	if ( empty( $r['thread_id'] ) || empty( $r['message_id'] ) ) {
 		return $content;

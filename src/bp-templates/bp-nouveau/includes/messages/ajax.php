@@ -2333,6 +2333,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'thread_id'  => $bp_get_the_thread_id,
 						'message_id' => $bp_get_the_thread_message_id,
 						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
 						'type'       => 'left',
 					)
 				);
@@ -2343,6 +2344,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'thread_id'  => $bp_get_the_thread_id,
 						'message_id' => $bp_get_the_thread_message_id,
 						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
 						'type'       => 'joined',
 					)
 				);
@@ -2410,6 +2412,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'thread_id'  => $bp_get_the_thread_id,
 						'message_id' => $bp_get_the_thread_message_id,
 						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
 						'type'       => 'left',
 					)
 				);
@@ -2420,6 +2423,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'thread_id'  => $bp_get_the_thread_id,
 						'message_id' => $bp_get_the_thread_message_id,
 						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
 						'type'       => 'joined',
 					)
 				);
