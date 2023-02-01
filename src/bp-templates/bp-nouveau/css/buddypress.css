@@ -26614,10 +26614,27 @@ span.icons:before {
   margin: 20px;
 }
 
-.bp-single-message-content .bp-message-content-wrap p.joined {
+.bp-single-message-wrap .bb-messages-group-notices {
+  width: 100%;
+  text-align: center;
   color: #847d7d;
-  font-style: italic;
+  font-size: 11px;
   font-weight: 500;
+  line-height: 17px;
+  margin: -5px 0;
+}
+
+.bp-single-message-wrap .bb-messages-group-notices p {
+  margin-bottom: 0;
+  line-height: 17px;
+}
+
+.bp-single-message-wrap .bb-messages-group-notices strong {
+  font-weight: 600;
+}
+
+.bp-single-message-wrap .bb-messages-group-notices .bp-tooltip {
+  display: inline-block;
 }
 
 .total-members-text:empty {
