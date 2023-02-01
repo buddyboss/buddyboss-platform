@@ -2260,10 +2260,17 @@ function bp_video_download_link( $attachment_id, $video_id ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_download_url_file() {
+<<<<<<< Updated upstream
 	$attachment_id       = filter_input( INPUT_GET, 'attachment_id', FILTER_SANITIZE_STRING );
 	$download_video_file = filter_input( INPUT_GET, 'download_video_file', FILTER_SANITIZE_STRING );
 	$video_file          = filter_input( INPUT_GET, 'video_file', FILTER_SANITIZE_STRING );
 	$video_type          = filter_input( INPUT_GET, 'video_type', FILTER_SANITIZE_STRING );
+=======
+	$attachment_id       = htmlspecialchars(INPUT_GET['attachment_id'], ENT_QUOTES, 'UTF-8');
+	$download_video_file = htmlspecialchars(INPUT_GET['download_video_file'], ENT_QUOTES, 'UTF-8');
+	$video_file          = htmlspecialchars(INPUT_GET['video_file'], ENT_QUOTES, 'UTF-8');
+	$video_type          = htmlspecialchars(INPUT_GET['video_type'], ENT_QUOTES, 'UTF-8');
+>>>>>>> Stashed changes
 	$can_download_btn    = false;
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification

@@ -184,7 +184,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							</div>
 
 							<div class="flex only-grid-view align-items-center primary-action justify-center">
-								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
+								<?php if ( isset( $profile_actions['primary'] ) ) {echo wp_kses_post( $profile_actions['primary'] );} ?>
 							</div>
 						</div><!-- // .item -->
 
@@ -197,7 +197,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 								<?php
 							}
 
-							if ( $profile_actions['primary'] ) {
+							if ( isset( $profile_actions['primary'] ) && $profile_actions['primary'] ) {
 								?>
 								<div class="flex only-list-view align-items-center primary-action justify-center">
 									<?php echo wp_kses_post( $profile_actions['primary'] ); ?>

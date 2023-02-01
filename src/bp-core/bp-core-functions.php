@@ -5928,7 +5928,7 @@ function bb_check_server_disabled_symlink() {
  * @since BuddyBoss 1.8.6
  */
 function bb_restricate_rss_feed() {
-	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 	if (
 		strpos( $actual_link, '/feed/' ) === false &&
 		strpos( $actual_link, 'feed=' ) === false
