@@ -1689,3 +1689,85 @@ function bb_moderation_moderated_user_ids( $user_id = 0 ) {
 
 	return in_array( $user_id, $all_users, true );
 }
+
+function bb_moderation_allowed_specific_notification( $args ) {
+	$type                    = isset( $args['type'] ) ? $args['type'] : '';
+	$recipient_user_id       = isset( $args['recipient_user_id'] ) ? $args['recipient_user_id'] : '';
+	$author_id               = isset( $args['author_id'] ) ? $args['author_id'] : '';
+	$group_id                = isset( $args['group_id'] ) ? $args['group_id'] : '';
+	$send_email_notification = true;
+	switch ( $type ) {
+		case 'activity':
+			if (
+				bp_moderation_is_user_suspended( $recipient_user_id ) ||
+				(
+					(
+						bp_moderation_is_user_blocked( $recipient_user_id ) ||
+						bb_moderation_is_user_blocked_by( $recipient_user_id )
+					) &&
+					(
+						empty( $group_id ) ||
+						(
+							! empty( $group_id ) &&
+							bp_is_active( 'groups' ) &&
+							(
+								! groups_is_user_admin( $author_id, $group_id ) &&
+								! groups_is_user_mod( $author_id, $group_id )
+							)
+						)
+					)
+				)
+			) {
+				$send_email_notification = false;
+			}
+			break;
+		case 'message':
+			if (
+				bp_moderation_is_user_suspended( $recipient_user_id ) ||
+				(
+					bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+					! empty( $group_id ) &&
+					bp_is_active( 'groups' ) &&
+					(
+						! groups_is_user_admin( $recipient_user_id, $group_id ) &&
+						! groups_is_user_mod( $recipient_user_id, $group_id )
+					)
+				)
+			) {
+				$send_email_notification = false;
+			}
+			break;
+		case 'forum':
+			if (
+				bp_moderation_is_user_suspended( $recipient_user_id ) ||
+				(
+					(
+						bp_moderation_is_user_blocked( $recipient_user_id ) ||
+						bb_moderation_is_user_blocked_by( $recipient_user_id )
+					) &&
+					(
+						(
+							empty( $group_id ) &&
+							(int) $recipient_user_id !== (int) $author_id
+						)
+						||
+						(
+							! empty( $group_id ) &&
+							bp_is_active( 'groups' ) &&
+							(
+								! groups_is_user_admin( $recipient_user_id, $group_id ) &&
+								! groups_is_user_mod( $recipient_user_id, $group_id )
+							)
+						)
+					)
+				)
+			) {
+				$send_email_notification = false;
+			}
+			break;
+		default :
+			$send_email_notification = true;
+	}
+
+	return $send_email_notification;
+}

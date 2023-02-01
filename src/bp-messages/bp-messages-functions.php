@@ -1135,7 +1135,16 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			}
 
 			// Check the sender is blocked by recipient or not.
-			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $sender_id ) ) {
+			if (
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				! bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => 'message',
+						'group_id'          => $group,
+						'recipient_user_id' => $recipient->user_id,
+					)
+				)
+			) {
 				continue;
 			}
 
