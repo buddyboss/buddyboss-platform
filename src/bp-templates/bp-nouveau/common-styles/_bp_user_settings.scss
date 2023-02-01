@@ -225,10 +225,19 @@
 
 	.email:last-child {
 		min-width: 48px;
+	}
 
-		label {
-			font-size: 0 !important;
-			line-height: 20px !important;
+	#buddypress .bb-bp-settings-content & {
+
+		.email:last-child {
+
+			label {
+
+				@media screen and (min-width: 900px) {
+					font-size: 0;
+					line-height: 20px;
+				}
+			}
 		}
 	}
 
