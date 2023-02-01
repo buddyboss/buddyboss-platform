@@ -213,7 +213,7 @@
 		}
 	}
 
-	.act-grid-1-1.bb-vertical-layout + div + div {
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem {
 		position: absolute;
 		right: 0;
 		bottom: 0;
@@ -222,9 +222,9 @@
 
 	@media screen and (max-width: 544px) {
 
-		.act-grid-1-1.bb-vertical-layout + div,
-		.act-grid-1-1.bb-vertical-layout + div + div,
-		.act-grid-1-1.bb-vertical-layout + div + div + div {
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
 			position: static;
 			width: 100%;
 		}
