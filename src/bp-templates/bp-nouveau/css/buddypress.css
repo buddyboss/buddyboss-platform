@@ -17514,28 +17514,28 @@ body.login .login-popup .mfp-close:hover {
   padding-top: 119%;
 }
 
-.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div,
-.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div + div,
-.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div + div + div {
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
   position: absolute;
   right: 0;
   top: 0;
   width: 36%;
 }
 
-.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div + div {
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem {
   top: 33.4%;
 }
 
-.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div + div + div {
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
   top: initial;
   bottom: 0;
 }
 
 @media screen and (max-width: 544px) {
-  .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div,
-  .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div + div,
-  .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div + div + div {
+  .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
+  .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
+  .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
     position: static;
     width: 100%;
   }
