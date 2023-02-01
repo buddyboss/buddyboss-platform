@@ -200,6 +200,13 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 			if ( ! empty( $place_holder_queries ) ) {
 				$place_holder_queries = implode( ', ', $place_holder_queries );
 				$wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
+
+				wp_cache_flush();
+
+				// Purge all the cache for API.
+				if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+					BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bb-subscriptions' );
+				}
 			}
 
 			// Update the migration offset.
@@ -455,6 +462,13 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 	if ( ! empty( $place_holder_queries ) ) {
 		$place_holder_queries = implode( ', ', $place_holder_queries );
 		$wpdb->query( "INSERT INTO {$subscription_tbl} ( blog_id, user_id, type, item_id, secondary_item_id, status, date_recorded ) VALUES {$place_holder_queries}" ); // phpcs:ignore
+
+		wp_cache_flush();
+
+		// Purge all the cache for API.
+		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+			BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bb-subscriptions' );
+		}
 	}
 
 	// Update the migration offset.
