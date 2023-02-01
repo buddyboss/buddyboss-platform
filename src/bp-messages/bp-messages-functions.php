@@ -2573,7 +2573,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 		);
 	}
 
-	if ( empty( $r['thread_id'] ) || empty( $r['message_id'] ) ) {
+	if ( empty( $r['message_id'] ) ) {
 		return $content;
 	}
 
@@ -2589,11 +2589,11 @@ function bb_messages_get_group_join_leave_text( $args ) {
 	}
 
 	/*
-	 * Member 1 : John joined the group
-	 * Member 2 : John and Charles joined the group
-	 * Member 3+ : John joined the group, along with 2 others.
+	 * Member 1 : John joined/left the group
+	 * Member 2 : John and Charles joined/left the group
+	 * Member 3+ : John joined/left the group, along with 2 others.
 	 * Member 3-6 : When hovering over “2 others”,  show tooltip with list of members.
-	 * Member 7+ : When hovering over “2 others”,  show tooltip with list of members. When clicking on “6 others”, open members modal showing all members who are included in the join status.
+	 * Member 7+ : When hovering over “2 others”,  show tooltip with list of members. When clicking on “6 others”, open members modal showing all members who are included in the join/leave status.
 	 */
 
 	if ( is_array( $users ) ) {
@@ -2601,7 +2601,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 		$content = __( 'Left group', 'buddyboss' );
 
 		/*
-		 * Member 1 : John joined the group
+		 * Member 1 : John joined/left the group
 		 */
 		if ( 1 === count( $users ) ) {
 			$user_id = ! empty( current( $users ) ) ? current( $users ) : 0;
@@ -2614,7 +2614,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 			}
 
 		/*
-		 * Member 2 : John and Charles joined the group
+		 * Member 2 : John and Charles joined/left the group
 		 */
 		} elseif ( 2 === count( $users ) ) {
 			$first_user_id = ! empty( current( $users ) ) ? current( $users ) : 0;
@@ -2642,9 +2642,9 @@ function bb_messages_get_group_join_leave_text( $args ) {
 			}
 
 		/*
-		 * Member 3+ : John joined the group, along with 2 others.
+		 * Member 3+ : John joined/left the group, along with 2 others.
 		 *  -> Member 3-6 : When hovering over “2 others”,  show tooltip with list of members.
-		 *  -> Member 7+ : When hovering over “2 others”,  show tooltip with list of members. When clicking on “6 others”, open members modal showing all members who are included in the join status.
+		 *  -> Member 7+ : When hovering over “2 others”,  show tooltip with list of members. When clicking on “6 others”, open members modal showing all members who are included in the join/leave status.
 		 */
 		} elseif ( 3 <= count( $users ) ) {
 			$total_user_ids = count( $users );
@@ -2676,7 +2676,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 			);
 
 			// If 7+ members then show tooltip with list of members and open member modal when click on count.
-			if ( 7 <= $total_user_ids ) {
+			if ( 7 <= $total_user_ids && ! empty( $r['thread_id'] ) ) {
 				/* translators: 1. Thread ID, 2. Message ID, 3. Message type, 4. Other member list. */
 				$to_others = sprintf(
 					'<a href="#message-members-list" class="view_other_members" data-thread-id="%1$d" data-message-id="%2$d" data-message-type="%3$s" data-action="bp_view_others">%4$s</a>',
