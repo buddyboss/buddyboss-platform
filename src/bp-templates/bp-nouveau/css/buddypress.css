@@ -10172,13 +10172,19 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   position: relative;
 }
 
-#bp-message-thread-list .bp-message-content-wrap span,
 #bp-message-thread-list .bp-message-content-wrap p {
   margin-bottom: 8px;
 }
 
-#bp-message-thread-list .bp-message-content-wrap span:last-child,
 #bp-message-thread-list .bp-message-content-wrap p:last-child {
+  margin-bottom: 0;
+}
+
+#bp-message-thread-list .bp-message-content-wrap > span {
+  margin-bottom: 8px;
+}
+
+#bp-message-thread-list .bp-message-content-wrap > span:last-child {
   margin-bottom: 0;
 }
 
