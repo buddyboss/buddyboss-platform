@@ -2525,23 +2525,23 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ]['is_user_blocked']    = bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id );
 			$thread->messages[ $i ]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $bp_get_the_thread_message_sender_id );
 
-			if( 'yes' !== $message_joined && 'yes' !== $message_left ) {
+			if ( 'yes' !== $message_joined && 'yes' !== $message_left ) {
 				if ( bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id ) ) {
 					$filtred_content = bb_moderation_is_suspended_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
-					if( $content !== $filtred_content ) {
-						$has_message_updated = true;
+					if ( $content !== $filtred_content ) {
+						$has_message_updated               = true;
 						$thread->messages[ $i ]['content'] = '<span class="suspended">' . $filtred_content . '</span>';
 					}
 				} elseif ( bb_moderation_is_user_blocked_by( $bp_get_the_thread_message_sender_id ) ) {
 					$filtred_content = bb_moderation_is_blocked_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
-					if( $content !== $filtred_content ) {
-						$has_message_updated = true;
+					if ( $content !== $filtred_content ) {
+						$has_message_updated               = true;
 						$thread->messages[ $i ]['content'] = '<span class="blocked">' . $filtred_content . '</span>';
 					}
 				} elseif ( bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id ) ) {
 					$filtred_content = bb_moderation_has_blocked_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
-					if( $content !== $filtred_content ) {
-						$has_message_updated = true;
+					if ( $content !== $filtred_content ) {
+						$has_message_updated               = true;
 						$thread->messages[ $i ]['content'] = '<span class="blocked">' . $filtred_content . '</span>';
 					}
 				}
@@ -2568,12 +2568,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if ( ! empty( $media_ids ) && bp_has_media(
 				array(
-					'include'  => $media_ids,
-					'privacy'  => array( 'message' ),
-					'order_by' => 'menu_order',
-					'sort'     => 'ASC',
-					'user_id'  => false,
-					'moderation_query' => $has_message_updated
+					'include'          => $media_ids,
+					'privacy'          => array( 'message' ),
+					'order_by'         => 'menu_order',
+					'sort'             => 'ASC',
+					'user_id'          => false,
+					'moderation_query' => $has_message_updated,
 				)
 			) ) {
 				$thread->messages[ $i ]['media'] = array();
@@ -2604,12 +2604,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				! empty( $video_ids ) &&
 				bp_has_video(
 					array(
-						'include'  => $video_ids,
-						'privacy'  => array( 'message' ),
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-						'user_id'  => false,
-						'moderation_query' => $has_message_updated
+						'include'          => $video_ids,
+						'privacy'          => array( 'message' ),
+						'order_by'         => 'menu_order',
+						'sort'             => 'ASC',
+						'user_id'          => false,
+						'moderation_query' => $has_message_updated,
 					)
 				)
 			) {
@@ -2665,10 +2665,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if ( ! empty( $document_ids ) && bp_has_document(
 				array(
-					'include'  => $document_ids,
-					'order_by' => 'menu_order',
-					'sort'     => 'ASC',
-					'moderation_query' => $has_message_updated
+					'include'          => $document_ids,
+					'order_by'         => 'menu_order',
+					'sort'             => 'ASC',
+					'moderation_query' => $has_message_updated,
 				)
 			) ) {
 				$thread->messages[ $i ]['document'] = array();
