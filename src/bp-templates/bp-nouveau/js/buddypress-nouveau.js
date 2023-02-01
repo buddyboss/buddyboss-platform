@@ -3375,6 +3375,9 @@ window.bp = window.bp || {};
 						var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
 						available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
 					}
+					if ( $( this ).hasClass( 'disabled' ) ) {
+						return;
+					}
 					if ( ! $( this ).find( 'input:checked' ).length ) {
 						return;
 					}
