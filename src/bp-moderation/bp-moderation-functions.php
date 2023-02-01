@@ -1702,18 +1702,19 @@ function bb_moderation_allowed_specific_notification( $args ) {
 				bp_moderation_is_user_suspended( $recipient_user_id ) ||
 				(
 					(
-						bp_moderation_is_user_blocked( $recipient_user_id ) ||
-						bb_moderation_is_user_blocked_by( $recipient_user_id )
-					) &&
-					(
-						empty( $group_id ) ||
+						empty( $group_id ) &&
 						(
-							! empty( $group_id ) &&
-							bp_is_active( 'groups' ) &&
-							(
-								! groups_is_user_admin( $author_id, $group_id ) &&
-								! groups_is_user_mod( $author_id, $group_id )
-							)
+							bp_moderation_is_user_blocked( $recipient_user_id ) ||
+							bb_moderation_is_user_blocked_by( $recipient_user_id )
+						)
+					) ||
+					(
+						! empty( $group_id ) &&
+						bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+						bp_is_active( 'groups' ) &&
+						(
+							! groups_is_user_admin( $author_id, $group_id ) &&
+							! groups_is_user_mod( $author_id, $group_id )
 						)
 					)
 				)
@@ -1742,22 +1743,18 @@ function bb_moderation_allowed_specific_notification( $args ) {
 				bp_moderation_is_user_suspended( $recipient_user_id ) ||
 				(
 					(
-						bp_moderation_is_user_blocked( $recipient_user_id ) ||
-						bb_moderation_is_user_blocked_by( $recipient_user_id )
-					) &&
+						empty( $group_id ) &&
+						bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+						(int) $recipient_user_id !== (int) $author_id
+					)
+					||
 					(
+						! empty( $group_id ) &&
+						bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+						bp_is_active( 'groups' ) &&
 						(
-							empty( $group_id ) &&
-							(int) $recipient_user_id !== (int) $author_id
-						)
-						||
-						(
-							! empty( $group_id ) &&
-							bp_is_active( 'groups' ) &&
-							(
-								! groups_is_user_admin( $recipient_user_id, $group_id ) &&
-								! groups_is_user_mod( $recipient_user_id, $group_id )
-							)
+							! groups_is_user_admin( $recipient_user_id, $group_id ) &&
+							! groups_is_user_mod( $recipient_user_id, $group_id )
 						)
 					)
 				)
