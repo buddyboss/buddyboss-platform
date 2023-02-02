@@ -757,8 +757,9 @@ function bb_notifications_background_enabled() {
  * @param string $date_notified     Notification date.
  * @param bool   $is_new            Setup the notification is unread or read.
  * @param int    $sender_id         Sender user id.
+ * @param int    $group_id          Group id.
  */
-function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true, $sender_id = 0 ) {
+function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true, $sender_id = 0, $group_id = 0 ) {
 	if (
 		empty( $user_ids ) ||
 		empty( $item_id ) ||
@@ -780,20 +781,18 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 		}
 
 		// Check the sender is blocked by/blocked/suspended recipient or not.
-		if ( ! empty( $sender_id ) ) {
-			$group = bp_messages_get_meta( $item_id, 'group_id', true ); // group_id.
-			if (
-				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-				bb_moderation_allowed_specific_notification(
-					array(
-						'type'              => $component_name,
-						'group_id'          => $group,
-						'recipient_user_id' => $user_id,
-					)
+		if (
+			! empty( $sender_id ) &&
+			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+			bb_moderation_allowed_specific_notification(
+				array(
+					'type'              => $component_name,
+					'group_id'          => $group_id,
+					'recipient_user_id' => $user_id,
 				)
-			) {
-				continue;
-			}
+			)
+		) {
+			continue;
 		}
 
 		bp_notifications_add_notification(
