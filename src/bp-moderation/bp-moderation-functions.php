@@ -1690,12 +1690,26 @@ function bb_moderation_moderated_user_ids( $user_id = 0 ) {
 	return in_array( $user_id, $all_users, true );
 }
 
+/**
+ * Function will allow to send specific email/notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args It will contain type, recipient id, gorup id and author id.
+ *
+ * @return bool
+ */
 function bb_moderation_allowed_specific_notification( $args ) {
 	$type                    = isset( $args['type'] ) ? $args['type'] : '';
 	$recipient_user_id       = isset( $args['recipient_user_id'] ) ? $args['recipient_user_id'] : '';
 	$author_id               = isset( $args['author_id'] ) ? $args['author_id'] : '';
 	$group_id                = isset( $args['group_id'] ) ? $args['group_id'] : '';
 	$send_email_notification = true;
+
+	if ( empty( $recipient_user_id ) ) {
+		return $send_email_notification;
+	}
+
 	switch ( $type ) {
 		case 'activity':
 			if (
