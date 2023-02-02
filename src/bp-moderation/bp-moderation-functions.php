@@ -1736,7 +1736,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
 				$retval = true;
 			}
 			break;
-		case 'message':
+		case 'messages':
 			if (
 				bp_moderation_is_user_suspended( $recipient_user_id ) ||
 				(
@@ -1761,7 +1761,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
 				$retval = true;
 			}
 			break;
-		case 'forum':
+		case 'forums':
 			if (
 				bp_moderation_is_user_suspended( $recipient_user_id ) ||
 				(

@@ -780,11 +780,20 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 		}
 
 		// Check the sender is blocked by/blocked/suspended recipient or not.
-		if (
-			! empty( $sender_id ) &&
-			true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $sender_id )
-		) {
-			continue;
+		if ( ! empty( $sender_id ) ) {
+			$group = bp_messages_get_meta( $item_id, 'group_id', true ); // group_id.
+			if (
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => $component_name,
+						'group_id'          => $group,
+						'recipient_user_id' => $user_id,
+					)
+				)
+			) {
+				continue;
+			}
 		}
 
 		bp_notifications_add_notification(

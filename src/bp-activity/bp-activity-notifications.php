@@ -244,7 +244,7 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 		bb_moderation_allowed_specific_notification(
 			array(
-				'type'              => 'activity',
+				'type'              => buddypress()->activity->id,
 				'group_id'          => 'groups' === $activity->component ? $activity->item_id : '',
 				'recipient_user_id' => $activity->user_id,
 				'author_id'         => $activity->user_id,
@@ -295,7 +295,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 		bb_moderation_allowed_specific_notification(
 			array(
-				'type'              => 'activity',
+				'type'              => buddypress()->activity->id,
 				'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
 				'recipient_user_id' => $activity_comment->user_id,
 				'author_id'         => $original_activity->user_id,

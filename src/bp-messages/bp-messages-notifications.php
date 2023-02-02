@@ -275,7 +275,7 @@ function bp_messages_message_sent_add_notification( $message ) {
 					function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 					bb_moderation_allowed_specific_notification(
 						array(
-							'type'              => 'message',
+							'type'              => buddypress()->messages->id,
 							'group_id'          => $group,
 							'recipient_user_id' => $recipient->user_id,
 						)

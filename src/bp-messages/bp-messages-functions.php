@@ -1139,7 +1139,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 				bb_moderation_allowed_specific_notification(
 					array(
-						'type'              => 'message',
+						'type'              => buddypress()->messages->id,
 						'group_id'          => $group,
 						'recipient_user_id' => $recipient->user_id,
 					)
@@ -1633,7 +1633,7 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 			bb_moderation_allowed_specific_notification(
 				array(
-					'type'              => 'message',
+					'type'              => buddypress()->messages->id,
 					'group_id'          => $group,
 					'recipient_user_id' => $recipient->user_id,
 				)

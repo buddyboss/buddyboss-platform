@@ -883,7 +883,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 				bb_moderation_allowed_specific_notification(
 					array(
-						'type'              => 'forum',
+						'type'              => bbp_get_component_name(),
 						'group_id'          => bp_is_active( 'groups' ) ? bp_get_current_group_id() : '',
 						'recipient_user_id' => $user_id,
 						'author_id'         => bbp_get_topic_author_id( $r['item_id'] ),
@@ -973,7 +973,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 				bb_moderation_allowed_specific_notification(
 					array(
-						'type'              => 'forum',
+						'type'              => bbp_get_component_name(),
 						'group_id'          => bp_is_active( 'groups' ) ? bp_get_current_group_id() : '',
 						'recipient_user_id' => $user_id,
 						'author_id'         => bbp_get_topic_author_id( $r['item_id'] ),
