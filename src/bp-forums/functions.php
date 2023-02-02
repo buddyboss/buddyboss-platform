@@ -57,11 +57,11 @@ function bbp_filter_user_id( $user_id = 0, $displayed_user_fallback = true, $cur
 	// Easy empty checking.
 	if ( ! empty( $user_id ) && is_numeric( $user_id ) ) {
 		$bbp_user_id = $user_id;
-	} // Currently viewing or editing a user.
-    elseif ( ( true === $displayed_user_fallback ) && ! empty( $did ) ) {
+		// Currently viewing or editing a user.
+	} elseif ( ( true === $displayed_user_fallback ) && ! empty( $did ) ) {
 		$bbp_user_id = $did;
-	} // Maybe fallback on the current_user ID.
-    elseif ( ( true === $current_user_fallback ) && ! empty( $lid ) ) {
+		// Maybe fallback on the current_user ID.
+	} elseif ( ( true === $current_user_fallback ) && ! empty( $lid ) ) {
 		$bbp_user_id = $lid;
 	}
 
@@ -216,13 +216,9 @@ function bbp_member_forums_screen_subscriptions() {
  */
 function bbp_member_forums_topics_content() {
 	?>
-
-    <div id="bbpress-forums">
-
+	<div id="bbpress-forums">
 		<?php bbp_get_template_part( 'user', 'topics-created' ); ?>
-
-    </div>
-
+	</div>
 	<?php
 }
 
@@ -235,13 +231,9 @@ function bbp_member_forums_topics_content() {
  */
 function bbp_member_forums_replies_content() {
 	?>
-
-    <div id="bbpress-forums">
-
+	<div id="bbpress-forums">
 		<?php bbp_get_template_part( 'user', 'replies-created' ); ?>
-
-    </div>
-
+	</div>
 	<?php
 }
 
@@ -254,13 +246,9 @@ function bbp_member_forums_replies_content() {
  */
 function bbp_member_forums_favorites_content() {
 	?>
-
-    <div id="bbpress-forums">
-
+	<div id="bbpress-forums">
 		<?php bbp_get_template_part( 'user', 'favorites' ); ?>
-
-    </div>
-
+	</div>
 	<?php
 }
 
@@ -273,13 +261,9 @@ function bbp_member_forums_favorites_content() {
  */
 function bbp_member_forums_subscriptions_content() {
 	?>
-
-    <div id="bbpress-forums">
-
+	<div id="bbpress-forums">
 		<?php bbp_get_template_part( 'user', 'subscriptions' ); ?>
-
-    </div>
-
+	</div>
 	<?php
 }
 
@@ -1034,14 +1018,14 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 
 	$params['forums'] = array(
 		'params'  => array(
-			'bb_current_user_id' => $user_id
+			'bb_current_user_id' => $user_id,
 		),
 		'nonces'  => array(
-			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' )
+			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
 		),
 		'strings' => array(
 			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss' ),
-		)
+		),
 	);
 
 	$params['forums']['draft'] = array();
