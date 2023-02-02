@@ -1627,8 +1627,18 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 			continue;
 		}
 
+		$group = bp_messages_get_meta( $tokens['message_id'], 'group_id', true );
 		// Check the sender is blocked by recipient or not.
-		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $sender_id ) ) {
+		if (
+			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+			bb_moderation_allowed_specific_notification(
+				array(
+					'type'              => 'message',
+					'group_id'          => $group,
+					'recipient_user_id' => $recipient->user_id,
+				)
+			)
+		) {
 			continue;
 		}
 
