@@ -65,7 +65,13 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 		}
 	} else {
 
-		$offset  = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT ) - 1;
+		$offset = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! empty( $offset ) ) {
+			$offset = -- $offset;
+		} else {
+			$offset = 0;
+		}
+
 		$results = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC LIMIT %d OFFSET %d", $forum_key, $topic_key, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( ! empty( $results ) ) {
@@ -358,7 +364,13 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 		}
 	} else {
 
-		$offset  = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT ) - 1;
+		$offset = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! empty( $offset ) ) {
+			$offset = -- $offset;
+		} else {
+			$offset = 0;
+		}
+
 		$results = $wpdb->get_col( $wpdb->prepare( "SELECT p.ID FROM {$wpdb->posts} AS p LEFT JOIN {$wpdb->postmeta} mt ON mt.post_id = p.ID WHERE mt.meta_key = %s AND ( p.post_type = %s OR p.post_type = %s ) GROUP BY p.ID ORDER BY p.ID ASC LIMIT %d OFFSET %d", $subscription_key, $forum_post_type, $topic_post_type, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( ! empty( $results ) ) {
