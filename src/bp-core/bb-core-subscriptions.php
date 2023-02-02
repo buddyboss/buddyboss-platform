@@ -1146,10 +1146,15 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				$child_forums = bb_get_all_nested_subforums( $forum_id );
-				if ( ! empty( $child_forums ) ) {
-					foreach ( $child_forums as $child_forum_id ) {
-						$topic_ids = bbp_get_all_child_ids( $child_forum_id, bbp_get_topic_post_type() );
+				$topic_ids        = bbp_get_all_child_ids( $forum_id, bbp_get_topic_post_type() );
+				$get_child_forums = bb_get_all_nested_subforums( $forum_id );
+				if ( ! empty( $get_child_forums ) ) {
+					$child_forums = array_merge( $child_forums, $get_child_forums );
+					foreach ( $get_child_forums as $child_forum_id ) {
+						$child_topic_ids = bbp_get_all_child_ids( $child_forum_id, bbp_get_topic_post_type() );
+						if ( ! empty( $child_topic_ids ) ) {
+							$topic_ids = array_merge( $topic_ids, $child_topic_ids );
+						}
 					}
 				}
 			}
