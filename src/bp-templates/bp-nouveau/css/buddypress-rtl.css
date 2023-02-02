@@ -26635,6 +26635,7 @@ span.icons:before {
 
 .bp-single-message-wrap .bb-messages-group-notices .bp-tooltip {
   display: inline-block;
+  color: #847d7d;
 }
 
 .bp-single-message-wrap .bb-messages-group-notices .bp-tooltip:after {
