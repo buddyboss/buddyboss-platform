@@ -26637,6 +26637,14 @@ span.icons:before {
   display: inline-block;
 }
 
+.bp-single-message-wrap .bb-messages-group-notices .bp-tooltip:after {
+  font-size: 11px;
+  line-height: 14px;
+  max-width: 190px;
+  white-space: normal;
+  width: max-content;
+}
+
 .total-members-text:empty {
   display: none;
 }
