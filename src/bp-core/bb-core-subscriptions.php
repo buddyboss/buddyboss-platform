@@ -119,6 +119,17 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	if ( ! empty( $subscription_users ) ) {
 		foreach ( $subscription_users as $user_id ) {
 
+			if ( ! $is_background ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->query(
+					$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						"DELETE FROM {$subscription_tbl} WHERE user_id = %d AND type IN ( 'topic', 'forum' )",
+						$user_id
+					)
+				);
+			}
+
 			// Increment the current offset.
 			$offset ++;
 
