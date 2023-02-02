@@ -1882,3 +1882,79 @@ function bb_notification_read_for_moderated_members() {
 }
 
 add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
+
+/**
+ * Function to allow specific notification for forum/activity/message on notification screen.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool   $retval       Return true or false.
+ * @param object $notification Notification Item.
+ *
+ * @return bool
+ */
+function bb_notification_linkable_specific_notification( $retval, $notification ) {
+	if (
+		(
+			'forums' !== $notification->component_name ||
+			'activity' !== $notification->component_name ||
+			'messages' !== $notification->component_name
+		) &&
+		! in_array(
+			$notification->component_action,
+			array(
+				'bb_forums_subscribed_discussion',
+				'bb_forums_subscribed_reply',
+				'bb_activity_comment',
+				'bb_groups_new_message',
+			),
+			true
+		)
+	) {
+		return $retval;
+	}
+
+	$group_id = 0;
+	if ( bp_is_active( 'forums' ) ) {
+		$forum_id = 0;
+		if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
+			$forum_id = bbp_get_reply_forum_id( $notification->item_id );
+		} elseif ( 'bb_forums_subscribed_discussion' === $notification->component_action ) {
+			$forum_id = bbp_get_topic_forum_id( $notification->item_id );
+		}
+		$group_id = bbp_get_forum_group_ids( $forum_id );
+		$group_id = ! empty( $group_id ) ? current( $group_id ) : 0;
+	}
+	if ( bp_is_active( 'activity' ) && 'bb_activity_comment' === $notification->component_action ) {
+		$current_activity = new BP_Activity_Activity( $notification->item_id );
+		if ( ! empty( $current_activity->id ) ) {
+			$original_activity = new BP_Activity_Activity( $current_activity->item_id );
+			$group_id          = 'groups' === $original_activity->component ? $original_activity->item_id : '';
+		}
+	}
+	if ( bp_is_active( 'messages' ) && 'bb_groups_new_message' === $notification->component_action ) {
+		$group_id = bp_messages_get_meta( $notification->item_id, 'group_id', true );
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		if (
+			bp_is_active( 'moderation' ) &&
+			(
+				bp_moderation_is_user_blocked( $notification->secondary_item_id ) ||
+				bb_moderation_is_user_blocked_by( $notification->secondary_item_id )
+			) ||
+			(
+				! empty( $group_id ) &&
+				(
+					groups_is_user_admin( $notification->user_id, $group_id ) ||
+					groups_is_user_mod( $notification->user_id, $group_id )
+				)
+			)
+		) {
+			return false;
+		}
+	}
+
+	return $retval;
+}
+add_filter( 'bb_notification_is_read_only', 'bb_notification_linkable_specific_notification', 10, 2 );
