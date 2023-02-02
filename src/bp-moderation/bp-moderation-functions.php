@@ -1700,14 +1700,14 @@ function bb_moderation_moderated_user_ids( $user_id = 0 ) {
  * @return bool
  */
 function bb_moderation_allowed_specific_notification( $args ) {
-	$type                    = isset( $args['type'] ) ? $args['type'] : '';
-	$recipient_user_id       = isset( $args['recipient_user_id'] ) ? $args['recipient_user_id'] : '';
-	$author_id               = isset( $args['author_id'] ) ? $args['author_id'] : '';
-	$group_id                = isset( $args['group_id'] ) ? $args['group_id'] : '';
-	$send_email_notification = true;
+	$type              = isset( $args['type'] ) ? $args['type'] : '';
+	$recipient_user_id = isset( $args['recipient_user_id'] ) ? $args['recipient_user_id'] : '';
+	$author_id         = isset( $args['author_id'] ) ? $args['author_id'] : '';
+	$group_id          = isset( $args['group_id'] ) ? $args['group_id'] : '';
+	$retval            = false;
 
 	if ( empty( $recipient_user_id ) ) {
-		return $send_email_notification;
+		return $retval;
 	}
 
 	switch ( $type ) {
@@ -1733,7 +1733,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
 					)
 				)
 			) {
-				$send_email_notification = false;
+				$retval = true;
 			}
 			break;
 		case 'message':
@@ -1749,7 +1749,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
 					)
 				)
 			) {
-				$send_email_notification = false;
+				$retval = true;
 			}
 			break;
 		case 'forum':
@@ -1773,12 +1773,12 @@ function bb_moderation_allowed_specific_notification( $args ) {
 					)
 				)
 			) {
-				$send_email_notification = false;
+				$retval = true;
 			}
 			break;
 		default :
-			$send_email_notification = true;
+			$retval = false;
 	}
 
-	return $send_email_notification;
+	return $retval;
 }

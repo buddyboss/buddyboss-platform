@@ -961,7 +961,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		foreach ( $r['user_ids'] as $user_id ) {
 			if (
 				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-				! bb_moderation_allowed_specific_notification(
+				bb_moderation_allowed_specific_notification(
 					array(
 						'type'              => 'forum',
 						'group_id'          => bp_is_active( 'groups' ) ? bp_get_current_group_id() : '',

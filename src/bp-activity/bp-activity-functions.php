@@ -4231,15 +4231,13 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 		$type_key = bb_get_prefences_key( 'legacy', $type_key );
 	}
 
-	$group_id = 'groups' === $original_activity->component ? $original_activity->item_id : '';
-
 	if ( $original_activity->user_id != $commenter_id ) {
 		if (
 			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-			! bb_moderation_allowed_specific_notification(
+			bb_moderation_allowed_specific_notification(
 				array(
 					'type'              => 'activity',
-					'group_id'          => $group_id,
+					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
 					'recipient_user_id' => $original_activity->user_id,
 					'author_id'         => $original_activity->user_id,
 				)
@@ -4297,10 +4295,10 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
 		if (
 			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-			! bb_moderation_allowed_specific_notification(
+			bb_moderation_allowed_specific_notification(
 				array(
 					'type'              => 'activity',
-					'group_id'          => $group_id,
+					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
 					'recipient_user_id' => $parent_comment->user_id,
 					'author_id'         => $original_activity->user_id,
 				)

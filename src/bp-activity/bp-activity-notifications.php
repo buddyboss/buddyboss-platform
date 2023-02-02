@@ -240,7 +240,17 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  */
 function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
 
-	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $activity->user_id, $commenter_id ) ) {
+	if (
+		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+		bb_moderation_allowed_specific_notification(
+			array(
+				'type'              => 'activity',
+				'group_id'          => 'groups' === $activity->component ? $activity->item_id : '',
+				'recipient_user_id' => $activity->user_id,
+				'author_id'         => $activity->user_id,
+			)
+		)
+	) {
 		return;
 	}
 
@@ -280,7 +290,18 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  */
 function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id ) {
 
-	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $activity_comment->user_id, $commenter_id ) ) {
+	$original_activity = new BP_Activity_Activity( $activity_comment->item_id );
+	if (
+		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+		bb_moderation_allowed_specific_notification(
+			array(
+				'type'              => 'activity',
+				'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+				'recipient_user_id' => $activity_comment->user_id,
+				'author_id'         => $original_activity->user_id,
+			)
+		)
+	) {
 		return;
 	}
 
