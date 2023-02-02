@@ -1915,6 +1915,7 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 	}
 
 	$group_id = 0;
+	
 	if ( bp_is_active( 'forums' ) ) {
 		$forum_id = 0;
 		if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
@@ -1925,6 +1926,7 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 		$group_id = bbp_get_forum_group_ids( $forum_id );
 		$group_id = ! empty( $group_id ) ? current( $group_id ) : 0;
 	}
+
 	if ( bp_is_active( 'activity' ) && 'bb_activity_comment' === $notification->component_action ) {
 		$current_activity = new BP_Activity_Activity( $notification->item_id );
 		if ( ! empty( $current_activity->id ) ) {
@@ -1932,6 +1934,7 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 			$group_id          = 'groups' === $original_activity->component ? $original_activity->item_id : '';
 		}
 	}
+
 	if ( bp_is_active( 'messages' ) && 'bb_groups_new_message' === $notification->component_action ) {
 		$group_id = bp_messages_get_meta( $notification->item_id, 'group_id', true );
 	}
