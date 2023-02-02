@@ -1915,7 +1915,7 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 	}
 
 	$group_id = 0;
-	
+
 	if ( bp_is_active( 'forums' ) ) {
 		$forum_id = 0;
 		if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
@@ -1939,23 +1939,22 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 		$group_id = bp_messages_get_meta( $notification->item_id, 'group_id', true );
 	}
 
-	if ( bp_is_active( 'groups' ) ) {
-		if (
-			bp_is_active( 'moderation' ) &&
+	if (
+		bp_is_active( 'moderation' ) &&
+		(
+			bp_moderation_is_user_blocked( $notification->secondary_item_id ) ||
+			bb_moderation_is_user_blocked_by( $notification->secondary_item_id )
+		) ||
+		(
+			! empty( $group_id ) &&
+			bp_is_active( 'groups' ) &&
 			(
-				bp_moderation_is_user_blocked( $notification->secondary_item_id ) ||
-				bb_moderation_is_user_blocked_by( $notification->secondary_item_id )
-			) ||
-			(
-				! empty( $group_id ) &&
-				(
-					groups_is_user_admin( $notification->user_id, $group_id ) ||
-					groups_is_user_mod( $notification->user_id, $group_id )
-				)
+				groups_is_user_admin( $notification->user_id, $group_id ) ||
+				groups_is_user_mod( $notification->user_id, $group_id )
 			)
-		) {
-			return false;
-		}
+		)
+	) {
+		return false;
 	}
 
 	return $retval;
