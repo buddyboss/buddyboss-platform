@@ -1230,10 +1230,15 @@ function bb_migrate_group_subscription( $is_background = false ) {
 		return;
 	}
 
+	$offset = 1;
+	if ( $is_background ) {
+		$offset = get_site_option( 'bb_group_subscriptions_migrate_page', 1 );
+	}
+
 	$args = array(
 		'fields'      => 'ids',
 		'per_page'    => 10,
-		'page'        => get_site_option( 'bb_group_subscriptions_migrate_page', 1 ),
+		'page'        => $offset,
 		'show_hidden' => true,
 	);
 
@@ -1257,9 +1262,7 @@ function bb_migrate_group_subscription( $is_background = false ) {
 	if ( ! empty( $all_groups ) ) {
 		bb_migrating_group_member_subscriptions( $all_groups, $is_background );
 		if ( ! $is_background ) {
-			$total      = count( $all_groups );
-			$last_total = get_site_option( 'bb_group_subscriptions_migrated_count', 0 );
-			$total      = (int) $last_total + $total;
+			$total = ( (int) get_site_option( 'bb_group_subscriptions_migrated_count', 0 ) + count( $all_groups ) );
 			update_site_option( 'bb_group_subscriptions_migrated_count', $total );
 
 			$records_updated = sprintf(
@@ -1270,7 +1273,7 @@ function bb_migrate_group_subscription( $is_background = false ) {
 
 			return array(
 				'status'  => 'running',
-				'offset'  => $total,
+				'offset'  => $offset,
 				'records' => $records_updated,
 			);
 		}
@@ -1356,7 +1359,7 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 
 	if ( $is_background ) {
 		// Update the migration offset.
-		$page = get_site_option( 'bb_group_subscriptions_migrate_page', 1 ) + 1;
+		$page = ( (int) get_site_option( 'bb_group_subscriptions_migrate_page', 1 ) + 1 );
 		update_site_option( 'bb_group_subscriptions_migrate_page', $page );
 
 		// Call recursive until group not found.
