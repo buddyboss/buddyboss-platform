@@ -1085,6 +1085,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$author_id               = 0;
 		$type_key                = '';
 		$email_notification_type = '';
+		$usernames               = array();
 		if ( 'bb_groups_subscribed_activity' === $r['notification_from'] ) {
 			// Bail if component is not activated.
 			if ( ! bp_is_active( 'activity' ) ) {
@@ -1105,9 +1106,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$type_key                = 'bb_groups_subscribed_activity';
 			$email_notification_type = 'groups-new-post';
 			$author_id               = ! empty( $activity->user_id ) ? $activity->user_id : 0;
+			$usernames               = bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
 		} elseif ( 'bb_groups_subscribed_discussion' === $r['notification_from'] ) {
 			// Bail if component is not activated.
-			if ( ! bp_is_active( 'forums' ) ) {
+			if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_topic_content' ) ) {
 				return false;
 			}
 
@@ -1115,6 +1117,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$type_key                = 'bb_groups_subscribed_discussion';
 			$email_notification_type = 'groups-new-forum-topic';
 			$author_id               = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bbp_get_topic_author_id( $data_id );
+			$usernames               = bp_activity_do_mentions() ? bp_activity_find_mentions( bbp_get_topic_content( $data_id ) ) : array();
 		}
 
 		if ( empty( $data_id ) || empty( $author_id ) || empty( $type_key ) || empty( $email_notification_type ) ) {
@@ -1130,12 +1133,29 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
-			// Bail if member opted out of receiving this email.
-			// Check the sender is blocked by recipient or not.
-			if (
-				true === bb_is_notification_enabled( $user_id, $type_key ) &&
-				true !== (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id )
-			) {
+			$user_id           = (int) $user_id;
+			$send_mail         = true;
+			$send_notification = true;
+
+			// Check the mention notification is enabled then disabled to send email notification.
+			if ( ! empty( $usernames ) && isset( $usernames[ $user_id ] ) ) {
+				if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+					$send_mail = false;
+				}
+			}
+
+			// It will check some condition to notification disable or disabled.
+			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+				$send_mail = false;
+			}
+
+			// It will check the moderation part.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id ) ) {
+				$send_notification = false;
+				$send_mail         = false;
+			}
+
+			if ( true === $send_mail ) {
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
 					'notification_type' => $email_notification_type,
@@ -1147,7 +1167,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				bp_send_email( $email_notification_type, (int) $user_id, $email_tokens );
 			}
 
-			if ( bp_is_active( 'notifications' ) ) {
+			if ( true === $send_notification && bp_is_active( 'notifications' ) ) {
 				add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 				bp_notifications_add_notification(
 					array(
