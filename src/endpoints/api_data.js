@@ -9377,13 +9377,6 @@ define({ "api": [
             "group": "Parameter",
             "type": "Number",
             "optional": true,
-            "field": "user_id",
-            "description": "<p>Pass a user_id to limit to only Subscriptions that this user is a subscribed.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
             "field": "blog_id",
             "description": "<p>Get subscription site wise. Default current site ID.</p>"
           },
