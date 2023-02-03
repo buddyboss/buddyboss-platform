@@ -20,6 +20,7 @@ use BuddyBoss\Performance\Integration\BB_Notifications;
 use BuddyBoss\Performance\Integration\BB_Replies;
 use BuddyBoss\Performance\Integration\BB_Topics;
 use BuddyBoss\Performance\Integration\BB_Videos;
+use BuddyBoss\Performance\Integration\BB_Subscriptions;
 
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
@@ -164,6 +165,12 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					if ( self::mu_is_component_active( 'video' ) && file_exists( $videos_integration ) ) {
 						require_once $videos_integration;
 						BB_Videos::instance();
+					}
+
+					$subscriptions_integration = dirname( __FILE__ ) . '/integrations/class-bb-subscriptions.php';
+					if ( file_exists( $subscriptions_integration ) ) {
+						require_once $subscriptions_integration;
+						BB_Subscriptions::instance();
 					}
 				}
 
