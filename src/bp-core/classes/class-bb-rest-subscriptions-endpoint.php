@@ -115,7 +115,6 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String=forum,topic} [type] Limit results based on subscription type.
 	 * @apiParam {String=asc,desc} [order=desc] Order sort attribute ascending or descending.
 	 * @apiParam {String=id,type,item_id,date_recorded} [orderby=date_recorded] Order Subscriptions by which attribute.
-	 * @apiParam {Number} [user_id] Pass a user_id to limit to only Subscriptions that this user is a subscribed.
 	 * @apiParam {Number} [blog_id] Get subscription site wise. Default current site ID.
 	 * @apiParam {Number} [item_id] Get Subscriptions that are user subscribed items.
 	 * @apiParam {Number} [secondary_item_id] Get Subscriptions that are children of the subscribed items.
@@ -895,14 +894,6 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		$params['blog_id'] = array(
 			'description'       => __( 'The ID of the current blog site.', 'buddyboss' ),
 			'default'           => get_current_blog_id(),
-			'type'              => 'integer',
-			'sanitize_callback' => 'absint',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
-		$params['user_id'] = array(
-			'description'       => __( 'Limit result set to items created by a specific user (ID).', 'buddyboss' ),
-			'default'           => bp_loggedin_user_id(),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
