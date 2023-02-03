@@ -1416,7 +1416,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 			// Get forum group IDs.
 			$group_ids  = function_exists( 'bbp_get_forum_group_ids' ) && ! empty( $topic->post_parent ) ? bbp_get_forum_group_ids( $topic->post_parent ) : array();
-			$group_id   = ( ! empty( current( $group_ids ) ) ? current( $group_ids ) : 0 );
+			$group_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
 			$group_name = bp_get_group_name( groups_get_group( $group_id ) );
 
 			if ( 'web_push' === $screen ) {
