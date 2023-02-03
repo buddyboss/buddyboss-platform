@@ -72,6 +72,11 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 			$offset = 0;
 		}
 
+		if ( 0 === $offset ) {
+			$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
+			// phpcs:ignore
+			$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE type IN ( 'topic', 'forum' )" );
+		}
 		$results = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC LIMIT %d OFFSET %d", $forum_key, $topic_key, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( ! empty( $results ) ) {
@@ -118,18 +123,6 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 
 	if ( ! empty( $subscription_users ) ) {
 		foreach ( $subscription_users as $user_id ) {
-
-			if ( ! $is_background ) {
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$wpdb->query(
-					$wpdb->prepare(
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-						"DELETE FROM {$subscription_tbl} WHERE user_id = %d AND type IN ( 'topic', 'forum' )",
-						$user_id
-					)
-				);
-			}
-
 			// Increment the current offset.
 			$offset ++;
 
@@ -507,6 +500,16 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 					}
 
 					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $blog_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
+
+					// Insert into the usermeta for backward compatibility.
+					( new BP_Forums_Legacy() )->bb_create_legacy_forum_subscriptions(
+						array(
+							'type'    => $subscription_type,
+							'user_id' => (int) $user_id,
+							'item_id' => (int) $post_id,
+							'blog_id' => (int) $blog_id,
+						)
+					);
 				}
 			}
 		}
