@@ -1030,6 +1030,12 @@ window.bp = window.bp || {};
 
 				form.slideDown( 200 );
 
+				var emojiPosition = form.find('.post-elements-buttons-item.post-emoji').prevAll().not(':hidden').length + 1;
+				form.find('.post-elements-buttons-item.post-emoji').attr( 'data-nth-child', emojiPosition );
+
+				var gifPosition = form.find('.post-elements-buttons-item.post-gif').prevAll().not(':hidden').length + 1;
+				form.find('.post-elements-buttons-item.post-gif').attr( 'data-nth-child', gifPosition );
+
 				/* Stop past image from clipboard */
 				var ce = form.find( '.ac-input[contenteditable]' );
 				if ( ce.length > 0 ) {
