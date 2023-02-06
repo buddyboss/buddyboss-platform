@@ -1702,7 +1702,7 @@ function bb_moderation_moderated_user_ids( $user_id = 0 ) {
 function bb_moderation_allowed_specific_notification( $args ) {
 	$type              = isset( $args['type'] ) ? $args['type'] : '';
 	$recipient_user_id = isset( $args['recipient_user_id'] ) ? $args['recipient_user_id'] : '';
-	$author_id         = isset( $args['author_id'] ) ? $args['author_id'] : '';
+	$sender_id         = isset( $args['sender_id'] ) ? $args['sender_id'] : '';
 	$group_id          = isset( $args['group_id'] ) ? $args['group_id'] : '';
 	$retval            = false;
 
@@ -1727,8 +1727,8 @@ function bb_moderation_allowed_specific_notification( $args ) {
 						! empty( $group_id ) &&
 						bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
 						(
-							! groups_is_user_admin( $author_id, $group_id ) &&
-							! groups_is_user_mod( $author_id, $group_id )
+							! groups_is_user_admin( $sender_id, $group_id ) &&
+							! groups_is_user_mod( $sender_id, $group_id )
 						)
 					)
 				)
@@ -1769,7 +1769,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
 					(
 						(
 							empty( $group_id ) &&
-							(int) $recipient_user_id !== (int) $author_id
+							(int) $recipient_user_id !== (int) $sender_id
 						)
 						||
 						(
