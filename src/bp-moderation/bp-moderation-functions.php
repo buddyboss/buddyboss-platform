@@ -1742,35 +1742,41 @@ function bb_moderation_remove_mention_link( $content ) {
  * @return bool
  */
 function bb_moderation_allowed_specific_notification( $args ) {
-	$type              = isset( $args['type'] ) ? $args['type'] : '';
-	$recipient_user_id = isset( $args['recipient_user_id'] ) ? $args['recipient_user_id'] : '';
-	$author_id         = isset( $args['author_id'] ) ? $args['author_id'] : '';
-	$group_id          = isset( $args['group_id'] ) ? $args['group_id'] : '';
-	$retval            = false;
 
-	if ( empty( $recipient_user_id ) ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'              => '',
+			'recipient_user_id' => '',
+			'sender_id'         => '',
+			'group_id'          => '',
+		)
+	);
+
+	$retval = false;
+	if ( empty( $r['recipient_user_id'] ) ) {
 		return $retval;
 	}
 
-	switch ( $type ) {
+	switch ( $r['type'] ) {
 		case 'activity':
 			if (
-				bp_moderation_is_user_suspended( $recipient_user_id ) ||
+				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
 				(
 					(
-						empty( $group_id ) &&
+						empty( $r['group_id'] ) &&
 						(
-							bp_moderation_is_user_blocked( $recipient_user_id ) ||
-							bb_moderation_is_user_blocked_by( $recipient_user_id )
+							bp_moderation_is_user_blocked( $r['recipient_user_id'] ) ||
+							bb_moderation_is_user_blocked_by( $r['recipient_user_id'] )
 						)
 					) ||
 					(
 						bp_is_active( 'groups' ) &&
-						! empty( $group_id ) &&
-						bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+						! empty( $r['group_id'] ) &&
+						bb_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
 						(
-							! groups_is_user_admin( $author_id, $group_id ) &&
-							! groups_is_user_mod( $author_id, $group_id )
+							! groups_is_user_admin( $r['sender_id'], $r['group_id'] ) &&
+							! groups_is_user_mod( $r['sender_id'], $r['group_id'] )
 						)
 					)
 				)
@@ -1780,22 +1786,22 @@ function bb_moderation_allowed_specific_notification( $args ) {
 			break;
 		case 'messages':
 			if (
-				bp_moderation_is_user_suspended( $recipient_user_id ) ||
+				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
 				(
 					(
-						empty( $group_id ) &&
+						empty( $r['group_id'] ) &&
 						(
-							bp_moderation_is_user_blocked( $recipient_user_id ) ||
-							bb_moderation_is_user_blocked_by( $recipient_user_id )
+							bp_moderation_is_user_blocked( $r['recipient_user_id'] ) ||
+							bb_moderation_is_user_blocked_by( $r['recipient_user_id'] )
 						)
 					) ||
 					(
 						bp_is_active( 'groups' ) &&
-						! empty( $group_id ) &&
-						bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+						! empty( $r['group_id'] ) &&
+						bb_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
 						(
-							! groups_is_user_admin( $recipient_user_id, $group_id ) &&
-							! groups_is_user_mod( $recipient_user_id, $group_id )
+							! groups_is_user_admin( $r['recipient_user_id'], $r['group_id'] ) &&
+							! groups_is_user_mod( $r['recipient_user_id'], $r['group_id'] )
 						)
 					)
 				)
@@ -1805,21 +1811,21 @@ function bb_moderation_allowed_specific_notification( $args ) {
 			break;
 		case 'forums':
 			if (
-				bp_moderation_is_user_suspended( $recipient_user_id ) ||
+				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
 				(
-					bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+					bb_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
 					(
 						(
-							empty( $group_id ) &&
-							(int) $recipient_user_id !== (int) $author_id
+							empty( $r['group_id'] ) &&
+							(int) $r['recipient_user_id'] !== (int) $r['sender_id']
 						)
 						||
 						(
 							bp_is_active( 'groups' ) &&
-							! empty( $group_id ) &&
+							! empty( $r['group_id'] ) &&
 							(
-								! groups_is_user_admin( $recipient_user_id, $group_id ) &&
-								! groups_is_user_mod( $recipient_user_id, $group_id )
+								! groups_is_user_admin( $r['recipient_user_id'], $r['group_id'] ) &&
+								! groups_is_user_mod( $r['recipient_user_id'], $r['group_id'] )
 							)
 						)
 					)
@@ -1828,7 +1834,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
 				$retval = true;
 			}
 			break;
-		default :
+		default:
 			$retval = false;
 	}
 

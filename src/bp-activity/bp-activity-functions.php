@@ -4239,7 +4239,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 					'type'              => buddypress()->activity->id,
 					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
 					'recipient_user_id' => $original_activity->user_id,
-					'author_id'         => $original_activity->user_id,
+					'sender_id'         => $original_activity->user_id,
 				)
 			)
 		) {
@@ -4300,7 +4300,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 					'type'              => buddypress()->activity->id,
 					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
 					'recipient_user_id' => $parent_comment->user_id,
-					'author_id'         => $original_activity->user_id,
+					'sender_id'         => $original_activity->user_id,
 				)
 			)
 		) {
