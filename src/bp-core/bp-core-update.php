@@ -2283,7 +2283,11 @@ function bb_migrate_subscriptions() {
  */
 function bb_update_to_2_2_7() {
 	// Clear notifications cache.
-	if ( function_exists( 'wp_cache_flush_group' ) ) {
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
 		wp_cache_flush_group( 'bp-notifications' );
 	} else {
 		wp_cache_flush();

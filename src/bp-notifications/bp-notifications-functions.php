@@ -1879,7 +1879,11 @@ function bb_notification_read_for_moderated_members() {
 	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	// Clear notifications cache.
-	if ( function_exists( 'wp_cache_flush_group' ) ) {
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
 		wp_cache_flush_group( 'bp-notifications' );
 	} else {
 		wp_cache_flush();
