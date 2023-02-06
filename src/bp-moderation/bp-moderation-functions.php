@@ -1792,7 +1792,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
 				$retval = true;
 			}
 			break;
-		default :
+		default:
 			$retval = false;
 	}
 
