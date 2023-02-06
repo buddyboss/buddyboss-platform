@@ -4232,9 +4232,22 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	}
 
 	if ( $original_activity->user_id != $commenter_id ) {
+		if (
+			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+			bb_moderation_allowed_specific_notification(
+				array(
+					'type'              => buddypress()->activity->id,
+					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+					'recipient_user_id' => $original_activity->user_id,
+					'author_id'         => $original_activity->user_id,
+				)
+			)
+		) {
+			return;
+		}
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $original_activity->user_id, $commenter_id ) ) {
+		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4280,9 +4293,22 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	$parent_comment = new BP_Activity_Activity( $params['parent_id'] );
 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
+		if (
+			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+			bb_moderation_allowed_specific_notification(
+				array(
+					'type'              => buddypress()->activity->id,
+					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+					'recipient_user_id' => $parent_comment->user_id,
+					'author_id'         => $original_activity->user_id,
+				)
+			)
+		) {
+			return;
+		}
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $commenter_id ) ) {
+		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,

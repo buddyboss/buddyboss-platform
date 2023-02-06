@@ -1731,3 +1731,106 @@ function bb_moderation_remove_mention_link( $content ) {
 
 	return $content;
 }
+
+/**
+ * Function will allow to send specific email/notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args It will contain type, recipient id, gorup id and author id.
+ *
+ * @return bool
+ */
+function bb_moderation_allowed_specific_notification( $args ) {
+	$type              = isset( $args['type'] ) ? $args['type'] : '';
+	$recipient_user_id = isset( $args['recipient_user_id'] ) ? $args['recipient_user_id'] : '';
+	$author_id         = isset( $args['author_id'] ) ? $args['author_id'] : '';
+	$group_id          = isset( $args['group_id'] ) ? $args['group_id'] : '';
+	$retval            = false;
+
+	if ( empty( $recipient_user_id ) ) {
+		return $retval;
+	}
+
+	switch ( $type ) {
+		case 'activity':
+			if (
+				bp_moderation_is_user_suspended( $recipient_user_id ) ||
+				(
+					(
+						empty( $group_id ) &&
+						(
+							bp_moderation_is_user_blocked( $recipient_user_id ) ||
+							bb_moderation_is_user_blocked_by( $recipient_user_id )
+						)
+					) ||
+					(
+						bp_is_active( 'groups' ) &&
+						! empty( $group_id ) &&
+						bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+						(
+							! groups_is_user_admin( $author_id, $group_id ) &&
+							! groups_is_user_mod( $author_id, $group_id )
+						)
+					)
+				)
+			) {
+				$retval = true;
+			}
+			break;
+		case 'messages':
+			if (
+				bp_moderation_is_user_suspended( $recipient_user_id ) ||
+				(
+					(
+						empty( $group_id ) &&
+						(
+							bp_moderation_is_user_blocked( $recipient_user_id ) ||
+							bb_moderation_is_user_blocked_by( $recipient_user_id )
+						)
+					) ||
+					(
+						bp_is_active( 'groups' ) &&
+						! empty( $group_id ) &&
+						bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+						(
+							! groups_is_user_admin( $recipient_user_id, $group_id ) &&
+							! groups_is_user_mod( $recipient_user_id, $group_id )
+						)
+					)
+				)
+			) {
+				$retval = true;
+			}
+			break;
+		case 'forums':
+			if (
+				bp_moderation_is_user_suspended( $recipient_user_id ) ||
+				(
+					bb_moderation_is_user_blocked_by( $recipient_user_id ) &&
+					(
+						(
+							empty( $group_id ) &&
+							(int) $recipient_user_id !== (int) $author_id
+						)
+						||
+						(
+							bp_is_active( 'groups' ) &&
+							! empty( $group_id ) &&
+							(
+								! groups_is_user_admin( $recipient_user_id, $group_id ) &&
+								! groups_is_user_mod( $recipient_user_id, $group_id )
+							)
+						)
+					)
+				)
+			) {
+				$retval = true;
+			}
+			break;
+		default :
+			$retval = false;
+	}
+
+	return $retval;
+}
