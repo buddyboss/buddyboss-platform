@@ -225,6 +225,7 @@ function bp_messages_message_sent_add_notification( $message ) {
 	if ( ! empty( $message->recipients ) ) {
 
 		$message_from = bp_messages_get_meta( $message->id, 'message_from', true ); // group.
+		$group        = bp_messages_get_meta( $message->id, 'group_id', true ); // group_id.
 		$action       = 'new_message';
 
 		if ( ! bb_enabled_legacy_email_preference() ) {
@@ -262,6 +263,7 @@ function bp_messages_message_sent_add_notification( $message ) {
 							bp_core_current_time(),
 							true,
 							$message->sender_id,
+							$group,
 						),
 					),
 				)
@@ -270,7 +272,16 @@ function bp_messages_message_sent_add_notification( $message ) {
 		} else {
 			foreach ( (array) $message->recipients as $recipient ) {
 				// Check the sender is blocked by/blocked/suspended/deleted recipient or not.
-				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $message->sender_id ) ) {
+				if (
+					function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+					bb_moderation_allowed_specific_notification(
+						array(
+							'type'              => buddypress()->messages->id,
+							'group_id'          => $group,
+							'recipient_user_id' => $recipient->user_id,
+						)
+					)
+				) {
 					continue;
 				}
 				bp_notifications_add_notification(
