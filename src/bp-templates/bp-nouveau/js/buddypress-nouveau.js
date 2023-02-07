@@ -3351,6 +3351,7 @@ window.bp = window.bp || {};
 							$( '.main-notification-settings' ).find( 'td' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 						}
+						bp.Nouveau.NotificationMobileDropdown( $( this ).closest( '#settings-form' ).find( 'tr:not( .notification_heading )' ) );
 					});
 				})(i);
 				/* jshint ignore:end */
@@ -3375,6 +3376,9 @@ window.bp = window.bp || {};
 						var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
 						available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
 					}
+					if ( $( this ).hasClass( 'disabled' ) ) {
+						return;
+					}
 					if ( ! $( this ).find( 'input:checked' ).length ) {
 						return;
 					}
@@ -3382,7 +3386,11 @@ window.bp = window.bp || {};
 					allInputsChecked++;
 				} );
 				if ( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
-					selected_text = textAll;
+					if ( $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length == 1 ) {
+						selected_text = selected_text;
+					} else {
+						selected_text = textAll;
+					}
 				} else {
 					selected_text = selected_text === '' ? textNone : selected_text;
 				}
