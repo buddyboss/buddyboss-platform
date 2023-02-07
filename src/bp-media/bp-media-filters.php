@@ -472,7 +472,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 						$media_ids[] = $media_id;
 					}
 					if ( ! in_array( $media_id, $media_ids ) ) {
-						bp_media_delete( array( 'id' => $media_id ) );
+						bp_media_delete( array( 'id' => $media_id ), 'activity' );
 					}
 				}
 
