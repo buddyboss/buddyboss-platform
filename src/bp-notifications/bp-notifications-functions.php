@@ -1637,11 +1637,18 @@ function bb_check_delay_email_notification() {
  * @return bool
  */
 function bb_can_send_push_notification( $user_id, $args = array() ) {
-	$skip_active_user = ! empty( $args ) && isset( $args['skip_active_user'] ) ? $args['skip_active_user'] : false;
-	$presence_time    = (int) apply_filters( 'bb_push_notification_presence_time', 60 ); // 5 minutes.
+	// Parse args.
+	$r = bp_parse_args(
+		$args,
+		array(
+			'skip_active_user' => false,
+		)
+	);
+
+	$presence_time    = (int) apply_filters( 'bb_push_notification_presence_time', bb_presence_interval() + bb_presence_time_span() );
 	$user_presence    = bb_is_online_user( $user_id, $presence_time );
 
-	if ( true === $user_presence && true === $skip_active_user ) {
+	if ( true === $user_presence && true === $r['skip_active_user'] ) {
 		return false;
 	}
 
