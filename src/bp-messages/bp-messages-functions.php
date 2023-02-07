@@ -2660,7 +2660,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 					$first_five_members
 			);
 			$member_names       = implode( ', ', $member_names );
-			if ( 6 <= $total_user_ids ) {
+			if ( 6 < $total_user_ids ) {
 				$member_names = $member_names . '&hellip;';
 			}
 
