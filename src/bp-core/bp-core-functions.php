@@ -8394,7 +8394,7 @@ function bb_mention_remove_deleted_users_link( $content ) {
 
 	foreach ( (array) $usernames as $user_id => $username ) {
 		if ( bp_is_user_inactive( $user_id ) ) {
-			preg_match_all( "'<a.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
+			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );			/*preg_match_all( "'<a.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );*/
 			if ( ! empty( $content_matches ) ) {
 				foreach ( $content_matches as $match ) {
 					if ( false !== strpos( $match[0], '@' . $username ) ) {
