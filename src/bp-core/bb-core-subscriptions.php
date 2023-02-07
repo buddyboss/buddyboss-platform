@@ -460,9 +460,11 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 			}
 
 			// Check if forum is group forum or not?
-			$group_ids = function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
-			if ( ! empty( $group_ids ) ) {
-				continue;
+			if ( $post->post_type === $forum_post_type ) {
+				$group_ids = function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+				if ( ! empty( $group_ids ) ) {
+					continue;
+				}
 			}
 
 			// Check the post status.
