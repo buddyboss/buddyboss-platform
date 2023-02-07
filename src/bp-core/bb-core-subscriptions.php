@@ -190,15 +190,6 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						continue;
 					}
 
-					// Get forum id.
-					$forum_id = function_exists( 'bbp_get_topic_forum_id' ) ? bbp_get_topic_forum_id( $topic_id ) : $topic->post_parent;
-
-					// Check if forum is group forum or not?
-					$group_ids = function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
-					if ( ! empty( $group_ids ) ) {
-						continue;
-					}
-
 					$record_args = array(
 						'user_id'           => (int) $user_id,
 						'item_id'           => (int) $topic_id,
