@@ -1173,21 +1173,13 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 		$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
 		$forum_ids        = bbp_get_group_forum_ids( $group_id );
 		$child_forums     = array();
-		$topic_ids        = array();
 		$blog_id          = get_current_blog_id();
 
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				$topic_ids        = bbp_get_all_child_ids( $forum_id, bbp_get_topic_post_type() );
 				$get_child_forums = bb_get_all_nested_subforums( $forum_id );
 				if ( ! empty( $get_child_forums ) ) {
 					$child_forums = array_merge( $child_forums, $get_child_forums );
-					foreach ( $get_child_forums as $child_forum_id ) {
-						$child_topic_ids = bbp_get_all_child_ids( $child_forum_id, bbp_get_topic_post_type() );
-						if ( ! empty( $child_topic_ids ) ) {
-							$topic_ids = array_merge( $topic_ids, $child_topic_ids );
-						}
-					}
 				}
 			}
 		}
@@ -1199,12 +1191,6 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 		if ( ! empty( $forum_ids ) ) {
 			$forum_ids = implode( ',', array_filter( wp_parse_id_list( $forum_ids ) ) );
 			$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND type = 'forum' AND blog_id = {$blog_id}" ); // phpcs:ignore
-		}
-
-		// Delete the group forum topic subscriptions.
-		if ( ! empty( $topic_ids ) ) {
-			$topic_ids = implode( ',', array_filter( wp_parse_id_list( $topic_ids ) ) );
-			$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$topic_ids}) AND type = 'topic' AND blog_id = {$blog_id}" ); // phpcs:ignore
 		}
 
 		// Clear subscription cache.
