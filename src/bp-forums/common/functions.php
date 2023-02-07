@@ -1152,11 +1152,6 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 		return false;
 	}
 
-	// Bail if discussion is attached in a group.
-	if ( function_exists( 'bbp_get_forum_group_ids' ) && ! empty( bbp_get_forum_group_ids( $forum_id ) ) ) {
-		return false;
-	}
-
 	// Poster name.
 	$reply_author_name = bbp_get_reply_author_display_name( $reply_id );
 
