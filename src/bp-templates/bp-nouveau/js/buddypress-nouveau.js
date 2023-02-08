@@ -842,7 +842,7 @@ window.bp = window.bp || {};
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 
 			// Show alert when change group forum.
-			$( document ).on( 'click', '.single-item.groups.group-admin #group-settings-form input[type=submit]', this.showAlertOnChangeGroupForum );
+			$( document ).on( 'submit', 'body.single-item.groups.group-admin #group-settings-form', this.showAlertOnChangeGroupForum );
 
 		},
 
