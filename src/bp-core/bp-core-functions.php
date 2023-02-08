@@ -8297,7 +8297,7 @@ function bb_pro_pusher_version() {
  * @return int
  */
 function bb_presence_time_span() {
-	return (int) apply_filters( 'bb_presence_time_span', 180 );
+	return (int) apply_filters( 'bb_presence_time_span', 20 );
 }
 
 /**
@@ -8309,6 +8309,17 @@ function bb_presence_time_span() {
  */
 function bb_presence_default_interval() {
 	return apply_filters( 'bb_presence_default_interval', 60 );
+}
+
+/**
+ * Function to return idle the time span for consider user inactive.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_idle_inactive_span() {
+	return (int) apply_filters( 'bb_idle_inactive_span', 180 );
 }
 
 /**
