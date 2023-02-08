@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2, bb_pusher_vars, bp_media_dropzone */
+/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2, bb_pusher_vars */
 /* jshint devel: true */
 /* @version 3.1.0 */
 window.wp = window.wp || {};
@@ -38,7 +38,7 @@ window.bp = window.bp || {};
 			this.box                    = 'inbox';
 			this.mediumEditor           = false;
 			this.divider                = [];
-			this.has_history  = [];
+			this.has_history            = [];
 			this.previous               = '';
 			this.last                   = '';
 			this.threadType             = 'unarchived';
@@ -73,20 +73,19 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url                          : BP_Nouveau.ajaxurl,
-				timeout                      : 3 * 60 * 60 * 1000,
-				dictFileTooBig               : BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage           : '',
-				acceptedFiles                : 'image/*',
-				autoProcessQueue             : true,
-				addRemoveLinks               : true,
-				uploadMultiple               : false,
-				maxFiles                     : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize                  : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-				thumbnailWidth               : 140,
-				thumbnailHeight              : 140,
-				dictInvalidFileType          : bp_media_dropzone.dictInvalidFileType,
-				dictMaxFilesExceeded         : BP_Nouveau.media.media_dict_file_exceeded,
+				url                 		 : BP_Nouveau.ajaxurl,
+				timeout             		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig      		 : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage  		 : '',
+				acceptedFiles       		 : 'image/*',
+				autoProcessQueue    		 : true,
+				addRemoveLinks      		 : true,
+				uploadMultiple      		 : false,
+				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				thumbnailWidth				 : 140,
+				thumbnailHeight				 : 140,
+				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
 				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 
@@ -490,28 +489,19 @@ window.bp = window.bp || {};
 				{
 					'page'         : 1,
 					'total_page'   : 0,
-					'search_terms' : ( collection.options && collection.options.search_terms ) ? collection.options.search_terms : '',
+					'search_terms' : '',
 					'box'          : this.box
 				}
 			);
 
 			if ( collection.length ) {
 				// Use it in the filters viex.
-				filters_view = new bp.Views.messageFilters( { model: this.filters, threads: collection } );
+				filters_view = new bp.Views.messageFilters( {model: this.filters, threads: collection} );
 
-				this.views.add( { id: 'filters', view: filters_view } );
+				this.views.add( {id: 'filters', view: filters_view} );
 
 				$( '#subsubnav' ).removeClass( 'bp-hide' );
 				filters_view.inject( '.bp-messages-filters' );
-
-				if (
-					collection.options &&
-					collection.options.search_terms &&
-					collection.options.search_terms != '' &&
-					filters_view.$el
-				) {
-					$( filters_view.$el ).find( 'input[type=search]' ).val( collection.options.search_terms );
-				}
 
 				$( '.bp-messages-threads-list .message-lists > li .thread-subject' ).each( function () {
 					var available_width = $( this ).width() - 10;
@@ -1930,7 +1920,6 @@ window.bp = window.bp || {};
 				dividerObject.group_link = '';
 				dividerObject.message_from = '';
 				dividerObject.class_name = 'divider-date';
-				dividerObject.is_group_notice = false;
 
 				if ( typeof dividerObject.gif !== 'undefined' ) {
 					delete dividerObject.gif;
@@ -2047,6 +2036,7 @@ window.bp = window.bp || {};
 				'input #message_content': 'focusEditorOnChange',
 				'input #message_content': 'postValidate',// jshint ignore:line
 				'change .medium-editor-toolbar-input': 'mediumLink',
+				'paste': 'handlePaste',
 			},
 
 			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
@@ -2135,6 +2125,18 @@ window.bp = window.bp || {};
 				}
 			},
 
+			handlePaste: function ( event ) {
+				// Get user's pasted data.
+				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+					data = clipboardData.getData( 'text/plain' );
+
+				// Insert the filtered content.
+				document.execCommand( 'insertHTML', false, data );
+
+				// Prevent the standard paste behavior.
+				event.preventDefault();
+			},
+
 			initialize: function() {
 				this.on( 'ready', this.activateTinyMce, this );
 				this.on( 'ready', this.listenToUploader, this );
@@ -2174,7 +2176,6 @@ window.bp = window.bp || {};
 							},
 							imageDragging: false,
 							anchor: {
-								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -4454,9 +4455,6 @@ window.bp = window.bp || {};
 
 				target.addClass( 'current' );
 				target.parents( '.bp-messages-container' ).removeClass( 'bp-compose-message' ).addClass( 'bp-view-message' );
-
-				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 100 );
-
 			},
 
 			doAction: function( event ) {
@@ -4843,7 +4841,6 @@ window.bp = window.bp || {};
 							return event;
 						} else {
 							$( '.message_action__list.open' ).removeClass( 'open' ).closest( '.message_actions' ).removeClass( 'open' );
-							$( 'body' ).removeClass( 'message_more_option_open' );
 						}
 
 					}
@@ -4865,7 +4862,6 @@ window.bp = window.bp || {};
 				event.preventDefault();
 				var currentTarget = event.currentTarget;
 				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' ).closest( '.message_actions' ).toggleClass( 'open' );
-				$( 'body' ).addClass( 'message_more_option_open' );
 			},
 
 		}
@@ -5011,22 +5007,21 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.last.split_date = split_date;
 
 				if ( $.inArray( split_date, bp.Nouveau.Messages.divider ) === -1 ) {
-					split_message.hash            = '';
-					split_message.id              = split_date;
-					split_message.content         = BP_Nouveau.messages.today;
-					split_message.sender_avatar   = '';
-					split_message.sender_id       = '';
-					split_message.sender_is_you   = '';
-					split_message.sender_link     = '';
-					split_message.sender_name     = '';
-					split_message.display_date    = '';
-					split_message.group_text      = '';
-					split_message.group_name      = '';
-					split_message.group_avatar    = '';
-					split_message.group_link      = '';
-					split_message.message_from    = '';
-					split_message.class_name      = 'divider-date';
-					split_message.is_group_notice = false;
+					split_message.hash          = '';
+					split_message.id            = split_date;
+					split_message.content       = BP_Nouveau.messages.today;
+					split_message.sender_avatar = '';
+					split_message.sender_id     = '';
+					split_message.sender_is_you = '';
+					split_message.sender_link   = '';
+					split_message.sender_name   = '';
+					split_message.display_date  = '';
+					split_message.group_text    = '';
+					split_message.group_name    = '';
+					split_message.group_avatar  = '';
+					split_message.group_link    = '';
+					split_message.message_from  = '';
+					split_message.class_name    = 'divider-date';
 					delete split_message.className;
 
 					if ( typeof split_message.gif !== 'undefined' ) {
@@ -5774,7 +5769,6 @@ window.bp = window.bp || {};
 				);
 
 				$( 'body' ).removeClass( 'compose' ).removeClass( 'inbox' ).addClass( 'view' );
-				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 100 );
 			},
 
 			starredView: function() {
@@ -5844,4 +5838,3 @@ window.bp = window.bp || {};
 	bp.Nouveau.Messages.start();
 
 } )( bp, jQuery );
-
