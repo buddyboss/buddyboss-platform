@@ -2334,5 +2334,94 @@ function bb_update_to_2_2_7() {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'blog_post' );
 	}
+
+	$is_already_run = get_transient( 'bb_migrate_group_subscriptions' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_group_subscriptions', 'yes', HOUR_IN_SECONDS );
+
+	// Default enabled the group subscriptions.
+	bp_update_option( 'bb_enable_group_subscriptions', 1 );
+
+	// Install new group subscription email templates.
+	bb_migrate_group_subscription_email_templates();
+
+	// Migrate group subscriptions.
+	bb_migrate_group_subscription( true );
 }
 
+/**
+ * Install group subscription email templates.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_migrate_group_subscription_email_templates() {
+	$email_templates = array(
+		array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'       => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}"', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{activity.content}}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt'     => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}.\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+			'post_status'      => 'publish',
+			'post_type'        => bp_get_email_post_type(),
+			'id'               => 'groups-new-post',
+			'term_description' => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
+		),
+		array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'       => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in the forum <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt'     => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
+			'post_status'      => 'publish',
+			'post_type'        => bp_get_email_post_type(),
+			'id'               => 'groups-new-forum-topic',
+			'term_description' => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
+		),
+	);
+
+	foreach ( $email_templates as $email_template ) {
+		$email_template_id = $email_template['id'];
+		$term_description  = $email_template['term_description'];
+		unset( $email_template['id'] );
+		unset( $email_template['term_description'] );
+
+		if (
+			term_exists( $email_template_id, bp_get_email_tax_type() ) &&
+			get_terms(
+				array(
+					'taxonomy' => bp_get_email_tax_type(),
+					'slug'     => $email_template_id,
+					'fields'   => 'count',
+				)
+			) > 0
+		) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( $email_template );
+		if ( ! $post_id ) {
+			continue;
+		}
+
+		$tt_ids = wp_set_object_terms( $post_id, $email_template_id, bp_get_email_tax_type() );
+
+		foreach ( $tt_ids as $tt_id ) {
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $term_description,
+				)
+			);
+		}
+	}
+}

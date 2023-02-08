@@ -67,6 +67,14 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 			unset( $enabled_notification['bb_following_new'] );
 		}
 
+		// Do not change settings(bb_groups_subscribed_activity, bb_groups_subscribed_discussion) because it's depend on subscription from the Settings -> Group.
+		if ( isset( $enabled_notification['bb_groups_subscribed_activity'] ) ) {
+			unset( $enabled_notification['bb_groups_subscribed_activity'] );
+		}
+		if ( isset( $enabled_notification['bb_groups_subscribed_discussion'] ) ) {
+			unset( $enabled_notification['bb_groups_subscribed_discussion'] );
+		}
+
 		if ( ! bb_enabled_legacy_email_preference() ) {
 			$hide_message_notification     = isset( $_POST['hide_message_notification'] ) ? sanitize_text_field( $_POST['hide_message_notification'] ) : 0;
 			$delay_email_notification      = isset( $_POST['delay_email_notification'] ) ? sanitize_text_field( $_POST['delay_email_notification'] ) : 0;
