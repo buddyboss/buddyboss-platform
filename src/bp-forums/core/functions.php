@@ -1032,7 +1032,7 @@ function bbp_get_empty_datetime() {
 /**
  * Get default forum image URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
  *

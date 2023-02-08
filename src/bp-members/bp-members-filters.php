@@ -808,7 +808,7 @@ add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
 /**
  * Remove all subscription associations for a given user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param int $user_id ID whose subscription data should be removed.
  *

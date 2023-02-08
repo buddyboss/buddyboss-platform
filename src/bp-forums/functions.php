@@ -1070,7 +1070,7 @@ add_filter( 'bp_core_get_js_strings', 'bb_nouveau_forum_localize_scripts', 10, 1
 /**
  * Update the forum/topic subscription when topic and forum merge/split/update parent.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param int     $post_id Post ID.
  * @param WP_Post $post    Post object.
