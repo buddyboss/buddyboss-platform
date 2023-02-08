@@ -4642,6 +4642,7 @@ span.dashicons.dashicons-admin-file:before {
     flex: 0 0 100% !important;
     max-width: 100% !important;
     min-width: auto !important;
+    position: relative;
   }
   .bb-activity-media-wrap .bb-activity-media-elem .entry-img,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem .entry-img {
@@ -10169,7 +10170,6 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   clear: both;
   overflow: hidden;
   margin: 0 auto;
-  position: relative;
 }
 
 #bp-message-thread-list .bp-message-content-wrap p {
@@ -17763,6 +17763,12 @@ body.login .login-popup .mfp-close:hover {
   left: 0;
   bottom: 0;
   width: 36%;
+}
+
+@media screen and (max-width: 544px) {
+  .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + div + div {
+    position: relative;
+  }
 }
 
 .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout {
