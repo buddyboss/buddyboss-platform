@@ -1307,7 +1307,7 @@ function bp_core_install_moderation_emails() {
 /**
  * Install database tables for the subscriptions
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @uses  get_charset_collate()
  * @uses  bp_core_get_table_prefix()
