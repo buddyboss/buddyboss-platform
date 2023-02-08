@@ -3469,7 +3469,7 @@ window.bp = window.bp || {};
 
 		userPresenceStatus: function() {
 
-			var idle_interval = parseInt( BB_Nouveau_Presence.presence_time_span ) * 1000;
+			var idle_interval = parseInt( BB_Nouveau_Presence.idle_inactive_span ) * 1000;
 
 			// setup the idle time user check.
 			bp.Nouveau.userPresenceChecker( idle_interval );
@@ -3533,7 +3533,8 @@ window.bp = window.bp || {};
 						}
 					},
 					parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000
-				); // 1 min.
+				 // 1 min.
+				);
 			}
 		},
 
