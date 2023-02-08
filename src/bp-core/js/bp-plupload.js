@@ -5,7 +5,7 @@ window.bp = window.bp || {};
 
 ( function( exports, $ ) {
 
-	// Bail if not set
+	// Bail if not set.
 	if ( typeof BP_Uploader === 'undefined' ) {
 		return;
 	}
@@ -17,7 +17,7 @@ window.bp = window.bp || {};
 	 */
 	_.extend( bp, _.pick( wp, 'Backbone', 'ajax', 'template' ) );
 
-	// Init Models, Collections, Views and the BuddyPress Uploader
+	// Init Models, Collections, Views and the BuddyPress Uploader.
 	bp.Models      = bp.Models || {};
 	bp.Collections = bp.Collections || {};
 	bp.Views       = bp.Views || {};
@@ -47,7 +47,7 @@ window.bp = window.bp || {};
 			return;
 		}
 
-		// Make sure flash sends cookies (seems in IE it does without switching to urlstream mode)
+		// Make sure flash sends cookies (seems in IE it does without switching to urlstream mode).
 		if ( ! isIE && 'flash' === plupload.predictRuntime( this.params.defaults ) &&
 			( ! this.params.defaults.required_features || ! this.params.defaults.required_features.hasOwnProperty( 'send_binary_string' ) ) ) {
 
@@ -106,7 +106,7 @@ window.bp = window.bp || {};
 			}
 		);
 
-		// See https://core.trac.wordpress.org/ticket/37039
+		// See https://core.trac.wordpress.org/ticket/37039.
 		this.uploader.bind(
 			'postinit',
 			function( up ) {
@@ -114,7 +114,7 @@ window.bp = window.bp || {};
 			}
 		);
 
-		// Init BuddyPress Uploader
+		// Init BuddyPress Uploader.
 		this.uploader.init();
 
 		/**
@@ -167,6 +167,11 @@ window.bp = window.bp || {};
 					return;
 				}
 
+				if ( ! uploader.settings.multi_selection ) {
+					// Called when files are added to queue.
+					$( self ).trigger( 'bp-uploader-hide' );
+				}
+
 				_.each(
 					files,
 					function( file ) {
@@ -174,10 +179,22 @@ window.bp = window.bp || {};
 
 						// Ignore failed uploads.
 						if ( plupload.FAILED === file.status ) {
+
+							if ( ! uploader.settings.multi_selection ) {
+								// Called when files are added to queue.
+								$( self ).trigger( 'bp-uploader-show' );
+							}
+
 							return;
 						}
 
 						if ( max > hundredmb && file.size > hundredmb && uploader.runtime !== 'html5' ) {
+
+							if ( ! uploader.settings.multi_selection ) {
+								// Called when files are added to queue.
+								$( self ).trigger( 'bp-uploader-show' );
+							}
+
 							_this.uploadSizeError( uploader, file, true );
 						} else {
 							attributes = _.extend(
@@ -256,8 +273,13 @@ window.bp = window.bp || {};
 
 				file.item.set( _.extend( response.data, { uploading: false } ) );
 
-				// Add the file to the Uploaded ones
+				// Add the file to the Uploaded ones.
 				bp.Uploader.filesUploaded.add( file.item );
+
+				if ( ! uploader.settings.multi_selection ) {
+					// Called when files are added to queue.
+					$( self ).trigger( 'bp-uploader-show' );
+				}
 
 			}
 		);
@@ -305,9 +327,9 @@ window.bp = window.bp || {};
 			function( uploader, pluploadError ) {
 
 				var max_size = ( self.params && self.params.defaults && self.params.defaults.filters && self.params.defaults.filters.max_file_size ) ? self.params.defaults.filters.max_file_size : '5120000b';
-				max_size = max_size.replace( 'b', '' );
-				max_size = (max_size  / 1e+6).toFixed(0); // Convert to MB
-				max_size = max_size + 'MB';
+				max_size     = max_size.replace( 'b', '' );
+				max_size     = (max_size / 1e+6).toFixed( 0 ); // Convert to MB.
+				max_size     = max_size + 'MB';
 
 				var message = self.strings.default_error,
 				key,
@@ -332,20 +354,25 @@ window.bp = window.bp || {};
 					}
 				}
 
+				if ( ! uploader.settings.multi_selection ) {
+					// Called when files are added to queue.
+					$( self ).trigger( 'bp-uploader-show' );
+				}
+
 				$( self ).trigger( 'bp-uploader-warning', message );
 				uploader.refresh();
 			}
 		);
 	};
 
-	// Create a very generic Model for files
+	// Create a very generic Model for files.
 	bp.Models.File = Backbone.Model.extend(
 		{
 			file: {}
 		}
 	);
 
-	// Add Collections to store queue, uploaded files and errors
+	// Add Collections to store queue, uploaded files and errors.
 	$.extend(
 		bp.Uploader,
 		{
@@ -355,7 +382,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Extend wp.Backbone.View with .prepare() and .inject()
+	// Extend wp.Backbone.View with .prepare() and .inject().
 	bp.View = bp.Backbone.View.extend(
 		{
 			inject: function( selector ) {
@@ -374,12 +401,15 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Allow only image files
-	BP_Uploader.settings.defaults.filters = _.extend(BP_Uploader.settings.defaults.filters, {mime_types : [
-		{ title : 'Image files', extensions : 'jpg,jpeg,png,gif' },
-	]});
+	// Allow only image files.
+	BP_Uploader.settings.defaults.filters = _.extend(
+		BP_Uploader.settings.defaults.filters,
+		{mime_types : [
+			{ title : 'Image files', extensions : 'jpg,jpeg,png,gif' },
+			]}
+	);
 
-	// BuddyPress Uploader main view
+	// BuddyPress Uploader main view.
 	bp.Views.Uploader = bp.View.extend(
 		{
 			className: 'bp-uploader-window',
@@ -397,6 +427,8 @@ window.bp = window.bp || {};
 				this.uploader = new bp.Uploader.uploader();
 				$( this.uploader ).on( 'bp-uploader-warning', _.bind( this.setWarning, this ) );
 				$( this.uploader ).on( 'bp-uploader-new-upload', _.bind( this.resetWarning, this ) );
+				$( this.uploader ).on( 'bp-uploader-hide', _.bind( this.hideUploader, this ) );
+				$( this.uploader ).on( 'bp-uploader-show', _.bind( this.showUploader, this ) );
 			},
 
 			setWarning: function( event, message ) {
@@ -420,7 +452,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				// Remove all warning views
+				// Remove all warning views.
 				_.each(
 					this.warnings,
 					function( view ) {
@@ -428,13 +460,33 @@ window.bp = window.bp || {};
 					}
 				);
 
-					// Reset Warnings
+					// Reset Warnings.
 					this.warnings = [];
+			},
+
+			hideUploader: function () {
+				if (
+					! _.isUndefined( this.views.view ) &&
+					! _.isUndefined( this.views.view.$el ) &&
+					this.views.view.$el.length > 0
+				) {
+					this.views.view.$el.hide();
+				}
+			},
+
+			showUploader: function () {
+				if (
+					! _.isUndefined( this.views.view ) &&
+					! _.isUndefined( this.views.view.$el ) &&
+					this.views.view.$el.length > 0
+				) {
+					this.views.view.$el.show();
+				}
 			}
 		}
 	);
 
-	// BuddyPress Uploader warning view
+	// BuddyPress Uploader warning view.
 	bp.Views.uploaderWarning = bp.View.extend(
 		{
 			tagName: 'p',
@@ -451,7 +503,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// BuddyPress Uploader Files view
+	// BuddyPress Uploader Files view.
 	bp.Views.uploaderStatus = bp.View.extend(
 		{
 			className: 'files',
@@ -473,6 +525,16 @@ window.bp = window.bp || {};
 			},
 
 			feedback: function( model ) {
+
+				if ( ! BP_Uploader.settings.multi_selection && ! _.isUndefined( model.get( 'message' ) ) && ! _.isUndefined( model.get( 'file' ) )) {
+					$( '#' + model.get( 'file' ).id )
+						.parents( '.files' )
+						.parent()
+						.parent()
+						.find( '.bp-uploader-window' )
+						.show();
+				}
+
 				if ( ! _.isUndefined( model.get( 'message' ) ) && ! _.isUndefined( model.get( 'file' ) ) ) {
 					$( '#' + model.get( 'file' ).id ).html( model.get( 'message' ) ).addClass( 'error' );
 				}
@@ -480,7 +542,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// BuddyPress Uploader File progress view
+	// BuddyPress Uploader File progress view.
 	bp.Views.uploaderProgress = bp.View.extend(
 		{
 			className: 'bp-uploader-progress',

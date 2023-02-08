@@ -391,7 +391,10 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {POST} /wp-json/buddyboss/v1/subscribe/:id Subscribe/Unsubscribe Forum
+	 * NOTICE: Since 2.2.2, forum subscriptions have been migrated to a
+	 * new API for subscribing users to notifications: /wp-json/buddyboss/v1/subscriptions
+	 *
+	 * @api            {POST} /wp-json/buddyboss/v1/forums/subscribe/:id Subscribe/Unsubscribe Forum
 	 * @apiName        GetBBPForumSubscribe
 	 * @apiGroup       Forums
 	 * @apiDescription Subscribe/Unsubscribe forum for the user.
@@ -412,7 +415,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$success = bbp_remove_user_subscription( $user_id, $forum->ID );
 			$action  = 'unsubscribe';
 		} elseif ( false === $is_subscription ) {
-			$success = bbp_add_user_subscription( $user_id, $forum->ID );
+			$success = (bool) bbp_add_user_subscription( $user_id, $forum->ID );
 			$action  = 'subscribe';
 		}
 
@@ -462,7 +465,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$retval = true;
 			$forum  = bbp_get_forum( $request->get_param( 'id' ) );
 
-			if ( ! bbp_is_subscriptions_active() ) {
+			if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Subscription was disabled.', 'buddyboss' ),
@@ -1214,7 +1217,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			'subscribed' => false,
 		);
 
-		if ( bbp_is_subscriptions_active() && current_user_can( 'edit_user', $user_id ) ) {
+		if ( bb_is_enabled_subscription( 'forum' ) && current_user_can( 'edit_user', $user_id ) ) {
 			$state['subscribed'] = bbp_is_user_subscribed( $user_id, $forum_id );
 		}
 
