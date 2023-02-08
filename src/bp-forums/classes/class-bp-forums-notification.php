@@ -590,7 +590,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Render callback function on frontend.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array $items Array of subscription list.
 	 *
@@ -703,7 +703,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Render callback function on frontend.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array $items Array of subscription list.
 	 *
@@ -837,7 +837,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Send callback function for forum type notification.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -935,7 +935,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Send callback function for topic type notification.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array $args Array of arguments.
 	 *
