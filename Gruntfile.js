@@ -214,7 +214,8 @@ module.exports = function (grunt) {
 			},
 			clean: {
 				all: [BUILD_DIR],
-				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/']
+				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
+				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
 			},
 			copy: {
 				files: {
@@ -298,28 +299,41 @@ module.exports = function (grunt) {
 						}
 					}
 			},
-			bp_rest_performance: {
-				cwd: SOURCE_DIR + 'buddyboss-platform-api/Performance/',
-				dest: SOURCE_DIR + 'bp-performance/classes/',
-				expand: true,
-				src: '**',
-				options: {
-					process : function( content ) {
-						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+				bp_rest_performance: {
+					cwd: SOURCE_DIR + 'buddyboss-platform-api/Performance/',
+					dest: SOURCE_DIR + 'bp-performance/classes/',
+					expand: true,
+					src: '**',
+					options: {
+						process : function( content ) {
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+						}
 					}
-				}
-			},
-			bp_rest_mu: {
-				cwd: SOURCE_DIR + 'buddyboss-platform-api/MuPlugin/',
-				dest: SOURCE_DIR + 'bp-performance/mu-plugins/',
-				expand: true,
-				src: '**',
-				options: {
-					process : function( content ) {
-						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+				},
+				bp_rest_mu: {
+					cwd: SOURCE_DIR + 'buddyboss-platform-api/MuPlugin/',
+					dest: SOURCE_DIR + 'bp-performance/mu-plugins/',
+					expand: true,
+					src: '**',
+					options: {
+						process : function( content ) {
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+						}
 					}
-				}
-			},
+				},
+				bb_icons: {
+					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/output/',
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
+					dot: true,
+					expand: true,
+					src: [
+						'css/**',
+						'fonts/**',
+						'!example.html',
+						'!font-map.json',
+						'!svg/**',
+					],
+				},
 			},
 			uglify: {
 				core: {
@@ -412,9 +426,14 @@ module.exports = function (grunt) {
 					stdout: false
 				},
 				rest_performance: {
-				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+					command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
 					cwd: SOURCE_DIR,
 					stdout: false
+				},
+				fetch_bb_icons: {
+					command: 'git clone https://github.com/buddyboss/bb-icons.git',
+					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
+					stdout: false,
 				},
 				composer: {
 					command: 'composer update',
@@ -519,4 +538,17 @@ module.exports = function (grunt) {
 
 	// Default task.
 	grunt.registerTask( 'default', ['src'] );
+	
+	// Fetch bb icons.
+	grunt.registerTask(
+		'fetch_bb_icons',
+		[
+			'clean:bb_icons',
+			'exec:fetch_bb_icons',
+			'copy:bb_icons',
+			'clean:bb_icons',
+			'rtlcss',
+			'cssmin'
+		],
+	);
 };
