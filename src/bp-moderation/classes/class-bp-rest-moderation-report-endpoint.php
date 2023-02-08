@@ -790,3 +790,4 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	}
 
 }
+

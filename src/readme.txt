@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2.5
+Stable tag: 2.2.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.2.6 =
+* Profiles - Improved profile and account settings UI and layout in the responsive view
+* Profiles - Handled a small UX issue by not allowing multiple selections for Profile and Cover photo upload
+* Notifications - Handled 'posts from members following' email template unsubscribe link issue
+* Groups - Handled group types dropdown doesn't consider the 'dropdown order' issue
+* Forums - Improved subscription workflow for forums and discussion by providing a dedicated screen under notification preferences
+* Activity - Handled activity with just media getting deleted issue on multiple edits
+* Activity - Handled activity form gets submitted issue on selecting formatting options in the responsive view
+* Activity - Small performance code refactoring for activity action buttons
+* Activity - Handled single activity small layout issue with media in responsive view
+* Messages - Improved send message UX in the messages sidebar when Pusher is enabled
+* Messages - Improved UX to show archived message screen
+* Moderation - Improved the suspended and blocked members media access logic specific to groups
+* Network Search - Handled search results page pagination issue when per page count updated using hook
+* REST API - Provided support for new subscription workflow for forums and discussions
+* REST API - Handled activity with media getting deleted on multiple edits in the API
 
 = 2.2.5 =
 * Notifications - Provided new notification type to trigger when members on the network follow other members

@@ -1029,15 +1029,15 @@ function bbp_repair_forum_visibility() {
  * @since bbPress (r5156)
  *
  * @param int $forum_id Get the forum ID to remove
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_forum_id To get the forum id
  * @uses bbp_get_forum_subscribers() To get the forum subscribers
  * @uses bbp_remove_user_subscription() To remove the user subscription
  */
 function bbp_remove_forum_from_all_subscriptions( $forum_id = 0 ) {
 
-	// Subscriptions are not active
-	if ( ! bbp_is_subscriptions_active() ) {
+	// Bail if subscriptions are turned off.
+	if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 		return;
 	}
 
