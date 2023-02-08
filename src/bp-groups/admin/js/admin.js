@@ -62,16 +62,18 @@
 							$( '#bp-groups-new-members' ).val( '' ).val( users_to_add.join( ', ' ) );
 						}
 
-						var connected_forum_id = parseInt( $( '#bbp_group_forum_id' ).val() );
-						if (
-							'undefined' !== typeof BP_Group_Admin.group_connected_forum_id &&
-							'undefined' !== typeof BP_Group_Admin.warn_on_attach_forum &&
-							! isNaN( connected_forum_id ) &&
-							parseInt( BP_Group_Admin.group_connected_forum_id ) !== connected_forum_id
-						) {
-							if ( ! confirm( BP_Group_Admin.warn_on_attach_forum ) ) {
-								e.preventDefault();
-								return false;
+						if ( 0 < $( '#bbp_group_forum_id' ).length ) {
+							var connected_forum_id = parseInt( $( '#bbp_group_forum_id' ).val() );
+							if (
+								'undefined' !== typeof BP_Group_Admin.group_connected_forum_id &&
+								'undefined' !== typeof BP_Group_Admin.warn_on_attach_forum &&
+								! isNaN( connected_forum_id ) &&
+								parseInt( BP_Group_Admin.group_connected_forum_id ) !== connected_forum_id
+							) {
+								if ( ! confirm( BP_Group_Admin.warn_on_attach_forum ) ) {
+									e.preventDefault();
+									return false;
+								}
 							}
 						}
 

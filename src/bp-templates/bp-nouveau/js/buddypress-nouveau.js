@@ -842,7 +842,7 @@ window.bp = window.bp || {};
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 
 			// Show alert when change group forum.
-			$( document ).on( 'click', '.single-item.groups.forum #group-settings-form input[type=submit]', this.showAlertOnChangeGroupForum );
+			$( document ).on( 'click', '.single-item.groups.group-admin #group-settings-form input[type=submit]', this.showAlertOnChangeGroupForum );
 
 		},
 
@@ -3566,20 +3566,22 @@ window.bp = window.bp || {};
 			};
 		},
 
-		showAlertOnChangeGroupForum: function ( e ) {
-			var connected_forum_id = parseInt( $( '#bbp_group_forum_id' ).val() );
-			if (
-				'undefined' !== typeof BP_Nouveau.forums.params.group_connected_forum_id &&
-				'undefined' !== BP_Nouveau.forums.strings.warn_on_attach_forum &&
-				! isNaN( connected_forum_id ) &&
-				parseInt( BP_Nouveau.forums.params.group_connected_forum_id ) !== connected_forum_id
-			) {
-				if ( ! confirm( BP_Nouveau.forums.strings.warn_on_attach_forum ) ) {
-					e.preventDefault();
-					return false;
+		showAlertOnChangeGroupForum: function(e) {
+			if ( 0 < $( '#bbp_group_forum_id' ).length ) {
+				var connected_forum_id = parseInt( $( '#bbp_group_forum_id' ).val() );
+				if (
+					'undefined' !== typeof BP_Nouveau.forums.params.group_connected_forum_id &&
+					'undefined' !== BP_Nouveau.forums.strings.warn_on_attach_forum &&
+					! isNaN( connected_forum_id ) &&
+					parseInt( BP_Nouveau.forums.params.group_connected_forum_id ) !== connected_forum_id
+				) {
+					if ( ! confirm( BP_Nouveau.forums.strings.warn_on_attach_forum ) ) {
+						e.preventDefault();
+						return false;
+					}
 				}
 			}
-		}
+		},
 
 	};
 
