@@ -75,7 +75,7 @@
 							<legend><?php _e( 'Discussion Extras', 'buddyboss' ); ?></legend>
 
 							<div>
-								<?php if ( bbp_is_subscriptions_active() ) : ?>
+								<?php if ( bb_is_enabled_subscription( 'topic' ) ) : ?>
 									<div class="bp-checkbox-wrap">
 										<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
 										<label for="bbp_topic_subscribers"><?php _e( 'Merge discussion subscribers', 'buddyboss' ); ?></label>

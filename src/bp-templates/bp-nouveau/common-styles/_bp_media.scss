@@ -218,6 +218,10 @@
 		right: 0;
 		bottom: 0;
 		width: 36%;
+
+		@media screen and (max-width: 544px) {
+			position: relative;
+		}
 	}
 
 	@media screen and (max-width: 544px) {
