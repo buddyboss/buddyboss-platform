@@ -3,7 +3,7 @@
  * BuddyBoss Forum Legacy.
  *
  * @package BuddyBoss\Forums
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 	/**
 	 * Setup the bp forums legacy class.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.2.6
 	 */
 	class BP_Forums_Legacy {
 
 		/**
 		 * The single instance of the class.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @var self
 		 */
@@ -29,7 +29,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Forum legacy Constructor.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 */
 		public function __construct() {
 
@@ -40,7 +40,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Get the instance of this class.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @return object Instance.
 		 */
@@ -57,7 +57,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Setup actions for Profile Settings.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 */
 		public function setup_actions() {
 			// Create or delete legacy forum and topic subscriptions.
@@ -69,7 +69,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Function to check the forums legacy is enabled or not.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @return bool True if forums legacy is enabled otherwise false.
 		 */
@@ -80,7 +80,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Create legacy forum and topic subscriptions.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @param array $args Array of argument to create a new subscription.
 		 *
@@ -115,7 +115,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Create legacy forum and topic subscriptions.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @param int $subscription_id New modern subscription ID.
 		 *
@@ -149,7 +149,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Create/delete legacy forum and topic subscriptions.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @param string $type    Subscription type.
 		 * @param int    $item_id Forum/topic ID.
@@ -213,7 +213,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Create legacy forum/topic subscriptions.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @param int $user_id ID of user.
 		 * @param int $item_id ID of forum/topic.
@@ -241,7 +241,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Delete legacy forum/topic subscriptions.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @param int $user_id ID of user.
 		 * @param int $item_id ID of forum/topic.
@@ -277,7 +277,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Get legacy forum/topic subscriptions.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @param int $user_id ID of user.
 		 * @param int $item_id ID of forum.
@@ -301,7 +301,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 		/**
 		 * Get legacy forum/topic subscriptions key.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.2.6
 		 *
 		 * @param int $item_id ID of forum/topic.
 		 *
@@ -337,7 +337,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 	/**
 	 * Call forum subscription instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @return BP_Forums_Legacy
 	 */

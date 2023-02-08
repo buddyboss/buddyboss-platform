@@ -482,7 +482,7 @@ function bp_nouveau_member_customizer_nav() {
 /**
  * Enqueue the members scripts
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  */
 function bp_nouveau_member_enqueue_scripts() {
 	if ( ! bp_is_user_settings() ) {
@@ -497,7 +497,7 @@ function bp_nouveau_member_enqueue_scripts() {
 /**
  * Register Scripts for the Member component
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $scripts The array of scripts to register.
  *
@@ -523,7 +523,7 @@ function bp_nouveau_member_register_scripts( $scripts = array() ) {
 /**
  * Localize the strings needed for the Member UI
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $params Associative array containing the JS Strings needed by scripts.
  *

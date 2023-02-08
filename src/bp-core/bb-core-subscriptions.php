@@ -2,7 +2,7 @@
 /**
  * Subscriptions Functions.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.2.6
  * @package BuddyBoss\Core
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Migration BuddyBoss forums and topics subscriptions with background/non-background to new system.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param bool $is_background The current process is background or not.
  * @param bool $is_updater    True when function is call from updater otherwise false.
@@ -104,7 +104,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 /**
  * Callback function to migrate BuddyBoss forums and topics subscriptions to new system.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $subscription_users Array of user subscriptions.
  * @param int   $offset             Offset value.
@@ -252,7 +252,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 /**
  * Migration bbpress forums and topics subscriptions with background/non-background to new system.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param bool $is_background The current process is background or not.
  * @param int  $blog_id       The blog ID to migrate for this blog.
@@ -306,7 +306,7 @@ function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = fa
 /**
  * Processing to migration bbpress forums and topics subscriptions with background/non-background to new system.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param bool $is_background The current process is background or not.
  * @param int  $blog_id       The blog ID to migrate for this blog.
@@ -385,7 +385,7 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 /**
  * Callback function to migrate bbpress forums and topics subscriptions to new system.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $subscription_posts Array of user post subscriptions.
  * @param int   $blog_id            The blog ID to migrate for this blog.
@@ -536,7 +536,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 /**
  * Functions to get all registered subscription types.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param string $type type string.
  *
@@ -556,7 +556,7 @@ function bb_register_subscriptions_types( $type = '' ) {
 /**
  * Retrieve all registered subscription types.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param bool $singular Return the singular label if true otherwise plural.
  *
@@ -587,7 +587,7 @@ function bb_get_subscriptions_types( $singular = false ) {
 /**
  * Create user subscription.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $args {
  *     An array of arguments.
@@ -673,7 +673,7 @@ function bb_create_subscription( $args = array() ) {
 	/**
 	 * Fires after create a new subscription.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array             $r                        Array of argument to create a new subscription.
 	 * @param int|bool|WP_Error $new_subscription_created The ID of new subscription when it's true otherwise return error.
@@ -686,7 +686,7 @@ function bb_create_subscription( $args = array() ) {
 /**
  * Retrieve user subscription by type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $args {
  *     An array of optional arguments.
@@ -739,7 +739,7 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
 /**
  * Retrieve all users by subscription type and item id.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $args {
  *     An array of optional arguments.
@@ -796,7 +796,7 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
  * of instantiating BP_Subscription directly, so that you will inherit cache
  * support and pass through the bb_subscriptions_get_subscription filter.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param int $subscription_id ID of the subscription.
  *
@@ -821,7 +821,7 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
 	/**
 	 * Filters a single subscription object.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param BB_Subscriptions $subscription Single subscription object.
 	 */
@@ -831,7 +831,7 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
 /**
  * Update the subscription item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param string $type    Subscription type.
  * @param int    $item_id Subscription item ID.
@@ -847,7 +847,7 @@ function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status,
 /**
  * Delete a subscription.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param int $subscription_id ID of the subscription to delete.
  *
@@ -858,7 +858,7 @@ function bb_delete_subscription( $subscription_id ) {
 	/**
 	 * Fires before the deletion of a subscription.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param int $subscription_id ID of the subscription to be deleted.
 	 */
@@ -875,7 +875,7 @@ function bb_delete_subscription( $subscription_id ) {
 	/**
 	 * Fires after the deletion of a subscription.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param int $subscription_id ID of the subscription that was deleted.
 	 */
@@ -887,7 +887,7 @@ function bb_delete_subscription( $subscription_id ) {
 /**
  * Delete user subscriptions by item ID and type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param string $type    Type of the subscription to delete.
  * @param int    $item_id Item ID of the subscription to delete.
@@ -916,7 +916,7 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 	/**
 	 * Fires before the deletion of subscriptions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array  $subscriptions Array of subscriptions to delete.
 	 * @param string $type          Type of the subscription to delete.
@@ -934,7 +934,7 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 	/**
 	 * Fires after the deletion of subscriptions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array  $subscriptions Array of subscriptions to delete.
 	 * @param string $type          Type of the subscription to delete.
@@ -949,7 +949,7 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 /**
  * Check the particular subscription is enabled or not for modern or legacy.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param string $type              The type of subscription like 'forum', topic'.
  * @param string $notification_type The type of notification.
@@ -988,7 +988,7 @@ function bb_is_enabled_subscription( $type, $notification_type = '' ) {
 /**
  * Trigger subscription notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @param array $args {
  *     An array of arguments.

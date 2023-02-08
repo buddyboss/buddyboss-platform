@@ -241,7 +241,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Update where query remove hidden/blocked user's forum subscriptions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array  $where   Subscription forums Where sql.
 	 * @param object $suspend suspend object.
