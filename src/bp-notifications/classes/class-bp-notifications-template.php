@@ -139,6 +139,16 @@ class BP_Notifications_Template {
 	public $query_vars;
 
 	/**
+<<<<<<< Updated upstream
+=======
+	 * Notification being new or not.
+	 *
+	 * @var bool
+	 */
+	public $is_new;
+
+	/**
+>>>>>>> Stashed changes
 	 * Constructor method.
 	 *
 	 * @see bp_has_notifications() For information on the array format.

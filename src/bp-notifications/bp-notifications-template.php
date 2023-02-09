@@ -246,8 +246,17 @@ function bp_has_notifications( $args = '' ) {
 	// Get the notifications.
 	$query_loop = new BP_Notifications_Template( $r );
 
+<<<<<<< Updated upstream
 	// Setup the global query loop.
 	buddypress()->notifications->query_loop = $query_loop;
+=======
+	//Get the notification Component
+	$bp_notifications = new BP_Notifications_Component();
+
+	// Setup the global query loop.
+	$bp_notifications->set_query_loop($query_loop);
+
+>>>>>>> Stashed changes
 
 	/**
 	 * Filters whether or not the user has notifications to display.
@@ -257,6 +266,7 @@ function bp_has_notifications( $args = '' ) {
 	 *
 	 * @param bool                      $value      Whether or not there are notifications to display.
 	 * @param BP_Notifications_Template $query_loop BP_Notifications_Template object instance.
+	 * @param BP_Notifications_Component $bp_notifications BP_Notifications_Component object instance.
 	 * @param array                     $r          Array of arguments passed into the BP_Notifications_Template class.
 	 */
 	return apply_filters( 'bp_has_notifications', $query_loop->has_notifications(), $query_loop, $r );

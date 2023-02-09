@@ -53,6 +53,15 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 */
 		public $tab_order = 50;
 
+		/**
+		 * Currently Selected tab's ID of the Settings tab
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @var integer
+		 */
+		public $active_section;
+		
+
 		public function __construct() {
 			$this->initialize();
 			$this->register_tab();
