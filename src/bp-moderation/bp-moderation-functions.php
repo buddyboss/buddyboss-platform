@@ -1768,6 +1768,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
 			}
 			break;
 		case 'forums':
+		case 'groups':
 			if (
 				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
 				(

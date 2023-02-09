@@ -1909,7 +1909,8 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 		(
 			'forums' !== $notification->component_name ||
 			'activity' !== $notification->component_name ||
-			'messages' !== $notification->component_name
+			'messages' !== $notification->component_name ||
+			'groups' !== $notification->component_name
 		) &&
 		! in_array(
 			$notification->component_action,
@@ -1918,6 +1919,7 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 				'bb_forums_subscribed_reply',
 				'bb_activity_comment',
 				'bb_groups_new_message',
+				'bb_groups_subscribed_discussion'
 			),
 			true
 		)
@@ -1931,7 +1933,10 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 		$forum_id = 0;
 		if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
 			$forum_id = bbp_get_reply_forum_id( $notification->item_id );
-		} elseif ( 'bb_forums_subscribed_discussion' === $notification->component_action ) {
+		} elseif (
+			'bb_forums_subscribed_discussion' === $notification->component_action ||
+			'bb_groups_subscribed_discussion' === $notification->component_action
+		) {
 			$forum_id = bbp_get_topic_forum_id( $notification->item_id );
 		}
 		$group_id = bbp_get_forum_group_ids( $forum_id );
