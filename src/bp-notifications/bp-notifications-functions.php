@@ -1907,21 +1907,29 @@ add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
 function bb_notification_linkable_specific_notification( $retval, $notification ) {
 	if (
 		(
-			'forums' !== $notification->component_name ||
-			'activity' !== $notification->component_name ||
-			'messages' !== $notification->component_name ||
-			'groups' !== $notification->component_name
-		) &&
-		! in_array(
-			$notification->component_action,
-			array(
-				'bb_forums_subscribed_discussion',
-				'bb_forums_subscribed_reply',
-				'bb_activity_comment',
-				'bb_groups_new_message',
-				'bb_groups_subscribed_discussion'
-			),
-			true
+			bp_moderation_is_user_suspended( $notification->user_id ) ||
+			bp_moderation_is_user_suspended( $notification->secondary_item_id ) ||
+			bp_is_user_inactive( $notification->user_id ) ||
+			bp_is_user_inactive( $notification->secondary_item_id )
+		) ||
+		(
+			(
+				'forums' !== $notification->component_name ||
+				'activity' !== $notification->component_name ||
+				'messages' !== $notification->component_name ||
+				'groups' !== $notification->component_name
+			) &&
+			! in_array(
+				$notification->component_action,
+				array(
+					'bb_forums_subscribed_discussion',
+					'bb_forums_subscribed_reply',
+					'bb_activity_comment',
+					'bb_groups_new_message',
+					'bb_groups_subscribed_discussion',
+				),
+				true
+			)
 		)
 	) {
 		return $retval;
