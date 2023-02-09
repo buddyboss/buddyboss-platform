@@ -494,7 +494,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	/**
 	 * Prepare subscription topic Where SQL query to filter blocked Forum.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array $where_conditions Subscription topic Where sql.
 	 * @param array $r                Array of subscription arguments.
@@ -526,7 +526,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden topic Where SQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.2.6
 		 *
 		 * @param array $where            Query to hide suspended user's topic.
 		 * @param array $this             current class object.

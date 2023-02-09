@@ -5957,7 +5957,7 @@ function bb_activity_following_post_notification( $args ) {
 		if ( true === $send_mail ) {
 			$unsubscribe_args = array(
 				'user_id'           => $user_id,
-				'notification_type' => 'bb_activity_following_post',
+				'notification_type' => 'new-activity-following',
 			);
 
 			$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
