@@ -1885,6 +1885,7 @@ function bb_notification_read_for_moderated_members() {
 	global $bp, $wpdb;
 	$select_sql  = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
 	$select_sql .= ' WHERE is_new = 1';
+	$select_sql .= " AND component_action NOT IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' )";
 
 	$select_sql_where = array();
 	$all_users        = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
@@ -1928,29 +1929,21 @@ add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
 function bb_notification_linkable_specific_notification( $retval, $notification ) {
 	if (
 		(
-			bp_moderation_is_user_suspended( $notification->user_id ) ||
-			bp_moderation_is_user_suspended( $notification->secondary_item_id ) ||
-			bp_is_user_inactive( $notification->user_id ) ||
-			bp_is_user_inactive( $notification->secondary_item_id )
-		) ||
-		(
-			(
-				'forums' !== $notification->component_name ||
-				'activity' !== $notification->component_name ||
-				'messages' !== $notification->component_name ||
-				'groups' !== $notification->component_name
-			) &&
-			! in_array(
-				$notification->component_action,
-				array(
-					'bb_forums_subscribed_discussion',
-					'bb_forums_subscribed_reply',
-					'bb_activity_comment',
-					'bb_groups_new_message',
-					'bb_groups_subscribed_discussion',
-				),
-				true
-			)
+			'forums' !== $notification->component_name ||
+			'activity' !== $notification->component_name ||
+			'messages' !== $notification->component_name ||
+			'groups' !== $notification->component_name
+		) &&
+		! in_array(
+			$notification->component_action,
+			array(
+				'bb_forums_subscribed_discussion',
+				'bb_forums_subscribed_reply',
+				'bb_activity_comment',
+				'bb_groups_new_message',
+				'bb_groups_subscribed_discussion',
+			),
+			true
 		)
 	) {
 		return $retval;
