@@ -1769,25 +1769,46 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * @return bool
  */
 function bb_notification_is_read_only( $notification ) {
+	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
+	$allowed_component_action = array(
+		'bb_connections_request_accepted',
+		'bb_connections_new_request',
+	);
+
 	$retval = ! empty( $notification ) &&
-			  (
-				  (
-					  ! empty( $notification->secondary_item_id ) &&
-					  bp_is_user_inactive( $notification->secondary_item_id )
-				  ) || (
-					  bp_is_active( 'moderation' ) &&
-					  (
-						  (
-							  ! empty( $notification->secondary_item_id ) &&
-							  bb_moderation_moderated_user_ids( $notification->secondary_item_id )
-						  ) ||
-						  (
-							  ! empty( $notification->user_id ) &&
-							  bb_moderation_moderated_user_ids( $notification->user_id )
-						  )
-					  )
-				  )
-			  );
+	          (
+		          (
+			          (
+				          ! in_array( $notification->component_action, $allowed_component_action, true ) &&
+				          ! empty( $notification->secondary_item_id ) &&
+				          bp_is_user_inactive( $notification->secondary_item_id )
+			          ) ||
+			          (
+				          in_array( $notification->component_action, $allowed_component_action, true ) &&
+				          ! empty( $notification->item_id ) &&
+				          bp_is_user_inactive( $notification->item_id )
+			          )
+		          ) ||
+		          (
+			          bp_is_active( 'moderation' ) &&
+			          (
+				          (
+					          ! in_array( $notification->component_action, $allowed_component_action, true ) &&
+					          ! empty( $notification->secondary_item_id ) &&
+					          bb_moderation_moderated_user_ids( $notification->secondary_item_id )
+				          ) ||
+				          (
+					          in_array( $notification->component_action, $allowed_component_action, true ) &&
+					          ! empty( $notification->item_id ) &&
+					          bb_moderation_moderated_user_ids( $notification->item_id )
+				          ) ||
+				          (
+					          ! empty( $notification->user_id ) &&
+					          bb_moderation_moderated_user_ids( $notification->user_id )
+				          )
+			          )
+		          )
+	          );
 
 	return (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
 }
