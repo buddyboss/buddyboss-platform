@@ -28,9 +28,9 @@
 	},
 	"require": {
 		"composer/installers": "^2",
-		"php": "^8",
+		"php": ">=8.0.0",
 		"phpunit/phpunit": "^9",
-		"php-ffmpeg/php-ffmpeg": "^1"
+		"php-ffmpeg/php-ffmpeg": "^1.1.0"
 	},
 	"require-dev": {
 		"symfony/var-dumper": "^6",

@@ -17,15 +17,15 @@
 	},
 	"require": {
 		"composer/installers": "^2",
-		"php": "^8",
-		"php-ffmpeg/php-ffmpeg": "^1"
+		"php": ">=8.0.0",
+		"php-ffmpeg/php-ffmpeg": "^1.1.0"
 	},
 	"autoload": {
 	},
 	"scripts": {
 		"remove-ffmpeg-docs": ["rm -rf vendor/php-ffmpeg/php-ffmpeg/docs && rm -rf vendor/php-ffmpeg/php-ffmpeg/tests"],
-		"post-install-cmd": ["@remove-ffmpeg-docs", "@install-scripts"],
-		"post-update-cmd": ["@remove-ffmpeg-docs", "@install-scripts"],
+		"post-install-cmd": ["@install-scripts"],
+		"post-update-cmd": ["@install-scripts"],
 		"install-scripts": [
 			"composer dump-autoload"
 		]
