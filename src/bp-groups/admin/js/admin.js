@@ -70,10 +70,33 @@
 								! isNaN( connected_forum_id ) &&
 								parseInt( BP_Group_Admin.group_connected_forum_id ) !== connected_forum_id
 							) {
-								if ( ! confirm( BP_Group_Admin.warn_on_attach_forum ) ) {
-									e.preventDefault();
-									return false;
-								}
+								e.preventDefault();
+								$( '<div>' + BP_Group_Admin.warn_on_attach_forum + '<div>' ).dialog(
+									{
+										dialogClass: 'group-forum-confirmation',
+										resizable: false,
+										height: 'auto',
+										width: 400,
+										modal: true,
+										buttons: [
+										{
+											text: BP_Group_Admin.confirm_button,
+											click: function() {
+												$( this ).dialog( 'close' );
+												$( '#bp-groups-edit-form' )[ 0 ].submit();
+											}
+										},
+										{
+											text: BP_Group_Admin.cancel_button,
+											click: function() {
+												$( this ).dialog( 'close' );
+												e.preventDefault();
+												return false;
+											}
+										}]
+									}
+								);
+								$( '.group-forum-confirmation .ui-dialog-titlebar' ).addClass( 'bp-hide' );
 							}
 						}
 

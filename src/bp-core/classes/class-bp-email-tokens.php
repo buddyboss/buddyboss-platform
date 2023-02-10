@@ -1667,7 +1667,7 @@ class BP_Email_Tokens {
 			return $output;
 		}
 
-		if ( 'groups-new-forum-topic' === $bp_email->get( 'type' ) ) {
+		if ( 'groups-new-discussion' === $bp_email->get( 'type' ) ) {
 			return $this->token__group_discussion_content( $bp_email, $formatted_tokens, $tokens );
 		}
 

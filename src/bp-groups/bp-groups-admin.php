@@ -250,6 +250,8 @@ function bp_groups_admin_load() {
 
 	$group_localize_arr = array(
 		'add_member_placeholder' => __( 'Start typing a username to add a new member.', 'buddyboss' ),
+		'confirm_button'         => __( 'Confirm', 'buddyboss' ),
+		'cancel_button'          => __( 'Cancel', 'buddyboss' ),
 		'warn_on_leave'          => __( 'If you leave this page, you will lose any unsaved changes you have made to the group.', 'buddyboss' ),
 		'warn_on_attach_forum'   => __( 'Members cannot subscribe individually to forums inside a group, only to the group itself. By moving this forum into a group, all existing subscriptions to the forum will be removed.', 'buddyboss' ),
 	);
@@ -279,6 +281,14 @@ function bp_groups_admin_load() {
 	wp_style_add_data( 'bp_groups_admin_css', 'rtl', true );
 	if ( $min ) {
 		wp_style_add_data( 'bp_groups_admin_css', 'suffix', $min );
+	}
+
+	if ( ! wp_script_is( 'jquery-ui-dialog', 'enqueued' ) ) {
+		wp_enqueue_script( 'jquery-ui-dialog' );
+	}
+
+	if ( ! wp_style_is( 'wp-jquery-ui-dialog', 'enqueued' ) ) {
+		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 	}
 
 	if ( $doaction && 'save' === $doaction ) {
