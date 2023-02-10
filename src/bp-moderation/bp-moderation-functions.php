@@ -1705,9 +1705,9 @@ function bb_moderation_allowed_specific_notification( $args ) {
 		$args,
 		array(
 			'type'              => '',
+			'group_id'          => '',
 			'recipient_user_id' => '',
 			'sender_id'         => '',
-			'group_id'          => '',
 		)
 	);
 
