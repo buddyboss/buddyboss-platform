@@ -2241,7 +2241,7 @@ function bb_update_to_2_2_5() {
 /**
  * Clear web and api cache on the update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @return void
  */
@@ -2261,7 +2261,7 @@ function bb_update_to_2_2_6() {
 /**
  * Migrate forum/topic subscription to new table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @return void
  */

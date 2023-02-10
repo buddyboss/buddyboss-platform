@@ -72,7 +72,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Subscriptions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @var array
 	 */
@@ -223,7 +223,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register the subscription type
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param array $types Subscription types.
 	 *
@@ -265,7 +265,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Check the subscription is enabled or not from preferences.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @param string $notification_type Notification type.
 	 *
@@ -280,7 +280,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Filtered the notification preferences to use for subscription.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.6
 	 *
 	 * @return array
 	 */

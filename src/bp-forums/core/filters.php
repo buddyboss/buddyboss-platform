@@ -358,7 +358,7 @@ function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 /**
  * Fires when a forum/topic is transitioned from one status to another.
  *
- * @since [BBVERSION]
+ * @since 2.2.6
  *
  * @param string  $new_status New post status.
  * @param string  $old_status Old post status.
