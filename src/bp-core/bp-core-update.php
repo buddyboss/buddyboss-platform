@@ -2318,7 +2318,7 @@ function bb_migrate_group_subscription_email_templates() {
 	$email_templates = array(
 		array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'       => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}"', 'buddyboss' ),
+			'post_title'       => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{activity.content}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
