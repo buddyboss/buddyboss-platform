@@ -2365,12 +2365,12 @@ function bb_migrate_group_subscription_email_templates() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'       => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{activity.content}}}", 'buddyboss' ),
+			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{activity.content}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt'     => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}.\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+			'post_excerpt'     => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
 			'post_status'      => 'publish',
 			'post_type'        => bp_get_email_post_type(),
-			'id'               => 'groups-new-post',
+			'id'               => 'groups-new-activity',
 			'term_description' => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
 		),
 		array(
@@ -2382,7 +2382,7 @@ function bb_migrate_group_subscription_email_templates() {
 			'post_excerpt'     => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 			'post_status'      => 'publish',
 			'post_type'        => bp_get_email_post_type(),
-			'id'               => 'groups-new-forum-topic',
+			'id'               => 'groups-new-discussion',
 			'term_description' => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
 		),
 	);

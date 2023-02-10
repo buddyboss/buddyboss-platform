@@ -1038,30 +1038,6 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 		}
 	}
 
-	if ( bp_is_groups_component() && bp_is_current_action( 'admin' ) && bp_is_action_variable( get_option( '_bbp_forum_slug', 'forum' ), 0 ) ) {
-		$params['forums']['strings']['warn_on_attach_forum'] = __( 'Members cannot subscribe individually to forums inside a group, only to the group itself. By moving this forum into a group, all existing subscriptions to the forum will be removed.', 'buddyboss' );
-		$group_id = 0;
-		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
-			$group_id = BBP_Forums_Group_Extension::get_group_id();
-		}
-
-		if ( empty( $group_id ) && function_exists( 'bp_get_new_group_id' ) && bp_get_new_group_id() ) {
-			$group_id = bp_get_new_group_id();
-		}
-
-		if ( ! empty( $group_id ) ) {
-			$connected_forum_id  = 0;
-			$connected_forum_ids = bbp_get_group_forum_ids( $connected_forum_id );
-
-			// Get the first forum ID.
-			if ( ! empty( $connected_forum_ids ) ) {
-				$connected_forum_id = (int) is_array( $connected_forum_ids ) ? $connected_forum_ids[0] : $connected_forum_ids;
-			}
-
-			$params['forums']['params']['group_connected_forum_id'] = $connected_forum_id;
-		}
-	}
-
 	return $params;
 }
 
