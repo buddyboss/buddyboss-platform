@@ -1111,6 +1111,8 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				)
 			);
 		} elseif ( ! empty( $send ) ) {
+			BP_Messages_Thread::$noCache = true;
+
 			$thread     = new BP_Messages_Thread( (int) $send );
 			$recipients = $thread->get_recipients();
 
@@ -1126,12 +1128,15 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				$retval['message'] = __( 'Your message was sent to all members of this group.', 'buddyboss' );
 			}
 
-			$last_message  = wp_list_filter( $thread->messages, array( 'id' => $thread->last_message_id ) );
-			$last_message  = reset( $last_message );
-			$fields_update = $this->update_additional_fields_for_object( $last_message, $request );
+			$last_message = wp_list_filter( $thread->messages, array( 'id' => $thread->last_message_id ) );
+			$last_message = reset( $last_message );
 
-			if ( is_wp_error( $fields_update ) ) {
-				return $fields_update;
+			if ( ! empty( $last_message ) ) {
+				$fields_update = $this->update_additional_fields_for_object( $last_message, $request );
+
+				if ( is_wp_error( $fields_update ) ) {
+					return $fields_update;
+				}
 			}
 
 			$retval['data'][] = $this->prepare_response_for_collection(

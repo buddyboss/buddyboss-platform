@@ -101,7 +101,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 						<?php
 						if ( function_exists( 'bp_get_group_status_description' ) && bb_platform_group_headers_element_enable( 'group-privacy' ) ) :
 							?>
-							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
 							<?php
 						endif;
 

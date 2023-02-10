@@ -100,6 +100,14 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		return $params;
 	}
 
+	$current_thread_type = '';
+	if ( bp_is_messages_component() && is_user_logged_in() ) {
+		$current_thread_type = 'unarchived';
+		if ( 'archived' === bp_current_action() ) {
+			$current_thread_type = 'archived';
+		}
+	}
+
 	$params['messages'] = array(
 		'errors'                     => array(
 			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
@@ -136,8 +144,17 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		'today'                      => __( 'Today', 'buddyboss' ),
 		'video_default_url'          => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
 		'message_url'                => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ),
+		'message_archived_url'       => trailingslashit( bb_get_messages_archived_url() ),
 		'current_thread_id'          => (int) bp_action_variable( 0 ),
 		'is_blocked_by_members'      => function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids( get_current_user_id() ) : array(),
+		'current_thread_type'        => $current_thread_type,
+		'gif_media'                  => __( 'Sent a gif', 'buddyboss' ),
+		'single_media'               => __( 'Sent a photo', 'buddyboss' ),
+		'multiple_media'             => __( 'Sent some photos', 'buddyboss' ),
+		'single_video'               => __( 'Sent a video', 'buddyboss' ),
+		'multiple_video'             => __( 'Sent some videos', 'buddyboss' ),
+		'single_document'            => __( 'Sent a document', 'buddyboss' ),
+		'multiple_document'          => __( 'Sent some documents', 'buddyboss' ),
 	);
 
 	// Star private messages.
