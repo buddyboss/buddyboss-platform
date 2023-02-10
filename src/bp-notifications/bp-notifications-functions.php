@@ -1817,25 +1817,46 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * @return bool
  */
 function bb_notification_is_read_only( $notification ) {
+	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
+	$allowed_component_action = array(
+		'bb_connections_request_accepted',
+		'bb_connections_new_request',
+	);
+
 	$retval = ! empty( $notification ) &&
-			  (
-				  (
-					  ! empty( $notification->secondary_item_id ) &&
-					  bp_is_user_inactive( $notification->secondary_item_id )
-				  ) || (
-					  bp_is_active( 'moderation' ) &&
-					  (
-						  (
-							  ! empty( $notification->secondary_item_id ) &&
-							  bb_moderation_moderated_user_ids( $notification->secondary_item_id )
-						  ) ||
-						  (
-							  ! empty( $notification->user_id ) &&
-							  bb_moderation_moderated_user_ids( $notification->user_id )
-						  )
-					  )
-				  )
-			  );
+	          (
+		          (
+			          (
+				          ! in_array( $notification->component_action, $allowed_component_action, true ) &&
+				          ! empty( $notification->secondary_item_id ) &&
+				          bp_is_user_inactive( $notification->secondary_item_id )
+			          ) ||
+			          (
+				          in_array( $notification->component_action, $allowed_component_action, true ) &&
+				          ! empty( $notification->item_id ) &&
+				          bp_is_user_inactive( $notification->item_id )
+			          )
+		          ) ||
+		          (
+			          bp_is_active( 'moderation' ) &&
+			          (
+				          (
+					          ! in_array( $notification->component_action, $allowed_component_action, true ) &&
+					          ! empty( $notification->secondary_item_id ) &&
+					          bb_moderation_moderated_user_ids( $notification->secondary_item_id )
+				          ) ||
+				          (
+					          in_array( $notification->component_action, $allowed_component_action, true ) &&
+					          ! empty( $notification->item_id ) &&
+					          bb_moderation_moderated_user_ids( $notification->item_id )
+				          ) ||
+				          (
+					          ! empty( $notification->user_id ) &&
+					          bb_moderation_moderated_user_ids( $notification->user_id )
+				          )
+			          )
+		          )
+	          );
 
 	return (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
 }
@@ -1911,13 +1932,14 @@ function bb_notification_read_for_moderated_members() {
 
 	global $bp, $wpdb;
 	$select_sql  = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
-	$select_sql .= ' WHERE is_new = 1';
+	$select_sql .= ' WHERE is_new = 1 AND user_id = ' . bp_loggedin_user_id();
 
 	$select_sql_where = array();
 	$all_users        = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
 
 	if ( ! empty( $all_users ) ) {
 		$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $all_users ) . ' )';
+		$select_sql .= " AND component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' ) AND item_id IN ( " . implode( ',', $all_users ) . " )";
 	}
 	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
 
@@ -1957,7 +1979,8 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 		(
 			'forums' !== $notification->component_name ||
 			'activity' !== $notification->component_name ||
-			'messages' !== $notification->component_name
+			'messages' !== $notification->component_name ||
+			'groups' !== $notification->component_name
 		) &&
 		! in_array(
 			$notification->component_action,
@@ -1966,6 +1989,7 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 				'bb_forums_subscribed_reply',
 				'bb_activity_comment',
 				'bb_groups_new_message',
+				'bb_groups_subscribed_discussion',
 			),
 			true
 		)
@@ -1973,13 +1997,19 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 		return $retval;
 	}
 
-	$group_id = 0;
+	$group_id  = 0;
+	$author_id = 0;
 
 	if ( bp_is_active( 'forums' ) ) {
 		$forum_id = 0;
 		if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
-			$forum_id = bbp_get_reply_forum_id( $notification->item_id );
-		} elseif ( 'bb_forums_subscribed_discussion' === $notification->component_action ) {
+			$forum_id  = bbp_get_reply_forum_id( $notification->item_id );
+			$topic_id  = bbp_get_reply_topic_id( $notification->item_id );
+			$author_id = bbp_get_topic_author_id( $topic_id );
+		} elseif (
+			'bb_forums_subscribed_discussion' === $notification->component_action ||
+			'bb_groups_subscribed_discussion' === $notification->component_action
+		) {
 			$forum_id = bbp_get_topic_forum_id( $notification->item_id );
 		}
 		$group_id = bbp_get_forum_group_ids( $forum_id );
@@ -2001,8 +2031,15 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 	if (
 		bp_is_active( 'moderation' ) &&
 		(
-			bp_moderation_is_user_blocked( $notification->secondary_item_id ) ||
-			bb_moderation_is_user_blocked_by( $notification->secondary_item_id )
+			// Will check for recipient user.
+			bb_moderation_is_user_blocked_by( $notification->secondary_item_id ) ||
+			(
+				// Will check for loggedin user.
+				empty( $group_id ) &&
+				! empty( $author_id ) &&
+				bp_moderation_is_user_blocked( $notification->secondary_item_id ) &&
+				(int) $notification->user_id === (int) $author_id
+			)
 		) ||
 		(
 			! empty( $group_id ) &&
