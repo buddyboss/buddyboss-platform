@@ -1091,8 +1091,9 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 	$gif_data         = bp_activity_get_meta( $activity_id, '_gif_data', true );
 
-	$activity_type = __( 'an update', 'buddyboss' );
-	if ( $media_ids ) {
+	if ( ! empty( wp_strip_all_tags( $activity->content ) ) ) {
+		$activity_type = __( 'an update', 'buddyboss' );
+	} elseif ( $media_ids ) {
 		$media_ids = array_filter( explode( ',', $media_ids ) );
 		if ( count( $media_ids ) > 1 ) {
 			$activity_type = __( 'some photos', 'buddyboss' );
@@ -1115,6 +1116,8 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 		}
 	} elseif ( $gif_data ) {
 		$activity_type = __( 'a gif', 'buddyboss' );
+	} else {
+		$activity_type = __( 'an update', 'buddyboss' );
 	}
 
 	$args = array(

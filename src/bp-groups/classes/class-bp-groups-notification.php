@@ -784,7 +784,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-new-post',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{activity.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
