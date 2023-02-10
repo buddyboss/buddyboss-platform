@@ -1932,14 +1932,14 @@ function bb_notification_read_for_moderated_members() {
 
 	global $bp, $wpdb;
 	$select_sql  = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
-	$select_sql .= ' WHERE is_new = 1';
-	$select_sql .= " AND component_action NOT IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' )";
+	$select_sql .= ' WHERE is_new = 1 AND user_id = ' . bp_loggedin_user_id();
 
 	$select_sql_where = array();
 	$all_users        = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
 
 	if ( ! empty( $all_users ) ) {
 		$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $all_users ) . ' )';
+		$select_sql .= " AND component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' ) AND item_id IN ( " . implode( ',', $all_users ) . " )";
 	}
 	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
 
