@@ -1150,7 +1150,16 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			// It will check the moderation part.
-			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id ) ) {
+			if (
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => buddypress()->groups->id,
+						'group_id'          => $r['item_id'],
+						'recipient_user_id' => $user_id,
+					)
+				)
+			) {
 				$send_notification = false;
 				$send_mail         = false;
 			}
