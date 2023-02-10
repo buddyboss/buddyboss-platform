@@ -45,12 +45,6 @@ module.exports = function (grunt) {
 	grunt.initConfig(
 		{
 			pkg: grunt.file.readJSON( 'package.json' ),
-			checkDependencies: {
-				options: {
-					packageManager: 'npm'
-				},
-				src: {}
-			},
 			jshint: {
 				options: grunt.file.readJSON( '.jshintrc' ),
 				grunt: {
@@ -462,18 +456,22 @@ module.exports = function (grunt) {
 					},
 				}
 			},
-			'string-replace': {
+			replace: {
 				dist: {
-					files: [{
-						src: '**/*.php',
-						expand: true,
-					}],
 					options: {
-						replacements: [{
-							pattern: /\[BBVERSION]/g,
-							replacement: '<%= pkg.BBVersion %>'
-						}]
-					}
+						patterns: [
+							{
+								match: /\[BBVERSION]/g,
+								replacement: '<%= pkg.BBVersion %>'
+							}
+						]
+					},
+					files: [
+						{
+							expand: true,
+							src: '**/*.php',
+						}
+					]
 				}
 			}
 		}
@@ -482,8 +480,9 @@ module.exports = function (grunt) {
 	/**
 	 * Register tasks.
 	 */
-	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
-	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+	grunt.registerTask('pre-commit', ['jsvalidate', 'jshint', 'stylelint']);
+	grunt.registerTask('string-replace', ['replace']);
+	grunt.registerTask('src', ['jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 	grunt.registerTask('build', ['string-replace', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
