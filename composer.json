@@ -33,11 +33,11 @@
 		"php-ffmpeg/php-ffmpeg": "^1"
 	},
 	"require-dev": {
-	  "symfony/var-dumper": "^6",
-	  "dealerdirect/phpcodesniffer-composer-installer": "*",
-	  "phpcompatibility/phpcompatibility-wp": "^2.1",
-	  "squizlabs/php_codesniffer": "^3.7",
-	  "wp-coding-standards/wpcs": "*"
+		"symfony/var-dumper": "^6",
+		"dealerdirect/phpcodesniffer-composer-installer": "*",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"squizlabs/php_codesniffer": "^3.7",
+		"wp-coding-standards/wpcs": "*"
 	},
 	"autoload": {},
     "scripts": {
