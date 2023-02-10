@@ -3585,23 +3585,23 @@ window.bp = window.bp || {};
 					e.preventDefault();
 					$( '<div>' + BP_Nouveau.groups.strings.warn_on_attach_forum + '<div>' ).dialog(
 						{
-							dialogClass: "group-forum-confirmation",
+							dialogClass: 'group-forum-confirmation',
 							resizable: false,
-							height: "auto",
+							height: 'auto',
 							width: 400,
 							modal: true,
 							buttons: [
 							{
 								text: BP_Nouveau.groups.strings.confirm_button,
 								click: function() {
-									$( this ).dialog( "close" );
+									$( this ).dialog( 'close' );
 									$( '#group-settings-form' )[ 0 ].submit();
 								}
 							},
 							{
 								text: BP_Nouveau.groups.strings.cancel_button,
 								click: function() {
-									$( this ).dialog( "close" );
+									$( this ).dialog( 'close' );
 									e.preventDefault();
 									return false;
 								}
