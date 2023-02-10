@@ -439,7 +439,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 						$document_ids[] = $document_id;
 					}
 					if ( ! in_array( $document_id, $document_ids ) ) {
-						bp_document_delete( array( 'id' => $document_id ) );
+						bp_document_delete( array( 'id' => $document_id ), 'activity' );
 					}
 				}
 
@@ -1863,13 +1863,13 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'size'        => $size,
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
+					'full_name'   => esc_attr( basename( $file ) ),
 				);
 
 				if ( 0 === $folder_id && $document->folder_id > 0 ) {
 					$folder_id                    = $document->folder_id;
 					$activity['can_edit_privacy'] = false;
 				}
-
 			}
 		}
 

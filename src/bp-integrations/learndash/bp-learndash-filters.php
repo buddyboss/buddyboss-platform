@@ -25,7 +25,7 @@ add_action( 'add_meta_boxes', 'bp_activity_add_meta_boxes', 50 );
 
 add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
 
-// Support other lanaguages slug for LD.
+// Support other languages slug for LD.
 add_filter( 'bp_get_requested_url', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 
@@ -391,5 +391,18 @@ function bb_support_learndash_course_permalink( $bp, $bp_uri ) {
  * @return string URL of the current page.
  */
 function bb_support_learndash_course_other_language_permalink( $url ) {
-	return rawurldecode( $url );
+	$un_trailing_slash_url = rtrim( $url, '/' );
+	$rawurldecode_url      = rawurldecode( $un_trailing_slash_url );
+
+	if (
+		class_exists( 'LearnDash_Settings_Section' ) &&
+		(
+			in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), explode( '/', $un_trailing_slash_url ), true ) ||
+			in_array( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ), explode( '/', $rawurldecode_url ), true )
+		)
+	) {
+		return rawurldecode( $url );
+	}
+
+	return $url;
 }
