@@ -1949,12 +1949,15 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 		return $retval;
 	}
 
-	$group_id = 0;
+	$group_id  = 0;
+	$author_id = 0;
 
 	if ( bp_is_active( 'forums' ) ) {
 		$forum_id = 0;
 		if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
-			$forum_id = bbp_get_reply_forum_id( $notification->item_id );
+			$forum_id  = bbp_get_reply_forum_id( $notification->item_id );
+			$topic_id  = bbp_get_reply_topic_id( $notification->item_id );
+			$author_id = bbp_get_topic_author_id( $topic_id );
 		} elseif (
 			'bb_forums_subscribed_discussion' === $notification->component_action ||
 			'bb_groups_subscribed_discussion' === $notification->component_action
@@ -1980,8 +1983,15 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 	if (
 		bp_is_active( 'moderation' ) &&
 		(
-			bp_moderation_is_user_blocked( $notification->secondary_item_id ) ||
-			bb_moderation_is_user_blocked_by( $notification->secondary_item_id )
+			// Will check for recipient user.
+			bb_moderation_is_user_blocked_by( $notification->secondary_item_id ) ||
+			(
+				// Will check for loggedin user.
+				empty( $group_id ) &&
+				! empty( $author_id ) &&
+				bp_moderation_is_user_blocked( $notification->secondary_item_id ) &&
+				(int) $notification->user_id === (int) $author_id
+			)
 		) ||
 		(
 			! empty( $group_id ) &&
