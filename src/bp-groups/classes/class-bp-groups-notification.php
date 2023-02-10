@@ -781,7 +781,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_email_type(
-			'groups-new-post',
+			'groups-new-activity',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss' ),
@@ -821,7 +821,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_email_type(
-			'groups-new-forum-topic',
+			'groups-new-discussion',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_title'         => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
@@ -1104,7 +1104,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$type_key                = 'bb_groups_subscribed_activity';
-			$email_notification_type = 'groups-new-post';
+			$email_notification_type = 'groups-new-activity';
 			$author_id               = ! empty( $activity->user_id ) ? $activity->user_id : 0;
 			$usernames               = bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
 		} elseif ( 'bb_groups_subscribed_discussion' === $r['notification_from'] ) {
@@ -1115,7 +1115,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 			$data_id                 = ! empty( $r['data']['topic_id'] ) ? $r['data']['topic_id'] : 0;
 			$type_key                = 'bb_groups_subscribed_discussion';
-			$email_notification_type = 'groups-new-forum-topic';
+			$email_notification_type = 'groups-new-discussion';
 			$author_id               = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bbp_get_topic_author_id( $data_id );
 			$usernames               = bp_activity_do_mentions() ? bp_activity_find_mentions( bbp_get_topic_content( $data_id ) ) : array();
 		}
