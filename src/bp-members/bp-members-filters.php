@@ -41,18 +41,9 @@ function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member
 
 	if ( is_admin() ) {
 
-		$member_type_id                = bp_member_type_post_by_type( $member_type );
-		$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-		if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-			$bp_user = new WP_User( $user_id );
-
-			if ( isset( $bp_user->roles ) && in_array( $selected_member_type_wp_roles[0], $bp_user->roles, true ) ) {
-				// Assign the default member type to user.
-				bp_set_member_type( $user_id, '' );
-				bp_set_member_type( $user_id, $member_type );
-			}
-		}
+		// Assign the default member type to user.
+		bp_set_member_type( $user_id, '' );
+		bp_set_member_type( $user_id, $member_type );
 	} else {
 		// Assign the default member type to user.
 		bp_set_member_type( $user_id, '' );
