@@ -350,6 +350,27 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			);
 			$bp_background_updater->save()->schedule_event();
 		}
+
+		// Update friend count.
+		if ( bp_is_active( 'friends' ) ) {
+			$friend_ids = friends_get_friend_user_ids( $member_id );
+
+			if ( ! empty( $friend_ids ) ) {
+				if ( $this->background_disabled || ! $force_bg_process ) {
+					$this->bb_update_member_friend_count( $member_id, $friend_ids, 'hidden' );
+				} else {
+					$bp_background_updater->data(
+						array(
+							array(
+								'callback' => array( $this, 'bb_update_member_friend_count' ),
+								'args'     => array( $member_id, $friend_ids, 'hidden' ),
+							),
+						)
+					);
+					$bp_background_updater->save()->schedule_event();
+				}
+			}
+		}
 	}
 
 	/**
@@ -405,6 +426,28 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
+		}
+
+		// Update friend count.
+		if ( bp_is_active( 'friends' ) ) {
+			$friend_ids = friends_get_friend_user_ids( $member_id );
+
+			if ( ! empty( $friend_ids ) ) {
+				$friend_ids = array_filter( array_unique( $friend_ids ) );
+				if ( $this->background_disabled || ! $force_bg_process ) {
+					$this->bb_update_member_friend_count( $member_id, $friend_ids, 'unhidden' );
+				} else {
+					$bp_background_updater->data(
+						array(
+							array(
+								'callback' => array( $this, 'bb_update_member_friend_count' ),
+								'args'     => array( $member_id, $friend_ids, 'unhidden' ),
+							),
+						)
+					);
+					$bp_background_updater->save()->schedule_event();
+				}
+			}
 		}
 	}
 
@@ -801,5 +844,35 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 * @param array  $params         Array of parameters for the request.
 		 */
 		return apply_filters( 'bb_get_suspended_avatar_url', $avatar_url, $old_avatar_url, $params );
+	}
+
+	/**
+	 * Update member friend count.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $user_id    User ID.
+	 * @param array  $member_ids Array member friend IDs.
+	 * @param string $type       Member hide or un-hide.
+	 */
+	public function bb_update_member_friend_count( $user_id, $member_ids, $type ) {
+
+		if ( ! empty( $member_ids ) ) {
+			foreach ( $member_ids as $member_id ) {
+				$friend_ids = friends_get_friend_user_ids( $member_id );
+
+				if ( ! empty( $friend_ids ) ) {
+					$total_friend_count = count( $friend_ids );
+
+					if ( 'hidden' === $type && in_array( $user_id, $friend_ids, true ) ) {
+						$total_friend_count--;
+					} elseif ( 'unhidden' === $type && ! in_array( $user_id, $friend_ids, true ) ) {
+						$total_friend_count++;
+					}
+
+					bp_update_user_meta( $member_id, 'total_friend_count', (int) $total_friend_count );
+				}
+			}
+		}
 	}
 }
