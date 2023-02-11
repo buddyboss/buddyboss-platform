@@ -482,6 +482,8 @@ class BP_Members_Component extends BP_Component {
 			array(
 				'bp_last_activity',
 				'bp_member_type',
+				'bp_member_member_type',
+				'bp_member',
 			)
 		);
 
@@ -508,6 +510,7 @@ class BP_Members_Component extends BP_Component {
 			'BP_REST_Members_Actions_Endpoint',
 			'BP_REST_Members_Details_Endpoint',
 			'BP_REST_Attachments_Member_Avatar_Endpoint',
+			'BB_REST_Subscriptions_Endpoint',
 		);
 
 		if ( function_exists( 'bp_core_get_suggestions' ) ) {

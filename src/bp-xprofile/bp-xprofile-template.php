@@ -639,6 +639,10 @@ function bp_get_the_profile_field_value() {
 		}
 	}
 
+	if ( 'socialnetworks' === $field->type ) {
+		$field->data->value = bp_get_user_social_networks_urls();
+	}
+
 	/**
 	 * Filters the XProfile field value.
 	 *
@@ -1028,7 +1032,7 @@ function bp_profile_field_data( $args = '' ) {
 	 */
 function bp_get_profile_field_data( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'field'   => false, // Field name or ID.
@@ -1661,4 +1665,24 @@ function bp_get_field_data_attribute( $attribute = false ) {
 	 * @param string $value data HTML attribute with imploded data attributes.
 	 */
 	return apply_filters( 'bp_get_field_data_attribute', implode( ' ', $data_attribute ) . '"' );
+}
+
+/**
+ * Validate social networks field values.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param string $html The member social networks.
+ * @param string $original_option_values The field value.
+ * @param string $social_networks_id The social network id.
+ *
+ * @return string|null
+ */
+function bb_get_user_social_networks_urls_with_visibility( $html, $original_option_values, $social_networks_id ) {
+
+	if ( strpos( $html, 'social-networks-wrap' ) === false ) {
+		return '';
+	}
+
+	return $html;
 }

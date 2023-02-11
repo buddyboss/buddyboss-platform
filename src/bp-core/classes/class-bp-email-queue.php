@@ -96,16 +96,23 @@ class BP_Email_Queue {
 			return;
 		}
 
-		$place_holders = array();
-
-		foreach ( $data as $item ) {
-			// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
-			$place_holders[] = $wpdb->prepare( "( %s, %s, %s, %s, %d )", $item['email_type'], maybe_serialize( $item['recipient'] ), maybe_serialize( $item['arguments'] ), bp_core_current_time(), 0 );
+		if ( count( $data ) > 200 ) {
+			$datas = array_chunk( $data, 200 );
+		} else {
+			$datas = array( $data );
 		}
 
-		$sql = "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES " . implode( ', ', $place_holders );
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query( $sql );
+		foreach ( $datas as $data ) {
+			$place_holders = array();
+			foreach ( $data as $item ) {
+				// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
+				$place_holders[] = $wpdb->prepare( "( %s, %s, %s, %s, %d )", $item['email_type'], maybe_serialize( $item['recipient'] ), maybe_serialize( $item['arguments'] ), bp_core_current_time(), 0 );
+			}
+
+			$sql = "INSERT INTO {$wpdb->prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES " . implode( ', ', $place_holders );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $sql );
+		}
 	}
 
 	/**

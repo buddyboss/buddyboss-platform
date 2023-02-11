@@ -27,9 +27,7 @@ function bp_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 	// Added this check for the display proper images in /wp-admin/options-discussion.php page Default Avatar page.
 	global $pagenow;
 	if ( 'options-discussion.php' === $pagenow ) {
-		if ( true === $args['force_default'] && 'mm' === $args['default'] ) {
-			return apply_filters( 'bp_set_wp_backend_default_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
-		} elseif ( true === $args['force_default'] ) {
+		if ( true === $args['force_default'] ) {
 			return $retval;
 		}
 	}
@@ -72,4 +70,4 @@ function bp_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 
 	return $retval;
 }
-add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
+

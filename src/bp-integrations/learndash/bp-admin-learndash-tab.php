@@ -109,18 +109,44 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__( 'Social Group Sync', 'buddyboss' ),
 			array(
 				'input_text'   => sprintf(
-					__( 'Enable group sync functionality <b>FROM</b> <a href="%1$s">BuddyBoss Social Groups</a> <b>TO</b> <a href="%2$s">LearnDash Groups</a>', 'buddyboss' ),
-					add_query_arg(
-						array(
-							'page' => 'bp-groups',
-						),
-						admin_url( 'admin.php' )
+				/* translators: 1. From text. 2. Group link. 3. To text link. 4. post type group link. */
+					'%1$s %2$s %3$s %4$s %5$s',
+					esc_html__( 'Enable group sync functionality ', 'buddyboss' ),
+					sprintf(
+					/* translators: 1. From text. */
+						'<strong><em>%s</em></strong>',
+						esc_html__( 'from', 'buddyboss' )
 					),
-					add_query_arg(
-						array(
-							'post_type' => 'groups',
+					sprintf(
+					/* translators: 1. Group link. 2. Group Text. */
+						'<a href="%1$s">%2$s</a>',
+						esc_url(
+							add_query_arg(
+								array(
+									'page' => 'bp-groups',
+								),
+								admin_url( 'admin.php' )
+							)
 						),
-						admin_url( 'edit.php' )
+						esc_html__( 'BuddyBoss Social Groups', 'buddyboss' )
+					),
+					sprintf(
+					/* translators: 1. To text. */
+						'<strong><em>%s</em></strong>',
+						esc_html__( 'to', 'buddyboss' )
+					),
+					sprintf(
+					/* translators: 1. Post type group link. 2. Post type group text. */
+						'<a href="%1$s">%2$s</a>',
+						esc_url(
+							add_query_arg(
+								array(
+									'post_type' => 'groups',
+								),
+								admin_url( 'edit.php' )
+							)
+						),
+						esc_html__( 'LearnDash Groups', 'buddyboss' )
 					)
 				),
 				'input_run_js' => 'buddypress_enabled',
@@ -247,18 +273,44 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__( 'LearnDash Group Sync', 'buddyboss' ),
 			array(
 				'input_text'   => sprintf(
-					__( 'Enable group sync functionality <b>FROM</b> <a href="%1$s">LearnDash Groups</a> <b>TO</b> <a href="%2$s">BuddyBoss Social Groups</a>', 'buddyboss' ),
-					add_query_arg(
-						array(
-							'post_type' => 'groups',
-						),
-						admin_url( 'edit.php' )
+				/* translators: 1. From text. 2. Group link. 3. To text link. 4. post type group link. */
+					'%1$s %2$s %3$s %4$s %5$s',
+					esc_html__( 'Enable group sync functionality ', 'buddyboss' ),
+					sprintf(
+					/* translators: 1. From text. */
+						'<strong><em>%s</em></strong>',
+						esc_html__( 'from', 'buddyboss' )
 					),
-					add_query_arg(
-						array(
-							'page' => 'bp-groups',
+					sprintf(
+					/* translators: 1. Post type group link. 2. Post type group text. */
+						'<a href="%1$s">%2$s</a>',
+						esc_url(
+							add_query_arg(
+								array(
+									'post_type' => 'groups',
+								),
+								admin_url( 'edit.php' )
+							)
 						),
-						admin_url( 'admin.php' )
+						esc_html__( 'LearnDash Groups', 'buddyboss' )
+					),
+					sprintf(
+					/* translators: 1. To text. */
+						'<strong><em>%s</em></strong>',
+						esc_html__( 'to', 'buddyboss' )
+					),
+					sprintf(
+					/* translators: 1. Group link. 2. Group Text. */
+						'<a href="%1$s">%2$s</a>',
+						esc_url(
+							add_query_arg(
+								array(
+									'page' => 'bp-groups',
+								),
+								admin_url( 'admin.php' )
+							)
+						),
+						esc_html__( 'BuddyBoss Social Groups', 'buddyboss' )
 					)
 				),
 				'input_run_js' => 'learndash_enabled',
