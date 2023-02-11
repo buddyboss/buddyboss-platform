@@ -26,45 +26,6 @@ add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 
 add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
 
 /**
- * Assign the default member type to user on Admin.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int    $user_id ID of user.
- * @param string $member_type Defult selected member type.
- */
-function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member_type ) {
-
-	if ( empty( $user_id ) || empty( $member_type ) ) {
-		return false;
-	}
-
-	if ( is_admin() ) {
-
-		// Assign the default member type to user.
-		bp_set_member_type( $user_id, '' );
-		bp_set_member_type( $user_id, $member_type );
-	} else {
-		// Assign the default member type to user.
-		bp_set_member_type( $user_id, '' );
-		bp_set_member_type( $user_id, $member_type );
-
-		$member_type_id                = bp_member_type_post_by_type( $member_type );
-		$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-		if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-			$bp_user = new WP_User( $user_id );
-			foreach ( $bp_user->roles as $role ) {
-				// Remove role.
-				$bp_user->remove_role( $role );
-			}
-			// Add role.
-			$bp_user->add_role( $selected_member_type_wp_roles[0] );
-		}
-	}
-}
-
-/**
  * Load additional sign-up sanitization filters on bp_loaded.
  *
  * These are used to prevent XSS in the BuddyPress sign-up process. You can
@@ -830,3 +791,42 @@ function bb_delete_user_subscriptions( $user_id ) {
 }
 add_action( 'wpmu_delete_user', 'bb_delete_user_subscriptions' );
 add_action( 'delete_user', 'bb_delete_user_subscriptions' );
+
+/**
+ * Assign the default member type to user who register recently.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id     ID of user.
+ * @param string $member_type Default selected member type.
+ */
+function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member_type ) {
+
+	if ( empty( $user_id ) || empty( $member_type ) ) {
+		return false;
+	}
+
+	if ( is_admin() ) {
+
+		// Assign the default member type to user.
+		bp_set_member_type( $user_id, '' );
+		bp_set_member_type( $user_id, $member_type );
+	} else {
+		// Assign the default member type to user.
+		bp_set_member_type( $user_id, '' );
+		bp_set_member_type( $user_id, $member_type );
+
+		$member_type_id                = bp_member_type_post_by_type( $member_type );
+		$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+		if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+			$bp_user = new WP_User( $user_id );
+			foreach ( $bp_user->roles as $role ) {
+				// Remove role.
+				$bp_user->remove_role( $role );
+			}
+			// Add role.
+			$bp_user->add_role( $selected_member_type_wp_roles[0] );
+		}
+	}
+}
