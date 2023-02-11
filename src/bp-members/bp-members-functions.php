@@ -4241,15 +4241,9 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 					'post_type'      => bp_get_invite_post_type(),
 					'posts_per_page' => - 1,
 					'meta_query'     => array(
-						'relation' => 'AND',
 						array(
 							'key'     => '_bp_invitee_email',
 							'value'   => $email,
-							'compare' => '=',
-						),
-						array(
-							'key'     => '_bp_invitee_status',
-							'value'   => '0',
 							'compare' => '=',
 						),
 					),
@@ -4429,15 +4423,9 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 				'post_type'      => bp_get_invite_post_type(),
 				'posts_per_page' => - 1,
 				'meta_query'     => array(
-					'relation' => 'AND',
 					array(
 						'key'     => '_bp_invitee_email',
 						'value'   => $email,
-						'compare' => '=',
-					),
-					array(
-						'key'     => '_bp_invitee_status',
-						'value'   => '0',
 						'compare' => '=',
 					),
 				),
