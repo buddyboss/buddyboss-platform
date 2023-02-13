@@ -446,6 +446,11 @@ window.bp = window.bp || {};
 						return;
 					}
 
+					// Check if URL has specific comment to show.
+					if ( $( 'body' ).hasClass( 'activity-singular' ) && window.location.hash !== '' && $( window.location.hash ).length && $( window.location.hash ).closest( '.activity-comments' ).length !== 0 ) {
+						return;
+					}
+
 					// Get the activity id.
 					activity_item = $( comment ).closest( '.activity-item' );
 
@@ -2266,8 +2271,9 @@ window.bp = window.bp || {};
 				if ( window.location.hash ) {
 
 					var id = window.location.hash;
+					var adminBar = $( '#wpadminbar' ).length !== 0 ? $( '#wpadminbar' ).innerHeight() : 0;
 					if ( $( id ).length > 0 ) {
-						$( 'html, body' ).animate( { scrollTop: parseInt( $( id ).offset().top ) - 50 }, 0 );
+						$( 'html, body' ).animate( { scrollTop: parseInt( $( id ).offset().top ) - (80 + adminBar) }, 0 );
 					}
 				}
 
