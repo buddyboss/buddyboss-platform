@@ -22890,6 +22890,21 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   display: none;
 }
 
+/* Access Control - Empty a tags */
+.acomment-avatar > a[href=""],
+.comment-author > a[href=""],
+.acomment-meta > a[href=""],
+.bp-avatar-wrap > a[href=""],
+.notification-avatar > a[href=""],
+.bs-group-member > a[href=""],
+.member-name > a[href=""],
+.message-metadata > a[href=""],
+.thread-avatar > a[href=""],
+.item-avatar > a[href=""],
+.item-meta h3 > a[href=""] {
+  pointer-events: none;
+}
+
 /*comment option*/
 #comments .comment-body {
   position: relative;

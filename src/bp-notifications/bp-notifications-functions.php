@@ -756,8 +756,10 @@ function bb_notifications_background_enabled() {
  * @param string $component_action  Notification component action.
  * @param string $date_notified     Notification date.
  * @param bool   $is_new            Setup the notification is unread or read.
+ * @param int    $sender_id         Sender user id.
+ * @param int    $group_id          Group id.
  */
-function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true ) {
+function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true, $sender_id = 0, $group_id = 0 ) {
 	if (
 		empty( $user_ids ) ||
 		empty( $item_id ) ||
@@ -775,6 +777,21 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 	foreach ( $user_ids as $user_id ) {
 
 		if ( empty( $user_id ) ) {
+			continue;
+		}
+
+		// Check the sender is blocked by/blocked/suspended recipient or not.
+		if (
+			! empty( $sender_id ) &&
+			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+			bb_moderation_allowed_specific_notification(
+				array(
+					'type'              => $component_name,
+					'group_id'          => $group_id,
+					'recipient_user_id' => $user_id,
+				)
+			)
+		) {
 			continue;
 		}
 
@@ -1578,7 +1595,17 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 		}
 	}
 
-	return $renderable;
+	/**
+	 * Filter will return notifications data which will render.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed  $renderable        Notifications data which will render.
+	 * @param string $notification_item Notifications item.
+	 * @param string $format            Format of the notification.
+	 * @param string $screen            Screen of the notification.
+	 */
+	return apply_filters( 'bb_notification_get_renderable_notifications', $renderable, $notification_item, $format, $screen );
 }
 
 
@@ -1740,3 +1767,254 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
 
 	return $where_sql;
 }
+
+/**
+ * Function to check if notification triggered by blocked/blocked by/suspended/deleted member
+ * then this notification will only for read purpose.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $notification Notification item.
+ *
+ * @return bool
+ */
+function bb_notification_is_read_only( $notification ) {
+	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
+	$allowed_component_action = array(
+		'bb_connections_request_accepted',
+		'bb_connections_new_request',
+	);
+
+	$retval = ! empty( $notification ) &&
+	          (
+		          (
+			          (
+				          ! in_array( $notification->component_action, $allowed_component_action, true ) &&
+				          ! empty( $notification->secondary_item_id ) &&
+				          bp_is_user_inactive( $notification->secondary_item_id )
+			          ) ||
+			          (
+				          in_array( $notification->component_action, $allowed_component_action, true ) &&
+				          ! empty( $notification->item_id ) &&
+				          bp_is_user_inactive( $notification->item_id )
+			          )
+		          ) ||
+		          (
+			          bp_is_active( 'moderation' ) &&
+			          (
+				          (
+					          ! in_array( $notification->component_action, $allowed_component_action, true ) &&
+					          ! empty( $notification->secondary_item_id ) &&
+					          bb_moderation_moderated_user_ids( $notification->secondary_item_id )
+				          ) ||
+				          (
+					          in_array( $notification->component_action, $allowed_component_action, true ) &&
+					          ! empty( $notification->item_id ) &&
+					          bb_moderation_moderated_user_ids( $notification->item_id )
+				          ) ||
+				          (
+					          ! empty( $notification->user_id ) &&
+					          bb_moderation_moderated_user_ids( $notification->user_id )
+				          )
+			          )
+		          )
+	          );
+
+	return (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
+}
+
+/**
+ * Function will remove link from notification description.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $renderable   Notification details.
+ * @param object $notification Notification item.
+ * @param string $format       Format of the notification.
+ * @param string $screen       Screen of the notification.
+ *
+ * @return string|string[]|null
+ */
+function bb_notification_get_renderable_notifications_callback( $renderable, $notification, $format, $screen ) {
+
+	if ( true === bb_notification_is_read_only( $notification ) ) {
+		if ( 'string' === $format ) {
+			$renderable = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $renderable );
+		} elseif ( 'object' === $format || 'array' === $format ) {
+			if ( is_object( $renderable ) ) {
+				$renderable->href = '';
+			} else {
+				$renderable['href'] = '';
+			}
+		}
+	}
+
+	return $renderable;
+}
+add_filter( 'bb_notification_get_renderable_notifications', 'bb_notification_get_renderable_notifications_callback', 99, 4 );
+
+/**
+ * Function will remove link from notification description.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $description  Notification details.
+ * @param object $notification Notification item.
+ *
+ * @return string|string[]|null
+ */
+function bb_get_the_notification_description_callback( $description, $notification ) {
+
+	if ( true === bb_notification_is_read_only( $notification ) ) {
+		$description = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $description );
+	}
+
+	return $description;
+
+}
+add_filter( 'bp_get_the_notification_description', 'bb_get_the_notification_description_callback', 99, 2 );
+
+/**
+ * Function will forcely read notification which triggered by blocked/blocked by/suspended member.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_notification_read_for_moderated_members() {
+	$current_user_id = bp_loggedin_user_id();
+
+	if ( ! $current_user_id ) {
+		return;
+	}
+
+	$read_notification_migration = bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+
+	if ( $read_notification_migration ) {
+		return;
+	}
+
+	global $bp, $wpdb;
+	$select_sql  = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
+	$select_sql .= ' WHERE is_new = 1 AND user_id = ' . bp_loggedin_user_id();
+
+	$select_sql_where = array();
+	$all_users        = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
+
+	if ( ! empty( $all_users ) ) {
+		$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $all_users ) . ' )';
+		$select_sql .= " AND component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' ) AND item_id IN ( " . implode( ',', $all_users ) . " )";
+	}
+	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
+
+	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' )';
+
+	$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ({$select_sql})";
+	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	// Clear notifications cache.
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		wp_cache_flush_group( 'bp-notifications' );
+	} else {
+		wp_cache_flush();
+	}
+
+	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+}
+
+add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
+
+/**
+ * Function to allow specific notification for forum/activity/message on notification screen.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool   $retval       Return true or false.
+ * @param object $notification Notification Item.
+ *
+ * @return bool
+ */
+function bb_notification_linkable_specific_notification( $retval, $notification ) {
+	if (
+		(
+			'forums' !== $notification->component_name ||
+			'activity' !== $notification->component_name ||
+			'messages' !== $notification->component_name ||
+			'groups' !== $notification->component_name
+		) &&
+		! in_array(
+			$notification->component_action,
+			array(
+				'bb_forums_subscribed_discussion',
+				'bb_forums_subscribed_reply',
+				'bb_activity_comment',
+				'bb_groups_new_message',
+				'bb_groups_subscribed_discussion',
+			),
+			true
+		)
+	) {
+		return $retval;
+	}
+
+	$group_id  = 0;
+	$author_id = 0;
+
+	if ( bp_is_active( 'forums' ) ) {
+		$forum_id = 0;
+		if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
+			$forum_id  = bbp_get_reply_forum_id( $notification->item_id );
+			$topic_id  = bbp_get_reply_topic_id( $notification->item_id );
+			$author_id = bbp_get_topic_author_id( $topic_id );
+		} elseif (
+			'bb_forums_subscribed_discussion' === $notification->component_action ||
+			'bb_groups_subscribed_discussion' === $notification->component_action
+		) {
+			$forum_id = bbp_get_topic_forum_id( $notification->item_id );
+		}
+		$group_id = bbp_get_forum_group_ids( $forum_id );
+		$group_id = ! empty( $group_id ) ? current( $group_id ) : 0;
+	}
+
+	if ( bp_is_active( 'activity' ) && 'bb_activity_comment' === $notification->component_action ) {
+		$current_activity = new BP_Activity_Activity( $notification->item_id );
+		if ( ! empty( $current_activity->id ) ) {
+			$original_activity = new BP_Activity_Activity( $current_activity->item_id );
+			$group_id          = 'groups' === $original_activity->component ? $original_activity->item_id : '';
+		}
+	}
+
+	if ( bp_is_active( 'messages' ) && 'bb_groups_new_message' === $notification->component_action ) {
+		$group_id = bp_messages_get_meta( $notification->item_id, 'group_id', true );
+	}
+
+	if (
+		bp_is_active( 'moderation' ) &&
+		(
+			// Will check for recipient user.
+			bb_moderation_is_user_blocked_by( $notification->secondary_item_id ) ||
+			(
+				// Will check for loggedin user.
+				empty( $group_id ) &&
+				! empty( $author_id ) &&
+				bp_moderation_is_user_blocked( $notification->secondary_item_id ) &&
+				(int) $notification->user_id === (int) $author_id
+			)
+		) ||
+		(
+			! empty( $group_id ) &&
+			bp_is_active( 'groups' ) &&
+			(
+				groups_is_user_admin( $notification->user_id, $group_id ) ||
+				groups_is_user_mod( $notification->user_id, $group_id )
+			)
+		)
+	) {
+		return false;
+	}
+
+	return $retval;
+}
+add_filter( 'bb_notification_is_read_only', 'bb_notification_linkable_specific_notification', 10, 2 );
