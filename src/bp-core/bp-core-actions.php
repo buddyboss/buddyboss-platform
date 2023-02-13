@@ -542,7 +542,7 @@ add_action( 'update_option_bp_wp_heartbeat_disabled', 'bb_clear_interval_on_enab
 /**
  * Redirect old forums subscriptions links to new one.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.6
  *
  * @return void
  */
