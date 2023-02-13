@@ -1213,7 +1213,8 @@ function folders_check_folder_access( $folder_id ) {
  */
 function bp_document_delete_orphaned_attachments() {
 
-	global $wpdb;
+	remove_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10 );
+	remove_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10 );
 
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
@@ -1222,15 +1223,37 @@ function bp_document_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_document_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
-	$data  = $wpdb->get_col( $query );
+	$args = array(
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+		'post_status'    => 'inherit',
+		'post_type'      => 'attachment',
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'   => 'bp_document_saved',
+				'value' => '0',
+			),
+			array(
+				'key'     => 'bb_media_draft',
+				'compare' => 'NOT EXISTS',
+				'value'   => '',
+			),
+		),
+	);
 
-	if ( ! empty( $data ) ) {
-		foreach ( $data as $a_id ) {
-			wp_delete_attachment( $a_id, true );
+	$document_wp_query = new WP_query( $args );
+	if ( 0 < $document_wp_query->found_posts ) {
+		foreach ( $document_wp_query->posts as $post_id ) {
+			wp_delete_attachment( $post_id, true );
 		}
 	}
 
+	wp_reset_postdata();
+	wp_reset_query();
+
+	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
+	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
 }
 
 /**
@@ -1375,11 +1398,37 @@ function bp_document_upload() {
 
 	do_action( 'bb_document_upload', $attachment );
 
+	// Generate document attachment preview link.
+	$attachment_id   = 'forbidden_' . $attachment->ID;
+	$attachment_url  = home_url( '/' ) . 'bb-attachment-document-preview/' . base64_encode( $attachment_id );
+	$attachment_file = get_attached_file( $attachment->ID );
+	$attachment_size = is_file( $attachment_file ) ? bp_document_size_format( filesize( get_attached_file( $attachment->ID ) ) ) : 0;
+
+	if ( 0 === $attachment_size ) {
+
+		if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		}
+
+		$file_system_direct = new WP_Filesystem_Direct( false );
+		$attachment_size    = bp_document_size_format( $file_system_direct->size( $attachment_file ) );
+	}
+
+	$extension = bp_document_extension( $attachment->ID );
+	$svg_icon  = bp_document_svg_icon( $extension, $attachment->ID );
+
 	$result = array(
-		'id'   => (int) $attachment->ID,
-		'url'  => esc_url( $attachment->guid ),
-		'name' => esc_attr( pathinfo( basename( get_attached_file( (int) $attachment->ID ) ), PATHINFO_FILENAME ) ),
-		'type' => esc_attr( 'document' ),
+		'id'                => (int) $attachment->ID,
+		'url'               => esc_url( $attachment_url ),
+		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
+		'full_name'         => esc_attr( basename( $attachment_file ) ),
+		'type'              => esc_attr( 'document' ),
+		'size'              => $attachment_size,
+		'extension'         => $extension,
+		'svg_icon'          => $svg_icon,
+		'svg_icon_download' => bp_document_svg_icon( 'download' ),
+		'text'              => bp_document_mirror_text( $attachment->ID ),
 	);
 
 	return $result;
@@ -2236,8 +2285,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity document own.
-					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+					$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2308,8 +2357,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity document own.
-							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+							$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -4269,15 +4318,17 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$file_path = $file_path . '/' . $file['file'];
 			}
 
-			if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' !== $extension ) {
-				// Regenerate attachment thumbnails.
-				bb_document_regenerate_attachment_thumbnails( $attachment_id );
-				$file      = image_get_intermediate_size( $attachment_id, $size );
-				$file_path = $file_path . '/' . $file['file'];
-			} elseif ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' === $extension ) {
-				bp_document_generate_document_previews( $attachment_id );
-				$file      = image_get_intermediate_size( $attachment_id, $size );
-				$file_path = $file_path . '/' . $file['file'];
+			if ( $file && ! empty( $file['file'] ) && ! file_exists( $file_path ) ) {
+				if ( 'pdf' !== $extension ) {
+					// Regenerate attachment thumbnails.
+					bb_document_regenerate_attachment_thumbnails( $attachment_id );
+					$file      = image_get_intermediate_size( $attachment_id, $size );
+					$file_path = $file_path . '/' . $file['file'];
+				} else {
+					bp_document_generate_document_previews( $attachment_id );
+					$file      = image_get_intermediate_size( $attachment_id, $size );
+					$file_path = $file_path . '/' . $file['file'];
+				}
 			}
 
 			if ( $file && ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) ) {
@@ -4310,8 +4361,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$document_symlinks_path  = bp_document_symlink_path();
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
 			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
-				$group_object    = groups_get_group( $document->group_id );
-				$group_status    = bp_get_group_status( $group_object );
+				$group_object            = groups_get_group( $document->group_id );
+				$group_status            = bp_get_group_status( $group_object );
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
 			}
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
@@ -4328,6 +4379,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			}
 		}
 	}
+
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter url here to audio url.
@@ -4839,7 +4892,7 @@ function bb_document_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	if ( ! empty ( $list ) ) {
+	if ( ! empty( $list ) ) {
 		do_action( 'bb_document_delete_older_symlinks' );
 	}
 

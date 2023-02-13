@@ -402,10 +402,27 @@ function bp_rest_register_field( $component_id, $attribute, $args = array(), $ob
 /**
  * Function to check its BuddyBoss rest route or not.
  *
- * @since BuddyBoss [VERSION]
+ * @since BuddyBoss 1.8.2
  *
  * @return bool
  */
 function bb_is_rest() {
 	return ! empty( $GLOBALS['wp']->query_vars['rest_route'] );
+}
+
+/**
+ * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
+ * Non-scalar values are ignored.
+ *
+ * @param string|array $var Data to sanitize.
+ *
+ * @since BuddyBoss 2.0.8
+ * @return string|array
+ */
+function bb_input_clean( $var ) {
+	if ( is_array( $var ) ) {
+		return array_map( 'bb_input_clean', $var );
+	} else {
+		return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
+	}
 }

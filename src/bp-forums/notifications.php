@@ -42,7 +42,7 @@ add_filter( 'bp_notifications_get_registered_components', 'bbp_filter_notificati
  *
  * @package BuddyBoss
  */
-function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name, $name, $id, $screen ) {
+function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name = '', $name = '', $id = 0, $screen = 'web' ) {
 
 	// New reply notifications.
 	if ( 'bbp_new_reply' === $action_name ) {
@@ -368,6 +368,12 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
+					continue;
+				}
+
 				$reply_id = bbp_get_reply_id( $reply_id );
 				$topic_id = bbp_get_topic_id( $topic_id );
 				$forum_id = bbp_get_forum_id( $forum_id );
@@ -498,6 +504,12 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, get_current_user_id() ) ) {
+					continue;
+				}
+
 				$topic_id = bbp_get_topic_id( $topic_id );
 				$forum_id = bbp_get_forum_id( $forum_id );
 
@@ -624,151 +636,6 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 	exit();
 }
 add_action( 'bbp_get_request', 'bbp_buddypress_mark_notifications', 1 );
-
-/**
- * Add notifications for the forum subscribers for creating a new discussion.
- *
- * @since BuddyBoss 1.9.3
- *
- * @param int   $topic_id Topic id.
- * @param int   $forum_id Forum id.
- * @param array $user_ids Array of users list.
- *
- * @return void
- */
-function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
-	if ( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) || empty( $user_ids ) ) {
-		return;
-	}
-
-	$user_ids        = wp_parse_id_list( $user_ids );
-	$topic_author_id = bbp_get_topic_author_id( $topic_id );
-
-	// Remove Topic author from the users.
-	$unset_topic_key = array_search( $topic_author_id, $user_ids, true );
-	if ( false !== $unset_topic_key ) {
-		unset( $user_ids[ $unset_topic_key ] );
-	}
-
-	if (
-		function_exists( 'bb_notifications_background_enabled' ) &&
-		true === bb_notifications_background_enabled() &&
-		count( $user_ids ) > 20
-	) {
-		global $bb_notifications_background_updater;
-		$bb_notifications_background_updater->data(
-			array(
-				array(
-					'callback' => 'bb_add_background_notifications',
-					'args'     => array(
-						$user_ids,
-						$topic_id,
-						$topic_author_id,
-						bbp_get_component_name(),
-						'bb_forums_subscribed_discussion',
-						bp_core_current_time(),
-						true,
-					),
-				),
-			)
-		);
-		$bb_notifications_background_updater->save()->dispatch();
-	} else {
-		foreach ( $user_ids as $user_id ) {
-			bp_notifications_add_notification(
-				array(
-					'user_id'           => $user_id,
-					'item_id'           => $topic_id,
-					'secondary_item_id' => $topic_author_id,
-					'component_name'    => bbp_get_component_name(),
-					'component_action'  => 'bb_forums_subscribed_discussion',
-					'date_notified'     => bp_core_current_time(),
-					'is_new'            => 1,
-				)
-			);
-		}
-	}
-}
-add_action( 'bbp_pre_notify_forum_subscribers', 'bb_pre_notify_forum_subscribers', 10, 3 );
-
-/**
- * Add notifications for the forum subscribers for creating a new discussion.
- *
- * @since BuddyBoss 1.9.3
- *
- * @param int   $reply_id Topic id.
- * @param int   $topic_id Forum id.
- * @param array $user_ids Array of users list.
- *
- * @return void
- */
-function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
-	if ( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) || empty( $user_ids ) ) {
-		return;
-	}
-
-	$user_ids        = wp_parse_id_list( $user_ids );
-	$reply_author_id = bbp_get_reply_author_id( $reply_id );
-	$reply_to_id     = bbp_get_reply_to( $reply_id );
-
-	// Remove Topic author from the users.
-	$unset_reply_key = array_search( $reply_author_id, $user_ids, true );
-	if ( false !== $unset_reply_key ) {
-		unset( $user_ids[ $unset_reply_key ] );
-	}
-
-	if ( ! empty( $reply_to_id ) ) {
-		$reply_to_author_id = bbp_get_reply_author_id( $reply_to_id );
-
-		$unset_reply_to_key = array_search( $reply_to_author_id, $user_ids, true );
-		if ( false !== $unset_reply_to_key ) {
-			unset( $user_ids[ $unset_reply_to_key ] );
-		}
-	}
-
-	$action = 'bb_forums_subscribed_reply';
-
-	if (
-		function_exists( 'bb_notifications_background_enabled' ) &&
-		true === bb_notifications_background_enabled() &&
-		count( $user_ids ) > 20
-	) {
-		global $bb_notifications_background_updater;
-		$bb_notifications_background_updater->data(
-			array(
-				array(
-					'callback' => 'bb_add_background_notifications',
-					'args'     => array(
-						$user_ids,
-						$reply_id,
-						$reply_author_id,
-						bbp_get_component_name(),
-						$action,
-						bp_core_current_time(),
-						true,
-					),
-				),
-			)
-		);
-		$bb_notifications_background_updater->save()->dispatch();
-	} else {
-		foreach ( $user_ids as $user_id ) {
-			bp_notifications_add_notification(
-				array(
-					'user_id'           => $user_id,
-					'item_id'           => $reply_id,
-					'secondary_item_id' => $reply_author_id,
-					'component_name'    => bbp_get_component_name(),
-					'component_action'  => $action,
-					'date_notified'     => bp_core_current_time(),
-					'is_new'            => 1,
-				)
-			);
-		}
-	}
-
-}
-add_action( 'bbp_pre_notify_subscribers', 'bb_pre_notify_reply_subscribers', 10, 3 );
 
 /**
  * Mark notifications as read when reading a topic or reply subscribed notification.
