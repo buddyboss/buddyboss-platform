@@ -2176,7 +2176,8 @@ window.bp = window.bp || {};
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true
+								linkValidation: true,
+								placeholderText: BP_Nouveau.anchorPlaceholderText
 							}
 						}
 					);

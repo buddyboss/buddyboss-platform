@@ -49,7 +49,8 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true
+								linkValidation: true,
+								placeholderText: BP_Nouveau.anchorPlaceholderText
 							}
 						}
 					);
@@ -142,7 +143,8 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true
+								linkValidation: true,
+								placeholderText: BP_Nouveau.anchorPlaceholderText
 							}
 						}
 					);
@@ -235,7 +237,8 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true
+								linkValidation: true,
+								placeholderText: BP_Nouveau.anchorPlaceholderText
 							}
 						}
 					);
@@ -412,7 +415,8 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
-										linkValidation: true
+										linkValidation: true,
+										placeholderText: BP_Nouveau.anchorPlaceholderText
 									}
 								}
 							);
@@ -464,7 +468,8 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
-										linkValidation: true
+										linkValidation: true,
+										placeholderText: BP_Nouveau.anchorPlaceholderText
 									}
 								}
 							);
@@ -516,7 +521,8 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
-										linkValidation: true
+										linkValidation: true,
+										placeholderText: BP_Nouveau.anchorPlaceholderText
 									}
 								}
 							);
