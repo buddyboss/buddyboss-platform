@@ -21,7 +21,7 @@ if ( ! empty( $group_type ) ) {
 
 
 $args = array(
-	'orderby'    => 'title',
+	'orderby'    => 'menu_order',
 	'order'      => 'ASC',
 	'meta_query' => array(
 		array(

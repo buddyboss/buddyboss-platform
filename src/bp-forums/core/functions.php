@@ -1029,3 +1029,27 @@ function bbp_get_empty_datetime() {
 	return (string) apply_filters( 'bbp_get_default_zero_date', $retval, $db_version );
 }
 
+/**
+ * Get default forum image URL.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ *
+ * @return string Return default forum image URL.
+ */
+function bb_get_forum_default_image( $size = 'full' ) {
+	$filename = 'bb-default-forum.png';
+	if ( 'full' !== $size ) {
+		$filename = 'bb-default-forum-150.png';
+	}
+	/**
+	 * Filters default forum image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default forum image URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_forum_default_image', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $filename ), $size );
+}

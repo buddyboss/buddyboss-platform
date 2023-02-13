@@ -431,7 +431,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 						$video_ids[] = $video_id;
 					}
 				    if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
-						bp_video_delete( array( 'id' => $video_id ) );
+						bp_video_delete( array( 'id' => $video_id ), 'activity' );
 					}
 				}
 

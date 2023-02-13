@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2.3
+Stable tag: 2.2.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,74 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.2.6 =
+* Profiles - Improved profile and account settings UI and layout in the responsive view
+* Profiles - Handled a small UX issue by not allowing multiple selections for Profile and Cover photo upload
+* Notifications - Handled 'posts from members following' email template unsubscribe link issue
+* Groups - Handled group types dropdown doesn't consider the 'dropdown order' issue
+* Forums - Improved subscription workflow for forums and discussion by providing a dedicated screen under notification preferences
+* Activity - Handled activity with just media getting deleted issue on multiple edits
+* Activity - Handled activity form gets submitted issue on selecting formatting options in the responsive view
+* Activity - Small performance code refactoring for activity action buttons
+* Activity - Handled single activity small layout issue with media in responsive view
+* Messages - Improved send message UX in the messages sidebar when Pusher is enabled
+* Messages - Improved UX to show archived message screen
+* Moderation - Improved the suspended and blocked members media access logic specific to groups
+* Network Search - Handled search results page pagination issue when per page count updated using hook
+* REST API - Provided support for new subscription workflow for forums and discussions
+* REST API - Handled activity with media getting deleted on multiple edits in the API
+
+= 2.2.5 =
+* Notifications - Provided new notification type to trigger when members on the network follow other members
+* Profiles - Handled duplicate profile fieldset issue when updated from the dashboard
+* Profiles - Handled fieldset saving empty fields and not getting deleted issues
+* Forums - Handled 'Recent Replies' widget layout and alignment issue
+* Forums - Handled edit reply option not working critical issue
+* Forums - Handled auto-generated activity for discussion issues when comments were added from the dashboard
+* Forums - Handled auto-generated activity for discussion backslash not showing issue when it exists
+* Forums - Handled forum widget 'Parent forum ID' not working issue
+* Private Network - Handled private website 'Public Website Content' not working as expected
+* Media - Handled upload photos modal in album, 'select photos' load more not working issue
+* Media - Handled media upload textarea not showing issue when forum component is disabled
+* Messages - Small improvements to show restrict icon for members not allowed to send a message based on access control rules
+* Messages - Handled exact time not showing issue next to the avatar in a single message thread
+* Messages - Handled compose message search recipient small UX issue
+* Messages - Handled 'blockquote' formatting UX issue on message send action
+* Moderation - Improved the suspended and blocked members comments content logic on blog posts and comments widget
+* Moderation - Small performance improvement by removing multiple moderation queries
+* Network Search - Handled search performance issues for posts in a big network
+* Network Search - Handled forum replies issue in search results not linking to the main content
+* Core - Handled emoji picker modal layout issue in the responsive view
+* Core - Handled plugin editor not working issue in the dashboard
+* Coding Standards - Small code refactoring to handle template issues with third-party themes
+* REST API - Provided API support for improved suspended and blocked members blog comments content logic
+
+= 2.2.4 =
+* Activity - Handled activity form not showing issue when media options are disabled
+* Profiles - Handled profile completion widget count UI issue for the RTL language site
+* Profiles - Small improvement to not show unsupported files when uploading profile and cover photo
+* Profiles - Handled the activity feed edit not working issue in the profile > groups tab
+* Profiles - Handled warning and notices issues when gravatar is enabled and profile updated
+* Groups - Handled group member count issue in the dashboard when members get deleted from the network
+* Forums - Small improvements to show pagination for sub-forums on a single forum screen
+* Forums - Handled forum discussion and reply attached documents getting deleted issue after edit
+* Forums - Handled invalid links issue for Forum discussion and replies post author in the profile
+* Media - Small improvements to giphy picker UI and layout
+* Media - Handled video thumbnail not showing issue
+* Media - Handled move document action not working issue when group component is disabled
+* Media - Handled small translation issue for group status on the documents directory screen
+* Messages - Handled join/leave group marks the group message thread unread for all group members
+* Messages - Small improvements to show the loading icon on performing any action on the thread from the messages sidebar
+* Messages - Small formatting improvements for the last message in the messages sidebar and header dropdown
+* Messages - Handled small layout issue when the site URL was posted in the message
+* Messages - Small improvement for external links to open in a new tab
+* Email Invites - Small improvement to allow all invites by email id in the dashboard
+* Moderation - Improved the 'block member' logic for member's profile and directory screen
+* Network Search - Handled search forum discussions by tag not working issue in the search results screen
+* Core - Small improvements for logged-in member's online/offline status
+* LearnDash - Small code refactoring to fix warnings and notices on group courses screen
+* Compatibility - Handled email conflict issue with the 'Instructor Role for LearnDash' plugin
 
 = 2.2.3 =
 * Notifications - Provided new notification type for new activity posts by someone member is following

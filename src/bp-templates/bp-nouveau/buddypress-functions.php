@@ -341,6 +341,15 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function enqueue_styles() {
+		global $pagenow;
+
+		if (
+			! empty( $pagenow ) &&
+			in_array( $pagenow, array( 'plugin-editor.php', 'theme-editor.php' ), true )
+		) {
+			return;
+		}
+
 		$min = bp_core_get_minified_asset_suffix();
 		$rtl = '';
 
@@ -673,10 +682,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function presence_localize_scripts() {
 
 		$params = array(
-			'heartbeat_enabled'  => bb_is_heartbeat_enabled(),
-			'presence_interval'  => bb_presence_interval(),
-			'presence_time_span' => bb_presence_time_span(),
-			'rest_nonce'         => wp_create_nonce( 'wp_rest' ),
+			'heartbeat_enabled'         => bb_is_heartbeat_enabled(),
+			'presence_interval'         => bb_presence_interval(),
+			'presence_default_interval' => bb_presence_default_interval(),
+			'presence_time_span'        => bb_presence_time_span(),
+			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
 		);
 
 		/**

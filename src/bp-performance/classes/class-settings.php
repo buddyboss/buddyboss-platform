@@ -150,10 +150,17 @@ class Settings {
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
-					'cache_bb_video'           => array(
+					'cache_bb_video'              => array(
 						'label'          => __( 'Videos', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Videos', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-video&nonce=' . self::$purge_nonce,
+						'type'           => 'checkbox',
+						'value'          => true,
+					),
+					'cache_bb_subscription'       => array(
+						'label'          => __( 'Subscriptions', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Subscriptions', 'buddyboss' ),
+						'purge_url'      => $purge_url . '&group=bbplatform&component=bb-subscription&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
