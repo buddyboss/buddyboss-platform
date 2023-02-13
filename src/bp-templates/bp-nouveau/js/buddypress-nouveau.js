@@ -3501,35 +3501,44 @@ window.bp = window.bp || {};
 					bp.Nouveau.updateUsersPresence( data.users_presence );
 				} );
 			} else {
-				setInterval( function () {
-					var params = {};
+				setInterval(
+					function () {
+						var params = {};
 
-					if (
-						'undefined' !== typeof window.bb_is_user_active &&
-						true === window.bb_is_user_active
-					) {
-						params.ids = bp.Nouveau.getPageUserIDs();
-					}
-
-					$.ajax(
-						{
-							type: 'POST',
-							url: '/wp-json/buddyboss/v1/members/presence',
-							data: params,
-							beforeSend: function ( xhr ) {
-								xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
-							},
-							success: function ( data ) {
-								// Check for our data, and use it.
-								if ( ! data ) {
-									return;
-								}
-
-								bp.Nouveau.updateUsersPresence( data );
-							}
+						if (
+							'undefined' !== typeof window.bb_is_user_active &&
+							true === window.bb_is_user_active
+						) {
+							params.ids = bp.Nouveau.getPageUserIDs();
 						}
-					);
-				}, parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 ); // 1 min.
+
+						if (
+							'undefined' !== typeof params.ids &&
+							'undefined' !== typeof params.ids.length &&
+							0 < params.ids.length
+						) {
+							$.ajax(
+								{
+									type: 'POST',
+									url: '/wp-json/buddyboss/v1/members/presence',
+									data: params,
+									beforeSend: function(xhr) {
+										xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
+									},
+									success: function(data) {
+										// Check for our data, and use it.
+										if ( ! data ) {
+											return;
+										}
+
+										bp.Nouveau.updateUsersPresence( data );
+									},
+								}
+							);
+						}
+					},
+					parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000
+				); // 1 min.
 			}
 		},
 
