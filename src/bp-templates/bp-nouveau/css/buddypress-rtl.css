@@ -4647,6 +4647,7 @@ span.dashicons.dashicons-admin-file:before {
     flex: 0 0 100% !important;
     max-width: 100% !important;
     min-width: auto !important;
+    position: relative;
   }
   .bb-activity-media-wrap .bb-activity-media-elem .entry-img,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem .entry-img {
@@ -10216,7 +10217,6 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   clear: both;
   overflow: hidden;
   margin: 0 auto;
-  position: relative;
 }
 
 #bp-message-thread-list .bp-message-content-wrap p {
@@ -11351,9 +11351,11 @@ body .bp-messages-user-threads {
   min-width: 48px;
 }
 
-.main-notification-settings .email:last-child label {
-  font-size: 0 !important;
-  line-height: 20px !important;
+@media screen and (min-width: 900px) {
+  #buddypress .bb-bp-settings-content .main-notification-settings .email:last-child label {
+    font-size: 0;
+    line-height: 20px;
+  }
 }
 
 @media screen and (min-width: 901px) {
@@ -11450,7 +11452,285 @@ body .bp-messages-user-threads {
   }
 }
 
+.subnav_tab .subnav {
+  display: flex;
+  list-style: none;
+  margin: 25px 0 30px 0;
+}
+
+.subnav_tab .subnav li {
+  margin: 0 0 0 25px;
+  padding: 0;
+}
+
+.subnav_tab .subnav li a {
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding: 0 0 5px 0;
+}
+
+.subnav_tab .subnav li a:focus-visible {
+  outline: 1px solid #5087e5;
+}
+
+.subnav_tab .subnav li:not(:last-child) {
+  margin: 0 0 0 25px;
+}
+
+.subnav_tab .subnav li.selected a {
+  border-bottom-color: #5087e5;
+}
+
 /*__ notifications __*/
+/*__ Notification Subscription __*/
+.bb-accordion {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 25px;
+}
+
+.bb-accordion .bb-accordion_head {
+  display: flex;
+  position: relative;
+  padding: 16px 22px;
+}
+
+.bb-accordion .bb-accordion_panel {
+  border-top: 1px solid #eee;
+}
+
+.bb-accordion .bb-accordion_title {
+  font-size: 18px;
+  font-weight: 600;
+  padding-left: 42px;
+  margin: 0;
+}
+
+.bb-accordion .bb-accordion_panel .bbp-pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin: 15px 0 22px 22px;
+  float: none;
+  width: auto;
+}
+
+.buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  color: #767676;
+  position: absolute;
+  top: 10px;
+  left: 25px;
+  background-color: transparent;
+  border: 0;
+  border-radius: 4px;
+  padding: 0;
+  height: 32px;
+  width: 32px;
+}
+
+.buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger i {
+  font-size: 24px;
+}
+
+.buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger:focus-visible {
+  outline: 1px solid #5087e5;
+}
+
+@media screen and (max-width: 767px) {
+  .bb-accordion {
+    border: 0;
+    margin-bottom: 15px;
+    border-radius: 0;
+  }
+  .bb-accordion.is_closed {
+    border-bottom: 1px solid #eee;
+  }
+  .bb-accordion.is_closed .bb-accordion_head {
+    border-bottom: 0;
+  }
+  .bb-accordion .bb-accordion_head {
+    padding: 14px 0;
+  }
+  .buddypress .buddypress-wrap .bb-accordion .bb-accordion_trigger {
+    left: 12px;
+  }
+  .bb-accordion .subscription-items {
+    padding: 15px 0 0 0;
+  }
+}
+
+.subscription-items {
+  list-style: none;
+  margin: 0;
+  padding: 10px 12px;
+}
+
+.subscription-items li {
+  position: relative;
+  border-radius: 4px;
+}
+
+.subscription-items li:focus-within, .subscription-items li:hover {
+  background-color: #eaeaea;
+}
+
+.subscription-items .subscription-item_anchor {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+  width: 100%;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.subscription-items .subscription-item_image {
+  height: 40px;
+  margin-left: 12px;
+  position: relative;
+}
+
+.subscription-items .subscription-item_image:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 1.6875px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+}
+
+.subscription-items .subscription-item_image img {
+  border-radius: 4px;
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+}
+
+[data-type="topic"] .subscription-items .subscription-item_image img {
+  border-radius: 50%;
+}
+
+.subscription-items .subscription-item_detail {
+  width: calc(100% - 98px);
+  margin-left: 12px;
+}
+
+.subscription-items .subscription-item_detail .subscription-item_title {
+  font-size: 14px;
+  display: block;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subscription-items .subscription-item_detail .subscription-item_title a {
+  color: currentColor;
+}
+
+.subscription-items .subscription-item_detail .subscription-item_meta {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #767676;
+  display: block;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subscription-items .subscription-item_detail .subscription-item_meta strong {
+  font-weight: 500;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  color: #767676;
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+  height: 28px;
+  width: 28px;
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 15px;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove i {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove:focus, .buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover {
+  background-color: #fff;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove:focus i, .buddypress .buddypress-wrap .subscription-items .subscription-item_remove:hover i {
+  color: #333;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove.is_loading {
+  pointer-events: none;
+}
+
+.buddypress .buddypress-wrap .subscription-items .subscription-item_remove.is_loading i:before {
+  content: "\ef30";
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+.subscription-items > p {
+  font-size: 14px;
+  margin: 0;
+  padding: 5px 10px;
+}
+
+.subscription-items-loader.is_loading .subscription-items_loading {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+}
+
+.subscription-items-loader.is_loading .subscription-items_loading .subscription-items-image_loading {
+  height: 40px;
+  width: 40px;
+  margin-left: 12px;
+  border-radius: 4px;
+}
+
+.subscription-items-loader.is_loading .subscription-items_loading .subscription-items-text_loading {
+  height: 14px;
+  flex: 1;
+  max-width: 160px;
+  border-radius: 100px;
+}
+
+/*__ Notification Subscription __*/
 /*__ Profile visibility __*/
 /*__ Group Invites __*/
 /**
@@ -17530,6 +17810,12 @@ body.login .login-popup .mfp-close:hover {
   left: 0;
   bottom: 0;
   width: 36%;
+}
+
+@media screen and (max-width: 544px) {
+  .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem {
+    position: relative;
+  }
 }
 
 @media screen and (max-width: 544px) {
