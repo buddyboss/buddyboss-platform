@@ -49,8 +49,8 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true
-								placeholderText: BP_Nouveau.anchorPlaceholderText,
+								linkValidation: true,
+								placeholderText: BP_Nouveau.anchorPlaceholderText
 							}
 						}
 					);
@@ -143,8 +143,8 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true
-								placeholderText: BP_Nouveau.anchorPlaceholderText,
+								linkValidation: true,
+								placeholderText: BP_Nouveau.anchorPlaceholderText
 							}
 						}
 					);
@@ -441,8 +441,8 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
-										linkValidation: true
-										placeholderText: BP_Nouveau.anchorPlaceholderText,
+										linkValidation: true,
+										placeholderText: BP_Nouveau.anchorPlaceholderText
 									}
 								}
 							);
@@ -494,8 +494,8 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
-										linkValidation: true
-										placeholderText: BP_Nouveau.anchorPlaceholderText,
+										linkValidation: true,
+										placeholderText: BP_Nouveau.anchorPlaceholderText
 									}
 								}
 							);
@@ -547,8 +547,8 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
-										linkValidation: true
-										placeholderText: BP_Nouveau.anchorPlaceholderText,
+										linkValidation: true,
+										placeholderText: BP_Nouveau.anchorPlaceholderText
 									}
 								}
 							);
