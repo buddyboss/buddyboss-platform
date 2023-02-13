@@ -2509,7 +2509,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				if ( ! empty( $old_document_ids ) ) {
 					foreach ( $old_document_ids as $document_id ) {
 						if ( ! in_array( (int) $document_id, $document_ids, true ) ) {
-							bp_document_delete( array( 'id' => $document_id ) );
+							bp_document_delete( array( 'id' => $document_id ), 'activity' );
 						}
 					}
 				}
