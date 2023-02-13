@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2, bb_pusher_vars */
+/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2, bb_pusher_vars, bp_media_dropzone */
 /* jshint devel: true */
 /* @version 3.1.0 */
 window.wp = window.wp || {};
@@ -73,19 +73,20 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url                 		 : BP_Nouveau.ajaxurl,
-				timeout             		 : 3 * 60 * 60 * 1000,
-				dictFileTooBig      		 : BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage  		 : '',
-				acceptedFiles       		 : 'image/*',
-				autoProcessQueue    		 : true,
-				addRemoveLinks      		 : true,
-				uploadMultiple      		 : false,
-				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-				thumbnailWidth				 : 140,
-				thumbnailHeight				 : 140,
-				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
+				url                          : BP_Nouveau.ajaxurl,
+				timeout                      : 3 * 60 * 60 * 1000,
+				dictFileTooBig               : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage           : '',
+				acceptedFiles                : 'image/*',
+				autoProcessQueue             : true,
+				addRemoveLinks               : true,
+				uploadMultiple               : false,
+				maxFiles                     : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+				maxFilesize                  : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				thumbnailWidth               : 140,
+				thumbnailHeight              : 140,
+				dictInvalidFileType          : bp_media_dropzone.dictInvalidFileType,
+				dictMaxFilesExceeded         : BP_Nouveau.media.media_dict_file_exceeded,
 				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 

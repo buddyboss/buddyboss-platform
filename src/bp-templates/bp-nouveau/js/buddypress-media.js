@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau, JSON, Dropzone, videojs */
+/* global bp, BP_Nouveau, JSON, Dropzone, videojs, bp_media_dropzone */
 /* @version 1.0.0 */
 window.bp = window.bp || {};
 
@@ -113,7 +113,7 @@ window.bp = window.bp || {};
 					uploadMultiple: false,
 					maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
 					maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-					dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
+					dictInvalidFileType: bp_media_dropzone.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 					previewTemplate: ForumDocumentTemplate,
 					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -131,6 +131,7 @@ window.bp = window.bp || {};
 					uploadMultiple: false,
 					maxFiles: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					dictInvalidFileType: bp_media_dropzone.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 					previewTemplate: ForumMediaTemplate,
 					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
