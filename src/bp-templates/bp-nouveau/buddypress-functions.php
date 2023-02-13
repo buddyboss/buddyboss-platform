@@ -686,6 +686,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'presence_interval'         => bb_presence_interval(),
 			'presence_default_interval' => bb_presence_default_interval(),
 			'presence_time_span'        => bb_presence_time_span(),
+			'idle_inactive_span'        => bb_idle_inactive_span(),
 			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
 		);
 

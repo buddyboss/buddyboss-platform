@@ -1631,14 +1631,24 @@ function bb_check_delay_email_notification() {
  *
  * @since BuddyBoss 2.2
  *
- * @param int $user_id User ID.
+ * @param int   $user_id User ID.
+ * @param array $args    Argument related to the push notification
  *
  * @return bool
  */
-function bb_can_send_push_notification( $user_id ) {
-	$presence_time = (int) apply_filters( 'bb_push_notification_presence_time', 300 ); // 5 minutes.
-	$user_presence = bb_is_online_user( $user_id, $presence_time );
-	if ( true === $user_presence ) {
+function bb_can_send_push_notification( $user_id, $args = array() ) {
+	// Parse args.
+	$r = bp_parse_args(
+		$args,
+		array(
+			'skip_active_user' => false,
+		)
+	);
+
+	$presence_time    = (int) apply_filters( 'bb_push_notification_presence_time', bb_presence_interval() + bb_presence_time_span() );
+	$user_presence    = bb_is_online_user( $user_id, $presence_time );
+
+	if ( true === $user_presence && true === $r['skip_active_user'] ) {
 		return false;
 	}
 
