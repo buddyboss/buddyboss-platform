@@ -319,19 +319,11 @@ function groups_edit_base_group_details( $args = array() ) {
 		groups_add_groupmeta( $group->id, 'previous_slug', $old_group->slug );
 	}
 
-	if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' ) ) {
-		if ( $r['notify_members'] && ! $r['slug'] ) {
-			groups_notification_group_updated( $group->id, $old_group );
-			// fire notification from front side.
-			if ( ! bb_enabled_legacy_email_preference() ) {
-				bb_groups_notification_groups_updated( $group->id );
-			}
-		}
-		if ( ! $r['notify_members'] && $r['slug'] ) {
-			// fire notification from admin side.
-			if ( ! bb_enabled_legacy_email_preference() ) {
-				bb_groups_notification_groups_updated( $group->id );
-			}
+	if ( bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' ) && $r['notify_members'] ) {
+		groups_notification_group_updated( $group->id, $old_group );
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			bb_groups_notification_groups_updated( $group->id );
 		}
 	}
 
