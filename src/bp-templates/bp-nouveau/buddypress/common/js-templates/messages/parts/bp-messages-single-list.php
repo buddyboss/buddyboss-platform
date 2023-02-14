@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BP Nouveau messages single list template
  *
@@ -10,114 +11,79 @@
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-single-list">
-
 	<div class="bp-single-message-wrap">
 		<# if ( ! data.is_group_notice ) { #>
 			<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 				<div class="bp-avatar-wrap">
 					<# if ( data.is_deleted ) { #>
 						<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
-					<# } else if ( data.is_user_suspended || data.is_user_blocked  ) { #>
-						<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
-						<# if ( data.is_user_blocked ) { #>
-							<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
-						<# } else if ( data.is_user_blocked_by ) { #>
-							<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
-						<# } #>
-					<# } else { #>
-						<a href="{{data.sender_link}}" class="bp-user-avatar">
+						<# } else if ( data.is_user_suspended || data.is_user_blocked ) { #>
 							<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
-							<# if ( data.is_user_blocked_by ) { #>
-								<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
-							<# } #>
-						</a>
-					<# } #>
+							<# if ( data.is_user_blocked ) { #>
+								<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
+								<# } else if ( data.is_user_blocked_by ) { #>
+									<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
+									<# } #>
+										<# } else { #>
+											<a href="{{data.sender_link}}" class="bp-user-avatar">
+												<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
+												<# if ( data.is_user_blocked_by ) { #>
+													<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
+													<# } #>
+											</a>
+											<# } #>
 				</div>
-			<# } #>
-
-			<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
-				<div class="bp-avatar-wrap bp-suspended-avatar">
-					<img class="avatar" src="{{{data.sender_avatar}}}" alt="Suspended Member Avatar">
-					<# if ( data.is_user_blocked ) { #>
-						<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
-					<# } else if ( data.is_user_blocked_by ) { #>
-						<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
-					<# } #>
-				</div>
-			<# } #>
-		</div>
-		<# } #>
-		<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
-			<div class="bp-avatar-wrap bp-suspended-avatar">
-				<img class="avatar" src="{{{data.sender_avatar}}}" alt="Suspended Member Avatar">
-				<# if ( data.is_user_blocked ) { #>
-					<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
-				<# } else if ( data.is_user_blocked_by ) { #>
-					<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
-				<# } #>
-			</div>
-		<# } #>
-
-		<div class="bp-single-message-content">
-			<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
-			<div class="message-metadata">
-				<# if ( data.beforeMeta ) { #>
-				<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
 				<# } #>
 
-				<# if ( data.is_deleted || ! data.sender_link ) { #>
-					<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
-				<# } else { #>
-					<a href="{{data.sender_link}}" class="bp-user-link">
-						<strong>{{{data.sender_name}}}</strong>
-					</a>
-				<# } #>
-			</div>
-			<# } #>
-
-
-			<div class="bp-single-message-content">
-				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
-				<div class="message-metadata">
-					<# if ( data.beforeMeta ) { #>
-						<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
-					<# } #>
-
-					<# if ( data.is_deleted ) { #>
-						<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
-					<# } else { #>
-						<a href="{{data.sender_link}}" class="bp-user-link">
-							<strong>{{{data.sender_name}}}</strong>
-						</a>
-					<# } #>
-
-					<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
-						<time datetime="{{data.date.toISOString()}}" class="activity">{{data.display_date}}</time>
-
-						<# if ( data.afterMeta ) { #>
-							<div class="bp-messages-hook after-message-meta">{{{data.afterMeta}}}</div>
+					<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
+						<div class="bp-avatar-wrap bp-suspended-avatar">
+							<img class="avatar" src="{{{data.sender_avatar}}}" alt="Suspended Member Avatar">
+							<# if ( data.is_user_blocked ) { #>
+								<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
+								<# } else if ( data.is_user_blocked_by ) { #>
+									<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
+									<# } #>
+						</div>
 						<# } #>
-					<# } #>
-			<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
-				<div class="message-metadata bp-suspended-meta">
-					<# if ( data.sender_link ) { #>
-						<a href="{{data.sender_link}}" class="bp-user-link">
+
+							<div class="bp-single-message-content">
+								<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
+									<div class="message-metadata">
+										<# if ( data.beforeMeta ) { #>
+											<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
+											<# } #>
+
+												<# if ( data.is_deleted || ! data.sender_link ) { #>
+													<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
+													<# } else { #>
+														<a href="{{data.sender_link}}" class="bp-user-link">
+															<strong>{{{data.sender_name}}}</strong>
+														</a>
+														<# } #>
+
+															<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
+																<time datetime="{{data.date.toISOString()}}" class="activity">{{data.display_date}}</time>
+
+																<# if ( data.afterMeta ) { #>
+																	<div class="bp-messages-hook after-message-meta">{{{data.afterMeta}}}</div>
+																	<# } #>
+																		<# } #>
+									</div>
+									<# } #>
+
+										<# if ( data.beforeContent ) { #>
+											<div class="bp-messages-hook before-message-content">{{{data.beforeContent}}}</div>
+											<# } #>
+
+												<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
+													<div class="message-metadata bp-suspended-meta">
+														<# if ( data.sender_link ) { #>
+															<a href="{{data.sender_link}}" class="bp-user-link">
+																<strong>{{{data.sender_name}}}</strong>
+																<a>
+																	<# } else {#>
 							<strong>{{{data.sender_name}}}</strong>
-						<a>
-					<# } else {#>
-						<strong>{{{data.sender_name}}}</strong>
-					<# } #>
-
-				</div>
-				<# } #>
-
-				<# if ( data.beforeContent ) { #>
-					<div class="bp-messages-hook before-message-content">{{{data.beforeContent}}}</div>
-				<# } #>
-
-				<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
-					<div class="message-metadata bp-suspended-meta">
-						<strong>{{{data.sender_name}}}</strong>
+						<# } #>
 					</div>
 					<div class="bp-message-content-wrap bp-suspended-content">{{{data.content}}}</div>
 				<# } else { #>
@@ -280,3 +246,37 @@
 		<# } #>
 	</div>
 </script>
+</div>
+<# } #>
+
+	<# if ( data.gif ) { #>
+		<div class="activity-attached-gif-container">
+			<div class="gif-image-container">
+				<div class="gif-player">
+					<video preload="auto" playsinline poster="{{data.gif.preview_url}}" loop muted>
+						<source src="{{data.gif.video_url}}" type="video/mp4">
+					</video>
+					<a href="#" class="gif-play-button">
+						<span class="bb-icon-bl bb-icon-play"></span>
+					</a>
+					<span class="gif-icon"></span>
+				</div>
+			</div>
+		</div>
+		<# } #>
+
+			<# if ( data.afterContent ) { #>
+				<div class="bp-messages-hook after-message-content">{{{data.afterContent}}}</div>
+				<# } #>
+
+					<# if ( data.group_text && data.message_from && 'group'===data.message_from ) { #>
+						<div class="bb-group-message-info">{{{data.group_text}}}</div>
+						<# } #>
+							</div>
+							<# } else { #>
+								<div class="bb-messages-group-notices">
+									{{{data.content}}}
+								</div>
+								<# } #>
+									</div>
+									</script>
