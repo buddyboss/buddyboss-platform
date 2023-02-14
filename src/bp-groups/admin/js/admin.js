@@ -47,7 +47,7 @@
 
 				$( 'input#save' ).on(
 					'click',
-					function() {
+					function( e ) {
 						/* Check for users to add */
 						var users_to_add = [];
 
@@ -60,6 +60,44 @@
 						/* There are users to add, include a comma separated list of users login in the main field */
 						if ( users_to_add.length ) {
 							$( '#bp-groups-new-members' ).val( '' ).val( users_to_add.join( ', ' ) );
+						}
+
+						if ( 0 < $( '#bbp_group_forum_id' ).length ) {
+							var connected_forum_id = parseInt( $( '#bbp_group_forum_id' ).val() );
+							if (
+								'undefined' !== typeof BP_Group_Admin.group_connected_forum_id &&
+								'undefined' !== typeof BP_Group_Admin.warn_on_attach_forum &&
+								! isNaN( connected_forum_id ) &&
+								parseInt( BP_Group_Admin.group_connected_forum_id ) !== connected_forum_id
+							) {
+								e.preventDefault();
+								$( '<div>' + BP_Group_Admin.warn_on_attach_forum + '<div>' ).dialog(
+									{
+										dialogClass: 'group-forum-confirmation',
+										resizable: false,
+										height: 'auto',
+										width: 400,
+										modal: true,
+										buttons: [
+										{
+											text: BP_Group_Admin.confirm_button,
+											click: function() {
+												$( this ).dialog( 'close' );
+												$( '#bp-groups-edit-form' )[ 0 ].submit();
+											}
+										},
+										{
+											text: BP_Group_Admin.cancel_button,
+											click: function() {
+												$( this ).dialog( 'close' );
+												e.preventDefault();
+												return false;
+											}
+										}]
+									}
+								);
+								$( '.group-forum-confirmation .ui-dialog-titlebar' ).addClass( 'bp-hide' );
+							}
 						}
 
 						window.warn_on_leave = false;

@@ -95,6 +95,8 @@ add_filter( 'bp_get_group_description', 'html_entity_decode' );
 // Load Group Notifications.
 add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
 
+add_filter( 'bp_repair_list', 'bb_groups_repair_group_subscriptions', 11 );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -1027,6 +1029,13 @@ function bb_load_groups_notifications() {
  * @since BuddyBoss 2.0.0
  */
 function bb_load_group_type_label_custom_css() {
+	if ( ! wp_script_is( 'jquery-ui-dialog', 'enqueued' ) ) {
+		wp_enqueue_script( 'jquery-ui-dialog' );
+	}
+	if ( ! wp_style_is( 'wp-jquery-ui-dialog', 'enqueued' ) ) {
+		wp_enqueue_style( 'wp-jquery-ui-dialog' );
+	}
+
 	if ( true === bp_disable_group_type_creation() ) {
 		$registered_group_types = bp_groups_get_group_types();
 		$cache_key              = 'bb-group-type-label-css';
@@ -1053,3 +1062,161 @@ function bb_load_group_type_label_custom_css() {
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
 
+/**
+ * Send subscription notification to users after post an activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content     The content of the update.
+ * @param int    $user_id     ID of the user posting the update.
+ * @param int    $group_id    ID of the group being posted to.
+ * @param bool   $activity_id Whether the activity recording succeeded.
+ *
+ * @return void
+ */
+function bb_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) {
+	// Bail if subscriptions are turned off.
+	if ( ! bb_is_enabled_subscription( 'group' ) ) {
+		return;
+	}
+
+	if ( empty( $user_id ) || empty( $group_id ) || empty( $activity_id ) ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	if ( empty( $activity ) || ( ! empty( $activity->item_id ) && $activity->item_id !== (int) $group_id ) ) {
+		return;
+	}
+
+	$activity_user_id = $activity->user_id;
+	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
+	$activity_link    = bp_activity_get_permalink( $activity_id );
+	$group            = groups_get_group( $group_id );
+	$media_ids        = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+	$document_ids     = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+	$gif_data         = bp_activity_get_meta( $activity_id, '_gif_data', true );
+
+	if ( ! empty( wp_strip_all_tags( $activity->content ) ) ) {
+		$activity_type = __( 'an update', 'buddyboss' );
+	} elseif ( $media_ids ) {
+		$media_ids = array_filter( explode( ',', $media_ids ) );
+		if ( count( $media_ids ) > 1 ) {
+			$activity_type = __( 'some photos', 'buddyboss' );
+		} else {
+			$activity_type = __( 'a photo', 'buddyboss' );
+		}
+	} elseif ( $document_ids ) {
+		$document_ids = array_filter( explode( ',', $document_ids ) );
+		if ( count( $document_ids ) > 1 ) {
+			$activity_type = __( 'some documents', 'buddyboss' );
+		} else {
+			$activity_type = __( 'a document', 'buddyboss' );
+		}
+	} elseif ( $video_ids ) {
+		$video_ids = array_filter( explode( ',', $video_ids ) );
+		if ( count( $video_ids ) > 1 ) {
+			$activity_type = __( 'some videos', 'buddyboss' );
+		} else {
+			$activity_type = __( 'a video', 'buddyboss' );
+		}
+	} elseif ( $gif_data ) {
+		$activity_type = __( 'a gif', 'buddyboss' );
+	} else {
+		$activity_type = __( 'an update', 'buddyboss' );
+	}
+
+	$args = array(
+		'tokens' => array(
+			'activity'      => $activity,
+			'poster.name'   => $poster_name,
+			'activity.url'  => esc_url( $activity_link ),
+			'group.url'     => esc_url( bp_get_group_permalink( $group ) ),
+			'group.name'    => bp_get_group_name( $group ),
+			'activity.type' => $activity_type,
+		),
+	);
+
+	bb_send_notifications_to_subscribers(
+		array(
+			'type'              => 'group',
+			'item_id'           => $group_id,
+			'notification_from' => 'bb_groups_subscribed_activity',
+			'data'              => array(
+				'activity_id'  => $activity_id,
+				'author_id'    => $activity_user_id,
+				'email_tokens' => $args,
+			),
+		)
+	);
+}
+add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
+
+/**
+ * Add group subscription repair list item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $repair_list Repair list.
+ *
+ * @return array Repair list items.
+ */
+function bb_groups_repair_group_subscriptions( $repair_list ) {
+	if ( bp_is_active( 'groups' ) ) {
+		$repair_list[] = array(
+			'bb-repair-group-subscription',
+			esc_html__( 'Migrate Group forum and discussion subscriptions data structure to the new subscription flow', 'buddyboss' ),
+			'bb_migrate_group_subscription',
+		);
+	}
+
+	return $repair_list;
+}
+
+/**
+ * Localize the strings needed for the Groups UI
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $params Associative array containing the JS Strings needed by scripts.
+ *
+ * @return array The same array with specific strings for the Groups UI if needed.
+ */
+function bb_nouveau_group_localize_scripts( $params = array() ) {
+
+	if ( function_exists( 'bp_is_active' ) && ! bp_is_active( 'groups' ) ) {
+		return $params;
+	}
+
+	$params['groups']['strings']['confirm_button'] = __( 'Confirm', 'buddyboss' );
+	$params['groups']['strings']['cancel_button']  = __( 'Cancel', 'buddyboss' );
+
+	if ( bp_is_active( 'forums' ) && bp_is_groups_component() && bp_is_current_action( 'admin' ) && bp_is_action_variable( get_option( '_bbp_forum_slug', 'forum' ), 0 ) ) {
+		$params['groups']['strings']['warn_on_attach_forum'] = __( 'Members cannot subscribe individually to forums inside a group, only to the group itself. By moving this forum into a group, all existing subscriptions to the forum will be removed.', 'buddyboss' );
+		$group_id = 0;
+		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
+			$group_id = BBP_Forums_Group_Extension::get_group_id();
+		}
+
+		if ( empty( $group_id ) && function_exists( 'bp_get_new_group_id' ) && bp_get_new_group_id() ) {
+			$group_id = bp_get_new_group_id();
+		}
+
+		if ( ! empty( $group_id ) && function_exists( 'bbp_get_group_forum_ids' ) ) {
+			$connected_forum_id  = 0;
+			$connected_forum_ids = bbp_get_group_forum_ids( $connected_forum_id );
+
+			// Get the first forum ID.
+			if ( ! empty( $connected_forum_ids ) ) {
+				$connected_forum_id = (int) is_array( $connected_forum_ids ) ? $connected_forum_ids[0] : $connected_forum_ids;
+			}
+
+			$params['groups']['params']['group_connected_forum_id'] = $connected_forum_id;
+		}
+	}
+
+	return $params;
+}
+add_filter( 'bp_core_get_js_strings', 'bb_nouveau_group_localize_scripts', 10, 1 );
