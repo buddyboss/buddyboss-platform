@@ -824,12 +824,17 @@ function bp_nouveau_has_nav( $args = array() ) {
 		// Build the nav for the displayed user.
 	} elseif ( bp_is_user() ) {
 		$bp_nouveau->displayed_nav = 'personal';
+		$parent_slug               = bp_current_component();
 		$user_nav                  = buddypress()->members->nav;
+
+		if ( 'account_notifications' === $bp_nouveau->object_nav ) {
+			$parent_slug .= '_notifications';
+		}
 
 		if ( 'secondary' === $n['type'] ) {
 			$nav = $user_nav->get_secondary(
 				array(
-					'parent_slug'     => bp_current_component(),
+					'parent_slug'     => $parent_slug,
 					'user_has_access' => (bool) $n['user_has_access'],
 				)
 			);

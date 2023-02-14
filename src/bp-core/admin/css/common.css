@@ -3494,3 +3494,14 @@ table.moderations .column-member img {
   border-radius: 3px;
   padding: 15px;
 }
+
+.notification-settings-input[data-bp-tooltip] {
+  display: inline-block;
+}
+
+.notification-settings-input[data-bp-tooltip]::after {
+  min-width: 140px;
+  white-space: normal;
+  padding: 7px 12px;
+  text-align: center;
+}

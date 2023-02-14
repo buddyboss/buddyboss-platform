@@ -71,6 +71,13 @@ class BP_Messages_Message {
 	public $mark_visible;
 
 	/**
+	 * Flag for posted message as a read for all recipients.
+	 *
+	 * @var bool
+	 */
+	public $mark_read;
+
+	/**
 	 * Message recipients.
 	 *
 	 * @var bool|array
@@ -133,6 +140,7 @@ class BP_Messages_Message {
 		$this->date_sent    = apply_filters( 'messages_message_date_sent_before_save', $this->date_sent, $this->id );
 		$this->is_hidden    = apply_filters( 'messages_message_is_hidden_before_save', $this->is_hidden, $this->id );
 		$this->mark_visible = apply_filters( 'messages_message_mark_visible_before_save', $this->mark_visible, $this->id );
+		$this->mark_read    = apply_filters( 'messages_message_mark_read_before_save', $this->mark_read, $this->id );
 
 		/**
 		 * Fires before the current message item gets saved.
@@ -154,15 +162,7 @@ class BP_Messages_Message {
 
 		// If we have no thread_id then this is the first message of a new thread.
 		if ( empty( $this->thread_id ) ) {
-			$max_thread      = self::get(
-				array(
-					'fields'   => 'thread_ids',
-					'per_page' => 1,
-					'page'     => 1,
-					'orderby'  => 'thread_id',
-				)
-			);
-			$this->thread_id = ( ! empty( $max_thread['messages'] ) ? (int) current( $max_thread['messages'] ) + 1 : 1 );
+			$this->thread_id = (int) $wpdb->get_var( "SELECT MAX(thread_id) FROM {$bp->messages->table_name_messages}" ) + 1;
 			$new_thread      = true;
 		}
 
@@ -202,8 +202,10 @@ class BP_Messages_Message {
 			do_action_ref_array( 'messages_message_new_thread_save', array( &$this ) );
 
 		} else {
-			// Update the unread count for all recipients.
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			if ( false === $this->mark_read ) {
+				// Update the unread count for all recipients.
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			}
 
 			if ( true === $this->mark_visible ) {
 				// Mark the thread to visible for all recipients.
@@ -480,12 +482,13 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.2.9
 	 *
-	 * @param array   $recipient_ids The ID of the users in the thread.
-	 * @param integer $sender        The ID of the sender user.
+	 * @param array $recipient_ids The ID of the users in the thread.
+	 * @param int   $sender        The ID of the sender user.
+	 * @param bool  $force_cache   Whether to force a cache update.
 	 *
 	 * @return null|mixed
 	 */
-	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
+	public static function get_existing_threads( $recipient_ids, $sender = 0, $force_cache = false ) {
 		global $wpdb;
 
 		// add the sender into the recipient list and order by id ascending.
@@ -494,10 +497,11 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
-		$results    = BP_Messages_Thread::get_threads_for_user(
+		$results = BP_Messages_Thread::get_threads_for_user(
 			array(
-				'fields'     => 'select',
-				'having_sql' => $having_sql,
+				'fields'      => 'select',
+				'having_sql'  => $having_sql,
+				'force_cache' => $force_cache,
 			)
 		);
 
