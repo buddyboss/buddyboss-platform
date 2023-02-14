@@ -3153,12 +3153,21 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 							$user_name = bp_core_get_user_displayname( $recipient->user_id );
 							?>
 							<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
-								<div class="user-avatar">
-									<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
-								</div>
-								<div class="user-name">
-									<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><?php echo esc_html( $user_name ); ?></a>
-								</div>
+								<?php if ( ! empty ( bp_core_get_user_domain( $recipient->user_id ) ) ) { ?>
+									<div class="user-avatar">
+										<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
+									</div>
+									<div class="user-name">
+										<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><?php echo esc_html( $user_name ); ?></a>
+									</div>
+								<?php } else { ?>
+									<div class="user-avatar">
+										<span><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></span>
+									</div>
+									<div class="user-name">
+										<span><?php echo esc_html( $user_name ); ?></span>
+									</div>
+								<?php } ?>
 								<?php if ( 'block' === $member_action && bp_is_active( 'moderation' ) ) { ?>
 									<div class="user-actions">
 										<?php
