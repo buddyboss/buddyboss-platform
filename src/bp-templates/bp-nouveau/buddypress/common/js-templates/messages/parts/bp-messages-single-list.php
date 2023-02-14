@@ -53,7 +53,7 @@
 						<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
 					<# } #>
 
-					<# if ( data.is_deleted ) { #>
+					<# if ( data.is_deleted || ! data.sender_link ) { #>
 						<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
 					<# } else { #>
 						<a href="{{data.sender_link}}" class="bp-user-link">
@@ -77,7 +77,13 @@
 
 				<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
 					<div class="message-metadata bp-suspended-meta">
-						<strong>{{{data.sender_name}}}</strong>
+						<# if ( data.sender_link ) { #>
+							<a href="{{data.sender_link}}" class="bp-user-link">
+								<strong>{{{data.sender_name}}}</strong>
+							<a>
+						<# } else {#>
+							<strong>{{{data.sender_name}}}</strong>
+						<# } #>
 					</div>
 					<div class="bp-message-content-wrap bp-suspended-content">{{{data.content}}}</div>
 				<# } else { #>
