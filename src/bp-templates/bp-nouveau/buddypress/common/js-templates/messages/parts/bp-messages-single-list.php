@@ -45,6 +45,36 @@
 					<# } #>
 				</div>
 			<# } #>
+		</div>
+		<# } #>
+		<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
+			<div class="bp-avatar-wrap bp-suspended-avatar">
+				<img class="avatar" src="{{{data.sender_avatar}}}" alt="Suspended Member Avatar">
+				<# if ( data.is_user_blocked ) { #>
+					<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
+				<# } else if ( data.is_user_blocked_by ) { #>
+					<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
+				<# } #>
+			</div>
+		<# } #>
+
+		<div class="bp-single-message-content">
+			<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
+			<div class="message-metadata">
+				<# if ( data.beforeMeta ) { #>
+				<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
+				<# } #>
+
+				<# if ( data.is_deleted || ! data.sender_link ) { #>
+					<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
+				<# } else { #>
+					<a href="{{data.sender_link}}" class="bp-user-link">
+						<strong>{{{data.sender_name}}}</strong>
+					</a>
+				<# } #>
+			</div>
+			<# } #>
+
 
 			<div class="bp-single-message-content">
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
@@ -68,6 +98,16 @@
 							<div class="bp-messages-hook after-message-meta">{{{data.afterMeta}}}</div>
 						<# } #>
 					<# } #>
+			<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
+				<div class="message-metadata bp-suspended-meta">
+					<# if ( data.sender_link ) { #>
+						<a href="{{data.sender_link}}" class="bp-user-link">
+							<strong>{{{data.sender_name}}}</strong>
+						<a>
+					<# } else {#>
+						<strong>{{{data.sender_name}}}</strong>
+					<# } #>
+
 				</div>
 				<# } #>
 
