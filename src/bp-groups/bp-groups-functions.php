@@ -4954,3 +4954,119 @@ function bb_group_drop_down_order_metabox_translate_order_text( $translated_text
 	return $translated_text;
 
 }
+
+/**
+ * Function to get Group Subscription button.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args button args.
+ * @param bool  $html Should return button html or not.
+ *
+ * @return string|array
+ */
+function bb_get_group_subscription_button( $args, $html = true ) {
+
+	if ( ! bb_is_enabled_subscription( 'group' ) || ! is_user_logged_in() ) {
+		return ! empty( $html ) ? '' : array();
+	}
+
+	$item_id = isset( $args['button_attr']['data-bp-content-id'] ) ? $args['button_attr']['data-bp-content-id'] : false;
+	$user_id = get_current_user_id();
+	$group   = groups_get_group( $item_id );
+
+	if ( empty( $item_id ) || empty( $args ) ) {
+		return ! empty( $html ) ? '' : array();
+	}
+
+	// Check the current user's permission.
+	$is_group_member = groups_is_user_member( $user_id, $item_id );
+	if ( false === (bool) $is_group_member ) {
+		return ! empty( $html ) ? '' : array();
+	}
+
+	$subscription_ids = bb_get_subscriptions(
+		array(
+			'type'    => 'group',
+			'item_id' => $item_id,
+			'user_id' => $user_id,
+			'fields'  => 'id',
+			'status'  => null,
+		),
+		true
+	);
+
+	$button_text         = __( 'Subscribe', 'buddyboss' );
+	$subscription_status = 'not-subscribed';
+	$link_class          = 'group-unsubscribed unsubscribed';
+	$action              = 'subscribe';
+	if ( ! empty( $subscription_ids['subscriptions'] ) ) {
+		$button_text         = __( 'Unsubscribe', 'buddyboss' );
+		$subscription_status = 'subscribed';
+		$link_class          = 'group-subscribed subscribed';
+		$action              = 'unsubscribe';
+	}
+
+	$button = array(
+		'id'                => 'group-subscription-' . $item_id,
+		'component'         => 'groups',
+		'must_be_logged_in' => true,
+		'block_self'        => false,
+		'wrapper_class'     => 'group-button ' . $subscription_status,
+		'wrapper_id'        => 'groupbutton-' . $item_id,
+		'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'subscription/' . $item_id ), 'bb-group-subscription' ),
+		'link_text'         => $button_text,
+		'link_class'        => 'group-button bp-toggle-action-button ' . $link_class,
+		'prefix_link_text'  => '<i></i>',
+		'is_tooltips'       => true,
+		'data-balloon'      => $button_text,
+		'data-balloon-pos'  => 'up',
+		'button_attr'       => array(
+			'hover_type'           => 'hover',
+			'data-title'           => $button_text,
+			'data-title-displayed' => $button_text,
+			'data-bb-group-name'   => esc_attr( $group->name ),
+			'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) ),
+			'add_pre_post_text'    => false,
+			'href'                 => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'subscription/' . $item_id ), 'bb-group-subscription' ),
+			'data-bp-btn-action'   => $action,
+		),
+	);
+
+	$button = bp_parse_args( $button, $args );
+
+	/**
+	 * Filter to update group subscription button arguments.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $button Button args.
+	 * @param array $args   Button args.
+	 */
+	$button = apply_filters( 'bb_group_subscription_button_args', $button, $args );
+
+	if ( ! empty( $html ) ) {
+		$button = sprintf(
+			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>',
+			esc_url( $button['link_href'] ),
+			esc_attr( $button['id'] ),
+			esc_attr( $button['link_class'] ),
+			esc_attr( $item_id ),
+			'group',
+			esc_url( $button['link_href'] ),
+			wp_kses_post( $button['link_text'] )
+		);
+	}
+
+	/**
+	 * Filter to update group subscription link.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $button Button args or HTML.
+	 * @param array $args   Button args.
+	 * @param bool  $html   Should return button html or not.
+	 */
+	return apply_filters( 'bb_get_group_subscription_button', $button, $args, $html );
+
+}

@@ -125,6 +125,15 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 					<?php
 				endif;
 
+				if (
+					function_exists( 'bp_get_group_status_description' ) &&
+					bb_platform_group_headers_element_enable( 'group-privacy' )
+				) {
+					?>
+					<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+					<?php
+				}
+
 				if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
 					?>
 					<p class="last-activity item-meta">
@@ -161,16 +170,13 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 					<div class="group-actions-absolute">
 					<?php
-					if (
-						function_exists( 'bp_get_group_status_description' ) &&
-						bb_platform_group_headers_element_enable( 'group-privacy' )
-					) {
-						?>
-						<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
-						<?php
-					}
-
 					bp_nouveau_group_header_buttons();
+					bp_nouveau_group_header_buttons(
+						array(
+							'type'           => 'subscription',
+							'button_element' => 'button',
+						)
+					);
 					bb_nouveau_group_header_bubble_buttons();
 					?>
 					</div>

@@ -80,6 +80,18 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
+			array(
+				'groups_subscribe' => array(
+					'function' => 'bb_nouveau_ajax_group_subscription',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_unsubscribe' => array(
+					'function' => 'bb_nouveau_ajax_group_subscription',
+					'nopriv'   => false,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -1786,4 +1798,180 @@ function bp_groups_messages_validate_message( $send, $type = 'all' ) {
 		$response['type']          = 'success';
 		wp_send_json_success( $response );
 	}
+}
+
+/**
+ * Subscribe or un-subscribe a group when clicking the bell button via a POST request.
+ *
+ * @since BuddyBoss [BBVERIOSN]
+ */
+function bb_nouveau_ajax_group_subscription() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() || empty( $_POST['action'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['nonce'] ) || empty( $_POST['item_id'] ) || ! bp_is_active( 'groups' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce.
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
+	$check = 'bb-group-subscription';
+
+	// Use a specific one for actions needed it.
+	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+	}
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Cast gid as integer.
+	$group_id = (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
+	$user_id  = bp_loggedin_user_id();
+
+	if ( ! bb_is_enabled_subscription( 'group' ) ) {
+		wp_send_json_error(
+			array(
+				'feedback' => sprintf(
+					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'Subscriptions are no longer active.', 'buddyboss' )
+				),
+			)
+		);
+	}
+
+	// Validate and get the group.
+	$group = groups_get_group( $group_id );
+
+	if ( empty( $group->id ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Check the current user's member of the group or not.
+	$is_group_member = groups_is_user_member( $user_id, $group_id );
+	if ( false === (bool) $is_group_member ) {
+		wp_send_json_error( $response );
+	}
+
+	$is_subscription = bb_get_subscriptions(
+		array(
+			'type'    => 'group',
+			'item_id' => $group_id,
+			'user_id' => $user_id,
+			'fields'  => 'id',
+			'status'  => null,
+		),
+		true
+	);
+
+	// Manage all button's possible actions here.
+	switch ( $_POST['action'] ) {
+
+		case 'groups_subscribe':
+			if ( ! empty( $is_subscription ) && ! empty( $is_subscription['subscriptions'] ) ) {
+				$response = array(
+					'feedback' => sprintf(
+						'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+						esc_html__( 'You are already subscribe this group.', 'buddyboss' )
+					),
+					'type'     => 'error',
+				);
+			} else {
+
+				$subscription_id = bb_create_subscription(
+					array(
+						'user_id'           => $user_id,
+						'item_id'           => $group_id,
+						'type'              => 'group',
+						'secondary_item_id' => $group->parent_id,
+					)
+				);
+
+				if ( is_wp_error( $subscription_id ) ) {
+					$response = array(
+						'feedback' => sprintf(
+							'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+							esc_html( $subscription_id->get_error_message() )
+						),
+						'type'     => 'error',
+					);
+				} else {
+
+					ob_start();
+					bp_nouveau_group_header_buttons(
+						array(
+							'type'           => 'subscription',
+							'button_element' => 'button',
+						)
+					);
+					$contents = ob_get_clean();
+
+					$response = array(
+						'contents'              => $contents,
+						'is_group_subscription' => true,
+						'type'                  => 'success',
+					);
+				}
+			}
+			break;
+
+		case 'groups_unsubscribe':
+			$subscription = ! empty( $is_subscription ) && ! empty( $is_subscription['subscriptions'] ) ? current( $is_subscription['subscriptions'] ) : array();
+			if ( ! empty( $subscription ) ) {
+				if ( bb_delete_subscription( $subscription ) ) {
+					ob_start();
+					bp_nouveau_group_header_buttons(
+						array(
+							'type'           => 'subscription',
+							'button_element' => 'button',
+						)
+					);
+					$contents = ob_get_clean();
+
+					$response = array(
+						'contents'              => $contents,
+						'is_group_subscription' => true,
+						'type'                  => 'success',
+					);
+				} else {
+					$response['type'] = 'error';
+				}
+			} else {
+				$response = array(
+					'feedback' => sprintf(
+						'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+						esc_html__( 'You have not subscribe to this group.', 'buddyboss' )
+					),
+					'type'     => 'error',
+				);
+			}
+			break;
+	}
+
+	/**
+	 * Filters change the success/fail message.
+	 *
+	 * @since BuddyBoss [BBVERIOSN]
+	 *
+	 * @param array $response Array of response message.
+	 * @param int   $group_id Group id.
+	 */
+	$response = apply_filters( 'bb_nouveau_ajax_group_subscription', $response, $group_id );
+
+	if ( 'error' === $response['type'] ) {
+		wp_send_json_error( $response );
+	}
+
+	wp_send_json_success( $response );
 }
