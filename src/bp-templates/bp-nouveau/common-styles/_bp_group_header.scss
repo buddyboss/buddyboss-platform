@@ -340,6 +340,40 @@
 
 					}
 
+					.group-subscription {
+						padding: 0 9px;
+						line-height: 37px;
+
+						i {
+							font-size: 18px;
+						}
+
+						&.not-subscribed {
+
+							i:before {
+								content: "\e86a";
+							}
+
+							&:hover i:before {
+								content: "\e86d";
+								font-weight: 300;
+							}
+
+						}
+
+						&.subscribed {
+
+							i {
+								font-weight: 300;
+							}
+
+							&:hover i:before {
+								content: "\e86a";
+							}
+
+						}
+					}
+
 				}
 
 				.bb_more_options {

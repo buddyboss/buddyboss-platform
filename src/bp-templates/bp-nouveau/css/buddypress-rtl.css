@@ -7957,6 +7957,32 @@ body.guillotine-dragging * {
   line-height: 38px;
 }
 
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription {
+  padding: 0 9px;
+  line-height: 37px;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription i {
+  font-size: 18px;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.not-subscribed i:before {
+  content: "\e86a";
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.not-subscribed:hover i:before {
+  content: "\e86d";
+  font-weight: 300;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.subscribed i {
+  font-weight: 300;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.subscribed:hover i:before {
+  content: "\e86a";
+}
+
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .bb_more_options {
   margin-right: 5px;
   margin-bottom: 0;

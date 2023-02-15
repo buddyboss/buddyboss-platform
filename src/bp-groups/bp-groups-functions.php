@@ -5013,7 +5013,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 		'wrapper_class'     => 'group-button ' . $subscription_status,
 		'wrapper_id'        => 'groupbutton-' . $item_id,
 		'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'subscription/' . $item_id ), 'bb-group-subscription' ),
-		'link_text'         => '<i></i>',
+		'link_text'         => '<i class="bb-icon-l bb-icon-bell"></i>',
 		'link_class'        => 'group-button bp-toggle-action-button group-subscription ' . $subscription_status,
 		'is_tooltips'       => true,
 		'data-balloon'      => $button_text,
