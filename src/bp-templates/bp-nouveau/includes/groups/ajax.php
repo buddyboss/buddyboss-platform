@@ -1807,10 +1807,9 @@ function bp_groups_messages_validate_message( $send, $type = 'all' ) {
  */
 function bb_nouveau_ajax_group_subscription() {
 	$response = array(
-		'feedback' => sprintf(
-			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
-		),
+		'feedback'              => esc_html__( 'There was a problem subscribing/unsubscribing.', 'buddyboss' ),
+		'is_group_subscription' => true,
+		'type'                  => 'error',
 	);
 
 	// Bail if not a POST action.
@@ -1827,7 +1826,7 @@ function bb_nouveau_ajax_group_subscription() {
 	$check = 'bb-group-subscription';
 
 	// Use a specific one for actions needed it.
-	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
+	if ( ! empty( $_POST['_wpnonce'] ) ) {
 		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
 	}
 
@@ -1843,10 +1842,8 @@ function bb_nouveau_ajax_group_subscription() {
 	if ( ! bb_is_enabled_subscription( 'group' ) ) {
 		wp_send_json_error(
 			array(
-				'feedback' => sprintf(
-					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-					esc_html__( 'Subscriptions are no longer active.', 'buddyboss' )
-				),
+				'feedback'              => esc_html__( 'Subscriptions are no longer active.', 'buddyboss' ),
+				'is_group_subscription' => true,
 			)
 		);
 	}
@@ -1857,6 +1854,13 @@ function bb_nouveau_ajax_group_subscription() {
 	if ( empty( $group->id ) ) {
 		wp_send_json_error( $response );
 	}
+
+	$group_name = bp_get_group_name( $group );
+	$group_name = bp_create_excerpt( $group_name, 35, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
+	$group_name = sprintf(
+		'<strong>%s</strong>',
+		$group_name
+	);
 
 	// Check the current user's member of the group or not.
 	$is_group_member = groups_is_user_member( $user_id, $group_id );
@@ -1881,11 +1885,9 @@ function bb_nouveau_ajax_group_subscription() {
 		case 'groups_subscribe':
 			if ( ! empty( $is_subscription ) && ! empty( $is_subscription['subscriptions'] ) ) {
 				$response = array(
-					'feedback' => sprintf(
-						'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-						esc_html__( 'You are already subscribe this group.', 'buddyboss' )
-					),
-					'type'     => 'error',
+					'feedback'              => esc_html__( 'You are already subscribe this group.', 'buddyboss' ),
+					'type'                  => 'error',
+					'is_group_subscription' => true,
 				);
 			} else {
 
@@ -1900,11 +1902,13 @@ function bb_nouveau_ajax_group_subscription() {
 
 				if ( is_wp_error( $subscription_id ) ) {
 					$response = array(
-						'feedback' => sprintf(
-							'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-							esc_html( $subscription_id->get_error_message() )
+						'feedback'              => sprintf(
+							/* translators: Group name. */
+							esc_html__( 'There was a problem subscribing to %s.', 'buddyboss' ),
+							$group_name
 						),
-						'type'     => 'error',
+						'type'                  => 'error',
+						'is_group_subscription' => true,
 					);
 				} else {
 
@@ -1921,6 +1925,11 @@ function bb_nouveau_ajax_group_subscription() {
 						'contents'              => $contents,
 						'is_group_subscription' => true,
 						'type'                  => 'success',
+						'feedback'              => sprintf(
+						/* translators: Group name. */
+							esc_html__( 'You\'ve been subscribed to %s.', 'buddyboss' ),
+							$group_name
+						),
 					);
 				}
 			}
@@ -1943,17 +1952,32 @@ function bb_nouveau_ajax_group_subscription() {
 						'contents'              => $contents,
 						'is_group_subscription' => true,
 						'type'                  => 'success',
+						'feedback'              => sprintf(
+						/* translators: Group name. */
+							esc_html__( 'You\'ve been unsubscribed from %s.', 'buddyboss' ),
+							$group_name
+						),
 					);
 				} else {
-					$response['type'] = 'error';
+					$response = array(
+						'feedback'              => sprintf(
+						/* translators: Group name. */
+							esc_html__( 'There was a problem unsubscribing from %s.', 'buddyboss' ),
+							$group_name
+						),
+						'type'                  => 'error',
+						'is_group_subscription' => true,
+					);
 				}
 			} else {
 				$response = array(
-					'feedback' => sprintf(
-						'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-						esc_html__( 'You have not subscribe to this group.', 'buddyboss' )
+					'feedback'              => sprintf(
+					/* translators: Group name. */
+						esc_html__( 'There was a problem unsubscribing from %s.', 'buddyboss' ),
+						$group_name
 					),
-					'type'     => 'error',
+					'type'                  => 'error',
+					'is_group_subscription' => true,
 				);
 			}
 			break;

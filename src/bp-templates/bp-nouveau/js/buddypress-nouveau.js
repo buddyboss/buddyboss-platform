@@ -2040,6 +2040,23 @@ window.bp = window.bp || {};
 							}
 						}
 
+						if (
+							'undefined' !== typeof response.data.is_group_subscription &&
+							true === response.data.is_group_subscription &&
+							'undefined' !== typeof response.data.feedback
+						) {
+							$( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + response.data.feedback + '</div>',
+									'error',
+									null,
+									true
+								]
+							);
+						}
+
 					} else {
 						// Specific cases for groups.
 						if ( 'groups' === object ) {
@@ -2051,6 +2068,23 @@ window.bp = window.bp || {};
 								} else {
 									return window.location.reload();
 								}
+							}
+
+							if (
+								'undefined' !== typeof response.data.is_group_subscription &&
+								true === response.data.is_group_subscription &&
+								'undefined' !== typeof response.data.feedback
+							) {
+								$( document ).trigger(
+									'bb_trigger_toast_message',
+									[
+										'',
+										'<div>' + response.data.feedback + '</div>',
+										'info',
+										null,
+										true
+									]
+								);
 							}
 						}
 
