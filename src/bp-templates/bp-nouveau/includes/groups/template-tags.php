@@ -997,7 +997,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			array(
 				'id'                => 'group_subscription',
 				'position'          => 50,
-				'component'         => 'moderation',
+				'component'         => 'groups',
 				'parent_element'    => $parent_element,
 				'parent_attr'       => array(
 					'id'    => ! empty( $button_args['wrapper_id'] ) ? $button_args['wrapper_id'] : '',
@@ -1005,6 +1005,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				),
 				'must_be_logged_in' => true,
 				'button_element'    => $button_element,
+				'show_link_text'    => false,
 				'button_attr'       => array(
 					'data-bp-content-id' => $group->id,
 				),

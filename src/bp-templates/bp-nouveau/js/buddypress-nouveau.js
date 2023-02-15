@@ -2206,8 +2206,11 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
-
-				if ( target.hasClass( 'group-subscription' ) ) {
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
 					target.removeClass( 'bp-toggle-action-button' );
 					target.addClass( 'bp-toggle-action-button-hover' );
 					return false;
@@ -2241,7 +2244,11 @@ window.bp = window.bp || {};
 
 			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
 
-				if ( target.hasClass( 'group-subscription' ) ) {
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
 					target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
 					target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 					return false;
