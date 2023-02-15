@@ -3464,7 +3464,8 @@ window.bp = window.bp || {};
 		},
 
 		userPresenceStatus: function() {
-
+		 	// Active user on page load.
+			window.bb_is_user_active = true;
 			var idle_interval = parseInt( BB_Nouveau_Presence.idle_inactive_span ) * 1000;
 
 			// setup the idle time user check.
