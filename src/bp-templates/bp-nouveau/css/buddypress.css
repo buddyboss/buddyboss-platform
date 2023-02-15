@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*--------------------------------------------------------------
 Hello, this is the BuddyPress Nouveau stylesheet.
 
@@ -7264,6 +7265,7 @@ body.register .registration-popup .mfp-close:hover {
 
 .single-headers .item-meta.last-activity {
   margin-bottom: 0;
+  margin-top: 1px;
 }
 
 .single-headers ul {
@@ -7912,8 +7914,17 @@ body.guillotine-dragging * {
   margin-bottom: 0;
 }
 
-.groups-header #cover-image-container #item-header-content .last-activity {
-  margin: 0 0 12px;
+.groups-header #cover-image-container #item-header-content .bp-group-meta-wrap {
+  margin: 0 0 12px 0;
+}
+
+.groups-header #cover-image-container #item-header-content .bp-group-meta-wrap .bp-group-status {
+  margin: 0;
+}
+
+.groups-header #cover-image-container #item-header-content .bp-group-meta-wrap .bp-group-status + .last-activity:before {
+  content: "•";
+  margin: 0 4px 0 8px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute {

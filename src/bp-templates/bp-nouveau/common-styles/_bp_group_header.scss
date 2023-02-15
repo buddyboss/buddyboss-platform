@@ -301,8 +301,19 @@
 
 			}
 
-			.last-activity {
-				margin: 0 0 12px;
+			.bp-group-meta-wrap {
+				margin: 0 0 12px 0;
+
+				.bp-group-status {
+					margin: 0;
+
+					+ .last-activity:before {
+						content: "•";
+						margin: 0 4px 0 8px;
+					}
+
+				}
+
 			}
 
 			.group-actions-absolute {

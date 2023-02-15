@@ -123,30 +123,37 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->
 					<?php
-				endif;
+				endif;  ?>
 
-				if (
-					function_exists( 'bp_get_group_status_description' ) &&
-					bb_platform_group_headers_element_enable( 'group-privacy' )
-				) {
-					?>
-					<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
-					<?php
-				}
+				<div class="bp-group-meta-wrap flex align-items-center">
 
-				if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
-					?>
-					<p class="last-activity item-meta">
-						<?php
-						printf(
-							/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-							esc_html__( 'Active %s', 'buddyboss' ),
-							wp_kses_post( bp_get_group_last_active() )
-						);
-						?>
-					</p>
 					<?php
-				endif;
+						if (
+							function_exists( 'bp_get_group_status_description' ) &&
+							bb_platform_group_headers_element_enable( 'group-privacy' )
+						) {
+							?>
+							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+							<?php
+						}
+
+						if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
+							?>
+							<p class="last-activity item-meta">
+								<?php
+								printf(
+									/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+									esc_html__( 'Active %s', 'buddyboss' ),
+									wp_kses_post( bp_get_group_last_active() )
+								);
+								?>
+							</p>
+							<?php
+					endif; ?>
+
+				</div>
+
+				<?php
 
 				if (
 					! bp_nouveau_groups_front_page_description() &&
