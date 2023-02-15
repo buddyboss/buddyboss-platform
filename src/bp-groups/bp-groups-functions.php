@@ -4998,12 +4998,10 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 
 	$button_text         = __( 'Subscribe', 'buddyboss' );
 	$subscription_status = 'not-subscribed';
-	$link_class          = 'group-unsubscribed unsubscribed';
 	$action              = 'subscribe';
 	if ( ! empty( $subscription_ids['subscriptions'] ) ) {
 		$button_text         = __( 'Unsubscribe', 'buddyboss' );
 		$subscription_status = 'subscribed';
-		$link_class          = 'group-subscribed subscribed';
 		$action              = 'unsubscribe';
 	}
 
@@ -5015,14 +5013,12 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 		'wrapper_class'     => 'group-button ' . $subscription_status,
 		'wrapper_id'        => 'groupbutton-' . $item_id,
 		'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'subscription/' . $item_id ), 'bb-group-subscription' ),
-		'link_text'         => $button_text,
-		'link_class'        => 'group-button bp-toggle-action-button ' . $link_class,
-		'prefix_link_text'  => '<i></i>',
+		'link_text'         => '<i></i>',
+		'link_class'        => 'group-button bp-toggle-action-button group-subscription ' . $subscription_status,
 		'is_tooltips'       => true,
 		'data-balloon'      => $button_text,
 		'data-balloon-pos'  => 'up',
 		'button_attr'       => array(
-			'hover_type'           => 'hover',
 			'data-title'           => $button_text,
 			'data-title-displayed' => $button_text,
 			'data-bb-group-name'   => esc_attr( $group->name ),
