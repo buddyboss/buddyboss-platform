@@ -5033,7 +5033,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 	);
 
 	$button = array(
-		'id'                => 'group-subscription-' . $item_id,
+		'id'                => 'group_subscription',
 		'component'         => 'groups',
 		'must_be_logged_in' => true,
 		'block_self'        => false,

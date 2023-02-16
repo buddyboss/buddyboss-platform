@@ -991,30 +991,32 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 		}
 
 		// Membership button on groups loop or single group's header.
-	} elseif ( 'subscription' === $type && bb_is_enabled_subscription( 'group' ) ) {
+	} elseif ( 'subscription' === $type ) {
 
-		$buttons['group_subscription'] = bb_get_group_subscription_button(
-			array(
-				'id'                => 'group_subscription',
-				'position'          => 50,
-				'component'         => 'groups',
-				'parent_element'    => $parent_element,
-				'parent_attr'       => array(
-					'id'    => ! empty( $button_args['wrapper_id'] ) ? $button_args['wrapper_id'] : '',
-					'class' => $parent_class,
+		if ( bb_is_enabled_subscription( 'group' ) ) {
+			$buttons['group_subscription'] = bb_get_group_subscription_button(
+				array(
+					'id'                => 'group_subscription',
+					'position'          => 50,
+					'component'         => 'groups',
+					'parent_element'    => $parent_element,
+					'parent_attr'       => array(
+						'id'    => ! empty( $button_args['wrapper_id'] ) ? $button_args['wrapper_id'] : '',
+						'class' => $parent_class,
+					),
+					'must_be_logged_in' => true,
+					'button_element'    => $button_element,
+					'show_link_text'    => false,
+					'button_attr'       => array(
+						'data-bp-content-id' => $group->id,
+					),
 				),
-				'must_be_logged_in' => true,
-				'button_element'    => $button_element,
-				'show_link_text'    => false,
-				'button_attr'       => array(
-					'data-bp-content-id' => $group->id,
-				),
-			),
-			false
-		);
+				false
+			);
 
-		if ( 'button' === $button_element ) {
-			unset( $buttons['group_subscription']['button_attr']['href'] );
+			if ( 'button' === $button_element ) {
+				unset( $buttons['group_subscription']['button_attr']['href'] );
+			}
 		}
 
 		// Membership button on groups loop or single group's header.
