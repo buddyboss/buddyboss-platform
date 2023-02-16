@@ -25,7 +25,6 @@ add_filter( 'bp_get_group_description', 'convert_chars' );
 add_filter( 'bp_get_group_description_excerpt', 'convert_chars' );
 add_filter( 'bp_get_group_name', 'convert_chars' );
 
-add_filter( 'bp_get_group_description', 'wpautop' );
 add_filter( 'bp_get_group_description_excerpt', 'wpautop' );
 
 add_filter( 'bp_get_group_description', 'make_clickable', 9 );
