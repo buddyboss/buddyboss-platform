@@ -7970,6 +7970,7 @@ body.guillotine-dragging * {
   content: "\e86a";
 }
 
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.not-subscribed:focus i:before,
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.not-subscribed:hover i:before {
   content: "\e86d";
   font-weight: 300;
@@ -7979,6 +7980,7 @@ body.guillotine-dragging * {
   font-weight: 300;
 }
 
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.subscribed:focus i:before,
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.subscribed:hover i:before {
   content: "\e86a";
 }

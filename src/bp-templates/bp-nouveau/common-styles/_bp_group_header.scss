@@ -354,6 +354,7 @@
 								content: "\e86a";
 							}
 
+							&:focus i:before,
 							&:hover i:before {
 								content: "\e86d";
 								font-weight: 300;
@@ -367,6 +368,7 @@
 								font-weight: 300;
 							}
 
+							&:focus i:before,
 							&:hover i:before {
 								content: "\e86a";
 							}
