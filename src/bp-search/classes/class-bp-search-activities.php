@@ -178,6 +178,10 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 
 			$post_ids = implode( ',', $post_ids_arr );
 
+			// Set current component as 'activity' to get activity result.
+			$old_current_component          = buddypress()->current_component;
+			buddypress()->current_component = 'activity';
+
 			do_action( 'bp_before_search_activity_html' );
 
 			if ( bp_has_activities(
@@ -201,6 +205,10 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			}
 
 			do_action( 'bp_after_search_activity_html' );
+
+			// Restore current component.
+			buddypress()->current_component = $old_current_component;
+			unset( $old_current_component );
 		}
 
 	}
