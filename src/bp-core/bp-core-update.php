@@ -397,6 +397,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19381 ) {
 			bb_update_to_2_2_6();
 		}
+
+		if ( $raw_db_version < 19481 ) {
+			bb_update_to_2_2_7();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2276,4 +2280,83 @@ function bb_migrate_subscriptions() {
 
 	// Flush the cache to delete all old cached subscriptions.
 	wp_cache_flush();
+}
+
+/**
+ * Background job to update friends count.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_7() {
+	$is_already_run = get_transient( 'bb_update_to_2_2_7' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_2_7', 'yes', HOUR_IN_SECONDS );
+
+	if ( bp_is_active( 'friends' ) ) {
+		global $bp_background_updater;
+
+		$user_ids = get_users(
+			array(
+				'fields'     => 'ids',
+				'meta_query' => array(
+					array(
+						'key'     => 'total_friend_count',
+						'compare' => 'EXISTS',
+					),
+				),
+			)
+		);
+
+		if ( empty( $user_ids ) ) {
+			return;
+		}
+
+		foreach ( array_chunk( $user_ids, 50 ) as $chunk ) {
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'migrate_member_friends_count',
+						'args'     => array( $chunk ),
+					),
+				)
+			);
+
+			$bp_background_updater->save()->schedule_event();
+		}
+	}
+}
+
+/**
+ * Update the friend count when member suspend/un-suspend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids Array of user ID.
+ *
+ * @return void
+ */
+function migrate_member_friends_count( $user_ids ) {
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		$query_friend_count = friends_get_friend_user_ids( $user_id );
+		$meta_friend_count  = friends_get_total_friend_count( $user_id );
+
+		if ( empty( $query_friend_count ) ) {
+			$query_friend_count = 0;
+		} else {
+			$query_friend_count = count( $query_friend_count );
+		}
+
+		if ( $query_friend_count !== (int) $meta_friend_count ) {
+			bp_update_user_meta( $user_id, 'total_friend_count', $query_friend_count );
+		}
+	}
 }
