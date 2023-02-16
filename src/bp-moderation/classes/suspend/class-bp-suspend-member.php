@@ -367,7 +367,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 							),
 						)
 					);
-					$bp_background_updater->save()->schedule_event();
+					$bp_background_updater->save()->dispatch();
 				}
 			}
 		}
@@ -445,7 +445,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 							),
 						)
 					);
-					$bp_background_updater->save()->schedule_event();
+					$bp_background_updater->save()->dispatch();
 				}
 			}
 		}
