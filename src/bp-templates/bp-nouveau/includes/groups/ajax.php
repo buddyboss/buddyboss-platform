@@ -1821,9 +1821,13 @@ function bb_nouveau_ajax_group_subscription() {
 		wp_send_json_error( $response );
 	}
 
+	// Cast gid as integer.
+	$group_id = (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
+	$user_id  = bp_loggedin_user_id();
+
 	// Use default nonce.
 	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
-	$check = 'bb-group-subscription';
+	$check = 'bb-group-subscription' . $group_id;
 
 	// Use a specific one for actions needed it.
 	if ( ! empty( $_POST['_wpnonce'] ) ) {
@@ -1834,10 +1838,6 @@ function bb_nouveau_ajax_group_subscription() {
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
 		wp_send_json_error( $response );
 	}
-
-	// Cast gid as integer.
-	$group_id = (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
-	$user_id  = bp_loggedin_user_id();
 
 	if ( ! bb_is_enabled_subscription( 'group' ) ) {
 		wp_send_json_error(
