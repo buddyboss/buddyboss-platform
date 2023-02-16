@@ -133,20 +133,19 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			$where_conditions   = array( '1=1' );
 			$where_conditions[] = "is_spam = 0
 						AND ExtractValue(a.content, '//text()') LIKE %s
-						AND a.hide_sitewide = 0
 						AND a.type = 'activity_update'
 						AND
 						(
-							( a.privacy IN ( '" . implode( "','", $privacy ) . "' ) and a.component != 'groups' ) " .
-			                      ( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( a.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND a.component = 'groups' )" : '' ) .
-			                      ( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( a.user_id IN ( '" . implode( "','", $friends ) . "' ) AND a.privacy = 'friends' )" : '' ) .
-			                      ( is_user_logged_in() ? " OR ( a.user_id = '" . bp_loggedin_user_id() . "' AND a.privacy = 'onlyme' )" : '' ) .
-			                      ")";
+							( a.privacy IN ( '" . implode( "','", $privacy ) . "' ) AND a.component != 'groups' AND a.hide_sitewide = 0 ) " .
+							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( a.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND a.component = 'groups' AND a.privacy = 'public' )" : '' ) .
+							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( a.user_id IN ( '" . implode( "','", $friends ) . "' ) AND a.privacy = 'friends' AND a.hide_sitewide = 0 )" : '' ) .
+							( is_user_logged_in() ? " OR ( a.user_id = '" . bp_loggedin_user_id() . "' AND a.privacy = 'onlyme' )" : '' ) .
+						")";
 
 			/**
 			 * Filters the MySQL WHERE conditions for the activity Search query.
 			 *
-             * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.
