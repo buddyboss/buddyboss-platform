@@ -1868,22 +1868,13 @@ function bb_nouveau_ajax_group_subscription() {
 		wp_send_json_error( $response );
 	}
 
-	$is_subscription = bb_get_subscriptions(
-		array(
-			'type'    => 'group',
-			'item_id' => $group_id,
-			'user_id' => $user_id,
-			'fields'  => 'id',
-			'status'  => null,
-		),
-		true
-	);
+	$is_subscription = bb_is_member_subscribed_group( $group_id, $user_id );
 
 	// Manage all button's possible actions here.
 	switch ( $_POST['action'] ) {
 
 		case 'groups_subscribe':
-			if ( ! empty( $is_subscription ) && ! empty( $is_subscription['subscriptions'] ) ) {
+			if ( $is_subscription ) {
 				$response = array(
 					'feedback'              => esc_html__( 'You are already subscribe this group.', 'buddyboss' ),
 					'type'                  => 'error',
@@ -1936,39 +1927,26 @@ function bb_nouveau_ajax_group_subscription() {
 			break;
 
 		case 'groups_unsubscribe':
-			$subscription = ! empty( $is_subscription ) && ! empty( $is_subscription['subscriptions'] ) ? current( $is_subscription['subscriptions'] ) : array();
-			if ( ! empty( $subscription ) ) {
-				if ( bb_delete_subscription( $subscription ) ) {
-					ob_start();
-					bp_nouveau_group_header_buttons(
-						array(
-							'type'           => 'subscription',
-							'button_element' => 'button',
-						)
-					);
-					$contents = ob_get_clean();
+			if ( $is_subscription && bb_delete_subscription( $is_subscription ) ) {
+				ob_start();
+				bp_nouveau_group_header_buttons(
+					array(
+						'type'           => 'subscription',
+						'button_element' => 'button',
+					)
+				);
+				$contents = ob_get_clean();
 
-					$response = array(
-						'contents'              => $contents,
-						'is_group_subscription' => true,
-						'type'                  => 'success',
-						'feedback'              => sprintf(
-						/* translators: Group name. */
-							esc_html__( 'You\'ve been unsubscribed from %s.', 'buddyboss' ),
-							$group_name
-						),
-					);
-				} else {
-					$response = array(
-						'feedback'              => sprintf(
-						/* translators: Group name. */
-							esc_html__( 'There was a problem unsubscribing from %s.', 'buddyboss' ),
-							$group_name
-						),
-						'type'                  => 'error',
-						'is_group_subscription' => true,
-					);
-				}
+				$response = array(
+					'contents'              => $contents,
+					'is_group_subscription' => true,
+					'type'                  => 'success',
+					'feedback'              => sprintf(
+					/* translators: Group name. */
+						esc_html__( 'You\'ve been unsubscribed from %s.', 'buddyboss' ),
+						$group_name
+					),
+				);
 			} else {
 				$response = array(
 					'feedback'              => sprintf(
