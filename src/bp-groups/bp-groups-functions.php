@@ -4956,6 +4956,46 @@ function bb_group_drop_down_order_metabox_translate_order_text( $translated_text
 }
 
 /**
+ * Function to check the user subscribed group or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id Group ID.
+ * @param int $user_id  User ID.
+ *
+ * @return bool
+ */
+function bb_is_member_subscribed_group( $group_id, $user_id ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	if ( empty( $group_id ) || empty( $user_id ) ) {
+		return false;
+	}
+
+	if ( function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
+		$subscription_ids = bb_get_subscriptions(
+			array(
+				'type'    => 'group',
+				'item_id' => $group_id,
+				'user_id' => $user_id,
+				'fields'  => 'id',
+				'status'  => null,
+			),
+			true
+		);
+
+		if ( ! empty( $subscription_ids ) && ! empty( $subscription_ids['subscriptions'] ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Function to get Group Subscription button.
  *
  * @since BuddyBoss [BBVERSION]
