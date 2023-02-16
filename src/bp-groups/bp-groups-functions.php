@@ -4966,6 +4966,7 @@ function bb_group_drop_down_order_metabox_translate_order_text( $translated_text
  * @return string|array
  */
 function bb_get_group_subscription_button( $args, $html = true ) {
+	global $wp;
 
 	if ( ! bb_is_enabled_subscription( 'group' ) || ! is_user_logged_in() ) {
 		return ! empty( $html ) ? '' : array();
@@ -5018,6 +5019,19 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 		$action              = 'unsubscribe';
 	}
 
+	$url = esc_url(
+		wp_nonce_url(
+			add_query_arg(
+				array(
+					'action'   => $action,
+					'group_id' => $item_id,
+				),
+				trailingslashit( home_url( $wp->request ) )
+			),
+			'bb-group-subscription' . $item_id
+		)
+	);
+
 	$button = array(
 		'id'                => 'group-subscription-' . $item_id,
 		'component'         => 'groups',
@@ -5025,7 +5039,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 		'block_self'        => false,
 		'wrapper_class'     => 'group-button ' . $subscription_status,
 		'wrapper_id'        => 'groupbutton-' . $item_id,
-		'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'subscription/' . $item_id ), 'bb-group-subscription' ),
+		'link_href'         => $url,
 		'link_text'         => ( $r['show_link_text'] ) ? $button_icon . $button_text : $button_icon,
 		'link_class'        => 'group-button bp-toggle-action-button group-subscription ' . $subscription_status,
 		'is_tooltips'       => true,
@@ -5035,9 +5049,8 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			'data-title'           => ( $r['show_link_text'] ) ? $button_icon . $button_hover_text : $button_icon,
 			'data-title-displayed' => ( $r['show_link_text'] ) ? $button_icon . $button_text : $button_icon,
 			'data-bb-group-name'   => esc_attr( $group->name ),
-			'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) ),
 			'add_pre_post_text'    => false,
-			'href'                 => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'subscription/' . $item_id ), 'bb-group-subscription' ),
+			'href'                 => $url,
 			'data-bp-btn-action'   => $action,
 		),
 	);
