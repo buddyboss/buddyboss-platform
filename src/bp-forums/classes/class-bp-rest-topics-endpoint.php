@@ -1115,7 +1115,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Handle Subscription Checkbox.
-		if ( bbp_is_subscriptions_active() ) {
+		if ( bb_is_enabled_subscription( 'topic' ) ) {
 			$author_id = bbp_get_user_id( 0, true, true );
 			// Check if subscribed.
 			$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
@@ -1686,7 +1686,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Handle Subscription Checkbox.
-		if ( bbp_is_subscriptions_active() ) {
+		if ( bb_is_enabled_subscription( 'topic' ) ) {
 			$author_id = bbp_get_user_id( 0, true, true );
 			// Check if subscribed.
 			$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
@@ -2673,7 +2673,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$state['favorited'] = bbp_is_user_favorite( $user_id, $topic_id );
 		}
 
-		if ( bbp_is_subscriptions_active() && current_user_can( 'edit_user', $user_id ) ) {
+		if ( bb_is_enabled_subscription( 'topic' ) && current_user_can( 'edit_user', $user_id ) ) {
 			$state['subscribed'] = bbp_is_user_subscribed( $user_id, $topic_id );
 		}
 

@@ -377,7 +377,7 @@ class BB_Members extends Integration_Abstract {
 	 * @param int $user_id User ID.
 	 */
 	public function event_bp_core_user_updated_last_activity( $user_id ) {
-		$this->purge_item_cache_by_item_id( $user_id );
+		$this->purge_item_cache_by_item_id( $user_id, false );
 	}
 
 	/**
@@ -422,9 +422,12 @@ class BB_Members extends Integration_Abstract {
 	 *
 	 * @param $member_id
 	 */
-	private function purge_item_cache_by_item_id( $member_id ) {
+	private function purge_item_cache_by_item_id( $member_id, $clear_subscription = true ) {
 		Cache::instance()->purge_by_group( 'bp-members_' . $member_id );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_core_get_user_domain( $member_id ) ) );
+		if ( $clear_subscription ) {
+			$this->purge_subscription_cache_by_user_id( $member_id );
+		}
 	}
 
 	/**
@@ -560,5 +563,33 @@ class BB_Members extends Integration_Abstract {
 		Cache::instance()->purge_by_component( 'post_comment' );
 		Cache::instance()->purge_by_component( 'sfwd-' );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+		Cache::instance()->purge_by_group( 'bb-subscriptions' );
+		Cache::instance()->purge_by_component( 'bb-subscriptions_' );
+	}
+
+	/**
+	 * Purge item cache by user id.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	private function purge_subscription_cache_by_user_id( $user_id ) {
+		$args = array(
+			'user_id' => $user_id,
+			'fields'  => 'id',
+			'status'  => null,
+		);
+
+		$all_subscription = bb_get_subscriptions(
+			$args,
+			true
+		);
+
+		if ( ! empty( $all_subscription['subscriptions'] ) ) {
+			foreach ( $all_subscription['subscriptions'] as $subscription_id ) {
+				Cache::instance()->purge_by_group( 'bb-subscriptions_' . $subscription_id );
+			}
+
+			Cache::instance()->purge_by_group( 'bb-subscriptions' );
+		}
 	}
 }
