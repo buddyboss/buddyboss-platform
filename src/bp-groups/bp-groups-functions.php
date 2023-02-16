@@ -4963,7 +4963,7 @@ function bb_group_drop_down_order_metabox_translate_order_text( $translated_text
  * @param int $group_id Group ID.
  * @param int $user_id  User ID.
  *
- * @return bool
+ * @return bool|int
  */
 function bb_is_member_subscribed_group( $group_id, $user_id ) {
 
@@ -4988,7 +4988,7 @@ function bb_is_member_subscribed_group( $group_id, $user_id ) {
 		);
 
 		if ( ! empty( $subscription_ids ) && ! empty( $subscription_ids['subscriptions'] ) ) {
-			return true;
+			return current( $subscription_ids['subscriptions'] );
 		}
 	}
 
@@ -5036,23 +5036,12 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 		return ! empty( $html ) ? '' : array();
 	}
 
-	$subscription_ids = bb_get_subscriptions(
-		array(
-			'type'    => 'group',
-			'item_id' => $item_id,
-			'user_id' => $user_id,
-			'fields'  => 'id',
-			'status'  => null,
-		),
-		true
-	);
-
 	$button_icon         = '<i class="bb-icon-l bb-icon-bell"></i>';
 	$button_text         = __( 'Subscribe', 'buddyboss' );
 	$button_hover_text   = __( 'Unsubscribe', 'buddyboss' );
 	$subscription_status = 'not-subscribed';
 	$action              = 'subscribe';
-	if ( ! empty( $subscription_ids['subscriptions'] ) ) {
+	if ( bb_is_member_subscribed_group( $item_id, $user_id ) ) {
 		$button_text         = __( 'Unsubscribe', 'buddyboss' );
 		$button_hover_text   = __( 'Subscribe', 'buddyboss' );
 		$subscription_status = 'subscribed';
@@ -5109,13 +5098,14 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 
 	if ( ! empty( $html ) ) {
 		$button = sprintf(
-			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>',
+			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s">%s</a>',
 			esc_url( $button['link_href'] ),
 			esc_attr( $button['id'] ),
 			esc_attr( $button['link_class'] ),
 			esc_attr( $item_id ),
 			'group',
 			esc_url( $button['link_href'] ),
+			esc_attr( $action ),
 			wp_kses_post( $button['link_text'] )
 		);
 	}

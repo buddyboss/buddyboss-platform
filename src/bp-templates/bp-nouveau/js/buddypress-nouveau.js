@@ -2208,6 +2208,8 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
 				if (
 					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
 					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
 					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
 				) {
@@ -2246,6 +2248,8 @@ window.bp = window.bp || {};
 
 				if (
 					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
 					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
 					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
 				) {

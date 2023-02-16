@@ -1255,9 +1255,6 @@ function bb_group_subscriptions_handler() {
 		'unsubscribe',
 	);
 
-	error_log( print_r( $group_id, 1 ) );
-	error_log( print_r( $group, 1 ) );
-
 	// Bail if actions aren't meant for this function.
 	if ( ! in_array( $action, $possible_actions, true ) ) {
 		return;
@@ -1280,19 +1277,10 @@ function bb_group_subscriptions_handler() {
 		bp_get_group_name( $group )
 	);
 
-	$is_subscription = bb_get_subscriptions(
-		array(
-			'type'    => 'group',
-			'item_id' => $group_id,
-			'user_id' => $user_id,
-			'fields'  => 'id',
-			'status'  => null,
-		),
-		true
-	);
+	$is_subscription = bb_is_member_subscribed_group( $group_id, $user_id );
 
 	if ( empty( $message ) && 'subscribe' === $action ) {
-		if ( ! empty( $is_subscription ) && ! empty( $is_subscription['subscriptions'] ) ) {
+		if ( $is_subscription ) {
 			$message = __( '%s You are already subscribe this group.', 'buddyboss' );
 		} else {
 			$subscription_id = bb_create_subscription(
@@ -1320,8 +1308,7 @@ function bb_group_subscriptions_handler() {
 			}
 		}
 	} elseif ( empty( $message ) && 'unsubscribe' === $action ) {
-		$subscription = ! empty( $is_subscription ) && ! empty( $is_subscription['subscriptions'] ) ? current( $is_subscription['subscriptions'] ) : array();
-		if (  empty( $subscription ) || ! bb_delete_subscription( $subscription ) ) {
+		if (  ! $is_subscription || ! bb_delete_subscription( $is_subscription ) ) {
 			$message = sprintf(
 			/* translators: Group name */
 				__( 'There was a problem unsubscribing from %s.', 'buddyboss' ),
