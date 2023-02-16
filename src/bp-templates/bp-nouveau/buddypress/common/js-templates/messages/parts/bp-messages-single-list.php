@@ -81,7 +81,7 @@
 						<a href="{{data.sender_link}}" class="bp-user-link">
 							<strong>{{{data.sender_name}}}</strong>
 						<a>
-					<# } else {#>
+					<# } else { #>
 						<strong>{{{data.sender_name}}}</strong>
 					<# } #>
 
