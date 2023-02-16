@@ -3795,3 +3795,17 @@ table.moderations .column-member {
 	border-radius: 3px;
 	padding: 15px;
 }
+
+.notification-settings-input {
+
+	&[data-bp-tooltip] {
+		display: inline-block;
+
+		&::after {
+			min-width: 140px;
+			white-space: normal;
+			padding: 7px 12px;
+			text-align: center;
+		}
+	}
+}

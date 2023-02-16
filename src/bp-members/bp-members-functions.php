@@ -461,7 +461,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
 	}
 
 	if ( ! $url = bp_core_get_user_domain( $user_id ) ) {
-		return false;
+		return '';
 	}
 
 	if ( ! empty( $just_link ) ) {
@@ -5099,7 +5099,25 @@ function bb_member_get_profile_action_arguments( $page = 'directory', $clicked =
  * @return void
  */
 function bb_members_notifications_mark_read() {
-	if ( ! is_user_logged_in() || ! bp_core_can_edit_settings() || ! bp_current_action() ) {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	// Mark individual notification as read for member following.
+	if ( ! empty( $_GET['rid'] ) ) {
+		BP_Notifications_Notification::update(
+			array(
+				'is_new' => false,
+			),
+			array(
+				'user_id'          => bp_loggedin_user_id(),
+				'id'               => (int) $_GET['rid'],
+				'component_action' => 'bb_following_new',
+			)
+		);
+	}
+
+	if ( ! bp_core_can_edit_settings() || ! bp_current_action() ) {
 		return;
 	}
 

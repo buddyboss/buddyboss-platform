@@ -556,9 +556,14 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$results['bb-presence-interval'] = (
 			function_exists( 'bb_presence_interval' ) ?
-			( bb_presence_interval() <= 60 ? bb_presence_interval() : 60 )
+			( bb_presence_interval() <= 60 ? bb_presence_interval() : bb_presence_default_interval() )
 			: 0
 		);
+
+		if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
+			$results['bbp_enable_forum_subscriptions'] = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'forum' );
+			$results['bbp_enable_topic_subscriptions'] = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'topic' );
+		}
 
 		return $results;
 	}

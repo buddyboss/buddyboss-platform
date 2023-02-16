@@ -261,10 +261,12 @@ function bp_nouveau_ajax_messages_send_message() {
 					}
 				}
 
-				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
+				$all_recipients = $messages_template->thread->get_recipients();
+
+				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
 				$un_access_users = array();
 				if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-					foreach ( (array) $messages_template->thread->recipients as $recipient ) {
+					foreach ( (array) $all_recipients as $recipient ) {
 						if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 							if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
 								$un_access_users[] = false;
@@ -642,7 +644,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	$message_response['started_date_mysql'] = $thread_template->thread->first_message_date;
 
-    // Clean up the loop.
+	// Clean up the loop.
 	bp_thread_messages();
 
 	// Remove the bp_current_action() override.
@@ -879,10 +881,12 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			continue;
 		}
 
-		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
+		$all_recipients = $messages_template->thread->get_recipients();
+
+		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
 		$un_access_users = array();
 		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() && count( $messages_template->thread->recipients ) < 3 ) {
-			foreach ( (array) $messages_template->thread->recipients as $recipient ) {
+			foreach ( (array) $all_recipients as $recipient ) {
 				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
 						$un_access_users[] = false;
@@ -960,6 +964,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'display_date'                    => bb_get_thread_sent_date(),
 			'started_date'                    => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 			'is_private_thread'               => $is_private_thread,
+			'has_media'                       => false,
 		);
 
 		if ( (int) bp_action_variable( 0 ) === (int) $bp_get_message_thread_id ) {
@@ -1084,50 +1089,56 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ]['starred_id'] = $sm_id;
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
-			$media_ids = bp_messages_get_meta( $last_message_id, 'bp_media_ids', true );
+		if ( empty( $threads->threads[ $i ]['excerpt'] ) ) {
+			if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+				$media_ids = bp_messages_get_meta( $last_message_id, 'bp_media_ids', true );
 
-			if ( ! empty( $media_ids ) ) {
-				$media_ids = explode( ',', $media_ids );
-				if ( count( $media_ids ) < 2 ) {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent a photo', 'buddyboss' );
-				} else {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent some photos', 'buddyboss' );
+				if ( ! empty( $media_ids ) ) {
+					$threads->threads[ $i ]['has_media'] = true;
+					$media_ids                           = explode( ',', $media_ids );
+					if ( count( $media_ids ) < 2 ) {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a photo', 'buddyboss' );
+					} else {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some photos', 'buddyboss' );
+					}
 				}
 			}
-		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
-			$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
+			if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+				$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
 
-			if ( ! empty( $video_ids ) ) {
-				$video_ids = explode( ',', $video_ids );
-				if ( count( $video_ids ) < 2 ) {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent a video', 'buddyboss' );
-				} else {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent some videos', 'buddyboss' );
+				if ( ! empty( $video_ids ) ) {
+					$threads->threads[ $i ]['has_media'] = true;
+					$video_ids                           = explode( ',', $video_ids );
+					if ( count( $video_ids ) < 2 ) {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a video', 'buddyboss' );
+					} else {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some videos', 'buddyboss' );
+					}
 				}
 			}
-		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
-			$document_ids = bp_messages_get_meta( $last_message_id, 'bp_document_ids', true );
+			if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+				$document_ids = bp_messages_get_meta( $last_message_id, 'bp_document_ids', true );
 
-			if ( ! empty( $document_ids ) ) {
-				$document_ids = explode( ',', $document_ids );
-				if ( count( $document_ids ) < 2 ) {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent a document', 'buddyboss' );
-				} else {
-					$threads->threads[ $i ]['excerpt'] = __( 'sent some documents', 'buddyboss' );
+				if ( ! empty( $document_ids ) ) {
+					$threads->threads[ $i ]['has_media'] = true;
+					$document_ids                        = explode( ',', $document_ids );
+					if ( count( $document_ids ) < 2 ) {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a document', 'buddyboss' );
+					} else {
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some documents', 'buddyboss' );
+					}
 				}
 			}
-		}
 
-		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
-			$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
+			if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+				$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
 
-			if ( ! empty( $gif_data ) ) {
-				$threads->threads[ $i ]['excerpt'] = __( 'sent a GIF', 'buddyboss' );
+				if ( ! empty( $gif_data ) ) {
+					$threads->threads[ $i ]['has_media'] = true;
+					$threads->threads[ $i ]['excerpt']   = __( 'Sent a gif', 'buddyboss' );
+				}
 			}
 		}
 
@@ -2093,8 +2104,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		)
 	);
 
+	$all_recipients = $thread_template->thread->get_recipients();
+
 	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
-	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
+	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $all_recipients );
 	$un_access_users = array();
 
 	$thread->thread = array(
@@ -2815,7 +2828,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->next_messages_timestamp         = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
 	$thread->group_id                        = $group_id;
 	$thread->is_group_thread                 = $is_group_thread;
-	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
+	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->get_recipients() );
 	$thread->user_can_upload_media           = bb_user_has_access_upload_media( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_document        = bb_user_has_access_upload_document( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_video           = bb_user_has_access_upload_video( 0, $login_user_id, 0, $thread_id, 'message' );
