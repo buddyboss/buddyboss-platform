@@ -26,15 +26,15 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 		 * @return object Bp_Search_Activities
 		 */
 		public static function instance() {
-			// Store the instance locally to avoid private static replication
+			// Store the instance locally to avoid private static replication.
 			static $instance = null;
 
-			// Only run these methods if they haven't been run previously
+			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
 				$instance = new Bp_Search_Activities();
 			}
 
-			// Always return the instance
+			// Always return the instance.
 			return $instance;
 		}
 
@@ -62,7 +62,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			 */
 			global $wpdb, $bp;
 
-			$bp_prefix = bp_core_get_table_prefix();
+			$bp_prefix   = bp_core_get_table_prefix();
 			$search_term = htmlspecialchars( $search_term );
 
 			$query_placeholder = array();
@@ -123,24 +123,24 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the activity Search query.
 			 *
-             * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
 			$sql['from'] = apply_filters( 'bp_activity_search_join_sql', $sql['from'] );
 
-			// searching only activity updates, others don't make sense
+			// searching only activity updates, others don't make sense.
 			$where_conditions   = array( '1=1' );
 			$where_conditions[] = "is_spam = 0
-						AND ExtractValue(a.content, '//text()') LIKE %s
-						AND a.type = 'activity_update'
-						AND
-						(
-							( a.privacy IN ( '" . implode( "','", $privacy ) . "' ) AND a.component != 'groups' AND a.hide_sitewide = 0 ) " .
-							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( a.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND a.component = 'groups' AND a.privacy = 'public' )" : '' ) .
-							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( a.user_id IN ( '" . implode( "','", $friends ) . "' ) AND a.privacy = 'friends' AND a.hide_sitewide = 0 )" : '' ) .
-							( is_user_logged_in() ? " OR ( a.user_id = '" . bp_loggedin_user_id() . "' AND a.privacy = 'onlyme' )" : '' ) .
-						")";
+				AND ExtractValue(a.content, '//text()') LIKE %s
+				AND a.type = 'activity_update'
+				AND
+				(
+					( a.privacy IN ( '" . implode( "','", $privacy ) . "' ) AND a.component != 'groups' AND a.hide_sitewide = 0 ) " .
+					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( a.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND a.component = 'groups' AND a.privacy = 'public' )" : '' ) .
+					( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( a.user_id IN ( '" . implode( "','", $friends ) . "' ) AND a.privacy = 'friends' AND a.hide_sitewide = 0 )" : '' ) .
+					( is_user_logged_in() ? " OR ( a.user_id = '" . bp_loggedin_user_id() . "' AND a.privacy = 'onlyme' )" : '' ) .
+				')';
 
 			/**
 			 * Filters the MySQL WHERE conditions for the activity Search query.
@@ -213,7 +213,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 
 	}
 
-	// End class Bp_Search_Posts
+	// End class Bp_Search_Posts.
 
 endif;
 
