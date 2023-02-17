@@ -1990,6 +1990,7 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 				'bb_activity_comment',
 				'bb_groups_new_message',
 				'bb_groups_subscribed_discussion',
+				'bb_groups_new_request'
 			),
 			true
 		)
@@ -2028,6 +2029,9 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 		$group_id = bp_messages_get_meta( $notification->item_id, 'group_id', true );
 	}
 
+	if ( bp_is_active( 'groups' ) && 'bb_groups_new_request' === $notification->component_action ) {
+		$group_id = $notification->item_id;
+	}
 	if (
 		bp_is_active( 'moderation' ) &&
 		(
