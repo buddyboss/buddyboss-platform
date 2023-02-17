@@ -31,7 +31,7 @@ class SyncGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct( $bpGroupId = null, $ldGroupId = null ) {
+	public function __construct( $bpGroupId = 0, $ldGroupId = 0 ) {
 		$this->bpGroupId = $bpGroupId;
 		$this->ldGroupId = $ldGroupId;
 
@@ -189,7 +189,7 @@ class SyncGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function associateToBuddypress( $bpGroupId = null ) {
+	public function associateToBuddypress( $bpGroupId = 0 ) {
 		if ( $this->bpGroupId && ! $bpGroupId ) {
 			return $this;
 		}
@@ -374,7 +374,7 @@ class SyncGenerator {
 	public function syncBpAdmin( $userId, $remove = false, $clearCache = true ) {
 
 		if ( empty( $this->ldGroupId ) ) {
-			return $this;
+			$this->ldGroupId = 0;
 		}
 
 		$this->syncingToLearndash(
@@ -398,6 +398,9 @@ class SyncGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpMod( $userId, $remove = false, $clearCache = true ) {
+		if ( empty( $this->ldGroupId ) ) {
+			$this->ldGroupId = 0;
+		}
 		$this->syncingToLearndash(
 			function() use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'mod' ), array( $userId, $this->ldGroupId, $remove ) );
@@ -421,6 +424,9 @@ class SyncGenerator {
 	public function syncBpMember( $userId, $remove = false, $clearCache = true ) {
 		$this->syncingToLearndash(
 			function() use ( $userId, $remove ) {
+				if ( empty( $this->ldGroupId ) ) {
+					$this->ldGroupId = 0;
+				}
 				call_user_func_array( $this->getBpSyncFunction( 'user' ), array( $userId, $this->ldGroupId, $remove ) );
 
 				// if sync to user, we need to remove previous admin
@@ -599,7 +605,7 @@ class SyncGenerator {
 	 */
 	protected function unsetBpGroupMeta( $removeProp = true ) {
 		if ( $removeProp ) {
-			$this->bpGroupId = null;
+			$this->bpGroupId = 0;
 		}
 
 		delete_post_meta( $this->ldGroupId, $this->syncMetaKey );
@@ -627,7 +633,7 @@ class SyncGenerator {
 	 */
 	protected function unsetSyncGropuIds() {
 		$this->unsetBpGroupMeta( false )->unsetLdGroupMeta( false );
-		$this->bpGroupId = $this->ldGroupId = null;
+		$this->bpGroupId = $this->ldGroupId = 0;
 		return $this;
 	}
 
