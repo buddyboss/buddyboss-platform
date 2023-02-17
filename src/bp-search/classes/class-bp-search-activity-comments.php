@@ -178,16 +178,13 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 
 			$post_ids = implode( ',', $post_ids_arr );
 
-			// Set current component as 'activity' to get activity result.
-			$old_current_component          = buddypress()->current_component;
-			buddypress()->current_component = 'activity';
-
 			if ( bp_has_activities(
 				array(
 					'display_comments' => 'stream',
 					'include'          => $post_ids,
 					'per_page'         => count( $post_ids_arr ),
 					'show_hidden'      => true,
+					'scope'            => false,
 				)
 			) ) {
 
@@ -204,10 +201,6 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 					$this->search_results['items'][ bp_get_activity_id() ] = $result;
 				}
 			}
-
-			// Restore current component.
-			buddypress()->current_component = $old_current_component;
-			unset( $old_current_component );
 		}
 
 	}
