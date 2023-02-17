@@ -681,6 +681,33 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 				foreach ( $notification_preferences as $group => $group_data ) {
 
+					if ( ! empty( $group_data['fields'] ) ) {
+						$group_data['fields'] = array_filter(
+							array_map(
+								function ( $fields ) {
+									if (
+										(
+											isset( $fields['notification_read_only'], $fields['default'] ) &&
+											true === (bool) $fields['notification_read_only'] &&
+											'yes' === (string) $fields['default']
+										) ||
+										(
+											! isset( $fields['notification_read_only'] ) ||
+											false === (bool) $fields['notification_read_only']
+										)
+									) {
+										return $fields;
+									}
+								},
+								$group_data['fields']
+							)
+						);
+					}
+
+					if ( empty( $group_data['fields'] ) ) {
+						continue;
+					}
+
 					if ( ! empty( $group_data['label'] ) ) {
 						$fields[] = array(
 							'name'        => '',
@@ -913,7 +940,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				$fields        = array_merge( $fields, $fields_groups );
 			}
 
-			if ( bp_is_active( 'forums' ) ) {
+			if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
 				$fields_forums[] = array(
 					'name'        => '',
 					'label'       => '',

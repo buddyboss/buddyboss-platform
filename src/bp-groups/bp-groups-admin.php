@@ -786,7 +786,7 @@ function bp_groups_admin_edit() {
 										<div id="bp-groups-permalink-box">
 											<strong><?php esc_html_e( 'Permalink:', 'buddyboss' ); ?></strong>
 											<span id="bp-groups-permalink">
-												<?php bp_groups_directory_permalink(); ?> <input type="text" id="bp-groups-slug" name="bp-groups-slug" value="<?php bp_group_slug( $group ); ?>" autocomplete="off"> /
+												<?php bp_groups_directory_permalink(); ?> <input type="text" id="bp-groups-slug" name="bp-groups-slug" value="<?php echo rawurldecode( bp_get_group_slug( $group ) ); ?>" autocomplete="off"> /
 											</span>
 											<a href="<?php echo bp_group_permalink( $group ); ?>" class="button button-small" id="bp-groups-visit-group"><?php esc_html_e( 'Visit Group', 'buddyboss' ); ?></a>
 										</div>

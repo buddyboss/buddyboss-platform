@@ -194,10 +194,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param array $where Query to hide suspended user's member.
-		 * @param array $class current class object.
+		 * @param array  $where       Query to hide suspended user's member.
+		 * @param object $class       current class object.
+		 * @param string $column_name Table column name.
 		 */
-		$where = apply_filters( 'bp_suspend_member_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bp_suspend_member_get_where_conditions', $where, $this, $column_name );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
@@ -660,6 +661,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
 		if ( empty( $username_visible ) && bp_moderation_is_user_suspended( $user_id ) ) {
+			if ( current_user_can( 'manage_options' ) ) {
+				$edit_link = add_query_arg( array( 'action' => 'edit' ), admin_url( 'user-edit.php?user_id=' . $user_id ) );
+				return $edit_link;
+			}
 			return '';
 		}
 
