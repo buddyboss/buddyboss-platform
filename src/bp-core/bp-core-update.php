@@ -2297,38 +2297,61 @@ function bb_update_to_2_2_7() {
 
 	set_transient( 'bb_update_to_2_2_7', 'yes', HOUR_IN_SECONDS );
 
-	if ( bp_is_active( 'friends' ) ) {
-		global $bp_background_updater;
+	bb_create_background_member_friends_count();
+}
 
-		$user_ids = get_users(
-			array(
-				'fields'     => 'ids',
-				'meta_query' => array(
-					array(
-						'key'     => 'total_friend_count',
-						'compare' => 'EXISTS',
-					),
-				),
-			)
-		);
+/**
+ * Create a background job to update the friend count when member suspend/un-suspend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $paged The current page. Default 1.
+ *
+ * @return void
+ */
+function bb_create_background_member_friends_count( $paged = 1 ) {
+	global $bp_background_updater;
 
-		if ( empty( $user_ids ) ) {
-			return;
-		}
-
-		foreach ( array_chunk( $user_ids, 50 ) as $chunk ) {
-			$bp_background_updater->data(
-				array(
-					array(
-						'callback' => 'migrate_member_friends_count',
-						'args'     => array( $chunk ),
-					),
-				)
-			);
-
-			$bp_background_updater->save()->schedule_event();
-		}
+	if ( ! bp_is_active( 'friends' ) ) {
+		return;
 	}
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 50;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	$user_ids = get_users(
+		array(
+			'fields'     => 'ids',
+			'number'     => $per_page,
+			'offset'     => $offset,
+			'orderby'    => 'ID',
+			'order'      => 'DESC',
+			'meta_query' => array(
+				array(
+					'key'     => 'total_friend_count',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_migrate_member_friends_count',
+				'args'     => array( $user_ids, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
 }
 
 /**
@@ -2337,10 +2360,11 @@ function bb_update_to_2_2_7() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $user_ids Array of user ID.
+ * @param int   $paged    The current page. Default 1.
  *
  * @return void
  */
-function migrate_member_friends_count( $user_ids ) {
+function bb_migrate_member_friends_count( $user_ids, $paged ) {
 	if ( empty( $user_ids ) ) {
 		return;
 	}
@@ -2359,4 +2383,8 @@ function migrate_member_friends_count( $user_ids ) {
 			bp_update_user_meta( $user_id, 'total_friend_count', $query_friend_count );
 		}
 	}
+
+	// Call recursive to finish update for all users.
+	$paged++;
+	bb_create_background_member_friends_count( $paged );
 }
