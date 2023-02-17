@@ -1908,6 +1908,7 @@ function bb_nouveau_ajax_group_subscription() {
 						array(
 							'type'           => 'subscription',
 							'button_element' => 'button',
+							'container'      => '',
 						)
 					);
 					$contents = ob_get_clean();
@@ -1933,6 +1934,7 @@ function bb_nouveau_ajax_group_subscription() {
 					array(
 						'type'           => 'subscription',
 						'button_element' => 'button',
+						'container'      => '',
 					)
 				);
 				$contents = ob_get_clean();
