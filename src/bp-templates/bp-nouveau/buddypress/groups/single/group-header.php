@@ -16,6 +16,7 @@ $group_avatar     = trailingslashit( $admin_link . 'group-avatar' );
 $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 
+add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
 ?>
 <div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( bb_platform_group_header_style() ); ?>">
 
@@ -99,11 +100,17 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 
 				<?php
 
-				if ( ! bp_nouveau_groups_front_page_description() && bp_nouveau_group_has_meta( 'description' ) && bb_platform_group_headers_element_enable( 'group-description' ) ) : ?>
+				if (
+					! bp_nouveau_groups_front_page_description() &&
+					bp_nouveau_group_has_meta( 'description' ) &&
+					bb_platform_group_headers_element_enable( 'group-description' )
+				) :
+					?>
 					<div class="group-description">
-						<?php bp_group_description(); ?>
+						<?php bp_group_description_excerpt(); ?>
 					</div><!-- //.group_description -->
-				<?php endif;
+					<?php
+				endif;
 				if ( bb_platform_group_headers_element_enable( 'group-type' ) ) :
 					?>
 				<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
@@ -177,3 +184,5 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 		</div>
 	</transition>
 </div> <!-- .bb-leave-group-popup -->
+<?php
+remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
