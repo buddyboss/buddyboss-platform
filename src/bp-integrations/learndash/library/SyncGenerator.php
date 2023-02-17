@@ -372,6 +372,11 @@ class SyncGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpAdmin( $userId, $remove = false, $clearCache = true ) {
+
+		if ( empty( $this->ldGroupId ) ) {
+			return $this;
+		}
+
 		$this->syncingToLearndash(
 			function() use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'admin' ), array( $userId, $this->ldGroupId, $remove ) );
