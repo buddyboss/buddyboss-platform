@@ -123,38 +123,36 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->
 					<?php
-				endif;  ?>
+				endif;
+				?>
 
 				<div class="bp-group-meta-wrap flex align-items-center">
 
 					<?php
-						if (
-							function_exists( 'bp_get_group_status_description' ) &&
-							bb_platform_group_headers_element_enable( 'group-privacy' )
-						) {
-							?>
-							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
-							<?php
-						}
+					if (
+						function_exists( 'bp_get_group_status_description' ) &&
+						bb_platform_group_headers_element_enable( 'group-privacy' )
+					) {
+						?>
+						<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+						<?php
+					}
 
-						if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
-							?>
-							<p class="last-activity item-meta">
-								<?php
-								printf(
-									/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-									esc_html__( 'Active %s', 'buddyboss' ),
-									wp_kses_post( bp_get_group_last_active() )
-								);
-								?>
-							</p>
+					if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
+						?>
+						<p class="last-activity item-meta">
 							<?php
-					endif; ?>
-
+							printf(
+								/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+								esc_html__( 'Active %s', 'buddyboss' ),
+								wp_kses_post( bp_get_group_last_active() )
+							);
+							?>
+						</p>
+					<?php endif; ?>
 				</div>
 
 				<?php
-
 				if (
 					! bp_nouveau_groups_front_page_description() &&
 					bp_nouveau_group_has_meta( 'description' ) &&
@@ -162,14 +160,16 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 				) :
 					?>
 					<div class="group-description">
-					<?php bp_group_description_excerpt(); ?>
+						<?php bp_group_description_excerpt(); ?>
 					</div><!-- //.group_description -->
 					<?php
 				endif;
 
 				if ( bb_platform_group_headers_element_enable( 'group-type' ) ) :
 					?>
-					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+					<p class="bp-group-meta bp-group-type">
+						<?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?>
+					</p>
 				<?php endif; ?>
 
 				<div class="group-actions-wrap" >
@@ -219,30 +219,28 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 <!-- Leave Group confirmation popup -->
 <div class="bb-leave-group-popup bb-action-popup" style="display: none">
-		<transition name="modal">
-			<div class="modal-mask bb-white bbm-model-wrap">
-				<div class="modal-wrapper">
-					<div class="modal-container">
-						<header class="bb-model-header">
-							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
-							<a class="bb-close-leave-group bb-model-close-button" href="#">
-								<span class="bb-icon-l bb-icon-times"></span>
-							</a>
-						</header>
-						<div class="bb-leave-group-content bb-action-popup-content">
-							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
-						</div>
-						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
-						</footer>
-
+	<transition name="modal">
+		<div class="modal-mask bb-white bbm-model-wrap">
+			<div class="modal-wrapper">
+				<div class="modal-container">
+					<header class="bb-model-header">
+						<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+						<a class="bb-close-leave-group bb-model-close-button" href="#">
+							<span class="bb-icon-l bb-icon-times"></span>
+						</a>
+					</header>
+					<div class="bb-leave-group-content bb-action-popup-content">
+						<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
 					</div>
+					<footer class="bb-model-footer flex align-items-center">
+						<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+					</footer>
+
 				</div>
 			</div>
-		</transition>
-	</div> <!-- .bb-leave-group-popup -->
-
-
+		</div>
+	</transition>
+</div> <!-- .bb-leave-group-popup -->
 <?php
-	remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
+remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
