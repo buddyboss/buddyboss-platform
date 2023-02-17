@@ -95,6 +95,7 @@ add_filter( 'bp_get_group_description', 'html_entity_decode' );
 add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
 
 add_filter( 'bp_repair_list', 'bb_groups_repair_group_subscriptions', 11 );
+add_action( 'bp_actions', 'bb_group_subscriptions_handler' );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
@@ -1220,3 +1221,111 @@ function bb_nouveau_group_localize_scripts( $params = array() ) {
 	return $params;
 }
 add_filter( 'bp_core_get_js_strings', 'bb_nouveau_group_localize_scripts', 10, 1 );
+
+/**
+ * Handles the front end subscribing and unsubscribing topics.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void|WP_Error
+ */
+function bb_group_subscriptions_handler() {
+	global $wp;
+
+	if ( ! function_exists( 'bb_is_enabled_subscription' ) || ! bb_is_enabled_subscription( 'group' ) ) {
+		return;
+	}
+
+	// Bail if no group ID is passed.
+	if ( empty( $_GET['action'] ) || empty( $_GET['group_id'] ) || empty( $_GET['_wpnonce'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		return;
+	}
+
+	// Get required data.
+	$user_id  = get_current_user_id();
+	$group_id = (int) sanitize_text_field( wp_unslash( $_GET['group_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+	$action   = sanitize_text_field( wp_unslash( $_GET['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+	$nonce    = sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+	$group    = groups_get_group( $group_id );
+
+	// Setup possible get actions.
+	$possible_actions = array(
+		'subscribe',
+		'unsubscribe',
+	);
+
+	// Bail if actions aren't meant for this function.
+	if ( ! in_array( $action, $possible_actions, true ) ) {
+		return;
+	}
+
+	$message = '';
+	$type    = 'error';
+
+	// Check for empty group.
+	if ( empty( $group_id ) || empty( $group->id ) ) {
+		$message = __( 'No group was found! Which group are you subscribing/unsubscribing to?', 'buddyboss' );
+	} elseif ( ! wp_verify_nonce( $nonce, 'bb-group-subscription' . $group_id ) ) {
+		$message = __( 'There was a problem subscribing/unsubscribing from that group!', 'buddyboss' );
+	} elseif ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		$message = __( 'You are not part of that group!', 'buddyboss' );
+	}
+
+	$group_name = sprintf(
+		'<strong>%s</strong>',
+		bp_get_group_name( $group )
+	);
+
+	$is_subscription = bb_is_member_subscribed_group( $group_id, $user_id );
+
+	if ( empty( $message ) && 'subscribe' === $action ) {
+		if ( $is_subscription ) {
+			$message = __( '%s You are already subscribe this group.', 'buddyboss' );
+		} else {
+			$subscription_id = bb_create_subscription(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $group_id,
+					'type'              => 'group',
+					'secondary_item_id' => $group->parent_id,
+				)
+			);
+
+			if ( is_wp_error( $subscription_id ) ) {
+				$message = sprintf(
+				/* translators: Group name */
+					__( 'There was a problem subscribing to %s.', 'buddyboss' ),
+					$group_name
+				);
+			} else {
+				$message = sprintf(
+				/* translators: Group name */
+					__( 'You\'ve been subscribed to %s.', 'buddyboss' ),
+					$group_name
+				);
+				$type    = 'success';
+			}
+		}
+	} elseif ( empty( $message ) && 'unsubscribe' === $action ) {
+		if (  ! $is_subscription || ! bb_delete_subscription( $is_subscription ) ) {
+			$message = sprintf(
+			/* translators: Group name */
+				__( 'There was a problem unsubscribing from %s.', 'buddyboss' ),
+				$group_name
+			);
+		} else {
+			$message = sprintf(
+			/* translators: Group name */
+				__( 'You\'ve been unsubscribed from %s.', 'buddyboss' ),
+				$group_name
+			);
+			$type    = 'success';
+		}
+	}
+
+	if ( ! empty( $message ) ) {
+		bp_core_add_message( $message, $type );
+	}
+	wp_safe_redirect( esc_url( trailingslashit( home_url( $wp->request ) ) ) );
+	exit();
+}

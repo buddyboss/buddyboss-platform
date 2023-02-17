@@ -1024,6 +1024,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					$data['icon']['thumb'] = (string) $group_thumb_image;
 				}
 
+				if ( ! empty( $group->parent_id ) ) {
+					$data['parent_html'] = '<strong>' . bp_get_group_name( groups_get_group( $group->parent_id ) ) . '</strong>';
+				}
+
 				// Parse the data.
 				$data = bp_parse_args(
 					$data,

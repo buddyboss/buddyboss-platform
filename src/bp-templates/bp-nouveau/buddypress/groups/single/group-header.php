@@ -69,7 +69,14 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 					<div class="item-meta">
 						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->
-				<?php endif;
+					<?php
+				endif;
+
+				if ( function_exists( 'bp_get_group_status_description' ) && bb_platform_group_headers_element_enable( 'group-privacy' ) ) :
+					?>
+					<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+					<?php
+				endif;
 
 				if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
 					?>
@@ -99,13 +106,13 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 					<?php bp_get_template_part( 'groups/single/parts/header-item-actions' ); ?>
 					<div class="group-actions-absolute">
 						<?php
-						if ( function_exists( 'bp_get_group_status_description' ) && bb_platform_group_headers_element_enable( 'group-privacy' ) ) :
-							?>
-							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
-							<?php
-						endif;
-
 						bp_nouveau_group_header_buttons();
+						bp_nouveau_group_header_buttons(
+							array(
+								'type'           => 'subscription',
+								'button_element' => 'button',
+							)
+						);
 						bb_nouveau_group_header_bubble_buttons();
 						?>
 					</div>
