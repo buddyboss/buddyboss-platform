@@ -4401,15 +4401,24 @@ function bp_platform_default_activity_types() {
 			'activity_name'  => 'updated_profile',
 			'activity_label' => __( 'Member updates their profile details', 'buddyboss' ),
 		),
-		array(
-			'activity_name'  => 'new_member',
-			'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
-		),
-		array(
-			'activity_name'  => 'friendship_created',
-			'activity_label' => __( 'Two members become connected', 'buddyboss' ),
-		),
 	);
+
+	// Check the registration is enabled or not.
+	if ( function_exists( 'bp_enable_site_registration' ) && bp_enable_site_registration() ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'new_member',
+					'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'friendship_created',
+					'activity_label' => __( 'Two members become connected', 'buddyboss' ),
+				),
+			)
+		);
+	}
 
 	// settings field that dependent on group.
 	if ( bp_is_active( 'groups' ) ) {
