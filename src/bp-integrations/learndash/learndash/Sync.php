@@ -85,7 +85,7 @@ class Sync {
 		// }
 
 		$newGroup  = bp_ld_sync()->getRequest( 'bp-ld-sync-id', null );
-		$generator = $this->generator( null, $groupId );
+		$generator = $this->generator( 0, $groupId );
 
 		if ( $generator->hasBpGroup() && $generator->getBpGroupId() == $newGroup ) {
 			
@@ -108,7 +108,7 @@ class Sync {
 			return false;
 		}
 
-		$this->deletingSyncedBpGroupId = $this->generator( null, $groupId )->getBpGroupId();
+		$this->deletingSyncedBpGroupId = $this->generator( 0, $groupId )->getBpGroupId();
 	}
 
 	/**
@@ -197,7 +197,7 @@ class Sync {
 			return false;
 		}
 
-		$generator = $this->generator( null, $groupId );
+		$generator = $this->generator( 0, $groupId );
 
 		if ( ! $generator->hasBpGroup() ) {
 			return false;
