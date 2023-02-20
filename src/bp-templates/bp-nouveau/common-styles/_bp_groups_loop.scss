@@ -111,14 +111,9 @@
 		max-height: calc(100vh - 220px);
 		overflow: auto;
 		padding: 20px 30px;
-		padding-bottom: 0;
-
-		p:empty {
-			display: none;
-		}
 
 		p {
-			white-space: pre-wrap;
+			margin-bottom: 0;
 		}
 
 	}
@@ -141,6 +136,21 @@
 			float: none;
 		}
 
+	}
+
+	&#group-description-popup {
+
+		.bb-action-popup-content {
+			padding-bottom: 1px;
+
+			p {
+				margin-bottom: 1.6875rem;
+
+				&:empty {
+					display: none;
+				}
+			}
+		}
 	}
 
 }

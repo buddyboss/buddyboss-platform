@@ -6648,15 +6648,10 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   max-height: calc(100vh - 220px);
   overflow: auto;
   padding: 20px 30px;
-  padding-bottom: 0;
-}
-
-.bb-action-popup .bb-action-popup-content p:empty {
-  display: none;
 }
 
 .bb-action-popup .bb-action-popup-content p {
-  white-space: pre-wrap;
+  margin-bottom: 0;
 }
 
 .bb-action-popup .bb-model-footer {
@@ -6676,6 +6671,18 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
 
 .bb-action-popup .bb-model-footer .push-right {
   float: none;
+}
+
+.bb-action-popup#group-description-popup .bb-action-popup-content {
+  padding-bottom: 1px;
+}
+
+.bb-action-popup#group-description-popup .bb-action-popup-content p {
+  margin-bottom: 1.6875rem;
+}
+
+.bb-action-popup#group-description-popup .bb-action-popup-content p:empty {
+  display: none;
 }
 
 @media screen and (min-width: 46.8em) {
