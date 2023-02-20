@@ -639,6 +639,10 @@ function bp_get_the_profile_field_value() {
 		}
 	}
 
+	if ( 'socialnetworks' === $field->type ) {
+		$field->data->value = bp_get_user_social_networks_urls();
+	}
+
 	/**
 	 * Filters the XProfile field value.
 	 *

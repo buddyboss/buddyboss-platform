@@ -26,6 +26,10 @@
 
 	<?php do_action( 'bbp_template_before_single_forum' ); ?>
 
+	<?php if ( bbp_is_single_forum() && ! bp_is_group_single() ) { ?>
+		<div class="bbp-forum-content-wrap"><?php echo wp_kses_post( bbp_get_forum_content_excerpt_view_more() ); ?></div>
+	<?php } ?>
+
 	<?php if ( post_password_required() ) : ?>
 
 		<?php bbp_get_template_part( 'form', 'protected' ); ?>
@@ -33,8 +37,11 @@
 	<?php else : ?>
 
 		<?php if ( bbp_has_forums() ) : ?>
+			<?php bbp_get_template_part( 'pagination', 'forums' ); ?>
 
 			<?php bbp_get_template_part( 'loop', 'forums' ); ?>
+
+			<?php bbp_get_template_part( 'pagination', 'forums' ); ?>
 
 		<?php endif; ?>
 
