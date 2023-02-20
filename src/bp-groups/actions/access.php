@@ -23,25 +23,28 @@ function bp_groups_group_access_protection() {
 	$is_visible      = $current_group->is_visible;
 	$no_access_args  = array();
 
+	$current_url  = home_url( $wp->request );
+
 	// The user can know about the group but doesn't have full access.
 	if ( ! $user_has_access && $is_visible ) {
+
+		if ( ! is_user_logged_in() ) {
+			bp_core_redirect(
+				add_query_arg(
+					array(
+						'bp-auth'       => 1,
+						'action'        => 'bpnoaccess',
+						'redirect_from' => 'private_group',
+					),
+					wp_login_url( $current_url )
+				)
+			);
+		}
 
 		// Always allow access to request-membership.
 		if ( bp_is_current_action( 'request-membership' ) && ! is_user_logged_in() ) {
 
-			$redirect        = bp_get_group_permalink( $current_group );
-			$current_actions = bp_action_variables();
-			if (
-				bp_is_active( 'forums' ) &&
-				! empty( $current_actions ) &&
-				(
-					in_array( get_option( '_bbp_topic_slug', 'discussion' ), $current_actions, true ) ||
-					in_array( get_option( '_bbp_forum_slug', 'forum' ), $current_actions, true )
-				)
-			) {
-				$redirect = str_replace( 'request-membership', get_option( '_bbp_forum_slug', 'forum' ), home_url( $wp->request ) );
-			}
-
+			$redirect = bp_get_group_permalink( $current_group );
 			bp_core_redirect(
 				add_query_arg(
 					array(
