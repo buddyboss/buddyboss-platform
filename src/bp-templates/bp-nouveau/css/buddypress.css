@@ -1595,6 +1595,7 @@ a.layout-grid-view {
   pointer-events: none;
 }
 
+#whats-new-form.media-uploading #aw-whats-new-submit,
 #whats-new-form.focus-in--empty #aw-whats-new-submit {
   opacity: 0.6;
   cursor: default;
