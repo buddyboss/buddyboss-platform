@@ -1986,7 +1986,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				foreach ( $old_video_ids as $video_id ) {
 
 					if ( ! in_array( (int) $video_id, $video_ids, true ) ) {
-						bp_video_delete( array( 'id' => $video_id ) );
+						bp_video_delete( array( 'id' => $video_id ), 'activity' );
 					}
 				}
 			}

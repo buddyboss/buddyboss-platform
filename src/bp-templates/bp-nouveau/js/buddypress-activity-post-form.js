@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone, tinymce */
+/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone */
 /* @version 3.1.0 */
 /*jshint esversion: 6 */
 window.wp = window.wp || {};
@@ -168,8 +168,8 @@ window.bp = window.bp || {};
 
 		displayEditActivity: function ( activity_data ) {
 			bp.draft_activity.allow_delete_media = true;
-			bp.draft_activity.display_post = 'edit';
-			var self = this;
+			bp.draft_activity.display_post       = 'edit';
+			var self                             = this;
 
 			// reset post form before editing.
 			self.postForm.$el.trigger( 'reset' );
@@ -303,6 +303,7 @@ window.bp = window.bp || {};
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
 			var $singleActivityFormWrap  = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+			var $tabActivityFormWrap     = $( '#bp-nouveau-activity-form' );
 
 			// unwrap hw wrapped content section.
 			if ( $( '#whats-new-content' ).parent().is( '.edit-activity-content-wrap' ) ) {
@@ -313,6 +314,10 @@ window.bp = window.bp || {};
 
 			if ( $singleActivityFormWrap.length ) {
 				$singleActivityFormWrap.hide();
+			}
+
+			if ( $tabActivityFormWrap.hasClass( 'is-bp-hide' ) ) {
+				$tabActivityFormWrap.addClass( 'bp-hide' );
 			}
 		},
 
@@ -334,6 +339,7 @@ window.bp = window.bp || {};
 		displayEditDraftActivityData: function ( activity_data, bpActivityEvent ) {
 			var self = this;
 
+			self.postForm.$el.parent( '#bp-nouveau-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
 			var element = self.postForm.$el.find( '#whats-new' ).get( 0 );
 			element.focus();
@@ -1449,6 +1455,11 @@ window.bp = window.bp || {};
 				var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
 				$singleActivityFormWrap.hide();
 
+				var $tabActivityFormWrap = $( '#bp-nouveau-activity-form' );
+				if ( $tabActivityFormWrap.hasClass( 'is-bp-hide' ) ) {
+					$tabActivityFormWrap.addClass( 'bp-hide' );
+				}
+
 				this.resetMultiMediaOptions();
 			},
 
@@ -1551,6 +1562,7 @@ window.bp = window.bp || {};
 					previewTemplate : document.getElementsByClassName( 'activity-post-default-template' )[0].innerHTML,
 					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 					maxThumbnailFilesize: ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
+					dictInvalidFileType: bp_media_dropzone.dictInvalidFileType,
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-media-uploader', this.dropzone_options );
@@ -3221,7 +3233,7 @@ window.bp = window.bp || {};
 					var model_attributes = this.model.attributes;
 					// check media is enable in groups or not.
 					if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
-						if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+						if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 							Backbone.trigger( 'activity_media_close' );
 						}
@@ -3231,7 +3243,7 @@ window.bp = window.bp || {};
 
 					// check document is enable in groups or not.
 					if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
-						if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+						if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 							Backbone.trigger( 'activity_document_close' );
 						}
@@ -3241,14 +3253,14 @@ window.bp = window.bp || {};
 
 					// check video is enable in groups or not.
 					if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
-						if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+						if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 							Backbone.trigger( 'activity_video_close' );
 						}
 					} else {
 						$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 					}
-					
+
 				}
 			}
 		}
@@ -3937,7 +3949,7 @@ window.bp = window.bp || {};
 
 						// check media is enable in groups or not.
 						if ( BP_Nouveau.media.group_media === false ) {
-							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 								Backbone.trigger( 'activity_media_close' );
 							}
@@ -3947,7 +3959,7 @@ window.bp = window.bp || {};
 
 						// check document is enable in groups or not.
 						if ( BP_Nouveau.media.group_document === false ) {
-							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 								Backbone.trigger( 'activity_document_close' );
 							}
@@ -3957,7 +3969,7 @@ window.bp = window.bp || {};
 
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.group_video === false ) {
-							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 								Backbone.trigger( 'activity_video_close' );
 							}
@@ -3978,7 +3990,7 @@ window.bp = window.bp || {};
 
 						// check media is enable in profile or not.
 						if ( BP_Nouveau.media.profile_media === false ) {
-							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 								$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 								Backbone.trigger( 'activity_media_close' );
 							}
@@ -3988,7 +4000,7 @@ window.bp = window.bp || {};
 
 						// check document is enable in profile or not.
 						if ( BP_Nouveau.media.profile_document === false ) {
-							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 								$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 								Backbone.trigger( 'activity_document_close' );
 							}
@@ -3998,7 +4010,7 @@ window.bp = window.bp || {};
 
 						// check video is enable in profile or not.
 						if ( BP_Nouveau.video.profile_video === false ) {
-							if ( null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+							if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 								Backbone.trigger( 'activity_video_close' );
 							}
@@ -4017,7 +4029,7 @@ window.bp = window.bp || {};
 						}
 					}
 					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
-					$( '#show-toolbar-button' ).removeClass( 'active' );										
+					$( '#show-toolbar-button' ).removeClass( 'active' );
 					$( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip', $( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
 				}
 			}
@@ -5468,7 +5480,7 @@ window.bp = window.bp || {};
 							$( '#editor-toolbar .post-emoji' ).removeClass('post-emoji-hide');
 						}
 					}
-					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );																																																		
+					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				}
 			},
 

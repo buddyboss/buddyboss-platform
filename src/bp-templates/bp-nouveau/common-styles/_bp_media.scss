@@ -213,12 +213,28 @@
 		}
 	}
 
-	.act-grid-1-1.bb-vertical-layout + div + div {
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem {
 		position: absolute;
 		right: 0;
 		bottom: 0;
 		width: 36%;
+
+		@media screen and (max-width: 544px) {
+			position: relative;
+		}
 	}
+
+	@media screen and (max-width: 544px) {
+
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
+			position: static;
+			width: 100%;
+		}
+
+	}
+
 }
 
 .bb-activity-media-wrap.bb-media-length-4 {
@@ -243,19 +259,36 @@
 		}
 	}
 
-	.act-grid-1-1.bb-vertical-layout + div {
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
 		position: absolute;
 		right: 0;
-		top: 33.4%;
+		top: 0;
 		width: 36%;
 	}
 
-	.act-grid-1-1.bb-vertical-layout + div + div {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		width: 36%;
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem {
+		top: 33.4%;
 	}
+
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
+		top: initial;
+		bottom: 0;
+	}
+
+
+	@media screen and (max-width: 544px) {
+
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
+			position: static;
+			width: 100%;
+		}
+
+	}
+
 }
 
 .bb-activity-media-wrap.bb-media-length-more {

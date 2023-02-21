@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau, JSON, Dropzone, videojs */
+/* global bp, BP_Nouveau, JSON, Dropzone, videojs, bp_media_dropzone */
 /* @version 1.0.0 */
 window.bp = window.bp || {};
 
@@ -113,7 +113,7 @@ window.bp = window.bp || {};
 					uploadMultiple: false,
 					maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
 					maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-					dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
+					dictInvalidFileType: bp_media_dropzone.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 					previewTemplate: ForumDocumentTemplate,
 					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -131,6 +131,7 @@ window.bp = window.bp || {};
 					uploadMultiple: false,
 					maxFiles: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					dictInvalidFileType: bp_media_dropzone.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 					previewTemplate: ForumMediaTemplate,
 					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -1300,7 +1301,7 @@ window.bp = window.bp || {};
 								) {
 									$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
 								}
-								
+
 								if (
 									'undefined' !== typeof response.data &&
 									'undefined' !== typeof response.data.media_group_count
@@ -1394,7 +1395,7 @@ window.bp = window.bp || {};
 		cancelEditAlbumTitle: function ( event ) {
 			event.preventDefault();
 
-			$( '#bb-album-title' ).hide();
+			$( '#bb-album-title' ).removeClass( 'error' ).hide();
 			$( '#bp-save-album-title,#bp-save-folder-title' ).hide();
 			$( '#bp-cancel-edit-album-title' ).hide();
 			$( '#bp-edit-album-title,#bp-edit-folder-title' ).show();
@@ -3147,6 +3148,7 @@ window.bp = window.bp || {};
 									kind: 'document',
 									upload: {
 										name: edit_documents[ d ].name,
+										filename: edit_documents[ d ].name,
 										title: edit_documents[ d ].name,
 										size: edit_documents[ d ].size,
 										uuid: edit_documents[ d ].id
@@ -4904,7 +4906,7 @@ window.bp = window.bp || {};
 
 			this.closeUploader( event );
 			$( '#bp-media-create-album' ).hide();
-			$( '#bb-album-title' ).val( '' );
+			$( '#bb-album-title' ).val( '' ).removeClass( 'error' );
 
 		},
 
@@ -5008,7 +5010,7 @@ window.bp = window.bp || {};
 										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#photos-groups-li a' ).append( photoGroupSpanTag );
 									}
 								}
-								
+
 								if ( 'yes' === BP_Nouveau.media.is_media_directory ) {
 									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-all a span.count' ).text( response.data.media_all_count );
 									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-personal a span.count' ).text( response.data.media_personal_count );
@@ -6783,7 +6785,7 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
 				document_elements.find( '.bb-document-section .document-preview .document-text' ).attr( 'data-extension', extension );
-				document_elements.find( '.bb-document-section .document-preview .document-text textarea' ).html( mirror_text_display.replace( 'n', '' ) );
+				document_elements.find( '.bb-document-section .document-preview .document-text textarea' ).html( mirror_text_display );
 
 				setTimeout( function () {
 					bp.Nouveau.Media.documentCodeMirror();
