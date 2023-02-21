@@ -460,9 +460,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
 		return $display_name;
 	}
 
-	if ( ! $url = bp_core_get_user_domain( $user_id ) ) {
-		return '';
-	}
+	$url = bp_core_get_user_domain( $user_id );
 
 	if ( ! empty( $just_link ) ) {
 		return $url;
