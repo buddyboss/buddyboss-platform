@@ -255,6 +255,10 @@ add_filter( 'bbp_make_clickable', 'bbp_make_mentions_clickable', 8 ); // @jjj
 // Search forum discussion with tags.
 add_filter( 'posts_where', 'bb_forum_search_by_topic_tags', 10, 2 );
 
+// Remove deleted members link from mention for topic/reply.
+add_filter( 'bbp_get_topic_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bbp_get_reply_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
 /** Deprecated ****************************************************************/
 
 /**
@@ -358,7 +362,7 @@ function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 /**
  * Fires when a forum/topic is transitioned from one status to another.
  *
- * @since [BBVERSION]
+ * @since 2.2.6
  *
  * @param string  $new_status New post status.
  * @param string  $old_status Old post status.
