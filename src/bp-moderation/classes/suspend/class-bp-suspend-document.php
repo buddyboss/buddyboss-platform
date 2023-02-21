@@ -69,20 +69,26 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $member_id Member id.
 	 * @param string $action    Action name to perform.
+	 * @param int    $page      Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_member_document_ids( $member_id, $action = '' ) {
+	public static function get_member_document_ids( $member_id, $action = '', $page = - 1 ) {
 		$document_ids = array();
 
-		$documents = BP_Document::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'user_id'          => $member_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'user_id'          => $member_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$documents = BP_Document::get( $args );
 
 		if ( ! empty( $documents['documents'] ) ) {
 			$document_ids = $documents['documents'];
@@ -105,20 +111,26 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id group id.
+	 * @param int $page     Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_group_document_ids( $group_id ) {
+	public static function get_group_document_ids( $group_id, $page = - 1 ) {
 		$document_ids = array();
 
-		$documents = BP_Document::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'group_id'         => $group_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'group_id'         => $group_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$documents = BP_Document::get( $args );
 
 		if ( ! empty( $documents['documents'] ) ) {
 			$document_ids = $documents['documents'];
@@ -233,7 +245,12 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_document_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+			$exclude_group_sql = '';
+			// Allow group medias from blocked/suspended users.
+			if ( bp_is_active( 'groups' ) ) {
+				$exclude_group_sql = ' OR d.privacy = "grouponly" ';
+			}
+			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}
 
 		return $where_conditions;
@@ -251,7 +268,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public function manage_hidden_document( $document_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $document_id,
@@ -267,13 +284,15 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->hide_related_content( $document_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'hide_related_content' ),
-					'args'     => array( $document_id, $hide_sitewide, $args ),
+					array(
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $document_id, $hide_sitewide, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -293,7 +312,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public function manage_unhidden_document( $document_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $document_id,
@@ -321,13 +340,15 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $document_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $document_id, $hide_sitewide, $force_all, $args ),
+					array(
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $document_id, $hide_sitewide, $force_all, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -347,8 +368,14 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	protected function get_related_contents( $document_id, $args = array() ) {
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 		$related_contents = array();
-		$document         = new BP_Document( $document_id );
+
+		if ( $page > 1 ) {
+			return $related_contents;
+		}
+
+		$document = new BP_Document( $document_id );
 
 		if ( bp_is_active( 'activity' ) && ! empty( $document ) && ! empty( $document->activity_id ) ) {
 

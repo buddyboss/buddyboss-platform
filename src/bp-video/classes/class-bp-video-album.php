@@ -234,7 +234,7 @@ class BP_Video_Album {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'page'         => 1,               // The current page.
@@ -321,7 +321,7 @@ class BP_Video_Album {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -515,27 +515,6 @@ class BP_Video_Album {
 			$albums[] = $album;
 		}
 
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $albums, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with albums.
-		foreach ( $albums as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$albums[ $a_index ]->user_email    = $a_user->user_email;
-				$albums[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$albums[ $a_index ]->user_login    = $a_user->user_login;
-				$albums[ $a_index ]->display_name  = $a_user->display_name;
-			}
-		}
-
 		return $albums;
 	}
 
@@ -670,7 +649,7 @@ class BP_Video_Album {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'id'           => false,

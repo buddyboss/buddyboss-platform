@@ -71,8 +71,8 @@
 						?>
 
 						<p>
-							<input type="hidden" value="" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
-							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tag, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
+							<input type="hidden" value="<?php echo ( ! empty( $get_the_tags ) ) ? esc_attr( $get_the_tags ) : ''; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tags, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
 								<?php
 								if ( ! empty( $get_the_tags ) ) {
 									$get_the_tags = explode( ',', $get_the_tags );
@@ -91,27 +91,67 @@
 
 					<?php endif; ?>
 
-					<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_reply_edit() || ( bbp_is_reply_edit() && ! bbp_is_reply_anonymous() ) ) ) : ?>
+					<?php if ( bb_is_enabled_subscription( 'topic' ) && ! bbp_is_anonymous() && ( ! bbp_is_reply_edit() || ( bbp_is_reply_edit() && ! bbp_is_reply_anonymous() ) ) ) : ?>
 
-						<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>
+						<?php
+						if (
+							bb_enabled_legacy_email_preference() ||
+							( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) )
+						) {
+							?>
 
-						<p class="checkbox bp-checkbox-wrap">
+							<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>
 
-							<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe"<?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+							<p class="checkbox bp-checkbox-wrap">
 
-							<?php if ( bbp_is_reply_edit() && ( bbp_get_reply_author_id() !== bbp_get_current_user_id() ) ) : ?>
+								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe"<?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 
-								<label for="bbp_topic_subscription"><?php _e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
+								<?php
+								if ( bbp_is_reply_edit() && ( bbp_get_reply_author_id() !== bbp_get_current_user_id() ) ) :
 
-							<?php else : ?>
+									if (
+										(
+											function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference()
+										) ||
+										(
+											function_exists( 'bp_is_active' ) &&
+											! bp_is_active( 'notifications' )
+										)
+									) {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
+										<?php
+									} else {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss' ); ?></label>
+										<?php
+									}
+								else :
+									if (
+										(
+											function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference()
+										) ||
+										(
+											function_exists( 'bp_is_active' ) &&
+											! bp_is_active( 'notifications' )
+										)
+									) {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss' ); ?></label>
+										<?php
+									} else {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss' ); ?></label>
+										<?php
+									}
+								endif;
+								?>
 
-								<label for="bbp_topic_subscription"><?php _e( 'Notify me of follow-up replies via email', 'buddyboss' ); ?></label>
+							</p>
 
-							<?php endif; ?>
+							<?php do_action( 'bbp_theme_after_reply_form_subscription' ); ?>
 
-						</p>
-
-						<?php do_action( 'bbp_theme_after_reply_form_subscription' ); ?>
+						<?php } ?>
 
 					<?php endif; ?>
 
@@ -142,6 +182,8 @@
 						<?php do_action( 'bbp_theme_before_reply_form_submit_button' ); ?>
 
 						<?php bbp_cancel_reply_to_link(); ?>
+
+						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_reply_discard_draft" name="bb_reply_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss' ); ?></button>
 
 						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="button submit"><?php _e( 'Post', 'buddyboss' ); ?></button>
 

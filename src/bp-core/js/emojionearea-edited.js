@@ -224,7 +224,7 @@ document = window.document || {};
 			},
 			search            : true,
 			placeholder       : null,
-			emojiPlaceholder  : ":smiley:",
+			emojiPlaceholder  : "",
 			searchPlaceholder : bp_emojionearea.searchPlaceholder,
 			container         : null,
 			hideSource        : true,
@@ -1465,7 +1465,7 @@ document = window.document || {};
 					function(hide) {
 						var filterBtns = picker.find( ".emojionearea-filter" );
 						var activeTone = (options.tones ? tones.find( "i.active" ).data( "skin" ) : 0);
-						var term       = self.search.val().replace( / /g, "_" ).replace( /"/g, "\\\"" );
+						var term       = self.search.val().replace( / /g, "_" ).replace( /"/g, "\\\"" ).toLocaleLowerCase();
 
 						if (term && term.length) {
 							if (self.recentFilter.hasClass( "active" )) {

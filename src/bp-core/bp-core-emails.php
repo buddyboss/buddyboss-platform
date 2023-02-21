@@ -76,6 +76,17 @@ function bb_is_email_queue() {
 }
 
 /**
+ * Function to used for disabled email queue.
+ *
+ * @since BuddyBoss 1.8.3
+ *
+ * @return false
+ */
+function bb_disabled_email_queue() {
+	return false;
+}
+
+/**
  * Check if there is enough recipients to use batch emails.
  *
  * @param array $recipients User IDs of recipients.

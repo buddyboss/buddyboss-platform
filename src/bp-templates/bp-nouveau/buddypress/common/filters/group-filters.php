@@ -1,8 +1,11 @@
 <?php
 /**
- * BP Nouveau Component's groups filters template.
+ * The template for BP Nouveau Component's groups filters template
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/filters/group-filters.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 // Check group type enable?
@@ -18,12 +21,14 @@ if ( ! empty( $group_type ) ) {
 
 
 $args = array(
+	'orderby'    => 'menu_order',
+	'order'      => 'ASC',
 	'meta_query' => array(
 		array(
 			'key'   => '_bp_group_type_enable_filter',
 			'value' => 1,
 		),
-	)
+	),
 );
 
 // Get active group types.

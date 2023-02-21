@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Folder Create
+ * The template for document folder create
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/create-folder.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 ?>
@@ -15,7 +18,7 @@
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></h4>
-						<a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="bb-icon bb-icon-close"></span></a>
+						<a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 					<div class="bb-field-wrap">
 						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
