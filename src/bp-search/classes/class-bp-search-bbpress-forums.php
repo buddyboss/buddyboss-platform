@@ -57,36 +57,33 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			$where_sql = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\')';
 
-			if ( ! bp_is_search_groups_enable() ) {
-				$group_memberships = '';
-				if ( bp_is_active( 'groups' ) ) {
-					$group_memberships = bp_get_user_groups(
-						get_current_user_id(),
-						array(
-							'is_admin' => null,
-							'is_mod'   => null,
-						)
-					);
+			if ( bp_is_active( 'groups' ) ) {
+				$group_memberships = bp_get_user_groups(
+					get_current_user_id(),
+					array(
+						'is_admin' => null,
+						'is_mod'   => null,
+					)
+				);
 
-					$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
+				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
 
-					$public_groups = groups_get_groups(
-						array(
-							'fields'   => 'ids',
-							'status'   => 'public',
-							'per_page' => - 1,
-						)
-					);
+				$public_groups = groups_get_groups(
+					array(
+						'fields'   => 'ids',
+						'status'   => 'public',
+						'per_page' => - 1,
+					)
+				);
 
-					if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
-						$public_groups = $public_groups['groups'];
-					} else {
-						$public_groups = array();
-					}
-
-					$group_memberships = array_merge( $public_groups, $group_memberships );
-					$group_memberships = array_unique( $group_memberships );
+				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
+					$public_groups = $public_groups['groups'];
+				} else {
+					$public_groups = array();
 				}
+
+				$group_memberships = array_merge( $public_groups, $group_memberships );
+				$group_memberships = array_unique( $group_memberships );
 
 				if ( ! empty( $group_memberships ) ) {
 					$in = array_map(
@@ -100,8 +97,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 					$where_sql .= ' OR pm.meta_value IN (' . trim( $in, ',' ) . ')';
 				}
-			} else {
-				$where_sql .= ' AND pm.meta_key is null';
 			}
 
 			$where_sql .= ')';
