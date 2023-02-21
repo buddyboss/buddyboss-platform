@@ -578,6 +578,29 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id, $action, $page );
 
+		// Update friend count.
+		if ( bp_is_active( 'friends' ) ) {
+			$friend_ids = friends_get_friend_user_ids( $member_id );
+
+			if ( ! empty( $friend_ids ) ) {
+				if ( $this->background_disabled ) {
+					$this->bb_update_member_friend_count( $member_id, $friend_ids, $action );
+				} else {
+					foreach ( array_chunk( $friend_ids, 50 ) as $chunk ) {
+						$bp_background_updater->data(
+							array(
+								array(
+									'callback' => array( $this, 'bb_update_member_friend_count' ),
+									'args'     => array( $member_id, $chunk, $action ),
+								),
+							)
+						);
+						$bp_background_updater->save()->dispatch();
+					}
+				}
+			}
+		}
+
 		/*
 		if ( bp_is_active( 'groups' ) ) {
 			$related_contents[ BP_Suspend_Group::$type ] = BP_Suspend_Group::get_member_group_ids( $member_id );
@@ -607,29 +630,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		if ( bp_is_active( 'video' ) ) {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_member_video_ids( $member_id, $action, $page );
-		}
-
-		// Update friend count.
-		if ( bp_is_active( 'friends' ) ) {
-			$friend_ids = friends_get_friend_user_ids( $member_id );
-
-			if ( ! empty( $friend_ids ) ) {
-				if ( $this->background_disabled ) {
-					$this->bb_update_member_friend_count( $member_id, $friend_ids, $action );
-				} else {
-					foreach ( array_chunk( $friend_ids, 50 ) as $chunk ) {
-						$bp_background_updater->data(
-							array(
-								array(
-									'callback' => array( $this, 'bb_update_member_friend_count' ),
-									'args'     => array( $member_id, $chunk, $action ),
-								),
-							)
-						);
-						$bp_background_updater->save()->dispatch();
-					}
-				}
-			}
 		}
 
 		return $related_contents;
