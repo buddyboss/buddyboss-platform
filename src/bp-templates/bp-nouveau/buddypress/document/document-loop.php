@@ -13,11 +13,11 @@ bp_nouveau_before_loop();
 
 if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
-	$get_page = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING );
-	$order_by = filter_input( INPUT_POST, 'order_by', FILTER_SANITIZE_STRING );
-	$orderby  = filter_input( INPUT_POST, 'orderby', FILTER_SANITIZE_STRING );
-	$sort     = filter_input( INPUT_POST, 'sort', FILTER_SANITIZE_STRING );
-	$scope    = filter_input( INPUT_POST, 'scope', FILTER_SANITIZE_STRING );
+	$get_page = filter_input( INPUT_POST, 'page', FILTER_UNSAFE_RAW );
+	$order_by = filter_input( INPUT_POST, 'order_by', FILTER_UNSAFE_RAW );
+	$orderby  = filter_input( INPUT_POST, 'orderby', FILTER_UNSAFE_RAW );
+	$sort     = filter_input( INPUT_POST, 'sort', FILTER_UNSAFE_RAW );
+	$scope    = filter_input( INPUT_POST, 'scope', FILTER_UNSAFE_RAW );
 	$extras   = filter_input( INPUT_POST, 'extras', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $get_page ) || 1 === (int) $get_page ) :

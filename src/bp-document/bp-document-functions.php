@@ -2057,7 +2057,7 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	$document_folder_table = $bp->document->table_name_folder;
 
-	$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
+	$type = filter_input( INPUT_GET, 'type', FILTER_UNSAFE_RAW );
 	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $group_id ) {

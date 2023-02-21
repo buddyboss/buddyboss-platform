@@ -364,7 +364,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	$documents           = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$documents           = ! empty( $documents ) ? $documents : array();
-	$actions             = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$actions             = filter_input( INPUT_POST, 'action', FILTER_UNSAFE_RAW );
 	$moderated_documents = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 
 	if ( ! empty( $documents ) ) {

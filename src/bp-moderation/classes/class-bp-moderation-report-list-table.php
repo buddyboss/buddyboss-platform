@@ -88,7 +88,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function no_items() {
-		$tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$tab = filter_input( INPUT_GET, 'tab', FILTER_UNSAFE_RAW );
 		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
 			esc_html_e( 'This member has not been reported by any members.', 'buddyboss' );
 		} else {
@@ -111,7 +111,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	public function prepare_items() {
 
 		$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
-		$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
+		$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_UNSAFE_RAW );
 		$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
 
 		if ( empty( $moderation_request_data->id ) ) {
@@ -201,7 +201,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 
-		$tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$tab = filter_input( INPUT_GET, 'tab', FILTER_UNSAFE_RAW );
 		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
 			$columns = array(
 				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),

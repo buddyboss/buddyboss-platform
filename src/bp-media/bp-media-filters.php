@@ -395,7 +395,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 
 	$medias           = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$medias           = ! empty( $medias ) ? $medias : array();
-	$actions          = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$actions          = filter_input( INPUT_POST, 'action', FILTER_UNSAFE_RAW );
 	$moderated_medias = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 
 	if ( ! empty( $medias ) ) {

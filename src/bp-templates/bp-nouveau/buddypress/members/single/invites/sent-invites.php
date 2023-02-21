@@ -12,7 +12,7 @@ bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 ?>
 
 <?php
-$email = trim ( filter_input( INPUT_GET, 'email', FILTER_SANITIZE_STRING ) );
+$email = trim ( filter_input( INPUT_GET, 'email', FILTER_UNSAFE_RAW ) );
 if ( isset( $email ) && '' !== $email ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice success">
@@ -27,7 +27,7 @@ if ( isset( $email ) && '' !== $email ) {
 	<?php
 }
 
-$failed = trim ( filter_input( INPUT_GET, 'failed', FILTER_SANITIZE_STRING ) );
+$failed = trim ( filter_input( INPUT_GET, 'failed', FILTER_UNSAFE_RAW ) );
 if ( isset( $failed ) && '' !== $failed ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice error">
@@ -43,7 +43,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 	<?php
 }
 
-$exists = trim ( filter_input( INPUT_GET, 'exists', FILTER_SANITIZE_STRING ) );
+$exists = trim ( filter_input( INPUT_GET, 'exists', FILTER_UNSAFE_RAW ) );
 if ( isset( $exists ) && '' !== $exists ) {
 	?>
     <aside class="bp-feedback bp-send-invites bp-template-notice error">
