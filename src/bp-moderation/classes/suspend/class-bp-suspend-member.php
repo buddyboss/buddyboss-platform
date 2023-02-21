@@ -351,28 +351,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			$bp_background_updater->save()->schedule_event();
 		}
 
-		// Update friend count.
-		if ( bp_is_active( 'friends' ) ) {
-			$friend_ids = friends_get_friend_user_ids( $member_id );
-
-			if ( ! empty( $friend_ids ) ) {
-				if ( $this->background_disabled || ! $force_bg_process ) {
-					$this->bb_update_member_friend_count( $member_id, $friend_ids, 'hidden' );
-				} else {
-					foreach ( array_chunk( $friend_ids, 50 ) as $chunk ) {
-						$bp_background_updater->data(
-							array(
-								array(
-									'callback' => array( $this, 'bb_update_member_friend_count' ),
-									'args'     => array( $member_id, $chunk, 'hidden' ),
-								),
-							)
-						);
-						$bp_background_updater->save()->dispatch();
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -430,29 +408,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			$bp_background_updater->save()->schedule_event();
 		}
 
-		// Update friend count.
-		if ( bp_is_active( 'friends' ) ) {
-			$friend_ids = friends_get_friend_user_ids( $member_id );
-
-			if ( ! empty( $friend_ids ) ) {
-				$friend_ids = array_filter( array_unique( $friend_ids ) );
-				if ( $this->background_disabled || ! $force_bg_process ) {
-					$this->bb_update_member_friend_count( $member_id, $friend_ids, 'unhidden' );
-				} else {
-					foreach ( array_chunk( $friend_ids, 50 ) as $chunk ) {
-						$bp_background_updater->data(
-							array(
-								array(
-									'callback' => array( $this, 'bb_update_member_friend_count' ),
-									'args'     => array( $member_id, $chunk, 'unhidden' ),
-								),
-							)
-						);
-						$bp_background_updater->save()->dispatch();
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -652,6 +607,29 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		if ( bp_is_active( 'video' ) ) {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_member_video_ids( $member_id, $action, $page );
+		}
+
+		// Update friend count.
+		if ( bp_is_active( 'friends' ) ) {
+			$friend_ids = friends_get_friend_user_ids( $member_id );
+
+			if ( ! empty( $friend_ids ) ) {
+				if ( $this->background_disabled ) {
+					$this->bb_update_member_friend_count( $member_id, $friend_ids, $action );
+				} else {
+					foreach ( array_chunk( $friend_ids, 50 ) as $chunk ) {
+						$bp_background_updater->data(
+							array(
+								array(
+									'callback' => array( $this, 'bb_update_member_friend_count' ),
+									'args'     => array( $member_id, $chunk, $action ),
+								),
+							)
+						);
+						$bp_background_updater->save()->dispatch();
+					}
+				}
+			}
 		}
 
 		return $related_contents;
@@ -868,9 +846,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				if ( ! empty( $friend_ids ) ) {
 					$total_friend_count = count( $friend_ids );
 
-					if ( 'hidden' === $type && in_array( $user_id, $friend_ids, true ) ) {
+					if ( 'hide' === $type && in_array( $user_id, $friend_ids, true ) ) {
 						$total_friend_count--;
-					} elseif ( 'unhidden' === $type && ! in_array( $user_id, $friend_ids, true ) ) {
+					} elseif ( 'unhide' === $type && ! in_array( $user_id, $friend_ids, true ) ) {
 						$total_friend_count++;
 					}
 
