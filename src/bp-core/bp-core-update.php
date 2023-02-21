@@ -2379,7 +2379,7 @@ function bb_migrate_group_subscription_email_templates() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'       => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in the forum <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
+			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt'     => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 			'post_status'      => 'publish',
