@@ -2350,6 +2350,8 @@ function bb_update_to_2_2_7() {
 
 	// Migrate group subscriptions.
 	bb_migrate_group_subscription( true );
+
+	bb_create_background_member_friends_count();
 }
 
 /**
@@ -2424,4 +2426,93 @@ function bb_migrate_group_subscription_email_templates() {
 			);
 		}
 	}
+}
+
+/**
+ * Create a background job to update the friend count when member suspend/un-suspend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $paged The current page. Default 1.
+ *
+ * @return void
+ */
+function bb_create_background_member_friends_count( $paged = 1 ) {
+	global $bp_background_updater;
+
+	if ( ! bp_is_active( 'friends' ) ) {
+		return;
+	}
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 50;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	$user_ids = get_users(
+		array(
+			'fields'     => 'ids',
+			'number'     => $per_page,
+			'offset'     => $offset,
+			'orderby'    => 'ID',
+			'order'      => 'DESC',
+			'meta_query' => array(
+				array(
+					'key'     => 'total_friend_count',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_migrate_member_friends_count',
+				'args'     => array( $user_ids, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Update the friend count when member suspend/un-suspend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids Array of user ID.
+ * @param int   $paged    The current page. Default 1.
+ *
+ * @return void
+ */
+function bb_migrate_member_friends_count( $user_ids, $paged ) {
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		$query_friend_count = friends_get_friend_user_ids( $user_id );
+		$meta_friend_count  = friends_get_total_friend_count( $user_id );
+
+		if ( empty( $query_friend_count ) ) {
+			$query_friend_count = 0;
+		} else {
+			$query_friend_count = count( $query_friend_count );
+		}
+
+		if ( $query_friend_count !== (int) $meta_friend_count ) {
+			bp_update_user_meta( $user_id, 'total_friend_count', $query_friend_count );
+		}
+	}
+
+	// Call recursive to finish update for all users.
+	$paged++;
+	bb_create_background_member_friends_count( $paged );
 }
