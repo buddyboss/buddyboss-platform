@@ -826,7 +826,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_title'         => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in the forum <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 				'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
