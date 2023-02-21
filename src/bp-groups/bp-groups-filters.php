@@ -25,6 +25,7 @@ add_filter( 'bp_get_group_description', 'convert_chars' );
 add_filter( 'bp_get_group_description_excerpt', 'convert_chars' );
 add_filter( 'bp_get_group_name', 'convert_chars' );
 
+add_filter( 'bp_get_group_description', 'wpautop' );
 add_filter( 'bp_get_group_description_excerpt', 'wpautop' );
 
 add_filter( 'bp_get_group_description', 'make_clickable', 9 );
@@ -121,6 +122,7 @@ function bp_groups_filter_kses( $content = '' ) {
 	$allowed_tags['i']           = array();
 	$allowed_tags['b']           = array();
 	$allowed_tags['strong']      = array();
+	$allowed_tags['em']          = array();
 	$allowed_tags['blockquote']  = array();
 	$allowed_tags['ol']          = array();
 	$allowed_tags['ul']          = array();
