@@ -17780,6 +17780,12 @@ body.login .login-popup .mfp-close:hover {
 }
 
 @media screen and (max-width: 544px) {
+  .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem {
+    position: relative;
+  }
+}
+
+@media screen and (max-width: 544px) {
   .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
   .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
   .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
