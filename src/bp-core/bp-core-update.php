@@ -393,6 +393,14 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19281 ) {
 			bb_update_to_2_2_5();
 		}
+
+		if ( $raw_db_version < 19381 ) {
+			bb_update_to_2_2_6();
+		}
+
+		if ( $raw_db_version < 19481 ) {
+			bb_update_to_2_2_7();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2227,5 +2235,92 @@ function bb_update_to_2_2_5() {
 				'description' => esc_html__( 'A member receives a new follower', 'buddyboss' ),
 			)
 		);
+	}
+}
+
+/**
+ * Clear web and api cache on the update.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @return void
+ */
+function bb_update_to_2_2_6() {
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear medias API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
+	}
+	bb_migrate_subscriptions();
+}
+
+/**
+ * Migrate forum/topic subscription to new table.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @return void
+ */
+function bb_migrate_subscriptions() {
+	$is_already_run = get_transient( 'bb_migrate_subscriptions' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_subscriptions', 'yes', HOUR_IN_SECONDS );
+	// Create subscription table.
+	bb_core_install_subscription();
+
+	// Migrate the subscription data to new table.
+	bb_subscriptions_migrate_users_forum_topic( true, true );
+
+	// Flush the cache to delete all old cached subscriptions.
+	wp_cache_flush();
+}
+
+/**
+ * Clear web and api cache on the update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_7() {
+	// Clear cache.
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		wp_cache_flush_group( 'bp_activity' );
+		wp_cache_flush_group( 'bp_groups' );
+		wp_cache_flush_group( 'bbpress_posts' );
+		wp_cache_flush_group( 'post_comment' );
+		wp_cache_flush_group( 'bbp-forums' );
+		wp_cache_flush_group( 'bbp-replies' );
+		wp_cache_flush_group( 'bbp-topics' );
+		wp_cache_flush_group( 'blog_post' );
+		wp_cache_flush_group( 'bp-notifications' );
+	} else {
+		wp_cache_flush();
+	}
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_groups' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbpress_posts' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-forums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'blog_post' );
+		// Clear notifications API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
 	}
 }

@@ -1617,7 +1617,7 @@ function bp_core_record_activity() {
 		do_action( 'bp_first_activity_for_member', $user_id );
 	}
 
-    // updated users last activity on each page refresh.
+	// updated users last activity on each page refresh.
 	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
 
 }
@@ -2941,6 +2941,42 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'settings' === $bp_item['slug'] && 'notifications' === $key ) {
 					$key = 'settings-notifications';
+
+					$parent_slug   = $s_nav->parent_slug . '_' . $s_nav->slug;
+					$child_nav_sub = buddypress()->members->nav->get_secondary( array( 'parent_slug' => $parent_slug ) );
+
+					if ( ! empty( $child_nav_sub ) ) {
+						$s_nav_counter_child = hexdec( uniqid() );
+
+						foreach ( $child_nav_sub as $c_nav ) {
+							$c_sub_name = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $c_nav['name'] );
+							$c_sub_name = trim( $c_sub_name );
+							$c_arr_key  = $c_nav['slug'] . '-sub';
+
+							if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+								/* translators: Navigation name */
+								$c_sub_name = sprintf( __( 'Notification %s', 'buddyboss' ), $c_sub_name );
+							} else {
+								/* translators: Navigation name */
+								$c_sub_name = sprintf( __( 'Email %s', 'buddyboss' ), $c_sub_name );
+							}
+
+							$page_args[ $c_arr_key ] =
+								(object) array(
+									'ID'             => $s_nav_counter_child,
+									'post_title'     => $c_sub_name,
+									'object_id'      => $s_nav_counter_child,
+									'post_author'    => 0,
+									'post_date'      => 0,
+									'post_excerpt'   => $c_arr_key,
+									'post_type'      => 'page',
+									'post_status'    => 'publish',
+									'comment_status' => 'closed',
+									'guid'           => $c_nav['link'],
+									'post_parent'    => $nav_counter_child,
+								);
+						}
+					}
 				}
 
 				if ( 'profile' === $key ) {
@@ -6709,10 +6745,13 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		$all_notifications
 	);
 
-	$read_only_notifications = array_column( array_filter( $all_notifications ), 'notification_read_only', 'key' );
+	$read_only_notifications = array_column( $all_notifications, null, 'key' );
 	if (
+		! empty( $read_only_notifications ) &&
 		isset( $read_only_notifications[ $notification_type ] ) &&
-		true === (bool) $read_only_notifications[ $notification_type ]
+		! empty( $read_only_notifications[ $notification_type ]['notification_read_only'] ) &&
+		! empty( $read_only_notifications[ $notification_type ]['default'] ) &&
+		'no' === $read_only_notifications[ $notification_type ]['default']
 	) {
 		return false;
 	}
@@ -7115,8 +7154,26 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
-		$notification_fields_read_only = array_filter( array_column( $options['fields'], 'notification_read_only', null ) );
-		$options['fields']             = ( ! empty( $notification_fields_read_only ) ? array_diff_key( $options['fields'], $notification_fields_read_only ) : $options['fields'] );
+		$options['fields'] = array_filter(
+			array_map(
+				function ( $fields ) {
+					if (
+						(
+							isset( $fields['notification_read_only'], $fields['default'] ) &&
+							true === (bool) $fields['notification_read_only'] &&
+							'yes' === (string) $fields['default']
+						) ||
+						(
+							! isset( $fields['notification_read_only'] ) ||
+							false === (bool) $fields['notification_read_only']
+						)
+					) {
+						return $fields;
+					}
+				},
+				$options['fields']
+			)
+		);
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
@@ -7134,7 +7191,11 @@ function bb_render_notification( $notification_group ) {
 
 			foreach ( $options['fields'] as $field ) {
 
-				if ( ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'] ) {
+				if (
+					! empty( $field['notification_read_only'] ) &&
+					true === $field['notification_read_only'] &&
+					'no' === (string) $field['default']
+				) {
 					continue;
 				}
 
@@ -7209,18 +7270,29 @@ function bb_render_notification( $notification_group ) {
  * @return array Settings data.
  */
 function bb_core_notification_preferences_data() {
+	$menu_title   = esc_html__( 'Email Preferences', 'buddyboss' );
+	$screen_title = esc_html__( 'Email Preferences', 'buddyboss' );
+	if ( ! empty( bb_get_subscriptions_types() ) ) {
+		$menu_title   = esc_html__( 'Email Settings', 'buddyboss' );
+		$screen_title = esc_html__( 'Email Settings', 'buddyboss' );
+	}
 
 	$data = array(
-		'menu_title'          => esc_html__( 'Email Preferences', 'buddyboss' ),
-		'screen_title'        => esc_html__( 'Email Preferences', 'buddyboss' ),
+		'menu_title'          => $menu_title,
+		'screen_title'        => $screen_title,
 		'screen_description'  => esc_html__( 'Choose your email notification preferences.', 'buddyboss' ),
 		'show_checkbox_label' => false,
 		'item_css_class'      => 'email-preferences',
 	);
 
 	if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
-		$data['menu_title']          = esc_html__( 'Notification Preferences', 'buddyboss' );
-		$data['screen_title']        = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['menu_title']   = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['screen_title'] = esc_html__( 'Notification Preferences', 'buddyboss' );
+		if ( ! empty( bb_get_subscriptions_types() ) ) {
+			$data['menu_title']   = esc_html__( 'Notification Settings', 'buddyboss' );
+			$data['screen_title'] = esc_html__( 'Notification Settings', 'buddyboss' );
+		}
+
 		$data['screen_description']  = esc_html__( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
 		$data['show_checkbox_label'] = true;
 		$data['item_css_class']      = 'notification-preferences';
@@ -8196,7 +8268,7 @@ function bb_pro_pusher_version() {
  * @return int
  */
 function bb_presence_time_span() {
-	return (int) apply_filters( 'bb_presence_time_span', 180 );
+	return (int) apply_filters( 'bb_presence_time_span', 20 );
 }
 
 /**
@@ -8208,6 +8280,17 @@ function bb_presence_time_span() {
  */
 function bb_presence_default_interval() {
 	return apply_filters( 'bb_presence_default_interval', 60 );
+}
+
+/**
+ * Function to return idle the time span for consider user inactive.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_idle_inactive_span() {
+	return (int) apply_filters( 'bb_idle_inactive_span', 180 );
 }
 
 /**
@@ -8229,4 +8312,80 @@ function bb_did_filter( $hook_name ) {
 	}
 
 	return $wp_filters[ $hook_name ];
+}
+
+/**
+ * Locate deleted usernames in an content string, as designated by an @ sign.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param string $content         Content.
+ *
+ * @return array|bool Associative array with username as key and username as
+ *                    value for deleted user. Boolean false if no mentions found.
+ */
+function bb_mention_deleted_users( $mentioned_users, $content ) {
+	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
+	preg_match_all( $pattern, $content, $usernames );
+
+	// Make sure there's only one instance of each username.
+	$usernames = ! empty( $usernames[1] ) ? array_unique( $usernames[1] ) : array();
+
+	// Bail if no usernames.
+	if ( empty( $usernames ) ) {
+		return $mentioned_users;
+	}
+
+	// We've found some mentions! Check to see if users exist.
+	foreach ( (array) array_values( $usernames ) as $username ) {
+		$user_id = bp_get_userid_from_mentionname( trim( $username ) );
+
+		if ( empty( $user_id ) ) {
+			$mentioned_users[ $username ] = $username;
+		}
+	}
+
+	if ( empty( $mentioned_users ) ) {
+		return $mentioned_users;
+	}
+
+	return $mentioned_users;
+}
+
+/**
+ * Function will remove mention link from content if mentioned member is deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $content Content.
+ *
+ * @return mixed
+ */
+function bb_mention_remove_deleted_users_link( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	$usernames = bb_mention_deleted_users( array(), $content );
+	// No mentions? Stop now!
+	if ( empty( $usernames ) ) {
+		return $content;
+	}
+
+	foreach ( (array) $usernames as $user_id => $username ) {
+		if ( bp_is_user_inactive( $user_id ) ) {
+			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );			/*preg_match_all( "'<a.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );*/
+			if ( ! empty( $content_matches ) ) {
+				foreach ( $content_matches as $match ) {
+					if ( false !== strpos( $match[0], '@' . $username ) ) {
+						$content = str_replace( $match[0], '@' . $username, $content );
+					}
+				}
+			}
+		}
+	}
+
+	return $content;
 }
