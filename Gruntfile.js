@@ -502,7 +502,7 @@ module.exports = function (grunt) {
 	 * Register tasks.
 	 */
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
-	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+	grunt.registerTask('src', [ 'fetch_bb_icons', 'checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 	grunt.registerTask('build', ['string-replace', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
@@ -546,9 +546,7 @@ module.exports = function (grunt) {
 			'clean:bb_icons',
 			'exec:fetch_bb_icons',
 			'copy:bb_icons',
-			'clean:bb_icons',
-			'rtlcss',
-			'cssmin'
+			'clean:bb_icons'
 		],
 	);
 };

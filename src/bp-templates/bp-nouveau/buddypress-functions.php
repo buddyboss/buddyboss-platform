@@ -358,7 +358,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		// BB icon version.
-		$bb_icon_version = get_option( 'bb_icon_version' );
+		$bb_icon_version = function_exists( 'bb_icon_font_map' ) ? bb_icon_font_map( 'version' ) : '';
 		$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : $this->version;
 
 		/**
