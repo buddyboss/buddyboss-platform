@@ -1920,6 +1920,7 @@ window.bp = window.bp || {};
 				dividerObject.group_link = '';
 				dividerObject.message_from = '';
 				dividerObject.class_name = 'divider-date';
+				dividerObject.is_group_notice = false;
 
 				if ( typeof dividerObject.gif !== 'undefined' ) {
 					delete dividerObject.gif;
@@ -5007,21 +5008,22 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.last.split_date = split_date;
 
 				if ( $.inArray( split_date, bp.Nouveau.Messages.divider ) === -1 ) {
-					split_message.hash          = '';
-					split_message.id            = split_date;
-					split_message.content       = BP_Nouveau.messages.today;
-					split_message.sender_avatar = '';
-					split_message.sender_id     = '';
-					split_message.sender_is_you = '';
-					split_message.sender_link   = '';
-					split_message.sender_name   = '';
-					split_message.display_date  = '';
-					split_message.group_text    = '';
-					split_message.group_name    = '';
-					split_message.group_avatar  = '';
-					split_message.group_link    = '';
-					split_message.message_from  = '';
-					split_message.class_name    = 'divider-date';
+					split_message.hash            = '';
+					split_message.id              = split_date;
+					split_message.content         = BP_Nouveau.messages.today;
+					split_message.sender_avatar   = '';
+					split_message.sender_id       = '';
+					split_message.sender_is_you   = '';
+					split_message.sender_link     = '';
+					split_message.sender_name     = '';
+					split_message.display_date    = '';
+					split_message.group_text      = '';
+					split_message.group_name      = '';
+					split_message.group_avatar    = '';
+					split_message.group_link      = '';
+					split_message.message_from    = '';
+					split_message.class_name      = 'divider-date';
+					split_message.is_group_notice = false;
 					delete split_message.className;
 
 					if ( typeof split_message.gif !== 'undefined' ) {
