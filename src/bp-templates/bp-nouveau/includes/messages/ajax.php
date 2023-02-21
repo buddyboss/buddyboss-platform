@@ -261,10 +261,12 @@ function bp_nouveau_ajax_messages_send_message() {
 					}
 				}
 
-				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
+				$all_recipients = $messages_template->thread->get_recipients();
+
+				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
 				$un_access_users = array();
 				if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-					foreach ( (array) $messages_template->thread->recipients as $recipient ) {
+					foreach ( (array) $all_recipients as $recipient ) {
 						if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 							if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
 								$un_access_users[] = false;
@@ -642,7 +644,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	$message_response['started_date_mysql'] = $thread_template->thread->first_message_date;
 
-    // Clean up the loop.
+	// Clean up the loop.
 	bp_thread_messages();
 
 	// Remove the bp_current_action() override.
@@ -879,10 +881,12 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			continue;
 		}
 
-		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
+		$all_recipients = $messages_template->thread->get_recipients();
+
+		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
 		$un_access_users = array();
 		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() && count( $messages_template->thread->recipients ) < 3 ) {
-			foreach ( (array) $messages_template->thread->recipients as $recipient ) {
+			foreach ( (array) $all_recipients as $recipient ) {
 				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
 						$un_access_users[] = false;
@@ -2100,8 +2104,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		)
 	);
 
+	$all_recipients = $thread_template->thread->get_recipients();
+
 	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
-	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
+	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $all_recipients );
 	$un_access_users = array();
 
 	$thread->thread = array(
@@ -2319,31 +2325,29 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				}
 			}
 
+			$is_group_notice = false;
 			if ( $message_left && 'yes' === $message_left ) {
-				/* translators: %s: Group Name */
-				$content    = '<p class="joined">' . sprintf( __( 'Left %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
-				$left_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left_users' );
-				if ( is_array( $left_users ) ) {
-					if ( 2 === count( $left_users ) ) {
-						$left_user = ( $left_users[1]['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $left_users[1]['user_id'] );
-						/* translators: 1. Group Name. 2. Member Name. */
-						$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <strong>%2$s</strong>', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>', '<strong>' . $left_user . '</strong>' ) . '</p>';
-					} elseif ( 2 < count( $left_users ) ) {
-						unset( $left_users[0] );
-						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
-						$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="left" data-action="bp_view_others" ><strong>%4$d others</strong></a>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $left_users ) ) . '</p>';
-						if ( 5 > count( $left_users ) ) {
-							$left_members = array_map(
-								function( $user ) use ( $login_user_id ) {
-									return ( $user['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $user['user_id'] );
-								},
-								$left_users
-							);
-							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
-							$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $left_members ), count( $left_users ) ) . '</p>';
-						}
-					}
-				}
+				$is_group_notice = true;
+				$content         = bb_messages_get_group_join_leave_text(
+					array(
+						'thread_id'  => $bp_get_the_thread_id,
+						'message_id' => $bp_get_the_thread_message_id,
+						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
+						'type'       => 'left',
+					)
+				);
+			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				$is_group_notice = true;
+				$content         = bb_messages_get_group_join_leave_text(
+					array(
+						'thread_id'  => $bp_get_the_thread_id,
+						'message_id' => $bp_get_the_thread_message_id,
+						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
+						'type'       => 'joined',
+					)
+				);
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
 				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
@@ -2352,31 +2356,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
-			} elseif ( $message_joined && 'yes' === $message_joined ) {
-				/* translators: %s: Group Name */
-				$content      = '<p class="joined">' . sprintf( __( 'Joined %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
-				$joined_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined_users' );
-				if ( is_array( $joined_users ) ) {
-					if ( 2 === count( $joined_users ) ) {
-						$join_user = ( $joined_users[1]['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $joined_users[1]['user_id'] );
-						/* translators: 1. Group Name. 2. Member Name. */
-						$content = '<p class="joined">' . sprintf( __( 'Joined %1$s, along with %2$s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>', '<strong>' . $join_user . '</strong>' ) . '</p>';
-					} elseif ( 2 < count( $joined_users ) ) {
-						unset( $joined_users[0] );
-						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
-						$content = '<p class="joined">' . sprintf( __( 'Joined <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="joined" data-action="bp_view_others" ><strong>%4$d others</strong></a>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $joined_users ) ) . '</p>';
-						if ( 5 > count( $joined_users ) ) {
-							$joined_members = array_map(
-								function( $user ) use ( $login_user_id ) {
-									return ( $user['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $user['user_id'] );
-								},
-								$joined_users
-							);
-							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
-							$content = '<p class="joined">' . sprintf( __( 'Joined <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count( $joined_users ) ) . '</p>';
-						}
-					}
-				}
 			} elseif ( 'This message was deleted' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {
@@ -2414,6 +2393,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
 				'display_date'              => bb_get_the_thread_message_sent_time(),
+				'is_group_notice'           => $is_group_notice,
 			);
 
 		} else {
@@ -2424,31 +2404,29 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$message_unbanned = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_un_ban', true );
 			$message_deleted  = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_messages_deleted', true );
 
+			$is_group_notice = false;
 			if ( $message_left && 'yes' === $message_left ) {
-				/* translators: %s: Group Name */
-				$content    = '<p class="joined">' . sprintf( __( 'Left %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
-				$left_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left_users' );
-				if ( is_array( $left_users ) ) {
-					if ( 2 === count( $left_users ) ) {
-						$left_user = ( $left_users[1]['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $left_users[1]['user_id'] );
-						/* translators: 1. Group Name. 2. Member Name. */
-						$content = '<p class="joined">' . sprintf( __( 'Left %1$s, along with %2$s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>', '<strong>' . $left_user . '</strong>' ) . '</p>';
-					} elseif ( 2 < count( $left_users ) ) {
-						unset( $left_users[0] );
-						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
-						$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="left" data-action="bp_view_others" ><strong>%4$d others</strong></a>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $left_users ) ) . '</p>';
-						if ( 5 > count( $left_users ) ) {
-							$left_members = array_map(
-								function( $user ) use ( $login_user_id ) {
-									return ( $user['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $user['user_id'] );
-								},
-								$left_users
-							);
-							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
-							$content = '<p class="joined">' . sprintf( __( 'Left <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $left_members ), count( $left_users ) ) . '</p>';
-						}
-					}
-				}
+				$is_group_notice = true;
+				$content         = bb_messages_get_group_join_leave_text(
+					array(
+						'thread_id'  => $bp_get_the_thread_id,
+						'message_id' => $bp_get_the_thread_message_id,
+						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
+						'type'       => 'left',
+					)
+				);
+			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				$is_group_notice = true;
+				$content         = bb_messages_get_group_join_leave_text(
+					array(
+						'thread_id'  => $bp_get_the_thread_id,
+						'message_id' => $bp_get_the_thread_message_id,
+						'user_id'    => $login_user_id,
+						'sender_id'  => $bp_get_the_thread_message_sender_id,
+						'type'       => 'joined',
+					)
+				);
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
 				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
@@ -2457,31 +2435,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
-			} elseif ( $message_joined && 'yes' === $message_joined ) {
-				/* translators: %s: Group Name */
-				$content      = '<p class="joined">' . sprintf( __( 'Joined %s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>' ) . '</p>';
-				$joined_users = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined_users' );
-				if ( is_array( $joined_users ) ) {
-					if ( 2 === count( $joined_users ) ) {
-						$join_user = ( $joined_users[1]['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $joined_users[1]['user_id'] );
-						/* translators: 1. Group Name. 2. Member Name. */
-						$content = '<p class="joined">' . sprintf( __( 'Joined %1$s, along with %2$s', 'buddyboss' ), '<strong>' . ucwords( $group_name ) . '</strong>', '<strong>' . $join_user . '</strong>' ) . '</p>';
-					} elseif ( 2 < count( $joined_users ) ) {
-						unset( $joined_users[0] );
-						/* translators: 1. Group Name. 2. Thread ID. 3. Message ID. 4. Member Count. */
-						$content = '<p class="joined">' . sprintf( __( 'Joined <strong>%1$s</strong>, along with <a href="#message-members-list" class="view_other_members" data-thread-id="%2$d" data-message-id="%3$d" data-message-type="joined" data-action="bp_view_others" ><strong>%4$d others</strong></a>', 'buddyboss' ), ucwords( $group_name ), $bp_get_the_thread_id, $bp_get_the_thread_message_id, count( $joined_users ) ) . '</p>';
-						if ( 5 > count( $joined_users ) ) {
-							$joined_members = array_map(
-								function( $user ) use ( $login_user_id ) {
-									return ( $user['user_id'] === $login_user_id ) ? __( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $user['user_id'] );
-								},
-								$joined_users
-							);
-							/* translators: 1. Group Name. 2. Member Names. 3. Member Count. */
-							$content = '<p class="joined">' . sprintf( __( 'Joined <strong>%1$s</strong>, along with <strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%2$s">%3$d others</strong>', 'buddyboss' ), ucwords( $group_name ), implode( ', ', $joined_members ), count( $joined_users ) ) . '</p>';
-						}
-					}
-				}
 			} elseif ( 'This message was deleted' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined deleted-message">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {
@@ -2489,14 +2442,14 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 
 			$thread->messages[ $i ] = array(
-				'id'            => $bp_get_the_thread_message_id,
-				'content'       => preg_replace( '#(<p></p>)#', '<p><br></p>', $content ),
-				'sender_id'     => $bp_get_the_thread_message_sender_id,
-				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
-				'is_deleted'    => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
-				'sender_link'   => bp_get_the_thread_message_sender_link(),
-				'sender_is_you' => $bp_get_the_thread_message_sender_id === $login_user_id,
-				'sender_avatar' => esc_url(
+				'id'              => $bp_get_the_thread_message_id,
+				'content'         => preg_replace( '#(<p></p>)#', '<p><br></p>', $content ),
+				'sender_id'       => $bp_get_the_thread_message_sender_id,
+				'sender_name'     => esc_html( bp_get_the_thread_message_sender_name() ),
+				'is_deleted'      => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
+				'sender_link'     => bp_get_the_thread_message_sender_link(),
+				'sender_is_you'   => $bp_get_the_thread_message_sender_id === $login_user_id,
+				'sender_avatar'   => esc_url(
 					bp_core_fetch_avatar(
 						array(
 							'item_id' => $bp_get_the_thread_message_sender_id,
@@ -2508,8 +2461,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						)
 					)
 				),
-				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => bb_get_the_thread_message_sent_time(),
+				'date'            => bp_get_the_thread_message_date_sent() * 1000,
+				'display_date'    => bb_get_the_thread_message_sent_time(),
+				'is_group_notice' => $is_group_notice,
 			);
 		}
 
@@ -2822,7 +2776,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->next_messages_timestamp         = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
 	$thread->group_id                        = $group_id;
 	$thread->is_group_thread                 = $is_group_thread;
-	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
+	$thread->can_user_send_message_in_thread = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->get_recipients() );
 	$thread->user_can_upload_media           = bb_user_has_access_upload_media( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_document        = bb_user_has_access_upload_document( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_video           = bb_user_has_access_upload_video( 0, $login_user_id, 0, $thread_id, 'message' );
@@ -3268,7 +3222,6 @@ function bb_nouveau_ajax_left_join_members_list() {
 	}
 	ob_start();
 	if ( is_array( $results ) ) {
-		unset( $results[0] );
 		?>
 		<div class="bb-report-type-wrp">
 			<?php

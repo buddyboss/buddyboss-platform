@@ -389,6 +389,18 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19181 ) {
 			bb_update_to_2_2_4();
 		}
+
+		if ( $raw_db_version < 19281 ) {
+			bb_update_to_2_2_5();
+		}
+
+		if ( $raw_db_version < 19381 ) {
+			bb_update_to_2_2_6();
+		}
+
+		if ( $raw_db_version < 19481 ) {
+			bb_update_to_2_2_7();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2161,5 +2173,151 @@ function bb_update_to_2_2_4() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear members API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
+	}
+}
+
+/**
+ * Install email template for following.
+ *
+ * @since BuddyBoss 2.2.5
+ *
+ * @return void
+ */
+function bb_update_to_2_2_5() {
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
+	}
+
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$email = array(
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_title'   => __( '[{{{site.name}}}] {{follower.name}} started following you', 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_content' => __( "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n\n{{{member.card}}}", 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_excerpt' => __( "{{follower.name}} started following you.\n\nTo learn more about them, visit their profile: {{{follower.url}}}", 'buddyboss' ),
+	);
+
+	$id = 'new-follower';
+
+	if (
+		term_exists( $id, bp_get_email_tax_type() ) &&
+		get_terms(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'slug'     => $id,
+				'fields'   => 'count',
+			)
+		) > 0
+	) {
+		return;
+	}
+
+	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+
+	foreach ( $tt_ids as $tt_id ) {
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		wp_update_term(
+			(int) $term->term_id,
+			bp_get_email_tax_type(),
+			array(
+				'description' => esc_html__( 'A member receives a new follower', 'buddyboss' ),
+			)
+		);
+	}
+}
+
+/**
+ * Clear web and api cache on the update.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @return void
+ */
+function bb_update_to_2_2_6() {
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear medias API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-photos' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-media-albums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
+	}
+	bb_migrate_subscriptions();
+}
+
+/**
+ * Migrate forum/topic subscription to new table.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @return void
+ */
+function bb_migrate_subscriptions() {
+	$is_already_run = get_transient( 'bb_migrate_subscriptions' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_subscriptions', 'yes', HOUR_IN_SECONDS );
+	// Create subscription table.
+	bb_core_install_subscription();
+
+	// Migrate the subscription data to new table.
+	bb_subscriptions_migrate_users_forum_topic( true, true );
+
+	// Flush the cache to delete all old cached subscriptions.
+	wp_cache_flush();
+}
+
+/**
+ * Clear web and api cache on the update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_7() {
+	// Clear cache.
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		wp_cache_flush_group( 'bp_activity' );
+		wp_cache_flush_group( 'bp_groups' );
+		wp_cache_flush_group( 'bbpress_posts' );
+		wp_cache_flush_group( 'post_comment' );
+		wp_cache_flush_group( 'bbp-forums' );
+		wp_cache_flush_group( 'bbp-replies' );
+		wp_cache_flush_group( 'bbp-topics' );
+		wp_cache_flush_group( 'blog_post' );
+	} else {
+		wp_cache_flush();
+	}
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_groups' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbpress_posts' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-forums' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'blog_post' );
 	}
 }

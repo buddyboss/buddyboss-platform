@@ -1558,23 +1558,25 @@ function bb_moderation_is_deleted_avatar() {
  *
  * @since BuddyBoss 2.2.4
  *
- * @param string $value Current set message.
+ * @param string $value     Current content.
+ * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
  *
  * @return string
  */
-function bb_moderation_has_blocked_message( $value ) {
+function bb_moderation_has_blocked_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when current user blocked to other user.
 	 *
 	 * @since BuddyBoss 2.2.4
 	 *
-	 * @param string $retval Current message.
-	 * @param string $value  Original content.
+	 * @param string $value     Current content.
+	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 */
-	$retval = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
 
-	return apply_filters( 'bb_moderation_has_blocked_message', $retval, $value );
+	return apply_filters( 'bb_moderation_has_blocked_message', $value, $item_type, $item_id );
 }
 
 /**
@@ -1582,20 +1584,24 @@ function bb_moderation_has_blocked_message( $value ) {
  *
  * @since BuddyBoss 2.2.4
  *
- * @param string $value Current set message.
+ * @param string $value     Current content.
+ * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
  *
  * @return string
  */
-function bb_moderation_is_blocked_message( $value ) {
+function bb_moderation_is_blocked_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when current user blocked by other user.
 	 *
 	 * @since BuddyBoss 2.2.4
 	 *
-	 * @param string $value Current set message.
+	 * @param string $value     Current content.
+	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 */
-	return apply_filters( 'bb_moderation_is_blocked_message', $value );
+	return apply_filters( 'bb_moderation_is_blocked_message', $value, $item_type, $item_id );
 }
 
 /**
@@ -1603,21 +1609,65 @@ function bb_moderation_is_blocked_message( $value ) {
  *
  * @since BuddyBoss 2.2.4
  *
- * @param string $value Current set message.
+ * @param string $value     Current content.
+ * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
  *
  * @return string
  */
-function bb_moderation_is_suspended_message( $value ) {
+function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when user is suspended.
 	 *
 	 * @since BuddyBoss 2.2.4
 	 *
-	 * @param string $retval Current message.
-	 * @param string $value  Original content.
+	 * @param string $value     Current content.
+	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
 	 */
-	$retval = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
 
-	return apply_filters( 'bb_moderation_is_suspended_message', $retval, $value );
+	return apply_filters( 'bb_moderation_is_suspended_message', $value, $item_type, $item_id );
+}
+
+/**
+ * Function will remove mention link from content if mentioned member is blocked/blokedby/suspended.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $content Content.
+ *
+ * @return mixed
+ */
+function bb_moderation_remove_mention_link( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	$usernames = bp_find_mentions_by_at_sign( array(), $content );
+
+	// No mentions? Stop now!
+	if ( empty( $usernames ) ) {
+		return $content;
+	}
+
+	foreach ( (array) $usernames as $user_id => $username ) {
+		if (
+			bp_moderation_is_user_blocked( $user_id ) ||
+			bb_moderation_is_user_blocked_by( $user_id ) ||
+			bp_moderation_is_user_suspended( $user_id )
+		) {
+			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
+			if ( ! empty( $content_matches ) ) {
+				foreach ( $content_matches as $match ) {
+					if ( false !== strpos( $match[0], '@' . $username ) ) {
+						$content = str_replace( $match[0], '@' . $username, $content );
+					}
+				}
+			}
+		}
+	}
+
+	return $content;
 }

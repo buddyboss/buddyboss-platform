@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau, Dropzone, videojs */
+/* global bp, BP_Nouveau, Dropzone, videojs, bp_media_dropzone */
 /* @version 3.1.0 */
 window.bp = window.bp || {};
 
@@ -1035,6 +1035,12 @@ window.bp = window.bp || {};
 
 				form.slideDown( 200 );
 
+				var emojiPosition = form.find('.post-elements-buttons-item.post-emoji').prevAll().not(':hidden').length + 1;
+				form.find('.post-elements-buttons-item.post-emoji').attr( 'data-nth-child', emojiPosition );
+
+				var gifPosition = form.find('.post-elements-buttons-item.post-gif').prevAll().not(':hidden').length + 1;
+				form.find('.post-elements-buttons-item.post-gif').attr( 'data-nth-child', gifPosition );
+
 				/* Stop past image from clipboard */
 				var ce = form.find( '.ac-input[contenteditable]' );
 				if ( ce.length > 0 ) {
@@ -1498,21 +1504,23 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url                 		: BP_Nouveau.ajaxurl,
-						timeout             		: 3 * 60 * 60 * 1000,
-						dictDefaultMessage  		: BP_Nouveau.media.dropzone_media_message,
-						acceptedFiles       		: 'image/*',
-						autoProcessQueue    		: true,
-						addRemoveLinks      		: true,
-						uploadMultiple      		: false,
-						maxFiles            		: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-						maxFilesize         		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-						thumbnailWidth				: 140,
-						thumbnailHeight				: 140,
-						dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
-						previewTemplate		 		: acCommentDefaultTemplate,
+						url                         : BP_Nouveau.ajaxurl,
+						timeout                     : 3 * 60 * 60 * 1000,
+						dictFileTooBig              : BP_Nouveau.media.dictFileTooBig,
+						dictInvalidFileType         : bp_media_dropzone.dictInvalidFileType,
+						dictDefaultMessage          : BP_Nouveau.media.dropzone_media_message,
+						acceptedFiles               : 'image/*',
+						autoProcessQueue            : true,
+						addRemoveLinks              : true,
+						uploadMultiple              : false,
+						maxFiles                    : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+						maxFilesize                 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						thumbnailWidth              : 140,
+						thumbnailHeight             : 140,
+						dictMaxFilesExceeded        : BP_Nouveau.media.media_dict_file_exceeded,
+						previewTemplate             : acCommentDefaultTemplate,
 						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
-						maxThumbnailFilesize    : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						maxThumbnailFilesize        : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					};
 
 					// init dropzone.
