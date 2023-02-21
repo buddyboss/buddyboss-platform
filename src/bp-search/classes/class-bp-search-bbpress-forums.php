@@ -55,7 +55,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				$post_status = array( 'publish' );
 			}
 
-			$in = '0';
+			$where_sql = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\')';
 
 			if ( ! bp_is_search_groups_enable() ) {
 				$group_memberships = '';
@@ -97,10 +97,16 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 					);
 
 					$in = implode( '', $in );
+
+					$where_sql .= ' OR pm.meta_value IN (' . trim( $in, ',' ) . ')';
 				}
+			} else {
+				$where_sql .= ' AND pm.meta_key is null';
 			}
 
-			$where[] = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\') OR pm.meta_value IN (' . trim( $in, ',' ) . ') )';
+			$where_sql .= ')';
+
+			$where[] = $where_sql;
 
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
