@@ -2612,7 +2612,7 @@ class BP_Email_Tokens {
 			</tr>
 			<tr>
 				<td>
-					<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+					<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; font-weight: 500; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 						<?php echo wp_kses_post( $formatted_tokens['discussion.title'] ); ?>
 					</div>
 				</td>
@@ -2685,7 +2685,7 @@ class BP_Email_Tokens {
 										?>
 										<tr>
 											<td>
-												<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+												<div class="bb-activity-media-wrap" style="padding: 5px 0 10px;">
 												<?php
 												while ( bp_media() ) {
 													bp_the_media();
@@ -2724,7 +2724,7 @@ class BP_Email_Tokens {
 										?>
 										<tr>
 											<td>
-												<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+												<div class="bb-activity-media-wrap" style="padding: 5px 0 10px;">
 													<?php
 													while ( bp_video() ) {
 														bp_the_video();
@@ -2767,7 +2767,7 @@ class BP_Email_Tokens {
 										?>
 										<tr>
 											<td>
-												<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+												<div class="bb-activity-media-wrap" style="padding: 5px 0 10px;">
 												<?php
 												while ( bp_document() ) {
 													bp_the_document();
