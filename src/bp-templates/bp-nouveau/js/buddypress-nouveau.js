@@ -3464,8 +3464,9 @@ window.bp = window.bp || {};
 		},
 
 		userPresenceStatus: function() {
-
-			var idle_interval = parseInt( BB_Nouveau_Presence.presence_time_span ) * 1000;
+		 	// Active user on page load.
+			window.bb_is_user_active = true;
+			var idle_interval = parseInt( BB_Nouveau_Presence.idle_inactive_span ) * 1000;
 
 			// setup the idle time user check.
 			bp.Nouveau.userPresenceChecker( idle_interval );
@@ -3513,23 +3514,23 @@ window.bp = window.bp || {};
 									type: 'POST',
 									url: '/wp-json/buddyboss/v1/members/presence',
 									data: params,
-									beforeSend: function(xhr) {
+									beforeSend: function ( xhr ) {
 										xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
 									},
-									success: function(data) {
+									success: function ( data ) {
 										// Check for our data, and use it.
 										if ( ! data ) {
 											return;
 										}
 
 										bp.Nouveau.updateUsersPresence( data );
-									},
+									}
 								}
 							);
 						}
 					},
-					parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000
-				); // 1 min.
+					parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 // 1 min.
+				);
 			}
 		},
 
