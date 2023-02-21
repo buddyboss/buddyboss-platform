@@ -547,6 +547,6 @@ module.exports = function (grunt) {
 			'exec:fetch_bb_icons',
 			'copy:bb_icons',
 			'clean:bb_icons'
-		],
+		]
 	);
 };
