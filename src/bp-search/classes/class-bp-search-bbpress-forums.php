@@ -55,9 +55,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				$post_status = array( 'publish' );
 			}
 
-			$in = '0';
+			$where_sql = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\')';
 
-			$group_memberships = '';
 			if ( bp_is_active( 'groups' ) ) {
 				$group_memberships = bp_get_user_groups(
 					get_current_user_id(),
@@ -85,26 +84,24 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 				$group_memberships = array_merge( $public_groups, $group_memberships );
 				$group_memberships = array_unique( $group_memberships );
+
+				if ( ! empty( $group_memberships ) ) {
+					$in = array_map(
+						function ( $group_id ) {
+							return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
+						},
+						$group_memberships
+					);
+
+					$in = implode( '', $in );
+
+					$where_sql .= ' OR pm.meta_value IN (' . trim( $in, ',' ) . ')';
+				}
 			}
 
-			if ( ! empty( $group_memberships ) ) {
-				$in = array_map(
-					function ( $group_id ) {
-						return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-					},
-					$group_memberships
-				);
+			$where_sql .= ')';
 
-				$in = implode( '', $in );
-			}
-
-
-			if ( empty( $in ) ) {
-				$where_postmeta = ' AND ( pm.meta_value IS NULL OR pm.meta_value = "a:0:{}" OR pm.meta_value = "" OR pm.meta_value = 0 ) ';
-			} else {
-				$where_postmeta = ' OR pm.meta_value IN (' . trim( $in, ',' ) . ') ';
-			}
-			$where[] = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\') ' . $where_postmeta . ' )';
+			$where[] = $where_sql;
 
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
