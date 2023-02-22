@@ -114,6 +114,8 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 				</div>
 
 				<?php
+				do_action( 'bb_group_single_top_header_action' );
+
 				echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : '';
 				bp_nouveau_group_hook( 'before', 'header_meta' );
 				?>
@@ -173,20 +175,10 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 				<?php endif; ?>
 
 				<div class="group-actions-wrap" >
-					<?php bp_get_template_part( 'groups/single/parts/header-item-actions' ); ?>
-
-					<div class="group-actions-absolute">
 					<?php
-					bp_nouveau_group_header_buttons();
-					bp_nouveau_group_header_buttons(
-						array(
-							'type'           => 'subscription',
-							'button_element' => 'button',
-						)
-					);
-					bb_nouveau_group_header_bubble_buttons();
+						bp_get_template_part( 'groups/single/parts/header-item-actions' );
+						do_action( 'bb_group_single_bottom_header_action' );
 					?>
-					</div>
 				</div>
 
 			</div><!-- #item-header-content -->

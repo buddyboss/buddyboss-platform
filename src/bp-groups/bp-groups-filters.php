@@ -1330,3 +1330,31 @@ function bb_group_subscriptions_handler() {
 	wp_safe_redirect( esc_url( trailingslashit( home_url( $wp->request ) ) ) );
 	exit();
 }
+
+/**
+ * Display group header action button when layout is left.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_group_single_left_header_actions() {
+	if ( 'left' === bb_platform_group_header_style() ) {
+		bb_group_single_header_actions();
+	}
+}
+add_action( 'bb_group_single_top_header_action', 'bb_group_single_left_header_actions' );
+
+/**
+ * Display group header action button when layout is center.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_group_single_center_header_actions() {
+	if ( 'centered' === bb_platform_group_header_style() ) {
+		bb_group_single_header_actions();
+	}
+}
+add_action( 'bb_group_single_bottom_header_action', 'bb_group_single_center_header_actions' );
