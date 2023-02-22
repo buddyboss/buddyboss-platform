@@ -59,11 +59,31 @@ function bp_video_upload() {
 
 	$name = $attachment->post_title;
 
+	// Generate video attachment preview link.
+	$attachment_id     = 'forbidden_' . $attachment->ID;
+	$attachment_url    = home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id );
+	$video_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
+
+	$file_url = wp_get_attachment_url( $attachment->ID );
+	$filetype = wp_check_filetype( $file_url );
+	$ext      = $filetype['ext'];
+	if ( empty( $ext ) ) {
+		$path = parse_url( $file_url, PHP_URL_PATH );
+		$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
+	}
+	// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234.
+	// https://stackoverflow.com/a/44858204.
+	if ( in_array( $ext, array( 'mov', 'm4v' ), true ) ) {
+		$ext = 'mp4';
+	}
+
 	$result = array(
-		'id'    => (int) $attachment->ID,
-		'thumb' => '',
-		'url'   => '',
-		'name'  => esc_attr( $name ),
+		'id'          => (int) $attachment->ID,
+		'thumb'       => '',
+		'url'         => esc_url( $attachment_url ),
+		'name'        => esc_attr( $name ),
+		'ext'         => esc_attr( $ext ),
+		'vid_msg_url' => esc_url( $video_message_url ),
 	);
 
 	return $result;
@@ -1409,7 +1429,7 @@ function bp_get_total_video_count() {
  * @return string
  */
 function bp_video_object_results_video_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'all';
 	$querystring['page']        = 1;
@@ -1431,7 +1451,7 @@ function bp_video_object_results_video_all_scope( $querystring ) {
  * @return string
  */
 function bp_video_object_template_results_video_personal_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'personal';
 	$querystring['page']        = 1;
@@ -1452,7 +1472,7 @@ function bp_video_object_template_results_video_personal_scope( $querystring ) {
  * @return string
  */
 function bp_video_object_template_results_video_groups_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'groups';
 	$querystring['page']        = 1;
@@ -1791,7 +1811,8 @@ function albums_check_video_album_access( $album_id ) {
  */
 function bp_video_delete_orphaned_attachments() {
 
-	global $wpdb;
+	remove_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10 );
+	remove_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10 );
 
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
@@ -1800,15 +1821,37 @@ function bp_video_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_video_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
-	$data  = $wpdb->get_col( $query );
+	$args = array(
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+		'post_status'    => 'inherit',
+		'post_type'      => 'attachment',
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'   => 'bp_video_saved',
+				'value' => '0',
+			),
+			array(
+				'key'     => 'bb_media_draft',
+				'compare' => 'NOT EXISTS',
+				'value'   => '',
+			),
+		),
+	);
 
-	if ( ! empty( $data ) ) {
-		foreach ( $data as $a_id ) {
-			wp_delete_attachment( $a_id, true );
+	$video_wp_query = new WP_query( $args );
+	if ( 0 < $video_wp_query->found_posts ) {
+		foreach ( $video_wp_query->posts as $post_id ) {
+			wp_delete_attachment( $post_id, true );
 		}
 	}
 
+	wp_reset_postdata();
+	wp_reset_query();
+
+	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
+	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
 }
 
 /**
@@ -2079,7 +2122,7 @@ function bp_video_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
  * @return string
  * @since BuddyBoss 1.7.0
  */
-function bp_video_default_scope( $scope ) {
+function bp_video_default_scope( $scope = 'all' ) {
 
 	$new_scope = array();
 
@@ -2777,8 +2820,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity video own.
-					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 :$activity->hide_sitewide;
+					$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : $activity->hide_sitewide;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2851,8 +2894,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity video own.
-							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+							$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -3358,6 +3401,8 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 	} else {
 		$attachment_url = wp_get_attachment_url( $attachment_id );
 	}
+
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter to get video thumb url.

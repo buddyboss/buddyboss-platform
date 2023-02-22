@@ -85,6 +85,23 @@ class BP_Notifications_Notification {
 	public $is_new;
 
 	/**
+	 * Is the notification newly inserted.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 * @var bool
+	 */
+	public $inserted = false;
+
+	/**
+	 * Is notification read only or linkable?
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var bool
+	 */
+	public $readonly;
+
+	/**
 	 * Columns in the notifications table.
 	 */
 	public static $columns = array(
@@ -167,6 +184,8 @@ class BP_Notifications_Notification {
 
 				// Set the notification type.
 				bp_notifications_update_meta( $this->id, 'is_modern', ! bb_enabled_legacy_email_preference() );
+
+				$this->inserted = true;
 			}
 			$retval = $this->id;
 		}
@@ -215,6 +234,7 @@ class BP_Notifications_Notification {
 			$this->component_action  = $notification->component_action;
 			$this->date_notified     = $notification->date_notified;
 			$this->is_new            = (int) $notification->is_new;
+			$this->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $notification ) : false;
 		}
 	}
 
@@ -649,7 +669,7 @@ class BP_Notifications_Notification {
 	 * @return array
 	 */
 	public static function parse_args( $args = '' ) {
-		return wp_parse_args(
+		return bp_parse_args(
 			$args,
 			array(
 				'id'                => false,
@@ -794,6 +814,7 @@ class BP_Notifications_Notification {
 			$results[ $key ]->item_id           = (int) $results[ $key ]->item_id;
 			$results[ $key ]->secondary_item_id = (int) $results[ $key ]->secondary_item_id;
 			$results[ $key ]->is_new            = (int) $results[ $key ]->is_new;
+			$results[ $key ]->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $results[ $key ] ) : false;
 		}
 
 		// Update meta cache.
@@ -855,6 +876,17 @@ class BP_Notifications_Notification {
 			$meta_query_sql
 		);
 
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.3
+		 *
+		 * @param string $where_sql Where SQL statement.
+		 * @param string $tbl_alias Table alias.
+		 * @param array  $r         Array of parsed arguments for the get method.
+		 */
+		$where_sql = apply_filters( 'bb_notifications_get_where_conditions', $where_sql, 'n', $r );
+		
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
 
@@ -1101,7 +1133,7 @@ class BP_Notifications_Notification {
 	 * }
 	 */
 	public static function get_current_notifications_for_user( $args = array() ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'user_id'      => bp_loggedin_user_id(),

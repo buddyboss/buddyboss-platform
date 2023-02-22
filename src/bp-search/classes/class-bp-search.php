@@ -426,7 +426,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'number'        => 3,
 			);
 
-			$args = wp_parse_args( $args, $defaults );
+			$args = bp_parse_args( $args, $defaults );
 
 			if ( true === $args['forum_search'] ) {
 				$this->searchable_items = array( 'forum', 'topic', 'reply' );
@@ -614,7 +614,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$last_item = end( $items );
 							$end_html  = '</ul>';
 
-							if ( $total_results > 3 ) {
+							if ( $total_results > $args['number'] ) {
 								$end_html .= "<footer class='results-group-footer'>";
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
 											   sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
@@ -635,7 +635,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 						foreach ( $ordered_items_group as $type => $grouped_items ) {
 
 							// Remove last item from list
-							if ( count( $grouped_items ) > 3 ) {
+							if ( count( $grouped_items ) > $args['number'] ) {
 								array_pop( $grouped_items );
 							}
 
@@ -784,7 +784,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @return array
 		 */
 		public function sanitize_args( $args = '' ) {
-			$args = wp_parse_args( $args, array() );
+			$args = bp_parse_args( $args, array() );
 
 			if ( isset( $args['search_term'] ) ) {
 				$args['search_term'] = sanitize_text_field( $args['search_term'] );

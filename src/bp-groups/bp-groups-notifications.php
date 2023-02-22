@@ -189,6 +189,7 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 			'group'                => $group,
 			'group.name'           => $group->name,
 			'group.id'             => $group_id,
+			'group.url'            => esc_url( bp_get_group_permalink( $group ) ),
 			'group-requests.url'   => esc_url( bp_get_group_permalink( $group ) . 'admin/membership-requests' ),
 			'membership.id'        => $membership_id,
 			'profile.url'          => esc_url( bp_core_get_user_domain( $requesting_user_id ) ),
@@ -373,6 +374,11 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 		$invited_user_id = $member;
 	}
 
+	// Check the sender is blocked by recipient or not.
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $invited_user_id, $inviter_user_id ) ) {
+		return;
+	}
+
 	// Bail if member has already been invited.
 	if ( ! empty( $member->invite_sent ) ) {
 		return;
@@ -404,11 +410,6 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 
 	// Bail if member opted out of receiving this email.
 	if ( false === bb_is_notification_enabled( $invited_user_id, $type_key ) ) {
-		return;
-	}
-
-	// Check the sender is blocked by recipient or not.
-	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $invited_user_id, $inviter_user_id ) ) {
 		return;
 	}
 

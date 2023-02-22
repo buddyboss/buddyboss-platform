@@ -565,7 +565,7 @@ function bb_core_prime_mentions_results() {
 
 	foreach ( $members_query->results as $user ) {
 		$result        = new stdClass();
-		$result->ID    = $user->user_nicename;
+		$result->ID    = bp_activity_get_user_mentionname( $user->ID );
 		$result->image = bp_core_fetch_avatar(
 			array(
 				'html'    => false,
@@ -578,6 +578,7 @@ function bb_core_prime_mentions_results() {
 		} else {
 			$result->name = bp_core_get_user_displayname( $user->ID );
 		}
+		$result->user_id = $user->ID;
 
 		$members[] = $result;
 	}
@@ -755,3 +756,36 @@ function bb_load_member_type_label_custom_css() {
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
 
+/**
+ * Remove all subscription associations for a given user.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param int $user_id ID whose subscription data should be removed.
+ *
+ * @return bool Returns false on failure.
+ */
+function bb_delete_user_subscriptions( $user_id ) {
+	// Get the user subscriptions.
+	$all_subscriptions = bb_get_subscriptions(
+		array(
+			'blog_id' => false,
+			'user_id' => $user_id,
+			'fields'  => 'id',
+			'status'  => null,
+			'cache'   => false,
+		),
+		true
+	);
+	$subscriptions     = ! empty( $all_subscriptions['subscriptions'] ) ? $all_subscriptions['subscriptions'] : array();
+
+	if ( ! empty( $subscriptions ) ) {
+		foreach ( $subscriptions as $subscription ) {
+			bb_delete_subscription( $subscription );
+		}
+	}
+
+	return true;
+}
+add_action( 'wpmu_delete_user', 'bb_delete_user_subscriptions' );
+add_action( 'delete_user', 'bb_delete_user_subscriptions' );
