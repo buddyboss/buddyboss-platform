@@ -8030,6 +8030,9 @@ body.guillotine-dragging * {
   .groups-header #item-header-cover-image #item-actions {
     margin-bottom: 15px;
   }
+  .groups-header .left #item-header-cover-image #item-actions {
+    margin-bottom: 0;
+  }
   .groups-header #cover-image-container #item-header-content {
     flex: 0 0 100%;
     text-align: center;
