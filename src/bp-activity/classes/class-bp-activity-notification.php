@@ -690,7 +690,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				} elseif ( ! empty( $gif_data ) ) {
 					$text = __( 'Posted an update', 'buddyboss' );
 				} else {
-					$text = __( 'Posted', 'buddyboss' );
+					$text = __( 'Posted an update', 'buddyboss' );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
@@ -764,7 +764,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					} else {
 						$text = sprintf(
 						/* translators: %s: User full name. */
-							__( '%1$s posted', 'buddyboss' ),
+							__( '%1$s posted an update', 'buddyboss' ),
 							$user_fullname
 						);
 					}
