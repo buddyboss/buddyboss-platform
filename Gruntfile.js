@@ -215,7 +215,7 @@ module.exports = function (grunt) {
 			clean: {
 				all: [BUILD_DIR],
 				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
-				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
+				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/', SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.json'],
 			},
 			copy: {
 				files: {
@@ -557,8 +557,8 @@ module.exports = function (grunt) {
 			'clean:bb_icons',
 			'exec:fetch_bb_icons',
 			'copy:bb_icons',
-			'clean:bb_icons',
 			'json2php',
+			'clean:bb_icons',
 			'rtlcss',
 			'cssmin'
 		]
