@@ -8068,6 +8068,9 @@ body.guillotine-dragging * {
     -ms-flex-pack: center;
     justify-content: center;
   }
+  .groups-header #cover-image-container.left #item-header-content .group-actions-absolute {
+    justify-content: start;
+  }
 }
 
 @media screen and (max-width: 380px) {

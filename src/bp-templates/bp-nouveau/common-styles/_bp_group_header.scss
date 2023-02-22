@@ -493,6 +493,10 @@
 
 			}
 
+			&.left #item-header-content .group-actions-absolute {
+				justify-content: start;
+			}
+
 		}
 
 	}
