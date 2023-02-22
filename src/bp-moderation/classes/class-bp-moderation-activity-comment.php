@@ -284,7 +284,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Remove mentioned link from activity comment.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.7
 	 *
 	 * @param string $content Activity comment.
 	 *

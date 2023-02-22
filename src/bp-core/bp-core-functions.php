@@ -8287,7 +8287,7 @@ function bb_presence_default_interval() {
 /**
  * Function to return idle the time span for consider user inactive.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @return int
  */
@@ -8319,7 +8319,7 @@ function bb_did_filter( $hook_name ) {
 /**
  * Locate deleted usernames in an content string, as designated by an @ sign.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param array  $mentioned_users Associative array with user IDs as keys and usernames as values.
  * @param string $content         Content.
@@ -8358,7 +8358,7 @@ function bb_mention_deleted_users( $mentioned_users, $content ) {
 /**
  * Function will remove mention link from content if mentioned member is deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param mixed $content Content.
  *

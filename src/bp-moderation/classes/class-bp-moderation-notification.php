@@ -106,7 +106,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 	/**
 	 * Function to remove unread notification link for moderated members from read notification screen.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.7
 	 *
 	 * @param string $retval  HTML for the mark unread link for the current notification.
 	 * @param int    $user_id The user ID.
