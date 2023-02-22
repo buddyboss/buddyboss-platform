@@ -893,8 +893,8 @@ window.bp = window.bp || {};
 						},
 						imageDragging: false,
 						anchor: {
-							linkValidation: true,
-							placeholderText: BP_Nouveau.anchorPlaceholderText
+							placeholderText: BP_Nouveau.anchorPlaceholderText,
+							linkValidation: true
 						}
 					}
 				);

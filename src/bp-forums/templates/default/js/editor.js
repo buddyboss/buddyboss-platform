@@ -49,8 +49,8 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true,
-								placeholderText: BP_Nouveau.anchorPlaceholderText
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
+								linkValidation: true
 							}
 						}
 					);
@@ -143,8 +143,8 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true,
-								placeholderText: BP_Nouveau.anchorPlaceholderText
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
+								linkValidation: true
 							}
 						}
 					);
@@ -250,8 +250,8 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true,
-								placeholderText: BP_Nouveau.anchorPlaceholderText
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
+								linkValidation: true
 							}
 						}
 					);
@@ -441,8 +441,8 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
-										linkValidation: true,
-										placeholderText: BP_Nouveau.anchorPlaceholderText
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
+										linkValidation: true
 									}
 								}
 							);
@@ -494,8 +494,8 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
-										linkValidation: true,
-										placeholderText: BP_Nouveau.anchorPlaceholderText
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
+										linkValidation: true
 									}
 								}
 							);
@@ -547,8 +547,8 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
-										linkValidation: true,
-										placeholderText: BP_Nouveau.anchorPlaceholderText
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
+										linkValidation: true
 									}
 								}
 							);
