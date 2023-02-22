@@ -2323,7 +2323,16 @@ function bb_update_to_2_2_7() {
 		// Clear notifications API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
 	}
+}
 
+/**
+ * Migration for group subscriptions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_8() {
 	$is_already_run = get_transient( 'bb_migrate_group_subscriptions' );
 	if ( $is_already_run ) {
 		return;

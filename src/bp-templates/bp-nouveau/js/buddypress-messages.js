@@ -2178,8 +2178,8 @@ window.bp = window.bp || {};
 							},
 							imageDragging: false,
 							anchor: {
-								linkValidation: true,
-								placeholderText: BP_Nouveau.anchorPlaceholderText
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
+								linkValidation: true
 							}
 						}
 					);
@@ -5843,5 +5843,3 @@ window.bp = window.bp || {};
 	bp.Nouveau.Messages.start();
 
 } )( bp, jQuery );
-
-
