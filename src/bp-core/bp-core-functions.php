@@ -8302,3 +8302,17 @@ function bb_did_filter( $hook_name ) {
 
 	return $wp_filters[ $hook_name ];
 }
+
+/**
+ * Fetch bb icon from the font-map.json file and store in option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @uses WP_Filesystem()
+ */
+function bb_icon_font_map_data( $key = '' ) {
+	global $bb_icons;
+	include get_template_directory() . '/assets/icons/font-map.php';
+
+	return ! empty( $key ) ? ( isset( $bb_icons[ $key ] ) ? $bb_icons[ $key ] : false ) : $bb_icons;
+}
