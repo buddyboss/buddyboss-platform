@@ -1599,7 +1599,7 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 	/**
 	 * Filter will return notifications data which will render.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.7
 	 *
 	 * @param mixed  $renderable        Notifications data which will render.
 	 * @param string $notification_item Notifications item.
@@ -1810,7 +1810,7 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * Function to check if notification triggered by blocked/blocked by/suspended/deleted member
  * then this notification will only for read purpose.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param object $notification Notification item.
  *
@@ -1864,7 +1864,7 @@ function bb_notification_is_read_only( $notification ) {
 /**
  * Function will remove link from notification description.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param mixed  $renderable   Notification details.
  * @param object $notification Notification item.
@@ -1894,7 +1894,7 @@ add_filter( 'bb_notification_get_renderable_notifications', 'bb_notification_get
 /**
  * Function will remove link from notification description.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param mixed  $description  Notification details.
  * @param object $notification Notification item.
@@ -1915,7 +1915,7 @@ add_filter( 'bp_get_the_notification_description', 'bb_get_the_notification_desc
 /**
  * Function will forcely read notification which triggered by blocked/blocked by/suspended member.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  */
 function bb_notification_read_for_moderated_members() {
 	$current_user_id = bp_loggedin_user_id();
@@ -1967,7 +1967,7 @@ add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
 /**
  * Function to allow specific notification for forum/activity/message on notification screen.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param bool   $retval       Return true or false.
  * @param object $notification Notification Item.

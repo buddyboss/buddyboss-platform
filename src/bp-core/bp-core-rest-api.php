@@ -430,7 +430,7 @@ function bb_input_clean( $var ) {
 /**
  * Function to remove mentioned link for moderated and deleted members from content.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param string $content Content.
  *
@@ -448,7 +448,7 @@ function bb_rest_raw_content( $content ) {
 	/**
 	 * Function will return content without mentioned link for moderated/deleted members.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.7
 	 *
 	 * @param string $content Content.
 	 */

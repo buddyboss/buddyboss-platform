@@ -95,7 +95,7 @@ class BP_Notifications_Notification {
 	/**
 	 * Is notification read only or linkable?
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.7
 	 *
 	 * @var bool
 	 */

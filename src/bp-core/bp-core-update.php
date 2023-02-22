@@ -2285,7 +2285,7 @@ function bb_migrate_subscriptions() {
 /**
  * Clear web and api cache on the update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @return void
  */
