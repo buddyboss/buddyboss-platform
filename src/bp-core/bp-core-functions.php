@@ -8310,8 +8310,6 @@ function bb_did_filter( $hook_name ) {
  *
  * @param string $key Array key.
  *
- * @uses  WP_Filesystem()
- *
  * @return array
  */
 function bb_icon_font_map_data( $key = '' ) {
