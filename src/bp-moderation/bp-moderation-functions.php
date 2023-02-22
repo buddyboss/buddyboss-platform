@@ -1633,7 +1633,7 @@ function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id =
 /**
  * Function will remove mention link from content if mentioned member is blocked/blokedby/suspended.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param mixed $content Content.
  *
@@ -1675,7 +1675,7 @@ function bb_moderation_remove_mention_link( $content ) {
 /**
  * Fetch all suspended user_ids.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param bool $force Bypass cache or not.
  *
@@ -1701,7 +1701,7 @@ function bb_moderation_get_suspended_user_ids( $force = false ) {
 /**
  * Fetch all moderated user or check the user is moderated or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param int $user_id User ID.
  *
@@ -1735,7 +1735,7 @@ function bb_moderation_moderated_user_ids( $user_id = 0 ) {
 /**
  * Function will allow to send specific email/notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param array $args It will contain type, recipient id, gorup id and author id.
  *
