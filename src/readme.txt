@@ -21,7 +21,7 @@ BuddyBoss Platform helps site builders & developers add community features to th
 To run BuddyBoss Platform, we recommend your host supports:
 
 * PHP version 8.0 or greater.
-* MySQL version 5.6 or greater, or, MariaDB version 10.0 or greater.
+* MySQL version 5.7 or greater, or, MariaDB version 10.3 or greater.
 * HTTPS support.
 
 == Installation ==
