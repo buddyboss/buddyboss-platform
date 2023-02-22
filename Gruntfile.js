@@ -298,7 +298,7 @@ module.exports = function (grunt) {
 							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
 						}
 					}
-			},
+				},
 				bp_rest_performance: {
 					cwd: SOURCE_DIR + 'buddyboss-platform-api/Performance/',
 					dest: SOURCE_DIR + 'bp-performance/classes/',
