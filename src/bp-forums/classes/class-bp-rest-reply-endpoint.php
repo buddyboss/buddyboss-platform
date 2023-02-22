@@ -2000,7 +2000,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		remove_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
-			'raw'      => $reply->post_content,
+			'raw'      => bb_rest_raw_content( $reply->post_content ),
 			'rendered' => bbp_get_reply_content( $reply->ID ),
 		);
 

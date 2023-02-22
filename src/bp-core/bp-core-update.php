@@ -2255,7 +2255,6 @@ function bb_update_to_2_2_6() {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
 	}
-
 	bb_migrate_subscriptions();
 }
 
@@ -2284,32 +2283,19 @@ function bb_migrate_subscriptions() {
 }
 
 /**
- * Clear web cache on the update.
+ * Clear web and api cache on the update.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
 function bb_update_to_2_2_7() {
-	// Clear notifications cache.
+	// Clear cache.
 	if (
 		function_exists( 'wp_cache_flush_group' ) &&
 		function_exists( 'wp_cache_supports' ) &&
 		wp_cache_supports( 'flush_group' )
 	) {
-		wp_cache_flush_group( 'bp-notifications' );
-	} else {
-		wp_cache_flush();
-	}
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear notifications API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
-	}
-
-	// Clear cache.
-	if ( function_exists( 'wp_cache_flush_group' ) ) {
 		wp_cache_flush_group( 'bp_activity' );
 		wp_cache_flush_group( 'bp_groups' );
 		wp_cache_flush_group( 'bbpress_posts' );
@@ -2318,6 +2304,7 @@ function bb_update_to_2_2_7() {
 		wp_cache_flush_group( 'bbp-replies' );
 		wp_cache_flush_group( 'bbp-topics' );
 		wp_cache_flush_group( 'blog_post' );
+		wp_cache_flush_group( 'bp-notifications' );
 	} else {
 		wp_cache_flush();
 	}
@@ -2333,8 +2320,19 @@ function bb_update_to_2_2_7() {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'blog_post' );
+		// Clear notifications API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
 	}
+}
 
+/**
+ * Migration for group subscription.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_8() {
 	$is_already_run = get_transient( 'bb_migrate_group_subscriptions' );
 	if ( $is_already_run ) {
 		return;
