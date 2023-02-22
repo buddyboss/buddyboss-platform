@@ -514,7 +514,7 @@ module.exports = function (grunt) {
 						replacements: [
 							{
 								pattern: /return/g,
-								replacement: '$bb_icons ='
+								replacement: '$bb_icons_data ='
 							}
 						]
 					}

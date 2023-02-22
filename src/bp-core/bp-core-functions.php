@@ -8311,8 +8311,8 @@ function bb_did_filter( $hook_name ) {
  * @uses WP_Filesystem()
  */
 function bb_icon_font_map_data( $key = '' ) {
-	global $bb_icons;
-	include get_template_directory() . '/assets/icons/font-map.php';
+	global $bb_icons_data;
+	include buddypress()->plugin_dir . 'bp-templates/bp-nouveau/icons/font-map.php';
 
-	return ! empty( $key ) ? ( isset( $bb_icons[ $key ] ) ? $bb_icons[ $key ] : false ) : $bb_icons;
+	return ! empty( $key ) ? ( isset( $bb_icons_data[ $key ] ) ? $bb_icons_data[ $key ] : false ) : $bb_icons_data;
 }
