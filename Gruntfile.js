@@ -215,7 +215,7 @@ module.exports = function (grunt) {
 			clean: {
 				all: [BUILD_DIR],
 				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
-				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/', SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.json'],
+				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
 			},
 			copy: {
 				files: {
@@ -504,6 +504,20 @@ module.exports = function (grunt) {
 							replacement: '<%= pkg.BBVersion %>'
 						}]
 					}
+				},
+				'icon-translate': {
+					files: [{
+						src: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php',
+						expand: true,
+					}],
+					options: {
+						replacements: [
+							{
+								pattern: /return/g,
+								replacement: '$bb_icons ='
+							}
+						]
+					}
 				}
 			}
 		}
@@ -512,6 +526,20 @@ module.exports = function (grunt) {
 	/**
 	 * Register tasks.
 	 */
+	// Fetch bb icons.
+	grunt.registerTask(
+		'fetch_bb_icons',
+		[
+			'clean:bb_icons',
+			'exec:fetch_bb_icons',
+			'copy:bb_icons',
+			'clean:bb_icons',
+			'json2php',
+			'string-replace:icon-translate',
+			'rtlcss',
+			'cssmin'
+		]
+	);
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('src', [ 'checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
@@ -549,18 +577,4 @@ module.exports = function (grunt) {
 
 	// Default task.
 	grunt.registerTask( 'default', ['src'] );
-	
-	// Fetch bb icons.
-	grunt.registerTask(
-		'fetch_bb_icons',
-		[
-			'clean:bb_icons',
-			'exec:fetch_bb_icons',
-			'copy:bb_icons',
-			'json2php',
-			'clean:bb_icons',
-			'rtlcss',
-			'cssmin'
-		]
-	);
 };
