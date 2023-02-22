@@ -8304,11 +8304,15 @@ function bb_did_filter( $hook_name ) {
 }
 
 /**
- * Fetch bb icon from the font-map.json file and store in option.
+ * Fetch bb icons data.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @uses WP_Filesystem()
+ * @param string $key Array key.
+ *
+ * @uses  WP_Filesystem()
+ *
+ * @return array
  */
 function bb_icon_font_map_data( $key = '' ) {
 	global $bb_icons_data;
