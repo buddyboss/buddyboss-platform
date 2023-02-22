@@ -2567,7 +2567,7 @@ function bb_get_message_response_object( $message ) {
 /**
  * Prepare the string to display list member joined or left the group in the message screen.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param array $args The ID of message.
  *
