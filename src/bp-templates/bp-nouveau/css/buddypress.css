@@ -9232,6 +9232,10 @@ body.register .buddypress-wrap .page ul {
   margin-top: 7px;
 }
 
+.bp-widget.social .social-networks-popup-hide {
+  display: none;
+}
+
 .users-header #item-header-avatar a.link-change-profile-image {
   top: 71px;
   left: 50%;
