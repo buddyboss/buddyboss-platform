@@ -562,7 +562,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Remove mentioned link from activity post.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.7
 	 *
 	 * @param string $content  Activity content.
 	 * @param object $activity Activity object.

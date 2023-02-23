@@ -2285,7 +2285,7 @@ function bb_migrate_subscriptions() {
 /**
  * Clear web and api cache on the update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @return void
  */
@@ -2304,6 +2304,7 @@ function bb_update_to_2_2_7() {
 		wp_cache_flush_group( 'bbp-replies' );
 		wp_cache_flush_group( 'bbp-topics' );
 		wp_cache_flush_group( 'blog_post' );
+		wp_cache_flush_group( 'bp-notifications' );
 	} else {
 		wp_cache_flush();
 	}
@@ -2319,5 +2320,7 @@ function bb_update_to_2_2_7() {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'blog_post' );
+		// Clear notifications API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
 	}
 }
