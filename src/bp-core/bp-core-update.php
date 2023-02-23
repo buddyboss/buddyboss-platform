@@ -401,6 +401,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19481 ) {
 			bb_update_to_2_2_7();
 		}
+
+		if ( $raw_db_version < 19551 ) {
+			bb_update_to_2_2_8();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2326,7 +2330,7 @@ function bb_update_to_2_2_7() {
 }
 
 /**
- * Migration for group subscription.
+ * Migrate when update the platform to the latest version.
  *
  * @since BuddyBoss [BBVERSION]
  *
