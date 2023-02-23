@@ -124,7 +124,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 
 				$tax_in = implode( ', ', $tax_in_arr );
 
-				$where .= $wpdb->prepare( " OR p.ID IN ( SELECT DISTINCT r.object_id from {$wpdb->term_relationships} r INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = r.term_taxonomy_id INNER JOIN { $wpdb->terms } t ON t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND tt.taxonomy IN(%s) )", $placeholder, $placeholder, $tax_in );
+				$where .= $wpdb->prepare( " OR p.ID IN ( SELECT DISTINCT r.object_id from {$wpdb->term_relationships} r INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = r.term_taxonomy_id INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND tt.taxonomy IN(%s) )", $placeholder, $placeholder, $tax_in );
 			}
 
 			// Meta query.
