@@ -53,6 +53,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
 		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 
+		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mention_link' ), 10, 1 );
+		add_filter( 'bp_get_activity_content', array( $this, 'bb_activity_content_remove_mention_link' ), 10, 1 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -554,5 +557,25 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		) {
 			$follow->leader_id = '';
 		}
+	}
+
+	/**
+	 * Remove mentioned link from activity post.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $content  Activity content.
+	 * @param object $activity Activity object.
+	 *
+	 * @return string
+	 */
+	public function bb_activity_content_remove_mention_link( $content ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$content = bb_moderation_remove_mention_link( $content );
+
+		return $content;
 	}
 }
