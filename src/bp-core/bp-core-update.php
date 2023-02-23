@@ -2410,16 +2410,11 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 	}
 
 	foreach ( $user_ids as $user_id ) {
-		$query_friend_count = friends_get_friend_user_ids( $user_id );
-		$meta_friend_count  = friends_get_total_friend_count( $user_id );
+		bp_has_members( 'type=alphabetical&page=1&scope=personal&per_page=1&user_id=' . $user_id );
+		$query_friend_count = (int) $GLOBALS['members_template']->total_member_count;
+		$meta_friend_count  = (int) friends_get_total_friend_count( $user_id );
 
-		if ( empty( $query_friend_count ) ) {
-			$query_friend_count = 0;
-		} else {
-			$query_friend_count = count( $query_friend_count );
-		}
-
-		if ( $query_friend_count !== (int) $meta_friend_count ) {
+		if ( $query_friend_count !== $meta_friend_count ) {
 			bp_update_user_meta( $user_id, 'total_friend_count', $query_friend_count );
 		}
 	}
