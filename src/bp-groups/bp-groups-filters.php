@@ -1213,7 +1213,7 @@ function bb_group_subscriptions_handler() {
 	// Check for empty group.
 	if ( empty( $group_id ) || empty( $group->id ) ) {
 		$message = __( 'No group was found! Which group are you subscribing/unsubscribing to?', 'buddyboss' );
-	} elseif ( ! wp_verify_nonce( $nonce, 'bb-group-subscription' . $group_id ) ) {
+	} elseif ( ! wp_verify_nonce( $nonce, 'bb-group-subscription-' . $group_id ) ) {
 		$message = __( 'There was a problem subscribing/unsubscribing from that group!', 'buddyboss' );
 	} elseif ( ! groups_is_user_member( $user_id, $group_id ) ) {
 		$message = __( 'You are not part of that group!', 'buddyboss' );

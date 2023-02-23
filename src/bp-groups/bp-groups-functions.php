@@ -5057,7 +5057,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 				),
 				trailingslashit( home_url( $wp->request ) )
 			),
-			'bb-group-subscription' . $item_id
+			'bb-group-subscription-' . $item_id
 		)
 	);
 
