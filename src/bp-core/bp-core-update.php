@@ -401,6 +401,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19481 ) {
 			bb_update_to_2_2_7();
 		}
+
+		if ( $raw_db_version < 19551 ) {
+			bb_update_to_2_2_8();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2333,13 +2337,6 @@ function bb_update_to_2_2_7() {
  * @return void
  */
 function bb_update_to_2_2_8() {
-	$is_already_run = get_transient( 'bb_update_to_2_2_8' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_update_to_2_2_8', 'yes', HOUR_IN_SECONDS );
-
 	bb_create_background_member_friends_count();
 }
 
