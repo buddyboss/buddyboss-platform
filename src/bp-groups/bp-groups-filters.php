@@ -1030,13 +1030,6 @@ function bb_load_groups_notifications() {
  * @since BuddyBoss 2.0.0
  */
 function bb_load_group_type_label_custom_css() {
-	if ( ! wp_script_is( 'jquery-ui-dialog', 'enqueued' ) ) {
-		wp_enqueue_script( 'jquery-ui-dialog' );
-	}
-	if ( ! wp_style_is( 'wp-jquery-ui-dialog', 'enqueued' ) ) {
-		wp_enqueue_style( 'wp-jquery-ui-dialog' );
-	}
-
 	if ( true === bp_disable_group_type_creation() ) {
 		$registered_group_types = bp_groups_get_group_types();
 		$cache_key              = 'bb-group-type-label-css';
@@ -1177,52 +1170,6 @@ function bb_groups_repair_group_subscriptions( $repair_list ) {
 }
 
 /**
- * Localize the strings needed for the Groups UI
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $params Associative array containing the JS Strings needed by scripts.
- *
- * @return array The same array with specific strings for the Groups UI if needed.
- */
-function bb_nouveau_group_localize_scripts( $params = array() ) {
-
-	if ( function_exists( 'bp_is_active' ) && ! bp_is_active( 'groups' ) ) {
-		return $params;
-	}
-
-	$params['groups']['strings']['confirm_button'] = __( 'Confirm', 'buddyboss' );
-	$params['groups']['strings']['cancel_button']  = __( 'Cancel', 'buddyboss' );
-
-	if ( bp_is_active( 'forums' ) && bp_is_groups_component() && bp_is_current_action( 'admin' ) && bp_is_action_variable( get_option( '_bbp_forum_slug', 'forum' ), 0 ) ) {
-		$params['groups']['strings']['warn_on_attach_forum'] = __( 'Members cannot subscribe individually to forums inside a group, only to the group itself. By moving this forum into a group, all existing subscriptions to the forum will be removed.', 'buddyboss' );
-		$group_id = 0;
-		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
-			$group_id = BBP_Forums_Group_Extension::get_group_id();
-		}
-
-		if ( empty( $group_id ) && function_exists( 'bp_get_new_group_id' ) && bp_get_new_group_id() ) {
-			$group_id = bp_get_new_group_id();
-		}
-
-		if ( ! empty( $group_id ) && function_exists( 'bbp_get_group_forum_ids' ) ) {
-			$connected_forum_id  = 0;
-			$connected_forum_ids = bbp_get_group_forum_ids( $connected_forum_id );
-
-			// Get the first forum ID.
-			if ( ! empty( $connected_forum_ids ) ) {
-				$connected_forum_id = (int) is_array( $connected_forum_ids ) ? $connected_forum_ids[0] : $connected_forum_ids;
-			}
-
-			$params['groups']['params']['group_connected_forum_id'] = $connected_forum_id;
-		}
-	}
-
-	return $params;
-}
-add_filter( 'bp_core_get_js_strings', 'bb_nouveau_group_localize_scripts', 10, 1 );
-
-/**
  * Handles the front end subscribing and unsubscribing topics.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1265,7 +1212,7 @@ function bb_group_subscriptions_handler() {
 	// Check for empty group.
 	if ( empty( $group_id ) || empty( $group->id ) ) {
 		$message = __( 'No group was found! Which group are you subscribing/unsubscribing to?', 'buddyboss' );
-	} elseif ( ! wp_verify_nonce( $nonce, 'bb-group-subscription' . $group_id ) ) {
+	} elseif ( ! wp_verify_nonce( $nonce, 'bb-group-subscription-' . $group_id ) ) {
 		$message = __( 'There was a problem subscribing/unsubscribing from that group!', 'buddyboss' );
 	} elseif ( ! groups_is_user_member( $user_id, $group_id ) ) {
 		$message = __( 'You are not part of that group!', 'buddyboss' );
@@ -1329,3 +1276,31 @@ function bb_group_subscriptions_handler() {
 	wp_safe_redirect( esc_url( trailingslashit( home_url( $wp->request ) ) ) );
 	exit();
 }
+
+/**
+ * Display group header action button when layout is left.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_group_single_left_header_actions() {
+	if ( 'left' === bb_platform_group_header_style() ) {
+		bb_group_single_header_actions();
+	}
+}
+add_action( 'bb_group_single_top_header_action', 'bb_group_single_left_header_actions' );
+
+/**
+ * Display group header action button when layout is center.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_group_single_center_header_actions() {
+	if ( 'centered' === bb_platform_group_header_style() ) {
+		bb_group_single_header_actions();
+	}
+}
+add_action( 'bb_group_single_bottom_header_action', 'bb_group_single_center_header_actions' );

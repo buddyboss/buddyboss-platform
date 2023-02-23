@@ -1828,7 +1828,7 @@ function bb_nouveau_ajax_group_subscription() {
 
 	// Use default nonce.
 	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
-	$check = 'bb-group-subscription' . $group_id;
+	$check = 'bb-group-subscription-' . $group_id;
 
 	// Use a specific one for actions needed it.
 	if ( ! empty( $_POST['_wpnonce'] ) ) {

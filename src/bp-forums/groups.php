@@ -333,7 +333,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						)
 					) : __( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' );
 					?>
-					<aside class="bp-feedback bp-messages bp-template-notice info">
+					<aside class="bp-feedback bp-feedback-v2 bp-messages bp-template-notice info">
 						<span class="bp-icon" aria-hidden="true"></span>
 						<p><?php echo wp_kses_post( $group_forum_info ); ?></p>
 					</aside>

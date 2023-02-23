@@ -5057,7 +5057,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 				),
 				trailingslashit( home_url( $wp->request ) )
 			),
-			'bb-group-subscription' . $item_id
+			'bb-group-subscription-' . $item_id
 		)
 	);
 
@@ -5121,4 +5121,28 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 	 */
 	return apply_filters( 'bb_get_group_subscription_button', $button, $r, $html );
 
+}
+
+/**
+ * Function to display group action buttons.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_group_single_header_actions() {
+	?>
+	<div class="group-actions-absolute">
+		<?php
+		bp_nouveau_group_header_buttons();
+		bp_nouveau_group_header_buttons(
+			array(
+				'type'           => 'subscription',
+				'button_element' => 'button',
+			)
+		);
+		bb_nouveau_group_header_bubble_buttons();
+		?>
+	</div>
+	<?php
 }
