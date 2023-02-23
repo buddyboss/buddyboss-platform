@@ -34,7 +34,7 @@ class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 	 * @param mixed $offset Array offset.
 	 * @return BP_Core_BP_Nav_BackCompat
 	 */
-	public function offsetGet( mixed $offset ): mixed {
+	public function offsetGet( $offset ) {
 		_doing_it_wrong(
 			'bp_nav',
 			__( 'These globals should not be used directly and are deprecated. Please use the BuddyPress nav functions instead.', 'buddyboss' ),
@@ -74,7 +74,7 @@ class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 	 *
 	 * @param mixed $offset Array offset.
 	 */
-	public function offsetUnset( mixed $offset ): void {
+	public function offsetUnset( $offset ) {
 		_doing_it_wrong(
 			'bp_nav',
 			__( 'These globals should not be used directly and are deprecated. Please use the BuddyPress nav functions instead.', 'buddyboss' ),
