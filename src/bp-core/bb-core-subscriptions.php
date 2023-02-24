@@ -1187,7 +1187,11 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 		}
 
 		// Clear subscription cache.
-		if ( function_exists( 'wp_cache_flush_group' ) ) {
+		if (
+			function_exists( 'wp_cache_flush_group' ) &&
+			function_exists( 'wp_cache_supports' ) &&
+			wp_cache_supports( 'flush_group' )
+		) {
 			wp_cache_flush_group( 'bbpress_users' );
 			wp_cache_flush_group( 'bb_subscriptions' );
 		} else {

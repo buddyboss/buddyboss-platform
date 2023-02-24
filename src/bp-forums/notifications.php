@@ -640,7 +640,7 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 		do_action( 'bbp_notifications_handler', $success, $user_id, $topic_id, $action );
 	}
 
-	if ( ! empty( $reply_id ) && get_post_type( $reply_id ) === 'reply' ) {
+	if ( ! empty( $reply_id ) && 'reply' === get_post_type( $reply_id ) ) {
 		// Redirect to the reply.
 		$redirect = bbp_get_reply_url( $reply_id );
 	} else {
