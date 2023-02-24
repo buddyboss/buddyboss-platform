@@ -4882,6 +4882,8 @@ window.bp = window.bp || {};
 					// Display draft activity.
 					bp.Nouveau.Activity.postForm.displayDraftActivity();
 				}
+
+				$('a.bp-suggestions-mention:empty').remove();
 			},
 
 			activityHideModalEvent: function () {
