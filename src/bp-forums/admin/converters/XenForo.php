@@ -792,9 +792,8 @@ class XenForo extends BBP_Converter_Base {
 	 *
 	 * @return string WordPress safe
 	 */
-	public function callback_topic_reply_count( $count = 1 ) {
-		$count = absint( (int) $count - 1 );
-		return $count;
+	public function callback_topic_reply_count( $count = 0 ) {
+		return (int) $count;
 	}
 
 	/**
