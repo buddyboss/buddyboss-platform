@@ -877,13 +877,32 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			}
 		}
 
+		$group_id = 0;
+		if ( bp_is_active( 'groups' ) ) {
+			$forum_id = bbp_get_topic_forum_id( $topic_id );
+			$group_id = bbp_get_forum_group_ids( $forum_id );
+			$group_id = ! empty( $group_id ) ? current( $group_id ) : 0;
+		}
+
 		foreach ( $r['user_ids'] as $user_id ) {
+
+			if (
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => bbp_get_component_name(),
+						'group_id'          => $group_id,
+						'recipient_user_id' => $user_id,
+						'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+					)
+				)
+			) {
+				continue;
+			}
+
 			// Bail if member opted out of receiving this email.
 			// Check the sender is blocked by recipient or not.
-			if (
-				true === bb_is_notification_enabled( $user_id, $type_key ) &&
-				true !== (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id )
-			) {
+			if ( true === bb_is_notification_enabled( $user_id, $type_key ) ) {
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
 					'notification_type' => 'bbp-new-forum-topic',
@@ -956,13 +975,31 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			}
 		}
 
+		$group_id = 0;
+		if ( bp_is_active( 'groups' ) ) {
+			$forum_id = bbp_get_reply_forum_id( $reply_id );
+			$group_id = bbp_get_forum_group_ids( $forum_id );
+			$group_id = ! empty( $group_id ) ? current( $group_id ) : 0;
+		}
+
 		foreach ( $r['user_ids'] as $user_id ) {
+			if (
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => bbp_get_component_name(),
+						'group_id'          => $group_id,
+						'recipient_user_id' => $user_id,
+						'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+					)
+				)
+			) {
+				continue;
+			}
+
 			// Bail if member opted out of receiving this email.
 			// Check the sender is blocked by recipient or not.
-			if (
-				true === bb_is_notification_enabled( $user_id, $type_key ) &&
-				true !== (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $author_id )
-			) {
+			if ( true === bb_is_notification_enabled( $user_id, $type_key ) ) {
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
 					'notification_type' => 'bbp-new-forum-reply',
