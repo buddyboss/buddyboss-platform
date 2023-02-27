@@ -401,6 +401,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19481 ) {
 			bb_update_to_2_2_7();
 		}
+
+		if ( $raw_db_version < 19551 ) {
+			bb_update_to_2_2_9();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2322,5 +2326,19 @@ function bb_update_to_2_2_7() {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'blog_post' );
 		// Clear notifications API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
+	}
+}
+
+/**
+ * Perform action while update the platform.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_9() {
+	// Migrate the topic favorites.
+	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
+		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
 	}
 }
