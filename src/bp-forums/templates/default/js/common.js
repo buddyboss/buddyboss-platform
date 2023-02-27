@@ -231,7 +231,7 @@ jQuery( document ).ready(
 								return bp_select2.i18n.removeAllItems;
 							}
 						},
-						dropdownCssClass: 'bb-select-dropdown',
+						dropdownCssClass: 'bb-select-dropdown bb-forum-tags-container',
 						containerCssClass: 'bb-select-container',
 						tokenSeparators: [ ',' ],
 						ajax: {
