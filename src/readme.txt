@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2.6.1
+Stable tag: 2.2.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,34 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.2.7.1 =
+* Network Search - Handled network search not working critical issue for database table with custom prefix
+
+= 2.2.7 =
+* Notifications - Improved members active/inactive presence logic for Push Notifications
+* Activity - Handled activity post with exact 4 media fails to follow right sequence order selected
+* Login - Handled 'Terms of Service' and 'Privacy Policy' inline JS not working issue
+* Messages - Improved group thread join/left notices for their members
+* Emails - Handled private messages email template reply button label layout issue when a translated string is long
+* Moderation - Improved the suspended and blocked members @mention logic in the network
+* Moderation - Improved the suspended and blocked members notifications logic for both new and existing
+* Moderation - Handled activity feed comment notification, redirection URL not working issue
+* Network Search - Handled search results improvements to not show groups, forums, discussions, replies, and photos if not accessible
+* Core - Handled active/inactive member presence logic returning console error issue in the background
+* Core - Handled small formatting issue in the editor for multiple new lines
+* Core - Handled translation issue for dropzone uploader across the network
+* Core - Provided medium editor placeholder texts available to be translatable
+* REST API - Improved the suspended and blocked members notification logic in the API
+* REST API - Small improvement for members presence active/inactive logic for push notifications in the API
+* REST API - Handled deleted and suspended members names to show 'Unknown Member' across the network in the API
+* REST API - Provided join/left group thread notices small update API support
+* REST API - Provided API support for improved moderation @mention logic
+* REST API - Handled profile field and Album name with '&' character shows HTML entity in the API response
+* REST API - Handled profile search not working issue with the '&' character in the API
+* REST API - Handled photos order issue when description updated with the endpoint
+* REST API - Small improvement in the API to fetch group specific files using the documents endpoint
+* Elementor - Handled 'BB Forum Search form' widget alignment and UI issues on the RTL language site
 
 = 2.2.6.1 =
 * Learndash - Handled update group critical issue for php version < 8.0

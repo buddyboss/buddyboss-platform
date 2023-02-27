@@ -1135,7 +1135,16 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			}
 
 			// Check the sender is blocked by recipient or not.
-			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $sender_id ) ) {
+			if (
+				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+				bb_moderation_allowed_specific_notification(
+					array(
+						'type'              => buddypress()->messages->id,
+						'group_id'          => $group,
+						'recipient_user_id' => $recipient->user_id,
+					)
+				)
+			) {
 				continue;
 			}
 
@@ -1618,8 +1627,18 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 			continue;
 		}
 
+		$group = bp_messages_get_meta( $tokens['message_id'], 'group_id', true );
 		// Check the sender is blocked by recipient or not.
-		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $sender_id ) ) {
+		if (
+			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+			bb_moderation_allowed_specific_notification(
+				array(
+					'type'              => buddypress()->messages->id,
+					'group_id'          => $group,
+					'recipient_user_id' => $recipient->user_id,
+				)
+			)
+		) {
 			continue;
 		}
 
@@ -2543,7 +2562,7 @@ function bb_get_message_response_object( $message ) {
 /**
  * Prepare the string to display list member joined or left the group in the message screen.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param array $args The ID of message.
  *

@@ -2159,6 +2159,10 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 			continue;
 		}
 
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $sender_id ) ) {
+			continue;
+		}
+
 		// Send notification email.
 		bp_send_email( $email_type, (int) $user_id, $args );
 	}
