@@ -1745,9 +1745,15 @@ function bb_notification_manage_app_push_notification( $content, $component_name
 		'app_push' !== $screen ||
 		empty( $notification_id ) ||
 		empty( $component_action ) ||
-		'bb_activity_following_post' !== $component_action ||
-		'bb_forums_subscribed_reply' !== $component_action ||
-		'bb_forums_subscribed_discussion' !== $component_action
+		! in_array(
+			$component_action,
+			array(
+				'bb_activity_following_post',
+				'bb_forums_subscribed_reply',
+				'bb_forums_subscribed_discussion',
+			),
+			true
+		)
 	) {
 		return $content;
 	}
