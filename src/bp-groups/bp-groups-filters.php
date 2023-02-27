@@ -123,6 +123,7 @@ function bp_groups_filter_kses( $content = '' ) {
 	$allowed_tags['i']           = array();
 	$allowed_tags['b']           = array();
 	$allowed_tags['strong']      = array();
+	$allowed_tags['em']          = array();
 	$allowed_tags['blockquote']  = array();
 	$allowed_tags['ol']          = array();
 	$allowed_tags['ul']          = array();
