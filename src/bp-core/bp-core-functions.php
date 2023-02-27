@@ -8415,3 +8415,19 @@ function bb_mention_remove_deleted_users_link( $content ) {
 
 	return $content;
 }
+
+/**
+ * Fetch bb icons data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $key Array key.
+ *
+ * @return array
+ */
+function bb_icon_font_map_data( $key = '' ) {
+	global $bb_icons_data;
+	include buddypress()->plugin_dir . 'bp-templates/bp-nouveau/icons/font-map.php';
+
+	return ! empty( $key ) ? ( isset( $bb_icons_data[ $key ] ) ? $bb_icons_data[ $key ] : false ) : $bb_icons_data;
+}
