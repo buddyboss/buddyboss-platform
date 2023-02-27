@@ -862,6 +862,18 @@ p.form-allowed-tags {
 			margin-top: 15px;
 		}
 
+		p:empty {
+			min-height: 1em;
+		}
+
+	}
+
+}
+
+ul.bbp-lead-topic .item-description {
+
+	p:empty {
+		min-height: 1em;
 	}
 
 }
