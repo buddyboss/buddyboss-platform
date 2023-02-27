@@ -565,6 +565,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bbp_enable_topic_subscriptions'] = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'topic' );
 		}
 
+		$results['bb-presence-idle-inactive-span'] = function_exists( 'bb_idle_inactive_span' ) ? bb_idle_inactive_span() : 180;
+
 		return $results;
 	}
 

@@ -745,15 +745,17 @@ add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 
  * @since BuddyBoss 2.0.3
  *
  * @param bool $retval  Default false.
- * @param int  $item_id Blocking User ID.
- * @param int  $user_id Blocked User ID.
+ * @param int  $item_id Blocking User ID ( Receiver user id ).
+ * @param int  $user_id Current User ID.
  *
  * @return bool True if the user blocked/suspended otherwise false.
  */
 function bb_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) {
-	if ( bp_moderation_is_user_blocked( $user_id, $item_id ) ) {
-		return true;
-	} elseif ( bp_moderation_is_user_suspended( $item_id ) ) {
+	if (
+		bp_moderation_is_user_blocked( $item_id ) ||
+		bb_moderation_is_user_blocked_by( $item_id ) ||
+		bp_moderation_is_user_suspended( $item_id )
+	) {
 		return true;
 	}
 

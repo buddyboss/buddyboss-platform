@@ -618,6 +618,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			),
 			'link_url'          => '',
 			'rest_actions'      => '',
+			'readonly'          => isset( $notification->readonly ) ? $notification->readonly : false,
 		);
 
 		$component = $notification->component_name;
@@ -1064,6 +1065,11 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'rest_actions'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Rest Actions which perform accept/reject based on the status.', 'buddyboss' ),
+					'type'        => 'object',
+				),
+				'readonly'          => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Readonly for the moderated members notification.', 'buddyboss' ),
 					'type'        => 'object',
 				),
 			),
