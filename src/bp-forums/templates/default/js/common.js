@@ -14,7 +14,7 @@ jQuery( document ).ready(
 				}
 
 				jQuery( element ).select2( {
-					dropdownParent: jQuery('.bbp-topic-form.bb-modal'),
+					dropdownParent: jQuery( element ).closest('.bb-modal'),
 					placeholder: jQuery( element ).attr( 'placeholder' ),
 					minimumInputLength: 1,
 					closeOnSelect: true,
@@ -46,7 +46,7 @@ jQuery( document ).ready(
 							return bp_select2.i18n.removeAllItems;
 						}
 					},
-					dropdownCssClass: 'bb-select-dropdown bb-forum-tags-container',
+					dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
 					containerCssClass: 'bb-select-container',
 					tokenSeparators: [ ',' ],
 					ajax: {
@@ -207,6 +207,7 @@ jQuery( document ).ready(
 				if ( $tagsSelect.length ) {
 					$tagsSelect.select2( {
 						placeholder: $tagsSelect.attr( 'placeholder' ),
+						dropdownParent: $tagsSelect.closest('.bb-modal'),
 						minimumInputLength: 1,
 						closeOnSelect: true,
 						tags: true,
@@ -237,7 +238,7 @@ jQuery( document ).ready(
 								return bp_select2.i18n.removeAllItems;
 							}
 						},
-						dropdownCssClass: 'bb-select-dropdown bb-forum-tags-container',
+						dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
 						containerCssClass: 'bb-select-container',
 						tokenSeparators: [ ',' ],
 						ajax: {
