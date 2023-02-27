@@ -2054,7 +2054,7 @@ add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bp_admin_fo
  * @param bool $is_background The current process is background or not.
  * @param int  $blog_id       The blog ID to migrate for this blog.
  *
- * @return array An array of the status code and the message.
+ * @return array|void An array of the status code and the message.
  */
 function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 	global $wpdb, $bp_background_updater;
@@ -2097,7 +2097,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 		$final_offset = $offset + count( $results );
 
 		if ( ! $is_background ) {
-			// All done!
+			// The current process is in progress!
 			return array(
 				'status'  => 'running',
 				'offset'  => $final_offset,
@@ -2121,7 +2121,6 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 			);
 		}
 	}
-
 }
 
 /**
@@ -2137,7 +2136,9 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 function bb_migrate_users_topic_favorites( $user_ids, $blog_id ) {
 	global $wpdb;
 
-	if ( is_multisite() && bp_is_network_activated() ) {
+	$switch = false;
+	if ( is_multisite() && get_current_blog_id() !== $blog_id ) {
+		$switch = true;
 		switch_to_blog( $blog_id );
 	}
 
@@ -2162,7 +2163,7 @@ function bb_migrate_users_topic_favorites( $user_ids, $blog_id ) {
 		}
 	}
 
-	if ( is_multisite() && bp_is_network_activated() ) {
+	if ( $switch ) {
 		restore_current_blog();
 	}
 }
