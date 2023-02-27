@@ -1234,7 +1234,7 @@ function bp_admin_repair_tools_wrapper_function() {
 		),
 	);
 
-	$type = filter_input( INPUT_POST, 'type', FILTER_UNSAFE_RAW );
+	$type = bb_filter_input_string( INPUT_POST, 'type' );
 
 	if ( empty( $type ) ) {
 		wp_send_json_error( $response );
