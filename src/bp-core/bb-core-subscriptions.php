@@ -1050,8 +1050,11 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
 
+	$usernames = isset( $r['data']['email_tokens']['tokens']['reply.content'] ) && ! empty( $r['data']['email_tokens']['tokens']['reply.content'] ) ? bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] ) : array();
+
 	$parse_args = array(
 		'type'              => $type,
+		'usernames'         => $usernames,
 		'item_id'           => $item_id,
 		'blog_id'           => $blog_id,
 		'data'              => $r['data'],
