@@ -4392,49 +4392,73 @@ function bp_core_get_active_custom_post_type_feed() {
  */
 function bp_platform_default_activity_types() {
 
-	$activity_type = apply_filters(
-		'bp_platform_default_activity_types',
+	$settings_fields = array(
 		array(
-			'0' => array(
-				'activity_name'  => 'new_avatar',
-				'activity_label' => __( 'Member changes their profile photo', 'buddyboss' ),
-			),
-			'1' => array(
-				'activity_name'  => 'updated_profile',
-				'activity_label' => __( 'Member updates their profile details', 'buddyboss' ),
-			),
-			'2' => array(
-				'activity_name'  => 'new_member',
-				'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
-			),
-			'3' => array(
-				'activity_name'  => 'friendship_created',
-				'activity_label' => __( 'Two members become connected', 'buddyboss' ),
-			),
-			'4' => array(
-				'activity_name'  => 'created_group',
-				'activity_label' => __( 'Member creates a group', 'buddyboss' ),
-			),
-			'5' => array(
-				'activity_name'  => 'joined_group',
-				'activity_label' => __( 'Member joins a group', 'buddyboss' ),
-			),
-			'6' => array(
-				'activity_name'  => 'group_details_updated',
-				'activity_label' => __( 'Group details are updated', 'buddyboss' ),
-			),
-			'7' => array(
-				'activity_name'  => 'bbp_topic_create',
-				'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' ),
-			),
-			'8' => array(
-				'activity_name'  => 'bbp_reply_create',
-				'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' ),
-			),
-		)
+			'activity_name'  => 'new_avatar',
+			'activity_label' => __( 'Member changes their profile photo', 'buddyboss' ),
+		),
+		array(
+			'activity_name'  => 'updated_profile',
+			'activity_label' => __( 'Member updates their profile details', 'buddyboss' ),
+		),
 	);
 
-	return $activity_type;
+	// Check the registration is enabled or not.
+	if ( function_exists( 'bp_enable_site_registration' ) && bp_enable_site_registration() ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'new_member',
+					'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'friendship_created',
+					'activity_label' => __( 'Two members become connected', 'buddyboss' ),
+				),
+			)
+		);
+	}
+
+	// settings field that dependent on group.
+	if ( bp_is_active( 'groups' ) ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'created_group',
+					'activity_label' => __( 'Member creates a group', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'joined_group',
+					'activity_label' => __( 'Member joins a group', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'group_details_updated',
+					'activity_label' => __( 'Group details are updated', 'buddyboss' ),
+				),
+			)
+		);
+	}
+
+	// Settings field that dependent on forum.
+	if ( bp_is_active( 'forums' ) ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'bbp_topic_create',
+					'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'bbp_reply_create',
+					'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' ),
+				),
+			)
+		);
+	}
+
+	return apply_filters( 'bb_platform_default_activity_types', $settings_fields );
 }
 
 if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
