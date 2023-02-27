@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.2.7.1 =
+* Network Search - Handled network search not working critical issue for database table with custom prefix
+
 = 2.2.7 =
 * Notifications - Improved members active/inactive presence logic for Push Notifications
 * Activity - Handled activity post with exact 4 media fails to follow right sequence order selected
