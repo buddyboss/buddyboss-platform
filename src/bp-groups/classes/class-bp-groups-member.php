@@ -1630,6 +1630,9 @@ class BP_Groups_Member {
 	 * @return bool|int True on success, false on failure.
 	 */
 	public static function bb_remove_group_subscription( $user_id, $group_id ) {
+
+		// Forcefully create the group subscription.
+		BP_Core_Notification_Abstract::$no_validate = true;
 		// Check if subscription is existed or not?.
 		$subscriptions = bb_get_subscriptions(
 			array(
@@ -1650,6 +1653,10 @@ class BP_Groups_Member {
 		$subscription = current( $subscriptions['subscriptions'] );
 
 		// Delete the subscription.
-		return bb_delete_subscription( $subscription->id );
+		$is_deleted = bb_delete_subscription( $subscription->id );
+
+		BP_Core_Notification_Abstract::$no_validate = false;
+
+		return $is_deleted;
 	}
 }
