@@ -1693,8 +1693,17 @@ function bb_notification_after_save_meta( $notification ) {
 	if (
 		! empty( $notification->id ) &&
 		! empty( $notification->component_action ) &&
-		'bb_activity_following_post' === $notification->component_action &&
-		bp_is_active( 'activity' )
+		(
+			'bb_activity_following_post' === $notification->component_action &&
+			bp_is_active( 'activity' )
+		) ||
+		(
+			bp_is_active( 'forums' ) &&
+			(
+				'bb_forums_subscribed_reply' === $notification->component_action ||
+				'bb_forums_subscribed_discussion' === $notification->component_action
+			)
+		)
 	) {
 		$activity = new BP_Activity_Activity( $notification->item_id );
 		if ( ! empty( $activity ) && ! empty( $activity->content ) ) {
@@ -1736,7 +1745,9 @@ function bb_notification_manage_app_push_notification( $content, $component_name
 		'app_push' !== $screen ||
 		empty( $notification_id ) ||
 		empty( $component_action ) ||
-		'bb_activity_following_post' !== $component_action
+		'bb_activity_following_post' !== $component_action ||
+		'bb_forums_subscribed_reply' !== $component_action ||
+		'bb_forums_subscribed_discussion' !== $component_action
 	) {
 		return $content;
 	}
