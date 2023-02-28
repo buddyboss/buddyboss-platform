@@ -9219,16 +9219,25 @@ body.register .buddypress-wrap .page ul {
   opacity: 1;
 }
 
-.users-header #social-networks-popup {
+.bp-widget.social #social-networks-popup .bb-model-header > p {
+  margin-left: auto;
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+.users-header #social-networks-popup,
+.bp-widget.social #social-networks-popup {
   display: none;
 }
 
-.users-header #social-networks-popup .bb-action-popup-content {
+.users-header #social-networks-popup .bb-action-popup-content,
+.bp-widget.social #social-networks-popup .bb-action-popup-content {
   padding: 26px 30px 35px;
   text-align: left;
 }
 
-.users-header #social-networks-popup .bb-action-popup-content .social {
+.users-header #social-networks-popup .bb-action-popup-content .social,
+.bp-widget.social #social-networks-popup .bb-action-popup-content .social {
   margin-top: 7px;
 }
 

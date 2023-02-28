@@ -355,7 +355,17 @@ body.register .buddypress-wrap .page ul {
 	opacity: 1;
 }
 
-.users-header #social-networks-popup {
+.bp-widget.social #social-networks-popup {
+
+	.bb-model-header > p {
+		margin-left: auto;
+		margin-bottom: 0;
+		line-height: 1;
+	}
+}
+
+.users-header #social-networks-popup,
+.bp-widget.social #social-networks-popup {
 	display: none;
 
 	.bb-action-popup-content {

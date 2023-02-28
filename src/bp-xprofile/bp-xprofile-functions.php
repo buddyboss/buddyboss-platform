@@ -1688,7 +1688,6 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	$social_networks_text  = $social_networks_field->name;
 
 	$is_enabled_header_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
-	$is_social_networks_popup = empty($is_enabled_header_social_networks) ? 'social-networks-popup-hide' : '';
 
 	$html = '';
 
@@ -1708,7 +1707,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 				if ( '' !== $original_option_value ) {
 					$key = bp_social_network_search_key( $key, $providers );
 
-					if ( $is_more_link && 2 === $i && ! empty($is_enabled_header_social_networks) ) {
+					if ( $is_more_link && 2 === $i ) {
 						$html .= '<span class="social-more-link social"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_html__( 'See all', 'buddyboss' ) . '" href="#social-networks-popup" class="show-action-popup"><i class="bb-icon-rf bb-icon-ellipsis-h"></i></a></span>';
 						break;
 					}
@@ -1717,7 +1716,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 				$i++;
 			}
 			if ( $is_more_link ) {
-				$html .= '<div style="display: none" class="bb-action-popup ' . $is_social_networks_popup . '" id="social-networks-popup">
+				$html .= '<div style="display: none" class="bb-action-popup" id="social-networks-popup">
 							<div class="modal-mask bb-white bbm-model-wrap">
 								<div class="action-popup-overlay"></div>
 								<div class="modal-wrapper">
