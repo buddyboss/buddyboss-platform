@@ -1050,24 +1050,24 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
 
-	$usernames = array();
-	if ( isset( $r['data']['email_tokens']['tokens'] ) ) {
-		if ( ! empty( $r['data']['email_tokens']['tokens']['reply.content'] ) ) {
-			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] );
-		}
-		if ( ! empty( $r['data']['email_tokens']['tokens']['discussion.content'] ) ) {
-			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['discussion.content'] );
-		}
-	}
-
 	$parse_args = array(
 		'type'              => $type,
-		'usernames'         => $usernames,
 		'item_id'           => $item_id,
 		'blog_id'           => $blog_id,
 		'data'              => $r['data'],
 		'notification_type' => $notification_type,
 	);
+
+	$usernames = array();
+	if ( ! empty( $r['data']['email_tokens']['tokens']['reply.content'] ) ) {
+		$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] );
+	}
+	if ( ! empty( $r['data']['email_tokens']['tokens']['discussion.content'] ) ) {
+		$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['discussion.content'] );
+	}
+	if ( ! empty( $usernames ) ) {
+		$parse_args['usernames'] = $usernames;
+	}
 
 	if (
 		isset( $subscriptions['total'] ) &&
