@@ -535,7 +535,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'name'        => 'group-name',
 			'description' => '',
 			'field'       => 'text',
-			'value'       => bp_get_group_name( $group ),
+			'value'       => ( function_exists( 'bp_get_group_name_editable' ) ? bp_get_group_name_editable( $group ) : bp_get_group_name( $group ) ),
 			'options'     => array(),
 		);
 
@@ -639,7 +639,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 											'<li>' . esc_html__( 'This group will not be listed in the groups directory or search results', 'buddyboss' ) . '</li>' .
 											'<li>' . esc_html__( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ) . '</li>' .
 										'</ul>',
-					'is_default_option' => 'private' === bp_get_new_group_status(),
+					'is_default_option' => 'hidden' === bp_get_new_group_status(),
 				),
 			),
 		);

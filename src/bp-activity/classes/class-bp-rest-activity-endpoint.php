@@ -1146,7 +1146,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_activity_maybe_truncate_entry', '__return_false' );
 
 		if ( 'activity_comment' === $activity->type ) {
+			add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
 			$rendered = apply_filters( 'bp_get_activity_content', $activity->content, $activity );
+			remove_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
 		} else {
 			$activities_template = null;
 
@@ -1236,7 +1238,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'name'              => bp_core_get_user_displayname( $activity->user_id ),
 			'component'         => $activity->component,
 			'content'           => array(
-				'raw'      => $activity->content,
+				'raw'      => bb_rest_raw_content( $activity->content ),
 				'rendered' => $this->render_item( $activity ),
 			),
 			'date'              => bp_rest_prepare_date_response( $activity->date_recorded ),
@@ -1282,7 +1284,21 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		// Add iframe embedded data in separate object.
 		$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
 		if ( ! empty( $link_embed ) && method_exists( $bp->embed, 'autoembed' ) ) {
-			$data['preview_data'] = $bp->embed->autoembed( $link_embed, '' );
+			$data['preview_data'] = $bp->embed->autoembed( '', $activity );
+
+			// Removed lazyload from link preview.
+			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity );
+		} elseif ( method_exists( $bp->embed, 'autoembed' ) && ! empty( $data['content_stripped'] ) ) {
+			$check_embedded_content = $bp->embed->autoembed( $data['content_stripped'], $activity );
+			if ( ! empty( $check_embedded_content ) ) {
+				preg_match( '/<iframe[^>]*><\/iframe>/', $check_embedded_content, $match );
+				if ( ! empty( $match[0] ) ) {
+					$data['preview_data'] = $match[0];
+				}
+			}
+
+			// Removed lazyload from link preview.
+			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity );
 		}
 
 		// remove comment options from media/document/video activity.
@@ -2090,7 +2106,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function bp_rest_activity_content_validate( $request ) {
 		$toolbar_option = true;
 
-		if ( ! empty( $request['content'] ) ) {
+		if ( ! empty( trim( wp_strip_all_tags( $request['content'] ) ) ) ) {
 			return false;
 		}
 
@@ -2106,6 +2122,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					)
 				)
 				&& empty( $request['bp_documents'] )
+				&& empty( $request['bp_videos'] )
 			)
 		);
 
@@ -2216,6 +2233,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_activitiy_edit_data( $activity ) {
 		global $activities_template;
+		if ( ! is_object( $activities_template ) ) {
+			$activities_template = new stdClass();
+		}
+
+		if ( ! isset( $activities_template->activity ) ) {
+			$activities_template->activity = $activity;
+		}
+
 		$activity_temp = $activities_template->activity;
 
 		if ( empty( $activity->id ) ) {
