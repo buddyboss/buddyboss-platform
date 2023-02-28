@@ -4295,6 +4295,14 @@ window.bp = window.bp || {};
 			},
 
 			threadsFetchError: function( collection, response ) {
+
+				if (
+					'undefined' !== typeof response.statusText &&
+					'abort' === response.statusText
+				) {
+					return;
+				}
+
 				if ( ! _.isUndefined( this.options.search_terms ) && this.options.search_terms !== '' ) {
 					this.loadingFeedback = new bp.Views.Feedback(
 						{
