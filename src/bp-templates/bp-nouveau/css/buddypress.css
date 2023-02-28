@@ -9219,12 +9219,6 @@ body.register .buddypress-wrap .page ul {
   opacity: 1;
 }
 
-.bp-widget.social #social-networks-popup .bb-model-header > p {
-  margin-left: auto;
-  margin-bottom: 0;
-  line-height: 1;
-}
-
 .users-header #social-networks-popup,
 .bp-widget.social #social-networks-popup {
   display: none;
@@ -9239,6 +9233,17 @@ body.register .buddypress-wrap .page ul {
 .users-header #social-networks-popup .bb-action-popup-content .social,
 .bp-widget.social #social-networks-popup .bb-action-popup-content .social {
   margin-top: 7px;
+}
+
+.bp-widget.social #social-networks-popup .bb-model-header > p {
+  margin-left: auto;
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+.bp-widget.social #social-networks-popup .bb-action-popup-content .social {
+  margin-top: 9px;
+  width: 24px;
 }
 
 .bp-widget.social .social-networks-popup-hide {
