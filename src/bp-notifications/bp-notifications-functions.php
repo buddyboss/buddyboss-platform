@@ -1690,39 +1690,52 @@ function bb_can_send_push_notification( $user_id, $args = array() ) {
  * @param BP_Notifications_Notification $notification Notification object.
  */
 function bb_notification_after_save_meta( $notification ) {
-	$usernames = '';
 	if (
 		! empty( $notification->id ) &&
 		! empty( $notification->component_action )
 	) {
+		$usernames = array();
 		if (
 			bp_is_active( 'activity' ) &&
-			'bb_activity_following_post' === $notification->component_action
+			in_array(
+				$notification->component_action,
+				array(
+					'bb_activity_following_post',
+				),
+				true
+			)
 		) {
 			$activity  = new BP_Activity_Activity( $notification->item_id );
 			$usernames = ! empty( $activity ) && ! empty( $activity->content ) && bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
 		} elseif (
 			bp_is_active( 'forums' ) &&
-			(
-				'bb_forums_subscribed_reply' === $notification->component_action
+			in_array(
+				$notification->component_action,
+				array(
+					'bb_forums_subscribed_reply',
+				),
+				true
 			)
 		) {
-			$content   = bbp_kses_data( bbp_get_reply_content( $notification->item_id ) );
+			$content = '';
+			if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
+				$content = bbp_kses_data( bbp_get_reply_content( $notification->item_id ) );
+			}
 			$usernames = ! empty( $content ) ? bp_find_mentions_by_at_sign( array(), $content ) : array();
 		}
-	}
 
-	if ( ! empty( $usernames ) ) {
-		$user_id     = $notification->user_id;
-		$mention_web = false;
-		$mention_app = false;
-		if ( isset( $usernames[ $user_id ] ) ) {
-			$mention_web = bb_web_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'web' );
-			$mention_app = bb_app_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'app' );
+		if ( ! empty( $usernames ) ) {
+			$user_id     = $notification->user_id;
+			$mention_web = false;
+			$mention_app = false;
+			if ( isset( $usernames[ $user_id ] ) ) {
+				$mention_web = bb_web_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'web' );
+				$mention_app = bb_app_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'app' );
+			}
+
+			bp_notifications_update_meta( $notification->id, 'not_send_app', $mention_app );
+			bp_notifications_update_meta( $notification->id, 'not_send_web', $mention_web );
 		}
-
-		bp_notifications_update_meta( $notification->id, 'not_send_app', $mention_app );
-		bp_notifications_update_meta( $notification->id, 'not_send_web', $mention_web );
 	}
 }
 
