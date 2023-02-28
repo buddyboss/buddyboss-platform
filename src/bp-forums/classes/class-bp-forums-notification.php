@@ -885,6 +885,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+			$send_mail         = true;
+			$send_notification = true;
 
 			if (
 				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
@@ -897,12 +899,23 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					)
 				)
 			) {
-				continue;
+				$send_notification = false;
+				$send_mail         = false;
+			}
+
+			if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
+				if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+					$send_mail = false;
+				}
+			}
+
+			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+				$send_mail = false;
 			}
 
 			// Bail if member opted out of receiving this email.
 			// Check the sender is blocked by recipient or not.
-			if ( true === bb_is_notification_enabled( $user_id, $type_key ) ) {
+			if ( true === $send_mail ) {
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
 					'notification_type' => 'bbp-new-forum-topic',
@@ -914,7 +927,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $email_tokens );
 			}
 
-			if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+			if ( ! bb_enabled_legacy_email_preference() && true === $send_notification && bp_is_active( 'notifications' ) ) {
+				add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 				bp_notifications_add_notification(
 					array(
 						'user_id'           => $user_id,
@@ -926,6 +940,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						'is_new'            => 1,
 					)
 				);
+				remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			}
 		}
 

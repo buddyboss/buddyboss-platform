@@ -1713,6 +1713,7 @@ function bb_notification_after_save_meta( $notification ) {
 				$notification->component_action,
 				array(
 					'bb_forums_subscribed_reply',
+					'bb_forums_subscribed_discussion'
 				),
 				true
 			)
@@ -1720,6 +1721,9 @@ function bb_notification_after_save_meta( $notification ) {
 			$content = '';
 			if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
 				$content = bbp_kses_data( bbp_get_reply_content( $notification->item_id ) );
+			}
+			if ( 'bb_forums_subscribed_discussion' === $notification->component_action ) {
+				$content = bbp_kses_data( bbp_get_topic_content( $notification->item_id ) );
 			}
 			$usernames = ! empty( $content ) ? bp_find_mentions_by_at_sign( array(), $content ) : array();
 		}

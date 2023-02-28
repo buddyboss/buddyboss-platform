@@ -1050,7 +1050,15 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
 
-	$usernames = isset( $r['data']['email_tokens']['tokens']['reply.content'] ) && ! empty( $r['data']['email_tokens']['tokens']['reply.content'] ) ? bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] ) : array();
+	$usernames = array();
+	if ( isset( $r['data']['email_tokens']['tokens'] ) ) {
+		if ( ! empty( $r['data']['email_tokens']['tokens']['reply.content'] ) ) {
+			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] );
+		}
+		if ( ! empty( $r['data']['email_tokens']['tokens']['discussion.content'] ) ) {
+			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['discussion.content'] );
+		}
+	}
 
 	$parse_args = array(
 		'type'              => $type,
