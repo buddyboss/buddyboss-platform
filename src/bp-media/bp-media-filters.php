@@ -398,6 +398,11 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	$actions          = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
 	$moderated_medias = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 
+	if ( ! empty( $medias ) ) {
+		$media_order = array_column( $medias, 'menu_order' );
+		array_multisort( $media_order, SORT_ASC, $medias );
+	}
+
 	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_medias ) ) {
 		$moderated_medias = explode( ',', $moderated_medias );
 		foreach ( $moderated_medias as $media_id ) {
@@ -472,7 +477,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 						$media_ids[] = $media_id;
 					}
 					if ( ! in_array( $media_id, $media_ids ) ) {
-						bp_media_delete( array( 'id' => $media_id ) );
+						bp_media_delete( array( 'id' => $media_id ), 'activity' );
 					}
 				}
 
@@ -596,8 +601,8 @@ function bp_media_update_media_privacy( $album ) {
 				$media_obj->privacy = $privacy;
 				$media_obj->save();
 
-				$attachment_id    = $media_obj->attachment_id;
-				$main_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+				$attachment_id          = $media_obj->attachment_id;
+				$main_activity_id       = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
 				$video_main_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 
 				if ( ! empty( $main_activity_id ) ) {
@@ -2683,6 +2688,7 @@ function bp_media_activity_append_gif( $content, $activity ) {
 function bb_setup_attachment_media_preview() {
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]', 'top' );
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]&size=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]&size=$matches[2]&media-thread-id=$matches[3]', 'top' );
 }
 
 /**
@@ -2697,6 +2703,10 @@ function bb_setup_attachment_media_preview() {
 function bb_setup_attachment_media_preview_query( $query_vars ) {
 	$query_vars[] = 'media-attachment-id';
 	$query_vars[] = 'size';
+
+	if ( bp_is_active( 'messages' ) ) {
+		$query_vars[] = 'media-thread-id';
+	}
 
 	return $query_vars;
 }
