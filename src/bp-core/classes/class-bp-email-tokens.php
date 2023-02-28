@@ -1663,12 +1663,16 @@ class BP_Email_Tokens {
 	public function token__discussion_content( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
 
-		if ( empty( $formatted_tokens['discussion.content'] ) || empty( $formatted_tokens['discussion.id'] ) ) {
+		if ( empty( $formatted_tokens['discussion.id'] ) ) {
 			return $output;
 		}
 
 		if ( 'groups-new-discussion' === $bp_email->get( 'type' ) ) {
 			return $this->token__group_discussion_content( $bp_email, $formatted_tokens, $tokens );
+		}
+
+		if ( empty( $formatted_tokens['discussion.content'] ) ) {
+			return $output;
 		}
 
 		$settings = bp_email_get_appearance_settings();
