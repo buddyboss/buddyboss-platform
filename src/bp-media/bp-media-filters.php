@@ -647,6 +647,11 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		// save media.
 		$medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
 
+		if ( ! empty( $medias ) ) {
+			$media_order = array_column( $medias, 'menu_order' );
+			array_multisort( $media_order, SORT_ASC, $medias );
+		}
+
 		// fetch currently uploaded media ids.
 		$existing_media                = array();
 		$existing_media_ids            = get_post_meta( $post_id, 'bp_media_ids', true );
