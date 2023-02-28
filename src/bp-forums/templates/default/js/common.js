@@ -14,7 +14,7 @@ jQuery( document ).ready(
 				}
 
 				jQuery( element ).select2( {
-					dropdownParent: jQuery( element ).closest('.bb-modal'),
+					dropdownParent: ( jQuery( element ).closest('.bb-modal').length > 0 ? jQuery( element ).closest('.bb-modal') : jQuery( document.body ) ),
 					placeholder: jQuery( element ).attr( 'placeholder' ),
 					minimumInputLength: 1,
 					closeOnSelect: true,
@@ -202,7 +202,7 @@ jQuery( document ).ready(
 				if ( $tagsSelect.length ) {
 					$tagsSelect.select2( {
 						placeholder: $tagsSelect.attr( 'placeholder' ),
-						dropdownParent: $tagsSelect.closest('.bb-modal'),
+						dropdownParent: ( $tagsSelect.closest('.bb-modal').length > 0 ? $tagsSelect.closest('.bb-modal') : jQuery( document.body ) ),
 						minimumInputLength: 1,
 						closeOnSelect: true,
 						tags: true,
