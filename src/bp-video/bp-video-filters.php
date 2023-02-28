@@ -571,6 +571,11 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 		// save video.
 		$videos = json_decode( stripslashes( $_POST['bbp_video'] ), true ); // phpcs:ignore
 
+		if ( ! empty( $videos ) ) {
+			$video_order = array_column( $videos, 'menu_order' );
+			array_multisort( $video_order, SORT_ASC, $videos );
+		}
+
 		// fetch currently uploaded video ids.
 		$existing_video                = array();
 		$existing_video_ids            = get_post_meta( $post_id, 'bp_video_ids', true );
