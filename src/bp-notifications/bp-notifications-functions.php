@@ -1713,7 +1713,7 @@ function bb_notification_after_save_meta( $notification ) {
 				$notification->component_action,
 				array(
 					'bb_forums_subscribed_reply',
-					'bb_forums_subscribed_discussion'
+					'bb_forums_subscribed_discussion',
 				),
 				true
 			)
