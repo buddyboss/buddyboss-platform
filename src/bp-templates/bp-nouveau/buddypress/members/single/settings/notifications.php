@@ -8,6 +8,12 @@
  * @version 1.0.0
  */
 
+// Added this condition for theme backward compatibility.
+if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+	bp_get_template_part( 'members/single/settings/subscriptions' );
+	return;
+}
+
 bp_nouveau_member_hook( 'before', 'settings_template' );
 
 $data  = bb_core_notification_preferences_data();
@@ -20,6 +26,8 @@ if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
 ?>
 
 <h2 class="screen-heading email-settings-screen"><?php echo wp_kses_post( $data['screen_title'] ); ?></h2>
+
+<?php bp_get_template_part( 'members/single/parts/notification-subnav' ); ?>
 
 <p class="bp-help-text email-notifications-info">
 	<?php echo wp_kses_post( $data['screen_description'] ); ?>

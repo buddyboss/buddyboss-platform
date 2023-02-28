@@ -837,6 +837,10 @@ window.bp = window.bp || {};
 
 			// Following widget more button click.
 			$( document ).on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
+
+			// Accordion open/close event
+			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
+
 		},
 
 		/**
@@ -3172,6 +3176,23 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * [toggleAccordion description]
+		 * @return {[type]} [description]
+		 */
+		 toggleAccordion: function() {
+			var accordion = $( this ).closest( '.bb-accordion' );
+			if( accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded' ) == 'true' ) {
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'false' );
+				accordion.find( '.bb-icon-angle-up' ).removeClass( 'bb-icon-angle-up' ).addClass( 'bb-icon-angle-down' );
+			} else {
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'true' );
+				accordion.find( '.bb-icon-angle-down' ).removeClass( 'bb-icon-angle-down' ).addClass( 'bb-icon-angle-up' );
+			}
+			accordion.toggleClass('is_closed');
+			accordion.find( '.bb-accordion_panel' ).slideToggle();
+		},
+
+		/**
 		 *  Make Medium Editor buttons wrap.
 		 *
 		 *  @param  {JQuery node} editorWrap The jQuery node.
@@ -3244,7 +3265,6 @@ window.bp = window.bp || {};
 				'resize',
 				function() { // Attach event once only.
 					editorWrap.removeClass( 'wrappingInitialised' ); // Remove class to run trough again as screen has resized.
-					$( editorWrap ).find( '.medium-editor-action-more-button' ).unbind( 'click' );
 					$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind( 'click' );
 				}
 			);
@@ -3351,6 +3371,7 @@ window.bp = window.bp || {};
 							$( '.main-notification-settings' ).find( 'td' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 						}
+						bp.Nouveau.NotificationMobileDropdown( $( this ).closest( '#settings-form' ).find( 'tr:not( .notification_heading )' ) );
 					});
 				})(i);
 				/* jshint ignore:end */
@@ -3375,6 +3396,9 @@ window.bp = window.bp || {};
 						var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
 						available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
 					}
+					if ( $( this ).hasClass( 'disabled' ) ) {
+						return;
+					}
 					if ( ! $( this ).find( 'input:checked' ).length ) {
 						return;
 					}
@@ -3382,7 +3406,11 @@ window.bp = window.bp || {};
 					allInputsChecked++;
 				} );
 				if ( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
-					selected_text = textAll;
+					if ( $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length == 1 ) {
+						selected_text = selected_text;
+					} else {
+						selected_text = textAll;
+					}
 				} else {
 					selected_text = selected_text === '' ? textNone : selected_text;
 				}
@@ -3436,8 +3464,9 @@ window.bp = window.bp || {};
 		},
 
 		userPresenceStatus: function() {
-
-			var idle_interval = parseInt( BB_Nouveau_Presence.presence_time_span ) * 1000;
+		 	// Active user on page load.
+			window.bb_is_user_active = true;
+			var idle_interval = parseInt( BB_Nouveau_Presence.idle_inactive_span ) * 1000;
 
 			// setup the idle time user check.
 			bp.Nouveau.userPresenceChecker( idle_interval );
@@ -3464,35 +3493,44 @@ window.bp = window.bp || {};
 					bp.Nouveau.updateUsersPresence( data.users_presence );
 				} );
 			} else {
-				setInterval( function () {
-					var params = {};
+				setInterval(
+					function () {
+						var params = {};
 
-					if (
-						'undefined' !== typeof window.bb_is_user_active &&
-						true === window.bb_is_user_active
-					) {
-						params.ids = bp.Nouveau.getPageUserIDs();
-					}
-
-					$.ajax(
-						{
-							type: 'POST',
-							url: '/wp-json/buddyboss/v1/members/presence',
-							data: params,
-							beforeSend: function ( xhr ) {
-								xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
-							},
-							success: function ( data ) {
-								// Check for our data, and use it.
-								if ( ! data ) {
-									return;
-								}
-
-								bp.Nouveau.updateUsersPresence( data );
-							}
+						if (
+							'undefined' !== typeof window.bb_is_user_active &&
+							true === window.bb_is_user_active
+						) {
+							params.ids = bp.Nouveau.getPageUserIDs();
 						}
-					);
-				}, parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 ); // 1 min.
+
+						if (
+							'undefined' !== typeof params.ids &&
+							'undefined' !== typeof params.ids.length &&
+							0 < params.ids.length
+						) {
+							$.ajax(
+								{
+									type: 'POST',
+									url: '/wp-json/buddyboss/v1/members/presence',
+									data: params,
+									beforeSend: function ( xhr ) {
+										xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
+									},
+									success: function ( data ) {
+										// Check for our data, and use it.
+										if ( ! data ) {
+											return;
+										}
+
+										bp.Nouveau.updateUsersPresence( data );
+									}
+								}
+							);
+						}
+					},
+					parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 // 1 min.
+				);
 			}
 		},
 

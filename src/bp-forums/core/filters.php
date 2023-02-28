@@ -255,6 +255,10 @@ add_filter( 'bbp_make_clickable', 'bbp_make_mentions_clickable', 8 ); // @jjj
 // Search forum discussion with tags.
 add_filter( 'posts_where', 'bb_forum_search_by_topic_tags', 10, 2 );
 
+// Remove deleted members link from mention for topic/reply.
+add_filter( 'bbp_get_topic_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bbp_get_reply_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
 /** Deprecated ****************************************************************/
 
 /**
@@ -359,3 +363,36 @@ function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 
 	return $where;
 }
+
+/**
+ * Fires when a forum/topic is transitioned from one status to another.
+ *
+ * @since 2.2.6
+ *
+ * @param string  $new_status New post status.
+ * @param string  $old_status Old post status.
+ * @param WP_Post $post       Post object.
+ */
+function bb_forums_update_subscription_status( $new_status, $old_status, $post ) {
+	if ( $new_status !== $old_status && ! empty( $post->post_type ) && in_array( $post->post_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ), true ) ) {
+
+		$blog_id = 0;
+		if ( is_multisite() ) {
+			$blog_id = get_current_blog_id();
+		}
+
+		$subscription_status = 1;
+		if ( ! empty( $new_status ) && in_array( $new_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) {
+			$subscription_status = 0;
+		}
+
+		$subscription_type = 'topic';
+		if ( bbp_get_forum_post_type() === $post->post_type ) {
+			$subscription_type = 'forum';
+		}
+
+		bb_subscriptions_update_subscriptions_status( $subscription_type, $post->ID, $subscription_status, $blog_id );
+	}
+}
+
+add_action( 'transition_post_status', 'bb_forums_update_subscription_status', 999, 3 );

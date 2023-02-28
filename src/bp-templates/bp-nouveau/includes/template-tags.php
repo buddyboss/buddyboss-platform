@@ -824,12 +824,17 @@ function bp_nouveau_has_nav( $args = array() ) {
 		// Build the nav for the displayed user.
 	} elseif ( bp_is_user() ) {
 		$bp_nouveau->displayed_nav = 'personal';
+		$parent_slug               = bp_current_component();
 		$user_nav                  = buddypress()->members->nav;
+
+		if ( 'account_notifications' === $bp_nouveau->object_nav ) {
+			$parent_slug .= '_notifications';
+		}
 
 		if ( 'secondary' === $n['type'] ) {
 			$nav = $user_nav->get_secondary(
 				array(
-					'parent_slug'     => bp_current_component(),
+					'parent_slug'     => $parent_slug,
 					'user_has_access' => (bool) $n['user_has_access'],
 				)
 			);
@@ -2608,7 +2613,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo apply_filters( 'the_content', $get_terms->post_content );
+			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
@@ -2616,7 +2621,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'the_content', $get_privacy->post_content );
+			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
@@ -2640,7 +2645,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'the_content', $get_privacy->post_content );
+			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
@@ -2665,7 +2670,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo apply_filters( 'the_content', $get_terms->post_content );
+			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
