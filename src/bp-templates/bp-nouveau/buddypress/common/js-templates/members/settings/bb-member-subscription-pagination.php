@@ -52,7 +52,7 @@
 				}
 			}
 
-			links = links.sort();
+			links = links.sort( function( a, b ) { return a - b } );
 
 			if ( 0 < links.length ) {
 				for ( i = 0; i < links.length; i++ ) {
