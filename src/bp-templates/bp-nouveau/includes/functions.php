@@ -282,7 +282,10 @@ function bp_nouveau_wrapper( $args = array() ) {
 	$default_classes        = array( 'action' );
 	$r['container_classes'] = array_merge( $r['container_classes'], $default_classes );
 
-	if ( empty( $r['container'] ) || ! isset( $valid_containers[ $r['container'] ] ) || empty( $r['output'] ) ) {
+	if ( empty( $r['container'] ) && ! empty( $r['output'] ) ) {
+		printf( $r['output'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return;
+	} elseif ( empty( $r['container'] ) || ! isset( $valid_containers[ $r['container'] ] ) || empty( $r['output'] ) ) {
 		return;
 	}
 

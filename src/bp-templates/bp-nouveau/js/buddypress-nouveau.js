@@ -840,10 +840,6 @@ window.bp = window.bp || {};
 
 			// Accordion open/close event
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
-
-			// Show alert when change group forum.
-			$( document ).on( 'submit', 'body.single-item.groups.group-admin #group-settings-form', this.showAlertOnChangeGroupForum );
-
 		},
 
 		/**
@@ -1969,7 +1965,11 @@ window.bp = window.bp || {};
 			if ( nonceUrl ) {
 				nonce = self.getLinkParams( nonceUrl, '_wpnonce' );
 			} else {
-				nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				if ( 'undefined' === typeof target.prop( 'href' ) ) {
+					nonce = self.getLinkParams( target.attr( 'href' ), '_wpnonce' );
+				} else {
+					nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				}
 			}
 
 			// Unfortunately unlike groups.
@@ -2042,6 +2042,23 @@ window.bp = window.bp || {};
 							}
 						}
 
+						if (
+							'undefined' !== typeof response.data.is_group_subscription &&
+							true === response.data.is_group_subscription &&
+							'undefined' !== typeof response.data.feedback
+						) {
+							$( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + response.data.feedback + '</div>',
+									'error',
+									null,
+									true
+								]
+							);
+						}
+
 					} else {
 						// Specific cases for groups.
 						if ( 'groups' === object ) {
@@ -2053,6 +2070,23 @@ window.bp = window.bp || {};
 								} else {
 									return window.location.reload();
 								}
+							}
+
+							if (
+								'undefined' !== typeof response.data.is_group_subscription &&
+								true === response.data.is_group_subscription &&
+								'undefined' !== typeof response.data.feedback
+							) {
+								$( document ).trigger(
+									'bb_trigger_toast_message',
+									[
+										'',
+										'<div>' + response.data.feedback + '</div>',
+										'info',
+										null,
+										true
+									]
+								);
 							}
 						}
 
@@ -2128,6 +2162,33 @@ window.bp = window.bp || {};
 						target.parent().replaceWith( response.data.contents );
 					}
 				}
+			).fail(
+				function () {
+
+					if ( ['unsubscribe', 'subscribe'].includes( action ) ) {
+						var title = $( target ).data( 'bb-group-name' );
+
+						if ( 25 < title.length ) {
+							title = title.substring( 0, 25 ) + '...';
+						}
+
+						var display_error = '<div>' + BP_Nouveau.subscriptions.error + '<strong>' + title + '</strong>.</div>';
+						if ( 'subscribe' === action ) {
+							display_error = '<div>' + BP_Nouveau.subscriptions.subscribe_error + '<strong>' + title + '</strong></div>';
+						}
+						jQuery( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								display_error,
+								'error',
+								null,
+								true
+							]
+						);
+					}
+					target.removeClass( 'pending loading' );
+				}
 			);
 		},
 
@@ -2174,6 +2235,17 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button' );
+					target.addClass( 'bp-toggle-action-button-hover' );
+					return false;
+				}
 
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
@@ -2202,6 +2274,18 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget );
 
 			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
+
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
+					target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
+					return false;
+				}
 
 				// support for BuddyBoss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
@@ -3591,46 +3675,6 @@ window.bp = window.bp || {};
 				}, inactive_timeout );
 				window.bb_is_user_active = true;
 			};
-		},
-
-		showAlertOnChangeGroupForum: function(e) {
-			if ( 0 < $( '#bbp_group_forum_id' ).length ) {
-				var connected_forum_id = parseInt( $( '#bbp_group_forum_id' ).val() );
-				if (
-					'undefined' !== typeof BP_Nouveau.groups.params.group_connected_forum_id &&
-					'undefined' !== BP_Nouveau.groups.strings.warn_on_attach_forum &&
-					! isNaN( connected_forum_id ) &&
-					parseInt( BP_Nouveau.groups.params.group_connected_forum_id ) !== connected_forum_id
-				) {
-					e.preventDefault();
-					$( '<div>' + BP_Nouveau.groups.strings.warn_on_attach_forum + '<div>' ).dialog(
-						{
-							dialogClass: 'group-forum-confirmation',
-							resizable: false,
-							height: 'auto',
-							width: 400,
-							modal: true,
-							buttons: [
-							{
-								text: BP_Nouveau.groups.strings.confirm_button,
-								click: function() {
-									$( this ).dialog( 'close' );
-									$( '#group-settings-form' )[ 0 ].submit();
-								}
-							},
-							{
-								text: BP_Nouveau.groups.strings.cancel_button,
-								click: function() {
-									$( this ).dialog( 'close' );
-									e.preventDefault();
-									return false;
-								}
-							}]
-						}
-					);
-					$( '.group-forum-confirmation .ui-dialog-titlebar' ).addClass( 'bp-hide' );
-				}
-			}
 		},
 
 	};
