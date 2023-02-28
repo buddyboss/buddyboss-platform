@@ -1083,6 +1083,8 @@ function bb_notification_avatar() {
 
 	switch ( $component_action ) {
 		case 'bb_groups_new_request':
+		case 'bb_groups_subscribed_discussion':
+		case 'bb_groups_subscribed_activity':
 			if ( ! empty( $notification->secondary_item_id ) ) {
 				$item_id = $notification->secondary_item_id;
 				$object  = 'user';
