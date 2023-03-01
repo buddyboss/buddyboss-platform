@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.4.0
  */
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 class BP_Document_Template {
 
 	/**

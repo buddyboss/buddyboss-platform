@@ -18,7 +18,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 	 *
 	 * @since BuddyPress 1.6.0
 	 */
-	#[AllowDynamicProperties]
+	#[\AllowDynamicProperties]
 	class BP_Admin {
 
 		/** Directory *************************************************************/

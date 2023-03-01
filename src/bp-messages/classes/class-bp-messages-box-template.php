@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Message Box Template Class
  */
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 class BP_Messages_Box_Template {
 
 	/**

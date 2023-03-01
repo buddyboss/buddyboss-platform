@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
-	#[AllowDynamicProperties]
+	#[\AllowDynamicProperties]
 	abstract class BP_Admin_Tab {
 
 		/**

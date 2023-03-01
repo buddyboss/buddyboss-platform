@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 class BP_Media_Template {
 
 	/**

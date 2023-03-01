@@ -19,7 +19,7 @@ use Buddyboss\LearndashIntegration\Learndash\Core as LearndashCore;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 /**
  * COre file of the plugin
  *
