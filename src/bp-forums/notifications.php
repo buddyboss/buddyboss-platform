@@ -674,10 +674,12 @@ function bb_mark_modern_notifications( $success, $user_id, $topic_id ) {
 	}
 
 	if ( ! empty( $topic_id ) ) {
+		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $topic_id ), bbp_get_component_name(), 'bb_new_mention' );
 		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $topic_id ), bbp_get_component_name(), 'bb_forums_subscribed_discussion' );
 	}
 
 	if ( ! empty( $_GET['reply_id'] ) ) {
+		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bb_new_mention' );
 		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bb_forums_subscribed_reply' );
 	}
 }
