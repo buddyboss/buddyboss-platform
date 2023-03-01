@@ -2771,7 +2771,7 @@ class BP_Email_Tokens {
 										?>
 										<tr>
 											<td>
-												<div class="bb-activity-media-wrap" style="padding: 5px 0 10px;">
+												<div style="padding: 5px 0 10px;">
 												<?php
 												while ( bp_document() ) {
 													bp_the_document();
