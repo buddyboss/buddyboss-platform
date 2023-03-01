@@ -353,9 +353,9 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 
 	$post_video       = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	$post_edit        = filter_input( INPUT_POST, 'edit', FILTER_SANITIZE_STRING );
-	$post_action      = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
-	$post_privacy     = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$post_edit        = bb_filter_input_string( INPUT_POST, 'edit' );
+	$post_action      = bb_filter_input_string( INPUT_POST, 'action' );
+	$post_privacy     = bb_filter_input_string( INPUT_POST, 'privacy' );
 	$moderated_videos = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
 	if ( ! empty( $post_video ) ) {
@@ -1753,7 +1753,7 @@ function bb_video_safari_popup_video_play( $is_ios ) {
 	$browser = bb_core_get_browser();
 	if ( false === $is_ios && isset( $browser ) ) {
 		$is_safari = stripos( $browser['name'], 'Safari' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		$action    = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+		$action    = bb_filter_input_string( INPUT_POST, 'action' );
 
 		if ( $is_safari && 'video_get_activity' === $action ) {
 			$is_ios = true;
