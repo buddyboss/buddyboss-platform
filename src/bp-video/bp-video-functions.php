@@ -619,7 +619,7 @@ function bp_video_add( $args = '' ) {
 		}
 	}
 
-	$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$action = bb_filter_input_string( INPUT_POST, 'action' );
 	if ( isset( $action ) && 'groups_get_group_members_send_message' === $action ) {
 		$video->privacy = 'message';
 	}
