@@ -441,7 +441,7 @@ function bp_video_get( $args = '' ) {
 			'sort'             => 'DESC',       // sort ASC or DESC.
 			'order_by'         => false,        // order by.
 
-			'scope'            => false,
+			'scope'            => false,        // public, friends, groups, personal
 
 			// want to limit the query.
 			'user_id'          => false,
@@ -449,10 +449,11 @@ function bp_video_get( $args = '' ) {
 			'album_id'         => false,
 			'group_id'         => false,
 			'search_terms'     => false,        // Pass search terms as a string.
-			'privacy'          => false,        // privacy of video.
+			'privacy'          => false,        // privacy of video - public, loggedin, onlyme, friends, grouponly, message
 			'exclude'          => false,        // Comma-separated list of activity IDs to exclude.
+			'in'               => false,        // Comma-separated list of activity IDs to include.
 			'count_total'      => false,
-			'moderation_query' => true,         // Filter for exclude moderation query.
+			'moderation_query' => true,         // Filter to include moderation query.
 		),
 		'video_get'
 	);
@@ -472,6 +473,7 @@ function bp_video_get( $args = '' ) {
 			'scope'            => $r['scope'],
 			'privacy'          => $r['privacy'],
 			'exclude'          => $r['exclude'],
+			'in'               => $r['in'],
 			'count_total'      => $r['count_total'],
 			'fields'           => $r['fields'],
 			'moderation_query' => $r['moderation_query'],
