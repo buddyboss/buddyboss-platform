@@ -2903,7 +2903,7 @@ function bp_nouveau_ajax_hide_thread() {
  * Function which get next recipients list for block member in message section and message header.
  */
 function bb_nouveau_ajax_recipient_list_for_blocks() {
-	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+	$post_data = bb_filter_input_string( INPUT_POST, 'post_data', array( FILTER_REQUIRE_ARRAY ) );
 	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
 
 	if ( ! isset( $post_data['thread_id'] ) ) {
@@ -2997,7 +2997,7 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
  * @return string|Object A JSON object containing html with success data.
  */
 function bb_nouveau_ajax_moderated_recipient_list() {
-	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+	$post_data = bb_filter_input_string( INPUT_POST, 'post_data', array( FILTER_REQUIRE_ARRAY ) );
 	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
 	if ( ! isset( $post_data['thread_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
@@ -3204,7 +3204,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
  * @return void|string|Object A JSON object containing html with success data.
  */
 function bb_nouveau_ajax_left_join_members_list() {
-	$post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+	$post_data = bb_filter_input_string( INPUT_POST, 'post_data', array( FILTER_REQUIRE_ARRAY ) );
 	if ( ! isset( $post_data['message_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_left_join_members_list', esc_html__( 'Missing message id.', 'buddyboss' ) );
 		wp_send_json_error( $response );
