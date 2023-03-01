@@ -8418,16 +8418,6 @@ if ( ! function_exists( 'bb_filter_input_string' ) ) {
 			return $string;
 		}
 
-		if ( is_string( $string ) ) {
-			/**
-			 * FILTER_SANITIZE_STRING doesn't behavior the same as strip_tags function.
-			 * strip_tags allows less than symbol inferred from context, FILTER_SANITIZE_STRING strips regardless.
-			 *
-			 * https://www.php.net/manual/en/filter.filters.sanitize.php#118186
-			 */
-			$string = preg_replace( "/(<)(\s|\d).*/", '', $string );
-		}
-
 		/**
 		 * This differs from strip_tags() because it removes the contents of
 		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
