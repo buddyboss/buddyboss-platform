@@ -923,7 +923,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						'class'   => '',
 					)
 				),
-				ENT_QUOTES
+				ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401
 			);
 
 			$name = bp_core_get_user_displayname( $member->ID );

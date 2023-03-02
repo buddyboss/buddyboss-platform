@@ -215,7 +215,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 					'html'    => false,
 				)
 			),
-			ENT_QUOTES
+			ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401
 		),
 	);
 
@@ -248,7 +248,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 							'class'   => $class,
 						)
 					),
-					ENT_QUOTES
+					ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401
 				),
 				'user_link' => bp_core_get_userlink( $inviter_id, false, true ),
 				'user_name' => bp_core_get_username( $inviter_id ),
