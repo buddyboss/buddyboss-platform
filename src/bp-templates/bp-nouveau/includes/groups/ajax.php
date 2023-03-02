@@ -1080,7 +1080,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	$wp_nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	$wp_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 
 	if ( empty( $wp_nonce ) || ! wp_verify_nonce( $wp_nonce, 'send_messages_users' ) ) {
 		wp_send_json_error( $response );
@@ -1144,8 +1144,8 @@ function bp_nouveau_ajax_groups_send_message() {
 	}
 
 	$group         = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ); // Group id.
-	$message_users = filter_input( INPUT_POST, 'users', FILTER_SANITIZE_STRING ); // all - individual.
-	$message_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ); // open - private.
+	$message_users = bb_filter_input_string( INPUT_POST, 'users' ); // all - individual.
+	$message_type  = bb_filter_input_string( INPUT_POST, 'type' ); // open - private.
 
 	// Get Members list if "All Group Members" selected.
 	if ( 'all' === $message_users ) {

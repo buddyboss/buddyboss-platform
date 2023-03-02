@@ -113,14 +113,14 @@ function bp_moderation_content_report() {
 		'message' => '',
 	);
 
-	$nonce     = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$nonce     = bb_filter_input_string( INPUT_POST, '_wpnonce' );
 	$item_id   = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
-	$item_type = filter_input( INPUT_POST, 'content_type', FILTER_SANITIZE_STRING );
-	$category  = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
+	$item_type = bb_filter_input_string( INPUT_POST, 'content_type' );
+	$category  = bb_filter_input_string( INPUT_POST, 'report_category' );
 	if ( 'other' !== $category ) {
 		$category = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_NUMBER_INT );
 	}
-	$item_note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
+	$item_note = bb_filter_input_string( INPUT_POST, 'note' );
 
 	if ( empty( $item_id ) || empty( $item_type ) || empty( $category ) ) {
 		$response['message'] = new WP_Error(
@@ -238,7 +238,7 @@ function bp_moderation_block_member() {
 		'redirect' => '',
 	);
 
-	$nonce   = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$nonce   = bb_filter_input_string( INPUT_POST, '_wpnonce' );
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) ) {
@@ -337,7 +337,7 @@ function bp_moderation_unblock_user() {
 		'message' => '',
 	);
 
-	$nonce   = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	$nonce   = bb_filter_input_string( INPUT_POST, 'nonce' );
 	$item_id = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) ) {
@@ -394,9 +394,9 @@ function bp_moderation_content_actions_request() {
 		'message' => '',
 	);
 
-	$nonce      = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
-	$item_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-	$sub_action = filter_input( INPUT_POST, 'sub_action', FILTER_SANITIZE_STRING );
+	$nonce      = bb_filter_input_string( INPUT_POST, 'nonce' );
+	$item_type  = bb_filter_input_string( INPUT_POST, 'type' );
+	$sub_action = bb_filter_input_string( INPUT_POST, 'sub_action' );
 	$item_id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
@@ -460,9 +460,9 @@ function bp_moderation_user_actions_request() {
 		'message' => '',
 	);
 
-	$nonce      = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
-	$item_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-	$sub_action = filter_input( INPUT_POST, 'sub_action', FILTER_SANITIZE_STRING );
+	$nonce      = bb_filter_input_string( INPUT_POST, 'nonce' );
+	$item_type  = bb_filter_input_string( INPUT_POST, 'type' );
+	$sub_action = bb_filter_input_string( INPUT_POST, 'sub_action' );
 	$item_id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
