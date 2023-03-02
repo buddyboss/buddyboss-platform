@@ -90,9 +90,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function register_tab() {
-			global ${$this->global_tabs_var};
+			global $global_tabs_var;
+			$global_tabs_var = $this->global_tabs_var;
 
-			${$this->global_tabs_var}[ $this->tab_name ] = $this;
+			$global_tabs_var[ $this->tab_name ] = $this;
+
+			$this->global_tabs_var = $global_tabs_var;
 		}
 
 		public function register_hook() {
