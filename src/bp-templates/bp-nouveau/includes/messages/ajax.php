@@ -167,7 +167,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	 *
 	 * @return bool True if message is valid, false otherwise.
 	 */
-	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES ) ) ), $content, $_POST );
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $content, $_POST );
 
 	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
@@ -497,7 +497,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	 *
 	 * @return bool True if message is valid, false otherwise.
 	 */
-	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES ) ) ), $content, $_POST );
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $content, $_POST );
 
 	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Please add some content to your message.', 'buddyboss' );
@@ -931,7 +931,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'message_id'                      => (int) $last_message_id,
 			'subject'                         => wp_strip_all_tags( bp_get_message_thread_subject() ),
 			'group_avatar'                    => $group_avatar,
-			'group_name'                      => html_entity_decode( $group_name, ENT_QUOTES ),
+			'group_name'                      => html_entity_decode( $group_name, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'is_deleted'                      => $is_deleted_group,
 			'is_group'                        => ! empty( $group_id ) ? true : false,
 			'is_group_thread'                 => $is_group_thread,
@@ -2116,7 +2116,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'started_date'              => bb_get_thread_start_date( $thread_template->thread->first_message_date, false ),
 		'started_date_mysql'        => $thread_template->thread->first_message_date,
 		'group_id'                  => $group_id,
-		'group_name'                => html_entity_decode( ucwords( $group_name ), ENT_QUOTES ),
+		'group_name'                => html_entity_decode( ucwords( $group_name ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 		'is_group_thread'           => $is_group_thread,
 		'is_deleted'                => $is_deleted_group,
 		'group_avatar'              => $group_avatar,

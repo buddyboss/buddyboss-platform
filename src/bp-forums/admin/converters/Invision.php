@@ -522,7 +522,7 @@ class Invision extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title, ENT_QUOTES ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '';
 		return $title;
 	}
 
@@ -569,7 +569,7 @@ class Invision extends BBP_Converter_Base {
 
 		// Strips Invision custom HTML first from $field before parsing $field to parser.php
 		$invision_markup = $field;
-		$invision_markup = html_entity_decode( $invision_markup, ENT_QUOTES );
+		$invision_markup = html_entity_decode( $invision_markup, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 		// Replace '[html]' with '<pre><code>'
 		$invision_markup = preg_replace( '/\[html\]/', '<pre><code>', $invision_markup );
@@ -643,6 +643,6 @@ class Invision extends BBP_Converter_Base {
 		$bbcode                 = BBCode::getInstance();
 		$bbcode->enable_smileys = false;
 		$bbcode->smiley_regex   = false;
-		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES );
+		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
 }
