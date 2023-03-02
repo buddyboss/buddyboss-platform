@@ -390,8 +390,8 @@ function bp_moderation_admin() {
 	}
 
 	// Decide whether to load the index or edit screen.
+	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
 	$doaction                = bb_filter_input_string( INPUT_GET, 'action' );
-	$moderation_id           = bb_filter_input_string( INPUT_GET, 'mid' );
 	$moderation_content_type = bb_filter_input_string( INPUT_GET, 'content_type' );
 
 	// Display the single activity edit screen.
