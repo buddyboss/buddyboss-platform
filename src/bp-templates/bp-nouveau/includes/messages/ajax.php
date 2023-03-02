@@ -2928,7 +2928,7 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 
 	$member_action = '';
 	if ( isset( $post_data['member_action'] ) ) {
-		$member_action = filter_var( $post_data['member_action'], FILTER_SANITIZE_STRING );
+		$member_action = bb_filter_var_string( $post_data['member_action'], FILTER_SANITIZE_STRING );
 	}
 
 	if ( 'report' === $member_action ) {
@@ -3019,7 +3019,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 
 	$member_action = '';
 	if ( isset( $post_data['member_action'] ) ) {
-		$member_action = filter_var( $post_data['member_action'], FILTER_SANITIZE_STRING );
+		$member_action = bb_filter_var_string( $post_data['member_action'], FILTER_SANITIZE_STRING );
 	}
 
 	if ( 'report' === $member_action ) {
