@@ -1414,7 +1414,7 @@ class BBCode {
 		}
 		$string    = preg_replace_callback( '~&#x([0-9a-f]+);~i', array( $this, '_UnHTMLEncode_chr_callback' ), $string );
 		$string    = preg_replace_callback( '~&#([0-9]+);~', array( $this, '_UnHTMLEncode_chr_hexdec_callback' ), $string );
-		$trans_tbl = get_html_translation_table( HTML_ENTITIES );
+		$trans_tbl = get_html_translation_table( HTML_ENTITIES, ENT_QUOTES );
 		$trans_tbl = array_flip( $trans_tbl );
 		return strtr( $string, $trans_tbl );
 	}
