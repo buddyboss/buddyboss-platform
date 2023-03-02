@@ -405,6 +405,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19551 ) {
 			bb_update_to_2_2_8();
 		}
+
+		if ( $raw_db_version < 19581 ) {
+			bb_update_to_2_2_9();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2512,4 +2516,35 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 	// Call recursive to finish update for all users.
 	$paged++;
 	bb_create_background_member_friends_count( $paged );
+}
+
+/**
+ * Migration for the activity widget based on the relevant feed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_9() {
+
+	if ( bp_is_relevant_feed_enabled() ) {
+		$settings = get_option( 'widget_bp_latest_activities' );
+		if ( ! empty( $settings ) ) {
+			foreach ( $settings as $k => $widget_data ) {
+				if ( ! is_int( $k ) ) {
+					continue;
+				}
+
+				if ( ! empty( $widget_data ) ) {
+					if ( ! isset( $widget_data['relevant'] ) ) {
+						$widget_data['relevant'] = (bool) bp_is_relevant_feed_enabled();
+					}
+
+					$settings[ $k ] = $widget_data;
+				}
+			}
+		}
+
+		update_option( 'widget_bp_latest_activities', $settings );
+	}
 }
