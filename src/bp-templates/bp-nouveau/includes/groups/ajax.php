@@ -922,7 +922,8 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						'type'    => 'thumb',
 						'class'   => '',
 					)
-				)
+				),
+				ENT_QUOTES
 			);
 
 			$name = bp_core_get_user_displayname( $member->ID );
