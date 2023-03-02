@@ -137,7 +137,7 @@ function bp_groups_filter_kses( $content = '' ) {
 	$tags = apply_filters( 'bp_groups_filter_kses', $allowed_tags );
 
 	// Convert HTML entities to their corresponding characters.
-	$content = html_entity_decode( $content );
+	$content = html_entity_decode( $content, ENT_QUOTES );
 
 	// Return KSES'ed content, allowing the above tags.
 	return wp_kses( $content, $tags );

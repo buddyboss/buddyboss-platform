@@ -1000,7 +1000,7 @@ function bp_avatar_ajax_delete() {
 		}
 
 		$return = array(
-			'avatar'        => html_entity_decode( $avatar ),
+			'avatar'        => html_entity_decode( $avatar, ENT_QUOTES ),
 			'feedback_code' => 4,
 			'item_id'       => $avatar_data['item_id'],
 		);

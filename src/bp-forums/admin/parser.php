@@ -1410,7 +1410,7 @@ class BBCode {
 	}
 	function UnHTMLEncode( $string ) {
 		if ( function_exists( 'html_entity_decode' ) ) {
-			return html_entity_decode( $string );
+			return html_entity_decode( $string, ENT_QUOTES );
 		}
 		$string    = preg_replace_callback( '~&#x([0-9a-f]+);~i', array( $this, '_UnHTMLEncode_chr_callback' ), $string );
 		$string    = preg_replace_callback( '~&#([0-9]+);~', array( $this, '_UnHTMLEncode_chr_hexdec_callback' ), $string );
