@@ -1238,7 +1238,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'name'              => bp_core_get_user_displayname( $activity->user_id ),
 			'component'         => $activity->component,
 			'content'           => array(
-				'raw'      => $activity->content,
+				'raw'      => bb_rest_raw_content( $activity->content ),
 				'rendered' => $this->render_item( $activity ),
 			),
 			'date'              => bp_rest_prepare_date_response( $activity->date_recorded ),

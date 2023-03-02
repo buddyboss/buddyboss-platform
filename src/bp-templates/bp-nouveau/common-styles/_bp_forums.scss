@@ -862,6 +862,18 @@ p.form-allowed-tags {
 			margin-top: 15px;
 		}
 
+		p:empty {
+			min-height: 1em;
+		}
+
+	}
+
+}
+
+ul.bbp-lead-topic .item-description {
+
+	p:empty {
+		min-height: 1em;
 	}
 
 }
@@ -991,7 +1003,6 @@ fieldset div.avatar {
 			.bb-reply-lable {
 				color: #7f868f;
 				font-weight: 400;
-				margin-right: 5px;
 			}
 
 			a {
