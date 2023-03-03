@@ -430,7 +430,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 	$params['class'] = apply_filters( 'bp_core_avatar_class', $params['class'], $params['item_id'], $params['object'], $params );
 
 	// Use an alias to leave the param unchanged.
-	$avatar_classes = $params['class'];
+	$avatar_classes = ! empty( $params['class'] ) ? $params['class'] : array();
 	if ( ! is_array( $avatar_classes ) ) {
 		$avatar_classes = explode( ' ', $avatar_classes );
 	}
