@@ -2646,7 +2646,7 @@ function bbp_get_allowed_tags() {
 		$allowed .= '> ';
 	}
 
-	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed, ENT_QUOTES ) );
+	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 }
 
 /** Errors & Messages *********************************************************/
