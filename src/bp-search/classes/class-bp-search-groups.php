@@ -68,7 +68,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			global $wpdb, $bp;
 			$query_placeholder = array();
 
-			$search_term = htmlspecialchars( $search_term );
+			$search_term = htmlspecialchars( $search_term, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 			$sql['select'] = 'SELECT';
 
