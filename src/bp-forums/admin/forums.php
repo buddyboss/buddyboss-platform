@@ -81,6 +81,9 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			// Set forum states
 			add_filter( 'display_post_states', array( $this, 'bbp_set_hidden_forum_states' ), 10, 2 );
 
+			// Set forum visibility/status
+			add_filter( 'wp_insert_post_data', array( $this, 'bb_forum_filter_post_staus' ), 10, 3 );
+
 			// Filter post parent for forum type post.
 			add_filter( 'wp_insert_post_parent', array( $this, 'forum_parent' ), 10, 3 );
 		}
@@ -691,6 +694,30 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 
 			$forum = bbp_get_forum( $post_ID );
 			return $forum->post_parent;
+		}
+
+		/**
+		 * Set post status from parent forum if exist.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $data submited post data.
+		 * @param array $postarr submited sanitized post data.
+		 * @param array $unsanitized_postarr submited unsanitized post data.
+		 *
+		 * @return array
+		 */
+		public function bb_forum_filter_post_staus( $data, $postarr, $unsanitized_postarr ) {
+			if ( bbp_get_forum_post_type() !== $data['post_type'] ) {
+				return $data;
+			}
+			if ( ! empty( $data['post_parent'] ) ) {
+				$forum = bbp_get_forum( $data['post_parent'] );
+				if ( ! empty( $forum ) ) {
+					$data['post_status'] = $forum->post_status;
+				}
+			}
+			return $data;
 		}
 	}
 endif; // class_exists check
