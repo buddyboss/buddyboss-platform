@@ -881,7 +881,7 @@ class BBCodeLibrary {
 		}
 		$email = is_string( $default ) ? $default : $bbcode->UnHTMLEncode( strip_tags( $content ) );
 		if ( $bbcode->IsValidEmail( $email ) ) {
-			return '<a href="mailto:' . htmlspecialchars( $email ) . '" class="bbcode_email">' . $content . '</a>';
+			return '<a href="mailto:' . htmlspecialchars( $email, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" class="bbcode_email">' . $content . '</a>';
 		} else {
 			return htmlspecialchars( $params['_tag'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . $content . htmlspecialchars( $params['_endtag'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 		}
