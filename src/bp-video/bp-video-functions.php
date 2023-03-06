@@ -3214,7 +3214,7 @@ function bb_video_is_ffmpeg_installed() {
 		return false;
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
-		if ( ! empty( trim( $ffmpeg->error ) ) ) {
+		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
 			return false;
 		} else {
 			return true;
