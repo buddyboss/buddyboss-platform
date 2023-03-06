@@ -1310,9 +1310,9 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	);
 
 	// Check if discussion is attached in a group then send group subscription notifications.
-	$group_ids = function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+	$group_ids = bp_is_active( 'groups' ) && function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
 	$item_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
-	if ( bb_is_enabled_subscription( 'group' ) && ! empty( $item_id ) ) {
+	if ( bp_is_active( 'groups' ) && bb_is_enabled_subscription( 'group' ) && ! empty( $item_id ) ) {
 		$type  = 'group';
 		$group = groups_get_group( $item_id );
 
