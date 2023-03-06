@@ -964,7 +964,8 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 			'blog_id' => $blog_id,
 			'fields'  => 'id',
 			'count'   => false,
-		)
+		),
+		true
 	);
 	$subscriptions     = ! empty( $all_subscriptions['subscriptions'] ) ? $all_subscriptions['subscriptions'] : array();
 
@@ -1187,7 +1188,11 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 		}
 
 		// Clear subscription cache.
-		if ( function_exists( 'wp_cache_flush_group' ) ) {
+		if (
+			function_exists( 'wp_cache_flush_group' ) &&
+			function_exists( 'wp_cache_supports' ) &&
+			wp_cache_supports( 'flush_group' )
+		) {
 			wp_cache_flush_group( 'bbpress_users' );
 			wp_cache_flush_group( 'bb_subscriptions' );
 		} else {
