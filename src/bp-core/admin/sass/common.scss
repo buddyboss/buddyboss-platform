@@ -36,7 +36,6 @@ TABLE OF CONTENTS:
 11.0 Notices UI
 12.0 Profile Photo
 13.0 Group Directories Enhancement
-	1.0 Group Forum Confirmation Popup
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
 16.0 Moderation
@@ -3159,29 +3158,6 @@ table tbody td .bb-description {
 
 	}
 
-}
-
-// 1.0 Group Forum Confirmation Popup
-
-.group-forum-confirmation {
-	border-radius: 3px;
-
-	.ui-button {
-		color: #0071a1;
-		border: 1px solid #0071a1;
-		background: #f3f5f6;
-		box-shadow: none;
-		font-size: 13px;
-		border-radius: 3px;
-		padding: 8px 10px;
-		height: auto;
-		line-height: 1;
-	}
-
-}
-
-.ui-widget-overlay {
-	opacity: 0.8;
 }
 
 /*------------------------------------------------------------------------------

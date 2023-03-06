@@ -283,14 +283,6 @@ function bp_groups_admin_load() {
 		wp_style_add_data( 'bp_groups_admin_css', 'suffix', $min );
 	}
 
-	if ( ! wp_script_is( 'jquery-ui-dialog', 'enqueued' ) ) {
-		wp_enqueue_script( 'jquery-ui-dialog' );
-	}
-
-	if ( ! wp_style_is( 'wp-jquery-ui-dialog', 'enqueued' ) ) {
-		wp_enqueue_style( 'wp-jquery-ui-dialog' );
-	}
-
 	if ( $doaction && 'save' === $doaction ) {
 		// Get group ID.
 		$group_id = isset( $_REQUEST['gid'] ) ? (int) $_REQUEST['gid'] : '';
