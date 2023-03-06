@@ -964,7 +964,8 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 			'blog_id' => $blog_id,
 			'fields'  => 'id',
 			'count'   => false,
-		)
+		),
+		true
 	);
 	$subscriptions     = ! empty( $all_subscriptions['subscriptions'] ) ? $all_subscriptions['subscriptions'] : array();
 
