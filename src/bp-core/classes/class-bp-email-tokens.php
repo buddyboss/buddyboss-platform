@@ -2771,7 +2771,7 @@ class BP_Email_Tokens {
 										?>
 										<tr>
 											<td>
-												<div class="bb-activity-media-wrap" style="padding: 5px 0 10px;">
+												<div style="padding: 5px 0 10px;">
 												<?php
 												while ( bp_document() ) {
 													bp_the_document();
@@ -2815,7 +2815,7 @@ class BP_Email_Tokens {
 										<td>
 											<div class="activity-attached-gif-container">
 												<div class="gif-image-container">
-													<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>" class="gif-play-button">
+													<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>">
 														<?php if ( is_int( $gif_data['still'] ) ) { ?>
 															<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
 														<?php } else { ?>
