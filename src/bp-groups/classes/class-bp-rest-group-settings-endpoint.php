@@ -1206,56 +1206,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'options'     => array(),
 		);
 
-		if ( bbp_is_user_keymaster() ) {
-			$forum_field = array(
-				'label'       => esc_html__( 'Group Forum:', 'buddyboss' ),
-				'name'        => 'bbp_group_forum_id',
-				'description' => esc_html__( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ),
-				'field'       => 'select',
-				'value'       => $forum_id,
-				'options'     => array(),
-			);
-
-			$forums = get_posts(
-				array(
-					'post_type'              => 'forum',
-					'numberposts'            => - 1,
-					'orderby'                => 'menu_order title',
-					'order'                  => 'ASC',
-					'disable_categories'     => true,
-					'suppress_filters'       => false,
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-				)
-			);
-
-			if ( ! empty( $forums ) ) {
-				$forum_field['options'][] = array(
-					'label'             => esc_html__( '(No Forum)', 'buddyboss' ),
-					'value'             => '',
-					'description'       => '',
-					'is_default_option' => empty( $forum_id ),
-					'disabled'          => false,
-				);
-				foreach ( $forums as $forum ) {
-					$title = $forum->post_title;
-					if ( '' === $title ) {
-						/* translators: %d: ID of a post. */
-						$title = sprintf( __( '#%d (no title)', 'buddyboss' ), $forum->ID );
-					}
-					$forum_field['options'][] = array(
-						'label'             => $title,
-						'value'             => $forum->ID,
-						'description'       => '',
-						'is_default_option' => $forum_id === $forum->ID,
-						'disabled'          => $this->is_option_disabled( $forum, $forum_id ),
-					);
-				}
-			}
-
-			$fields[] = $forum_field;
-		}
-
 		return apply_filters( 'bp_rest_group_settings_forum', $fields, $group_id );
 
 	}
@@ -1265,7 +1215,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Request $request Request used to generate the response.
 	 *
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	protected function update_forum_fields( $request ) {
 		$post_fields                        = $request->get_param( 'fields' );
@@ -1291,89 +1241,11 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		$edit_forum = ( array_key_exists( 'bbp-edit-group-forum', (array) $post_fields ) && ! empty( $post_fields['bbp-edit-group-forum'] ) ) ? true : false;
-		$forum_id   = 0;
 
 		$group_forum_extention = new BBP_Forums_Group_Extension();
 
-		// Keymasters have the ability to reconfigure forums.
-		if ( bbp_is_user_keymaster() ) {
-			$forum_ids = ( array_key_exists( 'bbp_group_forum_id', (array) $post_fields ) && ! empty( $post_fields['bbp_group_forum_id'] ) ) ? (array) (int) $post_fields['bbp_group_forum_id'] : array();
-
-			// Use the existing forum IDs.
-		} else {
-			$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
-		}
-
-		// Normalize group forum relationships now.
-		if ( ! empty( $forum_ids ) ) {
-
-			// Loop through forums, and make sure they exist.
-			foreach ( $forum_ids as $forum_id ) {
-
-				// Look for forum.
-				$forum = bbp_get_forum( $forum_id );
-
-				// No forum exists, so break the relationship.
-				if ( empty( $forum ) ) {
-					$group_forum_extention->remove_forum(
-						array(
-							'forum_id' => $forum_id,
-							'group_id' => $group_id,
-						)
-					);
-					unset( $forum_ids[ $forum_id ] );
-				}
-			}
-
-			// No support for multiple forums yet.
-			$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
-		}
-
-		// Update the group ID and forum ID relationships.
-		bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
-		bbp_update_forum_group_ids( $forum_id, (array) $group_id );
-
 		// Update the group forum setting.
-		$group = $group_forum_extention->toggle_group_forum( $group_id, $edit_forum, $forum_id );
-
-		// Create a new forum.
-		if ( empty( $forum_id ) && ( true === $edit_forum ) ) {
-
-			// Set the default forum status.
-			switch ( $group->status ) {
-				case 'hidden':
-					$status = bbp_get_hidden_status_id();
-					break;
-				case 'private':
-					$status = bbp_get_private_status_id();
-					break;
-				case 'public':
-				default:
-					$status = bbp_get_public_status_id();
-					break;
-			}
-
-			// Create the initial forum.
-			$forum_id = bbp_insert_forum(
-				array(
-					'post_parent'  => bbp_get_group_forums_root_id(),
-					'post_title'   => $group->name,
-					'post_content' => $group->description,
-					'post_status'  => $status,
-				)
-			);
-
-			// Setup forum args with forum ID.
-			$new_forum_args = array( 'forum_id' => $forum_id );
-
-			// If in admin, also include the group ID.
-			if ( is_admin() && ! empty( $group_id ) ) {
-				$new_forum_args['group_id'] = $group_id;
-			}
-
-			// Run the BP-specific functions for new groups.
-			$group_forum_extention->new_forum( $new_forum_args );
-		}
+		$group_forum_extention->toggle_group_forum( $group_id, $edit_forum );
 
 		$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
 
