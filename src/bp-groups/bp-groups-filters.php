@@ -1305,3 +1305,17 @@ function bb_group_single_center_header_actions() {
 	}
 }
 add_action( 'bb_group_single_bottom_header_action', 'bb_group_single_center_header_actions' );
+
+/**
+ * Delete group subscription when delete the group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id ID of the group.
+ *
+ * @return bool|int True on success, false on failure.
+ */
+function bb_delete_group_subscriptions( $group_id ) {
+	bb_delete_subscriptions_by_item( 'group', $group_id );
+}
+add_action( 'groups_delete_group', 'bb_delete_group_subscriptions' );
