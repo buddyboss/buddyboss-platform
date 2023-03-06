@@ -191,14 +191,14 @@ function bp_rest_response_add_total_headers( WP_REST_Response $response, $total 
  */
 function bp_rest_prepare_date_response( $date_gmt, $date = null ) {
 	if ( isset( $date ) ) {
-		return mysql_to_rfc3339( $date );
+		return mysql_to_rfc3339( $date ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 	}
 
 	if ( '0000-00-00 00:00:00' === $date_gmt ) {
 		return null;
 	}
 
-	return mysql_to_rfc3339( $date_gmt );
+	return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 }
 
 /**
