@@ -840,7 +840,6 @@ window.bp = window.bp || {};
 
 			// Accordion open/close event
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
-
 		},
 
 		/**
@@ -3578,7 +3577,7 @@ window.bp = window.bp || {};
 				}, inactive_timeout );
 				window.bb_is_user_active = true;
 			};
-		}
+		},
 
 	};
 
