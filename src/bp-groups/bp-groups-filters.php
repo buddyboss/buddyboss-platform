@@ -1030,13 +1030,6 @@ function bb_load_groups_notifications() {
  * @since BuddyBoss 2.0.0
  */
 function bb_load_group_type_label_custom_css() {
-	if ( ! wp_script_is( 'jquery-ui-dialog', 'enqueued' ) ) {
-		wp_enqueue_script( 'jquery-ui-dialog' );
-	}
-	if ( ! wp_style_is( 'wp-jquery-ui-dialog', 'enqueued' ) ) {
-		wp_enqueue_style( 'wp-jquery-ui-dialog' );
-	}
-
 	if ( true === bp_disable_group_type_creation() ) {
 		$registered_group_types = bp_groups_get_group_types();
 		$cache_key              = 'bb-group-type-label-css';
