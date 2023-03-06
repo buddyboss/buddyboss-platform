@@ -2688,9 +2688,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function bp_rest_moderation_message_prepare_value( $data, $message ) {
-		$sender_user       = (int) $message->sender_id;
-		$is_user_suspended = bp_moderation_is_user_suspended( $sender_user );
-		$is_user_blocked   = bp_moderation_is_user_blocked( $sender_user );
+		$sender_user        = (int) $message->sender_id;
+		$is_user_suspended  = bp_moderation_is_user_suspended( $sender_user );
+		$is_user_blocked    = bp_moderation_is_user_blocked( $sender_user );
+		$is_blocked_by_user = bb_moderation_is_user_blocked_by( $sender_user );
 
 		if ( empty( $is_user_suspended ) && empty( $is_user_blocked ) ) {
 			return $data;
@@ -2699,9 +2700,26 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$content = '';
 
 		if ( $is_user_suspended ) {
-			$content = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
+			$content = bb_moderation_is_suspended_message( $message->message, BP_Moderation_Message::$moderation_type, $message->id );
 		} elseif ( $is_user_blocked ) {
-			$content = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
+			$content = bb_moderation_has_blocked_message( $message->message, BP_Moderation_Message::$moderation_type, $message->id );
+		} elseif ( $is_blocked_by_user ) {
+			$content = bb_moderation_is_blocked_message( $message->message, BP_Moderation_Message::$moderation_type, $message->id );
+		}
+
+		if ( ! empty( $content ) && $message->message !== $content ) {
+			if ( ! empty( $data['media_gif'] ) ) {
+				$data['media_gif'] = null;
+			}
+			if ( ! empty( $data['bp_media_ids'] ) ) {
+				$data['bp_media_ids'] = null;
+			}
+			if ( ! empty( $data['bp_documents'] ) ) {
+				$data['bp_documents'] = null;
+			}
+			if ( ! empty( $data['bp_videos'] ) ) {
+				$data['bp_videos'] = null;
+			}
 		}
 
 		if ( ! empty( $content ) ) {
@@ -2732,9 +2750,10 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return $response;
 		}
 
-		$sender_user       = $data['last_sender_id'];
-		$is_user_suspended = bp_moderation_is_user_suspended( $sender_user );
-		$is_user_blocked   = bp_moderation_is_user_blocked( $sender_user );
+		$sender_user        = $data['last_sender_id'];
+		$is_user_suspended  = bp_moderation_is_user_suspended( $sender_user );
+		$is_user_blocked    = bp_moderation_is_user_blocked( $sender_user );
+		$is_blocked_by_user = bb_moderation_is_user_blocked_by( $sender_user );
 
 		if ( empty( $is_user_suspended ) && empty( $is_user_blocked ) ) {
 			return $response;
@@ -2743,9 +2762,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$content = '';
 
 		if ( $is_user_suspended ) {
-			$content = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
+			$content = bb_moderation_is_suspended_message( $data['message']['rendered'], BP_Moderation_Message::$moderation_type, $data['message_id'] );
+		} elseif ( $is_blocked_by_user ) {
+			$content = bb_moderation_is_blocked_message( $data['message']['rendered'], BP_Moderation_Message::$moderation_type, $data['message_id'] );
 		} elseif ( $is_user_blocked ) {
-			$content = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
+			$content = bb_moderation_has_blocked_message( $data['message']['rendered'], BP_Moderation_Message::$moderation_type, $data['message_id'] );
 		}
 
 		if ( ! empty( $content ) ) {
