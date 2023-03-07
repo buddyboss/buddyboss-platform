@@ -629,7 +629,8 @@ function bp_nouveau_ajax_post_update() {
 
 		$media_ids      = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 		$existing_media = ( ! empty( $media_ids ) ) ? explode( ',', $media_ids ) : array();
-		$posted_media   = array_column( $_POST['media'], 'media_id' ) ? wp_list_pluck( $_POST['media'], 'media_id' ) : array(); //phpcs:ignore
+		$posted_media   = array_column( $_POST['media'], 'media_id' );
+		$posted_media   = wp_parse_id_list( $posted_media );
 		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
 
 		if ( ! bb_media_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
