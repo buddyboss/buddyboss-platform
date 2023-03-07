@@ -240,7 +240,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Update where query remove hidden/blocked group subscriptions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param array  $where   Subscription groups where sql.
 	 * @param object $suspend suspend object.

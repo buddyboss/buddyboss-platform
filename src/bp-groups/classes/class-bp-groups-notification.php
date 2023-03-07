@@ -761,7 +761,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for group activity subscriptions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 */
 	public function register_notification_for_group_subscriptions() {
 		// Register the group activity subscription notifications.
@@ -949,7 +949,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Render callback function on frontend.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param array $items Array of subscription list.
 	 *
@@ -1056,7 +1056,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Send callback function for group type notification.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -1203,7 +1203,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format Group activity notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.

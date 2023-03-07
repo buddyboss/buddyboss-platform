@@ -2269,7 +2269,7 @@ function bb_get_default_custom_upload_group_cover() {
 /**
  * Is group subscription turned off?
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -2281,7 +2281,7 @@ function bb_enable_group_subscriptions( $default = true ) {
 	/**
 	 * Filters whether group subscription is turned off.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param bool $value Whether group subscription is turned off.
 	 */

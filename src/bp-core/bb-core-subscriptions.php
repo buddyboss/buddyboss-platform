@@ -1154,7 +1154,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 /**
  * Remove forum and topic subscriptions that assign to the group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int $group_id The ID of group.
  *
@@ -1212,7 +1212,7 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 /**
  * Migrate group subscription when update the platform to the latest version.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param bool $is_background Migration run in background or not.
  *
@@ -1289,7 +1289,7 @@ function bb_migrate_group_subscription( $is_background = false ) {
 /**
  * Migrating group subscription and remove group forums and topics subscriptions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param array $groups        Array of group IDs.
  * @param bool  $is_background Migration run in background or not.
@@ -1363,7 +1363,7 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 /**
  * Create group subscriptions for groups.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int   $group_id   The group ID.
  * @param array $member_ids Array of member IDs.
