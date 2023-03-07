@@ -1087,7 +1087,7 @@ add_action( 'edit_post', 'bb_subscription_update_secondary_item', 999, 2 );
 /**
  * Return true if a forum is a group forum.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int $forum_id Forum ID.
  *

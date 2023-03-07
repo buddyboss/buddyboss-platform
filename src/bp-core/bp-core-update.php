@@ -2336,7 +2336,7 @@ function bb_update_to_2_2_7() {
 /**
  * Migrate when update the platform to the latest version.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @return void
  */
@@ -2363,7 +2363,7 @@ function bb_update_to_2_2_8() {
 /**
  * Install group subscription email templates.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @return void
  */
