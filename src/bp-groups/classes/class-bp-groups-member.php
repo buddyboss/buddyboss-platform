@@ -1559,7 +1559,7 @@ class BP_Groups_Member {
 	/**
 	 * Create group subscription when member join/accept to the group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param int  $user_id  ID of the user.
 	 * @param int  $group_id ID of the group.
@@ -1621,7 +1621,7 @@ class BP_Groups_Member {
 	/**
 	 * Delete group subscription when remove member from the group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param int $user_id  ID of the user.
 	 * @param int $group_id ID of the group.

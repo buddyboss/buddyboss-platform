@@ -2960,7 +2960,7 @@ function bb_labs_no_settings_callback() {
 /**
  * Allow all users to subscribe groups field.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  */
 function bb_admin_setting_callback_group_subscriptions() {
 	?>
