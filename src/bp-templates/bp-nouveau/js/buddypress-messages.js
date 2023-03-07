@@ -5065,6 +5065,14 @@ window.bp = window.bp || {};
 
 				// use sent messageData here.
 				this.collection.add( first_message );
+				if (
+					$( document.body ).find( '#bp-messages-threads-list li.' + first_message.thread_id ).length &&
+					'undefined' !== typeof first_message.display_date_list
+				) {
+					var list_date = $( document.body ).find( '#bp-messages-threads-list li.' + first_message.thread_id + ' .thread-date' );
+					list_date.find( 'time' ).attr( 'datetime', first_message.date.toISOString() );
+					list_date.find( 'time' ).html( first_message.display_date_list );
+				}
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 
 				if( $( '#bp-message-thread-list li:last-child video' ).length > 0 ){
@@ -5140,12 +5148,6 @@ window.bp = window.bp || {};
 					}
 					messagePusherData.message.date = new Date( messagePusherData.message.date );
 					model.set( messagePusherData.message );
-
-					if ( $( document.body ).find( '#bp-messages-threads-list li.' + messagePusherData.message.thread_id ).length ) {
-						var list_date = $( document.body ).find( '#bp-messages-threads-list li.' + messagePusherData.message.thread_id + ' .thread-date' );
-						list_date.find( 'time' ).attr( 'datetime', messagePusherData.message.date.toISOString() );
-						list_date.find( 'time' ).html( messagePusherData.message.display_date_list );
-					}
 
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'has-medias' ) ) {
 						$( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).removeClass( 'has-medias' );
