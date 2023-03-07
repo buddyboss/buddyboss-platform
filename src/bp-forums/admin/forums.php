@@ -82,7 +82,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			add_filter( 'display_post_states', array( $this, 'bbp_set_hidden_forum_states' ), 10, 2 );
 
 			// Set forum visibility/status
-			add_filter( 'wp_insert_post_data', array( $this, 'bb_forum_filter_post_staus' ), 10, 3 );
+			add_filter( 'wp_insert_post_data', array( $this, 'bb_forum_filter_post_status' ), 10, 3 );
 
 			// Filter post parent for forum type post.
 			add_filter( 'wp_insert_post_parent', array( $this, 'forum_parent' ), 10, 3 );
@@ -707,7 +707,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		 *
 		 * @return array
 		 */
-		public function bb_forum_filter_post_staus( $data, $postarr, $unsanitized_postarr ) {
+		public function bb_forum_filter_post_status( $data, $postarr, $unsanitized_postarr ) {
 			if ( bbp_get_forum_post_type() !== $data['post_type'] ) {
 				return $data;
 			}
