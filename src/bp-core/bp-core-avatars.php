@@ -884,7 +884,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 		} elseif ( 'group' == $object ) {
 			$item_id = buddypress()->groups->current_group->id;
 		} elseif ( 'blog' == $object ) {
-			$item_id = $current_blog->id;
+			$item_id = get_current_blog_id();
 		}
 
 		/** This filter is documented in bp-core/bp-core-avatars.php */
@@ -915,7 +915,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 	/** This filter is documented in bp-core/bp-core-avatars.php */
 	$avatar_folder_dir = apply_filters( 'bp_core_avatar_folder_dir', bp_core_avatar_upload_path() . '/' . $avatar_dir . '/' . $item_id, $item_id, $object, $avatar_dir );
 
-	if ( ! file_exists( $avatar_folder_dir ) ) {
+	if ( ! is_dir( $avatar_folder_dir ) ) {
 		return false;
 	}
 
