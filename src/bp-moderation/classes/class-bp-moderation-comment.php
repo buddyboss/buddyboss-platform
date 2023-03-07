@@ -84,6 +84,10 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function get_permalink( $comment_id ) {
+		if ( empty( $comment_id ) ) {
+			return '';
+		}
+
 		$get_comment = get_comment( $comment_id );
 		if ( empty( $get_comment ) ) {
 			return '';
