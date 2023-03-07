@@ -1059,7 +1059,7 @@ add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
 /**
  * Send subscription notification to users after post an activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param string $content     The content of the update.
  * @param int    $user_id     ID of the user posting the update.
@@ -1151,7 +1151,7 @@ add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_not
 /**
  * Add group subscription repair list item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param array $repair_list Repair list.
  *
@@ -1172,7 +1172,7 @@ function bb_groups_repair_group_subscriptions( $repair_list ) {
 /**
  * Handles the front end subscribing and unsubscribing topics.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @return void|WP_Error
  */
@@ -1280,7 +1280,7 @@ function bb_group_subscriptions_handler() {
 /**
  * Display group header action button when layout is left.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @return void
  */
@@ -1294,7 +1294,7 @@ add_action( 'bb_group_single_top_header_action', 'bb_group_single_left_header_ac
 /**
  * Display group header action button when layout is center.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @return void
  */
@@ -1308,7 +1308,7 @@ add_action( 'bb_group_single_bottom_header_action', 'bb_group_single_center_head
 /**
  * Delete group subscription when delete the group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int $group_id ID of the group.
  *

@@ -1244,8 +1244,78 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		$group_forum_extention = new BBP_Forums_Group_Extension();
 
+		$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
+
+		// Normalize group forum relationships now.
+		if ( ! empty( $forum_ids ) ) {
+
+			// Loop through forums, and make sure they exist.
+			foreach ( $forum_ids as $forum_id ) {
+
+				// Look for forum.
+				$forum = bbp_get_forum( $forum_id );
+
+				// No forum exists, so break the relationship.
+				if ( empty( $forum ) ) {
+					$group_forum_extention->remove_forum(
+						array(
+							'forum_id' => $forum_id,
+							'group_id' => $group_id,
+						)
+					);
+					unset( $forum_ids[ $forum_id ] );
+				}
+			}
+
+			// No support for multiple forums yet.
+			$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
+		}
+
+		// Update the group ID and forum ID relationships.
+		bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
+		bbp_update_forum_group_ids( $forum_id, (array) $group_id );
+
 		// Update the group forum setting.
-		$group_forum_extention->toggle_group_forum( $group_id, $edit_forum );
+		$group = $group_forum_extention->toggle_group_forum( $group_id, $edit_forum, $forum_id );
+
+		// Create a new forum.
+		if ( empty( $forum_id ) && ( true === $edit_forum ) ) {
+
+			// Set the default forum status.
+			switch ( $group->status ) {
+				case 'hidden':
+					$status = bbp_get_hidden_status_id();
+					break;
+				case 'private':
+					$status = bbp_get_private_status_id();
+					break;
+				case 'public':
+				default:
+					$status = bbp_get_public_status_id();
+					break;
+			}
+
+			// Create the initial forum.
+			$forum_id = bbp_insert_forum(
+				array(
+					'post_parent'  => bbp_get_group_forums_root_id(),
+					'post_title'   => $group->name,
+					'post_content' => $group->description,
+					'post_status'  => $status,
+				)
+			);
+
+			// Setup forum args with forum ID.
+			$new_forum_args = array( 'forum_id' => $forum_id );
+
+			// If in admin, also include the group ID.
+			if ( ! empty( $group_id ) ) {
+				$new_forum_args['group_id'] = $group_id;
+			}
+
+			// Run the BP-specific functions for new groups.
+			$group_forum_extention->new_forum( $new_forum_args );
+		}
 
 		$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
 

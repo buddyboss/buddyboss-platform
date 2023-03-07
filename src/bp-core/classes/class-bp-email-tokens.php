@@ -2555,7 +2555,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token group discussion.content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.

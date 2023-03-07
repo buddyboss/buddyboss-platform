@@ -400,7 +400,7 @@ add_action( 'transition_post_status', 'bb_forums_update_subscription_status', 99
 /**
  * Remove forum and topic subscriptions when add forum to group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int    $group_id   The ID of group.
  * @param string $meta_key   The meta key of group.
@@ -422,7 +422,7 @@ add_action( 'add_group_meta', 'bb_remove_group_forum_topic_subscriptions_add_gro
 /**
  * Remove forum and topic subscriptions when update forum to group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int    $meta_id    The ID of group meta.
  * @param int    $group_id   The ID of group.
