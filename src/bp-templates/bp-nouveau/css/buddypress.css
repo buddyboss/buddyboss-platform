@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*--------------------------------------------------------------
 Hello, this is the BuddyPress Nouveau stylesheet.
 
@@ -7268,6 +7269,7 @@ body.register .registration-popup .mfp-close:hover {
 
 .single-headers .item-meta.last-activity {
   margin-bottom: 0;
+  margin-top: 1px;
 }
 
 .single-headers ul {
@@ -7909,15 +7911,24 @@ body.guillotine-dragging * {
 }
 
 .groups-header #cover-image-container #item-header-content .group-description {
-  margin: 0 0 12px;
+  margin: 0 0 15px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-description p {
   margin-bottom: 0;
 }
 
-.groups-header #cover-image-container #item-header-content .last-activity {
-  margin: 0 0 12px;
+.groups-header #cover-image-container #item-header-content .bp-group-meta-wrap {
+  margin: 0 0 12px 0;
+}
+
+.groups-header #cover-image-container #item-header-content .bp-group-meta-wrap .bp-group-status {
+  margin: 0;
+}
+
+.groups-header #cover-image-container #item-header-content .bp-group-meta-wrap .bp-group-status + .last-activity:before {
+  content: "•";
+  margin: 0 4px 0 8px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute {
@@ -7948,6 +7959,34 @@ body.guillotine-dragging * {
   padding: 0 16px;
   height: 38px;
   line-height: 38px;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription {
+  padding: 0 9px;
+  line-height: 37px;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription i {
+  font-size: 18px;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.not-subscribed i:before {
+  content: "\e86a";
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.not-subscribed:focus i:before,
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.not-subscribed:hover i:before {
+  content: "\e86d";
+  font-weight: 300;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.subscribed i {
+  font-weight: 300;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.subscribed:focus i:before,
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .group-subscription.subscribed:hover i:before {
+  content: "\e86a";
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .bb_more_options {
@@ -7995,6 +8034,9 @@ body.guillotine-dragging * {
   .groups-header #item-header-cover-image #item-actions {
     margin-bottom: 15px;
   }
+  .groups-header .left #item-header-cover-image #item-actions {
+    margin-bottom: 0;
+  }
   .groups-header #cover-image-container #item-header-content {
     flex: 0 0 100%;
     text-align: center;
@@ -8032,6 +8074,9 @@ body.guillotine-dragging * {
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
+  }
+  .groups-header #cover-image-container.left #item-header-content .group-actions-absolute {
+    justify-content: start;
   }
 }
 
@@ -8475,6 +8520,35 @@ body.buddypress.bp-user #page #primary .entry-header {
 #avatar-crop-actions a.avatar-crop-cancel {
   color: #555;
   margin-top: 15px;
+}
+
+.group-forum-confirmation {
+  border-radius: 4px;
+  border: 1px solid #d2d4d6;
+  box-shadow: none;
+}
+
+.group-forum-confirmation .ui-button {
+  background: #fff;
+  /* Old browsers */
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 1px;
+  color: #555;
+  cursor: pointer;
+  font-size: inherit;
+  font-weight: 400;
+  outline: none;
+  line-height: 1.3;
+  padding: 0.3em 0.7em;
+  text-align: center;
+  text-decoration: none;
+  width: auto;
+}
+
+.ui-widget-overlay {
+  background: rgba(250, 251, 253, 0.5);
+  opacity: 1;
 }
 
 /**
