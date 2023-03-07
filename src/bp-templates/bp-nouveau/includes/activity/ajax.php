@@ -652,7 +652,8 @@ function bp_nouveau_ajax_post_update() {
 
 		$document_ids      = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 		$existing_document = ( ! empty( $document_ids ) ) ? explode( ',', $document_ids ) : array();
-		$posted_document   = array_column( $_POST['document'], 'document_id' ) ? wp_list_pluck( $_POST['document'], 'document_id' ) : array(); //phpcs:ignore
+		$posted_document   = array_column( $_POST['document'], 'document_id' );
+		$posted_document   = wp_parse_id_list( $posted_document );
 		$is_same_document  = ( count( $existing_document ) === count( $posted_document ) && ! array_diff( $existing_document, $posted_document ) );
 
 		if ( ! bb_document_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_document ) {
