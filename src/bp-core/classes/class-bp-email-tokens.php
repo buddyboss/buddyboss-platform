@@ -210,7 +210,7 @@ class BP_Email_Tokens {
 									<tr>
 										<td width="20%" class="mobile-block-full">
 											<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>"
-											   style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 104px;">
+											   style="display: block; width: 104px; <?php echo esc_attr( $settings['body_border_color'] ); ?>; ">
 												<?php
 												$group_avatar = bp_core_fetch_avatar(
 													array(
@@ -270,7 +270,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: block;border-radius: 100px;text-align: center; height: 16px;line-height: 16px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 110px;padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -282,7 +282,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: inline-block;border-radius: 100px;text-align: center; line-height: 16px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;min-width: 110px;padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -2072,7 +2072,7 @@ class BP_Email_Tokens {
 														}
 														?>
 														<?php if ( $total_document_ids > 5 ) : ?>
-															<a href="<?php echo esc_url( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+															<a href="<?php echo esc_url( $tokens['message.url'] ); ?>"><?php echo sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
 														<?php endif; ?>
 													</div>
 													<?php
@@ -2496,7 +2496,7 @@ class BP_Email_Tokens {
 																}
 																?>
 																<?php if ( $total_document_ids > 5 ) : ?>
-																	<a href=""><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+																	<a href=""><?php echo sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
 																<?php endif; ?>
 															</div>
 															<?php
