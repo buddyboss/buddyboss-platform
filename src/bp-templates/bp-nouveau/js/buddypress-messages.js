@@ -5120,6 +5120,18 @@ window.bp = window.bp || {};
 
 			triggerPusherUpdateMessage: function ( messagePusherData ) {
 				var model = this.collection.get( messagePusherData.hash );
+
+				// Re-sync the collection if the collection is not updated on onSentMessage.
+				if ( 'undefined' === typeof model ) {
+					var message_array = [],
+						message       = messagePusherData.message;
+
+					message.date = new Date( message.date );
+					message_array.push( message );
+					window.Backbone.trigger( 'onSentMessage', message_array );
+					model = this.collection.get( messagePusherData.hash );
+				}
+
 				if ( model ) {
 					if ( parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
 						messagePusherData.message.sender_is_you = true;
