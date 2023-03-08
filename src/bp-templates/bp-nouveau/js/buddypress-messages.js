@@ -5147,7 +5147,7 @@ window.bp = window.bp || {};
 				// Re-sync the collection if the collection is not updated on onSentMessage.
 				if ( 'undefined' === typeof model ) {
 					var message_array = [],
-						message       = messagePusherData.message;
+					    message       = messagePusherData.message;
 
 					message.date = new Date( message.date );
 					message_array.push( message );
