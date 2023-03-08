@@ -104,7 +104,7 @@ class Settings {
 					'cache_bb_member_connections' => array(
 						'label'          => __( 'Member Connections', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Member Connections', 'buddyboss' ),
-						'purge_url'      => admin_url( $purge_url . '&group=bbplatform&component=bp-friends&nonce=' . self::$purge_nonce ),
+						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-friends&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
@@ -150,10 +150,17 @@ class Settings {
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
-					'cache_bb_video'           => array(
+					'cache_bb_video'              => array(
 						'label'          => __( 'Videos', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Videos', 'buddyboss' ),
 						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-video&nonce=' . self::$purge_nonce,
+						'type'           => 'checkbox',
+						'value'          => true,
+					),
+					'cache_bb_subscription'       => array(
+						'label'          => __( 'Subscriptions', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Subscriptions', 'buddyboss' ),
+						'purge_url'      => $purge_url . '&group=bbplatform&component=bb-subscription&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
@@ -248,11 +255,12 @@ class Settings {
 			);
 		}
 
-		$purge_nonce = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );
+		$purge_nonce = ( ! empty( $_GET['nonce'] ) ) ? wp_unslash( $_GET['nonce'] ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
 		if ( wp_verify_nonce( $purge_nonce, 'bbapp_cache_purge' ) ) {
 
-			$group      = filter_input( INPUT_GET, 'group', FILTER_SANITIZE_STRING );
-			$components = filter_input( INPUT_GET, 'component', FILTER_SANITIZE_STRING );
+			$group      = ( ! empty( $_GET['group'] ) ) ? self::input_clean( wp_unslash( $_GET['group'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$components = ( ! empty( $_GET['component'] ) ) ? self::input_clean( wp_unslash( $_GET['component'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			/**
 			 * Handle group purge action.
@@ -272,6 +280,22 @@ class Settings {
 				wp_safe_redirect( $purge_url . '&cache_purge=1' );
 				exit();
 			}
+		}
+	}
+
+	/**
+	 * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
+	 * Non-scalar values are ignored.
+	 *
+	 * @param string|array $var Data to sanitize.
+	 *
+	 * @return string|array
+	 */
+	public static function input_clean( $var ) {
+		if ( is_array( $var ) ) {
+			return array_map( 'self::input_clean', $var );
+		} else {
+			return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 		}
 	}
 }

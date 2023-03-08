@@ -85,10 +85,10 @@
 	cursor: pointer;
 	border: none;
 	position: absolute;
-	top: 5px;
-	right: 5px;
-	height: 16px;
-	width: 16px;
+	top: 8px;
+	right: 8px;
+	height: 19px;
+	width: 19px;
 	border-radius: 50%;
 	color: #c3c6c9;
 	z-index: 101;
@@ -103,7 +103,7 @@
 		top: 0;
 		left: 0;
 		font-family: "bb-icons";/* stylelint-disable-line */
-		font-size: 17px;
+		font-size: 20px;
 		line-height: 1;
 		speak: none;
 		display: inline-block;
@@ -115,8 +115,7 @@
 
 .dropzone .dz-remove {
 	color: #9ea8b3;
-	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-	background: #f8f8f8;
+	background: #e7e7ea;
 }
 
 .dropzone .dz-preview:hover {
@@ -138,8 +137,8 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	letter-spacing: -0.24px;
-	font-weight: 300;
+	letter-spacing: normal;
+	font-weight: 400;
 	margin-top: 8px;
 }
 
@@ -260,12 +259,12 @@
 
 .dropzone .dz-preview.dz-error .dz-error-message {
 	display: block;
+	line-height: 1.35;
 }
 
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
 	opacity: 1;
 	pointer-events: auto;
-	line-height: 1.35;
 }
 
 .dropzone .dz-preview .dz-error-message {
@@ -603,19 +602,16 @@
 
 	.dz-default.dz-message {
 		display: flex;
-		order: 2;
 		min-height: 1px;
-		max-width: 120px;
-		height: 120px;
+		max-width: 130px;
+		height: 130px;
 		font-size: 12px;
 		text-align: center;
 		line-height: 1.3;
 		margin: 0 0 10px;
 
 		.dz-button {
-			background-size: 35px !important;
-			font-size: 12px !important;
-			padding: 40px 5px 0 !important;
+			font-size: 13px !important;
 		}
 	}
 }
@@ -631,7 +627,7 @@
 	}
 
 	.dz-image img {
-		width: 160px;
+		width: 130px;
 	}
 
 	.dz-progress-ring-wrap {
@@ -642,13 +638,13 @@
 		transform: translate(-50%, -50%);
 		background-color: rgba(0, 0, 0, 0.5);
 		border-radius: 50%;
-		height: 60px;
-		width: 60px;
+		height: 50px;
+		width: 50px;
 
 		.dz-progress-ring {
 			position: absolute;
-			top: -1px;
-			left: -1px;
+			top: -2px;
+			left: -2px;
 			transition: 0.35s stroke-dashoffset;
 			transform: rotate(-90deg);
 			transform-origin: 50% 50%;
@@ -660,32 +656,65 @@
 
 		}
 
-		.bb-icon {
+		[class*=" bb-icon-"] {
 			position: absolute;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
 			color: #fff;
 			z-index: 11;
-			font-size: 18px;
+			font-size: 24px;
 		}
 
 	}
 
+	&.dz-error .dz-progress-ring-wrap {
+		background-color: rgba(0, 0, 0, 0.05);
+
+		[class*=" bb-icon-"] {
+			color: $light-text;
+		}
+	}
+
 }
 
-
-#bp-group-messages-post-document-uploader.dropzone,
-#messages-post-document-uploader.dropzone,
-#forums-post-document-uploader.dropzone,
-.activity-document-container .dropzone,
-.bp-media-document-uploader .dropzone,
-.dropzone.document {
+.dropzone.document-dropzone {
 
 	.dz-preview {
 
+		&:not(.dz-complete) {
+
+			.dz-progress-ring-wrap {
+				background-color: rgba(0, 0, 0, 0.05);
+
+				[class*=" bb-icon-"] {
+					color: rgba(18, 43, 70, 0.5);
+				}
+			}
+
+			.dz-progress-count {
+				background-color: rgba(0, 0, 0, 0.05);
+				color: rgba(18, 43, 70, 0.5);
+			}
+		}
+
 		.dz-progress-ring-wrap {
-			background-color: rgba(0, 0, 0, 0.3);
+			background-color: rgba(0, 0, 0, 0.05);
+
+			[class*=" bb-icon-"] {
+				color: rgba(18, 43, 70, 0.5);
+			}
+		}
+
+		.dz-icon {
+			display: none;
+		}
+
+		.dz-remove {
+			background-color: transparent;
+			color: #92949d;
+			top: 8px;
+			right: 8px;
 		}
 
 		&.dz-complete .dz-details {
@@ -693,11 +722,41 @@
 			.dz-filename {
 				position: static;
 				padding-right: 0;
-				margin-top: 30px;
+				margin-top: 11px;
 			}
 
 			.dz-size {
 				display: block;
+			}
+
+			.dz-icon {
+				display: block;
+				height: 38px;
+				line-height: 1;
+				margin-top: 25px;
+				position: relative;
+
+				&:before {
+					content: "\ee6e";
+					font-size: 38px;
+					color: #92949d;
+					font-family: "bb-icons";/* stylelint-disable-line */
+					display: inline-block;
+					line-height: 1;
+					position: absolute;
+					top: 0;
+					left: 50%;
+					transform: translateX(-50%);
+				}
+
+				[class*="bb-icons"] {
+					font-size: 38px;
+					color: rgba(18, 43, 70, 0.5);
+					left: 50%;
+					display: block;
+					position: absolute;
+					transform: translateX(-50%);
+				}
 			}
 		}
 
@@ -705,14 +764,21 @@
 
 			.dz-filename {
 				position: absolute;
-				bottom: 12px;
+				bottom: 3px;
 				left: 10px;
 				right: 0;
+				font-size: 13px;
+				line-height: 19.5px;
+				color: rgba(18, 43, 70, 0.5);
 				padding-right: 20px;
 			}
 
 			.dz-size {
 				display: none;
+				font-size: 13px;
+				font-weight: 500;
+				line-height: 19.5px;
+				color: rgba(18, 43, 70, 0.5);
 			}
 
 		}
@@ -721,30 +787,74 @@
 
 }
 
-@media screen and (max-width: 420px) {
+// Dropzone global progress UI
+.dropzone.dz-progress-view {
+	padding-bottom: 45px;
+	position: relative;
 
-	div.dropzone {
+	.dz-global-progress {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding-right: 25px;
 
-		.dz-preview {
-			min-width: 142px;
+		p {
+			color: $light-text;
+			font-size: 13px;
+			line-height: 1.5;
+			margin: 0 !important;
 
-			.dz-image {
-				height: 142px;
-
-				img {
-					width: 142px;
-				}
-
+			strong {
+				font-weight: 500;
 			}
 
 		}
 
-		&.dz-started .dz-default.dz-message {
-			max-width: 142px !important;
-			min-height: 142px !important;
+		.dz-progress-bar-full {
+			background-color: $light-grey;
+			border-radius: 100px;
+			height: 8px;
+			width: 100%;
+			margin-bottom: 6px;
+			overflow: hidden;
+		}
+
+		.dz-progress {
+			background-color: $blue;
+			display: block;
+			height: 100%;
+			width: 100%;
+		}
+
+		.dz-remove-all {
+
+			@include center-vert();
+			justify-content: center;
+			background-color: $light-grey;
+			border-radius: 50%;
+			cursor: pointer;
+			height: 20px;
+			width: 20px;
+			position: absolute;
+			top: -6px;
+			right: 0;
+
+			&:before {
+				color: $light-text;
+				font-size: 18px;
+			}
 		}
 
 	}
 
-}
+	&.files-uploaded {
+		padding-bottom: 0;
+		position: static;
 
+		.dz-global-progress {
+			display: none;
+		}
+	}
+
+}

@@ -49,6 +49,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
+		add_filter( 'bp_activity_comment_content', array( $this, 'bb_activity_comment_remove_mention_link' ), 10, 1 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -59,7 +61,6 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
-
 
 		// Report button text.
 		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
@@ -229,7 +230,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$author_id = self::get_content_owner_id( $item_id );
 
 		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
-		     ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+			 ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
 			return true;
 		}
 		return false;
@@ -278,5 +279,24 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$content_type = esc_html__( 'Comment', 'buddyboss' );
 
 		return $content_type;
+	}
+
+	/**
+	 * Remove mentioned link from activity comment.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $content Activity comment.
+	 *
+	 * @return string
+	 */
+	public function bb_activity_comment_remove_mention_link( $content ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$content = bb_moderation_remove_mention_link( $content );
+
+		return $content;
 	}
 }

@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Media Entry
+ * The template for media entry
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/media/entry.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 global $media_template;
@@ -53,7 +56,7 @@ if ( 'video' === $media_template->media->type ) {
 				if ( $can_edit || $report_btn ) {
 					?>
 					<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
-						<i class="bb-icon-menu-dots-v"></i>
+						<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 					</a>
 					<div class="video-action_list item-action_list">
 						<ul>
@@ -113,7 +116,7 @@ if ( 'video' === $media_template->media->type ) {
 				?>
 				<div class="bb-media-check-wrap bb-action-check-wrap">
 					<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
-					<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon bb-icon-check"></span></label>
+					<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon-rl bb-icon-check"></span></label>
 				</div>
 			<?php endif; ?>
 		</div>
@@ -146,10 +149,10 @@ if ( 'video' === $media_template->media->type ) {
 		<div class="media-action-wrap">
 			<?php
 			$report_btn = bp_media_get_report_link( array( 'id' => bp_get_media_id() ) );
-			if ( $can_move || $report_btn ) {
+			if ( $can_move || $report_btn || $can_delete ) {
 				?>
 				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-					<i class="bb-icon-menu-dots-v"></i>
+					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="media-action_list">
 					<ul>
@@ -196,7 +199,7 @@ if ( 'video' === $media_template->media->type ) {
 			?>
 			<div class="bb-media-check-wrap bb-action-check-wrap">
 				<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
-				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon bb-icon-check"></span></label>
+				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon-rl bb-icon-check"></span></label>
 			</div>
 		<?php endif; ?>
 	</div>

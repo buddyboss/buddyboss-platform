@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Notifications Loop
+ * The template for members notifications loop
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/notifications/notifications-loop.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
@@ -33,12 +35,14 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 				<?php
 				while ( bp_the_notifications() ) :
 					bp_the_notification();
+					$bp       = buddypress();
+					$readonly = isset( $bp->notifications->query_loop->notification->readonly ) ? $bp->notifications->query_loop->notification->readonly : false;
 				?>
 
 					<tr>
 						<td></td>
 						<td class="bulk-select-check">
-							<input id="<?php bp_the_notification_id(); ?>" type="checkbox" name="notifications[]" value="<?php bp_the_notification_id(); ?>" class="notification-check bs-styled-checkbox" />
+							<input id="<?php bp_the_notification_id(); ?>" type="checkbox" name="notifications[]" value="<?php bp_the_notification_id(); ?>" class="notification-check bs-styled-checkbox" data-readonly="<?php echo esc_attr( $readonly ); ?>"/>
 							<label for="<?php bp_the_notification_id(); ?>"><span class="bp-screen-reader-text"><?php esc_html_e( 'Select this notification', 'buddyboss' ); ?></span></label>
 						</td>
 						<td class="notification-description"><?php bp_the_notification_description(); ?></td>

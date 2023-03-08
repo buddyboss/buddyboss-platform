@@ -157,7 +157,7 @@ class BP_User_Query {
 		$this->setup_hooks();
 
 		if ( ! empty( $this->query_vars_raw ) ) {
-			$this->query_vars = wp_parse_args(
+			$this->query_vars = bp_parse_args(
 				$this->query_vars_raw,
 				array(
 					'type'                => 'newest',
@@ -260,6 +260,10 @@ class BP_User_Query {
 			'limit'   => '',
 		);
 
+		// 'include' - User ids to include in the results.
+		$include     = false !== $include ? wp_parse_id_list( $include ) : array();
+		$include_ids = $this->get_include_ids( $include );
+
 		/* TYPE **************************************************************/
 
 		// Determines the sort order, which means it also determines where the
@@ -275,6 +279,8 @@ class BP_User_Query {
 				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
 				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
 
+				$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
+
 				/**
 				 * Filters the threshold for activity timestamp minutes since to indicate online status.
 				 *
@@ -282,7 +288,7 @@ class BP_User_Query {
 				 *
 				 * @param int $value Amount of minutes for threshold. Default 15.
 				 */
-				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', apply_filters( 'bp_user_query_online_interval', 15 ) );
+				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', $online_default_time / 60 );
 				$sql['orderby'] = 'ORDER BY u.date_recorded';
 				$sql['order']   = 'DESC';
 
@@ -355,6 +361,18 @@ class BP_User_Query {
 
 				break;
 
+			// Support order by fields for generally.
+			case 'in':
+				$this->uid_name  = 'ID';
+				$this->uid_table = $wpdb->users;
+				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
+				if ( ! empty( $include_ids ) ) {
+					$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
+					$sql['where'][] = "u.{$this->uid_name} IN ({$include_ids})";
+					$sql['orderby'] = "ORDER BY FIELD(u.{$this->uid_name}, {$include_ids})";
+				}
+				break;
+
 			// Any other 'type' falls through.
 			default:
 				$this->uid_name  = 'ID';
@@ -379,12 +397,8 @@ class BP_User_Query {
 
 		/* WHERE *************************************************************/
 
-		// 'include' - User ids to include in the results.
-		$include     = false !== $include ? wp_parse_id_list( $include ) : array();
-		$include_ids = $this->get_include_ids( $include );
-
 		// An array containing nothing but 0 should always fail.
-		if ( 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
+		if ( is_array( $include_ids ) && 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
 			$sql['where'][] = $this->no_results['where'];
 		} elseif ( ! empty( $include_ids ) ) {
 			$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
@@ -417,7 +431,7 @@ class BP_User_Query {
 
 		// 'search_terms' searches user_login and user_nicename
 		// xprofile field matches happen in bp_xprofile_bp_user_query_search().
-		if ( false !== $search_terms ) {
+		if ( false !== (bool) $search_terms ) {
 			$search_terms = bp_esc_like( wp_kses_normalize_entities( $search_terms ) );
 
 			if ( $search_wildcard === 'left' ) {
@@ -584,6 +598,7 @@ class BP_User_Query {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function do_wp_user_query() {
+		static $do_wp_user_query;
 		$fields = array(
 			'ID',
 			'user_login',
@@ -610,23 +625,25 @@ class BP_User_Query {
 		 * @param array         $value Array of arguments for the user query.
 		 * @param BP_User_Query $this  Current BP_User_Query instance.
 		 */
-		$wp_user_query = new WP_User_Query(
-			apply_filters(
-				'bp_wp_user_query_args',
-				array(
+		$args = apply_filters( 'bp_wp_user_query_args', array(
+			// Relevant.
+			'fields'      => $fields,
+			'include'     => $this->user_ids,
 
-					// Relevant.
-					'fields'      => $fields,
-					'include'     => $this->user_ids,
+			// Overrides
+			'blog_id'     => 0,    // BP does not require blog roles.
+			'count_total' => false, // We already have a count.
+		), $this );
 
-					// Overrides
-					'blog_id'     => 0,    // BP does not require blog roles.
-					'count_total' => false, // We already have a count.
+		$cache_key = 'bb_do_wp_user_query_' . md5( maybe_serialize( $args ) );
 
-				),
-				$this
-			)
-		);
+		if ( ! isset( $do_wp_user_query[ $cache_key ] ) ) {
+			$wp_user_query = new WP_User_Query( $args );
+
+			$do_wp_user_query[ $cache_key ] = $wp_user_query;
+		} else {
+			$wp_user_query = $do_wp_user_query[ $cache_key ];
+		}
 
 		// We calculate total_users using a standalone query, except
 		// when a whitelist of user_ids is passed to the constructor.
@@ -646,7 +663,7 @@ class BP_User_Query {
 		foreach ( $this->user_ids as $key => $uid ) {
 			if ( isset( $r[ $uid ] ) ) {
 				$r[ $uid ]->ID          = (int) $uid;
-				$r[ $uid ]->user_status = (int) $r[ $uid ]->user_status;
+				$r[ $uid ]->user_status = isset( $r[ $uid ]->user_status ) ? (int) $r[ $uid ]->user_status : 0;
 
 				$this->results[ $uid ] = $r[ $uid ];
 

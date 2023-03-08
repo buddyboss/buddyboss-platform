@@ -98,11 +98,17 @@
 	}
 
 	.item-meta {
-		color: $light-text;
+		color: inherit;
 
 		@include font-size(14);
 		margin: $marg-med 0 $marg-xsml;
 		padding-bottom: $pad-sml;
+
+		&.last-activity {
+			margin-bottom: 0;
+			margin-top: 1px;
+		}
+
 	}
 
 	ul {

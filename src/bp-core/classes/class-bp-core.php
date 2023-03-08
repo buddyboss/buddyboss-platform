@@ -171,6 +171,7 @@ class BP_Core extends BP_Component {
 			array(
 				'buddyboss-app',
 				'learndash',
+				'pusher',
 				'compatibility',
 			)
 		);
@@ -179,6 +180,11 @@ class BP_Core extends BP_Component {
 
 		foreach ( $bp->available_integrations as $integration ) {
 			$file = "{$integration_dir}{$integration}/bp-{$integration}-loader.php";
+			if ( file_exists( $file ) ) {
+				include $file;
+			}
+
+			$file = "{$integration_dir}{$integration}/bb-{$integration}-loader.php";
 			if ( file_exists( $file ) ) {
 				include $file;
 			}
@@ -335,6 +341,9 @@ class BP_Core extends BP_Component {
 		wp_cache_add_global_groups(
 			array(
 				'bp',
+				'bp_pages',
+				'bp_invitations',
+				'bb_subscriptions',
 			)
 		);
 

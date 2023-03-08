@@ -139,6 +139,11 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
+		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
+			$where['moderation_where'] .= ' AND ';
+		}
+		$where['moderation_where'] .= ' ( d.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) ) ';
+
 		return $where;
 	}
 
@@ -220,8 +225,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.7.7
 	 *
-	 * @param array $report_button Activity report button
-	 * @param array $args          Arguments
+	 * @param array $report_button Activity report button.
+	 * @param array $args          Arguments.
 	 *
 	 * @return array|string
 	 */
@@ -236,11 +241,21 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
 		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 
-		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && ! in_array( $activity->type, array(
-				'bbp_forum_create',
-				'bbp_topic_create',
-				'bbp_reply_create'
-			) ) ) {
+		if (
+			(
+				! empty( $document_id ) ||
+				! empty( $document_ids )
+			) &&
+			! in_array(
+				$activity->type,
+				array(
+					'bbp_forum_create',
+					'bbp_topic_create',
+					'bbp_reply_create',
+				),
+				true
+			)
+		) {
 			$explode_documents = explode( ',', $document_ids );
 			if ( ! empty( $document_id ) ) {
 				$args['button_attr']['data-bp-content-id']   = $document_id;

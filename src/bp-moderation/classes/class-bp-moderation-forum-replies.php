@@ -53,6 +53,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_forum_reply_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
+		add_filter( 'bbp_get_reply_content', array( $this, 'bb_reply_content_remove_mention_link' ), 10, 2 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -224,7 +226,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		$author_id = self::get_content_owner_id( $item_id );
 
 		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
-		     ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+			 ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
 			return true;
 		}
 		return false;
@@ -281,5 +283,25 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		$report_button = bp_moderation_get_report_button( $args, false );
 
 		return $report_button;
+	}
+
+	/**
+	 * Remove mentioned link from discussion's reply.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $content  Reply content.
+	 * @param int    $reply_id Reply id.
+	 *
+	 * @return string
+	 */
+	public function bb_reply_content_remove_mention_link( $content, $reply_id ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$content = bb_moderation_remove_mention_link( $content );
+
+		return $content;
 	}
 }

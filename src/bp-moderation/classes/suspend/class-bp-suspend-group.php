@@ -61,15 +61,18 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		add_filter( 'bp_groups_get_join_count_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_groups_get_where_count_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// invitation
+		// invitation.
 		add_filter( 'bp_invitations_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_invitations_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// Search group
+		// Search group.
 		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+
+		// Update the where condition for group subscriptions.
+		add_filter( 'bb_subscriptions_get_where_conditions', array( $this, 'bb_subscriptions_group_where_conditions' ), 10, 2 );
 	}
 
 	/**
@@ -187,7 +190,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type, true ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type ) ) {
 			return false;
 		}
 
@@ -206,7 +209,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	public function manage_hidden_group( $group_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $group_id,
@@ -222,15 +225,17 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$args['type'] = self::$type;
 			$this->hide_related_content( $group_id, $hide_sitewide, $args );
 		} else {
 			$args['type'] = self::$type;
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'hide_related_content' ),
-					'args'     => array( $group_id, $hide_sitewide, $args ),
+					array(
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $group_id, $hide_sitewide, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -251,7 +256,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $group_id,
@@ -279,15 +284,17 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$args['type'] = self::$type;
 			$this->unhide_related_content( $group_id, $hide_sitewide, $force_all, $args );
 		} else {
 			$args['type'] = self::$type;
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $group_id, $hide_sitewide, $force_all, $args ),
+					array(
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $group_id, $hide_sitewide, $force_all, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -306,31 +313,32 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $group_id, $args = array() ) {
 		$related_contents = array();
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 
-		if ( bp_is_active( 'forums' ) ) {
+		if ( bp_is_active( 'forums' ) && $page < 2 ) {
 			$related_contents[ BP_Suspend_Forum::$type ] = (array) bbp_get_group_forum_ids( $group_id );
 		}
 
 		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_group_activity_ids( $group_id );
+			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_group_activity_ids( $group_id, $page );
 		}
 
-		if ( bp_is_active( 'messages' ) ) {
+		if ( bp_is_active( 'messages' ) && $page < 2 ) {
 			$related_contents[ BP_Suspend_Message::$type ] = BP_Suspend_Message::get_group_message_thread_ids( $group_id );
 		}
 
 		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_group_folder_ids( $group_id );
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_group_document_ids( $group_id );
+			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_group_folder_ids( $group_id, $page );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_group_document_ids( $group_id, $page );
 		}
 
 		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_group_album_ids( $group_id );
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_group_media_ids( $group_id );
+			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_group_album_ids( $group_id, $page );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_group_media_ids( $group_id, $page );
 		}
 
 		if ( bp_is_active( 'video' ) ) {
-			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_group_video_ids( $group_id );
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_group_video_ids( $group_id, $page );
 		}
 
 		return $related_contents;
@@ -456,5 +464,56 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 				'force_bg_process' => true,
 			)
 		);
+	}
+
+	/**
+	 * Prepare subscription group where SQL query to filter blocked groups.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param array $where_conditions Subscription where sql.
+	 * @param array $r                Array of subscription arguments.
+	 *
+	 * @return mixed Where SQL
+	 */
+	public function bb_subscriptions_group_where_conditions( $where_conditions, $r ) {
+		global $bp;
+
+		if ( isset( $r['bypass_moderation'] ) && true === (bool) $r['bypass_moderation'] ) {
+			return $where_conditions;
+		}
+
+		if ( ! empty( $r['type'] ) ) {
+			if ( ! is_array( $r['type'] ) ) {
+				$r['type'] = preg_split( '/[\s,]+/', $r['type'] );
+			}
+			$r['type'] = array_map( 'sanitize_title', $r['type'] );
+		}
+
+		if ( ! empty( $r['type'] ) && ! in_array( 'group', $r['type'], true ) ) {
+			return $where_conditions;
+		}
+
+		// Get suspended where query for the forum subscription.
+		$where                  = array();
+		$where['suspend_where'] = 'user_suspended = 1';
+
+		/**
+		 * Filters the hidden forum where SQL statement.
+		 *
+		 * @since BuddyBoss 2.2.8
+		 *
+		 * @param array $where            Query to hide suspended groups.
+		 * @param array $this             current class object.
+		 * @param array $where_conditions Subscription where sql.
+		 * @param array $r                Array of subscription arguments.
+		 */
+		$where = apply_filters( 'bb_subscriptions_suspend_group_get_where_conditions', $where, $this, $where_conditions, $r );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_group_where'] = "sc.item_id NOT IN ( SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = 'groups' AND ( " . implode( ' OR ', $where ) . ' ) )';
+		}
+
+		return $where_conditions;
 	}
 }
