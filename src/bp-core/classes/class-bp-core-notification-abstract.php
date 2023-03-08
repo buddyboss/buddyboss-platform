@@ -82,7 +82,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * If set bypass the subscription validation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @var bool
 	 */

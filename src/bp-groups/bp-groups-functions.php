@@ -4958,7 +4958,7 @@ function bb_group_drop_down_order_metabox_translate_order_text( $translated_text
 /**
  * Function to check the user subscribed group or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int $group_id Group ID.
  * @param int $user_id  User ID.
@@ -4998,7 +4998,7 @@ function bb_is_member_subscribed_group( $group_id, $user_id ) {
 /**
  * Function to get Group Subscription button.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param array $args button args.
  * @param bool  $html Should return button html or not.
@@ -5089,7 +5089,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 	/**
 	 * Filter to update group subscription button arguments.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param array $button Button args.
 	 * @param array $r      Button args.
@@ -5113,7 +5113,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 	/**
 	 * Filter to update group subscription link.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param mixed $button Button args or HTML.
 	 * @param array $r      Button args.
@@ -5126,7 +5126,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 /**
  * Function to display group action buttons.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @return void
  */
