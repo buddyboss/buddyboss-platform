@@ -6678,6 +6678,23 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   float: none;
 }
 
+.bb-action-popup#group-description-popup .bb-action-popup-content {
+  padding-bottom: 1px;
+}
+
+.bb-action-popup#group-description-popup .bb-action-popup-content p {
+  margin-bottom: 1.6875rem;
+}
+
+.bb-action-popup#group-description-popup .bb-action-popup-content p:empty {
+  display: none;
+}
+
+.bb-action-popup#group-description-popup .bb-action-popup-content ul {
+  margin: 0 0 1.6875rem 1.6875rem;
+  list-style-type: disc;
+}
+
 @media screen and (min-width: 46.8em) {
   .buddypress .bp-vertical-navs .groups-list .item-avatar {
     margin-right: 3%;
