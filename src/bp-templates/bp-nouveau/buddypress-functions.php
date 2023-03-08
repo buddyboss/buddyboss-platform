@@ -357,6 +357,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$rtl = '-rtl';
 		}
 
+		// BB icon version.
+		$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
+		$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : $this->version;
+
 		/**
 		 * Filters the BuddyPress Nouveau CSS dependencies.
 		 *
@@ -382,7 +386,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 				'file' => 'icons/css/icons-map%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
 			),
 			'bp-nouveau-bb-icons' => array(
-				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
+				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $bb_icon_version,
 			),
 			'bp-nouveau' => array(
 				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
