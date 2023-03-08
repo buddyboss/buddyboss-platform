@@ -53,7 +53,7 @@ function bb_global_search_default_items_to_search( $value ) {
 	return $value;
 }
 
-add_filter( 'bp_search_option_items-to-search', 'bb_global_search_default_items_to_search' );
+add_filter( 'bp_search_option_items_to_search', 'bb_global_search_default_items_to_search' );
 
 /**
  * Remove 'messages' and 'notifications' from search, if user is not logged In
@@ -80,7 +80,7 @@ function bp_search_remove_search_types_for_guests( $search_types ) {
 	return $search_types;
 }
 
-add_filter( 'bp_search_option_items-to-search', 'bp_search_remove_search_types_for_guests', 9 );
+add_filter( 'bp_search_option_items_to_search', 'bp_search_remove_search_types_for_guests', 9 );
 
 
 add_filter( 'template_include', 'bp_search_override_wp_native_results', 999 ); // don't leave any chance!.

@@ -432,6 +432,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->searchable_items = array( 'forum', 'topic', 'reply' );
 			}
 
+			$this->searchable_items = apply_filters ('bp_search_option_items_to_search', $this->searchable_items);
+			
 			$this->search_args = $args;// save it for using in other methods
 
 			// bail out if nothing to search for
