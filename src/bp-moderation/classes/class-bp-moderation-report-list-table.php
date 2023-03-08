@@ -243,7 +243,10 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	public function single_row( $item ) {
 		$item = (array) $item;
 		echo '<tr>';
-		wp_kses_post( $this->single_row_columns( $item ) );
+		$single_row_columns = $this->single_row_columns( $item );
+		if ( ! empty( $single_row_columns ) ) {
+			wp_kses_post( $single_row_columns );
+		}
 		echo '</tr>';
 	}
 
