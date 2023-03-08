@@ -386,7 +386,7 @@ function bp_core_set_uri_globals() {
 	 * If a BuddyPress directory is set to the WP front page, URLs like example.com/members/?s=foo
 	 * shouldn't interfere with blog searches.
 	 */
-	if ( empty( $current_action ) && ! empty( $_GET['s'] ) && 'page' == get_option( 'show_on_front' ) && ! empty( $match->id ) ) {
+	if ( empty( $current_action ) && ( ! empty( $_GET['s'] ) || ! empty( $_POST['s']) ) && 'page' == get_option( 'show_on_front' ) && ! empty( $match->id ) ) {
 		$page_on_front = (int) get_option( 'page_on_front' );
 		if ( (int) $match->id === $page_on_front ) {
 			$bp->current_component = '';
