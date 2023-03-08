@@ -2552,7 +2552,6 @@ function bp_media_get_forum_id( $media_id ) {
 			}
 		}
 	}
-	wp_reset_postdata();
 
 	if ( ! $forum_id ) {
 		$topics_media_query = new WP_Query(
@@ -2584,7 +2583,6 @@ function bp_media_get_forum_id( $media_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	if ( ! $forum_id ) {
@@ -2619,7 +2617,6 @@ function bp_media_get_forum_id( $media_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
