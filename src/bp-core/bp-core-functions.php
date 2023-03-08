@@ -7849,7 +7849,7 @@ function bb_validate_gravatar( $email ) {
  */
 function bb_core_get_os() {
 
-	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
 	$os_platform = '';
 	$os_array    = array(
