@@ -1554,8 +1554,8 @@ class BP_Activity_Activity {
 
 			// A true cache miss.
 		} elseif ( empty( $comments ) ) {
-
-			$bp = buddypress();
+			$comments = array();
+			$bp       = buddypress();
 
 			// Select the user's fullname with the query.
 			if ( bp_is_active( 'xprofile' ) ) {
