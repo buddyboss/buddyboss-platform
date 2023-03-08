@@ -11,7 +11,12 @@
 
 	<?php bbp_breadcrumb(); ?>
 
-	<?php bbp_forum_subscription_link(); ?>
+	<?php
+	// Remove subscription link if forum assigned to the group.
+	if ( ! function_exists( 'bb_is_forum_group_forum' ) || ! bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
+		bbp_forum_subscription_link();
+	}
+	?>
 
 	<?php if ( bbp_get_forum_report_link( array( 'id' => bbp_get_forum_id() ) ) ) { ?>
 		<div class="bb_more_options action">
