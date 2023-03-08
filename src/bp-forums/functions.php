@@ -1083,3 +1083,22 @@ function bb_subscription_update_secondary_item( $post_id, $post ) {
 }
 
 add_action( 'edit_post', 'bb_subscription_update_secondary_item', 999, 2 );
+
+/**
+ * Return true if a forum is a group forum.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param int $forum_id Forum ID.
+ *
+ * @return bool True if it is a group forum, false if not.
+ */
+function bb_is_forum_group_forum( $forum_id = 0 ) {
+
+	// Validate.
+	$forum_id = bbp_get_forum_id( $forum_id );
+
+	$retval = function_exists( 'bbp_is_group_forums_active' ) && function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_group_forums_active() && bbp_is_forum_group_forum( $forum_id );
+
+	return (bool) apply_filters( 'bb_is_forum_group_forum', $retval, $forum_id );
+}

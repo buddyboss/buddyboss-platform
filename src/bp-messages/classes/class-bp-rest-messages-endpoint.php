@@ -2983,7 +2983,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 					return new WP_Error(
 						'bp_rest_user_suspended',
-						__( 'Unable to send new messages at this time.', 'buddyboss' ),
+						__( 'Unable to send new messages to this member.', 'buddyboss' ),
 						array( 'status' => 400 )
 					);
 				} elseif ( function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( $recipient_id ) ) {
