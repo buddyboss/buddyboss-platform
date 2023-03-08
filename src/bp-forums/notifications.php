@@ -709,7 +709,7 @@ function bb_forums_add_notification_metas( $notification ) {
 
 
 /**
- * Mark notifications as read when a user visits an particular reply.
+ * Mark notifications as read when a user visits an particular discussion/reply.
  *
  * @since BuddyBoss [BBVERSION]
  */
