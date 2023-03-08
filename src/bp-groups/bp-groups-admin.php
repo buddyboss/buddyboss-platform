@@ -259,7 +259,7 @@ function bp_groups_admin_load() {
 	if ( isset( $_GET['page'], $_GET['gid'] ) && 'bp-groups' === $_GET['page'] && ! empty( $_GET['gid'] ) ) {
 		$connected_forum_id  = 0;
 		$requested_group_id  = (int) sanitize_text_field( wp_unslash( $_GET['gid'] ) );
-		$connected_forum_ids = bbp_get_group_forum_ids( $requested_group_id );
+		$connected_forum_ids = function_exists( 'bbp_get_group_forum_ids' ) ? bbp_get_group_forum_ids( $requested_group_id ) : array();
 
 		// Get the first forum ID.
 		if ( ! empty( $connected_forum_ids ) ) {
