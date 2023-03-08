@@ -853,7 +853,21 @@
 				margin-bottom: 0;
 			}
 
+		}
+
+		> span {
+			margin-bottom: 8px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		span,
+		p {
+
 			&.blocked,
+			&.suspended,
 			&.deleted-message {
 				display: inline-block;
 				font-size: 13px;

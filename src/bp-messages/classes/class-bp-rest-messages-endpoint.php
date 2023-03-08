@@ -1520,8 +1520,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				__( 'Left "%s"', 'buddyboss' ),
 				ucwords( $group_name )
 			);
-			$group_member_action_type         = 'left';
-			$group_message_left_join_memebers = bp_messages_get_meta( $message->id, 'group_message_group_left_users' );
+			$group_member_action_type        = 'left';
+			$group_message_left_join_members = bp_messages_get_meta( $message->id, 'group_message_group_left_users' );
+		} elseif ( 'yes' === $message_joined ) {
+			$message->message = sprintf(
+			/* translators: %s: Group name */
+				__( 'Joined "%s"', 'buddyboss' ),
+				ucwords( $group_name )
+			);
+			$group_member_action_type        = 'join';
+			$group_message_left_join_members = bp_messages_get_meta( $message->id, 'group_message_group_joined_users' );
 		} elseif ( $message_deleted && 'yes' === $message_deleted ) {
 			$message->message = __( 'This message was deleted', 'buddyboss' );
 		} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
@@ -1536,14 +1544,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				__( 'Ban "%s"', 'buddyboss' ),
 				ucwords( $group_name )
 			);
-		} elseif ( $message_joined && 'yes' === $message_joined ) {
-			$message->message = sprintf(
-			/* translators: %s: Group name */
-				__( 'Joined "%s"', 'buddyboss' ),
-				ucwords( $group_name )
-			);
-			$group_member_action_type         = 'join';
-			$group_message_left_join_memebers = bp_messages_get_meta( $message->id, 'group_message_group_joined_users' );
 		} elseif ( 'This message was deleted' === wp_strip_all_tags( $message->message ) ) {
 			$message->message = wp_strip_all_tags( $message->message );
 		} else {
@@ -1582,11 +1582,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'group_member_action_type'  => $group_member_action_type,
 		);
 
-		if ( isset( $group_message_left_join_memebers ) && ! empty( $group_message_left_join_memebers ) ) {
-			$group_message_left_join_memebers         = array_map(
-				function( $user ) {
+		if ( isset( $group_message_left_join_members ) && ! empty( $group_message_left_join_members ) ) {
+			$group_message_left_join_members          = array_map(
+				function ( $user ) {
 					$user['user_id']      = (int) $user['user_id'];
 					$user['name']         = bp_core_get_user_displayname( $user['user_id'] );
+					$user['time']         = bp_rest_prepare_date_response( $user['time'] );
 					$user['user_avatars'] = bp_core_fetch_avatar(
 						array(
 							'item_id' => $user['user_id'],
@@ -1594,11 +1595,30 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 							'type'    => 'thumb',
 						)
 					);
+
 					return $user;
 				},
-				$group_message_left_join_memebers
+				$group_message_left_join_members
 			);
-			$data['group_message_left_join_memebers'] = $group_message_left_join_memebers;
+			$data['group_message_left_join_memebers'] = $group_message_left_join_members;
+			$data['group_message_left_join_members']  = $group_message_left_join_members;
+		} elseif ( in_array( $group_member_action_type, array( 'join', 'left' ), true ) ) {
+			$group_message_left_join_members          = array(
+				array(
+					'user_id'      => $message->sender_id,
+					'name'         => bp_core_get_user_displayname( $message->sender_id ),
+					'time'         => bp_rest_prepare_date_response( $message->date_sent ),
+					'user_avatars' => bp_core_fetch_avatar(
+						array(
+							'item_id' => $message->sender_id,
+							'html'    => false,
+							'type'    => 'thumb',
+						)
+					),
+				),
+			);
+			$data['group_message_left_join_memebers'] = $group_message_left_join_members;
+			$data['group_message_left_join_members']  = $group_message_left_join_members;
 		}
 
 		// Sender details.
@@ -2963,7 +2983,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 					return new WP_Error(
 						'bp_rest_user_suspended',
-						__( 'Unable to send new messages at this time.', 'buddyboss' ),
+						__( 'Unable to send new messages to this member.', 'buddyboss' ),
 						array( 'status' => 400 )
 					);
 				} elseif ( function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( $recipient_id ) ) {
