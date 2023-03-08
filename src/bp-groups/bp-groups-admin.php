@@ -117,7 +117,7 @@ function bp_groups_admin_load() {
 		// Delete groups forums
 		if ( ! empty( $gf_ids ) ) {
 			foreach ( $gf_ids as $gf_id ) {
-				$forum_ids = bbp_get_group_forum_ids( $gf_id );
+				$forum_ids = function_exists( 'bbp_get_group_forum_ids' ) ? bbp_get_group_forum_ids( $gf_id ) : array();
 				foreach ( $forum_ids as $forum_id ) {
 					wp_delete_post( $forum_id, true );
 				}
