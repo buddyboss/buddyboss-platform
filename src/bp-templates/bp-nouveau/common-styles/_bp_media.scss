@@ -213,7 +213,7 @@
 		}
 	}
 
-	.act-grid-1-1.bb-vertical-layout + div + div {
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem {
 		position: absolute;
 		right: 0;
 		bottom: 0;
@@ -223,6 +223,18 @@
 			position: relative;
 		}
 	}
+
+	@media screen and (max-width: 544px) {
+
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
+			position: static;
+			width: 100%;
+		}
+
+	}
+
 }
 
 .bb-activity-media-wrap.bb-media-length-4 {
@@ -247,19 +259,36 @@
 		}
 	}
 
-	.act-grid-1-1.bb-vertical-layout + div {
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
 		position: absolute;
 		right: 0;
-		top: 33.4%;
+		top: 0;
 		width: 36%;
 	}
 
-	.act-grid-1-1.bb-vertical-layout + div + div {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		width: 36%;
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem {
+		top: 33.4%;
 	}
+
+	.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
+		top: initial;
+		bottom: 0;
+	}
+
+
+	@media screen and (max-width: 544px) {
+
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
+		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
+			position: static;
+			width: 100%;
+		}
+
+	}
+
 }
 
 .bb-activity-media-wrap.bb-media-length-more {
@@ -5319,6 +5348,24 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	.user-actions {
 		display: none;
+	}
+}
+
+/* Access Control - Empty a tags */
+.acomment-avatar,
+.comment-author,
+.acomment-meta,
+.bp-avatar-wrap,
+.notification-avatar,
+.bs-group-member,
+.member-name,
+.message-metadata,
+.thread-avatar,
+.item-avatar,
+.item-meta h3 {
+
+	> a[href=""] {
+		pointer-events: none;
 	}
 }
 

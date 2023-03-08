@@ -281,6 +281,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return $value;
 		}
 
+		if ( bp_is_user_inactive( $user_id ) ) {
+			return bb_moderation_is_deleted_label();
+		}
+
 		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
 			if ( bp_moderation_is_user_blocked( $user_id ) ) {
 				return bb_moderation_has_blocked_label( $value, $user_id );
