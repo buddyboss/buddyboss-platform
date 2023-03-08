@@ -7849,7 +7849,7 @@ function bb_validate_gravatar( $email ) {
  */
 function bb_core_get_os() {
 
-	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
 	$os_platform = '';
 	$os_array    = array(
@@ -8285,7 +8285,7 @@ function bb_presence_default_interval() {
 /**
  * Function to return idle the time span for consider user inactive.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @return int
  */
@@ -8317,7 +8317,7 @@ function bb_did_filter( $hook_name ) {
 /**
  * Locate deleted usernames in an content string, as designated by an @ sign.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param array  $mentioned_users Associative array with user IDs as keys and usernames as values.
  * @param string $content         Content.
@@ -8356,7 +8356,7 @@ function bb_mention_deleted_users( $mentioned_users, $content ) {
 /**
  * Function will remove mention link from content if mentioned member is deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param mixed $content Content.
  *
@@ -8388,4 +8388,20 @@ function bb_mention_remove_deleted_users_link( $content ) {
 	}
 
 	return $content;
+}
+
+/**
+ * Fetch bb icons data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $key Array key.
+ *
+ * @return array
+ */
+function bb_icon_font_map_data( $key = '' ) {
+	global $bb_icons_data;
+	include buddypress()->plugin_dir . 'bp-templates/bp-nouveau/icons/font-map.php';
+
+	return ! empty( $key ) ? ( isset( $bb_icons_data[ $key ] ) ? $bb_icons_data[ $key ] : false ) : $bb_icons_data;
 }
