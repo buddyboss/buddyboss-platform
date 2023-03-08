@@ -29,7 +29,9 @@ add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
 add_filter( 'bp_get_requested_url', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 
+// Support for learndash nested urls.
 add_filter( 'learndash_permalinks_nested_urls', 'bb_support_learndash_permalinks_nested_urls', 9999, 3 );
+
 /** Functions *****************************************************************/
 
 /**
