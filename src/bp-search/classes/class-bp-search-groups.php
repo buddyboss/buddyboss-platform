@@ -144,7 +144,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 					$where_conditions['search_query'] .= " AND ( g.status != 'hidden' {$hidden_groups_condition} ) ";
 				}
 			} else {
-				$where_conditions['search_query'] .= "AND g.status != 'hidden' ";
+				$where_conditions['search_query'] .= "AND g.status != 'hidden' AND g.status != 'private' ";
 			}
 
 			/**

@@ -256,6 +256,22 @@ function bb_seo_press_compatibility_helper() {
 add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
 /**
+ * Allow activity page content restriction via MemberPress
+ * 
+ * @since BuddyBoss 2.2.9
+ *
+ * @return void
+ */
+function bb_core_allow_activity_page_content_restriction_memberpress() {
+
+	if ( bp_is_active( 'activity' ) && bp_is_activity_component() && function_exists('is_bbpress') && is_bbpress() ) {
+		remove_filter( 'mepr-pre-run-rule-content', 'MeprBbPressIntegration::dont_block_the_content', 11, 3 );
+	}
+
+}
+add_action( 'bp_init', 'bb_core_allow_activity_page_content_restriction_memberpress' );
+
+/**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
  *
  * @since BuddyBoss 1.1.9
