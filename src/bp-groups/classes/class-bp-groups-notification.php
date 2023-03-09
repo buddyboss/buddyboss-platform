@@ -1135,7 +1135,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$type_key                = 'bb_groups_subscribed_discussion';
 			$email_notification_type = 'groups-new-discussion';
 			$author_id               = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bbp_get_topic_author_id( $data_id );
-			$usernames               = function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ? bp_activity_find_mentions( bbp_get_topic_content( $data_id ) ) : array();
+			$usernames               = function_exists( 'bp_find_mentions_by_at_sign' ) ? bp_find_mentions_by_at_sign( array(), bbp_get_topic_content( $data_id ) ) : array();
 		}
 
 		if ( empty( $data_id ) || empty( $author_id ) || empty( $type_key ) || empty( $email_notification_type ) ) {
