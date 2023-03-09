@@ -258,7 +258,7 @@ add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 /**
  * Allow activity page content restriction via MemberPress
  * 
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9
  *
  * @return void
  */

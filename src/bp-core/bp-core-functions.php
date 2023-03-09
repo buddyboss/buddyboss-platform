@@ -7877,7 +7877,7 @@ function bb_validate_gravatar( $email ) {
  */
 function bb_core_get_os() {
 
-	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
 	$os_platform = '';
 	$os_array    = array(
@@ -8432,7 +8432,7 @@ function bb_mention_remove_deleted_users_link( $content ) {
 /**
  * Fetch bb icons data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9
  *
  * @param string $key Array key.
  *
