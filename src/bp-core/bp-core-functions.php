@@ -8417,7 +8417,7 @@ function bb_mention_remove_deleted_users_link( $content ) {
 /**
  * Fetch bb icons data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9
  *
  * @param string $key Array key.
  *

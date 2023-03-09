@@ -831,7 +831,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Update member friend count.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.9
 	 *
 	 * @param int    $user_id    User ID.
 	 * @param array  $member_ids Array member friend IDs.

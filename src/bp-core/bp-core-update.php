@@ -2435,7 +2435,7 @@ function bb_migrate_group_subscription_email_templates() {
 /**
  * Background job to update friends count.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9
  *
  * @return void
  */
@@ -2453,7 +2453,7 @@ function bb_update_to_2_2_9() {
 /**
  * Create a background job to update the friend count when member suspend/un-suspend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9
  *
  * @param int $paged The current page. Default 1.
  *
@@ -2507,7 +2507,7 @@ function bb_create_background_member_friends_count( $paged = 1 ) {
 /**
  * Update the friend count when member suspend/un-suspend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9
  *
  * @param array $user_ids Array of user ID.
  * @param int   $paged    The current page. Default 1.
