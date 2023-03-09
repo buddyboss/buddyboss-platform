@@ -912,6 +912,16 @@ function bp_setup_nav_menu_item( $menu_item ) {
 					$menu_item->classes[] = 'current_page_item';
 					$menu_item->classes[] = 'current-menu-item';
 				}
+			} elseif (
+				bp_is_groups_component() &&
+				bp_is_group_create() &&
+				(
+					'create' === end( $url_parts ) ||
+					in_array( 'bp-groups-nav', $menu_item->classes, true )
+				)
+			) {
+				$menu_item->classes[] = 'current_page_item';
+				$menu_item->classes[] = 'current-menu-item';
 			} elseif ( strpos( $current, $menu_item->url ) !== false ) {
 				$menu_item->classes[] = 'current_page_item';
 				$menu_item->classes[] = 'current-menu-item';
@@ -2254,7 +2264,7 @@ add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
  */
 function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 
-	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type ) {
+	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type && ! bp_is_groups_component() ) {
 		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
 			$classes = array_diff( $classes, array( 'current-menu-item', 'current_page_item' ) );
 		}
