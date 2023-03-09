@@ -1728,14 +1728,14 @@ function bb_notification_after_save_meta( $notification ) {
 			)
 		) {
 			$content = '';
-			if ( 'bb_groups_subscribed_discussion' === $notification->component_action ) {
+			if (
+				'bb_groups_subscribed_discussion' === $notification->component_action ||
+				'bb_forums_subscribed_discussion' === $notification->component_action
+			) {
 				$content = bbp_kses_data( bbp_get_topic_content( $notification->item_id ) );
 			}
 			if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
 				$content = bbp_kses_data( bbp_get_reply_content( $notification->item_id ) );
-			}
-			if ( 'bb_forums_subscribed_discussion' === $notification->component_action ) {
-				$content = bbp_kses_data( bbp_get_topic_content( $notification->item_id ) );
 			}
 			$usernames = ! empty( $content ) ? bp_find_mentions_by_at_sign( array(), $content ) : array();
 		}

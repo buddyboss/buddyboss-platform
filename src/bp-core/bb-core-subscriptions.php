@@ -1120,11 +1120,13 @@ function bb_send_notifications_to_subscribers( $args ) {
 	);
 
 	$usernames = array();
-	if ( ! empty( $r['data']['email_tokens']['tokens']['reply.content'] ) ) {
-		$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] );
-	}
-	if ( ! empty( $r['data']['email_tokens']['tokens']['discussion.content'] ) ) {
-		$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['discussion.content'] );
+	if ( ! empty( $r['data']['email_tokens'] ) && ! empty( $r['data']['email_tokens']['tokens'] ) ) {
+		if ( ! empty( $r['data']['email_tokens']['tokens']['reply.content'] ) ) {
+			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] );
+		}
+		if ( ! empty( $r['data']['email_tokens']['tokens']['discussion.content'] ) ) {
+			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['discussion.content'] );
+		}
 	}
 	if ( ! empty( $usernames ) ) {
 		$parse_args['usernames'] = $usernames;
