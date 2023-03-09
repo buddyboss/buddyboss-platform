@@ -1241,6 +1241,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		$edit_forum = ( array_key_exists( 'bbp-edit-group-forum', (array) $post_fields ) && ! empty( $post_fields['bbp-edit-group-forum'] ) ) ? true : false;
+		$forum_id   = 0;
 
 		$group_forum_extention = new BBP_Forums_Group_Extension();
 

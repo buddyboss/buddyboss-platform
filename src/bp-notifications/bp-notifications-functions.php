@@ -2063,7 +2063,7 @@ add_filter( 'bb_notification_is_read_only', 'bb_notification_linkable_specific_n
 /**
  * Function to exclude the notification actions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9
  *
  * @return array
  */

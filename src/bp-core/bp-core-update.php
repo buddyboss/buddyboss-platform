@@ -405,6 +405,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19551 ) {
 			bb_update_to_2_2_8();
 		}
+
+		if ( $raw_db_version < 19571 ) {
+			bb_update_to_2_2_9();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2330,7 +2334,7 @@ function bb_update_to_2_2_7() {
 }
 
 /**
- * Migration for group subscriptions.
+ * Migrate when update the platform to the latest version.
  *
  * @since BuddyBoss 2.2.8
  *
@@ -2353,7 +2357,6 @@ function bb_update_to_2_2_8() {
 	// Migrate group subscriptions.
 	bb_migrate_group_subscription( true );
 }
-
 
 /**
  * Install group subscription email templates.
@@ -2427,13 +2430,30 @@ function bb_migrate_group_subscription_email_templates() {
 			);
 		}
 	}
+}
+
+/**
+ * Background job to update friends count.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @return void
+ */
+function bb_update_to_2_2_9() {
+	$is_already_run = get_transient( 'bb_update_to_2_2_9' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_2_9', 'yes', HOUR_IN_SECONDS );
+
 	bb_create_background_member_friends_count();
 }
 
 /**
  * Create a background job to update the friend count when member suspend/un-suspend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9
  *
  * @param int $paged The current page. Default 1.
  *
@@ -2487,7 +2507,7 @@ function bb_create_background_member_friends_count( $paged = 1 ) {
 /**
  * Update the friend count when member suspend/un-suspend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9
  *
  * @param array $user_ids Array of user ID.
  * @param int   $paged    The current page. Default 1.
