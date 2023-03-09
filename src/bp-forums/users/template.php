@@ -1093,6 +1093,11 @@ function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
 			return false;
 		}
 
+		// Remove subscription link if forum is assigned to any group.
+		if ( function_exists( 'bb_is_forum_group_forum' ) && bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
+			return false;
+		}
+
 		// Decide which link to show.
 		$is_subscribed = bbp_is_user_subscribed_to_forum( $user_id, $forum_id );
 		if ( ! empty( $is_subscribed ) ) {

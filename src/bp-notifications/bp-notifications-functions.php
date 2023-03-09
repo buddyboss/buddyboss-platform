@@ -863,7 +863,8 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 	$excluded_user_component_actions = bb_disabled_notification_actions_by_user( get_current_user_id() );
 
 	if ( ! empty( $excluded_user_component_actions ) ) {
-		$querystring['excluded_action'] = $excluded_user_component_actions;
+		$excluded_action                = bb_notification_excluded_component_actions();
+		$querystring['excluded_action'] = array_unique( array_merge( $excluded_action, $excluded_user_component_actions ) );
 	}
 
 	return http_build_query( $querystring );
@@ -1083,6 +1084,8 @@ function bb_notification_avatar() {
 
 	switch ( $component_action ) {
 		case 'bb_groups_new_request':
+		case 'bb_groups_subscribed_discussion':
+		case 'bb_groups_subscribed_activity':
 			if ( ! empty( $notification->secondary_item_id ) ) {
 				$item_id = $notification->secondary_item_id;
 				$object  = 'user';
@@ -1372,6 +1375,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 
 			break;
 		case 'bb_activity_following_post':
+		case 'bb_groups_subscribed_activity':
 			$item_id      = $notification->item_id;
 			$activity     = new BP_Activity_Activity( $item_id );
 			$media_ids    = bp_activity_get_meta( $item_id, 'bp_media_ids', true );
@@ -1672,8 +1676,8 @@ function bb_can_send_push_notification( $user_id, $args = array() ) {
 		)
 	);
 
-	$presence_time    = (int) apply_filters( 'bb_push_notification_presence_time', bb_presence_interval() + bb_presence_time_span() );
-	$user_presence    = bb_is_online_user( $user_id, $presence_time );
+	$presence_time = (int) apply_filters( 'bb_push_notification_presence_time', bb_presence_interval() + bb_presence_time_span() );
+	$user_presence = bb_is_online_user( $user_id, $presence_time );
 
 	if ( true === $user_presence && true === $r['skip_active_user'] ) {
 		return false;
@@ -1701,6 +1705,7 @@ function bb_notification_after_save_meta( $notification ) {
 				$notification->component_action,
 				array(
 					'bb_activity_following_post',
+					'bb_groups_subscribed_activity',
 				),
 				true
 			)
@@ -1712,6 +1717,7 @@ function bb_notification_after_save_meta( $notification ) {
 			in_array(
 				$notification->component_action,
 				array(
+					'bb_groups_subscribed_discussion',
 					'bb_forums_subscribed_reply',
 					'bb_forums_subscribed_discussion',
 				),
@@ -1719,6 +1725,9 @@ function bb_notification_after_save_meta( $notification ) {
 			)
 		) {
 			$content = '';
+			if ( 'bb_groups_subscribed_discussion' === $notification->component_action ) {
+				$content = bbp_kses_data( bbp_get_topic_content( $notification->item_id ) );
+			}
 			if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
 				$content = bbp_kses_data( bbp_get_reply_content( $notification->item_id ) );
 			}
@@ -1768,6 +1777,8 @@ function bb_notification_manage_app_push_notification( $content, $component_name
 			$component_action,
 			array(
 				'bb_activity_following_post',
+				'bb_groups_subscribed_activity',
+				'bb_groups_subscribed_discussion',
 				'bb_forums_subscribed_reply',
 				'bb_forums_subscribed_discussion',
 			),
@@ -1822,39 +1833,39 @@ function bb_notification_is_read_only( $notification ) {
 	);
 
 	$retval = ! empty( $notification ) &&
-	          (
-		          (
-			          (
-				          ! in_array( $notification->component_action, $allowed_component_action, true ) &&
-				          ! empty( $notification->secondary_item_id ) &&
-				          bp_is_user_inactive( $notification->secondary_item_id )
-			          ) ||
-			          (
-				          in_array( $notification->component_action, $allowed_component_action, true ) &&
-				          ! empty( $notification->item_id ) &&
-				          bp_is_user_inactive( $notification->item_id )
-			          )
-		          ) ||
-		          (
-			          bp_is_active( 'moderation' ) &&
-			          (
-				          (
-					          ! in_array( $notification->component_action, $allowed_component_action, true ) &&
-					          ! empty( $notification->secondary_item_id ) &&
-					          bb_moderation_moderated_user_ids( $notification->secondary_item_id )
-				          ) ||
-				          (
-					          in_array( $notification->component_action, $allowed_component_action, true ) &&
-					          ! empty( $notification->item_id ) &&
-					          bb_moderation_moderated_user_ids( $notification->item_id )
-				          ) ||
-				          (
-					          ! empty( $notification->user_id ) &&
-					          bb_moderation_moderated_user_ids( $notification->user_id )
-				          )
-			          )
-		          )
-	          );
+	(
+		(
+			(
+				! in_array( $notification->component_action, $allowed_component_action, true ) &&
+				! empty( $notification->secondary_item_id ) &&
+				bp_is_user_inactive( $notification->secondary_item_id )
+			) ||
+			(
+				in_array( $notification->component_action, $allowed_component_action, true ) &&
+				! empty( $notification->item_id ) &&
+				bp_is_user_inactive( $notification->item_id )
+			)
+			) ||
+			(
+				bp_is_active( 'moderation' ) &&
+			(
+				(
+					! in_array( $notification->component_action, $allowed_component_action, true ) &&
+					! empty( $notification->secondary_item_id ) &&
+					bb_moderation_moderated_user_ids( $notification->secondary_item_id )
+				) ||
+				(
+					in_array( $notification->component_action, $allowed_component_action, true ) &&
+					! empty( $notification->item_id ) &&
+					bb_moderation_moderated_user_ids( $notification->item_id )
+				) ||
+				(
+					! empty( $notification->user_id ) &&
+					bb_moderation_moderated_user_ids( $notification->user_id )
+				)
+			)
+		)
+	);
 
 	return (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
 }
@@ -1937,7 +1948,7 @@ function bb_notification_read_for_moderated_members() {
 
 	if ( ! empty( $all_users ) ) {
 		$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $all_users ) . ' )';
-		$select_sql .= " AND component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' ) AND item_id IN ( " . implode( ',', $all_users ) . " )";
+		$select_sql        .= " AND component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' ) AND item_id IN ( " . implode( ',', $all_users ) . ' )';
 	}
 	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
 
@@ -1988,7 +1999,7 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 				'bb_activity_comment',
 				'bb_groups_new_message',
 				'bb_groups_subscribed_discussion',
-				'bb_groups_new_request'
+				'bb_groups_new_request',
 			),
 			true
 		)
@@ -2058,3 +2069,24 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 	return $retval;
 }
 add_filter( 'bb_notification_is_read_only', 'bb_notification_linkable_specific_notification', 10, 2 );
+
+/**
+ * Function to exclude the notification actions.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @return array
+ */
+function bb_notification_excluded_component_actions() {
+	$actions = array();
+
+	if ( ! bp_is_active( 'activity' ) ) {
+		$actions[] = 'bb_groups_subscribed_activity';
+	}
+
+	if ( ! bp_is_active( 'forums' ) ) {
+		$actions[] = 'bb_groups_subscribed_discussion';
+	}
+
+	return apply_filters( 'bb_notification_excluded_component_actions', $actions );
+}

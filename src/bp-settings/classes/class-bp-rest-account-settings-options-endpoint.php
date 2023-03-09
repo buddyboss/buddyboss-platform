@@ -1033,6 +1033,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$field_groups = bp_xprofile_get_groups(
 			array(
 				'fetch_fields'           => true,
+				'user_id'                => bp_loggedin_user_id(),
 				'fetch_field_data'       => true,
 				'fetch_visibility_level' => true,
 			)
