@@ -895,6 +895,18 @@ function bp_setup_nav_menu_item( $menu_item ) {
 						bp_is_groups_component() &&
 						'invites' === bp_current_action() &&
 						in_array( 'bp-groups-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_user_albums() &&
+						in_array( 'bp-photos-nav', $menu_item->classes, true )
+					) ||
+					(
+						bp_is_forums_component() &&
+						(
+							'favorites' === bp_current_action() ||
+							'replies' === bp_current_action()
+						) &&
+						in_array( 'bp-forums-nav', $menu_item->classes, true )
 					)
 				) {
 					$menu_item->classes[] = 'current_page_item';
