@@ -53,10 +53,20 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$browser_tab          = empty( $_POST['_bp_on_screen_notifications_browser_tab'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_browser_tab'] );
 		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
 
-		// Do not change settings when follow is disabled from the Settings -> Activity.
-		if ( function_exists( 'bp_is_activity_follow_active' ) && false === bp_is_activity_follow_active() ) {
-			unset( $enabled_notification['bb_activity_following_post'] );
-			unset( $enabled_notification['bb_following_new'] );
+		// Do not change settings(bb_forums_subscribed_discussion, bb_forums_subscribed_reply) because it's depend on subscription from the Settings -> Forum.
+		if ( isset( $enabled_notification['bb_forums_subscribed_discussion'] ) ) {
+			unset( $enabled_notification['bb_forums_subscribed_discussion'] );
+		}
+		if ( isset( $enabled_notification['bb_forums_subscribed_reply'] ) ) {
+			unset( $enabled_notification['bb_forums_subscribed_reply'] );
+		}
+
+		// Do not change settings(bb_groups_subscribed_activity, bb_groups_subscribed_discussion) because it's depend on subscription from the Settings -> Group.
+		if ( isset( $enabled_notification['bb_groups_subscribed_activity'] ) ) {
+			unset( $enabled_notification['bb_groups_subscribed_activity'] );
+		}
+		if ( isset( $enabled_notification['bb_groups_subscribed_discussion'] ) ) {
+			unset( $enabled_notification['bb_groups_subscribed_discussion'] );
 		}
 
 		if ( ! bb_enabled_legacy_email_preference() ) {

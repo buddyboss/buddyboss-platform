@@ -524,7 +524,6 @@ window.bp = window.bp || {};
 						type: 'POST',
 						url: BP_Nouveau.ajaxurl,
 						data: draft_data,
-						async: false,
 						success: function() {}
 					}
 				);

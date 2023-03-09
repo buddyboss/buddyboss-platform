@@ -65,6 +65,9 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		// Update the where condition for group subscriptions.
+		add_filter( 'bb_subscriptions_suspend_group_get_where_conditions', array( $this, 'bb_subscriptions_moderation_group_where_conditions' ), 10, 2 );
 	}
 
 	/**
@@ -232,5 +235,31 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 */
 	public function report_content_type( $content_type, $item_id ) {
 		return esc_html__( 'Group', 'buddyboss' );
+	}
+
+	/**
+	 * Update where query remove hidden/blocked group subscriptions.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param array  $where   Subscription groups where sql.
+	 * @param object $suspend suspend object.
+	 *
+	 * @return array
+	 */
+	public function bb_subscriptions_moderation_group_where_conditions( $where, $suspend ) {
+		$moderation_where = 'hide_parent = 1 OR hide_sitewide = 1';
+
+		$blocked_query = $this->blocked_user_query();
+		if ( ! empty( $blocked_query ) ) {
+			if ( ! empty( $moderation_where ) ) {
+				$moderation_where .= ' OR ';
+			}
+			$moderation_where .= "( id IN ( $blocked_query ) )";
+		}
+
+		$where['moderation_where'] = $moderation_where;
+
+		return $where;
 	}
 }
