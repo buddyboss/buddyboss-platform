@@ -1502,7 +1502,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			array(
 				'posts_per_page' => - 1,
 				'post_type'      => bp_get_member_type_post_type(),
-				'orderby'        => 'title',
+				'post_status'    => 'publish',
+				'orderby'        => 'menu_order',
 				'order'          => 'ASC',
 			)
 		);

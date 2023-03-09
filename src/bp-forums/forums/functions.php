@@ -2572,7 +2572,7 @@ function bbp_get_forums_per_page( $default = 15 ) {
 /**
  * Return al sub forums by parent forum ID.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.8
  *
  * @param int $forum_id The ID of forum.
  *
