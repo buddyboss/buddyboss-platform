@@ -78,6 +78,16 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	private $subscriptions = array();
 
+
+	/**
+	 * If set bypass the subscription validation.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @var bool
+	 */
+	public static $no_validate = false;
+
 	/**
 	 * Initialize.
 	 *
@@ -238,6 +248,11 @@ abstract class BP_Core_Notification_Abstract {
 					is_array( $type['notification_type'] ) &&
 					! key_exists( $type['subscription_type'], $types ) &&
 					array_filter( array_map( array( $this, 'bb_filter_read_only_subscription' ), $type['notification_type'] ) )
+				) {
+					$types[ $type['subscription_type'] ] = $type;
+				} elseif (
+					true === self::$no_validate &&
+					! key_exists( $type['subscription_type'], $types )
 				) {
 					$types[ $type['subscription_type'] ] = $type;
 				}
