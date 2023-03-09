@@ -1630,6 +1630,11 @@ function bp_activity_user_can_delete( $activity = false ) {
 			$can_delete = true;
 		}
 
+		// Community organizers can delete activity.
+		if ( 'groups' === $activity->component && groups_is_user_admin( bp_loggedin_user_id(), $activity->item_id ) ) {
+			$can_delete = true;
+		}
+
 		// Users are allowed to delete their own activity. This is actually
 		// quite powerful, because doing so also deletes all comments to that
 		// activity item. We should revisit this eventually.
