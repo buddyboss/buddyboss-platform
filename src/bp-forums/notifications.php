@@ -750,6 +750,12 @@ function bb_forums_remove_screen_notifications() {
 		if ( 1 === $success ) {
 			$notifications_data = bp_notifications_get_notification( $comment_id );
 			if ( isset( $notifications_data->item_id ) ) {
+				$component_name   = 'forums';
+				$component_action = 'bb_forums_subscribed_discussion';
+				if ( function_exists( 'bp_is_group_forum_topic' ) && bp_is_group_forum_topic() ) {
+					$component_name   = 'groups';
+					$component_action = 'bb_groups_subscribed_discussion';
+				}
 				BP_Notifications_Notification::update(
 					array(
 						'is_new' => false,
@@ -768,8 +774,8 @@ function bb_forums_remove_screen_notifications() {
 					array(
 						'user_id'          => bp_loggedin_user_id(),
 						'item_id'          => $notifications_data->item_id,
-						'component_name'   => 'forums',
-						'component_action' => 'bb_forums_subscribed_discussion',
+						'component_name'   => $component_name,
+						'component_action' => $component_action,
 					)
 				);
 			}
