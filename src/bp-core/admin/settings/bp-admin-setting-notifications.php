@@ -54,19 +54,37 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
 
 		// Do not change settings(bb_forums_subscribed_discussion, bb_forums_subscribed_reply) because it's depend on subscription from the Settings -> Forum.
-		if ( isset( $enabled_notification['bb_forums_subscribed_discussion'] ) ) {
-			unset( $enabled_notification['bb_forums_subscribed_discussion'] );
-		}
-		if ( isset( $enabled_notification['bb_forums_subscribed_reply'] ) ) {
-			unset( $enabled_notification['bb_forums_subscribed_reply'] );
+		if ( function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
+			if ( isset( $enabled_notification['bb_forums_subscribed_discussion'] ) ) {
+				$enabled_notification['bb_forums_subscribed_discussion']['main'] = 'yes';
+			}
+			if ( isset( $enabled_notification['bb_forums_subscribed_reply'] ) ) {
+				$enabled_notification['bb_forums_subscribed_reply']['main'] = 'yes';
+			}
+		} else {
+			if ( isset( $enabled_notification['bb_forums_subscribed_discussion'] ) ) {
+				unset( $enabled_notification['bb_forums_subscribed_discussion'] );
+			}
+			if ( isset( $enabled_notification['bb_forums_subscribed_reply'] ) ) {
+				unset( $enabled_notification['bb_forums_subscribed_reply'] );
+			}
 		}
 
 		// Do not change settings(bb_groups_subscribed_activity, bb_groups_subscribed_discussion) because it's depend on subscription from the Settings -> Group.
-		if ( isset( $enabled_notification['bb_groups_subscribed_activity'] ) ) {
-			unset( $enabled_notification['bb_groups_subscribed_activity'] );
-		}
-		if ( isset( $enabled_notification['bb_groups_subscribed_discussion'] ) ) {
-			unset( $enabled_notification['bb_groups_subscribed_discussion'] );
+		if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
+			if ( isset( $enabled_notification['bb_groups_subscribed_activity'] ) ) {
+				$enabled_notification['bb_groups_subscribed_activity']['main'] = 'yes';
+			}
+			if ( isset( $enabled_notification['bb_groups_subscribed_discussion'] ) ) {
+				$enabled_notification['bb_groups_subscribed_discussion']['main'] = 'yes';
+			}
+		} else {
+			if ( isset( $enabled_notification['bb_groups_subscribed_activity'] ) ) {
+				unset( $enabled_notification['bb_groups_subscribed_activity'] );
+			}
+			if ( isset( $enabled_notification['bb_groups_subscribed_discussion'] ) ) {
+				unset( $enabled_notification['bb_groups_subscribed_discussion'] );
+			}
 		}
 
 		if ( ! bb_enabled_legacy_email_preference() ) {
