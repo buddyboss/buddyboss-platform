@@ -613,27 +613,26 @@ function bp_ps_anyfield_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	$results = $wpdb->get_col( $query );
-	if ( ! empty ( $results ) && ! current_user_can( 'administrator' )  ) {
-		$meta_value = 'adminsonly';
-		if ( bp_is_active( 'friends' ) && false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() ) ) {
-			$meta_value = 'friends';
+	$results  = $wpdb->get_results( $query, ARRAY_A );
+	$user_ids = array();
+	if ( ! empty( $results ) ) {
+		foreach ( $results as $key => $value ) {
+			$field_id = ! empty( $value['field_id'] ) ? $value['field_id'] : '';
+			$user_id  = ! empty( $value['user_id'] ) ? $value['user_id'] : '';
+			if ( ! empty( $field_id ) && ! empty( $user_id ) ) {
+				$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
+				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
+					unset( $results[ $key ] );
+				} elseif ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() ) ) {
+					unset( $results[ $key ] );
+				} else {
+					$user_ids[] = $user_id;
+				}
+			}
 		}
-		$args = array(
-			'fields'       => 'ID',
-			'include'      => $results,
-			'meta_key'     => 'bp_xprofile_visibility_levels',
-			'meta_value'   => $meta_value,
-			'meta_compare' => 'NOT REGEXP'
-		);
-		$user_query = new WP_User_Query( $args );
-		if ( ! empty ( $user_query ) ) {
-			$user_data = $user_query->get_results();
-			return $user_data;
-		}
-	} else {
-		return $results;
 	}
+
+	return $user_ids;
 }
 
 add_filter( 'bp_ps_add_fields', 'bp_ps_heading_field_setup', 11 );
