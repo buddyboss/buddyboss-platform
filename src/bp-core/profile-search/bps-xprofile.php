@@ -616,7 +616,7 @@ function bp_ps_anyfield_search( $f ) {
 	$results = $wpdb->get_col( $query );
 	if ( ! empty ( $results ) && ! current_user_can( 'administrator' )  ) {
 		$meta_value = 'adminsonly';
-		if ( false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() ) ) {
+		if ( bp_is_active( 'friends' ) && false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() ) ) {
 			$meta_value = 'friends';
 		}
 		$args = array(
