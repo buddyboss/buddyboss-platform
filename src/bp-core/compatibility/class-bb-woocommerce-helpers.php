@@ -102,7 +102,7 @@ class BB_Woocommerce_Helpers {
 	 * @return array
 	 */
 	public function bb_wcs_remove_query_vars( $q_vars ) {
-		if ( 'subscriptions' === bp_action_variable() ) {
+		if ( 'subscriptions' === bp_action_variable() && isset( $q_vars['subscriptions'] ) ) {
 			unset( $q_vars['subscriptions'] );
 		}
 
