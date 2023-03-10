@@ -591,7 +591,7 @@ function bp_ps_anyfield_search( $f ) {
 		'select' => '',
 		'where'  => array(),
 	);
-	$sql['select'] = "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data}";
+	$sql['select'] = "SELECT DISTINCT user_id, field_id FROM {$bp->profile->table_name_data}";
 
 	switch ( $filter ) {
 		case 'contains':
