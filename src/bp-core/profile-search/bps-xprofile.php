@@ -623,7 +623,7 @@ function bp_ps_anyfield_search( $f ) {
 				$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
 				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
 					unset( $results[ $key ] );
-				} elseif ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() ) ) {
+				} elseif ( bp_is_active( 'friends' ) && 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() ) ) {
 					unset( $results[ $key ] );
 				} else {
 					$user_ids[] = $user_id;
