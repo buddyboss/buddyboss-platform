@@ -692,7 +692,6 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			$forum = bbp_get_forum( $post_ID );
 			return $forum->post_parent;
 		}
-
 	}
 endif; // class_exists check
 
