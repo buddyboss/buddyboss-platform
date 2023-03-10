@@ -1337,40 +1337,36 @@ class BBP_Replies_Widget extends WP_Widget {
 					$author_related_class = 'bbp-reply-topic-no-avatar';
 				endif;
 
+				$reply_author_url = bbp_get_reply_author_url( $reply_id );
+
 				?>
 
 				<li class="<?php echo $author_related_class; ?>">
+					<?php if ( ! empty( $author_link ) ) : ?>
 
-					<?php
+					<a href="<?php echo esc_url( $reply_author_url ); ?>" class="bbp-author-link" rel="nofollow">
+						<span class="bbp-author-avatar">
+							<?php echo bbp_get_reply_author_avatar( $reply_id ); ?>
+						</span>
+					</a>
 
-					// Reply author, link, and timestamp.
-					if ( ! empty( $settings['show_date'] ) && ! empty( $author_link ) ) :
+					<?php endif; ?>
 
-						// translators: 1: reply author, 2: reply link, 3: reply timestamp.
-						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div class="bbp-reply-topic-time">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
+					<div class="bbp-reply-info">
 
-						// Reply link and timestamp.
-					elseif ( ! empty( $settings['show_date'] ) ) :
+						<?php
+						if ( ! empty( $author_link ) ) :
+							printf( __( '%1$s on ', 'buddyboss' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '">' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' );
+						endif;
 
-						// translators: 1: reply link, 2: reply timestamp.
-						printf( __( '%1$s %2$s', 'buddyboss' ), $reply_link, '<div class="bbp-reply-topic-time">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
+						echo $reply_link;
 
-						// Reply author and title.
-					elseif ( ! empty( $author_link ) ) :
+						if ( ! empty( $settings['show_date'] ) ) : ?>
 
-						// translators: 1: reply author, 2: reply link.
-						printf( __( '%1$s on %2$s', 'buddyboss' ), $author_link, $reply_link );
+							<div class="time-since"><?php bbp_topic_last_active_time( $reply_id ); ?></div>
 
-						// Only the reply title.
-					else :
-
-						// translators: 1: reply link.
-						printf( __( '%1$s', 'buddyboss' ), $reply_link );
-
-					endif;
-
-					?>
-
+						<?php endif; ?>
+					</div>	
 				</li>
 
 			<?php endwhile; ?>
