@@ -616,10 +616,32 @@ function bp_ps_anyfield_search( $f ) {
 	$results  = $wpdb->get_results( $query, ARRAY_A );
 	$user_ids = array();
 	if ( ! empty( $results ) ) {
+		// Exclude repeater fields.
+		$group_ids = bp_xprofile_get_groups(
+			array(
+				'repeater_show_main_fields_only' => true,
+				'fetch_fields'                   => true,
+				'fetch_field_data'               => true,
+				'user_id'                        => false,
+			)
+		);
+		$fields_array = array();
+		if ( ! empty( $group_ids ) ) {
+			foreach ( $group_ids as $group_key => $group_value ) {
+				$repeater_enabled = bp_xprofile_get_meta( $group_value->id, 'group', 'is_repeater_enabled', true );
+				if ( ! empty( $repeater_enabled ) && 'on' === $repeater_enabled && ! empty( $group_value->fields ) ) {
+					$fields_array = array_merge( $fields_array, wp_list_pluck( $group_value->fields, 'id' ) );
+				}
+			}
+		}
 		foreach ( $results as $key => $value ) {
-			$field_id = ! empty( $value['field_id'] ) ? $value['field_id'] : '';
-			$user_id  = ! empty( $value['user_id'] ) ? $value['user_id'] : '';
+			$field_id = ! empty( $value['field_id'] ) ? (int) $value['field_id'] : 0;
+			$user_id  = ! empty( $value['user_id'] ) ? (int) $value['user_id'] : 0;
 			if ( ! empty( $field_id ) && ! empty( $user_id ) ) {
+				if ( ! empty( $fields_array ) && in_array( $field_id, $fields_array, true ) ) {
+					unset( $results[ $key ] );
+					continue;
+				}
 				$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
 				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
 					unset( $results[ $key ] );
