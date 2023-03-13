@@ -1550,7 +1550,7 @@ class BP_Activity_Activity {
 		// We store the string 'none' to cache the fact that the
 		// activity item has no comments.
 		if ( 'none' === $comments ) {
-			$comments = false;
+			$comments = array();
 
 			// A true cache miss.
 		} elseif ( empty( $comments ) ) {
@@ -1725,7 +1725,7 @@ class BP_Activity_Activity {
 			// miss the next time the activity comments are fetched.
 			// Storing the string 'none' is a hack workaround to
 			// avoid unnecessary queries.
-			if ( false === $comments ) {
+			if ( false === $comments || empty( $comments ) ) {
 				$cache_value = 'none';
 			} else {
 				$cache_value = $comments;

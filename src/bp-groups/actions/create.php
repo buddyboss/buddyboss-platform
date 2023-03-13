@@ -198,7 +198,7 @@ function groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_video_status    = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
-			$post_group_video_status = filter_input( INPUT_POST, 'group-video-status', FILTER_SANITIZE_STRING );
+			$post_group_video_status = bb_filter_input_string( INPUT_POST, 'group-video-status' );
 			$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : 'members';
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'video_status', $video_status );
