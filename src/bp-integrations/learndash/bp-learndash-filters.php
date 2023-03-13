@@ -481,6 +481,9 @@ function bb_add_or_remove_user_in_social_group( $group_id, $user_id, $type = 'jo
 			}
 		}
 	}
+}
+
+/**
  * Forum's shortcode pagination support for the learndash permalink nested urls.
  *
  * @since BuddyBoss [BBVERSION]
