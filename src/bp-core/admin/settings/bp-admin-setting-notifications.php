@@ -53,37 +53,48 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$browser_tab          = empty( $_POST['_bp_on_screen_notifications_browser_tab'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_browser_tab'] );
 		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
 
-		// Do not change settings(bb_forums_subscribed_discussion, bb_forums_subscribed_reply) because it's depend on subscription from the Settings -> Forum.
-		if ( function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
-			if ( isset( $enabled_notification['bb_forums_subscribed_discussion'] ) ) {
-				$enabled_notification['bb_forums_subscribed_discussion']['main'] = 'yes';
-			}
-			if ( isset( $enabled_notification['bb_forums_subscribed_reply'] ) ) {
-				$enabled_notification['bb_forums_subscribed_reply']['main'] = 'yes';
-			}
-		} else {
-			if ( isset( $enabled_notification['bb_forums_subscribed_discussion'] ) ) {
-				unset( $enabled_notification['bb_forums_subscribed_discussion'] );
-			}
-			if ( isset( $enabled_notification['bb_forums_subscribed_reply'] ) ) {
-				unset( $enabled_notification['bb_forums_subscribed_reply'] );
+		// All preferences registered.
+		$notification_preferences   = bb_register_notification_preferences();
+		$preferences = array();
+		if ( ! empty( $notification_preferences ) ) {
+			foreach ( $notification_preferences as $group => $group_data ) {
+
+				if ( ! empty( $group_data['fields'] ) ) {
+					$keys = array_filter(
+						array_map(
+							function ( $fields ) {
+								if (
+									isset( $fields['notification_read_only'] ) &&
+									true === (bool) $fields['notification_read_only']
+								) {
+									return array(
+										'key'     => $fields['key'],
+										'default' => $fields['default']
+									);
+								}
+							},
+							$group_data['fields']
+						)
+					);
+
+					if ( ! empty( $keys ) ) {
+						$preferences = array_merge( $keys, $preferences );
+					}
+				}
 			}
 		}
 
-		// Do not change settings(bb_groups_subscribed_activity, bb_groups_subscribed_discussion) because it's depend on subscription from the Settings -> Group.
-		if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
-			if ( isset( $enabled_notification['bb_groups_subscribed_activity'] ) ) {
-				$enabled_notification['bb_groups_subscribed_activity']['main'] = 'yes';
-			}
-			if ( isset( $enabled_notification['bb_groups_subscribed_discussion'] ) ) {
-				$enabled_notification['bb_groups_subscribed_discussion']['main'] = 'yes';
-			}
-		} else {
-			if ( isset( $enabled_notification['bb_groups_subscribed_activity'] ) ) {
-				unset( $enabled_notification['bb_groups_subscribed_activity'] );
-			}
-			if ( isset( $enabled_notification['bb_groups_subscribed_discussion'] ) ) {
-				unset( $enabled_notification['bb_groups_subscribed_discussion'] );
+		if ( ! empty( $preferences ) ) {
+			foreach ( $preferences as $preference ) {
+
+				if ( isset( $preference['key'] ) && isset( $preference['default'] ) ) {
+					if ( isset( $enabled_notification[ $preference['key'] ] ) && $preference['default'] === 'yes' ) {
+						$enabled_notification[ $preference['key'] ]['main'] = $preference['default'];
+					} else {
+						unset( $enabled_notification[ $preference['key'] ] );
+					}
+				}
+
 			}
 		}
 
