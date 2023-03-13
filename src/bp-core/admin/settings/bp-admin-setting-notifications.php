@@ -54,8 +54,8 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
 
 		// All preferences registered.
-		$notification_preferences   = bb_register_notification_preferences();
-		$preferences = array();
+		$notification_preferences = bb_register_notification_preferences();
+		$preferences              = array();
 		if ( ! empty( $notification_preferences ) ) {
 			foreach ( $notification_preferences as $group => $group_data ) {
 
@@ -69,7 +69,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 								) {
 									return array(
 										'key'     => $fields['key'],
-										'default' => $fields['default']
+										'default' => $fields['default'],
 									);
 								}
 							},
@@ -88,13 +88,12 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 			foreach ( $preferences as $preference ) {
 
 				if ( isset( $preference['key'] ) && isset( $preference['default'] ) ) {
-					if ( isset( $enabled_notification[ $preference['key'] ] ) && $preference['default'] === 'yes' ) {
+					if ( isset( $enabled_notification[ $preference['key'] ] ) && 'yes' === $preference['default'] ) {
 						$enabled_notification[ $preference['key'] ]['main'] = $preference['default'];
 					} else {
 						unset( $enabled_notification[ $preference['key'] ] );
 					}
 				}
-
 			}
 		}
 
