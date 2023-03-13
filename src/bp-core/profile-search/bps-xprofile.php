@@ -627,10 +627,12 @@ function bp_ps_anyfield_search( $f ) {
 		);
 		$fields_array = array();
 		if ( ! empty( $group_ids ) ) {
-			foreach ( $group_ids as $group_key => $group_value ) {
-				$repeater_enabled = bp_xprofile_get_meta( $group_value->id, 'group', 'is_repeater_enabled', true );
-				if ( ! empty( $repeater_enabled ) && 'on' === $repeater_enabled && ! empty( $group_value->fields ) ) {
-					$fields_array = array_merge( $fields_array, wp_list_pluck( $group_value->fields, 'id' ) );
+			foreach ( $group_ids as $group_value ) {
+				if ( ! empty( $group_value->id ) ) {
+					$repeater_enabled = bp_xprofile_get_meta( $group_value->id, 'group', 'is_repeater_enabled', true );
+					if ( ! empty( $repeater_enabled ) && 'on' === $repeater_enabled && ! empty( $group_value->fields ) ) {
+						$fields_array = array_merge( $fields_array, wp_list_pluck( $group_value->fields, 'id' ) );
+					}
 				}
 			}
 		}
