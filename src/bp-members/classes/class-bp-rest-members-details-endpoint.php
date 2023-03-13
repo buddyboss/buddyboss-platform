@@ -287,10 +287,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
 		}
 
-		$id_map = array(
-			'activity' => 'activities',
-			'profile'  => 'xprofile',
-		);
+		$id_map = array( 'profile' => 'xprofile' );
 
 		$args = array();
 
@@ -324,7 +321,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				$request->set_param( 'user_nav', $navs );
 
 				$tab = array(
-					'id'                      => $id,
+					'id'                      => ( 'activity' === $id ? 'activities' : $id ), // Needs this slug to suppport: hide_in_app in app.
 					'title'                   => $name,
 					'default'                 => false,
 					'link'                    => $link,
