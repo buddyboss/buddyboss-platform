@@ -96,6 +96,9 @@ function bp_get_default_options() {
 		// Group Types.
 		'bp-disable-group-type-creation'             => false,
 
+		// Group Subscriptions.
+		'bb_enable_group_subscriptions'              => true,
+
 		// Auto Group Membership Approval.
 		'bp-enable-group-auto-join'                  => false,
 
@@ -2263,3 +2266,24 @@ function bb_get_default_custom_upload_group_cover() {
 	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
 }
 
+/**
+ * Is group subscription turned off?
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if group subscription is enabled, otherwise false.
+ */
+function bb_enable_group_subscriptions( $default = true ) {
+
+	/**
+	 * Filters whether group subscription is turned off.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param bool $value Whether group subscription is turned off.
+	 */
+	return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
+}
