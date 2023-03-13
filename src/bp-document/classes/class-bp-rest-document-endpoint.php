@@ -2653,9 +2653,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$documents = $this->assemble_response_data(
 			array(
-				'document_ids' => $document_ids,
-				'sort'         => 'ASC',
-				'order_by'     => 'menu_order',
+				'document_ids'     => $document_ids,
+				'sort'             => 'ASC',
+				'order_by'         => 'menu_order',
+				'moderation_query' => false,
 			)
 		);
 
