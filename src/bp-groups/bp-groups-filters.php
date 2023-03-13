@@ -1074,7 +1074,7 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	global $bp_activity_edit;
 
 	// Bail if subscriptions are turned off.
-	if ( ! bb_is_enabled_subscription( 'group' ) ) {
+	if ( ! bb_is_enabled_subscription( 'group' ) || ! bp_is_active( 'activity' ) ) {
 		return;
 	}
 
