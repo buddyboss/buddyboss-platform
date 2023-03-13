@@ -902,7 +902,7 @@ class BP_XProfile_Group {
 						<div id="post-body-content">
 							<div id="titlediv">
 								<div class="titlewrap">
-									<label id="title-prompt-text" for="title"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
+									<label id="title-prompt-text" for="title" class="screen-reader-text"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
 									<input type="text" name="group_name" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 								</div>
 							</div>
