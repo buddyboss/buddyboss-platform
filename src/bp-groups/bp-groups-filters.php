@@ -1071,12 +1071,14 @@ add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
  * @return void
  */
 function bb_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) {
+	global $bp_activity_edit;
+
 	// Bail if subscriptions are turned off.
 	if ( ! bb_is_enabled_subscription( 'group' ) ) {
 		return;
 	}
 
-	if ( empty( $user_id ) || empty( $group_id ) || empty( $activity_id ) ) {
+	if ( empty( $user_id ) || empty( $group_id ) || empty( $activity_id ) || $bp_activity_edit ) {
 		return;
 	}
 
