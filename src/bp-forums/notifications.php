@@ -309,7 +309,9 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		if ( false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $reply_to_item_id, $author_id ) ) {
 			$args['user_id']           = $reply_to_item_id;
 			$args['secondary_item_id'] = $secondary_item_id;
+			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			bp_notifications_add_notification( $args );
+			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
 
