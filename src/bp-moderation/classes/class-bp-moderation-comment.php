@@ -84,7 +84,16 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function get_permalink( $comment_id ) {
-		$url = get_comment_link( $comment_id );
+		if ( empty( $comment_id ) ) {
+			return '';
+		}
+
+		$get_comment = get_comment( $comment_id );
+		if ( empty( $get_comment ) ) {
+			return '';
+		}
+
+		$url = esc_url( get_comment_link( $get_comment ) );
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}

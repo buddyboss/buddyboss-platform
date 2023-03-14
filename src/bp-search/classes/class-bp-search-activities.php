@@ -63,7 +63,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			global $wpdb, $bp;
 
 			$bp_prefix   = bp_core_get_table_prefix();
-			$search_term = htmlspecialchars( $search_term );
+			$search_term = htmlspecialchars( $search_term, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 			$query_placeholder = array();
 

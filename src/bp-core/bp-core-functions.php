@@ -1141,8 +1141,6 @@ function bp_core_current_time( $gmt = true, $type = 'mysql' ) {
 	return apply_filters( 'bp_core_current_time', current_time( $type, $gmt ) );
 }
 
-
-
 /**
  * Get an English-language representation of the time elapsed since a given date.
  *
@@ -8431,6 +8429,7 @@ function bb_icon_font_map_data( $key = '' ) {
 
 	return ! empty( $key ) ? ( isset( $bb_icons_data[ $key ] ) ? $bb_icons_data[ $key ] : false ) : $bb_icons_data;
 }
+
 if ( ! function_exists( 'bb_filter_input_string' ) ) {
 	/**
 	 * Function used to sanitize user input in a manner similar to the (deprecated) FILTER_SANITIZE_STRING.

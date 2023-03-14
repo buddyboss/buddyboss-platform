@@ -1052,8 +1052,8 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 
 	if ( 1 === $field->is_required ) {
 		foreach ( $value as $key => $val ) {
-			$value = trim( $val );
-			if ( empty( $value ) ) {
+			$val = trim( $val );
+			if ( empty( $val ) ) {
 				return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 			}
 		}

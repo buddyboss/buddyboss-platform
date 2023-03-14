@@ -190,7 +190,6 @@ function bbp_admin_tools_feedback( $message, $class = false ) {
 	$lambda  = function () use ( $message ) {
 		echo $message;
 	};
-
 	add_action( 'admin_notices', $lambda );
 
 	return $lambda;
