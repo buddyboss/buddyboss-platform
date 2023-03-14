@@ -298,7 +298,9 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 	if ( $author_id !== $topic_author_id && $topic_author_id !== $reply_to_item_id ) {
 		if ( false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $topic_author_id, $author_id ) ) {
 			$args['secondary_item_id'] = $secondary_item_id;
+			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			bp_notifications_add_notification( $args );
+			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
 
@@ -778,6 +780,19 @@ function bb_forums_remove_screen_notifications() {
 						'component_action' => $component_action,
 					)
 				);
+				if ( (int) $notifications_data->user_id === (int) bp_loggedin_user_id() ) {
+					BP_Notifications_Notification::update(
+						array(
+							'is_new' => false,
+						),
+						array(
+							'user_id'          => bp_loggedin_user_id(),
+							'item_id'          => $notifications_data->item_id,
+							'component_name'   => 'forums',
+							'component_action' => 'bbp_new_reply',
+						)
+					);
+				}
 			}
 		}
 	}
