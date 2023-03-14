@@ -30,12 +30,12 @@ class BP_Email_Tokens {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
-		// set new email tokens added in BuddyBoss 1.0.0
+		// set new email tokens added in BuddyBoss 1.0.0.
 		add_filter( 'bp_email_set_tokens', array( $this, 'set_tokens' ), 10, 3 );
 
 		// tokens for email after a new message is received, does not contain usable info about sender user
 		// we need to acquire this info before we process tokens for that email
-		// priority 9 is importent
+		// priority 9 is importent.
 		add_action( 'messages_message_sent', array( $this, 'messages_message_sent' ), 9 );
 
 		add_action( 'bp_email_get_property', array( $this, 'bb_email_subject_strip_all_tags' ), 9999, 3 );
@@ -333,6 +333,8 @@ class BP_Email_Tokens {
 	 */
 	public function token__group_card( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
+
+		$settings = bp_email_get_appearance_settings();
 
 		$group = isset( $tokens['group'] ) ? $tokens['group'] : false;
 		if ( empty( $group ) ) {
