@@ -178,10 +178,6 @@ body.register {
 
 #buddypress #signup-form {
 
-	input:focus {
-		border-color: $form-border-focus;
-	}
-
 	input.error {
 		border-color: $warn;
 		border-width: 2px;
@@ -247,7 +243,8 @@ body.register {
 	.bb-show-pass {
 
 		.bb-icon-eye:before {
-			content: "\e8fc";
+			content: "\ee6a";
+			font-family: 'bb-icons';/* stylelint-disable-line */
 		}
 	}
 }

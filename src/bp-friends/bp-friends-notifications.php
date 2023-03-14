@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array|string
  */
-function friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
+function friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
 
 	switch ( $action ) {
 		case 'friendship_accepted':
@@ -190,6 +190,10 @@ add_action( 'friends_screen_my_friends', 'bp_friends_mark_friendship_accepted_no
  */
 function bp_friends_friendship_requested_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
 
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $friend_user_id, $initiator_user_id ) ) {
+		return;
+	}
+
 	$action = 'friendship_request';
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$action = 'bb_connections_new_request';
@@ -233,6 +237,11 @@ add_action( 'friends_friendship_rejected', 'bp_friends_mark_friendship_rejected_
  * @param int $friend_user_id    The friendship request receiver user ID.
  */
 function bp_friends_add_friendship_accepted_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
+
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $initiator_user_id, $friend_user_id ) ) {
+		return;
+	}
+
 	// Remove the friend request notice.
 	bp_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, buddypress()->friends->id, 'friendship_request' );
 	bp_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, buddypress()->friends->id, 'bb_connections_new_request' );
