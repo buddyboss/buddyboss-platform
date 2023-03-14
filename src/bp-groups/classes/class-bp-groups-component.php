@@ -515,7 +515,7 @@ class BP_Groups_Component extends BP_Component {
 		$user_has_access = $this->current_group->user_has_access;
 		$is_visible      = $this->current_group->is_visible;
 
-		if ( ! $user_has_access && $is_visible ) {
+		if ( ! $user_has_access && $is_visible && is_user_logged_in() ) {
 			$bp->current_action = 'request-membership';
 		}
 

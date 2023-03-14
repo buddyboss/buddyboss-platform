@@ -165,6 +165,11 @@ add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty'
 // Load Activity Notifications.
 add_action( 'bp_activity_includes', 'bb_load_activity_notifications' );
 
+// Remove deleted members link from mention for activity/comment.
+add_filter( 'bp_get_activity_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bp_get_activity_content_body', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3393,7 +3398,7 @@ add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_
 /**
  * Function will send notification to following user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.5
  *
  * @param BP_Activity_Follow $follower Contains following data.
  */
