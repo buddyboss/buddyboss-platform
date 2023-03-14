@@ -13,7 +13,7 @@ jq( document ).ready(
 	function () {
 
 		/** Copy profile type Shortcode *******************/
-		var clipboard = new Clipboard( '.copy-to-clipboard' );
+		var clipboard = new ClipboardJS( '.copy-to-clipboard' );
 		clipboard.on(
 			'success',
 			function() {
