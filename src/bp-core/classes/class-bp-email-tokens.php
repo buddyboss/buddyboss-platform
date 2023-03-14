@@ -3077,9 +3077,6 @@ class BP_Email_Tokens {
 																	$filename      = basename( get_attached_file( $attachment_id ) );
 																	$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
 																	$extension     = bp_get_document_extension();
-
-																	error_log( print_r( '$filename', 1 ) );
-																	error_log( print_r( $filename, 1 ) );
 																	?>
 																	<div class="bb-activity-media-elem" style="width:100%">
 																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" style="font-size:14px; text-decoration:none;">
