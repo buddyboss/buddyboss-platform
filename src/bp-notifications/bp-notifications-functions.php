@@ -1721,13 +1721,25 @@ function bb_notification_after_save_meta( $notification ) {
 				$notification->component_action,
 				array(
 					'bb_groups_subscribed_discussion',
+					'bb_forums_subscribed_reply',
+					'bb_forums_subscribed_discussion',
+					'bbp_new_reply',
 				),
 				true
 			)
 		) {
 			$content = '';
-			if ( 'bb_groups_subscribed_discussion' === $notification->component_action ) {
+			if (
+				'bb_groups_subscribed_discussion' === $notification->component_action ||
+				'bb_forums_subscribed_discussion' === $notification->component_action
+			) {
 				$content = bbp_kses_data( bbp_get_topic_content( $notification->item_id ) );
+			}
+			if (
+				'bb_forums_subscribed_reply' === $notification->component_action ||
+				'bbp_new_reply' === $notification->component_action
+			) {
+				$content = bbp_kses_data( bbp_get_reply_content( $notification->item_id ) );
 			}
 			$usernames = ! empty( $content ) ? bp_find_mentions_by_at_sign( array(), $content ) : array();
 		}
@@ -1774,6 +1786,9 @@ function bb_notification_manage_app_push_notification( $content, $component_name
 				'bb_activity_following_post',
 				'bb_groups_subscribed_activity',
 				'bb_groups_subscribed_discussion',
+				'bb_forums_subscribed_reply',
+				'bb_forums_subscribed_discussion',
+				'bbp_new_reply',
 			),
 			true
 		)
