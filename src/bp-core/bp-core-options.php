@@ -47,6 +47,9 @@ function bp_get_default_options() {
 
 		'bp-display-name-format'                     => 'first_name',
 
+		// Default profile slug format.
+		'bb_profile_slug_format'                     => 'username',
+
 		// Enable/Disable Profile Type.
 		'bp-member-type-enable-disable'              => false,
 
@@ -1825,6 +1828,27 @@ function bp_core_display_name_format( $default = 'first_name' ) {
 	 * @param string $value Default display name format.
 	 */
 	return apply_filters( 'bp_core_display_name_format', bp_get_option( 'bp-display-name-format', $default ) );
+}
+
+/**
+ * Get profile slug format.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: username.
+ * @return string profile slug format.
+ */
+function bb_get_profile_slug_format( $default = 'username' ) {
+
+	/**
+	 * Filters default profile slug format.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default profile slug format.
+	 */
+	return apply_filters( 'bb_get_profile_slug_format', bp_get_option( 'bb_profile_slug_format', $default ) );
 }
 
 /**

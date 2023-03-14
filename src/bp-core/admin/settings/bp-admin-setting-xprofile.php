@@ -196,6 +196,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'nick-name-options display-options';
 		$this->add_field( 'bp-hide-nickname-last-name', '', 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
+		// Section for Profile Links.
+		$this->add_section( 'bb_profile_slug_settings', __( 'Profile Links', 'buddyboss' ), '', 'bb_profile_slug_tutorial' );
+
+		// Display name format.
+		$this->add_field(
+			'bb_profile_slug_format',
+			__( 'Link Format', 'buddyboss' ),
+			array( $this, 'bb_profile_slug_format_callback' )
+		);
+
 		// Profile Avatar.
 		$avatar_type         = bb_get_profile_avatar_type();
 		$default_avatar_type = bb_get_default_profile_avatar_type();
@@ -425,6 +435,36 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 					admin_url( 'admin.php' )
 				)
 			)
+		);
+	}
+
+	/**
+	 * Display profile slug format.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_profile_slug_format_callback() {
+		$options = array(
+			'username'           => esc_html__( 'Username', 'buddyboss' ),
+			'unique_indentifier' => esc_html__( 'Unique Indentifier', 'buddyboss' ),
+		);
+
+		$current_value = bb_get_profile_slug_format();
+
+		printf( '<select name="%1$s" for="%1$s">', 'bb_profile_slug_format' );
+		foreach ( $options as $key => $value ) {
+			printf(
+				'<option value="%s" %s>%s</option>',
+				esc_attr( $key ),
+				$key === $current_value ? 'selected' : '',
+				esc_attr( $value )
+			);
+		}
+		printf( '</select>' );
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__( 'Select the format of your member’s profile links (i.e. /members/username). Both formats will open the member’s profile, so you can safely change without breaking previously shared links.', 'buddyboss' )
 		);
 	}
 

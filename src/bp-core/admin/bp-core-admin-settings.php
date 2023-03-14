@@ -2079,6 +2079,33 @@ function bp_profile_names_tutorial() {
 }
 
 /**
+ * Link to profile slug tutorial
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_profile_slug_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 72340, // TODO: Need to update tutorial page id.
+						),
+						'admin.php'
+					)
+				)
+			);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
  * Save our settings.
  *
  * @since 1.6.0
