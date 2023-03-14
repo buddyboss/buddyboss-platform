@@ -7,7 +7,7 @@
  * @since BuddyBoss 1.0.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class BP_Email_Tokens {
 
 	/**
-	 * message sender id
+	 * Message sender id.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -51,7 +51,7 @@ class BP_Email_Tokens {
 	 * @return array
 	 */
 	function set_tokens( $formatted_tokens, $tokens, $bp_email ) {
-		if ( 'html' == $bp_email->get_content_type() ) {
+		if ( 'html' === $bp_email->get_content_type() ) {
 			$email_content = $bp_email->get_content_html();
 
 			$all_tokens = $this->get_tokens();
@@ -209,7 +209,7 @@ class BP_Email_Tokens {
 									<tbody>
 									<tr>
 										<td width="20%" class="mobile-block-full">
-											<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>"
+											<a class="group-avatar-wrap mobile-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>"
 											   style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 104px;">
 												<?php
 												$group_avatar = bp_core_fetch_avatar(
@@ -1144,7 +1144,7 @@ class BP_Email_Tokens {
 																?>
 																<div class="bb-activity-media-elem"  style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;">
 																	<a href="<?php echo esc_url( $tokens['message.url'] ); ?>">
-																		<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_video_title() ); ?>" />
+																		<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_get_video_title() ); ?>" />
 																	</a>
 																</div>
 																<?php if ( $total_video_ids > 1 ) : ?>
