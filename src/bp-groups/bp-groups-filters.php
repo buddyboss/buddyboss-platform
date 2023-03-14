@@ -1088,7 +1088,7 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 		return;
 	}
 
-	// Return if main activity post not found or followers empty.
+	// Return if main activity post not found or activity is media/document/video.
 	if (
 		empty( $activity ) ||
 		'groups' !== $activity->component ||
@@ -1333,7 +1333,7 @@ function bb_delete_group_subscriptions( $group_id ) {
 add_action( 'groups_delete_group', 'bb_delete_group_subscriptions' );
 
 /**
- * Send subscription notification to users after post an activity.
+ * Send subscription notification to users after upload media/documents/videos in the group.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1357,7 +1357,7 @@ function bb_subscription_send_subscribe_group_media_notifications( $content, $us
 
 	$activity = new BP_Activity_Activity( $activity_id );
 
-	// Return if main activity post not found or followers empty.
+	// Return if main activity post not found or activity is media/document/video.
 	if (
 		empty( $activity ) ||
 		'groups' !== $activity->component ||
