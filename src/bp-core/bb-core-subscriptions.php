@@ -1443,5 +1443,5 @@ function bb_remove_duplicate_subscriptions() {
 	global $wpdb;
 
 	$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
-	$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE id not IN( SELECT ID FROM ( SELECT MAX(id) as ID from {$subscription_tbl} GROUP BY `user_id`, `type`, `item_id`) AS SB );" ); // phpcs:ignore
+	$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE id not IN( SELECT ID FROM ( SELECT MAX(id) as ID from {$subscription_tbl} GROUP BY `user_id`, `type`, `item_id`, `blog_id` ) AS SB );" ); // phpcs:ignore
 }
