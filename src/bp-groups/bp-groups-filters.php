@@ -1088,6 +1088,15 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 		return;
 	}
 
+	// Return if main activity post not found or followers empty.
+	if (
+		empty( $activity ) ||
+		'groups' !== $activity->component ||
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+	) {
+		return;
+	}
+
 	$activity_user_id = $activity->user_id;
 	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
 	$activity_link    = bp_activity_get_permalink( $activity_id );
@@ -1322,3 +1331,43 @@ function bb_delete_group_subscriptions( $group_id ) {
 	bb_delete_subscriptions_by_item( 'group', $group_id );
 }
 add_action( 'groups_delete_group', 'bb_delete_group_subscriptions' );
+
+/**
+ * Send subscription notification to users after post an activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content     The content of the update.
+ * @param int    $user_id     ID of the user posting the update.
+ * @param bool   $activity_id Whether the activity recording succeeded.
+ *
+ * @return void
+ */
+function bb_subscription_send_subscribe_group_media_notifications( $content, $user_id, $activity_id ) {
+	global $bp_activity_edit;
+
+	// Bail if subscriptions are turned off.
+	if ( ! bb_is_enabled_subscription( 'group' ) || ! bp_is_active( 'activity' ) ) {
+		return;
+	}
+
+	if ( empty( $user_id ) || empty( $activity_id ) || $bp_activity_edit ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	// Return if main activity post not found or followers empty.
+	if (
+		empty( $activity ) ||
+		'groups' !== $activity->component ||
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+	) {
+		return;
+	}
+
+	bb_subscription_send_subscribe_group_notifications( $content, $user_id, $activity->item_id, $activity_id );
+}
+add_action( 'bb_media_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
+add_action( 'bb_document_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
+add_action( 'bb_video_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
