@@ -410,7 +410,11 @@ function bp_version_updater() {
 			bb_update_to_2_2_9();
 		}
 
-		if ( $raw_db_version < 19581 ) {
+		if ( $raw_db_version < 19871 ) {
+			bb_update_to_2_2_9_1();
+		}
+
+		if ( $raw_db_version < 19981 ) {
 			bb_update_to_3_0_0();
 		}
 	}
@@ -2536,6 +2540,17 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 	// Call recursive to finish update for all users.
 	$paged++;
 	bb_create_background_member_friends_count( $paged );
+}
+
+/**
+ * Background job to update duplicate subscriptions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_9_1() {
+	bb_remove_duplicate_subscriptions();
 }
 
 /**
