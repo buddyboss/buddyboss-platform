@@ -863,7 +863,8 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 	$excluded_user_component_actions = bb_disabled_notification_actions_by_user( get_current_user_id() );
 
 	if ( ! empty( $excluded_user_component_actions ) ) {
-		$querystring['excluded_action'] = $excluded_user_component_actions;
+		$excluded_action                = bb_notification_excluded_component_actions();
+		$querystring['excluded_action'] = array_unique( array_merge( $excluded_action, $excluded_user_component_actions ) );
 	}
 
 	return http_build_query( $querystring );
@@ -2061,3 +2062,24 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 	return $retval;
 }
 add_filter( 'bb_notification_is_read_only', 'bb_notification_linkable_specific_notification', 10, 2 );
+
+/**
+ * Function to exclude the notification actions.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @return array
+ */
+function bb_notification_excluded_component_actions() {
+	$actions = array();
+
+	if ( ! bp_is_active( 'activity' ) ) {
+		$actions[] = 'bb_groups_subscribed_activity';
+	}
+
+	if ( ! bp_is_active( 'forums' ) ) {
+		$actions[] = 'bb_groups_subscribed_discussion';
+	}
+
+	return apply_filters( 'bb_notification_excluded_component_actions', $actions );
+}

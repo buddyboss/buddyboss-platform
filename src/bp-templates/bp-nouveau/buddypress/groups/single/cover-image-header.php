@@ -201,7 +201,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 						</a>
 					</header>
 					<div class="bb-action-popup-content">
-						<p><?php bp_group_description(); ?></p>
+						<?php bp_group_description(); ?>
 					</div>
 				</div>
 			</div>
