@@ -1435,7 +1435,7 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
 /**
  * Delete duplicate subscription entries.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9.1
  *
  * @return void
  */
