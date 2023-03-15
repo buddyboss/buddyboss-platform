@@ -2541,7 +2541,7 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 /**
  * Background job to update duplicate subscriptions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9.1
  *
  * @return void
  */
