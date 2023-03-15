@@ -17,6 +17,16 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 	 */
 	class BB_Presence {
 
+
+		/**
+		 * The single instance of the class.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var self
+		 */
+		private static $instance = null;
+
 		/**
 		 * Cache of the presence.
 		 *
@@ -52,6 +62,23 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @var string
 		 */
 		protected string $table_name;
+
+		/**
+		 * Get the instance of this class.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return Controller|BB_Presence|null
+		 */
+		public static function instance() {
+
+			if ( null === self::$instance ) {
+				$class_name     = __CLASS__;
+				self::$instance = new $class_name();
+			}
+
+			return self::$instance;
+		}
 
 		/**
 		 * Constructor method.
@@ -206,7 +233,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 					$cached_data = array_merge( $cached_data, $last_activities );
 				}
 			}
-			
+
 			return $cached_data;
 		}
 	}
