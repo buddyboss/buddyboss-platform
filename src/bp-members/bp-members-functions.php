@@ -1131,21 +1131,8 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
 		return false;
 	}
 
-	// Fall back on current time.
-	if ( empty( $time ) ) {
-		$time = bp_core_current_time();
-	}
-
-	// As of BuddyPress 2.0, last_activity is no longer stored in usermeta.
-	// However, we mirror it there for backward compatibility. Do not use!
-	// Remove our warning and re-add.
-	remove_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10 );
-	remove_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10 );
-	bp_update_user_meta( $user_id, 'last_activity', $time );
-	add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10, 4 );
-	add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 4 );
-
-	return BP_Core_User::update_last_activity( $user_id, $time );
+	$presence = new BB_Presence();
+	return $presence->bb_update_last_activity( $user_id );
 }
 
 /**
@@ -1226,10 +1213,8 @@ add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning'
 function bp_get_user_last_activity( $user_id = 0 ) {
 	$activity = '';
 
-	$last_activity = BP_Core_User::get_last_activity( $user_id );
-	if ( ! empty( $last_activity[ $user_id ] ) ) {
-		$activity = $last_activity[ $user_id ]['date_recorded'];
-	}
+	$presence = new BB_Presence();
+	$activity = $presence->bb_get_user_activity( $user_id );
 
 	/**
 	 * Filters the last activity for a given user.
