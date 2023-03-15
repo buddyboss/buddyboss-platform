@@ -1131,8 +1131,12 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
 		return false;
 	}
 
-	$presence = new BB_Presence();
-	return $presence->bb_update_last_activity( $user_id );
+	// Fall back on current time.
+	if ( empty( $time ) ) {
+		$time = bp_core_current_time();
+	}
+
+	return BP_Core_User::update_last_activity( $user_id, $time );
 }
 
 /**
@@ -1213,8 +1217,11 @@ add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning'
 function bp_get_user_last_activity( $user_id = 0 ) {
 	$activity = '';
 
-	$presence = new BB_Presence();
-	$activity = $presence->bb_get_user_activity( $user_id );
+	$presence      = new BB_Presence();
+	$last_activity = $presence->bb_get_user_last_activity( $user_id );
+	if ( ! empty( $last_activity[ $user_id ] ) ) {
+		$activity = $last_activity[ $user_id ]['date_recorded'];
+	}
 
 	/**
 	 * Filters the last activity for a given user.
