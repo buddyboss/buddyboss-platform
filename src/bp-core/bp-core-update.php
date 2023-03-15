@@ -2565,4 +2565,6 @@ function bb_update_to_2_2_9_1() {
 
 		update_option( 'widget_bp_latest_activities', $settings );
 	}
+
+	bb_remove_duplicate_subscriptions();
 }
