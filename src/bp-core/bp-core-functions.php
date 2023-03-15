@@ -8429,3 +8429,41 @@ function bb_icon_font_map_data( $key = '' ) {
 
 	return ! empty( $key ) ? ( isset( $bb_icons_data[ $key ] ) ? $bb_icons_data[ $key ] : false ) : $bb_icons_data;
 }
+
+/**
+ * Function will create BuddyBoss Presence API plugin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_presence_api_mu_plugin() {
+	//If mu-plugin directory not exists then create automatically.
+
+    if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
+        mkdir( WPMU_PLUGIN_DIR, 0755 );
+    }
+
+    $bp_platform_mu_path     = WP_PLUGIN_DIR . '/buddyboss-platform/bp-core/mu-plugins/buddyboss-presence-api.php';
+    $bp_platform_dev_mu_path = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-core/mu-plugins/buddyboss-presence-api.php';
+    if ( file_exists( $bp_platform_mu_path ) ) {
+        $bp_mu_plugin_file_path = $bp_platform_mu_path;
+    } elseif ( file_exists( $bp_platform_dev_mu_path ) ) {
+        $bp_mu_plugin_file_path = $bp_platform_dev_mu_path;
+    }
+
+    if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+        require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+        require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+    }
+
+    $wp_files_system = new \WP_Filesystem_Direct( array() );
+
+    if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+
+        // Try to automatically install MU plugin.
+        if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
+
+            // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+            @$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' );
+        }
+    }
+}
