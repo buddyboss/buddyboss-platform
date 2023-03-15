@@ -1333,7 +1333,7 @@ add_action( 'groups_delete_group', 'bb_delete_group_subscriptions' );
 /**
  * Send subscription notification to users after upload media/documents/videos in the group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9.1
  *
  * @param string $content     The content of the update.
  * @param int    $user_id     ID of the user posting the update.

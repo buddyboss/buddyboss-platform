@@ -84,7 +84,7 @@ class BB_Woocommerce_Helpers {
 	/**
 	 * Function to make compatible WooCommerce and BuddyBoss subscriptions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.9.1
 	 *
 	 * @return void
 	 */
@@ -95,7 +95,7 @@ class BB_Woocommerce_Helpers {
 	/**
 	 * Function to set query vars to enable BuddyBoss subscriptions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.9.1
 	 *
 	 * @param array $q_vars Query vars.
 	 *
