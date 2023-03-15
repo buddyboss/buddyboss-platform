@@ -1,4 +1,4 @@
-/* global Clipboard */
+/* global ClipboardJS */
 // profile types screen
 if (typeof jq == 'undefined') {
 	var jq = jQuery;
