@@ -101,7 +101,6 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$activity[ $user_id ]['date_recorded'] = $time;
 
 			} else {
-				error_log( 'insert');
 				$this->wpdb->insert(
 					$table_name,
 					// Data.
