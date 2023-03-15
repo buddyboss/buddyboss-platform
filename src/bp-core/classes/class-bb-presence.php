@@ -188,8 +188,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$last_activities = $this->wpdb->get_results(
 					$this->wpdb->prepare(
 						"SELECT id, user_id, date_recorded FROM {$table_name} 
-						WHERE component = 'members' AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}",
-
+						WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}",
+						'members'
 					)
 				);
 
