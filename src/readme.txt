@@ -57,6 +57,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.2.9.1 =
+* Notifications - Handled repeated email notification issues by removing duplicate forum subscription entries
+* Notifications - Handled triggering notification when an activity post is updated in a social group
+* Notifications - Handled notification broken template issue when media uploaded in a social group
+* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin 
+* Notifications - Handled defaults disabled issue for force enabled notifications types
+
 = 2.2.9 =
 * Profiles - Handled incorrect connection count shows in profile when any connected member is suspended
 * Groups - Handled group description small formatting issue on render
