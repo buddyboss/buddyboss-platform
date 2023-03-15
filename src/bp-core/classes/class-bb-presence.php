@@ -24,7 +24,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var object
 		 */
-		private $cache;
+		private object $cache;
 
 		/**
 		 * This will use for global $wpdb.
@@ -33,7 +33,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var object
 		 */
-		private $wpdb;
+		private object $wpdb;
 
 		/**
 		 * This will use for last activity cache time.
@@ -42,7 +42,16 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var int
 		 */
-		public $cache_time;
+		public int $cache_time;
+
+		/**
+		 * Activity table name to store last activity.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var string
+		 */
+		protected string $table_name;
 
 		/**
 		 * Constructor method.
@@ -55,33 +64,34 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$this->wpdb       = $wpdb;
 			$this->cache      = $wp_object_cache;
 			$this->cache_time = (int) apply_filters( 'bb_presence_last_activity_cache_time', 60 );
+			$this->table_name = $this->wpdb->prefix . 'bp_activity';
 		}
 
 		/**
 		 * Function will update the user's last activity time in cache and DB.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @param int    $user_id The ID of the user.
+		 * @param string $time Time into the mysql format.
 		 *
-		 * @param int $user_id The ID of the user.
+		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function bb_update_last_activity( $user_id, $time ) {
+		public function bb_update_last_activity( $user_id, $time = '' ) {
 			// Fall back on current time.
 			if ( empty( $time ) ) {
 				$time = current_time( 'mysql', true );
 			}
 
-			$table_name    = $this->wpdb->prefix . 'bp_activity';
 			$activity      = $this->bb_get_users_last_activity( $user_id );
 			$last_activity = isset( $activity[ $user_id ]['date_recorded'] ) ? strtotime( $activity[ $user_id ]['date_recorded'] ) : 0;
 			if ( false !== $this->cache->get( $user_id, 'bp_last_activity' ) && time() - $last_activity < $this->cache_time ) {
 				// Update the cache directly.
 				$activity[ $user_id ]['date_recorded'] = $time;
-				$this->cache->set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
+				wp_cache_set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
 
 				return;
 			}
 
-			// Update last activity in usermeta also.
+			// Update last activity in user meta also.
 			remove_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10 );
 			remove_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10 );
 			update_user_meta( $user_id, 'last_activity', $time );
@@ -90,11 +100,11 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			if ( ! empty( $activity[ $user_id ] ) ) {
 				$this->wpdb->update(
-					$table_name,
-					array( 'date_recorded' => $time, ),
-					array( 'id' => $activity[ $user_id ]['activity_id'], ),
-					array( '%s', ),
-					array( '%d', )
+					$this->table_name,
+					array( 'date_recorded' => $time ),
+					array( 'id' => $activity[ $user_id ]['activity_id'] ),
+					array( '%s' ),
+					array( '%d' )
 				);
 
 				// Add new date to existing activity entry for caching.
@@ -102,7 +112,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			} else {
 				$this->wpdb->insert(
-					$table_name,
+					$this->table_name,
 					// Data.
 					array(
 						'user_id'       => $user_id,
@@ -138,74 +148,66 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			// Set cache.
-			$this->cache->set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
+			wp_cache_set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
 		}
 
 		/**
-		 * Function will fetch the multiple user's last activity time from the cache or DB.
+		 * Function will fetch the users last activity time from the cache or DB.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array $user_ids Array of user IDs.
 		 *
-		 * @return false|array
+		 * @return array
 		 */
 		public function bb_get_users_last_activity( $user_ids ) {
-			$table_name = $this->wpdb->prefix . 'bp_activity';
 			// Sanitize and remove empty values.
 			$user_ids = array_filter( wp_parse_id_list( $user_ids ) );
 
 			if ( empty( $user_ids ) ) {
-				return false;
+				return array();
 			}
 
 			$uncached_user_ids = array();
+			$cached_data       = array();
+
 			foreach ( $user_ids as $user_id ) {
 				$user_id = (int) $user_id;
-				if ( false === $this->cache->get( $user_id, 'bp_last_activity' ) ) {
+				$cache   = wp_cache_get( $user_id, 'bp_last_activity' );
+				if ( false === $cache ) {
 					$uncached_user_ids[] = $user_id;
+				} else {
+					$cached_data[ $user_id ] = $cache;
 				}
 			}
 
 			if ( ! empty( $uncached_user_ids ) ) {
 				$user_ids_sql = implode( ',', $uncached_user_ids );
-				$user_count   = count( $uncached_user_ids );
 
-				$last_activities = $this->wpdb->get_results(
-					$this->wpdb->prepare(
-						"SELECT id, user_id, date_recorded FROM {$table_name} 
-						WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}",
-						'members'
-					)
-				);
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$query = $this->wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$this->table_name} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql})", 'members' );
 
-				foreach ( $last_activities as $last_activity ) {
-					$this->cache->set(
-						$last_activity->user_id,
-						array(
-							'user_id'       => $last_activity->user_id,
-							'date_recorded' => $last_activity->date_recorded,
-							'activity_id'   => $last_activity->id,
-						),
-						'bp_last_activity'
-					);
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$last_activities = $this->wpdb->get_results( $query );
+
+				if ( ! empty( $last_activities ) ) {
+					foreach ( $last_activities as $last_activity ) {
+						wp_cache_set(
+							$last_activity->user_id,
+							array(
+								'user_id'       => $last_activity->user_id,
+								'date_recorded' => $last_activity->date_recorded,
+								'activity_id'   => $last_activity->id,
+							),
+							'bp_last_activity'
+						);
+					}
+
+					$cached_data = array_merge( $cached_data, $last_activities );
 				}
 			}
-
-			// Fetch all user data from the cache.
-			$retval = array();
-			foreach ( $user_ids as $user_id ) {
-				$retval[ $user_id ] = $this->cache->get( $user_id, 'bp_last_activity' );
-
-				if ( isset( $retval['user_id'] ) ) {
-					$retval[ $user_id ]['user_id'] = (int) $retval[ $user_id ]['user_id'];
-				}
-				if ( isset( $retval['activity_id'] ) ) {
-					$retval[ $user_id ]['activity_id'] = (int) $retval[ $user_id ]['activity_id'];
-				}
-			}
-
-			return $retval;
+			
+			return $cached_data;
 		}
 	}
 }
