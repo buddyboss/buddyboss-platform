@@ -1217,8 +1217,8 @@ add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning'
 function bp_get_user_last_activity( $user_id = 0 ) {
 	$activity = '';
 
-	$presence      = new BB_Presence();
-	$last_activity = $presence->bb_get_users_last_activity( $user_id );
+	$last_activity = BB_Presence::bb_get_users_last_activity( $user_id );
+
 	if ( ! empty( $last_activity[ $user_id ] ) ) {
 		$activity = $last_activity[ $user_id ]['date_recorded'];
 	}

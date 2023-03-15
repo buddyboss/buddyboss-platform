@@ -877,8 +877,7 @@ class BP_Core_User {
 	 */
 	public static function update_last_activity( $user_id, $time ) {
 
-		$presence = new BB_Presence();
-		$updated  = $presence->bb_update_last_activity( $user_id, $time );
+		$updated = BB_Presence::bb_update_last_activity( $user_id, $time );
 
 		/**
 		 * Fires when a user's last_activity value has been updated.
