@@ -710,6 +710,7 @@ class BuddyPress {
 			'BP_Suspend_Comment'                           => 'suspend',
 			'BP_Suspend_Message'                           => 'suspend',
 			'BB_Subscriptions'                             => 'core',
+			'BB_Presence'                                  => 'core',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
