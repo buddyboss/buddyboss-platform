@@ -87,6 +87,9 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 		} else {
 			delete_site_option( 'bb_subscriptions_migrate_offset' );
 
+			// Delete duplicate entries.
+			bb_remove_duplicate_subscriptions();
+
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
 				$statement = __( 'Migrating BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
@@ -250,9 +253,6 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 			'offset'  => $latest_offset,
 			'records' => $records_updated,
 		);
-	} else {
-		// Delete migration transient.
-		delete_transient( 'bb_migrate_subscriptions' );
 	}
 }
 
@@ -374,6 +374,9 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 		if ( ! empty( $results ) ) {
 			return bb_migrate_bbpress_users_post_subscriptions( $results, $blog_id, $offset, $is_background );
 		} else {
+			// Delete duplicate entries.
+			bb_remove_duplicate_subscriptions();
+
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
 				$statement = __( 'Migrating BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
@@ -539,8 +542,6 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 		__( 'The total %s BBPress (v2.6+) forum and discussion subscriptions successfully migrated to BuddyBoss.', 'buddyboss' ),
 		bp_core_number_format( $latest_offset - 1 )
 	);
-	// Delete migration transient.
-	delete_transient( 'bb_migrate_subscriptions' );
 
 	// Restore current blog.
 	if ( $switch ) {
@@ -1271,9 +1272,12 @@ function bb_migrate_group_subscription( $is_background = false ) {
 			);
 		}
 	} else {
+
+		// Delete duplicate entries.
+		bb_remove_duplicate_subscriptions();
+
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
 		delete_site_option( 'bb_group_subscriptions_migrated_count' );
-		delete_transient( 'bb_migrate_group_subscriptions' );
 
 		/* translators: Status of current action. */
 		$statement = __( 'Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s', 'buddyboss' );
@@ -1302,7 +1306,6 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 	if ( empty( $groups ) ) {
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
 		delete_site_option( 'bb_group_subscriptions_migrated_count' );
-		delete_transient( 'bb_migrate_group_subscriptions' );
 		return;
 	}
 
@@ -1414,4 +1417,18 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
 	}
 
 	groups_update_groupmeta( $group_id, 'bb_subscription_migrated_v2', 'yes' );
+}
+
+/**
+ * Delete duplicate subscription entries.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_remove_duplicate_subscriptions() {
+	global $wpdb;
+
+	$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
+	$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE id not IN( SELECT ID FROM ( SELECT MAX(id) as ID from {$subscription_tbl} GROUP BY `user_id`, `type`, `item_id`, `blog_id` ) AS SB );" ); // phpcs:ignore
 }
