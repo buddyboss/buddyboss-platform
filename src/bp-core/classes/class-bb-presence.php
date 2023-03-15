@@ -28,22 +28,13 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		private static $instance = null;
 
 		/**
-		 * Cache of the presence.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @var object
-		 */
-		private object $cache;
-
-		/**
 		 * This will use for global $wpdb.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @var object
 		 */
-		private object $wpdb;
+		public static object $wpdb;
 
 		/**
 		 * This will use for last activity cache time.
@@ -52,7 +43,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var int
 		 */
-		public int $cache_time;
+		public static int $cache_time;
 
 		/**
 		 * Activity table name to store last activity.
@@ -61,7 +52,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var string
 		 */
-		protected string $table_name;
+		public static string $table_name;
 
 		/**
 		 * Get the instance of this class.
@@ -86,12 +77,11 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
-			global $wpdb, $wp_object_cache;
+			global $wpdb;
 
-			$this->wpdb       = $wpdb;
-			$this->cache      = $wp_object_cache;
-			$this->cache_time = (int) apply_filters( 'bb_presence_last_activity_cache_time', 60 );
-			$this->table_name = $this->wpdb->prefix . 'bp_activity';
+			self::$wpdb       = $wpdb;
+			self::$cache_time = (int) apply_filters( 'bb_presence_last_activity_cache_time', 60 );
+			self::$table_name = $wpdb->prefix . 'bp_activity';
 		}
 
 		/**
@@ -102,15 +92,17 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function bb_update_last_activity( $user_id, $time = '' ) {
+		public static function bb_update_last_activity( $user_id, $time = '' ) {
 			// Fall back on current time.
 			if ( empty( $time ) ) {
 				$time = current_time( 'mysql', true );
 			}
 
-			$activity      = $this->bb_get_users_last_activity( $user_id );
-			$last_activity = isset( $activity[ $user_id ]['date_recorded'] ) ? strtotime( $activity[ $user_id ]['date_recorded'] ) : 0;
-			if ( false !== $this->cache->get( $user_id, 'bp_last_activity' ) && time() - $last_activity < $this->cache_time ) {
+			$activity      = self::bb_get_users_last_activity( $user_id );
+			$last_activity = isset( $activity[ $user_id ]['date_recorded'] ) ? strtotime( $activity[ $user_id ]['date_recorded'] ) : time();
+			$cache         = wp_cache_get( $user_id, 'bp_last_activity' );
+
+			if ( false !== $cache && time() - $last_activity < self::$cache_time ) {
 				// Update the cache directly.
 				$activity[ $user_id ]['date_recorded'] = $time;
 				wp_cache_set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
@@ -126,8 +118,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 4 );
 
 			if ( ! empty( $activity[ $user_id ] ) ) {
-				$this->wpdb->update(
-					$this->table_name,
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				self::$wpdb->update(
+					self::$table_name,
 					array( 'date_recorded' => $time ),
 					array( 'id' => $activity[ $user_id ]['activity_id'] ),
 					array( '%s' ),
@@ -138,8 +131,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$activity[ $user_id ]['date_recorded'] = $time;
 
 			} else {
-				$this->wpdb->insert(
-					$this->table_name,
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				self::$wpdb->insert(
+					self::$table_name,
 					// Data.
 					array(
 						'user_id'       => $user_id,
@@ -170,7 +164,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$activity[ $user_id ] = array(
 					'user_id'       => $user_id,
 					'date_recorded' => $time,
-					'activity_id'   => $this->wpdb->insert_id,
+					'activity_id'   => self::$wpdb->insert_id,
 				);
 			}
 
@@ -187,7 +181,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return array
 		 */
-		public function bb_get_users_last_activity( $user_ids ) {
+		public static function bb_get_users_last_activity( $user_ids ) {
 			// Sanitize and remove empty values.
 			$user_ids = array_filter( wp_parse_id_list( $user_ids ) );
 
@@ -211,11 +205,13 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			if ( ! empty( $uncached_user_ids ) ) {
 				$user_ids_sql = implode( ',', $uncached_user_ids );
 
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$query = $this->wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$this->table_name} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql})", 'members' );
+				$t_name = self::$table_name;
 
-				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				$last_activities = $this->wpdb->get_results( $query );
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$query = self::$wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$t_name} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql})", 'members' );
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$last_activities = self::$wpdb->get_results( $query );
 
 				if ( ! empty( $last_activities ) ) {
 					foreach ( $last_activities as $last_activity ) {
@@ -237,4 +233,6 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			return $cached_data;
 		}
 	}
+
+	BB_Presence::instance();
 }
