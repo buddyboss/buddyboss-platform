@@ -36,13 +36,13 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		private $wpdb;
 
 		/**
-		 * Cache key.
+		 * This will use for last activity cache time.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @var string
+		 * @var int
 		 */
-		private $cache_key = 'bb_presence_last_activity_';
+		public $cache_time;
 
 		/**
 		 * Constructor method.
@@ -52,8 +52,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		public function __construct() {
 			global $wpdb, $wp_object_cache;
 
-			$this->wpdb  = $wpdb;
-			$this->cache = $wp_object_cache;
+			$this->wpdb       = $wpdb;
+			$this->cache      = $wp_object_cache;
+			$this->cache_time = (int) apply_filters( 'bb_presence_last_activity_cache_time', 60 );
 		}
 
 		/**
@@ -72,7 +73,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$table_name    = $this->wpdb->prefix . 'bp_activity';
 			$activity      = $this->bb_get_user_last_activity( $user_id );
 			$last_activity = isset( $activity[ $user_id ]['date_recorded'] ) ? strtotime( $activity[ $user_id ]['date_recorded'] ) : 0;
-			if ( false !== $this->cache->get( $user_id, 'bp_last_activity' ) && time() - $last_activity < 60 ) {
+			if ( false !== $this->cache->get( $user_id, 'bp_last_activity' ) && time() - $last_activity < $this->cache_time ) {
 				// Update the cache directly.
 				$activity[ $user_id ]['date_recorded'] = $time;
 				$this->cache->set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
