@@ -108,7 +108,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			} else {
 				$activity = $this->wpdb->get_var(
 					$this->wpdb->prepare(
-						"SELECT MAX(date_recorded) FROM {$this->wpdb->prefix}bp_activity WHERE user_id = %d",
+						"SELECT date_recorded FROM {$this->wpdb->prefix}bp_activity
+						WHERE component = 'members' AND type = 'last_activity' AND user_id = %d",
 						$user_id
 					)
 				);
