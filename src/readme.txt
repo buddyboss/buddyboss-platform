@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2.7.1
+Stable tag: 2.2.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,44 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.2.9 =
+* Profiles - Handled incorrect connection count shows in profile when any connected member is suspended
+* Groups - Handled group description small formatting issue on render
+* Groups - Handled update group details notification not working as expected
+* Groups - Handled critical issues when updating groups from the dashboard and the forums component is disabled
+* Forums - Handled forum discussion and reply tags field dropdown not working as expected
+* Forums - Handled new discussion form validation UI issue on submit
+* Forums - Handled discussion tags not showing issues in a group forum when it has an image
+* Forums - Handled 'Recent Discussions' widget small floating content UI issue
+* Forums - Handled reply editor lagging issue while typing at normal speed
+* Forums - Handled discussion email notification for subscribed members, the link doesn't take to the discussion on login
+* Emails - Handled group email notification template UI issue in the responsive view 
+* Moderation - Improved the suspended and blocked members content logic in the messaging module
+* Network Search - Handled course layout issue in the search results by handling excerpt formatting
+* Network Search - Handled search blog post by tag not working issue
+* Network Search - Handled activity posts and comments in private/hidden groups not showing for group members
+* Network Search - Handled non-members can search hidden group associated forums
+* Core - Small code refactoring to pull and render the Icon Pack
+* Core - Small improvement to allow translation for all icon names from the Icon Pack
+* Core - Small improvement to not show specific options in the dashboard when relevant modules are disabled
+* Coding Standards - Small code refactoring to fix PHP 8 warnings and notices
+* REST API - Handled activity feed endpoint missing timeline filters in the API
+* REST API - Handled group description small formatting issue in the API
+* REST API - Handled courses related strings translation not working issue
+* REST API - Small API updates for the latest moderation changes in the messaging module
+* REST API - Handled learndash disable comment option not working issue in the API for relevant activity posts
+* REST API - Handled profile types endpoint menu order not working issue in the API
+* REST API - Handled profile types visibility settings not working issue in the API
+* REST API - Handled group details endpoint critical issue in the API
+* Learndash - Handled password rest link not working issue when member registered purchasing the course as a guest using Paypal
+* Compatibility - Handled news feed page restriction not working issue
+
+= 2.2.8 =
+* Notifications - Provided option to subscribe to group notifications from a single group screen
+* Notifications - Provided new notification types to trigger when members create new activity or discussion in a group
+* Core - Handled migration for new subscription workflow for groups and associated forums
+* REST API - Provided API support for new subscription workflow for groups
 
 = 2.2.7.1 =
 * Network Search - Handled network search not working critical issue for database table with custom prefix
