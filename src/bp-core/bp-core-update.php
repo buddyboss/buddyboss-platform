@@ -409,6 +409,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19571 ) {
 			bb_update_to_2_2_9();
 		}
+
+		if ( $raw_db_version < 19671 ) {
+			bb_update_to_2_3_1();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2532,4 +2536,13 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 	// Call recursive to finish update for all users.
 	$paged++;
 	bb_create_background_member_friends_count( $paged );
+}
+
+/**
+ * Load BuddyBoss Presence API mu plugin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_3_1() {
+	bb_presence_api_mu_plugin();
 }
