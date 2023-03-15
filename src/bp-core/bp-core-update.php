@@ -2540,7 +2540,7 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 /**
  * Migration for the activity widget based on the relevant feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9.1
  *
  * @return void
  */
