@@ -71,7 +71,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			$table_name    = $this->wpdb->prefix . 'bp_activity';
-			$activity      = $this->bb_get_user_last_activity( $user_id );
+			$activity      = $this->bb_get_users_last_activity( $user_id );
 			$last_activity = isset( $activity[ $user_id ]['date_recorded'] ) ? strtotime( $activity[ $user_id ]['date_recorded'] ) : 0;
 			if ( false !== $this->cache->get( $user_id, 'bp_last_activity' ) && time() - $last_activity < $this->cache_time ) {
 				// Update the cache directly.
@@ -139,19 +139,6 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			// Set cache.
 			$this->cache->set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
-		}
-
-		/**
-		 * Function will fetch the user's last activity time from the cache or DB.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int $user_id The ID of the user.
-		 *
-		 * @return int|null This will return last activity time. If not found then return null.
-		 */
-		public function bb_get_user_last_activity( $user_id ) {
-			return $this->bb_get_users_last_activity( $user_id );
 		}
 
 		/**
