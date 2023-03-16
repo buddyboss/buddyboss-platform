@@ -286,12 +286,18 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $activities_template->activity->current_comment->id, self::$type, true ) ) {
+		if (
+			BP_Core_Suspend::check_suspended_content( $activities_template->activity->current_comment->id, self::$type, true ) &&
+			! bb_is_group_activity_comment( $activities_template->activity->current_comment ) // Check the activity is group or not.
+		) {
 			return 'activity/blocked-comment.php';
 		}
 
 		$author_id = BP_Moderation_Activity_Comment::get_content_owner_id( $activities_template->activity->current_comment->id );
-		if ( bp_moderation_is_user_suspended( $author_id ) ) {
+		if (
+			bp_moderation_is_user_suspended( $author_id ) &&
+			! bb_is_group_activity_comment( $activities_template->activity->current_comment ) // Check the activity is group or not.
+		) {
 			return 'activity/blocked-comment.php';
 		}
 

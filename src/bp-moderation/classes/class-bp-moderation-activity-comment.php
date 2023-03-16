@@ -158,7 +158,10 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( $this->is_content_hidden( $activities_template->activity->current_comment->id ) ) {
+		if (
+			$this->is_content_hidden( $activities_template->activity->current_comment->id ) &&
+			! bb_is_group_activity_comment( $activities_template->activity->current_comment ) // Check the activity is group or not.
+		) {
 			return 'activity/blocked-comment.php';
 		}
 

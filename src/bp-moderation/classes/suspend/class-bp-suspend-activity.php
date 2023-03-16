@@ -297,7 +297,15 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
+		if (
+			'activity_comment' !== $activity->type &&
+			BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) &&
+			(
+				// Allow group activity.
+				! bp_is_active( 'groups' ) ||
+				'groups' !== $activity->component
+			)
+		) {
 			return false;
 		}
 
