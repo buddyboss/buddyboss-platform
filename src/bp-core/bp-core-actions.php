@@ -577,6 +577,11 @@ if ( is_admin() ) {
 	add_action( 'bp_admin_init', 'bb_load_presence_api_mu' );
 }
 
+/**
+ * Load Presence API mu plugin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 function bb_load_presence_api_mu() {
 	if ( class_exists( 'BB_Presence' ) ) {
 		BB_Presence::bb_load_presence_api_mu_plugin();
