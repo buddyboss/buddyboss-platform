@@ -439,36 +439,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Display profile slug format.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_profile_slug_format_callback() {
-		$options = array(
-			'username'           => esc_html__( 'Username', 'buddyboss' ),
-			'unique_indentifier' => esc_html__( 'Unique Indentifier', 'buddyboss' ),
-		);
-
-		$current_value = bb_get_profile_slug_format();
-
-		printf( '<select name="%1$s" for="%1$s">', 'bb_profile_slug_format' );
-		foreach ( $options as $key => $value ) {
-			printf(
-				'<option value="%s" %s>%s</option>',
-				esc_attr( $key ),
-				$key === $current_value ? 'selected' : '',
-				esc_attr( $value )
-			);
-		}
-		printf( '</select>' );
-
-		printf(
-			'<p class="description">%s</p>',
-			esc_html__( 'Select the format of your member’s profile links (i.e. /members/username). Both formats will open the member’s profile, so you can safely change without breaking previously shared links.', 'buddyboss' )
-		);
-	}
-
-	/**
 	 * Enable profile types.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -798,6 +768,36 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				'error'   => false,
 			),
 			$upload_dir
+		);
+	}
+
+	/**
+	 * Display profile slug format.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_profile_slug_format_callback() {
+		$options = array(
+			'username'          => esc_html__( 'Username', 'buddyboss' ),
+			'unique_identifier' => esc_html__( 'Unique Identifier', 'buddyboss' ),
+		);
+
+		$current_value = bb_get_profile_slug_format();
+
+		printf( '<select name="%1$s" for="%2$s">', 'bb_profile_slug_format', 'bb_profile_slug_format' );
+		foreach ( $options as $key => $value ) {
+			printf(
+				'<option value="%1$s" %2$s>%3$s</option>',
+				esc_attr( $key ),
+				selected( $key === $current_value, true, false ),
+				esc_attr( $value )
+			);
+		}
+		printf( '</select>' );
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__( 'Select the format of your member’s profile links (i.e. /members/username). Both formats will open the member’s profile, so you can safely change without breaking previously shared links.', 'buddyboss' )
 		);
 	}
 }

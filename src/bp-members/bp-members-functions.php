@@ -441,7 +441,7 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
  * Return the profile slug for a user based on their user id.
  *
  * This function is sensitive to the setting profile links ,
- * so it will return the username or unique_indentifier as appropriate.
+ * so it will return the username or unique_identifier as appropriate.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -5450,9 +5450,9 @@ function bb_generate_user_profile_slug( $user_id ) {
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
-		$unique_indentifier = sha1( $user->user_email . $user->user_nicename );
-		bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_indentifier );
-		bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_indentifier, null );
+		$unique_identifier = sha1( $user->user_email . $user->user_nicename );
+		bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
+		bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, null );
 	}
 
 }
