@@ -3596,10 +3596,11 @@ window.bp = window.bp || {};
 							'undefined' !== typeof params.ids.length &&
 							0 < params.ids.length
 						) {
+							var url = '1' === BB_Nouveau_Presence.native_presence ? BB_Nouveau_Presence.native_presence_url : '/wp-json/buddyboss/v1/members/presence';
 							$.ajax(
 								{
 									type: 'POST',
-									url: '/wp-json/buddyboss/v1/members/presence',
+									url: url,
 									data: params,
 									beforeSend: function ( xhr ) {
 										xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
