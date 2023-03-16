@@ -2561,5 +2561,6 @@ function bb_update_to_2_2_9_1() {
 function bb_update_to_2_3_1() {
 	if ( class_exists( 'BB_Presence' ) ) {
 		BB_Presence::bb_load_presence_api_mu_plugin();
+		BB_Presence::bb_check_native_presence_load_directly();
 	}
 }
