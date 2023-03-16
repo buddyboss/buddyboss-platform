@@ -140,6 +140,11 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
+		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
+			$where['moderation_where'] .= ' AND ';
+		}
+		$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+
 		return $where;
 	}
 
