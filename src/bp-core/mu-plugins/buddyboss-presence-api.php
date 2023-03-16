@@ -6,7 +6,7 @@
  * Author: BuddyBoss
  * Author URI:  https://www.buddyboss.com
  *
- * @package BuddyBoss\Performance
+ * @package BuddyBoss\Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
