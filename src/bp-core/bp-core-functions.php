@@ -8429,3 +8429,21 @@ function bb_icon_font_map_data( $key = '' ) {
 
 	return ! empty( $key ) ? ( isset( $bb_icons_data[ $key ] ) ? $bb_icons_data[ $key ] : false ) : $bb_icons_data;
 }
+
+/**
+ * Function to fetch native presence path.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args URL params.
+ *
+ * @return string
+ */
+function bb_native_presence_path( $args = array() ) {
+	$url = buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php';
+	if ( ! empty( $args ) ) {
+		$url = add_query_arg( $args, $url );
+	}
+
+	return $url;
+}
