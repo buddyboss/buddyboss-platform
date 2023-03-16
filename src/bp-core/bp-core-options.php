@@ -1831,27 +1831,6 @@ function bp_core_display_name_format( $default = 'first_name' ) {
 }
 
 /**
- * Get profile slug format.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $default Optional. Fallback value if not found in the database.
- *                      Default: username.
- * @return string profile slug format.
- */
-function bb_get_profile_slug_format( $default = 'username' ) {
-
-	/**
-	 * Filters default profile slug format.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $value Default profile slug format.
-	 */
-	return apply_filters( 'bb_get_profile_slug_format', bp_get_option( 'bb_profile_slug_format', $default ) );
-}
-
-/**
  * Enable private REST APIs.
  * - Wrapper function to check settings with BuddyBoss APP and Platform both.
  *
@@ -2310,4 +2289,25 @@ function bb_enable_group_subscriptions( $default = true ) {
 	 * @param bool $value Whether group subscription is turned off.
 	 */
 	return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
+}
+
+/**
+ * Get profile slug format.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: username.
+ * @return string profile slug format.
+ */
+function bb_get_profile_slug_format( $default = 'username' ) {
+
+	/**
+	 * Filters default profile slug format.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default profile slug format.
+	 */
+	return apply_filters( 'bb_get_profile_slug_format', bp_get_option( 'bb_profile_slug_format', $default ) );
 }
