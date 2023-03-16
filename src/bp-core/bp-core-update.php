@@ -2540,7 +2540,7 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 /**
  * Migration for the activity widget based on the relevant feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.9.1
  *
  * @return void
  */
@@ -2565,4 +2565,6 @@ function bb_update_to_2_2_9_1() {
 
 		update_option( 'widget_bp_latest_activities', $settings );
 	}
+
+	bb_remove_duplicate_subscriptions();
 }
