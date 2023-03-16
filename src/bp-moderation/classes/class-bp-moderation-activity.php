@@ -165,7 +165,15 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && $this->is_content_hidden( (int) $activity->id ) ) {
+		if (
+			'activity_comment' !== $activity->type &&
+			$this->is_content_hidden( (int) $activity->id ) &&
+			(
+				// Allow group activity.
+				! bp_is_active( 'groups' ) ||
+				'groups' !== $activity->component
+			)
+		) {
 			return false;
 		}
 
