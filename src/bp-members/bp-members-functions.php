@@ -187,6 +187,8 @@ function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_lo
 
 	$username = bp_core_get_username( $user_id, $user_nicename, $user_login );
 
+	// @todo update the user name to identifier if profile link setting has been set to identifier.
+
 	if ( bp_is_username_compatibility_mode() ) {
 		$username = rawurlencode( $username );
 	}
