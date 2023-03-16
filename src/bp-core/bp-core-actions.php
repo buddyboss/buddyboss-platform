@@ -577,6 +577,11 @@ if ( is_admin() ) {
 	add_action( 'bp_admin_init', 'bb_load_presence_api_mu_plugin' );
 }
 
+/**
+ * Load presence API mu plugin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 function bb_load_presence_api_mu_plugin() {
     $bb_presence_api_mu_download = get_option( 'bb_presence_api_mu_download' );
     if ( ! empty( $bb_presence_api_mu_download ) ) {
@@ -611,6 +616,11 @@ function bb_load_presence_api_mu_plugin() {
 	}
 }
 
+/**
+ * Function to add admin notice to download BuddyBoss Presence API mu plugin file if not exists.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 function bb_add_sitewide_notice_for_presence_api_mu_file() {
 
     $bp_performance_download_nonce = wp_create_nonce( 'bb_presence_api_mu_download' );
