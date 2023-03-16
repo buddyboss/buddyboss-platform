@@ -336,6 +336,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			} else {
 				$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
+		} elseif ( bp_moderation_is_user_suspended( $user_id ) ) {
+			$content = bb_moderation_is_suspended_message( $content, $this->item_type, $item_id );
 		} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
 			$content = bb_moderation_is_blocked_message( $content, $this->item_type, $item_id );
 		}
