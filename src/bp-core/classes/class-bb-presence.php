@@ -330,6 +330,32 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<div class="notice notice-error">' . wpautop( $notice ) . '</div>';
 		}
+
+		/**
+		 * Function to check native presence file load directly or not.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_check_native_presence_load_directly() {
+			$file_url = plugin_dir_url( __DIR__ ) . 'bp-core/bb-core-native-presence.php?direct_allow=true';
+			$response = wp_remote_get( $file_url );
+			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+				$responseBody = wp_remote_retrieve_body( $response );
+				$result       = json_decode( $responseBody, true );
+				if (
+					! empty( $result ) &&
+					isset( $result['success'] ) &&
+					isset( $result['data']['direct_allow'] ) &&
+					true === $result['data']['direct_allow']
+				) {
+					update_option( 'bb_use_core_native_presence', true );
+				} else {
+					update_option( 'bb_use_core_native_presence', false );
+				}
+			} else {
+				update_option( 'bb_use_core_native_presence', false );
+			}
+		}
 	}
 
 	BB_Presence::instance();
