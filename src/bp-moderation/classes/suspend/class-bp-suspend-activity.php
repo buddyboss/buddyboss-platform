@@ -265,7 +265,11 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 			$exclude_group_sql = '';
 			// Allow group activities from blocked/suspended users.
-			if ( bp_is_active( 'groups' ) ) {
+			if (
+				bp_is_active( 'groups' ) &&
+				function_exists( 'bb_did_filter' ) &&
+				! bb_did_filter( 'bp_nouveau_activity_widget_query' )
+			) {
 				$exclude_group_sql = ' OR a.component = "groups" ';
 			}
 
