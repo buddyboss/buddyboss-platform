@@ -2559,5 +2559,5 @@ function bb_update_to_2_2_9_1() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_2_3_1() {
-	bb_presence_api_mu_plugin();
+	bb_load_presence_api_mu_plugin();
 }
