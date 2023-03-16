@@ -571,3 +571,61 @@ function bb_forums_subscriptions_redirect() {
 }
 
 add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
+
+// BuddyBoss Presence API mu plugin.
+if ( is_admin() ) {
+	add_action( 'bp_admin_init', 'bb_load_presence_api_mu_plugin' );
+}
+
+function bb_load_presence_api_mu_plugin() {
+    $bb_presence_api_mu_download = get_option( 'bb_presence_api_mu_download' );
+    if ( ! empty( $bb_presence_api_mu_download ) ) {
+        return;
+    }
+
+    $bp_platform_mu_path     = WP_PLUGIN_DIR . '/buddyboss-platform/bp-core/mu-plugins/buddyboss-presence-api.php';
+    $bp_platform_dev_mu_path = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-core/mu-plugins/buddyboss-presence-api.php';
+    if ( file_exists( $bp_platform_mu_path ) ) {
+        $bp_mu_plugin_file_path = $bp_platform_mu_path;
+    } elseif ( file_exists( $bp_platform_dev_mu_path ) ) {
+        $bp_mu_plugin_file_path = $bp_platform_dev_mu_path;
+    }
+
+    if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+        require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+        require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+    }
+
+    $wp_files_system = new \WP_Filesystem_Direct( array() );
+	if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+		// Try to automatically install MU plugin.
+		if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' );
+			update_option( 'bb_presence_api_mu_download', 'true', DAY_IN_SECONDS );
+		}
+	}
+
+	if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+		add_action( 'admin_notices', 'bb_add_sitewide_notice_for_presence_api_mu_file' );
+	}
+}
+
+function bb_add_sitewide_notice_for_presence_api_mu_file() {
+
+    $bp_performance_download_nonce = wp_create_nonce( 'bb_presence_api_mu_download' );
+
+    $download_path = admin_url( 'admin.php?page=bp-settings&download_mu_bpa_file=' . $bp_performance_download_nonce );
+    $notice = sprintf(
+        '%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
+        __( 'Presence API Caching cannot be automatically installed on your server. To enable caching, you need to manually install the "BuddyBoss Presence API" plugin in your', 'buddyboss' ),
+        'https://wordpress.org/support/article/must-use-plugins/',
+        __( 'must-use plugins', 'buddyboss' ),
+        $download_path,
+        __( 'Download the plugin', 'buddyboss' ),
+        __( 'and then upload it into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss' )
+    );
+
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    echo '<div class="notice notice-error">' . wpautop( $notice ) . '</div>';
+}
