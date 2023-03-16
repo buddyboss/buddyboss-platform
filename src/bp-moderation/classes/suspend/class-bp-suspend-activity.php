@@ -262,7 +262,14 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_activity_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+
+			$exclude_group_sql = '';
+			// Allow group activities from blocked/suspended users.
+			if ( bp_is_active( 'groups' ) ) {
+				$exclude_group_sql = ' OR a.component = "groups" ';
+			}
+
+			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}
 
 		return $where_conditions;
