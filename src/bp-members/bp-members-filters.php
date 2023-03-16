@@ -23,7 +23,7 @@ add_filter( 'register_url', 'bp_get_signup_page' );
 // Change the last active display format if users active within 5 minutes then shows 'Active now'.
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
 
-// Repair user nicknames.
+// Repair member profile links.
 add_filter( 'bp_repair_list', 'bb_repair_member_profile_links' );
 
 /**
@@ -797,18 +797,19 @@ add_action( 'delete_user', 'bb_delete_user_subscriptions' );
 /**
  * Add repair member profile links.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param array $repair_list Repair list items.
  *
  * @return array Repair list items.
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bb_repair_member_profile_links( $repair_list ) {
 	$repair_list[] = array(
-		'bb-xprofile-repair-user-nicknames',
+		'bb-member-repair-profile-links',
 		__( 'Repair member profile links', 'buddyboss' ),
 		'bb_repair_member_profile_links_callback',
 	);
+
 	return $repair_list;
 }
 
@@ -816,6 +817,10 @@ function bb_repair_member_profile_links( $repair_list ) {
  * This function will work as migration process which will repair member profile links.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $is_background The current process is background or not.
+ *
+ * @return array|void
  */
 function bb_repair_member_profile_links_callback( $is_background = false ) {
 	if ( ! bp_is_active( 'members' ) ) {
@@ -828,14 +833,14 @@ function bb_repair_member_profile_links_callback( $is_background = false ) {
 	}
 
 	$args = array(
-		'fields'      => 'ids',
-		'number'      => 1,
-		'meta_query'  => array(
+		'fields'     => 'ID',
+		'number'     => 1,
+		'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			array(
 				'key'     => 'bb_profile_slug',
 				'compare' => 'NOT EXISTS',
-			)
-		)
+			),
+		),
 	);
 
 	$users = get_users( $args );
