@@ -23,6 +23,9 @@ add_filter( 'register_url', 'bp_get_signup_page' );
 // Change the last active display format if users active within 5 minutes then shows 'Active now'.
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
 
+// Repair user nicknames.
+add_filter( 'bp_repair_list', 'bb_repair_member_profile_links' );
+
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
  *
@@ -789,3 +792,89 @@ function bb_delete_user_subscriptions( $user_id ) {
 }
 add_action( 'wpmu_delete_user', 'bb_delete_user_subscriptions' );
 add_action( 'delete_user', 'bb_delete_user_subscriptions' );
+
+
+/**
+ * Add repair member profile links.
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @return array Repair list items.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_repair_member_profile_links( $repair_list ) {
+	$repair_list[] = array(
+		'bb-xprofile-repair-user-nicknames',
+		__( 'Repair member profile links', 'buddyboss' ),
+		'bb_repair_member_profile_links_callback',
+	);
+	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will repair member profile links.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_repair_member_profile_links_callback( $is_background = false ) {
+	if ( ! bp_is_active( 'members' ) ) {
+		return;
+	}
+
+	$offset = 1;
+	if ( $is_background ) {
+		$offset = get_site_option( 'bb_profile_generate_unique_identifiers_page', 1 );
+	}
+
+	$args = array(
+		'fields'      => 'ids',
+		'number'      => 1,
+		'meta_query'  => array(
+			array(
+				'key'     => 'bb_profile_slug',
+				'compare' => 'NOT EXISTS',
+			)
+		)
+	);
+
+	$users = get_users( $args );
+
+	$all_users = array();
+	if ( ! empty( $users['users'] ) ) {
+		$all_users = $users['users'];
+	}
+
+	if ( ! empty( $all_users ) ) {
+		bb_migrating_group_member_subscriptions( $all_groups, $is_background );
+		if ( ! $is_background ) {
+			$total = ( (int) get_site_option( 'bb_profile_generate_unique_identifiers_count', 0 ) + count( $all_groups ) );
+			update_site_option( 'bb_profile_generate_unique_identifiers_count', $total );
+
+			$records_updated = sprintf(
+			/* translators: total topics */
+				_n( '%d group forum and discussion subscriptions migrated successfully', '%d groups forum and discussion subscriptions migrated successfully', bp_core_number_format( $total ), 'buddyboss' ),
+				bp_core_number_format( $total )
+			);
+
+			return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+			);
+		}
+	} else {
+		delete_site_option( 'bb_profile_generate_unique_identifiers_page' );
+		delete_site_option( 'bb_profile_generate_unique_identifiers_count' );
+		delete_transient( 'bb_migrate_group_subscriptions' );
+
+		/* translators: Status of current action. */
+		$statement = __( 'Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s', 'buddyboss' );
+
+		// All done!
+		return array(
+			'status'  => 1,
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
+}

@@ -391,6 +391,78 @@ function bp_core_get_username( $user_id = 0, $user_nicename = false, $user_login
 }
 
 /**
+ * Return the user ID based on profile_ lug.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $profile_slug profile slug to check.
+ * @return int|null The ID of the matched user on success, null on failure.
+ */
+function bb_core_get_userid_from_profile_slug( $profile_slug ) {
+	if ( empty( $profile_slug ) ) {
+		return false;
+	}
+
+	static $cache = array();
+
+	$cache_key = 'bp_core_get_userid_from_profile_slug' . $profile_slug;
+	if ( ! isset( $cache[ $cache_key ] ) ) {
+		$cache[ $cache_key ] = get_users(
+			array(
+				'meta_key'    => 'profile_slug',
+				'meta_value'  => $profile_slug,
+				'number'      => 1,
+				'count_total' => false,
+			)
+		);
+
+		$user = $cache[ $cache_key ] ? $cache[ $cache_key ][0] : null;
+	} else {
+		$user = $cache[ $cache_key ] ? $cache[ $cache_key ][0] : null;
+	}
+
+	return apply_filters( 'bb_core_get_userid_from_profile_slug', ! empty( $user->ID ) ? $user->ID : null, $profile_slug );
+}
+
+/**
+ * Retrieve member info based on profile slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $profile_slug nickname to check.
+ * @return WP_User|null WP_User object on success, null on failure.
+ */
+function bb_get_user_by_profile_slug( $profile_slug ) {
+	$user_id = bb_core_get_userid_from_profile_slug( $profile_slug );
+	return $user_id ? get_user_by( 'ID', $user_id ) : null;
+}
+
+/**
+ * Return the profile slug for a user based on their user id.
+ *
+ * This function is sensitive to the setting profile links ,
+ * so it will return the username or unique_indentifier as appropriate.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id       User ID to check.
+ * @return string The userslug of the matched user or an empty string if no user is found.
+ */
+function bb_core_get_user_slug( $user_id = 0 ) {
+
+	$userslug = get_the_author_meta( 'bb_profile_slug', $user_id );
+
+	/**
+	 * Filters the profile slug based on originally provided user ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $userslug Username determined by user ID.
+	 */
+	return apply_filters( 'bb_core_get_user_slug', $userslug );
+}
+
+/**
  * Return the user_nicename for a user based on their user_id.
  *
  * This should be used for linking to user profiles and anywhere else a
@@ -5361,5 +5433,27 @@ function bb_get_user_presence_html( $user_id, $expiry = true ) {
  */
 function bb_user_presence_html( $user_id, $expiry = true ) {
 	echo bb_get_user_presence_html( $user_id, $expiry ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+/**
+ * Generate user profile slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id user id.
+ */
+function bb_generate_user_profile_slug( $user_id ) {
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	$user = get_user_by( 'ID', (int) $user_id );
+
+	if ( $user ) {
+		$unique_indentifier = sha1( $user->user_email . $user->user_nicename );
+		bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_indentifier );
+		bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_indentifier, null );
+	}
+
 }
 
