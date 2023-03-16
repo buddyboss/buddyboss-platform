@@ -336,7 +336,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function bb_check_native_presence_load_directly() {
+		public static function bb_check_native_presence_load_directly() {
 			$file_url = plugin_dir_url( __DIR__ ) . 'bp-core/bb-core-native-presence.php?direct_allow=true';
 			$response = wp_remote_get( $file_url );
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
