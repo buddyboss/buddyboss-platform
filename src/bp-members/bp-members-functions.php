@@ -5423,7 +5423,7 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 
 		$found_users = get_users(
 			array(
-				'meta_key'    => 'profile_slug', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_key'    => 'bb_profile_slug', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 				'meta_value'  => $profile_slug, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 				'number'      => 1,
 				'count_total' => false,
