@@ -2331,3 +2331,20 @@ function buddyboss_menu_order( $menu_order ) {
 }
 
 add_filter( 'menu_order', 'buddyboss_menu_order' );
+
+/**
+ * Function to remove html entity from number format.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $formatted BuddyPress formatted value.
+ * @param int    $number    The number to be formatted.
+ * @param bool   $decimals  Whether or not to use decimals.
+ *
+ * @return string
+ */
+function bb_core_number_format_callback( $formatted, $number, $decimals ) {
+
+	return html_entity_decode( $formatted, ENT_NOQUOTES );
+}
+add_filter( 'bp_core_number_format', 'bb_core_number_format_callback', 10, 3 );
