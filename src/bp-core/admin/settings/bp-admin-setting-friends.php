@@ -69,7 +69,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	function bb_admin_setting_callback_enable_friends_auto_follow() {
 		?>
 
-		<input id="bb_enable_friends_auto_follow" name="bb_enable_friends_auto_follow" type="checkbox" value="1" <?php checked( bb_is_friends_auto_follow_active( false ) ); ?> />
+		<input id="bb_enable_friends_auto_follow" name="bb_enable_friends_auto_follow" type="checkbox" value="1" <?php checked( bb_is_friends_auto_follow_active(), true ); ?> />
 		<label for="bb_enable_friends_auto_follow"><?php esc_html_e( 'Automatically have members follow a member they connect with', 'buddyboss' ); ?></label>
 
 		<?php
