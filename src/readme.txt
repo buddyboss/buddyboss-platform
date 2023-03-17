@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2.9
+Stable tag: 2.2.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.2.9.1 =
+* Notifications - Handled repeated email notification issues by removing duplicate forum subscription entries
+* Notifications - Handled triggering notification when an activity post is updated in a social group
+* Notifications - Handled notification broken template issue when media uploaded in a social group
+* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin 
+* Notifications - Handled defaults disabled issue for force enabled notifications types
 
 = 2.2.9 =
 * Profiles - Handled incorrect connection count shows in profile when any connected member is suspended
