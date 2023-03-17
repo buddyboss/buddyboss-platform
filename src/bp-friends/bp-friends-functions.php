@@ -883,7 +883,7 @@ add_action( 'friends_friendship_accepted', 'friends_notification_accepted_reques
  * @param int $friend_user_id    ID of the request recipient.
  */
 function bb_friends_auto_follow( $friendship_id, $initiator_user_id, $friend_user_id ) {
-	if ( bp_is_activity_follow_active() && bb_is_friends_auto_follow_active() ) {
+	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && bb_is_friends_auto_follow_active() ) {
 		bp_start_following(
 			array(
 				'leader_id'   => $friend_user_id,

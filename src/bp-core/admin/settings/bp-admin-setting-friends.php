@@ -34,7 +34,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-force-friendship-to-message', __( 'Messaging', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_force_friendship_to_message' ), array( $this, 'bp_admin_sanitize_callback_force_friendship_to_message' ) );
 		}
 
-		if ( bp_is_activity_follow_active() ) {
+		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 			// Allow auto follow.
 			$this->add_field( 'bb_enable_friends_auto_follow', __( 'Auto Follow', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_friends_auto_follow' ) );
 		}
@@ -65,8 +65,10 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	 * Allow auto following members after connecting
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
 	 */
-	function bb_admin_setting_callback_enable_friends_auto_follow() {
+	public function bb_admin_setting_callback_enable_friends_auto_follow() {
 		?>
 
 		<input id="bb_enable_friends_auto_follow" name="bb_enable_friends_auto_follow" type="checkbox" value="1" <?php checked( bb_is_friends_auto_follow_active(), true ); ?> />
