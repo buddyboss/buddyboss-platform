@@ -126,7 +126,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10, 4 );
 			add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 4 );
 
-			if ( ! empty( $activity[ $user_id ] ) ) {
+			if ( ! empty( $activity[ $user_id ]['activity_id'] ) ) {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				self::$wpdb->update(
 					self::$table_name,
@@ -355,6 +355,42 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			} else {
 				update_option( 'bb_use_core_native_presence', false );
 			}
+		}
+
+		/**
+		 * Current user online activity time.
+		 *
+		 * @since BuddyPress [BBVERSION]
+		 *
+		 * @param int      $user_id User id.
+		 * @param bool|int $expiry  Given time or whether to check degault timeframe.
+		 *
+		 * @return string
+		 */
+		public static function bb_is_online_user_mu_cache( $user_id, $expiry = false ) {
+
+			$last_activity      = '';
+			$last_activity_data = self::bb_get_users_last_activity( $user_id );
+			if ( ! empty( $last_activity_data[ $user_id ]['date_recorded'] ) ) {
+				$last_activity = strtotime( $last_activity_data[ $user_id ]['date_recorded'] );
+			}
+
+			if ( empty( $last_activity ) ) {
+				return false;
+			}
+
+			$bb_presence_interval  = get_option( 'bb_presence_interval', 60 );
+			$bb_presence_time_span = 20;
+
+			if ( is_int( $expiry ) && ! empty( $expiry ) ) {
+				$timeframe = $expiry;
+			} else {
+				$timeframe = $bb_presence_interval + $bb_presence_time_span;
+			}
+
+			$online_time = $timeframe;
+
+			return time() - $last_activity <= $online_time;
 		}
 	}
 
