@@ -1256,7 +1256,7 @@ function bp_force_friendship_to_message( $default = false ) {
  *                      Default: true.
  * @return bool True if Auto Follow is enabled, otherwise false.
  */
-function bp_is_friends_auto_follow_active( $default = false ) {
+function bb_is_friends_auto_follow_active( $default = false ) {
 
 	/**
 	 * Filters whether or not Activity Auto Follow is enabled.
@@ -1265,7 +1265,7 @@ function bp_is_friends_auto_follow_active( $default = false ) {
 	 *
 	 * @param bool $value Whether or not Activity Follow is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_friends_auto_follow_active', (bool) bp_get_option( '_bp_enable_friends_auto_follow', $default ) );
+	return (bool) apply_filters( 'bb_is_friends_auto_follow_active', (bool) bp_get_option( 'bb_enable_friends_auto_follow', $default ) );
 }
 
 /**

@@ -36,7 +36,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 
 		if ( bp_is_activity_follow_active() ) {
 			// Allow auto follow.
-			$this->add_field( '_bp_enable_friends_auto_follow', __( 'Auto Follow', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_enable_friends_auto_follow' ), 'intval' );
+			$this->add_field( 'bb_enable_friends_auto_follow', __( 'Auto Follow', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_friends_auto_follow' ) );
 		}
 
 		/**
@@ -66,11 +66,11 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	function bp_admin_setting_callback_enable_friends_auto_follow() {
+	function bb_admin_setting_callback_enable_friends_auto_follow() {
 		?>
 
-		<input id="_bp_enable_friends_auto_follow" name="_bp_enable_friends_auto_follow" type="checkbox" value="1" <?php checked( bp_is_friends_auto_follow_active( false ) ); ?> />
-		<label for="_bp_enable_friends_auto_follow"><?php esc_html_e( 'Automatically have members follow a member they connect with', 'buddyboss' ); ?></label>
+		<input id="bb_enable_friends_auto_follow" name="bb_enable_friends_auto_follow" type="checkbox" value="1" <?php checked( bb_is_friends_auto_follow_active( false ) ); ?> />
+		<label for="bb_enable_friends_auto_follow"><?php esc_html_e( 'Automatically have members follow a member they connect with', 'buddyboss' ); ?></label>
 
 		<?php
 	}
