@@ -1891,7 +1891,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 			$thread->feedback_error = array(
-				'feedback' => __( 'Unable to send new messages at this time.', 'buddyboss' ),
+				'feedback' => __( 'Unable to send new messages to this member.', 'buddyboss' ),
 				'type'     => 'notice',
 			);
 		} elseif ( bb_moderation_is_user_blocked_by( $recipient_id ) ) {
@@ -2467,16 +2467,31 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			);
 		}
 
+		$has_message_updated = false;
 		if ( bp_is_active( 'moderation' ) ) {
 			$thread->messages[ $i ]['is_user_suspended']  = bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id );
 			$thread->messages[ $i ]['is_user_blocked']    = bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id );
 			$thread->messages[ $i ]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $bp_get_the_thread_message_sender_id );
 
-			if( 'yes' !== $message_joined && 'yes' !== $message_left ) {
+			if ( 'yes' !== $message_joined && 'yes' !== $message_left ) {
 				if ( bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id ) ) {
-					$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ) . '</p>';
+					$filtred_content = bb_moderation_is_suspended_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
+					if ( $content !== $filtred_content ) {
+						$has_message_updated               = true;
+						$thread->messages[ $i ]['content'] = '<span class="suspended">' . $filtred_content . '</span>';
+					}
+				} elseif ( bb_moderation_is_user_blocked_by( $bp_get_the_thread_message_sender_id ) ) {
+					$filtred_content = bb_moderation_is_blocked_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
+					if ( $content !== $filtred_content ) {
+						$has_message_updated               = true;
+						$thread->messages[ $i ]['content'] = '<span class="blocked">' . $filtred_content . '</span>';
+					}
 				} elseif ( bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id ) ) {
-					$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ) . '</p>';
+					$filtred_content = bb_moderation_has_blocked_message( $content, BP_Moderation_Message::$moderation_type, $bp_get_the_thread_message_id );
+					if ( $content !== $filtred_content ) {
+						$has_message_updated               = true;
+						$thread->messages[ $i ]['content'] = '<span class="blocked">' . $filtred_content . '</span>';
+					}
 				}
 			}
 		}
@@ -2501,11 +2516,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if ( ! empty( $media_ids ) && bp_has_media(
 				array(
-					'include'  => $media_ids,
-					'privacy'  => array( 'message' ),
-					'order_by' => 'menu_order',
-					'sort'     => 'ASC',
-					'user_id'  => false,
+					'include'          => $media_ids,
+					'privacy'          => array( 'message' ),
+					'order_by'         => 'menu_order',
+					'sort'             => 'ASC',
+					'user_id'          => false,
+					'moderation_query' => $has_message_updated,
 				)
 			) ) {
 				$thread->messages[ $i ]['media'] = array();
@@ -2536,11 +2552,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				! empty( $video_ids ) &&
 				bp_has_video(
 					array(
-						'include'  => $video_ids,
-						'privacy'  => array( 'message' ),
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-						'user_id'  => false,
+						'include'          => $video_ids,
+						'privacy'          => array( 'message' ),
+						'order_by'         => 'menu_order',
+						'sort'             => 'ASC',
+						'user_id'          => false,
+						'moderation_query' => $has_message_updated,
 					)
 				)
 			) {
@@ -2596,9 +2613,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			if ( ! empty( $document_ids ) && bp_has_document(
 				array(
-					'include'  => $document_ids,
-					'order_by' => 'menu_order',
-					'sort'     => 'ASC',
+					'include'          => $document_ids,
+					'order_by'         => 'menu_order',
+					'sort'             => 'ASC',
+					'moderation_query' => $has_message_updated,
 				)
 			) ) {
 				$thread->messages[ $i ]['document'] = array();
@@ -2732,7 +2750,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_groups_gif_support_enabled() ) ) ) {
 			$gif_data = bp_messages_get_meta( $bp_get_the_thread_message_id, '_gif_data', true );
 
-			if ( ! empty( $gif_data ) ) {
+			if ( ! empty( $gif_data ) && ! $has_message_updated ) {
 				$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
 				$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
@@ -3083,12 +3101,21 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 							$user_name = bp_core_get_user_displayname( $recipient->user_id );
 							?>
 							<div class="user-item-wrp" id="user-<?php echo esc_attr( $recipient->user_id ); ?>">
-								<div class="user-avatar">
-									<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
-								</div>
-								<div class="user-name">
-									<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><?php echo esc_html( $user_name ); ?></a>
-								</div>
+								<?php if ( ! empty ( bp_core_get_user_domain( $recipient->user_id ) ) ) { ?>
+									<div class="user-avatar">
+										<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></a>
+									</div>
+									<div class="user-name">
+										<a href="<?php echo esc_url( bp_core_get_user_domain( $recipient->user_id ) ); ?>"><?php echo esc_html( $user_name ); ?></a>
+									</div>
+								<?php } else { ?>
+									<div class="user-avatar">
+										<span><img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_html( $user_name ); ?>"></span>
+									</div>
+									<div class="user-name">
+										<span><?php echo esc_html( $user_name ); ?></span>
+									</div>
+								<?php } ?>
 								<?php if ( 'block' === $member_action && bp_is_active( 'moderation' ) ) { ?>
 									<div class="user-actions">
 										<?php
