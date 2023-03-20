@@ -51,6 +51,8 @@ if ( bp_is_active( 'moderation' ) ) {
 			$activity_comment_content = bb_moderation_is_blocked_message( bp_get_activity_comment_content(), BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
 		} elseif ( $is_user_blocked ) {
 			$activity_comment_content = bb_moderation_has_blocked_message( bp_get_activity_comment_content(), BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
+		} else {
+			$activity_comment_content = esc_html__( 'This content has been hidden from site admin.', 'buddypress' );
 		}
 
 		echo $activity_comment_content; // phpcs:ignore
