@@ -325,9 +325,8 @@ function bp_core_set_uri_globals() {
 
 					// Switch the displayed_user based on profile link format setting.
 				} elseif ( 'unique_identifier' === bb_get_profile_slug_format() ) {
-					$user_id                = bb_get_user_by_profile_slug( $after_member_slug );
-					$bp->displayed_user->id = (int) $user_id;
-					if ( empty( $user_id )) {
+					$bp->displayed_user->id = (int) bb_get_user_by_profile_slug( $after_member_slug );
+					if ( empty( $bp->displayed_user->id )) {
 						$bp->displayed_user->id = (int) bp_core_get_userid_from_nicename( $after_member_slug );
 					}
 				} else {
