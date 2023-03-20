@@ -24,7 +24,7 @@ add_filter( 'register_url', 'bp_get_signup_page' );
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
 
 // Repair member profile links.
-add_filter( 'bp_repair_list', 'bb_repair_member_profile_links' );
+add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
 
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
@@ -834,7 +834,8 @@ function bb_repair_member_profile_links_callback( $is_background = false ) {
 
 	$args = array(
 		'fields'     => 'ID',
-		'number'     => 1,
+		'page'       => $offset,
+		//'per_page'   => 2,
 		'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			array(
 				'key'     => 'bb_profile_slug',
@@ -845,20 +846,18 @@ function bb_repair_member_profile_links_callback( $is_background = false ) {
 
 	$users = get_users( $args );
 
-	$all_users = array();
-	if ( ! empty( $users['users'] ) ) {
-		$all_users = $users['users'];
-	}
+	if ( ! empty( $users ) ) {
 
-	if ( ! empty( $all_users ) ) {
-		bb_migrating_group_member_subscriptions( $all_groups, $is_background );
+		foreach ( $users as $user_id ) {
+			bb_set_user_profile_slug( $user_id );
+		}
 		if ( ! $is_background ) {
-			$total = ( (int) get_site_option( 'bb_profile_generate_unique_identifiers_count', 0 ) + count( $all_groups ) );
+			$total = ( (int) get_site_option( 'bb_profile_generate_unique_identifiers_count', 0 ) + count( $users ) );
 			update_site_option( 'bb_profile_generate_unique_identifiers_count', $total );
 
 			$records_updated = sprintf(
 			/* translators: total topics */
-				_n( '%d group forum and discussion subscriptions migrated successfully', '%d groups forum and discussion subscriptions migrated successfully', bp_core_number_format( $total ), 'buddyboss' ),
+				_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', bp_core_number_format( $total ), 'buddyboss' ),
 				bp_core_number_format( $total )
 			);
 
@@ -869,12 +868,12 @@ function bb_repair_member_profile_links_callback( $is_background = false ) {
 			);
 		}
 	} else {
+
 		delete_site_option( 'bb_profile_generate_unique_identifiers_page' );
 		delete_site_option( 'bb_profile_generate_unique_identifiers_count' );
-		delete_transient( 'bb_migrate_group_subscriptions' );
 
 		/* translators: Status of current action. */
-		$statement = __( 'Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s', 'buddyboss' );
+		$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss' );
 
 		// All done!
 		return array(
