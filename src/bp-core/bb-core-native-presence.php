@@ -64,7 +64,7 @@ if ( isset( $_POST['ids'] ) ) {
 	foreach ( array_unique( $users ) as $user_id ) {
 		$presence_data[] = array(
 			'id'     => $user_id,
-			'status' => BB_Presence::bb_is_online_user_mu_cache( $user_id ),
+			'status' => BB_Presence::bb_get_user_presence( $user_id ),
 		);
 	}
 

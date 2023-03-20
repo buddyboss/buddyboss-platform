@@ -392,6 +392,23 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			return time() - $last_activity <= $online_time;
 		}
+
+		/**
+		 * Get the given user ID online/offline status.
+		 *
+		 * @since BuddyPress [BBVERSION]
+		 *
+		 * @param int $user_id User id.
+		 *
+		 * @return string
+		 */
+		public static function bb_get_user_presence( $user_id, $expiry = false ) {
+			if ( self::bb_is_online_user_mu_cache( $user_id, $expiry ) ) {
+				return 'online';
+			} else {
+				return 'offline';
+			}
+		}
 	}
 
 	BB_Presence::instance();
