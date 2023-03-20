@@ -940,7 +940,7 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 		return bp_is_moderation_member_blocking_enable( 0 );
 	}
 
-	$settings = get_option( 'bpm_reporting_content_reporting', array() );
+	$settings = (array) get_option( 'bpm_reporting_content_reporting', array() );
 
 	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
 		$settings[ $content_type ] = bb_is_moderation_member_reporting_enable();
