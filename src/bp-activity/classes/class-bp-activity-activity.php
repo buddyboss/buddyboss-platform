@@ -1515,6 +1515,19 @@ class BP_Activity_Activity {
 		// Merge the comments with the activity items.
 		foreach ( (array) $activities as $key => $activity ) {
 			if ( isset( $activity_comments[ $activity->id ] ) ) {
+
+				// Apply condition for non group activity.
+				// Logged-in member CAN’T see comments by the member in other member’s posts of is/has blocked users.
+				if (
+					bp_is_active( 'moderation' ) &&
+					is_user_logged_in() &&
+					'groups' !== $activity->component &&
+					! empty( $activity_comments[ $activity->id ] ) &&
+					get_current_user_id() !== $activity->user_id
+				) {
+					$activity_comments[ $activity->id ] = self::get_filtered_activity_comments( $activity_comments[ $activity->id ] );
+				}
+
 				$activities[ $key ]->children = $activity_comments[ $activity->id ];
 			}
 		}
@@ -2042,5 +2055,32 @@ class BP_Activity_Activity {
 		$bp = buddypress();
 
 		return $wpdb->get_var( $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = 1 WHERE user_id = %d", $user_id ) );
+	}
+
+	/**
+	 * Hide all is/has blocked user activity comments on other member posts.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array|object $activity_comments The activity object or array.
+	 *
+	 * @return array|object
+	 */
+	public static function get_filtered_activity_comments( $activity_comments ) {
+		if ( ! empty( $activity_comments ) ) {
+			foreach ( $activity_comments as $activity_id => $activity_comment ) {
+				if (
+					! empty( $activity_comment ) &&
+					bb_moderation_is_user_blocked_by( $activity_comment->user_id ) ||
+					bp_moderation_is_user_blocked( $activity_comment->user_id )
+				) {
+					unset( $activity_comments[ $activity_id ] );
+				} elseif ( ! empty( $activity_comment->children ) ) {
+					$activity_comment->children = self::get_filtered_activity_comments( $activity_comment->children );
+				}
+			}
+		}
+
+		return $activity_comments;
 	}
 }
