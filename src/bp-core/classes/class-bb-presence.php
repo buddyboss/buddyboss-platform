@@ -398,7 +398,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyPress [BBVERSION]
 		 *
-		 * @param int $user_id User id.
+		 * @param int      $user_id User id.
+		 * @param bool|int $expiry  Given time or whether to check degault timeframe.
 		 *
 		 * @return string
 		 */
