@@ -850,7 +850,7 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 		global $bp_background_updater;
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
-		if ( ! empty( trim( $ffmpeg->error ) ) ) {
+		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
 			return;
 		}
 
