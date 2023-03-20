@@ -33,6 +33,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base = buddypress()->profile->id . '/fields';
+
+		// Support for Blog comments.
+		// EX: /wp-json/wp/v2/comments.
+		add_filter( 'rest_prepare_comment', array( $this, 'bp_rest_prepare_comment' ), 10, 2 );
 	}
 
 	/**
@@ -1498,7 +1502,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			array(
 				'posts_per_page' => - 1,
 				'post_type'      => bp_get_member_type_post_type(),
-				'orderby'        => 'title',
+				'post_status'    => 'publish',
+				'orderby'        => 'menu_order',
 				'order'          => 'ASC',
 			)
 		);
@@ -1882,5 +1887,25 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_get_displayed_user( $user_id ) {
 		return ( ! empty( $this->user_id ) ? $this->user_id : bp_loggedin_user_id() );
+	}
+
+	/**
+	 * Filters a comment returned from the REST API.
+	 * - From: xprofile_filter_comments()
+	 *
+	 * @param WP_REST_Response $response The response object.
+	 * @param WP_Comment       $comment  The original comment object.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function bp_rest_prepare_comment( $response, $comment ) {
+
+		$data = $response->get_data();
+
+		$data['author_name'] = bp_core_get_user_displayname( $comment->user_id );
+
+		$response->set_data( $data );
+
+		return $response;
 	}
 }

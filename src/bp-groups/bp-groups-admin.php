@@ -117,7 +117,7 @@ function bp_groups_admin_load() {
 		// Delete groups forums
 		if ( ! empty( $gf_ids ) ) {
 			foreach ( $gf_ids as $gf_id ) {
-				$forum_ids = bbp_get_group_forum_ids( $gf_id );
+				$forum_ids = function_exists( 'bbp_get_group_forum_ids' ) ? bbp_get_group_forum_ids( $gf_id ) : array();
 				foreach ( $forum_ids as $forum_id ) {
 					wp_delete_post( $forum_id, true );
 				}
@@ -248,15 +248,33 @@ function bp_groups_admin_load() {
 
 	$bp = buddypress();
 
+	$group_localize_arr = array(
+		'add_member_placeholder' => __( 'Start typing a username to add a new member.', 'buddyboss' ),
+		'confirm_button'         => __( 'Confirm', 'buddyboss' ),
+		'cancel_button'          => __( 'Cancel', 'buddyboss' ),
+		'warn_on_leave'          => __( 'If you leave this page, you will lose any unsaved changes you have made to the group.', 'buddyboss' ),
+		'warn_on_attach_forum'   => __( 'Members cannot subscribe individually to forums inside a group, only to the group itself. By moving this forum into a group, all existing subscriptions to the forum will be removed.', 'buddyboss' ),
+	);
+
+	if ( isset( $_GET['page'], $_GET['gid'] ) && 'bp-groups' === $_GET['page'] && ! empty( $_GET['gid'] ) ) {
+		$connected_forum_id  = 0;
+		$requested_group_id  = (int) sanitize_text_field( wp_unslash( $_GET['gid'] ) );
+		$connected_forum_ids = function_exists( 'bbp_get_group_forum_ids' ) ? bbp_get_group_forum_ids( $requested_group_id ) : array();
+
+		// Get the first forum ID.
+		if ( ! empty( $connected_forum_ids ) ) {
+			$connected_forum_id = (int) is_array( $connected_forum_ids ) ? $connected_forum_ids[0] : $connected_forum_ids;
+		}
+
+		$group_localize_arr['group_connected_forum_id'] = $connected_forum_id;
+	}
+
 	// Enqueue CSS and JavaScript.
 	wp_enqueue_script( 'bp_groups_admin_js', $bp->plugin_url . "bp-groups/admin/js/admin{$min}.js", array( 'jquery', 'wp-ajax-response', 'jquery-ui-autocomplete' ), bp_get_version(), true );
 	wp_localize_script(
 		'bp_groups_admin_js',
 		'BP_Group_Admin',
-		array(
-			'add_member_placeholder' => __( 'Start typing a username to add a new member.', 'buddyboss' ),
-			'warn_on_leave'          => __( 'If you leave this page, you will lose any unsaved changes you have made to the group.', 'buddyboss' ),
-		)
+		$group_localize_arr
 	);
 	wp_enqueue_style( 'bp_groups_admin_css', $bp->plugin_url . "bp-groups/admin/css/admin{$min}.css", array(), bp_get_version() );
 
@@ -786,7 +804,7 @@ function bp_groups_admin_edit() {
 										<div id="bp-groups-permalink-box">
 											<strong><?php esc_html_e( 'Permalink:', 'buddyboss' ); ?></strong>
 											<span id="bp-groups-permalink">
-												<?php bp_groups_directory_permalink(); ?> <input type="text" id="bp-groups-slug" name="bp-groups-slug" value="<?php bp_group_slug( $group ); ?>" autocomplete="off"> /
+												<?php bp_groups_directory_permalink(); ?> <input type="text" id="bp-groups-slug" name="bp-groups-slug" value="<?php echo rawurldecode( bp_get_group_slug( $group ) ); ?>" autocomplete="off"> /
 											</span>
 											<a href="<?php echo bp_group_permalink( $group ); ?>" class="button button-small" id="bp-groups-visit-group"><?php esc_html_e( 'Visit Group', 'buddyboss' ); ?></a>
 										</div>

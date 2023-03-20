@@ -166,10 +166,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array(
-			'id'   => $upload['id'],
-			'url'  => $upload['url'],
-			'name' => $upload['name'],
-			'type' => $upload['type'],
+			'id'                => $upload['id'],
+			'url'               => $upload['url'],
+			'name'              => $upload['name'],
+			'type'              => $upload['type'],
+			'size'              => $upload['size'],
+			'extension'         => $upload['extension'],
+			'svg_icon'          => $upload['svg_icon'],
+			'svg_icon_download' => $upload['svg_icon_download'],
+			'text'              => $upload['text'],
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -798,6 +803,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'folder_id'     => $document->folder_id,
 			'title'         => $document->title,
 			'user_id'       => $document->user_id,
+			'menu_order'    => $document->menu_order,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -1360,7 +1366,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $document->attachment_id ) ) {
-			$data['description']  = get_post_field( 'post_content', $document->attachment_id );
+			$data['description']  = wp_specialchars_decode( get_post_field( 'post_content', $document->attachment_id ), ENT_QUOTES );
 			$data['download_url'] = bp_document_download_link( $document->attachment_id, $document->id );
 			$data['extension']    = bp_document_extension( $document->attachment_id );
 			$data['svg_icon']     = bp_document_svg_icon( $data['extension'], $document->attachment_id, 'svg' );
@@ -1957,19 +1963,23 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			// extract the nice title name.
 			$title = get_the_title( $wp_attachment_id );
 
-			$document_id = bp_document_add(
-				array(
-					'id'            => $id,
-					'attachment_id' => $wp_attachment_id,
-					'title'         => $title,
-					'activity_id'   => $document_activity_id,
-					'folder_id'     => ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false ),
-					'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
-					'privacy'       => $document_privacy,
-					'user_id'       => $user_id,
-					'error_type'    => 'wp_error',
-				)
+			$add_document_args = array(
+				'id'            => $id,
+				'attachment_id' => $wp_attachment_id,
+				'title'         => $title,
+				'activity_id'   => $document_activity_id,
+				'folder_id'     => ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false ),
+				'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
+				'privacy'       => $document_privacy,
+				'user_id'       => $user_id,
+				'error_type'    => 'wp_error',
 			);
+
+			if ( isset( $args['menu_order'] ) ) {
+				$add_document_args['menu_order'] = ( ! empty( $args['menu_order'] ) ? $args['menu_order'] : 0 );
+			}
+
+			$document_id = bp_document_add( $add_document_args );
 
 			if ( is_int( $document_id ) ) {
 
@@ -2096,6 +2106,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( bp_is_active( 'groups' ) ) {
 				$new_scope[] = 'groups';
 			}
+		} elseif ( ( 'all' === $scope || empty( $scope ) ) && ! empty( $args['group_id'] ) ) {
+			$new_scope = array( 'groups' );
 		}
 
 		$new_scope = array_unique( $new_scope );
@@ -2336,6 +2348,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			array(
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
+				'order_by'     => 'menu_order',
 			)
 		);
 
@@ -2344,14 +2357,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'activity' );
+		$object->set_param( 'context', 'view' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response(
 					$document,
-					array(
-						'support' => 'activity',
-						'context' => 'view',
-					)
+					$object
 				)
 			);
 		}
@@ -2503,7 +2517,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				if ( ! empty( $old_document_ids ) ) {
 					foreach ( $old_document_ids as $document_id ) {
 						if ( ! in_array( (int) $document_id, $document_ids, true ) ) {
-							bp_document_delete( array( 'id' => $document_id ) );
+							bp_document_delete( array( 'id' => $document_id ), 'activity' );
 						}
 					}
 				}
@@ -2539,11 +2553,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					$component = 'groups';
 				}
 			}
-			if ( 'blogs' === $parent_activity->component ||
-			     (
-				     ! empty( $activity['component'] ) &&
-				     'blogs' === $activity['component']
-			     )
+			if (
+				'blogs' === $parent_activity->component ||
+				(
+					! empty( $activity['component'] ) &&
+					'blogs' === $activity['component']
+				)
 			) {
 				return false;
 			}
@@ -2638,8 +2653,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$documents = $this->assemble_response_data(
 			array(
-				'document_ids' => $document_ids,
-				'sort'         => 'ASC',
+				'document_ids'     => $document_ids,
+				'sort'             => 'ASC',
+				'order_by'         => 'menu_order',
+				'moderation_query' => false,
 			)
 		);
 
@@ -2648,9 +2665,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'message' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'message' ) )
+				$this->prepare_item_for_response( $document, $object )
 			);
 		}
 
@@ -2810,6 +2830,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			array(
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
+				'order_by'     => 'menu_order',
 			)
 		);
 
@@ -2818,9 +2839,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$object = new WP_REST_Request();
+		$object->set_param( 'support', 'forums' );
+
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'forums' ) )
+				$this->prepare_item_for_response( $document, $object )
 			);
 		}
 

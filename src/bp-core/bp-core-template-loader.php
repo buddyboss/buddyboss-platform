@@ -392,11 +392,22 @@ function bp_get_query_template( $type, $templates = array() ) {
 	 */
 	$templates = apply_filters( "bp_get_{$type}_template", $templates );
 
-	// Filter possible templates, try to match one, and set any BuddyPress theme
-	// compat properties so they can be cross-checked later.
+	/*
+	 * Filter possible templates, try to match one, and set any BuddyPress theme
+	 * compat properties so they can be cross-checked later.
+	 */
 	$templates = bp_set_theme_compat_templates( $templates );
 	$template  = bp_locate_template( $templates );
-	$template  = bp_set_theme_compat_template( $template );
+
+	/*
+	 * The current theme is using the WordPress Full Site Editing feature.
+	 * BuddyPress then needs to use the WordPress template canvas to retrieve the community content.
+	 */
+	if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() && get_theme_file_path( 'index.php' ) === $template ) {
+		$template = ABSPATH . WPINC . '/template-canvas.php';
+	}
+
+	$template = bp_set_theme_compat_template( $template );
 
 	/**
 	 * Filters the path to a template file.
