@@ -413,6 +413,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19871 ) {
 			bb_update_to_2_2_9_1();
 		}
+
+		if ( $raw_db_version < 19891 ) {
+			bb_update_to_2_2_9_3();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2547,4 +2551,15 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
  */
 function bb_update_to_2_2_9_1() {
 	bb_remove_duplicate_subscriptions();
+}
+
+/**
+ * Background job to generate user profile slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_2_9_3() {
+	bb_repair_member_profile_links_callback( true );
 }
