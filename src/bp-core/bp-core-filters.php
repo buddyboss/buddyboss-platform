@@ -2337,7 +2337,7 @@ add_filter( 'menu_order', 'buddyboss_menu_order' );
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $formatted BuddyPress formatted value.
+ * @param string $formatted The number to be formatted.
  *
  * @return string
  */
