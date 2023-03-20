@@ -402,7 +402,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return string
 		 */
-		public static function bb_get_user_presence( $user_id, $expiry = false ) {
+		public static function bb_get_user_presence_mu_cache( $user_id, $expiry = false ) {
 			if ( self::bb_is_online_user_mu_cache( $user_id, $expiry ) ) {
 				return 'online';
 			} else {
