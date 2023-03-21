@@ -160,7 +160,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			exit();
 		}
 		
-		if( $profile_slug_format_before_saving !== $profile_slug_format_after_saving ) {
+		if ( $profile_slug_format_before_saving !== $profile_slug_format_after_saving ) {
 			wp_cache_flush();
 		}
 
