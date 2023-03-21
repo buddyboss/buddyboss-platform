@@ -322,10 +322,17 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		if (
 			empty( $activities_template->activity->current_comment->id ) ||
-			empty( $activities_template->activity->current_comment->user_id ) ||
+			empty( $activities_template->activity->current_comment->user_id )
+		) {
+			return $content;
+		}
+
+		// Set content for reported content of group.
+		if (
+			! empty( $activities_template->activity->current_comment->id ) &&
+			! empty( $activities_template->activity->current_comment->user_id ) &&
 			bb_is_group_activity_comment( $activities_template->activity->current_comment )
 		) {
-			// Set content for reported content.
 			if (
 				$this->is_content_hidden( $activities_template->activity->current_comment->id ) &&
 				! bp_moderation_is_user_blocked( $activities_template->activity->current_comment->user_id )
