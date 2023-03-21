@@ -2,8 +2,7 @@
 /**
  * Native PHP to render the user presence.
  *
- * @package BuddyBoss
- *
+ * @package BuddyBoss\Core
  * @since BuddyBoss [BBVERSION]
  */
 
@@ -74,7 +73,7 @@ if ( ! is_user_logged_in() ) {
 // Include BB_Presence class.
 require_once __DIR__ . '/classes/class-bb-presence.php';
 
-if ( isset( $_POST['ids'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+if ( isset( $_POST['ids'] ) && class_exists( 'BB_Presence' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 	BB_Presence::bb_update_last_activity( get_current_user_id() );
 

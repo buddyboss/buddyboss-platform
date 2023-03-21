@@ -1,6 +1,6 @@
 <?php
 /**
- * Presence class
+ * Presence class.
  *
  * @package BuddyBoss\Core
  * @since BuddyBoss [BBVERSION]
