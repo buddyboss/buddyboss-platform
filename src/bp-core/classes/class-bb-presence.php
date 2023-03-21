@@ -433,7 +433,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			add_filter( 'rest_cache_pre_current_user_id', array( $this, 'bb_jwt_auth_support' ), 2 );
 
 			if ( ! isset( $_GET['bypass'] ) ) { // phpcs:ignore
-				$this->prepare_presence_mu();
+				$this->bb_prepare_presence_mu();
 			}
 		}
 
@@ -452,7 +452,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function is_current_user_available() {
+		public function bb_is_current_user_available() {
 			global $bb_is_current_user_available;
 			if ( isset( $bb_is_current_user_available ) ) {
 				return $bb_is_current_user_available;
@@ -468,10 +468,10 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 */
 		public function get_loggedin_user_id() {
 
-			if ( $this->is_current_user_available() ) {
+			if ( $this->bb_is_current_user_available() ) {
 				return get_current_user_id();
 			} else {
-				$guessed_user_id = $this->get_guessed_user_id();
+				$guessed_user_id = $this->bb_get_guessed_user_id();
 				if ( ! $guessed_user_id ) {
 					return 0;
 				}
@@ -487,7 +487,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return int|boolean
 		 */
-		public function get_guessed_user_id() {
+		public function bb_get_guessed_user_id() {
 			$guessed_user_id = apply_filters( 'rest_cache_pre_current_user_id', false );
 
 			return $guessed_user_id;
@@ -691,7 +691,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function prepare_presence_mu() {
+		public function bb_prepare_presence_mu() {
 
 			// Check if we are in WP API.
 			if ( strpos( $this->get_current_path(), 'wp-json/buddyboss/v1/members/presence' ) !== false ) {
