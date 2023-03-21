@@ -107,7 +107,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$time = current_time( 'mysql', true );
 			}
 
-			$activity      = self::bb_get_users_last_activity( $user_id );
+			$activity      = self::bb_get_users_last_activity( array( $user_id ) );
 			$last_activity = isset( $activity[ $user_id ]['date_recorded'] ) ? strtotime( $activity[ $user_id ]['date_recorded'] ) : time();
 			$cache         = wp_cache_get( $user_id, 'bp_last_activity' );
 
@@ -378,7 +378,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		public static function bb_is_online_user_mu_cache( $user_id, $expiry = false ) {
 
 			$last_activity      = '';
-			$last_activity_data = self::bb_get_users_last_activity( $user_id );
+			$last_activity_data = self::bb_get_users_last_activity( array( $user_id ) );
 			if ( ! empty( $last_activity_data[ $user_id ]['date_recorded'] ) ) {
 				$last_activity = strtotime( $last_activity_data[ $user_id ]['date_recorded'] );
 			}
@@ -417,6 +417,18 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			} else {
 				return 'offline';
 			}
+		}
+
+		/**
+		 * Load the hooks for the mu level
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public function bb_presence_mu_loader() {
+
+			error_log( print_r( 'mu loaded', 1 ) );
 		}
 	}
 

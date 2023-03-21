@@ -29,10 +29,20 @@ if ( is_plugin_active( 'buddyboss-platform/bp-loader.php' ) ) {
 		 * Included File.
 		 */
 		require_once $buddyboss_presence;
+
+		if ( class_exists( 'BB_Presence' ) ) {
+			$class_instance = BB_Presence::instance();
+			add_action( 'muplugins_loaded', array( $class_instance, 'bb_presence_mu_loader' ), 10 );
+		}
 	} elseif ( file_exists( $buddyboss_presence_dev ) ) {
 		/**
 		 * Included File.
 		 */
 		require_once $buddyboss_presence_dev;
+
+		if ( class_exists( 'BB_Presence' ) ) {
+			$class_instance = BB_Presence::instance();
+			add_action( 'muplugins_loaded', array( $class_instance, 'bb_presence_mu_loader' ), 10 );
+		}
 	}
 }
