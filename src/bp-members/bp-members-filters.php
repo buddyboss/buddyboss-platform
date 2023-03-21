@@ -835,7 +835,6 @@ function bb_repair_member_profile_links_callback( $is_background = false ) {
 	$args = array(
 		'fields'     => 'ID',
 		'page'       => $offset,
-		//'per_page'   => 2,
 		'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			array(
 				'key'     => 'bb_profile_slug',
