@@ -749,8 +749,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			// When the cache generated to user is not matched with it's being delivered to output error.
 			// Here we avoid passing another user cached instead of logged in.
 			if ( empty( $user_id ) ) {
-//				header( 'HTTP/1.0 401 Unauthorized' );
-//				header( 'Content-Type: application/json' );
+				header( 'HTTP/1.0 401 Unauthorized' );
+				header( 'Content-Type: application/json' );
 				$retval = new WP_Error(
 					'bp_rest_authorization_required_test',
 					__( 'Sorry, you are not allowed to perform this action.', 'buddypress' ),
@@ -759,7 +759,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 					)
 				);
 
-				echo rest_convert_error_to_response( $retval );
+				$error_data = rest_convert_error_to_response( $retval );
+				echo wp_json_encode( $error_data->data );
 				exit;
 			}
 
