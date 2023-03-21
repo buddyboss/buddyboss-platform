@@ -415,7 +415,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 19891 ) {
-			bb_update_to_2_2_9_3();
+			bb_update_to_2_3_1();
 		}
 	}
 
@@ -2560,6 +2560,14 @@ function bb_update_to_2_2_9_1() {
  *
  * @return void
  */
-function bb_update_to_2_2_9_3() {
+function bb_update_to_2_3_1() {
+
+	$is_already_run = get_transient( 'bb_update_to_2_3_1' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_3_1', 'yes', DAY_IN_SECONDS );
+
 	bb_repair_member_profile_links_callback( true );
 }

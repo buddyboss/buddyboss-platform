@@ -5489,3 +5489,27 @@ function bb_set_user_profile_slug( int $user_id ) {
 	return $unique_identifier;
 }
 
+/**
+ * Setup the user profile hash to the user meta.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids User IDs.
+ */
+function bb_set_bluk_user_profile_slug( $user_ids ) {
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		$user_id           = (int) $user_id;
+		$unique_identifier = bb_generate_user_profile_slug( $user_id );
+		if ( ! empty( $unique_identifier ) ) {
+			bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
+			bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
+		}
+	}
+}
+
+

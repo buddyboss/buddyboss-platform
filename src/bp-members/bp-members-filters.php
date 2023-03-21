@@ -822,38 +822,50 @@ function bb_repair_member_profile_links( $repair_list ) {
  *
  * @return array|void
  */
-function bb_repair_member_profile_links_callback( $is_background = false ) {
+function bb_repair_member_profile_links_callback( $is_background = false, $paged = 1 ) {
 	if ( ! bp_is_active( 'members' ) ) {
 		return;
 	}
 
-	$offset = 1;
+	$per_page = 50;
+
 	if ( $is_background ) {
-		$offset = get_site_option( 'bb_profile_generate_unique_identifiers_page', 1 );
+		$offset = ( ( $paged - 1 ) * $per_page );
+	} else {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	}
 
 	$args = array(
-		'fields'     => 'ID',
-		'page'       => $offset,
-		'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			array(
-				'key'     => 'bb_profile_slug',
-				'compare' => 'NOT EXISTS',
-			),
-		),
+		'fields' => 'ID',
+		'number' => $per_page,
+		'offset' => $offset,
 	);
 
-	$users = get_users( $args );
+	error_log( print_r( $args, 1 ) );
 
-	if ( ! empty( $users ) ) {
+	$user_ids = get_users( $args );
 
-		foreach ( $users as $user_id ) {
-			bb_set_user_profile_slug( $user_id );
-		}
-		if ( ! $is_background ) {
-			$total = ( (int) get_site_option( 'bb_profile_generate_unique_identifiers_count', 0 ) + count( $users ) );
-			update_site_option( 'bb_profile_generate_unique_identifiers_count', $total );
+	global $bp_background_updater;
 
+	if ( ! empty( $user_ids ) ) {
+		if ( $is_background ) {
+
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_set_bluk_user_profile_slug',
+						'args'     => array( $user_ids ),
+					),
+				)
+			);
+			$bp_background_updater->save()->dispatch();
+			$paged++;
+			bb_repair_member_profile_links_callback( $is_background, $paged++ );
+		} else {
+			bb_set_bluk_user_profile_slug( $user_ids );
+
+			$total           = $offset + count( $user_ids );
 			$records_updated = sprintf(
 				/* translators: total user */
 				_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', bp_core_number_format( $total ), 'buddyboss' ),
@@ -862,22 +874,21 @@ function bb_repair_member_profile_links_callback( $is_background = false ) {
 
 			return array(
 				'status'  => 'running',
-				'offset'  => $offset,
+				'offset'  => $total,
 				'records' => $records_updated,
 			);
 		}
 	} else {
+		if ( ! $is_background ) {
 
-		delete_site_option( 'bb_profile_generate_unique_identifiers_page' );
-		delete_site_option( 'bb_profile_generate_unique_identifiers_count' );
+			/* translators: Status of current action. */
+			$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss' );
 
-		/* translators: Status of current action. */
-		$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss' );
-
-		// All done!
-		return array(
-			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
-		);
+			// All done!
+			return array(
+				'status'  => 1,
+				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			);
+		}
 	}
 }
