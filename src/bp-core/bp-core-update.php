@@ -2570,4 +2570,6 @@ function bb_update_to_2_3_1() {
 	set_transient( 'bb_update_to_2_3_1', 'yes', DAY_IN_SECONDS );
 
 	bb_repair_member_profile_links_callback( true );
+
+	wp_cache_flush();
 }
