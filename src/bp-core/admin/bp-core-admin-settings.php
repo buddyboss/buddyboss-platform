@@ -2956,3 +2956,16 @@ function bb_labs_no_settings_callback() {
 		)
 	);
 }
+
+/**
+ * Allow all users to subscribe groups field.
+ *
+ * @since BuddyBoss 2.2.8
+ */
+function bb_admin_setting_callback_group_subscriptions() {
+	?>
+	<input id="bb_enable_group_subscriptions" name="bb_enable_group_subscriptions" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( bb_enable_group_subscriptions() ); ?> />
+	<label for="bb_enable_group_subscriptions"><?php esc_html_e( 'Allow members to subscribe to groups', 'buddyboss' ); ?></label>
+	<p class="description" id="bb_enable_group_subscriptions"><?php esc_html_e( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ); ?></p>
+	<?php
+}

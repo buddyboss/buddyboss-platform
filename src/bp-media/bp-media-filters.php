@@ -395,7 +395,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 
 	$medias           = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$medias           = ! empty( $medias ) ? $medias : array();
-	$actions          = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$actions          = bb_filter_input_string( INPUT_POST, 'action' );
 	$moderated_medias = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 
 	if ( ! empty( $medias ) ) {
@@ -646,6 +646,11 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 
 		// save media.
 		$medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
+
+		if ( ! empty( $medias ) ) {
+			$media_order = array_column( $medias, 'menu_order' );
+			array_multisort( $media_order, SORT_ASC, $medias );
+		}
 
 		// fetch currently uploaded media ids.
 		$existing_media                = array();
@@ -2073,7 +2078,7 @@ function bp_media_download_headers( $file_path, $filename, $download_range = arr
  * @param int $limit Time limit.
  */
 function bp_media_set_time_limit( $limit = 0 ) {
-	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
+	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
 		@set_time_limit( $limit ); // @codingStandardsIgnoreLine
 	}
 }

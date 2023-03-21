@@ -67,7 +67,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
-		$bb_display_name_format = filter_input( INPUT_POST, 'bp-display-name-format', FILTER_SANITIZE_STRING );
+		$bb_display_name_format = bb_filter_input_string( INPUT_POST, 'bp-display-name-format' );
 
 		// Set requirement for last name based on display format.
 		if ( isset( $bb_display_name_format ) ) {
@@ -99,9 +99,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			}
 		}
 
-		$bb_profile_avatar_type           = filter_input( INPUT_POST, 'bp-profile-avatar-type', FILTER_SANITIZE_STRING );
-		$bb_default_custom_profile_avatar = filter_input( INPUT_POST, 'bp-default-custom-profile-avatar', FILTER_SANITIZE_STRING );
-		$bb_default_custom_profile_cover  = filter_input( INPUT_POST, 'bp-default-custom-profile-cover', FILTER_SANITIZE_STRING );
+		$bb_profile_avatar_type           = bb_filter_input_string( INPUT_POST, 'bp-profile-avatar-type' );
+		$bb_default_custom_profile_avatar = bb_filter_input_string( INPUT_POST, 'bp-default-custom-profile-avatar' );
+		$bb_default_custom_profile_cover  = bb_filter_input_string( INPUT_POST, 'bp-default-custom-profile-cover' );
 
 		/**
 		 * Enable Gravatar's set disable if Profile Avatars is WordPress.
