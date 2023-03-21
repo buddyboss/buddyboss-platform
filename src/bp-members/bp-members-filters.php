@@ -868,8 +868,8 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 			$total           = $offset + count( $user_ids );
 			$records_updated = sprintf(
 				/* translators: total user */
-				_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', bp_core_number_format( $total ), 'buddyboss' ),
-				bp_core_number_format( $total )
+				_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', $total, 'buddyboss' ),
+				$total
 			);
 
 			return array(
