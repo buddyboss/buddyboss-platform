@@ -213,7 +213,7 @@ function bbp_has_forums( $args = '' ) {
 		$bbp->forum_query->pagination_links = paginate_links( $bbp_topic_pagination );
 
 		// Remove first page from pagination.
-		$bbp->forum_query->pagination_links = str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links );
+		$bbp->forum_query->pagination_links = ! empty( $bbp->forum_query->pagination_links ) ? str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links ) : '';
 	}
 
 	return apply_filters( 'bbp_has_forums', $bbp->forum_query->have_posts(), $bbp->forum_query );

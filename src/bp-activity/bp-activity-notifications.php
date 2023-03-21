@@ -554,8 +554,9 @@ function bp_activity_remove_screen_notifications_single_post() {
 				'is_new' => false,
 			),
 			array(
-				'user_id' => bp_loggedin_user_id(),
-				'id'      => $comment_id,
+				'user_id'        => bp_loggedin_user_id(),
+				'id'             => $comment_id,
+				'component_name' => 'activity',
 			)
 		);
 	}
