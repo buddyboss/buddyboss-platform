@@ -2,10 +2,19 @@
 // specify that we need a minimum from WP
 define( 'SHORTINIT', true );
 
-// Loading the WordPress environment
-require_once( $_SERVER['DOCUMENT_ROOT'] . '/wp-load.php' );
+$current_dir  = __DIR__;
+$wp_load_path = explode( 'wp-content', $current_dir );
 
-// Require files used for cookie-based user authentication
+// Loading the WordPress environment.
+if ( ! empty( $wp_load_path ) && file_exists( current( $wp_load_path ) . 'wp-load.php' ) ) {
+	require_once current( $wp_load_path ) . 'wp-load.php';
+} elseif ( isset( $_SERVER['DOCUMENT_ROOT'] ) && file_exists( $_SERVER['DOCUMENT_ROOT'] . '/wp-load.php' ) ) {
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/wp-load.php';
+}
+
+defined( 'ABSPATH' ) || exit;
+
+// Require files used for cookie-based user authentication.
 require ABSPATH . WPINC . '/pluggable.php';
 require ABSPATH . WPINC . '/kses.php';
 require ABSPATH . WPINC . '/user.php';
@@ -39,12 +48,6 @@ wp_cookie_constants();
  */
 wp_ssl_constants();
 
-
-// If user not logged in then return.
-if ( ! is_user_logged_in() ) {
-	return;
-}
-
 if ( isset( $_GET['direct_allow'] ) ) {
 	$return = array(
 		'direct_allow' => true,
@@ -52,8 +55,13 @@ if ( isset( $_GET['direct_allow'] ) ) {
 	wp_send_json_success( $return );
 }
 
+// If user not logged in then return.
+if ( ! is_user_logged_in() ) {
+	return;
+}
+
 // Include BB_Presence class.
-include_once __DIR__ . '/classes/class-bb-presence.php';
+require_once __DIR__ . '/classes/class-bb-presence.php';
 
 if ( isset( $_POST['ids'] ) ) {
 

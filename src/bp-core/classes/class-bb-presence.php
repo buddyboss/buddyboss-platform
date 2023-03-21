@@ -317,7 +317,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$bp_performance_download_nonce = wp_create_nonce( 'bb_presence_api_mu_download' );
 
 			$download_path = admin_url( 'admin.php?page=bp-settings&download_mu_bpa_file=' . $bp_performance_download_nonce );
-			$notice = sprintf(
+			$notice        = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
 				__( 'Presence API Caching cannot be automatically installed on your server. To enable caching, you need to manually install the "BuddyBoss Presence API" plugin in your', 'buddyboss' ),
 				'https://wordpress.org/support/article/must-use-plugins/',
@@ -338,15 +338,16 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 */
 		public static function bb_check_native_presence_load_directly() {
 			$bb_check_native_presence_load_directly = get_transient( 'bb_check_native_presence_load_directly' );
-			if ( ! empty( $bb_check_native_presence_load_directly ) ) {
+			if ( ! empty( $bb_check_native_presence_load_directly ) && 0 ) {
 				return;
 			}
 
-			$file_url = plugin_dir_url( __DIR__ ) . 'bp-core/bb-core-native-presence.php?direct_allow=true'; //bb_native_presence_path( array( 'direct_allow' => 'true' ) );
+			$file_url = trailingslashit( plugin_dir_url( __DIR__ ) ) . 'bb-core-native-presence.php?direct_allow=true';
 			$response = wp_remote_get( $file_url );
+
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-				$responseBody = wp_remote_retrieve_body( $response );
-				$result       = json_decode( $responseBody, true );
+				$response_body = wp_remote_retrieve_body( $response );
+				$result        = json_decode( $response_body, true );
 				if (
 					! empty( $result ) &&
 					isset( $result['success'] ) &&

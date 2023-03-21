@@ -572,11 +572,6 @@ function bb_forums_subscriptions_redirect() {
 
 add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
 
-// BuddyBoss Presence API mu plugin.
-if ( is_admin() ) {
-	add_action( 'bp_admin_init', 'bb_load_presence_api_mu' );
-}
-
 /**
  * Load Presence API mu plugin.
  *
@@ -587,6 +582,8 @@ function bb_load_presence_api_mu() {
 		BB_Presence::bb_load_presence_api_mu_plugin();
 	}
 }
+
+add_action( 'bp_admin_init', 'bb_load_presence_api_mu' );
 
 /**
  * Function to check presence native file directly or not.
