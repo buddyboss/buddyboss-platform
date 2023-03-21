@@ -647,6 +647,11 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		// save media.
 		$medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
 
+		if ( ! empty( $medias ) ) {
+			$media_order = array_column( $medias, 'menu_order' );
+			array_multisort( $media_order, SORT_ASC, $medias );
+		}
+
 		// fetch currently uploaded media ids.
 		$existing_media                = array();
 		$existing_media_ids            = get_post_meta( $post_id, 'bp_media_ids', true );
@@ -2073,7 +2078,7 @@ function bp_media_download_headers( $file_path, $filename, $download_range = arr
  * @param int $limit Time limit.
  */
 function bp_media_set_time_limit( $limit = 0 ) {
-	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
+	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
 		@set_time_limit( $limit ); // @codingStandardsIgnoreLine
 	}
 }

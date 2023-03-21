@@ -1550,7 +1550,7 @@ class BP_XProfile_Field {
 		<div id="titlediv">
 			<div class="titlewrap">
 				<label id="title-prompt-text"
-					   for="title"><?php echo esc_html__( 'Name (required)', 'buddyboss' ); ?></label>
+					   for="title" class="screen-reader-text"><?php echo esc_html__( 'Name (required)', 'buddyboss' ); ?></label>
 				<input type="text" name="title" id="title" value="<?php echo esc_attr( $this->name ); ?>"
 					   autocomplete="off"/>
 			</div>
