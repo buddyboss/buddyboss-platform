@@ -338,7 +338,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 */
 		public static function bb_check_native_presence_load_directly() {
 			$bb_check_native_presence_load_directly = get_transient( 'bb_check_native_presence_load_directly' );
-			if ( ! empty( $bb_check_native_presence_load_directly ) && 0 ) {
+			if ( ! empty( $bb_check_native_presence_load_directly ) ) {
 				return;
 			}
 
