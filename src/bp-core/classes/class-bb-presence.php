@@ -780,6 +780,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @param int   $user_id User id.
 		 * @param array $ids     Post user ids.
+		 *
+		 * @return array
 		 */
 		public function endpoint_cache_render( $user_id, $ids ) {
 			// Security Check.
@@ -798,6 +800,26 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				$error_data = rest_convert_error_to_response( $retval );
 				echo wp_json_encode( $error_data->data );
+				exit;
+			}
+
+			/** @var mixed|WP_Error $sanitized_value */
+			$sanitized_value = call_user_func( 'wp_parse_id_list', $ids );
+			error_log( print_r( $sanitized_value, true ) );
+			if ( is_wp_error( $sanitized_value ) ) {
+				$invalid_params[ 'ids' ]  = implode( ' ', $sanitized_value->get_error_messages() );
+				$invalid_details[ 'ids' ] = rest_convert_error_to_response( $sanitized_value )->get_data();
+
+				return new WP_Error(
+					'rest_invalid_param',
+					/* translators: %s: List of invalid parameters. */
+					sprintf( __( 'Invalid parameter(s): %s' ), implode( ', ', array_keys( $invalid_params ) ) ),
+					array(
+						'status'  => 400,
+						'params'  => $invalid_params,
+						'details' => $invalid_details,
+					)
+				);
 				exit;
 			}
 
