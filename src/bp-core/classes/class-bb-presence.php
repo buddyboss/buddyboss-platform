@@ -420,7 +420,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		}
 
 		/**
-		 * Load the hooks for the mu level
+		 * Load the hooks for the mu level.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -451,6 +451,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * Tells if the current user information is available on WordPress.
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool
 		 */
 		public function bb_is_current_user_available() {
 			global $bb_is_current_user_available;
@@ -465,6 +467,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * Check if user logged in or not.
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool|int
 		 */
 		public function bb_get_loggedin_user_id() {
 
@@ -504,7 +508,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 */
 		public function bb_cookie_support( $user_id ) {
 			$scheme          = apply_filters( 'auth_redirect_scheme', '' );
-			$cookie_elements = $this->wp_parse_auth_cookie( '', $scheme );
+			$cookie_elements = $this->bb_wp_parse_auth_cookie( '', $scheme );
 
 			if ( $cookie_elements && isset( $cookie_elements['username'] ) ) {
 				global $wpdb;
@@ -531,7 +535,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return array|bool
 		 */
-		public function wp_parse_auth_cookie( $cookie = '', $scheme = '' ) {
+		public function bb_wp_parse_auth_cookie( $cookie = '', $scheme = '' ) {
 			if ( empty( $cookie ) ) {
 
 				// @see wp_cookie_constants()..
