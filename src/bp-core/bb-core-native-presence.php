@@ -1,14 +1,25 @@
 <?php
-// specify that we need a minimum from WP
+/**
+ * Native PHP to render the user presence.
+ *
+ * @package BuddyBoss
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Specify that we need a minimum from WP.
 define( 'SHORTINIT', true );
 
-$current_dir  = __DIR__;
-$wp_load_path = explode( 'wp-content', $current_dir );
+$wp_load_path = explode( 'wp-content', __DIR__ );
 
 // Loading the WordPress environment.
 if ( ! empty( $wp_load_path ) && file_exists( current( $wp_load_path ) . 'wp-load.php' ) ) {
 	require_once current( $wp_load_path ) . 'wp-load.php';
+
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 } elseif ( isset( $_SERVER['DOCUMENT_ROOT'] ) && file_exists( $_SERVER['DOCUMENT_ROOT'] . '/wp-load.php' ) ) {
+
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/wp-load.php';
 }
 
@@ -48,7 +59,7 @@ wp_cookie_constants();
  */
 wp_ssl_constants();
 
-if ( isset( $_GET['direct_allow'] ) ) {
+if ( isset( $_GET['direct_allow'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	$return = array(
 		'direct_allow' => true,
 	);
@@ -63,10 +74,11 @@ if ( ! is_user_logged_in() ) {
 // Include BB_Presence class.
 require_once __DIR__ . '/classes/class-bb-presence.php';
 
-if ( isset( $_POST['ids'] ) ) {
+if ( isset( $_POST['ids'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 	BB_Presence::bb_update_last_activity( get_current_user_id() );
 
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$users         = $_POST['ids'];
 	$presence_data = array();
 	foreach ( array_unique( $users ) as $user_id ) {
