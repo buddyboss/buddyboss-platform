@@ -410,7 +410,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 19571 ) {
-			bb_update_to_2_2_9();
+			bb_update_to_2_2_9_0();
 		}
 
 		if ( $raw_db_version < 19871 ) {
@@ -2476,7 +2476,7 @@ function bb_migrate_group_subscription_email_templates() {
  *
  * @return void
  */
-function bb_update_to_2_2_9() {
+function bb_update_to_2_2_9_0() {
 	$is_already_run = get_transient( 'bb_update_to_2_2_9' );
 	if ( $is_already_run ) {
 		return;
