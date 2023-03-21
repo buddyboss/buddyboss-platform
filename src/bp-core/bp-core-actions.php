@@ -587,3 +587,16 @@ function bb_load_presence_api_mu() {
 		BB_Presence::bb_load_presence_api_mu_plugin();
 	}
 }
+
+/**
+ * Function to check presence native file directly or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_check_presence_load_directly() {
+	if ( class_exists( 'BB_Presence' ) ) {
+		BB_Presence::bb_check_native_presence_load_directly();
+	}
+}
+
+add_action( 'bp_init', 'bb_check_presence_load_directly' );

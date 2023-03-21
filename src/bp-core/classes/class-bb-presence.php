@@ -337,7 +337,12 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public static function bb_check_native_presence_load_directly() {
-			$file_url = bb_native_presence_path( array( 'direct_allow' => 'true' ) );
+			$bb_check_native_presence_load_directly = get_transient( 'bb_check_native_presence_load_directly' );
+			if ( ! empty( $bb_check_native_presence_load_directly ) ) {
+				return;
+			}
+
+			$file_url = plugin_dir_url( __DIR__ ) . 'bp-core/bb-core-native-presence.php?direct_allow=true'; //bb_native_presence_path( array( 'direct_allow' => 'true' ) );
 			$response = wp_remote_get( $file_url );
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 				$responseBody = wp_remote_retrieve_body( $response );
@@ -355,6 +360,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			} else {
 				update_option( 'bb_use_core_native_presence', false );
 			}
+
+			set_transient( 'bb_check_native_presence_load_directly', 'true', DAY_IN_SECONDS );
 		}
 
 		/**
