@@ -371,6 +371,12 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 				bb_moderation_is_user_blocked_by( $comment->user_id )
 			) {
 				return false;
+				// Check it for reported group activity comments.
+			} elseif (
+				$this->is_content_hidden( $comment->id ) &&
+				! bp_moderation_is_user_blocked( $comment->user_id )
+			) {
+				return false;
 			}
 		}
 
