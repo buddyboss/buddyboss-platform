@@ -580,7 +580,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 */
 		public function bb_jwt_auth_support( $user_id ) {
 
-			$header = $this->get_all_headers();
+			$header = $this->bb_get_all_headers();
 
 			$jwt_token = false;
 			if ( ! empty( $header ) ) {
@@ -626,7 +626,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return array|false|string
 		 */
-		public function get_all_headers() {
+		public function bb_get_all_headers() {
 
 			if ( function_exists( 'getallheaders' ) ) {
 				return getallheaders();
