@@ -415,7 +415,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 19971 ) {
-			bb_update_to_3_0_0();
+			bb_update_to_2_3_0();
 		}
 	}
 
@@ -2560,7 +2560,7 @@ function bb_update_to_2_2_9_1() {
  *
  * @return void
  */
-function bb_update_to_3_0_0() {
+function bb_update_to_2_3_0() {
 
 	if ( bp_is_relevant_feed_enabled() ) {
 		$settings = get_option( 'widget_bp_latest_activities' );
