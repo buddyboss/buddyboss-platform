@@ -6000,6 +6000,10 @@ function bb_is_group_activity_comment( $comment_id = 0 ) {
 		$comment_id = isset( $activities_template->activity->current_comment ) ? $activities_template->activity->current_comment : false;
 	}
 
+	if ( ! empty( $comment_id ) && is_array( $comment_id ) ) {
+		$comment_id = (int) $comment_id['id'];
+	}
+
 	if ( empty( $comment_id ) ) {
 		return false;
 	}
