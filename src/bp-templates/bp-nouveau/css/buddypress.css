@@ -2606,8 +2606,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-  bottom: -24px;
-  left: -15px;
+  bottom: -11px;
+  left: 0;
 }
 
 .activity-update-form .focus-in .medium-editor-toolbar {
@@ -11117,9 +11117,6 @@ body .bp-messages-user-threads {
   .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
     min-width: 30px;
-  }
-  .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-    left: 10px;
   }
 }
 
