@@ -856,7 +856,7 @@ function bb_repair_member_profile_links_callback( $is_background = false ) {
 			update_site_option( 'bb_profile_generate_unique_identifiers_count', $total );
 
 			$records_updated = sprintf(
-			/* translators: total topics */
+				/* translators: total user */
 				_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', bp_core_number_format( $total ), 'buddyboss' ),
 				bp_core_number_format( $total )
 			);
