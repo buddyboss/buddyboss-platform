@@ -585,7 +585,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$jwt_token = false;
 			if ( ! empty( $header ) ) {
 				foreach ( $header as $k => $v ) {
-					if ( strtolower( $k ) === 'accesstoken' ) {
+					if ( 'accesstoken' === strtolower( $k ) ) {
 						$jwt_token = $v;
 						break;
 					}
@@ -794,7 +794,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				header( 'Content-Type: application/json' );
 				$retval = new WP_Error(
 					'bp_rest_authorization_required_test',
-					__( 'Sorry, you are not allowed to perform this action.', 'buddypress' ),
+					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
 					array(
 						'status' => 401,
 					)
@@ -827,7 +827,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$arguments = array(
 				'args' => array(
 					'ids' => array(
-						'description'       => __( 'A unique users IDs of the member.', 'buddypress' ),
+						'description'       => __( 'A unique users IDs of the member.', 'buddyboss' ),
 						'type'              => 'array',
 						'required'          => true,
 						'items'             => array( 'type' => 'integer' ),
