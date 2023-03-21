@@ -325,6 +325,14 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			empty( $activities_template->activity->current_comment->user_id ) ||
 			bb_is_group_activity_comment( $activities_template->activity->current_comment )
 		) {
+			// Set content for reported content.
+			if (
+				$this->is_content_hidden( $activities_template->activity->current_comment->id ) &&
+				! bp_moderation_is_user_blocked( $activities_template->activity->current_comment->user_id )
+			) {
+				$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			}
+
 			return $content;
 		}
 
