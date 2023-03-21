@@ -11,6 +11,7 @@
  * @version 1.5.6
  */
 
+global $activities_template;
 $is_user_blocked    = false;
 $is_user_suspended  = false;
 $is_user_blocked_by = false;
@@ -49,7 +50,7 @@ if ( bp_is_active( 'moderation' ) ) {
 			$activity_comment_content = bb_moderation_is_suspended_message( bp_get_activity_comment_content(), BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
 		} elseif ( $is_user_blocked_by ) {
 			$activity_comment_content = bb_moderation_is_blocked_message( bp_get_activity_comment_content(), BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
-		} elseif ( $is_user_blocked ) {
+		} elseif ( $is_user_blocked && ! bb_is_group_activity_comment( $activities_template->activity->current_comment ) ) {
 			$activity_comment_content = bb_moderation_has_blocked_message( bp_get_activity_comment_content(), BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
 		} else {
 			$activity_comment_content = esc_html__( 'This content has been hidden from site admin.', 'buddypress' );
