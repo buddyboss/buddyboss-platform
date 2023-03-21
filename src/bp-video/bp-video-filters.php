@@ -358,6 +358,11 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	$post_privacy     = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
 	$moderated_videos = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
+	if ( ! empty( $post_video ) ) {
+		$video_order = array_column( $post_video, 'menu_order' );
+		array_multisort( $video_order, SORT_ASC, $post_video );
+	}
+
 	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_videos ) ) {
 		$moderated_videos = explode( ',', $moderated_videos );
 		foreach ( $moderated_videos as $video_id ) {
@@ -565,6 +570,11 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 
 		// save video.
 		$videos = json_decode( stripslashes( $_POST['bbp_video'] ), true ); // phpcs:ignore
+
+		if ( ! empty( $videos ) ) {
+			$video_order = array_column( $videos, 'menu_order' );
+			array_multisort( $video_order, SORT_ASC, $videos );
+		}
 
 		// fetch currently uploaded video ids.
 		$existing_video                = array();

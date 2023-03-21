@@ -165,6 +165,11 @@ add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty'
 // Load Activity Notifications.
 add_action( 'bp_activity_includes', 'bb_load_activity_notifications' );
 
+// Remove deleted members link from mention for activity/comment.
+add_filter( 'bp_get_activity_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bp_get_activity_content_body', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -1825,12 +1830,14 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 			$activity_id = groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $group_id,
 				)
 			);
+			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
@@ -2201,12 +2208,14 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 			$activity_id = groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $group_id,
 				)
 			);
+			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
@@ -2827,12 +2836,14 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 			$activity_id = groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $group_id,
 				)
 			);
+			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
