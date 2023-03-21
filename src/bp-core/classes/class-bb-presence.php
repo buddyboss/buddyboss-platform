@@ -466,7 +466,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function get_loggedin_user_id() {
+		public function bb_get_loggedin_user_id() {
 
 			if ( $this->bb_is_current_user_available() ) {
 				return get_current_user_id();
@@ -653,7 +653,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return string
 		 */
-		public function get_current_path() {
+		public function bb_get_current_path() {
 			return add_query_arg( null, null );
 		}
 
@@ -666,8 +666,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return string|bool
 		 */
-		public function get_current_endpoint() {
-			$current_path = $this->get_current_path();
+		public function bb_get_current_endpoint() {
+			$current_path = $this->bb_get_current_path();
 			if ( strpos( $current_path, 'wp-json/' ) !== false ) {
 
 				$current_path = explode( 'wp-json/', $current_path );
@@ -694,7 +694,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		public function bb_prepare_presence_mu() {
 
 			// Check if we are in WP API.
-			if ( strpos( $this->get_current_path(), 'wp-json/buddyboss/v1/members/presence' ) !== false ) {
+			if ( strpos( $this->bb_get_current_path(), 'wp-json/buddyboss/v1/members/presence' ) !== false ) {
 
 				/**
 				 * Remove WordPress Extra Headaches.
@@ -763,7 +763,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 					}
 				);
 
-				$user_id = $this->get_loggedin_user_id() ?? 0;
+				$user_id = $this->bb_get_loggedin_user_id() ?? 0;
 
 				// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 				$ids = (array) ( isset( $_POST['ids'] ) ? $_POST['ids'] : array() );
@@ -873,7 +873,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				exit;
 			}
 
-			$current_endpoint = $this->get_current_endpoint();
+			$current_endpoint = $this->bb_get_current_endpoint();
 			$header           = apply_filters( 'bb_rest_post_dispatch_header_cache', array(), $current_endpoint );
 
 			$header['bb-presence-mu-api'] = 'hit';
