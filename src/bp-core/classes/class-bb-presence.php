@@ -437,6 +437,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 		/**
 		 * Identify the current user is set by WordPress.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_is_set_current_user() {
 			global $bb_is_current_user_available;
@@ -445,6 +447,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 		/**
 		 * Tells if the current user information is available on WordPress.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function is_current_user_available() {
 			global $bb_is_current_user_available;
@@ -457,6 +461,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 		/**
 		 * Check if user logged in or not.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function get_loggedin_user_id() {
 
@@ -475,6 +481,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Guessed user ID.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return int|boolean
 		 */
 		public function get_guessed_user_id() {
@@ -485,6 +493,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 		/**
 		 * Get Pre User ID from WordPress Cookie.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int $user_id User ID.
 		 *
@@ -509,6 +519,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 		/**
 		 * Copied from wp-includes/pluggable.php.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @see wp-includes/pluggable.php
 		 *
@@ -558,6 +570,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Get the Pre User ID from BuddyBoss APP JWT Token.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param int $user_id User ID.
 		 *
 		 * @return int|void
@@ -606,6 +620,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Get Headers.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return array|false|string
 		 */
 		public function get_all_headers() {
@@ -630,6 +646,10 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 		/**
 		 * Returns the current web location.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return string
 		 */
 		public function get_current_path() {
 			return add_query_arg( null, null );
@@ -638,7 +658,11 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Get current endpoint.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @todo :- research the correct wp way to get current endpoint. I doubt on this.
+		 *
+		 * @return string|bool
 		 */
 		public function get_current_endpoint() {
 			$current_path = $this->get_current_path();
@@ -660,6 +684,11 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			return false;
 		}
 
+		/**
+		 * Function to load response from mu plugin.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		public function prepare_presence_mu() {
 
 			// Check if we are in WP API.
@@ -744,6 +773,14 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 		}
 
+		/**
+		 * Function to cache rendered response in cache.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $user_id User id.
+		 * @param array $ids     Post user ids.
+		 */
 		public function endpoint_cache_render( $user_id, $ids ) {
 			// Security Check.
 			// When the cache generated to user is not matched with it's being delivered to output error.
