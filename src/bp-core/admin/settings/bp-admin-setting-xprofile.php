@@ -46,6 +46,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$default_profile_avatar_type_before_saving = bb_get_default_profile_avatar_type();
 		$bp_enable_profile_gravatar_before_saving  = bp_enable_profile_gravatar();
 		$profile_cover_type_before_saving          = bb_get_default_profile_cover_type();
+		$profile_slug_format_before_saving         = bb_get_profile_slug_format();
 
 		parent::settings_save();
 
@@ -55,6 +56,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$default_profile_avatar_type_after_saving = bb_get_default_profile_avatar_type();
 		$bp_enable_profile_gravatar_after_saving  = bp_enable_profile_gravatar();
 		$profile_cover_type_after_saving          = bb_get_default_profile_cover_type();
+		$profile_slug_format_after_saving         = bb_get_profile_slug_format();
 
 		/**
 		 * Sync bp-enable-member-dashboard with customizer settings.
@@ -157,6 +159,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-xprofile' ) );
 			exit();
 		}
+		
+		if( $profile_slug_format_before_saving !== $profile_slug_format_after_saving ) {
+			wp_cache_flush();
+		}
+
 	}
 
 	/**
