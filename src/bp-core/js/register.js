@@ -88,7 +88,11 @@ jQuery( document ).ready( function() {
 								statusbar: false,
 								plugins: 'lists fullscreen link',
 								toolbar: ' bold italic underline blockquote strikethrough bullist numlist alignleft aligncenter alignright undo redo link fullscreen',
-
+								setup: function (editor) {
+									editor.on('change', function () {
+										editor.save();
+									});
+								}
 							}
 						);
 						window.tinymce.execCommand('mceRepaint');
@@ -186,7 +190,11 @@ jQuery( document ).ready( function() {
 								statusbar: false,
 								plugins: 'lists fullscreen link',
 								toolbar: ' bold italic underline blockquote strikethrough bullist numlist alignleft aligncenter alignright undo redo link fullscreen',
-
+								setup: function (editor) {
+									editor.on('change', function () {
+										editor.save();
+									});
+								}
 							}
 						);
 
