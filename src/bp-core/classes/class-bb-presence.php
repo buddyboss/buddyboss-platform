@@ -432,7 +432,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			add_filter( 'rest_cache_pre_current_user_id', array( $this, 'bb_cookie_support' ), 1 );
 			add_filter( 'rest_cache_pre_current_user_id', array( $this, 'bb_jwt_auth_support' ), 2 );
 
-			$this->prepare_presence_mu();
+			if ( ! isset( $_GET['bypass'] ) ) { // phpcs:ignore
+				$this->prepare_presence_mu();
+			}
 		}
 
 		/**
@@ -697,7 +699,6 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				/**
 				 * Remove WordPress Extra Headaches.
 				 */
-
 				// Tell WordPress to Don't Load Theme.
 				add_filter(
 					'wp_using_themes',
@@ -764,9 +765,10 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				$user_id = $this->get_loggedin_user_id() ?? 0;
 
-				$ids = (array) ( isset( $_POST['ids'] ) ? wp_parse_id_list( $_POST['ids'] ) : array() );
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+				$ids = (array) ( isset( $_POST['ids'] ) ? $_POST['ids'] : array() );
 
-				$this->endpoint_cache_render( $user_id, $ids );
+				$this->bb_endpoint_render( $user_id, $ids );
 
 				exit;
 			}
@@ -781,9 +783,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @param int   $user_id User id.
 		 * @param array $ids     Post user ids.
 		 *
-		 * @return array
+		 * @return void
 		 */
-		public function endpoint_cache_render( $user_id, $ids ) {
+		public function bb_endpoint_render( $user_id, $ids ) {
 			// Security Check.
 			// When the cache generated to user is not matched with it's being delivered to output error.
 			// Here we avoid passing another user cached instead of logged in.
@@ -799,18 +801,60 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				);
 
 				$error_data = rest_convert_error_to_response( $retval );
-				echo wp_json_encode( $error_data->data );
+				echo wp_json_encode( $error_data->get_data() );
 				exit;
 			}
 
-			/** @var mixed|WP_Error $sanitized_value */
-			$sanitized_value = call_user_func( 'wp_parse_id_list', $ids );
-			error_log( print_r( $sanitized_value, true ) );
-			if ( is_wp_error( $sanitized_value ) ) {
-				$invalid_params[ 'ids' ]  = implode( ' ', $sanitized_value->get_error_messages() );
-				$invalid_details[ 'ids' ] = rest_convert_error_to_response( $sanitized_value )->get_data();
+			if ( empty( $ids ) ) {
+				$retval = new WP_Error(
+					'rest_missing_callback_param',
+					/* translators: %s: List of required parameters. */
+					sprintf( __( 'Missing parameter(s): %s' ), 'ids' ),
+					array(
+						'status' => 400,
+						'params' => array( 'ids' ),
+					)
+				);
 
-				return new WP_Error(
+				$error_data = rest_convert_error_to_response( $retval );
+
+				header( 'Content-Type: application/json' );
+				header( 'HTTP/1.0 ' . $error_data->get_status() . ' Bad Request' );
+				echo wp_json_encode( $error_data->get_data() );
+				exit;
+			}
+
+			$arguments = array(
+				'args' => array(
+					'ids' => array(
+						'description'       => __( 'A unique users IDs of the member.', 'buddypress' ),
+						'type'              => 'array',
+						'required'          => true,
+						'items'             => array( 'type' => 'integer' ),
+						'sanitize_callback' => 'wp_parse_id_list',
+						'validate_callback' => 'rest_validate_request_arg',
+					),
+				),
+			);
+
+			$object = new WP_REST_Request();
+			$object->set_param( 'ids', $ids );
+			$object->set_attributes( $arguments );
+
+			$valid_check    = call_user_func( 'rest_validate_request_arg', $ids, $object, 'ids' );
+			$invalid_params = array();
+
+			if ( false === $valid_check ) {
+				$invalid_params['ids'] = __( 'Invalid parameter.', 'buddyboss' );
+			}
+
+			if ( is_wp_error( $valid_check ) ) {
+				$invalid_params['ids']  = implode( ' ', $valid_check->get_error_messages() );
+				$invalid_details['ids'] = rest_convert_error_to_response( $valid_check )->get_data();
+			}
+
+			if ( $invalid_params ) {
+				$retval = new WP_Error(
 					'rest_invalid_param',
 					/* translators: %s: List of invalid parameters. */
 					sprintf( __( 'Invalid parameter(s): %s' ), implode( ', ', array_keys( $invalid_params ) ) ),
@@ -820,14 +864,21 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 						'details' => $invalid_details,
 					)
 				);
+
+				$error_data = rest_convert_error_to_response( $retval );
+
+				header( 'Content-Type: application/json' );
+				header( 'HTTP/1.0 ' . $error_data->get_status() . ' Bad Request' );
+				echo wp_json_encode( $error_data->get_data() );
 				exit;
 			}
 
 			$current_endpoint = $this->get_current_endpoint();
+			$header           = apply_filters( 'bb_rest_post_dispatch_header_cache', array(), $current_endpoint );
 
-			$header = apply_filters( 'rest_post_dispatch_header_cache', array(), $current_endpoint );
+			$header['bb-presence-mu-api'] = 'hit';
+			$header['Content-Type']       = 'application/json';
 
-			$header['bb-presence-mu-api'] = true;
 			if ( ! empty( $header ) ) {
 				foreach ( $header as $header_key => $header_value ) {
 					header( $header_key . ':' . $header_value );
@@ -842,12 +893,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				);
 			}
 
-
 			echo wp_json_encode( apply_filters( 'rest_post_dispatch_cache', $presence_data, $current_endpoint ) );
 			exit;
 		}
-
-
 	}
 
 	BB_Presence::instance();
