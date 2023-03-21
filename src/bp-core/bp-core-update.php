@@ -402,15 +402,12 @@ function bp_version_updater() {
 			bb_update_to_2_2_7();
 		}
 
-		if ( $raw_db_version < 19581 ) {
-			bb_update_to_2_2_9();
-		}
 		if ( $raw_db_version < 19551 ) {
 			bb_update_to_2_2_8();
 		}
 
 		if ( $raw_db_version < 19571 ) {
-			bb_update_to_2_2_9_0();
+			bb_update_to_2_2_9();
 		}
 
 		if ( $raw_db_version < 19871 ) {
@@ -2341,7 +2338,7 @@ function bb_update_to_2_2_7() {
 }
 
 /**
- * Migration for the activity widget based on the relevant feed.
+ * Migration for the activity widget based on the relevant feed and Background job to update friends count.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2349,6 +2346,7 @@ function bb_update_to_2_2_7() {
  */
 function bb_update_to_2_2_9() {
 
+	// Migration for the activity widget based on the relevant feed
 	if ( bp_is_relevant_feed_enabled() ) {
 		$settings = get_option( 'widget_bp_latest_activities' );
 		if ( ! empty( $settings ) ) {
@@ -2369,6 +2367,16 @@ function bb_update_to_2_2_9() {
 
 		update_option( 'widget_bp_latest_activities', $settings );
 	}
+
+	// Background job to update friends count.
+	$is_already_run = get_transient( 'bb_update_to_2_2_9' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_2_9', 'yes', HOUR_IN_SECONDS );
+
+	bb_create_background_member_friends_count();
 }
 /*
  * Migrate when update the platform to the latest version.
@@ -2467,24 +2475,6 @@ function bb_migrate_group_subscription_email_templates() {
 			);
 		}
 	}
-}
-
-/**
- * Background job to update friends count.
- *
- * @since BuddyBoss 2.2.9
- *
- * @return void
- */
-function bb_update_to_2_2_9_0() {
-	$is_already_run = get_transient( 'bb_update_to_2_2_9' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_update_to_2_2_9', 'yes', HOUR_IN_SECONDS );
-
-	bb_create_background_member_friends_count();
 }
 
 /**
