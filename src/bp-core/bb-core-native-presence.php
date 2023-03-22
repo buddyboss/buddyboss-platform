@@ -65,17 +65,22 @@ if ( isset( $_GET['direct_allow'] ) ) { // phpcs:ignore WordPress.Security.Nonce
 	wp_send_json_success( $return );
 }
 
+// Include BB_Presence class.
+require_once __DIR__ . '/classes/class-bb-presence.php';
+add_action( 'set_current_user', array( BB_Presence::instance(), 'bb_is_set_current_user' ), 10 );
+add_filter( 'rest_cache_pre_current_user_id', array( BB_Presence::instance(), 'bb_cookie_support' ), 10 );
+add_filter( 'rest_cache_pre_current_user_id', array( BB_Presence::instance(), 'bb_jwt_auth_support' ), 10 );
+//BB_Presence::instance()->bb_presence_mu_loader();
+$loggedin_user_id = ! empty( get_current_user_id() ) ? get_current_user_id() : BB_Presence::instance()->bb_get_loggedin_user_id();
+
 // If user not logged in then return.
-if ( ! is_user_logged_in() ) {
+if ( empty( $loggedin_user_id ) ) {
 	return;
 }
 
-// Include BB_Presence class.
-require_once __DIR__ . '/classes/class-bb-presence.php';
-
 if ( isset( $_POST['ids'] ) && class_exists( 'BB_Presence' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-	BB_Presence::bb_update_last_activity( get_current_user_id() );
+	BB_Presence::bb_update_last_activity( $loggedin_user_id );
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$users         = $_POST['ids'];

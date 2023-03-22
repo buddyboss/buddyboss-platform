@@ -471,7 +471,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		public function bb_get_loggedin_user_id() {
 
 			if ( $this->bb_is_current_user_available() ) {
-				return get_current_user_id();
+				return ! empty( get_current_user_id() ) ? get_current_user_id() : $this->bb_get_guessed_user_id();
 			} else {
 				$guessed_user_id = $this->bb_get_guessed_user_id();
 				if ( ! $guessed_user_id ) {
