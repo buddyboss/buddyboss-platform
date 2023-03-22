@@ -298,7 +298,9 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 	if ( $author_id !== $topic_author_id && $topic_author_id !== $reply_to_item_id ) {
 		if ( false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $topic_author_id, $author_id ) ) {
 			$args['secondary_item_id'] = $secondary_item_id;
+			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			bp_notifications_add_notification( $args );
+			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
 
@@ -307,7 +309,9 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		if ( false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $reply_to_item_id, $author_id ) ) {
 			$args['user_id']           = $reply_to_item_id;
 			$args['secondary_item_id'] = $secondary_item_id;
+			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			bp_notifications_add_notification( $args );
+			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
 
@@ -674,10 +678,12 @@ function bb_mark_modern_notifications( $success, $user_id, $topic_id ) {
 	}
 
 	if ( ! empty( $topic_id ) ) {
+		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $topic_id ), bbp_get_component_name(), 'bb_new_mention' );
 		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $topic_id ), bbp_get_component_name(), 'bb_forums_subscribed_discussion' );
 	}
 
 	if ( ! empty( $_GET['reply_id'] ) ) {
+		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bb_new_mention' );
 		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bb_forums_subscribed_reply' );
 	}
 }
@@ -711,3 +717,87 @@ function bb_forums_add_notification_metas( $notification ) {
 		bp_notifications_update_meta( $notification->id, 'type', 'forum_topic' );
 	}
 }
+
+
+/**
+ * Mark notifications as read when a user visits an particular discussion/reply.
+ *
+ * @since BuddyBoss 2.3.0
+ */
+function bb_forums_remove_screen_notifications() {
+	$reply_id = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
+
+	if ( empty( $reply_id ) ) {
+		return;
+	}
+
+	$comment_id = 0;
+	// For replies.
+	if ( ! empty( $reply_id ) ) {
+		$comment_id = $reply_id;
+
+	}
+
+	// Mark individual activity reply notification as read.
+	if ( ! empty( $comment_id ) ) {
+		$success = BP_Notifications_Notification::update(
+			array(
+				'is_new' => false,
+			),
+			array(
+				'user_id'          => bp_loggedin_user_id(),
+				'id'               => $comment_id,
+				'component_name'   => 'forums',
+				'component_action' => 'bb_new_mention',
+			)
+		);
+		if ( 1 === $success ) {
+			$notifications_data = bp_notifications_get_notification( $comment_id );
+			if ( isset( $notifications_data->item_id ) ) {
+				$component_name   = 'forums';
+				$component_action = 'bb_forums_subscribed_discussion';
+				if ( function_exists( 'bp_is_group_forum_topic' ) && bp_is_group_forum_topic() ) {
+					$component_name   = 'groups';
+					$component_action = 'bb_groups_subscribed_discussion';
+				}
+				BP_Notifications_Notification::update(
+					array(
+						'is_new' => false,
+					),
+					array(
+						'user_id'          => bp_loggedin_user_id(),
+						'item_id'          => $notifications_data->item_id,
+						'component_name'   => 'forums',
+						'component_action' => 'bb_forums_subscribed_reply',
+					)
+				);
+				BP_Notifications_Notification::update(
+					array(
+						'is_new' => false,
+					),
+					array(
+						'user_id'          => bp_loggedin_user_id(),
+						'item_id'          => $notifications_data->item_id,
+						'component_name'   => $component_name,
+						'component_action' => $component_action,
+					)
+				);
+				if ( (int) $notifications_data->user_id === (int) bp_loggedin_user_id() ) {
+					BP_Notifications_Notification::update(
+						array(
+							'is_new' => false,
+						),
+						array(
+							'user_id'          => bp_loggedin_user_id(),
+							'item_id'          => $notifications_data->item_id,
+							'component_name'   => 'forums',
+							'component_action' => 'bbp_new_reply',
+						)
+					);
+				}
+			}
+		}
+	}
+
+}
+add_action( 'template_redirect', 'bb_forums_remove_screen_notifications' );
