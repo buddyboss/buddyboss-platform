@@ -152,7 +152,7 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		public function set_member_forum_query_vars() {
 
 			// Special handling for forum component
-			if ( ! bp_is_my_profile() ) {
+			if ( ! bp_is_my_profile() && ! bbp_is_single_user() ) {
 				return;
 			}
 

@@ -338,6 +338,11 @@ add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
 function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 	global $wpdb;
 
+	// If search component is not enabled, return.
+	if ( ! bp_is_active( 'search' ) ) {
+		return $where;
+	}
+
 	// Get query post types array .
 	$post_types      = (array) $wp_query->get( 'post_type' );
 	$topic_post_type = bbp_get_topic_post_type();

@@ -242,7 +242,7 @@ function learndash_integration_prepare_price_str( $price ) {
 			'ZWL' => '&#90;&#36;',
 		);
 
-		return html_entity_decode( $currency_symbols[ $price['code'] ] ) . $price['value'];
+		return html_entity_decode( $currency_symbols[ $price['code'] ], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . $price['value'];
 	}
 
 	return '';
