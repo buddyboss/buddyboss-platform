@@ -819,6 +819,7 @@ function bb_repair_member_profile_links( $repair_list ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param bool $is_background The current process is background or not.
+ * @param int  $paged         The page number.
  *
  * @return array|void
  */
