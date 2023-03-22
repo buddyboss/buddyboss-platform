@@ -774,7 +774,7 @@ function xprofile_check_gender_added_previously() {
 	$response            = array();
 	$response['message'] = __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' );
 
-	$referer = filter_input( INPUT_POST, 'referer', FILTER_SANITIZE_STRING );
+	$referer = bb_filter_input_string( INPUT_POST, 'referer' );
 
 	parse_str( $referer, $parsed_array );
 
@@ -1189,7 +1189,7 @@ function xprofile_check_social_networks_added_previously() {
 
 	$response            = array();
 	$response['message'] = __( 'You can only have one instance of the "Social Networks" profile field on the website.', 'buddyboss' );
-	$referer             = filter_input( INPUT_POST, 'referer', FILTER_SANITIZE_STRING );
+	$referer             = bb_filter_input_string( INPUT_POST, 'referer' );
 
 	parse_str( $referer, $parsed_array );
 
@@ -1232,7 +1232,7 @@ function xprofile_check_member_type_added_previously() {
 	$response            = array();
 	$response['message'] = __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' );
 
-	$referer = filter_input( INPUT_POST, 'referer', FILTER_SANITIZE_STRING );
+	$referer = bb_filter_input_string( INPUT_POST, 'referer' );
 
 	parse_str( $referer, $parsed_array );
 
