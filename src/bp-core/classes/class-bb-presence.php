@@ -875,6 +875,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$current_endpoint = $this->bb_get_current_endpoint();
 			$header           = apply_filters( 'bb_rest_post_dispatch_header_cache', array(), $current_endpoint );
 
+			// Update login users last activity.
+			BB_Presence::bb_update_last_activity( $user_id );
+
 			$header['bb-presence-mu-api'] = 'hit';
 			$header['Content-Type']       = 'application/json';
 
