@@ -43,6 +43,8 @@ function bp_activity_action_permalink_router() {
 	// Do not redirect at default.
 	$redirect = false;
 
+	do_action( 'bb_activity_before_permalink_redirect_url', $activity );
+
 	// Redirect based on the type of activity.
 	if ( bp_is_active( 'groups' ) && $activity->component == buddypress()->groups->id ) {
 
@@ -63,6 +65,8 @@ function bp_activity_action_permalink_router() {
 	} elseif ( ! empty( $activity->user_id ) ) {
 		$redirect = bp_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bp_get_activity_slug() . '/' . $activity->id . '/';
 	}
+
+	do_action( 'bb_activity_after_permalink_redirect_url', $activity );
 
 	// check if edit activity link.
 	if ( 'edit' === bp_action_variable( 1 ) ) {
