@@ -322,6 +322,7 @@ function bp_core_set_uri_globals() {
 					// Switch the displayed_user based on compatibility mode.
 				} elseif ( bp_is_username_compatibility_mode() ) {
 					$bp->displayed_user->id = (int) bp_core_get_userid( urldecode( $after_member_slug ) );
+
 				} else {
 					$bp->displayed_user->id = (int) bp_core_get_userid_from_nicename( $after_member_slug );
 				}
