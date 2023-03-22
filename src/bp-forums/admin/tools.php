@@ -187,7 +187,9 @@ function bbp_admin_tools_feedback( $message, $class = false ) {
 
 	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
 	$message = str_replace( "'", "\'", $message );
-	$lambda  = create_function( '', "echo '$message';" );
+	$lambda  = function () use ( $message ) {
+		echo $message;
+	};
 
 	add_action( 'admin_notices', $lambda );
 

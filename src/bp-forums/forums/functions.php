@@ -665,27 +665,68 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 	/** Forum Visibility */
 	if ( empty( bb_get_child_forum_group_ids( $forum_id ) ) && ! empty( $_POST['bbp_forum_visibility'] ) && in_array( $_POST['bbp_forum_visibility'], array( bbp_get_public_status_id(), bbp_get_private_status_id(), bbp_get_hidden_status_id() ) ) ) {
 
-		// Get forums current visibility
+		// Get forums current visibility.
 		$visibility = bbp_get_forum_visibility( $forum_id );
 
 		// What is the new forum visibility setting?
 		switch ( $_POST['bbp_forum_visibility'] ) {
 
-			// Hidden
+			// Hidden.
 			case bbp_get_hidden_status_id():
 				bbp_hide_forum( $forum_id, $visibility );
 				break;
 
-			// Private
+			// Private.
 			case bbp_get_private_status_id():
 				bbp_privatize_forum( $forum_id, $visibility );
 				break;
 
-			// Publish (default)
+			// Publish (default).
 			case bbp_get_public_status_id():
 			default:
 				bbp_publicize_forum( $forum_id, $visibility );
 				break;
+		}
+	}
+
+	$forum = bbp_get_forum( $forum_id );
+
+	if ( ! empty( $forum->post_parent ) ) {
+		$ancestors    = get_post_ancestors( $forum_id );
+		$root         = count( $ancestors ) - 1;
+		$parent_forum = $ancestors[ $root ];
+	} else {
+		$parent_forum = $forum_id;
+	}
+
+	// Update the child forums visibility based on the main parent if it's assign to the group.
+	if ( ! empty( $parent_forum ) && ! empty( bbp_get_forum_group_ids( $parent_forum ) ) ) {
+		$child_forums = bb_get_all_nested_subforums( $parent_forum );
+		if ( $child_forums ) {
+			foreach ( $child_forums as $child_forum_id ) {
+				if ( get_post_status( $child_forum_id ) !== get_post_status( $parent_forum ) ) {
+
+					// Main forum visibility.
+					switch ( get_post_status( $parent_forum ) ) {
+
+						// Hidden.
+						case bbp_get_hidden_status_id():
+							bbp_hide_forum( $child_forum_id );
+							break;
+
+						// Private.
+						case bbp_get_private_status_id():
+							bbp_privatize_forum( $child_forum_id );
+							break;
+
+						// Publish (default).
+						case bbp_get_public_status_id():
+						default:
+							bbp_publicize_forum( $child_forum_id );
+							break;
+					}
+				}
+			}
 		}
 	}
 }

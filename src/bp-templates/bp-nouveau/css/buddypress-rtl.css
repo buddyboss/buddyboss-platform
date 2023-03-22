@@ -2606,8 +2606,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-  bottom: -24px;
-  right: -15px;
+  bottom: -11px;
+  right: 0;
 }
 
 .activity-update-form .focus-in .medium-editor-toolbar {
@@ -7852,6 +7852,7 @@ body.guillotine-dragging * {
   width: 100%;
 }
 
+.groups-header #cover-image-container.centered #item-header-cover-image #item-header-content .bb-bp-group-title,
 .groups-header #cover-image-container.centered #item-header-cover-image #item-header-content .group-description {
   text-align: center;
 }
@@ -11116,9 +11117,6 @@ body .bp-messages-user-threads {
   .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
     min-width: 30px;
-  }
-  .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-    right: 10px;
   }
 }
 
