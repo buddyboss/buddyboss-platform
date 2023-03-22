@@ -5989,29 +5989,29 @@ function bb_activity_following_post_notification( $args ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object|int $comment_id Activity comment ID or object.
+ * @param object|int $comment Activity comment ID or object.
  *
  * @return bool
  */
-function bb_is_group_activity_comment( $comment_id = 0 ) {
-	global $activities_template;
+function bb_is_group_activity_comment( $comment = 0 ) {
 
-	if ( empty( $comment_id ) ) {
-		$comment_id = isset( $activities_template->activity->current_comment ) ? $activities_template->activity->current_comment : false;
-	}
-
-	if ( ! empty( $comment_id ) && is_array( $comment_id ) ) {
-		$comment_id = (int) $comment_id['id'];
+	$comment_id = 0;
+	if ( empty( $comment ) ) {
+		global $activities_template;
+		$comment_id = isset( $activities_template->activity->current_comment->id ) ? $activities_template->activity->current_comment->id : 0;
+	} elseif ( is_array( $comment ) ) {
+		$comment_id = (int) $comment['id'];
+	} elseif ( is_object( $comment ) ) {
+		$comment_id = (int) $comment->id;
+	} elseif ( is_int( $comment ) ) {
+		$comment_id = (int) $comment;
 	}
 
 	if ( empty( $comment_id ) ) {
 		return false;
 	}
 
-	$comment = $comment_id;
-	if ( is_int( $comment_id ) ) {
-		$comment = new BP_Activity_Activity( $comment_id );
-	}
+	$comment = new BP_Activity_Activity( $comment_id );
 
 	if ( ! empty( $comment->item_id ) && ! empty( $comment->user_id ) ) {
 		$main_activity = new BP_Activity_Activity( $comment->item_id );
