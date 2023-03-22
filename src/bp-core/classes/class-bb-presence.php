@@ -213,11 +213,10 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			if ( ! empty( $uncached_user_ids ) ) {
 				$user_ids_sql = implode( ',', $uncached_user_ids );
-
-				$t_name = self::$table_name;
+				$table_name   = self::$table_name;
 
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$query = self::$wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$t_name} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql})", 'members' );
+				$query = self::$wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$table_name} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql})", 'members' );
 
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$last_activities = self::$wpdb->get_results( $query );
@@ -292,7 +291,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				}
 			}
 
-			set_transient( 'bb_presence_api_mu_download', 'true', DAY_IN_SECONDS );
+			set_transient( 'bb_presence_api_mu_download', 'true', WEEK_IN_SECONDS );
 
 			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
 				self::$download_plugin_text = __( 'Download the plugin', 'buddyboss' );
@@ -362,7 +361,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				update_option( 'bb_use_core_native_presence', false );
 			}
 
-			set_transient( 'bb_check_native_presence_load_directly', 'true', DAY_IN_SECONDS );
+			set_transient( 'bb_check_native_presence_load_directly', 'true', WEEK_IN_SECONDS );
 		}
 
 		/**
@@ -396,9 +395,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$timeframe = $bb_presence_interval + $bb_presence_time_span;
 			}
 
-			$online_time = $timeframe;
-
-			return time() - $last_activity <= $online_time;
+			return time() - $last_activity <= $timeframe;
 		}
 
 		/**
