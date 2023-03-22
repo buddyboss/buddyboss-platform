@@ -219,22 +219,23 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$query = self::$wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$table_name} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql})", 'members' );
 
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
-				$last_activities = self::$wpdb->get_results( $query );
+				$last_activities = self::$wpdb->get_results( $query, ARRAY_A );
 
 				if ( ! empty( $last_activities ) ) {
 					foreach ( $last_activities as $last_activity ) {
 						wp_cache_set(
-							$last_activity->user_id,
+							$last_activity['user_id'],
 							array(
-								'user_id'       => $last_activity->user_id,
-								'date_recorded' => $last_activity->date_recorded,
-								'activity_id'   => $last_activity->id,
+								'user_id'       => $last_activity['user_id'],
+								'date_recorded' => $last_activity['date_recorded'],
+								'activity_id'   => $last_activity['id'],
 							),
 							'bp_last_activity'
 						);
+
+						$cached_data[ $last_activity['user_id'] ] = wp_cache_get( $last_activity['user_id'], 'bp_last_activity' );
 					}
 
-					$cached_data = array_merge( $cached_data, $last_activities );
 				}
 			}
 
