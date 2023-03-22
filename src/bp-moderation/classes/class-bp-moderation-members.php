@@ -432,14 +432,28 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		return $retval;
 	}
 
+	/**
+	 * Function to allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
 	public function bb_activity_before_permalink_redirect_url( $activity ) {
-		if ( bp_is_active( 'groups' ) && $activity->component == buddypress()->groups->id ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 			remove_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
 		}
 	}
 
+	/**
+	 * Function to dis-allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
 	public function bb_activity_after_permalink_redirect_url( $activity ) {
-		if ( bp_is_active( 'groups' ) && $activity->component == buddypress()->groups->id ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 			add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
 		}
 	}
