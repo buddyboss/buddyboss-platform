@@ -2578,7 +2578,7 @@ function bb_update_to_2_3_1() {
 	wp_cache_flush();
 }
 
-/*
+/**
  * Migration for the activity widget based on the relevant feed.
  *
  * @since BuddyBoss 2.3.0
