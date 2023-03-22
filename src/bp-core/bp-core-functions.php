@@ -2927,8 +2927,6 @@ function bp_nav_menu_get_loggedin_pages() {
 		}
 
 		if ( ! empty( $nav_sub ) ) {
-
-
 			foreach ( $nav_sub as $s_nav ) {
 
 				$sub_name          = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
@@ -8437,7 +8435,7 @@ if ( ! function_exists( 'bb_filter_input_string' ) ) {
 	 * so this function can be used to preserve the pre PHP 8.1 behavior where sanitization is expected during the retrieval
 	 * of user input.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.0
 	 *
 	 * @param string $type          One of INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
 	 * @param string $variable_name Name of a variable to retrieve.
@@ -8481,7 +8479,7 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 	 * so this function can be used to preserve the pre PHP 8.1 behavior where sanitization is expected during the retrieval
 	 * of user input.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.0
 	 *
 	 * @param string $variable_name Name of a variable to retrieve.
 	 * @param int[]  $flags         Array of supported filter options and flags.

@@ -679,7 +679,7 @@ class SyncGenerator {
 
 		$this->bpGroupId = groups_create_group(
 			array(
-				'name'      => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
+				'name'      => $ldGroup->post_title ?: sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId ),
 				'status'    => $settings->get( 'learndash.default_bp_privacy' ),
 				'parent_id' => $bp_parent_group_id,
 			)
@@ -880,8 +880,8 @@ class SyncGenerator {
 				array(
 					'group_id'    => $groupId,
 					'creator_id'  => $ldGroup->post_author,
-					'name'        => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
-					'status'      => $settings->get( 'learndash.default_bp_privacy' ),
+					'name'        => $ldGroup->post_title ?: sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId ),
+					//'status'      => $settings->get( 'learndash.default_bp_privacy' ),
 					'description' => $ldGroup->post_content,
 					'slug'        => $ldGroup->post_name,
 					'parent_id'   => $bp_parent_group_id,
