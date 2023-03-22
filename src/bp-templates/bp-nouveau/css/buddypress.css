@@ -9171,6 +9171,7 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 .buddypress-wrap .profile.edit .editfield .description {
   margin-top: -10px;
   margin-bottom: 10px;
+  white-space: pre-line;
   order: 2;
 }
 
@@ -12011,6 +12012,10 @@ body .bp-messages-user-threads {
 .buddypress-wrap .standard-form p.description {
   color: #737373;
   margin: 5px 0;
+}
+
+.buddypress-wrap .standard-form .editfield p.description {
+  white-space: pre-line;
 }
 
 .buddypress-wrap .standard-form div.checkbox label:nth-child(n+2),

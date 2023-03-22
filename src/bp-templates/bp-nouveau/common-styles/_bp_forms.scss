@@ -198,6 +198,10 @@
 			margin: $marg-xsml 0;
 		}
 
+		.editfield p.description {
+			white-space: pre-line;
+		}
+
 		div.checkbox label:nth-child(n+2),
 		div.radio div label {
 			color: $form-text;
