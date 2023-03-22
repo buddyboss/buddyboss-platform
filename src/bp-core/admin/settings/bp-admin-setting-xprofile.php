@@ -159,7 +159,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-xprofile' ) );
 			exit();
 		}
-		
+
 		if ( $profile_slug_format_before_saving !== $profile_slug_format_after_saving ) {
 			wp_cache_flush();
 		}
