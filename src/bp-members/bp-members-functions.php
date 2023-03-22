@@ -2000,6 +2000,11 @@ function bp_core_activate_signup( $key ) {
 				return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss' ) );
 			}
 
+			// In some cases, user's status is not getting updated on first attempt. Make sure it's updated.
+			if( 0 !== get_userdata( $user_id )->user_status ){
+				wp_update_user( array( 'ID' => $user_id, 'user_status' => 0 ) );
+			}
+			
 			bp_delete_user_meta( $user_id, 'activation_key' );
 
 			$user_already_created = true;
