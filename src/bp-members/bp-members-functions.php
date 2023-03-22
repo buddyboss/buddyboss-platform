@@ -5511,5 +5511,3 @@ function bb_set_bluk_user_profile_slug( $user_ids ) {
 		}
 	}
 }
-
-
