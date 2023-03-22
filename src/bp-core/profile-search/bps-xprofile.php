@@ -111,7 +111,7 @@ function bp_ps_xprofile_search( $f ) {
 		'select' => '',
 		'where'  => array(),
 	);
-	$sql['select']            = "SELECT user_id FROM {$bp->profile->table_name_data}";
+	$sql['select']            = "SELECT user_id, field_id FROM {$bp->profile->table_name_data}";
 
 	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
 		$sql['where']['field_id'] = $wpdb->prepare( "field_id IN ( SELECT f.id FROM {$bp->profile->table_name_fields} as f, {$bp->profile->table_name_meta} as m where f.id = m.object_id AND group_id = %d AND f.type = %s AND m.meta_key = '_cloned_from' AND m.meta_value = %d )", $f->group_id, $f->type, $f->id );
@@ -244,8 +244,31 @@ function bp_ps_xprofile_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	$results = $wpdb->get_col( $query );
-	return $results;
+	// If repeater enabel then we check repeater field id is private or not.
+	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
+		$results = $wpdb->get_results( $query, ARRAY_A );
+		$user_ids = array();
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $key => $value ) {
+				$field_id = ! empty( $value['field_id'] ) ? (int) $value['field_id'] : 0;
+				$user_id  = ! empty( $value['user_id'] ) ? (int) $value['user_id'] : 0;
+				if ( ! empty( $field_id ) && ! empty( $user_id ) ) {
+					$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
+					if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
+						unset( $results[ $key ] );
+					} elseif ( bp_is_active( 'friends' ) && 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() ) ) {
+						unset( $results[ $key ] );
+					} else {
+						$user_ids[] = $user_id;
+					}
+				}
+			}
+		}
+	} else {
+		$user_ids = $wpdb->get_col( $query );
+	}
+
+	return $user_ids;
 }
 
 /**
