@@ -162,6 +162,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		if ( $profile_slug_format_before_saving !== $profile_slug_format_after_saving ) {
 			wp_cache_flush();
+
+			// Purge all the cache for API.
+			if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+				BuddyBoss\Performance\Cache::instance()->purge_all();
+			}
 		}
 
 	}
