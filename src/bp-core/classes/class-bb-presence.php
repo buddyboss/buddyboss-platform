@@ -510,7 +510,6 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			if ( $cookie_elements && isset( $cookie_elements['username'] ) ) {
 				global $wpdb;
 
-				// @todo: any idea to avoid this query ?
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$get_user = $wpdb->get_row( $wpdb->prepare( "SELECT ID FROM $wpdb->users WHERE user_login=%s", $cookie_elements['username'] ) );
 
@@ -521,7 +520,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		}
 
 		/**
-		 * Copied from wp-includes/pluggable.php.
+		 * Function to get user login details from wordpress cookie.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -561,7 +560,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			$cookie_elements = explode( '|', $cookie );
-			if ( count( $cookie_elements ) !== 4 ) {
+			if ( 4 !== (int) count( $cookie_elements ) ) {
 				return false;
 			}
 
@@ -571,7 +570,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		}
 
 		/**
-		 * Get the Pre User ID from BuddyBoss APP JWT Token.
+		 * Function to get user if from JWT token.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -639,7 +638,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			$headers = array();
 			foreach ( $_SERVER as $name => $value ) {
-				if ( substr( $name, 0, 5 ) === 'HTTP_' ) {
+				if ( 'HTTP_' === substr( $name, 0, 5 ) ) {
 					$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
 				}
 			}
@@ -663,19 +662,17 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @todo :- research the correct wp way to get current endpoint. I doubt on this.
-		 *
 		 * @return string|bool
 		 */
 		public function bb_get_current_endpoint() {
 			$current_path = $this->bb_get_current_path();
-			if ( strpos( $current_path, 'wp-json/' ) !== false ) {
+			if ( false !== strpos( $current_path, 'wp-json/' ) ) {
 
 				$current_path = explode( 'wp-json/', $current_path );
 				$current_path = $current_path[1];
 
 				// remove query vars.
-				if ( strpos( $current_path, '?' ) !== false ) {
+				if ( false !== strpos( $current_path, '?' ) ) {
 					$current_path = explode( '?', $current_path );
 					$current_path = $current_path[0];
 				}
@@ -695,7 +692,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		public function bb_prepare_presence_mu() {
 
 			// Check if we are in WP API.
-			if ( strpos( $this->bb_get_current_path(), 'wp-json/buddyboss/v1/members/presence' ) !== false ) {
+			if ( false !== strpos( $this->bb_get_current_path(), 'wp-json/buddyboss/v1/members/presence' ) ) {
 
 				/**
 				 * Remove WordPress Extra Headaches.
@@ -810,7 +807,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$retval = new WP_Error(
 					'rest_missing_callback_param',
 					/* translators: %s: List of required parameters. */
-					sprintf( __( 'Missing parameter(s): %s' ), 'ids' ),
+					sprintf( __( 'Missing parameter(s): %s', 'buddyboss' ), 'ids' ),
 					array(
 						'status' => 400,
 						'params' => array( 'ids' ),
@@ -858,7 +855,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$retval = new WP_Error(
 					'rest_invalid_param',
 					/* translators: %s: List of invalid parameters. */
-					sprintf( __( 'Invalid parameter(s): %s' ), implode( ', ', array_keys( $invalid_params ) ) ),
+					sprintf( __( 'Invalid parameter(s): %s', 'buddyboss' ), implode( ', ', array_keys( $invalid_params ) ) ),
 					array(
 						'status'  => 400,
 						'params'  => $invalid_params,
