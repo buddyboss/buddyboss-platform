@@ -220,7 +220,7 @@ function bp_ps_xprofile_search( $f ) {
 
 	// If repeater enabel then we check repeater field id is private or not.
 	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
-		$results = $wpdb->get_results( $query, ARRAY_A );
+		$results  = $wpdb->get_results( $query, ARRAY_A );
 		$user_ids = array();
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $key => $value ) {
@@ -228,9 +228,17 @@ function bp_ps_xprofile_search( $f ) {
 				$user_id  = ! empty( $value['user_id'] ) ? (int) $value['user_id'] : 0;
 				if ( ! empty( $field_id ) && ! empty( $user_id ) ) {
 					$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
-					if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-						unset( $results[ $key ] );
-					} elseif ( bp_is_active( 'friends' ) && 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() ) ) {
+					if (
+						! current_user_can( 'administrator' ) &&
+						(
+							'adminsonly' === $field_visibility ||
+							(
+								bp_is_active( 'friends' ) &&
+								'friends' === $field_visibility &&
+								false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() )
+							)
+						)
+					) {
 						unset( $results[ $key ] );
 					} else {
 						$user_ids[] = $user_id;
@@ -501,7 +509,6 @@ function bp_ps_xprofile_gender_users_search( $f ) {
 				return $custom_ids;
 			}
 		}
-
 	}
 
 	return array();
@@ -578,7 +585,7 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 	} else {
 		$course_groups_users = get_course_groups_users_access( $course_id );
 	}
-	$course_user_ids     = array_merge( $course_user_ids, $course_groups_users );
+	$course_user_ids = array_merge( $course_user_ids, $course_groups_users );
 
 	if ( ! empty( $course_user_ids ) ) {
 		$course_user_ids = array_unique( $course_user_ids );
@@ -640,7 +647,7 @@ function bp_ps_anyfield_search( $f ) {
 	$user_ids = array();
 	if ( ! empty( $results ) ) {
 		// Exclude repeater fields.
-		$group_ids = bp_xprofile_get_groups(
+		$group_ids    = bp_xprofile_get_groups(
 			array(
 				'repeater_show_main_fields_only' => true,
 				'fetch_fields'                   => true,
@@ -668,9 +675,17 @@ function bp_ps_anyfield_search( $f ) {
 					continue;
 				}
 				$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
-				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-					unset( $results[ $key ] );
-				} elseif ( bp_is_active( 'friends' ) && 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() ) ) {
+				if (
+					! current_user_can( 'administrator' ) &&
+					(
+						'adminsonly' === $field_visibility ||
+						(
+							bp_is_active( 'friends' ) &&
+							'friends' === $field_visibility &&
+							false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() )
+						)
+					)
+				) {
 					unset( $results[ $key ] );
 				} else {
 					$user_ids[] = $user_id;
