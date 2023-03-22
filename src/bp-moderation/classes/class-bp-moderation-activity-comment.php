@@ -159,8 +159,17 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		}
 
 		if (
-			$this->is_content_hidden( $activities_template->activity->current_comment->id ) &&
-			! bb_is_group_activity_comment( $activities_template->activity->current_comment ) // Check the activity is group or not.
+			(
+				$this->is_content_hidden( $activities_template->activity->current_comment->id ) ||
+				bb_moderation_is_user_blocked_by( $activities_template->activity->current_comment->user_id )
+			) &&
+			(
+				! bb_is_group_activity_comment( $activities_template->activity->current_comment ) ||
+				(
+					bb_is_group_activity_comment( $activities_template->activity->current_comment ) &&
+					bp_moderation_is_content_hidden( $activities_template->activity->current_comment->id, self::$moderation_type )
+				)
+			)
 		) {
 			return 'activity/blocked-comment.php';
 		}
@@ -322,14 +331,25 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		if (
 			empty( $activities_template->activity->current_comment->id ) ||
-			empty( $activities_template->activity->current_comment->user_id ) ||
-			bb_is_group_activity_comment( $activities_template->activity->current_comment )
+			empty( $activities_template->activity->current_comment->user_id )
 		) {
 			return $content;
 		}
 
 		$user_id = $activities_template->activity->current_comment->user_id;
 		$item_id = $activities_template->activity->current_comment->id;
+
+		// Set content for reported content of group.
+		if ( bb_is_group_activity_comment( $activities_template->activity->current_comment ) ) {
+			if (
+				$this->is_content_hidden( $item_id ) &&
+				! bp_moderation_is_user_blocked( $user_id )
+			) {
+				$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			}
+
+			return $content;
+		}
 
 		if ( $this->is_content_hidden( $item_id ) ) {
 			$is_user_blocked = bp_moderation_is_user_blocked( $user_id );
@@ -361,6 +381,12 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			if (
 				! bb_is_group_activity_comment( $comment ) &&
 				bb_moderation_is_user_blocked_by( $comment->user_id )
+			) {
+				return false;
+				// Check it for reported group activity comments.
+			} elseif (
+				$this->is_content_hidden( $comment->id ) &&
+				! bp_moderation_is_user_blocked( $comment->user_id )
 			) {
 				return false;
 			}
