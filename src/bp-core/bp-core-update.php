@@ -410,8 +410,12 @@ function bp_version_updater() {
 			bb_update_to_2_2_9();
 		}
 
-		if ( $raw_db_version < 19581 ) {
+		if ( $raw_db_version < 19871 ) {
 			bb_update_to_2_2_9_1();
+		}
+
+		if ( $raw_db_version < 19971 ) {
+			bb_update_to_2_3_0();
 		}
 	}
 
@@ -2337,7 +2341,7 @@ function bb_update_to_2_2_7() {
 	}
 }
 
-/**
+/*
  * Migrate when update the platform to the latest version.
  *
  * @since BuddyBoss 2.2.8
@@ -2537,14 +2541,27 @@ function bb_migrate_member_friends_count( $user_ids, $paged ) {
 	$paged++;
 	bb_create_background_member_friends_count( $paged );
 }
+
 /**
- * Migration for the activity widget based on the relevant feed.
+ * Background job to update duplicate subscriptions.
  *
  * @since BuddyBoss 2.2.9.1
  *
  * @return void
  */
 function bb_update_to_2_2_9_1() {
+	bb_remove_duplicate_subscriptions();
+}
+
+/**
+ * Migration for the activity widget based on the relevant feed.
+ *
+ * @since BuddyBoss 2.3.0
+ *
+ * @return void
+ */
+function bb_update_to_2_3_0() {
+
 	if ( bp_is_relevant_feed_enabled() ) {
 		$settings = get_option( 'widget_bp_latest_activities' );
 		if ( ! empty( $settings ) ) {
@@ -2565,6 +2582,4 @@ function bb_update_to_2_2_9_1() {
 
 		update_option( 'widget_bp_latest_activities', $settings );
 	}
-
-	bb_remove_duplicate_subscriptions();
 }

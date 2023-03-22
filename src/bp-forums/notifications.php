@@ -722,7 +722,7 @@ function bb_forums_add_notification_metas( $notification ) {
 /**
  * Mark notifications as read when a user visits an particular discussion/reply.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.0
  */
 function bb_forums_remove_screen_notifications() {
 	$reply_id = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
