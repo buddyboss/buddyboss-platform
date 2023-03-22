@@ -842,8 +842,6 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 		'offset' => $offset,
 	);
 
-	error_log( print_r( $args, 1 ) );
-
 	$user_ids = get_users( $args );
 
 	global $bp_background_updater;
