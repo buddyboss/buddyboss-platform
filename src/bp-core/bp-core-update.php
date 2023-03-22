@@ -2556,7 +2556,7 @@ function bb_update_to_2_2_9_1() {
 /**
  * Migration for the activity widget based on the relevant feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.0
  *
  * @return void
  */

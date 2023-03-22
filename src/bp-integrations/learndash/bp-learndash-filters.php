@@ -413,7 +413,7 @@ function bb_support_learndash_course_other_language_permalink( $url ) {
 /**
  * Forum's shortcode pagination support for the learndash permalink nested urls.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.0
  *
  * @param array $ld_rewrite_rules    rewrite rules.
  * @param array $ld_rewrite_patterns rewrite rules structure with placeholder.
