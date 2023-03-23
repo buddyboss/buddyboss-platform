@@ -586,7 +586,7 @@ function bb_load_presence_api_mu() {
 add_action( 'bp_admin_init', 'bb_load_presence_api_mu' );
 
 /**
- * Function to check presence native file directly or not.
+ * Function to check server allow to load php file directly or not.
  *
  * @since BuddyBoss [BBVERSION]
  */
