@@ -391,9 +391,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				return false;
 			}
 
-			$bb_presence_interval  = get_option( 'bb_presence_interval_mu' );
-			$bb_presence_time_span = 20;
-
+			$bb_presence_interval  = function_exists( 'bb_presence_interval' ) ? bb_presence_interval() : self::bb_presence_interval_mu();
+			$bb_presence_time_span = function_exists( 'bb_presence_time_span' ) ? bb_presence_time_span() : self::bb_presence_time_span_mu();
 			if ( is_int( $expiry ) && ! empty( $expiry ) ) {
 				$timeframe = $expiry;
 			} else {
@@ -401,6 +400,36 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			return time() - $last_activity <= $timeframe;
+		}
+
+		/**
+		 * Function to return the presence interval time in seconds at mu level.
+		 * It will get bb_presence_interval_mu from DB if its empty then it will get bb_presence_default_interval_mu from DB.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return int
+		 */
+		public static function bb_presence_interval_mu() {
+			$bb_presence_interval_mu = (int) get_option( 'bb_presence_interval_mu' );
+			if ( empty( $bb_presence_interval_mu ) ) {
+				$bb_presence_interval_mu = (int) get_option( 'bb_presence_default_interval_mu', 60 );
+			}
+
+			return $bb_presence_interval_mu;
+		}
+
+		/**
+		 * Function to return presence time span at mu level.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return int
+		 */
+		public static function bb_presence_time_span_mu() {
+			$bb_presence_time_span = (int) get_option( 'bb_presence_time_span_mu', 20 );
+
+			return $bb_presence_time_span;
 		}
 
 		/**
