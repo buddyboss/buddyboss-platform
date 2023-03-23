@@ -68,17 +68,17 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			global $wpdb, $bp;
 			$query_placeholder = array();
 
-			$search_term = htmlspecialchars( $search_term );
+			$search_term = htmlspecialchars( $search_term, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
 				$sql['select'] .= ' COUNT( DISTINCT g.id ) ';
 			} else {
-				$sql['select'] .= $wpdb->prepare( " DISTINCT g.id, 'groups' as type, g.name LIKE %s AS relevance, gm2.meta_value as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT g.id, 'groups' as type, g.name LIKE %s AS relevance, gm.meta_value as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql['from'] = "FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name} g";
+			$sql['from'] = " FROM {$bp->groups->table_name} g LEFT JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id ";
 
 			/**
 			 * Filter the MySQL JOIN clause for the group Search query.
@@ -90,10 +90,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			$sql['from'] = apply_filters( 'bp_group_search_join_sql', $sql['from'] );
 
 			$where_conditions                 = array( '1=1' );
-			$where_conditions['search_query'] = "g.id = gm1.group_id 
-						AND g.id = gm2.group_id 
-						AND gm2.meta_key = 'last_activity' 
-						AND gm1.meta_key = 'total_member_count' 
+			$where_conditions['search_query'] = "gm.meta_key = 'last_activity'
 						AND ( g.name LIKE %s OR g.description LIKE %s )
 				";
 
@@ -135,18 +132,19 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 					// get all hidden groups where i am a member of
 					$hidden_groups_sql = $wpdb->prepare( "SELECT DISTINCT gm.group_id FROM {$bp->groups->table_name_members} gm JOIN {$bp->groups->table_name} g ON gm.group_id = g.id WHERE gm.user_id = %d AND gm.is_confirmed = 1 AND gm.is_banned = 0 AND g.status='hidden' ", bp_loggedin_user_id() );
 					$hidden_groups_ids = $wpdb->get_col( $hidden_groups_sql );
-					if ( empty( $hidden_groups_ids ) ) {
-						$hidden_groups_ids = array( 99999999 );// arbitrarily large number
-					}
 
-					$hidden_groups_ids_csv = implode( ',', $hidden_groups_ids );
+					$hidden_groups_condition = '';
+					if ( ! empty( $hidden_groups_ids ) ) {
+						$hidden_groups_csv       = implode( ',', $hidden_groups_ids );
+						$hidden_groups_condition = "OR g.id IN ( {$hidden_groups_csv} )";
+					}
 
 					// either gruops which are not hidden,
 					// or if hidden, only those where i am a member.
-					$where_conditions['search_query'] .= " AND ( g.status != 'hidden' OR g.id IN ( {$hidden_groups_ids_csv} ) ) ";
+					$where_conditions['search_query'] .= " AND ( g.status != 'hidden' {$hidden_groups_condition} ) ";
 				}
 			} else {
-				$where_conditions['search_query'] .= "AND g.status != 'hidden' ";
+				$where_conditions['search_query'] .= "AND g.status != 'hidden' AND g.status != 'private' ";
 			}
 
 			/**

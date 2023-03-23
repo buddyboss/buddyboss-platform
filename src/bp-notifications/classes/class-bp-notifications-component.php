@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Extends the component class to set up the Notifications component.
  */
+#[\AllowDynamicProperties]
 class BP_Notifications_Component extends BP_Component {
 
 	/**

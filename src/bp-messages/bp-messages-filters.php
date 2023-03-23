@@ -893,18 +893,21 @@ function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	$params['current']['message_user_id']           = bp_loggedin_user_id();
 
-	$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
-		array(
-			'fields'      => 'ids',
-			'user_id'     => bp_loggedin_user_id(),
-			'is_hidden'   => true,
-			'thread_type' => 'archived',
-		)
-	);
-
 	$archived_threads_ids = array();
-	if ( ! empty( $hidden_threads ) ) {
-		$archived_threads_ids = $hidden_threads['threads'];
+
+	if ( is_user_logged_in() ) {
+		$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
+			array(
+				'fields'      => 'ids',
+				'user_id'     => bp_loggedin_user_id(),
+				'is_hidden'   => true,
+				'thread_type' => 'archived',
+			)
+		);
+
+		if ( ! empty( $hidden_threads ) ) {
+			$archived_threads_ids = $hidden_threads['threads'];
+		}
 	}
 
 	$params['archived_threads'] = $archived_threads_ids;
@@ -1031,7 +1034,7 @@ function bb_messages_compose_action_sub_nav() {
 		</a>
 		<ul class="bb_more_options_list message_action__list">
 			<li class="archived-messages">
-				<a href="<?php bb_messages_archived_url(); ?>" data-action="more_options"><?php echo esc_html__( 'Archived messages', 'buddyboss' ); ?></a>
+				<a href="<?php bb_messages_archived_url(); ?>" class="archived-page" data-action="more_options"><?php echo esc_html__( 'Archived messages', 'buddyboss' ); ?></a>
 			</li>
 			<?php
 			if ( bp_is_user_messages() && bp_is_active( 'notifications' ) ) {

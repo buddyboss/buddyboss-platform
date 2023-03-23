@@ -26,7 +26,16 @@
 					<div class="bb-field-steps bb-field-steps-1">
 						<div class="bb-field-wrap">
 							<div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
-								<?php if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
+								<?php
+								if (
+									(
+										! bp_is_active( 'forums' ) ||
+										( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() )
+									) &&
+									! bp_is_messages_component() &&
+									bp_is_active( 'activity' )
+								) :
+									?>
 								<div class="media-uploader-post-content">
 									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your documents, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
 								</div>
