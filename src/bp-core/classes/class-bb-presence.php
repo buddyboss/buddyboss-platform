@@ -391,7 +391,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				return false;
 			}
 
-			$bb_presence_interval  = get_option( 'bb_presence_interval', 60 );
+			$bb_presence_interval  = get_option( 'bb_presence_interval_mu' );
 			$bb_presence_time_span = 20;
 
 			if ( is_int( $expiry ) && ! empty( $expiry ) ) {
@@ -855,7 +855,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				header( 'HTTP/1.0 401 Unauthorized' );
 				header( 'Content-Type: application/json' );
 				$retval = new WP_Error(
-					'bp_rest_authorization_required_test',
+					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
 					array(
 						'status' => 401,
