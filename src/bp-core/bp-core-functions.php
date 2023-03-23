@@ -8244,9 +8244,9 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	$bb_presence_interval = apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
+	$bb_presence_interval = (int) apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
 
-	if ( (int) $bb_presence_interval !== (int) get_option( 'bb_presence_interval_mu' ) ) {
+	if ( $bb_presence_interval !== (int) get_option( 'bb_presence_interval_mu' ) ) {
 		update_option( 'bb_presence_interval_mu', $bb_presence_interval );
 	}
 
@@ -8300,7 +8300,7 @@ function bb_pro_pusher_version() {
 function bb_presence_time_span() {
 	$bb_presence_time_span = (int) apply_filters( 'bb_presence_time_span', 20 );
 
-	if ( (int) $bb_presence_time_span !== (int) get_option( 'bb_presence_time_span_mu' ) ) {
+	if ( $bb_presence_time_span !== (int) get_option( 'bb_presence_time_span_mu' ) ) {
 		update_option( 'bb_presence_time_span_mu', $bb_presence_time_span );
 	}
 
@@ -8317,7 +8317,7 @@ function bb_presence_time_span() {
 function bb_presence_default_interval() {
 	$bb_presence_default_interval = (int) apply_filters( 'bb_presence_default_interval', 60 );
 
-	if ( (int) $bb_presence_default_interval !== (int) get_option( 'bb_presence_default_interval_mu' ) ) {
+	if ( $bb_presence_default_interval !== (int) get_option( 'bb_presence_default_interval_mu' ) ) {
 		update_option( 'bb_presence_default_interval_mu', $bb_presence_default_interval );
 	}
 
