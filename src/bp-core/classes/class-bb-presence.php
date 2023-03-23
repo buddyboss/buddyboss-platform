@@ -509,8 +509,39 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @return int
 		 */
 		public function bb_cookie_support( $user_id ) {
-			$scheme          = apply_filters( 'auth_redirect_scheme', '' );
-			$cookie_elements = $this->bb_wp_parse_auth_cookie( '', $scheme );
+			$scheme = apply_filters( 'auth_redirect_scheme', '' );
+
+			$header = $this->bb_get_all_headers();
+
+			$cookies = '';
+			if ( ! empty( $header ) ) {
+				foreach ( $header as $k => $v ) {
+					if ( 'cookie' === strtolower( $k ) ) {
+						$cookies = $v;
+						break;
+					}
+				}
+			}
+
+			$wp_cookie = '';
+
+			if ( ! empty( $cookies ) ) {
+				$cookies = explode( ';', trim( $cookies ) );
+				if ( ! empty( $cookies ) ) {
+					foreach ( $cookies as $cookie ) {
+						$cookie = trim( $cookie );
+						if (
+							strpos( $cookie, 'wordpress_test_' ) === false &&
+							strpos( $cookie, 'wordpress_' ) !== false
+						) {
+							$wp_cookie = $cookie;
+							break;
+						}
+					}
+				}
+			}
+
+			$cookie_elements = $this->bb_wp_parse_auth_cookie( $wp_cookie, $scheme );
 
 			if ( $cookie_elements && isset( $cookie_elements['username'] ) ) {
 				global $wpdb;
@@ -562,6 +593,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 				$cookie = $_COOKIE[ $cookie_name ];
+			} elseif ( ! empty( $cookie ) ) {
+				$cookie = explode( '=', $cookie );
+				$cookie = urldecode( end( $cookie ) );
 			}
 
 			$cookie_elements = explode( '|', $cookie );
@@ -644,6 +678,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 					return $user_id;
 				}
 			}
+
+			return $user_id;
 
 		}
 

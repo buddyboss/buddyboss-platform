@@ -695,6 +695,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
 			'native_presence'           => (bool) bp_get_option( 'bb_use_core_native_presence', false ),
 			'native_presence_url'       => buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php',
+			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
 		);
 
 		/**

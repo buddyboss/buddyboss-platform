@@ -3596,7 +3596,7 @@ window.bp = window.bp || {};
 							'undefined' !== typeof params.ids.length &&
 							0 < params.ids.length
 						) {
-							var url = '1' === BB_Nouveau_Presence.native_presence ? BB_Nouveau_Presence.native_presence_url : '/wp-json/buddyboss/v1/members/presence';
+							var url = '1' === BB_Nouveau_Presence.native_presence ? BB_Nouveau_Presence.native_presence_url : BB_Nouveau_Presence.presence_rest_url;
 							$.ajax(
 								{
 									type: 'POST',
