@@ -323,7 +323,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$download_path = admin_url( 'admin.php?page=bp-settings&download_mu_bpa_file=' . $bp_performance_download_nonce );
 			$notice        = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
-				__( 'Presence API Caching cannot be automatically installed on your server. To enable caching, you need to manually install the "BuddyBoss Presence API" plugin in your', 'buddyboss' ),
+				__( 'BuddyBoss Presence API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Presence API" plugin in your', 'buddyboss' ),
 				'https://wordpress.org/support/article/must-use-plugins/',
 				__( 'must-use plugins', 'buddyboss' ),
 				$download_path,

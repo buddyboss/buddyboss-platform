@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: BuddyBoss Presence API
- * Description: Must-Use plugin for BuddyBoss platform presence API.
+ * Description: Must-Use plugin for BuddyBoss Platform Presence API.
  * Version: 1.0.0
  * Author: BuddyBoss
  * Author URI:  https://www.buddyboss.com
