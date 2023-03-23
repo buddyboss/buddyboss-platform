@@ -33,9 +33,24 @@ require ABSPATH . WPINC . '/class-wp-role.php';
 require ABSPATH . WPINC . '/class-wp-roles.php';
 require ABSPATH . WPINC . '/class-wp-user.php';
 require ABSPATH . WPINC . '/class-wp-session-tokens.php';
+
+// Loaded files which is required.
+require ABSPATH . WPINC . '/class-wp-textdomain-registry.php';
+global $wp_textdomain_registry;
+if ( ! $wp_textdomain_registry instanceof WP_Textdomain_Registry ) {
+	$wp_textdomain_registry = new WP_Textdomain_Registry();
+}
+
 require ABSPATH . WPINC . '/class-wp-user-meta-session-tokens.php';
+require ABSPATH . WPINC . '/class-wp-http-response.php';
 require ABSPATH . WPINC . '/l10n.php';
+
+// Load rest api to validate the attributes.
+require ABSPATH . WPINC . '/rest-api/class-wp-rest-request.php';
+require ABSPATH . WPINC . '/rest-api/class-wp-rest-server.php';
+require ABSPATH . WPINC . '/rest-api/class-wp-rest-response.php';
 require ABSPATH . WPINC . '/rest-api.php';
+
 /**
  * 'WP_PLUGIN_URL' and others are used by: wp_cookie_constants()
  */
@@ -67,30 +82,14 @@ if ( isset( $_GET['direct_allow'] ) ) { // phpcs:ignore WordPress.Security.Nonce
 
 // Include BB_Presence class.
 require_once __DIR__ . '/classes/class-bb-presence.php';
-add_action( 'set_current_user', array( BB_Presence::instance(), 'bb_is_set_current_user' ), 10 );
-add_filter( 'rest_cache_pre_current_user_id', array( BB_Presence::instance(), 'bb_cookie_support' ), 10 );
-add_filter( 'rest_cache_pre_current_user_id', array( BB_Presence::instance(), 'bb_jwt_auth_support' ), 10 );
-//BB_Presence::instance()->bb_presence_mu_loader();
+
+BB_Presence::instance()->bb_presence_mu_loader();
+
 $loggedin_user_id = ! empty( get_current_user_id() ) ? get_current_user_id() : BB_Presence::instance()->bb_get_loggedin_user_id();
 
-// If user not logged in then return.
-if ( empty( $loggedin_user_id ) ) {
-	return;
-}
+// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+$users = ( isset( $_POST['ids'] ) ? $_POST['ids'] : array() );
 
-if ( isset( $_POST['ids'] ) && class_exists( 'BB_Presence' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+BB_Presence::instance()->bb_endpoint_render( $loggedin_user_id, $users );
 
-	BB_Presence::bb_update_last_activity( $loggedin_user_id );
-
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$users         = $_POST['ids'];
-	$presence_data = array();
-	foreach ( array_unique( $users ) as $user_id ) {
-		$presence_data[] = array(
-			'id'     => $user_id,
-			'status' => BB_Presence::bb_get_user_presence_mu_cache( $user_id ),
-		);
-	}
-
-	return wp_send_json( $presence_data );
-}
+exit;

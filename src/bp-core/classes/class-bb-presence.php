@@ -119,6 +119,11 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				return;
 			}
 
+			if ( ! function_exists( 'get_user_by ' ) ) {
+				// Require files used for cookie-based user authentication.
+				require ABSPATH . WPINC . '/pluggable.php';
+			}
+
 			// Update last activity in user meta also.
 			remove_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10 );
 			remove_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10 );
@@ -235,7 +240,6 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 						$cached_data[ $last_activity['user_id'] ] = wp_cache_get( $last_activity['user_id'], 'bp_last_activity' );
 					}
-
 				}
 			}
 
@@ -521,7 +525,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		}
 
 		/**
-		 * Function to get user login details from wordpress cookie.
+		 * Function to get user login details from WordPress cookie.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -596,8 +600,31 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			if ( $jwt_token ) {
 
 				$token = explode( '.', $jwt_token );
+
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+				$token_pre = (array) json_decode( base64_decode( $token[0] ) );
+
+				if (
+					array(
+						'typ' => 'JWT',
+						'alg' => 'HS256',
+					) !== $token_pre
+				) {
+					return $user_id;
+				}
+
 				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 				$token = (array) json_decode( base64_decode( $token[1] ) );
+
+				if ( ! empty( $token ) ) {
+					if ( empty( $token['exp'] ) ) {
+						return $user_id;
+					}
+
+					if ( $token['exp'] < time() ) {
+						return $user_id;
+					}
+				}
 
 				if ( isset( $token['data'] ) && isset( $token['data']->user ) && isset( $token['data']->user->id ) ) {
 					$user_id = $token['data']->user->id;
@@ -876,7 +903,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$header           = apply_filters( 'bb_rest_post_dispatch_header_cache', array(), $current_endpoint );
 
 			// Update login users last activity.
-			BB_Presence::bb_update_last_activity( $user_id );
+			self::bb_update_last_activity( $user_id );
 
 			$header['bb-presence-mu-api'] = 'hit';
 			$header['Content-Type']       = 'application/json';
