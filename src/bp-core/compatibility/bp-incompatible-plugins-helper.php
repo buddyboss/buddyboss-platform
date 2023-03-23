@@ -269,7 +269,7 @@ add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
 /**
  * Allow activity page content restriction via MemberPress
- * 
+ *
  * @since BuddyBoss 2.2.9
  *
  * @return void
@@ -1072,3 +1072,17 @@ function bb_wp_gravity_forms_compatibility_helper() {
 
 }
 add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
+
+/**
+ * Helper functions for the Paid Membership Pro compatibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_pmpro_compatibility_helper() {
+
+	if ( defined( 'PMPRO_VERSION' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-pmpro-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_pmpro_compatibility_helper' );
