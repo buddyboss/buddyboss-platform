@@ -8256,7 +8256,13 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
+	$bb_presence_interval = (int) apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
+
+	if ( $bb_presence_interval !== (int) get_option( 'bb_presence_interval_mu' ) ) {
+		update_option( 'bb_presence_interval_mu', $bb_presence_interval );
+	}
+
+	return $bb_presence_interval;
 }
 
 /**
@@ -8304,7 +8310,13 @@ function bb_pro_pusher_version() {
  * @return int
  */
 function bb_presence_time_span() {
-	return (int) apply_filters( 'bb_presence_time_span', 20 );
+	$bb_presence_time_span = (int) apply_filters( 'bb_presence_time_span', 20 );
+
+	if ( $bb_presence_time_span !== (int) get_option( 'bb_presence_time_span_mu' ) ) {
+		update_option( 'bb_presence_time_span_mu', $bb_presence_time_span );
+	}
+
+	return $bb_presence_time_span;
 }
 
 /**
@@ -8315,7 +8327,13 @@ function bb_presence_time_span() {
  * @return int
  */
 function bb_presence_default_interval() {
-	return apply_filters( 'bb_presence_default_interval', 60 );
+	$bb_presence_default_interval = (int) apply_filters( 'bb_presence_default_interval', 60 );
+
+	if ( $bb_presence_default_interval !== (int) get_option( 'bb_presence_default_interval_mu' ) ) {
+		update_option( 'bb_presence_default_interval_mu', $bb_presence_default_interval );
+	}
+
+	return $bb_presence_default_interval;
 }
 
 /**
