@@ -464,8 +464,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		public function bb_presence_mu_loader() {
 			add_action( 'set_current_user', array( $this, 'bb_is_set_current_user' ), 1 );
 
-			add_filter( 'rest_cache_pre_current_user_id', array( $this, 'bb_cookie_support' ), 1 );
-			add_filter( 'rest_cache_pre_current_user_id', array( $this, 'bb_jwt_auth_support' ), 2 );
+			add_filter( 'bb_rest_cache_pre_current_user_id', array( $this, 'bb_cookie_support' ), 1 );
+			add_filter( 'bb_rest_cache_pre_current_user_id', array( $this, 'bb_jwt_auth_support' ), 2 );
 
 			if ( ! isset( $_GET['bypass'] ) ) { // phpcs:ignore
 				$this->bb_prepare_presence_mu();
@@ -527,7 +527,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @return int|boolean
 		 */
 		public function bb_get_guessed_user_id() {
-			$guessed_user_id = apply_filters( 'rest_cache_pre_current_user_id', false );
+			$guessed_user_id = apply_filters( 'bb_rest_cache_pre_current_user_id', 0 );
 
 			return $guessed_user_id;
 		}
@@ -541,7 +541,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return int
 		 */
-		public function bb_cookie_support( int $user_id ) {
+		public function bb_cookie_support( $user_id ) {
 			$scheme = apply_filters( 'auth_redirect_scheme', '' );
 
 			$header = $this->bb_get_all_headers();
@@ -650,7 +650,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return int|void
 		 */
-		public function bb_jwt_auth_support( int $user_id ) {
+		public function bb_jwt_auth_support( $user_id ) {
 
 			$header = $this->bb_get_all_headers();
 

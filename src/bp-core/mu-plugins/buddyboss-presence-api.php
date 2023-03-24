@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	die();
+	return;
 }
 
 if ( ! function_exists( 'is_plugin_active' ) ) {
