@@ -421,6 +421,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19991 ) {
 			bb_update_to_2_3_1();
 		}
+
+		if ( $raw_db_version < 21071 ) {
+			bb_update_to_2_3_1();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2345,7 +2349,7 @@ function bb_update_to_2_2_7() {
 	}
 }
 
-/*
+/**
  * Migrate when update the platform to the latest version.
  *
  * @since BuddyBoss 2.2.8
@@ -2605,4 +2609,16 @@ function bb_update_to_2_3_1() {
 	set_transient( 'bb_update_to_2_3_1', 'yes', DAY_IN_SECONDS );
 
 	bb_repair_member_profile_links_callback( true );
+}
+
+/**
+ * Load BuddyBoss Presence API mu plugin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_3_1() {
+	if ( class_exists( 'BB_Presence' ) ) {
+		BB_Presence::bb_load_presence_api_mu_plugin();
+		BB_Presence::bb_check_native_presence_load_directly();
+	}
 }
