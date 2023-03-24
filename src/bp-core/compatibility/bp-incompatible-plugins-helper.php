@@ -221,6 +221,26 @@ function bp_helper_plugins_loaded_callback() {
 	if ( function_exists( 'tutor_pro' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
 	}
+
+	/**
+	 * Include filters to support network search when Paid Membership Pro plugin is activated.
+	 */
+	if ( defined( 'PMPRO_VERSION' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-pmpro-helpers.php';
+	}
+
+	/**
+	 * Include filters to support network search when Divi Builder plugin is activated.
+	 */
+	if ( class_exists( 'ET_Builder_Plugin' ) ) {
+		add_filter(
+			'et_builder_load_requests',
+			function( $builder_load_requests ) {
+				$builder_load_requests['action'][] = 'bp_search_ajax';
+				return $builder_load_requests;
+			}
+		);
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -1072,17 +1092,3 @@ function bb_wp_gravity_forms_compatibility_helper() {
 
 }
 add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
-
-/**
- * Helper functions for the Paid Membership Pro compatibility.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_pmpro_compatibility_helper() {
-
-	if ( defined( 'PMPRO_VERSION' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-pmpro-helpers.php';
-	}
-
-}
-add_action( 'init', 'bb_pmpro_compatibility_helper' );
