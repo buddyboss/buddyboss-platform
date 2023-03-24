@@ -249,12 +249,14 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Load presence API mu plugin.
 		 *
+		 * @param bool $bypass Bypass transient.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public static function bb_load_presence_api_mu_plugin() {
+		public static function bb_load_presence_api_mu_plugin( $bypass = true ) {
 
 			$bb_presence_api_mu_download = get_transient( 'bb_presence_api_mu_download' );
-			if ( ! empty( $bb_presence_api_mu_download ) ) {
+			if ( ! empty( $bb_presence_api_mu_download ) && ! $bypass ) {
 				return;
 			}
 
@@ -304,9 +306,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			} elseif (
 				! empty( $mu_plugins ) &&
 				array_key_exists( 'buddyboss-presence-api.php', $mu_plugins ) &&
-				version_compare( $mu_plugins['buddyboss-presence-api.php']['Version'], '1.0.1', '<' )
+				version_compare( $mu_plugins['buddyboss-presence-api.php']['Version'], '1.0.0', '<' )
 			) {
-				self::$download_plugin_text = __( 'Download v1.0.1', 'buddyboss' );
+				self::$download_plugin_text = __( 'Download v1.0.0', 'buddyboss' );
 				add_action( 'admin_notices', array( get_called_class(), 'bb_add_sitewide_notice_for_presence_api_mu_file' ) );
 			}
 		}
@@ -338,11 +340,13 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Function to check native presence file load directly or not.
 		 *
+		 * @param bool $bypass Bypass transient.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public static function bb_check_native_presence_load_directly() {
+		public static function bb_check_native_presence_load_directly( $bypass = false ) {
 			$bb_check_native_presence_load_directly = get_transient( 'bb_check_native_presence_load_directly' );
-			if ( ! empty( $bb_check_native_presence_load_directly ) ) {
+			if ( ! empty( $bb_check_native_presence_load_directly ) && ! $bypass ) {
 				return;
 			}
 
@@ -379,7 +383,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return string
 		 */
-		public static function bb_is_online_user_mu_cache( $user_id, $expiry = false ) {
+		public static function bb_is_online_user( $user_id, $expiry = false ) {
 
 			$last_activity      = '';
 			$last_activity_data = self::bb_get_users_last_activity( array( $user_id ) );
@@ -391,8 +395,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				return false;
 			}
 
-			$bb_presence_interval  = function_exists( 'bb_presence_interval' ) ? bb_presence_interval() : self::bb_presence_interval_mu();
-			$bb_presence_time_span = function_exists( 'bb_presence_time_span' ) ? bb_presence_time_span() : self::bb_presence_time_span_mu();
+			$bb_presence_interval  = function_exists( 'bb_presence_interval' ) ? bb_presence_interval() : self::bb_presence_interval();
+			$bb_presence_time_span = function_exists( 'bb_presence_time_span' ) ? bb_presence_time_span() : self::bb_presence_time_span();
 			if ( is_int( $expiry ) && ! empty( $expiry ) ) {
 				$timeframe = $expiry;
 			} else {
@@ -410,7 +414,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return int
 		 */
-		public static function bb_presence_interval_mu() {
+		public static function bb_presence_interval() {
 			$bb_presence_interval_mu = (int) get_option( 'bb_presence_interval_mu' );
 			if ( empty( $bb_presence_interval_mu ) ) {
 				$bb_presence_interval_mu = (int) get_option( 'bb_presence_default_interval_mu', 60 );
@@ -426,7 +430,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return int
 		 */
-		public static function bb_presence_time_span_mu() {
+		public static function bb_presence_time_span() {
 			$bb_presence_time_span = (int) get_option( 'bb_presence_time_span_mu', 20 );
 
 			return $bb_presence_time_span;
@@ -442,8 +446,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return string
 		 */
-		public static function bb_get_user_presence_mu_cache( $user_id, $expiry = false ) {
-			if ( self::bb_is_online_user_mu_cache( $user_id, $expiry ) ) {
+		public static function bb_get_user_presence( $user_id, $expiry = false ) {
+			if ( self::bb_is_online_user( $user_id, $expiry ) ) {
 				return 'online';
 			} else {
 				return 'offline';
@@ -537,7 +541,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return int
 		 */
-		public function bb_cookie_support( $user_id ) {
+		public function bb_cookie_support( int $user_id ) {
 			$scheme = apply_filters( 'auth_redirect_scheme', '' );
 
 			$header = $this->bb_get_all_headers();
@@ -646,7 +650,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @return int|void
 		 */
-		public function bb_jwt_auth_support( $user_id ) {
+		public function bb_jwt_auth_support( int $user_id ) {
 
 			$header = $this->bb_get_all_headers();
 
@@ -689,7 +693,11 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 					}
 				}
 
-				if ( isset( $token['data'] ) && isset( $token['data']->user ) && isset( $token['data']->user->id ) ) {
+				if (
+					isset( $token['data'] ) &&
+					isset( $token['data']->user ) &&
+					isset( $token['data']->user->id )
+				) {
 					$user_id = $token['data']->user->id;
 
 					// Check if there is any switch user.
@@ -983,7 +991,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			foreach ( array_unique( $ids ) as $user_id ) {
 				$presence_data[] = array(
 					'id'     => $user_id,
-					'status' => self::bb_get_user_presence_mu_cache( $user_id ),
+					'status' => self::bb_get_user_presence( $user_id ),
 				);
 			}
 
