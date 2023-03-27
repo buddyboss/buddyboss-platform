@@ -405,6 +405,18 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19551 ) {
 			bb_update_to_2_2_8();
 		}
+
+		if ( $raw_db_version < 19571 ) {
+			bb_update_to_2_2_9();
+		}
+
+		if ( $raw_db_version < 19871 ) {
+			bb_update_to_2_2_9_1();
+		}
+
+		if ( $raw_db_version < 19971 ) {
+			bb_update_to_2_3_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2329,7 +2341,7 @@ function bb_update_to_2_2_7() {
 	}
 }
 
-/**
+/*
  * Migrate when update the platform to the latest version.
  *
  * @since BuddyBoss 2.2.8
@@ -2425,5 +2437,149 @@ function bb_migrate_group_subscription_email_templates() {
 				)
 			);
 		}
+	}
+}
+
+/**
+ * Background job to update friends count.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @return void
+ */
+function bb_update_to_2_2_9() {
+	$is_already_run = get_transient( 'bb_update_to_2_2_9' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_2_9', 'yes', HOUR_IN_SECONDS );
+
+	bb_create_background_member_friends_count();
+}
+
+/**
+ * Create a background job to update the friend count when member suspend/un-suspend.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @param int $paged The current page. Default 1.
+ *
+ * @return void
+ */
+function bb_create_background_member_friends_count( $paged = 1 ) {
+	global $bp_background_updater;
+
+	if ( ! bp_is_active( 'friends' ) ) {
+		return;
+	}
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 50;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	$user_ids = get_users(
+		array(
+			'fields'     => 'ids',
+			'number'     => $per_page,
+			'offset'     => $offset,
+			'orderby'    => 'ID',
+			'order'      => 'DESC',
+			'meta_query' => array(
+				array(
+					'key'     => 'total_friend_count',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_migrate_member_friends_count',
+				'args'     => array( $user_ids, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Update the friend count when member suspend/un-suspend.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @param array $user_ids Array of user ID.
+ * @param int   $paged    The current page. Default 1.
+ *
+ * @return void
+ */
+function bb_migrate_member_friends_count( $user_ids, $paged ) {
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		bp_has_members( 'type=alphabetical&page=1&scope=personal&per_page=1&user_id=' . $user_id );
+		$query_friend_count = (int) $GLOBALS['members_template']->total_member_count;
+		$meta_friend_count  = (int) friends_get_total_friend_count( $user_id );
+
+		if ( $query_friend_count !== $meta_friend_count ) {
+			bp_update_user_meta( $user_id, 'total_friend_count', $query_friend_count );
+		}
+	}
+
+	// Call recursive to finish update for all users.
+	$paged++;
+	bb_create_background_member_friends_count( $paged );
+}
+
+/**
+ * Background job to update duplicate subscriptions.
+ *
+ * @since BuddyBoss 2.2.9.1
+ *
+ * @return void
+ */
+function bb_update_to_2_2_9_1() {
+	bb_remove_duplicate_subscriptions();
+}
+
+/**
+ * Migration for the activity widget based on the relevant feed.
+ *
+ * @since BuddyBoss 2.3.0
+ *
+ * @return void
+ */
+function bb_update_to_2_3_0() {
+
+	if ( bp_is_relevant_feed_enabled() ) {
+		$settings = get_option( 'widget_bp_latest_activities' );
+		if ( ! empty( $settings ) ) {
+			foreach ( $settings as $k => $widget_data ) {
+				if ( ! is_int( $k ) ) {
+					continue;
+				}
+
+				if ( ! empty( $widget_data ) ) {
+					if ( ! isset( $widget_data['relevant'] ) ) {
+						$widget_data['relevant'] = (bool) bp_is_relevant_feed_enabled();
+					}
+
+					$settings[ $k ] = $widget_data;
+				}
+			}
+		}
+
+		update_option( 'widget_bp_latest_activities', $settings );
 	}
 }

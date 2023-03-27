@@ -2606,8 +2606,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-  bottom: -24px;
-  left: -15px;
+  bottom: -11px;
+  left: 0;
 }
 
 .activity-update-form .focus-in .medium-editor-toolbar {
@@ -6678,6 +6678,23 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
   float: none;
 }
 
+.bb-action-popup#group-description-popup .bb-action-popup-content {
+  padding-bottom: 1px;
+}
+
+.bb-action-popup#group-description-popup .bb-action-popup-content p {
+  margin-bottom: 1.6875rem;
+}
+
+.bb-action-popup#group-description-popup .bb-action-popup-content p:empty {
+  display: none;
+}
+
+.bb-action-popup#group-description-popup .bb-action-popup-content ul {
+  margin: 0 0 1.6875rem 1.6875rem;
+  list-style-type: disc;
+}
+
 @media screen and (min-width: 46.8em) {
   .buddypress .bp-vertical-navs .groups-list .item-avatar {
     margin-right: 3%;
@@ -7835,6 +7852,7 @@ body.guillotine-dragging * {
   width: 100%;
 }
 
+.groups-header #cover-image-container.centered #item-header-cover-image #item-header-content .bb-bp-group-title,
 .groups-header #cover-image-container.centered #item-header-cover-image #item-header-content .group-description {
   text-align: center;
 }
@@ -10258,7 +10276,18 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   margin-bottom: 0;
 }
 
-#bp-message-thread-list .bp-message-content-wrap p.blocked, #bp-message-thread-list .bp-message-content-wrap p.deleted-message {
+#bp-message-thread-list .bp-message-content-wrap > span {
+  margin-bottom: 8px;
+}
+
+#bp-message-thread-list .bp-message-content-wrap > span:last-child {
+  margin-bottom: 0;
+}
+
+#bp-message-thread-list .bp-message-content-wrap span.blocked, #bp-message-thread-list .bp-message-content-wrap span.suspended, #bp-message-thread-list .bp-message-content-wrap span.deleted-message,
+#bp-message-thread-list .bp-message-content-wrap p.blocked,
+#bp-message-thread-list .bp-message-content-wrap p.suspended,
+#bp-message-thread-list .bp-message-content-wrap p.deleted-message {
   display: inline-block;
   font-size: 13px;
   font-weight: 400;
@@ -10267,7 +10296,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   border-radius: 4px;
 }
 
-#bp-message-thread-list .bp-message-content-wrap p.blocked:before, #bp-message-thread-list .bp-message-content-wrap p.deleted-message:before {
+#bp-message-thread-list .bp-message-content-wrap span.blocked:before, #bp-message-thread-list .bp-message-content-wrap span.suspended:before, #bp-message-thread-list .bp-message-content-wrap span.deleted-message:before,
+#bp-message-thread-list .bp-message-content-wrap p.blocked:before,
+#bp-message-thread-list .bp-message-content-wrap p.suspended:before,
+#bp-message-thread-list .bp-message-content-wrap p.deleted-message:before {
   content: "\ee08";
   display: inline-block;
   font-family: "bb-icons";
@@ -11085,9 +11117,6 @@ body .bp-messages-user-threads {
   .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
     min-width: 30px;
-  }
-  .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-    left: 10px;
   }
 }
 
@@ -15740,6 +15769,16 @@ ul.bbp-lead-topic .item-description p:empty {
   font-size: 1.3em;
   clear: none;
   margin-bottom: 10px;
+}
+
+.widget_display_topics ul > li {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.widget_display_topics .bbp-author-link {
+  flex: 0 0 40px;
+  margin-right: 10px;
 }
 
 /* =Avatars
