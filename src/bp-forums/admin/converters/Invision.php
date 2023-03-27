@@ -522,7 +522,7 @@ class Invision extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '';
 		return $title;
 	}
 
@@ -550,13 +550,13 @@ class Invision extends BBP_Converter_Base {
 	private function to_char( $input ) {
 		$output = '';
 		for ( $i = 0; $i < strlen( $input ); $i++ ) {
-			$j = ord( $input{$i} );
+			$j = ord( $input[$i] );
 			if ( ( $j >= 65 && $j <= 90 )
 				|| ( $j >= 97 && $j <= 122 )
 				|| ( $j >= 48 && $j <= 57 ) ) {
-				$output .= $input{$i};
+				$output .= $input[$i];
 			} else {
-				$output .= '&#' . ord( $input{$i} ) . ';';
+				$output .= '&#' . ord( $input[$i] ) . ';';
 			}
 		}
 		return $output;
@@ -569,7 +569,7 @@ class Invision extends BBP_Converter_Base {
 
 		// Strips Invision custom HTML first from $field before parsing $field to parser.php
 		$invision_markup = $field;
-		$invision_markup = html_entity_decode( $invision_markup );
+		$invision_markup = html_entity_decode( $invision_markup, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 		// Replace '[html]' with '<pre><code>'
 		$invision_markup = preg_replace( '/\[html\]/', '<pre><code>', $invision_markup );
@@ -643,6 +643,6 @@ class Invision extends BBP_Converter_Base {
 		$bbcode                 = BBCode::getInstance();
 		$bbcode->enable_smileys = false;
 		$bbcode->smiley_regex   = false;
-		return html_entity_decode( $bbcode->Parse( $field ) );
+		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
 }

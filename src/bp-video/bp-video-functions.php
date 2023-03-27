@@ -621,7 +621,7 @@ function bp_video_add( $args = '' ) {
 		}
 	}
 
-	$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$action = bb_filter_input_string( INPUT_POST, 'action' );
 	if ( isset( $action ) && 'groups_get_group_members_send_message' === $action ) {
 		$video->privacy = 'message';
 	}
@@ -850,7 +850,7 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 		global $bp_background_updater;
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
-		if ( ! empty( trim( $ffmpeg->error ) ) ) {
+		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
 			return;
 		}
 
@@ -2262,10 +2262,10 @@ function bp_video_download_link( $attachment_id, $video_id ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_download_url_file() {
-	$attachment_id       = filter_input( INPUT_GET, 'attachment_id', FILTER_SANITIZE_STRING );
-	$download_video_file = filter_input( INPUT_GET, 'download_video_file', FILTER_SANITIZE_STRING );
-	$video_file          = filter_input( INPUT_GET, 'video_file', FILTER_SANITIZE_STRING );
-	$video_type          = filter_input( INPUT_GET, 'video_type', FILTER_SANITIZE_STRING );
+	$attachment_id       = bb_filter_input_string( INPUT_GET, 'attachment_id' );
+	$download_video_file = bb_filter_input_string( INPUT_GET, 'download_video_file' );
+	$video_file          = bb_filter_input_string( INPUT_GET, 'video_file' );
+	$video_type          = bb_filter_input_string( INPUT_GET, 'video_type' );
 	$can_download_btn    = false;
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -3051,7 +3051,7 @@ function bp_video_get_activity_video( $activity_id ) {
  */
 function bp_video_upload_dir( $pathdata ) {
 
-	$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$action = bb_filter_input_string( INPUT_POST, 'action' );
 
 	if ( isset( $action ) && ( 'video_upload' === $action || 'video_thumbnail_upload' === $action ) ) { // WPCS: CSRF ok, input var ok.
 		if ( empty( $pathdata['subdir'] ) ) {
@@ -3211,7 +3211,7 @@ function bb_video_is_ffmpeg_installed() {
 		return false;
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
-		if ( ! empty( trim( $ffmpeg->error ) ) ) {
+		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
 			return false;
 		} else {
 			return true;

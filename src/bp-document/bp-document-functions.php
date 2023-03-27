@@ -2059,7 +2059,7 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	$document_folder_table = $bp->document->table_name_folder;
 
-	$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
+	$type = bb_filter_input_string( INPUT_GET, 'type' );
 	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $group_id ) {
@@ -2591,8 +2591,10 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	// Change attachment post metas & rename files.
 	foreach ( get_intermediate_image_sizes() as $size ) {
 		$size_data = image_get_intermediate_size( $attachment_document_id, $size );
-
-		@unlink( $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] );
+		$attachment_path = ! empty( $size_data['path'] ) ? $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] : '';
+		if ( ! empty( $attachment_path ) && file_exists( $attachment_path ) ) {
+			@unlink( $attachment_path );
+		}
 	}
 
 	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
@@ -2677,7 +2679,9 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		)
 	);
 
-	@unlink( $file_abs_path );
+	if ( file_exists( $file_abs_path ) ) {
+		@unlink( $file_abs_path );
+	}
 
 	return $response;
 }

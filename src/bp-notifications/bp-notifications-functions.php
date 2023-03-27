@@ -1111,7 +1111,7 @@ function bb_notification_avatar() {
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
+			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
 				echo bp_core_fetch_avatar(
 					array(
@@ -1121,7 +1121,10 @@ function bb_notification_avatar() {
 				);
 
 				// Get the small icon for the notification which will print beside the avatar.
-				echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
+				$notification_icon = bb_notification_small_icon( $component_action, true, $notification );
+				if ( ! empty( $notification_icon ) ) {
+					echo wp_kses_post( $notification_icon );
+				}
 				?>
 				<?php ( isset( $user ) ? bb_user_presence_html( $user->ID ) : '' ); ?>
 			</a>
@@ -1718,13 +1721,25 @@ function bb_notification_after_save_meta( $notification ) {
 				$notification->component_action,
 				array(
 					'bb_groups_subscribed_discussion',
+					'bb_forums_subscribed_reply',
+					'bb_forums_subscribed_discussion',
+					'bbp_new_reply',
 				),
 				true
 			)
 		) {
 			$content = '';
-			if ( 'bb_groups_subscribed_discussion' === $notification->component_action ) {
+			if (
+				'bb_groups_subscribed_discussion' === $notification->component_action ||
+				'bb_forums_subscribed_discussion' === $notification->component_action
+			) {
 				$content = bbp_kses_data( bbp_get_topic_content( $notification->item_id ) );
+			}
+			if (
+				'bb_forums_subscribed_reply' === $notification->component_action ||
+				'bbp_new_reply' === $notification->component_action
+			) {
+				$content = bbp_kses_data( bbp_get_reply_content( $notification->item_id ) );
 			}
 			$usernames = ! empty( $content ) ? bp_find_mentions_by_at_sign( array(), $content ) : array();
 		}
@@ -1771,6 +1786,9 @@ function bb_notification_manage_app_push_notification( $content, $component_name
 				'bb_activity_following_post',
 				'bb_groups_subscribed_activity',
 				'bb_groups_subscribed_discussion',
+				'bb_forums_subscribed_reply',
+				'bb_forums_subscribed_discussion',
+				'bbp_new_reply',
 			),
 			true
 		)
