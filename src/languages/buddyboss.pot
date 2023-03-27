@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.3.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-03-22 09:48:50+00:00\n"
+"POT-Creation-Date: 2023-03-27 09:27:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -981,7 +981,7 @@ msgid "There was a problem generating a link preview."
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5894
-#: bp-groups/bp-groups-filters.php:1113
+#: bp-groups/bp-groups-filters.php:1112
 #: bp-messages/classes/class-bp-messages-notification.php:367
 #: bp-messages/classes/class-bp-messages-notification.php:441
 #: bp-messages/classes/class-bp-messages-notification.php:522
@@ -991,7 +991,7 @@ msgid "some photos"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5896
-#: bp-groups/bp-groups-filters.php:1115
+#: bp-groups/bp-groups-filters.php:1114
 #: bp-messages/classes/class-bp-messages-notification.php:374
 #: bp-messages/classes/class-bp-messages-notification.php:449
 #: bp-messages/classes/class-bp-messages-notification.php:529
@@ -1001,7 +1001,7 @@ msgid "a photo"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5901
-#: bp-groups/bp-groups-filters.php:1120
+#: bp-groups/bp-groups-filters.php:1119
 #: bp-messages/classes/class-bp-messages-notification.php:384
 #: bp-messages/classes/class-bp-messages-notification.php:460
 #: bp-messages/classes/class-bp-messages-notification.php:539
@@ -1011,7 +1011,7 @@ msgid "some documents"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5903
-#: bp-groups/bp-groups-filters.php:1122
+#: bp-groups/bp-groups-filters.php:1121
 #: bp-messages/classes/class-bp-messages-notification.php:391
 #: bp-messages/classes/class-bp-messages-notification.php:468
 #: bp-messages/classes/class-bp-messages-notification.php:546
@@ -1021,7 +1021,7 @@ msgid "a document"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5908
-#: bp-groups/bp-groups-filters.php:1127
+#: bp-groups/bp-groups-filters.php:1126
 #: bp-messages/classes/class-bp-messages-notification.php:401
 #: bp-messages/classes/class-bp-messages-notification.php:479
 #: bp-messages/classes/class-bp-messages-notification.php:556
@@ -1031,7 +1031,7 @@ msgid "some videos"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5910
-#: bp-groups/bp-groups-filters.php:1129
+#: bp-groups/bp-groups-filters.php:1128
 #: bp-messages/classes/class-bp-messages-notification.php:408
 #: bp-messages/classes/class-bp-messages-notification.php:487
 #: bp-messages/classes/class-bp-messages-notification.php:563
@@ -1041,7 +1041,7 @@ msgid "a video"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5913
-#: bp-groups/bp-groups-filters.php:1109 bp-groups/bp-groups-filters.php:1134
+#: bp-groups/bp-groups-filters.php:1108 bp-groups/bp-groups-filters.php:1133
 msgid "an update"
 msgstr ""
 
@@ -6965,7 +6965,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2559
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:507
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:486
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
@@ -9029,8 +9029,8 @@ msgid "Display post featured image?"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-notification-abstract.php:184
-#: bp-core/profile-search/bps-xprofile.php:323
-#: bp-core/profile-search/bps-xprofile.php:628
+#: bp-core/profile-search/bps-xprofile.php:354
+#: bp-core/profile-search/bps-xprofile.php:708
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:274
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:104
 #: bp-moderation/screens/content-report-form.php:59
@@ -9431,19 +9431,19 @@ msgstr ""
 msgid "There was a problem cropping your %s photo."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:470
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:449
 msgid "Activate Forum Discussions Component"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:508
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:487
 msgid "activate"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:511
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:490
 msgid "LearnDash & bbPress Integration is deactivated."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:512
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:491
 msgid ""
 "The LearnDash & bbPress Integration plugin can't work if LearnDash LMS "
 "plugin & %1$s component is deactivated. Please activate LearnDash LMS "
@@ -9597,13 +9597,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -10378,50 +10378,50 @@ msgstr ""
 msgid "is within: %1$s miles of %2$s"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:325
+#: bp-core/profile-search/bps-xprofile.php:356
 msgid "Search all fields"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:326
+#: bp-core/profile-search/bps-xprofile.php:357
 msgid "Search every profile field"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:371
+#: bp-core/profile-search/bps-xprofile.php:402
 #: bp-integrations/learndash/bp-learndash-integration.php:22
 #: bp-integrations/learndash/templates/admin/integration-tab-intro.php:52
 #. translators: 1. Text. 2. Text.
 msgid "LearnDash"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:374
-#: bp-core/profile-search/bps-xprofile.php:375
+#: bp-core/profile-search/bps-xprofile.php:405
+#: bp-core/profile-search/bps-xprofile.php:406
 #: bp-integrations/learndash/buddypress/Core.php:117
 #: bp-integrations/learndash/buddypress/Reports.php:405
 #: bp-templates/bp-nouveau/includes/groups/classes.php:337
 msgid "Courses"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:425
-#: bp-core/profile-search/bps-xprofile.php:428
-#: bp-core/profile-search/bps-xprofile.php:429
+#: bp-core/profile-search/bps-xprofile.php:456
+#: bp-core/profile-search/bps-xprofile.php:459
+#: bp-core/profile-search/bps-xprofile.php:460
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:28
 msgid "Gender"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:630
+#: bp-core/profile-search/bps-xprofile.php:710
 msgid "Heading"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:631
+#: bp-core/profile-search/bps-xprofile.php:711
 msgid "Used to segregate form into sections"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:662
+#: bp-core/profile-search/bps-xprofile.php:742
 msgid "General Information"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:665
-#: bp-core/profile-search/bps-xprofile.php:666
+#: bp-core/profile-search/bps-xprofile.php:745
+#: bp-core/profile-search/bps-xprofile.php:746
 #: bp-members/bp-members-filters.php:187 bp-members/bp-members-filters.php:201
 msgid "Email Address"
 msgstr ""
@@ -17403,7 +17403,7 @@ msgstr ""
 msgid "Connect"
 msgstr ""
 
-#: bp-friends/bp-friends-template.php:842
+#: bp-friends/bp-friends-template.php:841
 msgid "%s connection"
 msgid_plural "%s connections"
 msgstr[0] ""
@@ -18371,7 +18371,7 @@ msgstr ""
 msgid "Edit Forum Settings"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1132
+#: bp-groups/bp-groups-filters.php:1131
 #: bp-messages/classes/class-bp-messages-notification.php:416
 #: bp-messages/classes/class-bp-messages-notification.php:496
 #: bp-messages/classes/class-bp-messages-notification.php:571
@@ -18380,50 +18380,50 @@ msgstr ""
 msgid "a gif"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1176
+#: bp-groups/bp-groups-filters.php:1175
 msgid ""
 "Migrate Group forum and discussion subscriptions data structure to the new "
 "subscription flow"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1226
+#: bp-groups/bp-groups-filters.php:1225
 msgid "No group was found! Which group are you subscribing/unsubscribing to?"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1228
+#: bp-groups/bp-groups-filters.php:1227
 msgid "There was a problem subscribing/unsubscribing from that group!"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1230
+#: bp-groups/bp-groups-filters.php:1229
 msgid "You are not part of that group!"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1242
+#: bp-groups/bp-groups-filters.php:1241
 msgid "%s You are already subscribe this group."
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1256
+#: bp-groups/bp-groups-filters.php:1255
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1899
 #. translators: Group name
 #. translators: Group name.
 msgid "There was a problem subscribing to %s."
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1262
+#: bp-groups/bp-groups-filters.php:1261
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1923
 #. translators: Group name
 #. translators: Group name.
 msgid "You've been subscribed to %s."
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1272
+#: bp-groups/bp-groups-filters.php:1271
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1957
 #. translators: Group name
 #. translators: Group name.
 msgid "There was a problem unsubscribing from %s."
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:1278
+#: bp-groups/bp-groups-filters.php:1277
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1949
 #. translators: Group name
 #. translators: Group name.
@@ -32880,22 +32880,22 @@ msgctxt "widget name"
 msgid "BuddyBoss - Network Posts"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:314
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:293
 msgctxt "ui"
 msgid "Membership"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:332
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:311
 msgctxt "ui"
 msgid "Info"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:342
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:321
 msgctxt "ui"
 msgid "Subscriptions"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:352
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:331
 msgctxt "ui"
 msgid "Payments"
 msgstr ""
@@ -33045,14 +33045,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
@@ -33118,3 +33119,4 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:287
 msgctxt "placeholder: activity comment count"
 msgid "%d Comment"
+msgstr ""
