@@ -187,6 +187,13 @@ function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_lo
 
 	$username = bp_core_get_username( $user_id, $user_nicename, $user_login );
 
+	if ( 'unique_identifier' === bb_get_profile_slug_format() ) {
+		$username = bb_core_get_user_slug( $user_id );
+		if ( empty( $username ) ) {
+			$username = bb_set_user_profile_slug( $user_id );
+		}
+	}
+
 	if ( bp_is_username_compatibility_mode() ) {
 		$username = rawurlencode( $username );
 	}
@@ -5356,3 +5363,144 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
 	echo bb_get_user_presence_html( $user_id, $expiry ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
+/**
+ * Generate user profile slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id user id.
+ *
+ * @return string
+ */
+function bb_generate_user_profile_slug( int $user_id ) {
+	$unique_identifier = '';
+	if ( empty( $user_id ) ) {
+		return $unique_identifier;
+	}
+
+	$user_profile_slug = bb_core_get_user_slug( $user_id );
+	if ( ! empty( $user_profile_slug ) ) {
+		return $unique_identifier;
+	}
+
+	$user = get_user_by( 'ID', (int) $user_id );
+
+	if ( $user ) {
+		$unique_identifier = sha1( $user->user_email . $user->user_nicename );
+	}
+
+	return $unique_identifier;
+}
+
+/**
+ * Get the user ID based on the profile hash.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $profile_slug profile slug to check.
+ *
+ * @return int The ID of the matched user on success, null on failure.
+ */
+function bb_get_user_by_profile_slug( $profile_slug ) {
+
+	// Bail if empty.
+	if ( empty( $profile_slug ) ) {
+		return false;
+	}
+
+	static $cache = array();
+
+	$cache_key = 'bb_profile_slug_' . $profile_slug;
+
+	if ( ! isset( $cache[ $cache_key ] ) ) {
+
+		$found_users = get_users(
+			array(
+				'meta_key'    => 'bb_profile_slug', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value'  => $profile_slug, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'number'      => 1,
+				'count_total' => false,
+				'fields'      => 'ID',
+			)
+		);
+
+		$user = ( ! empty( $found_users ) ? current( $found_users ) : 0 );
+
+		$cache[ $cache_key ] = $user;
+	} else {
+		$user = isset( $cache[ $cache_key ] ) ? $cache[ $cache_key ] : 0;
+	}
+
+	return apply_filters( 'bb_get_user_by_profile_slug', ! empty( $user ) ? $user : 0, $profile_slug );
+}
+
+/**
+ * Get the profile slug based on the user ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID to check.
+ *
+ * @return string
+ */
+function bb_core_get_user_slug( int $user_id ) {
+
+	if ( empty( $user_id ) ) {
+		return '';
+	}
+
+	$profile_slug = bp_get_user_meta( 'bb_profile_slug', $user_id, true );
+
+	/**
+	 * Filters the profile slug based on originally provided user ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $profile_slug User profile slug.
+	 * @param int    $user_id User ID.
+	 */
+	return apply_filters( 'bb_core_get_user_slug', $profile_slug, $user_id );
+}
+
+/**
+ * Setup the user profile hash to the user meta.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ *
+ * @return string
+ */
+function bb_set_user_profile_slug( int $user_id ) {
+
+	$unique_identifier = bb_generate_user_profile_slug( $user_id );
+	if ( ! empty( $unique_identifier ) ) {
+		bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
+		bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
+	}
+
+	return $unique_identifier;
+}
+
+/**
+ * Setup the user profile hash to the user meta.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids User IDs.
+ */
+function bb_set_bluk_user_profile_slug( $user_ids ) {
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		$user_id           = (int) $user_id;
+		$unique_identifier = bb_generate_user_profile_slug( $user_id );
+		if ( ! empty( $unique_identifier ) ) {
+			bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
+			bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
+		}
+	}
+}
