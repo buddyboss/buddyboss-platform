@@ -109,13 +109,16 @@
 		background-color: $light-text;
 		font-size: 17px;
 		line-height: 1;
-		height: 26px;
-		width: 26px;
 		padding: 4px;
 		border-radius: 50%;
 		position: absolute;
 		right: -5px;
 		bottom: -5px;
+
+		&.bb-icon-cancel {
+			height: 26px;
+			width: 26px;
+		}
 	}
 
 	// The primary list elements
@@ -305,22 +308,31 @@
 			list-style: none;
 		}
 
-		&.loading .bb_more_options_action {
-			pointer-events: none;
+		&.loading {
+			display: block;
 
-			> i {
-				opacity: 1;
+			.bb_more_options_action {
+				pointer-events: none;
 
-				&:before {
-					content: "\ef30";
-					animation: spin 2s infinite linear;
-					display: inline-block;
+				> i {
+					opacity: 1;
+
+					&:before {
+						content: "\ef30";
+						animation: spin 2s infinite linear;
+						display: inline-block;
+					}
+
 				}
 
 			}
 
 		}
 
+	}
+
+	.thread-item.unread .bb_more_options.loading + .bp-message-link:after {
+		opacity: 0;
 	}
 
 	.optionsOpen  .message-thread-options .bb_more_options_action i {
@@ -841,7 +853,21 @@
 				margin-bottom: 0;
 			}
 
+		}
+
+		> span {
+			margin-bottom: 8px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		span,
+		p {
+
 			&.blocked,
+			&.suspended,
 			&.deleted-message {
 				display: inline-block;
 				font-size: 13px;
@@ -881,6 +907,17 @@
 
 		a:before {
 			font-size: 18px;
+		}
+	}
+}
+
+.bp-message-content-wrap {
+
+	blockquote.wp-embedded-content {
+
+		+ p iframe.wp-embedded-content {
+			min-height: 0;
+			height: 0;
 		}
 	}
 }
@@ -1121,6 +1158,10 @@ input#send-to-input {
 
 	strong {
 		font-weight: 600;
+	}
+
+	body.bb-is-mobile & { // Hide notice in mobile
+		display: none;
 	}
 }
 
@@ -1652,9 +1693,13 @@ body .bp-messages-user-threads {
 #message-new-submit #bp-messages-send,
 #message-reply-new-submit #send_reply_button {
 	opacity: 0;
+	padding: 0;
 	position: absolute;
 	top: 0;
 	left: 0;
+	right: 0;
+	width: auto;
+	min-width: auto;
 	-webkit-tap-highlight-color: transparent;
 }
 
@@ -1742,9 +1787,6 @@ body .bp-messages-user-threads {
 		}
 	}
 
-	.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-		left: 10px;
-	}
 }
 
 .message-members-list #members_list:not(.is_not_empty),

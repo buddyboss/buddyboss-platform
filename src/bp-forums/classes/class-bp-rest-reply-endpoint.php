@@ -1149,12 +1149,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		do_action( 'bp_rest_reply_create_item', $reply, $topic_id, $forum_id, $request );
 
-		$response = $this->get_item(
-			array(
-				'id'      => $reply_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $reply_id );
+		$object->set_param( 'context', 'view' );
+
+		$response = $this->get_item( $object );
 
 		if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
 			/**
@@ -1671,12 +1670,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		do_action( 'bp_rest_reply_update_item', $reply, $request );
 
-		return $this->get_item(
-			array(
-				'id'      => $reply_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $reply_id );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 
 	}
 
@@ -1996,13 +1994,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$this->forum_endpoint->prepare_password_response( $reply->post_password );
 		}
 
+		$data['short_content'] = wp_trim_excerpt( '', $reply->ID );
+
 		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
-			'raw'      => $reply->post_content,
+			'raw'      => bb_rest_raw_content( $reply->post_content ),
 			'rendered' => bbp_get_reply_content( $reply->ID ),
 		);
 
@@ -2245,6 +2245,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
+				),
+				'short_content'            => array(
+					'description' => __( 'Short content of the reply.', 'buddyboss' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'content'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),

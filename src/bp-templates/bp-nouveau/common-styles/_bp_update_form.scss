@@ -603,6 +603,16 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
+	@media screen and (max-width: 480px) {
+
+		.has-draft .whats-new-form-footer {
+			flex-direction: column;
+			align-items: center;
+			padding-top: $pad-med;
+		}
+
+	}
+
 	#whats-new-toolbar .post-elements-buttons-item.disable,
 	#whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) {
 		pointer-events: initial;
@@ -1185,8 +1195,8 @@
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-	bottom: -24px;
-	left: -15px;
+	bottom: -11px;
+	left: 0;
 }
 
 .activity-update-form .focus-in .medium-editor-toolbar {
@@ -1761,7 +1771,7 @@ div[class*="attached-gif-container"] {
 @media screen and (min-width: 768px) {
 
 	.gif-media-search-dropdown.open {
-		width: 360px;
+		width: 320px;
 	}
 
 }

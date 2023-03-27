@@ -862,6 +862,18 @@ p.form-allowed-tags {
 			margin-top: 15px;
 		}
 
+		p:empty {
+			min-height: 1em;
+		}
+
+	}
+
+}
+
+ul.bbp-lead-topic .item-description {
+
+	p:empty {
+		min-height: 1em;
 	}
 
 }
@@ -935,6 +947,21 @@ p.form-allowed-tags {
 	margin-bottom: 10px;
 }
 
+.widget_display_topics {
+
+	ul > li {
+		display: flex;
+		margin-bottom: 15px;
+	}
+
+	.bbp-author-link {
+		flex: 0 0 40px;
+		margin-right: 10px;
+	}
+
+
+}
+
 /* =Avatars
 -------------------------------------------------------------- */
 
@@ -991,7 +1018,6 @@ fieldset div.avatar {
 			.bb-reply-lable {
 				color: #7f868f;
 				font-weight: 400;
-				margin-right: 5px;
 			}
 
 			a {

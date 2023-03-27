@@ -1392,6 +1392,7 @@ window.bp = window.bp || {};
 				this.video_dropzone_obj.destroy();
 			}
 			this.dropzone_video = [];
+			$( '#bp-video-post-content' ).val('');
 
 			var currentPopup = $( event.currentTarget ).closest( '#bp-video-uploader' );
 
@@ -1713,7 +1714,7 @@ window.bp = window.bp || {};
 
 			this.closeUploader( event );
 			$( '#bp-video-create-album' ).hide();
-			$( '#bb-album-title' ).val( '' );
+			$( '#bb-album-title' ).val( '' ).removeClass( 'error' );
 
 		},
 
@@ -2320,7 +2321,7 @@ window.bp = window.bp || {};
 			self.showVideo();
 			self.navigationCommands();
 
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' ) {
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' && self.current_video.privacy !== 'grouponly' ) {
 				self.getActivity();
 			} else {
 				self.getVideosDescription();
@@ -2844,8 +2845,9 @@ window.bp = window.bp || {};
 			$( '.video-js:not(.loaded)' ).each(
 				function () {
 
-					var self    = this;
-					var options = { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
+					var self   		= this;
+					var options 	= { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
+					var player_id 	= $( this ).attr( 'id' );
 
 					var videoIndex                   = $( this ).attr( 'id' );
 					player[ $( this ).attr( 'id' ) ] = videojs(
@@ -2872,8 +2874,8 @@ window.bp = window.bp || {};
                         }
 					);
 
-					if ( player[ $( this ).attr( 'id' ) ] !== undefined) {
-						player[ $( this ).attr( 'id' ) ].seekButtons(
+					if ( player[ player_id ] !== undefined && ( $( this ).find('.skip-back').length == 0 && $( this ).find('.skip-forward').length == 0 ) ) {
+						player[ player_id ].seekButtons(
 							{
 								forward: 5,
 								back: 5

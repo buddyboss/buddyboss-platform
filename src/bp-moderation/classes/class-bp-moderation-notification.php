@@ -46,6 +46,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 		 */
 		add_filter( 'bb_notifications_get_where_conditions', array( $this, 'update_where_sql' ), 9999, 3 );
 
+		add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_get_the_notification_mark_unread_link_callback' ), 10, 2 );
 	}
 
 	/**
@@ -86,25 +87,9 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function update_where_sql( $sql_where, $tbl_alias, $args = array() ) {
-		global $wpdb;
-		$bp = buddypress();
 
 		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
 			return $sql_where;
-		}
-
-		if ( bp_is_moderation_member_blocking_enable( 0 ) ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$moderation_query = $wpdb->prepare( "SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE ( hide_parent = %d OR hide_sitewide = %d OR reported = %d ) AND item_type = %s", 1, 1, 1, 'user' );
-
-			// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
-			$sql_where .= " AND {$tbl_alias}.secondary_item_id NOT IN ( " . $moderation_query . " )";
-
-			$hidden_users_ids = bp_moderation_get_hidden_user_ids();
-			if ( ! empty( $hidden_users_ids ) ) {
-				// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
-				$sql_where .= " AND ( {$tbl_alias}.item_id NOT IN ( " . implode( ',', $hidden_users_ids ) . " ) )";
-			}
 		}
 
 		/**
@@ -116,5 +101,30 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 		 * @param array  $class     current class object.
 		 */
 		return apply_filters( 'bp_moderation_notification_get_where_conditions', $sql_where, $this );
+	}
+
+	/**
+	 * Function to remove unread notification link for moderated members from read notification screen.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $retval  HTML for the mark unread link for the current notification.
+	 * @param int    $user_id The user ID.
+	 *
+	 * @return string
+	 */
+	public function bb_get_the_notification_mark_unread_link_callback( $retval, $user_id ) {
+		$notification = buddypress()->notifications->query_loop->notification;
+		if (
+			! empty( $notification ) &&
+			isset( $notification->is_new ) &&
+			empty( $notification->is_new ) &&
+			isset( $notification->readonly ) &&
+			true === $notification->readonly
+		) {
+			$retval = '';
+		}
+
+		return $retval;
 	}
 }

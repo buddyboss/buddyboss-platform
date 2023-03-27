@@ -609,13 +609,16 @@ class BBP_Forums_Widget extends WP_Widget {
 		// Forums filter.
 		$settings['title'] = apply_filters( 'bbp_forum_widget_title', $settings['title'], $instance, $this->id_base );
 
+		$parent_id = ( ! empty( $settings['parent_forum'] ) ? $settings['parent_forum'] : 0 );
+
+		$parent_id = ! is_numeric( $parent_id ) && 'any' !== $parent_id ? 0 : $parent_id;
+
 		// Note: private and hidden forums will be excluded via the
 		// bbp_pre_get_posts_normalize_forum_visibility action and function.
 		$widget_query = new WP_Query(
 			array(
 				'post_type'           => bbp_get_forum_post_type(),
-				// 'post_parent'         => $settings['parent_forum'],
-				'post_parent'         => 0,
+				'post_parent'         => $parent_id,
 				'post_status'         => bbp_get_public_status_id(),
 				'posts_per_page'      => bbp_get_forums_per_page(),
 				'ignore_sticky_posts' => true,
@@ -652,21 +655,23 @@ class BBP_Forums_Widget extends WP_Widget {
 						?>
 					</span>
 					<?php
-					$r = array(
-						'before'           => '<ul class="bb-sidebar-forums">',
-						'after'            => '</ul>',
-						'link_before'      => '<li class="bbp-sub-forum">',
-						'link_after'       => '</li>',
-						'count_before'     => ' (',
-						'count_after'      => ')',
-						'count_sep'        => ', ',
-						'separator'        => ' ',
-						'forum_id'         => $widget_query->post->ID,
-						'show_topic_count' => false,
-						'show_reply_count' => false,
-					);
+					if ( 0 !== $parent_id ) {
+						$r = array(
+							'before'           => '<ul class="bb-sidebar-forums">',
+							'after'            => '</ul>',
+							'link_before'      => '<li class="bbp-sub-forum">',
+							'link_after'       => '</li>',
+							'count_before'     => ' (',
+							'count_after'      => ')',
+							'count_sep'        => ', ',
+							'separator'        => ' ',
+							'forum_id'         => $widget_query->post->ID,
+							'show_topic_count' => false,
+							'show_reply_count' => false,
+						);
 
-					bbp_list_forums( $r );
+						bbp_list_forums( $r );
+					}
 					?>
 				</li>
 
@@ -914,31 +919,41 @@ class BBP_Topics_Widget extends WP_Widget {
 							'size'    => 14,
 						)
 					);
+					$author_related_class = 'bbp-topic-has-avatar';
+				else :
+					$author_related_class = 'bbp-topic-no-avatar';
 				endif;
 
 				$author_url = bbp_get_topic_author_url( $topic_id );
 				?>
 
-				<li>
-					<span class="bbp-topic-author-wrapper">
-						<?php if ( ! empty( $author_link ) ) : ?>
-							<a href="<?php echo esc_url( $author_url ); ?>"><?php echo bbp_get_topic_author_avatar( $topic_id ); ?></a>
-						<?php endif; ?>
-					</span>
-					<a class="bbp-forum-title" href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
+				<li class="<?php echo $author_related_class; ?>">
+					
+					<?php if ( ! empty( $author_link ) ) : ?>
 
-					<?php
-					if ( ! empty( $author_link ) ) :
-						printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
-					endif;
-					?>
-
-					<?php if ( ! empty( $settings['show_date'] ) ) : ?>
-
-						<div><?php bbp_topic_last_active_time( $topic_id ); ?></div>
+						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow">
+							<span class="bbp-author-avatar">
+								<?php echo bbp_get_topic_author_avatar( $topic_id ); ?>
+							</span>
+						</a>
 
 					<?php endif; ?>
+				
+					<div class="bbp-topic-info">
+						<a class="bbp-forum-title" href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
 
+						<?php
+						if ( ! empty( $author_link ) ) :
+							printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
+						endif;
+						?>
+
+						<?php if ( ! empty( $settings['show_date'] ) ) : ?>
+
+							<div class="time-since"><?php bbp_topic_last_active_time( $topic_id ); ?></div>
+
+						<?php endif; ?>
+					</div>	
 				</li>
 
 			<?php endwhile; ?>
@@ -1301,40 +1316,44 @@ class BBP_Replies_Widget extends WP_Widget {
 				$widget_query->the_post();
 				?>
 
-				<li>
+				<?php
+
+				// Verify the reply ID.
+				$reply_id   = bbp_get_reply_id( $widget_query->post->ID );
+				$reply_link = '<a class="bbp-reply-topic-title" href="' . esc_url( bbp_get_reply_url( $reply_id ) ) . '" title="' . esc_attr( bbp_get_reply_excerpt( $reply_id, 50 ) ) . '">' . bbp_get_reply_topic_title( $reply_id ) . '</a>';
+
+				// Only query user if showing them.
+				if ( ! empty( $settings['show_user'] ) ) :
+					$author_link          = bbp_get_reply_author_link(
+						array(
+							'post_id' => $reply_id,
+							'type'    => 'both',
+							'size'    => 14,
+						)
+					);
+					$author_related_class = 'bbp-reply-topic-has-avatar';
+				else :
+					$author_link          = false;
+					$author_related_class = 'bbp-reply-topic-no-avatar';
+				endif;
+
+				?>
+
+				<li class="<?php echo $author_related_class; ?>">
 
 					<?php
-
-					// Verify the reply ID.
-					$reply_id   = bbp_get_reply_id( $widget_query->post->ID );
-					$reply_link = '<a class="bbp-reply-topic-title" href="' . esc_url( bbp_get_reply_url( $reply_id ) ) . '" title="' . esc_attr( bbp_get_reply_excerpt( $reply_id, 50 ) ) . '">' . bbp_get_reply_topic_title( $reply_id ) . '</a>';
-
-					// Only query user if showing them.
-					if ( ! empty( $settings['show_user'] ) ) :
-						$author_link          = bbp_get_reply_author_link(
-							array(
-								'post_id' => $reply_id,
-								'type'    => 'both',
-								'size'    => 14,
-							)
-						);
-						$author_related_class = 'bbp-reply-topic-has-avatar';
-					else :
-						$author_link          = false;
-						$author_related_class = 'bbp-reply-topic-no-avatar';
-					endif;
 
 					// Reply author, link, and timestamp.
 					if ( ! empty( $settings['show_date'] ) && ! empty( $author_link ) ) :
 
 						// translators: 1: reply author, 2: reply link, 3: reply timestamp.
-						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div class="' . esc_attr( $author_related_class ) . '">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
+						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div class="bbp-reply-topic-time">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
 
 						// Reply link and timestamp.
 					elseif ( ! empty( $settings['show_date'] ) ) :
 
 						// translators: 1: reply link, 2: reply timestamp.
-						printf( __( '%1$s %2$s', 'buddyboss' ), $reply_link, '<div>' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
+						printf( __( '%1$s %2$s', 'buddyboss' ), $reply_link, '<div class="bbp-reply-topic-time">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
 
 						// Reply author and title.
 					elseif ( ! empty( $author_link ) ) :

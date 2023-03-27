@@ -374,6 +374,11 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 		$invited_user_id = $member;
 	}
 
+	// Check the sender is blocked by recipient or not.
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $invited_user_id, $inviter_user_id ) ) {
+		return;
+	}
+
 	// Bail if member has already been invited.
 	if ( ! empty( $member->invite_sent ) ) {
 		return;
@@ -405,11 +410,6 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 
 	// Bail if member opted out of receiving this email.
 	if ( false === bb_is_notification_enabled( $invited_user_id, $type_key ) ) {
-		return;
-	}
-
-	// Check the sender is blocked by recipient or not.
-	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $invited_user_id, $inviter_user_id ) ) {
 		return;
 	}
 

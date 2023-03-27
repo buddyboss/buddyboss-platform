@@ -49,6 +49,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
+		add_filter( 'bp_activity_comment_content', array( $this, 'bb_activity_comment_remove_mention_link' ), 10, 1 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -277,5 +279,24 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$content_type = esc_html__( 'Comment', 'buddyboss' );
 
 		return $content_type;
+	}
+
+	/**
+	 * Remove mentioned link from activity comment.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $content Activity comment.
+	 *
+	 * @return string
+	 */
+	public function bb_activity_comment_remove_mention_link( $content ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$content = bb_moderation_remove_mention_link( $content );
+
+		return $content;
 	}
 }

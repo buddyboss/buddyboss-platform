@@ -112,6 +112,7 @@ function bp_helper_plugins_loaded_callback() {
 
 			if ( is_array( $exclude_posts ) ) {
 				$exclude_posts[] = 'bp-group-type';
+				$exclude_posts[] = 'bp-email';
 			}
 
 			return $exclude_posts;
@@ -192,6 +193,13 @@ function bp_helper_plugins_loaded_callback() {
 	if ( class_exists( 'QueryMonitor' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-qm-helpers.php';
 	}
+
+	/**
+	 * Include filters when tutor-pro plugin is activated.
+	 */
+	if ( function_exists( 'tutor_pro' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -237,6 +245,22 @@ function bb_seo_press_compatibility_helper() {
 }
 
 add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
+
+/**
+ * Allow activity page content restriction via MemberPress
+ * 
+ * @since BuddyBoss 2.2.9
+ *
+ * @return void
+ */
+function bb_core_allow_activity_page_content_restriction_memberpress() {
+
+	if ( bp_is_active( 'activity' ) && bp_is_activity_component() && function_exists('is_bbpress') && is_bbpress() ) {
+		remove_filter( 'mepr-pre-run-rule-content', 'MeprBbPressIntegration::dont_block_the_content', 11, 3 );
+	}
+
+}
+add_action( 'bp_init', 'bb_core_allow_activity_page_content_restriction_memberpress' );
 
 /**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
@@ -1013,3 +1037,17 @@ function bb_elementor_library_template() {
 	}
 }
 add_action( 'bp_loaded', 'bb_elementor_library_template' );
+
+/**
+ * Helper functions for the gravity forms compatibility.
+ *
+ * @since BuddyBoss 2.2.1
+ */
+function bb_wp_gravity_forms_compatibility_helper() {
+
+	if ( class_exists( 'GFForms' ) ) {
+		require buddypress()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
