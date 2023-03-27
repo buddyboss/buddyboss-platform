@@ -89,7 +89,7 @@ if ( ! is_dir( $buddyboss_lang ) ) {
 	// File from the development version.
 	$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/src/languages/';
 }
-if ( ! empty( $buddyboss_lang ) ) {
+if ( ! empty( $buddyboss_lang ) && function_exists( 'load_plugin_textdomain' ) ) {
 	load_plugin_textdomain( 'buddyboss', false, $buddyboss_lang );
 }
 
