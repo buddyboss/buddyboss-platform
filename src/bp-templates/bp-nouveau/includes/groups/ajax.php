@@ -736,11 +736,33 @@ function bp_nouveau_ajax_send_group_invites() {
 		wp_send_json_error( $response );
 	}
 
+	// Get current user friend ids  
+	$current_user_id = bp_loggedin_user_id();
+	$friend_ids = friends_get_friend_user_ids( $current_user_id );
+
 	// For feedback.
 	$invited = array();
 
 	foreach ( (array) $_POST['users'] as $user_id ) {
 		$user_id             = (int) $user_id;
+
+		/* 
+		 * Check friends & settings component is active and 
+		 * all members can be invited
+		 */
+		if ( bp_is_active( 'friends' ) && bp_is_active( 'settings' ) && ! bp_nouveau_groups_disallow_all_members_invites() ) {
+			$restrict_invites_to_friends = bp_get_user_meta( $user_id, '_bp_nouveau_restrict_invites_to_friends', true );
+
+			/* 
+			 * Check user invite restriction and
+			 * user exists in the current user friend list
+			 */
+			if ( '1' == $restrict_invites_to_friends && ! in_array( $user_id, $friend_ids ) ) {
+				$invited[ $user_id ] = false;
+				continue;
+			}
+		}
+
 		$invited[ $user_id ] = groups_invite_user(
 			array(
 				'user_id'  => $user_id,
