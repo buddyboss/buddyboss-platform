@@ -3923,7 +3923,7 @@ function bp_activity_create_summary( $content, $activity ) {
 
 	// Generate a text excerpt for this activity item (and remove any oEmbeds URLs).
 	$summary = bp_create_excerpt(
-		html_entity_decode( $content ),
+		html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 		225,
 		array(
 			'html'              => false,

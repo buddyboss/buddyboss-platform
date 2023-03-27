@@ -16,6 +16,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 	 *
 	 * @since bbPress (r2464)
 	 */
+	#[\AllowDynamicProperties]
 	class BBP_Admin {
 
 		/** Directory *************************************************************/
