@@ -253,6 +253,10 @@
 			p {
 				word-break: break-word;
 			}
+
+			p:empty {
+				min-height: 1em;
+			}
 		}
 
 		.activity-read-more {
@@ -1485,6 +1489,7 @@ span.dashicons.dashicons-admin-file:before {
 			flex: 0 0 100% !important;
 			max-width: 100% !important;
 			min-width: auto !important;
+			position: relative;
 
 			.entry-img {
 				padding-top: 55.56% !important;

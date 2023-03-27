@@ -287,10 +287,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
 		}
 
-		$id_map = array(
-			'activity' => 'activities',
-			'profile'  => 'xprofile',
-		);
+		$id_map = array( 'profile' => 'xprofile' );
 
 		$args = array();
 
@@ -321,8 +318,10 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 					$id = $id_map[ $id ];
 				}
 
+				$request->set_param( 'user_nav', $navs );
+
 				$tab = array(
-					'id'                      => $id,
+					'id'                      => ( 'activity' === $id ? 'activities' : $id ), // Needs this slug to suppport: hide_in_app in app.
 					'title'                   => $name,
 					'default'                 => false,
 					'link'                    => $link,
@@ -353,6 +352,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 							'count'           => ( $this->bp_rest_nav_has_count( $s_nav ) ? $this->bp_rest_get_nav_count( $s_nav ) : '' ),
 							'position'        => $s_nav['position'],
 							'user_has_access' => $s_nav['user_has_access'],
+							'children'        => $this->get_secondary_nav_menu( $s_nav, $request ),
 						);
 
 						$tab['children'][] = $sub_nav;
@@ -384,6 +384,44 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		do_action( 'bp_rest_members_detail_get_items', $response, $request );
 
 		return $response;
+	}
+
+	/**
+	 * Prepares sub nav menu data for return as an array.
+	 *
+	 * @param object          $nav     Navigation object.
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return array
+	 */
+	public function get_secondary_nav_menu( $nav, $request ) {
+		$child_nav   = array();
+		$user_nav    = $request->get_param( 'user_nav' );
+		$parent_slug = $nav->parent_slug . '_' . $nav->slug;
+		$nav_sub     = $user_nav->get_secondary(
+			array(
+				'parent_slug'     => $parent_slug,
+				'user_has_access' => true,
+			)
+		);
+
+		if ( ! empty( $nav_sub ) ) {
+			foreach ( $nav_sub as $s_nav ) {
+				$sub_name    = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
+				$sub_name    = trim( $sub_name );
+				$child_nav[] = array(
+					'id'              => $s_nav['slug'],
+					'title'           => $sub_name,
+					'link'            => $s_nav['link'],
+					'count'           => ( $this->bp_rest_nav_has_count( $s_nav ) ? $this->bp_rest_get_nav_count( $s_nav ) : '' ),
+					'position'        => $s_nav['position'],
+					'user_has_access' => $s_nav['user_has_access'],
+					'children'        => $this->get_secondary_nav_menu( $s_nav, $request ),
+				);
+			}
+		}
+
+		return $child_nav;
 	}
 
 	/**
@@ -1175,15 +1213,6 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 					'ID'    => 'favorite',
 					'title' => __( 'My Favorites', 'buddyboss' ),
 					'url'   => esc_url( trailingslashit( $forums_link . bbp_get_user_favorites_slug() ) ),
-					'count' => '',
-				);
-			}
-
-			if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
-				$item_forums['children'][] = array(
-					'ID'    => 'subscribe',
-					'title' => __( 'Subscriptions', 'buddyboss' ),
-					'url'   => esc_url( trailingslashit( $forums_link . bbp_get_user_subscriptions_slug() ) ),
 					'count' => '',
 				);
 			}

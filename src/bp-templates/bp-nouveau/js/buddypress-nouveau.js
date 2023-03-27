@@ -837,6 +837,9 @@ window.bp = window.bp || {};
 
 			// Following widget more button click.
 			$( document ).on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
+
+			// Accordion open/close event
+			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 		},
 
 		/**
@@ -1956,7 +1959,11 @@ window.bp = window.bp || {};
 			if ( nonceUrl ) {
 				nonce = self.getLinkParams( nonceUrl, '_wpnonce' );
 			} else {
-				nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				if ( 'undefined' === typeof target.prop( 'href' ) ) {
+					nonce = self.getLinkParams( target.attr( 'href' ), '_wpnonce' );
+				} else {
+					nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				}
 			}
 
 			// Unfortunately unlike groups.
@@ -2029,6 +2036,23 @@ window.bp = window.bp || {};
 							}
 						}
 
+						if (
+							'undefined' !== typeof response.data.is_group_subscription &&
+							true === response.data.is_group_subscription &&
+							'undefined' !== typeof response.data.feedback
+						) {
+							$( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + response.data.feedback + '</div>',
+									'error',
+									null,
+									true
+								]
+							);
+						}
+
 					} else {
 						// Specific cases for groups.
 						if ( 'groups' === object ) {
@@ -2040,6 +2064,23 @@ window.bp = window.bp || {};
 								} else {
 									return window.location.reload();
 								}
+							}
+
+							if (
+								'undefined' !== typeof response.data.is_group_subscription &&
+								true === response.data.is_group_subscription &&
+								'undefined' !== typeof response.data.feedback
+							) {
+								$( document ).trigger(
+									'bb_trigger_toast_message',
+									[
+										'',
+										'<div>' + response.data.feedback + '</div>',
+										'info',
+										null,
+										true
+									]
+								);
 							}
 						}
 
@@ -2115,6 +2156,33 @@ window.bp = window.bp || {};
 						target.parent().replaceWith( response.data.contents );
 					}
 				}
+			).fail(
+				function () {
+
+					if ( ['unsubscribe', 'subscribe'].includes( action ) ) {
+						var title = $( target ).data( 'bb-group-name' );
+
+						if ( 25 < title.length ) {
+							title = title.substring( 0, 25 ) + '...';
+						}
+
+						var display_error = '<div>' + BP_Nouveau.subscriptions.error + '<strong>' + title + '</strong>.</div>';
+						if ( 'subscribe' === action ) {
+							display_error = '<div>' + BP_Nouveau.subscriptions.subscribe_error + '<strong>' + title + '</strong></div>';
+						}
+						jQuery( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								display_error,
+								'error',
+								null,
+								true
+							]
+						);
+					}
+					target.removeClass( 'pending loading' );
+				}
 			);
 		},
 
@@ -2161,6 +2229,17 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button' );
+					target.addClass( 'bp-toggle-action-button-hover' );
+					return false;
+				}
 
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
@@ -2189,6 +2268,18 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget );
 
 			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
+
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
+					target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
+					return false;
+				}
 
 				// support for BuddyBoss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
@@ -3172,6 +3263,23 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * [toggleAccordion description]
+		 * @return {[type]} [description]
+		 */
+		 toggleAccordion: function() {
+			var accordion = $( this ).closest( '.bb-accordion' );
+			if( accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded' ) == 'true' ) {
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'false' );
+				accordion.find( '.bb-icon-angle-up' ).removeClass( 'bb-icon-angle-up' ).addClass( 'bb-icon-angle-down' );
+			} else {
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'true' );
+				accordion.find( '.bb-icon-angle-down' ).removeClass( 'bb-icon-angle-down' ).addClass( 'bb-icon-angle-up' );
+			}
+			accordion.toggleClass('is_closed');
+			accordion.find( '.bb-accordion_panel' ).slideToggle();
+		},
+
+		/**
 		 *  Make Medium Editor buttons wrap.
 		 *
 		 *  @param  {JQuery node} editorWrap The jQuery node.
@@ -3244,7 +3352,6 @@ window.bp = window.bp || {};
 				'resize',
 				function() { // Attach event once only.
 					editorWrap.removeClass( 'wrappingInitialised' ); // Remove class to run trough again as screen has resized.
-					$( editorWrap ).find( '.medium-editor-action-more-button' ).unbind( 'click' );
 					$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind( 'click' );
 				}
 			);
@@ -3351,6 +3458,7 @@ window.bp = window.bp || {};
 							$( '.main-notification-settings' ).find( 'td' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 						}
+						bp.Nouveau.NotificationMobileDropdown( $( this ).closest( '#settings-form' ).find( 'tr:not( .notification_heading )' ) );
 					});
 				})(i);
 				/* jshint ignore:end */
@@ -3375,6 +3483,9 @@ window.bp = window.bp || {};
 						var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
 						available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
 					}
+					if ( $( this ).hasClass( 'disabled' ) ) {
+						return;
+					}
 					if ( ! $( this ).find( 'input:checked' ).length ) {
 						return;
 					}
@@ -3382,7 +3493,11 @@ window.bp = window.bp || {};
 					allInputsChecked++;
 				} );
 				if ( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
-					selected_text = textAll;
+					if ( $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length == 1 ) {
+						selected_text = selected_text;
+					} else {
+						selected_text = textAll;
+					}
 				} else {
 					selected_text = selected_text === '' ? textNone : selected_text;
 				}
@@ -3436,8 +3551,9 @@ window.bp = window.bp || {};
 		},
 
 		userPresenceStatus: function() {
-
-			var idle_interval = parseInt( BB_Nouveau_Presence.presence_time_span ) * 1000;
+		 	// Active user on page load.
+			window.bb_is_user_active = true;
+			var idle_interval = parseInt( BB_Nouveau_Presence.idle_inactive_span ) * 1000;
 
 			// setup the idle time user check.
 			bp.Nouveau.userPresenceChecker( idle_interval );
@@ -3464,35 +3580,44 @@ window.bp = window.bp || {};
 					bp.Nouveau.updateUsersPresence( data.users_presence );
 				} );
 			} else {
-				setInterval( function () {
-					var params = {};
+				setInterval(
+					function () {
+						var params = {};
 
-					if (
-						'undefined' !== typeof window.bb_is_user_active &&
-						true === window.bb_is_user_active
-					) {
-						params.ids = bp.Nouveau.getPageUserIDs();
-					}
-
-					$.ajax(
-						{
-							type: 'POST',
-							url: '/wp-json/buddyboss/v1/members/presence',
-							data: params,
-							beforeSend: function ( xhr ) {
-								xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
-							},
-							success: function ( data ) {
-								// Check for our data, and use it.
-								if ( ! data ) {
-									return;
-								}
-
-								bp.Nouveau.updateUsersPresence( data );
-							}
+						if (
+							'undefined' !== typeof window.bb_is_user_active &&
+							true === window.bb_is_user_active
+						) {
+							params.ids = bp.Nouveau.getPageUserIDs();
 						}
-					);
-				}, 60000 ); // 1 min.
+
+						if (
+							'undefined' !== typeof params.ids &&
+							'undefined' !== typeof params.ids.length &&
+							0 < params.ids.length
+						) {
+							$.ajax(
+								{
+									type: 'POST',
+									url: '/wp-json/buddyboss/v1/members/presence',
+									data: params,
+									beforeSend: function ( xhr ) {
+										xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
+									},
+									success: function ( data ) {
+										// Check for our data, and use it.
+										if ( ! data ) {
+											return;
+										}
+
+										bp.Nouveau.updateUsersPresence( data );
+									}
+								}
+							);
+						}
+					},
+					parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 // 1 min.
+				);
 			}
 		},
 
@@ -3540,7 +3665,7 @@ window.bp = window.bp || {};
 				}, inactive_timeout );
 				window.bb_is_user_active = true;
 			};
-		}
+		},
 
 	};
 
