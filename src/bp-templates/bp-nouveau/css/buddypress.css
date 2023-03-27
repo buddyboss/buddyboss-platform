@@ -6458,6 +6458,17 @@ span.dashicons.dashicons-admin-file:before {
   display: none;
 }
 
+.buddypress-wrap .activity-comments .ac-form.has-gif .ac-reply-content input[name="ac_form_submit"], .buddypress-wrap .activity-comments .ac-form.has-content .ac-reply-content input[name="ac_form_submit"], .buddypress-wrap .activity-comments .ac-form.has-media .ac-reply-content input[name="ac_form_submit"] {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+.buddypress-wrap .activity-comments .ac-form.media-uploading .ac-reply-content input[name="ac_form_submit"],
+.buddypress-wrap .activity-comments .ac-form .ac-reply-content input[name="ac_form_submit"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .buddypress-wrap .mini .activity-comments {
   clear: both;
   margin-top: 0;
@@ -18597,6 +18608,8 @@ a.bb-close-model {
   height: auto;
   min-height: 10px;
   line-height: 1;
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description .description-new-submit #bp-activity-description-new-reset {
@@ -18613,6 +18626,11 @@ a.bb-close-model {
 
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description .description-new-submit #bp-activity-description-new-reset:hover {
   color: #000;
+}
+
+.bb-media-info-section .activity-media-description .bp-edit-media-activity-description.has-content .description-new-submit #bp-activity-description-new-submit {
+  opacity: 1;
+  pointer-events: initial;
 }
 
 .bb-media-info-section .activity-video-description .bp-add-video-activity-description > span {
@@ -18643,6 +18661,8 @@ a.bb-close-model {
   height: auto;
   min-height: 10px;
   line-height: 1;
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 .bb-media-info-section .activity-video-description .bp-edit-video-activity-description .description-new-submit #bp-activity-description-new-reset {
@@ -18659,6 +18679,11 @@ a.bb-close-model {
 
 .bb-media-info-section .activity-video-description .bp-edit-video-activity-description .description-new-submit #bp-activity-description-new-reset:hover {
   color: #000;
+}
+
+.bb-media-info-section .activity-video-description .bp-edit-video-activity-description.has-content .description-new-submit #bp-activity-description-new-submit {
+  opacity: 1;
+  pointer-events: initial;
 }
 
 .bb-media-info-section .activity-comments {
