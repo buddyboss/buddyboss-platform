@@ -1632,13 +1632,20 @@
 .bb-media-model-container {
 
 	.bb-media-privacy-wrap .activity-privacy {
-		left: auto;
-		right: -20px;
+		left: -5px;
+		right: auto;
 	}
 
 	.bb-media-privacy-wrap .activity-privacy:before {
-		left: auto;
-		right: 44px;
+		left: 20px;
+		right: auto;
+	}
+
+	.bb-media-privacy-wrap .activity-privacy {
+
+		a {
+			font-weight: 400;
+		}
 	}
 
 }
