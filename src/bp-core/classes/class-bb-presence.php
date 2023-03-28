@@ -89,7 +89,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			global $wpdb;
 
 			self::$wpdb       = $wpdb;
-			self::$cache_time = (int) apply_filters( 'bb_presence_last_activity_cache_time', 60 );
+			self::$cache_time = (int) apply_filters( 'bb_presence_last_activity_cache_time', 300 );
 			self::$table_name = $wpdb->prefix . 'bp_activity';
 		}
 
