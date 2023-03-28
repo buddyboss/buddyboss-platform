@@ -109,12 +109,18 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			$activity      = self::bb_get_users_last_activity( array( $user_id ) );
 			$last_activity = isset( $activity[ $user_id ]['date_recorded'] ) ? strtotime( $activity[ $user_id ]['date_recorded'] ) : time();
-			$db_activity   = isset( $activity[ $user_id ]['db_recorded'] ) ? strtotime( $activity[ $user_id ]['db_recorded'] ) : $last_activity;
 			$cache         = wp_cache_get( $user_id, 'bp_last_activity' );
 
-			if ( false !== $cache && time() - $db_activity < self::$cache_time ) {
+			$check_time = ! empty( $cache['db_recorded'] ) ? strtotime( $cache['db_recorded'] ) : $last_activity;
+
+			if (
+				false !== $cache &&
+				! empty( $cache['cache_status'] ) &&
+				time() - $check_time < self::$cache_time
+			) {
 				// Update the cache directly.
 				$activity[ $user_id ]['date_recorded'] = $time;
+				$activity[ $user_id ]['cache_status']  = true;
 				wp_cache_set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
 
 				return;
@@ -144,6 +150,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				// Add new date to existing activity entry for caching.
 				$activity[ $user_id ]['date_recorded'] = $time;
+				$activity[ $user_id ]['db_recorded']   = $time;
+				$activity[ $user_id ]['cache_status']  = true;
 
 			} else {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -180,6 +188,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 					'user_id'       => $user_id,
 					'date_recorded' => $time,
 					'db_recorded'   => $time,
+					'cache_status'  => true,
 					'activity_id'   => self::$wpdb->insert_id,
 				);
 			}
@@ -230,18 +239,21 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				if ( ! empty( $last_activities ) ) {
 					foreach ( $last_activities as $last_activity ) {
+						$data = array(
+							'user_id'       => $last_activity['user_id'],
+							'date_recorded' => $last_activity['date_recorded'],
+							'db_recorded'   => $last_activity['date_recorded'],
+							'cache_status'  => false,
+							'activity_id'   => $last_activity['id'],
+						);
+
 						wp_cache_set(
 							$last_activity['user_id'],
-							array(
-								'user_id'       => $last_activity['user_id'],
-								'date_recorded' => $last_activity['date_recorded'],
-								'db_recorded'   => $last_activity['date_recorded'],
-								'activity_id'   => $last_activity['id'],
-							),
+							$data,
 							'bp_last_activity'
 						);
 
-						$cached_data[ $last_activity['user_id'] ] = wp_cache_get( $last_activity['user_id'], 'bp_last_activity' );
+						$cached_data[ $last_activity['user_id'] ] = $data;
 					}
 				}
 			}

@@ -841,6 +841,7 @@ class BP_Core_User {
 						'user_id'       => $last_activity->user_id,
 						'date_recorded' => $last_activity->date_recorded,
 						'db_recorded'   => $last_activity->date_recorded,
+						'cache_status'  => false,
 						'activity_id'   => $last_activity->id,
 					),
 					'bp_last_activity'
