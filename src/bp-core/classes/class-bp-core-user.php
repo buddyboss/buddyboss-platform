@@ -840,6 +840,7 @@ class BP_Core_User {
 					array(
 						'user_id'       => $last_activity->user_id,
 						'date_recorded' => $last_activity->date_recorded,
+						'db_recorded'   => $last_activity->date_recorded,
 						'activity_id'   => $last_activity->id,
 					),
 					'bp_last_activity'

@@ -109,9 +109,10 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			$activity      = self::bb_get_users_last_activity( array( $user_id ) );
 			$last_activity = isset( $activity[ $user_id ]['date_recorded'] ) ? strtotime( $activity[ $user_id ]['date_recorded'] ) : time();
+			$db_activity   = isset( $activity[ $user_id ]['db_recorded'] ) ? strtotime( $activity[ $user_id ]['db_recorded'] ) : $last_activity;
 			$cache         = wp_cache_get( $user_id, 'bp_last_activity' );
 
-			if ( false !== $cache && time() - $last_activity < self::$cache_time ) {
+			if ( false !== $cache && time() - $db_activity < self::$cache_time ) {
 				// Update the cache directly.
 				$activity[ $user_id ]['date_recorded'] = $time;
 				wp_cache_set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
@@ -178,6 +179,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$activity[ $user_id ] = array(
 					'user_id'       => $user_id,
 					'date_recorded' => $time,
+					'db_recorded'   => $time,
 					'activity_id'   => self::$wpdb->insert_id,
 				);
 			}
@@ -233,6 +235,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 							array(
 								'user_id'       => $last_activity['user_id'],
 								'date_recorded' => $last_activity['date_recorded'],
+								'db_recorded'   => $last_activity['date_recorded'],
 								'activity_id'   => $last_activity['id'],
 							),
 							'bp_last_activity'
