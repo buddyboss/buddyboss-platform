@@ -854,6 +854,20 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "\'", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
 	}
 
+	// Check user unique identifier exist.
+	$check_exists = $wpdb->get_var( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key =  %s AND meta_value = %s",
+			'bb_profile_slug',
+			$value
+		)
+	);
+
+	if ( $check_exists > 0 ) {
+		// translators: Nickname field.
+		return sprintf( __( 'Invalid %s has been taken.', 'buddyboss' ), $field_name );
+	}
+
 	// must be shorter then 32 characters
 	$nickname_length = apply_filters( 'xprofile_nickname_max_length', 32 );
 	if ( strlen( $value ) > $nickname_length ) {
