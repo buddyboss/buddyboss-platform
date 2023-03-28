@@ -111,9 +111,16 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$last_activity = isset( $activity[ $user_id ]['date_recorded'] ) ? strtotime( $activity[ $user_id ]['date_recorded'] ) : time();
 			$cache         = wp_cache_get( $user_id, 'bp_last_activity' );
 
-			if ( false !== $cache && time() - $last_activity < self::$cache_time ) {
+			$check_time = ! empty( $cache['db_recorded'] ) ? strtotime( $cache['db_recorded'] ) : $last_activity;
+
+			if (
+				false !== $cache &&
+				! empty( $cache['cache_status'] ) &&
+				time() - $check_time < self::$cache_time
+			) {
 				// Update the cache directly.
 				$activity[ $user_id ]['date_recorded'] = $time;
+				$activity[ $user_id ]['cache_status']  = true;
 				wp_cache_set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
 
 				return;
@@ -143,6 +150,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				// Add new date to existing activity entry for caching.
 				$activity[ $user_id ]['date_recorded'] = $time;
+				$activity[ $user_id ]['db_recorded']   = $time;
+				$activity[ $user_id ]['cache_status']  = true;
 
 			} else {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -178,6 +187,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$activity[ $user_id ] = array(
 					'user_id'       => $user_id,
 					'date_recorded' => $time,
+					'db_recorded'   => $time,
+					'cache_status'  => true,
 					'activity_id'   => self::$wpdb->insert_id,
 				);
 			}
@@ -228,17 +239,21 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				if ( ! empty( $last_activities ) ) {
 					foreach ( $last_activities as $last_activity ) {
+						$data = array(
+							'user_id'       => $last_activity['user_id'],
+							'date_recorded' => $last_activity['date_recorded'],
+							'db_recorded'   => $last_activity['date_recorded'],
+							'cache_status'  => false,
+							'activity_id'   => $last_activity['id'],
+						);
+
 						wp_cache_set(
 							$last_activity['user_id'],
-							array(
-								'user_id'       => $last_activity['user_id'],
-								'date_recorded' => $last_activity['date_recorded'],
-								'activity_id'   => $last_activity['id'],
-							),
+							$data,
 							'bp_last_activity'
 						);
 
-						$cached_data[ $last_activity['user_id'] ] = wp_cache_get( $last_activity['user_id'], 'bp_last_activity' );
+						$cached_data[ $last_activity['user_id'] ] = $data;
 					}
 				}
 			}
@@ -314,7 +329,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		}
 
 		/**
-		 * Function to add/update admin notice to download BuddyBoss Presence API mu plugin file if not exists.
+		 * Function to add/update admin notice to download BuddyBoss Performance API mu plugin file if not exists.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
@@ -325,7 +340,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$download_path = admin_url( 'admin.php?page=bp-settings&download_mu_bpa_file=' . $bp_performance_download_nonce );
 			$notice        = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
-				__( 'BuddyBoss Presence API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Presence API" plugin in your', 'buddyboss' ),
+				__( 'BuddyBoss Performance API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Performance API" plugin in your', 'buddyboss' ),
 				'https://wordpress.org/support/article/must-use-plugins/',
 				__( 'must-use plugins', 'buddyboss' ),
 				$download_path,
