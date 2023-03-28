@@ -329,7 +329,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		}
 
 		/**
-		 * Function to add/update admin notice to download BuddyBoss Presence API mu plugin file if not exists.
+		 * Function to add/update admin notice to download BuddyBoss Performance API mu plugin file if not exists.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
@@ -340,7 +340,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$download_path = admin_url( 'admin.php?page=bp-settings&download_mu_bpa_file=' . $bp_performance_download_nonce );
 			$notice        = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
-				__( 'BuddyBoss Presence API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Presence API" plugin in your', 'buddyboss' ),
+				__( 'BuddyBoss Performance API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Performance API" plugin in your', 'buddyboss' ),
 				'https://wordpress.org/support/article/must-use-plugins/',
 				__( 'must-use plugins', 'buddyboss' ),
 				$download_path,
