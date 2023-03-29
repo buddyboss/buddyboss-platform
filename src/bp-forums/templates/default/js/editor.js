@@ -180,6 +180,14 @@ jQuery( document ).ready(
 						}
 					);
 
+					jQuery('a.bp-suggestions-mention:empty').remove();
+					setTimeout(
+						function () {
+							jQuery('a.bp-suggestions-mention:empty').remove();
+						},
+						500
+					);
+
 				});
 			}
 
@@ -274,6 +282,14 @@ jQuery( document ).ready(
 							);
 							bbp_topic_content.val( jQuery(dummy_element).html() );
 						}
+					);
+
+					jQuery('a.bp-suggestions-mention:empty').remove();
+					setTimeout(
+						function () {
+							jQuery('a.bp-suggestions-mention:empty').remove();
+						},
+						500
 					);
 
 				});
