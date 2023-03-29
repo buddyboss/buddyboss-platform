@@ -798,6 +798,11 @@ add_action( 'bp_make_spam_user', 'friends_remove_data' );
  * @param int $friend_id     ID of the request recipient.
  */
 function friends_notification_new_request( $friendship_id, $initiator_id, $friend_id ) {
+
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $friend_id, $initiator_id ) ) {
+		return;
+	}
+
 	$type_key = 'notification_friends_friendship_request';
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$type_key = bb_get_prefences_key( 'legacy', $type_key );

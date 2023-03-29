@@ -517,7 +517,7 @@ function bbp_admin_setting_callback_subscriptions() {
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_subscriptions' );
 	?>
 	 />
-	<label for="_bbp_enable_subscriptions"><?php esc_html_e( 'Allow members to subscribe to forums and discussions', 'buddyboss' ); ?></label>
+	<label for="_bbp_enable_subscriptions"><?php esc_html_e( 'Allow members to subscribe to discussions and standalone forums', 'buddyboss' ); ?></label>
 
 	<?php
 }
