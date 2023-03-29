@@ -343,12 +343,12 @@ $width = wp_is_mobile() ? '100%' : '600px';
 							<!-- Email Header : END -->
 
 							<!-- Email Body : BEGIN -->
-							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="<?php echo esc_attr( $settings['body_bg'] ); ?>" style="width: <?php echo $width; ?>; border-collapse: separate !important; max-width: 600px; border-radius: 5px; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>" class="body_bg body_border_color">
+							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="<?php echo esc_attr( $settings['body_bg'] ); ?>" style="border-collapse: separate !important; max-width: 600px; border-radius: 5px; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>" class="body_bg body_border_color">
 
 								<!-- 1 Column Text : BEGIN -->
 								<tr>
 									<td>
-										<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: <?php echo $width; ?>;">
+										<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%;">
 											<tr>
 												<td style="padding: 20px 40px; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>" class="body_text_color body_text_size repsonsive-padding">
 													<?php echo $email_content; ?>
@@ -364,7 +364,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 
 							<!-- Email Footer : BEGIN -->
 							<br>
-							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="<?php echo esc_attr( $settings['direction'] ); ?>" style="max-width: 600px; border-radius: 5px; width: <?php echo $width; ?>">
+							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="<?php echo esc_attr( $settings['direction'] ); ?>" style="max-width: 600px; border-radius: 5px; width: 100%">
 								<tr>
 									<td style="padding: 20px 40px; width: 100%; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size repsonsive-padding">
 										<?php
