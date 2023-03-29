@@ -1,0 +1,384 @@
+<?php
+/**
+ * BuddyBoss Post Notification Class.
+ *
+ * @package BuddyBoss\Core
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Set up the BP_Post_Notification class.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+class BP_Post_Notification extends BP_Core_Notification_Abstract {
+
+	/**
+	 * Instance of this class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var object
+	 */
+	private static $instance = null;
+
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return null|BP_Post_Notification|Controller|object
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Constructor method.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function __construct() {
+		// Initialize.
+		$this->start();
+	}
+
+	/**
+	 * Initialize all methods inside it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return mixed|void
+	 */
+	public function load() {
+		$this->register_notification_group(
+			'posts',
+			esc_html__( 'Posts', 'buddyboss' ),
+			esc_html__( 'Posts', 'buddyboss' ),
+			5
+		);
+
+		$this->register_notification_for_post_comment_reply();
+	}
+
+	/**
+	 * Register notification for posts.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function register_notification_for_post_comment_reply() {
+		$this->register_notification_type(
+			'bb_posts_new_comment_reply',
+			esc_html__( 'A member replies to your post comment', 'buddyboss' ),
+			esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
+			'posts',
+			false,
+		);
+
+		$this->register_email_type(
+			'new-comment-reply',
+			array(
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} replied to your comment', 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to your comment:\n\n{{{post_comment_reply}}}", 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_plain_content' => __( "{{poster.name}} replied to your comment:\n\n{{{post_comment_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
+
+			),
+			'bb_posts_new_comment_reply'
+		);
+
+		$this->register_notification(
+			'posts',
+			'bb_posts_new_comment_reply',
+			'bb_posts_new_comment_reply',
+		);
+
+		//add_filter( 'bp_core_bb_posts_new_comment_reply_notification', array( $this, 'bb_render_posts_new_comment_reply_notification' ), 10, 7 );
+		
+	}
+
+	/**
+	 * Format the notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content               Notification content.
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param int    $total_items           Number of notifications with the same action.
+	 * @param string $component_action_name Canonical notification action.
+	 * @param string $component_name        Notification component ID.
+	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
+	 *
+	 * @return array|string
+	 */
+	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
+        $notification           = bp_notifications_get_notification( $notification_id );
+		$user_id                = $secondary_item_id;
+		$user_fullname          = bp_core_get_user_displayname( $user_id );
+		$excerpt      = 'test excerpt';
+
+		if ( '&nbsp;' === $excerpt ) {
+			$excerpt = '';
+		} else {
+			$excerpt = '"' . bp_create_excerpt(
+				$excerpt,
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			) . '"';
+
+			$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+			$excerpt = str_replace( '""', '', $excerpt );
+		}
+
+		if (
+			! empty( $notification ) &&
+			'bb_posts_new_comment_reply' === $notification->component_action &&
+			in_array( $notification->component_name, array( 'posts' ), true )
+		) {
+
+			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
+			$notification_link = trailingslashit( bp_core_get_user_domain( $user_id ) );
+
+			if ( $notification_type ) {
+				if ( 'bb_posts_new_comment_reply' === $notification_type ) {
+					if ( bp_is_active( 'blogs' ) ) {
+						$notification_link = '';
+						$notification_link = apply_filters( 'bb_post_new_comment_reply_permalink', $notification_link, $item_id, $secondary_item_id, $total_items );
+					}
+				}
+			}
+
+			$amount = 'single';
+
+			if ( 'web_push' === $screen ) {
+				if ( ! empty( $excerpt ) ) {
+					$text = sprintf(
+						/* translators: Excerpt. */
+						__( 'Replied to your comment: %s', 'buddyboss' ),
+						$excerpt
+					);
+				} else {
+					$text = __( 'Replied to your comment', 'buddyboss' );
+				}
+			} else {
+				if ( (int) $total_items > 1 ) {
+					$text   = sprintf(
+					/* translators: %s: Total mentioned count. */
+						__( 'You have %1$d new comment reply', 'buddyboss' ),
+						(int) $total_items
+					);
+					$amount = 'multiple';
+				} else {
+					if ( ! empty( $excerpt ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Excerpt. */
+							esc_html__( '%1$s replied to your comment %2$s', 'buddyboss' ),
+							$user_fullname,
+							$excerpt
+						);
+					} else {
+						$text = sprintf(
+						/* translators: %s: User full name. */
+							esc_html__( '%1$s replied to your comment', 'buddyboss' ),
+							$user_fullname
+						);
+					}
+				}
+			}
+
+
+			$notification_link = add_query_arg( 'rid', (int) $notification_id, $notification_link );
+
+			$content = apply_filters(
+				'bb_core_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => $user_fullname,
+					'image' => bb_notification_avatar_url( $notification ),
+				),
+				$notification,
+				$notification_link,
+				$text,
+				$screen
+			);
+
+		}
+
+		// Validate the return value & return if validated.
+		if (
+			! empty( $content ) &&
+			is_array( $content ) &&
+			isset( $content['text'] ) &&
+			isset( $content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $content['link'] ) ) {
+					$content = esc_html( $content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text'  => $content['text'],
+					'link'  => $content['link'],
+					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
+					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
+				);
+			}
+		}
+		return $content;
+	}
+
+	/**
+	 * Format the notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content           Notification content.
+	 * @param int    $item_id           Notification item ID.
+	 * @param int    $secondary_item_id Notification secondary item ID.
+	 * @param int    $total_items       Number of notifications with the same action.
+	 * @param string $format            Format of return. Either 'string' or 'object'.
+	 * @param int    $notification_id   Notification ID.
+	 * @param string $screen            Notification Screen type.
+	 *
+	 * @return array|string
+	 */
+	public function bb_render_posts_new_comment_reply_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
+		$notification           = bp_notifications_get_notification( $notification_id );
+		$user_id                = $secondary_item_id;
+		$user_fullname          = bp_core_get_user_displayname( $user_id );
+		$excerpt      = 'test excerpt';
+
+		if ( '&nbsp;' === $excerpt ) {
+			$excerpt = '';
+		} else {
+			$excerpt = '"' . bp_create_excerpt(
+				$excerpt,
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			) . '"';
+
+			$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+			$excerpt = str_replace( '""', '', $excerpt );
+		}
+
+		if (
+			! empty( $notification ) &&
+			'bb_posts_new_comment_reply' === $notification->component_action &&
+			in_array( $notification->component_name, array( 'posts' ), true )
+		) {
+
+			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
+			$notification_link = trailingslashit( bp_core_get_user_domain( $user_id ) );
+
+			if ( $notification_type ) {
+				if ( 'bb_posts_new_comment_reply' === $notification_type ) {
+					if ( bp_is_active( 'blogs' ) ) {
+						$notification_link = '';
+						$notification_link = apply_filters( 'bb_post_new_comment_reply_permalink', $notification_link, $item_id, $secondary_item_id, $total_items );
+					}
+				}
+			}
+
+			$amount = 'single';
+
+			if ( 'web_push' === $screen ) {
+				if ( ! empty( $excerpt ) ) {
+					$text = sprintf(
+						/* translators: Excerpt. */
+						__( 'Replied to your comment: %s', 'buddyboss' ),
+						$excerpt
+					);
+				} else {
+					$text = __( 'Replied to your comment', 'buddyboss' );
+				}
+			} else {
+				if ( (int) $total_items > 1 ) {
+					$text   = sprintf(
+					/* translators: %s: Total mentioned count. */
+						__( 'You have %1$d new comment reply', 'buddyboss' ),
+						(int) $total_items
+					);
+					$amount = 'multiple';
+				} else {
+					if ( ! empty( $excerpt ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Excerpt. */
+							esc_html__( '%1$s replied to your comment %2$s', 'buddyboss' ),
+							$user_fullname,
+							$excerpt
+						);
+					} else {
+						$text = sprintf(
+						/* translators: %s: User full name. */
+							esc_html__( '%1$s replied to your comment', 'buddyboss' ),
+							$user_fullname
+						);
+					}
+				}
+			}
+
+
+			$notification_link = add_query_arg( 'rid', (int) $notification_id, $notification_link );
+
+			$content = apply_filters(
+				'bb_core_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link'  => $notification_link,
+					'text'  => $text,
+					'title' => $user_fullname,
+					'image' => bb_notification_avatar_url( $notification ),
+				),
+				$notification,
+				$notification_link,
+				$text,
+				$screen
+			);
+
+		}
+
+		// Validate the return value & return if validated.
+		if (
+			! empty( $content ) &&
+			is_array( $content ) &&
+			isset( $content['text'] ) &&
+			isset( $content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $content['link'] ) ) {
+					$content = esc_html( $content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text'  => $content['text'],
+					'link'  => $content['link'],
+					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
+					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
+				);
+			}
+		}
+		return $content;
+	}
+
+}

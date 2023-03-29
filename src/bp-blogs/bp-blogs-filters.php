@@ -19,6 +19,9 @@ add_filter( 'bp_blog_latest_post_content', 'wpautop' );
 add_filter( 'bp_blog_latest_post_content', 'shortcode_unautop' );
 add_filter( 'bp_blog_latest_post_content', 'prepend_attachment' );
 
+// Load Post Notifications.
+add_action( 'bp_blogs_includes', 'bb_load_post_notifications', 20 );
+
 /**
  * Ensure that the 'Create a new site' link at wp-admin/my-sites.php points to the BP blog signup.
  *
@@ -170,3 +173,18 @@ function bb_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
 	return $buttons;
 }
 add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_inner_blogs_buttons', 10, 1 );
+
+/**
+ * Register the activity notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_post_notifications() {
+	if ( ! class_exists( 'BP_Post_Notification' ) ) {
+		// Load members notification file.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bp-post-notification.php' ) ) {
+			require buddypress()->plugin_dir . 'bp-core/classes/class-bp-post-notification.php';
+		}
+		BP_Post_Notification::instance();
+	}
+}
