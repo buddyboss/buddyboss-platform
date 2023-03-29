@@ -4760,7 +4760,7 @@ window.bp = window.bp || {};
 				if ( 'focusin' === event.type ) {
 					$( '#whats-new-form' ).closest( 'body' ).removeClass( 'initial-post-form-open' ).addClass( event.type + '-post-form-open' );
 				}
-				this.model.on( 'change:video change:document change:media change:gif_data change:privacy', this.postValidate, this );
+				this.model.on( 'change:video change:document change:media change:gif_data change:privacy, change:link_success', this.postValidate, this );
 
 				// Remove feedback.
 				var self = this;
