@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.3.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-03-22 07:25:40+00:00\n"
+"POT-Creation-Date: 2023-03-29 10:40:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5247,6 +5247,7 @@ msgid "Likes"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:103
+#: bp-forums/admin/settings.php:172
 msgid "Link Previews"
 msgstr ""
 
@@ -12367,10 +12368,6 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:164
 msgid "Post Formatting"
-msgstr ""
-
-#: bp-forums/admin/settings.php:172
-msgid "Auto-embed links"
 msgstr ""
 
 #: bp-forums/admin/settings.php:180
