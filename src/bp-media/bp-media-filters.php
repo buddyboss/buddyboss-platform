@@ -535,6 +535,15 @@ function bp_media_delete_activity_media( $activities ) {
 	if ( ! empty( $activities ) ) {
 		remove_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 		foreach ( $activities as $activity ) {
+			/*
+			 * Do not delete attached media, if the activity belongs to a different component. 
+			 * Attached media could still be used inside that component.
+			 */
+			$bp = buddypress();
+			if( $bp->activity->id !== $activity->component ){
+				continue;
+			}
+
 			$activity_id    = $activity->id;
 			$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
 			if ( ! empty( $media_activity ) && '1' == $media_activity ) {
