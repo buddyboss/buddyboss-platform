@@ -4252,7 +4252,6 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 				$bp_get_invitee_email = new WP_Query( $args );
 
 				if ( $bp_get_invitee_email->have_posts() ) {
-					$bp_get_invitee_email->the_post();
 
 					$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 					// Check if user is invited for specific member type.
@@ -4434,7 +4433,6 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 			$bp_get_invitee_email = new WP_Query( $args );
 
 			if ( $bp_get_invitee_email->have_posts() ) {
-				$bp_get_invitee_email->the_post();
 
 				$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 				// Check if user is invited for specific member type.
