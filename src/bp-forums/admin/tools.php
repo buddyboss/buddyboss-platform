@@ -2064,7 +2064,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 	if ( $is_background ) {
 		$offset = get_site_option( 'bb_upgrade_user_favorites_offset', 0 );
 	} else {
-		$offset = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
+		$offset = (int) filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
 		$offset = empty( $offset ) ? 0 : ( ( 1 === $offset ) ? ( $offset - 1 ) : $offset );
 	}
 
