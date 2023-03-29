@@ -4460,7 +4460,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 					 * @since BuddyBoss [BBVERSION]
 					 *
 					 * @param int $user_id ID of user.
-					 * @param string $member_type Defult selected member type.
+					 * @param string $member_type Default selected member type.
 					 */
 					do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 				}
@@ -4472,7 +4472,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 				 * @since BuddyBoss [BBVERSION]
 				 *
 				 * @param int $user_id ID of user.
-				 * @param string $member_type Defult selected member type.
+				 * @param string $member_type Default selected member type.
 				 */
 				do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 			}
@@ -4483,7 +4483,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param int $user_id ID of user.
-			 * @param string $member_type Defult selected member type.
+			 * @param string $member_type Default selected member type.
 			 */
 			do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 		}
