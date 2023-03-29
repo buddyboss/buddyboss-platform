@@ -86,13 +86,13 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 			'new-comment-reply',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} replied to your comment', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to your comment:\n\n{{{post_comment_reply}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{comment.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} replied to your comment:\n\n{{{post_comment_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to your comments.', 'buddyboss' ),
 
 			),
 			'bb_posts_new_comment_reply'

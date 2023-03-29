@@ -146,8 +146,16 @@ class BP_Email_Tokens {
 				'function'    => array( $this, 'token__activity_content' ),
 				'description' => __( 'Display the activity post content, along with member\'s photo and name.', 'buddyboss' ),
 			),
-			'post_comment_reply'     => array(
-				'function'    => array( $this, 'token__post_comment_reply' ),
+			'commenter.name'     => array(
+				'function'    => array( $this, 'token__commenter_name' ),
+				'description' => __( 'Display the commenter name.', 'buddyboss' ),
+			),
+			'comment.url'     => array(
+				'function'    => array( $this, 'token__comment_reply_url' ),
+				'description' => __( 'Display the post comment url.', 'buddyboss' ),
+			),
+			'comment_reply'     => array(
+				'function'    => array( $this, 'token__comment_reply' ),
 				'description' => __( 'Display the post comment reply content.', 'buddyboss' ),
 			),
 		);
