@@ -2105,7 +2105,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 				'offset'  => $final_offset,
 				'records' => sprintf(
 				/* translators: total members */
-					__( 'Upgraded %s user favorites.', 'buddyboss' ),
+					__( 'Copies %s favorites from user meta to topic meta.', 'buddyboss' ),
 					bp_core_number_format( $final_offset )
 				),
 			);
@@ -2119,7 +2119,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 			// All done!
 			return array(
 				'status'  => 1,
-				'message' => __( 'Upgrading user favorites&hellip; Complete!', 'buddyboss' ),
+				'message' => __( 'Copies favorites from user meta to topic meta&hellip; Complete!', 'buddyboss' ),
 			);
 		}
 	}
