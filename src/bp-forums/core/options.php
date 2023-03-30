@@ -441,6 +441,36 @@ function bbp_settings_integration( $default = 0 ) {
 	return (bool) apply_filters( 'bbp_settings_integration', (bool) get_option( '_bbp_settings_integration', $default ) );
 }
 
+/**
+ * How to interact with engagements
+ *
+ * There are 3 possible strategies:
+ * - 'meta' 2.6 and higher. Uses multiple postmeta keys.
+ * - 'user' Pre-2.6. Uses comma-separated string of IDs in usermeta.
+ * - 'term' Alternate. Uses taxonomy term relationships.
+ *
+ * @since 2.6.0 bbPress (r6875)
+ *
+ * @param bool $default Optional. Default value false
+ * @return string How to interact with engagements
+ */
+function bbp_engagements_strategy( $default = 'meta' ) {
+
+	// Get the option value
+	$integration = get_option( '_bbp_engagements_strategy', $default );
+
+	// Check that class exists, or fallback
+	$class_name  = 'BBP_User_Engagements_' . ucwords( $integration );
+
+	// Fallback to 'meta' if invalid
+	if ( ! class_exists( $class_name ) ) {
+		$integration = 'meta';
+	}
+
+	// Filter & return
+	return apply_filters( 'bbp_engagements_strategy', $integration, $default );
+}
+
 /** Slugs *********************************************************************/
 
 /**
