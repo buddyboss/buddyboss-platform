@@ -70,6 +70,9 @@ add_filter( 'bp_core_widget_user_display_name', 'stripslashes' );
 add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
 add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 
+// Load Post Notifications.
+add_action( 'bp_core_includes', 'bb_load_post_notifications', 20 );
+
 // Avatars.
 /**
  * Disable gravatars fallback for member avatars.
@@ -2440,3 +2443,14 @@ function buddyboss_menu_order( $menu_order ) {
 }
 
 add_filter( 'menu_order', 'buddyboss_menu_order' );
+
+/**
+ * Register the post comment reply notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_post_notifications() {
+	if ( class_exists( 'BP_Post_Notification' ) ) {
+		BP_Post_Notification::instance();
+	}	
+}
