@@ -266,7 +266,7 @@ function bbp_encode_callback( $matches = array() ) {
 function bbp_decode_callback( $matches = array() ) {
 
 	// Setup variables
-	$trans_table = array_flip( get_html_translation_table( HTML_ENTITIES ) );
+	$trans_table = array_flip( get_html_translation_table( HTML_ENTITIES, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 	$amps        = array( '&#38;', '&#038;', '&amp;' );
 	$single      = array( '&#39;', '&#039;' );
 	$content     = $matches[2];
