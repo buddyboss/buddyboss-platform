@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2.9.1
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,32 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.0 =
+* Profiles - Handled a small UX issue in the profile fields screen in the dashboard
+* Notifications - Small improvements to not trigger multiple notifications for forum discussion and reply when members are mentioned
+* Groups - Handled group header description alignment UI issues
+* Groups - Handled groups directory and single group SEO title and description not rendering issue
+* Forums - Handled forum discussions and replies uploaded image sequence issue
+* Forums - Handled forum discussion and replies pagination not working issue on other members profiles for logged-in member
+* Forums - Handled search forum critical issue when the network search component is disabled
+* Forums - Handled social group associated forum and its child forums visibility issue based on group privacy
+* Forums - Handled missing fields in the replies tab when a logged-in member is viewing other members profile
+* Forums - Handled 'XenForo' import not working issue
+* Activity - Provided option to show relevant activities in the 'Latest Activities' widget
+* Messages - Handled send message editor formatting toolbar layout issue when the media component is disabled
+* Messages - Handled UI issue when a new thread is created from the messages screen
+* Core - Small performance update for non-logged-in users
+* Core - Small improvements for selected page/tab class logic
+* Core - Icon Pack updated with latest icons
+* Coding Standards - Significant code refactoring to fix PHP 8 warnings and notices
+* Coding Standards - Significant code refactoring to fix PHP 8.2 deprecation errors, warnings, and notices
+* REST API - Code refactoring to fix PHP 8 and 8.2 warnings and notices in the API
+* REST API - Handled profile type endpoint text format issue when it has special characters
+* REST API - Handled forum replies endpoint not returning excerpt issue in the response
+* Learndash - Handled social group privacy settings getting updated issue when the 'LearnDash Group Sync' option is enabled and the learndash group is updated
+* Learndash - Handled URL query var not working issue on lesson and topic screen when 'Nested URLs' option is enabled
+* Compatibility - Handled Jetpack plugin widget visibility option not showing conflict
 
 = 2.2.9.1 =
 * Notifications - Handled repeated email notification issues by removing duplicate forum subscription entries

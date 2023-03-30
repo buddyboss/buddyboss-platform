@@ -29,6 +29,9 @@ add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
 add_filter( 'bp_get_requested_url', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10, 1 );
 
+// Support for learndash nested urls.
+add_filter( 'learndash_permalinks_nested_urls', 'bb_support_learndash_permalinks_nested_urls', 9999, 3 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -405,4 +408,68 @@ function bb_support_learndash_course_other_language_permalink( $url ) {
 	}
 
 	return $url;
+}
+
+/**
+ * Forum's shortcode pagination support for the learndash permalink nested urls.
+ *
+ * @since BuddyBoss 2.3.0
+ *
+ * @param array $ld_rewrite_rules    rewrite rules.
+ * @param array $ld_rewrite_patterns rewrite rules structure with placeholder.
+ * @param array $ld_rewrite_values   rewrite rules placeholders for slug and name.
+ *
+ * @return array $ld_rewrite_rules rewrite rules.
+ */
+function bb_support_learndash_permalinks_nested_urls( $ld_rewrite_rules, $ld_rewrite_patterns, $ld_rewrite_values ) {
+
+	if (
+		class_exists( 'LearnDash_Settings_Section' ) &&
+		'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'nested_urls' )
+	) {
+		$ld_bb_rewrite_patterns = array(
+			// Learndash Course > Quiz.
+			'{{courses_cpt_slug}}/([^/]+)/{{quizzes_cpt_slug}}/([^/]+)/page(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{quizzes_cpt_name}}=$matches[2]&paged=$matches[3]',
+
+			// Learndash Course > Lesson.
+			'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/page(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&paged=$matches[3]',
+
+			// Learndash Course > Lesson > Quiz.
+			'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/{{quizzes_cpt_slug}}/([^/]+)/page(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&{{quizzes_cpt_name}}=$matches[3]&paged=$matches[4]',
+
+			// Learndash Course > Lesson > Topic.
+			'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/{{topics_cpt_slug}}/([^/]+)/page(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&{{topics_cpt_name}}=$matches[3]&paged=$matches[4]',
+
+			// Learndash Course > Lesson > Topic > Quiz.
+			'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/{{topics_cpt_slug}}/([^/]+)/{{quizzes_cpt_slug}}/([^/]+)page(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&{{topics_cpt_name}}=$matches[3]&{{quizzes_cpt_name}}=$matches[4]&pagde=$matches[5]',
+		);
+
+		if (
+			! empty( $ld_bb_rewrite_patterns ) &&
+			! empty( $ld_rewrite_values )
+		) {
+			foreach ( $ld_bb_rewrite_patterns as $rewrite_pattern_key => $rewrite_pattern_rule ) {
+				foreach ( $ld_rewrite_values as $post_type_name => $ld_rewrite_values_sets ) {
+					if ( ! empty( $ld_rewrite_values_sets ) ) {
+						foreach ( $ld_rewrite_values_sets as $ld_rewrite_values_set_key => $ld_rewrite_values_set ) {
+							if ( ! empty( $ld_rewrite_values_set ) ) {
+								if ( ( ! isset( $ld_rewrite_values_set['placeholder'] ) ) || ( empty( $ld_rewrite_values_set['placeholder'] ) ) ) {
+									continue;
+								}
+								if ( ( ! isset( $ld_rewrite_values_set['value'] ) ) || ( empty( $ld_rewrite_values_set['value'] ) ) ) {
+									continue;
+								}
+
+								$rewrite_pattern_key  = str_replace( $ld_rewrite_values_set['placeholder'], $ld_rewrite_values_set['value'], $rewrite_pattern_key );
+								$rewrite_pattern_rule = str_replace( $ld_rewrite_values_set['placeholder'], $ld_rewrite_values_set['value'], $rewrite_pattern_rule );
+							}
+						}
+					}
+				}
+				$ld_rewrite_rules[ $rewrite_pattern_key ] = $rewrite_pattern_rule;
+			}
+		}
+	}
+
+	return $ld_rewrite_rules;
 }

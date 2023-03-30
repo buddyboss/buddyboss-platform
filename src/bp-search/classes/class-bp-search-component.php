@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Search_Component extends BP_Component {
 	/**
 	 * Start the search component creation process

@@ -105,7 +105,7 @@ function messages_new_message( $args = '' ) {
 	 *
 	 * @return bool True if message is valid, false otherwise.
 	 */
-	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $r['content'] ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $r['content'] ) ) ) ), $r['content'], $_POST );
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $r['content'] ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $r['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $r['content'], $_POST );
 
 	if ( ! $validated_content ) {
 		if ( 'wp_error' === $r['error_type'] ) {

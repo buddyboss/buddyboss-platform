@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.1.0
  */
+#[\AllowDynamicProperties]
 class BP_Groups_Invite_Template {
 
 	/**

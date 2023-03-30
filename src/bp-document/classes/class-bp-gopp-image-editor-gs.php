@@ -83,8 +83,8 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 			return false;
 		}
 
-		// Check that exec() is (probably) available and we're not in safe_mode.
-		if ( ! function_exists( 'exec' ) || ini_get( 'safe_mode' ) ) {
+		// Check that exec() is (probably) available.
+		if ( ! function_exists( 'exec' ) ) {
 			return false;
 		}
 

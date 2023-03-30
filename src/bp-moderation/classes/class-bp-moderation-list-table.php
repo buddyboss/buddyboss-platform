@@ -77,7 +77,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	protected function get_default_primary_column_name() {
-		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 		return ( 'reported-content' === $current_tab ) ? 'content_type' : 'blocked_member';
@@ -89,7 +89,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function no_items() {
-		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 		if ( 'reported-content' === $current_tab ) {
@@ -109,8 +109,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 
-		$moderation_status = filter_input( INPUT_GET, 'moderation_status', FILTER_SANITIZE_STRING );
-		$current_tab       = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$moderation_status = bb_filter_input_string( INPUT_GET, 'moderation_status' );
+		$current_tab       = bb_filter_input_string( INPUT_GET, 'tab' );
 		$current_tab       = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 		// Set current page.
@@ -218,7 +218,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @see   WP_List_Table::single_row_columns()
 	 */
 	public function get_columns() {
-		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 		if ( 'reported-content' === $current_tab ) {
@@ -259,7 +259,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	public function single_row( $item ) {
 		$item = (array) $item;
 		echo '<tr>';
-		wp_kses_post( $this->single_row_columns( $item ) );
+		$single_row_columns = $this->single_row_columns( $item );
+		if ( ! empty( $single_row_columns ) ) {
+			wp_kses_post( $single_row_columns );
+		}
 		echo '</tr>';
 	}
 
@@ -269,7 +272,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @since BuddyPress 2.0.0
 	 */
 	public function get_views() {
-		$current_tab               = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$current_tab               = bb_filter_input_string( INPUT_GET, 'tab' );
 		$current_tab               = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 		$blocked_members_url_base  = add_query_arg( array( 'page' => 'bp-moderation' ), bp_get_admin_url( 'admin.php' ) );
 		$reported_content_url_base = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), $blocked_members_url_base ) : $blocked_members_url_base;
@@ -404,7 +407,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions     = array();
-		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 		if ( 'reported-content' === $current_tab ) {
@@ -493,7 +496,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_content_type( $item = array() ) {
 
-		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 		$admins      = array_map(
 			'intval',
@@ -582,7 +585,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item loop ite.
 	 */
 	public function column_member( $item = array() ) {
-		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 		$actions = array(
@@ -626,7 +629,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		}
 
 		foreach ( $user_ids as $user_id ) {
-			printf( '<strong><a target="_blank" href="%s">%s %s</a></strong>', esc_url( BP_Moderation_Members::get_permalink( $user_id ) ), get_avatar( $user_id, '32' ), esc_html( bp_core_get_userlink( $user_id, true ) ) );
+			printf( '<strong><a target="_blank" href="%s">%s %s</a></strong>', ! empty( $user_id ) ? esc_url( BP_Moderation_Members::get_permalink( $user_id ) ) : '', get_avatar( $user_id, '32' ), esc_html( bp_core_get_userlink( $user_id, true ) ) );
 		}
 	}
 
