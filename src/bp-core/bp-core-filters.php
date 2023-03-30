@@ -71,7 +71,8 @@ add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
 add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 
 // Load Post Notifications.
-add_action( 'bp_core_includes', 'bb_load_post_notifications', 20 );
+add_action( 'bp_core_includes', 'bb_load_post_notifications' );
+add_action( 'comment_post', 'bp_post_new_comment_reply_notification', 10, 3 );
 
 // Avatars.
 /**
@@ -2453,4 +2454,92 @@ function bb_load_post_notifications() {
 	if ( class_exists( 'BP_Post_Notification' ) ) {
 		BP_Post_Notification::instance();
 	}	
+}
+
+function bp_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
+	// error_log( print_r( $comment_id, true ) );
+	// error_log( print_r( $commentdata, true ) );
+
+	// Don't record activity if the comment hasn't been approved.
+	if ( empty( $comment_approved ) ) {
+		return false;
+	}
+
+	// Don't record activity if no email address has been included.
+	if ( empty( $commentdata['comment_author_email'] ) ) {
+		return false;
+	}
+
+	// Don't record activity if the comment has already been marked as spam.
+	if ( 'spam' === $comment_approved ) {
+		return false;
+	}
+
+	// Get the user by the comment author email.
+	$user = get_user_by( 'email', $commentdata['comment_author_email'] );
+
+	// If user isn't registered, don't record activity.
+	if ( empty( $user ) ) {
+		return false;
+	}
+
+	// Get the user_id.
+	$comment_author_id = (int) $user->ID;
+
+	// Get the post.
+	$post = get_post( $commentdata['comment_post_ID'] );
+
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return false;
+	}
+
+	if ( 1 === $comment_approved ) {
+
+		// $comment_parent = 0 means post comment.
+		if ( ! empty( $commentdata['comment_parent'] ) ) {
+			$comment_content          = $commentdata['comment_content'];
+			$comment_author_id        = $comment_author_id;
+			$comment_author           = $commentdata['comment_author'];
+			$comment_link             = get_comment_link( $comment_id );
+			$parent_comment           = get_comment( $commentdata['comment_parent'] ); 
+			$parent_comment_author_id = $parent_comment->user_id;
+
+			//Send an email if the user hasn't opted-out.
+			if ( true === bb_is_notification_enabled( $comment_author_id, 'bb_posts_new_comment_reply' ) ) {
+				$args = array(
+					'tokens' => array(
+						'comment.id'                => $comment_id,
+						'commenter.id'              => $comment_author_id,
+						'commenter.name'            => $comment_author,
+						'comment_reply'             => wp_strip_all_tags( $comment_content ),
+						'comment.url'               => esc_url( $comment_link ),
+					),
+				);
+
+				// Commenter is non guest user.
+				if ( ! empty( $comment_author_id ) ) {
+					$unsubscribe_args = array(
+						'user_id'           => $parent_comment_author_id,
+						'notification_type' => 'bb_posts_new_comment_reply',
+					);
+					$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+					$to = '';
+				}
+
+				// Parent Comment author is non guest user.
+				if ( ! empty( $comment_author_id ) ) {
+					$unsubscribe_args = array(
+						'user_id'           => $parent_comment_author_id,
+						'notification_type' => 'bb_posts_new_comment_reply',
+					);
+					$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+					$to = '';
+				}
+
+				bp_send_email( 'bb_posts_new_comment_reply', $parent_comment_author_id, $args );
+			}
+		}
+	}
 }

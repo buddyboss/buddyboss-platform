@@ -3157,4 +3157,50 @@ class BP_Email_Tokens {
 
 		return $output;
 	}
+
+	/**
+	 * Generate the output for token commenter.name
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param \BP_Email $bp_email
+	 * @param array     $formatted_tokens
+	 * @param array     $tokens
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__commenter_name( $bp_email, $formatted_tokens, $tokens ) {
+
+		$user_id        = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
+		$commenter_name = '';
+		
+		if ( ! empty( $user_id ) ) {
+			$commenter_name = bp_core_get_user_displayname( $user_id );
+		} elseif ( ! empty ( $tokens['commenter.name'] ) ) {
+			$commenter_name = $tokens['commenter.name'];
+		}
+
+		return $commenter_name;
+	}
+
+	/**
+	 * Generate the output for token comment_reply.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param \BP_Email $bp_email
+	 * @param array     $formatted_tokens
+	 * @param array     $tokens
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__comment_reply( $bp_email, $formatted_tokens, $tokens ) {
+
+		$comment_reply = '';
+		if ( ! empty ( $tokens['comment_reply'] ) ) {
+			$comment_reply  = str_replace( array( "\r", "\n" ), '', $tokens['comment_reply'] );
+		}
+
+		return $comment_reply;
+	}
 }
