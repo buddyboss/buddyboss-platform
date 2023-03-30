@@ -584,7 +584,7 @@ function bbp_favorites_handler( $action = '' ) {
 	}
 
 	// Bail if no topic ID is passed
-	if ( empty( $_GET['object_id'] ) ) {
+	if ( empty( $_GET['topic_id'] ) ) {
 		return $success;
 	}
 
@@ -600,7 +600,7 @@ function bbp_favorites_handler( $action = '' ) {
 	}
 
 	// What action is taking place?
-	$topic_id = bbp_get_topic_id( $_GET['object_id'] );
+	$topic_id = bbp_get_topic_id( $_GET['topic_id'] );
 	$user_id  = bbp_get_user_id( 0, true, true );
 
 	// Check for empty topic
@@ -623,9 +623,12 @@ function bbp_favorites_handler( $action = '' ) {
 
 	/** No errors *************************************************************/
 
-	if ( 'bbp_favorite_remove' === $action ) {
+	$is_favorite = bbp_is_user_favorite( $user_id, $topic_id );
+	$success     = false;
+
+	if ( true === $is_favorite && 'bbp_favorite_remove' === $action ) {
 		$success = bbp_remove_user_favorite( $user_id, $topic_id );
-	} elseif ( 'bbp_favorite_add' === $action ) {
+	} elseif ( false === $is_favorite && 'bbp_favorite_add' === $action ) {
 		$success = bbp_add_user_favorite( $user_id, $topic_id );
 	}
 
