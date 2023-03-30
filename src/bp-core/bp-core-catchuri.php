@@ -1583,7 +1583,5 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 		$privacy_policy_url = '';
 	}
 
-	$link = apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );
-
-	return $link;
+	return apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );
 }
