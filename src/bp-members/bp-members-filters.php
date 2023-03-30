@@ -23,58 +23,7 @@ add_filter( 'register_url', 'bp_get_signup_page' );
 // Change the last active display format if users active within 5 minutes then shows 'Active now'.
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
 
-
 add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
-
-/**
- * Assign the default member type to user on Admin.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int    $user_id ID of user.
- * @param string $member_type Defult selected member type.
- */
-function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member_type ) {
-
-	if ( empty( $user_id ) || empty( $member_type ) ) {
-		return false;
-	}
-
-	if ( is_admin() ) {
-
-		$member_type_id                = bp_member_type_post_by_type( $member_type );
-		$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-		if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-			$bp_user = new WP_User( $user_id );
-
-			if ( isset( $bp_user->roles ) && in_array( $selected_member_type_wp_roles[0], $bp_user->roles, true ) ) {
-				// Assign the default member type to user.
-				bp_set_member_type( $user_id, '' );
-				bp_set_member_type( $user_id, $member_type );
-			}
-		}
-	} else {
-		// Assign the default member type to user.
-		bp_set_member_type( $user_id, '' );
-		bp_set_member_type( $user_id, $member_type );
-
-		$member_type_id                = bp_member_type_post_by_type( $member_type );
-		$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-		if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-			$bp_user = new WP_User( $user_id );
-			foreach ( $bp_user->roles as $role ) {
-				// Remove role.
-				$bp_user->remove_role( $role );
-			}
-			// Add role.
-			$bp_user->add_role( $selected_member_type_wp_roles[0] );
-		}
-	}
-}
-// Repair member profile links.
-add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
 
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
@@ -938,6 +887,45 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 				'status'  => 1,
 				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
 			);
+		}
+	}
+}
+
+/**
+ * Assign the default member type to user who register recently.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id     ID of user.
+ * @param string $member_type Default selected member type.
+ */
+function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member_type ) {
+
+	if ( empty( $user_id ) || empty( $member_type ) ) {
+		return false;
+	}
+
+	if ( is_admin() ) {
+
+		// Assign the default member type to user.
+		bp_set_member_type( $user_id, '' );
+		bp_set_member_type( $user_id, $member_type );
+	} else {
+		// Assign the default member type to user.
+		bp_set_member_type( $user_id, '' );
+		bp_set_member_type( $user_id, $member_type );
+
+		$member_type_id                = bp_member_type_post_by_type( $member_type );
+		$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+		if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+			$bp_user = new WP_User( $user_id );
+			foreach ( $bp_user->roles as $role ) {
+				// Remove role.
+				$bp_user->remove_role( $role );
+			}
+			// Add role.
+			$bp_user->add_role( $selected_member_type_wp_roles[0] );
 		}
 	}
 }
