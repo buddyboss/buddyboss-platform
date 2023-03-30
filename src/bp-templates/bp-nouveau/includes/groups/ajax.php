@@ -387,7 +387,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				if ( $parent_group_id > 0 ) {
 					$members_query      = groups_get_group_members(
 						array(
-							'group_id' => $parent_group_id,
+							'group_id'            => $parent_group_id,
+							'exclude_admins_mods' => false,
 						)
 					);
 					$members            = wp_list_pluck( $members_query['members'], 'ID' );

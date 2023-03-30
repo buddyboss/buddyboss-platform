@@ -877,7 +877,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 		'comment_author'       => bp_core_get_user_displayname( $params['user_id'] ),
 		'comment_author_email' => $user->user_email,
 		'comment_author_url'   => bp_core_get_user_domain( $params['user_id'], $user->user_nicename, $user->user_login ),
-		'comment_content'      => $params['content'],
+		'comment_content'      => bp_activity_at_name_filter( $params['content'] ),
 		'comment_type'         => '', // Could be interesting to add 'buddypress' here...
 		'comment_parent'       => (int) $comment_parent,
 		'user_id'              => $params['user_id'],

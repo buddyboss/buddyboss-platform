@@ -2946,7 +2946,6 @@ function bp_is_single_document() {
 	return (bool) ( bp_is_media_component() && 'my-document' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
-
 /** Groups ********************************************************************/
 
 /**

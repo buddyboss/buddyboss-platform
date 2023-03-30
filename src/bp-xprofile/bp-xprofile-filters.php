@@ -459,7 +459,7 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
 			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
 		}
 
-		$value = xprofile_filter_kses( $value, $data_obj );
+		$value = xprofile_filter_kses( $value, $data_obj, $field_id );
 	} elseif ( 'socialnetworks' === $field_type ) {
 		$data_obj = null;
 		if ( bp_is_user() ) {
@@ -850,8 +850,22 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	}
 
 	// only alpha numeric, underscore, dash
-	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
-		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
+	if ( ! preg_match( '/^([A-Za-z0-9\'-_\.]+)$/', $value ) ) {
+		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "\'", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
+	}
+
+	// Check user unique identifier exist.
+	$check_exists = $wpdb->get_var( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key =  %s AND meta_value = %s",
+			'bb_profile_slug',
+			$value
+		)
+	);
+
+	if ( $check_exists > 0 ) {
+		// translators: Nickname field.
+		return sprintf( __( 'Invalid %s has been taken.', 'buddyboss' ), $field_name );
 	}
 
 	// must be shorter then 32 characters

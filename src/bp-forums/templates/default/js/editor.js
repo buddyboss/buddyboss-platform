@@ -177,6 +177,19 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_reply_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( $reply_content ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+							}
 						}
 					);
 
@@ -186,6 +199,9 @@ jQuery( document ).ready(
 			// Add Click event to show / hide text formatting Toolbar for reply form.
 			jQuery( document ).on( 'click', '.bbp-reply-form #whats-new-toolbar .show-toolbar', function ( e ) {
 				e.preventDefault();
+				if( jQuery( this ).closest( '.bbpress-forums-activity.bb-quick-reply-form-wrap' ).length > 0) {
+					return;
+				}
 				var key = jQuery( e.currentTarget ).closest( '.bbp-reply-form' ).find( '.bbp_editor_reply_content' ).data( 'key' );
 				var medium_editor = jQuery( e.currentTarget ).closest( '.bbp-form' ).find( '.medium-editor-toolbar' );
 				jQuery( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
@@ -273,6 +289,19 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_topic_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( $reply_content ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+							}
 						}
 					);
 

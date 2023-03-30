@@ -1,0 +1,1 @@
+auto deploy test to http://bbplatform-dev.developbb.com/

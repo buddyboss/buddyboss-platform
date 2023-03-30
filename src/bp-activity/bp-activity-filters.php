@@ -170,6 +170,99 @@ add_filter( 'bp_get_activity_content', 'bb_mention_remove_deleted_users_link', 2
 add_filter( 'bp_get_activity_content_body', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 
+// Filter check the single embed URL wrap with "P" tag or not.
+add_filter( 'bp_activity_content_before_save', 'bb_activity_content_has_paragraph_tag' );
+
+// Action notification for mentions in single page blog comments
+add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 999, 4 );
+
+/**
+ * Notification for mentions in blog comment
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int        $activity_id          The activity comment ID.
+ * @param WP_Comment $post_type_comment    WP Comment object.
+ * @param array      $activity_args        Activity comment arguments.
+ * @param object     $activity_post_object The post type tracking args object.
+ */
+function bb_blogs_comment_mention_notification( $activity_id, $comment, $activity_args, $activity_post_object ) {
+	// Are mentions disabled?
+	if ( ! bp_activity_do_mentions() ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+	if ( empty( $activity->component ) ) {
+		return;
+	}
+
+	// If activity was marked as spam, stop the rest of this function.
+	if ( ! empty( $activity->is_spam ) ) {
+		return;
+	}
+
+	// Try to find mentions.
+	$usernames = bp_activity_find_mentions( $comment->comment_content );
+
+	// We have mentions!
+	if ( ! empty( $usernames ) ) {
+		// Are mentions disabled?
+		if ( ! bp_activity_do_mentions() || ( ! empty( $activity->privacy ) && 'onlyme' === $activity->privacy ) ) {
+			return;
+		}
+		$activity->content = $comment->comment_content;
+
+		// Send @mentions and setup BP notifications.
+		foreach ( (array) $usernames as $user_id => $username ) {
+			if ( apply_filters( 'bp_activity_at_name_do_notifications', true, $usernames, $user_id, $activity ) ) {
+				$email_type   = 'activity-at-message';
+				$group_name   = '';
+				$message_link = bp_activity_get_permalink( $activity_id );
+				$poster_name  = bp_core_get_user_displayname( $activity->user_id );
+
+				$notifications = BP_Notifications_Notification::get_all_for_user( $user_id, 'all' );
+
+				// Don't leave multiple notifications for the same activity item.
+				foreach ( $notifications as $notification ) {
+					if ( $activity_id === $notification->item_id && 'new_at_mention' === $notification->component_action ) {
+						return;
+					}
+				}
+				// Now email the user with the contents of the message (if they have enabled email notifications).
+				if ( true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' ) ) {
+					if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+						$email_type = 'groups-at-message';
+						$group_name = bp_get_current_group_name();
+					}
+
+					$unsubscribe_args = array(
+						'user_id'           => $user_id,
+						'notification_type' => $email_type,
+					);
+
+					$args = array(
+						'tokens' => array(
+							'activity'         => $activity,
+							'usermessage'      => wp_strip_all_tags( $activity->content ),
+							'group.name'       => $group_name,
+							'mentioned.url'    => $message_link,
+							'poster.name'      => $poster_name,
+							'receiver-user.id' => $user_id,
+							'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						),
+					);
+					bp_send_email( $email_type, $user_id, $args );
+
+					do_action('bp_activity_sent_mention_email', $activity, '', '', '', $user_id );
+				}
+				// Updates mention count for the user.
+				bp_activity_update_mention_count_for_user( $user_id, $activity->id );
+			}
+		}
+	}
+}
+
 /** Functions *****************************************************************/
 
 /**
@@ -1373,14 +1466,14 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 
 	// members directory
 	if ( ! bp_is_user() && bp_is_members_directory() ) {
-		$qs_args = bp_parse_args( $qs );
+		$qs_args = wp_parse_args( $qs );
 		// check if members scope is following before manipulating.
 		if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
 			$qs .= '&include=' . bp_get_following_ids(
-				array(
-					'user_id' => bp_loggedin_user_id(),
-				)
-			);
+					array(
+						'user_id' => bp_loggedin_user_id(),
+					)
+				);
 		}
 	}
 
@@ -2529,14 +2622,14 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
-					$content = bp_create_excerpt( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
+					$content = bp_create_excerpt( make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
 					if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 						$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 						$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 						$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
 					}
 				} else {
-					$content = html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+					$content = make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 				}
 			}
 		}
@@ -3070,6 +3163,31 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 			}
 		}
 	}
+}
+
+/**
+ * Wrap with "P" tag if found the single plan text link.
+ *
+ * @param string $content Activity content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_activity_content_has_paragraph_tag( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+	preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+	if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+		$content = sprintf( '<p>%s</p>', $content );
+	}
+
+	return $content;
 }
 
 /**

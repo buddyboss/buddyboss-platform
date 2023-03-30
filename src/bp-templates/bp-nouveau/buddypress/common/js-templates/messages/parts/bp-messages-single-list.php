@@ -78,13 +78,12 @@
 				<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
 					<div class="message-metadata bp-suspended-meta">
 						<# if ( data.sender_link ) { #>
-						<a href="{{data.sender_link}}" class="bp-user-link">
+							<a href="{{data.sender_link}}" class="bp-user-link">
+								<strong>{{{data.sender_name}}}</strong>
+							<a>
+						<# } else {#>
 							<strong>{{{data.sender_name}}}</strong>
-						<a>
-					<# } else { #>
-						<strong>{{{data.sender_name}}}</strong>
-					<# } #>
-
+						<# } #>
 					</div>
 					<div class="bp-message-content-wrap bp-suspended-content">{{{data.content}}}</div>
 				<# } else { #>

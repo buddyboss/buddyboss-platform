@@ -58,7 +58,11 @@ if ( 'video' === $media_template->media->type ) {
 					<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 						<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 					</a>
-					<div class="video-action_list item-action_list">
+					<div class="video-action_list item-action_list bb_more_dropdown">
+						<div class="bb_more_dropdown__title"> 
+							<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
+							<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
+						</div>
 						<ul>
 							<?php
 							if ( $can_edit && ( bb_user_can_create_video() || $group_id > 0 ) ) {
@@ -98,6 +102,7 @@ if ( 'video' === $media_template->media->type ) {
 							?>
 						</ul>
 					</div>
+					<div class="bb_more_dropdown_overlay"></div>
 					<?php
 				}
 				?>
@@ -154,7 +159,11 @@ if ( 'video' === $media_template->media->type ) {
 				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
-				<div class="media-action_list">
+				<div class="media-action_list bb_more_dropdown">
+					<div class="bb_more_dropdown__title"> 
+						<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
+						<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
+					</div>
 					<ul>
 						<?php
 						if ( $is_comment_pic ) {
@@ -189,6 +198,7 @@ if ( 'video' === $media_template->media->type ) {
 						?>
 					</ul>
 				</div>
+				<div class="bb_more_dropdown_overlay"></div>
 			<?php } ?>
 		</div> <!--.media-action-wrap-->
 		<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap" data-id="<?php bp_media_id(); ?>" data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-privacy="<?php bp_media_privacy(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-album-id="<?php bp_media_album_id(); ?>" data-group-id="<?php bp_media_group_id(); ?>" data-attachment-id="<?php bp_media_attachment_id(); ?>" data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( bp_get_media_id() ) ); ?>" href="#">

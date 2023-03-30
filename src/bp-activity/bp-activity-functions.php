@@ -1237,7 +1237,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 				if ( $user_id != $current_user_id ) {
 					$user_display_name = bp_core_get_user_displayname( $user_id );
 					if ( strpos( $like_text, $user_display_name ) === false ) {
-						$carry .= $user_display_name . '&#10;';
+						$carry .= $user_display_name . ',&#10;';
 					}
 				}
 
@@ -1246,7 +1246,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 		);
 	}
 
-	return $favorited_users;
+	return ! empty( $favorited_users ) ? trim( $favorited_users, ',&#10;' ) : '';
 }
 
 /**
@@ -4481,7 +4481,19 @@ add_action( 'bp_after_activity_comment', 'bp_activity_comment_embed_after_recurs
  * @return mixed The cached embeds for this activity item.
  */
 function bp_embed_activity_cache( $cache, $id, $cachekey ) {
-	return bp_activity_get_meta( $id, $cachekey );
+	$data = bp_activity_get_meta( $id, $cachekey );
+	if (
+		! empty( $data ) &&
+		false !== strpos( $data, 'loom.com' ) &&
+		(
+			false !== strpos( $data, 'sandbox' ) ||
+			false !== strpos( $data, 'security' )
+		)
+	) {
+		return false;
+	}
+
+	return $data;
 }
 
 /**
@@ -5835,6 +5847,24 @@ function bb_activity_post_form_groups_per_page() {
 }
 
 /**
+ * Replace the livestamp attribute for the Latest Activity widget.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $new_content Activity content.
+ *
+ * @return string
+ */
+function bb_activity_remove_livestamp_attribute( $new_content = '' ) {
+
+	if ( empty( $new_content ) ) {
+		return $new_content;
+	}
+
+	return str_replace( 'data-livestamp', 'data-activity-datestamp', $new_content );
+}
+
+/**
  * Follow button.
  *
  * @since BuddyBoss 2.1.3
@@ -5982,4 +6012,47 @@ function bb_activity_following_post_notification( $args ) {
 			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
+}
+
+/**
+ * Check whether activity comment is group comment or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object|int $comment Activity comment ID or object.
+ *
+ * @return bool
+ */
+function bb_is_group_activity_comment( $comment = 0 ) {
+
+	$comment_id = 0;
+	if ( empty( $comment ) ) {
+		global $activities_template;
+		$comment_id = isset( $activities_template->activity->current_comment->id ) ? $activities_template->activity->current_comment->id : 0;
+	} elseif ( is_array( $comment ) ) {
+		$comment_id = (int) $comment['id'];
+	} elseif ( is_object( $comment ) ) {
+		$comment_id = (int) $comment->id;
+	} elseif ( is_int( $comment ) ) {
+		$comment_id = (int) $comment;
+	}
+
+	if ( empty( $comment_id ) ) {
+		return false;
+	}
+
+	$comment = new BP_Activity_Activity( $comment_id );
+
+	if ( ! empty( $comment->item_id ) && ! empty( $comment->user_id ) ) {
+		$main_activity = new BP_Activity_Activity( $comment->item_id );
+
+		if (
+			! empty( $main_activity->component ) &&
+			'groups' === $main_activity->component
+		) {
+			return true;
+		}
+	}
+
+	return false;
 }

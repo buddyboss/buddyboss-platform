@@ -27,7 +27,7 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 		array(
 			'bp-nouveau-media' => array(
 				'file'         => 'js/buddypress-media%s.js',
-				'dependencies' => array( 'bp-nouveau' ),
+				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-codemirror' ),
 				'footer'       => true,
 			),
 		)
@@ -132,7 +132,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'dropzone_media_message'             => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Photos', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
 		'media_select_error'                 => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
 		'empty_media_type'                   => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
-		'invalid_media_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
+		'invalid_media_type'                 => __( 'Unable to upload the file.', 'buddyboss' ),
 		'media_size_error_header'            => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description'       => __( 'This file type is too large.', 'buddyboss' ),
 		'dictFileTooBig'                     => __( 'File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB.', 'buddyboss' ),
@@ -144,10 +144,11 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
-		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
+		'media_dict_file_exceeded'           => sprintf( __( 'You can upload a maximum of %s photos to a post.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
 		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
 		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
+		'multipleErrorOnFile'                => sprintf( '%s<br>%s', esc_html__( 'There was a problem uploading some of your files.', 'buddyboss' ), esc_html__( 'Click on a file to see the error.', 'buddyboss' ) ),
 		'connection_lost_error'              => __( 'Connection lost with the server.', 'buddyboss' ),
 	);
 

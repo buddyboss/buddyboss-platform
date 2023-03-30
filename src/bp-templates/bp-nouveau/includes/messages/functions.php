@@ -560,3 +560,4 @@ function bp_nouveau_messages_catch_hook_content( $hooks = array() ) {
 
 	return $content;
 }
+

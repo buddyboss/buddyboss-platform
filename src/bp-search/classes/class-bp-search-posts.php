@@ -172,6 +172,12 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			);
 
 			if ( $qry->have_posts() ) {
+
+				// Remove Boots Frond End Builder App.
+				if ( class_exists( 'ET_Builder_Plugin' ) ) {
+					remove_filter( 'the_content', 'et_fb_app_boot', 1 );
+				}
+
 				while ( $qry->have_posts() ) {
 					$qry->the_post();
 					$result = array(
@@ -182,6 +188,11 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 					);
 
 					$this->search_results['items'][ get_the_ID() ] = $result;
+				}
+
+				// Add Boots Frond End Builder App.
+				if ( class_exists( 'ET_Builder_Plugin' ) ) {
+					add_filter( 'the_content', 'et_fb_app_boot', 1 );
 				}
 			}
 			wp_reset_postdata();

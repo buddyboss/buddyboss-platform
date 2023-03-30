@@ -1067,8 +1067,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 				'type'    => 'info',
 				'message' => __( 'No blocked members found.', 'buddyboss' ),
 			),
-		)
-	);
+	) );
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {
 		return false;

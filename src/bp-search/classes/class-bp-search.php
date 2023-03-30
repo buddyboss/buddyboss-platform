@@ -750,6 +750,16 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 				$this->search_results['all']['total_match_count'] = $all_items_count;
 			}
+
+			/**
+			 * Filters out the search results.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $search_results Array of search results.
+			 * @param object $this           Object of BP_Search class.
+			 */
+			$this->search_results = apply_filters( 'bp_search_query_final_results', $this->search_results, $this );
 		}
 
 		/**

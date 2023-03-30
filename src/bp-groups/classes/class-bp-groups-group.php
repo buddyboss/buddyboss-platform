@@ -1209,7 +1209,15 @@ class BP_Groups_Group {
 		) {
 			// Exclude all other hidden group.
 			$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", ( ! empty( $r['user_id'] ) ? $r['user_id'] : bp_loggedin_user_id() ) );
-		} elseif ( empty( $r['show_hidden'] ) || ( ! empty( $r['show_hidden'] ) && ! is_user_logged_in() ) ) {
+		} elseif (
+			(
+				empty( $r['show_hidden'] ) ||
+				(
+					! empty( $r['show_hidden'] ) &&
+					! is_user_logged_in()
+				)
+			) && ! bb_is_wp_cli()
+		) {
 			$where_conditions['hidden'] = "g.status != 'hidden'";
 		}
 

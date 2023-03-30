@@ -76,6 +76,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
+		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
+
 	}
 
 	/**
@@ -191,7 +195,13 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
-		if ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
+		if (
+			! bp_is_single_activity() &&
+			(
+				bp_moderation_is_user_blocked( $user_id ) ||
+				bb_moderation_is_user_blocked_by( $user_id )
+			)
+		) {
 			buddypress()->displayed_user->id = 0;
 			bp_do_404();
 
@@ -213,7 +223,16 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) &&
+		// Alowed to view single group activity.
+		if (
+			bp_is_single_activity() &&
+			! wp_doing_ajax()
+		) {
+			return $domain;
+		}
+
+		if (
+			empty( $username_visible ) &&
 			! bp_moderation_is_user_suspended( $user_id ) &&
 			(
 				bp_moderation_is_user_blocked( $user_id ) ||
@@ -411,5 +430,31 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Function to allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_before_permalink_redirect_url( $activity ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			remove_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+		}
+	}
+
+	/**
+	 * Function to dis-allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_after_permalink_redirect_url( $activity ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+		}
 	}
 }

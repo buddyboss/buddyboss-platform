@@ -264,18 +264,22 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			$( event.currentTarget ).closest( '.bb-activity-video-elem' ).toggleClass( 'is-visible' ).siblings().removeClass( 'is-visible' ).closest( '.activity-item' ).siblings().find( '.bb-activity-video-elem' ).removeClass( 'is-visible' );
+			$( event.currentTarget ).closest( '.bb-activity-video-elem' ).find( '.bb_more_dropdown' ).toggleClass( 'open' ).closest( '.activity-item' ).siblings().find( '.bb-activity-video-elem .bb_more_dropdown' ).removeClass( 'open' );
+			$( 'body' ).addClass( 'video_more_option_open' );
 
 			if ( $( event.currentTarget ).closest( '.bb-activity-video-elem' ).length < 1 ) {
 				$( event.currentTarget ).closest( '.bb-video-thumb' ).toggleClass( 'is-visible' ).parent().siblings().find( '.bb-video-thumb' ).removeClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.bb-video-thumb' ).find( '.bb_more_dropdown' ).toggleClass( 'open' ).closest( '.bb-video-thumb' ).parent().siblings().find( '.bb_more_dropdown' ).removeClass( 'open' );
 			}
 
 			if ( $( event.currentTarget ).closest( '.bb-media-model-container' ).length ) {
-				$( event.currentTarget ).closest( '.video-action-wrap' ).toggleClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.video-action-wrap' ).toggleClass( 'is-visible' ).find( '.bb_more_dropdown' ).toggleClass( 'open' );
 			}
 
 			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( ! $( event.currentTarget ).hasClass( 'video-action_more' ) ) ) {
-				$( event.currentTarget ).closest( '.bb-activity-video-elem' ).removeClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.bb-activity-video-elem' ).removeClass( 'is-visible' ).find( '.bb_more_dropdown' ).removeClass( 'open' );
 				$( event.currentTarget ).closest( '.bb-item-thumb' ).removeClass( 'is-visible' );
+				$( 'body' ).removeClass( 'video_more_option_open' );
 			}
 		},
 
@@ -1600,14 +1604,14 @@ window.bp = window.bp || {};
 								) {
 									$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
 								}
-								
+
 								if (
 									'undefined' !== typeof response.data &&
 									'undefined' !== typeof response.data.video_group_count
 								) {
 									$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
 								}
-								
+
 								buddyPressSelector.find( '.video-list:not(.existing-video-list)' ).find( '.bb-video-check-wrap [name="bb-video-select"]:checked' ).each(
 									function () {
 										$( this ).closest( 'li' ).remove();
@@ -2298,6 +2302,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-next-media', this.next.bind( this ) );
 			$( document ).on( 'click', '.bp-add-video-activity-description', this.openVideoActivityDescription.bind( this ) );
 			$( document ).on( 'click', '#bp-activity-description-new-reset', this.closeVideoActivityDescription.bind( this ) );
+			$( document ).on( 'keyup', '.bp-edit-video-activity-description #add-activity-description', this.MediaActivityDescriptionUpdate.bind(this));
 			$( document ).on( 'click', '#bp-activity-description-new-submit', this.submitVideoActivityDescription.bind( this ) );
 			$( document ).on( 'bp_activity_ajax_delete_request_video', this.videoActivityDeleted.bind( this ) );
 
@@ -2707,6 +2712,14 @@ window.bp = window.bp || {};
 			target.parents( '.activity-video-description' ).find( '.bp-video-activity-description' ).show();
 			target.parents( '.activity-video-description' ).find( '#add-activity-description' ).val( default_value );
 			target.parents( '.activity-video-description' ).find( '.bp-edit-video-activity-description' ).hide().removeClass( 'open' );
+		},
+
+		MediaActivityDescriptionUpdate: function( event ) {
+			if( $( event.currentTarget ).val().trim() !== '' ) {
+				$( event.currentTarget ).closest( '.bp-edit-video-activity-description' ).addClass( 'has-content' );
+			} else {
+				$( event.currentTarget ).closest( '.bp-edit-video-activity-description' ).removeClass( 'has-content' );
+			}
 		},
 
 		submitVideoActivityDescription: function ( event ) {

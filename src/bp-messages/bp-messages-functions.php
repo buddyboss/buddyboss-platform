@@ -89,6 +89,7 @@ function messages_new_message( $args = '' ) {
 			$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddyboss' );
 
 			return new WP_Error( $error_code, $feedback );
+
 		} else {
 			return false;
 		}
@@ -1074,6 +1075,10 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	}
 
 	$group      = bp_messages_get_meta( $id, 'group_id', true );
+	$post_group = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT );
+	if ( ! $group && isset( $post_group ) ) {
+		$group = $post_group;
+	}
 	$group_name = bp_get_group_name( groups_get_group( $group ) );
 
 	// check if it has enough recipients to use batch emails.
@@ -2162,7 +2167,7 @@ function bb_get_message_response_object( $message ) {
 	if ( false === bp_core_get_core_userdata( $sender_id ) ) {
 		$content = esc_html__( 'This message was deleted', 'buddyboss' );
 	}
-	$content    = preg_replace( '#(<p></p>)#', '<p><br></p>', apply_filters( 'bp_get_message_thread_content', $content ) );
+	$content    = preg_replace( '#(<p></p>)#', '<p><br></p>', apply_filters( 'bp_get_the_thread_message_content', $content ) );
 	$excerpt    = apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
 	$message_id = $message->id;
 	$excerpt    = wp_trim_words( wp_strip_all_tags( $excerpt ) );

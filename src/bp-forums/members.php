@@ -99,6 +99,7 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		public function get_topics_created_url( $user_id = 0 ) {
 			return $this->get_profile_url( $user_id, bbp_get_topic_archive_slug() );
 		}
+
 		/**
 		 * Override Forums replies created URL with BuddyBoss profile URL
 		 *

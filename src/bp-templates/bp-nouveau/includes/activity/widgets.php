@@ -112,7 +112,7 @@ class BP_Latest_Activities extends WP_Widget {
 
 		if ( bp_loggedin_user_id() ) {
 
-			$scope[] = 'just-me';				
+			$scope[] = 'just-me';
 
 			if ( bp_activity_do_mentions() ) {
 				$scope[] = 'mentions';
@@ -132,18 +132,18 @@ class BP_Latest_Activities extends WP_Widget {
 
 			if ( bp_is_active( 'forums' ) ) {
 				$scope[] = 'forums';
-			}			
+			}
 		}
-	
+
 		if ( bp_loggedin_user_id() && ! empty( $instance['relevant'] ) ) {
 			$key = array_search( 'public', $scope, true );
 			if ( is_array( $scope ) && false !== $key ) {
-				unset( $scope[ $key ] );				
+				unset( $scope[ $key ] );
 			}
 		}
 
 		$scope = implode( ',', $scope );
-		
+
 		/**
 		 * Globalize the activity widget arguments.
 		 * @see bp_nouveau_activity_widget_query() to override

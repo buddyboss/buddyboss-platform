@@ -53,7 +53,11 @@ $more_media     = $media_template->media_count > 5 ? true : false;
 					<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 						<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 					</a>
-					<div class="media-action_list">
+					<div class="media-action_list bb_more_dropdown">
+						<div class="bb_more_dropdown__title"> 
+							<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
+							<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
+						</div>
 						<ul class="conflict-activity-ul-li-comment">
 							<?php
 							if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
@@ -89,6 +93,7 @@ $more_media     = $media_template->media_count > 5 ? true : false;
 							?>
 						</ul>
 					</div>
+					<div class="bb_more_dropdown_overlay"></div>
 				<?php } ?>
 		<?php } ?>
 	</div> <!--.media-action-wrap-->

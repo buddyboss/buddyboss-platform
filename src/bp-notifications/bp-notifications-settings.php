@@ -478,12 +478,7 @@ function bb_activate_notification( $field, $checked ) {
 		}
 		?>
 	>
-		<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes"
-			<?php
-			checked( $checked, 1 );
-			disabled( $disabled, 1 );
-			?>
-		/>
+		<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); disabled( $disabled, 1 ); ?> />
 	</span>
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 

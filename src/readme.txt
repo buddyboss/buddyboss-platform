@@ -2,7 +2,7 @@
 Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
-Requires PHP: 5.6.20
+Requires PHP: 8.0
 Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,8 +20,8 @@ BuddyBoss Platform helps site builders & developers add community features to th
 
 To run BuddyBoss Platform, we recommend your host supports:
 
-* PHP version 7.2 or greater.
-* MySQL version 5.6 or greater, or, MariaDB version 10.0 or greater.
+* PHP version 8.0 or greater.
+* MySQL version 5.7 or greater, or, MariaDB version 10.3 or greater.
 * HTTPS support.
 
 == Installation ==
@@ -87,7 +87,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Notifications - Handled repeated email notification issues by removing duplicate forum subscription entries
 * Notifications - Handled triggering notification when an activity post is updated in a social group
 * Notifications - Handled notification broken template issue when media uploaded in a social group
-* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin 
+* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin
 * Notifications - Handled defaults disabled issue for force enabled notifications types
 
 = 2.2.9 =
@@ -101,7 +101,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Handled 'Recent Discussions' widget small floating content UI issue
 * Forums - Handled reply editor lagging issue while typing at normal speed
 * Forums - Handled discussion email notification for subscribed members, the link doesn't take to the discussion on login
-* Emails - Handled group email notification template UI issue in the responsive view 
+* Emails - Handled group email notification template UI issue in the responsive view
 * Moderation - Improved the suspended and blocked members content logic in the messaging module
 * Network Search - Handled course layout issue in the search results by handling excerpt formatting
 * Network Search - Handled search blog post by tag not working issue
@@ -459,7 +459,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Handled Activity form text color issue when @mention added and removed
 * Activity - Small improvement to show user-friendly validation message from dropzone uploader
 * Activity - Small improvement to restrict media upload for post types auto-generated activity
-* Activity - Handled post types auto-generated activity long comment read more issue 
+* Activity - Handled post types auto-generated activity long comment read more issue
 * Media - Handled symlink not working issue on private page excluded URL for non-logged-in member
 * Media - Handled media upload not showing thumbnail issue for media size more than 10MB
 * Media - Handled media popup layout issue for a specific set of device sizes

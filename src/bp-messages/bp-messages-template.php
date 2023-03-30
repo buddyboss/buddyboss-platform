@@ -1394,7 +1394,7 @@ function bp_get_send_private_message_link() {
 	 *
 	 * @param string $value URL for the Private Message link in member profile headers.
 	 */
-	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_core_get_username( $user_id ) ) );
+	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_members_get_user_nicename( $user_id ) ) );
 }
 
 /**
@@ -2282,7 +2282,20 @@ add_action( 'thread_loop_start', 'bp_messages_embed' );
  * @return mixed The cached embeds for this message item.
  */
 function bp_embed_message_cache( $cache, $id, $cachekey ) {
-	return bp_messages_get_meta( $id, $cachekey );
+	$data = bp_messages_get_meta( $id, $cachekey );
+
+	if (
+		! empty( $data ) &&
+		false !== strpos( $data, 'loom.com' ) &&
+		(
+			false !== strpos( $data, 'sandbox' ) ||
+			false !== strpos( $data, 'security' )
+		)
+	) {
+		return false;
+	}
+
+	return $data;
 }
 
 /**

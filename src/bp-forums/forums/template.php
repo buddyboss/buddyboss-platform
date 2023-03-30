@@ -214,7 +214,7 @@ function bbp_has_forums( $args = '' ) {
 
 		if ( ! empty( $bbp->forum_query->pagination_links ) ) {
 			// Remove first page from pagination.
-			$bbp->forum_query->pagination_links = str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links );
+			$bbp->forum_query->pagination_links = ! empty( $bbp->forum_query->pagination_links ) ? str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links ) : '';
 		}
 	}
 

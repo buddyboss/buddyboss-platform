@@ -608,17 +608,17 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function localize_scripts() {
 
 		$params = array(
-			'ajaxurl'            => bp_core_ajax_url(),
-			'only_admin_notice'  => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
-			'is_friend_confirm'  => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
-			'confirm'            => __( 'Are you sure?', 'buddyboss' ),
-			'confirm_delete_set' => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'    => __( 'View previous comments', 'buddyboss' ),
-			'unsaved_changes'    => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
-			'object_nav_parent'  => '#buddypress',
+			'ajaxurl'               => bp_core_ajax_url(),
+			'only_admin_notice'     => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
+			'is_friend_confirm'     => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
+			'confirm'               => __( 'Are you sure?', 'buddyboss' ),
+			'confirm_delete_set'    => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
+			'show_x_comments'       => __( 'View previous comments', 'buddyboss' ),
+			'unsaved_changes'       => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
+			'object_nav_parent'     => '#buddypress',
 			'anchorPlaceholderText' => __( 'Paste or type a link', 'buddyboss' ),
-			'empty_field'        => __( 'New Field', 'buddyboss' ),
-			'close'              => __( 'Close', 'buddyboss' ),
+			'empty_field'           => __( 'New Field', 'buddyboss' ),
+			'close'                 => __( 'Close', 'buddyboss' ),
 		);
 
 		// If the Object/Item nav are in the sidebar
@@ -693,6 +693,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'presence_time_span'        => bb_presence_time_span(),
 			'idle_inactive_span'        => bb_idle_inactive_span(),
 			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
+			'native_presence'           => (bool) bp_get_option( 'bb_use_core_native_presence', false ),
+			'native_presence_url'       => buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php',
+			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
 		);
 
 		/**

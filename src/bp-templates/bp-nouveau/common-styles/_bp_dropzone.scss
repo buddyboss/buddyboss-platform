@@ -258,12 +258,12 @@
 }
 
 .dropzone .dz-preview.dz-error .dz-error-message {
-	display: block;
+	display: none; // Hide single media error messages since moved in main notices feedback area
 	line-height: 1.35;
 }
 
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
-	opacity: 1;
+	opacity: 0; // Hide single media error messages since moved in main notices feedback area
 	pointer-events: auto;
 }
 
@@ -271,7 +271,6 @@
 	pointer-events: none;
 	z-index: 100;
 	position: absolute;
-	display: block;
 	display: none;
 	opacity: 0;
 	-webkit-transition: opacity 0.3s ease;
@@ -616,7 +615,8 @@
 	}
 }
 
-.dropzone.dz-max-files-reached .dz-default.dz-message {
+.dropzone.dz-max-files-reached .dz-default.dz-message,
+.dropzone.bb-max-files-reached .dz-default.dz-message {
 	display: none;
 }
 

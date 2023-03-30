@@ -715,13 +715,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						wp_kses_post( $section['title'] );
 
 						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
-						?>
-							<div class="bbapp-tutorial-btn">
-								<?php call_user_func( $section['tutorial_callback'], $section ); ?>
-							</div>
-							<?php
-						}
+						?><div class="bbapp-tutorial-btn">
 
+							<?php call_user_func( $section['tutorial_callback'], $section ); ?>
+						</div>
+						<?php
+					}
 					echo "</h2>\n";
 				}
 
@@ -793,3 +792,4 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 	}
 
 endif;
+

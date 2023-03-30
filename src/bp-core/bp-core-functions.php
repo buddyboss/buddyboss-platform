@@ -4816,10 +4816,11 @@ function bp_core_parse_url( $url ) {
 
 	$embed_code = '';
 	$oembed_obj = _wp_oembed_get_object();
-	$is_oembed  = $oembed_obj->get_data( $url, array( 'discover' => false ) );
+	$discover   = apply_filters( 'bb_oembed_discover_support', false, $url );
+	$is_oembed  = $oembed_obj->get_data( $url, array( 'discover' => $discover ) );
 
 	if ( $is_oembed ) {
-		$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
+		$embed_code = wp_oembed_get( $url, array( 'discover' => $discover ) );
 	}
 
 	// Fetch the oembed code for URL.
@@ -8052,6 +8053,17 @@ function bb_get_user_id_by_activity_mentionname( $mention_names ) {
 }
 
 /**
+ * Return to check its working with WP CLI or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_wp_cli() {
+	return defined( 'WP_CLI' ) && WP_CLI;
+}
+
+/**
  * A group of regex replaces used to identify text formatted with newlines.
  * The remaining line breaks after conversion become <<br />> tags, unless $br is set to '0' or 'false'.
  *
@@ -8244,7 +8256,13 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
+	$bb_presence_interval = (int) apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
+
+	if ( $bb_presence_interval !== (int) get_option( 'bb_presence_interval_mu' ) ) {
+		update_option( 'bb_presence_interval_mu', $bb_presence_interval );
+	}
+
+	return $bb_presence_interval;
 }
 
 /**
@@ -8292,7 +8310,13 @@ function bb_pro_pusher_version() {
  * @return int
  */
 function bb_presence_time_span() {
-	return (int) apply_filters( 'bb_presence_time_span', 20 );
+	$bb_presence_time_span = (int) apply_filters( 'bb_presence_time_span', 20 );
+
+	if ( $bb_presence_time_span !== (int) get_option( 'bb_presence_time_span_mu' ) ) {
+		update_option( 'bb_presence_time_span_mu', $bb_presence_time_span );
+	}
+
+	return $bb_presence_time_span;
 }
 
 /**
@@ -8303,7 +8327,13 @@ function bb_presence_time_span() {
  * @return int
  */
 function bb_presence_default_interval() {
-	return apply_filters( 'bb_presence_default_interval', 60 );
+	$bb_presence_default_interval = (int) apply_filters( 'bb_presence_default_interval', 60 );
+
+	if ( $bb_presence_default_interval !== (int) get_option( 'bb_presence_default_interval_mu' ) ) {
+		update_option( 'bb_presence_default_interval_mu', $bb_presence_default_interval );
+	}
+
+	return $bb_presence_default_interval;
 }
 
 /**
@@ -8412,93 +8442,6 @@ function bb_mention_remove_deleted_users_link( $content ) {
 	}
 
 	return $content;
-}
-
-if ( ! function_exists( 'bb_filter_input_string' ) ) {
-	/**
-	 * Function used to sanitize user input in a manner similar to the (deprecated) FILTER_SANITIZE_STRING.
-	 *
-	 * In many cases, the usage of `FILTER_SANITIZE_STRING` can be easily replaced with `FILTER_SANITIZE_FULL_SPECIAL_CHARS` but
-	 * in some cases, especially when storing the user input, encoding all special characters can result in an stored XSS injection
-	 * so this function can be used to preserve the pre PHP 8.1 behavior where sanitization is expected during the retrieval
-	 * of user input.
-	 *
-	 * @since BuddyBoss 2.3.0
-	 *
-	 * @param string $type          One of INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
-	 * @param string $variable_name Name of a variable to retrieve.
-	 * @param int[]  $flags         Array of supported filter options and flags.
-	 *                              Accepts `FILTER_REQUIRE_ARRAY` in order to require the input to be an array.
-	 *                              Accepts `FILTER_FLAG_NO_ENCODE_QUOTES` to prevent encoding of quotes.
-	 * @return string|string[]|null|boolean Value of the requested variable on success, `false` if the filter fails, or `null` if the `$variable_name` variable is not set.
-	 */
-	function bb_filter_input_string( $type, $variable_name, $flags = array() ) {
-
-		$require_array = in_array( FILTER_REQUIRE_ARRAY, $flags, true );
-		$string        = filter_input( $type, $variable_name, FILTER_UNSAFE_RAW, $require_array ? FILTER_REQUIRE_ARRAY : array() );
-
-		// If we have an empty string or the input var isn't found we can return early.
-		if ( empty( $string ) ) {
-			return $string;
-		}
-
-		/**
-		 * This differs from strip_tags() because it removes the contents of
-		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
-		 * will return 'something'. wp_strip_all_tags will return ''
-		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
-
-		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
-			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
-		}
-
-		return $string;
-
-	}
-}
-
-if ( ! function_exists( 'bb_filter_var_string' ) ) {
-	/**
-	 * Function used to sanitize user input in a manner similar to the (deprecated) FILTER_SANITIZE_STRING.
-	 *
-	 * In many cases, the usage of `FILTER_SANITIZE_STRING` can be easily replaced with `FILTER_SANITIZE_FULL_SPECIAL_CHARS` but
-	 * in some cases, especially when storing the user input, encoding all special characters can result in an stored XSS injection
-	 * so this function can be used to preserve the pre PHP 8.1 behavior where sanitization is expected during the retrieval
-	 * of user input.
-	 *
-	 * @since BuddyBoss 2.3.0
-	 *
-	 * @param string $variable_name Name of a variable to retrieve.
-	 * @param int[]  $flags         Array of supported filter options and flags.
-	 *                              Accepts `FILTER_REQUIRE_ARRAY` in order to require the input to be an array.
-	 *                              Accepts `FILTER_FLAG_NO_ENCODE_QUOTES` to prevent encoding of quotes.
-	 * @return string|string[]|null|boolean Value of the requested variable on success, `false` if the filter fails, or `null` if the `$variable_name` variable is not set.
-	 */
-	function bb_filter_var_string( $variable_name, $flags = array() ) {
-
-		$require_array = in_array( FILTER_REQUIRE_ARRAY, $flags, true );
-		$string        = filter_var( $variable_name, FILTER_UNSAFE_RAW, $require_array ? FILTER_REQUIRE_ARRAY : array() );
-
-		// If we have an empty string or the input var isn't found we can return early.
-		if ( empty( $string ) ) {
-			return $string;
-		}
-
-		/**
-		 * This differs from strip_tags() because it removes the contents of
-		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
-		 * will return 'something'. wp_strip_all_tags will return ''
-		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
-
-		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
-			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
-		}
-
-		return $string;
-
-	}
 }
 
 /**

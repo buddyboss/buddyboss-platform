@@ -322,6 +322,7 @@ class BP_Messages_Box_Template {
 
 		if ( ! bp_is_current_action( 'notices' ) && ! empty( $this->thread->messages ) ) {
 			$last_message_index = 0;
+			// $this->thread->messages = array_reverse( (array) $this->thread->messages );
 
 			if ( isset( $this->thread->last_message->id ) && (int) $this->thread->last_message->id > 0 ) {
 				$this->thread->last_message_id      = $this->thread->last_message->id;
