@@ -155,6 +155,15 @@ function bbp_setup_current_user() {
 	do_action( 'bbp_setup_current_user' );
 }
 
+/**
+ * Setup the user engagements strategy
+ *
+ * @since 2.6.0 bbPress (r6875)
+ */
+function bbp_setup_engagements() {
+	do_action( 'bbp_setup_engagements' );
+}
+
 /** Supplemental Actions ******************************************************/
 
 /**

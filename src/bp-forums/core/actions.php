@@ -82,6 +82,7 @@ add_action( 'bbp_init', 'bbp_register', 0 );
 add_action( 'bbp_init', 'bbp_add_rewrite_tags', 20 );
 add_action( 'bbp_init', 'bbp_add_rewrite_rules', 30 );
 add_action( 'bbp_init', 'bbp_add_permastructs', 40 );
+add_action( 'bbp_init', 'bbp_setup_engagements', 50  );
 add_action( 'bbp_init', 'bbp_ready', 999 );
 
 /**
