@@ -746,11 +746,11 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 */
 		public function setup_engagements() {
 
-			// Setup the class name
+			// Setup the class name.
 			$strategy   = ucwords( bbp_engagements_strategy() );
 			$class_name = "BBP_User_Engagements_{$strategy}";
 
-			// Setup the engagements interface
+			// Setup the engagements interface.
 			$this->engagements = new $class_name();
 		}
 
