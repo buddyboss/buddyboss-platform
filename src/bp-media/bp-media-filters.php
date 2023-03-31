@@ -2745,6 +2745,8 @@ function bb_setup_attachment_media_preview_template( $template ) {
 /**
  * Enable media preview without trailing slash.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $redirect_url URL to render.
  *
  * @return mixed|string
