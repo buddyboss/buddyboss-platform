@@ -590,8 +590,8 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 *
 	 * @since 2.6.3 bbPress (r6991)
 	 *
-	 * @param string $meta_key
-	 * @param int    $object_id
+	 * @param string $meta_key  The meta key.
+	 * @param int    $object_id The object id.
 	 *
 	 * @return string
 	 */
@@ -641,8 +641,8 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 *
 	 * @since 2.6.3 bbPress (r6991)
 	 *
-	 * @param string $meta_key
-	 * @param int    $object_id
+	 * @param string $meta_key  The meta key.
+	 * @param int    $object_id The object id.
 	 *
 	 * @return mixed Results from cache get.
 	 */
