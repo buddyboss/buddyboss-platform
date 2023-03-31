@@ -540,7 +540,7 @@ function bp_media_delete_activity_media( $activities ) {
 			 * Attached media could still be used inside that component.
 			 */
 			$bp = buddypress();
-			if( $bp->activity->id !== $activity->component ){
+			if( !empty( $bp->activity ) && ( $bp->activity->id !== $activity->component ) ){
 				continue;
 			}
 
