@@ -9,8 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/** User Relationships ********************************************************/
-
 /**
  * Add a user id to an object.
  *
@@ -344,8 +342,8 @@ function bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
  *
  * @since 2.6.0 bbPress (r6522)
  *
- * @param int  $topic_id
- * @param bool $force
+ * @param int  $topic_id The topic id.
+ * @param bool $force    If force true the recalcualate topic engaged.
  *
  * @return boolean True if any engagements are added, false otherwise.
  */
@@ -568,9 +566,9 @@ function bbp_remove_user_favorite( $user_id, $topic_id ) {
 }
 
 /**
- * Handles the front end adding and removing of favorite topics
+ * Handles the front end adding and removing of favorite topics.
  *
- * @param string $action The requested action to compare this function to
+ * @param string $action The requested action to compare this function to.
  *
  * @return bool
  */
@@ -675,7 +673,7 @@ function bbp_favorites_handler( $action = '' ) {
  */
 
 /**
- * Get a user's object IDs
+ * Get a user's object IDs.
  *
  * For the most part, you should not need to use this function, and may even
  * want to come up with a more efficient way to get IDs on your own. Nevertheless,
@@ -684,9 +682,9 @@ function bbp_favorites_handler( $action = '' ) {
  *
  * @since 2.6.0 bbPress (r6606)
  *
- * @param array $args The arguments to override defaults
+ * @param array $args The arguments to override defaults.
  *
- * @return array|bool Results if user has objects, otherwise null
+ * @return array|bool Results if user has objects, otherwise null.
  */
 function bbp_get_user_object_ids( $args = array() ) {
 	$object_ids = $defaults = array();
@@ -720,7 +718,7 @@ function bbp_get_user_object_ids( $args = array() ) {
 				'compare' => 'NUMERIC'
 			),
 
-			// Performance
+			// Performance.
 			'nopaging'               => true,
 			'suppress_filters'       => true,
 			'update_post_term_cache' => false,

@@ -756,38 +756,6 @@ function bbp_is_get_request() {
 	return (bool) ( 'GET' === strtoupper( $_SERVER['REQUEST_METHOD'] ) );
 }
 
-/** Redirection ***************************************************************/
-
-/**
- * Perform a safe, local redirect somewhere inside the current site
- *
- * On some setups, passing the value of wp_get_referer() may result in an empty
- * value for $location, which results in an error on redirection. If $location
- * is empty, we can safely redirect back to the forum root. This might change
- * in a future version, possibly to the site root.
- *
- * @since 2.6.0 bbPress (r5658)
- *
- * @see  bbp_redirect_to_field()
- *
- * @param string $location The URL to redirect the user to.
- * @param int    $status   Optional. The numeric code to give in the redirect
- *                         headers. Default: 302.
- */
-function bbp_redirect( $location = '', $status = 302 ) {
-
-	// Prevent errors from empty $location
-	if ( empty( $location ) ) {
-		$location = bbp_get_forums_url();
-	}
-
-	// Setup the safe redirect
-	wp_safe_redirect( $location, $status );
-
-	// Exit so the redirect takes place immediately
-	exit();
-}
-
 /**
  * Fix forums media
  *
@@ -1084,4 +1052,34 @@ function bb_get_forum_default_image( $size = 'full' ) {
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
 	 */
 	return apply_filters( 'bb_get_forum_default_image', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $filename ), $size );
+}
+
+/**
+ * Perform a safe, local redirect somewhere inside the current site.
+ *
+ * On some setups, passing the value of wp_get_referer() may result in an empty
+ * value for $location, which results in an error on redirection. If $location
+ * is empty, we can safely redirect back to the forum root. This might change
+ * in a future version, possibly to the site root.
+ *
+ * @since 2.6.0 bbPress (r5658)
+ *
+ * @see   bbp_redirect_to_field()
+ *
+ * @param string $location The URL to redirect the user to.
+ * @param int    $status   Optional. The numeric code to give in the redirect
+ *                         headers. Default: 302.
+ */
+function bbp_redirect( $location = '', $status = 302 ) {
+
+	// Prevent errors from empty $location.
+	if ( empty( $location ) ) {
+		$location = bbp_get_forums_url();
+	}
+
+	// Setup the safe redirect.
+	wp_safe_redirect( $location, $status );
+
+	// Exit so the redirect takes place immediately.
+	exit();
 }
