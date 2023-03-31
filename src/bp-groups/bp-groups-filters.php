@@ -420,12 +420,13 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 		$group = groups_get_group( $activity->item_id );
 
 		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
-		if ( ! empty( $group ) && groups_is_user_mod( bp_loggedin_user_id(), $activity->item_id ) ) {
-			$can_delete = true;
-		}
-
-		// Organizer can delete the activity.
-		if ( ! empty( $group ) && groups_is_user_admin( bp_loggedin_user_id(), $activity->item_id ) ) {
+		if ( 
+			! empty( $group ) && 
+			(
+				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+				groups_is_user_admin( get_current_user_id(), $activity->item_id ) 
+			)
+		) {
 			$can_delete = true;
 		}
 	}
