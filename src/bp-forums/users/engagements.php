@@ -1,68 +1,67 @@
 <?php
-
 /**
- * bbPress User Engagement Functions
+ * bbPress User Engagement Functions.
  *
- * @package bbPress
+ * @package    bbPress
  * @subpackage Engagements
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /** User Relationships ********************************************************/
 
 /**
- * Add a user id to an object
+ * Add a user id to an object.
  *
  * @since 2.6.0 bbPress (r6109)
  *
- * @param int    $object_id The object id
- * @param int    $user_id   The user id
- * @param string $rel_key   The relationship key
- * @param string $rel_type  The relationship type (usually 'post')
- * @param bool   $unique    Whether meta key should be unique to the object
+ * @param int    $object_id The object id.
+ * @param int    $user_id   The user id.
+ * @param string $rel_key   The relationship key.
+ * @param string $rel_type  The relationship type (usually 'post').
+ * @param bool   $unique    Whether meta key should be unique to the object.
  *
- * @return bool Returns true on success, false on failure
+ * @return bool Returns true on success, false on failure.
  */
 function bbp_add_user_to_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post', $unique = false ) {
 	$object_id = absint( $object_id );
 	$user_id   = absint( $user_id );
 	$retval    = bbp_user_engagements_interface( $rel_key, $rel_type )->add_user_to_object( $object_id, $user_id, $rel_key, $rel_type, $unique );
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_add_user_to_object', $retval, $object_id, $user_id, $rel_key, $rel_type, $unique );
 }
 
 /**
- * Remove a user id from an object
+ * Remove a user id from an object.
  *
  * @since 2.6.0 bbPress (r6109)
  *
- * @param int    $object_id The object id
- * @param int    $user_id   The user id
- * @param string $rel_key   The relationship key
- * @param string $rel_type  The relationship type (usually 'post')
+ * @param int    $object_id The object id.
+ * @param int    $user_id   The user id.
+ * @param string $rel_key   The relationship key.
+ * @param string $rel_type  The relationship type (usually 'post').
  *
- * @return bool Returns true on success, false on failure
+ * @return bool Returns true on success, false on failure.
  */
 function bbp_remove_user_from_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
 	$retval = bbp_user_engagements_interface( $rel_key, $rel_type )->remove_user_from_object( $object_id, $user_id, $rel_key, $rel_type );
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_user_from_object', $retval, $object_id, $user_id, $rel_key, $rel_type );
 }
 
 /**
- * Remove a user id from all objects
+ * Remove a user id from all objects.
  *
  * @since 2.6.0 bbPress (r6109)
  *
- * @param int    $user_id  The user id
- * @param string $rel_key  The relationship key
- * @param string $rel_type The relationship type (usually 'post')
+ * @param int    $user_id  The user id.
+ * @param string $rel_key  The relationship key.
+ * @param string $rel_type The relationship type (usually 'post').
  *
- * @return bool Returns true on success, false on failure
+ * @return bool Returns true on success, false on failure.
  */
 function bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
 	$user_id = absint( $user_id );
@@ -73,72 +72,71 @@ function bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $rel_typ
 }
 
 /**
- * Remove an object from all users
+ * Remove an object from all users.
  *
  * @since 2.6.0 bbPress (r6109)
  *
- * @param int    $object_id The object id
- * @param int    $user_id   The user id
- * @param string $rel_key   The relationship key
- * @param string $rel_type  The relationship type (usually 'post')
+ * @param int    $object_id The object id.
+ * @param string $rel_key   The relationship key.
+ * @param string $rel_type  The relationship type (usually 'post').
  *
- * @return bool Returns true on success, false on failure
+ * @return bool Returns true on success, false on failure.
  */
 function bbp_remove_object_from_all_users( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
 	$object_id = absint( $object_id );
 	$retval    = bbp_user_engagements_interface( $rel_key, $rel_type )->remove_object_from_all_users( $object_id, $rel_key, $rel_type );
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_object_from_all_users', $retval, $object_id, $rel_key, $rel_type );
 }
 
 /**
- * Remove all users from all objects
+ * Remove all users from all objects.
  *
  * @since 2.6.0 bbPress (r6109)
  *
- * @param string $rel_key  The relationship key
- * @param string $rel_type The relationship type (usually 'post')
+ * @param string $rel_key  The relationship key.
+ * @param string $rel_type The relationship type (usually 'post').
  *
- * @return bool Returns true on success, false on failure
+ * @return bool Returns true on success, false on failure.
  */
 function bbp_remove_all_users_from_all_objects( $rel_key = '', $rel_type = 'post' ) {
 	$retval = bbp_user_engagements_interface( $rel_key, $rel_type )->remove_all_users_from_all_objects( $rel_key, $rel_type );
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_all_users_from_all_objects', $retval, $rel_key, $rel_type );
 }
 
 /**
- * Get users of an object
+ * Get users of an object.
  *
  * @since 2.6.0 bbPress (r6109)
  *
- * @param int    $object_id The object id
- * @param string $rel_key   The key used to index this relationship
- * @param string $rel_type  The type of meta to look in
+ * @param int    $object_id The object id.
+ * @param string $rel_key   The key used to index this relationship.
+ * @param string $rel_type  The type of meta to look in.
  *
- * @return array Returns ids of users
+ * @return array Returns ids of users.
  */
 function bbp_get_users_for_object( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
 	$object_id = absint( $object_id );
 	$retval    = bbp_user_engagements_interface( $rel_key, $rel_type )->get_users_for_object( $object_id, $rel_key, $rel_type );
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_users_for_object', $retval, $object_id, $rel_key, $rel_type );
 }
 
 /**
- * Check if an object has a specific user
+ * Check if an object has a specific user.
  *
  * @since 2.6.0 bbPress (r6109)
  *
- * @param int    $object_id The object id
- * @param int    $user_id   The user id
- * @param string $rel_key   The relationship key
- * @param string $rel_type  The relationship type (usually 'post')
+ * @param int    $object_id The object id.
+ * @param int    $user_id   The user id.
+ * @param string $rel_key   The relationship key.
+ * @param string $rel_type  The relationship type (usually 'post').
  *
- * @return bool Returns true if object has a user, false if not
+ * @return bool Returns true if object has a user, false if not.
  */
 function bbp_is_object_of_user( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
 	$object_id = absint( $object_id );
@@ -146,67 +144,67 @@ function bbp_is_object_of_user( $object_id = 0, $user_id = 0, $rel_key = '', $re
 	$user_ids  = bbp_get_users_for_object( $object_id, $rel_key, $rel_type );
 	$retval    = is_numeric( array_search( $user_id, $user_ids, true ) );
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_object_of_user', $retval, $object_id, $user_id, $rel_key, $rel_type );
 }
 
 /**
- * Get the query part responsible for JOINing objects to user IDs
+ * Get the query part responsible for JOINing objects to user IDs.
  *
  * @since 2.6.0 bbPress (r6747)
  *
- * @param array  $args      Default query arguments
- * @param string $context   Additional context
- * @param string $rel_key   The relationship key
- * @param string $rel_type  The relationship type (usually 'post')
+ * @param array  $args     Default query arguments.
+ * @param string $context  Additional context.
+ * @param string $rel_key  The relationship key.
+ * @param string $rel_type The relationship type (usually 'post').
  *
  * @return array
  */
 function bbp_get_user_object_query( $args = array(), $context = '', $rel_key = '', $rel_type = 'post' ) {
 	$retval = bbp_user_engagements_interface( $rel_key, $rel_type )->get_query( $args, "get_user_{$context}", $rel_key, $rel_type );
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_user_object_query', $retval, $args, $context, $rel_key, $rel_type );
 }
 
 /** Engagements ***************************************************************/
 
 /**
- * Get the users who have engaged in a topic
+ * Get the users who have engaged in a topic.
  *
  * @since 2.6.0 bbPress (r6320)
  *
- * @param int $topic_id Optional. Topic id
+ * @param int $topic_id Optional. Topic id.
  *
- * @return array|bool Results if the topic has any engagements, otherwise false
+ * @return array|bool Results if the topic has any engagements, otherwise false.
  */
 function bbp_get_topic_engagements( $topic_id = 0 ) {
 	$topic_id = bbp_get_topic_id( $topic_id );
 	$users    = bbp_get_users_for_object( $topic_id, '_bbp_engagement' );
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_topic_engagements', $users, $topic_id );
 }
 
 /**
- * Return the users who have engaged in a topic, directly with a database query
+ * Return the users who have engaged in a topic, directly with a database query.
  *
  * See: https://bbpress.trac.wordpress.org/ticket/3083
  *
  * @since 2.6.0 bbPress (r6522)
  *
- * @param int $topic_id
+ * @param int $topic_id The Topic Id.
  *
  * @return array
  */
 function bbp_get_topic_engagements_raw( $topic_id = 0 ) {
 
-	// Default variables
+	// Default variables.
 	$topic_id = bbp_get_topic_id( $topic_id );
 	$bbp_db   = bbp_db();
 	$statii   = "'" . implode( "', '", bbp_get_public_topic_statuses() ) . "'";
 
-	// A cool UNION query!
+	// A cool UNION query!.
 	$sql = "
 SELECT DISTINCT( post_author ) FROM (
 	SELECT post_author FROM {$bbp_db->posts}
@@ -216,58 +214,58 @@ UNION
 		WHERE ( post_parent = %d AND post_status = %s AND post_type = %s )
 ) as u1";
 
-	// Prepare & get results
+	// Prepare & get results.
 	$query   = $bbp_db->prepare( $sql, $topic_id, bbp_get_topic_post_type(), $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type() );
 	$results = $bbp_db->get_col( $query );
 
-	// Parse results into voices
+	// Parse results into voices.
 	$engagements = ! is_wp_error( $results )
 		? wp_parse_id_list( array_filter( $results ) )
 		: array();
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_topic_engagements_raw', $engagements, $topic_id );
 }
 
 /**
- * Get a user's topic engagements
+ * Get a user's topic engagements.
  *
  * @since 2.6.0 bbPress (r6320)
- * @since 2.6.0 bbPress (r6618) Signature changed to accept an array of arguments
+ * @since 2.6.0 bbPress (r6618) Signature changed to accept an array of arguments.
  *
- * @param array $args Optional. Arguments to pass into bbp_has_replies()
+ * @param array $args Optional. Arguments to pass into bbp_has_replies().
  *
- * @return bool True if user has engaged, otherwise false
+ * @return bool True if user has engaged, otherwise false.
  */
 function bbp_get_user_engagements( $args = array() ) {
 	$r     = bbp_get_user_object_query( $args, 'engagements', '_bbp_engagement' );
 	$query = bbp_has_topics( $r );
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'bbp_get_user_engagements', $query, 0, $r, $args );
 }
 
 /**
- * Check if a user is engaged in a topic or not
+ * Check if a user is engaged in a topic or not.
  *
  * @since 2.6.0 bbPress (r6320)
  *
- * @param int $user_id Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id  Optional. User id.
+ * @param int $topic_id Optional. Topic id.
  *
- * @return bool True if the topic is in user's engagements, otherwise false
+ * @return bool True if the topic is in user's engagements, otherwise false.
  */
 function bbp_is_user_engaged( $user_id = 0, $topic_id = 0 ) {
 	$user_id  = bbp_get_user_id( $user_id, true, true );
 	$topic_id = bbp_get_topic_id( $topic_id );
 	$retval   = bbp_is_object_of_user( $topic_id, $user_id, '_bbp_engagement' );
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_user_engaged', $retval, $user_id, $topic_id );
 }
 
 /**
- * Add a topic to user's engagements
+ * Add a topic to user's engagements.
  *
  * Note that both the User and Topic should be verified to exist before using
  * this function. Originally both were validated, but because this function is
@@ -276,24 +274,24 @@ function bbp_is_user_engaged( $user_id = 0, $topic_id = 0 ) {
  *
  * @since 2.6.0 bbPress (r6320)
  *
- * @param int $user_id Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id  Optional. User id.
+ * @param int $topic_id Optional. Topic id.
  *
- * @return bool Always true
+ * @return bool Always true.
  */
 function bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
 
-	// Bail if not enough info
+	// Bail if not enough info.
 	if ( empty( $user_id ) || empty( $topic_id ) ) {
 		return false;
 	}
 
-	// Bail if already a engaged
+	// Bail if already a engaged.
 	if ( bbp_is_user_engaged( $user_id, $topic_id ) ) {
 		return false;
 	}
 
-	// Bail if add fails
+	// Bail if add fails.
 	if ( ! bbp_add_user_to_object( $topic_id, $user_id, '_bbp_engagement' ) ) {
 		return false;
 	}
@@ -304,29 +302,28 @@ function bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
 }
 
 /**
- * Remove a topic from user's engagements
+ * Remove a topic from user's engagements.
  *
  * @since 2.6.0 bbPress (r6320)
  *
- * @param int $user_id Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id  Optional. User id.
+ * @param int $topic_id Optional. Topic id.
  *
- * @return bool True if the topic was removed from user's engagements, otherwise
- *               false
+ * @return bool True if the topic was removed from user's engagements, otherwise false.
  */
 function bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
 
-	// Bail if not enough info
+	// Bail if not enough info.
 	if ( empty( $user_id ) || empty( $topic_id ) ) {
 		return false;
 	}
 
-	// Bail if not already engaged
+	// Bail if not already engaged.
 	if ( ! bbp_is_user_engaged( $user_id, $topic_id ) ) {
 		return false;
 	}
 
-	// Bail if remove fails
+	// Bail if remove fails.
 	if ( ! bbp_remove_user_from_object( $topic_id, $user_id, '_bbp_engagement' ) ) {
 		return false;
 	}
@@ -350,44 +347,44 @@ function bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
  * @param int  $topic_id
  * @param bool $force
  *
- * @return boolean True if any engagements are added, false otherwise
+ * @return boolean True if any engagements are added, false otherwise.
  */
 function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
 
-	// Default return value
+	// Default return value.
 	$retval = false;
 
-	// Check post type
+	// Check post type.
 	$topic_id = bbp_is_reply( $topic_id )
 		? bbp_get_reply_topic_id( $topic_id )
 		: bbp_get_topic_id( $topic_id );
 
-	// Bail if no topic ID
+	// Bail if no topic ID.
 	if ( empty( $topic_id ) ) {
 		return $retval;
 	}
 
-	// Query for engagements
+	// Query for engagements.
 	$old_engagements = bbp_get_topic_engagements( $topic_id );
 	$new_engagements = bbp_get_topic_engagements_raw( $topic_id );
 
-	// Sort arrays
+	// Sort arrays.
 	sort( $old_engagements, SORT_NUMERIC );
 	sort( $new_engagements, SORT_NUMERIC );
 
-	// Only recalculate on change
+	// Only recalculate on change.
 	if ( ( true === $force ) || ( $old_engagements !== $new_engagements ) ) {
 
-		// Delete all engagements
+		// Delete all engagements.
 		bbp_remove_object_from_all_users( $topic_id, '_bbp_engagement' );
 
-		// Update the voice count for this topic id
+		// Update the voice count for this topic id.
 		foreach ( $new_engagements as $user_id ) {
 			$retval = bbp_add_user_engagement( $user_id, $topic_id );
 		}
 	}
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_recalculate_user_engagements', $retval, $topic_id );
 }
 
@@ -399,14 +396,16 @@ function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
  *
  * @since 2.6.0 bbPress (r6526)
  *
- * @param int $topic_id
+ * @param int $topic_id The topic id.
+ *
+ * @return bool|void
  */
 function bbp_update_topic_engagements( $topic_id = 0 ) {
 
-	// Is a reply
+	// Is a reply.
 	if ( bbp_is_reply( $topic_id ) ) {
 
-		// Bail if reply isn't published
+		// Bail if reply isn't published.
 		if ( ! bbp_is_reply_published( $topic_id ) ) {
 			return;
 		}
@@ -414,10 +413,10 @@ function bbp_update_topic_engagements( $topic_id = 0 ) {
 		$author_id = bbp_get_reply_author_id( $topic_id );
 		$topic_id  = bbp_get_reply_topic_id( $topic_id );
 
-	// Is a topic
+	// Is a topic.
 	} elseif ( bbp_is_topic( $topic_id ) ) {
 
-		// Bail if topic isn't published
+		// Bail if topic isn't published.
 		if ( ! bbp_is_topic_published( $topic_id ) ) {
 			return;
 		}
@@ -425,48 +424,48 @@ function bbp_update_topic_engagements( $topic_id = 0 ) {
 		$author_id = bbp_get_topic_author_id( $topic_id );
 		$topic_id  = bbp_get_topic_id( $topic_id );
 
-	// Is unknown
+	// Is unknown.
 	} else {
 		return;
 	}
 
-	// Bail if topic is not public
+	// Bail if topic is not public.
 	if ( ! bbp_is_topic_public( $topic_id ) ) {
 		return;
 	}
 
-	// Return whether engagement was added
+	// Return whether engagement was added.
 	return bbp_add_user_engagement( $author_id, $topic_id );
 }
 
 /** Favorites *****************************************************************/
 
 /**
- * Get the users who have made the topic favorite
+ * Get the users who have made the topic favorite.
  *
  * @since 2.0.0 bbPress (r2658)
  *
- * @param int $topic_id Optional. Topic id
+ * @param int $topic_id Optional. Topic id.
  *
- * @return array|bool Results if the topic has any favoriters, otherwise false
+ * @return array|bool Results if the topic has any favoriters, otherwise false.
  */
 function bbp_get_topic_favoriters( $topic_id = 0 ) {
 	$topic_id = bbp_get_topic_id( $topic_id );
 	$users    = bbp_get_users_for_object( $topic_id, '_bbp_favorite' );
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( 'bbp_get_topic_favoriters', $users, $topic_id );
 }
 
 /**
- * Get a user's favorite topics
+ * Get a user's favorite topics.
  *
  * @since 2.0.0 bbPress (r2652)
- * @since 2.6.0 bbPress (r6618) Signature changed to accept an array of arguments
+ * @since 2.6.0 bbPress (r6618) Signature changed to accept an array of arguments.
  *
- * @param array $args Optional. Arguments to pass into bbp_has_topics()
+ * @param array $args Optional. Arguments to pass into bbp_has_topics().
  *
- * @return array Array of topics if user has favorites, otherwise empty array
+ * @return array Array of topics if user has favorites, otherwise empty array.
  */
 function bbp_get_user_favorites( $args = array() ) {
 	$r     = bbp_get_user_object_query( $args, 'favorites', '_bbp_favorite' );
@@ -474,29 +473,29 @@ function bbp_get_user_favorites( $args = array() ) {
 		? bbp_has_topics( $r )
 		: array();
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'bbp_get_user_favorites', $query, 0, $r, $args );
 }
 
 /**
- * Check if a topic is in user's favorites or not
+ * Check if a topic is in user's favorites or not.
  *
  * @since 2.0.0 bbPress (r2652)
  *
- * @param int $user_id Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id  Optional. User id.
+ * @param int $topic_id Optional. Topic id.
  *
- * @return bool True if the topic is in user's favorites, otherwise false
+ * @return bool True if the topic is in user's favorites, otherwise false.
  */
 function bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
 	$retval = bbp_is_object_of_user( $topic_id, $user_id, '_bbp_favorite' );
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_user_favorite', $retval, $user_id, $topic_id );
 }
 
 /**
- * Add a topic to user's favorites
+ * Add a topic to user's favorites.
  *
  * Note that both the User and Topic should be verified to exist before using
  * this function. Originally both were validated, but because this function is
@@ -505,26 +504,26 @@ function bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
  *
  * @since 2.0.0 bbPress (r2652)
  *
- * @param int $user_id Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id  Optional. User id.
+ * @param int $topic_id Optional. Topic id.
  *
- * @return bool True if the topic was added to user's favorites, otherwise false
+ * @return bool True if the topic was added to user's favorites, otherwise false.
  */
 function bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
 	$user_id  = bbp_get_user_id( $user_id, false, false );
 	$topic_id = bbp_get_topic_id( $topic_id );
 
-	// Bail if not enough info
+	// Bail if not enough info.
 	if ( empty( $user_id ) || empty( $topic_id ) ) {
 		return false;
 	}
 
-	// Bail if already a favorite
+	// Bail if already a favorite.
 	if ( bbp_is_user_favorite( $user_id, $topic_id ) ) {
 		return false;
 	}
 
-	// Bail if add fails
+	// Bail if add fails.
 	if ( ! bbp_add_user_to_object( $topic_id, $user_id, '_bbp_favorite' ) ) {
 		return false;
 	}
@@ -535,30 +534,30 @@ function bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
 }
 
 /**
- * Remove a topic from user's favorites
+ * Remove a topic from user's favorites.
  *
  * @since 2.0.0 bbPress (r2652)
  *
- * @param int $user_id Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id  Optional. User id.
+ * @param int $topic_id Optional. Topic id.
  *
- * @return bool True if the topic was removed from user's favorites, otherwise false
+ * @return bool True if the topic was removed from user's favorites, otherwise false.
  */
 function bbp_remove_user_favorite( $user_id, $topic_id ) {
 	$user_id  = bbp_get_user_id( $user_id, false, false );
 	$topic_id = bbp_get_topic_id( $topic_id );
 
-	// Bail if not enough info
+	// Bail if not enough info.
 	if ( empty( $user_id ) || empty( $topic_id ) ) {
 		return false;
 	}
 
-	// Bail if not already a favorite
+	// Bail if not already a favorite.
 	if ( ! bbp_is_user_favorite( $user_id, $topic_id ) ) {
 		return false;
 	}
 
-	// Bail if remove fails
+	// Bail if remove fails.
 	if ( ! bbp_remove_user_from_object( $topic_id, $user_id, '_bbp_favorite' ) ) {
 		return false;
 	}
@@ -572,51 +571,53 @@ function bbp_remove_user_favorite( $user_id, $topic_id ) {
  * Handles the front end adding and removing of favorite topics
  *
  * @param string $action The requested action to compare this function to
+ *
+ * @return bool
  */
 function bbp_favorites_handler( $action = '' ) {
 
-	// Default
+	// Default.
 	$success = false;
 
-	// Bail if favorites not active
+	// Bail if favorites not active.
 	if ( ! bbp_is_favorites_active() ) {
 		return $success;
 	}
 
-	// Bail if no topic ID is passed
+	// Bail if no topic ID is passed.
 	if ( empty( $_GET['topic_id'] ) ) {
 		return $success;
 	}
 
-	// Setup possible get actions
+	// Setup possible get actions.
 	$possible_actions = array(
 		'bbp_favorite_add',
 		'bbp_favorite_remove',
 	);
 
-	// Bail if actions aren't meant for this function
+	// Bail if actions aren't meant for this function.
 	if ( ! in_array( $action, $possible_actions, true ) ) {
 		return $success;
 	}
 
-	// What action is taking place?
+	// What action is taking place?.
 	$topic_id = bbp_get_topic_id( $_GET['topic_id'] );
 	$user_id  = bbp_get_user_id( 0, true, true );
 
-	// Check for empty topic
+	// Check for empty topic.
 	if ( empty( $topic_id ) ) {
 		bbp_add_error( 'bbp_favorite_topic_id', __( '<strong>Error</strong>: No topic was found. Which topic are you marking/unmarking as favorite?', 'bbpress' ) );
 
-	// Check nonce
+	// Check nonce.
 	} elseif ( ! bbp_verify_nonce_request( 'toggle-favorite_' . $topic_id ) ) {
 		bbp_add_error( 'bbp_favorite_nonce', __( '<strong>Error</strong>: Are you sure you wanted to do that?', 'bbpress' ) );
 
-	// Check current user's ability to edit the user
+	// Check current user's ability to edit the user.
 	} elseif ( ! current_user_can( 'edit_user', $user_id ) ) {
 		bbp_add_error( 'bbp_favorite_permission', __( '<strong>Error</strong>: You do not have permission to edit favorites for that user.', 'bbpress' ) );
 	}
 
-	// Bail if errors
+	// Bail if errors.
 	if ( bbp_has_errors() ) {
 		return $success;
 	}
@@ -632,15 +633,15 @@ function bbp_favorites_handler( $action = '' ) {
 		$success = bbp_add_user_favorite( $user_id, $topic_id );
 	}
 
-	// Do additional favorites actions
+	// Do additional favorites actions.
 	do_action( 'bbp_favorites_handler', $success, $user_id, $topic_id, $action );
 
 	// Success!
 	if ( true === $success ) {
 
-		// Redirect back from whence we came
+		// Redirect back from whence we came.
 		if ( ! empty( $_REQUEST['redirect_to'] ) ) {
-			$redirect = $_REQUEST['redirect_to']; // Validated later
+			$redirect = $_REQUEST['redirect_to']; // Validated later.
 		} elseif ( bbp_is_favorites() ) {
 			$redirect = bbp_get_favorites_permalink( $user_id, true );
 		} elseif ( bbp_is_single_user() ) {
@@ -655,7 +656,7 @@ function bbp_favorites_handler( $action = '' ) {
 
 		bbp_redirect( $redirect );
 
-	// Fail! Handle errors
+	// Fail! Handle errors.
 	} elseif ( 'bbp_favorite_remove' === $action ) {
 		bbp_add_error( 'bbp_favorite_remove', __( '<strong>Error</strong>: There was a problem removing that topic from favorites.', 'bbpress' ) );
 	} elseif ( 'bbp_favorite_add' === $action ) {
@@ -683,17 +684,14 @@ function bbp_favorites_handler( $action = '' ) {
  *
  * @since 2.6.0 bbPress (r6606)
  *
- * @param int    $user_id   The user id
- * @param string $rel_key   The relationship key
- * @param string $rel_type  The relationship type (usually 'post')
- * @param array  $args      The arguments to override defaults
+ * @param array $args The arguments to override defaults
  *
  * @return array|bool Results if user has objects, otherwise null
  */
 function bbp_get_user_object_ids( $args = array() ) {
 	$object_ids = $defaults = array();
 
-	// Parse arguments
+	// Parse arguments.
 	$r = bbp_parse_args( $args, array(
 		'user_id'     => 0,
 		'object_type' => bbp_get_topic_post_type(),
@@ -703,14 +701,14 @@ function bbp_get_user_object_ids( $args = array() ) {
 		'args'        => array()
 	), 'get_user_object_ids' );
 
-	// Sanitize arguments
+	// Sanitize arguments.
 	$r['user_id']     = bbp_get_user_id( $r['user_id'] );
 	$r['rel_key']     = sanitize_key( $r['rel_key'] );
 	$r['rel_type']    = sanitize_key( $r['rel_type'] );
 	$r['object_type'] = sanitize_key( $r['object_type'] );
 	$r['filter']      = sanitize_key( $r['filter'] );
 
-	// Defaults
+	// Defaults.
 	if ( 'post' === $r['rel_type'] ) {
 		$defaults = array(
 			'fields'         => 'ids',
@@ -732,27 +730,27 @@ function bbp_get_user_object_ids( $args = array() ) {
 		) );
 	}
 
-	// Parse arguments
+	// Parse arguments.
 	$query_args = bbp_parse_args( $r['args'], $defaults, "get_{$r['filter']}_args" );
 
-	// Queries
+	// Queries.
 	if ( 'post' === $r['rel_type'] ) {
 		$query      = new WP_Query( $query_args );
 		$object_ids = $query->posts;
 	}
 
-	// Filter & return
+	// Filter & return.
 	return (array) apply_filters( "bbp_get_{$r['filter']}", $object_ids, $r, $args );
 }
 
 /**
- * Get array of forum IDs that a user can moderate
+ * Get array of forum IDs that a user can moderate.
  *
  * @since 2.6.0 bbPress (r5834)
  *
  * @param int $user_id User id.
  *
- * @return array Return array of forum ids, or empty array
+ * @return array Return array of forum ids, or empty array.
  */
 function bbp_get_moderator_forum_ids( $user_id = 0 ) {
 	return bbp_get_user_object_ids( array(
@@ -764,13 +762,13 @@ function bbp_get_moderator_forum_ids( $user_id = 0 ) {
 }
 
 /**
- * Get a user's engaged topic ids
+ * Get a user's engaged topic ids.
  *
  * @since 2.6.0 bbPress (r6320)
  *
- * @param int $user_id Optional. User id
+ * @param int $user_id Optional. User id.
  *
- * @return array Return array of topic ids, or empty array
+ * @return array Return array of topic ids, or empty array.
  */
 function bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
 	return bbp_get_user_object_ids( array(
@@ -781,13 +779,13 @@ function bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
 }
 
 /**
- * Get a user's favorite topic ids
+ * Get a user's favorite topic ids.
  *
  * @since 2.0.0 bbPress (r2652)
  *
- * @param int $user_id Optional. User id
+ * @param int $user_id Optional. User id.
  *
- * @return array Return array of favorite topic ids, or empty array
+ * @return array Return array of favorite topic ids, or empty array.
  */
 function bbp_get_user_favorites_topic_ids( $user_id = 0 ) {
 	return bbp_get_user_object_ids( array(

@@ -366,7 +366,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			$actions = array(
 				'setup_theme',              // Setup the default theme compat
 				'setup_current_user',       // Setup currently logged in user
-				'setup_engagements',        // Setup user engagements strategy
+				'setup_engagements',        // Setup user engagements strategy.
 				'register_post_types',      // Register post types (forum|topic|reply)
 				'register_post_statuses',   // Register post statuses (closed|spam|orphan|hidden)
 				'register_taxonomies',      // Register taxonomies (topic-tag)
@@ -740,7 +740,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		}
 
 		/**
-		 * Setup the user engagements strategy
+		 * Setup the user engagements strategy.
 		 *
 		 * @since 2.6.0 bbPress (r6875)
 		 */
