@@ -197,7 +197,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * @param string $meta_key  The relationship key.
 	 * @param string $meta_type The relationship type (usually 'post').
 	 *
-	 * @return bool Returns true on success, false on failure
+	 * @return bool Returns true on success, false on failure.
 	 */
 	public function remove_user_from_all_objects( $user_id = 0, $meta_key = '', $meta_type = 'post' ) {
 		return delete_metadata( $meta_type, null, $meta_key, $user_id, true );
@@ -261,7 +261,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 */
 	public function get_query( $args = array(), $context_key = '', $meta_key = '', $meta_type = 'post' ) {
 
-		// Backwards compat for pre-2.6.0
+		// Backwards compat for pre-2.6.0.
 		if ( is_numeric( $args ) ) {
 			$args = array(
 				'meta_query' => array( array(
@@ -272,7 +272,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 			);
 		}
 
-		// Default arguments
+		// Default arguments.
 		$defaults = array(
 			'meta_query' => array( array(
 				'key'     => $meta_key,
@@ -281,7 +281,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 			) )
 		);
 
-		// Parse arguments
+		// Parse arguments.
 		return bbp_parse_args( $args, $defaults, $context_key );
 	}
 }
@@ -307,12 +307,12 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 *
 	 * @since 2.6.0 bbPress (r6737)
 	 *
-	 * @param string $tax_key
-	 * @param string $object_type
+	 * @param string $tax_key     Taxonomy key.
+	 * @param string $object_type The object type.
 	 */
 	private function jit_taxonomy( $tax_key = '', $object_type = 'user' ) {
 
-		// Bail if taxonomy already exists
+		// Bail if taxonomy already exists.
 		if ( taxonomy_exists( $tax_key ) ) {
 			return;
 		}
@@ -353,7 +353,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * @param string $meta_type The relationship type (usually 'post').
 	 * @param bool   $unique    Whether meta key should be unique to the object.
 	 *
-	 * @return bool Returns true on success, false on failure.
+	 * @return array|bool|void|WP_Error Returns true on success, false on failure.
 	 */
 	public function add_user_to_object( $object_id = 0, $user_id = 0, $meta_key = '', $meta_type = 'post', $unique = false ) {
 		$user_key = "{$meta_key}_user_id_{$user_id}";
@@ -448,21 +448,21 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 		$tax_key  = "{$meta_key}_{$meta_type}";
 		$this->jit_taxonomy( $tax_key );
 
-		// Get terms
+		// Get terms.
 		$terms = get_terms( array(
 			'object_ids' => $object_id,
 			'taxonomy'   => $tax_key
 		) );
 
-		// Slug part to replace
+		// Slug part to replace.
 		$user_ids = array();
 
-		// Loop through terms and get the user ID
+		// Loop through terms and get the user ID.
 		foreach ( $terms as $term ) {
 			$user_ids[] = str_replace( $user_key, '', $term->slug );
 		}
 
-		// Parse & return
+		// Parse & return.
 		return wp_parse_id_list( $user_ids );
 	}
 
@@ -482,10 +482,10 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 		$tax_key  = "{$meta_key}_{$meta_type}";
 		$user_key = "{$meta_key}_user_id_";
 
-		// Make sure the taxonomy is registered
+		// Make sure the taxonomy is registered.
 		$this->jit_taxonomy( $tax_key );
 
-		// Backwards compat for pre-2.6.0
+		// Backwards compat for pre-2.6.0.
 		if ( is_numeric( $args ) ) {
 			$args = array(
 				'tax_query' => array( array(
@@ -496,7 +496,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 			);
 		}
 
-		// Default arguments
+		// Default arguments.
 		$defaults = array(
 			'tax_query' => array( array(
 				'taxonomy' => $tax_key,
@@ -505,7 +505,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 			) )
 		);
 
-		// Parse arguments
+		// Parse arguments.
 		return bbp_parse_args( $args, $defaults, $context_key );
 	}
 }
