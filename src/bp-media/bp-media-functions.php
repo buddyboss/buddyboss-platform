@@ -61,7 +61,7 @@ function bp_media_upload() {
 		'id'      => (int) $attachment->ID,
 		'thumb'   => $attachment_thumb_url,
 		'medium'  => $attachment_medium,
-		'url'     => $attachment_url,
+		'url'     => untrailingslashit( $attachment_url ),
 		'msg_url' => $attachment_message_url,
 		'name'    => esc_attr( $name ),
 	);
@@ -3452,7 +3452,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 		}
 	}
 
-	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filters media preview image url.
