@@ -2589,7 +2589,7 @@ function bb_update_to_2_3_0() {
 }
 
 /**
- * Perform action while update the platform.
+ * Migration favorites from user meta to topic meta.
  *
  * @since BuddyBoss [BBVERSION]
  *
