@@ -170,3 +170,94 @@ function bb_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
 	return $buttons;
 }
 add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_inner_blogs_buttons', 10, 1 );
+
+
+/**
+ * Notification for mentions in blog comment
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int        $activity_id The activity comment ID.
+ * @param WP_Comment $comment WP Comment object.
+ * @param array      $activity_args Activity comment arguments.
+ * @param object     $activity_post_object The post type tracking args object.
+ */
+function bb_blogs_comment_mention_notification( $activity_id, $comment, $activity_args, $activity_post_object ) {
+	// Are mentions disabled?
+	if ( ! bp_activity_do_mentions() ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+	if ( empty( $activity->component ) ) {
+		return;
+	}
+
+	// If activity was marked as spam, stop the rest of this function.
+	if ( ! empty( $activity->is_spam ) ) {
+		return;
+	}
+
+	// Try to find mentions.
+	$usernames = bp_activity_find_mentions( $comment->comment_content );
+
+	// We have mentions!
+	if ( ! empty( $usernames ) ) {
+		// Are mentions disabled?
+		if ( ! bp_activity_do_mentions() || ( ! empty( $activity->privacy ) && 'onlyme' === $activity->privacy ) ) {
+			return;
+		}
+		$activity->content = $comment->comment_content;
+
+		// Send @mentions and setup BP notifications.
+		foreach ( (array) $usernames as $user_id => $username ) {
+			if ( apply_filters( 'bp_activity_at_name_do_notifications', true, $usernames, $user_id, $activity ) ) {
+				$email_type   = 'activity-at-message';
+				$group_name   = '';
+				$message_link = bp_activity_get_permalink( $activity_id );
+				$poster_name  = bp_core_get_user_displayname( $activity->user_id );
+
+				$notifications = BP_Notifications_Notification::get_all_for_user( $user_id, 'all' );
+
+				// Don't leave multiple notifications for the same activity item.
+				foreach ( $notifications as $notification ) {
+					if ( $activity_id === $notification->item_id && 'new_at_mention' === $notification->component_action ) {
+						return;
+					}
+				}
+				// Now email the user with the contents of the message (if they have enabled email notifications).
+				if ( 'no' !== bp_get_user_meta( $user_id, 'notification_activity_new_mention', true ) ) {
+					if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+						$email_type = 'groups-at-message';
+						$group_name = bp_get_current_group_name();
+					}
+
+					$unsubscribe_args = array(
+						'user_id'           => $user_id,
+						'notification_type' => $email_type,
+					);
+
+					$args = array(
+						'tokens' => array(
+							'activity'         => $activity,
+							'usermessage'      => wp_strip_all_tags( $activity->content ),
+							'group.name'       => $group_name,
+							'mentioned.url'    => $message_link,
+							'poster.name'      => $poster_name,
+							'receiver-user.id' => $user_id,
+							'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						),
+					);
+					bp_send_email( $email_type, $user_id, $args );
+
+					do_action('bp_activity_sent_mention_email', $activity, '', '', '', $user_id );
+				}
+				// Updates mention count for the user.
+				bp_activity_update_mention_count_for_user( $user_id, $activity->id );
+			}
+		}
+	}
+}
+
+// Action notification for mentions in single page blog comments.
+add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 999, 4 );
