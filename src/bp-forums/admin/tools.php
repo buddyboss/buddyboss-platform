@@ -37,7 +37,15 @@ function bbp_admin_repair() {
 
 		<div class="bp-admin-card section-repair_forums">
 
-			<h2><?php esc_html_e( 'Repair Forums', 'buddyboss' ); ?></h2>
+			<h2>
+				<?php
+				$meta_icon = bb_admin_icons( 'repair_forums' );
+				if ( ! empty( $meta_icon ) ) {
+					echo '<i class="' . esc_attr( $meta_icon ) . ' "></i>';
+				}
+				esc_html_e( 'Repair Forums', 'buddyboss' );
+				?>
+			</h2>
 
 			<p><?php esc_html_e( 'BuddyBoss keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
 
@@ -179,7 +187,9 @@ function bbp_admin_tools_feedback( $message, $class = false ) {
 
 	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
 	$message = str_replace( "'", "\'", $message );
-	$lambda  = create_function( '', "echo '$message';" );
+	$lambda  = function () use ( $message ) {
+		echo $message;
+	};
 
 	add_action( 'admin_notices', $lambda );
 
@@ -196,25 +206,27 @@ function bbp_admin_tools_feedback( $message, $class = false ) {
  */
 function bbp_admin_repair_list() {
 	$repair_list = array(
-		0  => array( 'bbp-sync-topic-meta', __( 'Recalculate the parent discussion for each post', 'buddyboss' ), 'bbp_admin_repair_topic_meta' ),
-		5  => array( 'bbp-sync-forum-meta', __( 'Recalculate the parent forum for each post', 'buddyboss' ), 'bbp_admin_repair_forum_meta' ),
-		10 => array( 'bbp-sync-forum-visibility', __( 'Recalculate private and hidden forums', 'buddyboss' ), 'bbp_admin_repair_forum_visibility' ),
-		15 => array( 'bbp-sync-all-topics-forums', __( 'Recalculate last activity in each discussion and forum', 'buddyboss' ), 'bbp_admin_repair_freshness' ),
-		20 => array( 'bbp-sync-all-topics-sticky', __( 'Recalculate the sticky relationship of each discussion', 'buddyboss' ), 'bbp_admin_repair_sticky' ),
-		25 => array( 'bbp-sync-all-reply-positions', __( 'Recalculate the position of each reply', 'buddyboss' ), 'bbp_admin_repair_reply_menu_order' ),
-		30 => array( 'bbp-group-forums', __( 'Repair social group forum relationships', 'buddyboss' ), 'bbp_admin_repair_group_forum_relationship' ),
-		35 => array( 'bbp-forum-topics', __( 'Count discussions in each forum', 'buddyboss' ), 'bbp_admin_repair_forum_topic_count' ),
-		40 => array( 'bbp-forum-replies', __( 'Count replies in each forum', 'buddyboss' ), 'bbp_admin_repair_forum_reply_count' ),
-		45 => array( 'bbp-topic-replies', __( 'Count replies in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_reply_count' ),
-		50 => array( 'bbp-topic-members', __( 'Count members in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_voice_count' ),
-		55 => array( 'bbp-topic-hidden-replies', __( 'Count spammed & trashed replies in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_hidden_reply_count' ),
-		60 => array( 'bbp-user-topics', __( 'Count discussions for each user', 'buddyboss' ), 'bbp_admin_repair_user_topic_count' ),
-		65 => array( 'bbp-user-replies', __( 'Count replies for each user', 'buddyboss' ), 'bbp_admin_repair_user_reply_count' ),
-		70 => array( 'bbp-user-favorites', __( 'Remove trashed discussions from user favorites', 'buddyboss' ), 'bbp_admin_repair_user_favorites' ),
-		75 => array( 'bbp-user-topic-subscriptions', __( 'Remove trashed discussions from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_topic_subscriptions' ),
-		80 => array( 'bbp-user-forum-subscriptions', __( 'Remove trashed forums from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_forum_subscriptions' ),
-		85 => array( 'bbp-user-role-map', __( 'Remap existing users to default forum roles', 'buddyboss' ), 'bbp_admin_repair_user_roles' ),
-		90 => array( 'bbp-wp-role-restore', __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' ),
+		0   => array( 'bbp-sync-topic-meta', __( 'Recalculate the parent discussion for each post', 'buddyboss' ), 'bbp_admin_repair_topic_meta' ),
+		5   => array( 'bbp-sync-forum-meta', __( 'Recalculate the parent forum for each post', 'buddyboss' ), 'bbp_admin_repair_forum_meta' ),
+		10  => array( 'bbp-sync-forum-visibility', __( 'Recalculate private and hidden forums', 'buddyboss' ), 'bbp_admin_repair_forum_visibility' ),
+		15  => array( 'bbp-sync-all-topics-forums', __( 'Recalculate last activity in each discussion and forum', 'buddyboss' ), 'bbp_admin_repair_freshness' ),
+		20  => array( 'bbp-sync-all-topics-sticky', __( 'Recalculate the sticky relationship of each discussion', 'buddyboss' ), 'bbp_admin_repair_sticky' ),
+		25  => array( 'bbp-sync-all-reply-positions', __( 'Recalculate the position of each reply', 'buddyboss' ), 'bbp_admin_repair_reply_menu_order' ),
+		30  => array( 'bbp-group-forums', __( 'Repair social group forum relationships', 'buddyboss' ), 'bbp_admin_repair_group_forum_relationship' ),
+		35  => array( 'bbp-forum-topics', __( 'Count discussions in each forum', 'buddyboss' ), 'bbp_admin_repair_forum_topic_count' ),
+		40  => array( 'bbp-forum-replies', __( 'Count replies in each forum', 'buddyboss' ), 'bbp_admin_repair_forum_reply_count' ),
+		45  => array( 'bbp-topic-replies', __( 'Count replies in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_reply_count' ),
+		50  => array( 'bbp-topic-members', __( 'Count members in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_voice_count' ),
+		55  => array( 'bbp-topic-hidden-replies', __( 'Count spammed & trashed replies in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_hidden_reply_count' ),
+		60  => array( 'bbp-user-topics', __( 'Count discussions for each user', 'buddyboss' ), 'bbp_admin_repair_user_topic_count' ),
+		65  => array( 'bbp-user-replies', __( 'Count replies for each user', 'buddyboss' ), 'bbp_admin_repair_user_reply_count' ),
+		70  => array( 'bbp-user-favorites', __( 'Remove trashed discussions from user favorites', 'buddyboss' ), 'bbp_admin_repair_user_favorites' ),
+		75  => array( 'bbp-user-topic-subscriptions', __( 'Remove trashed discussions from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_topic_subscriptions' ),
+		80  => array( 'bbp-user-forum-subscriptions', __( 'Remove trashed forums from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_forum_subscriptions' ),
+		85  => array( 'bbp-user-role-map', __( 'Remap existing users to default forum roles', 'buddyboss' ), 'bbp_admin_repair_user_roles' ),
+		90  => array( 'bbp-wp-role-restore', __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' ),
+		95  => array( 'bbp-migrate-buddyboss-forum-topic-subscription', __( 'Migrate BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
+		100 => array( 'bbp-migrate-bbpress-forum-topic-subscription', __( 'Migrate BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
 	);
 	ksort( $repair_list );
 
@@ -247,7 +259,7 @@ function bbp_get_network_sites() {
 function bbp_admin_repair_topic_reply_count() {
 	global $wpdb;
 
-	$statement = __( 'Counting the number of replies in each discussion&hellip; %s', 'buddyboss' );
+	$statement = __( 'Counting the number of replies in each discussion &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	// Post types and status
@@ -313,7 +325,7 @@ function bbp_admin_repair_topic_reply_count() {
 function bbp_admin_repair_topic_voice_count() {
 	global $wpdb;
 
-	$statement = __( 'Counting the number of members in each discussion&hellip; %s', 'buddyboss' );
+	$statement = __( 'Counting the number of members in each discussion &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM `{$wpdb->postmeta}` WHERE `meta_key` = '_bbp_voice_count';";
@@ -372,7 +384,7 @@ function bbp_admin_repair_topic_voice_count() {
 function bbp_admin_repair_topic_hidden_reply_count() {
 	global $wpdb;
 
-	$statement = __( 'Counting the number of spammed and trashed replies in each discussion&hellip; %s', 'buddyboss' );
+	$statement = __( 'Counting the number of spammed and trashed replies in each discussion &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM `{$wpdb->postmeta}` WHERE `meta_key` = '_bbp_reply_count_hidden';";
@@ -414,7 +426,7 @@ function bbp_admin_repair_topic_hidden_reply_count() {
 function bbp_admin_repair_group_forum_relationship() {
 	global $wpdb;
 
-	$statement = __( 'Repairing BuddyBoss group-forum relationships&hellip; %s', 'buddyboss' );
+	$statement = __( 'Repairing social group forum relationships &hellip; %s', 'buddyboss' );
 	$g_count   = 0;
 	$f_count   = 0;
 	$s_count   = 0;
@@ -571,7 +583,7 @@ function bbp_admin_repair_group_forum_relationship() {
 function bbp_admin_repair_forum_topic_count() {
 	global $wpdb;
 
-	$statement = __( 'Counting the number of discussions in each forum&hellip; %s', 'buddyboss' );
+	$statement = __( 'Counting the number of discussions in each forum &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->postmeta} WHERE meta_key IN ( '_bbp_topic_count', '_bbp_total_topic_count' );";
@@ -628,7 +640,7 @@ function bbp_admin_repair_forum_topic_count() {
 function bbp_admin_repair_forum_reply_count() {
 	global $wpdb;
 
-	$statement = __( 'Counting the number of replies in each forum&hellip; %s', 'buddyboss' );
+	$statement = __( 'Counting the number of replies in each forum &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	// Post type
@@ -693,7 +705,7 @@ function bbp_admin_repair_forum_reply_count() {
 function bbp_admin_repair_user_topic_count() {
 	global $wpdb;
 
-	$statement   = __( 'Counting the number of discussions each user has created&hellip; %s', 'buddyboss' );
+	$statement   = __( 'Counting the number of discussions for each user &hellip; %s', 'buddyboss' );
 	$result      = __( 'Failed!', 'buddyboss' );
 	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$wpdb->posts}` WHERE `post_type` = '" . bbp_get_topic_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "' GROUP BY `post_author`;";
 	$insert_rows = $wpdb->get_results( $sql_select );
@@ -767,7 +779,7 @@ function bbp_admin_repair_user_topic_count() {
 function bbp_admin_repair_user_reply_count() {
 	global $wpdb;
 
-	$statement   = __( 'Counting the number of discussions to which each user has replied&hellip; %s', 'buddyboss' );
+	$statement   = __( 'Counting the number of replies for each user &hellip; %s', 'buddyboss' );
 	$result      = __( 'Failed!', 'buddyboss' );
 	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$wpdb->posts}` WHERE `post_type` = '" . bbp_get_reply_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "' GROUP BY `post_author`;";
 	$insert_rows = $wpdb->get_results( $sql_select );
@@ -841,7 +853,7 @@ function bbp_admin_repair_user_reply_count() {
 function bbp_admin_repair_user_favorites() {
 	global $wpdb;
 
-	$statement = __( 'Removing trashed discussions from user favorites&hellip; %s', 'buddyboss' );
+	$statement = __( 'Removing trashed discussions from user favorites &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 	$key       = $wpdb->prefix . '_bbp_favorites';
 	$users     = $wpdb->get_results( "SELECT `user_id`, `meta_value` AS `favorites` FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';" );
@@ -938,7 +950,7 @@ function bbp_admin_repair_user_favorites() {
 function bbp_admin_repair_user_topic_subscriptions() {
 	global $wpdb;
 
-	$statement = __( 'Removing trashed discussions from user subscriptions&hellip; %s', 'buddyboss' );
+	$statement = __( 'Removing trashed discussions from user subscriptions &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 	$key       = $wpdb->prefix . '_bbp_subscriptions';
 	$users     = $wpdb->get_results( "SELECT `user_id`, `meta_value` AS `subscriptions` FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';" );
@@ -1034,7 +1046,7 @@ function bbp_admin_repair_user_topic_subscriptions() {
 function bbp_admin_repair_user_forum_subscriptions() {
 	global $wpdb;
 
-	$statement = __( 'Removing trashed forums from user subscriptions&hellip; %s', 'buddyboss' );
+	$statement = __( 'Removing trashed forums from user subscriptions &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 	$key       = $wpdb->prefix . '_bbp_forum_subscriptions';
 	$users     = $wpdb->get_results( "SELECT `user_id`, `meta_value` AS `subscriptions` FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';" );
@@ -1131,7 +1143,7 @@ function bbp_admin_repair_user_forum_subscriptions() {
  */
 function bbp_admin_repair_user_roles() {
 
-	$statement    = __( 'Remapping forum role for each user on this site&hellip; %s', 'buddyboss' );
+	$statement    = __( 'Remapping existing users to default forum roles &hellip; %s', 'buddyboss' );
 	$changed      = 0;
 	$role_map     = bbp_get_user_role_map();
 	$default_role = bbp_get_default_role();
@@ -1198,7 +1210,7 @@ function bbp_admin_repair_user_roles() {
 function bbp_admin_repair_freshness() {
 	global $wpdb;
 
-	$statement = __( 'Recomputing latest post in every discussion and forum&hellip; %s', 'buddyboss' );
+	$statement = __( 'Recalculating last activity in each discussion and forum &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	// First, delete everything.
@@ -1401,7 +1413,7 @@ function bbp_admin_repair_freshness() {
 function bbp_admin_repair_sticky() {
 	global $wpdb;
 
-	$statement = __( 'Repairing the sticky discussion to the parent forum relationships&hellip; %s', 'buddyboss' );
+	$statement = __( 'Recalculating the sticky relationship of each discussion &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 	$forums    = $wpdb->get_col( "SELECT ID FROM `{$wpdb->posts}` WHERE `post_type` = 'forum';" );
 
@@ -1469,7 +1481,7 @@ function bbp_admin_repair_sticky() {
  * @return array An array of the status code and the message
  */
 function bbp_admin_repair_forum_visibility() {
-	$statement = __( 'Recalculating forum visibility &hellip; %s', 'buddyboss' );
+	$statement = __( 'Recalculating private and hidden forums &hellip; %s', 'buddyboss' );
 
 	// Bail if queries returned errors
 	if ( ! bbp_repair_forum_visibility() ) {
@@ -1503,7 +1515,7 @@ function bbp_admin_repair_forum_visibility() {
 function bbp_admin_repair_forum_meta() {
 	global $wpdb;
 
-	$statement = __( 'Recalculating the forum for each post &hellip; %s', 'buddyboss' );
+	$statement = __( 'Recalculating the parent forum for each post &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	// First, delete everything.
@@ -1598,7 +1610,7 @@ function bbp_admin_repair_forum_meta() {
 function bbp_admin_repair_topic_meta() {
 	global $wpdb;
 
-	$statement = __( 'Recalculating the discussion for each post &hellip; %s', 'buddyboss' );
+	$statement = __( 'Recalculating the parent discussion for each post &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	// First, delete everything.
@@ -1676,7 +1688,7 @@ function bbp_admin_repair_topic_meta() {
 function bbp_admin_repair_reply_menu_order() {
 	global $wpdb;
 
-	$statement = __( 'Recalculating reply menu order &hellip; %s', 'buddyboss' );
+	$statement = __( 'Recalculating the position of each reply &hellip; %s', 'buddyboss' );
 	$result    = __( 'No reply positions to recalculate!', 'buddyboss' );
 
 	// Delete cases where `_bbp_reply_to` was accidentally set to itself
@@ -1945,7 +1957,8 @@ function bbp_admin_reset_handler() {
  */
 function bp_admin_forum_repair_tools_wrapper_function() {
 
-	$type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+	$type    = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+	$site_id = isset( $_POST['site_id'] ) ? sanitize_text_field( wp_unslash( $_POST['site_id'] ) ) : 0;
 
 	$response = array(
 		'feedback' => sprintf(
@@ -1963,8 +1976,8 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
-	$nonce = $_POST['nonce'];
+	// Use default nonce.
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bbpress-do-counts';
 
 	// Nonce check!
@@ -1972,8 +1985,8 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		wp_send_json_error( $response );
 	}
 
-	if( is_multisite() && bp_is_network_activated() ){
-		switch_to_blog( $_POST['site_id'] );
+	if ( is_multisite() && bp_is_network_activated() ) {
+		switch_to_blog( $site_id );
 	}
 
 	if ( 'bbp-sync-topic-meta' === $type ) {
@@ -2014,9 +2027,13 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		$status = bbp_admin_repair_user_roles();
 	} elseif ( 'bbp-wp-role-restore' === $type ) {
 		$status = bbp_restore_caps_from_wp_roles();
+	} elseif ( 'bbp-migrate-buddyboss-forum-topic-subscription' === $type ) {
+		$status = bb_subscriptions_migrate_users_forum_topic();
+	} elseif ( 'bbp-migrate-bbpress-forum-topic-subscription' === $type ) {
+		$status = bb_subscriptions_migrate_bbpress_users_forum_topic( false, $site_id );
 	}
 
-	if( is_multisite() && bp_is_network_activated() ) {
+	if ( is_multisite() && bp_is_network_activated() ) {
 		restore_current_blog();
 	}
 

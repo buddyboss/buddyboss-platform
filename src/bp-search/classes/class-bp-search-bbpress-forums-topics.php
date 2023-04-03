@@ -33,7 +33,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
-			$from = "{$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_bbp_forum_id'";
+			$from = "{$wpdb->posts} p";
 
 			/**
 			 * Filter the MySQL JOIN clause for the topic Search query.
@@ -195,7 +195,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			if ( ! empty( $forum_ids ) ) {
 				$forum_id_in = implode( ',', $forum_ids );
-				$where[]     = " pm.meta_value IN ( $forum_id_in ) ";
+				$where[]     = " p.post_parent IN ( $forum_id_in ) ";
 			}
 
 			$query_placeholder[] = '%' . $search_term . '%';
@@ -242,13 +242,13 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$cache_key = 'nested_child_forum_ids_' . bbp_get_forum_post_type() . '_' . $forum_id;
 			if ( ! isset( $bp_nested_child_forum_ids[ $cache_key ] ) ) {
 				// SQL query for getting all nested child forum id from parent forum id.
-				$sql = "SELECT ID
-					FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
-						  ( SELECT @pv := %d ) initialisation
-					WHERE FIND_IN_SET( post_parent, @pv )
-					AND   LENGTH( @pv := CONCAT(@pv, ',', ID ) )";
+			$sql = "SELECT ID
+				FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
+					  ( SELECT @pv := %d, @pvv := %d ) initialisation
+				WHERE FIND_IN_SET( post_parent, @pvv )
+				AND   LENGTH( @pvv := CONCAT(@pv, ',', ID ) )";
 
-				$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id ) );
+			$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id, $forum_id ) );
 
 				$bp_nested_child_forum_ids[ $cache_key ] = $child_forum_ids;
 			} else {

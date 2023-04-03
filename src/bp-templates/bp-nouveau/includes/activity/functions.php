@@ -79,15 +79,24 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		return $params;
 	}
 
+	// Draft activity meta key.
+	$draft_activity_meta_key = 'draft_user';
+
+	if ( 0 < bp_displayed_user_id() ) {
+		$draft_activity_meta_key = 'draft_user_' . bp_displayed_user_id();
+	}
+
 	$activity_params = array(
-		'user_id'          => bp_loggedin_user_id(),
-		'object'           => 'user',
-		'backcompat'       => (bool) has_action( 'bp_activity_post_form_options' ),
-		'post_nonce'       => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
-		'excluded_hosts'   => array(),
-		'user_can_post'    => ( is_user_logged_in() && bb_user_can_create_activity() ),
-		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
-		'errors'           => array(
+		'user_id'           => bp_loggedin_user_id(),
+		'object'            => 'user',
+		'backcompat'        => (bool) has_action( 'bp_activity_post_form_options' ),
+		'post_nonce'        => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
+		'post_draft_nonce'  => wp_create_nonce( 'post_draft_activity' ),
+		'excluded_hosts'    => array(),
+		'user_can_post'     => ( is_user_logged_in() && bb_user_can_create_activity() ),
+		'is_activity_edit'  => bp_is_activity_edit() ? (int) bp_current_action() : false,
+		'displayed_user_id' => bp_displayed_user_id(),
+		'errors'            => array(
 			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
 			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
 			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
@@ -192,7 +201,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			);
 			$cache_key  = 'bbp_default_groups_' . md5( maybe_serialize( $group_args ) );
 			if ( ! isset( $group_query_cache[ $cache_key ] ) ) {
+				add_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+				add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
 				$group_query_cache[ $cache_key ] = groups_get_groups( $group_args );
+				remove_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+				remove_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
 			}
 			$groups = $group_query_cache[ $cache_key ];
 
@@ -224,6 +237,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
 		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
 		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
+		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
@@ -242,7 +256,13 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 				'group_avatar' => bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
 			)
 		);
+
+		$draft_activity_meta_key = 'draft_group_' . bp_get_current_group_id();
 	}
+
+	// Get draft activity.
+	$draft_activity                    = bp_get_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key, true );
+	$activity_params['draft_activity'] = $draft_activity;
 
 	$activity_params['access_control_settings'] = array(
 		'can_create_activity'          => bb_user_can_create_activity(),
@@ -575,6 +595,11 @@ function bp_nouveau_activity_widget_query() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_notification_filters() {
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		return;
+	}
+
 	$notifications = array(
 		array(
 			'id'       => 'new_at_mention',
@@ -623,3 +648,5 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //		),
 	) );
 }
+
+

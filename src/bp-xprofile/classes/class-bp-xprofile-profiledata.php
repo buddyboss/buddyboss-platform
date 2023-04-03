@@ -85,7 +85,7 @@ class BP_XProfile_ProfileData {
 		$profiledata = wp_cache_get( $cache_key, 'bp_xprofile_data' );
 		$table_name  = bp_core_get_table_prefix() . 'bp_xprofile_data';
 
-		if ( null === $profiledata ) {
+		if ( false === $profiledata ) {
 
 			$sql         = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE field_id = %d AND user_id = %d", $field_id, $user_id );
 			$profiledata = $wpdb->get_row( $sql );

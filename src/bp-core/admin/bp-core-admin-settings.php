@@ -1810,8 +1810,8 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 				<?php
 				printf(
 				/* translators: %s: comment post type */
-					esc_html__( 'Comments are not supported for %s', 'buddyboss' ),
-					esc_html( $post_type )
+					esc_html__( 'Comments are not supported for %s.', 'buddyboss' ),
+					esc_html( $post_type_obj->labels->name )
 				);
 				?>
 			</p>
@@ -1908,7 +1908,7 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 
 	if ( true === $args['description'] ) {
 		?>
-		<p class="description"><?php esc_html_e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
@@ -2733,7 +2733,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	}
 	?>
 
-	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1"<?php checked( $checked_checkbox ); ?><?php disabled( $disable_field ); ?>/>
+	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1" <?php checked( $checked_checkbox ); disabled( $disable_field ); ?>/>
 	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST API access to only logged-in members', 'buddyboss' ); ?></label>
 	<p class="description">
 		<?php
@@ -2826,3 +2826,146 @@ function bb_admin_setting_callback_private_rss_feeds_public_content() {
 	<?php
 }
 
+/**
+ * Register the labs settings section.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @return array
+ */
+function bb_labs_get_settings_sections() {
+
+	$settings = array(
+		'bp_labs_settings' => array(
+			'page'     => 'labs',
+			'title'    => esc_html__( 'BuddyBoss Labs', 'buddyboss' ),
+			'callback' => 'bb_labs_info_section_callback',
+		),
+	);
+
+	return (array) apply_filters( 'bb_labs_get_settings_sections', $settings );
+
+}
+
+/**
+ * Get settings fields by section.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param string $section_id Section id.
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ */
+function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty.
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bb_labs_get_settings_fields();
+	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
+
+	return (array) apply_filters( 'bb_labs_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all the settings fields.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @return array
+ */
+function bb_labs_get_settings_fields() {
+
+	$fields = (array) apply_filters( 'bb_labs_get_settings_fields', array() );
+
+	if ( empty( $fields ) ) {
+		$fields['bp_labs_settings'] = array(
+			'bb_labs_no_settings_callback' => array(
+				'title'    => ' ',
+				'callback' => 'bb_labs_no_settings_callback',
+				'args'     => array( 'class' => 'notes-hidden-header' ),
+			),
+		);
+	}
+
+	return $fields;
+}
+
+/**
+ * BuddyBoss Labs settings section callback.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_labs_info_section_callback() {
+	?>
+
+	<p>
+		<?php
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				wp_kses_post(
+				/* translators: Support portal. */
+					__(
+						'BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href="%s" target="_blank" >support portal</a>.',
+						'buddyboss'
+					)
+				),
+				'https://support.buddyboss.com'
+			)
+		);
+		?>
+	</p>
+
+	<p>
+		<?php
+		printf(
+			'<p class="description">%s</p>',
+			wp_kses_post(
+			/* translators: Support portal. */
+				__(
+					'Please note, customer support will not be able to provide support for these features until their official release.',
+					'buddyboss'
+				)
+			)
+		);
+		?>
+	</p>
+
+	<?php
+}
+
+/**
+ * Function to show the notice about the no labs features available.
+ *
+ * @since BuddyBoss 2.1.5.1
+ *
+ * @return void
+ */
+function bb_labs_no_settings_callback() {
+	printf(
+		'<p class="no-field-notice">%s</p><style>.submit{display:none;}</style>',
+		wp_kses_post(
+		/* translators: Support portal. */
+			__(
+				'There are currently no BuddyBoss Labs features available.',
+				'buddyboss'
+			)
+		)
+	);
+}
+
+/**
+ * Allow all users to subscribe groups field.
+ *
+ * @since BuddyBoss 2.2.8
+ */
+function bb_admin_setting_callback_group_subscriptions() {
+	?>
+	<input id="bb_enable_group_subscriptions" name="bb_enable_group_subscriptions" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( bb_enable_group_subscriptions() ); ?> />
+	<label for="bb_enable_group_subscriptions"><?php esc_html_e( 'Allow members to subscribe to groups', 'buddyboss' ); ?></label>
+	<p class="description" id="bb_enable_group_subscriptions"><?php esc_html_e( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ); ?></p>
+	<?php
+}

@@ -692,6 +692,10 @@ function bp_get_group_name( $group = false ) {
 		$group =& $groups_template->group;
 	}
 
+	if ( empty( $group->id ) || empty( $group->name ) ) {
+		return '';
+	}
+
 	/**
 	 * Filters the name of the current group in the loop.
 	 *
@@ -734,24 +738,24 @@ function bp_get_group_type( $group = false ) {
 
 	if ( true === bp_disable_group_type_creation() ) {
 
-		$group_type = bp_groups_get_group_type( $group->id );
-		$group_type = bp_groups_get_group_type_object( $group_type );
+		$type_slug  = bp_groups_get_group_type( $group->id );
+		$group_type = bp_groups_get_group_type_object( $type_slug );
 		$group_type = $group_type->labels['singular_name'] ?? '';
 
 		if ( 'public' == $group->status ) {
 
 			$group_visibility = esc_html__( 'Public', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
 			$group_visibility = esc_html__( 'Hidden', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
 			$group_visibility = esc_html__( 'Private', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} else {
 			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
@@ -1401,6 +1405,49 @@ function bp_get_group_description_editable( $group = false ) {
 }
 
 /**
+ * Output the name for the current group in the loop, for use in a textbox.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ */
+function bp_group_name_editable( $group = false ) {
+	echo bp_get_group_name_editable( $group );
+}
+
+/**
+ * Return the permalink for the current group in the loop, for use in a textarea.
+ *
+ * 'bp_get_group_name_editable' does not have the formatting
+ * filters that 'bp_get_group_name' has, which makes it
+ * appropriate for "raw" editing.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ * @return string
+ */
+function bp_get_group_name_editable( $group = false ) {
+	global $groups_template;
+
+	if ( empty( $group ) ) {
+		$group =& $groups_template->group;
+	}
+
+	/**
+	 * Filters the name of the current group in the loop.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param string $name  Name of the current group in the loop.
+	 * @param object $group Group object.
+	 */
+	return apply_filters( 'bp_get_group_name_editable', $group->name, $group );
+}
+
+/**
  * Output an excerpt of the group description.
  *
  * @since BuddyPress 1.0.0
@@ -1899,8 +1946,9 @@ function bp_group_list_admins( $group = false ) {
 						<?php
 						$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
 						printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
-						?>">
-						<span class="bb-icon bb-icon-menu-dots-h"></span>
+						?>
+						">
+						<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 					</a>
 				</li>
 			<?php } ?>
@@ -1937,7 +1985,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
@@ -2899,6 +2947,10 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 			// If we can't resolve the user_id, don't proceed with a zero value.
 			return array();
 		}
+	}
+
+	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+		$user_id = false;
 	}
 
 	// First, get a list of descendants (don't pass a user id--we want them all).
@@ -5616,29 +5668,31 @@ function bp_group_creation_tabs() {
 		$is_enabled = bp_are_previous_group_creation_steps_complete( $slug );
 		?>
 
-		<li
-		<?php
-		if ( bp_get_groups_current_create_step() == $slug ) :
-			?>
-			 class="current"<?php endif; ?>>
+		<li <?php echo ( ( bp_get_groups_current_create_step() == $slug ) ? 'class="current"' : '' ); ?>>
 			<?php
-			if ( $is_enabled ) :
+			if ( $is_enabled ) {
 				?>
-			<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo $slug; ?>/">
-															<?php
-else :
-	?>
-	<span><?php endif; ?><?php echo $counter; ?>. <?php echo $step['name']; ?>
-					 <?php
-						if ( $is_enabled ) :
-							?>
-	</a>
-							<?php
-else :
-	?>
-	</span><?php endif ?></li>
-					<?php
-					$counter++;
+				<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo $slug; ?>/">
+				<?php
+			} else {
+				?>
+				<span>
+				<?php
+			}
+
+				echo $counter . '. ' . $step['name'];
+
+			if ( $is_enabled ) {
+				?>
+				</a>
+				<?php
+			} else {
+				?>
+				</span>
+			<?php } ?>
+		</li>
+		<?php
+		$counter++;
 	}
 
 	unset( $is_enabled );

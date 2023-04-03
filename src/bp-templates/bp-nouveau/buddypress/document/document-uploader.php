@@ -20,13 +20,22 @@
 						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 						<span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 						<a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
-							<span class="bb-icon bb-icon-close"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-field-steps bb-field-steps-1">
 						<div class="bb-field-wrap">
 							<div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
-								<?php if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
+								<?php
+								if (
+									(
+										! bp_is_active( 'forums' ) ||
+										( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() )
+									) &&
+									! bp_is_messages_component() &&
+									bp_is_active( 'activity' )
+								) :
+									?>
 								<div class="media-uploader-post-content">
 									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your documents, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
 								</div>
@@ -37,12 +46,12 @@
 										<div class="dz-preview dz-file-preview">
 											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 											<div class="dz-details">
-												<div class="dz-icon"><span class="bb-icon-file"></span></div>
+												<div class="dz-icon"><span class="bb-icon-l bb-icon-file"></span></div>
 												<div class="dz-filename"><span data-dz-name></span></div>
 												<div class="dz-size" data-dz-size></div>
 											</div>
 											<div class="dz-progress-ring-wrap">
-												<i class="bb-icon bb-icon-attach-fill"></i>
+												<i class="bb-icon-f bb-icon-file-attach"></i>
 												<svg class="dz-progress-ring" width="54" height="54">
 													<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 												</svg>
@@ -61,7 +70,7 @@
 									</div>
 								</div>
 								<a id="bp-media-document-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
-									<i class="bb-icon-folder"></i>
+									<i class="bb-icon-l bb-icon-folder"></i>
 									<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>
 								</a>
 							</div>
@@ -75,7 +84,7 @@
 					</div>
 					<footer class="bb-model-footer document-uploader-footer">
 						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" >
-							<i class="bb-icon-plus"></i>
+							<i class="bb-icon-l bb-icon-plus"></i>
 							<?php esc_html_e( 'Create new folder', 'buddyboss' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>

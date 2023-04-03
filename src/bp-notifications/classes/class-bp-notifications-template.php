@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
+#[\AllowDynamicProperties]
 class BP_Notifications_Template {
 
 	/**
@@ -153,7 +154,7 @@ class BP_Notifications_Template {
 	public function __construct( $args = array() ) {
 
 		// Parse arguments.
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'id'                => false,
@@ -162,6 +163,7 @@ class BP_Notifications_Template {
 				'secondary_item_id' => false,
 				'component_name'    => bp_notifications_get_registered_components(),
 				'component_action'  => false,
+				'excluded_action'   => false,
 				'is_new'            => true,
 				'search_terms'      => '',
 				'order_by'          => 'date_notified',
@@ -199,6 +201,7 @@ class BP_Notifications_Template {
 			'secondary_item_id' => $r['secondary_item_id'],
 			'component_name'    => $r['component_name'],
 			'component_action'  => $r['component_action'],
+			'excluded_action'   => $r['excluded_action'],
 			'meta_query'        => $r['meta_query'],
 			'date_query'        => $r['date_query'],
 			'is_new'            => $this->is_new,

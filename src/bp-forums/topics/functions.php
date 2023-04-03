@@ -195,7 +195,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
 	// No topic content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		 && empty( $_POST['bbp_media'] )
 		 && empty( $_POST['bbp_document'] )
 		 && empty( $_POST['bbp_video'] )
@@ -448,6 +448,22 @@ function bbp_new_topic_handler( $action = '' ) {
 			}
 		}
 
+		// Delete draft data from the database.
+		$draft_data_key = 'draft_discussion_' . $forum_id;
+		$usermeta_key   = 'bb_user_topic_reply_draft';
+		$user_id        = bp_loggedin_user_id();
+		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+
+		if ( ! empty( $existing_draft ) && isset( $existing_draft[ $draft_data_key ] ) ) {
+			unset( $existing_draft[ $draft_data_key ] );
+		}
+
+		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
+			$existing_draft = array();
+		}
+
+		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+
 		/** Additional Actions (After Save) */
 
 		do_action( 'bbp_new_topic_post_extras', $topic_id );
@@ -659,7 +675,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 	     && empty( $_POST['bbp_media'] )
 	     && empty( $_POST['bbp_document'] )
 	     && empty( $_POST['bbp_video'] )
@@ -888,7 +904,7 @@ function bbp_edit_topic_handler( $action = '' ) {
  * @uses update_post_meta() To update the topic metas
  * @uses set_transient() To update the flood check transient for the ip
  * @uses bbp_update_user_last_posted() To update the users last posted time
- * @uses bbp_is_subscriptions_active() To check if the subscriptions feature is
+ * @uses bb_is_enabled_subscription() To check if the subscriptions feature is
  *                                      activated or not
  * @uses bbp_is_user_subscribed() To check if the user is subscribed
  * @uses bbp_remove_user_subscription() To remove the user's subscription
@@ -955,8 +971,20 @@ function bbp_update_topic( $topic_id = 0, $forum_id = 0, $anonymous_data = false
 		}
 	}
 
+	// Get the post type.
+	$post_type = get_post_type( $topic_id );
+	if ( empty( $post_type ) ) {
+		return;
+	}
+
+	$subscribe_type = 'topic';
+	if ( bbp_get_forum_post_type() === $post_type ) {
+		$subscribe_type = 'forum';
+	}
+
 	// Handle Subscription Checkbox.
-	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) ) {
+	// Make sure the form is being submitted from frontend.
+	if ( bb_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ( ! isset( $_POST['action'] ) || 'editpost' !== $_POST['action'] ) ) {
 		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 
@@ -1325,7 +1353,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 		foreach ( (array) $subscribers as $subscriber ) {
 
 			// Shift the subscriber if told to.
-			if ( ! empty( $_POST['bbp_topic_subscribers'] ) && ( '1' === $_POST['bbp_topic_subscribers'] ) && bbp_is_subscriptions_active() ) {
+			if ( ! empty( $_POST['bbp_topic_subscribers'] ) && ( '1' === $_POST['bbp_topic_subscribers'] ) && bb_is_enabled_subscription( 'topic' ) ) {
 				bbp_add_user_subscription( $subscriber, $destination_topic->ID );
 			}
 
@@ -1380,6 +1408,21 @@ function bbp_merge_topic_handler( $action = '' ) {
 	// Sticky.
 	bbp_unstick_topic( $source_topic->ID );
 
+	// Delete source topic's last & count meta data.
+	delete_post_meta( $source_topic->ID, '_bbp_last_reply_id' );
+	delete_post_meta( $source_topic->ID, '_bbp_last_active_id' );
+	delete_post_meta( $source_topic->ID, '_bbp_last_active_time' );
+	delete_post_meta( $source_topic->ID, '_bbp_voice_count' );
+	delete_post_meta( $source_topic->ID, '_bbp_reply_count' );
+	delete_post_meta( $source_topic->ID, '_bbp_reply_count_hidden' );
+	delete_post_meta( $source_topic->ID, '_bbp_parent_reply_count' );
+
+	// Delete source topics user relationships.
+	delete_post_meta( $source_topic->ID, '_bbp_favorite' );
+	delete_post_meta( $source_topic->ID, '_bbp_subscription' );
+
+	$parent_replies = 0;
+
 	// Get the replies of the source topic.
 	$replies = (array) get_posts(
 		array(
@@ -1418,14 +1461,15 @@ function bbp_merge_topic_handler( $action = '' ) {
 			bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
 			bbp_update_reply_forum_id( $reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
 
-			// Adjust reply to values.
-			$reply_to = bbp_get_reply_to( $reply->ID );
-			if ( empty( $reply_to ) ) {
-				bbp_update_reply_to( $reply->ID, $source_topic->ID );
-			}
+			// Update the reply position.
+			bbp_update_reply_position( $reply->ID );
 
 			// Do additional actions per merged reply.
 			do_action( 'bbp_merged_topic_reply', $reply->ID, $destination_topic->ID );
+
+			if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
+				$parent_replies++;
+			}
 		}
 	}
 
@@ -1435,6 +1479,12 @@ function bbp_merge_topic_handler( $action = '' ) {
 	bbp_update_topic_last_reply_id( $destination_topic->ID );
 	bbp_update_topic_last_active_id( $destination_topic->ID );
 	bbp_update_topic_last_active_time( $destination_topic->ID );
+
+	// Update parent reply count with destination topic_id.
+	if ( ! empty( $destination_topic->ID ) && 0 !== $parent_replies ) {
+		$parent_reply_count = get_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', true );
+		update_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', (int) $parent_reply_count + $parent_replies );
+	}
 
 	// Send the post parent of the source topic as it has been shifted.
 	// (possibly to a new forum) so we need to update the counts of the.
@@ -1584,7 +1634,7 @@ function bbp_split_topic_handler( $action = '' ) {
 
 	// How to Split.
 	if ( ! empty( $_POST['bbp_topic_split_option'] ) ) {
-		$split_option = (string) trim( $_POST['bbp_topic_split_option'] );
+		$split_option = sanitize_key( $_POST['bbp_topic_split_option'] );
 	}
 
 	// Invalid split option.
@@ -1698,7 +1748,7 @@ function bbp_split_topic_handler( $action = '' ) {
 	/** Subscriptions */
 
 	// Copy the subscribers.
-	if ( ! empty( $_POST['bbp_topic_subscribers'] ) && '1' === $_POST['bbp_topic_subscribers'] && bbp_is_subscriptions_active() ) {
+	if ( ! empty( $_POST['bbp_topic_subscribers'] ) && '1' === $_POST['bbp_topic_subscribers'] && bb_is_enabled_subscription( 'topic' ) ) {
 
 		// Get the subscribers.
 		$subscribers = bbp_get_topic_subscribers( $source_topic->ID );
@@ -1748,22 +1798,11 @@ function bbp_split_topic_handler( $action = '' ) {
 	// comparision without a filter.
 	$replies = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_date >= %s AND {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_type = %s ORDER BY {$wpdb->posts}.post_date ASC", $from_reply->post_date, $source_topic->ID, bbp_get_reply_post_type() ) );
 
+	$source_parent_replies      = 0;
+	$destination_parent_replies = 0;
+
 	// Make sure there are replies to loop through.
 	if ( ! empty( $replies ) && ! is_wp_error( $replies ) ) {
-
-		// Calculate starting point for reply positions.
-		switch ( $split_option ) {
-
-			// Get topic reply count for existing topic.
-			case 'existing':
-				$reply_position = bbp_get_topic_reply_count( $destination_topic->ID );
-				break;
-
-			// Account for new lead topic.
-			case 'reply':
-				$reply_position = 1;
-				break;
-		}
 
 		// Save reply ids.
 		$reply_ids = array();
@@ -1771,8 +1810,9 @@ function bbp_split_topic_handler( $action = '' ) {
 		// Change the post_parent of each reply to the destination topic id.
 		foreach ( $replies as $reply ) {
 
-			// Bump the reply position each iteration through the loop.
-			$reply_position++;
+			if ( ! empty( $source_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
+				$source_parent_replies++;
+			}
 
 			// Update the reply.
 			wp_update_post(
@@ -1781,23 +1821,25 @@ function bbp_split_topic_handler( $action = '' ) {
 					'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss' ), $destination_topic->post_title ),
 					'post_name'   => false, // will be automatically generated.
 					'post_parent' => $destination_topic->ID,
-					'menu_order'  => $reply_position,
 					'guid'        => '',
 				)
 			);
 
 			// Gather reply ids.
-			$reply_ids[] = $reply->ID;
+			$reply_ids[] = (int) $reply->ID;
 
 			// Adjust reply meta values.
 			bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
 			bbp_update_reply_forum_id( $reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
 
+			// Adjust reply position.
+			bbp_update_reply_position( $reply->ID );
+
 			// Adjust reply to values.
 			$reply_to = bbp_get_reply_to( $reply->ID );
 
 			// Not a reply to a reply that moved over.
-			if ( ! in_array( $reply_to, $reply_ids ) ) {
+			if ( ! in_array( $reply_to, $reply_ids, true ) ) {
 				bbp_update_reply_to( $reply->ID, 0 );
 			}
 
@@ -1808,6 +1850,22 @@ function bbp_split_topic_handler( $action = '' ) {
 
 			// Do additional actions per split reply.
 			do_action( 'bbp_split_topic_reply', $reply->ID, $destination_topic->ID );
+
+			if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
+				$destination_parent_replies++;
+			}
+		}
+
+		// Update parent reply count with source topic_id.
+		if ( ! empty( $source_topic->ID ) && 0 !== $source_parent_replies ) {
+			$parent_reply_count = get_post_meta( $source_topic->ID, '_bbp_parent_reply_count', true );
+			update_post_meta( $source_topic->ID, '_bbp_parent_reply_count', (int) $parent_reply_count - $source_parent_replies );
+		}
+
+		// Update parent reply count with destination topic_id.
+		if ( ! empty( $destination_topic->ID ) && 0 !== $destination_parent_replies ) {
+			$parent_reply_count = get_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', true );
+			update_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', (int) $parent_reply_count + $destination_parent_replies );
 		}
 
 		// Remove reply to from new topic.
@@ -2394,7 +2452,7 @@ function bbp_remove_topic_from_all_favorites( $topic_id = 0 ) {
  * @since bbPress (r2652)
  *
  * @param int $topic_id Get the topic id to remove
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_topic_id To get the topic id
  * @uses bbp_get_topic_subscribers() To get the topic subscribers
  * @uses bbp_remove_user_subscription() To remove the user subscription
@@ -2402,7 +2460,7 @@ function bbp_remove_topic_from_all_favorites( $topic_id = 0 ) {
 function bbp_remove_topic_from_all_subscriptions( $topic_id = 0 ) {
 
 	// Subscriptions are not active.
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 		return;
 	}
 

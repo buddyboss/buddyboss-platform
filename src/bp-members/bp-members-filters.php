@@ -541,10 +541,6 @@ function bb_core_prime_mentions_results() {
 		return;
 	}
 
-	if ( bp_is_active( 'activity' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
-		return;
-	}
-
 	// Bail out if the site has a ton of users.
 	if ( bp_is_large_install() ) {
 		return;
@@ -569,7 +565,7 @@ function bb_core_prime_mentions_results() {
 
 	foreach ( $members_query->results as $user ) {
 		$result        = new stdClass();
-		$result->ID    = $user->user_nicename;
+		$result->ID    = bp_activity_get_user_mentionname( $user->ID );
 		$result->image = bp_core_fetch_avatar(
 			array(
 				'html'    => false,
@@ -582,6 +578,7 @@ function bb_core_prime_mentions_results() {
 		} else {
 			$result->name = bp_core_get_user_displayname( $user->ID );
 		}
+		$result->user_id = $user->ID;
 
 		$members[] = $result;
 	}
@@ -708,3 +705,87 @@ function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 
 	return apply_filters( 'bb_members_allow_html_tags', $bbp_allow_tags );
 }
+
+// Load Account Settings Notifications.
+add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
+
+/**
+ * Register the Account Settings notifications.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_load_members_account_settings_notifications() {
+	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {
+		BP_Members_Mentions_Notification::instance();
+	}
+
+	if ( class_exists( 'BP_Members_Notification' ) ) {
+		BP_Members_Notification::instance();
+	}
+}
+
+/**
+ * Function will add custom css for all member type's label. ( i.e - Background color, Text color)
+ *
+ * @since BuddyBoss 2.0.0
+ */
+function bb_load_member_type_label_custom_css() {
+	if ( true === bp_member_type_enable_disable() ) {
+		$registered_member_types = bp_get_member_types();
+		$cache_key               = 'bb-member-type-label-css';
+		$member_type_custom_css  = wp_cache_get( $cache_key, 'bp_member_member_type' );
+		if ( false === $member_type_custom_css && ! empty( $registered_member_types ) ) {
+			foreach ( $registered_member_types as $type ) {
+				$label_color_data = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $type ) : '';
+				if (
+					isset( $label_color_data ) &&
+					isset( $label_color_data['color_type'] ) &&
+					'custom' === $label_color_data['color_type']
+				) {
+					$background_color       = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
+					$text_color             = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
+					$class_name             = 'body .bp-member-type.bb-current-member-' . $type;
+					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+				}
+			}
+			wp_cache_set( $cache_key, $member_type_custom_css, 'bp_member_member_type' );
+		}
+		wp_add_inline_style( 'bp-nouveau', $member_type_custom_css );
+	}
+}
+add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
+
+/**
+ * Remove all subscription associations for a given user.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param int $user_id ID whose subscription data should be removed.
+ *
+ * @return bool Returns false on failure.
+ */
+function bb_delete_user_subscriptions( $user_id ) {
+	// Get the user subscriptions.
+	$all_subscriptions = bb_get_subscriptions(
+		array(
+			'blog_id' => false,
+			'user_id' => $user_id,
+			'fields'  => 'id',
+			'status'  => null,
+			'cache'   => false,
+		),
+		true
+	);
+	$subscriptions     = ! empty( $all_subscriptions['subscriptions'] ) ? $all_subscriptions['subscriptions'] : array();
+
+	if ( ! empty( $subscriptions ) ) {
+		foreach ( $subscriptions as $subscription ) {
+			bb_delete_subscription( $subscription );
+		}
+	}
+
+	return true;
+}
+add_action( 'wpmu_delete_user', 'bb_delete_user_subscriptions' );
+add_action( 'delete_user', 'bb_delete_user_subscriptions' );
