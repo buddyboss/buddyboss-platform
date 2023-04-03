@@ -2601,7 +2601,7 @@ function bb_update_to_2_3_2() {
 		return;
 	}
 
-	set_transient( 'bb_migrate_favorites', 'yes', HOUR_IN_SECONDS );
+	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
 	// Migrate the topic favorites.
 	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
 		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
