@@ -273,7 +273,7 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 	);
 
 	if ( $check_exists > 0 ) {
-		return $errors->add( 'invalid_user_login', __( 'Invalid Username', 'buddyboss' ), array( 'form-field' => 'user_login' ) );
+		return $errors->add( 'invalid_nickname', __( 'Invalid Nickname', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
 	}
 
 	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
