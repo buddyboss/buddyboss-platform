@@ -568,6 +568,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$results['bb-presence-idle-inactive-span'] = function_exists( 'bb_idle_inactive_span' ) ? bb_idle_inactive_span() : 180;
 
+		$native_presence               = (bool) bp_get_option( 'bb_use_core_native_presence', false );
+		$results['bb-native-presence'] = true === $native_presence ? buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php' : '';
 		return $results;
 	}
 
