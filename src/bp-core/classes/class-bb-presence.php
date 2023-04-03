@@ -881,7 +881,16 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 				$ids = (array) ( isset( $_POST['ids'] ) ? $_POST['ids'] : array() );
-
+				// Added support for row format in rest API.
+				if ( empty( $ids ) ) {
+					$json = file_get_contents( 'php://input' );
+					if ( ! empty( $json ) ) {
+						$json_data = json_decode( $json, true );
+						if ( ! empty( $json_data ) && ! empty( $json_data['ids'] ) ) {
+							$ids = $json_data['ids'];
+						}
+					}
+				}
 				$this->bb_endpoint_render( $user_id, $ids );
 
 				exit;
