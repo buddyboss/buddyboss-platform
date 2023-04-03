@@ -1138,7 +1138,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			bp_groups_set_group_type( $group_id, $current_types );
 		}
 
-		$parent_id    = isset( $post_fields['bp-groups-parent'] ) && array_key_exists( 'bp-groups-parent', (array) $post_fields ) ? $post_fields['bp-groups-parent'] : '0';
+		$parent_id    = isset( $post_fields['bp-groups-parent'] ) && array_key_exists( 'bp-groups-parent', (array) $post_fields ) ? $post_fields['bp-groups-parent'] : bp_get_parent_group_id( $group->id );
 		$enable_forum = ( isset( $group->enable_forum ) ? $group->enable_forum : false );
 
 		$error  = '';
