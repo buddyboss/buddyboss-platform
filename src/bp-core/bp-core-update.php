@@ -418,7 +418,7 @@ function bp_version_updater() {
 			bb_update_to_2_3_0();
 		}
 
-		if ( $raw_db_version < 19991 ) {
+		if ( $raw_db_version < 20001 ) {
 			bb_update_to_2_3_2();
 		}
 	}
@@ -2600,7 +2600,7 @@ function bb_update_to_2_3_2() {
 	wp_cache_flush();
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		BuddyBoss\Performance\Cache::instance()->purge_all();
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
 	}
 
 	$defaults = array(
@@ -2649,4 +2649,12 @@ function bb_update_to_2_3_2() {
 			)
 		);
 	}
+
+	// Old setup then by default disable notification setting for post omment reply.
+	// $notification_preferences = bb_register_notification_preferences();
+	// $setting_key              = 'bb_posts_new_comment_reply';
+	// if ( ! empty( $notification_preferences ) && isset( $notification_preferences[$setting_key] ) ) {
+	// 	unset( $notification_preferences[$setting_key] );
+	// }
+
 }

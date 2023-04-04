@@ -74,12 +74,17 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_post_comment_reply() {
+
+		$default = false;
+		if ( bp_is_install() ) {
+			$default = true;
+		}
 		$this->register_notification_type(
 			'bb_posts_new_comment_reply',
 			esc_html__( 'A member replies to your post comment', 'buddyboss' ),
 			esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
 			'posts',
-			false,
+			$default
 		);
 
 		$this->register_email_type(
@@ -128,12 +133,11 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 		
 		if ( ! empty( $notification ) && 'bb_posts_new_comment_reply' === $notification->component_action &&
 			in_array( $notification->component_name, array( 'core' ), true ) ) {
-
-			$user_id           = $secondary_item_id;
-			$user_fullname     = bp_core_get_user_displayname( $user_id );
 			$comment           = get_comment( $notification->item_id );
 			$excerpt           = $comment->comment_content;
-			$notification_link = get_comment_link( $comment ); 
+			$notification_link = get_comment_link( $comment );
+			$comment_author    = get_user_by( 'email', $comment->comment_author_email );
+			$commenter_name    = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
 
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';
@@ -165,7 +169,7 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text   = sprintf(
-					/* translators: %s: Total mentioned count. */
+					/* translators: %s: Total new comment reply count. */
 						__( 'You have %1$d new comment reply', 'buddyboss' ),
 						(int) $total_items
 					);
@@ -173,16 +177,16 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 				} else {
 					if ( ! empty( $excerpt ) ) {
 						$text = sprintf(
-						/* translators: 1: User full name, 2: Excerpt. */
-							esc_html__( '%1$s replied to your comment %2$s', 'buddyboss' ),
-							$user_fullname,
+						/* translators: 1: Commenter name, 2: Excerpt. */
+							esc_html__( '%1$s replied to your comment: %2$s', 'buddyboss' ),
+							$commenter_name,
 							$excerpt
 						);
 					} else {
 						$text = sprintf(
-						/* translators: %s: User full name. */
+						/* translators: %s: Commenter name. */
 							esc_html__( '%1$s replied to your comment', 'buddyboss' ),
-							$user_fullname
+							$commenter_name
 						);
 					}
 				}
@@ -193,7 +197,7 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 				array(
 					'link'  => $notification_link,
 					'text'  => $text,
-					'title' => $user_fullname,
+					'title' => $commenter_name,
 					'image' => bb_notification_avatar_url( $notification ),
 				),
 				$notification,

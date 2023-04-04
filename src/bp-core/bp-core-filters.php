@@ -2490,8 +2490,8 @@ function bp_post_new_comment_reply_notification( $comment_id, $comment_approved,
 		return false;
 	}
 
-	// Check the sender is blocked by recipient or not.
-	if ( ! empty( $parent_comment ) && ! empty( $comment_author ) && true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $comment_author->ID ) ) {
+	// Check for moderation.
+	if ( ! empty( $parent_comment ) && ! empty( $comment_author ) && true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $comment_author->ID, $parent_comment->user_id ) ) {
 		return false;
 	}
 
