@@ -104,9 +104,6 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 			'bb_posts_new_comment_reply',
 			'bb-icon-f bb-icon-comment',
 		);
-
-		//add_filter( 'bp_core_bb_posts_new_comment_reply_notification', array( $this, 'bb_render_posts_new_comment_reply_notification' ), 10, 7 );
-		
 	}
 
 	/**
@@ -207,5 +204,4 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 		}
 		return $content;
 	}
-
 }
