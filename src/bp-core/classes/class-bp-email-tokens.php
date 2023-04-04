@@ -3200,13 +3200,14 @@ class BP_Email_Tokens {
 	 */
 	public function token__comment_reply( $bp_email, $formatted_tokens, $tokens ) {
 
-		$output = '';
+		$output        = '';
+		$comment_reply = '';
 
 		$settings     = bp_email_get_appearance_settings();
 		$comment_id   = isset( $tokens['comment.id'] ) ? $tokens['comment.id'] : false;
 		$commenter_id = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
 		if ( ! empty ( $tokens['comment_reply'] ) ) {
-			$comment_reply  = str_replace( array( "\r", "\n" ), '', $tokens['comment_reply'] );
+			$comment_reply  = $tokens['comment_reply'];
 		}
 
 		if ( empty( $comment_id ) ) {
@@ -3265,9 +3266,9 @@ class BP_Email_Tokens {
 										<tbody>
 											<tr>
 												<td>
-													<div class="bb-content-body" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+													<div class="bb-content-body" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;">
 														<?php
-														echo $comment_reply;
+														echo wpautop( $comment_reply );
 														?>
 													</div>
 												</td>
@@ -3289,7 +3290,7 @@ class BP_Email_Tokens {
 			</tr>
 
 			<tr>
-				<td><a href="<?php echo esc_url( $tokens['comment.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'View Comment', 'buddyboss' ); ?></a></td>
+				<td><a href="<?php echo esc_url( $tokens['comment.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 10px 28px;"><?php esc_html_e( 'View Comment', 'buddyboss' ); ?></a></td>
 			</tr>
 		</table>
 		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
