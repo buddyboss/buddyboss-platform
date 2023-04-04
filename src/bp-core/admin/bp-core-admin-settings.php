@@ -2985,7 +2985,7 @@ function bb_profile_slug_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 72340, // @todo: Need to update tutorial page id.
+						'article' => 126235,
 					),
 					'admin.php'
 				)
