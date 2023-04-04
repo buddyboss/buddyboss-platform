@@ -3735,6 +3735,11 @@ MediumEditor.extensions = {};
                 range.endContainer.nodeName.toLowerCase() === 'a' ||
                 MediumEditor.util.getClosestTag(MediumEditor.selection.getSelectedParentElement(range), 'a')) {
                 return this.execAction('unlink');
+            } else {
+                this.execAction('createLink', { value: '#' });
+                setTimeout(function () {
+                    this.getInput().focus();
+                }.bind(this), 0);
             }
 
             if (!this.isDisplayed()) {
@@ -4049,6 +4054,7 @@ MediumEditor.extensions = {};
             toolbarInput.classList.remove( 'validate' );
             event.preventDefault();
             this.doFormCancel();
+            this.execAction('unlink');
         }
     });
 
