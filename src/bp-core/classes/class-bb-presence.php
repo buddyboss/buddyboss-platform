@@ -269,20 +269,17 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public static function bb_load_presence_api_mu_plugin( $bypass = true ) {
+			if ( ! function_exists( 'buddypress' ) ) {
+				return;
+			}
+
 			if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 			}
 
-			$wp_files_system = new \WP_Filesystem_Direct( array() );
-
-			$bp_platform_mu_path     = WP_PLUGIN_DIR . '/buddyboss-platform/bp-core/mu-plugins/buddyboss-presence-api.php';
-			$bp_platform_dev_mu_path = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-core/mu-plugins/buddyboss-presence-api.php';
-			if ( file_exists( $bp_platform_mu_path ) ) {
-				$bp_mu_plugin_file_path = $bp_platform_mu_path;
-			} elseif ( file_exists( $bp_platform_dev_mu_path ) ) {
-				$bp_mu_plugin_file_path = $bp_platform_dev_mu_path;
-			}
+			$wp_files_system        = new \WP_Filesystem_Direct( array() );
+			$bp_mu_plugin_file_path = buddypress()->plugin_dir . 'bp-core/mu-plugins/buddyboss-presence-api.php';
 
 			$purge_nonce = ( ! empty( $_GET['download_mu_bpa_file'] ) ) ? wp_unslash( $_GET['download_mu_bpa_file'] ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
