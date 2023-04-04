@@ -3730,16 +3730,15 @@ MediumEditor.extensions = {};
             event.stopPropagation();
 
             var range = MediumEditor.selection.getSelectionRange(this.document);
+            var preLink = document.createElement( 'span' );
+            preLink.classList.add( 'medium-editor-create-link' );
 
             if (range.startContainer.nodeName.toLowerCase() === 'a' ||
                 range.endContainer.nodeName.toLowerCase() === 'a' ||
                 MediumEditor.util.getClosestTag(MediumEditor.selection.getSelectedParentElement(range), 'a')) {
                 return this.execAction('unlink');
             } else {
-                this.execAction('createLink', { value: '#' });
-                setTimeout(function () {
-                    this.getInput().focus();
-                }.bind(this), 0);
+                range.surroundContents( preLink );
             }
 
             if (!this.isDisplayed()) {
