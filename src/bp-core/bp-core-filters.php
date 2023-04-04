@@ -71,8 +71,9 @@ add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
 add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 
 // Load Post Notifications.
-add_action( 'bp_core_includes', 'bb_load_post_notifications' );
+add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
 add_action( 'comment_post', 'bp_post_new_comment_reply_notification', 10, 3 );
+add_action( 'transition_comment_status', 'bp_post_comment_on_status_change', 10, 3 );
 
 // Avatars.
 /**
@@ -2457,89 +2458,120 @@ function bb_load_post_notifications() {
 }
 
 function bp_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
-	// error_log( print_r( $comment_id, true ) );
-	// error_log( print_r( $commentdata, true ) );
-
-	// Don't record activity if the comment hasn't been approved.
+	// Don't send notification if the comment hasn't been approved.
 	if ( empty( $comment_approved ) ) {
 		return false;
-	}
-
-	// Don't record activity if no email address has been included.
-	if ( empty( $commentdata['comment_author_email'] ) ) {
-		return false;
-	}
+	}	
 
 	// Don't record activity if the comment has already been marked as spam.
 	if ( 'spam' === $comment_approved ) {
 		return false;
 	}
 
-	// Get the user by the comment author email.
-	$user = get_user_by( 'email', $commentdata['comment_author_email'] );
-
-	// If user isn't registered, don't record activity.
-	if ( empty( $user ) ) {
+	if ( empty( $commentdata['comment_parent'] ) ){
 		return false;
 	}
 
-	// Get the user_id.
-	$comment_author_id = (int) $user->ID;
-
 	// Get the post.
 	$post = get_post( $commentdata['comment_post_ID'] );
-
 	if ( ! is_a( $post, 'WP_Post' ) ) {
 		return false;
 	}
 
-	if ( 1 === $comment_approved ) {
+	//Get the user by the comment author email.
+	$comment_author = get_user_by( 'email', $commentdata['comment_author_email'] );
+	$parent_comment = get_comment( $commentdata['comment_parent'] );
 
-		// $comment_parent = 0 means post comment.
-		if ( ! empty( $commentdata['comment_parent'] ) ) {
-			$comment_content          = $commentdata['comment_content'];
-			$comment_author_id        = $comment_author_id;
-			$comment_author           = $commentdata['comment_author'];
-			$comment_link             = get_comment_link( $comment_id );
-			$parent_comment           = get_comment( $commentdata['comment_parent'] ); 
-			$parent_comment_author_id = $parent_comment->user_id;
+	if ( empty( $parent_comment->user_id ) ) {
+		return false;
+	}
 
-			//Send an email if the user hasn't opted-out.
-			if ( true === bb_is_notification_enabled( $comment_author_id, 'bb_posts_new_comment_reply' ) ) {
+	if( ! empty( $comment_author ) && $parent_comment->user_id === $comment_author->ID ) {
+		return false;
+	}
+
+	// Check the sender is blocked by recipient or not.
+	if ( ! empty( $parent_comment ) && ! empty( $comment_author ) && true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $comment_author->ID ) ) {
+		return false;
+	}
+
+	// $comment_parent = 0 means top level post comment.
+	if ( ! empty( $commentdata['comment_parent'] ) ) {
+		$comment_author_id        = ! empty( $comment_author ) ? $comment_author->ID : $commentdata['user_id'];
+		$comment_content          = $commentdata['comment_content'];
+		$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $commentdata['comment_author'];
+		$comment_link             = get_comment_link( $comment_id ); 
+		$parent_comment_author_id = ( int ) $parent_comment->user_id;
+
+		//Send an email if the user hasn't opted-out.
+		if ( ! empty( $parent_comment_author_id ) ) {
+			
+			if ( true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
+
+				$unsubscribe_args = array(
+					'user_id'           => $parent_comment_author_id,
+					'notification_type' => 'new-comment-reply',
+				);
+
 				$args = array(
 					'tokens' => array(
-						'comment.id'                => $comment_id,
-						'commenter.id'              => $comment_author_id,
-						'commenter.name'            => $comment_author,
-						'comment_reply'             => wp_strip_all_tags( $comment_content ),
-						'comment.url'               => esc_url( $comment_link ),
+						'comment.id'     => $comment_id,
+						'commenter.id'   => $comment_author_id,
+						'commenter.name' => $comment_author_name,
+						'comment_reply'  => wp_strip_all_tags( $comment_content ),
+						'comment.url'    => esc_url( $comment_link ),
+						'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					),
 				);
 
-				// Commenter is non guest user.
-				if ( ! empty( $comment_author_id ) ) {
-					$unsubscribe_args = array(
-						'user_id'           => $parent_comment_author_id,
-						'notification_type' => 'bb_posts_new_comment_reply',
-					);
-					$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+				bp_send_email( 'new-comment-reply', $parent_comment_author_id, $args );
 
-					$to = '';
-				}
-
-				// Parent Comment author is non guest user.
-				if ( ! empty( $comment_author_id ) ) {
-					$unsubscribe_args = array(
-						'user_id'           => $parent_comment_author_id,
-						'notification_type' => 'bb_posts_new_comment_reply',
-					);
-					$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
-
-					$to = '';
-				}
-
-				bp_send_email( 'bb_posts_new_comment_reply', $parent_comment_author_id, $args );
 			}
+
+			update_comment_meta( $comment_id, 'bb_comment_notified_after_approved', 1 );
+			/**
+			 * Fires at the point that notifications should be sent for new comment reply.
+			 *
+			 * @since BuddyPress [BBVERSION]
+			 *
+			 * @param int   $comment_id   ID for the newly received comment reply.
+			 * @param int   $commenter_id ID of the user who made the comment reply.
+			 * @param array $commentdata  Comment reply related data.
+			 */
+			do_action( 'bp_post_new_comment_reply_notification', $comment_id, $comment_author_id, $commentdata );
 		}
 	}
+}
+
+function bp_post_comment_on_status_change( $new_status, $old_status, $comment ) {
+
+	$notification_alreay_sent = get_comment_meta( $comment->comment_ID, 'bb_comment_notified_after_approved', true );
+	if( empty( $notification_alreay_sent ) && 'approved' === $new_status && ( in_array( $old_status, array( 'unapproved', 'spam' ) ) ) ) {
+		$commentdata = get_object_vars( $comment );
+		bp_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
+	}
+}
+
+
+add_action( 'bp_post_new_comment_reply_notification', 'bp_post_new_comment_reply_add_notification', 10, 3 );
+function bp_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
+
+	// Specify the Notification type.
+	$component_action = 'bb_posts_new_comment_reply';
+	$parent_comment   = get_comment( $commentdata['comment_parent'] );
+
+	if ( bp_is_active( 'notifications' ) ) {
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => ( int ) $parent_comment->user_id,
+				'item_id'           => $comment_id,
+				'secondary_item_id' => $commenter_id,
+				'component_name'    => 'core',
+				'component_action'  => $component_action,
+				'date_notified'     => bp_core_current_time(),
+				'is_new'            => 1,
+			)
+		);
+	}
+
 }

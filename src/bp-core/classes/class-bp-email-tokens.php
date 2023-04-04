@@ -150,6 +150,10 @@ class BP_Email_Tokens {
 				'function'    => array( $this, 'token__commenter_name' ),
 				'description' => __( 'Display the commenter name.', 'buddyboss' ),
 			),
+			'commenter.url'     => array(
+				'function'    => array( $this, 'token__commenter_url' ),
+				'description' => __( 'Display the commenter link.', 'buddyboss' ),
+			),
 			'comment.url'     => array(
 				'function'    => array( $this, 'token__comment_reply_url' ),
 				'description' => __( 'Display the post comment url.', 'buddyboss' ),
@@ -3196,11 +3200,131 @@ class BP_Email_Tokens {
 	 */
 	public function token__comment_reply( $bp_email, $formatted_tokens, $tokens ) {
 
-		$comment_reply = '';
+		$output = '';
+
+		$settings     = bp_email_get_appearance_settings();
+		$comment_id   = isset( $tokens['comment.id'] ) ? $tokens['comment.id'] : false;
+		$commenter_id = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
 		if ( ! empty ( $tokens['comment_reply'] ) ) {
 			$comment_reply  = str_replace( array( "\r", "\n" ), '', $tokens['comment_reply'] );
 		}
 
-		return $comment_reply;
+		if ( empty( $comment_id ) ) {
+			return $comment_reply;
+		}
+
+		$commenter_url        = ! empty( $commenter_id ) ? esc_url( bp_core_get_user_domain( $commenter_id ) ) : '#';
+		$commenter_avatar_url = bp_core_fetch_avatar(
+			array(
+				'item_id' => $commenter_id,
+				'width'   => 100,
+				'height'  => 100,
+				'type'    => 'full',
+				'html'    => false,
+			)
+		);
+
+		$commenter_name =  isset( $tokens['commenter.name'] ) ? $tokens['commenter.name'] : '';
+
+		ob_start();
+		?>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<tr>
+				<td align="center">
+					<table cellpadding="0" cellspacing="0" border="0" width="100%">
+						<tbody>
+						<tr>
+							<td valign="middle" width="65px" style="vertical-align: middle;">
+								<a style="display: block; width: 47px;" href="<?php echo $commenter_url; ?>" target="_blank" rel="nofollow">
+									<img alt="" src="<?php echo esc_url( $commenter_avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+								</a>
+							</td>
+							<td width="88%" style="vertical-align: middle;">
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo $commenter_name; ?></div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+						<tbody>
+							<tr>
+								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+							</tr>
+							<tr>
+								<td align="center">
+									<table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
+										<tbody>
+											<tr>
+												<td>
+													<div class="bb-content-body" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+														<?php
+														echo $comment_reply;
+														?>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td><a href="<?php echo esc_url( $tokens['comment.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'View Comment', 'buddyboss' ); ?></a></td>
+			</tr>
+		</table>
+		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
+		<?php
+		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
+
+		return $output;
 	}
+
+	/**
+	 * Generate the output for token comment.url
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param \BP_Email $bp_email
+	 * @param array     $formatted_tokens
+	 * @param array     $tokens
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__comment_reply_url( $bp_email, $formatted_tokens, $tokens ) {
+
+		$comment_reply_url = '';
+		if ( ! empty ( $tokens['comment.url'] ) ) {
+			$comment_reply_url  = str_replace( array( "\r", "\n" ), '', $tokens['comment.url'] );
+		}
+
+		return $comment_reply_url;
+	}
+
+	public function token__commenter_url( $bp_email, $formatted_tokens, $tokens ) {
+		$commenter_id  = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
+		$commenter_url = ! empty( $commenter_id ) ? esc_url( bp_core_get_user_domain( $commenter_id ) ) : '#';
+		
+		return $commenter_url;
+	}
+
 }

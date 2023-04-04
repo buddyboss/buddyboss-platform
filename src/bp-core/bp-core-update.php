@@ -417,6 +417,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19971 ) {
 			bb_update_to_2_3_0();
 		}
+
+		if ( $raw_db_version < 19971 ) {
+			bb_update_to_2_3_2();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2593,6 +2597,12 @@ function bb_update_to_2_3_0() {
  * @return void
  */
 function bb_update_to_2_3_2() {
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
 	$defaults = array(
 		'post_status' => 'publish',
 		'post_type'   => bp_get_email_post_type(),
@@ -2602,7 +2612,7 @@ function bb_update_to_2_3_2() {
 		/* translators: do not remove {} brackets or translate its contents. */
 		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_content' => __( "<a href=\"{{{comment.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
+		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
 		/* translators: do not remove {} brackets or translate its contents. */
 		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
 	);

@@ -88,7 +88,7 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_title'         => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{comment.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
@@ -99,12 +99,13 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			'posts',
+			'core',
 			'bb_posts_new_comment_reply',
 			'bb_posts_new_comment_reply',
+			'bb-icon-f bb-icon-comment',
 		);
 
-		add_filter( 'bp_core_bb_posts_new_comment_reply_notification', array( $this, 'bb_render_posts_new_comment_reply_notification' ), 10, 7 );
+		//add_filter( 'bp_core_bb_posts_new_comment_reply_notification', array( $this, 'bb_render_posts_new_comment_reply_notification' ), 10, 7 );
 		
 	}
 
@@ -125,42 +126,31 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
-        $notification           = bp_notifications_get_notification( $notification_id );
-		$user_id                = $secondary_item_id;
-		$user_fullname          = bp_core_get_user_displayname( $user_id );
-		$excerpt      = 'test excerpt';
+		
+		$notification  = bp_notifications_get_notification( $notification_id );
+		
+		if ( ! empty( $notification ) && 'bb_posts_new_comment_reply' === $notification->component_action &&
+			in_array( $notification->component_name, array( 'core' ), true ) ) {
 
-		if ( '&nbsp;' === $excerpt ) {
-			$excerpt = '';
-		} else {
-			$excerpt = '"' . bp_create_excerpt(
-				$excerpt,
-				50,
-				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
-				)
-			) . '"';
+			$user_id           = $secondary_item_id;
+			$user_fullname     = bp_core_get_user_displayname( $user_id );
+			$comment           = get_comment( $notification->item_id );
+			$excerpt           = $comment->comment_content;
+			$notification_link = get_comment_link( $comment ); 
 
-			$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
-			$excerpt = str_replace( '""', '', $excerpt );
-		}
+			if ( '&nbsp;' === $excerpt ) {
+				$excerpt = '';
+			} else {
+				$excerpt = '"' . bp_create_excerpt(
+					$excerpt,
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				) . '"';
 
-		if (
-			! empty( $notification ) &&
-			'bb_posts_new_comment_reply' === $notification->component_action &&
-			in_array( $notification->component_name, array( 'posts' ), true )
-		) {
-
-			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
-			$notification_link = trailingslashit( bp_core_get_user_domain( $user_id ) );
-
-			if ( $notification_type ) {
-				if ( 'bb_posts_new_comment_reply' === $notification_type ) {
-					if ( bp_is_active( 'blogs' ) ) {
-						$notification_link = '';
-						$notification_link = apply_filters( 'bb_post_new_comment_reply_permalink', $notification_link, $item_id, $secondary_item_id, $total_items );
-					}
-				}
+				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+				$excerpt = str_replace( '""', '', $excerpt );
 			}
 
 			$amount = 'single';
@@ -201,9 +191,6 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 				}
 			}
 
-
-			$notification_link = add_query_arg( 'rid', (int) $notification_id, $notification_link );
-
 			$content = apply_filters(
 				'bb_core_' . $amount . '_' . $notification->component_action . '_notification',
 				array(
@@ -217,166 +204,6 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 				$text,
 				$screen
 			);
-
-		}
-
-		// Validate the return value & return if validated.
-		if (
-			! empty( $content ) &&
-			is_array( $content ) &&
-			isset( $content['text'] ) &&
-			isset( $content['link'] )
-		) {
-			if ( 'string' === $format ) {
-				if ( empty( $content['link'] ) ) {
-					$content = esc_html( $content['text'] );
-				} else {
-					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
-				}
-			} else {
-				$content = array(
-					'text'  => $content['text'],
-					'link'  => $content['link'],
-					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
-					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
-				);
-			}
-		}
-		return $content;
-	}
-
-	/**
-	 * Format the notifications.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $content           Notification content.
-	 * @param int    $item_id           Notification item ID.
-	 * @param int    $secondary_item_id Notification secondary item ID.
-	 * @param int    $total_items       Number of notifications with the same action.
-	 * @param string $format            Format of return. Either 'string' or 'object'.
-	 * @param int    $notification_id   Notification ID.
-	 * @param string $screen            Notification Screen type.
-	 *
-	 * @return array|string
-	 */
-	public function bb_render_posts_new_comment_reply_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
-		$notification           = bp_notifications_get_notification( $notification_id );
-		$user_id                = $secondary_item_id;
-		$user_fullname          = bp_core_get_user_displayname( $user_id );
-		$excerpt      = 'test excerpt';
-
-		if ( '&nbsp;' === $excerpt ) {
-			$excerpt = '';
-		} else {
-			$excerpt = '"' . bp_create_excerpt(
-				$excerpt,
-				50,
-				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
-				)
-			) . '"';
-
-			$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
-			$excerpt = str_replace( '""', '', $excerpt );
-		}
-
-		if (
-			! empty( $notification ) &&
-			'bb_posts_new_comment_reply' === $notification->component_action &&
-			in_array( $notification->component_name, array( 'posts' ), true )
-		) {
-
-			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
-			$notification_link = trailingslashit( bp_core_get_user_domain( $user_id ) );
-
-			if ( $notification_type ) {
-				if ( 'bb_posts_new_comment_reply' === $notification_type ) {
-					if ( bp_is_active( 'blogs' ) ) {
-						$notification_link = '';
-						$notification_link = apply_filters( 'bb_post_new_comment_reply_permalink', $notification_link, $item_id, $secondary_item_id, $total_items );
-					}
-				}
-			}
-
-			$amount = 'single';
-
-			if ( 'web_push' === $screen ) {
-				if ( ! empty( $excerpt ) ) {
-					$text = sprintf(
-						/* translators: Excerpt. */
-						__( 'Replied to your comment: %s', 'buddyboss' ),
-						$excerpt
-					);
-				} else {
-					$text = __( 'Replied to your comment', 'buddyboss' );
-				}
-			} else {
-				if ( (int) $total_items > 1 ) {
-					$text   = sprintf(
-					/* translators: %s: Total mentioned count. */
-						__( 'You have %1$d new comment reply', 'buddyboss' ),
-						(int) $total_items
-					);
-					$amount = 'multiple';
-				} else {
-					if ( ! empty( $excerpt ) ) {
-						$text = sprintf(
-						/* translators: 1: User full name, 2: Excerpt. */
-							esc_html__( '%1$s replied to your comment %2$s', 'buddyboss' ),
-							$user_fullname,
-							$excerpt
-						);
-					} else {
-						$text = sprintf(
-						/* translators: %s: User full name. */
-							esc_html__( '%1$s replied to your comment', 'buddyboss' ),
-							$user_fullname
-						);
-					}
-				}
-			}
-
-
-			$notification_link = add_query_arg( 'rid', (int) $notification_id, $notification_link );
-
-			$content = apply_filters(
-				'bb_core_' . $amount . '_' . $notification->component_action . '_notification',
-				array(
-					'link'  => $notification_link,
-					'text'  => $text,
-					'title' => $user_fullname,
-					'image' => bb_notification_avatar_url( $notification ),
-				),
-				$notification,
-				$notification_link,
-				$text,
-				$screen
-			);
-
-		}
-
-		// Validate the return value & return if validated.
-		if (
-			! empty( $content ) &&
-			is_array( $content ) &&
-			isset( $content['text'] ) &&
-			isset( $content['link'] )
-		) {
-			if ( 'string' === $format ) {
-				if ( empty( $content['link'] ) ) {
-					$content = esc_html( $content['text'] );
-				} else {
-					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
-				}
-			} else {
-				$content = array(
-					'text'  => $content['text'],
-					'link'  => $content['link'],
-					'title' => ( isset( $content['title'] ) ? $content['title'] : '' ),
-					'image' => ( isset( $content['image'] ) ? $content['image'] : '' ),
-				);
-			}
 		}
 		return $content;
 	}
