@@ -19,7 +19,11 @@ endif;
 
 switch ( bp_current_action() ) :
 	case 'notifications':
-		bp_get_template_part( 'members/single/settings/notifications' );
+		if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+			bp_get_template_part( 'members/single/settings/subscriptions' );
+		} else {
+			bp_get_template_part( 'members/single/settings/notifications' );
+		}
 		break;
 	case 'capabilities':
 		bp_get_template_part( 'members/single/settings/capabilities' );

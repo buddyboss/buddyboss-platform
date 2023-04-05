@@ -291,6 +291,7 @@ class BP_Groups_Member {
 			return false;
 		}
 
+		$is_member_add = false;
 		if ( ! empty( $this->id ) ) {
 			$sql = $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET inviter_id = %d, is_admin = %d, is_mod = %d, is_banned = %d, user_title = %s, is_confirmed = %d, comments = %s, invite_sent = %d WHERE id = %d", $this->inviter_id, $this->is_admin, $this->is_mod, $this->is_banned, $this->user_title, $this->is_confirmed, $this->comments, $this->invite_sent, $this->id );
 		} else {
@@ -300,6 +301,7 @@ class BP_Groups_Member {
 			}
 
 			$sql = $wpdb->prepare( "INSERT INTO {$bp->groups->table_name_members} ( user_id, group_id, inviter_id, is_admin, is_mod, is_banned, user_title, date_modified, is_confirmed, comments, invite_sent ) VALUES ( %d, %d, %d, %d, %d, %d, %s, %s, %d, %s, %d )", $this->user_id, $this->group_id, $this->inviter_id, $this->is_admin, $this->is_mod, $this->is_banned, $this->user_title, $this->date_modified, $this->is_confirmed, $this->comments, $this->invite_sent );
+			$is_member_add = true;
 		}
 
 		if ( ! $wpdb->query( $sql ) ) {
@@ -313,6 +315,13 @@ class BP_Groups_Member {
 
 		// Update the group's member count.
 		self::refresh_total_member_count_for_group( $this->group_id );
+
+		// Create a group subscription.
+		if ( $is_member_add && 1 === (int) $this->is_confirmed ) {
+			self::bb_create_group_subscription( $this->user_id, $this->group_id, null );
+		} else {
+			self::bb_create_group_subscription( $this->user_id, $this->group_id, $this->is_banned );
+		}
 
 		/**
 		 * Fires after the current group membership item has been saved.
@@ -458,6 +467,9 @@ class BP_Groups_Member {
 		// Update the group's member count.
 		self::refresh_total_member_count_for_group( $this->group_id );
 
+		// Delete group subscription.
+		self::bb_remove_group_subscription( $this->user_id, $this->group_id );
+
 		/**
 		 * Fires after a member is removed from a group.
 		 *
@@ -530,6 +542,9 @@ class BP_Groups_Member {
 
 		// Update the group's member count.
 		self::refresh_total_member_count_for_group( $group_id );
+
+		// Delete group subscription.
+		self::bb_remove_group_subscription( $user_id, $group_id );
 
 		/**
 		 * Fires after a member is removed from a group.
@@ -1540,5 +1555,108 @@ class BP_Groups_Member {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Create group subscription when member join/accept to the group.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param int  $user_id  ID of the user.
+	 * @param int  $group_id ID of the group.
+	 * @param bool $status   Status of the member in the group.
+	 *
+	 * @return bool|int True on success, false on failure.
+	 */
+	public static function bb_create_group_subscription( $user_id, $group_id, $status = null ) {
+		$retval = false;
+
+		// Forcefully create the group subscription.
+		BP_Core_Notification_Abstract::$no_validate = true;
+
+		// Get group parent.
+		$parent_group_id = bp_get_parent_group_id( $group_id );
+
+		$record_args = array(
+			'blog_id'           => get_current_blog_id(),
+			'user_id'           => $user_id,
+			'item_id'           => $group_id,
+			'type'              => 'group',
+			'secondary_item_id' => $parent_group_id,
+		);
+
+		if ( null !== $status ) {
+			// Check if subscription is existed or not?.
+			$subscriptions = bb_get_subscriptions(
+				array(
+					'type'    => 'group',
+					'user_id' => $user_id,
+					'item_id' => $group_id,
+					'count'   => false,
+					'cache'   => false,
+					'status'  => null,
+				),
+				true
+			);
+
+			if ( ! empty( $subscriptions['subscriptions'] ) && ! empty( current( $subscriptions['subscriptions'] ) ) ) {
+				$subscription = current( $subscriptions['subscriptions'] );
+
+				if ( $subscription->status !== $status ) {
+					return $retval;
+				}
+
+				$record_args['id']     = $subscription->id;
+				$record_args['status'] = ! $status;
+			} else {
+				return $retval;
+			}
+		}
+
+		$retval = bb_create_subscription( $record_args );
+
+		BP_Core_Notification_Abstract::$no_validate = false;
+		return $retval;
+	}
+
+	/**
+	 * Delete group subscription when remove member from the group.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param int $user_id  ID of the user.
+	 * @param int $group_id ID of the group.
+	 *
+	 * @return bool|int True on success, false on failure.
+	 */
+	public static function bb_remove_group_subscription( $user_id, $group_id ) {
+
+		// Forcefully create the group subscription.
+		BP_Core_Notification_Abstract::$no_validate = true;
+		// Check if subscription is existed or not?.
+		$subscriptions = bb_get_subscriptions(
+			array(
+				'type'    => 'group',
+				'user_id' => $user_id,
+				'item_id' => $group_id,
+				'count'   => false,
+				'cache'   => false,
+				'status'  => null,
+			),
+			true
+		);
+		if ( empty( $subscriptions['subscriptions'] ) ) {
+			return false;
+		}
+
+		// Get current one.
+		$subscription = current( $subscriptions['subscriptions'] );
+
+		// Delete the subscription.
+		$is_deleted = bb_delete_subscription( $subscription->id );
+
+		BP_Core_Notification_Abstract::$no_validate = false;
+
+		return $is_deleted;
 	}
 }

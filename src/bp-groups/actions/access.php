@@ -16,23 +16,45 @@ function bp_groups_group_access_protection() {
 		return;
 	}
 
+	global $wp;
+
 	$current_group   = groups_get_current_group();
 	$user_has_access = $current_group->user_has_access;
 	$is_visible      = $current_group->is_visible;
 	$no_access_args  = array();
 
+	$current_url  = home_url( $wp->request );
+
 	// The user can know about the group but doesn't have full access.
 	if ( ! $user_has_access && $is_visible ) {
 
+		if ( ! is_user_logged_in() ) {
+			bp_core_redirect(
+				add_query_arg(
+					array(
+						'bp-auth'       => 1,
+						'action'        => 'bpnoaccess',
+						'redirect_from' => 'private_group',
+					),
+					wp_login_url( $current_url )
+				)
+			);
+		}
+
 		// Always allow access to request-membership.
 		if ( bp_is_current_action( 'request-membership' ) && ! is_user_logged_in() ) {
+
 			$redirect = bp_get_group_permalink( $current_group );
-			bp_core_redirect( add_query_arg( array(
-					'bp-auth'       => 1,
-					'action'        => 'bpnoaccess',
-					'redirect_from' => 'private_group',
-				),
-					wp_login_url( $redirect ) ) );
+			bp_core_redirect(
+				add_query_arg(
+					array(
+						'bp-auth'       => 1,
+						'action'        => 'bpnoaccess',
+						'redirect_from' => 'private_group',
+					),
+					wp_login_url( $redirect )
+				)
+			);
 		} elseif ( bp_is_current_action( 'request-membership' ) && is_user_logged_in() ) {
 			$user_has_access = true;
 

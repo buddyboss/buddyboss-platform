@@ -460,9 +460,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
 		return $display_name;
 	}
 
-	if ( ! $url = bp_core_get_user_domain( $user_id ) ) {
-		return false;
-	}
+	$url = bp_core_get_user_domain( $user_id );
 
 	if ( ! empty( $just_link ) ) {
 		return $url;
@@ -1138,15 +1136,6 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
 		$time = bp_core_current_time();
 	}
 
-	// As of BuddyPress 2.0, last_activity is no longer stored in usermeta.
-	// However, we mirror it there for backward compatibility. Do not use!
-	// Remove our warning and re-add.
-	remove_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10 );
-	remove_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10 );
-	bp_update_user_meta( $user_id, 'last_activity', $time );
-	add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10, 4 );
-	add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 4 );
-
 	return BP_Core_User::update_last_activity( $user_id, $time );
 }
 
@@ -1228,7 +1217,8 @@ add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning'
 function bp_get_user_last_activity( $user_id = 0 ) {
 	$activity = '';
 
-	$last_activity = BP_Core_User::get_last_activity( $user_id );
+	$last_activity = BB_Presence::bb_get_users_last_activity( $user_id );
+
 	if ( ! empty( $last_activity[ $user_id ] ) ) {
 		$activity = $last_activity[ $user_id ]['date_recorded'];
 	}
@@ -4855,7 +4845,7 @@ function bb_is_online_user( $user_id, $expiry = false ) {
 	if ( is_int( $expiry ) && ! empty( $expiry ) ) {
 		$timeframe = $expiry;
 	} else {
-		$timeframe = bb_presence_time_span();
+		$timeframe = bb_presence_interval() + bb_presence_time_span();
 	}
 
 	$online_time = apply_filters( 'bb_default_online_presence_time', $timeframe );
