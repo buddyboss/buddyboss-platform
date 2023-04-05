@@ -585,26 +585,30 @@ add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
 function bb_load_post_notifications() {
 	if ( class_exists( 'BB_Post_Notification' ) ) {
 		BB_Post_Notification::instance();
-	}	
+	}
 }
 
 /**
  * Send new post comment reply notification.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param int        $comment_id       The comment ID.
+ * @param int|string $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
+ * @param array      $commentdata      Comment data.
  */
 function bb_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
 	// Don't send notification if the comment hasn't been approved.
 	if ( empty( $comment_approved ) ) {
 		return false;
-	}	
+	}
 
 	// Don't record activity if the comment has already been marked as spam.
 	if ( 'spam' === $comment_approved ) {
 		return false;
 	}
 
-	if ( empty( $commentdata['comment_parent'] ) ){
+	if ( empty( $commentdata['comment_parent'] ) ) {
 		return false;
 	}
 
@@ -614,7 +618,7 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 		return false;
 	}
 
-	//Get the user by the comment author email.
+	// Get the user by the comment author email.
 	$comment_author = get_user_by( 'email', $commentdata['comment_author_email'] );
 	$parent_comment = get_comment( $commentdata['comment_parent'] );
 
@@ -622,7 +626,7 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 		return false;
 	}
 
-	if( ! empty( $comment_author ) && $comment_author->ID === (int) $parent_comment->user_id ) {
+	if ( ! empty( $comment_author ) && $comment_author->ID === (int) $parent_comment->user_id ) {
 		return false;
 	}
 
@@ -631,51 +635,54 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 		return false;
 	}
 
-	// $comment_parent = 0 means top level post comment.
-	if ( ! empty( $commentdata['comment_parent'] ) ) {
-		$comment_author_id        = ! empty( $comment_author ) ? $comment_author->ID : $commentdata['user_id'];
-		$comment_content          = $commentdata['comment_content'];
-		$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $commentdata['comment_author'];
-		$comment_link             = get_comment_link( $comment_id ); 
-		$parent_comment_author_id = ( int ) $parent_comment->user_id;
+	$comment_author_id        = ! empty( $comment_author ) ? $comment_author->ID : $commentdata['user_id'];
+	$comment_content          = $commentdata['comment_content'];
+	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $commentdata['comment_author'];
+	$comment_link             = get_comment_link( $comment_id );
+	$parent_comment_author_id = (int) $parent_comment->user_id;
 
-		//Send an email if the user hasn't opted-out.
-		if ( ! empty( $parent_comment_author_id ) ) {
-			
-			if ( true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
+	// Check the sender is blocked by recipient or not.
+	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment_author_id, $comment_author_id ) ) {
+		return;
+	}
 
-				$unsubscribe_args = array(
-					'user_id'           => $parent_comment_author_id,
-					'notification_type' => 'new-comment-reply',
-				);
+	// Send an email if the user hasn't opted-out.
+	if ( ! empty( $parent_comment_author_id ) ) {
 
-				$args = array(
-					'tokens' => array(
-						'comment.id'     => $comment_id,
-						'commenter.id'   => $comment_author_id,
-						'commenter.name' => $comment_author_name,
-						'comment_reply'  => wp_strip_all_tags( $comment_content ),
-						'comment.url'    => esc_url( $comment_link ),
-						'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
-					),
-				);
+		if ( true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
 
-				bp_send_email( 'new-comment-reply', $parent_comment_author_id, $args );
+			$unsubscribe_args = array(
+				'user_id'           => $parent_comment_author_id,
+				'notification_type' => 'new-comment-reply',
+			);
 
-			}
+			$args = array(
+				'tokens' => array(
+					'comment.id'     => $comment_id,
+					'commenter.id'   => $comment_author_id,
+					'commenter.name' => $comment_author_name,
+					'comment_reply'  => wp_strip_all_tags( $comment_content ),
+					'comment.url'    => esc_url( $comment_link ),
+					'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				),
+			);
 
-			update_comment_meta( $comment_id, 'bb_comment_notified_after_approved', 1 );
-			/**
-			 * Fires at the point that notifications should be sent for new comment reply.
-			 *
-			 * @since BuddyPress [BBVERSION]
-			 *
-			 * @param int   $comment_id   ID for the newly received comment reply.
-			 * @param int   $commenter_id ID of the user who made the comment reply.
-			 * @param array $commentdata  Comment reply related data.
-			 */
-			do_action( 'bb_post_new_comment_reply_notification', $comment_id, $comment_author_id, $commentdata );
+			bp_send_email( 'new-comment-reply', $parent_comment_author_id, $args );
+
 		}
+
+		update_comment_meta( $comment_id, 'bb_comment_notified_after_approved', 1 );
+
+		/**
+		 * Fires at the point that notifications should be sent for new comment reply.
+		 *
+		 * @since BuddyPress [BBVERSION]
+		 *
+		 * @param int   $comment_id   ID for the newly received comment reply.
+		 * @param int   $commenter_id ID of the user who made the comment reply.
+		 * @param array $commentdata  Comment reply related data.
+		 */
+		do_action( 'bb_post_new_comment_reply_notification', $comment_id, $comment_author_id, $commentdata );
 	}
 }
 
@@ -683,11 +690,19 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
  * Check post comment status on transition_comment_status hook and send the new comment reply notification if not sent already.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string     $new_status New comment status.
+ * @param string     $old_status Previous comment status.
+ * @param WP_Comment $comment Comment data.
  */
 function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) {
 
-	$notification_alreay_sent = get_comment_meta( $comment->comment_ID, 'bb_comment_notified_after_approved', true );
-	if( empty( $notification_alreay_sent ) && 'approved' === $new_status && ( in_array( $old_status, array( 'unapproved', 'spam' ) ) ) ) {
+	$notification_already_sent = get_comment_meta( $comment->comment_ID, 'bb_comment_notified_after_approved', true );
+	if (
+		empty( $notification_already_sent ) &&
+		'approved' === $new_status &&
+		in_array( $old_status, array( 'unapproved', 'spam' ), true )
+	) {
 		$commentdata = get_object_vars( $comment );
 		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
 	}
