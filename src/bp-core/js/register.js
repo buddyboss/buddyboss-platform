@@ -23,7 +23,11 @@ jQuery( document ).ready( function() {
 	onLoadField.val( getExistingFieldsSelector.val() );
 
 	if ( typeof window.tinymce !== 'undefined' ) {
-		window.tinymce.remove('textarea');
+		$( window.tinymce.editors ).each( function( index ) {
+			window.tinymce.editors[index].on('change', function () {
+				window.tinymce.editors[index].save();
+			});
+		});
 	}
 
 	var dropDownSelected = jQuery( 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id);
