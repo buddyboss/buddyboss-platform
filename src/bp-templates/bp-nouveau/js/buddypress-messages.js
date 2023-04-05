@@ -2502,7 +2502,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly.
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -2732,7 +2732,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
@@ -2975,7 +2975,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								errorText = response.data.feedback;
-							} else if ( 'Server responded with 0 code.' == response ) { // update error text to user friendly
+							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								errorText = BP_Nouveau.media.connection_lost_error;
 							}
 						} else {
