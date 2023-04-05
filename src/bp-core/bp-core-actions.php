@@ -614,7 +614,10 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 
 	// Get the post.
 	$post = get_post( $commentdata['comment_post_ID'] );
-	if ( ! is_a( $post, 'WP_Post' ) ) {
+	if (
+		! is_a( $post, 'WP_Post' ) ||
+		( isset( $post->post_type ) && 'post' !== $post->post_type ) // Allow only for the WP default post only.
+	) {
 		return false;
 	}
 
