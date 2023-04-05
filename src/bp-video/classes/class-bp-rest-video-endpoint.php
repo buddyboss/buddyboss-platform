@@ -833,6 +833,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'album_id'      => $video->album_id,
 			'activity_id'   => $video->activity_id,
 			'user_id'       => $video->user_id,
+			'menu_order'    => $video->menu_order,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -1589,19 +1590,23 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			// extract the nice title name.
 			$title = get_the_title( $wp_attachment_id );
 
-			$video_id = bp_video_add(
-				array(
-					'id'            => $id,
-					'attachment_id' => $wp_attachment_id,
-					'title'         => $title,
-					'activity_id'   => $video_activity_id,
-					'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
-					'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
-					'privacy'       => $video_privacy,
-					'user_id'       => $user_id,
-					'error_type'    => 'wp_error',
-				)
+			$add_video_args = array(
+				'id'            => $id,
+				'attachment_id' => $wp_attachment_id,
+				'title'         => $title,
+				'activity_id'   => $video_activity_id,
+				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
+				'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
+				'privacy'       => $video_privacy,
+				'user_id'       => $user_id,
+				'error_type'    => 'wp_error',
 			);
+
+			if ( isset( $args['menu_order'] ) ) {
+				$add_video_args['menu_order'] = ( ! empty( $args['menu_order'] ) ? $args['menu_order'] : 0 );
+			}
+
+			$video_id = bp_video_add( $add_video_args );
 
 			if ( is_int( $video_id ) ) {
 
@@ -1847,6 +1852,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			array(
 				'video_ids' => $video_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -2093,6 +2099,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			array(
 				'video_ids' => $video_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -2273,8 +2280,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$videos = $this->assemble_response_data(
 			array(
-				'video_ids' => $video_ids,
-				'sort'      => 'ASC',
+				'video_ids'        => $video_ids,
+				'sort'             => 'ASC',
+				'order_by'         => 'menu_order',
+				'moderation_query' => false,
 			)
 		);
 

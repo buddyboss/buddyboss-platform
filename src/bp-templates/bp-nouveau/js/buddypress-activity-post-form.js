@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone, tinymce */
+/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone */
 /* @version 3.1.0 */
 /*jshint esversion: 6 */
 window.wp = window.wp || {};
@@ -1562,6 +1562,7 @@ window.bp = window.bp || {};
 					previewTemplate : document.getElementsByClassName( 'activity-post-default-template' )[0].innerHTML,
 					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 					maxThumbnailFilesize: ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
+					dictInvalidFileType: bp_media_dropzone.dictInvalidFileType,
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-media-uploader', this.dropzone_options );
@@ -3143,6 +3144,7 @@ window.bp = window.bp || {};
 										},
 										imageDragging: false,
 										anchor: {
+											placeholderText: BP_Nouveau.anchorPlaceholderText,
 											linkValidation: true
 										}
 									}
