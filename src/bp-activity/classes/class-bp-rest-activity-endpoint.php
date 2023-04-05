@@ -1322,15 +1322,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $activity->children ) ) {
 			$data['comment_count'] = bp_activity_recurse_comment_count( $activity );
 
-			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] ) {
-				// First check the comment is disabled from the activity settings for post type.
-				// For more information please check this PROD-2475.
-				if ( 'activity_comment' !== $activity->type && $data['can_comment'] ) {
-					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
-					// This is for activity comment to attach the comment in the feed.
-				} elseif ( 'activity_comment' === $activity->type ) {
-					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
-				}
+			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] && $data['can_comment'] ) {
+				$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 			}
 		} else {
 			$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id );
