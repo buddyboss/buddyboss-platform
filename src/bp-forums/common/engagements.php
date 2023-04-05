@@ -285,21 +285,25 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 		// Backwards compat for pre-2.6.0.
 		if ( is_numeric( $args ) ) {
 			$args = array(
-				'meta_query' => array( array(
-					'key'     => $meta_key,
-					'value'   => bbp_get_user_id( $args, false, false ),
-					'compare' => 'NUMERIC'
-				) )
+				'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					array(
+						'key'     => $meta_key,
+						'value'   => bbp_get_user_id( $args, false, false ),
+						'compare' => 'NUMERIC',
+					),
+				),
 			);
 		}
 
 		// Default arguments.
 		$defaults = array(
-			'meta_query' => array( array(
-				'key'     => $meta_key,
-				'value'   => bbp_get_displayed_user_id(),
-				'compare' => 'NUMERIC'
-			) )
+			'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'     => $meta_key,
+					'value'   => bbp_get_displayed_user_id(),
+					'compare' => 'NUMERIC',
+				),
+			),
 		);
 
 		// Parse arguments.
@@ -341,29 +345,33 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 			return;
 		}
 
-		// Register the taxonomy
-		register_taxonomy( $tax_key, 'bbp_' . $object_type, array(
-			'labels'                => array(),
-			'description'           => '',
-			'public'                => false,
-			'publicly_queryable'    => false,
-			'hierarchical'          => false,
-			'show_ui'               => false,
-			'show_in_menu'          => false,
-			'show_in_nav_menus'     => false,
-			'show_tagcloud'         => false,
-			'show_in_quick_edit'    => false,
-			'show_admin_column'     => false,
-			'meta_box_cb'           => false,
-			'capabilities'          => array(),
-			'rewrite'               => false,
-			'query_var'             => '',
-			'update_count_callback' => '',
-			'show_in_rest'          => false,
-			'rest_base'             => false,
-			'rest_controller_class' => false,
-			'_builtin'              => false
-		) );
+		// Register the taxonomy.
+		register_taxonomy(
+			$tax_key,
+			'bbp_' . $object_type,
+			array(
+				'labels'                => array(),
+				'description'           => '',
+				'public'                => false,
+				'publicly_queryable'    => false,
+				'hierarchical'          => false,
+				'show_ui'               => false,
+				'show_in_menu'          => false,
+				'show_in_nav_menus'     => false,
+				'show_tagcloud'         => false,
+				'show_in_quick_edit'    => false,
+				'show_admin_column'     => false,
+				'meta_box_cb'           => false,
+				'capabilities'          => array(),
+				'rewrite'               => false,
+				'query_var'             => '',
+				'update_count_callback' => '',
+				'show_in_rest'          => false,
+				'rest_base'             => false,
+				'rest_controller_class' => false,
+				'_builtin'              => false,
+			)
+		);
 	}
 
 	/**
@@ -425,7 +433,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 		$user_key = "{$meta_key}_user_id_{$user_id}";
 		$tax_key  = "{$meta_key}_{$meta_type}";
 		$this->jit_taxonomy( $tax_key );
-		$term     = get_term_by( 'slug', $user_key, $tax_key );
+		$term = get_term_by( 'slug', $user_key, $tax_key );
 
 		return wp_delete_term( $term->term_id, $tax_key );
 	}
@@ -458,7 +466,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * @return bool|void
 	 */
 	public function remove_all_users_from_all_objects( $meta_key = '', $meta_type = 'post' ) {
-		// TODO
+		// TODO.
 	}
 
 	/**
@@ -479,10 +487,12 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 		$this->jit_taxonomy( $tax_key );
 
 		// Get terms.
-		$terms = get_terms( array(
-			'object_ids' => $object_id,
-			'taxonomy'   => $tax_key
-		) );
+		$terms = get_terms(
+			array(
+				'object_ids' => $object_id,
+				'taxonomy'   => $tax_key,
+			)
+		);
 
 		// Slug part to replace.
 		$user_ids = array();
@@ -519,21 +529,25 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 		// Backwards compat for pre-2.6.0.
 		if ( is_numeric( $args ) ) {
 			$args = array(
-				'tax_query' => array( array(
-					'taxonomy' => $tax_key,
-					'terms'    => $user_key . bbp_get_user_id( $args, false, false ),
-					'field'    => 'slug'
-				) )
+				'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+					array(
+						'taxonomy' => $tax_key,
+						'terms'    => $user_key . bbp_get_user_id( $args, false, false ),
+						'field'    => 'slug',
+					),
+				),
 			);
 		}
 
 		// Default arguments.
 		$defaults = array(
-			'tax_query' => array( array(
-				'taxonomy' => $tax_key,
-				'terms'    => $user_key . bbp_get_displayed_user_id(),
-				'field'    => 'slug'
-			) )
+			'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				array(
+					'taxonomy' => $tax_key,
+					'terms'    => $user_key . bbp_get_displayed_user_id(),
+					'field'    => 'slug',
+				),
+			),
 		);
 
 		// Parse arguments.
@@ -582,19 +596,18 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 		switch ( $meta_key ) {
 
 			// Favorites.
-			case '_bbp_favorite' :
+			case '_bbp_favorite':
 				$key = '_bbp_favorites';
 				break;
 
 			// Subscriptions.
-			case '_bbp_subscription' :
-
+			case '_bbp_subscription':
 				// Maybe guess at post type.
 				$post_type = ! empty( $object_id )
 					? get_post_type( $object_id )
 					: bbp_get_topic_post_type();
 
-				// Forums & Topics used different keys :/
+				// Forums & Topics used different keys.
 				$key = ( bbp_get_forum_post_type() === $post_type )
 					? '_bbp_forum_subscriptions'
 					: '_bbp_subscriptions';
@@ -602,7 +615,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 				break;
 
 			// Unknown, so pluralize.
-			default :
+			default:
 				$key = "{$meta_key}s";
 				break;
 		}
@@ -643,14 +656,13 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 		switch ( $meta_key ) {
 
 			// Favorites.
-			case '_bbp_favorite' :
+			case '_bbp_favorite':
 				$key = 'bbp_get_topic_favoriters_';
 				break;
 
 			// Subscriptions.
-			case '_bbp_subscription' :
-
-				// Forums & Topics used different keys :/
+			case '_bbp_subscription':
+				// Forums & Topics used different keys.
 				$key = ( bbp_get_forum_post_type() === $post_type )
 					? 'bbp_get_forum_subscribers_'
 					: 'bbp_get_topic_subscribers_';
@@ -658,7 +670,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 				break;
 
 			// Unknown, so pluralize.
-			default :
+			default:
 				$nounize = rtrim( $meta_key, 'e' );
 				$key     = "bbp_get_{$post_type}_{$nounize}ers_";
 				break;
@@ -762,7 +774,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 		$retval     = false;
 		$option_key = $this->get_user_option_key( $meta_key, $object_id );
 		$object_ids = $this->parse_comma_list( get_user_option( $option_key, $user_id ) );
-		$exists     = array_search( $object_id, $object_ids );
+		$exists     = array_search( $object_id, $object_ids, true );
 
 		// Not already added, so add it.
 		if ( false === $exists ) {
@@ -776,7 +788,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 			}
 		}
 
-		// Return true if added, or false if not.
+		// True if added, or false if not.
 		return $retval;
 	}
 
@@ -797,7 +809,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 		$retval     = false;
 		$option_key = $this->get_user_option_key( $meta_key, $object_id );
 		$object_ids = $this->parse_comma_list( get_user_option( $option_key, $user_id ) );
-		$exists     = array_search( $object_id, $object_ids );
+		$exists     = array_search( $object_id, $object_ids, true );
 
 		// Exists, so remove it.
 		if ( false !== $exists ) {
@@ -814,7 +826,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 			}
 		}
 
-		// Return true if removed, or false if not.
+		// True if removed, or false if not.
 		return $retval;
 	}
 
@@ -871,8 +883,8 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 		$u_count  = count( $user_ids );
 
 		// Count number of removals.
-		$removed  = array();
-		$r_count  = 0;
+		$removed = array();
+		$r_count = 0;
 
 		// Users have engaged, so remove them.
 		if ( ! empty( $u_count ) ) {
@@ -910,8 +922,8 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 		$u_count    = count( $user_ids );
 
 		// Count number of removals.
-		$removed    = array();
-		$r_count    = 0;
+		$removed = array();
+		$r_count = 0;
 
 		// Users have engaged, so remove them.
 		if ( ! empty( $u_count ) ) {
@@ -988,7 +1000,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 
 		// Maybe include these post IDs.
 		$args = array(
-			'post__in' => $object_ids
+			'post__in' => $object_ids,
 		);
 
 		// Parse arguments.
