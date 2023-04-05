@@ -158,7 +158,7 @@ class BP_Latest_Activities extends WP_Widget {
 //			'secondary_id' => 0,
 //		);
 		$bp_nouveau->activity->widget_args = apply_filters(
-			'activity_comments_args',
+			'activity_comments_widget_args',
 			array(
 				'max'          => $max,
 				'scope'        => $scope,
