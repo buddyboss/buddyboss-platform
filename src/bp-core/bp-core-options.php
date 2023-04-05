@@ -96,6 +96,9 @@ function bp_get_default_options() {
 		// Group Types.
 		'bp-disable-group-type-creation'             => false,
 
+		// Group Subscriptions.
+		'bb_enable_group_subscriptions'              => true,
+
 		// Auto Group Membership Approval.
 		'bp-enable-group-auto-join'                  => false,
 
@@ -1245,6 +1248,28 @@ function bp_force_friendship_to_message( $default = false ) {
 }
 
 /**
+ * Check the activity auto follow enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ *
+ * @return bool True if Auto Follow is enabled, otherwise false.
+ */
+function bb_is_friends_auto_follow_active( $default = false ) {
+
+	/**
+	 * Filter whether the activity auto follow enabled or not.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether the activity auto follow enabled or not.
+	 */
+	return (bool) apply_filters( 'bb_is_friends_auto_follow_active', bp_is_active( 'activity' ) && bp_get_option( 'bb_enable_friends_auto_follow', $default ) );
+}
+
+/**
  * Is member type disabled?
  *
  * @since BuddyBoss 1.0.0
@@ -2263,3 +2288,24 @@ function bb_get_default_custom_upload_group_cover() {
 	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
 }
 
+/**
+ * Is group subscription turned off?
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if group subscription is enabled, otherwise false.
+ */
+function bb_enable_group_subscriptions( $default = true ) {
+
+	/**
+	 * Filters whether group subscription is turned off.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param bool $value Whether group subscription is turned off.
+	 */
+	return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
+}

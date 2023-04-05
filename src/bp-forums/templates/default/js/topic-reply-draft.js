@@ -243,7 +243,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
 
 			// Remove class to display draft.
-			$( '#new-post' ).removeClass( 'has-draft' );
+			$( '#new-post' ).removeClass( 'has-draft has-content has-media has-gif' );
 		},
 
 		resetTopicReplyDraftPostForm: function() {
@@ -258,19 +258,23 @@ window.bp = window.bp || {};
 
 			// Reset editor.
 			if ( 'topic' === this.topic_reply_draft.object ) {
-				$medium_editor = window.forums_medium_topic_editor[editor_key];
-
+				if( window.forums_medium_topic_editor ) {
+					$medium_editor = window.forums_medium_topic_editor[editor_key];
+					$medium_editor.setContent( '' );
+				}
 				$editor = target.find( '#bbp_editor_topic_content_' + editor_key );
 				$editor.removeClass( 'error' );
-				$medium_editor.setContent( '' );
 				target.find( '#bbp_topic_content' ).val( '' );
 				target.find( '#bbp_topic_title' ).val( '' );
+				target.removeClass( 'has-title' );
 			} else if ( 'reply' === this.topic_reply_draft.object ) {
-				$medium_editor = window.forums_medium_reply_editor[editor_key];
-
+				if ( window.forums_medium_reply_editor ) {
+					$medium_editor = window.forums_medium_reply_editor[editor_key];
+					$medium_editor.setContent( '' );
+				}
 				$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
 				$editor.removeClass( 'error' );
-				$medium_editor.setContent( '' );
+				$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
 				target.find( '#bbp_reply_content' ).val( '' );
 				setTimeout(
 					function () {
@@ -348,7 +352,7 @@ window.bp = window.bp || {};
 			target[0].reset();
 
 			// Remove class to display draft.
-			target.removeClass( 'has-draft' );
+			target.removeClass( 'has-content' );
 		},
 
 		collectTopicReplyDraftActivity: function() {
@@ -519,7 +523,6 @@ window.bp = window.bp || {};
 						type: 'POST',
 						url: BP_Nouveau.ajaxurl,
 						data: draft_data,
-						async: false,
 						success: function() {}
 					}
 				);
@@ -574,14 +577,29 @@ window.bp = window.bp || {};
 			// Title.
 			if ( 'undefined' !== typeof activity_data.bbp_topic_title ) {
 				$form.find( '#bbp_topic_title' ).val( activity_data.bbp_topic_title );
+				$form.addClass( 'has-title' );
 			}
 
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_topic_content ) {
 				$editor.html( activity_data.bbp_topic_content );
-				var element = $editor.get( 0 );
+				var element;
+				if ( $( '#bbp_topic_content' ).prop("tagName").toLowerCase === 'div' ) {
+					element = $editor.get( 0 );
+				} else {
+					element = $( '#bbp_topic_content' )[0];
+				}
 				element.focus();
 				$form.find( '#bbp_topic_content' ).val( activity_data.bbp_topic_content );
+				if ( $( '#bbp_topic_content' ).prop("tagName").toLowerCase === 'div' ) {
+					if ( $( element ).text() !== '' ) {
+						$form.addClass( 'has-content' );
+					}
+				} else {
+					if ( $( element ).val() !== '' ) {
+						$form.addClass( 'has-content' );
+					}
+				}
 			}
 
 			// Stick topic.
@@ -638,9 +656,23 @@ window.bp = window.bp || {};
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_reply_content ) {
 				$editor.html( activity_data.bbp_reply_content );
-				var element = $editor.get( 0 );
+				var element;
+				if ( $( '#bbp_reply_content' ).prop("tagName").toLowerCase === 'div' ) {
+					element = $editor.get( 0 );
+				} else {
+					element = $( '#bbp_reply_content' )[0];
+				}
 				element.focus();
 				$form.find( '#bbp_reply_content' ).val( activity_data.bbp_reply_content );
+				if ( $( '#bbp_reply_content' ).prop("tagName").toLowerCase === 'div' ) {
+					if ( $( element ).text() !== '' ) {
+						$form.addClass( 'has-content' );
+					}
+				} else {
+					if ( $( element ).val() !== '' ) {
+						$form.addClass( 'has-content' );
+					}
+				}
 			}
 
 			// Subscribe notify.
@@ -740,6 +772,8 @@ window.bp = window.bp || {};
 						}
 					}
 
+					$form.addClass( 'has-media' );
+
 				}
 			}
 
@@ -809,6 +843,8 @@ window.bp = window.bp || {};
 							$form.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
 					}
+
+					$form.addClass( 'has-media' );
 
 				}
 			}
@@ -880,6 +916,8 @@ window.bp = window.bp || {};
 						}
 					}
 
+					$form.addClass( 'has-media' );
+
 				}
 			}
 
@@ -909,6 +947,7 @@ window.bp = window.bp || {};
 						if ( $form.find( '#forums-media-button' ) ) {
 							$form.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
+						$form.addClass( 'has-gif' );
 					}
 				}
 			}
