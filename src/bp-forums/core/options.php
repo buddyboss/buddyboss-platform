@@ -635,7 +635,7 @@ function bbp_engagements_strategy( $default = 'meta' ) {
 	$integration = get_option( '_bbp_engagements_strategy', $default );
 
 	// Check that class exists, or fallback.
-	$class_name  = 'BBP_User_Engagements_' . ucwords( $integration );
+	$class_name = 'BBP_User_Engagements_' . ucwords( $integration );
 
 	// Fallback to 'meta' if invalid.
 	if ( ! class_exists( $class_name ) ) {

@@ -70,7 +70,7 @@ function bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $rel_typ
 	$user_id = absint( $user_id );
 	$retval  = bbp_user_engagements_interface( $rel_key, $rel_type )->remove_user_from_all_objects( $user_id, $rel_key, $rel_type );
 
-	// Filter & return
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_user_from_all_objects', $retval, $user_id, $rel_key, $rel_type );
 }
 
@@ -429,7 +429,7 @@ function bbp_update_topic_engagements( $topic_id = 0 ) {
 		$author_id = bbp_get_reply_author_id( $topic_id );
 		$topic_id  = bbp_get_reply_topic_id( $topic_id );
 
-	// Is a topic.
+		// Is a topic.
 	} elseif ( bbp_is_topic( $topic_id ) ) {
 
 		// Bail if topic isn't published.
@@ -440,7 +440,7 @@ function bbp_update_topic_engagements( $topic_id = 0 ) {
 		$author_id = bbp_get_topic_author_id( $topic_id );
 		$topic_id  = bbp_get_topic_id( $topic_id );
 
-	// Is unknown.
+		// Is unknown.
 	} else {
 		return;
 	}
@@ -606,7 +606,7 @@ function bbp_favorites_handler( $action = '' ) {
 	}
 
 	// Bail if no topic ID is passed.
-	if ( empty( $_GET['topic_id'] ) ) {
+	if ( empty( $_GET['topic_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		return $success;
 	}
 
@@ -622,18 +622,18 @@ function bbp_favorites_handler( $action = '' ) {
 	}
 
 	// What action is taking place?.
-	$topic_id = bbp_get_topic_id( $_GET['topic_id'] );
+	$topic_id = bbp_get_topic_id( $_GET['topic_id'] ); // phpcs:ignore
 	$user_id  = bbp_get_user_id( 0, true, true );
 
 	// Check for empty topic.
 	if ( empty( $topic_id ) ) {
 		bbp_add_error( 'bbp_favorite_topic_id', __( '<strong>Error</strong>: No topic was found. Which topic are you marking/unmarking as favorite?', 'buddyboss' ) );
 
-	// Check nonce.
+		// Check nonce.
 	} elseif ( ! bbp_verify_nonce_request( 'toggle-favorite_' . $topic_id ) ) {
 		bbp_add_error( 'bbp_favorite_nonce', __( '<strong>Error</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
 
-	// Check current user's ability to edit the user.
+		// Check current user's ability to edit the user.
 	} elseif ( ! current_user_can( 'edit_user', $user_id ) ) {
 		bbp_add_error( 'bbp_favorite_permission', __( '<strong>Error</strong>: You do not have permission to edit favorites for that user.', 'buddyboss' ) );
 	}
@@ -643,7 +643,7 @@ function bbp_favorites_handler( $action = '' ) {
 		return $success;
 	}
 
-	/** No errors *************************************************************/
+	/** No errors */
 
 	$is_favorite = bbp_is_user_favorite( $user_id, $topic_id );
 	$success     = false;
@@ -661,7 +661,9 @@ function bbp_favorites_handler( $action = '' ) {
 	if ( true === $success ) {
 
 		// Redirect back from whence we came.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! empty( $_REQUEST['redirect_to'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			$redirect = $_REQUEST['redirect_to']; // Validated later.
 		} elseif ( bbp_is_favorites() ) {
 			$redirect = bbp_get_favorites_permalink( $user_id, true );
@@ -677,11 +679,11 @@ function bbp_favorites_handler( $action = '' ) {
 
 		bbp_redirect( $redirect );
 
-	// Fail! Handle errors.
+		// Fail! Handle errors.
 	} elseif ( 'bbp_favorite_remove' === $action ) {
 		bbp_add_error( 'bbp_favorite_remove', __( '<strong>Error</strong>: There was a problem removing that topic from favorites.', 'buddyboss' ) );
 	} elseif ( 'bbp_favorite_add' === $action ) {
-		bbp_add_error( 'bbp_favorite_add',    __( '<strong>Error</strong>: There was a problem favoriting that topic.', 'buddyboss' ) );
+		bbp_add_error( 'bbp_favorite_add', __( '<strong>Error</strong>: There was a problem favoriting that topic.', 'buddyboss' ) );
 	}
 
 	return (bool) $success;
@@ -711,17 +713,22 @@ function bbp_favorites_handler( $action = '' ) {
  * @return array|bool Results if user has objects, otherwise null.
  */
 function bbp_get_user_object_ids( $args = array() ) {
-	$object_ids = $defaults = array();
+	$object_ids = array();
+	$defaults   = array();
 
 	// Parse arguments.
-	$r = bbp_parse_args( $args, array(
-		'user_id'     => 0,
-		'object_type' => bbp_get_topic_post_type(),
-		'rel_key'     => '',
-		'rel_type'    => 'post',
-		'filter'      => 'user_object_ids',
-		'args'        => array()
-	), 'get_user_object_ids' );
+	$r = bbp_parse_args(
+		$args,
+		array(
+			'user_id'     => 0,
+			'object_type' => bbp_get_topic_post_type(),
+			'rel_key'     => '',
+			'rel_type'    => 'post',
+			'filter'      => 'user_object_ids',
+			'args'        => array(),
+		),
+		'get_user_object_ids'
+	);
 
 	// Sanitize arguments.
 	$r['user_id']     = bbp_get_user_id( $r['user_id'] );
@@ -736,20 +743,22 @@ function bbp_get_user_object_ids( $args = array() ) {
 			'fields'         => 'ids',
 			'post_type'      => $r['object_type'],
 			'posts_per_page' => -1,
-			'meta_query'     => array( array(
-				'key'     => $r['rel_key'],
-				'value'   => $r['user_id'],
-				'compare' => 'NUMERIC'
-			),
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'     => $r['rel_key'],
+					'value'   => $r['user_id'],
+					'compare' => 'NUMERIC',
+				),
 
-			// Performance.
-			'nopaging'               => true,
-			'suppress_filters'       => true,
-			'update_post_term_cache' => false,
-			'update_post_meta_cache' => false,
-			'ignore_sticky_posts'    => true,
-			'no_found_rows'          => true
-		) );
+				// Performance.
+				'nopaging'               => true,
+				'suppress_filters'       => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+				'ignore_sticky_posts'    => true,
+				'no_found_rows'          => true,
+			),
+		);
 	}
 
 	// Parse arguments.
@@ -776,12 +785,14 @@ function bbp_get_user_object_ids( $args = array() ) {
  * @return array Return array of forum ids, or empty array.
  */
 function bbp_get_moderator_forum_ids( $user_id = 0 ) {
-	return bbp_get_user_object_ids( array(
-		'user_id'     => $user_id,
-		'rel_key'     => '_bbp_moderator_id',
-		'object_type' => bbp_get_forum_post_type(),
-		'filter'      => 'moderator_forum_ids'
-	) );
+	return bbp_get_user_object_ids(
+		array(
+			'user_id'     => $user_id,
+			'rel_key'     => '_bbp_moderator_id',
+			'object_type' => bbp_get_forum_post_type(),
+			'filter'      => 'moderator_forum_ids',
+		)
+	);
 }
 
 /**
@@ -795,11 +806,13 @@ function bbp_get_moderator_forum_ids( $user_id = 0 ) {
  * @return array Return array of topic ids, or empty array.
  */
 function bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
-	return bbp_get_user_object_ids( array(
-		'user_id' => $user_id,
-		'rel_key' => '_bbp_engagement',
-		'filter'  => 'user_engaged_topic_ids'
-	) );
+	return bbp_get_user_object_ids(
+		array(
+			'user_id' => $user_id,
+			'rel_key' => '_bbp_engagement',
+			'filter'  => 'user_engaged_topic_ids',
+		)
+	);
 }
 
 /**
@@ -813,9 +826,11 @@ function bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
  * @return array Return array of favorite topic ids, or empty array.
  */
 function bbp_get_user_favorites_topic_ids( $user_id = 0 ) {
-	return bbp_get_user_object_ids( array(
-		'user_id' => $user_id,
-		'rel_key' => '_bbp_favorite',
-		'filter'  => 'user_favorites_topic_ids'
-	) );
+	return bbp_get_user_object_ids(
+		array(
+			'user_id' => $user_id,
+			'rel_key' => '_bbp_favorite',
+			'filter'  => 'user_favorites_topic_ids',
+		)
+	);
 }
