@@ -5344,7 +5344,7 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
 /**
  * Generate user profile slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param int $user_id user id.
  *
@@ -5373,7 +5373,7 @@ function bb_generate_user_profile_slug( int $user_id ) {
 /**
  * Get the user ID based on the profile hash.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param string $profile_slug profile slug to check.
  *
@@ -5415,7 +5415,7 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 /**
  * Get the profile slug based on the user ID.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param int $user_id User ID to check.
  *
@@ -5432,7 +5432,7 @@ function bb_core_get_user_slug( int $user_id ) {
 	/**
 	 * Filters the profile slug based on originally provided user ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.1
 	 *
 	 * @param string $profile_slug User profile slug.
 	 * @param int    $user_id User ID.
@@ -5443,7 +5443,7 @@ function bb_core_get_user_slug( int $user_id ) {
 /**
  * Setup the user profile hash to the user meta.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param int $user_id User ID.
  *
@@ -5463,7 +5463,7 @@ function bb_set_user_profile_slug( int $user_id ) {
 /**
  * Setup the user profile hash to the user meta.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param array $user_ids User IDs.
  */

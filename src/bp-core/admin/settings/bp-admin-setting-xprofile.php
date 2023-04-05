@@ -786,7 +786,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Display profile slug format.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.1
 	 */
 	public function bb_profile_slug_format_callback() {
 		$options = array(

@@ -2486,7 +2486,7 @@ add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10,
 /**
  * Function to remove html entity from number format.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param string $formatted The number to be formatted.
  *
