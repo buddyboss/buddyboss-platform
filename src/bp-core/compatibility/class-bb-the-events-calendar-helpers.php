@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  */
 
 // Exit if accessed directly.
@@ -86,7 +86,7 @@ class BB_The_Event_Calendar_Helpers {
 	 * Function to pass query vars when enabled "Use updated calendar designs"
 	 * and enabled private mode from the platform.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.1
 	 *
 	 * @param array $query_vars The parsed query vars array.
 	 *

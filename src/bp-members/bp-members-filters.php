@@ -799,7 +799,7 @@ add_action( 'delete_user', 'bb_delete_user_subscriptions' );
 /**
  * Add repair member profile links.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param array $repair_list Repair list items.
  *
@@ -818,7 +818,7 @@ function bb_repair_member_profile_links( $repair_list ) {
 /**
  * This function will work as migration process which will repair member profile links.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param bool $is_background The current process is background or not.
  * @param int  $paged         The page number.

@@ -64,7 +64,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	/**
 	 * Allow auto following members after connecting
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.1
 	 *
 	 * @return void
 	 */

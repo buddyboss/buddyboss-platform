@@ -575,7 +575,7 @@ add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
 /**
  * Load Presence API mu plugin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  */
 function bb_load_presence_api_mu() {
 	if ( class_exists( 'BB_Presence' ) ) {
@@ -588,7 +588,7 @@ add_action( 'bp_admin_init', 'bb_load_presence_api_mu' );
 /**
  * Function to check server allow to load php file directly or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  */
 function bb_check_presence_load_directly() {
 	if ( class_exists( 'BB_Presence' ) ) {

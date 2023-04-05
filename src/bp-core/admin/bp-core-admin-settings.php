@@ -2973,7 +2973,7 @@ function bb_admin_setting_callback_group_subscriptions() {
 /**
  * Link to profile slug tutorial
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  */
 function bb_profile_slug_tutorial() {
 	?>
@@ -2985,7 +2985,7 @@ function bb_profile_slug_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 72340, // @todo: Need to update tutorial page id.
+						'article' => 126235,
 					),
 					'admin.php'
 				)
