@@ -4014,6 +4014,12 @@ MediumEditor.extensions = {};
             return this.getForm().querySelector('.medium-editor-toolbar-anchor-button');
         },
 
+        clearPreCreateLink: function () {
+            jQuery('.medium-editor-create-link').replaceWith(function () {
+                return this.childNodes;
+            });
+        },
+
         handleTextboxKeyup: function (event) {
             // For ENTER -> create the anchor
             if (event.keyCode === MediumEditor.util.keyCode.ENTER) {
@@ -4042,6 +4048,7 @@ MediumEditor.extensions = {};
                 return false;
             } else {
                 toolbarInput.classList.remove( 'validate' );
+                this.clearPreCreateLink();
             }
             event.preventDefault();
             this.doFormSave();
@@ -4053,7 +4060,7 @@ MediumEditor.extensions = {};
             toolbarInput.classList.remove( 'validate' );
             event.preventDefault();
             this.doFormCancel();
-            this.execAction('unlink');
+            this.clearPreCreateLink();
         }
     });
 
