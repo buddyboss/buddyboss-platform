@@ -225,7 +225,7 @@ class BP_Video_Component extends BP_Component {
 				$nav_name .= sprintf(
 					' <span class="%s">%s</span>',
 					esc_attr( $class ),
-					bp_core_number_format( $count )
+					$count
 				);
 			} else {
 				$nav_name = __( 'Videos', 'buddyboss' );

@@ -2092,7 +2092,7 @@ window.bp = window.bp || {};
 							// Check friend count set.
 							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
 								// Check friend count > 0 then show the count span.
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
@@ -2105,7 +2105,7 @@ window.bp = window.bp || {};
 									$( friend_with_count ).hide();
 								}
 							} else if ( undefined !== response.data.friend_count ) {
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
@@ -3596,10 +3596,11 @@ window.bp = window.bp || {};
 							'undefined' !== typeof params.ids.length &&
 							0 < params.ids.length
 						) {
+							var url = '1' === BB_Nouveau_Presence.native_presence ? BB_Nouveau_Presence.native_presence_url : BB_Nouveau_Presence.presence_rest_url;
 							$.ajax(
 								{
 									type: 'POST',
-									url: '/wp-json/buddyboss/v1/members/presence',
+									url: url,
 									data: params,
 									beforeSend: function ( xhr ) {
 										xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
