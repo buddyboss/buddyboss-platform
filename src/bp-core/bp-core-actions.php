@@ -123,6 +123,11 @@ add_action( 'bp_after_setup_theme', 'bp_show_hide_toolbar', 9999999 );
 // Restrict user when view media/document from url.
 add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
 
+// Load Post Notifications.
+add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
+add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 10, 3 );
+add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 10, 3 );
+
 // Load the admin.
 if ( is_admin() ) {
 	add_action( 'bp_loaded', 'bp_admin' );
