@@ -46,7 +46,7 @@ function bp_member_revoke_invite_admin() {
 	$allowed_args 	= array( 'post_status', 'post_type', 'action', 'm', 'paged', 'action2' );
 
 	foreach( $allowed_args as $arg ){
-		if( !empty( filter_input( INPUT_GET, $arg ) ) ){
+		if( isset( $_GET[$arg] ) ){
 			$redirect .= "&{$arg}=" . sanitize_text_field( $_GET[$arg] );
 		}
 	}
