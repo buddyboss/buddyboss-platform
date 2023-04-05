@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.3.11 =
+* Profiles - Small icon fix for 'Profile Links' option in the dashboard
+
 = 2.3.1 =
 * Profiles - Provided the option to replace usernames with unique IDs to secure member profile URLs
 * Profiles - Handled profile field instructions small formatting issue
