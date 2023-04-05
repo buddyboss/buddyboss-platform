@@ -139,7 +139,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		// Allow group activities from blocked/suspended users.
 		if (
 			bp_is_active( 'groups' ) &&
-			function_exists( 'bb_did_filter' ) && ! bb_did_filter( 'activity_comments_widget_args' )
+			function_exists( 'did_action' ) && ! did_action( 'get_template_part_activity/widget' )
 		) {
 			$exclude_group_sql = ' OR a.component = "groups"';
 		}

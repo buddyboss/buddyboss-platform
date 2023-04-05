@@ -148,27 +148,14 @@ class BP_Latest_Activities extends WP_Widget {
 		 * Globalize the activity widget arguments.
 		 * @see bp_nouveau_activity_widget_query() to override
 		 */
-//		$bp_nouveau->activity->widget_args = array(
-//			'max'          => $max,
-//			'scope'        => $scope,
-//			'user_id'      => 0,
-//			'object'       => false,
-//			'action'       => join( ',', $type ),
-//			'primary_id'   => 0,
-//			'secondary_id' => 0,
-//		);
-		$bp_nouveau->activity->widget_args = apply_filters(
-			'activity_comments_widget_args',
-			array(
-				'max'          => $max,
-				'scope'        => $scope,
-				'user_id'      => 0,
-				'object'       => false,
-				'action'       => join( ',', $type ),
-				'primary_id'   => 0,
-				'secondary_id' => 0,
-			),
-			$instance
+		$bp_nouveau->activity->widget_args = array(
+			'max'          => $max,
+			'scope'        => $scope,
+			'user_id'      => 0,
+			'object'       => false,
+			'action'       => join( ',', $type ),
+			'primary_id'   => 0,
+			'secondary_id' => 0,
 		);
 
 		bp_get_template_part( 'activity/widget' );
