@@ -72,8 +72,8 @@ add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 
 // Load Post Notifications.
 add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
-add_action( 'comment_post', 'bp_post_new_comment_reply_notification', 10, 3 );
-add_action( 'transition_comment_status', 'bp_post_comment_on_status_change', 10, 3 );
+add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 10, 3 );
+add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 10, 3 );
 
 // Avatars.
 /**
@@ -2457,7 +2457,7 @@ function bb_load_post_notifications() {
 	}	
 }
 
-function bp_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
+function bb_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
 	// Don't send notification if the comment hasn't been approved.
 	if ( empty( $comment_approved ) ) {
 		return false;
@@ -2538,23 +2538,23 @@ function bp_post_new_comment_reply_notification( $comment_id, $comment_approved,
 			 * @param int   $commenter_id ID of the user who made the comment reply.
 			 * @param array $commentdata  Comment reply related data.
 			 */
-			do_action( 'bp_post_new_comment_reply_notification', $comment_id, $comment_author_id, $commentdata );
+			do_action( 'bb_post_new_comment_reply_notification', $comment_id, $comment_author_id, $commentdata );
 		}
 	}
 }
 
-function bp_post_comment_on_status_change( $new_status, $old_status, $comment ) {
+function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) {
 
 	$notification_alreay_sent = get_comment_meta( $comment->comment_ID, 'bb_comment_notified_after_approved', true );
 	if( empty( $notification_alreay_sent ) && 'approved' === $new_status && ( in_array( $old_status, array( 'unapproved', 'spam' ) ) ) ) {
 		$commentdata = get_object_vars( $comment );
-		bp_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
+		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
 	}
 }
 
 
-add_action( 'bp_post_new_comment_reply_notification', 'bp_post_new_comment_reply_add_notification', 10, 3 );
-function bp_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
+add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );
+function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
 
 	// Specify the Notification type.
 	$component_action = 'bb_posts_new_comment_reply';
