@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.3.1
+Stable tag: 2.3.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,7 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
-= 2.3.11 =
+= 2.3.1.1 =
 * Profiles - Small icon fix for 'Profile Links' option in the dashboard
 
 = 2.3.1 =
