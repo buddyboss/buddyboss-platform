@@ -2973,7 +2973,7 @@ function bb_admin_setting_callback_group_subscriptions() {
 /**
  * Link to profile slug tutorial
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  */
 function bb_profile_slug_tutorial() {
 	?>

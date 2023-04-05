@@ -2592,7 +2592,7 @@ function bb_update_to_2_3_0() {
  * Background job to generate user profile slug.
  * Load BuddyBoss Presence API mu plugin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @return void
  */

@@ -3,7 +3,7 @@
  * Native PHP to render the user presence.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  */
 
 // Specify that we need a minimum from WP.

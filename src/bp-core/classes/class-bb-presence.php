@@ -3,7 +3,7 @@
  * Presence class.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 	/**
 	 * BuddyBoss Presence object.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.1
 	 */
 	class BB_Presence {
 
@@ -21,7 +21,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * The single instance of the class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @var self
 		 */
@@ -30,7 +30,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * This will use for global $wpdb.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @var object
 		 */
@@ -39,7 +39,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * This will use for last activity cache time.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @var int
 		 */
@@ -48,7 +48,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Activity table name to store last activity.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @var string
 		 */
@@ -57,7 +57,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Download plugin text which appears on admin side.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @var string
 		 */
@@ -66,7 +66,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Get the instance of this class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return Controller|BB_Presence|null
 		 */
@@ -83,7 +83,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Constructor method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 */
 		public function __construct() {
 			global $wpdb;
@@ -99,7 +99,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @param int    $user_id The ID of the user.
 		 * @param string $time Time into the mysql format.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_update_last_activity( $user_id, $time = '' ) {
 			// Fall back on current time.
@@ -200,7 +200,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Function will fetch the users last activity time from the cache or DB.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @param array $user_ids Array of user IDs.
 		 *
@@ -266,7 +266,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @param bool $bypass Bypass transient.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_load_presence_api_mu_plugin( $bypass = true ) {
 			if ( ! function_exists( 'buddypress' ) ) {
@@ -345,7 +345,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Function to add/update admin notice to download BuddyBoss Performance API mu plugin file if not exists.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_add_sitewide_notice_for_presence_api_mu_file() {
 
@@ -371,7 +371,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @param bool $bypass Bypass transient.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_check_native_presence_load_directly( $bypass = false ) {
 			$bb_check_native_presence_load_directly = get_transient( 'bb_check_native_presence_load_directly' );
@@ -405,7 +405,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Current user online activity time.
 		 *
-		 * @since BuddyPress [BBVERSION]
+		 * @since BuddyPress 2.3.1
 		 *
 		 * @param int      $user_id User id.
 		 * @param bool|int $expiry  Given time or whether to check degault timeframe.
@@ -439,7 +439,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * Function to return the presence interval time in seconds at mu level.
 		 * It will get bb_presence_interval_mu from DB if its empty then it will get bb_presence_default_interval_mu from DB.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return int
 		 */
@@ -455,7 +455,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Function to return presence time span at mu level.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return int
 		 */
@@ -468,7 +468,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Get the given user ID online/offline status.
 		 *
-		 * @since BuddyPress [BBVERSION]
+		 * @since BuddyPress 2.3.1
 		 *
 		 * @param int      $user_id User id.
 		 * @param bool|int $expiry  Given time or whether to check degault timeframe.
@@ -486,7 +486,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Load the hooks for the mu level.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return void
 		 */
@@ -504,7 +504,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Identify the current user is set by WordPress.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 */
 		public function bb_is_set_current_user() {
 			global $bb_is_current_user_available;
@@ -514,7 +514,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Tells if the current user information is available on WordPress.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return bool
 		 */
@@ -530,7 +530,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Check if user logged in or not.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return bool|int
 		 */
@@ -551,7 +551,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Guessed user ID.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return int|boolean
 		 */
@@ -564,7 +564,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Get Pre User ID from WordPress Cookie.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @param int $user_id User ID.
 		 *
@@ -620,7 +620,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Function to get user login details from WordPress cookie.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @see wp-includes/pluggable.php
 		 *
@@ -673,7 +673,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Function to get user if from JWT token.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @param int $user_id User ID.
 		 *
@@ -752,7 +752,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Get Headers.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return array|false|string
 		 */
@@ -779,7 +779,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Returns the current web location.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return string
 		 */
@@ -790,7 +790,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Get current endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @return string|bool
 		 */
@@ -817,7 +817,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Function to load response from mu plugin.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 */
 		public function bb_prepare_presence_mu() {
 
@@ -906,7 +906,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Function to cache rendered response in cache.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.1
 		 *
 		 * @param int   $user_id User id.
 		 * @param array $ids     Post user ids.
