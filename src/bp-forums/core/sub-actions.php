@@ -481,3 +481,14 @@ function bbp_allowed_themes( $themes ) {
 function bbp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 	return apply_filters( 'bbp_map_meta_caps', $caps, $cap, $user_id, $args );
 }
+
+/**
+ * Setup the user engagements strategy.
+ *
+ * @since 2.6.0 bbPress (r6875)
+ * @since BuddyBoss [BBVERSION]
+ */
+function bbp_setup_engagements() {
+	do_action( 'bbp_setup_engagements' );
+}
+

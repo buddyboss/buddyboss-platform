@@ -797,7 +797,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			$menu_item->classes[] = 'current-menu-item';
 		} else {
 
-			if ( is_user_logged_in() && ( strpos( $current, bp_loggedin_user_domain() ) !== false ) ) {
+			if ( bp_loggedin_user_domain() && strpos( $current, bp_loggedin_user_domain() ) !== false ) {
 				if (
 					(
 						! in_array( 'settings', $url_parts, true ) &&
