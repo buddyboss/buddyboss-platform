@@ -49,6 +49,7 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -142,6 +143,7 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -248,6 +250,7 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -438,6 +441,7 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
 										linkValidation: true
 									}
 								}
@@ -490,6 +494,7 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
 										linkValidation: true
 									}
 								}
@@ -542,6 +547,7 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
 										linkValidation: true
 									}
 								}

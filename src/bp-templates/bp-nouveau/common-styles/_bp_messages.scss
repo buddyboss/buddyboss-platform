@@ -845,7 +845,6 @@
 		clear: both;
 		overflow: hidden;
 		margin: 0 auto;
-		position: relative;
 
 		p {
 			margin-bottom: 8px;
@@ -854,7 +853,21 @@
 				margin-bottom: 0;
 			}
 
+		}
+
+		> span {
+			margin-bottom: 8px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		span,
+		p {
+
 			&.blocked,
+			&.suspended,
 			&.deleted-message {
 				display: inline-block;
 				font-size: 13px;
@@ -1774,9 +1787,6 @@ body .bp-messages-user-threads {
 		}
 	}
 
-	.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-		left: 10px;
-	}
 }
 
 .message-members-list #members_list:not(.is_not_empty),

@@ -195,7 +195,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
 	// No topic content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		 && empty( $_POST['bbp_media'] )
 		 && empty( $_POST['bbp_document'] )
 		 && empty( $_POST['bbp_video'] )
@@ -675,7 +675,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 	     && empty( $_POST['bbp_media'] )
 	     && empty( $_POST['bbp_document'] )
 	     && empty( $_POST['bbp_video'] )
@@ -904,7 +904,7 @@ function bbp_edit_topic_handler( $action = '' ) {
  * @uses update_post_meta() To update the topic metas
  * @uses set_transient() To update the flood check transient for the ip
  * @uses bbp_update_user_last_posted() To update the users last posted time
- * @uses bbp_is_subscriptions_active() To check if the subscriptions feature is
+ * @uses bb_is_enabled_subscription() To check if the subscriptions feature is
  *                                      activated or not
  * @uses bbp_is_user_subscribed() To check if the user is subscribed
  * @uses bbp_remove_user_subscription() To remove the user's subscription
@@ -971,9 +971,20 @@ function bbp_update_topic( $topic_id = 0, $forum_id = 0, $anonymous_data = false
 		}
 	}
 
+	// Get the post type.
+	$post_type = get_post_type( $topic_id );
+	if ( empty( $post_type ) ) {
+		return;
+	}
+
+	$subscribe_type = 'topic';
+	if ( bbp_get_forum_post_type() === $post_type ) {
+		$subscribe_type = 'forum';
+	}
+
 	// Handle Subscription Checkbox.
 	// Make sure the form is being submitted from frontend.
-	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) && ( ! isset( $_POST['action'] ) || 'editpost' !== $_POST['action'] ) ) {
+	if ( bb_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ( ! isset( $_POST['action'] ) || 'editpost' !== $_POST['action'] ) ) {
 		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 
@@ -1342,7 +1353,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 		foreach ( (array) $subscribers as $subscriber ) {
 
 			// Shift the subscriber if told to.
-			if ( ! empty( $_POST['bbp_topic_subscribers'] ) && ( '1' === $_POST['bbp_topic_subscribers'] ) && bbp_is_subscriptions_active() ) {
+			if ( ! empty( $_POST['bbp_topic_subscribers'] ) && ( '1' === $_POST['bbp_topic_subscribers'] ) && bb_is_enabled_subscription( 'topic' ) ) {
 				bbp_add_user_subscription( $subscriber, $destination_topic->ID );
 			}
 
@@ -1737,7 +1748,7 @@ function bbp_split_topic_handler( $action = '' ) {
 	/** Subscriptions */
 
 	// Copy the subscribers.
-	if ( ! empty( $_POST['bbp_topic_subscribers'] ) && '1' === $_POST['bbp_topic_subscribers'] && bbp_is_subscriptions_active() ) {
+	if ( ! empty( $_POST['bbp_topic_subscribers'] ) && '1' === $_POST['bbp_topic_subscribers'] && bb_is_enabled_subscription( 'topic' ) ) {
 
 		// Get the subscribers.
 		$subscribers = bbp_get_topic_subscribers( $source_topic->ID );
@@ -2441,7 +2452,7 @@ function bbp_remove_topic_from_all_favorites( $topic_id = 0 ) {
  * @since bbPress (r2652)
  *
  * @param int $topic_id Get the topic id to remove
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_topic_id To get the topic id
  * @uses bbp_get_topic_subscribers() To get the topic subscribers
  * @uses bbp_remove_user_subscription() To remove the user subscription
@@ -2449,7 +2460,7 @@ function bbp_remove_topic_from_all_favorites( $topic_id = 0 ) {
 function bbp_remove_topic_from_all_subscriptions( $topic_id = 0 ) {
 
 	// Subscriptions are not active.
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 		return;
 	}
 
