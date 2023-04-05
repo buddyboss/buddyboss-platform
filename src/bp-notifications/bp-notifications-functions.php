@@ -2099,8 +2099,6 @@ function bb_notification_excluded_component_actions() {
 	return apply_filters( 'bb_notification_excluded_component_actions', $actions );
 }
 
-add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );
-
 /**
  * Function to add the notification for post new comment reply.
  *
@@ -2128,3 +2126,4 @@ function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id,
 	}
 
 }
+add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );
