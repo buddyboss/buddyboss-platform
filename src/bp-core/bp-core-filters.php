@@ -2486,7 +2486,7 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 		return false;
 	}
 
-	if( ! empty( $comment_author ) && $parent_comment->user_id === $comment_author->ID ) {
+	if( ! empty( $comment_author ) && $comment_author->ID === (int) $parent_comment->user_id ) {
 		return false;
 	}
 
