@@ -421,6 +421,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19991 ) {
 			bb_update_to_2_3_1();
 		}
+
+		if ( $raw_db_version < 20001 ) {
+			bb_update_to_2_3_2();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2611,4 +2615,26 @@ function bb_update_to_2_3_1() {
 	}
 
 	bb_repair_member_profile_links_callback( true );
+}
+
+/**
+ * Migration favorites from user meta to topic meta.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_2() {
+	$is_already_run = get_transient( 'bb_migrate_favorites' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
+	// Migrate the topic favorites.
+	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
+		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
+	}
+
+	wp_cache_flush();
 }
