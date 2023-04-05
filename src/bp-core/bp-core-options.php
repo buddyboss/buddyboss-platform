@@ -1253,7 +1253,7 @@ function bp_force_friendship_to_message( $default = false ) {
 /**
  * Check the activity auto follow enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -1265,7 +1265,7 @@ function bb_is_friends_auto_follow_active( $default = false ) {
 	/**
 	 * Filter whether the activity auto follow enabled or not.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.1
 	 *
 	 * @param bool $value Whether the activity auto follow enabled or not.
 	 */
@@ -2316,7 +2316,7 @@ function bb_enable_group_subscriptions( $default = true ) {
 /**
  * Get profile slug format.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                      Default: username.
@@ -2327,7 +2327,7 @@ function bb_get_profile_slug_format( $default = 'username' ) {
 	/**
 	 * Filters default profile slug format.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.1
 	 *
 	 * @param string $value Default profile slug format.
 	 */

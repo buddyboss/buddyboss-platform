@@ -1102,25 +1102,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		if (
-			! empty( $activity['user_id'] ) &&
-			(
-				bp_moderation_is_user_suspended( $activity['user_id'] ) ||
-				bp_moderation_is_user_blocked( $activity['user_id'] ) ||
-				bb_moderation_is_user_blocked_by( $activity['user_id'] )
-			) &&
-			(
-				(
-					'activity_comment' === $activity['type'] &&
-					function_exists( 'bb_is_group_activity_comment' ) &&
-					! bb_is_group_activity_comment( $activity )
-				) ||
-				(
-					'activity_comment' !== $activity['type'] &&
-					'groups' !== $activity['component']
-				)
-			)
-		) {
+		if ( ! empty( $activity['user_id'] ) && ( bp_moderation_is_user_suspended( $activity['user_id'] ) || bp_moderation_is_user_blocked( $activity['user_id'] ) ) ) {
 			return false;
 		}
 
@@ -1308,39 +1290,21 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		$content = $activity->content;
-		if (
-			(
-				'activity_comment' === $activity->type &&
-				! bb_is_group_activity_comment( $activity )
-			) ||
-			(
-				'activity_comment' !== $activity->type &&
-				'groups' !== $activity->component
-			)
-		) {
-			if ( $is_user_suspended ) {
-				$content = bb_moderation_is_suspended_message( $activity->content, $type, $activity->id );
-			} elseif ( $is_user_blocked ) {
-				$content = bb_moderation_has_blocked_message( $activity->content, $type, $activity->id );
-			} elseif ( $is_blocked_by_user ) {
-				$content = bb_moderation_is_blocked_message( $activity->content, $type, $activity->id );
-			} else {
-				$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
-			}
-			$data['can_favorite'] = false;
-			$data['can_comment']  = false;
-		} elseif (
-			'activity_comment' === $activity->type &&
-			bb_is_group_activity_comment( $activity ) &&
-			$is_hidden
-		) {
-			$content              = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
-			$data['can_favorite'] = false;
-			$data['can_comment']  = false;
+
+		if ( $is_user_suspended ) {
+			$content = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
+		} elseif ( $is_user_blocked ) {
+			$content = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
+		} elseif ( $is_blocked_by_user ) {
+			$content = $content;
+		} else {
+			$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 		}
 
-		$data['can_edit']   = false;
-		$data['can_delete'] = false;
+		$data['can_favorite'] = false;
+		$data['can_comment']  = false;
+		$data['can_edit']     = false;
+		$data['can_delete']   = false;
 
 		$data['content'] = array(
 			'raw'      => $content,

@@ -2444,7 +2444,7 @@ add_filter( 'menu_order', 'buddyboss_menu_order' );
 /**
  * Function to remove html entity from number format.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.1
  *
  * @param string $formatted The number to be formatted.
  *

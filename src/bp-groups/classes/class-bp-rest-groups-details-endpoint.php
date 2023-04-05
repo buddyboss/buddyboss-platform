@@ -621,8 +621,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @return int The count attribute for the nav item.
 	 */
 	protected function bp_rest_get_nav_count( $group, $nav ) {
-		$nav_item     = $nav['slug'];
-		$courses_slug = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
+		$nav_item = $nav['slug'];
 
 		if ( 'members' === $nav_item || 'all-members' === $nav_item ) {
 			$count = $group->total_member_count;
@@ -638,10 +637,6 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			$count  = count( $admins ) + count( $mods );
 		} elseif ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item ) {
 			$count = bp_video_get_total_group_video_count( $group->id );
-		} elseif ( $courses_slug === $nav_item ) {
-			if ( function_exists( 'bp_learndash_get_group_courses' ) ) {
-				$count = count( bp_learndash_get_group_courses( bp_get_current_group_id() ) );
-			}
 		}
 
 		if ( ! isset( $count ) ) {

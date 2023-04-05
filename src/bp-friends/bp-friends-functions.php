@@ -876,7 +876,7 @@ add_action( 'friends_friendship_accepted', 'friends_notification_accepted_reques
 /**
  * When a connection request is accepted, auto follow the member if auto follow setting is enabled.
  *
- * @since BuddyPress [BBVERSION]
+ * @since BuddyPress 2.3.1
  *
  * @param int $friendship_id     ID of the friendship object.
  * @param int $initiator_user_id ID of the user who initiated the request.
