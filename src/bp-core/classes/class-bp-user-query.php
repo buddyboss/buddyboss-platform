@@ -157,7 +157,7 @@ class BP_User_Query {
 		$this->setup_hooks();
 
 		if ( ! empty( $this->query_vars_raw ) ) {
-			$this->query_vars = wp_parse_args(
+			$this->query_vars = bp_parse_args(
 				$this->query_vars_raw,
 				array(
 					'type'                => 'newest',
@@ -279,6 +279,8 @@ class BP_User_Query {
 				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
 				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
 
+				$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
+
 				/**
 				 * Filters the threshold for activity timestamp minutes since to indicate online status.
 				 *
@@ -286,7 +288,7 @@ class BP_User_Query {
 				 *
 				 * @param int $value Amount of minutes for threshold. Default 15.
 				 */
-				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', apply_filters( 'bp_user_query_online_interval', 15 ) );
+				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', $online_default_time / 60 );
 				$sql['orderby'] = 'ORDER BY u.date_recorded';
 				$sql['order']   = 'DESC';
 
@@ -661,7 +663,7 @@ class BP_User_Query {
 		foreach ( $this->user_ids as $key => $uid ) {
 			if ( isset( $r[ $uid ] ) ) {
 				$r[ $uid ]->ID          = (int) $uid;
-				$r[ $uid ]->user_status = (int) $r[ $uid ]->user_status;
+				$r[ $uid ]->user_status = isset( $r[ $uid ]->user_status ) ? (int) $r[ $uid ]->user_status : 0;
 
 				$this->results[ $uid ] = $r[ $uid ];
 

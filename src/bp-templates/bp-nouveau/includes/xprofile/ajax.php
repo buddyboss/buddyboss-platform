@@ -70,10 +70,10 @@ function bp_nouveau_ajax_xprofile_get_field() {
 
 	$bp                        = buddypress();
 	$member_type_id            = filter_input( INPUT_GET, 'type', FILTER_VALIDATE_INT );
-	$existing_fields           = filter_input( INPUT_GET, 'fields', FILTER_SANITIZE_STRING );
-	$existing_fields_exclude   = filter_input( INPUT_GET, 'fields', FILTER_SANITIZE_STRING );
-	$existing_fields_fixed_ids = filter_input( INPUT_GET, 'fixedIds', FILTER_SANITIZE_STRING );
-	$prevId                    = filter_input( INPUT_GET, 'prevId', FILTER_SANITIZE_STRING );
+	$existing_fields           = bb_filter_input_string( INPUT_GET, 'fields' );
+	$existing_fields_exclude   = bb_filter_input_string( INPUT_GET, 'fields' );
+	$existing_fields_fixed_ids = bb_filter_input_string( INPUT_GET, 'fixedIds' );
+	$prevId                    = bb_filter_input_string( INPUT_GET, 'prevId' );
 	$member_type_key           = bp_get_member_type_key( $member_type_id );
 	$prev_type_key             = bp_get_member_type_key( $prevId );
 	$existing_fields_arr       = explode( ',', $existing_fields );

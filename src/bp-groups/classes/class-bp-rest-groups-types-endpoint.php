@@ -161,12 +161,12 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		// Get the edit schema.
 		$schema  = $this->get_item_schema();
 		$schema  = $schema['properties'];
-		$post_id = $this->bp_rest_group_type_post_by_type( $data['name'] );
+		$post_id = function_exists( 'bp_group_get_group_type_id' ) ? bp_group_get_group_type_id( $data['name'] ) : 0;
 
 		// Define default visibility property.
 		if ( isset( $schema['enable_filter'] ) ) {
 			if ( ! empty( $post_id ) ) {
-				$data['enable_filter'] = (
+				$data['enable_filter'] = (bool) (
 					! empty( get_post_meta( $post_id, '_bp_group_type_enable_filter', true ) )
 					? get_post_meta( $post_id, '_bp_group_type_enable_filter', true )
 					: ''
@@ -178,7 +178,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $schema['enable_remove'] ) ) {
 			if ( ! empty( $post_id ) ) {
-				$data['enable_remove'] = (
+				$data['enable_remove'] = (bool) (
 					! empty( get_post_meta( $post_id, '_bp_group_type_enable_remove', true ) )
 					? get_post_meta( $post_id, '_bp_group_type_enable_remove', true )
 					: ''
@@ -190,7 +190,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $schema['restrict-invites-user-same-group-type'] ) ) {
 			if ( ! empty( $post_id ) ) {
-				$data['restrict-invites-user-same-group-type'] = (
+				$data['restrict-invites-user-same-group-type'] = (bool) (
 					! empty( get_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', true ) )
 					? get_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', true )
 					: ''
@@ -240,6 +240,12 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			} else {
 				$data['group_type_role_labels'] = array();
 			}
+		}
+
+		// Group type's label background and text color.
+		$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $data['name'] ) : '';
+		if ( ! empty( $label_color_data ) && isset( $schema['label_colors'] ) ) {
+			$data['label_colors'] = $label_color_data;
 		}
 
 		$response = rest_ensure_response( $data );
@@ -381,6 +387,13 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
+
+			$schema['properties']['label_colors'] = array(
+				'description' => __( 'Label\'s text and background colors for group types.' , 'buddyboss' ),
+				'type'        => 'array',
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
 		}
 
 		/**
@@ -411,40 +424,6 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		 * @param array $params Query params.
 		 */
 		return apply_filters( 'bp_rest_groups_types_collection_params', $params );
-	}
-
-	/**
-	 * Get group type post by Group type slug.
-	 *
-	 * @param string $group_type Group type name.
-	 *
-	 * @return array
-	 */
-	protected function bp_rest_group_type_post_by_type( $group_type ) {
-		if ( empty( $group_type ) ) {
-			return;
-		}
-
-		$post_id = '';
-
-		$group_type_posts = get_posts(
-			array(
-				'name'                   => $group_type,
-				'post_type'              => 'bp-group-type',
-				'post_status'            => 'publish',
-				'numberposts'            => 1,
-				'fields'                 => 'ids',
-				'suppress_filters'       => false,
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-			)
-		);
-
-		if ( ! empty( $group_type_posts ) ) {
-			$post_id = $group_type_posts[0];
-		}
-
-		return apply_filters( 'bp_member_type_post_by_type', $post_id );
 	}
 
 }

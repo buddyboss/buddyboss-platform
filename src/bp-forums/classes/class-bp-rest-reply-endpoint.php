@@ -172,6 +172,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$args['offset'] = $request['offset'];
 		}
 
+		// Added support for fetch user replies by order.
+		if ( isset( $request['hierarchical'] ) ) {
+			$args['hierarchical'] = (bool) $request['hierarchical'];
+		}
+
 		if ( isset( $request['thread_replies'] ) ) {
 			$thread_replies = (bool) $request['thread_replies'];
 		} else {
@@ -1149,12 +1154,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		do_action( 'bp_rest_reply_create_item', $reply, $topic_id, $forum_id, $request );
 
-		$response = $this->get_item(
-			array(
-				'id'      => $reply_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $reply_id );
+		$object->set_param( 'context', 'view' );
+
+		$response = $this->get_item( $object );
 
 		if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
 			/**
@@ -1671,12 +1675,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		do_action( 'bp_rest_reply_update_item', $reply, $request );
 
-		return $this->get_item(
-			array(
-				'id'      => $reply_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $reply_id );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 
 	}
 
@@ -1996,13 +1999,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$this->forum_endpoint->prepare_password_response( $reply->post_password );
 		}
 
+		$data['short_content'] = wp_trim_excerpt( '', $reply->ID );
+
 		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
-			'raw'      => $reply->post_content,
+			'raw'      => bb_rest_raw_content( $reply->post_content ),
 			'rendered' => bbp_get_reply_content( $reply->ID ),
 		);
 
@@ -2017,13 +2022,54 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 		/* -- Prepare content */
 
+		$forum_id = bbp_get_reply_forum_id( $reply->ID );
+
+		if ( ! empty( $forum_id ) ) {
+			$this->forum_endpoint->group = (
+				function_exists( 'bbp_is_forum_group_forum' )
+				&& bbp_is_forum_group_forum( $forum_id )
+				&& function_exists( 'groups_get_group' )
+			)
+			? (
+				! empty( bbp_get_forum_group_ids( $forum_id ) )
+				? groups_get_group( current( bbp_get_forum_group_ids( $forum_id ) ) )
+				: ''
+			)
+			: '';
+		}
+
+		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
+			$group_forum_extention = new BBP_Forums_Group_Extension();
+			// Allow group member to view private/hidden forums.
+			add_filter( 'bbp_map_meta_caps', array( $group_forum_extention, 'map_group_forum_meta_caps' ), 10, 4 );
+
+			// Fix issue - Group organizers and moderators can not add topic tags.
+			add_filter( 'bbp_map_topic_tag_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_assign_topic_tags_caps' ), 10, 4 );
+		}
+
+		add_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
 		// current user permission.
 		$data['current_user_permissions'] = $this->get_reply_current_user_permissions( $reply->ID );
 
 		$data['action_states'] = $this->get_reply_action_states( $reply->ID );
 
+		remove_filter( 'bbp_map_group_forum_topic_meta_caps', array( $this->forum_endpoint, 'bb_rest_map_group_forum_topic_meta_caps' ), 99, 4 );
+
+		$this->forum_endpoint->group = '';
+
 		// Revisions.
 		$data['revisions'] = $this->get_reply_revisions( $reply->ID );
+
+		// Pass group ids for embedded members endpoint.
+		$group_ids = '';
+		if ( ! empty( $args['post_parent'] ) ) {
+			$group = bbp_get_forum_group_ids( bbp_get_topic_forum_id( $args['post_parent'] ) );
+			if ( ! empty( $group ) ) {
+				$group_ids = count( $group ) > 1 ? implode( ', ', $group ) : $group[0];
+			}
+		}
+		$request['group_id'] = $group_ids;
 
 		$data = $this->add_additional_fields_to_object( $data, $request );
 		$data = $this->filter_response_by_context( $data, $context );
@@ -2031,7 +2077,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		// @todo add prepare_links
 		$response = rest_ensure_response( $data );
 
-		$response->add_links( $this->prepare_links( $reply ) );
+		$response->add_links( $this->prepare_links( $reply, $request ) );
 
 		/**
 		 * Filter a component value returned from the API.
@@ -2204,6 +2250,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
+				),
+				'short_content'            => array(
+					'description' => __( 'Short content of the reply.', 'buddyboss' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'content'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -2392,14 +2443,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param WP_Post $post Post object.
+	 * @param WP_Post         $post    Post object.
+	 * @param WP_REST_Request $request Request used to generate the response.
 	 *
 	 * @return array
 	 * @since 0.1.0
 	 */
-	protected function prepare_links( $post ) {
-		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
-
+	protected function prepare_links( $post, $request ) {
+		$group = ! empty( $request['group_id'] ) ? '?group_id=' . $request['group_id'] : '';
+		$base  = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 		// Entity meta.
 		$links = array(
 			'self'       => array(
@@ -2409,7 +2461,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) ),
+				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) . $group ),
 				'embeddable' => true,
 			),
 		);

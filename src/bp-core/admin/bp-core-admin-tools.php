@@ -41,11 +41,20 @@ function bp_core_admin_tools() {
 	<div class="wrap">
 		<div class="bp-admin-card section-default_data">
 
-			<h2><?php esc_html_e( 'Default Data', 'buddyboss' ); ?></h2>
+			<h2>
+				<?php
+				$meta_icon = bb_admin_icons( 'default_data' );
+				if ( ! empty( $meta_icon ) ) {
+					?>
+					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+					<?php
+				}
+				esc_html_e( 'Default Data', 'buddyboss' ); ?>
+			</h2>
 
 			<form action="" method="post" id="bp-admin-form" class="bp-admin-form">
 				<fieldset>
-					<legend><?php _e( 'What do you want to import?', 'buddyboss' ); ?></legend>
+					<legend><?php esc_html_e( 'What data do you want to import?', 'buddyboss' ); ?></legend>
 					<ul class="items">
 						<li class="users main">
 							<label for="import-users">
@@ -229,7 +238,17 @@ function bp_repair_community_submenu_page() {
 	<div class="wrap">
 		<div class="bp-admin-card section-repair_community">
 
-			<h2><?php esc_html_e( 'Repair Community', 'buddyboss' ); ?></h2>
+			<h2>
+				<?php
+				$meta_icon = bb_admin_icons( 'repair_community' );
+				if ( ! empty( $meta_icon ) ) {
+					?>
+					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+					<?php
+				}
+				esc_html_e( 'Repair Community', 'buddyboss' );
+				?>
+			</h2>
 
 			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
 
@@ -431,6 +450,13 @@ function bp_admin_repair_list() {
 		'bp-invitations-table',
 		esc_html__( 'Create the database table for Invitations and migrate existing group invitations if needed', 'buddyboss' ),
 		'bp_admin_invitations_table',
+	);
+
+	// Sync profile completion widget.
+	$repair_list[111] = array(
+		'bp-sync-profile-completion-widget',
+		esc_html__( 'Re-Sync Profile Completion widget profile photo status', 'buddyboss' ),
+		'bb_sync_profile_completion_widget',
 	);
 
 	ksort( $repair_list );
@@ -1208,7 +1234,7 @@ function bp_admin_repair_tools_wrapper_function() {
 		),
 	);
 
-	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$type = bb_filter_input_string( INPUT_POST, 'type' );
 
 	if ( empty( $type ) ) {
 		wp_send_json_error( $response );
@@ -1414,4 +1440,87 @@ function bp_admin_invitations_table() {
 		'status'  => 0,
 		'message' => sprintf( $statement, $result ),
 	);
+}
+
+/**
+ * Function will sync profile uploaded photo for profile completion widget data.
+ *
+ * @since BuddyBoss 2.0.9
+ *
+ * @return array
+ */
+function bb_sync_profile_completion_widget() {
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+
+	// Users args.
+	$args = array(
+		'number'   => 50,
+		'fields'   => array( 'ID' ),
+		'meta_key' => 'bp_profile_completion_widgets',
+		'offset'   => $offset,
+	);
+
+	$users = get_users( $args );
+	if ( ! empty( $users ) ) {
+		foreach ( $users as $user ) {
+			// Get existing user meta who have profile completion widget data in DB.
+			$get_user_data = bp_get_user_meta( $user->ID, 'bp_profile_completion_widgets', true );
+			if ( ! empty( $get_user_data ) ) {
+				$total_completed_count = isset( $get_user_data['completed_fields'] ) ? $get_user_data['completed_fields'] : 0;
+
+				if (
+					isset( $get_user_data['photo_type'] ) &&
+					isset( $get_user_data['photo_type']['profile_photo'] ) &&
+					isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] )
+				) {
+					$is_profile_photo_uploaded = ( bp_get_user_has_avatar( $user->ID ) ) ? 1 : 0;
+
+					if ( ! $is_profile_photo_uploaded &&
+					     bp_enable_profile_gravatar() &&
+					     'blank' !== get_option( 'avatar_default', 'mystery' )
+					) {
+						/**
+						 * There is not any direct way to check gravatar set for user.
+						 * Need to check $profile_url is send 200 status or not.
+						 */
+						$profile_url = get_avatar_url( $user->ID, array( 'default' => '404' ) );
+
+						$headers = get_headers( $profile_url, 1 );
+						if ( $headers[0] === 'HTTP/1.1 200 OK' && isset( $headers['Link'] ) ) {
+							$is_profile_photo_uploaded = 1;
+						}
+					}
+
+					if ( (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] !== (int) $is_profile_photo_uploaded ) {
+						$get_user_data['photo_type']['profile_photo']['is_uploaded'] = $is_profile_photo_uploaded;
+						if ( 1 === (int) $is_profile_photo_uploaded ) {
+							$total_completed_count = ++ $total_completed_count;
+						} else {
+							$total_completed_count = -- $total_completed_count;
+						}
+					}
+				}
+
+				$get_user_data['completed_fields'] = $total_completed_count;
+
+				// Update new response for completion widget.
+				bp_update_user_meta( $user->ID, 'bp_profile_completion_widgets', $get_user_data );
+			}
+
+			$offset++;
+		}
+
+		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		$statement = __( 'Profile Completion widget, profile photo status re-sync %s', 'buddyboss' );
+		return array(
+			'status'  => 1,
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
 }

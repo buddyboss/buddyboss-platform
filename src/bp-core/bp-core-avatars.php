@@ -208,7 +208,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 	global $current_blog;
 
 	// Set the default variables array and parse it against incoming $args array.
-	$params = wp_parse_args(
+	$params = bp_parse_args(
 		$args,
 		array(
 			'item_id'       => false,
@@ -430,7 +430,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 	$params['class'] = apply_filters( 'bp_core_avatar_class', $params['class'], $params['item_id'], $params['object'], $params );
 
 	// Use an alias to leave the param unchanged.
-	$avatar_classes = $params['class'];
+	$avatar_classes = ! empty( $params['class'] ) ? $params['class'] : array();
 	if ( ! is_array( $avatar_classes ) ) {
 		$avatar_classes = explode( ' ', $avatar_classes );
 	}
@@ -684,6 +684,9 @@ function bp_core_fetch_avatar( $args = '' ) {
 			$url_args['d'] = $default_grav;
 		}
 
+		// Filter the URL args to the Gravatar URL.
+		$url_args = apply_filters( 'bp_core_gravatar_url_args', $url_args, $params );
+
 		if ( isset( $url_args['d'] ) && 'blank' === $url_args['d'] ) {
 			$gravatar = apply_filters( 'bp_discussion_blank_option_default_avatar', bb_get_blank_profile_avatar() );
 		} elseif ( isset( $url_args['d'] ) && 'mm' === $url_args['d'] ) {
@@ -692,7 +695,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 			if ( false === $response ) {
 				$gravcheck = 'https://www.gravatar.com/avatar/' . md5( strtolower( $params['email'] ) ) . '?d=404';
 				$response  = get_headers( $gravcheck );
-				set_transient( $key, $response, DAY_IN_SECONDS );
+				set_transient( $key, $response, 3 * HOUR_IN_SECONDS );
 			}
 			if ( isset( $response[0] ) && $response[0] == 'HTTP/1.1 404 Not Found' ) {
 
@@ -766,7 +769,13 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 		if ( ! $gravatar || empty( $gravatar ) ) {
 			remove_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
-			$gravatar = get_avatar_url( $params['email'], array( 'force_default' => true, 'size' => $params['width'] ) );
+			$gravatar = get_avatar_url(
+				$params['email'],
+				array(
+					'force_default' => true,
+					'size'          => $params['width'],
+				)
+			);
 			add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
 		}
 
@@ -841,7 +850,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 		'avatar_dir' => false,
 	);
 
-	$args = wp_parse_args( $args, $defaults );
+	$args = bp_parse_args( $args, $defaults );
 	extract( $args, EXTR_SKIP );
 
 	/**
@@ -875,7 +884,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 		} elseif ( 'group' == $object ) {
 			$item_id = buddypress()->groups->current_group->id;
 		} elseif ( 'blog' == $object ) {
-			$item_id = $current_blog->id;
+			$item_id = get_current_blog_id();
 		}
 
 		/** This filter is documented in bp-core/bp-core-avatars.php */
@@ -906,7 +915,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 	/** This filter is documented in bp-core/bp-core-avatars.php */
 	$avatar_folder_dir = apply_filters( 'bp_core_avatar_folder_dir', bp_core_avatar_upload_path() . '/' . $avatar_dir . '/' . $item_id, $item_id, $object, $avatar_dir );
 
-	if ( ! file_exists( $avatar_folder_dir ) ) {
+	if ( ! is_dir( $avatar_folder_dir ) ) {
 		return false;
 	}
 
@@ -991,7 +1000,7 @@ function bp_avatar_ajax_delete() {
 		}
 
 		$return = array(
-			'avatar'        => html_entity_decode( $avatar ),
+			'avatar'        => html_entity_decode( $avatar, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'feedback_code' => 4,
 			'item_id'       => $avatar_data['item_id'],
 		);
@@ -1365,7 +1374,7 @@ function bp_avatar_handle_capture( $data = '', $item_id = 0 ) {
  */
 function bp_core_avatar_handle_crop( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'object'        => 'user',
@@ -1381,17 +1390,30 @@ function bp_core_avatar_handle_crop( $args = '' ) {
 	);
 
 	/**
-	 * Filters whether or not to handle cropping.
+	 * Filters whether to do cropping.
 	 *
 	 * If you want to override this function, make sure you return false.
 	 *
-	 * @since BuddyPress 1.2.4
+	 * @since BuddyBoss 2.0.4
 	 *
-	 * @param bool  $value Whether or not to crop.
+	 * @param bool  $value Whether to do crop.
 	 * @param array $r     Array of parsed arguments for function.
 	 */
-	if ( ! apply_filters( 'bp_core_pre_avatar_handle_crop', true, $r ) ) {
-		return true;
+	if ( apply_filters( 'bp_core_do_avatar_handle_crop', true, $r ) ) {
+
+		/**
+		 * Filters whether or not to handle cropping.
+		 *
+		 * If you want to override this function, make sure you return false.
+		 *
+		 * @since BuddyPress 1.2.4
+		 *
+		 * @param bool  $value Whether or not to crop.
+		 * @param array $r     Array of parsed arguments for function.
+		 */
+		if ( ! apply_filters( 'bp_core_pre_avatar_handle_crop', true, $r ) ) {
+			return true;
+		}
 	}
 
 	// Crop the file.
@@ -1422,7 +1444,7 @@ function bp_avatar_ajax_set() {
 	// Check the nonce.
 	check_admin_referer( 'bp_avatar_cropstore', 'nonce' );
 
-	$avatar_data = wp_parse_args(
+	$avatar_data = bp_parse_args(
 		$_POST,
 		array(
 			'crop_w' => bp_core_avatar_full_width(),
@@ -1506,6 +1528,16 @@ function bp_avatar_ajax_set() {
 		$avatar_dir = sanitize_key( $avatar_data['object'] ) . '-avatars';
 	}
 
+	/**
+	 * Update avatar directory based on avatar data conditionally.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param string $avatar_dir  Avatar Directory
+	 * @param array  $avatar_data Avatar Data.
+	 */
+	$avatar_dir = apply_filters( 'bb_avatar_ajax_set_avatar_dir', $avatar_dir, $avatar_data );
+
 	// Crop args.
 	$r = array(
 		'item_id'       => $avatar_data['item_id'],
@@ -1545,6 +1577,9 @@ function bp_avatar_ajax_set() {
 		} elseif ( 'group' === $avatar_data['object'] ) {
 			/** This action is documented in bp-groups/bp-groups-screens.php */
 			do_action( 'groups_avatar_uploaded', (int) $avatar_data['item_id'], $avatar_data['type'], $r );
+		} else {
+			/** action to used for other component. **/
+			do_action( sanitize_title( $avatar_data['object'] ) . '_avatar_uploaded', (int) $avatar_data['item_id'], $avatar_data['type'], $r );
 		}
 
 		wp_send_json_success( $return );

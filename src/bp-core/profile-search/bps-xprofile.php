@@ -26,12 +26,12 @@ function bp_ps_xprofile_setup( $fields ) {
 		while ( bp_profile_groups() ) {
 			bp_the_profile_group();
 			$group_name = str_replace( '&amp;', '&', stripslashes( $group->name ) );
-
 			while ( bp_profile_fields() ) {
 				bp_the_profile_field();
 				$f = new stdClass();
 
 				$f->group       = $group_name;
+				$f->group_id	= $group->id;
 				$f->id          = $field->id;
 				$f->code        = 'field_' . $field->id;
 				$f->name        = str_replace( '&amp;', '&', stripslashes( $field->name ) );
@@ -39,7 +39,6 @@ function bp_ps_xprofile_setup( $fields ) {
 				$f->description = str_replace( '&amp;', '&', stripslashes( $field->description ) );
 				$f->description = $f->description;
 				$f->type        = $field->type;
-
 				$f->format         = bp_ps_xprofile_format( $field->type, $field->id );
 				$f->search         = 'bp_ps_xprofile_search';
 				$f->sort_directory = 'bp_ps_xprofile_sort_directory';
@@ -86,8 +85,13 @@ function bp_ps_xprofile_search( $f ) {
 		'select' => '',
 		'where'  => array(),
 	);
-	$sql['select']            = "SELECT user_id FROM {$bp->profile->table_name_data}";
-	$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
+	$sql['select']            = "SELECT user_id, field_id FROM {$bp->profile->table_name_data}";
+
+	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
+		$sql['where']['field_id'] = $wpdb->prepare( "field_id IN ( SELECT f.id FROM {$bp->profile->table_name_fields} as f, {$bp->profile->table_name_meta} as m where f.id = m.object_id AND group_id = %d AND f.type = %s AND m.meta_key = '_cloned_from' AND m.meta_value = %d )", $f->group_id, $f->type, $f->id );
+	} else {
+		$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
+	}
 
 	switch ( $filter ) {
 		case 'integer_range':
@@ -214,8 +218,39 @@ function bp_ps_xprofile_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	$results = $wpdb->get_col( $query );
-	return $results;
+	// If repeater enabel then we check repeater field id is private or not.
+	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
+		$results  = $wpdb->get_results( $query, ARRAY_A );
+		$user_ids = array();
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $key => $value ) {
+				$field_id = ! empty( $value['field_id'] ) ? (int) $value['field_id'] : 0;
+				$user_id  = ! empty( $value['user_id'] ) ? (int) $value['user_id'] : 0;
+				if ( ! empty( $field_id ) && ! empty( $user_id ) ) {
+					$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
+					if (
+						! current_user_can( 'administrator' ) &&
+						(
+							'adminsonly' === $field_visibility ||
+							(
+								bp_is_active( 'friends' ) &&
+								'friends' === $field_visibility &&
+								false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() )
+							)
+						)
+					) {
+						unset( $results[ $key ] );
+					} else {
+						$user_ids[] = $user_id;
+					}
+				}
+			}
+		}
+	} else {
+		$user_ids = $wpdb->get_col( $query );
+	}
+
+	return $user_ids;
 }
 
 /**
@@ -459,17 +494,24 @@ function bp_ps_xprofile_gender_users_search( $f ) {
 	if ( isset( $gender ) && ! empty( $gender ) ) {
 
 		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table_profile_fields} a WHERE parent_id = 0 AND type = 'gender' " );
+		if ( ! empty( $exists_gender ) ) {
 
-		$custom_ids = $wpdb->get_col( "SELECT user_id FROM {$table_profile_data} WHERE field_id = {$exists_gender[0]->id} AND value = '{$gender}'" );
+			if ( is_array( $gender ) ) {
+				$gender = "'" . implode( "', '", $gender ) . "'";
+				$where  = " AND value IN({$gender})";
+			} else {
+				$where = " AND value = '{$gender}'";
+			}
 
-		if ( isset( $custom_ids ) && ! empty( $custom_ids ) ) {
-			return $custom_ids;
-		} else {
-			return array();
+			$custom_ids = $wpdb->get_col( "SELECT user_id FROM {$table_profile_data} WHERE field_id = {$exists_gender[0]->id} {$where}" );
+
+			if ( ! empty( $custom_ids ) ) {
+				return $custom_ids;
+			}
 		}
-	} else {
-		return array();
 	}
+
+	return array();
 }
 
 /**
@@ -526,7 +568,7 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 		'fields' => 'ID',
 	);
 
-	$query_args = wp_parse_args( $query_args, $defaults );
+	$query_args = bp_parse_args( $query_args, $defaults );
 
 	if ( $exclude_admin == true ) {
 		$query_args['role__not_in'] = array( 'administrator' );
@@ -543,7 +585,7 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 	} else {
 		$course_groups_users = get_course_groups_users_access( $course_id );
 	}
-	$course_user_ids     = array_merge( $course_user_ids, $course_groups_users );
+	$course_user_ids = array_merge( $course_user_ids, $course_groups_users );
 
 	if ( ! empty( $course_user_ids ) ) {
 		$course_user_ids = array_unique( $course_user_ids );
@@ -579,7 +621,7 @@ function bp_ps_anyfield_search( $f ) {
 		'select' => '',
 		'where'  => array(),
 	);
-	$sql['select'] = "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data}";
+	$sql['select'] = "SELECT DISTINCT user_id, field_id FROM {$bp->profile->table_name_data}";
 
 	switch ( $filter ) {
 		case 'contains':
@@ -601,8 +643,58 @@ function bp_ps_anyfield_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	$results = $wpdb->get_col( $query );
-	return $results;
+	$results  = $wpdb->get_results( $query, ARRAY_A );
+	$user_ids = array();
+	if ( ! empty( $results ) ) {
+		// Exclude repeater fields.
+		$group_ids    = bp_xprofile_get_groups(
+			array(
+				'repeater_show_main_fields_only' => true,
+				'fetch_fields'                   => true,
+				'fetch_field_data'               => true,
+				'user_id'                        => false,
+			)
+		);
+		$fields_array = array();
+		if ( ! empty( $group_ids ) ) {
+			foreach ( $group_ids as $group_value ) {
+				if ( ! empty( $group_value->id ) ) {
+					$repeater_enabled = bp_xprofile_get_meta( $group_value->id, 'group', 'is_repeater_enabled', true );
+					if ( ! empty( $repeater_enabled ) && 'on' === $repeater_enabled && ! empty( $group_value->fields ) ) {
+						$fields_array = array_merge( $fields_array, wp_list_pluck( $group_value->fields, 'id' ) );
+					}
+				}
+			}
+		}
+		foreach ( $results as $key => $value ) {
+			$field_id = ! empty( $value['field_id'] ) ? (int) $value['field_id'] : 0;
+			$user_id  = ! empty( $value['user_id'] ) ? (int) $value['user_id'] : 0;
+			if ( ! empty( $field_id ) && ! empty( $user_id ) ) {
+				if ( ! empty( $fields_array ) && in_array( $field_id, $fields_array, true ) ) {
+					unset( $results[ $key ] );
+					continue;
+				}
+				$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
+				if (
+					! current_user_can( 'administrator' ) &&
+					(
+						'adminsonly' === $field_visibility ||
+						(
+							bp_is_active( 'friends' ) &&
+							'friends' === $field_visibility &&
+							false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() )
+						)
+					)
+				) {
+					unset( $results[ $key ] );
+				} else {
+					$user_ids[] = $user_id;
+				}
+			}
+		}
+	}
+
+	return $user_ids;
 }
 
 add_filter( 'bp_ps_add_fields', 'bp_ps_heading_field_setup', 11 );
@@ -633,4 +725,72 @@ function bp_ps_heading_field_setup( $fields ) {
  */
 function bp_ps_search_dummy_fields( $f ) {
 	return array();
+}
+
+/**
+ * Registers Email Address field in frontend and backend in advance search.
+ *
+ * @since BuddyBoss 2.0.5
+ *
+ * @param array $fields Fields array.
+ *
+ * @return array
+ */
+function bb_ps_email_setup( $fields ) {
+
+	$f              = new stdClass();
+	$f->group       = __( 'General Information', 'buddyboss' );
+	$f->id          = 'xprofile_email';
+	$f->code        = 'field_xprofile_email';
+	$f->name        = __( 'Email Address', 'buddyboss' );
+	$f->description = __( 'Email Address', 'buddyboss' );
+	$f->type        = 'textbox';
+	$f->format      = bp_ps_xprofile_format( 'textbox', 'xprofile_email' );
+	$f->search      = 'bb_ps_xprofile_email_users_search';
+
+	$fields[] = $f;
+
+	return $fields;
+}
+
+// Hook for registering a Gender field in frontend and backend in advance search.
+add_filter( 'bp_ps_add_fields', 'bb_ps_email_setup' );
+
+/**
+ * Fetch the users based on selected value in advance search.
+ *
+ * @since BuddyBoss 2.0.5
+ *
+ * @param object $f Field object.
+ *
+ * @return array
+ */
+function bb_ps_xprofile_email_users_search( $f ) {
+	global $wpdb;
+
+	$value  = $f->value;
+	$value  = str_replace( '&', '&amp;', $value );
+	$filter = $f->format . '_' . ( '' === trim( $f->filter ) ? 'is' : $f->filter );
+
+	$sql_query = "SELECT ID FROM {$wpdb->users} WHERE ";
+
+	switch ( $filter ) {
+		case 'text_contains':
+			$escaped    = '%' . bp_ps_esc_like( $value ) . '%';
+			$sql_query .= $wpdb->prepare( 'user_email LIKE %s', $escaped );
+			break;
+
+		case 'text_like':
+			$value      = str_replace( '\\\\%', '\\%', $value );
+			$value      = str_replace( '\\\\_', '\\_', $value );
+			$sql_query .= $wpdb->prepare( 'user_email LIKE %s', $value );
+			break;
+
+		case 'text_is':
+		default:
+			$sql_query .= $wpdb->prepare( 'user_email = %s', $value );
+			break;
+	}
+
+	return $wpdb->get_col( $sql_query );
 }

@@ -108,13 +108,49 @@ class BP_Latest_Activities extends WP_Widget {
 			$reset_activities_template = $GLOBALS['activities_template'];
 		}
 
+		$scope[] = 'public';
+
+		if ( bp_loggedin_user_id() ) {
+
+			$scope[] = 'just-me';				
+
+			if ( bp_activity_do_mentions() ) {
+				$scope[] = 'mentions';
+			}
+
+			if ( bp_is_active( 'friends' ) ) {
+				$scope[] = 'friends';
+			}
+
+			if ( bp_is_active( 'groups' ) ) {
+				$scope[] = 'groups';
+			}
+
+			if ( bp_is_activity_follow_active() ) {
+				$scope[] = 'following';
+			}
+
+			if ( bp_is_active( 'forums' ) ) {
+				$scope[] = 'forums';
+			}			
+		}
+	
+		if ( bp_loggedin_user_id() && ! empty( $instance['relevant'] ) ) {
+			$key = array_search( 'public', $scope, true );
+			if ( is_array( $scope ) && false !== $key ) {
+				unset( $scope[ $key ] );				
+			}
+		}
+
+		$scope = implode( ',', $scope );
+		
 		/**
 		 * Globalize the activity widget arguments.
 		 * @see bp_nouveau_activity_widget_query() to override
 		 */
 		$bp_nouveau->activity->widget_args = array(
 			'max'          => $max,
-			'scope'        => 'all',
+			'scope'        => $scope,
 			'user_id'      => 0,
 			'object'       => false,
 			'action'       => join( ',', $type ),
@@ -144,8 +180,9 @@ class BP_Latest_Activities extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
-		$instance['title'] = strip_tags( $new_instance['title'] );
-		$instance['max']   = 5;
+		$instance['title']    = strip_tags( $new_instance['title'] );
+		$instance['relevant'] = isset( $new_instance['relevant'] ) ? (bool) $new_instance['relevant'] : false;
+		$instance['max']      = 5;
 		if ( ! empty( $new_instance['max'] ) ) {
 			$instance['max'] = $new_instance['max'];
 		}
@@ -168,14 +205,19 @@ class BP_Latest_Activities extends WP_Widget {
 	 * @return string HTML output.
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array(
-			'title' => __( 'Latest updates', 'buddyboss' ),
-			'max'   => 5,
-			'type'  => '',
-		) );
+		$instance = bp_parse_args(
+			(array) $instance,
+			array(
+				'title'    => __( 'Latest updates', 'buddyboss' ),
+				'max'      => 5,
+				'type'     => '',
+				'relevant' => false,
+			)
+		);
 
-		$title = esc_attr( $instance['title'] );
-		$max   = (int) $instance['max'];
+		$title    = esc_attr( $instance['title'] );
+		$max      = (int) $instance['max'];
+		$relevant = (bool) $instance['relevant'];
 
 		$type = array( 'activity_update' );
 		if ( ! empty( $instance['type'] ) ) {
@@ -201,6 +243,11 @@ class BP_Latest_Activities extends WP_Widget {
 					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type, true ) ); ?>><?php echo esc_html( $name ); ?></option>
 				<?php endforeach; ?>
 			</select>
+		</p>
+		<p>
+			<input type="checkbox" class="widefat" id="<?php echo $this->get_field_id( 'relevant' ); ?>" name="<?php echo $this->get_field_name( 'relevant' ); ?>" <?php checked( true, $relevant ); ?> value="1" />
+			<label for="<?php echo $this->get_field_id( 'relevant' ); ?>"><?php esc_html_e( 'Only show activities that are relevant to the logged-in member', 'buddyboss' ); ?></label>
+			<p><small><info style="color: #808080;font-size: 13px;"><?php esc_html_e( 'While logged in, members will only see activities from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss' ); ?></info></small></p>
 		</p>
 		<?php
 	}
