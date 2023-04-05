@@ -101,7 +101,7 @@ function bb_core_default_install_emails( $default_components ) {
 
 	// Called Posts Notification class.
 	if ( ! class_exists( 'BP_Post_Notification' ) ) {
-		
+
 		// Load Messages notification file.
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bp-post-notification.php' ) ) {
 			require buddypress()->plugin_dir . 'bp-core/classes/class-bp-post-notification.php';

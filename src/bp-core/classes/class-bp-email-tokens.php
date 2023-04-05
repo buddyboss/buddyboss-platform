@@ -146,19 +146,19 @@ class BP_Email_Tokens {
 				'function'    => array( $this, 'token__activity_content' ),
 				'description' => __( 'Display the activity post content, along with member\'s photo and name.', 'buddyboss' ),
 			),
-			'commenter.name'     => array(
+			'commenter.name'       => array(
 				'function'    => array( $this, 'token__commenter_name' ),
 				'description' => __( 'Display the commenter name.', 'buddyboss' ),
 			),
-			'commenter.url'     => array(
+			'commenter.url'        => array(
 				'function'    => array( $this, 'token__commenter_url' ),
 				'description' => __( 'Display the commenter link.', 'buddyboss' ),
 			),
-			'comment.url'     => array(
+			'comment.url'          => array(
 				'function'    => array( $this, 'token__comment_reply_url' ),
 				'description' => __( 'Display the post comment url.', 'buddyboss' ),
 			),
-			'comment_reply'     => array(
+			'comment_reply'        => array(
 				'function'    => array( $this, 'token__comment_reply' ),
 				'description' => __( 'Display the post comment reply content.', 'buddyboss' ),
 			),
@@ -225,8 +225,7 @@ class BP_Email_Tokens {
 									<tbody>
 									<tr>
 										<td width="20%" class="mobile-block-full">
-											<a class="group-avatar-wrap mobile-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>"
-											   style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 104px;">
+											<a class="group-avatar-wrap mobile-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 104px;">
 												<?php
 												$group_avatar = bp_core_fetch_avatar(
 													array(
@@ -2906,13 +2905,13 @@ class BP_Email_Tokens {
 									<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( $activity->user_id ) ); ?>" target="_blank" rel="nofollow">
 										<?php
 										$avatar_url = bp_core_fetch_avatar(
-												array(
-														'item_id' => $activity->user_id,
-														'width'   => 100,
-														'height'  => 100,
-														'type'    => 'full',
-														'html'    => false,
-												)
+											array(
+												'item_id' => $activity->user_id,
+												'width'   => 100,
+												'height'  => 100,
+												'type'    => 'full',
+												'html'    => false,
+											)
 										);
 										?>
 										<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"/>
@@ -3066,7 +3065,7 @@ class BP_Email_Tokens {
 																	<?php if ( $total_video_ids > 1 ) : ?>
 																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;width:100%;background-color: #b5b7bb;padding:0;"></p>
 																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;width:100%;background-color: #e1e4e8;padding:0;"></p>
-																	<?php
+																		<?php
 																	endif;
 
 																	break;
@@ -3177,10 +3176,10 @@ class BP_Email_Tokens {
 
 		$user_id        = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
 		$commenter_name = '';
-		
+
 		if ( ! empty( $user_id ) ) {
 			$commenter_name = bp_core_get_user_displayname( $user_id );
-		} elseif ( ! empty ( $tokens['commenter.name'] ) ) {
+		} elseif ( ! empty( $tokens['commenter.name'] ) ) {
 			$commenter_name = $tokens['commenter.name'];
 		}
 
@@ -3206,8 +3205,8 @@ class BP_Email_Tokens {
 		$settings     = bp_email_get_appearance_settings();
 		$comment_id   = isset( $tokens['comment.id'] ) ? $tokens['comment.id'] : false;
 		$commenter_id = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
-		if ( ! empty ( $tokens['comment_reply'] ) ) {
-			$comment_reply  = $tokens['comment_reply'];
+		if ( ! empty( $tokens['comment_reply'] ) ) {
+			$comment_reply = $tokens['comment_reply'];
 		}
 
 		if ( empty( $comment_id ) ) {
@@ -3225,7 +3224,7 @@ class BP_Email_Tokens {
 			)
 		);
 
-		$commenter_name =  isset( $tokens['commenter.name'] ) ? $tokens['commenter.name'] : '';
+		$commenter_name = isset( $tokens['commenter.name'] ) ? $tokens['commenter.name'] : '';
 
 		ob_start();
 		?>
@@ -3314,8 +3313,8 @@ class BP_Email_Tokens {
 	public function token__comment_reply_url( $bp_email, $formatted_tokens, $tokens ) {
 
 		$comment_reply_url = '';
-		if ( ! empty ( $tokens['comment.url'] ) ) {
-			$comment_reply_url  = str_replace( array( "\r", "\n" ), '', $tokens['comment.url'] );
+		if ( ! empty( $tokens['comment.url'] ) ) {
+			$comment_reply_url = str_replace( array( "\r", "\n" ), '', $tokens['comment.url'] );
 		}
 
 		return $comment_reply_url;
@@ -3324,7 +3323,7 @@ class BP_Email_Tokens {
 	public function token__commenter_url( $bp_email, $formatted_tokens, $tokens ) {
 		$commenter_id  = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
 		$commenter_url = ! empty( $commenter_id ) ? esc_url( bp_core_get_user_domain( $commenter_id ) ) : '#';
-		
+
 		return $commenter_url;
 	}
 
