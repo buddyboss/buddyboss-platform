@@ -70,11 +70,6 @@ add_filter( 'bp_core_widget_user_display_name', 'stripslashes' );
 add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
 add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 
-// Load Post Notifications.
-add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
-add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 10, 3 );
-add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 10, 3 );
-
 // Avatars.
 /**
  * Disable gravatars fallback for member avatars.
@@ -2452,8 +2447,8 @@ add_filter( 'menu_order', 'buddyboss_menu_order' );
  * @since BuddyBoss [BBVERSION]
  */
 function bb_load_post_notifications() {
-	if ( class_exists( 'BP_Post_Notification' ) ) {
-		BP_Post_Notification::instance();
+	if ( class_exists( 'BB_Post_Notification' ) ) {
+		BB_Post_Notification::instance();
 	}	
 }
 
@@ -2550,28 +2545,4 @@ function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) 
 		$commentdata = get_object_vars( $comment );
 		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
 	}
-}
-
-
-add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );
-function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
-
-	// Specify the Notification type.
-	$component_action = 'bb_posts_new_comment_reply';
-	$parent_comment   = get_comment( $commentdata['comment_parent'] );
-
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_add_notification(
-			array(
-				'user_id'           => ( int ) $parent_comment->user_id,
-				'item_id'           => $comment_id,
-				'secondary_item_id' => $commenter_id,
-				'component_name'    => 'core',
-				'component_action'  => $component_action,
-				'date_notified'     => bp_core_current_time(),
-				'is_new'            => 1,
-			)
-		);
-	}
-
 }

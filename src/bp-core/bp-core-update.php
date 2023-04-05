@@ -2597,12 +2597,6 @@ function bb_update_to_2_3_0() {
  * @return void
  */
 function bb_update_to_2_3_2() {
-	wp_cache_flush();
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'post_comment' );
-	}
-
 	$defaults = array(
 		'post_status' => 'publish',
 		'post_type'   => bp_get_email_post_type(),

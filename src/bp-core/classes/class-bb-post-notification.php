@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BP_Post_Notification class.
+ * Set up the BB_Post_Notification class.
  *
  * @since BuddyBoss [BBVERSION]
  */
-class BP_Post_Notification extends BP_Core_Notification_Abstract {
+class BB_Post_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BP_Post_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @return null|BP_Post_Notification|Controller|object
+	 * @return null|BB_Post_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
