@@ -2111,6 +2111,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 			);
 		} else {
 			update_site_option( 'bb_upgrade_user_favorites_offset', $final_offset );
+			bb_admin_upgrade_user_favorites( $is_background, $blog_id );
 		}
 	} else {
 		delete_site_option( 'bb_upgrade_user_favorites_offset' );
