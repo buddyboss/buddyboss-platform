@@ -872,3 +872,24 @@ function friends_notification_accepted_request( $friendship_id, $initiator_id, $
 	bp_send_email( 'friends-request-accepted', $initiator_id, $args );
 }
 add_action( 'friends_friendship_accepted', 'friends_notification_accepted_request', 10, 3 );
+
+/**
+ * When a connection request is accepted, auto follow the member if auto follow setting is enabled.
+ *
+ * @since BuddyPress 2.3.1
+ *
+ * @param int $friendship_id     ID of the friendship object.
+ * @param int $initiator_user_id ID of the user who initiated the request.
+ * @param int $friend_user_id    ID of the request recipient.
+ */
+function bb_friends_auto_follow( $friendship_id, $initiator_user_id, $friend_user_id ) {
+	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && bb_is_friends_auto_follow_active() ) {
+		bp_start_following(
+			array(
+				'leader_id'   => $friend_user_id,
+				'follower_id' => $initiator_user_id,
+			)
+		);
+	}
+}
+add_action( 'friends_friendship_accepted', 'bb_friends_auto_follow', 10, 3 );
