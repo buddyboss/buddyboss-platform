@@ -627,7 +627,7 @@
 
 			.activity-content {
 				margin: 0;
-				position: relative;
+				position: static;
 
 				&:after {
 					clear: both;
@@ -1351,7 +1351,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .activity-list .activity-item .activity-content.video-activity-wrap,
 .activity-list .activity-item .activity-content.document-activity {
-	position: relative;
+	position: static;
 
 	.activity-inner {
 		overflow: visible;

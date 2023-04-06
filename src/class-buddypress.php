@@ -638,6 +638,7 @@ class BuddyPress {
 
 		// These classes don't have a name that matches their component.
 		$irregular_map = array(
+			'BB_Presence'                                  => 'core',
 			'BP_Akismet'                                   => 'activity',
 			'BP_Admin'                                     => 'core',
 			'BP_Background_Updater'                        => 'core',
