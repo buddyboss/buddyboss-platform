@@ -157,13 +157,19 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'bb_new_mention' === $notification->component_action &&
 			in_array( $notification->component_name, array( 'core' ), true )
 		) {
-
 			$comment                = get_comment( $notification->item_id );
 			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
-			$comment_author         = get_user_by( 'email', $comment->comment_author_email );
-			$commenter_name         = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
-			$notification_link      = add_query_arg( 'cid', (int) $notification_id, get_comment_link( $comment ) );
-			$amount                 = 'single';
+			$notification_link      = bp_get_notifications_permalink();
+			$commenter_name         = '';
+
+			if ( ! empty( $comment ) ) {
+				$comment_author    = get_user_by( 'email', $comment->comment_author_email );
+				$notification_link = get_comment_link( $comment );
+				$commenter_name    = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
+			}
+
+			$notification_link = add_query_arg( 'cid', (int) $notification_id, $notification_link );
+			$amount            = 'single';
 
 			if ( 'web_push' === $screen ) {
 				if ( ! empty( $notification_type_html ) ) {
