@@ -1716,6 +1716,18 @@ function bb_notification_after_save_meta( $notification ) {
 			$activity  = new BP_Activity_Activity( $notification->item_id );
 			$usernames = ! empty( $activity ) && ! empty( $activity->content ) && bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
 		} elseif (
+			'core' === $notification->component_name &&
+			in_array(
+				$notification->component_action,
+				array(
+					'bb_posts_new_comment_reply',
+				),
+				true
+			)
+		) {
+			$comment   = get_comment( $notification->item_id );
+			$usernames = ! empty( $content ) ? bp_find_mentions_by_at_sign( array(), $comment->comment_content ) : array();
+		} elseif (
 			bp_is_active( 'forums' ) &&
 			in_array(
 				$notification->component_action,
@@ -2103,7 +2115,6 @@ function bb_notification_excluded_component_actions() {
  * Function to add the notification for post new comment reply.
  *
  * @since BuddyBoss [BBVERSION]
- *
  */
 function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
 
@@ -2114,7 +2125,7 @@ function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id,
 	if ( bp_is_active( 'notifications' ) ) {
 		bp_notifications_add_notification(
 			array(
-				'user_id'           => ( int ) $parent_comment->user_id,
+				'user_id'           => (int) $parent_comment->user_id,
 				'item_id'           => $comment_id,
 				'secondary_item_id' => $commenter_id,
 				'component_name'    => 'core',
