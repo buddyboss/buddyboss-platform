@@ -162,7 +162,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
 			$comment_author         = get_user_by( 'email', $comment->comment_author_email );
 			$commenter_name         = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
-			$notification_link      = get_comment_link( $comment );
+			$notification_link      = add_query_arg( 'rid', (int) $notification_id, get_comment_link( $comment ) );
 			$amount                 = 'single';
 
 			if ( 'web_push' === $screen ) {
