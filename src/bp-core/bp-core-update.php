@@ -417,6 +417,14 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19971 ) {
 			bb_update_to_2_3_0();
 		}
+
+		if ( $raw_db_version < 19991 ) {
+			bb_update_to_2_3_1();
+		}
+
+		if ( $raw_db_version < 20001 ) {
+			bb_update_to_2_3_2();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2341,7 +2349,7 @@ function bb_update_to_2_2_7() {
 	}
 }
 
-/*
+/**
  * Migrate when update the platform to the latest version.
  *
  * @since BuddyBoss 2.2.8
@@ -2582,4 +2590,87 @@ function bb_update_to_2_3_0() {
 
 		update_option( 'widget_bp_latest_activities', $settings );
 	}
+}
+
+/**
+ * Background job to generate user profile slug.
+ * Load BuddyBoss Presence API mu plugin.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @return void
+ */
+function bb_update_to_2_3_1() {
+
+	$is_already_run = get_transient( 'bb_update_to_2_3_1' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_3_1', 'yes', DAY_IN_SECONDS );
+
+	if ( class_exists( 'BB_Presence' ) ) {
+		BB_Presence::bb_load_presence_api_mu_plugin();
+		BB_Presence::bb_check_native_presence_load_directly();
+	}
+
+	bb_repair_member_profile_links_callback( true );
+}
+
+
+/**
+ * Install email template for activity following post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_2() {
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$email = array(
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
+	);
+
+	$id = 'new-comment-reply';
+
+	if (
+		term_exists( $id, bp_get_email_tax_type() ) &&
+		get_terms(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'slug'     => $id,
+				'fields'   => 'count',
+			)
+		) > 0
+	) {
+		return;
+	}
+
+	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+
+	foreach ( $tt_ids as $tt_id ) {
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		wp_update_term(
+			(int) $term->term_id,
+			bp_get_email_tax_type(),
+			array(
+				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
+			)
+		);
+	}
+
 }
