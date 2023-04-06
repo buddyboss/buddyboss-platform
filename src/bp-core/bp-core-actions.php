@@ -736,3 +736,36 @@ function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) 
 		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
 	}
 }
+
+/**
+ * Mark blog comment notifications as read.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ */
+function bb_core_read_blog_comment_notification() {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	$comment_id = 0;
+	// For replies to a parent update.
+	if ( ! empty( $_GET['cid'] ) ) {
+		$comment_id = (int) $_GET['cid'];
+	}
+
+	// Mark individual notification as read.
+	if ( ! empty( $comment_id ) ) {
+		BP_Notifications_Notification::update(
+			array(
+				'is_new' => false,
+			),
+			array(
+				'user_id' => bp_loggedin_user_id(),
+				'id'      => $comment_id,
+			)
+		);
+	}
+}
+
+add_action( 'template_redirect', 'bb_core_read_blog_comment_notification', 99 );
