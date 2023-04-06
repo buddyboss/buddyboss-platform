@@ -212,8 +212,10 @@ function bbp_has_forums( $args = '' ) {
 		// Add pagination to query object.
 		$bbp->forum_query->pagination_links = paginate_links( $bbp_topic_pagination );
 
-		// Remove first page from pagination.
-		$bbp->forum_query->pagination_links = str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links );
+		if ( ! empty( $bbp->forum_query->pagination_links ) ) {
+			// Remove first page from pagination.
+			$bbp->forum_query->pagination_links = str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links );
+		}
 	}
 
 	return apply_filters( 'bbp_has_forums', $bbp->forum_query->have_posts(), $bbp->forum_query );

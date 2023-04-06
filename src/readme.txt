@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2.9.1
+Stable tag: 2.3.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,58 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.1.1 =
+* Profiles - Small icon fix for 'Profile Links' option in the dashboard
+
+= 2.3.1 =
+* Profiles - Provided the option to replace usernames with unique IDs to secure member profile URLs
+* Profiles - Handled profile field instructions small formatting issue
+* Profiles - Handled profile search issue with profile fields configured as 'only me' privacy
+* Profiles - Handled members count formatting issues across the network as well as APIs
+* Groups - Handled group message with unsupported media format, error message not closing issue
+* Groups - Handled group documents pagination issue
+* Activity - Handled activity posts liked members tooltip formatting issue
+* Media - Handled media modal 'Download' button UI issue when 'BuddyBoss Theme' is not active
+* Messages - Small improvement for shared socket connection update for multiple browser tabs using Pusher
+* Messages - Handled selected member in compose message is not appearing when the mention name is updated and a message is composed of the profile
+* Messages - Handled video embed not showing properly in messages
+* Connections - Provided option to auto-follow when members connect
+* Moderation - Handled critical issues in the settings API when all moderation options are disabled
+* Core - Improved and optimized presence API performance for online/offline status using MU Plugin and independent PHP file
+* Core - Small improvement for Activity, Activity comment, media description, forums discussion, and reply form by not allowing to submit when no text or media uploaded
+* Coding Standards - Small code refactoring to fix PHP warnings for non-logged-in users
+* Events Calendar Pro - Handled events page not working conflict when private site enabled
+* REST API - Handled incorrect replies order in the profile issue in the API
+* REST API - Handled group types in a non-English language not returning in the API
+* REST API - Handled update sub-group privacy using API removes parent group settings
+* REST API - Handled invited organizer returns in the API before accepting the request
+
+= 2.3.0 =
+* Profiles - Handled a small UX issue in the profile fields screen in the dashboard
+* Notifications - Small improvements to not trigger multiple notifications for forum discussion and reply when members are mentioned
+* Groups - Handled group header description alignment UI issues
+* Groups - Handled groups directory and single group SEO title and description not rendering issue
+* Forums - Handled forum discussions and replies uploaded image sequence issue
+* Forums - Handled forum discussion and replies pagination not working issue on other members profiles for logged-in member
+* Forums - Handled search forum critical issue when the network search component is disabled
+* Forums - Handled social group associated forum and its child forums visibility issue based on group privacy
+* Forums - Handled missing fields in the replies tab when a logged-in member is viewing other members profile
+* Forums - Handled 'XenForo' import not working issue
+* Activity - Provided option to show relevant activities in the 'Latest Activities' widget
+* Messages - Handled send message editor formatting toolbar layout issue when the media component is disabled
+* Messages - Handled UI issue when a new thread is created from the messages screen
+* Core - Small performance update for non-logged-in users
+* Core - Small improvements for selected page/tab class logic
+* Core - Icon Pack updated with latest icons
+* Coding Standards - Significant code refactoring to fix PHP 8 warnings and notices
+* Coding Standards - Significant code refactoring to fix PHP 8.2 deprecation errors, warnings, and notices
+* REST API - Code refactoring to fix PHP 8 and 8.2 warnings and notices in the API
+* REST API - Handled profile type endpoint text format issue when it has special characters
+* REST API - Handled forum replies endpoint not returning excerpt issue in the response
+* Learndash - Handled social group privacy settings getting updated issue when the 'LearnDash Group Sync' option is enabled and the learndash group is updated
+* Learndash - Handled URL query var not working issue on lesson and topic screen when 'Nested URLs' option is enabled
+* Compatibility - Handled Jetpack plugin widget visibility option not showing conflict
 
 = 2.2.9.1 =
 * Notifications - Handled repeated email notification issues by removing duplicate forum subscription entries

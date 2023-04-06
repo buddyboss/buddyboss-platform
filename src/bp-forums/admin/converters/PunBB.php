@@ -674,7 +674,7 @@ class PunBB extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '';
 		return $title;
 	}
 }
