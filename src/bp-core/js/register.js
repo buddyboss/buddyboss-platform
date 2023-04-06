@@ -74,7 +74,7 @@ jQuery( document ).ready( function() {
 					jQuery( 'body .layout-wrap #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
-					jQuery('.register-section textarea.wp-editor-area').each(function( index ) {
+					jQuery('.register-section textarea.wp-editor-area').each(function() {
 						// Remove older html structure to resolve conflict.
 						wp.editor.remove( jQuery(this).attr('id') );
 						wp.editor.initialize( jQuery(this).attr('id'), {
@@ -173,7 +173,7 @@ jQuery( document ).ready( function() {
 					jQuery( 'body .layout-wrap #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
-					jQuery('.register-section textarea.wp-editor-area').each(function( index ) {
+					jQuery('.register-section textarea.wp-editor-area').each(function() {
 						// Remove older html structure to resolve conflict.
 						wp.editor.remove( jQuery(this).attr('id') );
 						wp.editor.initialize( jQuery(this).attr('id'), {
