@@ -125,7 +125,7 @@ add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
 
 // Load Post Notifications.
 add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
-add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 10, 3 );
+add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 20, 3 );
 add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 10, 3 );
 
 // Load the admin.
@@ -747,23 +747,7 @@ function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) 
  */
 function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
-	if (
-		(
-			// Are mentions disabled?
-			function_exists( 'bp_activity_do_mentions' ) &&
-			! bp_activity_do_mentions()
-		) ||
-		(
-			bp_is_active( 'activity' ) &&
-			(
-				bp_is_post_type_feed_enable( 'post' ) ||
-				(
-					bp_is_post_type_feed_enable( 'post' ) &&
-					! bb_is_post_type_feed_comment_enable( 'post' )
-				)
-			)
-		)
-	) {
+	if ( ! function_exists( 'bp_find_mentions_by_at_sign' ) ) {
 		return;
 	}
 
@@ -801,6 +785,20 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
 	if ( ! is_a( $post, 'WP_Post' ) ) {
 		return false;
+	}
+
+	if (
+		! empty( $post->post_type ) &&
+		bp_is_active( 'activity' ) &&
+		(
+			bp_is_post_type_feed_enable( $post->post_type ) ||
+			(
+				bp_is_post_type_feed_enable( $post->post_type ) &&
+				! bb_is_post_type_feed_comment_enable( $post->post_type )
+			)
+		)
+	) {
+		return;
 	}
 
 	// Try to find mentions.
@@ -872,17 +870,12 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 			bp_send_email( $email_type, $user_id, $args );
 		}
 
-		if ( bp_is_active( 'activity' ) && bp_is_active( 'notifications' ) ) {
+		if ( bp_is_active( 'notifications' ) ) {
 			// Specify the Notification type.
-			$component_action = 'new_at_mention';
-			$component_name   = buddypress()->activity->id;
+			$component_action = 'bb_new_mention';
+			$component_name   = 'core';
 
-			if ( ! bb_enabled_legacy_email_preference() ) {
-				$component_action = 'bb_new_mention';
-			}
-
-			add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
-
+			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			bp_notifications_add_notification(
 				array(
 					'user_id'           => $user_id,
@@ -894,11 +887,29 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 					'is_new'            => 1,
 				)
 			);
-
-			remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
 
 }
 
 add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
+
+/**
+ * Registered component name for the core.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $component_names Array of registered component names.
+ *
+ * @return mixed
+ */
+function bb_core_registered_notification_components( $component_names ) {
+	if ( ! in_array( 'core', $component_names, true ) ) {
+		$component_names[] = 'core';
+	}
+
+	return $component_names;
+}
+
+add_action( 'bp_notifications_get_registered_components', 'bb_core_registered_notification_components', 20, 1 );

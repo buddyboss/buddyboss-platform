@@ -273,8 +273,25 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 				bp_activity_update_mention_count_for_user( $user_id, $activity->id );
 			}
 
-			if ( ! bb_enabled_legacy_email_preference() ) {
-				do_action( 'bp_activity_sent_mention_email', $activity, '', '', '', $user_id );
+			if ( bp_is_active( 'notifications' ) ) {
+
+				// Specify the Notification type.
+				$component_action = 'bb_new_mention';
+				$component_name   = 'core';
+
+				add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+				bp_notifications_add_notification(
+					array(
+						'user_id'           => $user_id,
+						'item_id'           => $comment->comment_ID,
+						'secondary_item_id' => $comment->user_id,
+						'component_name'    => $component_name,
+						'component_action'  => $component_action,
+						'date_notified'     => bp_core_current_time(),
+						'is_new'            => 1,
+					)
+				);
+				remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			}
 		}
 	}
@@ -282,4 +299,3 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 
 // Action notification for mentions in single page blog comments.
 add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 999, 4 );
-
