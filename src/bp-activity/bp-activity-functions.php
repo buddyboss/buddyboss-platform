@@ -5996,7 +5996,7 @@ function bb_activity_following_post_notification( $args ) {
 					'is_new'            => 1,
 				)
 			);
-			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
 }
