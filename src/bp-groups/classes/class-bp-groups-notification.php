@@ -778,7 +778,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 			$this->register_notification_type(
 				'bb_groups_subscribed_activity',
-				esc_html__( 'New post in a group you\'re subscribed to', 'buddyboss' ),
+				__( 'New post in a group you\'re subscribed to', 'buddyboss' ),
 				esc_html__( 'A new activity post in a group a member is subscribed to', 'buddyboss' ),
 				'groups',
 				function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
@@ -821,7 +821,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 			$this->register_notification_type(
 				'bb_groups_subscribed_discussion',
-				esc_html__( 'New discussion in a group you\'re subscribed to', 'buddyboss' ),
+				__( 'New discussion in a group you\'re subscribed to', 'buddyboss' ),
 				esc_html__( 'A new discussion in a group a member is subscribed to', 'buddyboss' ),
 				'groups',
 				function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
