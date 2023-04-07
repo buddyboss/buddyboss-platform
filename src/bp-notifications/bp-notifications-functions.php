@@ -1324,7 +1324,9 @@ function bb_get_notification_conditional_icon( $notification ) {
 	switch ( $notification->component_action ) {
 		case 'bb_new_mention':
 			$notification_type = bp_notifications_get_meta( $notification->id, 'type', true );
-			if ( 'activity_comment' === $notification_type ) {
+			if ( ! empty( $notification->component_name ) && 'core' === $notification->component_name ) {
+				$icon_class = 'bb-icon-f bb-icon-comment-square-dots';
+			} elseif ( 'activity_comment' === $notification_type ) {
 				$icon_class = 'bb-icon-f bb-icon-comment-activity';
 			} elseif ( 'activity_post' === $notification_type ) {
 				$icon_class = 'bb-icon-f bb-icon-activity';
@@ -1709,12 +1711,25 @@ function bb_notification_after_save_meta( $notification ) {
 				array(
 					'bb_activity_following_post',
 					'bb_groups_subscribed_activity',
+					'bb_activity_comment',
 				),
 				true
 			)
 		) {
 			$activity  = new BP_Activity_Activity( $notification->item_id );
 			$usernames = ! empty( $activity ) && ! empty( $activity->content ) && bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
+		} elseif (
+			'core' === $notification->component_name &&
+			in_array(
+				$notification->component_action,
+				array(
+					'bb_posts_new_comment_reply',
+				),
+				true
+			)
+		) {
+			$comment   = get_comment( $notification->item_id );
+			$usernames = ! empty( $comment ) && ! empty( $comment->comment_content ) ? bp_find_mentions_by_at_sign( array(), $comment->comment_content ) : array();
 		} elseif (
 			bp_is_active( 'forums' ) &&
 			in_array(
@@ -2103,7 +2118,6 @@ function bb_notification_excluded_component_actions() {
  * Function to add the notification for post new comment reply.
  *
  * @since BuddyBoss [BBVERSION]
- *
  */
 function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
 
@@ -2111,19 +2125,19 @@ function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id,
 	$component_action = 'bb_posts_new_comment_reply';
 	$parent_comment   = get_comment( $commentdata['comment_parent'] );
 
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_add_notification(
-			array(
-				'user_id'           => ( int ) $parent_comment->user_id,
-				'item_id'           => $comment_id,
-				'secondary_item_id' => $commenter_id,
-				'component_name'    => 'core',
-				'component_action'  => $component_action,
-				'date_notified'     => bp_core_current_time(),
-				'is_new'            => 1,
-			)
-		);
-	}
+	add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+	bp_notifications_add_notification(
+		array(
+			'user_id'           => (int) $parent_comment->user_id,
+			'item_id'           => $comment_id,
+			'secondary_item_id' => $commenter_id,
+			'component_name'    => 'core',
+			'component_action'  => $component_action,
+			'date_notified'     => bp_core_current_time(),
+			'is_new'            => 1,
+		)
+	);
+	remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 
 }
 add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );

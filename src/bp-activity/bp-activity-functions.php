@@ -4214,6 +4214,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	$original_activity = new BP_Activity_Activity( $params['activity_id'] );
 	$poster_name       = bp_core_get_user_displayname( $commenter_id );
 	$thread_link       = bp_activity_get_permalink( $params['activity_id'] );
+	$usernames         = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
 
 	remove_filter( 'bp_get_activity_content_body', 'convert_smilies' );
 	remove_filter( 'bp_get_activity_content_body', 'wpautop' );
@@ -4246,8 +4247,16 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 			return;
 		}
 
+		$send_email = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $original_activity->user_id, $usernames ) ) {
+			if ( true === bb_is_notification_enabled( $original_activity->user_id, 'bb_new_mention' ) ) {
+				$send_email = false;
+			}
+		}
+
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
+		if ( true === $send_email && true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4307,8 +4316,16 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 			return;
 		}
 
+		$send_email = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $parent_comment->user_id, $usernames ) ) {
+			if ( true === bb_is_notification_enabled( $parent_comment->user_id, 'bb_new_mention' ) ) {
+				$send_email = false;
+			}
+		}
+
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
+		if ( true === $send_email && true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,
@@ -5997,7 +6014,7 @@ function bb_activity_following_post_notification( $args ) {
 		}
 
 		if ( true === $send_notification && bp_is_active( 'notifications' ) ) {
-			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			bp_notifications_add_notification(
 				array(
 					'user_id'           => $user_id,
@@ -6009,7 +6026,7 @@ function bb_activity_following_post_notification( $args ) {
 					'is_new'            => 1,
 				)
 			);
-			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
 }
