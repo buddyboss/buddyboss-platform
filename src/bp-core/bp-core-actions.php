@@ -125,8 +125,8 @@ add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
 
 // Load Post Notifications.
 add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
-add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 10, 3 );
-add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 10, 3 );
+add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 20, 3 );
+add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 20, 3 );
 
 // Load the admin.
 if ( is_admin() ) {
@@ -660,7 +660,11 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 	}
 
 	// Check for moderation.
-	if ( ! empty( $parent_comment ) && ! empty( $comment_author ) && true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $comment_author->ID, $parent_comment->user_id ) ) {
+	if (
+		! empty( $parent_comment ) &&
+		! empty( $comment_author ) &&
+		true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $comment_author->ID, $parent_comment->user_id )
+	) {
 		return false;
 	}
 
@@ -669,11 +673,6 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $commentdata['comment_author'];
 	$comment_link             = get_comment_link( $comment_id );
 	$parent_comment_author_id = (int) $parent_comment->user_id;
-
-	// Check the sender is blocked by recipient or not.
-	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment_author_id, $comment_author_id ) ) {
-		return;
-	}
 
 	// Send an email if the user hasn't opted-out.
 	if ( ! empty( $parent_comment_author_id ) ) {

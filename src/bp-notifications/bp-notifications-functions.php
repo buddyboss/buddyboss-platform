@@ -2111,19 +2111,17 @@ function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id,
 	$component_action = 'bb_posts_new_comment_reply';
 	$parent_comment   = get_comment( $commentdata['comment_parent'] );
 
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_add_notification(
-			array(
-				'user_id'           => ( int ) $parent_comment->user_id,
-				'item_id'           => $comment_id,
-				'secondary_item_id' => $commenter_id,
-				'component_name'    => 'core',
-				'component_action'  => $component_action,
-				'date_notified'     => bp_core_current_time(),
-				'is_new'            => 1,
-			)
-		);
-	}
+	bp_notifications_add_notification(
+		array(
+			'user_id'           => (int) $parent_comment->user_id,
+			'item_id'           => $comment_id,
+			'secondary_item_id' => $commenter_id,
+			'component_name'    => 'core',
+			'component_action'  => $component_action,
+			'date_notified'     => bp_core_current_time(),
+			'is_new'            => 1,
+		)
+	);
 
 }
 add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );
