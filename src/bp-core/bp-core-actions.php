@@ -126,7 +126,7 @@ add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
 // Load Post Notifications.
 add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
 add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 20, 3 );
-add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 10, 3 );
+add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 20, 3 );
 
 // Load the admin.
 if ( is_admin() ) {
@@ -678,7 +678,16 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 	// Send an email if the user hasn't opted-out.
 	if ( ! empty( $parent_comment_author_id ) ) {
 
-		if ( true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
+		$usernames = bp_find_mentions_by_at_sign( array(), $comment_content );
+		$send_mail = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $parent_comment_author_id, $usernames ) ) {
+			if ( true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_new_mention' ) ) {
+				$send_mail = false;
+			}
+		}
+
+		if ( true === $send_mail && true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment_author_id,
@@ -894,6 +903,30 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 }
 
 add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
+
+/**
+ * Fired and mention email when comment has been approved.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string     $new_status New comment status.
+ * @param string     $old_status Previous comment status.
+ * @param WP_Comment $comment Comment data.
+ *
+ * @return void
+ */
+function bb_mention_post_type_comment_status_change( $new_status, $old_status, $comment ) {
+
+	if (
+		'approved' === $new_status &&
+		in_array( $old_status, array( 'unapproved', 'spam' ), true )
+	) {
+		$commentdata = get_object_vars( $comment );
+		bb_mention_post_type_comment( $commentdata['comment_ID'], $commentdata['comment_approved'] );
+	}
+}
+
+add_action( 'transition_comment_status', 'bb_mention_post_type_comment_status_change', 10, 3 );
 
 /**
  * Registered component name for the core.

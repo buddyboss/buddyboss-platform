@@ -279,7 +279,6 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 				$component_action = 'bb_new_mention';
 				$component_name   = 'core';
 
-				add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 				bp_notifications_add_notification(
 					array(
 						'user_id'           => $user_id,
@@ -291,7 +290,6 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 						'is_new'            => 1,
 					)
 				);
-				remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			}
 		}
 	}

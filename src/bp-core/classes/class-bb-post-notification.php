@@ -128,13 +128,16 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
-		
-		$notification  = bp_notifications_get_notification( $notification_id );
-		
-		if ( ! empty( $notification ) && 'bb_posts_new_comment_reply' === $notification->component_action &&
-			in_array( $notification->component_name, array( 'core' ), true ) ) {
+
+		$notification = bp_notifications_get_notification( $notification_id );
+
+		if (
+			! empty( $notification ) &&
+			'bb_posts_new_comment_reply' === $notification->component_action &&
+			in_array( $notification->component_name, array( 'core' ), true )
+		) {
 			$comment           = get_comment( $notification->item_id );
-			$excerpt           = $comment->comment_content;
+			$excerpt           = wp_strip_all_tags( $comment->comment_content );
 			$notification_link = get_comment_link( $comment );
 			$comment_author    = get_user_by( 'email', $comment->comment_author_email );
 			$commenter_name    = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
