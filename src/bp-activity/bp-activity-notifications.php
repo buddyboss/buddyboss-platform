@@ -261,6 +261,7 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 	}
 
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 
 	bp_notifications_add_notification(
 		array(
@@ -273,7 +274,7 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 			'is_new'            => 1,
 		)
 	);
-
+	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 
 }
@@ -310,8 +311,8 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_activity_comment';
 	}
-
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 
 	bp_notifications_add_notification(
 		array(
@@ -324,7 +325,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 			'is_new'            => 1,
 		)
 	);
-
+	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 }
 add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 3 );

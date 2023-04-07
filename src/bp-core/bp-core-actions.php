@@ -624,6 +624,7 @@ function bb_load_post_notifications() {
  * @param array      $commentdata      Comment data.
  */
 function bb_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
+
 	// Don't send notification if the comment hasn't been approved.
 	if ( empty( $comment_approved ) ) {
 		return false;
@@ -660,7 +661,11 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 	}
 
 	// Check for moderation.
-	if ( ! empty( $parent_comment ) && ! empty( $comment_author ) && true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $comment_author->ID, $parent_comment->user_id ) ) {
+	if (
+		! empty( $parent_comment ) &&
+		! empty( $comment_author ) &&
+		true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $comment_author->ID, $parent_comment->user_id )
+	) {
 		return false;
 	}
 
@@ -669,11 +674,6 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $commentdata['comment_author'];
 	$comment_link             = get_comment_link( $comment_id );
 	$parent_comment_author_id = (int) $parent_comment->user_id;
-
-	// Check the sender is blocked by recipient or not.
-	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment_author_id, $comment_author_id ) ) {
-		return;
-	}
 
 	// Send an email if the user hasn't opted-out.
 	if ( ! empty( $parent_comment_author_id ) ) {
