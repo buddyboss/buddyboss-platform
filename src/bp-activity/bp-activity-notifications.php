@@ -490,30 +490,6 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 			}
 		}
 	}
-
-	// Send a notification to the parent comment author for follow-up comments.
-	if ( ! empty( $post_type_comment->comment_parent ) ) {
-		$parent_comment = get_comment( $post_type_comment->comment_parent );
-
-		if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $activity_args['user_id'] ) {
-
-			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $post_type_comment->user_id ) ) {
-				return;
-			}
-
-			bp_notifications_add_notification(
-				array(
-					'user_id'           => $parent_comment->user_id,
-					'item_id'           => $activity_id,
-					'secondary_item_id' => $post_type_comment->user_id,
-					'component_name'    => buddypress()->activity->id,
-					'component_action'  => 'comment_reply',
-					'date_notified'     => $post_type_comment->comment_date_gmt,
-					'is_new'            => 1,
-				)
-			);
-		}
-	}
 }
 add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notification_for_synced_blog_comment', 10, 4 );
 

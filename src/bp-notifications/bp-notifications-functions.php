@@ -1325,7 +1325,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 		case 'bb_new_mention':
 			$notification_type = bp_notifications_get_meta( $notification->id, 'type', true );
 			if ( ! empty( $notification->component_name ) && 'core' === $notification->component_name ) {
-				$icon_class = 'bb-icon-f bb-icon-comment';
+				$icon_class = 'bb-icon-f bb-icon-comment-square-dots';
 			} elseif ( 'activity_comment' === $notification_type ) {
 				$icon_class = 'bb-icon-f bb-icon-comment-activity';
 			} elseif ( 'activity_post' === $notification_type ) {
