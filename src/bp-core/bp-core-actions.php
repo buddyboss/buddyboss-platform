@@ -747,6 +747,38 @@ function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) 
 }
 
 /**
+ * Mark blog comment notifications as read.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_read_blog_comment_notification() {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	$comment_id = 0;
+	// For replies to a parent update.
+	if ( ! empty( $_GET['cid'] ) ) {
+		$comment_id = (int) $_GET['cid'];
+	}
+
+	// Mark individual notification as read.
+	if ( ! empty( $comment_id ) ) {
+		BP_Notifications_Notification::update(
+			array(
+				'is_new' => false,
+			),
+			array(
+				'user_id' => bp_loggedin_user_id(),
+				'id'      => $comment_id,
+			)
+		);
+	}
+}
+
+add_action( 'template_redirect', 'bb_core_read_blog_comment_notification', 99 );
+
+/**
  * Fire an email when someone mentioned users into the blog post comment and post published.
  *
  * @since BuddyBoss 1.9.3
@@ -946,30 +978,3 @@ function bb_core_registered_notification_components( $component_names ) {
 }
 
 add_action( 'bp_notifications_get_registered_components', 'bb_core_registered_notification_components', 20, 1 );
-
-function bb_core_read_blog_comment_notification() {
-	if ( ! is_user_logged_in() ) {
-		return;
-	}
-
-	$comment_id = 0;
-	// For replies to a parent update.
-	if ( ! empty( $_GET['cid'] ) ) {
-		$comment_id = (int) $_GET['cid'];
-	}
-
-	// Mark individual activity reply notification as read.
-	if ( ! empty( $comment_id ) ) {
-		BP_Notifications_Notification::update(
-			array(
-				'is_new' => false,
-			),
-			array(
-				'user_id' => bp_loggedin_user_id(),
-				'id'      => $comment_id,
-			)
-		);
-	}
-}
-
-add_action( 'template_redirect', 'bb_core_read_blog_comment_notification', 99 );

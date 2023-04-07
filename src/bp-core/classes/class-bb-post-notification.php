@@ -138,7 +138,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 		) {
 			$comment           = get_comment( $notification->item_id );
 			$excerpt           = wp_strip_all_tags( $comment->comment_content );
-			$notification_link = get_comment_link( $comment );
+			$notification_link = add_query_arg( 'cid', (int) $notification_id, get_comment_link( $comment ) );
 			$comment_author    = get_user_by( 'email', $comment->comment_author_email );
 			$commenter_name    = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
 
