@@ -3320,6 +3320,17 @@ class BP_Email_Tokens {
 		return $comment_reply_url;
 	}
 
+	/**
+	 * Generate the output for token commenter.url
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param \BP_Email $bp_email
+	 * @param array     $formatted_tokens
+	 * @param array     $tokens
+	 *
+	 * @return string html for the output.
+	 */
 	public function token__commenter_url( $bp_email, $formatted_tokens, $tokens ) {
 		$commenter_id  = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
 		$commenter_url = ! empty( $commenter_id ) ? esc_url( bp_core_get_user_domain( $commenter_id ) ) : '#';
