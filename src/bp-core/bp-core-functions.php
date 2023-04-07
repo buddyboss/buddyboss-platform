@@ -6872,7 +6872,7 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 			function ( $n ) use ( $component_name, $component_action ) {
 				if (
 					'bb_new_mention' === $component_action &&
-					in_array( $component_name, array( 'activity', 'forums', 'members' ), true )
+					in_array( $component_name, array( 'activity', 'forums', 'members', 'core' ), true )
 				) {
 					return $n['notification_type'];
 				} elseif (

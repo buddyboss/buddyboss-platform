@@ -261,6 +261,7 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 	}
 
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 
 	bp_notifications_add_notification(
 		array(
@@ -273,7 +274,7 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 			'is_new'            => 1,
 		)
 	);
-
+	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 
 }
@@ -310,8 +311,8 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_activity_comment';
 	}
-
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 
 	bp_notifications_add_notification(
 		array(
@@ -324,7 +325,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 			'is_new'            => 1,
 		)
 	);
-
+	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 }
 add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 3 );
@@ -488,30 +489,6 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 					)
 				);
 			}
-		}
-	}
-
-	// Send a notification to the parent comment author for follow-up comments.
-	if ( ! empty( $post_type_comment->comment_parent ) ) {
-		$parent_comment = get_comment( $post_type_comment->comment_parent );
-
-		if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $activity_args['user_id'] ) {
-
-			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $post_type_comment->user_id ) ) {
-				return;
-			}
-
-			bp_notifications_add_notification(
-				array(
-					'user_id'           => $parent_comment->user_id,
-					'item_id'           => $activity_id,
-					'secondary_item_id' => $post_type_comment->user_id,
-					'component_name'    => buddypress()->activity->id,
-					'component_action'  => 'comment_reply',
-					'date_notified'     => $post_type_comment->comment_date_gmt,
-					'is_new'            => 1,
-				)
-			);
 		}
 	}
 }
