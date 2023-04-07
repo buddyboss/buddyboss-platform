@@ -2104,9 +2104,9 @@ function bb_notification_excluded_component_actions() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int        $comment_id   The comment ID.
- * @param int|string $commenter_id Commener ID.
- * @param array      $commentdata  Comment data.
+ * @param int   $comment_id   The comment ID.
+ * @param int   $commenter_id Commenter ID.
+ * @param array $commentdata  Comment data.
  */
 function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
 
