@@ -1045,8 +1045,15 @@ window.bp = window.bp || {};
 				var ce = form.find( '.ac-input[contenteditable]' );
 				if ( ce.length > 0 ) {
 					var div_editor = ce.get( 0 );
+					var commentID = $(div_editor).attr( 'id' ) + ( $(div_editor).closest( '.bb-media-model-inner' ).length ? '-theater' : '' );
 
-					if ( $.inArray( $(div_editor).attr( 'id' ), self.InitiatedCommentForms ) == -1 ) {//Check if Comment form has already paste event initiated
+					// Comment block is moved from theater and needs to be initiated
+					if( $.inArray( commentID, self.InitiatedCommentForms ) !== -1 && !$(div_editor).closest( 'form' ).hasClass( 'events-initiated')  ) {
+						var index = self.InitiatedCommentForms.indexOf( commentID );
+						self.InitiatedCommentForms.splice(index, 1);
+					}
+
+					if ( $.inArray( commentID, self.InitiatedCommentForms ) == -1 &&  !$(div_editor).closest( 'form' ).hasClass( 'events-initiated') ) {//Check if Comment form has already paste event initiated
 						div_editor.addEventListener( 'paste', function ( e ) {
 							e.preventDefault();
 							var text = e.clipboardData.getData( 'text/plain' );
@@ -1067,7 +1074,8 @@ window.bp = window.bp || {};
 								jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
 							}
 						} );
-						self.InitiatedCommentForms.push( $(div_editor).attr( 'id' ) );//Add this Comment form in initiated comment form list
+						$(div_editor).closest( 'form' ).addClass( 'events-initiated');
+						self.InitiatedCommentForms.push( commentID );//Add this Comment form in initiated comment form list
 					}
 				}
 

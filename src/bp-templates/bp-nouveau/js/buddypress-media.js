@@ -6563,6 +6563,7 @@ window.bp = window.bp || {};
 					if ( activity_comments.length ) {
 						activity_comments.html( html );
 						activity_comments.attr( 'class', classes );
+						activity_comments.children( 'form' ).removeClass( 'events-initiated').hide();
 					}
 				}
 				activity_state = activity.find( '.activity-state' );
@@ -6600,6 +6601,7 @@ window.bp = window.bp || {};
 					if ( activity_comments.length ) {
 						activity_comments.html( html );
 						activity_comments.attr( 'class', classes );
+						activity_comments.children( 'form' ).removeClass( 'events-initiated').hide();
 						//Reset document text preview
 						activity_comments.find( '.document-text.loaded' ).removeClass( 'loaded' ).find( '.CodeMirror' ).remove();
 						jQuery( window ).scroll();
