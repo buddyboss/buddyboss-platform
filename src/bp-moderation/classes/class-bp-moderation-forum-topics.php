@@ -143,6 +143,10 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
+		if ( function_exists( 'bb_did_filter' ) && ! bb_did_filter( 'topic_widget_settings' ) ) {
+			$where['moderation_widget_topic'] = '( wp_posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		}
+
 		return $where;
 	}
 
