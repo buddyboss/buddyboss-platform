@@ -4148,7 +4148,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 					$title_text             = get_the_title( $parent_activity->secondary_item_id );
-					$message_link           = get_permalink( $activity->secondary_item_id );
+					$message_link           = get_permalink( $parent_activity->secondary_item_id );
 				} else {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 				}
