@@ -678,7 +678,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => false,
 				'component_name'    => bp_notifications_get_registered_components(),
 				'component_action'  => false,
-				'excluded_action'   => false,
+				'excluded_action'   => bb_notification_excluded_component_actions(),
 				'is_new'            => true,
 				'search_terms'      => '',
 				'order_by'          => false,
@@ -735,6 +735,10 @@ class BP_Notifications_Notification {
 	 */
 	public static function get( $args = array() ) {
 		global $wpdb;
+
+		if ( isset( $args['excluded_action'] ) && empty( $args['excluded_action'] ) ) {
+			unset( $args['excluded_action'] );
+		}
 
 		// Parse the arguments.
 		$r = self::parse_args( $args );

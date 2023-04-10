@@ -23,6 +23,9 @@ add_filter( 'register_url', 'bp_get_signup_page' );
 // Change the last active display format if users active within 5 minutes then shows 'Active now'.
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
 
+// Repair member profile links.
+add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
+
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
  *
@@ -789,3 +792,102 @@ function bb_delete_user_subscriptions( $user_id ) {
 }
 add_action( 'wpmu_delete_user', 'bb_delete_user_subscriptions' );
 add_action( 'delete_user', 'bb_delete_user_subscriptions' );
+
+
+/**
+ * Add repair member profile links.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @return array Repair list items.
+ */
+function bb_repair_member_profile_links( $repair_list ) {
+	$repair_list[] = array(
+		'bb-member-repair-profile-links',
+		__( 'Repair member profile links', 'buddyboss' ),
+		'bb_repair_member_profile_links_callback',
+	);
+
+	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will repair member profile links.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param bool $is_background The current process is background or not.
+ * @param int  $paged         The page number.
+ *
+ * @return array|void
+ */
+function bb_repair_member_profile_links_callback( $is_background = false, $paged = 1 ) {
+	if ( ! bp_is_active( 'members' ) ) {
+		return;
+	}
+
+	$per_page = 50;
+
+	if ( $is_background ) {
+		$offset = ( ( $paged - 1 ) * $per_page );
+	} else {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	}
+
+	$args = array(
+		'fields' => 'ID',
+		'number' => $per_page,
+		'offset' => $offset,
+	);
+
+	$user_ids = get_users( $args );
+
+	global $bp_background_updater;
+
+	if ( ! empty( $user_ids ) ) {
+		if ( $is_background ) {
+
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_set_bluk_user_profile_slug',
+						'args'     => array( $user_ids ),
+					),
+				)
+			);
+			$bp_background_updater->save()->dispatch();
+			$paged++;
+			bb_repair_member_profile_links_callback( $is_background, $paged++ );
+		} else {
+			bb_set_bluk_user_profile_slug( $user_ids );
+
+			$total           = $offset + count( $user_ids );
+			$records_updated = sprintf(
+				/* translators: total user */
+				_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', $total, 'buddyboss' ),
+				$total
+			);
+
+			return array(
+				'status'  => 'running',
+				'offset'  => $total,
+				'records' => $records_updated,
+			);
+		}
+	} else {
+		if ( ! $is_background ) {
+
+			/* translators: Status of current action. */
+			$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss' );
+
+			// All done!
+			return array(
+				'status'  => 1,
+				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			);
+		}
+	}
+}

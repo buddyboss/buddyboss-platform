@@ -1130,10 +1130,11 @@ class BP_Video {
 
 						// Deleting an activity.
 					} else {
-						$activity_delete = false;
+						$activity_delete  = false;
+						$activity_content = ! empty( $activity->content ) ? wp_strip_all_tags( $activity->content, true ) : '';
 						if (
 							(
-								'activity' !== $from && empty( wp_strip_all_tags( $activity->content, true ) )
+								'activity' !== $from && empty( $activity_content )
 							) ||
 							(
 								'activity' === $from && ! empty( $activity->secondary_item_id )

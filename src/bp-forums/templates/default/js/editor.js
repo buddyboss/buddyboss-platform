@@ -177,6 +177,19 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_reply_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( $reply_content ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+							}
 						}
 					);
 
@@ -281,6 +294,19 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_topic_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( $reply_content ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+							}
 						}
 					);
 
