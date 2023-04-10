@@ -2127,16 +2127,41 @@ window.bp = window.bp || {};
 				}
 			},
 
-			handlePaste: function ( event ) {
-				// Get user's pasted data.
-				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-					data = clipboardData.getData( 'text/plain' );
-
-				// Insert the filtered content.
-				document.execCommand( 'insertHTML', false, data );
-
-				// Prevent the standard paste behavior.
+			handlePaste: function(event) {
+				// Prevent the default paste behavior
 				event.preventDefault();
+			
+				// Get the pasted text from clipboard
+				var pastedText = '';
+				if (event.clipboardData) {
+					pastedText = event.clipboardData.getData('text/plain');
+				} else if (window.clipboardData) {
+					pastedText = window.clipboardData.getData('Text');
+				}
+			
+				// Get the current selection range
+				var range = window.getSelection().getRangeAt(0);
+			
+				// Create a temporary div to hold the pasted content
+				var div = document.createElement('div');
+				div.innerHTML = pastedText;
+			
+				// Extract the nodes from the div and insert them into the selection range
+				var nodes = Array.from(div.childNodes);
+				for (var i = 0; i < nodes.length; i++) {
+					var node = nodes[i];
+					range.insertNode(node);
+					range.setStartAfter(node);
+				}
+			
+				// Set the selection range to the end of the pasted content
+				range.setStartAfter(nodes[nodes.length - 1]);
+				range.collapse(true);
+			
+				// Update the selection with the new range
+				var sel = window.getSelection();
+				sel.removeAllRanges();
+				sel.addRange(range);
 			},
 
 			initialize: function() {
