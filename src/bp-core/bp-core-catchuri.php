@@ -326,6 +326,21 @@ function bp_core_set_uri_globals() {
 				} else {
 					$bp->displayed_user->id = (int) bp_core_get_userid_from_nicename( $after_member_slug );
 				}
+
+				// Compatibility for the profile links format.
+				if ( empty( $bp->displayed_user->id ) ) {
+					if ( 'unique_identifier' === bb_get_profile_slug_format() ) {
+						$bp->displayed_user->id = (int) bb_get_user_by_profile_slug( $after_member_slug );
+						if ( empty( $bp->displayed_user->id ) ) {
+							$bp->displayed_user->id = (int) bp_core_get_userid_from_nicename( $after_member_slug );
+						}
+					} else {
+						$bp->displayed_user->id = (int) bp_core_get_userid_from_nicename( $after_member_slug );
+						if ( empty( $bp->displayed_user->id ) ) {
+							$bp->displayed_user->id = (int) bb_get_user_by_profile_slug( $after_member_slug );
+						}
+					}
+				}
 			}
 
 			// Is this a profile type directory?

@@ -294,5 +294,38 @@ jQuery( document ).ready(
 				}
 			} );
 		}
+
+		jQuery( document ).on( 'keyup', '#bbp_topic_title', function ( e ) {
+			if ( jQuery( e.currentTarget ).val().trim() !== '' ) {
+				jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-title' );
+			} else {
+				jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-title' );
+			}
+		} );
+
+		if ( jQuery( 'textarea#bbp_topic_content' ).length !== 0 ) {
+			// Enable submit button if content is available.
+			jQuery( '#bbp_topic_content' ).on( 'keyup', function() {
+				var $reply_content = jQuery( '#bbp_topic_content' ).val().trim();
+				if ( $reply_content !== '' ) {
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+				} else {
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+				}
+			} );
+		}
+
+		if ( jQuery( 'textarea#bbp_reply_content' ).length !== 0 ) {
+			// Enable submit button if content is available.
+			jQuery( '#bbp_reply_content' ).on( 'keyup', function() {
+				var $reply_content = jQuery( '#bbp_reply_content' ).val().trim();
+				if ( $reply_content !== '' ) {
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+				} else {
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+				}
+			} );
+		}
+
 	}
 );
