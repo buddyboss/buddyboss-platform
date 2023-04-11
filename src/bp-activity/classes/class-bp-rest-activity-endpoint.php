@@ -1269,7 +1269,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				: false
 			),
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
-			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ) ),
+			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
 			'activity_data'     => $this->bp_rest_activitiy_edit_data( $activity ),
 			'feature_media'     => '',

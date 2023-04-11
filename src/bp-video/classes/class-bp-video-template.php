@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.7.0
  */
+#[\AllowDynamicProperties]
 class BP_Video_Template {
 
 	/**

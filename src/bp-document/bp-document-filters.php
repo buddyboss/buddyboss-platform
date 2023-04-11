@@ -364,7 +364,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	$documents           = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$documents           = ! empty( $documents ) ? $documents : array();
-	$actions             = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$actions             = bb_filter_input_string( INPUT_POST, 'action' );
 	$moderated_documents = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 
 	if ( ! empty( $documents ) ) {
@@ -574,6 +574,11 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 
 		// save document.
 		$documents = json_decode( stripslashes( $_POST['bbp_document'] ), true );
+
+		if ( ! empty( $documents ) ) {
+			$document_order = array_column( $documents, 'menu_order' );
+			array_multisort( $document_order, SORT_ASC, $documents );
+		}
 
 		// fetch currently uploaded document ids.
 		$existing_document                = array();

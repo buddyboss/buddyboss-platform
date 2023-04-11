@@ -609,7 +609,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				break;
 		}
 
-		return $count;
+		return bp_core_number_format( $count );
 	}
 
 	/**
@@ -643,7 +643,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return $count;
+		return bp_core_number_format( $count );
 	}
 
 	/**
