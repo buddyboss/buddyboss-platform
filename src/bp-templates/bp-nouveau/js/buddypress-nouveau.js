@@ -807,8 +807,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
 			$( document ).on( 'click', '#message-threads .report-content', this.threadListReportPopup );
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
-			$( document ).on( 'keyup', '.bp-dir-search-form input[type="search"]', this.directorySearchInput );
-			$( document ).on( 'click', '.bp-dir-search-form #bp-dir-search-form_reset', this.resetDirectorySearch );
+			$( document ).on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', this.directorySearchInput );
+			$( document ).on( 'click', '.search-form-has-reset #search-form_reset', this.resetDirectorySearch );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -3388,7 +3388,7 @@ window.bp = window.bp || {};
 		 *  @return {function}
 		 */
 		directorySearchInput: function() {
-			var resetButton = $( this ).closest( '.bp-dir-search-form' ).find( '#bp-dir-search-form_reset' );
+			var resetButton = $( this ).closest( '.search-form-has-reset' ).find( '#search-form_reset' );
 			if( $( this ).val().length > 0 ) {
 				resetButton.show();
 			} else {
@@ -3404,8 +3404,12 @@ window.bp = window.bp || {};
 		 */
 		resetDirectorySearch: function( e ) {
 			e.preventDefault();
-			$( this ).closest( 'form' ).find( 'input[type="search"]').val('');
-			$( this ).closest( 'form' ).find( '.nouveau-search-submit' ).trigger( 'click' );
+			if($( this ).closest( 'form' ).hasClass( 'bp-dir-search-form' ) ) {
+				$( this ).closest( 'form' ).find( 'input[type="search"]').val('');
+				$( this ).closest( 'form' ).find( '.search-form_submit' ).trigger( 'click' );
+			} else {
+				$( this ).closest( 'form' ).find( '#bbp_search' ).val('');
+			}
 			$( this ).hide();
 		},
 
