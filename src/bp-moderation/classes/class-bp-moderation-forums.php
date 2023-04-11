@@ -131,6 +131,15 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
+		$sql = $this->exclude_where_query();
+		if ( ! empty( $sql ) ) {
+			$where['moderation_where'] = $sql;
+		}
+
+		if ( function_exists( 'bb_did_filter' ) && ! bb_did_filter( 'forum_widget_settings' ) ) {
+			$where['moderation_widget_forums'] = '( wp_posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		}
+
 		return $where;
 	}
 
