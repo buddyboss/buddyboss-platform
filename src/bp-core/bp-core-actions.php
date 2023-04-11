@@ -787,6 +787,22 @@ function bb_core_read_blog_comment_notification() {
 						'component_name' => $notifications_data->component_name,
 					)
 				);
+
+				if ( bp_is_active( 'activity' ) ) {
+					$activity_id = get_comment_meta( $notifications_data->item_id, 'bp_activity_comment_id', true );
+					if ( ! empty( $activity_id ) ) {
+						BP_Notifications_Notification::update(
+							array(
+								'is_new' => false,
+							),
+							array(
+								'user_id'        => bp_loggedin_user_id(),
+								'item_id'        => $activity_id,
+								'component_name' => 'activity',
+							)
+						);
+					}
+				}
 			}
 		}
 	}

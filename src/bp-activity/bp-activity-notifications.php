@@ -550,6 +550,22 @@ function bp_activity_remove_screen_notifications_single_post() {
 						'component_name' => $notifications_data->component_name,
 					)
 				);
+
+				if ( 'activity' === $notifications_data->component_name ) {
+					$post_id = bp_activity_get_meta( $notifications_data->item_id, 'bp_blogs_post_comment_id', true );
+					if ( ! empty( $post_id ) ) {
+						BP_Notifications_Notification::update(
+							array(
+								'is_new' => false,
+							),
+							array(
+								'user_id'        => bp_loggedin_user_id(),
+								'item_id'        => $post_id,
+								'component_name' => 'core',
+							)
+						);
+					}
+				}
 			}
 		}
 	}
