@@ -141,10 +141,10 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public function update_join_sql( $join_sql, $wp_query = null ) {
 		global $wpdb;
 
-		$action_name = current_filter();
-
-		if ( 'bp_forums_search_join_sql' === $action_name ) {
-			$join_sql .= $this->exclude_joint_query( 'p.ID' );
+		$forum_slug = bbp_get_forum_post_type();
+		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
+		if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) && in_array( $forum_slug, $post_types, true ) ) {
+			$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
 
 			/**
 			 * Filters the hidden forum Where SQL statement.
@@ -155,23 +155,6 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			 * @param array $class    current class object.
 			 */
 			$join_sql = apply_filters( 'bp_suspend_forum_get_join', $join_sql, $this );
-
-		} else {
-			$forum_slug = bbp_get_forum_post_type();
-			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-			if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) && in_array( $forum_slug, $post_types, true ) ) {
-				$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
-
-				/**
-				 * Filters the hidden forum Where SQL statement.
-				 *
-				 * @since BuddyBoss 1.5.6
-				 *
-				 * @param array $join_sql Join sql query
-				 * @param array $class    current class object.
-				 */
-				$join_sql = apply_filters( 'bp_suspend_forum_get_join', $join_sql, $this );
-			}
 		}
 
 		return $join_sql;
@@ -198,9 +181,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			}
 		}
 
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
-
+		$where = array();
 		/**
 		 * Filters the hidden forum Where SQL statement.
 		 *
@@ -212,11 +193,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_forum_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			if ( 'bp_forums_search_where_sql' === $action_name ) {
-				$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-			} else {
-				$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
-			}
+			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
 		}
 
 		return $where_conditions;
@@ -238,12 +215,6 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		if ( ! empty( $username_visible ) ) {
 			return $post;
-		}
-
-		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
-
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
-			return null;
 		}
 
 		return $post;
