@@ -207,6 +207,9 @@ jQuery( document ).ready(
 			// Add Click event to show / hide text formatting Toolbar for reply form.
 			jQuery( document ).on( 'click', '.bbp-reply-form #whats-new-toolbar .show-toolbar', function ( e ) {
 				e.preventDefault();
+				if( jQuery( this ).closest( '.bbpress-forums-activity.bb-quick-reply-form-wrap' ).length > 0) {
+					return;
+				}
 				var key = jQuery( e.currentTarget ).closest( '.bbp-reply-form' ).find( '.bbp_editor_reply_content' ).data( 'key' );
 				var medium_editor = jQuery( e.currentTarget ).closest( '.bbp-form' ).find( '.medium-editor-toolbar' );
 				jQuery( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
