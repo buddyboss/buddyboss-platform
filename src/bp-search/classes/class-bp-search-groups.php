@@ -68,7 +68,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			global $wpdb, $bp;
 			$query_placeholder = array();
 
-			$search_term = htmlspecialchars( $search_term );
+			$search_term = htmlspecialchars( $search_term, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 			$sql['select'] = 'SELECT';
 
@@ -144,7 +144,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 					$where_conditions['search_query'] .= " AND ( g.status != 'hidden' {$hidden_groups_condition} ) ";
 				}
 			} else {
-				$where_conditions['search_query'] .= "AND g.status != 'hidden' ";
+				$where_conditions['search_query'] .= "AND g.status != 'hidden' AND g.status != 'private' ";
 			}
 
 			/**

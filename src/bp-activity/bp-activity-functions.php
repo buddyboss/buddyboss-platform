@@ -1237,7 +1237,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 				if ( $user_id != $current_user_id ) {
 					$user_display_name = bp_core_get_user_displayname( $user_id );
 					if ( strpos( $like_text, $user_display_name ) === false ) {
-						$carry .= $user_display_name . '&#10;';
+						$carry .= $user_display_name . ',&#10;';
 					}
 				}
 
@@ -1246,7 +1246,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 		);
 	}
 
-	return $favorited_users;
+	return ! empty( $favorited_users ) ? trim( $favorited_users, ',&#10;' ) : '';
 }
 
 /**
@@ -3923,7 +3923,7 @@ function bp_activity_create_summary( $content, $activity ) {
 
 	// Generate a text excerpt for this activity item (and remove any oEmbeds URLs).
 	$summary = bp_create_excerpt(
-		html_entity_decode( $content ),
+		html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 		225,
 		array(
 			'html'              => false,

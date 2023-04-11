@@ -692,6 +692,10 @@ function bp_get_group_name( $group = false ) {
 		$group =& $groups_template->group;
 	}
 
+	if ( empty( $group->id ) || empty( $group->name ) ) {
+		return '';
+	}
+
 	/**
 	 * Filters the name of the current group in the loop.
 	 *
