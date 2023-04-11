@@ -808,6 +808,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#message-threads .report-content', this.threadListReportPopup );
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 			$( document ).on( 'keyup', '.bp-dir-search-form input[type="search"]', this.directorySearchInput );
+			$( document ).on( 'click', '.bp-dir-search-form #bp-dir-search-form_reset', this.resetDirectorySearch );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -3382,7 +3383,7 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 *  Show Action Popup
+		 *  Show/Hide Search reset button
 		 *
 		 *  @return {function}
 		 */
@@ -3393,6 +3394,19 @@ window.bp = window.bp || {};
 			} else {
 				resetButton.hide();
 			}
+		},
+
+		/**
+		 *  Reset search results
+		 *
+		 *  @param  {object} event The event object.
+		 *  @return {function}
+		 */
+		resetDirectorySearch: function( e ) {
+			e.preventDefault();
+			$( this ).closest( 'form' ).find( 'input[type="search"]').val('');
+			$( this ).closest( 'form' ).find( '.nouveau-search-submit' ).trigger( 'click' );
+			$( this ).hide();
 		},
 
 		/**
