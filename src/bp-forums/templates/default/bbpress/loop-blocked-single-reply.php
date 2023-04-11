@@ -7,12 +7,16 @@
  *
  * @package BuddyBoss\Theme
  */
-$reply_id        = bbp_get_reply_id();
-$reply_author_id = bbp_get_reply_author_id( $reply_id );
-$is_user_blocked = $is_user_suspended = false;
+
+$reply_id           = bbp_get_reply_id();
+$reply_author_id    = bbp_get_reply_author_id( $reply_id );
+$is_user_blocked    = false;
+$is_user_suspended  = false;
+$is_user_blocked_by = false;
 if ( bp_is_active( 'moderation' ) ) {
-	$is_user_suspended = bp_moderation_is_user_suspended( $reply_author_id );
-	$is_user_blocked   = bp_moderation_is_user_blocked( $reply_author_id );
+	$is_user_suspended  = bp_moderation_is_user_suspended( $reply_author_id );
+	$is_user_blocked    = bp_moderation_is_user_blocked( $reply_author_id );
+	$is_user_blocked_by = bb_moderation_is_user_blocked_by( $reply_author_id );
 }
 ?>
 
@@ -35,13 +39,19 @@ if ( bp_is_active( 'moderation' ) ) {
 
 			<?php do_action( 'bbp_theme_before_reply_content' ); ?>
 
-			<?php if ( $is_user_suspended ) {
-				esc_html_e( 'This content has been hidden as the member is suspended.', 'buddyboss' );
-			} else if ( $is_user_blocked ) {
-				esc_html_e( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
+			<?php
+			$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
+			if ( $is_user_suspended ) {
+				$reply_content = bb_moderation_is_suspended_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
+			} elseif ( $is_user_blocked_by ) {
+				$reply_content = bb_moderation_is_blocked_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
+			} elseif ( $is_user_blocked ) {
+				$reply_content = bb_moderation_has_blocked_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
 			} else {
-				esc_html_e( 'This content has been hidden from site admin.', 'buddyboss' );
-			} ?>
+				$reply_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			}
+			echo $reply_content; // phpcs:ignore
+			?>
 
 			<?php do_action( 'bbp_theme_after_reply_content' ); ?>
 
