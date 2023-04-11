@@ -558,18 +558,29 @@ function bp_activity_remove_screen_notifications_single_post() {
 				);
 
 				if ( 'activity' === $notifications_data->component_name ) {
-					$post_id = bp_activity_get_meta( $notifications_data->item_id, 'bp_blogs_post_comment_id', true );
-					if ( ! empty( $post_id ) ) {
-						BP_Notifications_Notification::update(
-							array(
-								'is_new' => false,
-							),
-							array(
-								'user_id'        => bp_loggedin_user_id(),
-								'item_id'        => $post_id,
-								'component_name' => 'core',
-							)
-						);
+					$activity = new BP_Activity_Activity( $notifications_data->item_id );
+					$post_id  = 0;
+					if ( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
+						// Get activity object.
+						$comment_activity = new BP_Activity_Activity( $activity->item_id );
+						if ( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
+							$comment_post_type = $comment_activity->secondary_item_id;
+							$get_post_type     = get_post_type( $comment_post_type );
+							$post_id           = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
+						}
+
+						if ( ! empty( $post_id ) ) {
+							BP_Notifications_Notification::update(
+								array(
+									'is_new' => false,
+								),
+								array(
+									'user_id'        => bp_loggedin_user_id(),
+									'item_id'        => $post_id,
+									'component_name' => 'core',
+								)
+							);
+						}
 					}
 				}
 			}
