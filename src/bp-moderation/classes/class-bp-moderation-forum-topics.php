@@ -138,11 +138,6 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
-		$sql = $this->exclude_where_query();
-		if ( ! empty( $sql ) ) {
-			$where['moderation_where'] = $sql;
-		}
-
 		return $where;
 	}
 
