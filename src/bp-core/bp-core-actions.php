@@ -764,7 +764,7 @@ function bb_core_read_blog_comment_notification() {
 
 	// Mark individual notification as read.
 	if ( ! empty( $comment_id ) ) {
-		BP_Notifications_Notification::update(
+		$updated = BP_Notifications_Notification::update(
 			array(
 				'is_new' => false,
 			),
@@ -773,6 +773,22 @@ function bb_core_read_blog_comment_notification() {
 				'id'      => $comment_id,
 			)
 		);
+
+		if ( 1 === $updated ) {
+			$notifications_data = bp_notifications_get_notification( $comment_id );
+			if ( isset( $notifications_data->item_id ) ) {
+				BP_Notifications_Notification::update(
+					array(
+						'is_new' => false,
+					),
+					array(
+						'user_id'        => bp_loggedin_user_id(),
+						'item_id'        => $notifications_data->item_id,
+						'component_name' => $notifications_data->component_name,
+					)
+				);
+			}
+		}
 	}
 }
 
