@@ -461,6 +461,12 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $post_type_comment->post->post_author, $post_type_comment->user_id ) ) {
 				return;
 			}
+
+			$component_action = 'update_reply';
+			if ( ! bb_enabled_legacy_email_preference() ) {
+				$component_action = 'bb_activity_comment';
+			}
+
 			if ( ! empty( $post_type_comment->comment_parent ) ) {
 				$parent_comment = get_comment( $post_type_comment->comment_parent );
 				if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $post_type_comment->post->post_author ) {
@@ -470,7 +476,7 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 							'item_id'           => $activity_id,
 							'secondary_item_id' => $post_type_comment->user_id,
 							'component_name'    => buddypress()->activity->id,
-							'component_action'  => 'update_reply',
+							'component_action'  => $component_action,
 							'date_notified'     => $post_type_comment->comment_date_gmt,
 							'is_new'            => 1,
 						)
@@ -483,7 +489,7 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 						'item_id'           => $activity_id,
 						'secondary_item_id' => $post_type_comment->user_id,
 						'component_name'    => buddypress()->activity->id,
-						'component_action'  => 'update_reply',
+						'component_action'  => $component_action,
 						'date_notified'     => $post_type_comment->comment_date_gmt,
 						'is_new'            => 1,
 					)
