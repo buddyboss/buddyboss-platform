@@ -807,6 +807,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
 			$( document ).on( 'click', '#message-threads .report-content', this.threadListReportPopup );
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
+			$( document ).on( 'keyup', '.bp-dir-search-form input[type="search"]', this.directorySearchInput );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -3378,6 +3379,20 @@ window.bp = window.bp || {};
 		closeActionPopup: function( event ) {
 			event.preventDefault();
 			$( this ).closest( '.bb-action-popup' ).hide();
+		},
+
+		/**
+		 *  Show Action Popup
+		 *
+		 *  @return {function}
+		 */
+		directorySearchInput: function() {
+			var resetButton = $( this ).closest( '.bp-dir-search-form' ).find( '#bp-dir-search-form_reset' );
+			if( $( this ).val().length > 0 ) {
+				resetButton.show();
+			} else {
+				resetButton.hide();
+			}
 		},
 
 		/**
