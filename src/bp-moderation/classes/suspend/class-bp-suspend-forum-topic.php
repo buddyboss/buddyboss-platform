@@ -230,9 +230,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 			}
 		}
 
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
-
+		$where = array();
 		/**
 		 * Filters the hidden forum topic Where SQL statement.
 		 *
@@ -244,11 +242,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_forum_topic_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			if ( 'bp_forum_topic_search_where_sql' === $action_name ) {
-				$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-			} else {
-				$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
-			}
+			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
 		}
 
 		return $where_conditions;
