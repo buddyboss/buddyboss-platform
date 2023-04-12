@@ -170,10 +170,10 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	public function update_join_sql( $join_sql, $wp_query = null ) {
 		global $wpdb;
 
-		$action_name = current_filter();
-
-		if ( 'bp_forum_reply_search_join_sql' === $action_name ) {
-			$join_sql .= $this->exclude_joint_query( 'p.ID' );
+		$reply_slug = bbp_get_reply_post_type();
+		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
+		if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) && in_array( $reply_slug, $post_types, true ) ) {
+			$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
 
 			/**
 			 * Filters the hidden Forum Reply Where SQL statement.
@@ -184,23 +184,6 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			 * @param array $class    current class object.
 			 */
 			$join_sql = apply_filters( 'bp_suspend_forum_reply_get_join', $join_sql, $this );
-
-		} else {
-			$reply_slug = bbp_get_reply_post_type();
-			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-			if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) && in_array( $reply_slug, $post_types, true ) ) {
-				$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
-
-				/**
-				 * Filters the hidden Forum Reply Where SQL statement.
-				 *
-				 * @since BuddyBoss 1.5.6
-				 *
-				 * @param array $join_sql Join sql query
-				 * @param array $class    current class object.
-				 */
-				$join_sql = apply_filters( 'bp_suspend_forum_reply_get_join', $join_sql, $this );
-			}
 		}
 
 		return $join_sql;
@@ -229,7 +212,10 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		}
 
 		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		// Remove suspended members reply from widget.
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
+			$where['suspend_where'] = $this->exclude_where_query();
+		}
 
 		/**
 		 * Filters the hidden forum reply Where SQL statement.
@@ -242,11 +228,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_forum_reply_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			if ( 'bp_forum_reply_search_where_sql' === $action_name ) {
-				$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-			} else {
-				$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
-			}
+			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
 		}
 
 		return $where_conditions;
