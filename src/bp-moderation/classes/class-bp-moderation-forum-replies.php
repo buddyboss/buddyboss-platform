@@ -135,9 +135,12 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
-		$sql = $this->exclude_where_query();
-		if ( ! empty( $sql ) ) {
-			$where['moderation_where'] = $sql;
+		// Remove has blocked members reply from widget.
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
+			$sql = $this->exclude_where_query();
+			if ( ! empty( $sql ) ) {
+				$where['moderation_where'] = $sql;
+			}
 		}
 
 		return $where;
