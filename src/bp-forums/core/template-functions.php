@@ -146,7 +146,7 @@ function bbp_enqueue_style( $handle = '', $file = '', $dependencies = array(), $
 
 	// Make sure there is always a version
 	if ( empty( $version ) ) {
-		$version = bbp_get_version();
+		$version = bp_get_version();
 	}
 
 	// Loop through template stack
@@ -214,7 +214,7 @@ function bbp_enqueue_script( $handle = '', $file = '', $dependencies = array(), 
 
 	// Make sure there is always a version
 	if ( empty( $version ) ) {
-		$version = bbp_get_version();
+		$version = bp_get_version();
 	}
 
 	// Loop through template stack
