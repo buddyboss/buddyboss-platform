@@ -186,6 +186,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 			 * @param array $class    current class object.
 			 */
 			$join_sql = apply_filters( 'bp_suspend_forum_topic_get_join', $join_sql, $this );
+
 		} else {
 			$topic_slug = bbp_get_topic_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
