@@ -41,16 +41,14 @@ if ( bp_is_active( 'moderation' ) ) {
 
 			<?php
 			$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
-			if ( bp_is_active( 'moderation' ) ) {
-				if ( $is_user_suspended ) {
-					$reply_content = bb_moderation_is_suspended_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
-				} elseif ( $is_user_blocked_by ) {
-					$reply_content = bb_moderation_is_blocked_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
-				} elseif ( $is_user_blocked ) {
-					$reply_content = bb_moderation_has_blocked_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
-				} else {
-					$reply_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
-				}
+			if ( $is_user_suspended ) {
+				$reply_content = bb_moderation_is_suspended_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
+			} elseif ( $is_user_blocked_by ) {
+				$reply_content = bb_moderation_is_blocked_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
+			} elseif ( $is_user_blocked ) {
+				$reply_content = bb_moderation_has_blocked_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
+			} else {
+				$reply_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
 			echo $reply_content; // phpcs:ignore
 			?>
