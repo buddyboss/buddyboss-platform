@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.3.1.2 =
+* Forums - Handled forum discussion and reply form disabled post button cache issue
+
 = 2.3.1.1 =
 * Profiles - Small icon fix for 'Profile Links' option in the dashboard
 
