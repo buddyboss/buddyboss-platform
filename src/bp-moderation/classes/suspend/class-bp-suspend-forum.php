@@ -182,6 +182,10 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		$where = array();
+		// Remove suspended members forum from widget.
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_forum_widget_settings_parse_args' ) ) {
+			$where['suspend_where'] = $this->exclude_where_query();
+		}
 		/**
 		 * Filters the hidden forum Where SQL statement.
 		 *
