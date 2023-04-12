@@ -177,6 +177,20 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_reply_content.val( jQuery(dummy_element).html() );
+
+							if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+								if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
+									clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
+								}
+	
+								window.forums_medium_reply_editor[key].linkTimeout = setTimeout(
+									function () {
+										window.forums_medium_reply_editor[key].linkTimeout = null;
+										linkPreviews.scrapURL( bbp_reply_content.val() );
+									},
+									500
+								);
+							}
 						}
 					);
 
@@ -546,3 +560,197 @@ jQuery( document ).ready(
 		}
 	}
 );
+
+const linkPreviews = {
+	loadedURLs: [],
+	loadURLAjax: null,
+	options: new Map(),
+	scrapURL: function ( urlText ) {
+		var urlString = '';
+
+		if ( urlText === null ) {
+			return;
+		}
+
+		//Remove mentioned members Link
+		var tempNode = $( '<div></div>' ).html( urlText );
+		tempNode.find( 'a.bp-suggestions-mention' ).remove();
+		urlText = tempNode.html();
+
+		if ( urlText.indexOf( '<img' ) >= 0 ) {
+			urlText = urlText.replace( /<img .*?>/g, '' );
+		}
+
+		if ( urlText.indexOf( 'http://' ) >= 0 ) {
+			urlString = this.getURL( 'http://', urlText );
+		} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
+			urlString = this.getURL( 'https://', urlText );
+		} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
+			urlString = this.getURL( 'www', urlText );
+		}
+
+		if ( urlString !== '' ) {
+			// check if the url of any of the excluded video oembeds.
+			var url_a    = document.createElement( 'a' );
+			url_a.href   = urlString;
+			var hostname = url_a.hostname;
+			if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== -1 ) {
+				urlString = '';
+			}
+		}
+
+		if ( '' !== urlString ) {
+			this.loadURLPreview( urlString );
+		}
+	},
+
+	getURL: function ( prefix, urlText ) {
+		var urlString   = '';
+		urlText         = urlText.replace( /&nbsp;/g, '' );
+		var startIndex  = urlText.indexOf( prefix );
+		var responseUrl = '';
+
+		if ( ! _.isUndefined( $( $.parseHTML( urlText ) ).attr( 'href' ) ) ) {
+			urlString = $( urlText ).attr( 'href' );
+		} else {
+			for ( var i = startIndex; i < urlText.length; i++ ) {
+				if (
+					urlText[ i ] === ' ' ||
+					urlText[ i ] === '\n' ||
+					( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ||
+					( urlText[ i ] === '<' && urlText[ i + 1 ] === 'b' && urlText[ i + 2 ] === 'r' )
+				) {
+					break;
+				} else {
+					urlString += urlText[ i ];
+				}
+			}
+			if ( prefix === 'www' ) {
+				prefix    = 'http://';
+				urlString = prefix + urlString;
+			}
+		}
+
+		var div       = document.createElement( 'div' );
+		div.innerHTML = urlString;
+		var elements  = div.getElementsByTagName( '*' );
+
+		while ( elements[ 0 ] ) {
+			elements[ 0 ].parentNode.removeChild( elements[ 0 ] );
+		}
+
+		if ( div.innerHTML.length > 0 ) {
+			responseUrl = div.innerHTML;
+		}
+
+		return responseUrl;
+	},
+
+	loadURLPreview: function ( url ) {
+		var self = this;
+
+		var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
+		url        = $.trim( url );
+		if ( regexp.test( url ) ) {
+			if ( ( ! _.isUndefined( self.options.get( 'link_success' ) ) && self.options.get( 'link_success' ) == true ) && self.options.get( 'link_url' ) === url ) {
+				return false;
+			}
+
+			if ( url.includes( window.location.hostname ) && ( url.includes( 'download_document_file' ) || url.includes( 'download_media_file' ) || url.includes( 'download_video_file' ) ) ) {
+				return false;
+			}
+
+			var urlResponse = false;
+			if ( self.loadedURLs.length ) {
+				$.each(
+					self.loadedURLs,
+					function ( index, urlObj ) {
+						if ( urlObj.url == url ) {
+							urlResponse = urlObj.response;
+							return false;
+						}
+					}
+				);
+			}
+
+			if ( self.loadURLAjax != null ) {
+				self.loadURLAjax.abort();
+			}
+
+			self.options.set(
+				{
+					link_scrapping: true,
+					link_loading: true,
+					link_error: false,
+					link_url: url,
+					link_embed: false
+				}
+			);
+
+			if ( ! urlResponse ) {
+				self.loadURLAjax = $.post(
+					ajaxurl,
+					{
+					  action: 'bp_activity_parse_url',
+					  url: url
+					},
+					function( response ) {
+					  // success callback
+					  self.setURLResponse(response, url);
+					}
+				  ).always(function() {
+					// always callback
+				});
+			} else {
+				self.setURLResponse( urlResponse, url );
+			}
+		}
+	},
+
+	setURLResponse: function ( response, url ) {
+		var self = this;
+
+		self.options.set( 'link_loading', false );
+
+		if ( response.title === '' && response.images === '' ) {
+			self.options.set( 'link_scrapping', false );
+			return;
+		}
+
+		if ( response.error === '' ) {
+			var urlImages = response.images;
+			if (
+				true === self.options.get( 'edit_activity' ) && 'undefined' === typeof self.options.get( 'link_image_index_save' ) && '' === self.options.get( 'link_image_index_save' )
+			) {
+				urlImages = '';
+			}
+			var urlImagesIndex = '';
+			if ( '' !== self.options.get( 'link_image_index' ) ) {
+				urlImagesIndex =  parseInt( self.options.get( 'link_image_index' ) );
+			}
+			self.options.set(
+				{
+					link_success: true,
+					link_title: response.title,
+					link_description: response.description,
+					link_images: urlImages,
+					link_image_index: urlImagesIndex,
+					link_image_index_save: self.options.get( 'link_image_index_save' ),
+					link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
+				}
+			);
+
+			self.loadedURLs.push( { 'url': url, 'response': response } );
+
+		} else {
+			self.options.set(
+				{
+					link_success: false,
+					link_error: true,
+					link_error_msg: response.error
+				}
+			);
+		}
+	},
+};
+	
