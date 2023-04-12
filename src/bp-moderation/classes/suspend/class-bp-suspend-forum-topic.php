@@ -172,10 +172,10 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	public function update_join_sql( $join_sql, $wp_query = null ) {
 		global $wpdb;
 
-		$action_name = current_filter();
-
-		if ( 'bp_forum_topic_search_join_sql' === $action_name ) {
-			$join_sql .= $this->exclude_joint_query( 'p.ID' );
+		$topic_slug = bbp_get_topic_post_type();
+		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
+		if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) && in_array( $topic_slug, $post_types, true ) ) {
+			$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
 
 			/**
 			 * Filters the hidden Forum Topic Where SQL statement.
@@ -186,23 +186,6 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 			 * @param array $class    current class object.
 			 */
 			$join_sql = apply_filters( 'bp_suspend_forum_topic_get_join', $join_sql, $this );
-
-		} else {
-			$topic_slug = bbp_get_topic_post_type();
-			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-			if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) && in_array( $topic_slug, $post_types, true ) ) {
-				$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
-
-				/**
-				 * Filters the hidden Forum Topic Where SQL statement.
-				 *
-				 * @since BuddyBoss 1.5.6
-				 *
-				 * @param array $join_sql Join sql query
-				 * @param array $class    current class object.
-				 */
-				$join_sql = apply_filters( 'bp_suspend_forum_topic_get_join', $join_sql, $this );
-			}
 		}
 
 		return $join_sql;
@@ -231,7 +214,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		}
 
 		$where = array();
-		// Remove suspended members forum from widget.
+		// Remove suspended members topic from widget.
 		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_topic_widget_settings_parse_args' ) ) {
 			$where['suspend_where'] = $this->exclude_where_query();
 		}
