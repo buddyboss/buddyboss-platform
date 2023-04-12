@@ -261,6 +261,7 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 	}
 
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 
 	bp_notifications_add_notification(
 		array(
@@ -273,7 +274,7 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 			'is_new'            => 1,
 		)
 	);
-
+	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 
 }
@@ -310,8 +311,8 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_activity_comment';
 	}
-
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 
 	bp_notifications_add_notification(
 		array(
@@ -324,7 +325,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 			'is_new'            => 1,
 		)
 	);
-
+	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 }
 add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 3 );
@@ -460,6 +461,12 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $post_type_comment->post->post_author, $post_type_comment->user_id ) ) {
 				return;
 			}
+
+			$component_action = 'update_reply';
+			if ( ! bb_enabled_legacy_email_preference() ) {
+				$component_action = 'bb_activity_comment';
+			}
+
 			if ( ! empty( $post_type_comment->comment_parent ) ) {
 				$parent_comment = get_comment( $post_type_comment->comment_parent );
 				if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $post_type_comment->post->post_author ) {
@@ -469,7 +476,7 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 							'item_id'           => $activity_id,
 							'secondary_item_id' => $post_type_comment->user_id,
 							'component_name'    => buddypress()->activity->id,
-							'component_action'  => 'update_reply',
+							'component_action'  => $component_action,
 							'date_notified'     => $post_type_comment->comment_date_gmt,
 							'is_new'            => 1,
 						)
@@ -482,7 +489,7 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 						'item_id'           => $activity_id,
 						'secondary_item_id' => $post_type_comment->user_id,
 						'component_name'    => buddypress()->activity->id,
-						'component_action'  => 'update_reply',
+						'component_action'  => $component_action,
 						'date_notified'     => $post_type_comment->comment_date_gmt,
 						'is_new'            => 1,
 					)
@@ -525,7 +532,7 @@ function bp_activity_remove_screen_notifications_single_post() {
 
 	// Mark individual activity reply notification as read.
 	if ( ! empty( $comment_id ) ) {
-		BP_Notifications_Notification::update(
+		$updated = BP_Notifications_Notification::update(
 			array(
 				'is_new' => false,
 			),
@@ -535,6 +542,49 @@ function bp_activity_remove_screen_notifications_single_post() {
 				'component_name' => 'activity',
 			)
 		);
+
+		if ( 1 === $updated ) {
+			$notifications_data = bp_notifications_get_notification( $comment_id );
+			if ( isset( $notifications_data->item_id ) ) {
+				BP_Notifications_Notification::update(
+					array(
+						'is_new' => false,
+					),
+					array(
+						'user_id'        => bp_loggedin_user_id(),
+						'item_id'        => $notifications_data->item_id,
+						'component_name' => $notifications_data->component_name,
+					)
+				);
+
+				if ( 'activity' === $notifications_data->component_name ) {
+					$activity = new BP_Activity_Activity( $notifications_data->item_id );
+					$post_id  = 0;
+					if ( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
+						// Get activity object.
+						$comment_activity = new BP_Activity_Activity( $activity->item_id );
+						if ( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
+							$comment_post_type = $comment_activity->secondary_item_id;
+							$get_post_type     = get_post_type( $comment_post_type );
+							$post_id           = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
+						}
+
+						if ( ! empty( $post_id ) ) {
+							BP_Notifications_Notification::update(
+								array(
+									'is_new' => false,
+								),
+								array(
+									'user_id'        => bp_loggedin_user_id(),
+									'item_id'        => $post_id,
+									'component_name' => 'core',
+								)
+							);
+						}
+					}
+				}
+			}
+		}
 	}
 }
 add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single_post' );
