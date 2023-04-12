@@ -2118,6 +2118,10 @@ function bb_notification_excluded_component_actions() {
  * Function to add the notification for post new comment reply.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $comment_id   The comment ID.
+ * @param int   $commenter_id Commenter ID.
+ * @param array $commentdata  Comment data.
  */
 function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
 
