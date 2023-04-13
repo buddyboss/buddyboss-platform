@@ -7,6 +7,8 @@
  * @todo    maybe move to BuddyBoss Forums once bbPress 1.1 can be removed
  */
 
+use PhpParser\Node\Expr\Isset_;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -1116,3 +1118,163 @@ function bb_is_forum_group_forum( $forum_id = 0 ) {
 
 	return (bool) apply_filters( 'bb_is_forum_group_forum', $retval, $forum_id );
 }
+
+/**
+ * AJAX endpoint for link preview URL parser.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_forums_link_preview_parse_url() {
+	// Get URL.
+	$url = $_POST['url'];
+
+	// Check if URL is validated.
+	if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss' ) ) );
+	}
+
+	// Get URL parsed data.
+	$parse_url_data = bp_core_parse_url( $url );
+
+	// If empty data then send error.
+	if ( empty( $parse_url_data ) ) {
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
+	}
+
+	// send json success.
+	wp_send_json( $parse_url_data );
+}
+add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+
+/**
+ * Save link preview data into topic/reply meta key "_link_preview_data"
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $post_id Topic or Reply id.
+ */
+function bb_forums_save_link_preview_data( $post_id ) {
+	error_log( print_r( $post_id, true ) );
+	error_log( print_r( $_POST, true ) );
+	if ( ! isset( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'bbp-new-topic', 'bbp-new-reply', 'reply' ) ) ) {
+		return false;
+	}
+
+	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
+	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+	// Check if link url is set or not.
+	if ( empty( $link_url ) ) {
+		if ( false === $link_embed ) {
+			update_post_meta( $post_id, '_link_embed', '0' );
+
+			// This will remove the preview data if the activity don't have anymore link in content.
+			update_post_meta( $post_id, '_link_preview_data', '' );
+		}
+
+		return;
+	}
+
+	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
+	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
+	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
+
+	// Check if link embed was used.
+	if ( true === $link_embed && ! empty( $link_url ) ) {
+		update_post_meta( $post_id, '_link_embed', $link_url );
+		return;
+	}
+
+	$preview_data['url'] = $link_url;
+
+	if ( ! empty( $link_image ) ) {
+		$attachment_id = bb_media_sideload_attachment( $link_image );
+		if ( $attachment_id ) {
+			$preview_data['attachment_id'] = $attachment_id;
+		} else {
+			// store non downloadable urls as it is in preview data.
+			$preview_data['image_url'] = $link_image;
+		}
+	}
+
+	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
+
+	if ( ! empty( $link_title ) ) {
+		$preview_data['title'] = $link_title;
+	}
+
+	if ( ! empty( $link_description ) ) {
+		$preview_data['description'] = $link_description;
+	}
+
+	update_post_meta( $post_id, '_link_preview_data', $preview_data );
+}
+
+add_action( 'bbp_new_topic', 'bb_forums_save_link_preview_data', 10 );
+add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data', 10 );
+
+/**
+ * Embed link preview in activity content
+ *
+ * @param $content
+ * @param $post_id
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_forums_link_preview( $content, $post_id ) {
+
+	$preview_data = get_post_meta( $post_id, '_link_preview_data', true );
+
+	if ( empty( $preview_data['url'] ) ) {
+		return $content;
+	}
+
+	$preview_data = bp_parse_args(
+		$preview_data,
+		array(
+			'title'       => '',
+			'description' => '',
+		)
+	);
+
+	$parse_url   = wp_parse_url( $preview_data['url'] );
+	$domain_name = '';
+	if ( ! empty( $parse_url['host'] ) ) {
+		$domain_name = str_replace( 'www.', '', $parse_url['host'] );
+	}
+
+	$description = $preview_data['description'];
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
+	$description = wp_trim_words( $description, 40, $read_more );
+
+	$content = make_clickable( $content );
+
+	$content .= '<div class="activity-link-preview-container">';
+	if ( ! empty( $preview_data['attachment_id'] ) ) {
+		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
+		$content  .= '<div class="activity-link-preview-image">';
+		$content  .= '<div class="activity-link-preview-image-cover">';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
+		$content  .= '</div>';
+		$content  .= '</div>';
+	} elseif ( ! empty( $preview_data['image_url'] ) ) {
+		$content .= '<div class="activity-link-preview-image">';
+		$content .= '<div class="activity-link-preview-image-cover">';
+		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
+		$content .= '</div>';
+		$content .= '</div>';
+	}
+	$content .= '<div class="activity-link-preview-info">';
+	$content .= '<p class="activity-link-preview-link-name">' . esc_html( $domain_name ) . '</p>';
+	$content .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
+	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
+	$content .= '</div>';
+	$content .= '</div>';
+
+	return $content;
+}
+
+add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 20, 2 );
+add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 20, 2 );
