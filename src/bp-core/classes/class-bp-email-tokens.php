@@ -210,7 +210,7 @@ class BP_Email_Tokens {
 									<tr>
 										<td width="20%" class="mobile-block-full">
 											<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>"
-											   style="display: block; width: 104px; <?php echo esc_attr( $settings['body_border_color'] ); ?>; ">
+											   style="display: block; width: 104px;">
 												<?php
 												$group_avatar = bp_core_fetch_avatar(
 													array(
@@ -224,7 +224,7 @@ class BP_Email_Tokens {
 													)
 												);
 												?>
-												<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="100" height="100" border="0" style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
+												<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="100" height="100" border="0" style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display:block;" />
 											</a>
 										</td>
 										<td width="4%" class="mobile-hide">&nbsp;</td>
