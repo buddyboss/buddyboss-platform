@@ -165,6 +165,8 @@ function bp_moderation_get( $args = '' ) {
  *
  * @since BuddyBoss 1.5.6
  *
+ * @param bool $force_cache Bypass cache it true.
+ *
  * @return array $moderation See BP_Moderation::get() for description.
  */
 function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
