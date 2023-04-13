@@ -164,12 +164,6 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 			return $post;
 		}
 
-		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
-
-		if ( $this->is_content_hidden( (int) $post_id ) ) {
-			return null;
-		}
-
 		return $post;
 	}
 
