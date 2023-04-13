@@ -189,7 +189,7 @@ function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
 		),
 	);
 
-	$cache_key = 'bp_moderation_get_hidden_user_ids_' . md5( maybe_serialize( $args ) );
+	$cache_key = 'bp_moderation_get_hidden_user_ids_' . BP_Moderation_Members::$moderation_type . '_' . get_current_user_id();
 	if ( isset( $cache[ $cache_key ] ) && false === $force_cache ) {
 		return $cache[ $cache_key ];
 	}
