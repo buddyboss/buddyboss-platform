@@ -7,8 +7,6 @@
  * @todo    maybe move to BuddyBoss Forums once bbPress 1.1 can be removed
  */
 
-use PhpParser\Node\Expr\Isset_;
-
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
