@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.3.1.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-04-12 12:07:36+00:00\n"
+"POT-Creation-Date: 2023-04-14 09:58:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -529,10 +529,10 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:1157
 #: bp-activity/classes/class-bp-activity-list-table.php:665
 #: bp-core/bp-core-wp-emails.php:233 bp-core/bp-core-wp-emails.php:524
-#: bp-core/classes/class-bp-email-tokens.php:613
-#: bp-core/classes/class-bp-email-tokens.php:643
-#: bp-core/classes/class-bp-email-tokens.php:878
-#: bp-core/classes/class-bp-email-tokens.php:1246
+#: bp-core/classes/class-bp-email-tokens.php:614
+#: bp-core/classes/class-bp-email-tokens.php:644
+#: bp-core/classes/class-bp-email-tokens.php:879
+#: bp-core/classes/class-bp-email-tokens.php:1247
 #: bp-forums/admin/metaboxes.php:109 bp-forums/admin/settings.php:336
 #: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1777
 #: bp-forums/replies/template.php:1820 bp-forums/topics/template.php:3347
@@ -957,14 +957,14 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:4158 bp-blogs/bp-blogs-filters.php:293
 #: bp-core/bp-core-actions.php:938
-#: bp-core/classes/class-bp-email-tokens.php:3292
+#: bp-core/classes/class-bp-email-tokens.php:3293
 msgid "View Comment"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:4161
 #: bp-activity/bp-activity-functions.php:4166
-#: bp-core/classes/class-bp-email-tokens.php:2566
-#: bp-core/classes/class-bp-email-tokens.php:3154
+#: bp-core/classes/class-bp-email-tokens.php:2567
+#: bp-core/classes/class-bp-email-tokens.php:3155
 msgid "View Post"
 msgstr ""
 
@@ -4827,7 +4827,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:129
 #: bp-core/admin/settings/bp-admin-setting-groups.php:232
 #: bp-core/bp-core-functions.php:789 bp-core/bp-core-template.php:561
-#: bp-core/bp-core-update.php:955 bp-core/classes/class-bp-email-tokens.php:457
+#: bp-core/bp-core-update.php:955 bp-core/classes/class-bp-email-tokens.php:458
 #: bp-forums/admin/topics.php:679 bp-groups/bp-groups-admin.php:1444
 #: bp-groups/bp-groups-admin.php:2101 bp-groups/bp-groups-functions.php:4304
 #: bp-groups/bp-groups-functions.php:4323
@@ -9321,8 +9321,8 @@ msgstr ""
 msgid "Private"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:253
-#: bp-core/classes/class-bp-email-tokens.php:407
+#: bp-core/classes/class-bp-email-tokens.php:254
+#: bp-core/classes/class-bp-email-tokens.php:408
 #: bp-groups/bp-groups-template.php:748 bp-groups/bp-groups-template.php:753
 #: bp-groups/bp-groups-template.php:758 bp-groups/bp-groups-template.php:761
 #: bp-groups/bp-groups-template.php:766 bp-groups/bp-groups-template.php:768
@@ -9337,22 +9337,22 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:271
+#: bp-core/classes/class-bp-email-tokens.php:272
 msgid "members"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:271
+#: bp-core/classes/class-bp-email-tokens.php:272
 msgid "member"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:288
-#: bp-core/classes/class-bp-email-tokens.php:300
-#: bp-core/classes/class-bp-email-tokens.php:489
+#: bp-core/classes/class-bp-email-tokens.php:289
+#: bp-core/classes/class-bp-email-tokens.php:301
+#: bp-core/classes/class-bp-email-tokens.php:490
 #: bp-groups/bp-groups-admin.php:809
 msgid "Visit Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:483
+#: bp-core/classes/class-bp-email-tokens.php:484
 #: bp-groups/bp-groups-template.php:4320
 #: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:152
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:219
@@ -9360,42 +9360,42 @@ msgstr ""
 msgid "Leave Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:486
+#: bp-core/classes/class-bp-email-tokens.php:487
 #: bp-groups/bp-groups-template.php:4348 bp-groups/bp-groups-template.php:4407
 msgid "Join Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:1206
-#: bp-core/classes/class-bp-email-tokens.php:2092
-#: bp-core/classes/class-bp-email-tokens.php:2520
-#: bp-core/classes/class-bp-email-tokens.php:2821
-#: bp-core/classes/class-bp-email-tokens.php:3109
+#: bp-core/classes/class-bp-email-tokens.php:1207
+#: bp-core/classes/class-bp-email-tokens.php:2093
+#: bp-core/classes/class-bp-email-tokens.php:2521
+#: bp-core/classes/class-bp-email-tokens.php:2822
+#: bp-core/classes/class-bp-email-tokens.php:3110
 #. translators: The more documents.
 msgid "and %d more"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:1355
+#: bp-core/classes/class-bp-email-tokens.php:1356
 msgid "connections"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:1355
+#: bp-core/classes/class-bp-email-tokens.php:1356
 msgid "connection"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:1366
+#: bp-core/classes/class-bp-email-tokens.php:1367
 #: bp-members/classes/class-bp-members-admin.php:1276
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-loop.php:13
 msgid "View Profile"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:2138
+#: bp-core/classes/class-bp-email-tokens.php:2139
 #: bp-templates/bp-nouveau/buddypress/search/loop/message.php:31
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:540
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:545
 msgid "View Conversation"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:2869
+#: bp-core/classes/class-bp-email-tokens.php:2870
 #: bp-forums/notifications.php:573 bp-forums/topics/template.php:58
 #: bp-forums/topics/template.php:59
 msgid "View Discussion"
