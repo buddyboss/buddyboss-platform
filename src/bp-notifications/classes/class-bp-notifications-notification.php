@@ -814,10 +814,12 @@ class BP_Notifications_Notification {
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$order_sql} {$pag_sql}";
 
-		if ( isset( $r['fields'] ) && 'id' === $r['fields'] ) {
+		if ( isset( $r['fields'] ) && ( 'id' === $r['fields'] || 'ids' === $r['fields'] ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			$results = $wpdb->get_col( $sql );
 			$results = wp_parse_id_list( $results );
 		} else {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			$results = $wpdb->get_results( $sql );
 
 			// Integer casting.
