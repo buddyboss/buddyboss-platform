@@ -188,9 +188,10 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			}
 		}
 
-		$reply_id = bbp_get_reply_id();
+		$reply_id        = bbp_get_reply_id();
+		$reply_author_id = bbp_get_reply_author_id( $reply_id );
 
-		if ( $this->is_content_hidden( $reply_id ) ) {
+		if ( $this->is_content_hidden( $reply_id ) || bb_moderation_is_user_blocked_by( $reply_author_id ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 
