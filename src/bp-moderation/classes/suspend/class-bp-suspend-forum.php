@@ -504,7 +504,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bb_subscriptions_suspend_forum_get_where_conditions', $where, $this, $where_conditions, $r );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_topic_where'] = " AND ( " . implode( ' OR ', $where ) . ' ) )';
+			$where_conditions['suspend_forum_where'] = " AND ( " . implode( ' OR ', $where ) . ' ) )';
 		}
 
 		return $where_conditions;
