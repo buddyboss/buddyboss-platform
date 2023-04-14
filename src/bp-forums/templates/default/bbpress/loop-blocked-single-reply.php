@@ -49,10 +49,8 @@ if ( bp_is_active( 'moderation' ) ) {
 				$reply_content = bb_moderation_is_blocked_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
 			} elseif ( $is_user_blocked ) {
 				$reply_content = bb_moderation_has_blocked_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
-			} else {
-				if ( $check_hidden_content ) {
-					$reply_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
-				}
+			} elseif ( $check_hidden_content ) {
+				$reply_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
 			echo $reply_content; // phpcs:ignore
 			?>
