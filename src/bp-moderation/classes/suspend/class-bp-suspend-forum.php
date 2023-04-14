@@ -489,8 +489,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		// Get suspended where query for the forum subscription.
-		$where                  = array();
-		//$where['suspend_where'] = 'user_suspended = 1';
+		$where = array();
 
 		/**
 		 * Filters the hidden forum Where SQL statement.
@@ -505,7 +504,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bb_subscriptions_suspend_forum_get_where_conditions', $where, $this, $where_conditions, $r );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			//$where_conditions['suspend_forum_where'] = "sc.item_id NOT IN ( SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = 'forum' AND ( " . implode( ' OR ', $where ) . ' ) )';
+			$where_conditions['suspend_topic_where'] = " AND ( " . implode( ' OR ', $where ) . ' ) )';
 		}
 
 		return $where_conditions;

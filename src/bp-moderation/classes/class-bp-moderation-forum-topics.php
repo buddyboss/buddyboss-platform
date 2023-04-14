@@ -283,17 +283,6 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function bb_subscriptions_moderation_where_conditions( $where, $suspend ) {
-		$moderation_where = 'hide_parent = 1 OR hide_sitewide = 1';
-
-		$blocked_query = $this->blocked_user_query();
-		if ( ! empty( $blocked_query ) ) {
-			if ( ! empty( $moderation_where ) ) {
-				$moderation_where .= ' OR ';
-			}
-			$moderation_where .= "( id IN ( $blocked_query ) )";
-		}
-
-		$where['moderation_where'] = $moderation_where;
 
 		return $where;
 	}
