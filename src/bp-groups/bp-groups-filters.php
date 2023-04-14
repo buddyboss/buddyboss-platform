@@ -66,7 +66,6 @@ add_filter( 'bp_get_new_group_description', 'esc_textarea' );
 add_filter( 'bp_get_total_group_count', 'bp_core_number_format' );
 add_filter( 'bp_get_group_total_for_member', 'bp_core_number_format' );
 add_filter( 'bp_get_group_total_members', 'bp_core_number_format' );
-add_filter( 'bp_get_total_group_count_for_user', 'bp_core_number_format' );
 
 // Activity component integration.
 add_filter( 'bp_activity_at_name_do_notifications', 'bp_groups_disable_at_mention_notification_for_non_public_groups', 10, 4 );
@@ -141,7 +140,7 @@ function bp_groups_filter_kses( $content = '' ) {
 	$tags = apply_filters( 'bp_groups_filter_kses', $allowed_tags );
 
 	// Convert HTML entities to their corresponding characters.
-	$content = html_entity_decode( $content );
+	$content = html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 	// Return KSES'ed content, allowing the above tags.
 	return wp_kses( $content, $tags );

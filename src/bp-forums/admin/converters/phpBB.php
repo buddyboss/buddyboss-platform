@@ -904,7 +904,7 @@ class phpBB extends BBP_Converter_Base {
 
 		// Strips custom phpBB 'magic_url' and 'bbcode_uid' first from $field before parsing $field to parser.php
 		$phpbb_uid = $field;
-		$phpbb_uid = html_entity_decode( $phpbb_uid );
+		$phpbb_uid = html_entity_decode( $phpbb_uid, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 		// Replace '[b:XXXXXXX]' with '<strong>'
 		$phpbb_uid = preg_replace( '/\[b:(.*?)\]/', '<strong>', $phpbb_uid );
