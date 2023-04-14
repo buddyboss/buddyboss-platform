@@ -324,4 +324,4 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 }
 
 // Action notification for mentions in single page blog comments.
-add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 999, 4 );
+add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 10, 4 );
