@@ -260,6 +260,8 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 		$component_action = 'bb_activity_comment';
 	}
 
+	error_log( print_r( 'bp_activity_update_reply_add_notification', 1 ) );
+
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 
@@ -311,6 +313,9 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_activity_comment';
 	}
+
+	error_log( print_r( 'bp_activity_comment_reply_add_notification', 1 ) );
+
 	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 
@@ -449,7 +454,12 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_at_mention_delete_not
  */
 function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $post_type_comment, $activity_args, $activity_post_object ) {
 	// If activity comments are disabled for WP posts, stop now!
-	if ( bp_disable_blogforum_comments() || empty( $activity_id ) ) {
+	if (
+		empty( $post_type_comment->post ) ||
+		empty( $post_type_comment->post->post_type ) ||
+		! bb_is_post_type_feed_comment_enable( $post_type_comment->post->post_type ) ||
+		empty( $activity_id )
+	) {
 		return;
 	}
 
