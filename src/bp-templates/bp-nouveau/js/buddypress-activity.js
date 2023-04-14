@@ -606,9 +606,10 @@ window.bp = window.bp || {};
 				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
 				if ( activity_item.length ) {
 					var activity_data = activity_item.data( 'bp-activity' );
+					var activity_URL_preview = activity_item.data( 'link-preview' );
 
 					if ( ! _.isUndefined( activity_data ) ) {
-						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
 					}
 				}
 			}
@@ -1318,9 +1319,10 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				var activity_data = activity_item.data( 'bp-activity' );
+				var activity_URL_preview = activity_item.data( 'link-preview' );
 
 				if ( typeof activity_data !== 'undefined' ) {
-					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
 
 					// Check if it's a Group activity.
 					if ( target.closest( 'li' ).hasClass( 'groups' ) ) {

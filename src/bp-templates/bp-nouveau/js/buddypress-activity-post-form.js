@@ -166,7 +166,7 @@ window.bp = window.bp || {};
 			}
 		},
 
-		displayEditActivity: function ( activity_data ) {
+		displayEditActivity: function ( activity_data, activity_URL_preview ) {
 			bp.draft_activity.allow_delete_media = true;
 			bp.draft_activity.display_post       = 'edit';
 			var self                             = this;
@@ -188,7 +188,7 @@ window.bp = window.bp || {};
 				function() {
 
 					var bpActivityEvent = new Event( 'bp_activity_edit' );
-					bp.Nouveau.Activity.postForm.displayEditDraftActivityData( activity_data, bpActivityEvent );
+					bp.Nouveau.Activity.postForm.displayEditDraftActivityData( activity_data, bpActivityEvent, activity_URL_preview );
 				},
 				0
 			);
@@ -201,7 +201,7 @@ window.bp = window.bp || {};
 		 *
 		 * @param activity_data
 		 */
-		displayEditActivityForm : function( activity_data ) {
+		displayEditActivityForm : function( activity_data, activity_URL_preview ) {
 			var self = this;
 
 			var $activityForm            = $( '#bp-nouveau-activity-form' );
@@ -220,7 +220,7 @@ window.bp = window.bp || {};
 			bp.privacy         = activity_data.privacy;
 
 			// Set the activity value.
-			self.displayEditActivity( activity_data );
+			self.displayEditActivity( activity_data, activity_URL_preview );
 			this.model.set( 'edit_activity', true );
 
 			var edit_activity_editor         = $( '#whats-new' )[0];
@@ -336,11 +336,12 @@ window.bp = window.bp || {};
 			);
 		},
 
-		displayEditDraftActivityData: function ( activity_data, bpActivityEvent ) {
+		displayEditDraftActivityData: function ( activity_data, bpActivityEvent, activity_URL_preview ) {
 			var self = this;
 
 			self.postForm.$el.parent( '#bp-nouveau-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
+			self.postForm.$el.find( '#whats-new' ).data( 'activity-url-preview', activity_URL_preview );
 			var element = self.postForm.$el.find( '#whats-new' ).get( 0 );
 			element.focus();
 
@@ -2866,8 +2867,9 @@ window.bp = window.bp || {};
 
 			scrapURL: function ( urlText ) {
 				var urlString = '';
+				var activity_URL_preview = this.$el.closest( '#whats-new' ).data( 'activity-url-preview' );
 
-				if ( urlText === null ) {
+				if ( urlText === null && activity_URL_preview === undefined ) {
 					return;
 				}
 
@@ -2900,6 +2902,8 @@ window.bp = window.bp || {};
 
 				if ( '' !== urlString ) {
 					this.loadURLPreview( urlString );
+				} else if( activity_URL_preview !== undefined ){
+					this.loadURLPreview( activity_URL_preview.url );
 				}
 			},
 
