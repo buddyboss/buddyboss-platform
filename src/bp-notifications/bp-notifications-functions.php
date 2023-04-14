@@ -1716,7 +1716,14 @@ function bb_notification_after_save_meta( $notification ) {
 				true
 			)
 		) {
-			$activity  = new BP_Activity_Activity( $notification->item_id );
+			$activity = new BP_Activity_Activity( $notification->item_id );
+
+			if ( ! empty( $activity ) && empty( $activity->content ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
+				add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
+				$activity->content = bp_blogs_activity_comment_content_with_read_more( '', $activity );
+				add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_true' );
+			}
+
 			$usernames = ! empty( $activity ) && ! empty( $activity->content ) && bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
 		} elseif (
 			'core' === $notification->component_name &&

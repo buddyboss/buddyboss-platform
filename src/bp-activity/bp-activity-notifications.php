@@ -477,6 +477,8 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 				$component_action = 'bb_activity_comment';
 			}
 
+			add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+
 			if ( ! empty( $post_type_comment->comment_parent ) ) {
 				$parent_comment = get_comment( $post_type_comment->comment_parent );
 				if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $post_type_comment->post->post_author ) {
@@ -505,10 +507,12 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 					)
 				);
 			}
+
+			remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
 }
-add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notification_for_synced_blog_comment', 10, 4 );
+add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notification_for_synced_blog_comment', 20, 4 );
 
 /**
  * Mark notifications as read when a user visits an single post.
