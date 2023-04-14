@@ -528,6 +528,20 @@ jQuery( document ).ready(
 									for( var i = 0; i < atwho_query.length; i++ ) {
 										jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
 									}
+									if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+										if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
+											clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
+										}
+			
+										window.forums_medium_reply_editor[key].linkTimeout = setTimeout(
+											function () {
+												window.forums_medium_reply_editor[key].linkTimeout = null;
+												linkPreviews.currentTarget = window.forums_medium_reply_editor[key];
+												linkPreviews.scrapURL( bbp_topic_content.val() );
+											},
+											500
+										);
+									}
 								}
 							);
 						});
@@ -581,6 +595,20 @@ jQuery( document ).ready(
 									var atwho_query = bbp_topic_content.find( 'span.atwho-query' );
 									for( var i = 0; i < atwho_query.length; i++ ) {
 										jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+									}
+									if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+										if ( window.forums_medium_topic_editor[key].linkTimeout != null ) {
+											clearTimeout( window.forums_medium_topic_editor[key].linkTimeout );
+										}
+			
+										window.forums_medium_topic_editor[key].linkTimeout = setTimeout(
+											function () {
+												window.forums_medium_topic_editor[key].linkTimeout = null;
+												linkPreviews.currentTarget = window.forums_medium_topic_editor[key];
+												linkPreviews.scrapURL( bbp_topic_content.val() );
+											},
+											500
+										);
 									}
 								}
 							);
