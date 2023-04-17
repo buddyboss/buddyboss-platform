@@ -3388,12 +3388,19 @@ window.bp = window.bp || {};
 		 *  @return {function}
 		 */
 		directorySearchInput: function() {
-			var resetButton = $( this ).closest( '.search-form-has-reset' ).find( '#search-form_reset' );
+			var $form = $( this ).closest( '.search-form-has-reset' );
+			var $resetButton = $form.find( '#search-form_reset' );
+
 			if( $( this ).val().length > 0 ) {
-				resetButton.show();
+				$resetButton.show();
 			} else {
-				resetButton.hide();
+				$resetButton.hide();
 			}
+
+			if( !$( this ).hasClass( 'ui-autocomplete-input' ) && $( this ).val().length > 1 ) {
+				$form.find( '.search-form_submit' ).trigger( 'click' );
+			}
+
 		},
 
 		/**
@@ -3404,7 +3411,7 @@ window.bp = window.bp || {};
 		 */
 		resetDirectorySearch: function( e ) {
 			e.preventDefault();
-			if($( this ).closest( 'form' ).hasClass( 'bp-dir-search-form' ) ) {
+			if( $( this ).closest( 'form' ).hasClass( 'bp-dir-search-form' ) || $( this ).closest( 'form' ).hasClass( 'bp-messages-search-form' ) ) {
 				$( this ).closest( 'form' ).find( 'input[type="search"]').val('');
 				$( this ).closest( 'form' ).find( '.search-form_submit' ).trigger( 'click' );
 			} else {
