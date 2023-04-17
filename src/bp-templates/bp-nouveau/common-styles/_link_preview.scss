@@ -32,6 +32,10 @@
 	flex-direction: column;
 	transition: all linear 0.2s;
 
+	#whats-new-attachments & {
+		margin-bottom: 20px;
+	}
+
 	+ .bb-bb-media-wrap {
 		margin-top: 10px;
 	}
@@ -389,7 +393,7 @@
 	transform: translate(0, -50%);
 }
 
-#buddypress .b-url-thumb-nav button {
+.bb-url-thumb-nav button[id*="bb-url-"] {
 	cursor: pointer;
 	margin: 0 3px;
 	padding: 0;
