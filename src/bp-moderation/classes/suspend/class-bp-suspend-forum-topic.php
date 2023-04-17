@@ -274,6 +274,12 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 			return $post;
 		}
 
+		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
+
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
+			return null;
+		}
+
 		return $post;
 	}
 
@@ -531,7 +537,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bb_subscriptions_suspend_topic_get_where_conditions', $where, $this, $where_conditions, $r );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_topic_where'] = " AND ( " . implode( ' OR ', $where ) . ' ) )';
+			$where_conditions['suspend_topic_where'] = "sc.item_id NOT IN ( SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = 'forum_topic' AND ( " . implode( ' OR ', $where ) . ' ) )';
 		}
 
 		return $where_conditions;

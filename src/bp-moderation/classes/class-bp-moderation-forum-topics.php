@@ -139,13 +139,18 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		$this->alias = $suspend->alias;
 
 		// Remove has blocked/is blocked members discussion from widget.
+		$exclude_where = false;
 		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_topic_widget_settings_parse_args' ) ) {
-			// Remove has blocked members discussion from widget.
-			$sql = $this->exclude_where_query();
-			if ( ! empty( $sql ) ) {
-				$where['moderation_where'] = $sql;
-			}
+			$exclude_where = true;
+		}
 
+		// Remove has blocked members discussion from widget.
+		$sql = $this->exclude_where_query( $exclude_where );
+		if ( ! empty( $sql ) ) {
+			$where['moderation_where'] = $sql;
+		}
+
+		if ( true === $exclude_where ) {
 			// Remove is blocked members discussion from widget.
 			$where['moderation_widget_forums'] = '( wp_posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 		}
@@ -169,6 +174,12 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 		if ( ! empty( $username_visible ) ) {
 			return $post;
+		}
+
+		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
+
+		if ( $this->is_content_hidden( (int) $post_id ) ) {
+			return null;
 		}
 
 		return $post;
@@ -283,6 +294,17 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function bb_subscriptions_moderation_where_conditions( $where, $suspend ) {
+		$moderation_where = 'hide_parent = 1 OR hide_sitewide = 1';
+
+		$blocked_query = $this->blocked_user_query();
+		if ( ! empty( $blocked_query ) ) {
+			if ( ! empty( $moderation_where ) ) {
+				$moderation_where .= ' OR ';
+			}
+			$moderation_where .= "( id IN ( $blocked_query ) )";
+		}
+
+		$where['moderation_where'] = $moderation_where;
 
 		return $where;
 	}
