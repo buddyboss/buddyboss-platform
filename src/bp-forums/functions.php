@@ -1249,25 +1249,25 @@ function bb_forums_link_preview( $content, $post_id ) {
 
 	$content = make_clickable( $content );
 
-	$content .= '<div class="activity-link-preview-container">';
+	$content .= '<div class="bb-link-preview-container">';
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
-		$content  .= '<div class="activity-link-preview-image">';
-		$content  .= '<div class="activity-link-preview-image-cover">';
+		$content  .= '<div class="bb-link-preview-image">';
+		$content  .= '<div class="bb-link-preview-image-cover">';
 		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
 		$content  .= '</div>';
 		$content  .= '</div>';
 	} elseif ( ! empty( $preview_data['image_url'] ) ) {
-		$content .= '<div class="activity-link-preview-image">';
-		$content .= '<div class="activity-link-preview-image-cover">';
+		$content .= '<div class="bb-link-preview-image">';
+		$content .= '<div class="bb-link-preview-image-cover">';
 		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
 		$content .= '</div>';
 		$content .= '</div>';
 	}
-	$content .= '<div class="activity-link-preview-info">';
-	$content .= '<p class="activity-link-preview-link-name">' . esc_html( $domain_name ) . '</p>';
-	$content .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
-	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
+	$content .= '<div class="bb-link-preview-info">';
+	$content .= '<p class="bb-link-preview-link-name">' . esc_html( $domain_name ) . '</p>';
+	$content .= '<p class="bb-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
+	$content .= '<div class="bb-link-preview-excerpt"><p>' . $description . '</p></div>';
 	$content .= '</div>';
 	$content .= '</div>';
 
