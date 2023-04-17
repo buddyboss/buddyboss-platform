@@ -261,7 +261,6 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function bb_subscriptions_moderation_where_conditions( $where, $suspend ) {
-
 		$moderation_where = 'hide_parent = 1 OR hide_sitewide = 1';
 
 		$blocked_query = $this->blocked_user_query();
