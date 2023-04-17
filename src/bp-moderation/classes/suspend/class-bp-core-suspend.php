@@ -500,21 +500,7 @@ class BP_Core_Suspend {
 		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result || true === $force ) {
-			$sql = $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE item_id = %d AND item_type = %s", $item_id, $item_type );
-			if ( in_array(
-				$item_type,
-				array(
-					'forum',
-					'forum_topic',
-					'forum_reply',
-				),
-				true )
-			) {
-				$sql .= ' AND user_suspended = 0';
-			} else {
-				$sql .= ' AND user_suspended = 1';
-			}
-			$result = $wpdb->get_var( $sql ); // phpcs:ignore
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE item_id = %d AND item_type = %s AND user_suspended = 1", $item_id, $item_type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
