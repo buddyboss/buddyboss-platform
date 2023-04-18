@@ -50,7 +50,7 @@
 								</button>
 								<label for="group-document-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search Documents…', 'buddyboss' ); ?></label>
 								<input id="group-document-search" name="document_search" type="search" placeholder="<?php esc_attr_e( 'Search Documents…', 'buddyboss' ); ?>">
-								<button type="reset" id="search-form_reset">
+								<button type="reset" class="search-form_reset">
 									<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
 									<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
 								</button>

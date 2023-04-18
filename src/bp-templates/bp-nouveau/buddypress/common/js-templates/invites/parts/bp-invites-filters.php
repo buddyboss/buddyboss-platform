@@ -20,7 +20,7 @@
 					<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
 					<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 				</button>
-				<button type="reset" id="search-form_reset">
+				<button type="reset" class="search-form_reset">
 					<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
 					<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
 				</button>
