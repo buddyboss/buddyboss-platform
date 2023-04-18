@@ -1521,7 +1521,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
 				$key     = get_post_meta( $post->ID, '_bp_member_type_key', true );
-				if ( '' === $enabled || '1' === $enabled || ! empty( $request['show_all'] ) ) {
+				if ( '' === $enabled || '1' === $enabled || $post_selected === $post->ID || ! empty( $request['show_all'] ) ) {
 					$options[] = array(
 						'id'                => $post->ID,
 						'group_id'          => $field->group_id,
