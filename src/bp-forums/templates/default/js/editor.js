@@ -206,6 +206,14 @@ jQuery( document ).ready(
 						}
 					);
 
+					jQuery('a.bp-suggestions-mention:empty').remove();
+					setTimeout(
+						function () {
+							jQuery('a.bp-suggestions-mention:empty').remove();
+						},
+						500
+					);
+
 				});
 			}
 
@@ -316,6 +324,14 @@ jQuery( document ).ready(
 								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 							}
 						}
+					);
+
+					jQuery('a.bp-suggestions-mention:empty').remove();
+					setTimeout(
+						function () {
+							jQuery('a.bp-suggestions-mention:empty').remove();
+						},
+						500
 					);
 
 				});
