@@ -78,7 +78,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 
 		add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_member_directories_remove_profile_actions' ), 9999, 2 );
-
 	}
 
 	/**
