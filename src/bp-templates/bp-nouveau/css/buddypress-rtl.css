@@ -21542,6 +21542,26 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
   width: auto;
 }
 
+.buddypress .buddypress-wrap .search-form-has-reset .search-form_reset,
+.search-form-has-reset .search-form_reset {
+  font-size: 13px;
+  color: #767676;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  opacity: 0.4;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
+  display: none;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset .search-form_reset:hover,
+.search-form-has-reset .search-form_reset:hover {
+  opacity: 1;
+}
+
 body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
