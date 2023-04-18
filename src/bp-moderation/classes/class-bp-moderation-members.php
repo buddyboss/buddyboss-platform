@@ -141,11 +141,14 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		$this->alias = $suspend->alias;
 
 		$blocked_user_query = true;
-
 		if (
 			(
 				function_exists( 'bp_is_group_members' ) &&
 				bp_is_group_members()
+			) ||
+			(
+				function_exists( 'bp_get_group_current_admin_tab' ) &&
+				'manage-members' === bp_get_group_current_admin_tab()
 			) ||
 			(
 				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
