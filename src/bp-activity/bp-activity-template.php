@@ -250,7 +250,7 @@ function bp_has_activities( $args = '' ) {
 	 *
 	 * @param int Per page.
 	 */
-	$per_page = (int) apply_filters( 'bb_activity_per_page', 20 );
+	$per_page = (int) apply_filters( 'bb_activity_default_per_page', 20 );
 
 	/*
 	 * Parse Args.
