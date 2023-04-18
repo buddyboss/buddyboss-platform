@@ -886,7 +886,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 
 	// Prevent separate activity entry being made.
 	remove_action( 'comment_post', 'bp_activity_post_type_comment', 10 );
-	remove_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20 );
+	remove_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 
 	// Handle multisite.
 	switch_to_blog( $parent_activity->item_id );

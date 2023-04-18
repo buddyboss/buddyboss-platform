@@ -748,7 +748,7 @@ function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) 
 function bb_post_new_comment_reply_notification_helper( $comment_ID, $comment ) {
 	$commentdata               = get_object_vars( $comment );
 	$notification_already_sent = get_comment_meta( $comment_ID, 'bb_comment_notified_after_approved', true );
-	if ( empty( $notification_already_sent ) && 'approved' === $commentdata['comment_approved'] ) {
+	if ( empty( $notification_already_sent ) && 1 === (int) $commentdata['comment_approved'] ) {
 		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
 	}
 }
