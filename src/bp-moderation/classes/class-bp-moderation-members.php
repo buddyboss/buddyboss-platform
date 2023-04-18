@@ -420,7 +420,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to remove profile action for isblocked and hasblocked member.
+	 * Function to remove profile action if member is hasblocked/isblocked.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -442,7 +442,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to remove member type label if hasblocked user..
+	 * Function to remove member type label if member is hasblocked.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
