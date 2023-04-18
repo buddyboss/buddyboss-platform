@@ -3404,7 +3404,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			if( !$( this ).hasClass( 'ui-autocomplete-input' ) && $( this ).val().length > 1 ) {
+			if( !$( this ).hasClass( 'ui-autocomplete-input' ) ) {
 				$form.find( '.search-form_submit' ).trigger( 'click' );
 			}
 
