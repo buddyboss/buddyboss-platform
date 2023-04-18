@@ -77,10 +77,15 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 
 		$default                 = false;
 		$bb_enabled_notification = bp_get_option( 'bb_enabled_notification', false );
-		if ( get_transient( '_bp_is_new_install' ) 
-			|| ( empty( $bb_enabled_notification ) && bp_get_option( 'bb_posts_new_comment_reply_default_setting', false ) ) ) {
+		if (
+			false !== get_transient( '_bp_is_new_install' ) ||
+			(
+				empty( $bb_enabled_notification ) &&
+				true === (bool) bp_get_option( 'bb_posts_new_comment_reply_default_setting', false )
+			)
+		) {
 			$default = true;
-			bp_update_option( 'bb_posts_new_comment_reply_default_setting', $default );
+			bp_update_option( 'bb_posts_new_comment_reply_default_setting', true );
 		}
 
 		$this->register_notification_type(
@@ -132,9 +137,9 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
-		
+
 		$notification  = bp_notifications_get_notification( $notification_id );
-		
+
 		if ( ! empty( $notification ) && 'bb_posts_new_comment_reply' === $notification->component_action &&
 			in_array( $notification->component_name, array( 'core' ), true ) ) {
 			$comment           = get_comment( $notification->item_id );
