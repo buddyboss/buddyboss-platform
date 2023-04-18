@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.3.1.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-04-14 09:52:36+00:00\n"
+"POT-Creation-Date: 2023-04-18 12:27:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -357,7 +357,7 @@ msgstr ""
 #: bp-messages/classes/class-bp-messages-notices-admin.php:211
 #: bp-messages/classes/class-bp-messages-notices-list-table.php:84
 #: bp-moderation/bp-moderation-filters.php:869
-#: bp-moderation/bp-moderation-functions.php:1233
+#: bp-moderation/bp-moderation-functions.php:1245
 #: bp-moderation/classes/class-bp-moderation-list-table.php:227
 msgid "Content"
 msgstr ""
@@ -536,8 +536,8 @@ msgstr ""
 #: bp-forums/admin/metaboxes.php:109 bp-forums/admin/settings.php:336
 #: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1777
 #: bp-forums/replies/template.php:1820 bp-forums/topics/template.php:3347
-#: bp-moderation/classes/class-bp-moderation-activity.php:510
-#: bp-moderation/classes/class-bp-moderation-forum-replies.php:264
+#: bp-moderation/classes/class-bp-moderation-activity.php:495
+#: bp-moderation/classes/class-bp-moderation-forum-replies.php:260
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:408
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:848
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:956
@@ -625,7 +625,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-notification.php:226
 #: bp-activity/classes/class-bp-activity-notification.php:241
 #: bp-activity/classes/class-bp-activity-notification.php:645
-#: bp-core/classes/class-bb-post-notification.php:152
+#: bp-core/classes/class-bb-post-notification.php:158
 #: bp-forums/classes/class-bp-forums-notification.php:426
 #: bp-groups/classes/class-bp-groups-notification.php:1247
 #: bp-groups/classes/class-bp-groups-notification.php:1447
@@ -956,7 +956,7 @@ msgid "post"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:4158 bp-blogs/bp-blogs-filters.php:293
-#: bp-core/bp-core-actions.php:938
+#: bp-core/bp-core-actions.php:955
 #: bp-core/classes/class-bp-email-tokens.php:3292
 msgid "View Comment"
 msgstr ""
@@ -979,61 +979,61 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5941
 #: bp-groups/bp-groups-filters.php:1119
-#: bp-messages/classes/class-bp-messages-notification.php:367
-#: bp-messages/classes/class-bp-messages-notification.php:441
-#: bp-messages/classes/class-bp-messages-notification.php:522
-#: bp-messages/classes/class-bp-messages-notification.php:597
-#: bp-messages/classes/class-bp-messages-notification.php:672
+#: bp-messages/classes/class-bp-messages-notification.php:371
+#: bp-messages/classes/class-bp-messages-notification.php:445
+#: bp-messages/classes/class-bp-messages-notification.php:526
+#: bp-messages/classes/class-bp-messages-notification.php:601
+#: bp-messages/classes/class-bp-messages-notification.php:676
 msgid "some photos"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5943
 #: bp-groups/bp-groups-filters.php:1121
-#: bp-messages/classes/class-bp-messages-notification.php:374
-#: bp-messages/classes/class-bp-messages-notification.php:449
-#: bp-messages/classes/class-bp-messages-notification.php:529
-#: bp-messages/classes/class-bp-messages-notification.php:604
-#: bp-messages/classes/class-bp-messages-notification.php:679
+#: bp-messages/classes/class-bp-messages-notification.php:378
+#: bp-messages/classes/class-bp-messages-notification.php:453
+#: bp-messages/classes/class-bp-messages-notification.php:533
+#: bp-messages/classes/class-bp-messages-notification.php:608
+#: bp-messages/classes/class-bp-messages-notification.php:683
 msgid "a photo"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5948
 #: bp-groups/bp-groups-filters.php:1126
-#: bp-messages/classes/class-bp-messages-notification.php:384
-#: bp-messages/classes/class-bp-messages-notification.php:460
-#: bp-messages/classes/class-bp-messages-notification.php:539
-#: bp-messages/classes/class-bp-messages-notification.php:614
-#: bp-messages/classes/class-bp-messages-notification.php:689
+#: bp-messages/classes/class-bp-messages-notification.php:388
+#: bp-messages/classes/class-bp-messages-notification.php:464
+#: bp-messages/classes/class-bp-messages-notification.php:543
+#: bp-messages/classes/class-bp-messages-notification.php:618
+#: bp-messages/classes/class-bp-messages-notification.php:693
 msgid "some documents"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5950
 #: bp-groups/bp-groups-filters.php:1128
-#: bp-messages/classes/class-bp-messages-notification.php:391
-#: bp-messages/classes/class-bp-messages-notification.php:468
-#: bp-messages/classes/class-bp-messages-notification.php:546
-#: bp-messages/classes/class-bp-messages-notification.php:621
-#: bp-messages/classes/class-bp-messages-notification.php:696
+#: bp-messages/classes/class-bp-messages-notification.php:395
+#: bp-messages/classes/class-bp-messages-notification.php:472
+#: bp-messages/classes/class-bp-messages-notification.php:550
+#: bp-messages/classes/class-bp-messages-notification.php:625
+#: bp-messages/classes/class-bp-messages-notification.php:700
 msgid "a document"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5955
 #: bp-groups/bp-groups-filters.php:1133
-#: bp-messages/classes/class-bp-messages-notification.php:401
-#: bp-messages/classes/class-bp-messages-notification.php:479
-#: bp-messages/classes/class-bp-messages-notification.php:556
-#: bp-messages/classes/class-bp-messages-notification.php:631
-#: bp-messages/classes/class-bp-messages-notification.php:706
+#: bp-messages/classes/class-bp-messages-notification.php:405
+#: bp-messages/classes/class-bp-messages-notification.php:483
+#: bp-messages/classes/class-bp-messages-notification.php:560
+#: bp-messages/classes/class-bp-messages-notification.php:635
+#: bp-messages/classes/class-bp-messages-notification.php:710
 msgid "some videos"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5957
 #: bp-groups/bp-groups-filters.php:1135
-#: bp-messages/classes/class-bp-messages-notification.php:408
-#: bp-messages/classes/class-bp-messages-notification.php:487
-#: bp-messages/classes/class-bp-messages-notification.php:563
-#: bp-messages/classes/class-bp-messages-notification.php:638
-#: bp-messages/classes/class-bp-messages-notification.php:713
+#: bp-messages/classes/class-bp-messages-notification.php:412
+#: bp-messages/classes/class-bp-messages-notification.php:491
+#: bp-messages/classes/class-bp-messages-notification.php:567
+#: bp-messages/classes/class-bp-messages-notification.php:642
+#: bp-messages/classes/class-bp-messages-notification.php:717
 msgid "a video"
 msgstr ""
 
@@ -1642,7 +1642,7 @@ msgid "%1$s started following you"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:215
-#: bp-blogs/bp-blogs-filters.php:281 bp-core/bp-core-actions.php:926
+#: bp-blogs/bp-blogs-filters.php:281 bp-core/bp-core-actions.php:943
 #: bp-members/classes/class-bp-members-mentions-notification.php:161
 #: bp-members/classes/class-bp-members-mentions-notification.php:260
 msgid "comment"
@@ -2673,15 +2673,15 @@ msgstr ""
 msgid "%1$s created the site %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:259 bp-blogs/bp-blogs-activity.php:1611
+#: bp-blogs/bp-blogs-activity.php:259 bp-blogs/bp-blogs-activity.php:1613
 msgid "(no title)"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:283 bp-blogs/bp-blogs-activity.php:1663
+#: bp-blogs/bp-blogs-activity.php:283 bp-blogs/bp-blogs-activity.php:1665
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:285 bp-blogs/bp-blogs-activity.php:1665
+#: bp-blogs/bp-blogs-activity.php:285 bp-blogs/bp-blogs-activity.php:1667
 msgid "%1$s posted a new post."
 msgstr ""
 
@@ -2693,11 +2693,11 @@ msgstr ""
 msgid "%1$s commented on the post, %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1656
+#: bp-blogs/bp-blogs-activity.php:1658
 msgid "%1$s posted a new %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1658
+#: bp-blogs/bp-blogs-activity.php:1660
 msgid "%1$s posted a new %2$s."
 msgstr ""
 
@@ -4116,8 +4116,8 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:21
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:90
 #: bp-forums/topics/template.php:51
-#: bp-moderation/classes/class-bp-moderation-activity.php:506
-#: bp-moderation/classes/class-bp-moderation-forum-topics.php:250
+#: bp-moderation/classes/class-bp-moderation-activity.php:491
+#: bp-moderation/classes/class-bp-moderation-forum-topics.php:246
 msgid "Discussion"
 msgstr ""
 
@@ -4838,7 +4838,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:495
 #: bp-members/classes/class-bp-core-members-widget.php:303
 #: bp-members/classes/class-bp-members-component.php:38
-#: bp-moderation/bp-moderation-functions.php:1234
+#: bp-moderation/bp-moderation-functions.php:1246
 #: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:516
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:342
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:22
@@ -5099,7 +5099,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1672 bp-forums/admin/tools.php:1674
 #: bp-forums/admin/tools.php:1746 bp-forums/admin/tools.php:1748
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1838
-#: bp-members/bp-members-filters.php:888 bp-video/bp-video-filters.php:1018
+#: bp-members/bp-members-filters.php:891 bp-video/bp-video-filters.php:1018
 msgid "Complete!"
 msgstr ""
 
@@ -5281,8 +5281,8 @@ msgid "Custom Post Types"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-document.php:22
-#: bp-moderation/classes/class-bp-moderation-activity.php:540
-#: bp-moderation/classes/class-bp-moderation-activity.php:547
+#: bp-moderation/classes/class-bp-moderation-activity.php:525
+#: bp-moderation/classes/class-bp-moderation-activity.php:532
 #: bp-moderation/classes/class-bp-moderation-document.php:220
 msgid "Document"
 msgstr ""
@@ -5629,8 +5629,8 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-video.php:24
 #: bp-document/bp-document-functions.php:2041
-#: bp-moderation/classes/class-bp-moderation-activity.php:554
-#: bp-moderation/classes/class-bp-moderation-activity.php:561
+#: bp-moderation/classes/class-bp-moderation-activity.php:539
+#: bp-moderation/classes/class-bp-moderation-activity.php:546
 #: bp-moderation/classes/class-bp-moderation-video.php:220
 #: bp-video/bp-video-functions.php:2571
 msgid "Video"
@@ -6173,7 +6173,7 @@ msgstr ""
 #: bp-forums/forums/functions.php:1740 bp-forums/forums/template.php:51
 #: bp-forums/groups.php:52
 #: bp-forums/templates/default/bbpress/loop-forums.php:18
-#: bp-moderation/classes/class-bp-moderation-activity.php:502
+#: bp-moderation/classes/class-bp-moderation-activity.php:487
 #: bp-moderation/classes/class-bp-moderation-forums.php:238
 msgid "Forum"
 msgstr ""
@@ -6616,15 +6616,15 @@ msgstr ""
 msgid "You cannot upload more than 10 files at a time."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:929
+#: bp-core/bp-core-cssjs.php:930
 msgid "Mismatch"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:930
+#: bp-core/bp-core-cssjs.php:931
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:931
+#: bp-core/bp-core-cssjs.php:932
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:720
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:790
 #: bp-members/screens/register.php:161 bp-members/screens/register.php:209
@@ -8021,13 +8021,13 @@ msgid "New forum discussion in a group a member is subscribed to"
 msgstr ""
 
 #: bp-core/bp-core-update.php:2643
-#: bp-core/classes/class-bb-post-notification.php:94
+#: bp-core/classes/class-bb-post-notification.php:103
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{commenter.name}} replied to your comment"
 msgstr ""
 
 #: bp-core/bp-core-update.php:2645
-#: bp-core/classes/class-bb-post-notification.php:96
+#: bp-core/classes/class-bb-post-notification.php:105
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your "
@@ -8037,7 +8037,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-update.php:2647
-#: bp-core/classes/class-bb-post-notification.php:98
+#: bp-core/classes/class-bb-post-notification.php:107
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{commenter.name}} replied to your comment:\n"
@@ -8048,8 +8048,8 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-update.php:2678
-#: bp-core/classes/class-bb-post-notification.php:85
-#: bp-core/classes/class-bb-post-notification.php:99
+#: bp-core/classes/class-bb-post-notification.php:94
+#: bp-core/classes/class-bb-post-notification.php:108
 msgid "A member receives a reply to their WordPress post comment"
 msgstr ""
 
@@ -8487,34 +8487,34 @@ msgstr ""
 msgid "This field type does not support."
 msgstr ""
 
-#: bp-core/classes/class-bb-post-notification.php:84
+#: bp-core/classes/class-bb-post-notification.php:93
 msgid "A member replies to your post comment"
 msgstr ""
 
-#: bp-core/classes/class-bb-post-notification.php:100
+#: bp-core/classes/class-bb-post-notification.php:109
 msgid "You will no longer receive emails when someone replies to your comments."
 msgstr ""
 
-#: bp-core/classes/class-bb-post-notification.php:166
+#: bp-core/classes/class-bb-post-notification.php:172
 #. translators: Excerpt.
 msgid "Replied to your comment: %s"
 msgstr ""
 
-#: bp-core/classes/class-bb-post-notification.php:170
+#: bp-core/classes/class-bb-post-notification.php:176
 msgid "Replied to your comment"
 msgstr ""
 
-#: bp-core/classes/class-bb-post-notification.php:176
+#: bp-core/classes/class-bb-post-notification.php:182
 #. translators: %s: Total new comment reply count.
 msgid "You have %1$d new comment reply"
 msgstr ""
 
-#: bp-core/classes/class-bb-post-notification.php:184
+#: bp-core/classes/class-bb-post-notification.php:190
 #. translators: 1: Commenter name, 2: Excerpt.
 msgid "%1$s replied to your comment: %2$s"
 msgstr ""
 
-#: bp-core/classes/class-bb-post-notification.php:191
+#: bp-core/classes/class-bb-post-notification.php:197
 #. translators: %s: Commenter name.
 msgid "%1$s replied to your comment"
 msgstr ""
@@ -10584,7 +10584,7 @@ msgstr ""
 
 #: bp-core/profile-search/bps-xprofile.php:772
 #: bp-core/profile-search/bps-xprofile.php:773
-#: bp-members/bp-members-filters.php:140 bp-members/bp-members-filters.php:154
+#: bp-members/bp-members-filters.php:143 bp-members/bp-members-filters.php:157
 msgid "Email Address"
 msgstr ""
 
@@ -10605,7 +10605,7 @@ msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-filters.php:34
 #: bp-core/profile-search/templates/members/bps-form-default.php:199
-#: bp-notifications/bp-notifications-template.php:1109
+#: bp-notifications/bp-notifications-template.php:1115
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:110
 #: bp-xprofile/classes/class-bp-xprofile-field-type-radiobutton.php:93
 #: bp-xprofile/classes/class-bp-xprofile-field-type-radiobutton.php:189
@@ -15316,7 +15316,7 @@ msgstr ""
 msgid "Spectator"
 msgstr ""
 
-#: bp-forums/common/locale.php:55 bp-moderation/bp-moderation-functions.php:240
+#: bp-forums/common/locale.php:55 bp-moderation/bp-moderation-functions.php:252
 #: bp-moderation/classes/class-bp-moderation-list-table.php:289
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:186
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:275
@@ -16582,11 +16582,11 @@ msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-reply.php:188
 #: bp-forums/templates/default/bbpress/form-topic.php:244
-#: bp-moderation/bp-moderation-functions.php:1168
-#: bp-moderation/classes/class-bp-moderation-activity.php:514
-#: bp-moderation/classes/class-bp-moderation-activity.php:531
-#: bp-moderation/classes/class-bp-moderation-activity.php:545
-#: bp-moderation/classes/class-bp-moderation-activity.php:559
+#: bp-moderation/bp-moderation-functions.php:1180
+#: bp-moderation/classes/class-bp-moderation-activity.php:499
+#: bp-moderation/classes/class-bp-moderation-activity.php:516
+#: bp-moderation/classes/class-bp-moderation-activity.php:530
+#: bp-moderation/classes/class-bp-moderation-activity.php:544
 #: bp-templates/bp-nouveau/includes/activity/functions.php:234
 #: bp-templates/bp-nouveau/includes/functions.php:1536
 msgid "Post"
@@ -18549,11 +18549,11 @@ msgid "Edit Forum Settings"
 msgstr ""
 
 #: bp-groups/bp-groups-filters.php:1138
-#: bp-messages/classes/class-bp-messages-notification.php:416
-#: bp-messages/classes/class-bp-messages-notification.php:496
-#: bp-messages/classes/class-bp-messages-notification.php:571
-#: bp-messages/classes/class-bp-messages-notification.php:646
-#: bp-messages/classes/class-bp-messages-notification.php:721
+#: bp-messages/classes/class-bp-messages-notification.php:420
+#: bp-messages/classes/class-bp-messages-notification.php:500
+#: bp-messages/classes/class-bp-messages-notification.php:575
+#: bp-messages/classes/class-bp-messages-notification.php:650
+#: bp-messages/classes/class-bp-messages-notification.php:725
 msgid "a gif"
 msgstr ""
 
@@ -18956,8 +18956,8 @@ msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:436
 #: bp-groups/classes/class-bp-groups-component.php:956
-#: bp-moderation/classes/class-bp-moderation-activity.php:526
-#: bp-moderation/classes/class-bp-moderation-activity.php:533
+#: bp-moderation/classes/class-bp-moderation-activity.php:511
+#: bp-moderation/classes/class-bp-moderation-activity.php:518
 #: bp-moderation/classes/class-bp-moderation-media.php:220
 msgid "Photo"
 msgstr ""
@@ -23046,22 +23046,22 @@ msgstr ""
 msgid "Edit Cover Photo"
 msgstr ""
 
-#: bp-members/bp-members-filters.php:668
+#: bp-members/bp-members-filters.php:671
 msgid "Active now"
 msgstr ""
 
-#: bp-members/bp-members-filters.php:808
+#: bp-members/bp-members-filters.php:811
 msgid "Repair member profile links"
 msgstr ""
 
-#: bp-members/bp-members-filters.php:869
+#: bp-members/bp-members-filters.php:872
 #. translators: total user
 msgid "%d user unique identifier generated successfully"
 msgid_plural "%d users unique identifier generated successfully"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-members/bp-members-filters.php:883
+#: bp-members/bp-members-filters.php:886
 #. translators: Status of current action.
 msgid "Profile unique identifier generated for all users; %s"
 msgstr ""
@@ -24848,7 +24848,7 @@ msgid "%1$s joined the group, along with %2$s"
 msgstr ""
 
 #: bp-messages/bp-messages-notifications.php:41
-#: bp-messages/classes/class-bp-messages-notification.php:339
+#: bp-messages/classes/class-bp-messages-notification.php:343
 #. translators: %d total messages
 #. translators: %d total items
 msgid "You have %d new messages"
@@ -25153,126 +25153,126 @@ msgstr ""
 msgid "New messages"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:229
+#: bp-messages/classes/class-bp-messages-notification.php:233
 #. translators: excerpt
 msgid "Sent you a message: %s"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:235
+#: bp-messages/classes/class-bp-messages-notification.php:239
 msgid "Sent you some photos"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:237
+#: bp-messages/classes/class-bp-messages-notification.php:241
 msgid "Sent you a photo"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:242
+#: bp-messages/classes/class-bp-messages-notification.php:246
 msgid "Sent you some documents"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:244
+#: bp-messages/classes/class-bp-messages-notification.php:248
 msgid "Sent you a document"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:249
+#: bp-messages/classes/class-bp-messages-notification.php:253
 msgid "Sent you some videos"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:251
+#: bp-messages/classes/class-bp-messages-notification.php:255
 msgid "Sent you a video"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:254
+#: bp-messages/classes/class-bp-messages-notification.php:258
 msgid "Sent you a gif"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:256
+#: bp-messages/classes/class-bp-messages-notification.php:260
 msgid "Sent you a message"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:270
+#: bp-messages/classes/class-bp-messages-notification.php:274
 #. translators: 1. user display name 2. excerpt
 msgid "%1$s sent a new message: %2$s"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:279
+#: bp-messages/classes/class-bp-messages-notification.php:283
 #. translators: user display name
 msgid "%s sent some photos"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:285
+#: bp-messages/classes/class-bp-messages-notification.php:289
 #. translators: 1. user display name
 msgid "%s sent a photo"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:294
+#: bp-messages/classes/class-bp-messages-notification.php:298
 #. translators: user display name
 msgid "%s sent some documents"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:300
+#: bp-messages/classes/class-bp-messages-notification.php:304
 #. translators: user display name
 msgid "%1$s sent a document"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:309
+#: bp-messages/classes/class-bp-messages-notification.php:313
 #. translators: user display name
 msgid "%1$s sent some videos"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:315
+#: bp-messages/classes/class-bp-messages-notification.php:319
 #. translators: user display name
 msgid "%s sent a video"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:322
+#: bp-messages/classes/class-bp-messages-notification.php:326
 #. translators: user display name
 msgid "%s sent a GIF"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:328
+#: bp-messages/classes/class-bp-messages-notification.php:332
 #. translators: user display name
 msgid "%s sent a new message"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:356
-#: bp-messages/classes/class-bp-messages-notification.php:511
-#: bp-messages/classes/class-bp-messages-notification.php:586
-#: bp-messages/classes/class-bp-messages-notification.php:661
+#: bp-messages/classes/class-bp-messages-notification.php:360
+#: bp-messages/classes/class-bp-messages-notification.php:515
+#: bp-messages/classes/class-bp-messages-notification.php:590
+#: bp-messages/classes/class-bp-messages-notification.php:665
 #. translators: 1. user display name 2. exceprt
 #. translators: 1. user display name 2. except text
 #. translators: 1. user display name 2. gif text
 msgid "%1$s sent you a message: %2$s"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:365
-#: bp-messages/classes/class-bp-messages-notification.php:372
-#: bp-messages/classes/class-bp-messages-notification.php:382
-#: bp-messages/classes/class-bp-messages-notification.php:389
-#: bp-messages/classes/class-bp-messages-notification.php:399
-#: bp-messages/classes/class-bp-messages-notification.php:406
-#: bp-messages/classes/class-bp-messages-notification.php:414
-#: bp-messages/classes/class-bp-messages-notification.php:520
-#: bp-messages/classes/class-bp-messages-notification.php:527
-#: bp-messages/classes/class-bp-messages-notification.php:537
-#: bp-messages/classes/class-bp-messages-notification.php:544
-#: bp-messages/classes/class-bp-messages-notification.php:554
-#: bp-messages/classes/class-bp-messages-notification.php:561
-#: bp-messages/classes/class-bp-messages-notification.php:569
-#: bp-messages/classes/class-bp-messages-notification.php:595
-#: bp-messages/classes/class-bp-messages-notification.php:602
-#: bp-messages/classes/class-bp-messages-notification.php:612
-#: bp-messages/classes/class-bp-messages-notification.php:619
-#: bp-messages/classes/class-bp-messages-notification.php:629
-#: bp-messages/classes/class-bp-messages-notification.php:636
-#: bp-messages/classes/class-bp-messages-notification.php:644
-#: bp-messages/classes/class-bp-messages-notification.php:670
-#: bp-messages/classes/class-bp-messages-notification.php:677
-#: bp-messages/classes/class-bp-messages-notification.php:687
-#: bp-messages/classes/class-bp-messages-notification.php:694
-#: bp-messages/classes/class-bp-messages-notification.php:704
-#: bp-messages/classes/class-bp-messages-notification.php:711
-#: bp-messages/classes/class-bp-messages-notification.php:719
+#: bp-messages/classes/class-bp-messages-notification.php:369
+#: bp-messages/classes/class-bp-messages-notification.php:376
+#: bp-messages/classes/class-bp-messages-notification.php:386
+#: bp-messages/classes/class-bp-messages-notification.php:393
+#: bp-messages/classes/class-bp-messages-notification.php:403
+#: bp-messages/classes/class-bp-messages-notification.php:410
+#: bp-messages/classes/class-bp-messages-notification.php:418
+#: bp-messages/classes/class-bp-messages-notification.php:524
+#: bp-messages/classes/class-bp-messages-notification.php:531
+#: bp-messages/classes/class-bp-messages-notification.php:541
+#: bp-messages/classes/class-bp-messages-notification.php:548
+#: bp-messages/classes/class-bp-messages-notification.php:558
+#: bp-messages/classes/class-bp-messages-notification.php:565
+#: bp-messages/classes/class-bp-messages-notification.php:573
+#: bp-messages/classes/class-bp-messages-notification.php:599
+#: bp-messages/classes/class-bp-messages-notification.php:606
+#: bp-messages/classes/class-bp-messages-notification.php:616
+#: bp-messages/classes/class-bp-messages-notification.php:623
+#: bp-messages/classes/class-bp-messages-notification.php:633
+#: bp-messages/classes/class-bp-messages-notification.php:640
+#: bp-messages/classes/class-bp-messages-notification.php:648
+#: bp-messages/classes/class-bp-messages-notification.php:674
+#: bp-messages/classes/class-bp-messages-notification.php:681
+#: bp-messages/classes/class-bp-messages-notification.php:691
+#: bp-messages/classes/class-bp-messages-notification.php:698
+#: bp-messages/classes/class-bp-messages-notification.php:708
+#: bp-messages/classes/class-bp-messages-notification.php:715
+#: bp-messages/classes/class-bp-messages-notification.php:723
 #. translators: 1. user display name 2. photos text
 #. translators: 1. user display name 2. photo text
 #. translators: 1. user display name 2. documents text
@@ -25304,26 +25304,26 @@ msgstr ""
 msgid "%1$s sent you %2$s"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:421
-#: bp-messages/classes/class-bp-messages-notification.php:576
-#: bp-messages/classes/class-bp-messages-notification.php:651
-#: bp-messages/classes/class-bp-messages-notification.php:726
+#: bp-messages/classes/class-bp-messages-notification.php:425
+#: bp-messages/classes/class-bp-messages-notification.php:580
+#: bp-messages/classes/class-bp-messages-notification.php:655
+#: bp-messages/classes/class-bp-messages-notification.php:730
 #. translators: %1$s user display name
 msgid "%1$s sent you a message"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:429
+#: bp-messages/classes/class-bp-messages-notification.php:433
 #. translators: 1. user display name 2. group name 3. excerpt
 msgid "%1$s sent a message to %2$s: %3$s"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:439
-#: bp-messages/classes/class-bp-messages-notification.php:447
-#: bp-messages/classes/class-bp-messages-notification.php:458
-#: bp-messages/classes/class-bp-messages-notification.php:466
-#: bp-messages/classes/class-bp-messages-notification.php:477
-#: bp-messages/classes/class-bp-messages-notification.php:485
-#: bp-messages/classes/class-bp-messages-notification.php:494
+#: bp-messages/classes/class-bp-messages-notification.php:443
+#: bp-messages/classes/class-bp-messages-notification.php:451
+#: bp-messages/classes/class-bp-messages-notification.php:462
+#: bp-messages/classes/class-bp-messages-notification.php:470
+#: bp-messages/classes/class-bp-messages-notification.php:481
+#: bp-messages/classes/class-bp-messages-notification.php:489
+#: bp-messages/classes/class-bp-messages-notification.php:498
 #. translators: 1. user display name 2. photos text 3. group name
 #. translators: 1. user display name 2. photo text 3. group name
 #. translators: 1. user display name 2. documents text 3. group name
@@ -25334,7 +25334,7 @@ msgstr ""
 msgid "%1$s sent %2$s to %3$s"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notification.php:502
+#: bp-messages/classes/class-bp-messages-notification.php:506
 #. translators: 1. user display name 2. group name
 msgid "%1$s sent a message to %2$s"
 msgstr ""
@@ -26019,7 +26019,7 @@ msgid "Member has been successfully unsuspended."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:537
-#: bp-moderation/bp-moderation-functions.php:239
+#: bp-moderation/bp-moderation-functions.php:251
 #: bp-moderation/screens/single/admin/report-single.php:156
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:3137
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:3139
@@ -26028,8 +26028,8 @@ msgid "Block"
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:541
-#: bp-moderation/bp-moderation-functions.php:242
-#: bp-moderation/bp-moderation-functions.php:243
+#: bp-moderation/bp-moderation-functions.php:254
+#: bp-moderation/bp-moderation-functions.php:255
 #: bp-moderation/classes/class-bp-moderation-members.php:124
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:3165
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:3167
@@ -26063,7 +26063,7 @@ msgstr ""
 msgid "A short description of this reporting category."
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1194
+#: bp-moderation/bp-moderation-functions.php:1206
 #: bp-moderation/screens/content-report-form.php:16
 #: bp-moderation/screens/content-report-form.php:68
 #: bp-moderation/screens/reported-content-popup.php:17
@@ -26073,18 +26073,18 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1220
+#: bp-moderation/bp-moderation-functions.php:1232
 #: bp-moderation/classes/class-bp-moderation-list-table.php:293
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:3154
 msgid "Reported"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1235
+#: bp-moderation/bp-moderation-functions.php:1247
 msgid "Content & Members"
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:1491
-#: bp-moderation/bp-moderation-functions.php:1534
+#: bp-moderation/bp-moderation-functions.php:1503
+#: bp-moderation/bp-moderation-functions.php:1546
 msgid "Unknown Member"
 msgstr ""
 
@@ -26182,42 +26182,42 @@ msgstr ""
 msgid "Report Comment"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-activity.php:413
+#: bp-moderation/classes/class-bp-moderation-activity.php:398
 #: bp-moderation/classes/class-bp-moderation-forums.php:224
 msgid "Report Forum"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-activity.php:417
-#: bp-moderation/classes/class-bp-moderation-forum-topics.php:236
+#: bp-moderation/classes/class-bp-moderation-activity.php:402
+#: bp-moderation/classes/class-bp-moderation-forum-topics.php:232
 msgid "Report Discussion"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-activity.php:421
-#: bp-moderation/classes/class-bp-moderation-forum-replies.php:250
+#: bp-moderation/classes/class-bp-moderation-activity.php:406
+#: bp-moderation/classes/class-bp-moderation-forum-replies.php:246
 msgid "Report Reply"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-activity.php:425
-#: bp-moderation/classes/class-bp-moderation-activity.php:442
-#: bp-moderation/classes/class-bp-moderation-activity.php:456
-#: bp-moderation/classes/class-bp-moderation-activity.php:470
+#: bp-moderation/classes/class-bp-moderation-activity.php:410
+#: bp-moderation/classes/class-bp-moderation-activity.php:427
+#: bp-moderation/classes/class-bp-moderation-activity.php:441
+#: bp-moderation/classes/class-bp-moderation-activity.php:455
 msgid "Report Post"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-activity.php:437
-#: bp-moderation/classes/class-bp-moderation-activity.php:444
+#: bp-moderation/classes/class-bp-moderation-activity.php:422
+#: bp-moderation/classes/class-bp-moderation-activity.php:429
 #: bp-moderation/classes/class-bp-moderation-media.php:206
 msgid "Report Photo"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-activity.php:451
-#: bp-moderation/classes/class-bp-moderation-activity.php:458
+#: bp-moderation/classes/class-bp-moderation-activity.php:436
+#: bp-moderation/classes/class-bp-moderation-activity.php:443
 #: bp-moderation/classes/class-bp-moderation-document.php:206
 msgid "Report Document"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-activity.php:465
-#: bp-moderation/classes/class-bp-moderation-activity.php:472
+#: bp-moderation/classes/class-bp-moderation-activity.php:450
+#: bp-moderation/classes/class-bp-moderation-activity.php:457
 #: bp-moderation/classes/class-bp-moderation-video.php:206
 msgid "Report Video"
 msgstr ""
@@ -27071,7 +27071,7 @@ msgstr ""
 msgid "Go"
 msgstr ""
 
-#: bp-notifications/bp-notifications-template.php:1110
+#: bp-notifications/bp-notifications-template.php:1116
 msgid "Clear All"
 msgstr ""
 
@@ -31893,7 +31893,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-filters.php:855
 #: bp-xprofile/bp-xprofile-filters.php:964
 #: bp-xprofile/bp-xprofile-filters.php:1077
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:532
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:540
 #: bp-xprofile/screens/edit.php:194
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
@@ -32530,14 +32530,14 @@ msgid ""
 "update the data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:498
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:502
 #: bp-xprofile/screens/edit.php:104
 msgid ""
 "Changing this profile type would remove your Administrator role and lock "
 "you out of the WordPress admin."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:508
+#: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:516
 #: bp-xprofile/screens/edit.php:123
 msgid ""
 "Changing this profile type would remove your Editor role and lock you out "

@@ -223,6 +223,10 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 
 			if ( 'web_push' === $screen ) {
 
+				if ( ! empty( $thread_id ) ) {
+					$link = bp_get_message_thread_view_link( $thread_id, $notification->user_id );
+				}
+
 				if ( ! empty( $excerpt ) ) {
 					$text = sprintf(
 					/* translators: excerpt */
