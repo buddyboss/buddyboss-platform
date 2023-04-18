@@ -807,7 +807,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
 			$( document ).on( 'click', '#message-threads .report-content', this.threadListReportPopup );
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
-			$( document ).on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', this.directorySearchInput );
+			$( document ).on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
 			$( document ).on( 'click', '.search-form-has-reset #search-form_reset', this.resetDirectorySearch );
 
 			$( document ).on( 'keyup', this, this.keyUp );
@@ -3434,7 +3434,7 @@ window.bp = window.bp || {};
 				var CustomSearchEvent = $.Event( 'search' );
 				$form.find( 'input[type="search"]').trigger( CustomSearchEvent );
 			}
-			
+
 		},
 
 		/**
