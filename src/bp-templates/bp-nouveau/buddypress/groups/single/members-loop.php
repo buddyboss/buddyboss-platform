@@ -152,9 +152,15 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 								?>
 							</div>
 
-							<div class="flex align-items-center follow-container justify-center">
-								<?php echo wp_kses_post( $followers_count ); ?>
-							</div>
+							<?php
+							if ( ! $is_blocked ) {
+								?>
+								<div class="flex align-items-center follow-container justify-center">
+									<?php echo wp_kses_post( $followers_count ); ?>
+								</div>
+								<?php
+							}
+							?>
 
 							<div class="flex only-grid-view align-items-center primary-action justify-center">
 								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
