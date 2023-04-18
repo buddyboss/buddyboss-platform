@@ -154,7 +154,19 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( $this->is_content_hidden( $activities_template->activity->current_comment->id ) ) {
+		if (
+			(
+				$this->is_content_hidden( $activities_template->activity->current_comment->id ) ||
+				bb_moderation_is_user_blocked_by( $activities_template->activity->current_comment->user_id )
+			) &&
+			(
+				! bb_is_group_activity_comment( $activities_template->activity->current_comment ) ||
+				(
+					bb_is_group_activity_comment( $activities_template->activity->current_comment ) &&
+					bp_moderation_is_content_hidden( $activities_template->activity->current_comment->id, self::$moderation_type )
+				)
+			)
+		) {
 			return 'activity/blocked-comment.php';
 		}
 
