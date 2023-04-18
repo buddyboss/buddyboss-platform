@@ -3391,7 +3391,7 @@ window.bp = window.bp || {};
 			var $form = $( this ).closest( '.search-form-has-reset' );
 			var $resetButton = $form.find( '.search-form_reset' );
 
-			if( $( this ).val().length > 0 ) {
+			if ( $( this ).val().length > 0 ) {
 				$resetButton.show();
 			} else {
 				$resetButton.hide();
@@ -3403,7 +3403,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			if( !$( this ).hasClass( 'ui-autocomplete-input' ) ) {
+			if ( !$( this ).hasClass( 'ui-autocomplete-input' ) ) {
 				$form.find( '.search-form_submit' ).trigger( 'click' );
 			}
 
@@ -3418,7 +3418,7 @@ window.bp = window.bp || {};
 		resetDirectorySearch: function( e ) {
 			e.preventDefault();
 			var $form = $( this ).closest( 'form' );
-			if( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
+			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( '.search-form_submit' ).trigger( 'click' );
 			} else {
@@ -3428,7 +3428,7 @@ window.bp = window.bp || {};
 			$( this ).hide();
 
 			// Trigger search event
-			if( $form.hasClass( 'bp-invites-search-form') ) {
+			if ( $form.hasClass( 'bp-invites-search-form') ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
 			}
