@@ -3395,6 +3395,13 @@ window.bp = window.bp || {};
 				$resetButton.show();
 			} else {
 				$resetButton.hide();
+
+				// Trigger search event
+				if( $form.hasClass( 'bp-invites-search-form') ) {
+					$form.find( 'input[type="search"]').val('');
+					var CustomSearchEvent = $.Event( 'search' );
+					$form.find( 'input[type="search"]').trigger( CustomSearchEvent );
+				}
 			}
 
 			if( !$( this ).hasClass( 'ui-autocomplete-input' ) && $( this ).val().length > 1 ) {
@@ -3411,13 +3418,23 @@ window.bp = window.bp || {};
 		 */
 		resetDirectorySearch: function( e ) {
 			e.preventDefault();
-			if( $( this ).closest( 'form' ).hasClass( 'bp-dir-search-form' ) || $( this ).closest( 'form' ).hasClass( 'bp-messages-search-form' ) ) {
-				$( this ).closest( 'form' ).find( 'input[type="search"]').val('');
-				$( this ).closest( 'form' ).find( '.search-form_submit' ).trigger( 'click' );
+			var $form = $( this ).closest( 'form' );
+			if( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
+				$form.find( 'input[type="search"]').val('');
+				$form.find( '.search-form_submit' ).trigger( 'click' );
 			} else {
-				$( this ).closest( 'form' ).find( '#bbp_search' ).val('');
+				$form.find( '#bbp_search' ).val('');
 			}
+
 			$( this ).hide();
+
+			// Trigger search event
+			if( $form.hasClass( 'bp-invites-search-form') ) {
+				$form.find( 'input[type="search"]').val('');
+				var CustomSearchEvent = $.Event( 'search' );
+				$form.find( 'input[type="search"]').trigger( CustomSearchEvent );
+			}
+			
 		},
 
 		/**
