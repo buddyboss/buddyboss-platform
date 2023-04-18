@@ -23,10 +23,10 @@ add_filter( 'register_url', 'bp_get_signup_page' );
 // Change the last active display format if users active within 5 minutes then shows 'Active now'.
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
 
-add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
-
 // Repair member profile links.
 add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
+
+add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
 
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
