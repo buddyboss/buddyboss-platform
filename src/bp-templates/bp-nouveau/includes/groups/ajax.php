@@ -1740,7 +1740,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
 			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-				$chunk_members = array_chunk( $members, 10 );
+				$chunk_members = array_chunk( $members, bb_get_email_queue_min_count() );
 				if ( ! empty( $chunk_members ) ) {
 					foreach ( $chunk_members as $key => $members ) {
 						$bb_email_background_updater->data(
