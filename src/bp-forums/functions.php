@@ -1152,14 +1152,19 @@ add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
  * @param $post_id Topic or Reply id.
  */
 function bb_forums_save_link_preview_data( $post_id ) {
-	error_log( print_r( $post_id, true ) );
-	error_log( print_r( $_POST, true ) );
+
+	$link_preview_data = array();
+
 	if ( ! isset( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'bbp-new-topic', 'bbp-new-reply', 'reply' ) ) ) {
 		return false;
 	}
 
-	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
-	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+	if ( ! empty( $_POST['link_preview_data'] ) ) {
+		$link_preview_data = get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) );
+	}
+
+	$link_url   = ! empty( $link_preview_data['link_url'] ) ? filter_var( $link_preview_data['link_url'], FILTER_VALIDATE_URL ) : '';
+	$link_embed = isset( $link_preview_data['link_embed'] ) ? filter_var( $link_preview_data['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
 	// Check if link url is set or not.
 	if ( empty( $link_url ) ) {
@@ -1173,9 +1178,9 @@ function bb_forums_save_link_preview_data( $post_id ) {
 		return;
 	}
 
-	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
-	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
-	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
+	$link_title       = ! empty( $link_preview_data['link_title'] ) ? filter_var( $link_preview_data['link_title'] ) : '';
+	$link_description = ! empty( $link_preview_data['link_description'] ) ? filter_var( $link_preview_data['link_description'] ) : '';
+	$link_image       = ! empty( $link_preview_data['link_image'] ) ? filter_var( $link_preview_data['link_image'], FILTER_VALIDATE_URL ) : '';
 
 	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
@@ -1195,7 +1200,7 @@ function bb_forums_save_link_preview_data( $post_id ) {
 		}
 	}
 
-	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
+	$preview_data['link_image_index_save'] = isset( $link_preview_data['link_image_index_save'] ) ? filter_var( $link_preview_data['link_image_index_save'] ) : '';
 
 	if ( ! empty( $link_title ) ) {
 		$preview_data['title'] = $link_title;

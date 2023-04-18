@@ -1736,12 +1736,7 @@ function bbp_forum_form_fields() {
 function bbp_topic_form_fields() {
 
 	?>
-	<input type="hidden" name="link_url" id="link_url" />
-	<input type="hidden" name="link_title" id="link_title" />
-	<input type="hidden" name="link_description" id="link_description" />
-	<input type="hidden" name="link_image" id="link_image" />
-	<input type="hidden" name="link_image_index_save" id="link_image_index_save" />
-	<input type="hidden" name="link_embed" id="link_embed" />
+	<input type="hidden" name="link_preview_data" id="link_preview_data" />
 		
 	<?php
 
@@ -1798,12 +1793,7 @@ function bbp_topic_form_fields() {
 function bbp_reply_form_fields() {
 
 	?>
-	<input type="hidden" name="link_url" id="link_url" />
-	<input type="hidden" name="link_title" id="link_title" />
-	<input type="hidden" name="link_description" id="link_description" />
-	<input type="hidden" name="link_image" id="link_image" />
-	<input type="hidden" name="link_image_index_save" id="link_image_index_save" />
-	<input type="hidden" name="link_embed" id="link_embed" />
+	<input type="hidden" name="link_preview_data" id="link_preview_data" />
 		
 	<?php
 

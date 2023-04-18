@@ -3850,13 +3850,18 @@ window.bp = window.bp || {};
 		
 					// Set form values for link preview.
 					self.currentTargetForm = jQuery( self.currentTarget.elements[0] ).closest( 'form' );
-					if ( jQuery( self.currentTargetForm ).find('#link_url').length > 0 ) {
-						jQuery( self.currentTargetForm ).find('#link_url').val( url );
-						jQuery( self.currentTargetForm ).find('#link_title').val( response.title );
-						jQuery( self.currentTargetForm ).find('#link_description').val( response.description );
-						jQuery( self.currentTargetForm ).find('#link_embed').val( self.options.link_embed );
-						jQuery( self.currentTargetForm ).find('#link_image').val( urlImages[ self.options.link_image_index_save ] );
-						jQuery( self.currentTargetForm ).find('#link_image_index_save').val( self.options.link_image_index_save );
+					if ( jQuery( self.currentTargetForm ).find('#link_preview_data').length > 0 ) {
+
+						const link_preview_data = {
+							link_url: url,
+							link_title: response.title,
+							link_description: response.description,
+							link_embed: self.options.link_embed,
+							link_image: urlImages[ self.options.link_image_index_save ],
+							link_image_index_save: self.options.link_image_index_save,
+						};
+
+						jQuery( self.currentTargetForm ).find('#link_preview_data').val( JSON.stringify( link_preview_data ) );
 					}
 					
 		
