@@ -3399,8 +3399,7 @@ window.bp = window.bp || {};
 				// Trigger search event
 				if( $form.hasClass( 'bp-invites-search-form') ) {
 					$form.find( 'input[type="search"]').val('');
-					var CustomSearchEvent = $.Event( 'search' );
-					$form.find( 'input[type="search"]').trigger( CustomSearchEvent );
+					$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
 				}
 			}
 
@@ -3431,8 +3430,7 @@ window.bp = window.bp || {};
 			// Trigger search event
 			if( $form.hasClass( 'bp-invites-search-form') ) {
 				$form.find( 'input[type="search"]').val('');
-				var CustomSearchEvent = $.Event( 'search' );
-				$form.find( 'input[type="search"]').trigger( CustomSearchEvent );
+				$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
 			}
 
 		},
