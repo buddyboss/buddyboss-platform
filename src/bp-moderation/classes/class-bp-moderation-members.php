@@ -76,6 +76,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_member_directories_remove_profile_actions' ), 9999, 2 );
+
 	}
 
 	/**
@@ -411,5 +414,28 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Function to remove profile action for isblocked and hasblocked member.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $buttons     Member profile actions.
+	 * @param int    $user_id     Member ID.
+	 * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
+	 *
+	 * @return array|string Return the member actions.
+	 */
+	public function bb_member_directories_remove_profile_actions( $buttons, $user_id ) {
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			$buttons['primary']   = '';
+			$buttons['secondary'] = '';
+		} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+			$buttons['primary']   = '';
+			$buttons['secondary'] = '';
+		}
+
+		return $buttons;
 	}
 }
