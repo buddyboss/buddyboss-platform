@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Media_Component extends BP_Component {
 
 	/**
@@ -266,7 +267,7 @@ class BP_Media_Component extends BP_Component {
 				$nav_name .= sprintf(
 					' <span class="%s">%s</span>',
 					esc_attr( $class ),
-					bp_core_number_format( $count )
+					$count
 				);
 			} else {
 				$nav_name = __( 'Photos', 'buddyboss' );

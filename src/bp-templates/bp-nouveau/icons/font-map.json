@@ -1,0 +1,3233 @@
+{
+    "name": "bb-icons",
+    "version": "1.0.3",
+    "copyright": "BuddyBoss",
+    "groups": [
+        {
+            "id": "accessibility",
+            "label": "Accessibility"
+        },
+        {
+            "id": "alerts",
+            "label": "Alerts"
+        },
+        {
+            "id": "arrows",
+            "label": "Arrows"
+        },
+        {
+            "id": "brands",
+            "label": "Brands"
+        },
+        {
+            "id": "interfaces",
+            "label": "Interfaces"
+        },
+        {
+            "id": "media-files",
+            "label": "Media & Files"
+        },
+        {
+            "id": "objects",
+            "label": "Objects"
+        },
+        {
+            "id": "shopping-money",
+            "label": "Shopping & Money"
+        },
+        {
+            "id": "technology",
+            "label": "Technology"
+        },
+        {
+            "id": "text-formatting",
+            "label": "Text & Formatting"
+        },
+        {
+            "id": "users-people",
+            "label": "Users & People"
+        }
+    ],
+    "glyphs": [
+        {
+            "css": "activity",
+            "code": 59476,
+            "label": "Activity",
+            "group": "interfaces"
+        },
+        {
+            "css": "activity-slash",
+            "code": 60816,
+            "label": "Activity Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "address-book",
+            "code": 60817,
+            "label": "Address Book",
+            "group": "users-people"
+        },
+        {
+            "css": "airplay",
+            "code": 59479,
+            "label": "Airplay",
+            "group": "interfaces"
+        },
+        {
+            "css": "alarm",
+            "code": 60819,
+            "label": "Alarm",
+            "group": "objects"
+        },
+        {
+            "css": "album",
+            "code": 60820,
+            "label": "Album",
+            "group": "media-files"
+        },
+        {
+            "css": "align-center",
+            "code": 59478,
+            "label": "Align Center",
+            "group": "text-formatting"
+        },
+        {
+            "css": "align-justify",
+            "code": 59480,
+            "label": "Align Justify",
+            "group": "text-formatting"
+        },
+        {
+            "css": "align-left",
+            "code": 59481,
+            "label": "Align Left",
+            "group": "text-formatting"
+        },
+        {
+            "css": "align-right",
+            "code": 59482,
+            "label": "Align Right",
+            "group": "text-formatting"
+        },
+        {
+            "css": "anchor",
+            "code": 59485,
+            "label": "Anchor",
+            "group": "objects"
+        },
+        {
+            "css": "angle-double-down",
+            "code": 59517,
+            "label": "Angle Double Down",
+            "group": "arrows"
+        },
+        {
+            "css": "angle-double-left",
+            "code": 59520,
+            "label": "Angle Double Left",
+            "group": "arrows"
+        },
+        {
+            "css": "angle-double-right",
+            "code": 59518,
+            "label": "Angle Double Right",
+            "group": "arrows"
+        },
+        {
+            "css": "angle-double-up",
+            "code": 59519,
+            "label": "Angle Double Up",
+            "group": "arrows"
+        },
+        {
+            "css": "angle-right",
+            "code": 59431,
+            "label": "Angle Right",
+            "group": "arrows"
+        },
+        {
+            "css": "angle-down",
+            "code": 59430,
+            "label": "Angle Down",
+            "group": "arrows"
+        },
+        {
+            "css": "angle-left",
+            "code": 59563,
+            "label": "Angle Left",
+            "group": "arrows"
+        },
+        {
+            "css": "angle-up",
+            "code": 59516,
+            "label": "Angle Up",
+            "group": "arrows"
+        },
+        {
+            "css": "arrow-down",
+            "code": 59489,
+            "label": "Arrow Down",
+            "group": "arrows"
+        },
+        {
+            "css": "arrow-left",
+            "code": 59487,
+            "label": "Arrow Left",
+            "group": "arrows"
+        },
+        {
+            "css": "arrow-right",
+            "code": 59488,
+            "label": "Arrow Right",
+            "group": "arrows"
+        },
+        {
+            "css": "arrows",
+            "code": 60837,
+            "label": "Arrows",
+            "group": "arrows"
+        },
+        {
+            "css": "arrows-h",
+            "code": 60838,
+            "label": "Arrows Horizontal",
+            "group": "arrows"
+        },
+        {
+            "css": "arrows-v",
+            "code": 60839,
+            "label": "Arrows Vertical",
+            "group": "arrows"
+        },
+        {
+            "css": "arrow-up",
+            "code": 59492,
+            "label": "Arrow Up",
+            "group": "arrows"
+        },
+        {
+            "css": "article",
+            "code": 60841,
+            "label": "Article",
+            "group": "interfaces"
+        },
+        {
+            "css": "article-slash",
+            "code": 60842,
+            "label": "Article Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "asterisk",
+            "code": 60843,
+            "label": "Asterisk",
+            "group": "text-formatting"
+        },
+        {
+            "css": "at",
+            "code": 59495,
+            "label": "At",
+            "group": "text-formatting"
+        },
+        {
+            "css": "audio-description",
+            "code": 60845,
+            "label": "Audio Description",
+            "group": "accessibility"
+        },
+        {
+            "css": "award",
+            "code": 59493,
+            "label": "Award",
+            "group": "objects"
+        },
+        {
+            "css": "award-slash",
+            "code": 59397,
+            "label": "Award Slash",
+            "group": "objects"
+        },
+        {
+            "css": "backward",
+            "code": 60847,
+            "label": "Backward",
+            "group": "interfaces"
+        },
+        {
+            "css": "ball-soccer",
+            "code": 59393,
+            "label": "Ball Soccer",
+            "group": "objects"
+        },
+        {
+            "css": "bars",
+            "code": 60849,
+            "label": "Bars",
+            "group": "interfaces"
+        },
+        {
+            "css": "bars-2",
+            "code": 60850,
+            "label": "Bars 2",
+            "group": "interfaces"
+        },
+        {
+            "css": "battery",
+            "code": 59497,
+            "label": "Battery",
+            "group": "interfaces"
+        },
+        {
+            "css": "battery-empty",
+            "code": 59499,
+            "label": "Battery Empty",
+            "group": "interfaces"
+        },
+        {
+            "css": "battery-full",
+            "code": 60853,
+            "label": "Battery Full",
+            "group": "interfaces"
+        },
+        {
+            "css": "battery-quarter",
+            "code": 60855,
+            "label": "Battery Quarter",
+            "group": "interfaces"
+        },
+        {
+            "css": "battery-slash",
+            "code": 60856,
+            "label": "Battery Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "battery-three-quarters",
+            "code": 60857,
+            "label": "Battery Three Quarters",
+            "group": "interfaces"
+        },
+        {
+            "css": "bell",
+            "code": 59501,
+            "label": "Bell",
+            "group": "interfaces"
+        },
+        {
+            "css": "bell-plus",
+            "code": 59557,
+            "label": "Bell Plus",
+            "group": "interfaces"
+        },
+        {
+            "css": "bell-slash",
+            "code": 59498,
+            "label": "Bell Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "bluetooth",
+            "code": 59500,
+            "label": "Bluetooth",
+            "group": "technology"
+        },
+        {
+            "css": "bold",
+            "code": 59722,
+            "label": "Bold",
+            "group": "text-formatting"
+        },
+        {
+            "css": "bolt",
+            "code": 60863,
+            "label": "Bolt",
+            "group": "interfaces"
+        },
+        {
+            "css": "book",
+            "code": 59502,
+            "label": "Book",
+            "group": "objects"
+        },
+        {
+            "css": "bookmark",
+            "code": 59506,
+            "label": "Bookmark",
+            "group": "interfaces"
+        },
+        {
+            "css": "book-open",
+            "code": 59759,
+            "label": "Book Open",
+            "group": "objects"
+        },
+        {
+            "css": "books",
+            "code": 60867,
+            "label": "Books",
+            "group": "objects"
+        },
+        {
+            "css": "box",
+            "code": 59766,
+            "label": "Box",
+            "group": "objects"
+        },
+        {
+            "css": "brand-android",
+            "code": 60869,
+            "label": "Android",
+            "group": "brands"
+        },
+        {
+            "css": "brand-aperture",
+            "code": 59486,
+            "label": "Aperture",
+            "group": "brands"
+        },
+        {
+            "css": "brand-apple",
+            "code": 60871,
+            "label": "Apple",
+            "group": "brands"
+        },
+        {
+            "css": "brand-buddyboss",
+            "code": 60872,
+            "label": "BuddyBoss",
+            "group": "brands"
+        },
+        {
+            "css": "brand-buddyboss-app",
+            "code": 60873,
+            "label": "BuddyBoss App",
+            "group": "brands"
+        },
+        {
+            "css": "brand-buddyboss-bolt",
+            "code": 60874,
+            "label": "BuddyBoss Bolt",
+            "group": "brands"
+        },
+        {
+            "css": "brand-buddypress",
+            "code": 60875,
+            "label": "BuddyPress",
+            "group": "brands"
+        },
+        {
+            "css": "brand-bunnynet",
+            "code": 59882,
+            "label": "Bunny Net",
+            "group": "brands"
+        },
+        {
+            "css": "brand-chrome",
+            "code": 59523,
+            "label": "Chrome",
+            "group": "brands"
+        },
+        {
+            "css": "brand-clubhouse",
+            "code": 60877,
+            "label": "Clubhouse",
+            "group": "brands"
+        },
+        {
+            "css": "brand-codepen",
+            "code": 60878,
+            "label": "CodePen",
+            "group": "brands"
+        },
+        {
+            "css": "brand-dribbble",
+            "code": 60879,
+            "label": "Dribbble",
+            "group": "brands"
+        },
+        {
+            "css": "brand-edge",
+            "code": 60880,
+            "label": "Microsoft Edge",
+            "group": "brands"
+        },
+        {
+            "css": "brand-elementor",
+            "code": 60881,
+            "label": "Elementor",
+            "group": "brands"
+        },
+        {
+            "css": "brand-facebook",
+            "code": 60882,
+            "label": "Facebook",
+            "group": "brands"
+        },
+        {
+            "css": "brand-facebook-f",
+            "code": 59399,
+            "label": "Facebook F",
+            "group": "brands"
+        },
+        {
+            "css": "brand-firefox",
+            "code": 60883,
+            "label": "Firefox",
+            "group": "brands"
+        },
+        {
+            "css": "brand-flickr",
+            "code": 60884,
+            "label": "Flickr",
+            "group": "brands"
+        },
+        {
+            "css": "brand-gamipress",
+            "code": 60885,
+            "label": "GamiPress",
+            "group": "brands"
+        },
+        {
+            "css": "brand-github",
+            "code": 60886,
+            "label": "GitHub",
+            "group": "brands"
+        },
+        {
+            "css": "brand-google",
+            "code": 60887,
+            "label": "Google",
+            "group": "brands"
+        },
+        {
+            "css": "brand-gitlab",
+            "code": 60888,
+            "label": "GitLab",
+            "group": "brands"
+        },
+        {
+            "css": "brand-google-admob",
+            "code": 60889,
+            "label": "Google AdMob",
+            "group": "brands"
+        },
+        {
+            "css": "brand-google-firebase",
+            "code": 60890,
+            "label": "Google Firebase",
+            "group": "brands"
+        },
+        {
+            "css": "brand-google-fonts",
+            "code": 60891,
+            "label": "Google Fonts",
+            "group": "brands"
+        },
+        {
+            "css": "brand-instagram",
+            "code": 60892,
+            "label": "Instagram",
+            "group": "brands"
+        },
+        {
+            "css": "brand-intercom",
+            "code": 59891,
+            "label": "Intercom",
+            "group": "brands"
+        },
+        {
+            "css": "brand-learndash",
+            "code": 60893,
+            "label": "LearnDash",
+            "group": "brands"
+        },
+        {
+            "css": "brand-lifterlms",
+            "code": 60894,
+            "label": "LifterLMS",
+            "group": "brands"
+        },
+        {
+            "css": "brand-linkedin",
+            "code": 60895,
+            "label": "LinkedIn",
+            "group": "brands"
+        },
+        {
+            "css": "brand-medium",
+            "code": 60896,
+            "label": "Medium",
+            "group": "brands"
+        },
+        {
+            "css": "brand-meetup",
+            "code": 59392,
+            "label": "Meetup",
+            "group": "brands"
+        },
+        {
+            "css": "brand-memberpress",
+            "code": 60848,
+            "label": "MemberPress",
+            "group": "brands"
+        },
+        {
+            "css": "brand-onesignal",
+            "code": 59394,
+            "label": "OneSignal",
+            "group": "brands"
+        },
+        {
+            "css": "brand-paidmembershipspro",
+            "code": 60900,
+            "label": "Paid Memberships Pro",
+            "group": "brands"
+        },
+        {
+            "css": "brand-pinterest",
+            "code": 60901,
+            "label": "Pinterest",
+            "group": "brands"
+        },
+        {
+            "css": "brand-pusher",
+            "code": 60902,
+            "label": "Pusher",
+            "group": "brands"
+        },
+        {
+            "css": "brand-quora",
+            "code": 60903,
+            "label": "Quora",
+            "group": "brands"
+        },
+        {
+            "css": "brand-reddit",
+            "code": 60904,
+            "label": "Reddit",
+            "group": "brands"
+        },
+        {
+            "css": "brand-restrictcontentpro",
+            "code": 60905,
+            "label": "Restrict Content Pro",
+            "group": "brands"
+        },
+        {
+            "css": "brand-safari",
+            "code": 60906,
+            "label": "Safari",
+            "group": "brands"
+        },
+        {
+            "css": "brand-skype",
+            "code": 60907,
+            "label": "Skype",
+            "group": "brands"
+        },
+        {
+            "css": "brand-snapchat",
+            "code": 60908,
+            "label": "Snapchat",
+            "group": "brands"
+        },
+        {
+            "css": "brand-slack",
+            "code": 60909,
+            "label": "Slack",
+            "group": "brands"
+        },
+        {
+            "css": "brand-spotify",
+            "code": 60910,
+            "label": "Spotify",
+            "group": "brands"
+        },
+        {
+            "css": "brand-telegram",
+            "code": 60911,
+            "label": "Telegram",
+            "group": "brands"
+        },
+        {
+            "css": "brand-tiktok",
+            "code": 60912,
+            "label": "TikTok",
+            "group": "brands"
+        },
+        {
+            "css": "brand-tumblr",
+            "code": 60913,
+            "label": "Tumblr",
+            "group": "brands"
+        },
+        {
+            "css": "brand-tutorlms",
+            "code": 60914,
+            "label": "Tutor LMS",
+            "group": "brands"
+        },
+        {
+            "css": "brand-twitch",
+            "code": 60915,
+            "label": "Twitch",
+            "group": "brands"
+        },
+        {
+            "css": "brand-twitter",
+            "code": 60916,
+            "label": "Twitter",
+            "group": "brands"
+        },
+        {
+            "css": "brand-vimeo",
+            "code": 60917,
+            "label": "Vimeo",
+            "group": "brands"
+        },
+        {
+            "css": "brand-vk",
+            "code": 60918,
+            "label": "VK",
+            "group": "brands"
+        },
+        {
+            "css": "brand-whatsapp",
+            "code": 60919,
+            "label": "WhatsApp",
+            "group": "brands"
+        },
+        {
+            "css": "brand-wishlistmember",
+            "code": 60920,
+            "label": "WishList Member",
+            "group": "brands"
+        },
+        {
+            "css": "brand-woocommerce",
+            "code": 60921,
+            "label": "WooCommerce",
+            "group": "brands"
+        },
+        {
+            "css": "brand-wordpress",
+            "code": 60922,
+            "label": "WordPress",
+            "group": "brands"
+        },
+        {
+            "css": "brand-xing",
+            "code": 60923,
+            "label": "XING",
+            "group": "brands"
+        },
+        {
+            "css": "brand-youtube",
+            "code": 60924,
+            "label": "YouTube",
+            "group": "brands"
+        },
+        {
+            "css": "brand-zoom",
+            "code": 60925,
+            "label": "Zoom",
+            "group": "brands"
+        },
+        {
+            "css": "briefcase",
+            "code": 59503,
+            "label": "Briefcase",
+            "group": "objects"
+        },
+        {
+            "css": "browser",
+            "code": 60927,
+            "label": "Browser",
+            "group": "technology"
+        },
+        {
+            "css": "browser-code",
+            "code": 59767,
+            "label": "Browser Code",
+            "group": "technology"
+        },
+        {
+            "css": "browser-terminal",
+            "code": 60929,
+            "label": "Browser Terminal",
+            "group": "technology"
+        },
+        {
+            "css": "bug",
+            "code": 60930,
+            "label": "Bug",
+            "group": "technology"
+        },
+        {
+            "css": "bullhorn",
+            "code": 60931,
+            "label": "Bullhorn",
+            "group": "objects"
+        },
+        {
+            "css": "bullseye",
+            "code": 60932,
+            "label": "Bullseye",
+            "group": "objects"
+        },
+        {
+            "css": "calendar",
+            "code": 59395,
+            "label": "Calendar",
+            "group": "interfaces"
+        },
+        {
+            "css": "camera",
+            "code": 60934,
+            "label": "Camera",
+            "group": "media-files"
+        },
+        {
+            "css": "camera-slash",
+            "code": 59504,
+            "label": "Camera Slash",
+            "group": "media-files"
+        },
+        {
+            "css": "cancel",
+            "code": 60936,
+            "label": "Cancel",
+            "group": "interfaces"
+        },
+        {
+            "css": "caret-down",
+            "code": 60937,
+            "label": "Caret Down",
+            "group": "arrows"
+        },
+        {
+            "css": "caret-left",
+            "code": 60938,
+            "label": "Caret Left",
+            "group": "arrows"
+        },
+        {
+            "css": "caret-right",
+            "code": 60939,
+            "label": "Caret Right",
+            "group": "arrows"
+        },
+        {
+            "css": "caret-up",
+            "code": 60940,
+            "label": "Caret Up",
+            "group": "arrows"
+        },
+        {
+            "css": "car-small",
+            "code": 59398,
+            "label": "Car Small",
+            "group": "objects"
+        },
+        {
+            "css": "cart-slash",
+            "code": 59890,
+            "label": "Cart Slash",
+            "group": "shopping-money"
+        },
+        {
+            "css": "cast",
+            "code": 59512,
+            "label": "Cast",
+            "group": "interfaces"
+        },
+        {
+            "css": "certificate",
+            "code": 59765,
+            "label": "Certificate",
+            "group": "interfaces"
+        },
+        {
+            "css": "chart-area",
+            "code": 60944,
+            "label": "Chart Area",
+            "group": "interfaces"
+        },
+        {
+            "css": "chart-bar-h",
+            "code": 60945,
+            "label": "Chart Bar Horizontal",
+            "group": "interfaces"
+        },
+        {
+            "css": "chart-bar-trending",
+            "code": 60946,
+            "label": "Chart Bar Trending",
+            "group": "interfaces"
+        },
+        {
+            "css": "chart-bar-v",
+            "code": 59496,
+            "label": "Chart Bar Vertical",
+            "group": "interfaces"
+        },
+        {
+            "css": "chart-line",
+            "code": 60948,
+            "label": "Chart Line",
+            "group": "interfaces"
+        },
+        {
+            "css": "chart-pie",
+            "code": 60949,
+            "label": "Chart Pie",
+            "group": "interfaces"
+        },
+        {
+            "css": "check",
+            "code": 59510,
+            "label": "Check",
+            "group": "interfaces"
+        },
+        {
+            "css": "checkbox",
+            "code": 59509,
+            "label": "Checkbox",
+            "group": "interfaces"
+        },
+        {
+            "css": "circle",
+            "code": 59521,
+            "label": "Circle",
+            "group": "interfaces"
+        },
+        {
+            "css": "clipboard",
+            "code": 59522,
+            "label": "Clipboard",
+            "group": "interfaces"
+        },
+        {
+            "css": "clock",
+            "code": 59524,
+            "label": "Clock",
+            "group": "interfaces"
+        },
+        {
+            "css": "closed-captioning",
+            "code": 60955,
+            "label": "Closed Captioning",
+            "group": "accessibility"
+        },
+        {
+            "css": "cloud",
+            "code": 59717,
+            "label": "Cloud",
+            "group": "technology"
+        },
+        {
+            "css": "cloud-check",
+            "code": 59892,
+            "label": "Cloud Check",
+            "group": "technology"
+        },
+        {
+            "css": "cloud-download",
+            "code": 59529,
+            "label": "Cloud Download",
+            "group": "technology"
+        },
+        {
+            "css": "cloud-exclamation",
+            "code": 59893,
+            "label": "Cloud Exclamation",
+            "group": "technology"
+        },
+        {
+            "css": "cloud-drizzle",
+            "code": 59526,
+            "label": "Cloud Drizzle",
+            "group": "objects"
+        },
+        {
+            "css": "cloud-lightning",
+            "code": 59525,
+            "label": "Cloud Lightning",
+            "group": "objects"
+        },
+        {
+            "css": "cloud-rain",
+            "code": 60960,
+            "label": "Cloud Rain",
+            "group": "objects"
+        },
+        {
+            "css": "cloud-slash",
+            "code": 59528,
+            "label": "Cloud Slash",
+            "group": "technology"
+        },
+        {
+            "css": "cloud-snow",
+            "code": 60962,
+            "label": "Cloud Snow",
+            "group": "objects"
+        },
+        {
+            "css": "cloud-sync",
+            "code": 60963,
+            "label": "Cloud Sync",
+            "group": "technology"
+        },
+        {
+            "css": "cloud-times",
+            "code": 59894,
+            "label": "Cloud Times",
+            "group": "technology"
+        },
+        {
+            "css": "cloud-upload",
+            "code": 60964,
+            "label": "Cloud Upload",
+            "group": "technology"
+        },
+        {
+            "css": "code",
+            "code": 60965,
+            "label": "Code",
+            "group": "technology"
+        },
+        {
+            "css": "code-branch",
+            "code": 60966,
+            "label": "Code Branch",
+            "group": "technology"
+        },
+        {
+            "css": "cog",
+            "code": 60967,
+            "label": "Cog",
+            "group": "interfaces"
+        },
+        {
+            "css": "cogs",
+            "code": 60968,
+            "label": "Cogs",
+            "group": "interfaces"
+        },
+        {
+            "css": "coin",
+            "code": 60969,
+            "label": "Coin",
+            "group": "shopping-money"
+        },
+        {
+            "css": "coins",
+            "code": 60970,
+            "label": "Coins",
+            "group": "shopping-money"
+        },
+        {
+            "css": "columns",
+            "code": 60971,
+            "label": "Columns",
+            "group": "text-formatting"
+        },
+        {
+            "css": "command",
+            "code": 60972,
+            "label": "Command",
+            "group": "interfaces"
+        },
+        {
+            "css": "comment",
+            "code": 59769,
+            "label": "Comment",
+            "group": "interfaces"
+        },
+        {
+            "css": "comment-activity",
+            "code": 59751,
+            "label": "Comment Activity",
+            "group": "interfaces"
+        },
+        {
+            "css": "comment-dots",
+            "code": 60975,
+            "label": "Comment Dots",
+            "group": "interfaces"
+        },
+        {
+            "css": "comment-notification",
+            "code": 60976,
+            "label": "Comment Notification",
+            "group": "interfaces"
+        },
+        {
+            "css": "comments",
+            "code": 60977,
+            "label": "Comments",
+            "group": "interfaces"
+        },
+        {
+            "css": "comment-slash",
+            "code": 60978,
+            "label": "Comment Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "comment-square",
+            "code": 60979,
+            "label": "Comment Square",
+            "group": "interfaces"
+        },
+        {
+            "css": "comment-square-dots",
+            "code": 60980,
+            "label": "Comment Square Dots",
+            "group": "interfaces"
+        },
+        {
+            "css": "comment-square-slash",
+            "code": 60981,
+            "label": "Comment Square Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "comments-slash",
+            "code": 60982,
+            "label": "Comments Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "comments-square",
+            "code": 60983,
+            "label": "Comments Square",
+            "group": "interfaces"
+        },
+        {
+            "css": "comments-square-slash",
+            "code": 60984,
+            "label": "Comments Square Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "compass",
+            "code": 60985,
+            "label": "Compass",
+            "group": "objects"
+        },
+        {
+            "css": "compress",
+            "code": 60986,
+            "label": "Compress",
+            "group": "interfaces"
+        },
+        {
+            "css": "copy",
+            "code": 60987,
+            "label": "Copy",
+            "group": "interfaces"
+        },
+        {
+            "css": "copyright",
+            "code": 60988,
+            "label": "Copyright",
+            "group": "text-formatting"
+        },
+        {
+            "css": "corner-left",
+            "code": 60989,
+            "label": "Corner Left",
+            "group": "arrows"
+        },
+        {
+            "css": "corner-right",
+            "code": 60990,
+            "label": "Corner Right",
+            "group": "arrows"
+        },
+        {
+            "css": "course",
+            "code": 60991,
+            "label": "Course",
+            "group": "interfaces"
+        },
+        {
+            "css": "course-slash",
+            "code": 60992,
+            "label": "Course Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "cpu",
+            "code": 60993,
+            "label": "CPU",
+            "group": "technology"
+        },
+        {
+            "css": "credit-card",
+            "code": 60994,
+            "label": "Credit Card",
+            "group": "shopping-money"
+        },
+        {
+            "css": "crop",
+            "code": 60995,
+            "label": "Crop",
+            "group": "text-formatting"
+        },
+        {
+            "css": "crosshairs",
+            "code": 60996,
+            "label": "Crosshairs",
+            "group": "interfaces"
+        },
+        {
+            "css": "crown",
+            "code": 59895,
+            "label": "Crown",
+            "group": "objects"
+        },
+        {
+            "css": "cube",
+            "code": 59507,
+            "label": "Cube",
+            "group": "objects"
+        },
+        {
+            "css": "currency-bitcoin",
+            "code": 60998,
+            "label": "Currency Bitcoin",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-crypto",
+            "code": 60999,
+            "label": "Currency Crypto",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-dollar",
+            "code": 61000,
+            "label": "Currency Dollar",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-euro",
+            "code": 61001,
+            "label": "Currency Euro",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-lira",
+            "code": 61002,
+            "label": "Currency Lira",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-peso",
+            "code": 61003,
+            "label": "Currency Peso",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-pound",
+            "code": 61004,
+            "label": "Currency Pound",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-ruble",
+            "code": 61005,
+            "label": "Currency Ruble",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-rupee",
+            "code": 61006,
+            "label": "Currency Rupee",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-won",
+            "code": 61007,
+            "label": "Currency Won",
+            "group": "shopping-money"
+        },
+        {
+            "css": "currency-yen",
+            "code": 61008,
+            "label": "Currency Yen",
+            "group": "shopping-money"
+        },
+        {
+            "css": "cut",
+            "code": 61009,
+            "label": "Cut",
+            "group": "text-formatting"
+        },
+        {
+            "css": "database",
+            "code": 61010,
+            "label": "Database",
+            "group": "technology"
+        },
+        {
+            "css": "delete-tag",
+            "code": 61011,
+            "label": "Delete Tag",
+            "group": "interfaces"
+        },
+        {
+            "css": "desktop",
+            "code": 61012,
+            "label": "Desktop",
+            "group": "technology"
+        },
+        {
+            "css": "divide",
+            "code": 61013,
+            "label": "Divide",
+            "group": "text-formatting"
+        },
+        {
+            "css": "dot-circle",
+            "code": 61014,
+            "label": "Dot Circle",
+            "group": "interfaces"
+        },
+        {
+            "css": "download",
+            "code": 61015,
+            "label": "Download",
+            "group": "interfaces"
+        },
+        {
+            "css": "droplet",
+            "code": 61016,
+            "label": "Droplet",
+            "group": "interfaces"
+        },
+        {
+            "css": "duplicate",
+            "code": 61017,
+            "label": "Duplicate",
+            "group": "interfaces"
+        },
+        {
+            "css": "edit",
+            "code": 61018,
+            "label": "Edit",
+            "group": "interfaces"
+        },
+        {
+            "css": "eject",
+            "code": 61019,
+            "label": "Eject",
+            "group": "interfaces"
+        },
+        {
+            "css": "ellipsis-h",
+            "code": 61020,
+            "label": "Ellipsis Horizontal",
+            "group": "interfaces"
+        },
+        {
+            "css": "emoticon-confused",
+            "code": 59896,
+            "label": "Emoticon Confused",
+            "group": "interfaces"
+        },
+        {
+            "css": "emoticon-frown",
+            "code": 61022,
+            "label": "Emoticon Frown",
+            "group": "interfaces"
+        },
+        {
+            "css": "emoticon-smile",
+            "code": 61023,
+            "label": "Emoticon Smile",
+            "group": "interfaces"
+        },
+        {
+            "css": "emoticon-wink",
+            "code": 61024,
+            "label": "Emoticon Wink",
+            "group": "interfaces"
+        },
+        {
+            "css": "emotion-laugh",
+            "code": 61025,
+            "label": "Emotion Laugh",
+            "group": "interfaces"
+        },
+        {
+            "css": "envelope",
+            "code": 61026,
+            "label": "Envelope",
+            "group": "interfaces"
+        },
+        {
+            "css": "envelope-open",
+            "code": 61027,
+            "label": "Envelope Open",
+            "group": "interfaces"
+        },
+        {
+            "css": "exchange",
+            "code": 61028,
+            "label": "Exchange",
+            "group": "interfaces"
+        },
+        {
+            "css": "exclamation",
+            "code": 61029,
+            "label": "Exclamation",
+            "group": "alerts"
+        },
+        {
+            "css": "exclamation-triangle",
+            "code": 61030,
+            "label": "Exclamation Triangle",
+            "group": "alerts"
+        },
+        {
+            "css": "expand",
+            "code": 61031,
+            "label": "Expand",
+            "group": "interfaces"
+        },
+        {
+            "css": "external-link",
+            "code": 61032,
+            "label": "External Link",
+            "group": "interfaces"
+        },
+        {
+            "css": "eye",
+            "code": 61033,
+            "label": "Eye",
+            "group": "interfaces"
+        },
+        {
+            "css": "eye-slash",
+            "code": 61034,
+            "label": "Eye Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "fast-backward",
+            "code": 61035,
+            "label": "Fast Backward",
+            "group": "interfaces"
+        },
+        {
+            "css": "fast-forward",
+            "code": 61036,
+            "label": "Fast Forward",
+            "group": "interfaces"
+        },
+        {
+            "css": "feather",
+            "code": 61037,
+            "label": "Feather",
+            "group": "objects"
+        },
+        {
+            "css": "file",
+            "code": 61038,
+            "label": "File",
+            "group": "media-files"
+        },
+        {
+            "css": "file-album",
+            "code": 61039,
+            "label": "File Album",
+            "group": "media-files"
+        },
+        {
+            "css": "file-archive",
+            "code": 61040,
+            "label": "File Archive",
+            "group": "media-files"
+        },
+        {
+            "css": "file-article",
+            "code": 59917,
+            "label": "File Article",
+            "group": "media-files"
+        },
+        {
+            "css": "file-attach",
+            "code": 59776,
+            "label": "File Attach",
+            "group": "media-files"
+        },
+        {
+            "css": "file-audio",
+            "code": 61042,
+            "label": "File Audio",
+            "group": "media-files"
+        },
+        {
+            "css": "file-bookmark",
+            "code": 61043,
+            "label": "File Bookmark",
+            "group": "media-files"
+        },
+        {
+            "css": "file-checklist",
+            "code": 61044,
+            "label": "File Checklist",
+            "group": "media-files"
+        },
+        {
+            "css": "file-cloud",
+            "code": 61045,
+            "label": "File Cloud",
+            "group": "media-files"
+        },
+        {
+            "css": "file-code",
+            "code": 61046,
+            "label": "File Code",
+            "group": "media-files"
+        },
+        {
+            "css": "file-contact",
+            "code": 61047,
+            "label": "File Contact",
+            "group": "media-files"
+        },
+        {
+            "css": "file-css",
+            "code": 61048,
+            "label": "File CSS",
+            "group": "media-files"
+        },
+        {
+            "css": "file-design",
+            "code": 61049,
+            "label": "File Design",
+            "group": "media-files"
+        },
+        {
+            "css": "file-doc",
+            "code": 61050,
+            "label": "File Doc",
+            "group": "media-files"
+        },
+        {
+            "css": "file-dollar",
+            "code": 61051,
+            "label": "File Dollar",
+            "group": "media-files"
+        },
+        {
+            "css": "file-download",
+            "code": 61052,
+            "label": "File Download",
+            "group": "media-files"
+        },
+        {
+            "css": "file-excel",
+            "code": 61053,
+            "label": "File Excel",
+            "group": "media-files"
+        },
+        {
+            "css": "file-exclamation",
+            "code": 61054,
+            "label": "File Exclamation",
+            "group": "media-files"
+        },
+        {
+            "css": "file-export",
+            "code": 61055,
+            "label": "File Export",
+            "group": "media-files"
+        },
+        {
+            "css": "file-font",
+            "code": 61056,
+            "label": "File Font",
+            "group": "media-files"
+        },
+        {
+            "css": "file-gif",
+            "code": 61057,
+            "label": "File GIF",
+            "group": "media-files"
+        },
+        {
+            "css": "file-globe",
+            "code": 61058,
+            "label": "File Globe",
+            "group": "media-files"
+        },
+        {
+            "css": "file-image",
+            "code": 61059,
+            "label": "File Image",
+            "group": "media-files"
+        },
+        {
+            "css": "file-import",
+            "code": 61060,
+            "label": "File Import",
+            "group": "media-files"
+        },
+        {
+            "css": "file-info",
+            "code": 61061,
+            "label": "File Info",
+            "group": "media-files"
+        },
+        {
+            "css": "file-list",
+            "code": 61062,
+            "label": "File List",
+            "group": "media-files"
+        },
+        {
+            "css": "file-list-numeric",
+            "code": 61063,
+            "label": "File List Numeric",
+            "group": "media-files"
+        },
+        {
+            "css": "file-minus",
+            "code": 61064,
+            "label": "File Minus",
+            "group": "media-files"
+        },
+        {
+            "css": "file-mobile",
+            "code": 61065,
+            "label": "File Mobile",
+            "group": "media-files"
+        },
+        {
+            "css": "file-pdf",
+            "code": 61066,
+            "label": "File PDF",
+            "group": "media-files"
+        },
+        {
+            "css": "file-plus",
+            "code": 61067,
+            "label": "File Plus",
+            "group": "media-files"
+        },
+        {
+            "css": "file-powerpoint",
+            "code": 61068,
+            "label": "File Powerpoint",
+            "group": "media-files"
+        },
+        {
+            "css": "file-presentation",
+            "code": 61069,
+            "label": "File Presentation",
+            "group": "media-files"
+        },
+        {
+            "css": "file-question",
+            "code": 61070,
+            "label": "File Question",
+            "group": "media-files"
+        },
+        {
+            "css": "file-rss",
+            "code": 61071,
+            "label": "File RSS",
+            "group": "media-files"
+        },
+        {
+            "css": "file-share",
+            "code": 61072,
+            "label": "File Share",
+            "group": "media-files"
+        },
+        {
+            "css": "file-signature",
+            "code": 61073,
+            "label": "File Signature",
+            "group": "media-files"
+        },
+        {
+            "css": "file-spreadsheet",
+            "code": 61074,
+            "label": "File Spreadsheet",
+            "group": "media-files"
+        },
+        {
+            "css": "file-text",
+            "code": 61075,
+            "label": "File Text",
+            "group": "media-files"
+        },
+        {
+            "css": "file-times",
+            "code": 61076,
+            "label": "File Times",
+            "group": "media-files"
+        },
+        {
+            "css": "file-upload",
+            "code": 61077,
+            "label": "File Upload",
+            "group": "media-files"
+        },
+        {
+            "css": "file-vector",
+            "code": 61078,
+            "label": "File Vector",
+            "group": "media-files"
+        },
+        {
+            "css": "file-video",
+            "code": 61079,
+            "label": "File Video",
+            "group": "media-files"
+        },
+        {
+            "css": "file-word",
+            "code": 61080,
+            "label": "File Word",
+            "group": "media-files"
+        },
+        {
+            "css": "film",
+            "code": 61081,
+            "label": "Film",
+            "group": "media-files"
+        },
+        {
+            "css": "filter",
+            "code": 61082,
+            "label": "Filter",
+            "group": "interfaces"
+        },
+        {
+            "css": "filter-alt",
+            "code": 61083,
+            "label": "Filter Alt",
+            "group": "interfaces"
+        },
+        {
+            "css": "flag",
+            "code": 61084,
+            "label": "Flag",
+            "group": "interfaces"
+        },
+        {
+            "css": "flask",
+            "code": 61085,
+            "label": "Flask",
+            "group": "objects"
+        },
+        {
+            "css": "folder",
+            "code": 61086,
+            "label": "Folder",
+            "group": "media-files"
+        },
+        {
+            "css": "folder-alt",
+            "code": 61087,
+            "label": "Folder Alt",
+            "group": "media-files"
+        },
+        {
+            "css": "folder-alt-slash",
+            "code": 61088,
+            "label": "Folder Alt Slash",
+            "group": "media-files"
+        },
+        {
+            "css": "folder-download",
+            "code": 59897,
+            "label": "Folder Download",
+            "group": "media-files"
+        },
+        {
+            "css": "folder-move",
+            "code": 59898,
+            "label": "Folder Move",
+            "group": "media-files"
+        },
+        {
+            "css": "folder-open",
+            "code": 61089,
+            "label": "Folder Open",
+            "group": "media-files"
+        },
+        {
+            "css": "folder-plus",
+            "code": 61090,
+            "label": "Folder Plus",
+            "group": "media-files"
+        },
+        {
+            "css": "folder-slash",
+            "code": 61091,
+            "label": "Folder Slash",
+            "group": "media-files"
+        },
+        {
+            "css": "folder-upload",
+            "code": 59899,
+            "label": "Folder Upload",
+            "group": "media-files"
+        },
+        {
+            "css": "font",
+            "code": 61092,
+            "label": "Font",
+            "group": "text-formatting"
+        },
+        {
+            "css": "forest",
+            "code": 61093,
+            "label": "Forest",
+            "group": "objects"
+        },
+        {
+            "css": "forward",
+            "code": 61094,
+            "label": "Forward",
+            "group": "interfaces"
+        },
+        {
+            "css": "gem",
+            "code": 61095,
+            "label": "Gem",
+            "group": "objects"
+        },
+        {
+            "css": "gif",
+            "code": 61096,
+            "label": "GIF",
+            "group": "media-files"
+        },
+        {
+            "css": "gift",
+            "code": 61097,
+            "label": "Gift",
+            "group": "objects"
+        },
+        {
+            "css": "globe",
+            "code": 61098,
+            "label": "Globe",
+            "group": "interfaces"
+        },
+        {
+            "css": "globe-alt",
+            "code": 59918,
+            "label": "Globe Alt",
+            "group": "interfaces"
+        },
+        {
+            "css": "globe-layers",
+            "code": 61099,
+            "label": "Globe Layers",
+            "group": "interfaces"
+        },
+        {
+            "css": "graduation-cap",
+            "code": 61100,
+            "label": "Graduation Cap",
+            "group": "objects"
+        },
+        {
+            "css": "grid-large",
+            "code": 61101,
+            "label": "Grid Large",
+            "group": "interfaces"
+        },
+        {
+            "css": "grid-small",
+            "code": 61102,
+            "label": "Grid Small",
+            "group": "interfaces"
+        },
+        {
+            "css": "grip-h",
+            "code": 59900,
+            "label": "Grid H",
+            "group": "interfaces"
+        },
+        {
+            "css": "grip-v",
+            "code": 59901,
+            "label": "Grid V",
+            "group": "interfaces"
+        },
+        {
+            "css": "hashtag",
+            "code": 61103,
+            "label": "Hashtag",
+            "group": "interfaces"
+        },
+        {
+            "css": "hand-pointer",
+            "code": 59884,
+            "label": "Hand Pointer",
+            "group": "interfaces"
+        },
+        {
+            "css": "heading",
+            "code": 61104,
+            "label": "Heading",
+            "group": "text-formatting"
+        },
+        {
+            "css": "headphones",
+            "code": 61105,
+            "label": "Headphones",
+            "group": "objects"
+        },
+        {
+            "css": "heart",
+            "code": 61106,
+            "label": "Heart",
+            "group": "interfaces"
+        },
+        {
+            "css": "home",
+            "code": 61107,
+            "label": "Home",
+            "group": "interfaces"
+        },
+        {
+            "css": "image",
+            "code": 61108,
+            "label": "Image",
+            "group": "media-files"
+        },
+        {
+            "css": "images",
+            "code": 61109,
+            "label": "Images",
+            "group": "media-files"
+        },
+        {
+            "css": "image-move",
+            "code": 59902,
+            "label": "Image Move",
+            "group": "media-files"
+        },
+        {
+            "css": "image-plus",
+            "code": 59885,
+            "label": "Image Plus",
+            "group": "media-files"
+        },
+        {
+            "css": "image-slash",
+            "code": 61110,
+            "label": "Image Slash",
+            "group": "media-files"
+        },
+        {
+            "css": "images-slash",
+            "code": 61111,
+            "label": "Images Slash",
+            "group": "media-files"
+        },
+        {
+            "css": "image-video",
+            "code": 61112,
+            "label": "Image Video",
+            "group": "media-files"
+        },
+        {
+            "css": "image-video-slash",
+            "code": 61113,
+            "label": "Image Video Slash",
+            "group": "media-files"
+        },
+        {
+            "css": "inbox",
+            "code": 61114,
+            "label": "Inbox",
+            "group": "interfaces"
+        },
+        {
+            "css": "indent",
+            "code": 61115,
+            "label": "Indent",
+            "group": "text-formatting"
+        },
+        {
+            "css": "info",
+            "code": 61116,
+            "label": "Info",
+            "group": "alerts"
+        },
+        {
+            "css": "info-triangle",
+            "code": 61117,
+            "label": "Info Triangle",
+            "group": "alerts"
+        },
+        {
+            "css": "italic",
+            "code": 61118,
+            "label": "Italic",
+            "group": "text-formatting"
+        },
+        {
+            "css": "key",
+            "code": 61119,
+            "label": "Key",
+            "group": "objects"
+        },
+        {
+            "css": "keyboard",
+            "code": 61120,
+            "label": "Keyboard",
+            "group": "objects"
+        },
+        {
+            "css": "key-slash",
+            "code": 61121,
+            "label": "Key Slash",
+            "group": "objects"
+        },
+        {
+            "css": "laptop",
+            "code": 61122,
+            "label": "Laptop",
+            "group": "technology"
+        },
+        {
+            "css": "layers",
+            "code": 61123,
+            "label": "Layers",
+            "group": "technology"
+        },
+        {
+            "css": "less-than",
+            "code": 61124,
+            "label": "Less Than",
+            "group": "interfaces"
+        },
+        {
+            "css": "less-than-equal",
+            "code": 61125,
+            "label": "Less Than Equal",
+            "group": "interfaces"
+        },
+        {
+            "css": "life-ring",
+            "code": 61126,
+            "label": "Life Ring",
+            "group": "objects"
+        },
+        {
+            "css": "lightbulb",
+            "code": 60933,
+            "label": "Lightbulb",
+            "group": "objects"
+        },
+        {
+            "css": "link",
+            "code": 61128,
+            "label": "Link",
+            "group": "interfaces"
+        },
+        {
+            "css": "list",
+            "code": 61129,
+            "label": "List",
+            "group": "text-formatting"
+        },
+        {
+            "css": "list-number",
+            "code": 61130,
+            "label": "List Number",
+            "group": "text-formatting"
+        },
+        {
+            "css": "location-arrow",
+            "code": 61131,
+            "label": "Location Arrow",
+            "group": "interfaces"
+        },
+        {
+            "css": "lock-alt",
+            "code": 61133,
+            "label": "Lock Alt",
+            "group": "interfaces"
+        },
+        {
+            "css": "lock-alt-open",
+            "code": 61134,
+            "label": "Lock Alt Open",
+            "group": "interfaces"
+        },
+        {
+            "css": "lock-open",
+            "code": 61135,
+            "label": "Lock Open",
+            "group": "interfaces"
+        },
+        {
+            "css": "map",
+            "code": 61136,
+            "label": "Map",
+            "group": "objects"
+        },
+        {
+            "css": "map-marker",
+            "code": 61137,
+            "label": "Map Marker",
+            "group": "interfaces"
+        },
+        {
+            "css": "marketplace",
+            "code": 61138,
+            "label": "Marketplace",
+            "group": "objects"
+        },
+        {
+            "css": "maximize",
+            "code": 61139,
+            "label": "Maximize",
+            "group": "interfaces"
+        },
+        {
+            "css": "membership-card",
+            "code": 61140,
+            "label": "Membership Card",
+            "group": "shopping-money"
+        },
+        {
+            "css": "merge",
+            "code": 61141,
+            "label": "Merge",
+            "group": "interfaces"
+        },
+        {
+            "css": "microphone",
+            "code": 61142,
+            "label": "Microphone",
+            "group": "interfaces"
+        },
+        {
+            "css": "microphone-slash",
+            "code": 61143,
+            "label": "Microphone Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "minimize",
+            "code": 59886,
+            "label": "Minimize",
+            "group": "interfaces"
+        },
+        {
+            "css": "minus",
+            "code": 61144,
+            "label": "Minus",
+            "group": "interfaces"
+        },
+        {
+            "css": "mobile",
+            "code": 61145,
+            "label": "Mobile",
+            "group": "technology"
+        },
+        {
+            "css": "mobile-slash",
+            "code": 59903,
+            "label": "Mobile Slash",
+            "group": "technology"
+        },
+        {
+            "css": "money",
+            "code": 61146,
+            "label": "Money",
+            "group": "shopping-money"
+        },
+        {
+            "css": "moon",
+            "code": 61147,
+            "label": "Moon",
+            "group": "objects"
+        },
+        {
+            "css": "more-than",
+            "code": 61148,
+            "label": "More Than",
+            "group": "interfaces"
+        },
+        {
+            "css": "more-than-equal",
+            "code": 61149,
+            "label": "More Than Equal",
+            "group": "interfaces"
+        },
+        {
+            "css": "mouse-pointer",
+            "code": 61150,
+            "label": "Mouse Pointer",
+            "group": "interfaces"
+        },
+        {
+            "css": "music",
+            "code": 61151,
+            "label": "Music",
+            "group": "media-files"
+        },
+        {
+            "css": "music-note",
+            "code": 61152,
+            "label": "Music Note",
+            "group": "media-files"
+        },
+        {
+            "css": "music-note-slash",
+            "code": 61153,
+            "label": "Music Note Slash",
+            "group": "media-files"
+        },
+        {
+            "css": "music-slash",
+            "code": 61154,
+            "label": "Music Slash",
+            "group": "media-files"
+        },
+        {
+            "css": "newspaper",
+            "code": 59919,
+            "label": "Newspaper",
+            "group": "objects"
+        },
+        {
+            "css": "outdent",
+            "code": 61155,
+            "label": "Outdent",
+            "group": "text-formatting"
+        },
+        {
+            "css": "oxtagon",
+            "code": 61156,
+            "label": "Oxtagon",
+            "group": "interfaces"
+        },
+        {
+            "css": "package",
+            "code": 61157,
+            "label": "Package",
+            "group": "objects"
+        },
+        {
+            "css": "paperclip",
+            "code": 61158,
+            "label": "Paperclip",
+            "group": "interfaces"
+        },
+        {
+            "css": "paper-plane",
+            "code": 61159,
+            "label": "Paper Plane",
+            "group": "interfaces"
+        },
+        {
+            "css": "paragraph",
+            "code": 61160,
+            "label": "Paragraph",
+            "group": "text-formatting"
+        },
+        {
+            "css": "paste",
+            "code": 61161,
+            "label": "Paste",
+            "group": "interfaces"
+        },
+        {
+            "css": "pause",
+            "code": 61162,
+            "label": "Pause",
+            "group": "interfaces"
+        },
+        {
+            "css": "pen",
+            "code": 61163,
+            "label": "Pen",
+            "group": "interfaces"
+        },
+        {
+            "css": "pencil",
+            "code": 61164,
+            "label": "Pencil",
+            "group": "interfaces"
+        },
+        {
+            "css": "percentage",
+            "code": 61165,
+            "label": "Percentage",
+            "group": "interfaces"
+        },
+        {
+            "css": "phone",
+            "code": 61166,
+            "label": "Phone",
+            "group": "interfaces"
+        },
+        {
+            "css": "phone-call",
+            "code": 61167,
+            "label": "Phone Call",
+            "group": "interfaces"
+        },
+        {
+            "css": "phone-forwarded",
+            "code": 61168,
+            "label": "Phone Forwarded",
+            "group": "interfaces"
+        },
+        {
+            "css": "phone-incoming",
+            "code": 61169,
+            "label": "Phone Incoming",
+            "group": "interfaces"
+        },
+        {
+            "css": "phone-missed",
+            "code": 61170,
+            "label": "Phone Missed",
+            "group": "interfaces"
+        },
+        {
+            "css": "phone-slash",
+            "code": 61171,
+            "label": "Phone Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "picture-in-picture",
+            "code": 59888,
+            "label": "Picture In Picture",
+            "group": "interfaces"
+        },
+        {
+            "css": "pin",
+            "code": 61172,
+            "label": "Pin",
+            "group": "interfaces"
+        },
+        {
+            "css": "pin-star",
+            "code": 61173,
+            "label": "Pin Star",
+            "group": "interfaces"
+        },
+        {
+            "css": "pizza-slice",
+            "code": 61174,
+            "label": "Pizza Slice",
+            "group": "objects"
+        },
+        {
+            "css": "play",
+            "code": 61175,
+            "label": "Play",
+            "group": "interfaces"
+        },
+        {
+            "css": "plug",
+            "code": 61176,
+            "label": "Plug",
+            "group": "objects"
+        },
+        {
+            "css": "plus",
+            "code": 61177,
+            "label": "Plus",
+            "group": "interfaces"
+        },
+        {
+            "css": "pocket",
+            "code": 61178,
+            "label": "Pocket",
+            "group": "interfaces"
+        },
+        {
+            "css": "poll",
+            "code": 61179,
+            "label": "Poll",
+            "group": "interfaces"
+        },
+        {
+            "css": "poll-h",
+            "code": 61180,
+            "label": "Poll Horizontal",
+            "group": "interfaces"
+        },
+        {
+            "css": "power-on",
+            "code": 61181,
+            "label": "Power On",
+            "group": "interfaces"
+        },
+        {
+            "css": "printer",
+            "code": 61182,
+            "label": "Printer",
+            "group": "interfaces"
+        },
+        {
+            "css": "question",
+            "code": 61183,
+            "label": "Question",
+            "group": "alerts"
+        },
+        {
+            "css": "question-triangle",
+            "code": 59477,
+            "label": "Question Triangle",
+            "group": "alerts"
+        },
+        {
+            "css": "quiz",
+            "code": 61185,
+            "label": "Quiz",
+            "group": "interfaces"
+        },
+        {
+            "css": "quote-left",
+            "code": 61186,
+            "label": "Quote Left",
+            "group": "text-formatting"
+        },
+        {
+            "css": "quote-right",
+            "code": 61187,
+            "label": "Quote Right",
+            "group": "text-formatting"
+        },
+        {
+            "css": "radio",
+            "code": 61188,
+            "label": "Radio",
+            "group": "interfaces"
+        },
+        {
+            "css": "random",
+            "code": 61189,
+            "label": "Random",
+            "group": "interfaces"
+        },
+        {
+            "css": "receipt",
+            "code": 61190,
+            "label": "Receipt",
+            "group": "shopping-money"
+        },
+        {
+            "css": "redo",
+            "code": 61191,
+            "label": "Redo",
+            "group": "interfaces"
+        },
+        {
+            "css": "registered",
+            "code": 61192,
+            "label": "Registered",
+            "group": "interfaces"
+        },
+        {
+            "css": "repeat",
+            "code": 61193,
+            "label": "Repeat",
+            "group": "interfaces"
+        },
+        {
+            "css": "reply",
+            "code": 61194,
+            "label": "Reply",
+            "group": "interfaces"
+        },
+        {
+            "css": "reply-all",
+            "code": 61195,
+            "label": "Reply All",
+            "group": "interfaces"
+        },
+        {
+            "css": "rocket",
+            "code": 61196,
+            "label": "Rocket",
+            "group": "objects"
+        },
+        {
+            "css": "rss",
+            "code": 61197,
+            "label": "Rss",
+            "group": "interfaces"
+        },
+        {
+            "css": "save",
+            "code": 61198,
+            "label": "Save",
+            "group": "interfaces"
+        },
+        {
+            "css": "scissors",
+            "code": 61199,
+            "label": "Scissors",
+            "group": "interfaces"
+        },
+        {
+            "css": "search",
+            "code": 61200,
+            "label": "Search",
+            "group": "interfaces"
+        },
+        {
+            "css": "search-minus",
+            "code": 61201,
+            "label": "Search Minus",
+            "group": "interfaces"
+        },
+        {
+            "css": "search-plus",
+            "code": 61202,
+            "label": "Search Plus",
+            "group": "interfaces"
+        },
+        {
+            "css": "server",
+            "code": 61203,
+            "label": "Server",
+            "group": "technology"
+        },
+        {
+            "css": "share",
+            "code": 61204,
+            "label": "Share",
+            "group": "interfaces"
+        },
+        {
+            "css": "share-dots",
+            "code": 61205,
+            "label": "Share Dots",
+            "group": "interfaces"
+        },
+        {
+            "css": "share-square",
+            "code": 61206,
+            "label": "Share Square",
+            "group": "interfaces"
+        },
+        {
+            "css": "shield",
+            "code": 61207,
+            "label": "Shield",
+            "group": "interfaces"
+        },
+        {
+            "css": "shield-half",
+            "code": 61208,
+            "label": "Shield Half",
+            "group": "interfaces"
+        },
+        {
+            "css": "shopping-bag",
+            "code": 61209,
+            "label": "Shopping Bag",
+            "group": "shopping-money"
+        },
+        {
+            "css": "shopping-basket",
+            "code": 61210,
+            "label": "Shopping Basket",
+            "group": "shopping-money"
+        },
+        {
+            "css": "shopping-cart",
+            "code": 61211,
+            "label": "Shopping Cart",
+            "group": "shopping-money"
+        },
+        {
+            "css": "sidebar",
+            "code": 59552,
+            "label": "Sidebar",
+            "group": "interfaces"
+        },
+        {
+            "css": "signal-1",
+            "code": 61213,
+            "label": "Signal 1",
+            "group": "interfaces"
+        },
+        {
+            "css": "signal-2",
+            "code": 61214,
+            "label": "Signal 2",
+            "group": "interfaces"
+        },
+        {
+            "css": "signal-3",
+            "code": 61215,
+            "label": "Signal 3",
+            "group": "interfaces"
+        },
+        {
+            "css": "signal-full",
+            "code": 61216,
+            "label": "Signal Full",
+            "group": "interfaces"
+        },
+        {
+            "css": "signal-slash",
+            "code": 61217,
+            "label": "Signal Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "sign-in",
+            "code": 61218,
+            "label": "Sign In",
+            "group": "interfaces"
+        },
+        {
+            "css": "sign-out",
+            "code": 61219,
+            "label": "Sign Out",
+            "group": "interfaces"
+        },
+        {
+            "css": "sliders-h",
+            "code": 61220,
+            "label": "Sliders Horizontal",
+            "group": "interfaces"
+        },
+        {
+            "css": "sliders-v",
+            "code": 61221,
+            "label": "Sliders Vertical",
+            "group": "interfaces"
+        },
+        {
+            "css": "sort",
+            "code": 61222,
+            "label": "Sort",
+            "group": "interfaces"
+        },
+        {
+            "css": "sort-alpha-down",
+            "code": 61223,
+            "label": "Sort Alpha Down",
+            "group": "interfaces"
+        },
+        {
+            "css": "sort-alpha-up",
+            "code": 61224,
+            "label": "Sort Alpha Up",
+            "group": "interfaces"
+        },
+        {
+            "css": "sort-amount-down",
+            "code": 61225,
+            "label": "Sort Amount Down",
+            "group": "interfaces"
+        },
+        {
+            "css": "sort-amount-up",
+            "code": 61226,
+            "label": "Sort Amount Up",
+            "group": "interfaces"
+        },
+        {
+            "css": "sort-down",
+            "code": 61227,
+            "label": "Sort Down",
+            "group": "interfaces"
+        },
+        {
+            "css": "sort-numeric-down",
+            "code": 61228,
+            "label": "Sort Numeric Down",
+            "group": "interfaces"
+        },
+        {
+            "css": "sort-numeric-up",
+            "code": 61229,
+            "label": "Sort Numeric Up",
+            "group": "interfaces"
+        },
+        {
+            "css": "sort-up",
+            "code": 61230,
+            "label": "Sort Up",
+            "group": "interfaces"
+        },
+        {
+            "css": "speaker",
+            "code": 61231,
+            "label": "Speaker",
+            "group": "objects"
+        },
+        {
+            "css": "spinner",
+            "code": 61232,
+            "label": "Spinner",
+            "group": "interfaces"
+        },
+        {
+            "css": "spinner-alt",
+            "code": 59887,
+            "label": "Spinner Alt",
+            "group": "interfaces"
+        },
+        {
+            "css": "spinner-third",
+            "code": 61233,
+            "label": "Spinner Third",
+            "group": "interfaces"
+        },
+        {
+            "css": "split",
+            "code": 59904,
+            "label": "Split",
+            "group": "interfaces"
+        },
+        {
+            "css": "star",
+            "code": 61234,
+            "label": "Star",
+            "group": "interfaces"
+        },
+        {
+            "css": "star-half",
+            "code": 61235,
+            "label": "Star Half",
+            "group": "interfaces"
+        },
+        {
+            "css": "star-slash",
+            "code": 59905,
+            "label": "Star Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "step-backward",
+            "code": 61236,
+            "label": "Step Backward",
+            "group": "interfaces"
+        },
+        {
+            "css": "step-forward",
+            "code": 61237,
+            "label": "Step Forward",
+            "group": "interfaces"
+        },
+        {
+            "css": "stop",
+            "code": 61238,
+            "label": "Stop",
+            "group": "interfaces"
+        },
+        {
+            "css": "stopwatch",
+            "code": 59906,
+            "label": "Stopwatch",
+            "group": "objects"
+        },
+        {
+            "css": "strikethrough",
+            "code": 59907,
+            "label": "Strikethrough",
+            "group": "text-formatting"
+        },
+        {
+            "css": "sun",
+            "code": 61239,
+            "label": "Sun",
+            "group": "objects"
+        },
+        {
+            "css": "sunrise",
+            "code": 61240,
+            "label": "Sunrise",
+            "group": "objects"
+        },
+        {
+            "css": "sync",
+            "code": 61241,
+            "label": "Sync",
+            "group": "interfaces"
+        },
+        {
+            "css": "tablet",
+            "code": 61242,
+            "label": "Tablet",
+            "group": "technology"
+        },
+        {
+            "css": "tag",
+            "code": 61243,
+            "label": "Tag",
+            "group": "interfaces"
+        },
+        {
+            "css": "tags",
+            "code": 61244,
+            "label": "Tags",
+            "group": "interfaces"
+        },
+        {
+            "css": "terminal",
+            "code": 61245,
+            "label": "Terminal",
+            "group": "technology"
+        },
+        {
+            "css": "text",
+            "code": 61246,
+            "label": "Text",
+            "group": "text-formatting"
+        },
+        {
+            "css": "thermometer",
+            "code": 61247,
+            "label": "Thermometer",
+            "group": "objects"
+        },
+        {
+            "css": "thumbs-down",
+            "code": 61248,
+            "label": "Thumbs Down",
+            "group": "interfaces"
+        },
+        {
+            "css": "thumbs-up",
+            "code": 61249,
+            "label": "Thumbs Up",
+            "group": "interfaces"
+        },
+        {
+            "css": "times",
+            "code": 59432,
+            "label": "Times",
+            "group": "alerts"
+        },
+        {
+            "css": "times-triangle",
+            "code": 61251,
+            "label": "Times Triangle",
+            "group": "alerts"
+        },
+        {
+            "css": "toggle-off",
+            "code": 61252,
+            "label": "Toggle Off",
+            "group": "interfaces"
+        },
+        {
+            "css": "toggle-on",
+            "code": 61253,
+            "label": "Toggle On",
+            "group": "interfaces"
+        },
+        {
+            "css": "tools",
+            "code": 61254,
+            "label": "Tools",
+            "group": "interfaces"
+        },
+        {
+            "css": "trademark",
+            "code": 61255,
+            "label": "Trademark",
+            "group": "text-formatting"
+        },
+        {
+            "css": "trash",
+            "code": 61256,
+            "label": "Trash",
+            "group": "interfaces"
+        },
+        {
+            "css": "trash-restore",
+            "code": 61257,
+            "label": "Trash Restore",
+            "group": "interfaces"
+        },
+        {
+            "css": "trending-down",
+            "code": 61258,
+            "label": "Trending Down",
+            "group": "interfaces"
+        },
+        {
+            "css": "trending-up",
+            "code": 61259,
+            "label": "Trending Up",
+            "group": "interfaces"
+        },
+        {
+            "css": "trophy",
+            "code": 61260,
+            "label": "Trophy",
+            "group": "objects"
+        },
+        {
+            "css": "trophy-slash",
+            "code": 59908,
+            "label": "Trophy Slash",
+            "group": "objects"
+        },
+        {
+            "css": "tv",
+            "code": 61261,
+            "label": "TV",
+            "group": "technology"
+        },
+        {
+            "css": "umbrella",
+            "code": 61262,
+            "label": "Umbrella",
+            "group": "objects"
+        },
+        {
+            "css": "underline",
+            "code": 61263,
+            "label": "Underline",
+            "group": "text-formatting"
+        },
+        {
+            "css": "undo",
+            "code": 61264,
+            "label": "Undo",
+            "group": "interfaces"
+        },
+        {
+            "css": "unlink",
+            "code": 61265,
+            "label": "Unlink",
+            "group": "interfaces"
+        },
+        {
+            "css": "user",
+            "code": 61266,
+            "label": "User",
+            "group": "users-people"
+        },
+        {
+            "css": "user-arrow-down",
+            "code": 59913,
+            "label": "User Arrow Down",
+            "group": "users-people"
+        },
+        {
+            "css": "user-arrow-up",
+            "code": 59914,
+            "label": "User Arrow Up",
+            "group": "users-people"
+        },
+        {
+            "css": "user-avatar",
+            "code": 61267,
+            "label": "User Avatar",
+            "group": "users-people"
+        },
+        {
+            "css": "user-badge",
+            "code": 61268,
+            "label": "User Badge",
+            "group": "users-people"
+        },
+        {
+            "css": "user-cancel",
+            "code": 59920,
+            "label": "User Cancel",
+            "group": "users-people"
+        },
+        {
+            "css": "user-card",
+            "code": 61269,
+            "label": "User Card",
+            "group": "users-people"
+        },
+        {
+            "css": "user-check",
+            "code": 61270,
+            "label": "User Check",
+            "group": "users-people"
+        },
+        {
+            "css": "user-clock",
+            "code": 61271,
+            "label": "User Clock",
+            "group": "users-people"
+        },
+        {
+            "css": "user-cog",
+            "code": 61272,
+            "label": "User Cog",
+            "group": "users-people"
+        },
+        {
+            "css": "user-crown",
+            "code": 59915,
+            "label": "User Crown",
+            "group": "users-people"
+        },
+        {
+            "css": "user-edit",
+            "code": 61273,
+            "label": "User Edit",
+            "group": "users-people"
+        },
+        {
+            "css": "user-friends",
+            "code": 61274,
+            "label": "User Friends",
+            "group": "users-people"
+        },
+        {
+            "css": "user-friends-alt",
+            "code": 61275,
+            "label": "User Friends Alt",
+            "group": "users-people"
+        },
+        {
+            "css": "user-friends-alt-slash",
+            "code": 61276,
+            "label": "User Friends Alt Slash",
+            "group": "users-people"
+        },
+        {
+            "css": "user-friends-plus",
+            "code": 59916,
+            "label": "User Friends Plus",
+            "group": "users-people"
+        },
+        {
+            "css": "user-friends-slash",
+            "code": 61277,
+            "label": "User Friends Slash",
+            "group": "users-people"
+        },
+        {
+            "css": "user-info",
+            "code": 59921,
+            "label": "User Info",
+            "group": "users-people"
+        },
+        {
+            "css": "user-lock",
+            "code": 61278,
+            "label": "User Lock",
+            "group": "users-people"
+        },
+        {
+            "css": "user-minus",
+            "code": 61279,
+            "label": "User Minus",
+            "group": "users-people"
+        },
+        {
+            "css": "user-plus",
+            "code": 61280,
+            "label": "User Plus",
+            "group": "users-people"
+        },
+        {
+            "css": "users",
+            "code": 59741,
+            "label": "Users",
+            "group": "users-people"
+        },
+        {
+            "css": "user-slash",
+            "code": 61282,
+            "label": "User Slash",
+            "group": "users-people"
+        },
+        {
+            "css": "users-slash",
+            "code": 61283,
+            "label": "Users Slash",
+            "group": "users-people"
+        },
+        {
+            "css": "user-times",
+            "code": 61284,
+            "label": "User Times",
+            "group": "users-people"
+        },
+        {
+            "css": "u-turn-down",
+            "code": 59909,
+            "label": "U Turn Down",
+            "group": "arrows"
+        },
+        {
+            "css": "u-turn-left",
+            "code": 59910,
+            "label": "U Turn Left",
+            "group": "arrows"
+        },
+        {
+            "css": "u-turn-right",
+            "code": 59911,
+            "label": "U Turn Right",
+            "group": "arrows"
+        },
+        {
+            "css": "u-turn-up",
+            "code": 59912,
+            "label": "U Turn Up",
+            "group": "arrows"
+        },
+        {
+            "css": "video",
+            "code": 61285,
+            "label": "Video",
+            "group": "media-files"
+        },
+        {
+            "css": "video-plus",
+            "code": 59889,
+            "label": "Video Plus",
+            "group": "media-files"
+        },
+        {
+            "css": "video-slash",
+            "code": 61286,
+            "label": "Video Slash",
+            "group": "media-files"
+        },
+        {
+            "css": "voicemail",
+            "code": 61287,
+            "label": "Voicemail",
+            "group": "interfaces"
+        },
+        {
+            "css": "volume-down",
+            "code": 61288,
+            "label": "Volume Down",
+            "group": "interfaces"
+        },
+        {
+            "css": "volume-mute",
+            "code": 61289,
+            "label": "Volume Mute",
+            "group": "interfaces"
+        },
+        {
+            "css": "volume-off",
+            "code": 61290,
+            "label": "Volume Off",
+            "group": "interfaces"
+        },
+        {
+            "css": "volume-slash",
+            "code": 61291,
+            "label": "Volume Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "volume-up",
+            "code": 61292,
+            "label": "Volume Up",
+            "group": "interfaces"
+        },
+        {
+            "css": "wallet",
+            "code": 61293,
+            "label": "Wallet",
+            "group": "shopping-money"
+        },
+        {
+            "css": "watch",
+            "code": 61294,
+            "label": "Watch",
+            "group": "objects"
+        },
+        {
+            "css": "wheelchair",
+            "code": 61295,
+            "label": "Wheelchair",
+            "group": "accessibility"
+        },
+        {
+            "css": "wifi",
+            "code": 61296,
+            "label": "Wi-Fi",
+            "group": "interfaces"
+        },
+        {
+            "css": "wifi-slash",
+            "code": 61297,
+            "label": "Wi-Fi Slash",
+            "group": "interfaces"
+        },
+        {
+            "css": "wind",
+            "code": 61298,
+            "label": "Wind",
+            "group": "objects"
+        },
+        {
+            "css": "wrench",
+            "code": 61299,
+            "label": "Wrench",
+            "group": "interfaces"
+        },
+        {
+            "css": "battery-half",
+            "code": 60854,
+            "label": "Battery Half",
+            "group": "interfaces"
+        },
+        {
+            "css": "upload",
+            "code": 59880,
+            "label": "Upload",
+            "group": "interfaces"
+        },
+        {
+            "css": "ellipsis-v",
+            "code": 61021,
+            "label": "Ellipsis Vertical",
+            "group": "interfaces"
+        },
+        {
+            "css": "lock",
+            "code": 61132,
+            "label": "Lock",
+            "group": "interfaces"
+        },
+        {
+            "css": "attach",
+            "code": 59878,
+            "label": "Attach",
+            "group": "interfaces"
+        },
+        {
+            "css": "thumbtack",
+            "code": 59396,
+            "label": "Thumbtack",
+            "group": "interfaces"
+        },
+        {
+            "css": "thumbtack-star",
+            "code": 59881,
+            "label": "Thumbtack Star",
+            "group": "interfaces"
+        }
+    ]
+}

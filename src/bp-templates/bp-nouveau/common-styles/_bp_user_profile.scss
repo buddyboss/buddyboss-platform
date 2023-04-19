@@ -112,6 +112,7 @@
 			.description {
 				margin-top: -$marg-sml;
 				margin-bottom: $marg-sml;
+				white-space: pre-line;
 				order: 2;
 			}
 
@@ -127,6 +128,15 @@
 
 	} // .profile
 } // close .buddypress-wrap
+
+.profile-edit {
+
+	button.button > i {
+		font-size: 18px;
+		margin-right: 5px;
+	}
+
+}
 
 #btn_add_repeater_set {
 	align-items: center;
@@ -438,6 +448,12 @@ div.profile_completion_wrap {
 		float: right;
 		width: 50px;
 		text-align: center;
+
+		html[dir="rtl"] & {
+			display: flex;
+			align-items: center;
+			justify-content: end;
+		}
 	}
 }
 

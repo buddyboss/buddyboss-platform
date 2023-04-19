@@ -240,6 +240,20 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  */
 function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
 
+	if (
+		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+		bb_moderation_allowed_specific_notification(
+			array(
+				'type'              => buddypress()->activity->id,
+				'group_id'          => 'groups' === $activity->component ? $activity->item_id : '',
+				'recipient_user_id' => $activity->user_id,
+				'sender_id'         => $activity->user_id,
+			)
+		)
+	) {
+		return;
+	}
+
 	// Specify the Notification type.
 	$component_action = 'update_reply';
 	if ( ! bb_enabled_legacy_email_preference() ) {
@@ -275,6 +289,21 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  * @param int                  $commenter_id     ID of the user who made the comment.
  */
 function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id ) {
+
+	$original_activity = new BP_Activity_Activity( $activity_comment->item_id );
+	if (
+		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+		bb_moderation_allowed_specific_notification(
+			array(
+				'type'              => buddypress()->activity->id,
+				'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+				'recipient_user_id' => $activity_comment->user_id,
+				'sender_id'         => $original_activity->user_id,
+			)
+		)
+	) {
+		return;
+	}
 
 	// Specify the Notification type.
 	$component_action = 'comment_reply';
@@ -333,6 +362,8 @@ function bp_activity_remove_screen_notifications_single_activity_permalink( $act
 
 	// Mark as read any notifications for the current user related to this activity item.
 	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'new_at_mention' );
+	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'bb_new_mention' );
+	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'bb_activity_following_post' );
 
 	$comment_id = 0;
 	// For replies to a parent update.
@@ -426,6 +457,9 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 		// Only add a notification if comment author is a registered user.
 		// @todo Should we remove this restriction?
 		if ( ! empty( $post_type_comment->user_id ) ) {
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $post_type_comment->post->post_author, $post_type_comment->user_id ) ) {
+				return;
+			}
 			if ( ! empty( $post_type_comment->comment_parent ) ) {
 				$parent_comment = get_comment( $post_type_comment->comment_parent );
 				if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $post_type_comment->post->post_author ) {
@@ -462,6 +496,11 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 		$parent_comment = get_comment( $post_type_comment->comment_parent );
 
 		if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $activity_args['user_id'] ) {
+
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $post_type_comment->user_id ) ) {
+				return;
+			}
+
 			bp_notifications_add_notification(
 				array(
 					'user_id'           => $parent_comment->user_id,
@@ -515,8 +554,9 @@ function bp_activity_remove_screen_notifications_single_post() {
 				'is_new' => false,
 			),
 			array(
-				'user_id' => bp_loggedin_user_id(),
-				'id'      => $comment_id,
+				'user_id'        => bp_loggedin_user_id(),
+				'id'             => $comment_id,
+				'component_name' => 'activity',
 			)
 		);
 	}
@@ -554,6 +594,8 @@ function bb_activity_add_notification_metas( $notification ) {
 			$parent_activity = new BP_Activity_Activity( $activity->item_id );
 			if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
 				bp_notifications_update_meta( $notification->id, 'type', 'post_comment' );
+			} elseif ( ! empty( $parent_activity ) && 'activity_update' === $parent_activity->type && $activity->item_id === $activity->secondary_item_id ) {
+				bp_notifications_update_meta( $notification->id, 'type', 'activity_post' );
 			} else {
 				bp_notifications_update_meta( $notification->id, 'type', 'activity_comment' );
 			}

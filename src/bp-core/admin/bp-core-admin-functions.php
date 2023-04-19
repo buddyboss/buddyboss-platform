@@ -367,10 +367,11 @@ function bp_core_activation_notice() {
 	$dupe_names = array();
 	$page_ids   = bp_core_get_directory_page_ids();
 	$dupes      = array_diff_assoc( $page_ids, array_unique( $page_ids ) );
+	$bp_pages   = bp_core_get_directory_pages();
 
 	if ( ! empty( $dupes ) ) {
 		foreach ( array_keys( $dupes ) as $dupe_component ) {
-			$dupe_names[] = $bp->pages->{$dupe_component}->title;
+			$dupe_names[] = $bp_pages->{$dupe_component}->title;
 		}
 
 		// Make sure that there are no duplicate duplicates :).
@@ -379,7 +380,7 @@ function bp_core_activation_notice() {
 
 	// If there are duplicates, post a message about them.
 	if ( ! empty( $dupe_names ) ) {
-		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-page-settings' ), 'admin.php' ) );
+		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 		if ( isset( $_GET['page'] ) && 'bp-pages' === $_GET['page'] ) {
 			$notice = sprintf(
 				'%1$s',
@@ -736,7 +737,7 @@ function bp_core_get_admin_active_tab_object() {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_setting_url( $tab, $args = array() ) {
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'page' => 'bp-settings',
@@ -778,9 +779,9 @@ function bp_core_admin_integration_tabs( $active_tab = '' ) {
 		$tab_class  = $is_current ? $active_class : $idle_class;
 
 		if ( $i === $count ) {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+			$tabs_html .= '<li class="' . esc_attr( sanitize_key( $tab_data['name'] ) ) . '"><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
 		} else {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+			$tabs_html .= '<li class="' . esc_attr( sanitize_key( $tab_data['name'] ) ) . '"><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
 		}
 
 		$i = $i + 1;
@@ -897,7 +898,7 @@ function bp_core_get_admin_integration_active_tab_object() {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_integrations_url( $tab, $args = array() ) {
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'page' => 'bp-integrations',
@@ -1240,19 +1241,19 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 	?>
 
 	<div id="buddypress-menu" class="posttypediv">
-		<h4><?php _e( 'Logged-In', 'buddyboss' ); ?></h4>
-		<p><?php _e( '<em>Logged-In</em> links are relative to the current user, and are not visible to visitors who are not logged in.', 'buddyboss' ); ?></p>
+		<h4><?php esc_html_e( 'Logged-In', 'buddyboss' ); ?></h4>
+		<p><?php esc_html_e( '<em>Logged-In</em> links are relative to the current user, and are not visible to visitors who are not logged in.', 'buddyboss' ); ?></p>
 
-		<div id="tabs-panel-posttype-<?php echo $post_type_name; ?>-loggedin" class="tabs-panel tabs-panel-active">
+		<div id="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-loggedin" class="tabs-panel tabs-panel-active">
 			<ul id="buddypress-menu-checklist-loggedin" class="categorychecklist form-no-clear">
 				<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', $tabs['loggedin']['pages'] ), 0, (object) $args ); ?>
 			</ul>
 		</div>
 
-		<h4><?php _e( 'Logged-Out', 'buddyboss' ); ?></h4>
-		<p><?php _e( '<em>Logged-Out</em> links are not visible to users who are logged in.', 'buddyboss' ); ?></p>
+		<h4><?php esc_html_e( 'Logged-Out', 'buddyboss' ); ?></h4>
+		<p><?php esc_html_e( '<em>Logged-Out</em> links are not visible to users who are logged in.', 'buddyboss' ); ?></p>
 
-		<div id="tabs-panel-posttype-<?php echo $post_type_name; ?>-loggedout" class="tabs-panel tabs-panel-active">
+		<div id="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-loggedout" class="tabs-panel tabs-panel-active">
 			<ul id="buddypress-menu-checklist-loggedout" class="categorychecklist form-no-clear">
 				<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', $tabs['loggedout']['pages'] ), 0, (object) $args ); ?>
 			</ul>
@@ -2001,7 +2002,7 @@ function bp_member_type_permissions_metabox( $post ) {
 				<tbody>
 				<tr>
 					<td colspan="2">
-						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registerd and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
+						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registered and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
 					</td>
 				</tr>
 
@@ -2433,7 +2434,7 @@ add_action( 'admin_menu', 'bp_register_member_type_import_submenu_page' );
 function bp_register_member_type_import_submenu_page() {
 
 	add_submenu_page(
-		null,   // or 'options.php'.
+		'',
 		__( 'Repair Community', 'buddyboss' ),
 		__( 'Repair Community', 'buddyboss' ),
 		'manage_options',
@@ -2442,7 +2443,7 @@ function bp_register_member_type_import_submenu_page() {
 	);
 
 	add_submenu_page(
-		null,   // or 'options.php'.
+		'',
 		'Import Member Types',
 		'Import Member Types',
 		'manage_options',
@@ -3280,7 +3281,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 					'admin.php'
 				)
 			),
-			'name'  => esc_html__( 'Blocked Members', 'buddyboss' ),
+			'name'  => esc_html__( 'Flagged Members', 'buddyboss' ),
 			'class' => 'bp-blocked-members',
 		);
 	}

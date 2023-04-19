@@ -16,6 +16,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 	 *
 	 * @since BuddyPress 2.0.0
 	 */
+	#[\AllowDynamicProperties]
 	class BP_Members_Admin {
 
 		/** Directory *************************************************************/
@@ -1528,7 +1529,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				}
 
 				// profile type string must either reference a valid profile type, or be empty.
-				$is_suspend = stripslashes( $_POST['user_status'] );
+				$is_suspend = isset( $_POST['user_status'] ) ? stripslashes( $_POST['user_status'] ) : '';
 
 				if ( ! empty( $is_suspend ) && 'suspend' === $is_suspend ) {
 					BP_Suspend_Member::suspend_user( $user_id );

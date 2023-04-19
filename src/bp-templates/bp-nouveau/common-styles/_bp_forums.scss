@@ -396,6 +396,29 @@ div.bbp-reply-header {
 	overflow-x: auto;
 }
 
+#new-post {
+
+	.bb_discard_topic_reply_draft {
+		display: none;
+	}
+}
+
+#new-post.has-draft {
+
+	.bb_discard_topic_reply_draft {
+		display: block;
+	}
+}
+
+.bb_discard_topic_reply_draft {
+	border: 0 !important;
+	background-color: transparent !important;
+	line-height: 1 !important;
+	font-size: 15px !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
 /* =Reply to
 -------------------------------------------------------------- */
 
@@ -645,6 +668,10 @@ td.bbp-topic-counts {
 
 #bbpress-forums fieldset.bbp-form {
 	clear: left;
+
+	.select2-container {
+		z-index: auto;
+	}
 }
 
 #bbpress-forums fieldset.bbp-form {
@@ -835,8 +862,33 @@ p.form-allowed-tags {
 			margin-top: 15px;
 		}
 
+		p:empty {
+			min-height: 1em;
+		}
+
 	}
 
+}
+
+ul.bbp-lead-topic .item-description {
+
+	p:empty {
+		min-height: 1em;
+	}
+
+}
+
+#bbpress-forums {
+
+	.replies-content,
+	.bbp-topic-content,
+	.bbp-reply-content,
+	.bbp-reply-content {
+
+		[dir="rtl"] & [dir="ltr"] {
+			text-align: right;
+		}
+	}
 }
 
 #bbpress-forums .bbp-topic-content ul.bbp-topic-revision-log li,
@@ -893,6 +945,21 @@ p.form-allowed-tags {
 	font-size: 1.3em;
 	clear: none;
 	margin-bottom: 10px;
+}
+
+.widget_display_topics {
+
+	ul > li {
+		display: flex;
+		margin-bottom: 15px;
+	}
+
+	.bbp-author-link {
+		flex: 0 0 40px;
+		margin-right: 10px;
+	}
+
+
 }
 
 /* =Avatars
@@ -1121,6 +1188,15 @@ fieldset div.avatar {
 			display: block;
 			padding: 12px;
 			background-color: #fafafa;
+		}
+
+		.bb-video-wrapper .fluid-width-video-wrapper {
+			margin: 0;
+
+			iframe {
+				margin: 0;
+				border-radius: 4px;
+			}
 		}
 
 	}
@@ -1567,6 +1643,68 @@ h2.bbp-form-title.entry-title {
 
 .bbp-reply-content.bs-forum-suspended-content {
 	opacity: 0.7;
+}
+
+
+/* Forum submit button*/
+
+#new-post {
+
+	&.has-gif,
+	&.has-media,
+	&.has-content {
+
+		.bbp-form #bbp_reply_submit {
+			opacity: 1;
+			pointer-events: initial;
+		}
+
+	}
+
+	&.media-uploading .bbp-form,
+	.bbp-form {
+
+		#bbp_reply_submit {
+			opacity: 0.4;
+			pointer-events: none;
+		}
+
+	}
+
+	&.has-title {
+
+		&.has-gif,
+		&.has-media,
+		&.has-content {
+
+			.bbp-form {
+
+				#bbp_topic_submit {
+					opacity: 1;
+					pointer-events: initial;
+				}
+			}
+
+		}
+
+	}
+
+	&.media-uploading.has-title .bbp-form,
+	.bbp-form {
+
+		#bbp_topic_submit {
+			opacity: 0.4;
+			pointer-events: none;
+		}
+
+	}
+
+}
+
+.topic-edit #new-post .bbp-form #bbp_topic_submit,
+.reply-edit #new-post .bbp-form #bbp_reply_submit {
+	opacity: 1;
+	pointer-events: initial;
 }
 
 

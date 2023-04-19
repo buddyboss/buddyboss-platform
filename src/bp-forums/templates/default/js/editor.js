@@ -11,10 +11,10 @@ jQuery( document ).ready(
 			window.forums_medium_topic_editor = [];
 
 			var toolbarOptions = {
-					buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-					relativeContainer: document.getElementById('whats-new-toolbar'),
-					static: true,
-					updateOnEmptySelection: true
+				buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+				relativeContainer: document.getElementById('whats-new-toolbar'),
+				static: true,
+				updateOnEmptySelection: true
 			};
 			if ( jQuery( '.bbp_editor_forum_content' ).length ) {
 				jQuery( '.bbp_editor_forum_content' ).each(function(i,element){
@@ -32,7 +32,8 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.description,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions,
+							// toolbar: toolbarOptions,
+							toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-forum-form' ).closest( '.bbp-forum-form' ).find( '#whats-new-toolbar' )[0] } ),
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
@@ -48,6 +49,7 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -55,7 +57,7 @@ jQuery( document ).ready(
 
 					window.forums_medium_forum_editor[key].subscribe(
 						'editableInput',
-						function ( event ) {
+						function () {
 							var bbp_forum_content = jQuery(element).closest('form').find( '#bbp_forum_content' );
 							var html = window.forums_medium_forum_editor[key].getContent();
 							var dummy_element = document.createElement( 'div' );
@@ -81,20 +83,22 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_forum_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( $reply_content ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+							}
 						}
 					);
 
-					element.addEventListener( 'paste', function ( event ) {
-						// Get user's pasted data.
-						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-							data = clipboardData.getData( 'text/plain' );
-
-						// Insert the filtered content.
-						document.execCommand( 'insertHTML', false, data );
-
-						// Prevent the standard paste behavior.
-						event.preventDefault();
-					} );
 				});
 			}
 
@@ -135,7 +139,8 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.type_reply,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions,
+							// toolbar: toolbarOptions,
+							toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-reply-form' ).closest( '.bbp-reply-form' ).find( '#whats-new-toolbar' )[0] } ),
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
@@ -151,6 +156,7 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -184,26 +190,39 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_reply_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( $reply_content ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+							}
 						}
 					);
 
-					element.addEventListener( 'paste', function ( event ) {
-						// Get user's pasted data.
-						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-							data = clipboardData.getData( 'text/plain' );
+					jQuery('a.bp-suggestions-mention:empty').remove();
+					setTimeout(
+						function () {
+							jQuery('a.bp-suggestions-mention:empty').remove();
+						},
+						500
+					);
 
-						// Insert the filtered content.
-						document.execCommand( 'insertHTML', false, data );
-
-						// Prevent the standard paste behavior.
-						event.preventDefault();
-					} );
 				});
 			}
 
 			// Add Click event to show / hide text formatting Toolbar for reply form.
 			jQuery( document ).on( 'click', '.bbp-reply-form #whats-new-toolbar .show-toolbar', function ( e ) {
 				e.preventDefault();
+				if( jQuery( this ).closest( '.bbpress-forums-activity.bb-quick-reply-form-wrap' ).length > 0) {
+					return;
+				}
 				var key = jQuery( e.currentTarget ).closest( '.bbp-reply-form' ).find( '.bbp_editor_reply_content' ).data( 'key' );
 				var medium_editor = jQuery( e.currentTarget ).closest( '.bbp-form' ).find( '.medium-editor-toolbar' );
 				jQuery( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
@@ -238,7 +257,8 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.type_topic,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions,
+							// toolbar: toolbarOptions,
+							toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-topic-form ' ).find( '#whats-new-toolbar' )[0] } ),
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
@@ -254,6 +274,7 @@ jQuery( document ).ready(
 							},
 							imageDragging: false,
 							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
 								linkValidation: true
 							}
 						}
@@ -289,20 +310,30 @@ jQuery( document ).ready(
 								}
 							);
 							bbp_topic_content.val( jQuery(dummy_element).html() );
+
+							// Enable submit button if content is available.
+							var $reply_content   = jQuery( element ).html();
+
+							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+							var content_text = jQuery( $reply_content ).text();
+							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+							} else {
+								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
+							}
 						}
 					);
 
-					element.addEventListener( 'paste', function ( event ) {
-						// Get user's pasted data.
-						var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-							data = clipboardData.getData( 'text/plain' );
+					jQuery('a.bp-suggestions-mention:empty').remove();
+					setTimeout(
+						function () {
+							jQuery('a.bp-suggestions-mention:empty').remove();
+						},
+						500
+					);
 
-						// Insert the filtered content.
-						document.execCommand( 'insertHTML', false, data );
-
-						// Prevent the standard paste behavior.
-						event.preventDefault();
-					} );
 				});
 			}
 
@@ -330,7 +361,7 @@ jQuery( document ).ready(
 			jQuery( document ).on ( 'keyup', '#bbpress-forums .medium-editor-toolbar-input', function( event ) {
 
 				var URL = event.target.value;
-				
+
 				if ( bp.Nouveau.isURL( URL ) ) {
 					jQuery( event.target ).removeClass('isNotValid').addClass('isValid');
 				} else {
@@ -340,7 +371,7 @@ jQuery( document ).ready(
 			});
 		}
 
-			/* Use backticks instead of <code> for the Code button in the editor */
+		/* Use backticks instead of <code> for the Code button in the editor */
 		if ( typeof( edButtons ) !== 'undefined' ) {
 			/*globals edButtons:false */
 			edButtons[110] = new QTags.TagButton( 'code', 'code', '`', '`', 'c' );
@@ -348,56 +379,56 @@ jQuery( document ).ready(
 			QTags._buttonsInit();
 		}
 
-			/* Tab from topic title */
-			jQuery( '#bbp_topic_title' ).bind(
-				'keydown.editor-focus',
-				function(e) {
-					if ( e.which !== 9 ) {
-						return;
-					}
+		/* Tab from topic title */
+		jQuery( '#bbp_topic_title' ).bind(
+			'keydown.editor-focus',
+			function(e) {
+				if ( e.which !== 9 ) {
+					return;
+				}
 
-					if ( ! e.ctrlKey && ! e.altKey && ! e.shiftKey ) {
-						if ( typeof( tinymce ) !== 'undefined' ) {
-							/*globals tinymce:false */
-							if ( ! tinymce.activeEditor.isHidden() ) {
-								var editor = tinymce.activeEditor.editorContainer;
-								jQuery( '#' + editor + ' td.mceToolbar > a' ).focus();
-							} else {
-								jQuery( 'textarea.bbp-the-content' ).focus();
-							}
+				if ( ! e.ctrlKey && ! e.altKey && ! e.shiftKey ) {
+					if ( typeof( tinymce ) !== 'undefined' ) {
+						/*globals tinymce:false */
+						if ( ! tinymce.activeEditor.isHidden() ) {
+							var editor = tinymce.activeEditor.editorContainer;
+							jQuery( '#' + editor + ' td.mceToolbar > a' ).focus();
 						} else {
 							jQuery( 'textarea.bbp-the-content' ).focus();
 						}
-
-						e.preventDefault();
+					} else {
+						jQuery( 'textarea.bbp-the-content' ).focus();
 					}
+
+					e.preventDefault();
 				}
-			);
+			}
+		);
 
-			/* Shift + tab from topic tags */
-			jQuery( '#bbp_topic_tags' ).bind(
-				'keydown.editor-focus',
-				function(e) {
-					if ( e.which !== 9 ) {
-						  return;
-					}
+		/* Shift + tab from topic tags */
+		jQuery( '#bbp_topic_tags' ).bind(
+			'keydown.editor-focus',
+			function(e) {
+				if ( e.which !== 9 ) {
+					return;
+				}
 
-					if ( e.shiftKey && ! e.ctrlKey && ! e.altKey ) {
-						if ( typeof( tinymce ) !== 'undefined' ) {
-							if ( ! tinymce.activeEditor.isHidden() ) {
-								 var editor = tinymce.activeEditor.editorContainer;
-								 jQuery( '#' + editor + ' td.mceToolbar > a' ).focus();
-							} else {
-								jQuery( 'textarea.bbp-the-content' ).focus();
-							}
+				if ( e.shiftKey && ! e.ctrlKey && ! e.altKey ) {
+					if ( typeof( tinymce ) !== 'undefined' ) {
+						if ( ! tinymce.activeEditor.isHidden() ) {
+							var editor = tinymce.activeEditor.editorContainer;
+							jQuery( '#' + editor + ' td.mceToolbar > a' ).focus();
 						} else {
 							jQuery( 'textarea.bbp-the-content' ).focus();
 						}
-
-						e.preventDefault();
+					} else {
+						jQuery( 'textarea.bbp-the-content' ).focus();
 					}
+
+					e.preventDefault();
 				}
-			);
+			}
+		);
 
 		if ( window.elementorFrontend ) {
 			jQuery( document ).on( 'elementor/popup/show', function () {
@@ -425,7 +456,8 @@ jQuery( document ).ready(
 										text: window.bbpEditorJsStrs.description,
 										hideOnClick: true
 									},
-									toolbar: toolbarOptions,
+									// toolbar: toolbarOptions,
+									toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-forum-form' ).find( '#whats-new-toolbar' )[0] } ),
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
@@ -441,6 +473,7 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
 										linkValidation: true
 									}
 								}
@@ -448,12 +481,25 @@ jQuery( document ).ready(
 
 							window.forums_medium_forum_editor[key].subscribe(
 								'editableInput',
-								function ( event ) {
+								function () {
 									var bbp_forum_content = jQuery(element).closest('form').find( '#bbp_forum_content' );
 									bbp_forum_content.val( window.forums_medium_forum_editor[key].getContent() );
 									var atwho_query = bbp_forum_content.find( 'span.atwho-query' );
 									for( var i = 0; i < atwho_query.length; i++ ) {
 										jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+									}
+
+									// Enable submit button if content is available.
+									var $reply_content   = jQuery( element ).html();
+
+									$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+									$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+									var content_text = jQuery( $reply_content ).text();
+									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 									}
 								}
 							);
@@ -476,7 +522,8 @@ jQuery( document ).ready(
 										text: window.bbpEditorJsStrs.type_reply,
 										hideOnClick: true
 									},
-									toolbar: toolbarOptions,
+									// toolbar: toolbarOptions,
+									toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-reply-form' ).find( '#whats-new-toolbar' )[0] } ),
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
@@ -492,6 +539,7 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
 										linkValidation: true
 									}
 								}
@@ -505,6 +553,19 @@ jQuery( document ).ready(
 									var atwho_query = bbp_reply_content.find( 'span.atwho-query' );
 									for( var i = 0; i < atwho_query.length; i++ ) {
 										jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+									}
+
+									// Enable submit button if content is available.
+									var $reply_content   = jQuery( element ).html();
+
+									$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+									$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+									var content_text = jQuery( $reply_content ).text();
+									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 									}
 								}
 							);
@@ -527,7 +588,8 @@ jQuery( document ).ready(
 										text: window.bbpEditorJsStrs.type_topic,
 										hideOnClick: true
 									},
-									toolbar: toolbarOptions,
+									// toolbar: toolbarOptions,
+									toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-topic-form' ).find( '#whats-new-toolbar' )[0] } ),
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
@@ -543,6 +605,7 @@ jQuery( document ).ready(
 									},
 									imageDragging: false,
 									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
 										linkValidation: true
 									}
 								}
@@ -557,6 +620,19 @@ jQuery( document ).ready(
 									var atwho_query = bbp_topic_content.find( 'span.atwho-query' );
 									for( var i = 0; i < atwho_query.length; i++ ) {
 										jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+									}
+
+									// Enable submit button if content is available.
+									var $reply_content   = jQuery( element ).html();
+
+									$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+									$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
+
+									var content_text = jQuery( $reply_content ).text();
+									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-content' )
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 									}
 								}
 							);
