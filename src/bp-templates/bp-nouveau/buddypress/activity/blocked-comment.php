@@ -24,7 +24,7 @@ if ( bp_is_active( 'moderation' ) ) {
 }
 ?>
 
-<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class(); ?> <?php $check_hidden_content ? esc_attr_e( 'suspended-comment-item' ) : '' ?>"
+<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class(); ?> <?php echo $check_hidden_content ?  'suspended-comment-item' : '' ?>"
 	data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
 
 	<div class="acomment-avatar item-avatar">
