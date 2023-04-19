@@ -27,6 +27,12 @@ if ( bp_is_active( 'moderation' ) ) {
 <li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class(); ?> <?php echo $check_hidden_content ?  'suspended-comment-item' : '' ?>"
 	data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
 
+	<?php
+	if ( bb_is_group_activity_comment( bp_get_activity_comment_id() ) ) {
+		bb_nouveau_activity_comment_bubble_buttons();
+	}
+	?>
+
 	<div class="acomment-avatar item-avatar">
 		<a href="<?php bp_activity_comment_user_link(); ?>">
 			<?php
@@ -61,6 +67,10 @@ if ( bp_is_active( 'moderation' ) ) {
 		}
 
 		echo $activity_comment_content; // phpcs:ignore
+
+		if ( bb_is_group_activity_comment( bp_get_activity_comment_id() ) ) {
+			do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
+		}
 		?>
 
 	</div>
