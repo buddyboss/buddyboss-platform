@@ -4454,7 +4454,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 					/**
 					 * Assign the default member type to user on Admin.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 2.3.2
 					 *
 					 * @param int $user_id ID of user.
 					 * @param string $member_type Default selected member type.
@@ -4466,7 +4466,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 				/**
 				 * Assign the default member type to user on Admin.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.3.2
 				 *
 				 * @param int $user_id ID of user.
 				 * @param string $member_type Default selected member type.
@@ -4477,7 +4477,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 			/**
 			 * Assign the default member type to user on Admin.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.3.2
 			 *
 			 * @param int $user_id ID of user.
 			 * @param string $member_type Default selected member type.
