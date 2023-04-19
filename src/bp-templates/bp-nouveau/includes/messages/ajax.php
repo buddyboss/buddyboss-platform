@@ -1097,9 +1097,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$threads->threads[ $i ]['has_media'] = true;
 					$media_ids                           = explode( ',', $media_ids );
 					if ( count( $media_ids ) < 2 ) {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent a photo', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a photo', 'buddyboss' );
 					} else {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent some photos', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some photos', 'buddyboss' );
 					}
 				}
 			}
@@ -1111,9 +1111,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$threads->threads[ $i ]['has_media'] = true;
 					$video_ids                           = explode( ',', $video_ids );
 					if ( count( $video_ids ) < 2 ) {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent a video', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a video', 'buddyboss' );
 					} else {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent some videos', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some videos', 'buddyboss' );
 					}
 				}
 			}
@@ -1125,9 +1125,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$threads->threads[ $i ]['has_media'] = true;
 					$document_ids                        = explode( ',', $document_ids );
 					if ( count( $document_ids ) < 2 ) {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent a document', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent a document', 'buddyboss' );
 					} else {
-						$threads->threads[ $i ]['excerpt'] = __( 'sent some documents', 'buddyboss' );
+						$threads->threads[ $i ]['excerpt'] = __( 'Sent some documents', 'buddyboss' );
 					}
 				}
 			}
@@ -1137,7 +1137,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 				if ( ! empty( $gif_data ) ) {
 					$threads->threads[ $i ]['has_media'] = true;
-					$threads->threads[ $i ]['excerpt']   = __( 'sent a gif', 'buddyboss' );
+					$threads->threads[ $i ]['excerpt']   = __( 'Sent a gif', 'buddyboss' );
 				}
 			}
 		}
