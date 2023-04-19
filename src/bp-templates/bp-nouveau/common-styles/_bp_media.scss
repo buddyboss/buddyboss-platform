@@ -743,6 +743,7 @@
 	max-height: 90vh;
 	min-height: 90vh;
 	overflow: auto;
+	box-sizing: border-box;
 }
 
 .bb-media-model-inner {
@@ -876,6 +877,8 @@ a.bb-close-model {
 					height: auto;
 					min-height: 10px;
 					line-height: 1;
+					opacity: 0.4;
+					pointer-events: none;
 				}
 
 				#bp-activity-description-new-reset {
@@ -893,6 +896,11 @@ a.bb-close-model {
 				#bp-activity-description-new-reset:hover {
 					color: #000;
 				}
+			}
+
+			&.has-content .description-new-submit #bp-activity-description-new-submit {
+				opacity: 1;
+				pointer-events: initial;
 			}
 		}
 	}
@@ -927,6 +935,8 @@ a.bb-close-model {
 					height: auto;
 					min-height: 10px;
 					line-height: 1;
+					opacity: 0.4;
+					pointer-events: none;
 				}
 
 				#bp-activity-description-new-reset {
@@ -944,6 +954,11 @@ a.bb-close-model {
 				#bp-activity-description-new-reset:hover {
 					color: #000;
 				}
+			}
+
+			&.has-content .description-new-submit #bp-activity-description-new-submit {
+				opacity: 1;
+				pointer-events: initial;
 			}
 		}
 	}

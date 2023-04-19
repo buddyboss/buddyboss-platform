@@ -61,7 +61,7 @@ function bp_media_upload() {
 		'id'      => (int) $attachment->ID,
 		'thumb'   => $attachment_thumb_url,
 		'medium'  => $attachment_medium,
-		'url'     => $attachment_url,
+		'url'     => untrailingslashit( $attachment_url ),
 		'msg_url' => $attachment_message_url,
 		'name'    => esc_attr( $name ),
 	);
@@ -378,29 +378,31 @@ function bp_media_get_specific( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'media_ids' => false,      // A single media_id or array of IDs.
-			'max'       => false,      // Maximum number of results to return.
-			'page'      => 1,          // Page 1 without a per_page will result in no pagination.
-			'per_page'  => false,      // Results per page.
-			'sort'      => 'DESC',     // Sort ASC or DESC.
-			'order_by'  => false,      // Sort ASC or DESC.
-			'privacy'   => false,      // privacy to filter.
-			'album_id'  => false,      // Album ID.
-			'user_id'   => false,      // User ID.
+			'media_ids'        => false,      // A single media_id or array of IDs.
+			'max'              => false,      // Maximum number of results to return.
+			'page'             => 1,          // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,      // Results per page.
+			'sort'             => 'DESC',     // Sort ASC or DESC.
+			'order_by'         => false,      // Sort ASC or DESC.
+			'privacy'          => false,      // privacy to filter.
+			'album_id'         => false,      // Album ID.
+			'user_id'          => false,      // User ID.
+			'moderation_query' => true,
 		),
 		'media_get_specific'
 	);
 
 	$get_args = array(
-		'in'       => $r['media_ids'],
-		'max'      => $r['max'],
-		'page'     => $r['page'],
-		'per_page' => $r['per_page'],
-		'sort'     => $r['sort'],
-		'order_by' => $r['order_by'],
-		'privacy'  => $r['privacy'],
-		'album_id' => $r['album_id'],
-		'user_id'  => $r['user_id'],
+		'in'               => $r['media_ids'],
+		'max'              => $r['max'],
+		'page'             => $r['page'],
+		'per_page'         => $r['per_page'],
+		'sort'             => $r['sort'],
+		'order_by'         => $r['order_by'],
+		'privacy'          => $r['privacy'],
+		'album_id'         => $r['album_id'],
+		'user_id'          => $r['user_id'],
+		'moderation_query' => $r['moderation_query'],
 	);
 
 	/**
@@ -2550,7 +2552,6 @@ function bp_media_get_forum_id( $media_id ) {
 			}
 		}
 	}
-	wp_reset_postdata();
 
 	if ( ! $forum_id ) {
 		$topics_media_query = new WP_Query(
@@ -2582,7 +2583,6 @@ function bp_media_get_forum_id( $media_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	if ( ! $forum_id ) {
@@ -2617,7 +2617,6 @@ function bp_media_get_forum_id( $media_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
@@ -3453,7 +3452,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 		}
 	}
 
-	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filters media preview image url.

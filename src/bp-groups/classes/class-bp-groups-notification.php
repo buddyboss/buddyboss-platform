@@ -761,104 +761,118 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for group activity subscriptions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 */
 	public function register_notification_for_group_subscriptions() {
-		// Register the group activity subscription notifications.
-		$activity_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
-		if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
-			$activity_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
-		}
 
-		$this->register_notification_type(
-			'bb_groups_subscribed_activity',
-			esc_html__( 'New post in a group you\'re subscribed to', 'buddyboss' ),
-			esc_html__( 'A new activity post in a group a member is subscribed to', 'buddyboss' ),
-			'groups',
-			function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
-			true,
-			$activity_notification_tooltip_text
-		);
+		$subscription_types = array();
 
-		$this->register_email_type(
-			'groups-new-activity',
-			array(
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{activity.content}}}", 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails of new posts in groups your subscribed to.', 'buddyboss' ),
-			),
-			'bb_groups_subscribed_activity'
-		);
+		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) ) {
+			// Register the group activity subscription notifications.
+			$activity_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+			if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
+				$activity_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
+			}
 
-		$this->register_notification(
-			'groups',
-			'bb_groups_subscribed_activity',
-			'bb_groups_subscribed_activity',
-			'bb-icon-f bb-icon-comment'
-		);
+			$subscription_types[] = 'bb_groups_subscribed_activity';
 
-		add_filter( 'bp_groups_bb_groups_subscribed_activity_notification', array( $this, 'bb_format_groups_subscription_notification' ), 10, 7 );
+			$this->register_notification_type(
+				'bb_groups_subscribed_activity',
+				esc_html__( 'New post in a group you\'re subscribed to', 'buddyboss' ),
+				esc_html__( 'A new activity post in a group a member is subscribed to', 'buddyboss' ),
+				'groups',
+				function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
+				true,
+				$activity_notification_tooltip_text
+			);
 
-		// Register the group discussion subscription notifications.
-		$discussion_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
-		if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
-			$discussion_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
-		}
-
-		$this->register_notification_type(
-			'bb_groups_subscribed_discussion',
-			esc_html__( 'New discussion in a group you\'re subscribed to', 'buddyboss' ),
-			esc_html__( 'A new discussion in a group a member is subscribed to', 'buddyboss' ),
-			'groups',
-			function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
-			true,
-			$discussion_notification_tooltip_text
-		);
-
-		$this->register_email_type(
-			'groups-new-discussion',
-			array(
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
-				'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails of new discussions in groups your subscribed to.', 'buddyboss' ),
-			),
-			'bb_groups_subscribed_discussion'
-		);
-
-		$this->register_notification(
-			'groups',
-			'bb_groups_subscribed_discussion',
-			'bb_groups_subscribed_discussion',
-			'bb-icon-f bb-icon-comment-square-dots'
-		);
-
-		// Register the subscription for group activity and discussion.
-		$this->bb_register_subscription_type(
-			array(
-				'label'              => array(
-					'singular' => __( 'Group', 'buddyboss' ),
-					'plural'   => __( 'Groups', 'buddyboss' ),
+			$this->register_email_type(
+				'groups-new-activity',
+				array(
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss' ),
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{activity.content}}}", 'buddyboss' ),
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_plain_content' => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+					'situation_label'     => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
+					'unsubscribe_text'    => __( 'You will no longer receive emails of new posts in groups your subscribed to.', 'buddyboss' ),
 				),
-				'subscription_type'  => 'group',
-				'items_callback'     => array( $this, 'bb_render_subscribed_groups' ),
-				'send_callback'      => array( $this, 'bb_send_subscribed_group_notifications' ),
-				'validate_callback'  => array( $this, 'bb_validate_group_subscription_request' ),
-				'notification_type'  => array( 'bb_groups_subscribed_activity', 'bb_groups_subscribed_discussion' ),
-				'notification_group' => 'groups',
-			)
-		);
+				'bb_groups_subscribed_activity'
+			);
 
-		add_filter( 'bp_groups_bb_groups_subscribed_discussion_notification', array( $this, 'bb_format_groups_subscription_notification' ), 10, 7 );
+			$this->register_notification(
+				'groups',
+				'bb_groups_subscribed_activity',
+				'bb_groups_subscribed_activity',
+				'bb-icon-f bb-icon-comment'
+			);
+
+			add_filter( 'bp_groups_bb_groups_subscribed_activity_notification', array( $this, 'bb_format_groups_subscription_notification' ), 10, 7 );
+		}
+
+		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
+
+			// Register the group discussion subscription notifications.
+			$discussion_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+			if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
+				$discussion_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
+			}
+
+			$this->register_notification_type(
+				'bb_groups_subscribed_discussion',
+				esc_html__( 'New discussion in a group you\'re subscribed to', 'buddyboss' ),
+				esc_html__( 'A new discussion in a group a member is subscribed to', 'buddyboss' ),
+				'groups',
+				function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
+				true,
+				$discussion_notification_tooltip_text
+			);
+
+			$this->register_email_type(
+				'groups-new-discussion',
+				array(
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_title'         => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
+					/* translators: do not remove {} brackets or translate its contents. */
+					'email_plain_content' => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
+					'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
+					'unsubscribe_text'    => __( 'You will no longer receive emails of new discussions in groups your subscribed to.', 'buddyboss' ),
+				),
+				'bb_groups_subscribed_discussion'
+			);
+
+			$this->register_notification(
+				'groups',
+				'bb_groups_subscribed_discussion',
+				'bb_groups_subscribed_discussion',
+				'bb-icon-f bb-icon-comment-square-dots'
+			);
+
+			add_filter( 'bp_groups_bb_groups_subscribed_discussion_notification', array( $this, 'bb_format_groups_subscription_notification' ), 10, 7 );
+
+			$subscription_types[] = 'bb_groups_subscribed_discussion';
+		}
+
+		if ( ! empty( $subscription_types ) ) {
+			// Register the subscription for group activity and discussion.
+			$this->bb_register_subscription_type(
+				array(
+					'label'              => array(
+						'singular' => __( 'Group', 'buddyboss' ),
+						'plural'   => __( 'Groups', 'buddyboss' ),
+					),
+					'subscription_type'  => 'group',
+					'items_callback'     => array( $this, 'bb_render_subscribed_groups' ),
+					'send_callback'      => array( $this, 'bb_send_subscribed_group_notifications' ),
+					'validate_callback'  => array( $this, 'bb_validate_group_subscription_request' ),
+					'notification_type'  => $subscription_types,
+					'notification_group' => 'groups',
+				)
+			);
+		}
 	}
 
 	/**
@@ -949,7 +963,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Render callback function on frontend.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param array $items Array of subscription list.
 	 *
@@ -1056,7 +1070,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Send callback function for group type notification.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -1110,7 +1124,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$type_key                = 'bb_groups_subscribed_activity';
 			$email_notification_type = 'groups-new-activity';
 			$author_id               = ! empty( $activity->user_id ) ? $activity->user_id : 0;
-			$usernames               = bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
+			$usernames               = function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
 		} elseif ( 'bb_groups_subscribed_discussion' === $r['notification_from'] ) {
 			// Bail if component is not activated.
 			if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_topic_content' ) ) {
@@ -1121,7 +1135,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$type_key                = 'bb_groups_subscribed_discussion';
 			$email_notification_type = 'groups-new-discussion';
 			$author_id               = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bbp_get_topic_author_id( $data_id );
-			$usernames               = bp_activity_do_mentions() ? bp_activity_find_mentions( bbp_get_topic_content( $data_id ) ) : array();
+			$usernames               = function_exists( 'bp_find_mentions_by_at_sign' ) ? bp_find_mentions_by_at_sign( array(), bbp_get_topic_content( $data_id ) ) : array();
 		}
 
 		if ( empty( $data_id ) || empty( $author_id ) || empty( $type_key ) || empty( $email_notification_type ) ) {
@@ -1203,7 +1217,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format Group activity notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.8
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
@@ -1260,7 +1274,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						$activity_excerpt
 					);
 				} elseif ( $media_ids ) {
-					$media_ids = array_filter( explode( ',', $media_ids ) );
+					$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 					if ( count( $media_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
@@ -1275,7 +1289,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						);
 					}
 				} elseif ( $document_ids ) {
-					$document_ids = array_filter( explode( ',', $document_ids ) );
+					$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 					if ( count( $document_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
@@ -1290,7 +1304,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						);
 					}
 				} elseif ( $video_ids ) {
-					$video_ids = array_filter( explode( ',', $video_ids ) );
+					$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 					if ( count( $video_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
@@ -1338,7 +1352,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 							$activity_excerpt
 						);
 					} elseif ( $media_ids ) {
-						$media_ids = array_filter( explode( ',', $media_ids ) );
+						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
@@ -1355,7 +1369,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( $document_ids ) {
-						$document_ids = array_filter( explode( ',', $document_ids ) );
+						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
@@ -1372,7 +1386,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( $video_ids ) {
-						$video_ids = array_filter( explode( ',', $video_ids ) );
+						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
