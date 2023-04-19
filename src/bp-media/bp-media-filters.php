@@ -2740,3 +2740,24 @@ function bb_setup_attachment_media_preview_template( $template ) {
 
 	return $template;
 }
+
+
+/**
+ * Enable media preview without trailing slash.
+ *
+ * @since BuddyBoss 2.3.2
+ *
+ * @param string $redirect_url URL to render.
+ *
+ * @return mixed|string
+ */
+function bb_media_remove_specific_trailing_slash( $redirect_url ) {
+	if (
+		strpos( $redirect_url, 'bb-attachment-media-preview' ) !== false ||
+		strpos( $redirect_url, 'bb-media-preview' ) !== false
+	) {
+		$redirect_url = untrailingslashit( $redirect_url );
+	}
+	return $redirect_url;
+}
+add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 9999 );

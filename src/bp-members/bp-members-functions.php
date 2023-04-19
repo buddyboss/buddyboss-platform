@@ -4451,59 +4451,38 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 						$bp_user->add_role( $selected_member_type_wp_roles[0] );
 					}
 				} else {
-					// Assign the default member type to user.
-					bp_set_member_type( $user_id, '' );
-					bp_set_member_type( $user_id, $existing_selected );
-
-					$member_type_id                = bp_member_type_post_by_type( $existing_selected );
-					$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-						$bp_user = new WP_User( $user_id );
-						foreach ( $bp_user->roles as $role ) {
-							// Remove role.
-							$bp_user->remove_role( $role );
-						}
-						// Add role.
-						$bp_user->add_role( $selected_member_type_wp_roles[0] );
-					}
+					/**
+					 * Assign the default member type to user on Admin.
+					 *
+					 * @since BuddyBoss 2.3.2
+					 *
+					 * @param int $user_id ID of user.
+					 * @param string $member_type Default selected member type.
+					 */
+					do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 				}
 				// If user is not invited by send invites then assign default member type.
 			} else {
-				// Assign the default member type to user.
-				bp_set_member_type( $user_id, '' );
-				bp_set_member_type( $user_id, $existing_selected );
-
-				$member_type_id                = bp_member_type_post_by_type( $existing_selected );
-				$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-					$bp_user = new WP_User( $user_id );
-					foreach ( $bp_user->roles as $role ) {
-						// Remove role.
-						$bp_user->remove_role( $role );
-					}
-					// Add role.
-					$bp_user->add_role( $selected_member_type_wp_roles[0] );
-				}
+				/**
+				 * Assign the default member type to user on Admin.
+				 *
+				 * @since BuddyBoss 2.3.2
+				 *
+				 * @param int $user_id ID of user.
+				 * @param string $member_type Default selected member type.
+				 */
+				do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 			}
 		} else {
-			// Assign the default member type to user.
-			bp_set_member_type( $user_id, '' );
-			bp_set_member_type( $user_id, $existing_selected );
-
-			$member_type_id                = bp_member_type_post_by_type( $existing_selected );
-			$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-			if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-				$bp_user = new WP_User( $user_id );
-				foreach ( $bp_user->roles as $role ) {
-					// Remove role.
-					$bp_user->remove_role( $role );
-				}
-				// Add role.
-				$bp_user->add_role( $selected_member_type_wp_roles[0] );
-			}
+			/**
+			 * Assign the default member type to user on Admin.
+			 *
+			 * @since BuddyBoss 2.3.2
+			 *
+			 * @param int $user_id ID of user.
+			 * @param string $member_type Default selected member type.
+			 */
+			do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 		}
 	}
 
