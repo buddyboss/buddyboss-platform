@@ -85,19 +85,39 @@ function xprofile_screen_edit_profile() {
 				$selected_member_type_wp_roles = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_wp_roles', true );
 
 				if ( bp_current_user_can( 'administrator' ) ) {
-					if ( 'none' === $selected_member_type_wp_roles[0] ) {
+					if ( empty( $selected_member_type_wp_roles ) || ( isset( $selected_member_type_wp_roles[0] ) && 'none' === $selected_member_type_wp_roles[0] ) ) {
 						bp_set_member_type( bp_displayed_user_id(), '' );
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
-					} elseif ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
+
+						// If selected profile type is empty then bypass required field error for admin.
+						$errors                   = false;
+						$is_required[ $field_id ] = false;
+					} elseif (
+						(
+							isset( $selected_member_type_wp_roles[0] ) &&
+							'administrator' !== $selected_member_type_wp_roles[0]
+						) ||
+						! isset( $selected_member_type_wp_roles[0] )
+					) {
 						$errors                  = true;
 						$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
 						$validations[]           = $bp_error_message_string;
 					}
 				} elseif ( bp_current_user_can( 'editor' ) ) {
-					if ( 'none' === $selected_member_type_wp_roles[0] ) {
+					if ( empty( $selected_member_type_wp_roles ) || ( isset( $selected_member_type_wp_roles[0] ) && 'none' === $selected_member_type_wp_roles[0] ) ) {
 						bp_set_member_type( bp_displayed_user_id(), '' );
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
-					} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ) ) ) {
+
+						// If selected profile type is empty then bypass required field error for editor.
+						$errors                   = false;
+						$is_required[ $field_id ] = false;
+					} elseif (
+						(
+							isset( $selected_member_type_wp_roles[0] ) &&
+							! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ) )
+						) ||
+						! isset( $selected_member_type_wp_roles[0] )
+					) {
 						$errors                  = true;
 						$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );
 						$validations[]           = $bp_error_message_string;

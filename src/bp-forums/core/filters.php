@@ -338,6 +338,11 @@ add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
 function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 	global $wpdb;
 
+	// If search component is not enabled, return.
+	if ( ! bp_is_active( 'search' ) ) {
+		return $where;
+	}
+
 	// Get query post types array .
 	$post_types      = (array) $wp_query->get( 'post_type' );
 	$topic_post_type = bbp_get_topic_post_type();
@@ -353,7 +358,9 @@ function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 			)
 		);
 
-		$where .= " OR $wpdb->posts.ID IN (SELECT DISTINCT $wpdb->posts.ID FROM $wpdb->posts LEFT JOIN $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id ) WHERE $wpdb->term_relationships.term_taxonomy_id IN (" . implode( ',', $matching_terms ) . ')) ';
+		if ( ! empty( $matching_terms ) && ! is_wp_error( $matching_terms ) ) {
+			$where .= " OR $wpdb->posts.ID IN (SELECT DISTINCT $wpdb->posts.ID FROM $wpdb->posts LEFT JOIN $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id ) WHERE $wpdb->term_relationships.term_taxonomy_id IN (" . implode( ',', $matching_terms ) . ')) ';
+		}
 	}
 
 	return $where;

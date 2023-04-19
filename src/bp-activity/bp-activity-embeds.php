@@ -142,7 +142,7 @@ function bp_activity_get_embed_excerpt( $content = '' ) {
 	 * bp_activity_truncate_entry() includes the 'Read More' link, which is why
 	 * we're using this instead of bp_create_excerpt().
 	 */
-	$content = html_entity_decode( $content );
+	$content = html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	$content = bp_activity_truncate_entry(
 		$content,
 		array(

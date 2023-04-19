@@ -62,7 +62,7 @@ if ( $courseId ) : ?>
 				$link = apply_filters(
 					'bp_get_send_private_message_link',
 					wp_nonce_url(
-						bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_activity_get_user_mentionname( $user->ID )
+						bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_members_get_user_nicename( $user_id )
 					)
 				);
 

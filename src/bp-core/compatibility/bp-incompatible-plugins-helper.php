@@ -178,34 +178,13 @@ function bp_helper_plugins_loaded_callback() {
 		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
 	}
 
+	/**
+	 * Include filters when The Events Calendar plugin is activated.
+	 *
+	 * Support The Events Calendar.
+	 */
 	if ( in_array( 'the-events-calendar/the-events-calendar.php', $bp_plugins, true ) ) {
-
-		/**
-		 * Function to suppress "The Event Calendar" plugin's parse_query filter.
-		 *
-		 * @since BuddyBoss 2.0.3
-		 *
-		 * @param array $query default query variable.
-		 *
-		 * @return array|mixed
-		 */
-		function bb_core_tribe_events_parse_query( $query ) {
-
-			if ( true === is_search() ||
-			     (
-				     true === (bool) defined( 'DOING_AJAX' ) &&
-				     true === (bool) DOING_AJAX &&
-				     isset( $_REQUEST['action'] ) &&
-				     'bp_search_ajax' === $_REQUEST['action']
-			     )
-			) {
-				$query->set( 'tribe_suppress_query_filters', true );
-			}
-
-			return $query;
-		}
-
-		add_filter( 'parse_query', 'bb_core_tribe_events_parse_query' );
+		require buddypress()->compatibility_dir . '/class-bb-the-events-calendar-helpers.php';
 	}
 
 	/**
@@ -220,6 +199,26 @@ function bp_helper_plugins_loaded_callback() {
 	 */
 	if ( function_exists( 'tutor_pro' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
+	}
+
+	/**
+	 * Include filters to support network search when Paid Membership Pro plugin is activated.
+	 */
+	if ( defined( 'PMPRO_VERSION' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-pmpro-helpers.php';
+	}
+
+	/**
+	 * Include filters to support network search when Divi Builder plugin is activated.
+	 */
+	if ( class_exists( 'ET_Builder_Plugin' ) ) {
+		add_filter(
+			'et_builder_load_requests',
+			function( $builder_load_requests ) {
+				$builder_load_requests['action'][] = 'bp_search_ajax';
+				return $builder_load_requests;
+			}
+		);
 	}
 }
 
@@ -269,7 +268,7 @@ add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
 /**
  * Allow activity page content restriction via MemberPress
- * 
+ *
  * @since BuddyBoss 2.2.9
  *
  * @return void

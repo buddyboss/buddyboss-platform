@@ -38,4 +38,4 @@ if ( ! empty( $F->action ) ) {
 	</p>
 <?php
 
-// BP Profile Search - end of template
+// BP Profile Search - end of template.
