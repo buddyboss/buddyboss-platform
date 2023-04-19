@@ -2184,7 +2184,7 @@ function bb_get_message_response_object( $message ) {
 				$has_media = true;
 				$media_ids = explode( ',', $media_ids );
 				if ( count( $media_ids ) < 2 ) {
-					$excerpt = __( 'sSnt a photo', 'buddyboss' );
+					$excerpt = __( 'Sent a photo', 'buddyboss' );
 				} else {
 					$excerpt = __( 'Sent some photos', 'buddyboss' );
 				}
