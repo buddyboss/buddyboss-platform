@@ -14,7 +14,6 @@
 bp_nouveau_activity_hook( 'before', 'entry' );
 
 $link_preview_string = "";
-$link_embed_string   = "";
 
 $link_preview_data = bp_activity_get_meta( bp_get_activity_id(), '_link_preview_data', true );
 if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
@@ -23,12 +22,12 @@ if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
 
 $link_embed = bp_activity_get_meta( bp_get_activity_id(), '_link_embed', true );
 if ( ! empty( $link_embed ) ) {
-	$link_embed_string = $link_embed;
+	$link_preview_string = $link_embed;
 }
 
 ?>
 
-<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-embed='<?php echo $link_embed_string; ?>'>
+<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>'>
 
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 

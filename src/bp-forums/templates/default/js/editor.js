@@ -196,6 +196,7 @@ jQuery( document ).ready(
 					);
 
 				});
+				bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
 			}
 
 			// Add Click event to show / hide text formatting Toolbar for reply form.
@@ -307,6 +308,7 @@ jQuery( document ).ready(
 					);
 
 				});
+				bp.Nouveau.TopicReplyDraft.displayTopicReplyDraft();
 			}
 
 			// Add Click event to show / hide text formatting Toolbar for topic form.
