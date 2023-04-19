@@ -80,10 +80,10 @@ function bp_video_upload() {
 	$result = array(
 		'id'          => (int) $attachment->ID,
 		'thumb'       => '',
-		'url'         => esc_url( $attachment_url ),
+		'url'         => esc_url( untrailingslashit( $attachment_url) ),
 		'name'        => esc_attr( $name ),
 		'ext'         => esc_attr( $ext ),
-		'vid_msg_url' => esc_url( $video_message_url ),
+		'vid_msg_url' => esc_url( untrailingslashit( $video_message_url ) ),
 	);
 
 	return $result;
@@ -3401,7 +3401,7 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 		$attachment_url = wp_get_attachment_url( $attachment_id );
 	}
 
-	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter to get video thumb url.
@@ -4323,7 +4323,7 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 		if ( ! bb_enable_symlinks() ) {
 			$video_id       = 'forbidden_' . $video->id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
-			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
+			$attachment_url = untrailingslashit( home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size );
 
 		} else {
 
