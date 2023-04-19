@@ -77,11 +77,11 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 
-		add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_member_directories_remove_profile_actions' ), 9999, 2 );
-		add_filter( 'bp_member_type_name_string', array( $this, 'bb_remove_member_type_name_string' ), 9999, 3 );
-
 		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
 		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
+		
+		add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_member_directories_remove_profile_actions' ), 9999, 2 );
+		add_filter( 'bp_member_type_name_string', array( $this, 'bb_remove_member_type_name_string' ), 9999, 3 );
 	}
 
 	/**
