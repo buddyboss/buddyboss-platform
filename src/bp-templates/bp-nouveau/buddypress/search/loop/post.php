@@ -32,19 +32,36 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 		<div class="item">
 			<h3 class="entry-title item-title">
 				<a href="<?php the_permalink(); ?>"
-				   title="
-				   <?php
+				title="
+				<?php
 					echo esc_attr(
-					    /* translators: %s title attribute. */
+						/* translators: %s title attribute. */
 						sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) )
 					);
 					?>
 					"
-				   rel="bookmark"><?php the_title(); ?></a>
+				rel="bookmark"><?php the_title(); ?></a>
 			</h3>
 
 			<div class="entry-content entry-summary">
-				<?php echo wp_kses_post( $result['post_content'] ); ?>
+				<?php
+				$get_the_post_content = apply_filters( 'the_content', get_the_content( '', false, get_the_ID() ) );
+				// Render Divi shortcodes and other as well.
+				ob_start();
+				echo do_shortcode( $get_the_post_content );
+				$get_the_post_content = ob_get_clean();
+
+				$get_the_post_content = strip_shortcodes( wp_strip_all_tags( $get_the_post_content ) );
+				$get_the_post_content = bp_create_excerpt(
+					$get_the_post_content,
+					100,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				);
+
+				echo wp_kses_post( $get_the_post_content );
+				?>
 			</div>
 
 			<div class="entry-meta">
