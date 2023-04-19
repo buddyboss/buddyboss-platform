@@ -897,7 +897,7 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 /**
  * Assign the default member type to user who register recently.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.2
  *
  * @param int    $user_id     ID of user.
  * @param string $member_type Default selected member type.
