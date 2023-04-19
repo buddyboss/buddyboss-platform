@@ -64,9 +64,12 @@ if ( bp_is_active( 'moderation' ) ) {
 		?>
 
 	</div>
-	
 
-	
+	<?php
+	if ( bb_is_group_activity_comment( bp_get_activity_comment_id() ) ) {
+		bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) );
+	}
+	?>
 
 	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
 </li>
