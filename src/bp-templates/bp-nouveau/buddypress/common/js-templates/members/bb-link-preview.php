@@ -1,4 +1,15 @@
-<% if ( data.link_scrapping ) { %>
+<?php
+/**
+ * The template for displaying link preview
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/members/bb-link-preview.php.
+ *
+ * @since [BBVERSION]
+ */
+
+?>
+<script type="text/html" id="tmpl-bb-link-preview">
+	<% if ( data.link_scrapping ) { %>
 	<% if ( data.link_loading ) { %>
 	<span class="bb-url-scrapper-loading bb-ajax-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><?php esc_html_e( 'Loading preview...', 'buddyboss' ) ?></span>
 	<% } %>
@@ -64,3 +75,4 @@
 	<% } %>
 	<% } %>
 	<% } %>
+</script>
