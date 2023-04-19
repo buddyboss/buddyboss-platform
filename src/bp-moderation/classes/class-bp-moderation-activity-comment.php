@@ -156,12 +156,15 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		if (
 			(
+				// If isBlocked and comment is hidden then blocked comment template will call.
 				$this->is_content_hidden( $activities_template->activity->current_comment->id ) ||
 				bb_moderation_is_user_blocked_by( $activities_template->activity->current_comment->user_id )
 			) &&
 			(
+				// If current comment is not group activity then blocked comment template will call.
 				! bb_is_group_activity_comment( $activities_template->activity->current_comment ) ||
 				(
+					// If current comment is group activity and comment is hidden then blocked comment template will call.
 					bb_is_group_activity_comment( $activities_template->activity->current_comment ) &&
 					bp_moderation_is_content_hidden( $activities_template->activity->current_comment->id, self::$moderation_type )
 				)

@@ -289,7 +289,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		if (
 			BP_Core_Suspend::check_suspended_content( $activities_template->activity->current_comment->id, self::$type, true ) &&
 			! bb_is_group_activity_comment( $activities_template->activity->current_comment )
-			// Check the activity is group or not. If found current comment is group activity comment then skip this.
+			// If current comment is not group activity and comment is suspended then blocked comment template will call.
 		) {
 			return 'activity/blocked-comment.php';
 		}
@@ -298,7 +298,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		if (
 			bp_moderation_is_user_suspended( $author_id ) &&
 			! bb_is_group_activity_comment( $activities_template->activity->current_comment )
-			// Check the activity is group or not. If found current comment is group activity comment then skip this.
+			// If current comment is not group activity and user is suspended then blocked comment template will call.
 		) {
 			return 'activity/blocked-comment.php';
 		}
