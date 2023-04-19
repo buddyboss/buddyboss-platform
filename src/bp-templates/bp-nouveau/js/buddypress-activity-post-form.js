@@ -341,7 +341,9 @@ window.bp = window.bp || {};
 
 			self.postForm.$el.parent( '#bp-nouveau-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
-			self.postForm.$el.find( '#whats-new' ).data( 'activity-url-preview', activity_URL_preview );
+			if( activity_URL_preview != null ) {
+				self.postForm.$el.find( '#whats-new' ).data( 'activity-url-preview', activity_URL_preview );
+			}
 			var element = self.postForm.$el.find( '#whats-new' ).get( 0 );
 			element.focus();
 
@@ -2903,7 +2905,7 @@ window.bp = window.bp || {};
 				if ( '' !== urlString ) {
 					this.loadURLPreview( urlString );
 				} else if( activity_URL_preview !== undefined ){
-					this.loadURLPreview( activity_URL_preview.url );
+					this.loadURLPreview( activity_URL_preview );
 				}
 			},
 
@@ -4989,6 +4991,9 @@ window.bp = window.bp || {};
 				//Add Toolbar to show in default view
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+
+				//Reset activity link preview
+				$( '#whats-new' ).removeData( 'activity-url-preview' );
 
 				// Remove footer wrapper
 				this.$el.find( '.whats-new-form-footer' ).remove();

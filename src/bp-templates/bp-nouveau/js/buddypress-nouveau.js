@@ -3852,7 +3852,7 @@ window.bp = window.bp || {};
 					self.currentTargetForm = jQuery( self.currentTarget.elements[0] ).closest( 'form' );
 					if ( jQuery( self.currentTargetForm ).find('#link_preview_data').length > 0 ) {
 
-						const link_preview_data = {
+						var link_preview_data = {
 							link_url: url,
 							link_title: response.title,
 							link_description: response.description,
