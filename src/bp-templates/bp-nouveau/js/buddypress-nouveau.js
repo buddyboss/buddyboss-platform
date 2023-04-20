@@ -3671,6 +3671,7 @@ window.bp = window.bp || {};
 			currentTarget: null,
 			currentTargetForm: null,
 			currentPreviewParent: null,
+			controlsAdded :null,
 			loadedURLs: [],
 			loadURLAjax: null,
 			options: {},
@@ -3687,6 +3688,21 @@ window.bp = window.bp || {};
 				if( self.currentPreviewParent ) {
 					self.currentPreviewParent.html( html );
 				}
+
+				if( self.controlsAdded === null && self.options.link_loading === false ){
+					self.registerControls();
+				}
+			},
+			registerControls: function() {
+				var self = this;
+				$( self.currentPreviewParent ).on( 'click', '#bb-link-preview-remove-image', function() {
+					self.options.link_images = [];
+					self.options.link_image_index = 0;
+					self.options.link_image_index_save = '0';
+					self.render( self.options );
+				});
+
+				self.controlsAdded = true;
 			},
 			scrapURL: function ( urlText, targetPreviewParent ) {
 				var self = this;
@@ -3814,18 +3830,12 @@ window.bp = window.bp || {};
 							link_loading: true,
 							link_error: false,
 							link_url: url,
-							link_embed: false
+							link_embed: false,
+							link_success: false,
 						}
 					);
 
-					self.render( {
-						link_scrapping: true,
-						link_loading: true,
-						link_error: false,
-						link_url: url,
-						link_embed: false,
-						link_success: false,
-					} );
+					self.render( self.options );
 		
 					if ( ! urlResponse ) {
 						self.loadURLAjax = $.post(
@@ -3864,6 +3874,7 @@ window.bp = window.bp || {};
 					// ) {
 					// 	urlImages = '';
 					// }
+					self.options.link_image_index = 0;
 					var urlImagesIndex = '';
 					if ( '' !== self.options.link_image_index ) {
 						urlImagesIndex =  parseInt( self.options.link_image_index );
@@ -3896,18 +3907,7 @@ window.bp = window.bp || {};
 
 						jQuery( self.currentTargetForm ).find('#link_preview_data').val( JSON.stringify( link_preview_data ) );
 
-						self.render( {
-							link_scrapping: true,
-							link_loading: false,
-							link_error: '',
-							link_success: true,
-							link_error_msg: response.error,
-							link_images: response.images,
-							link_image_index: 0,
-							link_url: url,
-							link_title: response.title,
-							link_description: response.description
-						} );
+						self.render( self.options );
 					}
 					
 		
@@ -3915,22 +3915,12 @@ window.bp = window.bp || {};
 					Object.assign( self.options, {
 							link_success: false,
 							link_error: true,
-							link_error_msg: response.error
+							link_error_msg: response.error,
+							link_loading: false
 						}
 					);
 
-					self.render( {
-						link_scrapping: true,
-						link_loading: false,
-						link_error: true,
-						link_error_msg: response.error,
-						link_success: false,
-						link_images: '',
-						link_image_index: 0,
-						link_url: url,
-						link_title: '',
-						link_description: ''
-					} );
+					self.render( self.options );
 				}
 			},
 		
