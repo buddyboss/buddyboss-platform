@@ -2065,10 +2065,10 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 		$offset = get_site_option( 'bb_upgrade_user_favorites_offset', 0 );
 	} else {
 		$offset = (int) filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
-		$offset = empty( $offset ) ? 0 : ( ( 1 === $offset ) ? ( $offset - 1 ) : $offset );
+		$offset = ! empty( $offset ) ? ( $offset - 1 ) : 0;
 	}
 
-	$results = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE um.meta_key = %s GROUP BY u.ID ORDER BY um.umeta_id ASC LIMIT %d OFFSET %d", $wpdb->prefix . '_bbp_favorites', 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$results = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE um.meta_key = %s GROUP BY u.ID ORDER BY u.ID ASC LIMIT %d OFFSET %d", $wpdb->prefix . '_bbp_favorites', 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	if ( ! empty( $results ) ) {
 		$min_count = (int) apply_filters( 'bb_user_favorites_queue_min_count', 10 );
