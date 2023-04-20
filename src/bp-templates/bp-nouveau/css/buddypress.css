@@ -21418,7 +21418,7 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
 
 .bp-document-listing .media-search-form .bp-dir-search-form #group-document-search {
   background-image: none;
-  padding: 6px 10px 6px 32px;
+  padding: 6px 30px 6px 32px;
   height: auto;
   font-size: 14px;
 }
@@ -21429,6 +21429,11 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
 
 .bp-document-listing .bp-media-header-wrap .bb-title {
   width: auto;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset,
+.search-form-has-reset {
+  position: relative;
 }
 
 .buddypress .buddypress-wrap .search-form-has-reset .search-form_reset,
@@ -21449,6 +21454,13 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
 .buddypress .buddypress-wrap .search-form-has-reset .search-form_reset:hover,
 .search-form-has-reset .search-form_reset:hover {
   opacity: 1;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset input[type="search"],
+.buddypress .buddypress-wrap .search-form-has-reset #bbp_search,
+.search-form-has-reset input[type="search"],
+.search-form-has-reset #bbp_search {
+  padding-right: 30px;
 }
 
 body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
@@ -21551,7 +21563,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .bp-dir-search-form #group-document-search {
   background-image: none;
-  padding: 6px 10px 6px 32px;
+  padding: 6px 30px 6px 32px;
   height: auto;
   font-size: 14px;
 }
