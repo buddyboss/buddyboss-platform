@@ -2073,7 +2073,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 	if ( ! empty( $results ) ) {
 		$min_count = (int) apply_filters( 'bb_user_favorites_queue_min_count', 10 );
 
-		if ( $is_background && count( $results ) > $min_count ) {
+		if ( $is_background ) {
 			$chunk_results = array_chunk( $results, $min_count );
 			if ( ! empty( $chunk_results ) ) {
 				foreach ( $chunk_results as $chunk_result ) {
@@ -2093,6 +2093,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 			$bp_background_updater->dispatch();
 		} else {
 			bb_migrate_users_topic_favorites( $results, $blog_id );
+			$offset ++;
 		}
 
 		// Update the offset.
