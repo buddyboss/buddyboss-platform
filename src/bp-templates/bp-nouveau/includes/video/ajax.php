@@ -1188,6 +1188,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 	$user_domain      = bp_core_get_user_domain( $video->user_id );
 	$display_name     = bp_core_get_user_displayname( $video->user_id );
 	$time_since       = bp_core_time_since( $video->date_created );
+	add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 	$avatar           = bp_core_fetch_avatar(
 		array(
 			'item_id' => $video->user_id,
@@ -1195,6 +1196,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 			'type'    => 'full',
 		)
 	);
+	remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 
 	ob_start();
 
