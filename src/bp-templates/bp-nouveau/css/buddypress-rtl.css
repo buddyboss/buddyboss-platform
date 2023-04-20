@@ -28620,7 +28620,7 @@ span.icons:before {
   transform: translate(0, -50%);
 }
 
-.bb-url-thumb-nav button[id*="bb-url-"] {
+.bb-url-thumb-nav button[type="button"][id*="bb-url-"] {
   cursor: pointer;
   margin: 0 3px;
   padding: 0;
@@ -28634,17 +28634,17 @@ span.icons:before {
   display: none;
 }
 
-.bb-url-thumb-nav button[id*="bb-url-"] .bb-icon-l {
+.bb-url-thumb-nav button[type="button"][id*="bb-url-"] .bb-icon-l {
   display: block;
 }
 
-.bb-url-thumb-nav button[id*="bb-url-"] .bb-icon-l::before {
+.bb-url-thumb-nav button[type="button"][id*="bb-url-"] .bb-icon-l::before {
   font-size: 40px;
   text-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
   color: #fff;
 }
 
-.bb-url-thumb-nav button[id*="bb-url-"]#bb-url-nextPicButton {
+.bb-url-thumb-nav button[type="button"][id*="bb-url-"]#bb-url-nextPicButton {
   right: inherit;
   left: 0;
 }

@@ -3670,14 +3670,38 @@ window.bp = window.bp || {};
 		linkPreviews : {
 			currentTarget: null,
 			currentTargetForm: null,
+			currentPreviewParent: null,
 			loadedURLs: [],
 			loadURLAjax: null,
 			options: {},
-			scrapURL: function ( urlText ) {
+			render: function( renderOptions ) {
+				var self = this;
+				// Link Preview Template
+				var tmpl = $('#tmpl-bb-link-preview').html();
+
+				// Compile the template
+				var compiled = _.template(tmpl);
+
+				var html = compiled( renderOptions );
+
+				if( self.currentPreviewParent ) {
+					self.currentPreviewParent.html( html );
+				}
+			},
+			scrapURL: function ( urlText, targetPreviewParent ) {
+				var self = this;
 				var urlString = '';
 		
 				if ( urlText === null ) {
 					return;
+				}
+
+				if( targetPreviewParent ) {
+
+					if( targetPreviewParent.children( '.bb-url-scrapper-container' ).length == 0 ) {
+						targetPreviewParent.prepend('<div class="bb-url-scrapper-container"><div>');
+					}
+					self.currentPreviewParent = targetPreviewParent.find( '.bb-url-scrapper-container' );
 				}
 		
 				//Remove mentioned members Link
@@ -3793,6 +3817,15 @@ window.bp = window.bp || {};
 							link_embed: false
 						}
 					);
+
+					self.render( {
+						link_scrapping: true,
+						link_loading: true,
+						link_error: false,
+						link_url: url,
+						link_embed: false,
+						link_success: false,
+					} );
 		
 					if ( ! urlResponse ) {
 						self.loadURLAjax = $.post(
@@ -3862,6 +3895,19 @@ window.bp = window.bp || {};
 						};
 
 						jQuery( self.currentTargetForm ).find('#link_preview_data').val( JSON.stringify( link_preview_data ) );
+
+						self.render( {
+							link_scrapping: true,
+							link_loading: false,
+							link_error: '',
+							link_success: true,
+							link_error_msg: response.error,
+							link_images: response.images,
+							link_image_index: 0,
+							link_url: url,
+							link_title: response.title,
+							link_description: response.description
+						} );
 					}
 					
 		
@@ -3872,6 +3918,19 @@ window.bp = window.bp || {};
 							link_error_msg: response.error
 						}
 					);
+
+					self.render( {
+						link_scrapping: true,
+						link_loading: false,
+						link_error: true,
+						link_error_msg: response.error,
+						link_success: false,
+						link_images: '',
+						link_image_index: 0,
+						link_url: url,
+						link_title: '',
+						link_description: ''
+					} );
 				}
 			},
 		
