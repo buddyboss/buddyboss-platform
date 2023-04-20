@@ -1155,12 +1155,14 @@ function bb_forums_save_link_preview_data( $post_id ) {
 
 	$link_preview_data = array();
 
-	if ( ! isset( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'bbp-new-topic', 'bbp-new-reply', 'reply' ) ) ) {
+	if ( isset( $_POST['action'] ) && ! in_array( $_POST['action'], array( 'bbp-new-topic', 'bbp-new-reply', 'reply' ) ) ) {
 		return false;
 	}
 
 	if ( ! empty( $_POST['link_preview_data'] ) ) {
 		$link_preview_data = get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) );
+	} else {
+		$link_preview_data = $_POST;
 	}
 
 	$link_url   = ! empty( $link_preview_data['link_url'] ) ? filter_var( $link_preview_data['link_url'], FILTER_VALIDATE_URL ) : '';
@@ -1213,8 +1215,11 @@ function bb_forums_save_link_preview_data( $post_id ) {
 	update_post_meta( $post_id, '_link_preview_data', $preview_data );
 }
 
-add_action( 'bbp_new_topic', 'bb_forums_save_link_preview_data', 10 );
-add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data', 10 );
+add_action( 'bbp_new_topic', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_edit_topic', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_edit_reply', 'bb_forums_save_link_preview_data' );
+
 
 /**
  * Embed link preview in activity content
