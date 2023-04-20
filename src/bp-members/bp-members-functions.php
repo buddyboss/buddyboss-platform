@@ -5427,7 +5427,7 @@ function bb_core_get_user_slug( int $user_id ) {
 		return '';
 	}
 
-	$profile_slug = bp_get_user_meta( 'bb_profile_slug', $user_id, true );
+	$profile_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
 
 	/**
 	 * Filters the profile slug based on originally provided user ID.
