@@ -5364,7 +5364,7 @@ function bb_generate_user_profile_slug( int $user_id ) {
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
-		$unique_identifier = sha1( $user->user_email . $user->user_nicename );
+		$unique_identifier = sha1( $user->user_email . $user->user_nicename . $user->ID );
 	}
 
 	return $unique_identifier;
