@@ -228,7 +228,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		// Alowed to view single group activity.
+		// Allowed to view single group activity.
 		if (
 			bp_is_single_activity() &&
 			! wp_doing_ajax()
