@@ -488,7 +488,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to remove member type label if member is hasblocked.
+	 * Logged in member is blocked by members from group, then loggedin member can not see member type of is blocked by members.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
