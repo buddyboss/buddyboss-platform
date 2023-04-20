@@ -3702,6 +3702,25 @@ window.bp = window.bp || {};
 					self.render( self.options );
 				});
 
+				$( self.currentPreviewParent ).on( 'click', '#bb-close-link-suggestion', function() {
+					// Set default values.
+					Object.assign( self.options, {
+						link_success: false,
+						link_error: false,
+						link_error_msg: '',
+						link_scrapping: false,
+						link_images: [],
+						link_image_index: 0,
+						link_title: '',
+						link_description: '',
+						link_url: '',
+						link_embed: false,
+						link_swap_image_button: 0,
+						link_image_index_save: '0',
+					} );
+					self.render( self.options );
+				});
+
 				self.controlsAdded = true;
 			},
 			scrapURL: function ( urlText, targetPreviewParent ) {
