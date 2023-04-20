@@ -294,21 +294,6 @@ jQuery( document ).ready(
 				}
 			} );
 		}
-
-		// Disabled Post Formatting - Topic/reply content
-		if ( typeof window.MediumEditor == 'undefined' ) {
-
-			jQuery( document ).on ( 'keyup', '#bbpress-forums .bbp-the-content', function( event ) {
-
-				var id = jQuery( this ).attr( 'id' );
-				var type = jQuery( this ).data( 'type' );
-				var bbp_reply_content = jQuery( this ).closest('form').find( '#bbp_' + type + '_content' );
-				var content = document.getElementById(id).innerHTML;
-				bbp_reply_content.val( content );
-
-			});
-
-		}
 		
 		jQuery( document ).on( 'keyup', '#bbp_topic_title', function ( e ) {
 			if ( jQuery( e.currentTarget ).val().trim() !== '' ) {
