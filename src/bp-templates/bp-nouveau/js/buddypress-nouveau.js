@@ -3695,6 +3695,14 @@ window.bp = window.bp || {};
 			},
 			registerControls: function() {
 				var self = this;
+				self.displayNextPrevButtonView = function() {
+					$( '.bb-url-scrapper-container #bb-url-prevPicButton' ).show();
+					$( '.bb-url-scrapper-container #bb-url-nextPicButton' ).show();
+					$( '.bb-url-scrapper-container #bb-link-preview-select-image' ).show();
+					$( '.bb-url-scrapper-container #icon-exchange' ).hide();
+					$( '.bb-url-scrapper-container #bb-link-preview-remove-image' ).hide();
+				};
+
 				$( self.currentPreviewParent ).on( 'click', '#bb-link-preview-remove-image', function() {
 					self.options.link_images = [];
 					self.options.link_image_index = 0;
@@ -3718,6 +3726,48 @@ window.bp = window.bp || {};
 						link_swap_image_button: 0,
 						link_image_index_save: '0',
 					} );
+					self.render( self.options );
+				});
+
+				$( self.currentPreviewParent ).on( 'click', '#icon-exchange', function() {
+					self.options.link_swap_image_button = 1;
+					self.displayNextPrevButtonView();
+					// self.render( self.options );
+				});
+
+				$( self.currentPreviewParent ).on( 'click', '#bb-url-prevPicButton', function() {
+					var imageIndex = self.options.link_image_index;
+					if ( imageIndex > 0 ) {
+						Object.assign( self.options, {
+							link_image_index : imageIndex - 1,
+							link_swap_image_button : 1
+						} );
+						self.render( self.options );
+						self.displayNextPrevButtonView();
+					}
+				});
+
+				$( self.currentPreviewParent ).on( 'click', '#bb-url-nextPicButton', function() {
+					var imageIndex = self.options.link_image_index;
+					var images = self.options.link_images;
+					if ( imageIndex < images.length - 1 ) {
+						Object.assign( self.options, {
+							link_image_index : imageIndex + 1,
+							link_swap_image_button : 1
+						} );
+						self.render( self.options );
+						self.displayNextPrevButtonView();
+					}
+				});
+
+				$( self.currentPreviewParent ).on( 'click', '#bb-link-preview-select-image', function() {
+					var imageIndex = self.options.link_image_index;
+					self.options.link_image_index_save = imageIndex;
+					$( '.bb-url-scrapper-container #icon-exchange' ).show();
+					$( '.bb-url-scrapper-container #activity-link-preview-remove-image' ).show();
+					$( '.bb-url-scrapper-container #activity-link-preview-select-image' ).hide();
+					$( '.bb-url-scrapper-container #activity-url-prevPicButton' ).hide();
+					$( '.bb-url-scrapper-container #activity-url-nextPicButton' ).hide();
 					self.render( self.options );
 				});
 
