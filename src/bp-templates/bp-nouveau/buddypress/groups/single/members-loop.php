@@ -70,8 +70,6 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			if ( bp_is_active( 'moderation' ) ) {
 				if ( bp_moderation_is_user_suspended( bp_get_member_user_id() ) ) {
 					$moderation_class .= 'bp-user-suspended';
-				} elseif ( bp_moderation_is_user_blocked( bp_get_member_user_id() ) ) {
-					$moderation_class .= ' bp-user-blocked';
 				} elseif ( bb_moderation_is_user_blocked_by( bp_get_member_user_id() ) ) {
 					$is_blocked       = true;
 					$moderation_class .= ' bp-user-blocked';
