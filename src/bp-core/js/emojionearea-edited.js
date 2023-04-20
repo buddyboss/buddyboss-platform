@@ -1370,7 +1370,8 @@ document = window.document || {};
 					if ( typeof window.forums_medium_topic_editor == 'undefined' && source.is( "TEXTAREA" ) ) {
 						var textArea = $( 'textarea.bbp-the-content' ).get( 0 );
 						var init = textArea.selectionStart;
-						textArea.value = textArea.value.slice( 0, init ) + self.emojiTemplate + textArea.value.slice( init );
+						var emojiUnicode = emojione.shortnameToUnicode( emojibtn.data( "name" ) );
+						textArea.value = textArea.value.slice( 0, init ) + emojiUnicode + textArea.value.slice( init );
 						textArea.setSelectionRange( init + 1, init + 1 );
 						textArea.focus();
 					} else {

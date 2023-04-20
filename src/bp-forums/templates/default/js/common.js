@@ -173,9 +173,6 @@ jQuery( document ).ready(
 									if ( typeof window.forums_medium_forum_editor !== 'undefined' && typeof window.forums_medium_forum_editor[ key ] !== 'undefined' ) {
 										window.forums_medium_forum_editor[ key ].checkContentChanged();
 									}
-									if ( typeof window.forums_medium_topic_editor == 'undefined' ) {
-										$( '#bbpress-forums .bbp-the-content--not-medium' ).keyup();
-									}
 									jQuery( '#' + elem_id )[ 0 ].emojioneArea.hidePicker();
 								},
 								search_keypress: function() {
