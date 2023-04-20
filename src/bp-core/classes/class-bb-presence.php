@@ -279,7 +279,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			$wp_files_system        = new \WP_Filesystem_Direct( array() );
-			$bp_mu_plugin_file_path = buddypress()->plugin_dir . 'bp-core/mu-plugins/buddyboss-presence-api.php';
+			$bp_mu_plugin_file_path = buddypress()->plugin_dir . 'bp-core/mu-plugins/buddyboss-performance-api.php';
 
 			$purge_nonce = ( ! empty( $_GET['download_mu_bpa_file'] ) ) ? wp_unslash( $_GET['download_mu_bpa_file'] ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
@@ -309,33 +309,33 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			$mu_plugins = get_mu_plugins();
-			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php' ) ) {
 				// Try to automatically install MU plugin.
 				if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' );
+					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php' );
 				}
 			} elseif (
 				! empty( $mu_plugins ) &&
-				array_key_exists( 'buddyboss-presence-api.php', $mu_plugins ) &&
-				version_compare( $mu_plugins['buddyboss-presence-api.php']['Version'], '1.0.1', '<' )
+				array_key_exists( 'buddyboss-performance-api.php', $mu_plugins ) &&
+				version_compare( $mu_plugins['buddyboss-performance-api.php']['Version'], '1.0.1', '<' )
 			) {
 				// Try to automatically install MU plugin.
 				if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', true );
+					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php', true );
 				}
 			}
 
 			set_transient( 'bb_presence_api_mu_download', 'true', WEEK_IN_SECONDS );
 
-			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php' ) ) {
 				self::$download_plugin_text = __( 'Download the plugin', 'buddyboss' );
 				add_action( 'admin_notices', array( get_called_class(), 'bb_add_sitewide_notice_for_presence_api_mu_file' ) );
 			} elseif (
 				! empty( $mu_plugins ) &&
-				array_key_exists( 'buddyboss-presence-api.php', $mu_plugins ) &&
-				version_compare( $mu_plugins['buddyboss-presence-api.php']['Version'], '1.0.0', '<' )
+				array_key_exists( 'buddyboss-performance-api.php', $mu_plugins ) &&
+				version_compare( $mu_plugins['buddyboss-performance-api.php']['Version'], '1.0.0', '<' )
 			) {
 				self::$download_plugin_text = __( 'Download v1.0.0', 'buddyboss' );
 				add_action( 'admin_notices', array( get_called_class(), 'bb_add_sitewide_notice_for_presence_api_mu_file' ) );
