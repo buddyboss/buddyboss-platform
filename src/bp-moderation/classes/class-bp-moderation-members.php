@@ -499,7 +499,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return array|string Return the member actions.
 	 */
 	public function bb_remove_member_type_name_string( $string, $member_type, $user_id ) {
-		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+		if ( bb_moderation_is_user_blocked_by( $user_id ) ) {
 			$string = '';
 		}
 
