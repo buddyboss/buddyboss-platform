@@ -1233,6 +1233,11 @@ add_action( 'bbp_edit_reply', 'bb_forums_save_link_preview_data' );
  */
 function bb_forums_link_preview( $content, $post_id ) {
 
+	// Check if link preview/embed enabled.
+	if( ! bbp_use_autoembed() ) {
+		return $content;
+	}
+
 	$preview_data = get_post_meta( $post_id, '_link_preview_data', true );
 
 	if ( empty( $preview_data['url'] ) ) {
