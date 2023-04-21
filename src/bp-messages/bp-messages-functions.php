@@ -1086,7 +1086,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 
 	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 		global $bb_email_background_updater;
-		$chunk_recipients = array_chunk( $recipients, 10 );
+		$chunk_recipients = array_chunk( $recipients, bb_get_email_queue_min_count() );
 		if ( ! empty( $chunk_recipients ) ) {
 			foreach ( $chunk_recipients as $key => $data_recipients ) {
 				$bb_email_background_updater->data(
