@@ -1366,7 +1366,18 @@ document = window.document || {};
 					}
 
 					saveSelection( editor[0] );
-					pasteHtmlAtCaret( shortnameTo( emojibtn.data( "name" ), self.emojiTemplate ) );
+
+					if ( typeof window.forums_medium_topic_editor == 'undefined' && source.is( "TEXTAREA" ) ) {
+						var textArea = $( 'textarea.bbp-the-content' ).get( 0 );
+						var init = textArea.selectionStart;
+						var emojiUnicode = emojione.shortnameToUnicode( emojibtn.data( "name" ) );
+						textArea.value = textArea.value.slice( 0, init ) + emojiUnicode + textArea.value.slice( init );
+						textArea.setSelectionRange( init + 1, init + 1 );
+						textArea.focus();
+					} else {
+						pasteHtmlAtCaret( shortnameTo( emojibtn.data( "name" ), self.emojiTemplate ) );
+					}
+
 					// }
 
 					if (self.recentEmojis) {
