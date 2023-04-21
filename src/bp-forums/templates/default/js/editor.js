@@ -222,6 +222,10 @@ jQuery( document ).ready(
 						}
 					);
 
+					var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
+					var form = jQuery(element).closest( 'form' );
+					bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+
 					var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
 					if( link_preview_input.length > 0) {
 						link_preview_input.on( 'change', function() {
@@ -375,6 +379,10 @@ jQuery( document ).ready(
 							}
 						}
 					);
+
+					var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
+					var form = jQuery(element).closest( 'form' );
+					bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 
 					var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
 					if( link_preview_input.length > 0) {
@@ -646,13 +654,18 @@ jQuery( document ).ready(
 												var form = jQuery(element).closest( 'form' );
 												window.forums_medium_reply_editor[key].linkTimeout = null;
 												bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_reply_editor[key];
-												bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+												bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 											},
 											500
 										);
 									}
 								}
 							);
+
+							var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
+							var form = jQuery(element).closest( 'form' );
+							bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+
 							var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
 							if( link_preview_input.length > 0) {
 								link_preview_input.on( 'change', function() {
@@ -749,6 +762,10 @@ jQuery( document ).ready(
 									}
 								}
 							);
+
+							var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
+							var form = jQuery(element).closest( 'form' );
+							bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 
 							var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
 							if( link_preview_input.length > 0) {

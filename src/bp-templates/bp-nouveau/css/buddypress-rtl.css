@@ -16490,9 +16490,16 @@ h2.bbp-form-title.entry-title {
 }
 
 .topic-edit #new-post .bbp-form #bbp_topic_submit,
+.topic-edit #new-post .bbp-form #bbp_reply_submit,
+.reply-edit #new-post .bbp-form #bbp_topic_submit,
 .reply-edit #new-post .bbp-form #bbp_reply_submit {
   opacity: 1;
   pointer-events: initial;
+}
+
+.topic-edit #new-post .bbp-form .bb-url-scrapper-container,
+.reply-edit #new-post .bbp-form .bb-url-scrapper-container {
+  max-width: 100%;
 }
 
 /* Forum Video*/

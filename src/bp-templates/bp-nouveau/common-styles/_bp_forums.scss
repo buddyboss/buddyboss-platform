@@ -1703,10 +1703,19 @@ h2.bbp-form-title.entry-title {
 
 }
 
-.topic-edit #new-post .bbp-form #bbp_topic_submit,
-.reply-edit #new-post .bbp-form #bbp_reply_submit {
-	opacity: 1;
-	pointer-events: initial;
+.topic-edit #new-post .bbp-form,
+.reply-edit #new-post .bbp-form {
+
+	#bbp_topic_submit,
+	#bbp_reply_submit {
+		opacity: 1;
+		pointer-events: initial;
+	}
+
+	.bb-url-scrapper-container {
+		max-width: 100%;
+	}
+
 }
 
 
