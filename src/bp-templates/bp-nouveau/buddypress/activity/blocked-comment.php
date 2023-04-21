@@ -25,8 +25,7 @@ if ( bp_is_active( 'moderation' ) ) {
 	 * If a group activity that is created by a suspended member, and someone reports a parent comment on that post,
 	 * then we need to hide all children for that post comment.
 	 */
-	$check_suspended_content = BP_Core_Suspend::check_suspended_content( bp_get_activity_comment_id(), BP_Moderation_Activity_Comment::$moderation_type, true );
-	if ( bb_is_group_activity_comment( bp_get_activity_comment_id() ) && $check_suspended_content ) {
+	if ( bb_is_group_activity_comment( bp_get_activity_comment_id() ) ) {
 		$main_parent_activity_id = new BP_Activity_Activity( bp_get_activity_comment_id() );
 		while ( $main_parent_activity_id->item_id !== $main_parent_activity_id->secondary_item_id ) {
 			$main_parent_activity_id = new BP_Activity_Activity( $main_parent_activity_id->secondary_item_id );
