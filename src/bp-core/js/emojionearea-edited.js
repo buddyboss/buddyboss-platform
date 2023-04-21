@@ -90,11 +90,16 @@ document = window.document || {};
 		} else {
 			fname = unicode;
 		}
+		if ( typeof window.forums_medium_topic_editor == 'undefined' ) {
+			var altAlt = emojione.shortnameToUnicode( shortname );
+		} else {
+			var altAlt = friendlyName;
+		}
 		template = template.replace( '{name}', shortname || '' )
 			.replace( '{friendlyName}', friendlyName )
 			.replace( '{img}', imagePath + (emojioneSupportMode < 2 ? fname.toUpperCase() : originalUnicode.uc_output ) + '.' + imageType )
 			.replace( '{uni}', unicode )
-			.replace( '{alt}', friendlyName );
+			.replace( '{alt}', altAlt );
 
 		if (shortname) {
 			template = template.replace( '{char}', emojione.shortnameToUnicode( shortname ) );
