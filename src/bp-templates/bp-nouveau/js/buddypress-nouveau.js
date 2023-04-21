@@ -3672,6 +3672,7 @@ window.bp = window.bp || {};
 			currentTargetForm: null,
 			currentPreviewParent: null,
 			controlsAdded :null,
+			dataInput: null,
 			loadedURLs: [],
 			loadURLAjax: null,
 			options: {},
@@ -3689,9 +3690,29 @@ window.bp = window.bp || {};
 					self.currentPreviewParent.html( html );
 				}
 
-				if( self.controlsAdded === null && self.options.link_loading === false ){
+				if( self.options.link_loading === true || self.options.link_swap_image_button === 1 ) {
+					return;
+				}
+
+				if( self.controlsAdded === null ){
 					self.registerControls();
 				}
+
+				if ( self.dataInput !== null && self.dataInput.length > 0 ) {
+
+					var link_preview_data = {
+						link_url: self.options.link_url,
+						link_title: self.options.link_title,
+						link_description: self.options.link_description,
+						link_embed: self.options.link_embed,
+						link_image: self.options.link_images[ self.options.link_image_index_save ],
+						link_image_index_save: self.options.link_image_index_save
+					};
+
+					self.dataInput.val( JSON.stringify( link_preview_data ) );
+
+				}
+
 			},
 			registerControls: function() {
 				var self = this;
@@ -3703,14 +3724,16 @@ window.bp = window.bp || {};
 					$( '.bb-url-scrapper-container #bb-link-preview-remove-image' ).hide();
 				};
 
-				$( self.currentPreviewParent ).on( 'click', '#bb-link-preview-remove-image', function() {
+				$( self.currentPreviewParent ).on( 'click', '#bb-link-preview-remove-image', function( e ) {
+					e.preventDefault();
 					self.options.link_images = [];
 					self.options.link_image_index = 0;
 					self.options.link_image_index_save = '0';
 					self.render( self.options );
 				});
 
-				$( self.currentPreviewParent ).on( 'click', '#bb-close-link-suggestion', function() {
+				$( self.currentPreviewParent ).on( 'click', '#bb-close-link-suggestion', function( e ) {
+					e.preventDefault();
 					// Set default values.
 					Object.assign( self.options, {
 						link_success: false,
@@ -3729,13 +3752,14 @@ window.bp = window.bp || {};
 					self.render( self.options );
 				});
 
-				$( self.currentPreviewParent ).on( 'click', '#icon-exchange', function() {
+				$( self.currentPreviewParent ).on( 'click', '#icon-exchange', function( e ) {
+					e.preventDefault();
 					self.options.link_swap_image_button = 1;
 					self.displayNextPrevButtonView();
-					// self.render( self.options );
 				});
 
-				$( self.currentPreviewParent ).on( 'click', '#bb-url-prevPicButton', function() {
+				$( self.currentPreviewParent ).on( 'click', '#bb-url-prevPicButton', function( e ) {
+					e.preventDefault();
 					var imageIndex = self.options.link_image_index;
 					if ( imageIndex > 0 ) {
 						Object.assign( self.options, {
@@ -3747,7 +3771,8 @@ window.bp = window.bp || {};
 					}
 				});
 
-				$( self.currentPreviewParent ).on( 'click', '#bb-url-nextPicButton', function() {
+				$( self.currentPreviewParent ).on( 'click', '#bb-url-nextPicButton', function( e ) {
+					e.preventDefault();
 					var imageIndex = self.options.link_image_index;
 					var images = self.options.link_images;
 					if ( imageIndex < images.length - 1 ) {
@@ -3760,9 +3785,11 @@ window.bp = window.bp || {};
 					}
 				});
 
-				$( self.currentPreviewParent ).on( 'click', '#bb-link-preview-select-image', function() {
+				$( self.currentPreviewParent ).on( 'click', '#bb-link-preview-select-image', function( e ) {
+					e.preventDefault();
 					var imageIndex = self.options.link_image_index;
 					self.options.link_image_index_save = imageIndex;
+					self.options.link_swap_image_button = 0;
 					$( '.bb-url-scrapper-container #icon-exchange' ).show();
 					$( '.bb-url-scrapper-container #activity-link-preview-remove-image' ).show();
 					$( '.bb-url-scrapper-container #activity-link-preview-select-image' ).hide();
@@ -3773,7 +3800,7 @@ window.bp = window.bp || {};
 
 				self.controlsAdded = true;
 			},
-			scrapURL: function ( urlText, targetPreviewParent ) {
+			scrapURL: function ( urlText, targetPreviewParent, targetDataInput ) {
 				var self = this;
 				var urlString = '';
 		
@@ -3787,6 +3814,10 @@ window.bp = window.bp || {};
 						targetPreviewParent.prepend('<div class="bb-url-scrapper-container"><div>');
 					}
 					self.currentPreviewParent = targetPreviewParent.find( '.bb-url-scrapper-container' );
+				}
+
+				if( targetDataInput && targetDataInput.prop('tagName').toLowerCase() === 'input' ){
+					self.dataInput = targetDataInput;
 				}
 		
 				//Remove mentioned members Link
@@ -3950,6 +3981,7 @@ window.bp = window.bp || {};
 					}
 					Object.assign( self.options, {
 							link_success: true,
+							link_url: url,
 							link_title: response.title,
 							link_description: response.description,
 							link_images: urlImages,
@@ -3962,22 +3994,24 @@ window.bp = window.bp || {};
 					self.loadedURLs.push( { 'url': url, 'response': response } );
 		
 					// Set form values for link preview.
-					self.currentTargetForm = jQuery( self.currentTarget.elements[0] ).closest( 'form' );
-					if ( jQuery( self.currentTargetForm ).find('#link_preview_data').length > 0 ) {
+					// self.currentTargetForm = jQuery( self.currentTarget.elements[0] ).closest( 'form' );
+					// if ( jQuery( self.currentTargetForm ).find('#link_preview_data').length > 0 ) {
 
-						var link_preview_data = {
-							link_url: url,
-							link_title: response.title,
-							link_description: response.description,
-							link_embed: self.options.link_embed,
-							link_image: urlImages[ self.options.link_image_index_save ],
-							link_image_index_save: self.options.link_image_index_save,
-						};
+					// 	var link_preview_data = {
+					// 		link_url: url,
+					// 		link_title: response.title,
+					// 		link_description: response.description,
+					// 		link_embed: self.options.link_embed,
+					// 		link_image: urlImages[ self.options.link_image_index_save ],
+					// 		link_image_index_save: self.options.link_image_index_save,
+					// 	};
 
-						jQuery( self.currentTargetForm ).find('#link_preview_data').val( JSON.stringify( link_preview_data ) );
+					// 	jQuery( self.currentTargetForm ).find('#link_preview_data').val( JSON.stringify( link_preview_data ) );
 
-						self.render( self.options );
-					}
+					// 	self.render( self.options );
+					// }
+
+					self.render( self.options );
 					
 		
 				} else {

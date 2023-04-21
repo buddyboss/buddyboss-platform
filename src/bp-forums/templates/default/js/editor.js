@@ -185,9 +185,10 @@ jQuery( document ).ready(
 	
 								window.forums_medium_reply_editor[key].linkTimeout = setTimeout(
 									function () {
+										var form = jQuery(element).closest( 'form' );
 										window.forums_medium_reply_editor[key].linkTimeout = null;
 										bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_reply_editor[key];
-										bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), jQuery(element).closest('form').find('#whats-new-attachments')  );
+										bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 									},
 									500
 								);
@@ -300,9 +301,10 @@ jQuery( document ).ready(
 	
 								window.forums_medium_topic_editor[key].linkTimeout = setTimeout(
 									function () {
+										var form = jQuery(element).closest('form');
 										window.forums_medium_topic_editor[key].linkTimeout = null;
 										bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_topic_editor[key];
-										bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), jQuery(element).closest('form').find('#whats-new-attachments') );
+										bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 									},
 									500
 								);
@@ -528,9 +530,10 @@ jQuery( document ).ready(
 			
 										window.forums_medium_reply_editor[key].linkTimeout = setTimeout(
 											function () {
+												var form = jQuery(element).closest( 'form' );
 												window.forums_medium_reply_editor[key].linkTimeout = null;
 												bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_reply_editor[key];
-												bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), jQuery(element).closest('form').find('#whats-new-attachments')  );
+												bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 											},
 											500
 										);
@@ -596,9 +599,10 @@ jQuery( document ).ready(
 			
 										window.forums_medium_topic_editor[key].linkTimeout = setTimeout(
 											function () {
+												var form = jQuery(element).closest( 'form' );
 												window.forums_medium_topic_editor[key].linkTimeout = null;
 												bp.Nouveau.linkPreviews.currentTarget = window.forums_medium_topic_editor[key];
-												bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), jQuery(element).closest('form').find('#whats-new-attachments')  );
+												bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 											},
 											500
 										);
