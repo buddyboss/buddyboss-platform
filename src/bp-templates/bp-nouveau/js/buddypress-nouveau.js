@@ -3701,6 +3701,10 @@ window.bp = window.bp || {};
 					self.registerControls();
 				}
 
+				if( self.options.link_error === true ) {
+					return;
+				}
+
 				if ( self.dataInput !== null && self.dataInput.length > 0 ) {
 
 					var link_preview_data = {
@@ -4022,7 +4026,8 @@ window.bp = window.bp || {};
 							link_success: false,
 							link_error: true,
 							link_error_msg: response.error,
-							link_loading: false
+							link_loading: false,
+							link_images: []
 						}
 					);
 
