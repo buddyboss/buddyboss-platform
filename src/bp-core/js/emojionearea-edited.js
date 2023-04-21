@@ -1371,8 +1371,9 @@ document = window.document || {};
 						var textArea = $( 'textarea.bbp-the-content' ).get( 0 );
 						var init = textArea.selectionStart;
 						var emojiUnicode = emojione.shortnameToUnicode( emojibtn.data( "name" ) );
+						var emojiUnicodeLength = emojiUnicode.length;
 						textArea.value = textArea.value.slice( 0, init ) + emojiUnicode + textArea.value.slice( init );
-						textArea.setSelectionRange( init + 1, init + 1 );
+						textArea.setSelectionRange( init + emojiUnicodeLength, init + emojiUnicodeLength );
 						textArea.focus();
 					} else {
 						pasteHtmlAtCaret( shortnameTo( emojibtn.data( "name" ), self.emojiTemplate ) );
