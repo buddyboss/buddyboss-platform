@@ -3716,7 +3716,7 @@ window.bp = window.bp || {};
 						link_image_index_save: self.options.link_image_index_save
 					};
 
-					self.dataInput.val( JSON.stringify( link_preview_data ) );
+					self.dataInput.val( JSON.stringify( link_preview_data ) ).trigger('change');
 
 				}
 
