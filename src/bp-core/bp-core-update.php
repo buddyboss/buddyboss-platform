@@ -2653,7 +2653,7 @@ function bb_repair_member_unique_slug( $paged = 1 ) {
 			'number'     => $per_page,
 			'offset'     => $offset,
 			'orderby'    => 'ID',
-			'order'      => 'DESC',
+			'order'      => 'ASC',
 			'meta_query' => array(
 				array(
 					'key'     => 'bb_profile_slug',
