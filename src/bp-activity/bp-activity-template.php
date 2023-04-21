@@ -243,15 +243,6 @@ function bp_has_activities( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
-	/**
-	 * Filters to modify the per page record for the activity.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int Per page.
-	 */
-	$per_page = (int) apply_filters( 'bb_activity_default_per_page', 20 );
-
 	/*
 	 * Parse Args.
 	 */
@@ -267,7 +258,7 @@ function bp_has_activities( $args = '' ) {
 			'in'                => false,        // Comma-separated list or array of activity IDs among which to search.
 			'sort'              => 'DESC',       // Sort DESC or ASC.
 			'page'              => 1,            // Which page to load.
-			'per_page'          => $per_page,    // Number of items per page.
+			'per_page'          => 20,    // Number of items per page.
 			'page_arg'          => 'acpage',     // See https://buddypress.trac.wordpress.org/ticket/3679.
 			'max'               => false,        // Max number to return.
 			'fields'            => 'all',
