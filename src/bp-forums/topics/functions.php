@@ -3749,6 +3749,8 @@ function bbp_topic_content_autoembed_paragraph( $content ) {
 			}
 		}
 	}
+
+	return $content;
 }
 
 /** Feeds *********************************************************************/
