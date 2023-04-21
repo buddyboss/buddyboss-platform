@@ -1584,6 +1584,8 @@ window.bp = window.bp || {};
 					'uploadprogress',
 					function( element ) {
 
+						self.$el.closest( '#whats-new-form').addClass( 'media-uploading' );
+
 						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 						var radius        = circle.r.baseVal.value;
 						var circumference = radius * 2 * Math.PI;
@@ -1680,6 +1682,7 @@ window.bp = window.bp || {};
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) + '</div>' ) );
 							this.removeFile( file );
+							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 						}
 					}
 				);
@@ -1716,6 +1719,7 @@ window.bp = window.bp || {};
 							}
 
 							if ( !_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
+								self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 								var tool_box = self.$el.parents( '#whats-new-form' );
 								if ( tool_box.find( '#activity-document-button' ) ) {
 									tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
@@ -1737,6 +1741,16 @@ window.bp = window.bp || {};
 							}
 
 							bp.draft_content_changed = true;
+						}
+					}
+				);
+
+				// Enable submit button when all medias are uploaded
+				bp.Nouveau.Activity.postForm.dropzone.on(
+					'complete',
+					function() {
+						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 						}
 					}
 				);
@@ -1831,6 +1845,8 @@ window.bp = window.bp || {};
 					'uploadprogress',
 					function( element ) {
 
+						self.$el.closest( '#whats-new-form').addClass( 'media-uploading' );
+
 						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 						var radius        = circle.r.baseVal.value;
 						var circumference = radius * 2 * Math.PI;
@@ -1923,6 +1939,7 @@ window.bp = window.bp || {};
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_file_type + '. ' + ( response ? response : '' ) + '<div>' ) );
 							this.removeFile( file );
+							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 						}
 					}
 				);
@@ -1953,6 +1970,7 @@ window.bp = window.bp || {};
 							}
 
 							if ( !_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
+								self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 								var tool_box = self.$el.parents( '#whats-new-form' );
 								if ( tool_box.find( '#activity-media-button' ) ) {
 									tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
@@ -1974,6 +1992,16 @@ window.bp = window.bp || {};
 							}
 
 							bp.draft_content_changed = true;
+						}
+					}
+				);
+
+				// Enable submit button when all documents are uploaded
+				bp.Nouveau.Activity.postForm.dropzone.on(
+					'complete',
+					function() {
+						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 						}
 					}
 				);
@@ -2097,6 +2125,8 @@ window.bp = window.bp || {};
 					'uploadprogress',
 					function( element ) {
 
+						self.$el.closest( '#whats-new-form').addClass( 'media-uploading' );
+
 						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 						var radius        = circle.r.baseVal.value;
 						var circumference = radius * 2 * Math.PI;
@@ -2136,10 +2166,16 @@ window.bp = window.bp || {};
 							response.data.uuid       = file.upload.uuid;
 							response.data.group_id   = ! _.isUndefined( BP_Nouveau.video ) && ! _.isUndefined( BP_Nouveau.video.group_id ) ? BP_Nouveau.video.group_id : false;
 							response.data.saved      = false;
-							response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
-							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-							self.video.push( response.data );
-							self.model.set( 'video', self.video );
+
+							var thumbnailCheck = setInterval( function () {
+								if( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+									response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+									response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+									self.video.push( response.data );
+									self.model.set( 'video', self.video );
+									clearInterval( thumbnailCheck );
+								}
+							});
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -2180,6 +2216,7 @@ window.bp = window.bp || {};
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.video.invalid_video_type + '. ' + ( response ? response : '' ) + '<div>' ) );
 							this.removeFile( file );
+							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 						}
 					}
 				);
@@ -2210,6 +2247,7 @@ window.bp = window.bp || {};
 							}
 
 							if ( !_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
+								self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 								var tool_box = self.$el.parents( '#whats-new-form' );
 								if ( tool_box.find( '#activity-media-button' ) ) {
 									tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
@@ -2228,6 +2266,16 @@ window.bp = window.bp || {};
 							}
 
 							bp.draft_content_changed = true;
+						}
+					}
+				);
+
+				// Enable submit button when all videos are uploaded
+				bp.Nouveau.Activity.postForm.dropzone.on(
+					'complete',
+					function() {
+						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 						}
 					}
 				);
@@ -2470,6 +2518,7 @@ window.bp = window.bp || {};
 				}
 
 				var tool_box_comment = this.$el.parents( '.ac-reply-content' );
+				this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
 				if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
@@ -2616,6 +2665,8 @@ window.bp = window.bp || {};
 				}
 
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
+				this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
+
 				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
 				whatNewScroll.stop().animate({
 					scrollTop: whatNewScroll[0].scrollHeight
@@ -4886,6 +4937,8 @@ window.bp = window.bp || {};
 					// Display draft activity.
 					bp.Nouveau.Activity.postForm.displayDraftActivity();
 				}
+
+				$('a.bp-suggestions-mention:empty').remove();
 			},
 
 			activityHideModalEvent: function () {

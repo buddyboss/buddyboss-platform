@@ -66,7 +66,6 @@ add_filter( 'bp_get_new_group_description', 'esc_textarea' );
 add_filter( 'bp_get_total_group_count', 'bp_core_number_format' );
 add_filter( 'bp_get_group_total_for_member', 'bp_core_number_format' );
 add_filter( 'bp_get_group_total_members', 'bp_core_number_format' );
-add_filter( 'bp_get_total_group_count_for_user', 'bp_core_number_format' );
 
 // Activity component integration.
 add_filter( 'bp_activity_at_name_do_notifications', 'bp_groups_disable_at_mention_notification_for_non_public_groups', 10, 4 );
@@ -420,7 +419,13 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 		$group = groups_get_group( $activity->item_id );
 
 		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
-		if ( ! empty( $group ) && groups_is_user_mod( get_current_user_id(), $activity->item_id ) ) {
+		if ( 
+			! empty( $group ) && 
+			(
+				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+				groups_is_user_admin( get_current_user_id(), $activity->item_id ) 
+			)
+		) {
 			$can_delete = true;
 		}
 	}
@@ -1109,21 +1114,21 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	if ( ! empty( wp_strip_all_tags( $activity->content ) ) ) {
 		$activity_type = __( 'an update', 'buddyboss' );
 	} elseif ( $media_ids ) {
-		$media_ids = array_filter( explode( ',', $media_ids ) );
+		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 		if ( count( $media_ids ) > 1 ) {
 			$activity_type = __( 'some photos', 'buddyboss' );
 		} else {
 			$activity_type = __( 'a photo', 'buddyboss' );
 		}
 	} elseif ( $document_ids ) {
-		$document_ids = array_filter( explode( ',', $document_ids ) );
+		$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 		if ( count( $document_ids ) > 1 ) {
 			$activity_type = __( 'some documents', 'buddyboss' );
 		} else {
 			$activity_type = __( 'a document', 'buddyboss' );
 		}
 	} elseif ( $video_ids ) {
-		$video_ids = array_filter( explode( ',', $video_ids ) );
+		$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 		if ( count( $video_ids ) > 1 ) {
 			$activity_type = __( 'some videos', 'buddyboss' );
 		} else {

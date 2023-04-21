@@ -797,7 +797,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			$menu_item->classes[] = 'current-menu-item';
 		} else {
 
-			if ( strpos( $current, bp_loggedin_user_domain() ) !== false ) {
+			if ( is_user_logged_in() && ( strpos( $current, bp_loggedin_user_domain() ) !== false ) ) {
 				if (
 					(
 						! in_array( 'settings', $url_parts, true ) &&
@@ -2440,3 +2440,18 @@ function buddyboss_menu_order( $menu_order ) {
 }
 
 add_filter( 'menu_order', 'buddyboss_menu_order' );
+
+/**
+ * Function to remove html entity from number format.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param string $formatted The number to be formatted.
+ *
+ * @return string
+ */
+function bb_core_number_format_callback( $formatted ) {
+	return html_entity_decode( $formatted, ENT_NOQUOTES );
+}
+
+add_filter( 'bp_core_number_format', 'bb_core_number_format_callback', 10, 1 );
