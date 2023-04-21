@@ -2625,14 +2625,6 @@ function bb_update_to_2_3_1() {
  * @return void
  */
 function bb_update_to_2_3_2() {
-
-	$is_already_run = get_transient( 'bb_update_to_2_3_2' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_update_to_2_3_2', 'yes', DAY_IN_SECONDS );
-
 	bb_repair_member_unique_slug();
 }
 
