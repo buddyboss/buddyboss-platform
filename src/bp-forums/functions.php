@@ -1288,6 +1288,3 @@ function bb_forums_link_preview( $content, $post_id ) {
 
 	return $content;
 }
-
-add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 20, 2 );
-add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 20, 2 );

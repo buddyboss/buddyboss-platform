@@ -200,6 +200,7 @@ function bbp_new_topic_handler( $action = '' ) {
 		 && empty( $_POST['bbp_document'] )
 		 && empty( $_POST['bbp_video'] )
 		 && empty( $_POST['bbp_media_gif'] )
+		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $_POST['link_preview_data'] ) ) )
 	) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
@@ -680,6 +681,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	     && empty( $_POST['bbp_document'] )
 	     && empty( $_POST['bbp_video'] )
 	     && empty( $_POST['bbp_media_gif'] )
+		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $_POST['link_preview_data'] ) ) )
 	) {
 		bbp_add_error( 'bbp_edit_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
@@ -3706,10 +3708,47 @@ function bbp_topic_content_autoembed_paragraph( $content ) {
 				$embeds_array[] = wpautop( $embed );
 			}
 		}
-	}
 
-	// Put the line breaks back.
-	return $content . implode( '', $embeds_array );
+		// Put the line breaks back.
+		return $content . implode( '', $embeds_array );
+
+	} else {
+
+		// check if preview url was used or not, if not return content without embed
+		$link_embed = get_post_meta( bbp_get_topic_id(), '_link_embed', true );
+		if ( ! empty( $link_embed ) ) {
+			$embed_data = bp_core_parse_url( $link_embed );
+
+			if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
+				$embed_code = $embed_data['description'];
+			} else {
+				$embed_code = wp_oembed_get( $link_embed, array( 'discover' => false ) );
+
+				if ( ! empty( $embed_code ) ) {
+					$parsed_url_data = array(
+						'title'       => ' ',
+						'description' => $embed_code,
+						'images'      => '',
+						'error'       => '',
+						'wp_embed'    => true,
+					);
+					$cache_key       = 'bb_forums_oembed_' . md5( maybe_serialize( $link_embed ) );
+					// set the transient.
+					set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
+				}
+			}
+
+			if ( ! empty( $embed_code ) ) {
+				preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+				preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+				if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+					$content = sprintf( '<p>%s</p>', $content );
+				}
+				return  $content .= $embed_code;
+			}
+		}
+	}
 }
 
 /** Feeds *********************************************************************/

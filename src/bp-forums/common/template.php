@@ -1740,7 +1740,7 @@ function bbp_topic_form_fields() {
 		
 	<?php
 
-	if ( bbp_is_topic_edit() ) :
+	if ( bbp_is_topic_edit() ) {
 		?>
 
 		<input type="hidden" name="action"       id="bbp_post_action" value="bbp-edit-topic" />
@@ -1757,7 +1757,23 @@ function bbp_topic_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-topic_' . bbp_get_topic_id() );
 
-	else :
+		$link_url = '';
+		$link_preview_data = get_post_meta( bbp_get_topic_id(), '_link_preview_data', true );
+		if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
+			$link_url = ! empty ( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
+		}
+
+		$link_embed = get_post_meta( bbp_get_topic_id(), '_link_embed', true );
+		if ( ! empty( $link_embed ) ) {
+			$link_url = $link_embed;
+		}
+
+		if ( ! empty( $link_url ) ) {
+			?>
+			<input type="hidden" name="bbp_topic_link_url" id="bbp_topic_link_url" value="<?php echo $link_url; ?>" />
+			<?php
+		}
+	} else {
 
 		if ( bbp_is_single_forum() ) :
 			?>
@@ -1776,7 +1792,7 @@ function bbp_topic_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-new-topic' );
 
-	endif;
+	}
 }
 
 /**
@@ -1797,7 +1813,7 @@ function bbp_reply_form_fields() {
 		
 	<?php
 
-	if ( bbp_is_reply_edit() ) :
+	if ( bbp_is_reply_edit() ) {
 		$forum_redirect_to = isset( $_REQUEST['forum_redirect_to'] ) ? (int) $_REQUEST['forum_redirect_to'] : 1
 		?>
 
@@ -1814,7 +1830,23 @@ function bbp_reply_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-reply_' . bbp_get_reply_id() );
 
-	else :
+		$link_url = '';
+		$link_preview_data = get_post_meta( bbp_get_reply_id(), '_link_preview_data', true );
+		if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
+			$link_url = ! empty ( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
+		}
+
+		$link_embed = get_post_meta( bbp_get_reply_id(), '_link_embed', true );
+		if ( ! empty( $link_embed ) ) {
+			$link_url = $link_embed;
+		}
+
+		if ( ! empty( $link_url ) ) {
+			?>
+			<input type="hidden" name="bbp_reply_link_url" id="bbp_reply_link_url" value="<?php echo $link_url; ?>" />
+			<?php
+		}
+	} else {
 		?>
 
 		<input type="hidden" name="bbp_topic_id"    id="bbp_topic_id"    value="<?php bbp_topic_id(); ?>" />
@@ -1834,7 +1866,7 @@ function bbp_reply_form_fields() {
 			bbp_redirect_to_field( get_permalink() );
 
 		endif;
-	endif;
+	}
 }
 
 /**
