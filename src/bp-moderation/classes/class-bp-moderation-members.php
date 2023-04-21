@@ -281,7 +281,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return $value;
 		}
 
-		if ( bp_is_user_inactive( $user_id ) ) {
+		$user = get_userdata( $user_id );
+
+		if ( empty( $user ) || ! empty( $user->deleted ) ) {
 			return bb_moderation_is_deleted_label();
 		}
 

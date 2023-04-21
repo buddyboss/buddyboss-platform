@@ -1646,6 +1646,68 @@ h2.bbp-form-title.entry-title {
 }
 
 
+/* Forum submit button*/
+
+#new-post {
+
+	&.has-gif,
+	&.has-media,
+	&.has-content {
+
+		.bbp-form #bbp_reply_submit {
+			opacity: 1;
+			pointer-events: initial;
+		}
+
+	}
+
+	&.media-uploading .bbp-form,
+	.bbp-form {
+
+		#bbp_reply_submit {
+			opacity: 0.4;
+			pointer-events: none;
+		}
+
+	}
+
+	&.has-title {
+
+		&.has-gif,
+		&.has-media,
+		&.has-content {
+
+			.bbp-form {
+
+				#bbp_topic_submit {
+					opacity: 1;
+					pointer-events: initial;
+				}
+			}
+
+		}
+
+	}
+
+	&.media-uploading.has-title .bbp-form,
+	.bbp-form {
+
+		#bbp_topic_submit {
+			opacity: 0.4;
+			pointer-events: none;
+		}
+
+	}
+
+}
+
+.topic-edit #new-post .bbp-form #bbp_topic_submit,
+.reply-edit #new-post .bbp-form #bbp_reply_submit {
+	opacity: 1;
+	pointer-events: initial;
+}
+
+
 /* Forum Video*/
 
 #bbpress-forums .bb-activity-media-wrap.forums-video-wrap {
