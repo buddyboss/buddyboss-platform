@@ -3907,9 +3907,6 @@ window.bp = window.bp || {};
 				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
 				url        = $.trim( url );
 				if ( regexp.test( url ) ) {
-					if ( ( ! _.isUndefined( self.options.link_success ) && self.options.link_success == true ) && self.options.link_url === url ) {
-						return false;
-					}
 		
 					if ( url.includes( window.location.hostname ) && ( url.includes( 'download_document_file' ) || url.includes( 'download_media_file' ) || url.includes( 'download_video_file' ) ) ) {
 						return false;
