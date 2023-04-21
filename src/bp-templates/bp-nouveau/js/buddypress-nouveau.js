@@ -3701,6 +3701,10 @@ window.bp = window.bp || {};
 					self.registerControls();
 				}
 
+				if( self.options.link_error === true ) {
+					return;
+				}
+
 				if ( self.dataInput !== null && self.dataInput.length > 0 ) {
 
 					var link_preview_data = {
@@ -3712,7 +3716,7 @@ window.bp = window.bp || {};
 						link_image_index_save: self.options.link_image_index_save
 					};
 
-					self.dataInput.val( JSON.stringify( link_preview_data ) );
+					self.dataInput.val( JSON.stringify( link_preview_data ) ).trigger('change');
 
 				}
 
@@ -3903,9 +3907,6 @@ window.bp = window.bp || {};
 				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
 				url        = $.trim( url );
 				if ( regexp.test( url ) ) {
-					if ( ( ! _.isUndefined( self.options.link_success ) && self.options.link_success == true ) && self.options.link_url === url ) {
-						return false;
-					}
 		
 					if ( url.includes( window.location.hostname ) && ( url.includes( 'download_document_file' ) || url.includes( 'download_media_file' ) || url.includes( 'download_video_file' ) ) ) {
 						return false;
@@ -4022,7 +4023,8 @@ window.bp = window.bp || {};
 							link_success: false,
 							link_error: true,
 							link_error_msg: response.error,
-							link_loading: false
+							link_loading: false,
+							link_images: []
 						}
 					);
 
