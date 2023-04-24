@@ -1168,11 +1168,13 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
 
 	// Check if link embed or link preview and append the content accordingly.
-	$link_embed = get_post_meta( $reply_id, '_link_embed', true );
-	if ( ! empty( $link_embed ) ) {
-		$reply_content .= $link_embed;
-	} else {
-		$reply_content = bb_forums_link_preview( $reply_content, $reply_id );
+	if( bbp_use_autoembed() ) {
+		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
+		if ( empty( preg_replace( '/<p>(\s|(?:<br \/>|<br>|<\/br>|<br\/?>))*<\/p>/','', $reply_content ) ) && ! empty( $link_embed ) ) {
+			$reply_content .= $link_embed;
+		} else {
+			$reply_content = bb_forums_link_preview( $reply_content, $reply_id );
+		}
 	}
 
 	$reply_url     = bbp_get_reply_url( $reply_id );
@@ -1306,11 +1308,13 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	$forum_url     = esc_url( bbp_get_forum_permalink( $forum_id ) );
 
 	// Check if link embed or link preview and append the content accordingly.
-	$link_embed = get_post_meta( $topic_id, '_link_embed', true );
-	if ( ! empty( $link_embed ) ) {
-		$topic_content .= $link_embed;
-	} else {
-		$topic_content = bb_forums_link_preview( $topic_content, $topic_id );
+	if( bbp_use_autoembed() ) {
+		$link_embed = get_post_meta( $topic_id, '_link_embed', true );
+		if ( empty( preg_replace( '/<p>(\s|(?:<br \/>|<br>|<\/br>|<br\/?>))*<\/p>/','', $topic_content ) ) && ! empty( $link_embed ) ) {
+			$topic_content .= $link_embed;
+		} else {
+			$topic_content = bb_forums_link_preview( $topic_content, $topic_id );
+		}
 	}
 
 	$args = array(

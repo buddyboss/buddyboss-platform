@@ -397,6 +397,17 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 				// Strip tags from text and setup mail data.
 				$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
+
+				// Check if link embed or link preview and append the content accordingly.
+				if( bbp_use_autoembed() ) {
+					$link_embed = get_post_meta( $reply_id, '_link_embed', true );
+					if ( empty( preg_replace( '/<p>(\s|(?:<br \/>|<br>|<\/br>|<br\/?>))*<\/p>/','', $reply_content ) ) && ! empty( $link_embed ) ) {
+						$reply_content .= $link_embed;
+					} else {
+						$reply_content = bb_forums_link_preview( $reply_content, $reply_id );
+					}
+				}
+
 				$reply_url     = bbp_get_reply_url( $reply_id );
 				$title_text    = bbp_get_topic_title( $topic_id );
 

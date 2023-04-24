@@ -2167,7 +2167,7 @@ function bbp_reply_content_autoembed_paragraph( $content ) {
 
 	} else {
 
-		// check if preview url was used or not, if not return content without embed
+		// if not urls in content then check if embed was used or not, if not return content without embed.
 		$link_embed = get_post_meta( bbp_get_reply_id(), '_link_embed', true );
 		if ( ! empty( $link_embed ) ) {
 			$embed_data = bp_core_parse_url( $link_embed );
