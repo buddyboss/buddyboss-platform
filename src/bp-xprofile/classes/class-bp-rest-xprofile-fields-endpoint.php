@@ -33,6 +33,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base = buddypress()->profile->id . '/fields';
+
+		// Support for Blog comments.
+		// EX: /wp-json/wp/v2/comments.
+		add_filter( 'rest_prepare_comment', array( $this, 'bp_rest_prepare_comment' ), 10, 2 );
 	}
 
 	/**
@@ -922,7 +926,9 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		// Added options for selectbox, multiselectbox, radio and checkbox fields.
 		if ( 'selectbox' === $field->type || 'multiselectbox' === $field->type || 'radio' === $field->type || 'checkbox' === $field->type ) {
+			add_filter( 'bp_xprofile_field_get_children', array( $this, 'bb_rest_xprofile_field_get_children' ), 20, 1 );
 			$data['options'] = $field->get_children();
+			remove_filter( 'bp_xprofile_field_get_children', array( $this, 'bb_rest_xprofile_field_get_children' ), 20, 1 );
 		}
 
 		if ( 'gender' === $field->type ) {
@@ -1100,7 +1106,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 
 			if ( 'telephone' === $profile_field->type ) {
-				$value = wp_strip_all_tags( html_entity_decode( $value ) );
+				$value = wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 			}
 		}
 
@@ -1129,7 +1135,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 
 			if ( 'telephone' === $profile_field->type ) {
-				$value = wp_strip_all_tags( html_entity_decode( $value ) );
+				$value = wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 			}
 		}
 
@@ -1498,7 +1504,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			array(
 				'posts_per_page' => - 1,
 				'post_type'      => bp_get_member_type_post_type(),
-				'orderby'        => 'title',
+				'post_status'    => 'publish',
+				'orderby'        => 'menu_order',
 				'order'          => 'ASC',
 			)
 		);
@@ -1514,7 +1521,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
 				$key     = get_post_meta( $post->ID, '_bp_member_type_key', true );
-				if ( '' === $enabled || '1' === $enabled || ! empty( $request['show_all'] ) ) {
+				if ( '' === $enabled || '1' === $enabled || $post_selected === $post->ID || ! empty( $request['show_all'] ) ) {
 					$options[] = array(
 						'id'                => $post->ID,
 						'group_id'          => $field->group_id,
@@ -1882,5 +1889,47 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_get_displayed_user( $user_id ) {
 		return ( ! empty( $this->user_id ) ? $this->user_id : bp_loggedin_user_id() );
+	}
+
+	/**
+	 * Filters a comment returned from the REST API.
+	 * - From: xprofile_filter_comments()
+	 *
+	 * @param WP_REST_Response $response The response object.
+	 * @param WP_Comment       $comment  The original comment object.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function bp_rest_prepare_comment( $response, $comment ) {
+
+		$data = $response->get_data();
+
+		$data['author_name'] = bp_core_get_user_displayname( $comment->user_id );
+
+		$response->set_data( $data );
+
+		return $response;
+	}
+
+	/**
+	 * Filters the found children for a field.
+	 *
+	 * @param object $children Found children for a field.
+	 *
+	 * @return mixed
+	 */
+	public function bb_rest_xprofile_field_get_children( $children ) {
+
+		if ( empty( $children ) ) {
+			return $children;
+		}
+
+		foreach ( $children as $k => $option ) {
+			if ( ! empty( $option->name ) ) {
+				$option->name = stripslashes_deep( $option->name );
+			}
+		}
+
+		return $children;
 	}
 }

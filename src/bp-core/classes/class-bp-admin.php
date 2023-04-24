@@ -18,6 +18,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 	 *
 	 * @since BuddyPress 1.6.0
 	 */
+	#[\AllowDynamicProperties]
 	class BP_Admin {
 
 		/** Directory *************************************************************/
@@ -1128,6 +1129,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyBoss 1.9.1
 		 */
 		public function bb_display_update_plugin_information() {
+			if ( 0 !== strpos( get_current_screen()->id, 'plugins' ) ) {
+				return;
+			}
 			// Check the transient to see if we've just updated the plugin.
 			global $bp;
 			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';

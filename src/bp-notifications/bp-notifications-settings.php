@@ -21,13 +21,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bb_notification_get_settings_sections() {
 
 	$settings = array(
-		'bp_notifications'                   => array(
+		'bp_notifications' => array(
 			'page'              => 'notifications',
 			'title'             => esc_html__( 'On-screen Notifications', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_on_screen_notification_setting_tutorial',
 			'notice'            => ( ! bb_enabled_legacy_email_preference() ) ? __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ) : '',
 		),
-		'bp_notification_settings_automatic' => array(
+	);
+
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		$settings['bp_notification_settings_automatic'] = array(
 			'page'              => 'notifications',
 			'title'             => esc_html__( 'Notification Types', 'buddyboss' ),
 			'tutorial_callback' => 'bb_automatic_notifications_tutorial',
@@ -43,8 +46,8 @@ function bb_notification_get_settings_sections() {
 					. '" target="_blank" >' . esc_html__( 'this tutorial', 'buddyboss' ) . '</a>'
 				) : ''
 			),
-		),
-	);
+		);
+	}
 
 	if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'messages' ) ) {
 		$settings['bp_messaging_notification_settings'] = array(
@@ -302,7 +305,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 					if ( ! empty( $field_group['fields'] ) ) {
 						echo '<div class="field-set">';
 						foreach ( $field_group['fields'] as $field ) {
-							$checked = isset( $field['default'] ) && 'yes' === $field['default'] ? true : false;
+							$checked = isset( $field['default'] ) && 'yes' === $field['default'];
 							?>
 								<div class="field-block">
 									<div class="field-render">
@@ -392,13 +395,14 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 
 										if ( ! empty( $options ) ) {
 											foreach ( $options as $key => $v ) {
-												$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', ! $checked );
-												$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
+												$parent_disabled = ! empty( $field['notification_read_only'] ) && true === $field['notification_read_only'];
+												$is_disabled     = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', ! $checked );
+												$is_render       = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
 												if ( $is_render ) {
 													?>
-													<div class="field-wrap <?php echo esc_attr( $key . ( $is_disabled ? ' disabled' : '' ) ); ?>">
+													<div class="field-wrap <?php echo esc_attr( $key . ( $is_disabled && $parent_disabled ? ' disabled' : '' ) ); ?>">
 														<input type="hidden" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="no" />
-														<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+														<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); disabled( ( $is_disabled && $parent_disabled ), true ); ?> />
 														<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
 													</div>
 													<?php
@@ -433,23 +437,8 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
  */
 function bb_admin_setting_callback_notification_warning() {
 	echo '<p class="description notification-information bb-lab-notice">' .
-		sprintf(
-			wp_kses_post(
-					/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
-				__( 'Enable the %1$s feature in %2$s to manage the notification types used on your site.', 'buddyboss' )
-			),
-			'<strong>' . esc_html__( 'Notification Preferences', 'buddyboss' ) . '</strong>',
-			'<a href="' .
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-settings',
-							'tab'  => 'bp-labs',
-						),
-						admin_url( 'admin.php' )
-					)
-				)
-			. '">' . esc_html__( 'BuddyBoss Labs', 'buddyboss' ) . '</a>'
+		wp_kses_post(
+			__( 'Notification Types are not supported when using the legacy notifications system.', 'buddyboss' )
 		) .
 	'</p>';
 }
@@ -463,11 +452,39 @@ function bb_admin_setting_callback_notification_warning() {
  * @param bool  $checked Is checked or not.
  */
 function bb_activate_notification( $field, $checked ) {
-	$label = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
+	$label        = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
+	$tooltip_pos  = '';
+	$tooltip_text = '';
+	if ( ! empty( $field['notification_tooltip_text'] ) ) {
+		$tooltip_pos  = 'up';
+		$tooltip_text = $field['notification_tooltip_text'];
+	}
+	$disabled = ! empty( $field['notification_read_only'] );
+
+	if ( ! empty( $field['notification_read_only'] ) && ! empty( $field['default'] ) && 'no' === $field['default'] ) {
+		$checked = false;
+	}
 	?>
 
 	<input name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="hidden" value="no" />
-	<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?> />
+	<span class="notification-settings-input"
+		<?php
+		if ( ! empty( $tooltip_pos ) ) {
+			echo ' data-bp-tooltip-pos="' . esc_attr( $tooltip_pos ) . '"';
+		}
+
+		if ( ! empty( $tooltip_text ) ) {
+			echo ' data-bp-tooltip="' . esc_attr( $tooltip_text ) . '"';
+		}
+		?>
+	>
+		<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes"
+			<?php
+			checked( $checked, 1 );
+			disabled( $disabled, 1 );
+			?>
+		/>
+	</span>
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 
 	<?php
@@ -514,25 +531,8 @@ function bb_admin_setting_callback_push_notification_bbp_pro_older_version_insta
  */
 function bb_admin_setting_callback_push_notification_lab_notification_preferences() {
 	echo '<p class="description notification-information bb-lab-notice">' .
-		sprintf(
-			wp_kses_post(
-				/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
-				__( 'Enable the %1$s feature in %2$s to use web push notifications on your site.', 'buddyboss' )
-			),
-			'<strong>' . esc_html__( 'Notification Preferences', 'buddyboss' ) . '</strong>',
-			'<a href="' .
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-settings',
-							'tab'  => 'bp-labs',
-						),
-						admin_url( 'admin.php' )
-					)
-				) .
-			'">' .
-				esc_html__( 'BuddyBoss Labs', 'buddyboss' ) .
-			'</a>'
+		wp_kses_post(
+			__( 'Web Push Notifications are not supported when using the legacy notifications system.', 'buddyboss' )
 		) .
 	'</p>';
 }

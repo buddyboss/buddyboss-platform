@@ -53,6 +53,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
 		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 
+		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mention_link' ), 10, 1 );
+		add_filter( 'bp_get_activity_content', array( $this, 'bb_activity_content_remove_mention_link' ), 10, 1 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -70,6 +73,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		add_action( 'bp_follow_before_save', array( $this, 'bb_follow_before_save' ) );
 	}
 
 	/**
@@ -536,5 +541,41 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $content_type;
+	}
+
+	/**
+	 * Function to prevent following to that user who has blocked and who is blocked the current user.
+	 *
+	 * @since BuddyBoss 2.2.5
+	 *
+	 * @param BP_Activity_Follow $follow Contains following data.
+	 */
+	public function bb_follow_before_save( $follow ) {
+		if (
+			bb_moderation_is_user_blocked_by( $follow->leader_id ) ||
+			bp_moderation_is_user_blocked( $follow->leader_id )
+		) {
+			$follow->leader_id = '';
+		}
+	}
+
+	/**
+	 * Remove mentioned link from activity post.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $content  Activity content.
+	 * @param object $activity Activity object.
+	 *
+	 * @return string
+	 */
+	public function bb_activity_content_remove_mention_link( $content ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$content = bb_moderation_remove_mention_link( $content );
+
+		return $content;
 	}
 }

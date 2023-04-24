@@ -713,7 +713,7 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 			_deprecated_argument( __FUNCTION__, '4.3.1' );
 		}
 
-		global $wpdb, $wp_hasher;
+		global $wp_hasher;
 		$user = get_userdata( $user_id );
 
 		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -791,7 +791,13 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 			$wp_hasher = new PasswordHash( 8, true );
 		}
 		$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
-		$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
+
+		$key_saved = wp_update_user(
+			array(
+				'ID'                  => $user->ID,
+				'user_activation_key' => $hashed,
+			)
+		);
 
 		$switched_locale = switch_to_locale( get_user_locale( $user ) );
 

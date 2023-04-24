@@ -233,6 +233,7 @@
 	}
 }
 
+#whats-new-form.media-uploading,
 #whats-new-form.focus-in--empty {
 
 	#aw-whats-new-submit {
@@ -601,6 +602,16 @@
 		justify-content: space-between;
 		background-color: $light-grey;
 		border-top: 1px solid $bp-border-color;
+	}
+
+	@media screen and (max-width: 480px) {
+
+		.has-draft .whats-new-form-footer {
+			flex-direction: column;
+			align-items: center;
+			padding-top: $pad-med;
+		}
+
 	}
 
 	#whats-new-toolbar .post-elements-buttons-item.disable,
@@ -1185,8 +1196,8 @@
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-	bottom: -24px;
-	left: -15px;
+	bottom: -11px;
+	left: 0;
 }
 
 .activity-update-form .focus-in .medium-editor-toolbar {
@@ -1622,13 +1633,20 @@
 .bb-media-model-container {
 
 	.bb-media-privacy-wrap .activity-privacy {
-		left: auto;
-		right: -20px;
+		left: -5px;
+		right: auto;
 	}
 
 	.bb-media-privacy-wrap .activity-privacy:before {
-		left: auto;
-		right: 44px;
+		left: 20px;
+		right: auto;
+	}
+
+	.bb-media-privacy-wrap .activity-privacy {
+
+		a {
+			font-weight: 400;
+		}
 	}
 
 }
@@ -1761,7 +1779,7 @@ div[class*="attached-gif-container"] {
 @media screen and (min-width: 768px) {
 
 	.gif-media-search-dropdown.open {
-		width: 360px;
+		width: 320px;
 	}
 
 }

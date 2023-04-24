@@ -524,12 +524,21 @@ function bbp_get_forum_subscribers( $forum_id = 0 ) {
 		return;
 	}
 
-	global $wpdb;
-
-	$key   = $wpdb->prefix . '_bbp_forum_subscriptions';
 	$users = wp_cache_get( 'bbp_get_forum_subscribers_' . $forum_id, 'bbpress_users' );
 	if ( false === $users ) {
-		$users = $wpdb->get_col( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = '{$key}' and FIND_IN_SET('{$forum_id}', meta_value) > 0" );
+		$get_subscriptions = bb_get_subscription_users(
+			array(
+				'item_id' => $forum_id,
+				'type'    => 'forum',
+				'count'   => false,
+			),
+			true
+		);
+
+		$users = array();
+		if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
+			$users = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
+		}
 		wp_cache_set( 'bbp_get_forum_subscribers_' . $forum_id, $users, 'bbpress_users' );
 	}
 
@@ -553,12 +562,21 @@ function bbp_get_topic_subscribers( $topic_id = 0 ) {
 		return;
 	}
 
-	global $wpdb;
-
-	$key   = $wpdb->prefix . '_bbp_subscriptions';
 	$users = wp_cache_get( 'bbp_get_topic_subscribers_' . $topic_id, 'bbpress_users' );
 	if ( false === $users ) {
-		$users = $wpdb->get_col( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = '{$key}' and FIND_IN_SET('{$topic_id}', meta_value) > 0" );
+		$get_subscriptions = bb_get_subscription_users(
+			array(
+				'item_id' => $topic_id,
+				'type'    => 'topic',
+				'count'   => false,
+			),
+			true
+		);
+
+		$users = array();
+		if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
+			$users = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
+		}
 		wp_cache_set( 'bbp_get_topic_subscribers_' . $topic_id, $users, 'bbpress_users' );
 	}
 
@@ -667,8 +685,19 @@ function bbp_get_user_subscribed_forum_ids( $user_id = 0 ) {
 		return false;
 	}
 
-	$subscriptions = get_user_option( '_bbp_forum_subscriptions', $user_id );
-	$subscriptions = array_filter( wp_parse_id_list( $subscriptions ) );
+	$get_subscriptions = bb_get_subscriptions(
+		array(
+			'user_id' => $user_id,
+			'type'    => 'forum',
+			'fields'  => 'item_id',
+		),
+		true
+	);
+
+	$subscriptions = array();
+	if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
+		$subscriptions = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
+	}
 
 	return (array) apply_filters( 'bbp_get_user_subscribed_forum_ids', $subscriptions, $user_id );
 }
@@ -692,8 +721,19 @@ function bbp_get_user_subscribed_topic_ids( $user_id = 0 ) {
 		return false;
 	}
 
-	$subscriptions = get_user_option( '_bbp_subscriptions', $user_id );
-	$subscriptions = array_filter( wp_parse_id_list( $subscriptions ) );
+	$get_subscriptions = bb_get_subscriptions(
+		array(
+			'user_id' => $user_id,
+			'type'    => 'topic',
+			'fields'  => 'item_id',
+		),
+		true
+	);
+
+	$subscriptions = array();
+	if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
+		$subscriptions = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
+	}
 
 	return (array) apply_filters( 'bbp_get_user_subscribed_topic_ids', $subscriptions, $user_id );
 }
@@ -772,38 +812,38 @@ function bbp_is_user_subscribed( $user_id = 0, $object_id = 0 ) {
  */
 function bbp_is_user_subscribed_to_forum( $user_id = 0, $forum_id = 0, $subscribed_ids = array() ) {
 
-	// Assume user is not subscribed
+	// Assume user is not subscribed.
 	$retval = false;
 
-	// Validate user
+	// Validate user.
 	$user_id = bbp_get_user_id( $user_id, true, true );
 	if ( ! empty( $user_id ) ) {
 
-		// Get subscription ID's if none passed
+		// Get subscription ID's if none passed.
 		if ( empty( $subscribed_ids ) ) {
 			$subscribed_ids = bbp_get_user_subscribed_forum_ids( $user_id );
 		}
 
-		// User has forum subscriptions
+		// User has forum subscriptions.
 		if ( ! empty( $subscribed_ids ) ) {
 
-			// Checking a specific forum id
+			// Checking a specific forum id.
 			if ( ! empty( $forum_id ) ) {
 				$forum    = bbp_get_forum( $forum_id );
 				$forum_id = ! empty( $forum ) ? $forum->ID : 0;
 
-				// Using the global forum id
+				// Using the global forum id.
 			} elseif ( bbp_get_forum_id() ) {
 				$forum_id = bbp_get_forum_id();
 
-				// Use the current post id
+				// Use the current post id.
 			} elseif ( ! bbp_get_forum_id() ) {
 				$forum_id = get_the_ID();
 			}
 
-			// Is forum_id in the user's favorites
+			// Is forum_id in the user's favorites.
 			if ( ! empty( $forum_id ) ) {
-				$retval = in_array( $forum_id, $subscribed_ids );
+				$retval = in_array( $forum_id, $subscribed_ids, true );
 			}
 		}
 	}
@@ -830,38 +870,38 @@ function bbp_is_user_subscribed_to_forum( $user_id = 0, $forum_id = 0, $subscrib
  */
 function bbp_is_user_subscribed_to_topic( $user_id = 0, $topic_id = 0, $subscribed_ids = array() ) {
 
-	// Assume user is not subscribed
+	// Assume user is not subscribed.
 	$retval = false;
 
-	// Validate user
+	// Validate user.
 	$user_id = bbp_get_user_id( $user_id, true, true );
 	if ( ! empty( $user_id ) ) {
 
-		// Get subscription ID's if none passed
+		// Get subscription ID's if none passed.
 		if ( empty( $subscribed_ids ) ) {
 			$subscribed_ids = bbp_get_user_subscribed_topic_ids( $user_id );
 		}
 
-		// User has topic subscriptions
+		// User has topic subscriptions.
 		if ( ! empty( $subscribed_ids ) ) {
 
-			// Checking a specific topic id
+			// Checking a specific topic id.
 			if ( ! empty( $topic_id ) ) {
 				$topic    = bbp_get_topic( $topic_id );
 				$topic_id = ! empty( $topic ) ? $topic->ID : 0;
 
-				// Using the global topic id
+				// Using the global topic id.
 			} elseif ( bbp_get_topic_id() ) {
 				$topic_id = bbp_get_topic_id();
 
-				// Use the current post id
+				// Use the current post id.
 			} elseif ( ! bbp_get_topic_id() ) {
 				$topic_id = get_the_ID();
 			}
 
-			// Is topic_id in the user's favorites
+			// Is topic_id in the user's favorites.
 			if ( ! empty( $topic_id ) ) {
-				$retval = in_array( $topic_id, $subscribed_ids );
+				$retval = in_array( $topic_id, $subscribed_ids, true );
 			}
 		}
 	}
@@ -874,10 +914,10 @@ function bbp_is_user_subscribed_to_topic( $user_id = 0, $topic_id = 0, $subscrib
  *
  * @since bbPress (r5156)
  *
- * @param int $user_id  Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id   Optional. User id.
+ * @param int $object_id Optional. Topic id.
  *
- * @return bool Always true
+ * @return bool Return true otherwise false.
  * @uses  get_post() To get the post object
  * @uses  bbp_get_user_subscribed_forum_ids() To get the user's forum subscriptions
  * @uses  bbp_get_user_subscribed_topic_ids() To get the user's topic subscriptions
@@ -891,7 +931,7 @@ function bbp_add_user_subscription( $user_id = 0, $object_id = 0 ) {
 		return false;
 	}
 
-	// Get the post type
+	// Get the post type.
 	$post_type = get_post_type( $object_id );
 	if ( empty( $post_type ) ) {
 		return false;
@@ -899,21 +939,21 @@ function bbp_add_user_subscription( $user_id = 0, $object_id = 0 ) {
 
 	switch ( $post_type ) {
 
-		// Forum
+		// Forum.
 		case bbp_get_forum_post_type():
-			bbp_add_user_forum_subscription( $user_id, $object_id );
+			$subscription_id = bbp_add_user_forum_subscription( $user_id, $object_id );
 			break;
 
-		// Topic
+		// Topic.
 		case bbp_get_topic_post_type():
 		default:
-			bbp_add_user_topic_subscription( $user_id, $object_id );
+			$subscription_id = bbp_add_user_topic_subscription( $user_id, $object_id );
 			break;
 	}
 
 	do_action( 'bbp_add_user_subscription', $user_id, $object_id, $post_type );
 
-	return true;
+	return $subscription_id;
 }
 
 /**
@@ -921,10 +961,10 @@ function bbp_add_user_subscription( $user_id = 0, $object_id = 0 ) {
  *
  * @since bbPress (r5156)
  *
- * @param int $user_id  Optional. User id
- * @param int $forum_id Optional. forum id
+ * @param int $user_id  Optional. User id.
+ * @param int $forum_id Optional. forum id.
  *
- * @return bool Always true
+ * @return bool Return true if subscribed otherwise false.
  * @uses  bbp_get_forum() To get the forum
  * @uses  update_user_option() To update the user's subscriptions
  * @uses  do_action() Calls 'bbp_add_user_subscription' with the user & forum id
@@ -940,18 +980,23 @@ function bbp_add_user_forum_subscription( $user_id = 0, $forum_id = 0 ) {
 		return false;
 	}
 
-	$subscriptions = (array) bbp_get_user_subscribed_forum_ids( $user_id );
-	if ( ! in_array( $forum_id, $subscriptions ) ) {
-		$subscriptions[] = $forum_id;
-		$subscriptions   = implode( ',', wp_parse_id_list( array_filter( $subscriptions ) ) );
-		update_user_option( $user_id, '_bbp_forum_subscriptions', $subscriptions );
+	$subscription_id = bb_create_subscription(
+		array(
+			'user_id'           => $user_id,
+			'item_id'           => $forum_id,
+			'type'              => 'forum',
+			'secondary_item_id' => $forum->post_parent,
+			'error_type'        => 'bool',
+		)
+	);
 
+	if ( $subscription_id ) {
 		wp_cache_delete( 'bbp_get_forum_subscribers_' . $forum_id, 'bbpress_users' );
 	}
 
 	do_action( 'bbp_add_user_forum_subscription', $user_id, $forum_id );
 
-	return true;
+	return is_int( $subscription_id );
 }
 
 /**
@@ -959,10 +1004,10 @@ function bbp_add_user_forum_subscription( $user_id = 0, $forum_id = 0 ) {
  *
  * @since bbPress (r2668)
  *
- * @param int $user_id  Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id  Optional. User id.
+ * @param int $topic_id Optional. Topic id.
  *
- * @return bool Always true
+ * @return bool Return true if subscribed otherwise false.
  * @uses  bbp_get_topic() To get the topic
  * @uses  update_user_option() To update the user's subscriptions
  * @uses  do_action() Calls 'bbp_add_user_subscription' with the user & topic id
@@ -978,18 +1023,23 @@ function bbp_add_user_topic_subscription( $user_id = 0, $topic_id = 0 ) {
 		return false;
 	}
 
-	$subscriptions = (array) bbp_get_user_subscribed_topic_ids( $user_id );
-	if ( ! in_array( $topic_id, $subscriptions ) ) {
-		$subscriptions[] = $topic_id;
-		$subscriptions   = implode( ',', wp_parse_id_list( array_filter( $subscriptions ) ) );
-		update_user_option( $user_id, '_bbp_subscriptions', $subscriptions );
+	$subscription_id = bb_create_subscription(
+		array(
+			'user_id'           => $user_id,
+			'item_id'           => $topic_id,
+			'type'              => 'topic',
+			'secondary_item_id' => $topic->post_parent,
+			'error_type'        => 'bool',
+		)
+	);
 
+	if ( $subscription_id ) {
 		wp_cache_delete( 'bbp_get_topic_subscribers_' . $topic_id, 'bbpress_users' );
 	}
 
 	do_action( 'bbp_add_user_topic_subscription', $user_id, $topic_id );
 
-	return true;
+	return is_int( $subscription_id );
 }
 
 /**
@@ -997,8 +1047,8 @@ function bbp_add_user_topic_subscription( $user_id = 0, $topic_id = 0 ) {
  *
  * @since             bbPress (r2668)
  *
- * @param int $user_id  Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id   Optional. User id.
+ * @param int $object_id Optional. Topic id.
  *
  * @return bool True if the topic was removed from user's subscriptions,
  *               otherwise false
@@ -1022,12 +1072,12 @@ function bbp_remove_user_subscription( $user_id = 0, $object_id = 0 ) {
 
 	switch ( $post_type ) {
 
-		// Forum
+		// Forum.
 		case bbp_get_forum_post_type():
 			bbp_remove_user_forum_subscription( $user_id, $object_id );
 			break;
 
-		// Topic
+		// Topic.
 		case bbp_get_topic_post_type():
 		default:
 			bbp_remove_user_topic_subscription( $user_id, $object_id );
@@ -1044,8 +1094,8 @@ function bbp_remove_user_subscription( $user_id = 0, $object_id = 0 ) {
  *
  * @since             bbPress (r5156)
  *
- * @param int $user_id  Optional. User id
- * @param int $forum_id Optional. forum id
+ * @param int $user_id  Optional. User id.
+ * @param int $forum_id Optional. forum id.
  *
  * @return bool True if the forum was removed from user's subscriptions,
  *               otherwise false
@@ -1060,25 +1110,32 @@ function bbp_remove_user_forum_subscription( $user_id, $forum_id ) {
 		return false;
 	}
 
-	$subscriptions = (array) bbp_get_user_subscribed_forum_ids( $user_id );
-	if ( empty( $subscriptions ) ) {
+	$forum = bbp_get_forum( $forum_id );
+	if ( empty( $forum ) ) {
 		return false;
 	}
 
-	$pos = array_search( $forum_id, $subscriptions );
-	if ( false === $pos ) {
+	// Check if subscription is existed or not?.
+	$subscriptions = bb_get_subscriptions(
+		array(
+			'type'    => 'forum',
+			'user_id' => $user_id,
+			'item_id' => $forum_id,
+			'count'   => false,
+			'cache'   => false,
+			'status'  => null,
+		),
+		true
+	);
+	if ( empty( $subscriptions['subscriptions'] ) ) {
 		return false;
 	}
 
-	array_splice( $subscriptions, $pos, 1 );
-	$subscriptions = array_filter( $subscriptions );
+	// Get current one.
+	$subscription = current( $subscriptions['subscriptions'] );
 
-	if ( ! empty( $subscriptions ) ) {
-		$subscriptions = implode( ',', wp_parse_id_list( $subscriptions ) );
-		update_user_option( $user_id, '_bbp_forum_subscriptions', $subscriptions );
-	} else {
-		delete_user_option( $user_id, '_bbp_forum_subscriptions' );
-	}
+	// Delete the subscription.
+	bb_delete_subscription( $subscription->id );
 
 	wp_cache_delete( 'bbp_get_forum_subscribers_' . $forum_id, 'bbpress_users' );
 
@@ -1092,8 +1149,8 @@ function bbp_remove_user_forum_subscription( $user_id, $forum_id ) {
  *
  * @since             bbPress (r5156)
  *
- * @param int $user_id  Optional. User id
- * @param int $topic_id Optional. Topic id
+ * @param int $user_id  Optional. User id.
+ * @param int $topic_id Optional. Topic id.
  *
  * @return bool True if the topic was removed from user's subscriptions,
  *               otherwise false
@@ -1108,25 +1165,32 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
 		return false;
 	}
 
-	$subscriptions = (array) bbp_get_user_subscribed_topic_ids( $user_id );
-	if ( empty( $subscriptions ) ) {
+	$topic = bbp_get_topic( $topic_id );
+	if ( empty( $topic ) ) {
 		return false;
 	}
 
-	$pos = array_search( $topic_id, $subscriptions );
-	if ( false === $pos ) {
+	// Check if subscription is existed or not?.
+	$subscriptions = bb_get_subscriptions(
+		array(
+			'type'    => 'topic',
+			'user_id' => $user_id,
+			'item_id' => $topic_id,
+			'count'   => false,
+			'cache'   => false,
+			'status'  => null,
+		),
+		true
+	);
+	if ( empty( $subscriptions['subscriptions'] ) ) {
 		return false;
 	}
 
-	array_splice( $subscriptions, $pos, 1 );
-	$subscriptions = array_filter( $subscriptions );
+	// Get current one.
+	$subscription = current( $subscriptions['subscriptions'] );
 
-	if ( ! empty( $subscriptions ) ) {
-		$subscriptions = implode( ',', wp_parse_id_list( $subscriptions ) );
-		update_user_option( $user_id, '_bbp_subscriptions', $subscriptions );
-	} else {
-		delete_user_option( $user_id, '_bbp_subscriptions' );
-	}
+	// Delete the subscription.
+	bb_delete_subscription( $subscription->id );
 
 	wp_cache_delete( 'bbp_get_topic_subscribers_' . $topic_id, 'bbpress_users' );
 
@@ -1140,9 +1204,9 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
  *
  * @since bbPress (r5156)
  *
- * @param string $action The requested action to compare this function to
+ * @param string $action The requested action to compare this function to.
  *
- * @uses  bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses  bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses  bbp_get_user_id() To get the user id
  * @uses  bbp_verify_nonce_request() To verify the nonce and check the request
  * @uses  current_user_can() To check if the current user can edit the user
@@ -1159,7 +1223,7 @@ function bbp_remove_user_topic_subscription( $user_id, $topic_id ) {
  */
 function bbp_forum_subscriptions_handler( $action = '' ) {
 
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 		return false;
 	}
 
@@ -1216,7 +1280,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
 	do_action( 'bbp_subscriptions_handler', $success, $user_id, $forum_id, $action );
 
 	// Success!
-	if ( true === $success ) {
+	if ( $success ) {
 
 		// Redirect back from whence we came
 		if ( bbp_is_subscriptions() ) {
@@ -1249,7 +1313,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
  *
  * @param string $action The requested action to compare this function to
  *
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_user_id() To get the user id
  * @uses bbp_verify_nonce_request() To verify the nonce and check the request
  * @uses current_user_can() To check if the current user can edit the user
@@ -1266,7 +1330,7 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
  */
 function bbp_subscriptions_handler( $action = '' ) {
 
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 		return false;
 	}
 
@@ -1323,7 +1387,7 @@ function bbp_subscriptions_handler( $action = '' ) {
 	do_action( 'bbp_subscriptions_handler', $success, $user_id, $topic_id, $action );
 
 	// Success!
-	if ( true === $success ) {
+	if ( $success ) {
 
 		// Redirect back from whence we came
 		if ( bbp_is_subscriptions() ) {

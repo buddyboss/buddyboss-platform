@@ -14,6 +14,7 @@ jQuery( document ).ready(
 				}
 
 				jQuery( element ).select2( {
+					dropdownParent: ( jQuery( element ).closest('.bb-modal').length > 0 ? jQuery( element ).closest('.bb-modal') : jQuery( document.body ) ),
 					placeholder: jQuery( element ).attr( 'placeholder' ),
 					minimumInputLength: 1,
 					closeOnSelect: true,
@@ -45,7 +46,7 @@ jQuery( document ).ready(
 							return bp_select2.i18n.removeAllItems;
 						}
 					},
-					dropdownCssClass: 'bb-select-dropdown',
+					dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
 					containerCssClass: 'bb-select-container',
 					tokenSeparators: [ ',' ],
 					ajax: {
@@ -201,6 +202,7 @@ jQuery( document ).ready(
 				if ( $tagsSelect.length ) {
 					$tagsSelect.select2( {
 						placeholder: $tagsSelect.attr( 'placeholder' ),
+						dropdownParent: ( $tagsSelect.closest('.bb-modal').length > 0 ? $tagsSelect.closest('.bb-modal') : jQuery( document.body ) ),
 						minimumInputLength: 1,
 						closeOnSelect: true,
 						tags: true,
@@ -231,7 +233,7 @@ jQuery( document ).ready(
 								return bp_select2.i18n.removeAllItems;
 							}
 						},
-						dropdownCssClass: 'bb-select-dropdown',
+						dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
 						containerCssClass: 'bb-select-container',
 						tokenSeparators: [ ',' ],
 						ajax: {
@@ -292,5 +294,38 @@ jQuery( document ).ready(
 				}
 			} );
 		}
+
+		jQuery( document ).on( 'keyup', '#bbp_topic_title', function ( e ) {
+			if ( jQuery( e.currentTarget ).val().trim() !== '' ) {
+				jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-title' );
+			} else {
+				jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-title' );
+			}
+		} );
+
+		if ( jQuery( 'textarea#bbp_topic_content' ).length !== 0 ) {
+			// Enable submit button if content is available.
+			jQuery( '#bbp_topic_content' ).on( 'keyup', function() {
+				var $reply_content = jQuery( '#bbp_topic_content' ).val().trim();
+				if ( $reply_content !== '' ) {
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+				} else {
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+				}
+			} );
+		}
+
+		if ( jQuery( 'textarea#bbp_reply_content' ).length !== 0 ) {
+			// Enable submit button if content is available.
+			jQuery( '#bbp_reply_content' ).on( 'keyup', function() {
+				var $reply_content = jQuery( '#bbp_reply_content' ).val().trim();
+				if ( $reply_content !== '' ) {
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+				} else {
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+				}
+			} );
+		}
+
 	}
 );

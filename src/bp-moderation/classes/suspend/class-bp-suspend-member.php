@@ -194,10 +194,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param array $where Query to hide suspended user's member.
-		 * @param array $class current class object.
+		 * @param array  $where       Query to hide suspended user's member.
+		 * @param object $class       current class object.
+		 * @param string $column_name Table column name.
 		 */
-		$where = apply_filters( 'bp_suspend_member_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bp_suspend_member_get_where_conditions', $where, $this, $column_name );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
@@ -569,11 +570,36 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $member_id, $args = array() ) {
+		global $bp_background_updater;
+
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 		$related_contents = array();
 
 		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id, $action, $page );
+
+		// Update friend count.
+		if ( bp_is_active( 'friends' ) ) {
+			$friend_ids = friends_get_friend_user_ids( $member_id );
+
+			if ( ! empty( $friend_ids ) ) {
+				if ( $this->background_disabled ) {
+					$this->bb_update_member_friend_count( $member_id, $friend_ids, $action );
+				} else {
+					foreach ( array_chunk( $friend_ids, 50 ) as $chunk ) {
+						$bp_background_updater->data(
+							array(
+								array(
+									'callback' => array( $this, 'bb_update_member_friend_count' ),
+									'args'     => array( $member_id, $chunk, $action ),
+								),
+							)
+						);
+						$bp_background_updater->save()->dispatch();
+					}
+				}
+			}
+		}
 
 		/*
 		if ( bp_is_active( 'groups' ) ) {
@@ -660,6 +686,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
 		if ( empty( $username_visible ) && bp_moderation_is_user_suspended( $user_id ) ) {
+			if ( current_user_can( 'manage_options' ) ) {
+				$edit_link = add_query_arg( array( 'action' => 'edit' ), admin_url( 'user-edit.php?user_id=' . $user_id ) );
+				return $edit_link;
+			}
 			return '';
 		}
 
@@ -796,5 +826,35 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 * @param array  $params         Array of parameters for the request.
 		 */
 		return apply_filters( 'bb_get_suspended_avatar_url', $avatar_url, $old_avatar_url, $params );
+	}
+
+	/**
+	 * Update member friend count.
+	 *
+	 * @since BuddyBoss 2.2.9
+	 *
+	 * @param int    $user_id    User ID.
+	 * @param array  $member_ids Array member friend IDs.
+	 * @param string $type       Member hide or un-hide.
+	 */
+	public function bb_update_member_friend_count( $user_id, $member_ids, $type ) {
+
+		if ( ! empty( $member_ids ) ) {
+			foreach ( $member_ids as $member_id ) {
+				$friend_ids = friends_get_friend_user_ids( $member_id );
+
+				if ( ! empty( $friend_ids ) ) {
+					$total_friend_count = count( $friend_ids );
+
+					if ( 'hide' === $type && in_array( $user_id, $friend_ids, true ) ) {
+						$total_friend_count--;
+					} elseif ( 'unhide' === $type && ! in_array( $user_id, $friend_ids, true ) ) {
+						$total_friend_count++;
+					}
+
+					bp_update_user_meta( $member_id, 'total_friend_count', (int) $total_friend_count );
+				}
+			}
+		}
 	}
 }
