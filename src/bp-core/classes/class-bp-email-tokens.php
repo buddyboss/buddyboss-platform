@@ -618,6 +618,7 @@ class BP_Email_Tokens {
 	 * @return string html for the output
 	 */
 	public function token__mentioned_content( $bp_email, $formatted_tokens, $tokens ) {
+		global $bp;
 		$output = '';
 
 		$settings = bp_email_get_appearance_settings();
@@ -694,13 +695,35 @@ class BP_Email_Tokens {
 											<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 												<?php
 												if ( ! empty( $activity ) ) {
-													echo apply_filters_ref_array(
-														'bp_get_activity_content_body',
-														array(
-															$activity->content,
-															&$activity,
-														)
-													);
+
+													if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
+														$activity->content = '';
+													}
+													// Check if link embed or link preview and append the content accordingly.
+													$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
+													if ( empty( preg_replace( '/<p>(\s|(?:<br \/>|<br>|<\/br>|<br\/?>))*<\/p>/','', $activity->content ) ) && ! empty( $link_embed ) ) {
+														$activity->content .= $link_embed;
+													}
+
+													$removed_autoembed_filter = false;
+													if (
+														function_exists( 'bp_use_embed_in_activity' ) &&
+														bp_use_embed_in_activity() &&
+														method_exists( $bp->embed, 'autoembed' ) &&
+														method_exists( $bp->embed, 'run_shortcode' )
+													) {
+														$removed_autoembed_filter = true;
+														remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'autoembed' ), 8, 2 );
+														remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
+													}
+
+													echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+
+													if ( $removed_autoembed_filter ) {
+														add_filter( 'bp_get_activity_content_body', array( $bp->embed, 'autoembed' ), 8, 2 );
+														add_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
+													}
+
 												} else {
 													echo $content;
 												}
