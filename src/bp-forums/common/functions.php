@@ -1171,7 +1171,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	if( bbp_use_autoembed() ) {
 		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
 		if ( empty( preg_replace( '/<p>(\s|(?:<br \/>|<br>|<\/br>|<br\/?>))*<\/p>/','', $reply_content ) ) && ! empty( $link_embed ) ) {
-			$reply_content .= $link_embed;
+			$reply_content .= bbp_make_clickable( $link_embed );
 		} else {
 			$reply_content = bb_forums_link_preview( $reply_content, $reply_id );
 		}
@@ -1311,7 +1311,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	if( bbp_use_autoembed() ) {
 		$link_embed = get_post_meta( $topic_id, '_link_embed', true );
 		if ( empty( preg_replace( '/<p>(\s|(?:<br \/>|<br>|<\/br>|<br\/?>))*<\/p>/','', $topic_content ) ) && ! empty( $link_embed ) ) {
-			$topic_content .= $link_embed;
+			$topic_content .= bbp_make_clickable( $link_embed );
 		} else {
 			$topic_content = bb_forums_link_preview( $topic_content, $topic_id );
 		}
