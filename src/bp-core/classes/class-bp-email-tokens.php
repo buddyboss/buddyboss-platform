@@ -701,7 +701,7 @@ class BP_Email_Tokens {
 													}
 													// Check if link embed or link preview and append the content accordingly.
 													$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
-													if ( empty( preg_replace( '/<p>(\s|(?:<br \/>|<br>|<\/br>|<br\/?>))*<\/p>/','', $activity->content ) ) && ! empty( $link_embed ) ) {
+													if ( empty( preg_replace( '/(?:<p>\s*<\/p>\s*)+|<p>(\s|(?:<br>|<\/br>|<br\/?>))*<\/p>/', '', $activity->content ) ) && ! empty( $link_embed ) ) {
 														$activity->content .= $link_embed;
 													}
 
@@ -2373,7 +2373,7 @@ class BP_Email_Tokens {
 															}
 															// Check if link embed or link preview and append the content accordingly.
 															$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
-															if ( empty( preg_replace( '/<p>(\s|(?:<br \/>|<br>|<\/br>|<br\/?>))*<\/p>/','', $activity->content ) ) && ! empty( $link_embed ) ) {
+															if ( empty( preg_replace( '/(?:<p>\s*<\/p>\s*)+|<p>(\s|(?:<br>|<\/br>|<br\/?>))*<\/p>/', '', $activity->content ) ) && ! empty( $link_embed ) ) {
 																$activity->content .= $link_embed;
 															}
 
@@ -2987,7 +2987,7 @@ class BP_Email_Tokens {
 															}
 															// Check if link embed or link preview and append the content accordingly.
 															$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
-															if ( empty( preg_replace( '/<p>(\s|(?:<br \/>|<br>|<\/br>|<br\/?>))*<\/p>/','', $activity->content ) ) && ! empty( $link_embed ) ) {
+															if ( empty( preg_replace( '/(?:<p>\s*<\/p>\s*)+|<p>(\s|(?:<br>|<\/br>|<br\/?>))*<\/p>/', '', $activity->content ) ) && ! empty( $link_embed ) ) {
 																$activity->content .= $link_embed;
 															}
 
