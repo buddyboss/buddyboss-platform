@@ -23887,6 +23887,21 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   width: auto;
 }
 
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-volume-panel .vjs-mouse-display .vjs-volume-tooltip,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-volume-panel .vjs-mouse-display .vjs-volume-tooltip,
+.bb-media-section .video-js .vjs-control-bar .vjs-volume-panel .vjs-mouse-display .vjs-volume-tooltip {
+  display: none;
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back ~ .vjs-seek-button.skip-back,
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-forward ~ .vjs-seek-button.skip-forward,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back ~ .vjs-seek-button.skip-back,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-forward ~ .vjs-seek-button.skip-forward,
+.bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back ~ .vjs-seek-button.skip-back,
+.bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-forward ~ .vjs-seek-button.skip-forward {
+  display: none;
+}
+
 .bb-activity-video-elem .video-js .vjs-control-bar button,
 .bb-activity-video-elem .video-js .vjs-control-bar button:hover,
 .bb-video-thumb .video-js .vjs-control-bar button,
