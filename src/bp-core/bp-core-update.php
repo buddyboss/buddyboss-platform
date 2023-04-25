@@ -2687,6 +2687,12 @@ function bb_update_to_2_3_2() {
 	}
 
 	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 }
 
 /**
