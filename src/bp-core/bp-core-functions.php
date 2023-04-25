@@ -4796,7 +4796,7 @@ function bp_core_parse_url( $url ) {
 		}
 	}
 
-	$cache_key = 'bp_activity_oembed_' . md5( maybe_serialize( $url ) );
+	$cache_key = 'bb_oembed_' . md5( maybe_serialize( $url ) );
 
 	// get transient data for url.
 	$parsed_url_data = get_transient( $cache_key );

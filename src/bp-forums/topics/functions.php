@@ -3732,7 +3732,7 @@ function bbp_topic_content_autoembed_paragraph( $content ) {
 						'error'       => '',
 						'wp_embed'    => true,
 					);
-					$cache_key       = 'bb_forums_oembed_' . md5( maybe_serialize( $link_embed ) );
+					$cache_key       = 'bb_oembed_' . md5( maybe_serialize( $link_embed ) );
 					// set the transient.
 					set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
 				}
