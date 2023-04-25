@@ -2074,3 +2074,23 @@ function bb_setup_attachment_document_preview_template( $template ) {
 
 	return $template;
 }
+
+/**
+ * Enable document preview without trailing slash.
+ *
+ * @since BuddyBoss 2.3.2
+ *
+ * @param string $redirect_url URL to render.
+ *
+ * @return mixed|string
+ */
+function bb_document_remove_specific_trailing_slash( $redirect_url ) {
+	if (
+		strpos( $redirect_url, 'bb-document-preview' ) !== false ||
+		strpos( $redirect_url, 'bb-attachment-document-preview' ) !== false
+	) {
+		$redirect_url = untrailingslashit( $redirect_url );
+	}
+	return $redirect_url;
+}
+add_filter( 'redirect_canonical', 'bb_document_remove_specific_trailing_slash', 9999 );

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.3.1.2
+Stable tag: 2.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,25 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.2 =
+* Profiles - Handled non-selectable profile types not showing issue in Edit Profile even when configured from the admin dashboard
+* Profiles - Handled profile types field validation issue for administrator and editor role members
+* Profiles - Small improvement for the 'add user' action in the admin dashboard by assigning a selected role instead of the default profile type role configured
+* Profiles - Handled small performance issue for member search action with the help of cache
+* Groups - Handled delete activity post permission issue in the social group for the group organizer
+* Forums - Handled forums search not working issue when search by 'discussion tag' option enabled in network search
+* Forums - Handled quick reply form formatting option not working issue on forum discussion auto-generated activity
+* Activity - Handled empty markup getting added issue when editing activity post with @mention
+* Media - Small improvements to media link by removing trailing slash when symlink is disabled
+* Media - Handled uploaded video default thumbnail issue in Safari browser
+* Messages - Handled error notice on messages screen when visiting triggered push notification
+* Emails - Handled email template layout issue for the iOS email app
+* Moderation - Handled newly registered member display name shows as 'Unknown Member' when moderation component is enabled
+* Network Search - Handled network search page results content showing shortcode issue
+* Registration - Handled register page validation issue when paragraph and profile type fields were added together
+* Login - Handled small typo issue when only the 'Terms of Service' page is configured
+* Core - Small performance and security improvement by updating a bunch of JS libraries
 
 = 2.3.1.2 =
 * Forums - Handled forum discussion and reply form disabled post button cache issue

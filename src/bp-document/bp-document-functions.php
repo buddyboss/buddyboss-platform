@@ -1422,7 +1422,7 @@ function bp_document_upload() {
 
 	$result = array(
 		'id'                => (int) $attachment->ID,
-		'url'               => esc_url( $attachment_url ),
+		'url'               => esc_url( untrailingslashit( $attachment_url ) ),
 		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
 		'full_name'         => esc_attr( basename( $attachment_file ) ),
 		'type'              => esc_attr( 'document' ),
@@ -4383,7 +4383,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 		}
 	}
 
-	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? user_trailingslashit( $attachment_url ) : $attachment_url;
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter url here to audio url.
