@@ -79,7 +79,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
 		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
-		
+
 		add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_member_directories_remove_profile_actions' ), 9999, 2 );
 		add_filter( 'bp_member_type_name_string', array( $this, 'bb_remove_member_type_name_string' ), 9999, 3 );
 	}
@@ -144,6 +144,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		$this->alias = $suspend->alias;
 
 		$blocked_user_query = true;
+
 		if (
 			(
 				function_exists( 'bp_is_group_members' ) &&
@@ -228,7 +229,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		// Allowed to view single group activity.
+		// Alowed to view single group activity.
 		if (
 			bp_is_single_activity() &&
 			! wp_doing_ajax()

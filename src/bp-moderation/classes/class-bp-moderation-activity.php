@@ -135,6 +135,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
+		$exclude_group_sql = '';
+		// Allow group activities from blocked/suspended users.
+		if ( bp_is_active( 'groups' ) ) {
+			$exclude_group_sql = ' OR a.component = "groups"';
+		}
+
 		$sql = $this->exclude_where_query();
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
@@ -144,7 +150,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			$where['moderation_where'] .= ' AND ';
 		}
 
-		$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )' . $exclude_group_sql;
 
 		return $where;
 	}
