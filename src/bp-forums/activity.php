@@ -403,17 +403,21 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Check if link embed or link preview and append the content accordingly.
 			if( bbp_use_autoembed() ) {
-				$post_id = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? $topic->ID : $topic_id;
+				$post_id    = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? $topic->ID : $topic_id;
 				$link_embed = get_post_meta( $post_id, '_link_embed', true );
-				if ( empty( preg_replace( '/(?:<p>\s*<\/p>\s*)+|<p>(\s|(?:<br>|<\/br>|<br\/?>))*<\/p>/', '', $content ) ) && ! empty( $link_embed ) ) {
-					$content .= bbp_make_clickable( $link_embed );
+				if ( ! empty( $link_embed ) ) {
+					if ( bbp_is_reply( $post_id ) ) {
+						$content = bbp_reply_content_autoembed_paragraph( $content, $post_id );
+					} else { 
+						$content = bbp_topic_content_autoembed_paragraph( $content, $post_id );
+					}
 				} else {
 					$content = bb_forums_link_preview( $content, $post_id );
 				}
 			}
 
 			$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
-			
+
 			return $content;
 		}
 

@@ -2121,10 +2121,11 @@ function bb_validate_reply_embed( $content ) {
  * Add oembed to forum reply.
  *
  * @param $content
+ * @param $reply_id
  *
  * @return string
  */
-function bbp_reply_content_autoembed_paragraph( $content ) {
+function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 	global $wp_embed;
 
 	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
@@ -2166,9 +2167,11 @@ function bbp_reply_content_autoembed_paragraph( $content ) {
 		return $content . implode( '', $embeds_array );
 
 	} else {
-
+		if ( empty( $reply_id ) ) {
+			$reply_id = bbp_get_reply_id();
+		} 
 		// if not urls in content then check if embed was used or not, if not return content without embed.
-		$link_embed = get_post_meta( bbp_get_reply_id(), '_link_embed', true );
+		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
 		if ( ! empty( $link_embed ) ) {
 			$embed_data = bp_core_parse_url( $link_embed );
 

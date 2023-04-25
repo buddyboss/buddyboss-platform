@@ -1033,6 +1033,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	$params['forums'] = array(
 		'params'  => array(
 			'bb_current_user_id' => $user_id,
+			'link_preview'       => bbp_use_autoembed() ? true : false,
 		),
 		'nonces'  => array(
 			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),

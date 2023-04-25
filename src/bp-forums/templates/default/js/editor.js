@@ -204,7 +204,7 @@ jQuery( document ).ready(
 								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 							}
 
-							if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) ) {
 								if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
 									clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
 								}
@@ -362,7 +362,7 @@ jQuery( document ).ready(
 								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 							}
 
-							if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) ) {
 								if ( window.forums_medium_topic_editor[key].linkTimeout != null ) {
 									clearTimeout( window.forums_medium_topic_editor[key].linkTimeout );
 								}
@@ -644,7 +644,7 @@ jQuery( document ).ready(
 										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 									}
 
-									if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) ) {
 										if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
 											clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
 										}
@@ -745,7 +745,7 @@ jQuery( document ).ready(
 										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 									}
 
-									if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) ) {
 										if ( window.forums_medium_topic_editor[key].linkTimeout != null ) {
 											clearTimeout( window.forums_medium_topic_editor[key].linkTimeout );
 										}

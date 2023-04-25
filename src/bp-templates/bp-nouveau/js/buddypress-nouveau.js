@@ -3849,7 +3849,7 @@ window.bp = window.bp || {};
 					var url_a    = document.createElement( 'a' );
 					url_a.href   = urlString;
 					var hostname = url_a.hostname;
-					if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== -1 ) {
+					if ( 'undefined' !== typeof BP_Nouveau.forums.params.excluded_hosts && BP_Nouveau.forums.params.excluded_hosts.indexOf( hostname ) !== -1 ) {
 						urlString = '';
 					}
 				}

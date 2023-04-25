@@ -3671,7 +3671,7 @@ function bb_validate_topic_embed( $content ) {
  *
  * @return string
  */
-function bbp_topic_content_autoembed_paragraph( $content ) {
+function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 	global $wp_embed;
 
 	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
@@ -3713,9 +3713,11 @@ function bbp_topic_content_autoembed_paragraph( $content ) {
 		return $content . implode( '', $embeds_array );
 
 	} else {
-
+		if ( empty( $topic_id ) ) {
+			$topic_id = bbp_get_topic_id();
+		}
 		// check if preview url was used or not, if not return content without embed
-		$link_embed = get_post_meta( bbp_get_topic_id(), '_link_embed', true );
+		$link_embed = get_post_meta( $topic_id, '_link_embed', true );
 		if ( ! empty( $link_embed ) ) {
 			$embed_data = bp_core_parse_url( $link_embed );
 
