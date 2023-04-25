@@ -1139,10 +1139,6 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	if ( '' === $content || empty( $content ) ) {
-		$content = '&nbsp;';
-	}
-
 	$group         = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ); // Group id.
 	$message_users = bb_filter_input_string( INPUT_POST, 'users' ); // all - individual.
 	$message_type  = bb_filter_input_string( INPUT_POST, 'type' ); // open - private.
