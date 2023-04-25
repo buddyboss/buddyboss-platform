@@ -1208,7 +1208,7 @@ function bb_digest_message_email_notifications() {
 					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 						global $bb_email_background_updater;
 
-						$chunk_recipient_array = array_chunk( $thread['recipients'], 10 );
+						$chunk_recipient_array = array_chunk( $thread['recipients'], bb_get_email_queue_min_count() );
 
 						if ( ! empty( $chunk_recipient_array ) ) {
 							foreach ( $chunk_recipient_array as $chunk_recipient ) {
