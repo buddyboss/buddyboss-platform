@@ -68,10 +68,6 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
-
-		add_filter( 'bp_activity_comment_content', array( $this, 'bb_blocked_get_activity_comment' ), 10, 2 );
-
-		add_filter( 'bp_activity_can_comment_reply', array( $this, 'bb_blocked_activity_can_comment_reply' ), 10, 2 );
 	}
 
 	/**
@@ -306,84 +302,5 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$content = bb_moderation_remove_mention_link( $content );
 
 		return $content;
-	}
-
-	/**
-	 * Update activity comment text for blocked comment.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $content The content of the current activity comment.
-	 * @param string $context This filter's context ("get").
-	 *
-	 * @return mixed|string
-	 */
-	public function bb_blocked_get_activity_comment( $content, $context ) {
-		global $activities_template;
-
-		if (
-			empty( $activities_template->activity->current_comment->id ) ||
-			empty( $activities_template->activity->current_comment->user_id )
-		) {
-			return $content;
-		}
-
-		$user_id = $activities_template->activity->current_comment->user_id;
-		$item_id = $activities_template->activity->current_comment->id;
-
-		// Set content for reported content of group.
-		if ( bb_is_group_activity_comment( $activities_template->activity->current_comment ) ) {
-			if (
-				$this->is_content_hidden( $item_id ) &&
-				! bp_moderation_is_user_blocked( $user_id )
-			) {
-				$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
-			}
-
-			return $content;
-		}
-
-		if ( $this->is_content_hidden( $item_id ) ) {
-			$is_user_blocked = bp_moderation_is_user_blocked( $user_id );
-
-			if ( $is_user_blocked ) {
-				$content = bb_moderation_has_blocked_message( $content, $this->item_type, $item_id );
-			} else {
-				$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
-			}
-		} elseif ( bp_moderation_is_user_suspended( $user_id ) ) {
-			$content = bb_moderation_is_suspended_message( $content, $this->item_type, $item_id );
-		} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
-			$content = bb_moderation_is_blocked_message( $content, $this->item_type, $item_id );
-		}
-
-		return $content;
-	}
-
-	/**
-	 * Check the current comment author is has blocked or not.
-	 *
-	 * @since BuddyPress [BBVERSION]
-	 *
-	 * @param bool   $can_comment Status on if activity reply can be commented on.
-	 * @param object $comment     Current comment object being checked on.
-	 */
-	public function bb_blocked_activity_can_comment_reply( $can_comment, $comment ) {
-		if ( bp_is_active( 'groups' ) && ! empty( $comment->item_id ) && ! empty( $comment->user_id ) ) {
-			if (
-				! bb_is_group_activity_comment( $comment ) &&
-				bb_moderation_is_user_blocked_by( $comment->user_id )
-			) {
-				return false;
-				// Check it for reported group activity comments.
-			} elseif (
-				$this->is_content_hidden( $comment->id ) &&
-				! bp_moderation_is_user_blocked( $comment->user_id )
-			) {
-				return false;
-			}
-		}
-
-		return $can_comment;
 	}
 }
