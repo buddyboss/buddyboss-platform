@@ -2120,8 +2120,8 @@ function bb_validate_reply_embed( $content ) {
 /**
  * Add oembed to forum reply.
  *
- * @param $content
- * @param $reply_id
+ * @param $content  Reply content.
+ * @param $reply_id Optional Reply id.
  *
  * @return string
  */

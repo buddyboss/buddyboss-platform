@@ -3667,7 +3667,8 @@ function bb_validate_topic_embed( $content ) {
 /**
  * Add oembed to forum topic.
  *
- * @param $content
+ * @param $content  Topic content.
+ * @param $topic_id Optional Topic id.
  *
  * @return string
  */
