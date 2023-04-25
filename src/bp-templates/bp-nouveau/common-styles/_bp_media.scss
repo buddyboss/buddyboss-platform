@@ -4012,7 +4012,7 @@ body.search-results.bb-template-v2 .search_results {
 
 			#group-document-search {
 				background-image: none;
-				padding: 6px 10px 6px 32px;
+				padding: 6px 30px 6px 32px;
 				height: auto;
 				font-size: 14px;
 			}
@@ -4025,6 +4025,35 @@ body.search-results.bb-template-v2 .search_results {
 		.bb-title {
 			width: auto;
 		}
+	}
+
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset,
+.search-form-has-reset {
+	position: relative;
+
+	.search-form_reset {
+		font-size: 13px;
+		color: $light-text;
+		background-color: transparent;
+		border: 0;
+		padding: 0;
+		opacity: 0.4;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 12px;
+		display: none;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	input[type="search"],
+	#bbp_search {
+		padding-right: 30px;
 	}
 
 }
@@ -4142,7 +4171,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 				#group-document-search {
 					background-image: none;
-					padding: 6px 10px 6px 32px;
+					padding: 6px 30px 6px 32px;
 					height: auto;
 					font-size: 14px;
 				}
