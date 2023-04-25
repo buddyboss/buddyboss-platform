@@ -613,3 +613,35 @@ function bbp_get_search_slug( $default = 'search' ) {
 function bbp_get_config_location( $default = '' ) {
 	return apply_filters( 'bbp_get_config_location', get_option( 'bb-config-location', $default ) );
 }
+
+/**
+ * How to interact with engagements.
+ *
+ * There are 3 possible strategies:
+ * - 'meta' 2.6 and higher. Uses multiple postmeta keys.
+ * - 'user' Pre-2.6. Uses comma-separated string of IDs in usermeta.
+ * - 'term' Alternate. Uses taxonomy term relationships.
+ *
+ * @since 2.6.0 bbPress (r6875)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Default value false.
+ *
+ * @return string How to interact with engagements.
+ */
+function bbp_engagements_strategy( $default = 'meta' ) {
+
+	// Get the option value.
+	$integration = get_option( '_bbp_engagements_strategy', $default );
+
+	// Check that class exists, or fallback.
+	$class_name = 'BBP_User_Engagements_' . ucwords( $integration );
+
+	// Fallback to 'meta' if invalid.
+	if ( ! class_exists( $class_name ) ) {
+		$integration = 'meta';
+	}
+
+	// Filter & return.
+	return apply_filters( 'bbp_engagements_strategy', $integration, $default );
+}
