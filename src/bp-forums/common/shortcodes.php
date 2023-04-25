@@ -500,32 +500,36 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_reply_form( $attr, $content = '' ) {
 
-			// Unset globals.
-			$this->unset_globals();
+			if ( isset( $attr['id'] ) && bbp_is_topic( $attr['id'] ) ) {
+				// Unset globals.
+				$this->unset_globals();
 
-			// Set passed attribute to $reply_id for clarity.
-			$topic_id = bbpress()->current_topic_id = $attr['id'];
-			$forum_id = bbp_get_reply_forum_id( $topic_id );
+				$forum_id = 0;
+				$topic_id = 0;
 
-			// Bail if ID passed is not a reply.
-			if ( ! bbp_is_topic( $topic_id ) ) {
-				return $content;
-			}
+				// Get forum ID from given topic ID.
+				$forum_id = bbp_get_reply_forum_id( $attr['id'] );
+				$topic_id = $attr['id'];
 
-			// Reset the queries if not in theme compat.
-			if ( ! bbp_is_theme_compat_active() ) {
+				// Set global variables.
+				bbpress()->current_forum_id = $forum_id;
+				bbpress()->current_topic_id = $topic_id;
 
-				$bbp = bbpress();
+				// Reset the queries if not in theme compat.
+				if ( ! bbp_is_theme_compat_active() ) {
 
-				// Reset necessary forum_query attributes for replys loop to function.
-				$bbp->forum_query->query_vars['post_type'] = bbp_get_forum_post_type();
-				$bbp->forum_query->in_the_loop             = true;
-				$bbp->forum_query->post                    = get_post( $forum_id );
+					$bbp = bbpress();
 
-				// Reset necessary topic_query attributes for replys loop to function.
-				$bbp->topic_query->query_vars['post_type'] = bbp_get_topic_post_type();
-				$bbp->topic_query->in_the_loop             = true;
-				$bbp->topic_query->post                    = get_post( $topic_id );
+					// Reset necessary forum_query attributes for replies loop to function.
+					$bbp->forum_query->query_vars['post_type'] = bbp_get_forum_post_type();
+					$bbp->forum_query->in_the_loop             = true;
+					$bbp->forum_query->post                    = get_post( $forum_id );
+
+					// Reset necessary topic_query attributes for replies loop to function.
+					$bbp->topic_query->query_vars['post_type'] = bbp_get_topic_post_type();
+					$bbp->topic_query->in_the_loop             = true;
+					$bbp->topic_query->post                    = get_post( $topic_id );
+				}
 			}
 
 			// Start output buffer.
