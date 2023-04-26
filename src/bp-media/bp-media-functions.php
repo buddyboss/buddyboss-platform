@@ -48,14 +48,26 @@ function bp_media_upload() {
 		return $attachment;
 	}
 
+	/**
+	 * Hook Media upload.
+	 *
+	 * @param mixed $attachment attachment
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_media_upload', $attachment );
+
+	// get saved media id.
+	$media_id = get_post_meta( $attachment->ID, 'bp_media_id', true );
+
 	$name = $attachment->post_title;
 
-	// Generate document attachment preview link.
-	$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
-	$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
-	$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
-	$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
-	$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
+	if ( ! empty( $media_id ) ) {
+		$attachment_url         = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-photos-popup-image' );
+		$attachment_thumb_url   = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-activity-image' );
+		$attachment_medium      = $attachment_thumb_url;
+		$attachment_message_url = $attachment_thumb_url;
+	}
 
 	$result = array(
 		'id'      => (int) $attachment->ID,
@@ -455,7 +467,8 @@ function bp_media_add( $args = '' ) {
 			'title'         => '',                      // title of media being added.
 			'album_id'      => false,                   // Optional: ID of the album.
 			'group_id'      => false,                   // Optional: ID of the group.
-			'activity_id'   => false,                   // The ID of activity.
+			'activity_id'   => false,
+			'message_id'    => false,                   // The ID of activity.
 			'privacy'       => 'public',                // Optional: privacy of the media e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this media was recorded.
@@ -473,6 +486,7 @@ function bp_media_add( $args = '' ) {
 	$media->album_id      = (int) $r['album_id'];
 	$media->group_id      = (int) $r['group_id'];
 	$media->activity_id   = (int) $r['activity_id'];
+	$media->message_id    = (int) $r['message_id'];
 	$media->privacy       = $r['privacy'];
 	$media->menu_order    = $r['menu_order'];
 	$media->date_created  = $r['date_created'];
@@ -505,6 +519,7 @@ function bp_media_add( $args = '' ) {
 
 	// media is saved for attachment.
 	update_post_meta( $media->attachment_id, 'bp_media_saved', true );
+	update_post_meta( $media->attachment_id, 'bp_media_id', $media->id );
 
 	/**
 	 * Fires at the end of the execution of adding a new media item, before returning the new media item ID.
