@@ -959,7 +959,7 @@ function bp_media_attach_media_to_message( &$message ) {
 			foreach ( $media_attachments as $attachment ) {
 
 				// Get media_id from the attachment ID.
-				$media_id    = get_post_meta( 'bp_media_id', $attachment['id'] );
+				$media_id    = get_post_meta( $attachment['id'], 'bp_media_id', true );
 				$media_ids[] = $media_id;
 
 				// Attach already created media.
@@ -969,8 +969,10 @@ function bp_media_attach_media_to_message( &$message ) {
 				$media->save();
 
 				update_post_meta( $media->attachment_id, 'bp_media_saved', true );
+				update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $message->id );
+
 				if ( isset( $_POST ) && isset( $_POST['thread_id'] ) && 'message' === $media->privacy ) {
-					update_post_meta( $media->attachment_id, 'bp_media_message_thread_id', $_POST['thread_id'] );
+					update_post_meta( $media->attachment_id, 'thread_id', $_POST['thread_id'] );
 				}
 			}
 			if ( ! empty( $media_ids ) ) {

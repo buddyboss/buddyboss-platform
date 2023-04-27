@@ -62,11 +62,18 @@ function bp_media_upload() {
 
 	$name = $attachment->post_title;
 
-	if ( ! empty( $media_id ) ) {
+	if ( ! empty( $media_id ) && bp_is_messages_component() ) {
 		$attachment_url         = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-photos-popup-image' );
 		$attachment_thumb_url   = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-activity-image' );
 		$attachment_medium      = $attachment_thumb_url;
-		$attachment_message_url = $attachment_thumb_url;
+		$attachment_message_url = $attachment_url;
+	} else {
+		// Generate document attachment preview link.
+		$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
+		$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
+		$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
+		$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
+		$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
 	}
 
 	$result = array(

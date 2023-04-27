@@ -57,13 +57,21 @@ function bp_video_upload() {
 	 */
 	do_action( 'bb_video_upload', $attachment );
 
+	// get saved media id.
+	$media_id = get_post_meta( $attachment->ID, 'bp_media_id', true );
+
 	$name = $attachment->post_title;
 
-	// Generate video attachment preview link.
-	$attachment_id     = 'forbidden_' . $attachment->ID;
-	$attachment_url    = home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id );
-	$video_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
-
+	if ( ! empty( $media_id ) && bp_is_messages_component() ) {
+		$get_video_thumb_id = get_post_meta( $attachment->ID, 'bp_video_preview_thumbnail_id', true );
+		$attachment_url     = bb_video_get_thumb_url( $media_id, $get_video_thumb_id, 'bb-video-poster-popup-image' );
+		$video_message_url  = $attachment_url;
+	} else {
+		// Generate video attachment preview link.
+		$attachment_id     = 'forbidden_' . $attachment->ID;
+		$attachment_url    = home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id );
+		$video_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
+	}
 	$file_url = wp_get_attachment_url( $attachment->ID );
 	$filetype = wp_check_filetype( $file_url );
 	$ext      = $filetype['ext'];
@@ -637,6 +645,7 @@ function bp_video_add( $args = '' ) {
 
 	// video is saved for attachment.
 	update_post_meta( $video->attachment_id, 'bp_video_saved', true );
+	update_post_meta( $video->attachment_id, 'bp_media_id', $video->id );
 
 	/**
 	 * Fires at the end of the execution of adding a new video item, before returning the new video item ID.
@@ -725,6 +734,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 			if ( $video_id ) {
 				$video_ids[] = $video_id;
 			}
+
 		}
 	}
 
