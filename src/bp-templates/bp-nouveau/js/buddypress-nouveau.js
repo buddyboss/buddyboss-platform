@@ -70,6 +70,8 @@ window.bp = window.bp || {};
 			// Profile Notification setting
 			this.profileNotificationSetting();
 
+			this.xProfileBlock();
+
 			// Bail if not set.
 			if ( 'undefined' !== typeof BB_Nouveau_Presence ) {
 				// User Presence status.
@@ -3443,6 +3445,15 @@ window.bp = window.bp || {};
 				}
 			});
 
+		},
+
+		/**
+		 *  Add socialnetworks profile field type related class
+		 */
+		xProfileBlock: function () {
+			$( '.profile-fields .field_type_socialnetworks' ).each( function () {
+				$( this ).closest( '.bp-widget' ).addClass( 'social' );
+			} );
 		},
 
 		/**
