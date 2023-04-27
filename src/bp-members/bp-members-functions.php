@@ -5346,11 +5346,12 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
  *
  * @since BuddyBoss 2.3.1
  *
- * @param int $user_id user id.
+ * @param int  $user_id user id.
+ * @param bool $force   Optional. If true then will generate new slug forcefully.
  *
  * @return string
  */
-function bb_generate_user_profile_slug( int $user_id ) {
+function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 	$unique_identifier = '';
 
 	// If empty user ID.
@@ -5358,32 +5359,38 @@ function bb_generate_user_profile_slug( int $user_id ) {
 		return $unique_identifier;
 	}
 
-	// Get user slug if already exists.
-	$user_profile_slug = bb_core_get_user_slug( $user_id );
+	if ( ! $force ) {
+		// Get user slug if already exists.
+		$user_profile_slug = bb_core_get_user_slug( $user_id );
 
-	// Check the slug and it's not long.
-	if (
-		! empty( $user_profile_slug ) &&
-		bb_is_short_user_unique_identifier( $user_profile_slug )
-	) {
-		return $unique_identifier;
+		// Check the slug and it's not long.
+		if (
+			! empty( $user_profile_slug ) &&
+			bb_is_short_user_unique_identifier( $user_profile_slug )
+		) {
+			return $user_profile_slug;
+		}
 	}
 
 	// If slug is long or not exists then generate a new slug.
-	$unique_identifier = '';
-	$character_length  = 8;
+	$character_length = 8;
 
 	// Get user by ID.
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
 
+		if ( $force ) {
+			// Increment length when forcefully generate new slug.
+			$character_length++;
+		}
+
 		$new_unique_identifier = strtolower( sha1( $user->user_email . $user->user_nicename . $user->ID ) );
 		$unique_identifier     = substr( $new_unique_identifier, 0, $character_length );
 
 		while ( bb_is_exists_user_unique_identifier( $unique_identifier ) ) {
 
-			// Increment if the slug already exists.
+			// Increment length if the slug already exists.
 			$character_length++;
 
 			// Generate new a new between 8 and 12 characters long.
@@ -5488,13 +5495,14 @@ function bb_core_get_user_slug( int $user_id ) {
  *
  * @since BuddyBoss 2.3.1
  *
- * @param int $user_id User ID.
+ * @param int  $user_id User ID.
+ * @param bool $force   Optional. If true then will generate new slug and update forcefully.
  *
  * @return string
  */
-function bb_set_user_profile_slug( int $user_id ) {
+function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
 
-	$unique_identifier = bb_generate_user_profile_slug( $user_id );
+	$unique_identifier = bb_generate_user_profile_slug( $user_id, $force );
 	if ( ! empty( $unique_identifier ) ) {
 
 		// Backward compatible to store 40 characters long unique slug.
