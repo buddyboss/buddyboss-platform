@@ -21,17 +21,6 @@ if ( bp_is_active( 'moderation' ) ) {
 	$is_user_blocked      = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_get_activity_comment_user_id() );
 	$is_user_blocked_by   = function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( bp_get_activity_comment_user_id() );
 	$check_hidden_content = BP_Core_Suspend::check_hidden_content( bp_get_activity_comment_id(), BP_Moderation_Activity_Comment::$moderation_type );
-	/**
-	 * If a group activity that is created by a suspended member, and someone reports a parent comment on that post,
-	 * then we need to hide all children for that post comment.
-	 */
-	if ( bb_is_group_activity_comment( bp_get_activity_comment_id() ) ) {
-		$main_parent_activity_id = new BP_Activity_Activity( bp_get_activity_comment_id() );
-		while ( $main_parent_activity_id->item_id !== $main_parent_activity_id->secondary_item_id ) {
-			$main_parent_activity_id = new BP_Activity_Activity( $main_parent_activity_id->secondary_item_id );
-		}
-		$check_hidden_content = BP_Core_Suspend::check_hidden_content( $main_parent_activity_id->id, BP_Moderation_Activity_Comment::$moderation_type );
-	}
 }
 ?>
 
