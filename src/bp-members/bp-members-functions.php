@@ -5352,19 +5352,45 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
  */
 function bb_generate_user_profile_slug( int $user_id ) {
 	$unique_identifier = '';
+
+	// If empty user ID.
 	if ( empty( $user_id ) ) {
 		return $unique_identifier;
 	}
 
+	// Get user slug if already exists.
 	$user_profile_slug = bb_core_get_user_slug( $user_id );
-	if ( ! empty( $user_profile_slug ) ) {
+
+	// Check the slug and it's not long.
+	if (
+		! empty( $user_profile_slug ) &&
+		bb_is_short_user_unique_identifier( $user_profile_slug )
+	) {
 		return $unique_identifier;
 	}
 
+	// If slug is long or not exists then generate a new slug.
+	$unique_identifier = '';
+	$character_length  = 8;
+
+	// Get user by ID.
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
-		$unique_identifier = sha1( $user->user_email . $user->user_nicename );
+
+		$new_unique_identifier = strtolower( sha1( $user->user_email . $user->user_nicename . $user->ID ) );
+		$unique_identifier     = substr( $new_unique_identifier, 0, $character_length );
+
+		while ( bb_is_exists_user_unique_identifier( $unique_identifier ) ) {
+
+			// Increment if the slug already exists.
+			$character_length++;
+
+			// Generate new a new between 8 and 12 characters long.
+			if ( $character_length >= 8 && $character_length <= 12 ) {
+				$unique_identifier = substr( $new_unique_identifier, 0, $character_length );
+			}
+		}
 	}
 
 	return $unique_identifier;
@@ -5391,21 +5417,38 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 	$cache_key = 'bb_profile_slug_' . $profile_slug;
 
 	if ( ! isset( $cache[ $cache_key ] ) ) {
+		global $wpdb;
 
-		$found_users = get_users(
-			array(
-				'meta_key'    => 'bb_profile_slug', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-				'meta_value'  => $profile_slug, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-				'number'      => 1,
-				'count_total' => false,
-				'fields'      => 'ID',
-			)
-		);
+		if ( bb_is_short_user_unique_identifier( $profile_slug ) ) {
 
-		$user = ( ! empty( $found_users ) ? current( $found_users ) : 0 );
+			// Get the user who has 8 to 12 characters long unique slug.
+			$user_query = $wpdb->prepare(
+				"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` = %s",
+				"bb_profile_slug_{$profile_slug}"
+			);
 
+		} else {
+
+			// Backward compatible to check 40 characters long unique slug.
+			$user_query = $wpdb->prepare(
+				"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
+				"bb_profile_slug_{$profile_slug}",
+				"bb_profile_long_slug_{$profile_slug}"
+			);
+
+		}
+
+		// Get the user ID from the created query based on string length.
+		$found_users = $wpdb->get_var( $user_query );
+
+		// Validate the user ID.
+		$user = ( ! empty( $found_users ) && ! is_wp_error( $found_users ) ? $found_users : 0 );
+
+		// Set in static cache.
 		$cache[ $cache_key ] = $user;
 	} else {
+
+		// If already cached then return from the cache.
 		$user = isset( $cache[ $cache_key ] ) ? $cache[ $cache_key ] : 0;
 	}
 
@@ -5427,7 +5470,7 @@ function bb_core_get_user_slug( int $user_id ) {
 		return '';
 	}
 
-	$profile_slug = bp_get_user_meta( 'bb_profile_slug', $user_id, true );
+	$profile_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
 
 	/**
 	 * Filters the profile slug based on originally provided user ID.
@@ -5453,6 +5496,16 @@ function bb_set_user_profile_slug( int $user_id ) {
 
 	$unique_identifier = bb_generate_user_profile_slug( $user_id );
 	if ( ! empty( $unique_identifier ) ) {
+
+		// Backward compatible to store 40 characters long unique slug.
+		$old_unique_identifier = bb_core_get_user_slug( $user_id );
+		if (
+			! empty( $old_unique_identifier ) &&
+			! bb_is_short_user_unique_identifier( $old_unique_identifier )
+		) {
+			bp_update_user_meta( $user_id, 'bb_profile_long_slug_' . $old_unique_identifier, $user_id );
+		}
+
 		bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
 		bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
 	}
@@ -5477,8 +5530,85 @@ function bb_set_bluk_user_profile_slug( $user_ids ) {
 		$user_id           = (int) $user_id;
 		$unique_identifier = bb_generate_user_profile_slug( $user_id );
 		if ( ! empty( $unique_identifier ) ) {
+
+			// Backward compatible to store 40 characters long unique slug.
+			$old_unique_identifier = bb_core_get_user_slug( $user_id );
+			if (
+				! empty( $old_unique_identifier ) &&
+				! bb_is_short_user_unique_identifier( $old_unique_identifier )
+			) {
+				bp_update_user_meta( $user_id, 'bb_profile_long_slug_' . $old_unique_identifier, $user_id );
+			}
+
 			bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
 			bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
 		}
 	}
+}
+
+/**
+ * Function to check the newly generated slug is exists or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $unique_identifier Newly generated unique identifier.
+ * @param int    $user_id           Optional. ID of user to exclude from the search.
+ *
+ * @return bool|int False if unique identifier is not exists otherwise return user ID.
+ */
+function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
+	global $wpdb;
+
+	// Prepare the statement to check unique identifier.
+	$prepare_query = $wpdb->prepare(
+		"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` = %s AND `meta_value` = %s",
+		'bb_profile_slug',
+		$unique_identifier
+	);
+
+	// Exclude the user to check unique identifier.
+	if ( ! empty( $user_id ) ) {
+		$prepare_query = $wpdb->prepare(
+			$prepare_query . " AND user_id != %d",
+			$user_id
+		);
+	}
+
+	// Execute the query.
+	$val = $wpdb->get_var( $prepare_query );
+
+	// Return false if no record found.
+	if ( empty( $val ) ) {
+		return false;
+	}
+
+	// Return user ID if already exists the unique identifier.
+	return $val;
+}
+
+/**
+ * Function to check the unique identifier slug is short or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $unique_identifier User unique identifier.
+ *
+ * @return bool False if unique identifier is 40 characters long otherwise return true.
+ */
+function bb_is_short_user_unique_identifier( $unique_identifier ) {
+	// Get length of provided unique identifier.
+	if ( function_exists( 'mb_strlen' ) ) {
+		$length = mb_strlen( $unique_identifier );
+	} else {
+		$length = strlen( $unique_identifier );
+	}
+
+
+	// Check the unique identifier is short then return true.
+	if ( $length >= 8 && $length <= 12 ) {
+		return true;
+	}
+
+	// Return false because unique identifier is 40 characters long.
+	return false;
 }
