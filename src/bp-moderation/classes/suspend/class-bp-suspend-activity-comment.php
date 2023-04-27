@@ -286,10 +286,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			}
 		}
 
-		if (
-			bb_is_group_activity_comment() &&
-			BP_Core_Suspend::check_suspended_content( $activities_template->activity->current_comment->id, self::$type, true )
-		) {
+		if ( BP_Core_Suspend::check_suspended_content( $activities_template->activity->current_comment->id, self::$type, true ) ) {
 			return 'activity/blocked-comment.php';
 		}
 
