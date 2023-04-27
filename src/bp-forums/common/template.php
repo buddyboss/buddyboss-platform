@@ -2973,7 +2973,7 @@ function bb_topic_reply_edit_link_preview_field( $post_id ){
 	if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
 		$link_data['embed']                 = 0;
 		$link_data['url']                   = ! empty ( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
-		$link_data['link_image_index_save'] = ! empty ( $link_preview_data['link_image_index_save'] ) ? $link_preview_data['link_image_index_save'] : 0;
+		$link_data['link_image_index_save'] = $link_preview_data['link_image_index_save'];
 	}
 
 	$link_embed = get_post_meta( $post_id, '_link_embed', true );
