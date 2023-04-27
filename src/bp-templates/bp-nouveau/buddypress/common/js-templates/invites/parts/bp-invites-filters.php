@@ -17,7 +17,7 @@
 				<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search', 'buddyboss' ); ?>"/>
 
 				<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit">
-					<span class="bb-icons bb-icon-search" aria-hidden="true"></span>
+					<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
 					<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 				</button>
 			</form>

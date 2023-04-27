@@ -87,9 +87,8 @@ add_action( 'bp_document_add', 'bp_document_clear_document_user_object_cache', 1
  * @param array $documents DB results of document items.
  */
 function bp_document_clear_document_user_object_cache_on_delete( $documents ) {
-
-	if ( ! empty( $documents[0] ) ) {
-		foreach ( (array) $documents[0] as $deleted_document ) {
+	if ( ! empty( $documents ) ) {
+		foreach ( (array) $documents as $deleted_document ) {
 			$user_id = ! empty( $deleted_document->user_id ) ? $deleted_document->user_id : false;
 
 			wp_cache_delete( 'bb_document_activity_' . $deleted_document->id, 'bp_document' ); // Used in bb_moderation_get_media_record_by_id().

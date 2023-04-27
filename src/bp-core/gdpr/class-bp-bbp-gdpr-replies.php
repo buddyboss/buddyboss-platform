@@ -116,7 +116,7 @@ class BP_Bbp_Gdpr_Replies {
 						'value' => ! empty( $parent_title ) ? __(
 							'Reply To: ',
 							'buddyboss'
-						) . html_entity_decode( $parent_title ) : '',
+						) . html_entity_decode( $parent_title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '',
 					),
 					array(
 						'name'  => __( 'Reply Content', 'buddyboss' ),

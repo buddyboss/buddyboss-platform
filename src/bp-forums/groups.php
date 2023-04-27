@@ -99,9 +99,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Adds a hidden input value to the "Group Settings" page
 			add_action( 'bp_before_group_settings_admin', array( $this, 'group_settings_hidden_field' ) );
 
-			// Added notification settings for forums.
-			add_action( 'bp_notification_settings', array( $this, 'forums_notification_settings' ), 11 );
-
 			// Possibly redirect.
 			add_action( 'bbp_template_redirect', array( $this, 'forum_redirect_canonical' ), 11 );
 		}
@@ -302,7 +299,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$group_id  = empty( $group->id ) ? bp_get_new_group_id() : $group->id;
 			$forum_ids = bbp_get_group_forum_ids( $group_id );
 
-			// Get the first forum ID
+			// Get the first forum ID.
 			if ( ! empty( $forum_ids ) ) {
 				$forum_id = (int) is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids;
 			}
@@ -310,48 +307,76 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Should box be checked already?
 			$checked = is_admin() ? bp_group_is_forum_enabled( $group ) : bp_get_new_group_enable_forum() || bp_group_is_forum_enabled( bp_get_group_id() ); ?>
 
-		<h4 class="bb-section-title"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></h4>
+			<h4 class="bb-section-title"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></h4>
 
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></legend>
-			<p class="bb-section-info"><?php esc_html_e( 'Connect a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion. Unchecking this option will not delete existing forum content.', 'buddyboss' ); ?></p>
+			<fieldset>
+				<legend class="screen-reader-text"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></legend>
 
-			<div class="field-group">
-				<p class="checkbox bp-checkbox-wrap bp-group-option-enable">
-					<input type="checkbox" name="bbp-edit-group-forum" id="bbp-edit-group-forum" class="bs-styled-checkbox" value="1"<?php checked( $checked ); ?> />
-					<label for="bbp-edit-group-forum"><?php esc_html_e( 'Yes, I want this group to have a discussion forum.', 'buddyboss' ); ?></label>
-				</p>
-			</div>
-
-				<?php if ( bbp_is_user_keymaster() ) : ?>
-				<hr class="bb-sep-line" />
-				<div class="field-group">
-					<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
-					<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
-					<?php
-						bbp_dropdown(
-							array(
-								'select_id'          => 'bbp_group_forum_id',
-								'show_none'          => __( '(No Forum)', 'buddyboss' ),
-								'selected'           => $forum_id,
-								'disable_categories' => false,
-								'disabled_walker'    => false,
-							)
-						);
+				<?php
+				if ( ! is_admin() ) {
+					$group_forum_info = bbp_is_user_keymaster() ? sprintf(
+					/* translators: Link to wp-admin edit group */
+						__( 'As an administrator, you can %s in the settings.', 'buddyboss' ),
+						sprintf(
+							'<a href="%1$s">%2$s</a>',
+							esc_url(
+								add_query_arg(
+									array(
+										'page'   => 'bp-groups',
+										'gid'    => $group,
+										'action' => 'edit',
+									),
+									bp_get_admin_url( 'admin.php' )
+								)
+							),
+							__( 'change the forum connected to this group', 'buddyboss' )
+						)
+					) : __( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' );
 					?>
+					<aside class="bp-feedback bp-feedback-v2 bp-messages bp-template-notice info">
+						<span class="bp-icon" aria-hidden="true"></span>
+						<p><?php echo wp_kses_post( $group_forum_info ); ?></p>
+					</aside>
+				<?php } ?>
+
+				<p class="bb-section-info"><?php esc_html_e( 'Connect a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion. Unchecking this option will not delete existing forum content.', 'buddyboss' ); ?></p>
+
+				<div class="field-group">
+					<p class="checkbox bp-checkbox-wrap bp-group-option-enable">
+						<input type="checkbox" name="bbp-edit-group-forum" id="bbp-edit-group-forum" class="bs-styled-checkbox" value="1"<?php checked( $checked ); ?> />
+						<label for="bbp-edit-group-forum"><?php esc_html_e( 'Yes, I want this group to have a discussion forum.', 'buddyboss' ); ?></label>
+					</p>
 				</div>
-			<?php endif; ?>
+
+				<?php if ( is_admin() && bbp_is_user_keymaster() ) : ?>
+					<hr class="bb-sep-line" />
+					<div class="field-group">
+						<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
+						<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
+						<?php
+							bbp_dropdown(
+								array(
+									'select_id'          => 'bbp_group_forum_id',
+									'show_none'          => __( '(No Forum)', 'buddyboss' ),
+									'selected'           => $forum_id,
+									'disable_categories' => false,
+									'disabled_walker'    => false,
+								)
+							);
+						?>
+					</div>
+				<?php endif; ?>
 
 				<?php if ( ! is_admin() ) : ?>
-				<br />
-				<input type="submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-			<?php endif; ?>
+					<br />
+					<input type="submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
+				<?php endif; ?>
 
-		</fieldset>
+			</fieldset>
 
 			<?php
 
-			// Verify intent
+			// Verify intent.
 			if ( is_admin() ) {
 				wp_nonce_field( 'groups_edit_save_' . $this->slug, 'forum_group_admin_ui' );
 			} else {
@@ -1531,98 +1556,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			groups_update_last_activity( $group->id );
 
 			return $args;
-		}
-
-		/**
-		 * Add Forum/Topic Subscribe email settings to the Settings > Notifications page.
-		 *
-		 * @since BuddyBoss 1.5.9
-		 */
-		public function forums_notification_settings() {
-			if ( bp_action_variables() ) {
-				bp_do_404();
-
-				return;
-			}
-
-			$notification_forums_following_reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_forums_following_reply', true );
-			$notification_forums_following_topic = bp_get_user_meta( bp_displayed_user_id(), 'notification_forums_following_topic', true );
-			if ( ! $notification_forums_following_reply ) {
-				$notification_forums_following_reply = 'yes';
-			}
-
-			if ( ! $notification_forums_following_topic ) {
-				$notification_forums_following_topic = 'yes';
-			}
-			?>
-
-			<table class="notification-settings" id="forums-notification-settings">
-				<thead>
-				<tr>
-					<th class="icon"></th>
-					<th class="title"><?php esc_html_e( 'Forums', 'buddyboss' ); ?></th>
-					<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
-					<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
-				</tr>
-				</thead>
-				<tbody>
-					<tr id="forums-notification-settings-new-message">
-						<td></td>
-						<td><?php esc_html_e( 'A member replies to a discussion you are subscribed', 'buddyboss' ); ?></td>
-						<td class="yes">
-							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_forums_following_reply]"
-									   id="notification-forums-reply-new-messages-yes" class="bs-styled-radio"
-									   value="yes" <?php checked( $notification_forums_following_reply, 'yes', true ); ?> />
-								<label for="notification-forums-reply-new-messages-yes"><span
-											class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-							</div>
-						</td>
-						<td class="no">
-							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_forums_following_reply]"
-									   id="notification-forums-reply-new-messages-no" class="bs-styled-radio"
-									   value="no" <?php checked( $notification_forums_following_reply, 'no', true ); ?> />
-								<label for="notification-forums-reply-new-messages-no"><span
-											class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-							</div>
-						</td>
-					</tr>
-					<tr id="forums-notification-settings-new-message">
-						<td></td>
-						<td><?php esc_html_e( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ); ?></td>
-						<td class="yes">
-							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_forums_following_topic]"
-									   id="notification-forums-topic-new-messages-yes" class="bs-styled-radio"
-									   value="yes" <?php checked( $notification_forums_following_topic, 'yes', true ); ?> />
-								<label for="notification-forums-topic-new-messages-yes"><span
-											class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-							</div>
-						</td>
-						<td class="no">
-							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_forums_following_topic]"
-									   id="notification-forums-topic-new-messages-no" class="bs-styled-radio"
-									   value="no" <?php checked( $notification_forums_following_topic, 'no', true ); ?> />
-								<label for="notification-forums-topic-new-messages-no"><span
-											class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-							</div>
-						</td>
-					</tr>
-					<?php
-
-					/**
-					 * Fires inside the closing </tbody> tag for forums screen notification settings.
-					 *
-					 * @since BuddyBoss 1.5.9
-					 */
-					do_action( 'forums_screen_notification_settings' );
-					?>
-				</tbody>
-			</table>
-
-			<?php
 		}
 
 		/**

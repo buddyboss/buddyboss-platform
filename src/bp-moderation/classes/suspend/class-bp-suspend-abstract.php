@@ -101,14 +101,19 @@ abstract class BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $item_id_field Items ID field name with alias of table.
+	 * @param string $item_type     Item type field name with the alias of table.
 	 *
 	 * @return string|void
 	 */
-	protected function exclude_joint_query( $item_id_field ) {
+	protected function exclude_joint_query( $item_id_field, $item_type = '' ) {
 		global $wpdb;
 		$bp = buddypress();
 
-		return ' ' . $wpdb->prepare( "LEFT JOIN {$bp->table_prefix}bp_suspend {$this->alias} ON ( {$this->alias}.item_type = %s AND {$this->alias}.item_id = $item_id_field )", $this->item_type ); // phpcs:ignore
+		if ( empty( $item_type ) ) {
+			$item_type = $this->item_type;
+		}
+
+		return ' ' . $wpdb->prepare( "LEFT JOIN {$bp->table_prefix}bp_suspend {$this->alias} ON ( {$this->alias}.item_type = %s AND {$this->alias}.item_id = $item_id_field )", $item_type ); // phpcs:ignore
 	}
 
 	/**

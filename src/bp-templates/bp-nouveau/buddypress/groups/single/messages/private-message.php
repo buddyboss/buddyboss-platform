@@ -68,7 +68,7 @@ if ( 0 === $total_count ) {
 					</div>
 					<div id="bp-message-dropdown-options" class="bp-message-dropdown-options-hide">
 						<div>
-							<i class="bb-icon-loader animate-spin"></i>
+							<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 						</div>
 					</div>
 				</div>
@@ -79,7 +79,7 @@ if ( 0 === $total_count ) {
 							<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
 							<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
 							<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit">
-								<span class="bb-icon-search" aria-hidden="true"></span>
+								<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
 								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
 							</button>
 						</form>
@@ -115,7 +115,7 @@ if ( 0 === $total_count ) {
 				<div class="bb-title-wrap">
 					<h2 class="bb-title"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></h2>
 					<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></a>
-					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="bb-icon-plus-circle"></span><?php esc_html_e( 'Select Members', 'buddyboss' ); ?></a></div>
+					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="bb-icon-rl bb-icon-plus-circle"></span><?php esc_html_e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
 				<div class="bp-select-members-wrap">
 					<div class="bp-messages-feedback bp-messages-feedback-hide">
@@ -150,7 +150,7 @@ if ( 0 === $total_count ) {
 											<div class="dz-size" data-dz-size></div>
 										</div>
 										<div class="dz-progress-ring-wrap">
-											<i class="bb-icon bb-icon-camera-fill"></i>
+											<i class="bb-icon-f bb-icon-camera"></i>
 											<svg class="dz-progress-ring" width="54" height="54">
 												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 											</svg>
@@ -177,8 +177,9 @@ if ( 0 === $total_count ) {
 										<div class="dz-details">
 											<div class="dz-filename"><span data-dz-name></span></div>
 										</div>
+										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 										<div class="dz-progress-ring-wrap">
-											<i class="bb-icon bb-icon-video-fill"></i>
+											<i class="bb-icon-f bb-icon-video"></i>
 											<svg class="dz-progress-ring" width="54" height="54">
 												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 											</svg>
@@ -215,12 +216,12 @@ if ( 0 === $total_count ) {
 									<div class="dz-preview dz-file-preview">
 										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 										<div class="dz-details">
-											<div class="dz-icon"><span class="bb-icon-file"></span></div>
+											<div class="dz-icon"><span class="bb-icon-l bb-icon-file"></span></div>
 											<div class="dz-filename"><span data-dz-name></span></div>
 											<div class="dz-size" data-dz-size></div>
 										</div>
 										<div class="dz-progress-ring-wrap">
-											<i class="bb-icon bb-icon-attach-fill"></i>
+											<i class="bb-icon-f bb-icon-file-attach"></i>
 											<svg class="dz-progress-ring" width="54" height="54">
 												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 											</svg>
@@ -245,7 +246,7 @@ if ( 0 === $total_count ) {
 										<img src="" alt="">
 									</div>
 									<div class="gif-image-remove gif-image-overlay">
-										<span class="bb-icon-close"></span>
+										<span class="bb-icon-l bb-icon-times"></span>
 									</div>
 								</div>
 								<input name="bp_group_messages_gif" id="bp_group_messages_gif" type="hidden" value=""/>
@@ -261,14 +262,14 @@ if ( 0 === $total_count ) {
 							<?php if ( bp_is_active( 'media' ) ) : ?>
 								<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>">
 									<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
-										<span class="bb-icon bb-icon-text-format"></span>
+										<span class="bb-icon-l bb-icon-font"></span>
 									</a>
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
-										<span class="bb-icon bb-icon-camera-small"></span>
+										<span class="bb-icon-l bb-icon-camera"></span>
 									</a>
 								</div>
 							<?php endif; ?>
@@ -278,14 +279,14 @@ if ( 0 === $total_count ) {
 								?>
 								<div class="post-elements-buttons-item post-video video-support">
 									<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
-										<i class="bb-icon bb-icon-video-alt"></i>
+										<i class="bb-icon-l bb-icon-video"></i>
 									</a>
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
-										<span class="bb-icon bb-icon-attach"></span>
+										<span class="bb-icon-l bb-icon-attach"></span>
 									</a>
 								</div>
 							<?php endif; ?>
@@ -293,18 +294,27 @@ if ( 0 === $total_count ) {
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
 										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
-											<span class="bb-icon bb-icon-gif"></span>
+											<span class="bb-icon-l bb-icon-gif"></span>
 										</a>
 										<div class="gif-media-search-dropdown">
 											<div class="bp-group-messages-attached-gif-container">
 												<div class="gif-search-content">
 													<div class="gif-search-query">
-														<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY', 'buddyboss' ); ?>" class="search-query-input"/>
+														<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input"/>
 														<span class="search-icon"></span>
 													</div>
 													<div class="gif-search-results" id="gif-search-results">
 														<ul class="gif-search-results-list">
 														</ul>
+														<div class="gif-alert gif-no-results">
+															<i class="bb-icon-l bb-icon-image-slash"></i>
+															<p><?php esc_html_e( 'No results found', 'buddyboss' ); ?></p>
+														</div>
+
+														<div class="gif-alert gif-no-connection">
+															<i class="bb-icon-l bb-icon-cloud-slash"></i>
+															<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
+														</div>
 													</div>
 												</div>
 											</div>

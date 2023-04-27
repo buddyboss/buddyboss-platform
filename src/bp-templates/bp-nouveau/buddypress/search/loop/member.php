@@ -19,10 +19,12 @@
 			<h2 class="item-title member-name">
 				<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
 			</h2>
-
+			<?php echo bp_get_user_member_type( bp_get_member_user_id() ); ?>
 			<?php if ( bp_nouveau_member_has_meta() ) : ?>
 				<p class="item-meta last-activity">
-					<?php bp_nouveau_member_meta(); ?>
+					<span class="middot">&middot;</span>
+					<?php esc_html_e( 'Last active', 'buddyboss' ); ?>
+					<?php echo wp_kses_post( bb_get_member_last_activity_time() ); ?>
 				</p>
 			<?php endif; ?>
 		</div>

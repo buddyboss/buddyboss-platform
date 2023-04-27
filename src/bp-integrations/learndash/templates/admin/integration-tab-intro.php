@@ -1,8 +1,27 @@
 <div class="wrap">
 
 	<div class="bp-admin-card section-bp_ld-integration">
-		<?php if( ! bp_is_active( 'groups' ) && is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) )  : ?>
-			<h2><?php _e( 'Social Groups</span>', 'buddyboss' ); ?></h2>
+		<?php
+		$meta_icon      = bb_admin_icons( 'bp_ld-integration' );
+		$meta_icon_html = '';
+		if ( ! empty( $meta_icon ) ) {
+			$meta_icon_html .= '<i class="' . esc_attr( $meta_icon ) . '"></i>';
+		}
+		if( ! bp_is_active( 'groups' ) && is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) )  :
+			?>
+			<h2>
+				<?php
+				echo wp_kses(
+					$meta_icon_html,
+					array(
+						'i' => array(
+							'class' => array()
+						)
+					)
+				);
+				esc_html_e( 'Social Groups', 'buddyboss' );
+				?>
+			</h2>
 			<p>
 			<?php
 				printf(
@@ -18,7 +37,22 @@
 			</p>
 		<?php else: ?>
 			<h2 class="has_tutorial_btn">
-				<?php _e( 'LearnDash <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?>
+				<?php
+				echo wp_kses(
+					$meta_icon_html,
+					array(
+						'i' => array(
+							'class' => array()
+						)
+					)
+				);
+				echo sprintf(
+				/* translators: 1. Text. 2. Text. */
+					'%1$s&nbsp;<span>&mdash; %2$s</span>',
+					esc_html__( 'LearnDash', 'buddyboss' ),
+					esc_html__( 'requires plugin to activate', 'buddyboss' )
+				);
+				?>
 				<div class="bbapp-tutorial-btn">
 					<a class="button" href="<?php echo bp_get_admin_url(
 						add_query_arg(

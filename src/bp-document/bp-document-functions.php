@@ -418,31 +418,33 @@ function bp_document_get_specific( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'document_ids' => false,      // A single document_id or array of IDs.
-			'max'          => false,      // Maximum number of results to return.
-			'page'         => 1,          // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,      // Results per page.
-			'sort'         => 'DESC',     // Sort ASC or DESC.
-			'order_by'     => false,      // Sort ASC or DESC.
-			'folder_id'    => false,      // Sort ASC or DESC.
-			'folder'       => false,
-			'meta_query'   => false,
-			'privacy'      => false,      // privacy to filter.
+			'document_ids'     => false,      // A single document_id or array of IDs.
+			'max'              => false,      // Maximum number of results to return.
+			'page'             => 1,          // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,      // Results per page.
+			'sort'             => 'DESC',     // Sort ASC or DESC.
+			'order_by'         => false,      // Sort ASC or DESC.
+			'folder_id'        => false,      // Sort ASC or DESC.
+			'folder'           => false,
+			'meta_query'       => false,
+			'privacy'          => false,      // privacy to filter.
+			'moderation_query' => true,
 		),
 		'document_get_specific'
 	);
 
 	$get_args = array(
-		'in'         => $r['document_ids'],
-		'max'        => $r['max'],
-		'page'       => $r['page'],
-		'per_page'   => $r['per_page'],
-		'sort'       => $r['sort'],
-		'order_by'   => $r['order_by'],
-		'folder_id'  => $r['folder_id'],
-		'folder'     => $r['folder'],
-		'privacy'    => $r['privacy'],      // privacy to filter.
-		'meta_query' => $r['meta_query'],
+		'in'               => $r['document_ids'],
+		'max'              => $r['max'],
+		'page'             => $r['page'],
+		'per_page'         => $r['per_page'],
+		'sort'             => $r['sort'],
+		'order_by'         => $r['order_by'],
+		'folder_id'        => $r['folder_id'],
+		'folder'           => $r['folder'],
+		'privacy'          => $r['privacy'],      // privacy to filter.
+		'meta_query'       => $r['meta_query'],
+		'moderation_query' => $r['moderation_query'],
 	);
 
 	/**
@@ -1213,7 +1215,8 @@ function folders_check_folder_access( $folder_id ) {
  */
 function bp_document_delete_orphaned_attachments() {
 
-	global $wpdb;
+	remove_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10 );
+	remove_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10 );
 
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
@@ -1222,15 +1225,37 @@ function bp_document_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_document_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
-	$data  = $wpdb->get_col( $query );
+	$args = array(
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+		'post_status'    => 'inherit',
+		'post_type'      => 'attachment',
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'   => 'bp_document_saved',
+				'value' => '0',
+			),
+			array(
+				'key'     => 'bb_media_draft',
+				'compare' => 'NOT EXISTS',
+				'value'   => '',
+			),
+		),
+	);
 
-	if ( ! empty( $data ) ) {
-		foreach ( $data as $a_id ) {
-			wp_delete_attachment( $a_id, true );
+	$document_wp_query = new WP_query( $args );
+	if ( 0 < $document_wp_query->found_posts ) {
+		foreach ( $document_wp_query->posts as $post_id ) {
+			wp_delete_attachment( $post_id, true );
 		}
 	}
 
+	wp_reset_postdata();
+	wp_reset_query();
+
+	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
+	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
 }
 
 /**
@@ -1375,11 +1400,37 @@ function bp_document_upload() {
 
 	do_action( 'bb_document_upload', $attachment );
 
+	// Generate document attachment preview link.
+	$attachment_id   = 'forbidden_' . $attachment->ID;
+	$attachment_url  = home_url( '/' ) . 'bb-attachment-document-preview/' . base64_encode( $attachment_id );
+	$attachment_file = get_attached_file( $attachment->ID );
+	$attachment_size = is_file( $attachment_file ) ? bp_document_size_format( filesize( get_attached_file( $attachment->ID ) ) ) : 0;
+
+	if ( 0 === $attachment_size ) {
+
+		if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		}
+
+		$file_system_direct = new WP_Filesystem_Direct( false );
+		$attachment_size    = bp_document_size_format( $file_system_direct->size( $attachment_file ) );
+	}
+
+	$extension = bp_document_extension( $attachment->ID );
+	$svg_icon  = bp_document_svg_icon( $extension, $attachment->ID );
+
 	$result = array(
-		'id'   => (int) $attachment->ID,
-		'url'  => esc_url( $attachment->guid ),
-		'name' => esc_attr( pathinfo( basename( get_attached_file( (int) $attachment->ID ) ), PATHINFO_FILENAME ) ),
-		'type' => esc_attr( 'document' ),
+		'id'                => (int) $attachment->ID,
+		'url'               => esc_url( untrailingslashit( $attachment_url ) ),
+		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
+		'full_name'         => esc_attr( basename( $attachment_file ) ),
+		'type'              => esc_attr( 'document' ),
+		'size'              => $attachment_size,
+		'extension'         => $extension,
+		'svg_icon'          => $svg_icon,
+		'svg_icon_download' => bp_document_svg_icon( 'download' ),
+		'text'              => bp_document_mirror_text( $attachment->ID ),
 	);
 
 	return $result;
@@ -1593,7 +1644,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 	switch ( $extension ) {
 		case '7z':
 			$svg = array(
-				'font' => 'bb-icon-file-7z',
+				'font' => 'bb-icon-file-archive',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-7z</title><path d="M13.728 0.032c0.992 0 1.984 0.384 2.72 1.056l0.16 0.16 6.272 6.496c0.672 0.672 1.056 1.6 1.12 2.528v17.76c0 2.144-1.696 3.904-3.808 4h-16.192c-2.144 0-3.904-1.664-4-3.808v-24.192c0-2.144 1.696-3.904 3.808-4h9.92zM13.728 2.048h-9.728c-1.056 0-1.92 0.8-1.984 1.824v24.16c0 1.056 0.8 1.92 1.824 2.016h16.16c1.056 0 1.92-0.832 1.984-1.856l0.032-0.16v-17.504c0-0.48-0.16-0.896-0.448-1.28l-0.128-0.128-6.272-6.464c-0.384-0.416-0.896-0.608-1.44-0.608zM16.992 14.528c0.576 0 1.024 0.448 1.024 0.992 0 0.512-0.416 0.96-0.896 0.992l-0.128 0.032v0.512l-1.984 0.992v1.184l1.984-0.992v-1.184h0.032v1.184h-0.032v0.832l-1.984 0.992v1.152l1.984-0.992v-1.152h0.032v1.152h-0.032v0.832l-1.984 0.992v1.184l1.984-0.992v-1.184h0.032v1.184h-0.032v2.304h0.128c0.48 0.064 0.896 0.48 0.896 0.992s-0.416 0.928-0.896 0.992h-1.984c-0.544 0-0.992-0.448-0.992-0.992 0-0.512 0.384-0.928 0.864-0.992v-0.704l-2.592 0.672c-0.096 0.032-0.192 0.032-0.256 0-0.064 0.032-0.096 0.032-0.16 0.032h-5.984c-0.576 0-1.024-0.448-1.024-1.024v-5.984c0-0.544 0.448-0.992 1.024-0.992h5.984c0.096 0 0.16 0 0.256 0.032h0.16l2.592 0.704v-0.768c-0.48-0.064-0.864-0.48-0.864-0.992s0.384-0.928 0.864-0.992h1.984zM12 17.536h-5.984v5.984h5.984v-5.984zM10.496 21.344c0.288 0 0.512 0.224 0.512 0.512s-0.224 0.512-0.512 0.512h-3.008c-0.256 0-0.48-0.224-0.48-0.512s0.224-0.512 0.48-0.512h3.008zM10.496 18.752c0.288 0 0.512 0.224 0.512 0.512 0 0.256-0.224 0.48-0.512 0.48h-3.008c-0.256 0-0.48-0.224-0.48-0.48 0-0.288 0.224-0.512 0.48-0.512h3.008z"></path></svg>',
 			);
 			break;
@@ -1680,80 +1731,80 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 		case 'gzip':
 		case 'zip':
 			$svg = array(
-				'font' => 'bb-icon-file-zip',
+				'font' => 'bb-icon-file-archive',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-zip</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h2.976v-1.984h2.016v-1.92h-2.016v-2.080h2.016v2.016h1.984v2.048h-1.984v1.92h11.008c1.056 0 1.92-0.832 1.984-1.856l0.032-0.16v-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM10.976 21.952v2.048h-1.984v-2.048h1.984zM11.008 16c0.544 0 0.992 0.448 0.992 0.992v3.008c0 0.544-0.448 0.992-0.992 0.992h-4c-0.544 0-0.992-0.448-0.992-0.992v-3.008c0-0.544 0.448-0.992 0.992-0.992h4zM10.592 16.992h-3.2c-0.192 0-0.352 0.128-0.384 0.32v1.28c0 0.192 0.128 0.352 0.32 0.384l0.064 0.032h3.2c0.192 0 0.352-0.16 0.416-0.32v-1.28c0-0.224-0.192-0.416-0.416-0.416z"></path></svg>',
 			);
 			break;
 		case 'hlam':
 			$svg = array(
-				'font' => 'bb-icon-file-hlam',
+				'font' => 'bb-icon-file-excel',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-hlam</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM18.016 24c0.256 0 0.48 0.224 0.48 0.512v0.992c0 0.256-0.224 0.48-0.48 0.48h-12c-0.288 0-0.512-0.224-0.512-0.48v-0.992c0-0.288 0.224-0.512 0.512-0.512h12zM14.56 15.648c0.128 0 0.224 0.064 0.288 0.192v0l0.704 1.216 0.672-1.216c0.064-0.096 0.16-0.16 0.256-0.192v0h1.824c0.288 0 0.448 0.288 0.32 0.512v0l-1.504 2.816 1.504 3.168c0.096 0.224-0.032 0.448-0.224 0.512v0h-1.856c-0.128 0-0.256-0.096-0.32-0.224v0l-0.672-1.472-0.672 1.472c-0.064 0.128-0.16 0.192-0.256 0.192v0l-0.064 0.032h-1.856c-0.256 0-0.416-0.288-0.288-0.544v0l1.824-3.136-1.664-2.784c-0.128-0.224 0-0.48 0.224-0.544v0h1.76zM11.008 20c0.256 0 0.48 0.224 0.48 0.512v0.992c0 0.256-0.224 0.48-0.48 0.48h-4.992c-0.288 0-0.512-0.224-0.512-0.48v-0.992c0-0.288 0.224-0.512 0.512-0.512h4.992zM14.336 16.352h-0.832l1.44 2.432c0.032 0.096 0.064 0.192 0.032 0.288v0l-0.032 0.064-1.632 2.816h1.024l0.896-1.984c0.128-0.256 0.448-0.288 0.608-0.096v0l0.032 0.096 0.896 1.984h0.992l-1.376-2.816c-0.032-0.096-0.032-0.16 0-0.256v0l0.032-0.064 1.312-2.464h-0.992l-0.864 1.6c-0.128 0.224-0.416 0.256-0.576 0.064v0l-0.032-0.064-0.928-1.6zM11.008 16c0.256 0 0.48 0.224 0.48 0.512v0.992c0 0.256-0.224 0.48-0.48 0.48h-4.992c-0.288 0-0.512-0.224-0.512-0.48v-0.992c0-0.288 0.224-0.512 0.512-0.512h4.992z"></path></svg>',
 			);
 			break;
 		case 'hlsb':
 			$svg = array(
-				'font' => 'bb-icon-file-hlsb',
+				'font' => 'bb-icon-file-excel',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-hlsb</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM17.504 24.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-2.016c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h2.016zM13.504 24.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-2.016c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h2.016zM9.504 24.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-3.008c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h3.008zM17.504 20.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-2.016c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h2.016zM13.504 20.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-2.016c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h2.016zM7.424 17.984l0.512 1.312h0.064l0.64-1.312h1.344l-1.216 2.432 1.248 2.592h-1.376l-0.64-1.312h-0.064l-0.64 1.312h-1.28l1.152-2.464-1.152-2.56h1.408z"></path></svg>',
 			);
 			break;
 		case 'hlsm':
 			$svg = array(
-				'font' => 'bb-icon-file-hlsm',
+				'font' => 'bb-icon-file-excel',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><title>file-hlsm</title><path d="M17.632 0.928c1.024 0 1.984 0.416 2.688 1.152v0l5.92 6.112c0.672 0.704 1.056 1.632 1.056 2.624v0 16.48c0 2.080-1.696 3.776-3.776 3.776v0h-15.040c-2.080 0-3.776-1.696-3.776-3.776v0-22.592c0-2.080 1.696-3.776 3.776-3.776v0zM17.632 2.816h-9.152c-1.056 0-1.888 0.864-1.888 1.888v0 22.592c0 1.024 0.832 1.888 1.888 1.888v0h15.040c1.056 0 1.888-0.864 1.888-1.888v0-16.48c0-0.48-0.192-0.96-0.512-1.312v0l-5.92-6.112c-0.352-0.352-0.832-0.576-1.344-0.576v0zM19.936 21.632l0.48 1.248h0.064l0.608-1.248h1.248l-1.12 2.304 1.152 2.4h-1.312l-0.576-1.216h-0.064l-0.608 1.216h-1.216l1.12-2.304-1.12-2.4h1.344zM17.184 24.48c0.256 0 0.448 0.192 0.448 0.448v0.96c0 0.256-0.192 0.448-0.448 0.448h-1.888c-0.256 0-0.48-0.192-0.48-0.448v-0.96c0-0.256 0.224-0.448 0.48-0.448h1.888zM13.408 24.48c0.256 0 0.48 0.192 0.48 0.448v0.96c0 0.256-0.224 0.448-0.48 0.448h-2.816c-0.256 0-0.48-0.192-0.48-0.448v-0.96c0-0.256 0.224-0.448 0.48-0.448h2.816zM17.184 20.704c0.256 0 0.448 0.224 0.448 0.48v0.928c0 0.256-0.192 0.48-0.448 0.48h-1.888c-0.256 0-0.48-0.224-0.48-0.48v-0.928c0-0.256 0.224-0.48 0.48-0.48h1.888zM13.408 20.704c0.256 0 0.48 0.224 0.48 0.48v0.928c0 0.256-0.224 0.48-0.48 0.48h-2.816c-0.256 0-0.48-0.224-0.48-0.48v-0.928c0-0.256 0.224-0.48 0.48-0.48h2.816zM20.928 16.928c0.288 0 0.48 0.224 0.48 0.48v0.928c0 0.288-0.192 0.48-0.48 0.48h-1.856c-0.288 0-0.48-0.192-0.48-0.48v-0.928c0-0.256 0.192-0.48 0.48-0.48h1.856zM17.184 16.928c0.256 0 0.448 0.224 0.448 0.48v0.928c0 0.288-0.192 0.48-0.448 0.48h-1.888c-0.256 0-0.48-0.192-0.48-0.48v-0.928c0-0.256 0.224-0.48 0.48-0.48h1.888zM13.408 16.928c0.256 0 0.48 0.224 0.48 0.48v0.928c0 0.288-0.224 0.48-0.48 0.48h-2.816c-0.256 0-0.48-0.192-0.48-0.48v-0.928c0-0.256 0.224-0.48 0.48-0.48h2.816z"></path></svg>',
 			);
 			break;
 		case 'htm':
 		case 'html':
 			$svg = array(
-				'font' => 'bb-icon-file-html',
+				'font' => 'bb-icon-file-code',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-html</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.736 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM9.536 20.416c0.192 0.224 0.224 0.544 0.032 0.8l-0.032 0.064-2.112 2.048 2.112 2.112c0.192 0.224 0.224 0.544 0.032 0.768l-0.032 0.064c-0.224 0.224-0.544 0.256-0.768 0.064l-0.096-0.064-2.496-2.528c-0.224-0.192-0.224-0.544-0.064-0.768l0.064-0.064 2.528-2.496c0.224-0.224 0.608-0.224 0.832 0zM14.080 20.416c0.224-0.224 0.608-0.224 0.832 0v0l2.528 2.496 0.032 0.064c0.192 0.224 0.16 0.576-0.032 0.768v0l-2.592 2.592c-0.224 0.192-0.544 0.16-0.768-0.064v0l-0.064-0.064c-0.16-0.224-0.16-0.544 0.064-0.768v0l2.080-2.112-2.144-2.112c-0.16-0.256-0.16-0.576 0.064-0.8zM12.768 20.032c0.288 0.096 0.48 0.384 0.416 0.672l-0.032 0.064-1.664 5.28c-0.096 0.32-0.448 0.48-0.736 0.384s-0.448-0.384-0.416-0.672l0.032-0.064 1.664-5.28c0.096-0.32 0.448-0.48 0.736-0.384zM10.496 15.008c0.288 0 0.512 0.224 0.512 0.48v1.024c0 0.256-0.224 0.48-0.512 0.48h-4c-0.256 0-0.48-0.224-0.48-0.48v-1.024c0-0.256 0.224-0.48 0.48-0.48h4z"></path></svg>',
 			);
 			break;
 		case 'ics':
 			$svg = array(
-				'font' => 'bb-icon-file-ics',
+				'font' => 'bb-icon-file-code',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-ics</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM15.008 15.488c0.544 0 0.992 0.448 0.992 1.024v0.512c1.12 0 2.016 0.896 2.016 1.984v5.984c0 1.12-0.896 2.016-2.016 2.016h-8c-1.088 0-1.984-0.896-1.984-2.016v-5.984c0-1.056 0.8-1.92 1.824-1.984h0.16v-0.512c0-0.576 0.448-1.024 0.992-1.024s0.992 0.448 0.992 1.024v0.512h4v-0.512c0-0.576 0.448-1.024 1.024-1.024zM16.064 19.616h-7.968c-0.256 0-0.448 0.192-0.512 0.416v4.48c0 0.512 0.384 0.96 0.896 0.992l0.096 0.032h6.976c0.512 0 0.96-0.384 0.992-0.896l0.032-0.128v-4.384c0-0.288-0.224-0.512-0.512-0.512zM10.144 20.672c0.256 0 0.48 0.224 0.48 0.512v0.704c0 0.288-0.224 0.512-0.48 0.512h-0.832c-0.288 0-0.512-0.224-0.512-0.512v-0.704c0-0.288 0.224-0.512 0.512-0.512h0.832z"></path></svg>',
 			);
 			break;
 		case 'ico':
 			$svg = array(
-				'font' => 'bb-icon-file-ico',
+				'font' => 'bb-icon-file-image',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-ico</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM16 16c1.12 0 2.016 0.896 2.016 1.984v7.008c0 1.12-0.896 2.016-2.016 2.016h-8c-1.088 0-1.984-0.896-1.984-2.016v-7.008c0-1.088 0.896-1.984 1.984-1.984h8zM13.504 17.984h-3.008c-0.256 0-0.48 0.224-0.48 0.512v0 0.544c0 0.256 0.224 0.48 0.48 0.48v0h0.768v3.968h-0.768c-0.256 0-0.48 0.192-0.48 0.48v0 0.544c0 0.256 0.224 0.48 0.48 0.48v0h3.008c0.288 0 0.512-0.224 0.512-0.48v0-0.544c0-0.288-0.224-0.48-0.512-0.48v0h-0.672v-3.968h0.672c0.288 0 0.512-0.224 0.512-0.48v0-0.544c0-0.288-0.224-0.512-0.512-0.512v0z"></path></svg>',
 			);
 			break;
 		case 'ipa':
 			$svg = array(
-				'font' => 'bb-icon-file-ipa',
+				'font' => 'bb-icon-file-mobile',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-ipa</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM16 13.984c1.376 0 2.496 1.12 2.496 2.528v0 8c0 1.376-1.12 2.496-2.496 2.496v0h-8c-1.376 0-2.496-1.12-2.496-2.496v0-8c0-1.408 1.12-2.528 2.496-2.528v0h8zM16 15.008h-8c-0.832 0-1.504 0.672-1.504 1.504v0 8c0 0.8 0.672 1.472 1.504 1.472v0h8c0.832 0 1.504-0.672 1.504-1.472v0-8c0-0.832-0.672-1.504-1.504-1.504v0zM9.12 19.008v2.976h-0.608v-2.976h0.608zM11.104 19.008c0.608 0 1.056 0.416 1.056 1.024s-0.448 1.024-1.088 1.024v0h-0.576v0.928h-0.64v-2.976h1.248zM14.080 19.008l1.056 2.976h-0.704l-0.224-0.704h-1.056l-0.224 0.704h-0.608l1.024-2.976h0.736zM13.728 19.616h-0.064l-0.352 1.184h0.768l-0.352-1.184zM10.944 19.52h-0.448v1.024h0.448c0.352 0 0.576-0.16 0.576-0.512 0-0.32-0.224-0.512-0.576-0.512v0z"></path></svg>',
 			);
 			break;
 		case 'js':
 			$svg = array(
-				'font' => 'bb-icon-file-js',
+				'font' => 'bb-icon-file-code',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-js</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM13.504 16c1.088 0 1.984 0.896 1.984 1.984v7.008c0 1.12-0.896 2.016-1.984 2.016h-6.016c-1.088 0-1.984-0.896-1.984-2.016v-7.008c0-1.088 0.896-1.984 1.984-1.984h6.016zM15.904 13.12c1.312 0 2.4 1.056 2.496 2.336v6.496c0 1.152-0.896 2.112-2.048 2.176h-0.128v-0.992c0.608 0 1.12-0.48 1.184-1.088v-6.4c0-0.8-0.608-1.44-1.344-1.504h-5.568c-0.768 0-1.408 0.576-1.472 1.344l-0.032 0.16v0.032h-0.992v-0.032c0-1.344 1.024-2.432 2.336-2.496l0.16-0.032h5.408zM12.992 20.992h-5.088c-0.224 0.064-0.416 0.256-0.416 0.512 0 0.224 0.192 0.448 0.416 0.48h5.184c0.224-0.032 0.416-0.256 0.416-0.48 0-0.288-0.224-0.512-0.512-0.512zM12.992 19.008h-5.088c-0.224 0.032-0.416 0.256-0.416 0.48 0 0.256 0.192 0.448 0.416 0.512h5.184c0.224-0.064 0.416-0.256 0.416-0.512s-0.224-0.48-0.512-0.48z"></path></svg>',
 			);
 			break;
 		case 'jar':
 			$svg = array(
-				'font' => 'bb-icon-file-jar',
+				'font' => 'bb-icon-file-code',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-jar</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM17.696 25.504c-0.192 0.48-0.544 0.832-1.088 1.024-0.64 0.288-1.472 0.416-2.336 0.448-0.96 0.064-2.048 0.128-3.328 0-0.416-0.032-1.024-0.096-1.792-0.224-0.192-0.032-0.48-0.096-0.896-0.224 0.928 0.064 1.6 0.096 2.016 0.096 1.824 0 3.136-0.032 3.872-0.096 1.536-0.064 2.464-0.288 3.552-1.024zM8.256 24.544c-0.928 0.16-1.376 0.32-1.376 0.512 0 0.256 2.016 0.608 4.096 0.608 0.928 0 1.92-0.032 2.752-0.128 1.056-0.096 1.888-0.256 2.24-0.352 0.64-0.128 0.928-0.288 0.864-0.544 0.224 0.064 0.224 0.224 0.128 0.416s-0.48 0.544-1.312 0.768c-0.448 0.128-1.216 0.352-3.232 0.448-1.6 0.032-2.304 0.032-3.072 0-0.768-0.064-3.456-0.256-3.392-0.96 0.032-0.48 0.8-0.736 2.304-0.768zM9.632 23.36v0.032c-0.032 0.064-0.064 0.192 0.064 0.256 0.128 0.032 0.768 0.096 1.44 0.064 0.576-0.032 1.152-0.064 1.536-0.064 0.448-0.032 0.992-0.128 1.6-0.224-0.128 0.096-0.384 0.384-0.928 0.608-0.576 0.256-1.696 0.384-2.272 0.384s-2.176 0-2.176-0.544c0-0.512 0.736-0.512 0.736-0.512zM9.184 21.664c-0.224 0.192-0.256 0.32-0.096 0.416 0.192 0.16 0.64 0.224 1.984 0.224 0.928 0 2.048-0.128 3.456-0.384-0.192 0.192-0.384 0.352-0.608 0.448-0.768 0.384-1.792 0.576-2.912 0.576-2.176 0-2.72-0.48-2.656-0.8 0.032-0.192 0.288-0.352 0.832-0.48zM17.024 19.584c0.768 0.192 1.024 0.576 1.056 1.056 0.096 0.864-0.8 1.536-2.656 2.048 1.024-0.768 1.536-1.376 1.6-1.888s-0.416-0.832-1.376-1.024c0.512-0.224 0.96-0.288 1.376-0.192zM9.76 19.776c-0.928 0.256-1.376 0.448-1.376 0.576 0 0.224 1.152 0.352 2.656 0.352 0.992 0 2.336-0.096 4-0.352-0.8 0.768-2.144 1.12-4.064 1.088-2.88-0.064-3.808-0.48-3.744-0.992 0.032-0.384 0.864-0.608 2.528-0.672zM14.88 14.4c-0.32 0.256-0.64 0.48-0.928 0.704-0.416 0.352-1.088 0.832-1.088 1.504s0.576 0.704 0.8 1.632c0.16 0.608-0.192 1.216-1.024 1.856 0.224-0.288 0.288-0.8 0.16-1.216-0.16-0.416-1.248-0.864-0.896-2.272 0.096-0.352 0.512-0.832 0.832-1.088 0.512-0.384 1.216-0.768 2.144-1.12zM13.504 11.008c0.544 0.992 0.608 1.888 0.128 2.656-0.48 0.736-1.568 1.536-2.304 2.24-0.352 0.384-0.512 0.928-0.448 1.376 0.064 0.832 0.32 1.6 0.704 2.272-1.28-0.992-1.888-1.984-1.824-2.944 0.096-1.44 1.504-2.112 2.176-2.656s1.696-1.248 1.568-2.944z"></path></svg>',
 			);
 			break;
 		case 'mp3':
 			$svg = array(
-				'font' => 'bb-icon-file-mp3',
+				'font' => 'bb-icon-file-audio',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-mp3</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM16.96 16c0.128 0 0.288 0.032 0.384 0.128s0.16 0.224 0.16 0.352v0 7.744c0 0.96-0.672 1.824-1.664 2.048-0.96 0.224-1.984-0.192-2.464-1.056-0.448-0.832-0.288-1.888 0.448-2.528s1.856-0.736 2.688-0.224v0-3.040l-6.624 0.704v4.768c0 0.96-0.704 1.792-1.664 2.048-0.96 0.224-1.984-0.192-2.464-1.056-0.48-0.832-0.288-1.888 0.448-2.528s1.824-0.736 2.688-0.224v0-5.856c0-0.256 0.192-0.448 0.448-0.48v0z"></path></svg>',
 			);
 			break;
 		case 'ods':
 			$svg = array(
-				'font' => 'bb-icon-file-ods',
+				'font' => 'bb-icon-file-spreadsheet',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-ods</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM16 16c1.12 0 2.016 0.896 2.016 1.984v7.008c0 1.12-0.896 2.016-2.016 2.016h-8c-1.088 0-1.984-0.896-1.984-2.016v-7.008c0-1.088 0.896-1.984 1.984-1.984h8zM9.344 24.224h-1.856v0.768c0 0.256 0.192 0.448 0.416 0.512h1.44v-1.28zM12.352 24.224h-2.016v1.28h2.016v-1.28zM16.512 24.224h-3.168v1.28h2.656c0.256 0 0.448-0.192 0.48-0.416l0.032-0.096v-0.768zM9.344 22.048h-1.856v1.184h1.856v-1.184zM12.352 22.048h-2.016v1.184h2.016v-1.184zM16.512 22.048h-3.168v1.184h3.168v-1.184zM9.344 19.84h-1.856v1.184h1.856v-1.184zM12.352 19.84h-2.016v1.184h2.016v-1.184zM16.512 19.84h-3.168v1.184h3.168v-1.184zM9.344 17.504h-1.344c-0.256 0-0.448 0.16-0.48 0.416l-0.032 0.064v0.864h1.856v-1.344zM12.352 17.504h-2.016v1.344h2.016v-1.344z"></path></svg>',
 			);
 			break;
 		case 'odt':
 			$svg = array(
-				'font' => 'bb-icon-file-odt',
+				'font' => 'bb-icon-file-spreadsheet',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-odt</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM17.504 24.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-11.008c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h11.008zM17.504 21.536c0.288 0 0.512 0.224 0.512 0.48v1.024c0 0.256-0.224 0.48-0.512 0.48h-11.008c-0.256 0-0.48-0.224-0.48-0.48v-1.024c0-0.256 0.224-0.48 0.48-0.48h11.008zM11.712 16.512c0.576 0.128 0.992 0.416 1.28 0.8-1.024-0.096-1.792 0.064-2.368 0.512-0.48 0.384-0.8 0.992-0.928 1.952 0 0.128-0.064 0.16-0.128 0.192s-0.192 0.032-0.288-0.096c-0.608-0.512-1.344-0.928-1.952-0.992-0.736-0.096-1.504 0.288-2.336 1.12 0.448-1.312 1.056-2.016 1.888-2.176 0.832-0.128 1.536 0.064 2.048 0.544 0.192-0.704 0.576-1.248 1.152-1.6 0.384-0.224 1.056-0.384 1.632-0.256zM11.136 14.016c0.384 0.096 0.672 0.288 0.896 0.544-0.704-0.128-1.28 0-1.76 0.352-0.352 0.256-0.512 0.768-0.576 1.312 0 0.096-0.032 0.128-0.096 0.128-0.032 0.032-0.128 0.032-0.192-0.032-0.416-0.384-0.928-0.672-1.376-0.704-0.512-0.032-1.056 0.224-1.632 0.768 0.32-0.896 0.736-1.376 1.344-1.472 0.576-0.096 1.056 0.032 1.408 0.384 0.128-0.48 0.416-0.832 0.832-1.088 0.256-0.16 0.736-0.256 1.152-0.192z"></path></svg>',
 			);
 			break;
@@ -1765,13 +1816,13 @@ function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) 
 			break;
 		case 'png':
 			$svg = array(
-				'font' => 'bb-icon-file-png',
+				'font' => 'bb-icon-file-image',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-png</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.12 0-2.016 0.896-2.016 2.016v0 24c0 1.12 0.896 2.016 2.016 2.016v0h16c1.12 0 1.984-0.896 1.984-2.016v0-17.504c0-0.512-0.192-1.024-0.544-1.408v0l-6.272-6.496c-0.384-0.384-0.896-0.608-1.44-0.608v0zM15.68 15.008c1.28 0 2.304 1.024 2.304 2.304v0 7.392c0 1.248-1.024 2.304-2.304 2.304v0h-7.36c-1.28 0-2.336-1.056-2.336-2.304v0-7.392c0-1.28 1.056-2.304 2.336-2.304v0h7.36zM9.152 21.376l-0.096 0.064-2.144 1.6v1.664c0 0.704 0.544 1.312 1.248 1.376h7.52c0.768 0 1.408-0.64 1.408-1.376v0-3.136c-0.896 0.416-2.080 0.992-3.52 1.728-0.448 0.224-0.992 0.192-1.408-0.064l-0.128-0.096-2.368-1.728c-0.16-0.096-0.352-0.096-0.512-0.032zM15.68 15.936h-7.36c-0.768 0-1.408 0.608-1.408 1.376v0 4.48c0.416-0.32 0.96-0.704 1.536-1.152 0.512-0.384 1.152-0.416 1.664-0.096l0.128 0.064 2.368 1.728c0.128 0.096 0.288 0.128 0.448 0.096l0.096-0.064 3.936-1.92v-3.136c0-0.736-0.576-1.312-1.248-1.376h-0.16zM13.376 17.792c0.672 0 1.248 0.544 1.248 1.248s-0.576 1.248-1.248 1.248c-0.704 0-1.248-0.544-1.248-1.248s0.544-1.248 1.248-1.248z"></path></svg>',
 			);
 			break;
 		case 'psd':
 			$svg = array(
-				'font' => 'bb-icon-file-psd',
+				'font' => 'bb-icon-file-vector',
 				'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-psd</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM7.072 22.336l4.416 2.528c0.32 0.192 0.704 0.192 0.992 0.032l4.448-2.528 0.896 0.704c0.16 0.16 0.192 0.416 0.064 0.576-0.032 0.032-0.064 0.064-0.128 0.096l-5.536 3.2c-0.128 0.064-0.288 0.064-0.416 0.032l-0.096-0.032-5.44-3.2c-0.192-0.128-0.256-0.352-0.128-0.544 0-0.064 0.032-0.096 0.064-0.096l0.864-0.768zM7.104 20l4.416 2.56c0.32 0.16 0.704 0.16 0.992 0l4.448-2.528 0.896 0.736c0.16 0.128 0.192 0.384 0.064 0.544-0.032 0.064-0.064 0.096-0.128 0.128l-5.536 3.168c-0.128 0.064-0.288 0.096-0.448 0.032l-0.064-0.032-5.44-3.2c-0.192-0.096-0.256-0.352-0.128-0.544 0-0.032 0.032-0.064 0.064-0.096l0.864-0.768zM12.16 15.040l0.064 0.032 5.472 3.104c0.192 0.128 0.288 0.32 0.288 0.544 0 0.16-0.064 0.32-0.192 0.416l-0.096 0.064-5.44 3.104c-0.128 0.096-0.288 0.096-0.448 0.032l-0.064-0.032-5.44-3.104c-0.224-0.096-0.32-0.32-0.288-0.544 0-0.16 0.064-0.32 0.192-0.416l0.096-0.064 5.408-3.104c0.128-0.096 0.288-0.096 0.448-0.032zM11.968 16.256l-4.256 2.432 0.8 0.448 1.856-0.704c0.032 0 0.032 0 0.064 0 0.128-0.032 0.256 0.064 0.32 0.192v0.064l0.064 0.352 1.408-0.352c0.096-0.032 0.16 0 0.224 0 0.128 0.064 0.192 0.224 0.16 0.352l-0.032 0.064-0.896 1.824 0.32 0.192 4.288-2.432-4.32-2.432zM13.408 17.696c0 0.288-0.384 0.512-0.896 0.576-0.512 0.032-0.928-0.16-0.928-0.416-0.032-0.288 0.352-0.544 0.864-0.576s0.928 0.16 0.96 0.416z"></path></svg>',
 			);
 			break;
@@ -2008,7 +2059,7 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	$document_folder_table = $bp->document->table_name_folder;
 
-	$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
+	$type = bb_filter_input_string( INPUT_GET, 'type' );
 	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $group_id ) {
@@ -2236,7 +2287,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity document own.
-					$activity->hide_sitewide     = 0;
+					$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2307,7 +2359,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity document own.
-							$activity->hide_sitewide     = 0;
+							$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -2538,8 +2591,10 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	// Change attachment post metas & rename files.
 	foreach ( get_intermediate_image_sizes() as $size ) {
 		$size_data = image_get_intermediate_size( $attachment_document_id, $size );
-
-		@unlink( $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] );
+		$attachment_path = ! empty( $size_data['path'] ) ? $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] : '';
+		if ( ! empty( $attachment_path ) && file_exists( $attachment_path ) ) {
+			@unlink( $attachment_path );
+		}
 	}
 
 	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
@@ -2624,7 +2679,9 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		)
 	);
 
-	@unlink( $file_abs_path );
+	if ( file_exists( $file_abs_path ) ) {
+		@unlink( $file_abs_path );
+	}
 
 	return $response;
 }
@@ -3521,7 +3578,6 @@ function bp_document_get_forum_id( $document_id ) {
 			}
 		}
 	}
-	wp_reset_postdata();
 
 	if ( ! $forum_id ) {
 		$topics_document_query = new WP_Query(
@@ -3553,7 +3609,6 @@ function bp_document_get_forum_id( $document_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	if ( ! $forum_id ) {
@@ -3588,7 +3643,6 @@ function bp_document_get_forum_id( $document_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	return apply_filters( 'bp_document_get_forum_id', $forum_id, $document_id );
@@ -4267,15 +4321,17 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$file_path = $file_path . '/' . $file['file'];
 			}
 
-			if ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' !== $extension ) {
-				// Regenerate attachment thumbnails.
-				bb_document_regenerate_attachment_thumbnails( $attachment_id );
-				$file      = image_get_intermediate_size( $attachment_id, $size );
-				$file_path = $file_path . '/' . $file['file'];
-			} elseif ( $file && ! empty( $file['file'] ) && ( ! empty( $file['path'] ) || ! file_exists( $file_path ) ) && 'pdf' === $extension ) {
-				bp_document_generate_document_previews( $attachment_id );
-				$file      = image_get_intermediate_size( $attachment_id, $size );
-				$file_path = $file_path . '/' . $file['file'];
+			if ( $file && ! empty( $file['file'] ) && ! file_exists( $file_path ) ) {
+				if ( 'pdf' !== $extension ) {
+					// Regenerate attachment thumbnails.
+					bb_document_regenerate_attachment_thumbnails( $attachment_id );
+					$file      = image_get_intermediate_size( $attachment_id, $size );
+					$file_path = $file_path . '/' . $file['file'];
+				} else {
+					bp_document_generate_document_previews( $attachment_id );
+					$file      = image_get_intermediate_size( $attachment_id, $size );
+					$file_path = $file_path . '/' . $file['file'];
+				}
 			}
 
 			if ( $file && ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) ) {
@@ -4308,8 +4364,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$document_symlinks_path  = bp_document_symlink_path();
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
 			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
-				$group_object    = groups_get_group( $document->group_id );
-				$group_status    = bp_get_group_status( $group_object );
+				$group_object            = groups_get_group( $document->group_id );
+				$group_status            = bp_get_group_status( $group_object );
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
 			}
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
@@ -4326,6 +4382,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			}
 		}
 	}
+
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter url here to audio url.
@@ -4837,7 +4895,7 @@ function bb_document_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	if ( ! empty ( $list ) ) {
+	if ( ! empty( $list ) ) {
 		do_action( 'bb_document_delete_older_symlinks' );
 	}
 

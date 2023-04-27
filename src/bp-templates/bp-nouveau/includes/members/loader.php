@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Nouveau_Members {
 	/**
 	 * Constructor
@@ -43,15 +44,15 @@ class BP_Nouveau_Members {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function includes() {
-		require( trailingslashit( $this->dir ) . 'functions.php' );
-		require( trailingslashit( $this->dir ) . 'template-tags.php' );
+		require trailingslashit( $this->dir ) . 'functions.php';
+		require trailingslashit( $this->dir ) . 'template-tags.php';
 	}
 
 	/**
 	 * Register do_action() hooks
 	 *
 	 * @since BuddyPress 3.0.0
-     * @since BuddyBoss 1.0.0 Hooked bp_nouveau_admin_bar_member_dashboard to bp_setup_admin_bar action
+	 * @since BuddyBoss 1.0.0 Hooked bp_nouveau_admin_bar_member_dashboard to bp_setup_admin_bar action
 	 */
 	protected function setup_actions() {
 		$ajax_actions = array(
@@ -73,12 +74,16 @@ class BP_Nouveau_Members {
 			}
 		}
 
-		// Actions to check whether we are in the member's default front page sidebar
+		// Actions to check whether we are in the member's default front page sidebar.
 		add_action( 'dynamic_sidebar_before', array( $this, 'user_home_sidebar_set' ), 10, 1 );
 		add_action( 'dynamic_sidebar_after', array( $this, 'user_home_sidebar_unset' ), 10, 1 );
 
-        // Add 'Dashboard' link to admin bar
-        add_action( 'bp_setup_admin_bar', 'bp_nouveau_admin_bar_member_dashboard', 11 );
+		// Add 'Dashboard' link to admin bar.
+		add_action( 'bp_setup_admin_bar', 'bp_nouveau_admin_bar_member_dashboard', 11 );
+
+		// Enqueue the scripts for the new UI.
+		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_member_enqueue_scripts' );
+
 	}
 
 	/**
@@ -87,6 +92,12 @@ class BP_Nouveau_Members {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_filters() {
+		// Register member scripts.
+		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_member_register_scripts', 10, 1 );
+
+		// Localize Scripts.
+		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_member_localize_scripts', 10, 1 );
+
 		// Add the default-front to User's front hierarchy if user enabled it (Enabled by default).
 	}
 

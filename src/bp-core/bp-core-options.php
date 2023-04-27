@@ -42,10 +42,13 @@ function bp_get_default_options() {
 		// Default fullname field name.
 		'bp-xprofile-nickname-field-name'            => __( 'Nickname', 'buddyboss' ),
 
-		// Default fullname field name. (for backward compat)
+		// Default fullname field name. (for backward compat).
 		'bp-xprofile-fullname-field-name'            => __( 'Name', 'buddyboss' ),
 
 		'bp-display-name-format'                     => 'first_name',
+
+		// Default profile slug format.
+		'bb_profile_slug_format'                     => 'username',
 
 		// Enable/Disable Profile Type.
 		'bp-member-type-enable-disable'              => false,
@@ -96,6 +99,9 @@ function bp_get_default_options() {
 		// Group Types.
 		'bp-disable-group-type-creation'             => false,
 
+		// Group Subscriptions.
+		'bb_enable_group_subscriptions'              => true,
+
 		// Auto Group Membership Approval.
 		'bp-enable-group-auto-join'                  => false,
 
@@ -117,7 +123,7 @@ function bp_get_default_options() {
 		// Email unsubscribe salt.
 		'bp-emails-unsubscribe-salt'                 => '',
 
-		// Profile Enable Gravatar
+		// Profile Enable Gravatar.
 		'bp-enable-profile-gravatar'                 => false,
 
 		/* Groups ************************************************************/
@@ -1022,7 +1028,6 @@ function bp_is_activity_edit_enabled( $default = false ) {
  *                      Default: false.
  * @return bool True if Edit is enabled, otherwise false.
  */
-
 function bp_is_relevant_feed_enabled( $default = false ) {
 
 	/**
@@ -1037,7 +1042,7 @@ function bp_is_relevant_feed_enabled( $default = false ) {
 }
 
 /**
- * single time slot by time key.
+ * Single time slot by time key.
  *
  * @param null $time Return single time slot by time key.
  *
@@ -1082,7 +1087,7 @@ function bp_activity_edit_times( $time = null ) {
 /**
  * Get BuddyBoss Activity Time option.
  *
- * @param bool $default when option not found, function will return $default value
+ * @param bool $default when option not found, function will return $default value.
  *
  * @return mixed|void
  *
@@ -1246,6 +1251,28 @@ function bp_force_friendship_to_message( $default = false ) {
 }
 
 /**
+ * Check the activity auto follow enabled or not.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ *
+ * @return bool True if Auto Follow is enabled, otherwise false.
+ */
+function bb_is_friends_auto_follow_active( $default = false ) {
+
+	/**
+	 * Filter whether the activity auto follow enabled or not.
+	 *
+	 * @since BuddyBoss 2.3.1
+	 *
+	 * @param bool $value Whether the activity auto follow enabled or not.
+	 */
+	return (bool) apply_filters( 'bb_is_friends_auto_follow_active', bp_is_active( 'activity' ) && bp_get_option( 'bb_enable_friends_auto_follow', $default ) );
+}
+
+/**
  * Is member type disabled?
  *
  * @since BuddyBoss 1.0.0
@@ -1355,7 +1382,7 @@ function bp_disable_invite_member_type( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param string $post_type Post Type
+ * @param string $post_type Post Type.
  * @param bool   $default Optional. Fallback value if not found in the database.
  *                        Default: false.
  *
@@ -1400,7 +1427,7 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param string $activity_type Activity Type
+ * @param string $activity_type Activity Type.
  * @param bool   $default Optional. Fallback value if not found in the database.
  *                        Default: false.
  *
@@ -1467,7 +1494,7 @@ function bp_member_type_default_on_registration( $default = '' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param string $member_type Member type
+ * @param string $member_type Member type.
  * @param bool   $default Optional. Fallback value if not found in the database.
  *                        Default: true.
  *
@@ -1969,13 +1996,13 @@ function bb_feed_not_allowed_comment_post_types() {
  */
 function bp_enable_private_rest_apis( $default = false ) {
 	global $bp;
-	
+
 	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rest-apis'] ) ) {
 		$val = (bool) $bp->site_options['bb-enable-private-rest-apis'];
 	} else {
 		$val = (bool) bp_get_option( 'bb-enable-private-rest-apis', $default );
 	}
-	
+
 	/**
 	 * Filters whether private REST apis for site is enabled.
 	 *
@@ -1997,7 +2024,7 @@ function bp_enable_private_rest_apis( $default = false ) {
  * @return string Private REST APIs public content.
  */
 function bb_enable_private_rest_apis_public_content( $default = '' ) {
-	
+
 	/**
 	 * Filters Private REST APIs public content.
 	 *
@@ -2021,13 +2048,13 @@ function bb_enable_private_rest_apis_public_content( $default = '' ) {
  */
 function bp_enable_private_rss_feeds( $default = false ) {
 	global $bp;
-	
+
 	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rss-feeds'] ) ) {
 		$val = (bool) $bp->site_options['bb-enable-private-rss-feeds'];
 	} else {
 		$val = (bool) bp_get_option( 'bb-enable-private-rss-feeds', $default );
 	}
-	
+
 	/**
 	 * Filters whether private REST apis for site is enabled.
 	 *
@@ -2049,7 +2076,7 @@ function bp_enable_private_rss_feeds( $default = false ) {
  * @return string Private RSS Feeds public content.
  */
 function bb_enable_private_rss_feeds_public_content( $default = '' ) {
-	
+
 	/**
 	 * Filters Private REST APIs public content.
 	 *
@@ -2262,4 +2289,47 @@ function bb_get_default_custom_upload_group_cover() {
 	 * @param string $value Default custom upload group cover URL.
 	 */
 	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
+}
+
+/**
+ * Is group subscription turned off?
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if group subscription is enabled, otherwise false.
+ */
+function bb_enable_group_subscriptions( $default = true ) {
+
+	/**
+	 * Filters whether group subscription is turned off.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param bool $value Whether group subscription is turned off.
+	 */
+	return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
+}
+
+/**
+ * Get profile slug format.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: username.
+ * @return string profile slug format.
+ */
+function bb_get_profile_slug_format( $default = 'username' ) {
+
+	/**
+	 * Filters default profile slug format.
+	 *
+	 * @since BuddyBoss 2.3.1
+	 *
+	 * @param string $value Default profile slug format.
+	 */
+	return apply_filters( 'bb_get_profile_slug_format', bp_get_option( 'bb_profile_slug_format', $default ) );
 }

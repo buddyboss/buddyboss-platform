@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Activity_Template {
 
 	/**
@@ -186,7 +187,7 @@ class BP_Activity_Template {
 			'spam'              => 'ham_only',
 			'update_meta_cache' => true,
 		);
-		$r        = wp_parse_args( $args, $defaults );
+		$r        = bp_parse_args( $args, $defaults );
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );

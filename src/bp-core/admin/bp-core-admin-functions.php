@@ -367,10 +367,11 @@ function bp_core_activation_notice() {
 	$dupe_names = array();
 	$page_ids   = bp_core_get_directory_page_ids();
 	$dupes      = array_diff_assoc( $page_ids, array_unique( $page_ids ) );
+	$bp_pages   = bp_core_get_directory_pages();
 
 	if ( ! empty( $dupes ) ) {
 		foreach ( array_keys( $dupes ) as $dupe_component ) {
-			$dupe_names[] = $bp->pages->{$dupe_component}->title;
+			$dupe_names[] = $bp_pages->{$dupe_component}->title;
 		}
 
 		// Make sure that there are no duplicate duplicates :).
@@ -379,7 +380,7 @@ function bp_core_activation_notice() {
 
 	// If there are duplicates, post a message about them.
 	if ( ! empty( $dupe_names ) ) {
-		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-page-settings' ), 'admin.php' ) );
+		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 		if ( isset( $_GET['page'] ) && 'bp-pages' === $_GET['page'] ) {
 			$notice = sprintf(
 				'%1$s',
@@ -440,16 +441,16 @@ function bp_do_activation_redirect() {
 		delete_transient( '_bp_is_new_install' );
 	}
 
-	// In Appearance > Menus, make "BuddyBoss" available by default
+	// In Appearance > Menus, make "BuddyBoss" available by default.
 	$get_existing_option = get_user_option( 'metaboxhidden_nav-menus', bp_loggedin_user_id() );
 	if ( '' === $get_existing_option || false === $get_existing_option ) {
 		$hidden_metaboxes = array();
-		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $hidden_metaboxes ); // update the user metaboxes
+		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $hidden_metaboxes ); // update the user metaboxes.
 	} else {
 		if ( ( $key = array_search( 'add-buddypress-nav-menu', $get_existing_option ) ) !== false ) {
 			unset( $get_existing_option[ $key ] );
 		}
-		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes
+		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
 
 	// Redirect to dashboard and trigger the Hello screen.
@@ -736,7 +737,7 @@ function bp_core_get_admin_active_tab_object() {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_setting_url( $tab, $args = array() ) {
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'page' => 'bp-settings',
@@ -778,9 +779,9 @@ function bp_core_admin_integration_tabs( $active_tab = '' ) {
 		$tab_class  = $is_current ? $active_class : $idle_class;
 
 		if ( $i === $count ) {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+			$tabs_html .= '<li class="' . esc_attr( sanitize_key( $tab_data['name'] ) ) . '"><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
 		} else {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+			$tabs_html .= '<li class="' . esc_attr( sanitize_key( $tab_data['name'] ) ) . '"><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
 		}
 
 		$i = $i + 1;
@@ -897,7 +898,7 @@ function bp_core_get_admin_integration_active_tab_object() {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_integrations_url( $tab, $args = array() ) {
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'page' => 'bp-integrations',
@@ -1240,19 +1241,19 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 	?>
 
 	<div id="buddypress-menu" class="posttypediv">
-		<h4><?php _e( 'Logged-In', 'buddyboss' ); ?></h4>
-		<p><?php _e( '<em>Logged-In</em> links are relative to the current user, and are not visible to visitors who are not logged in.', 'buddyboss' ); ?></p>
+		<h4><?php esc_html_e( 'Logged-In', 'buddyboss' ); ?></h4>
+		<p><?php esc_html_e( '<em>Logged-In</em> links are relative to the current user, and are not visible to visitors who are not logged in.', 'buddyboss' ); ?></p>
 
-		<div id="tabs-panel-posttype-<?php echo $post_type_name; ?>-loggedin" class="tabs-panel tabs-panel-active">
+		<div id="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-loggedin" class="tabs-panel tabs-panel-active">
 			<ul id="buddypress-menu-checklist-loggedin" class="categorychecklist form-no-clear">
 				<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', $tabs['loggedin']['pages'] ), 0, (object) $args ); ?>
 			</ul>
 		</div>
 
-		<h4><?php _e( 'Logged-Out', 'buddyboss' ); ?></h4>
-		<p><?php _e( '<em>Logged-Out</em> links are not visible to users who are logged in.', 'buddyboss' ); ?></p>
+		<h4><?php esc_html_e( 'Logged-Out', 'buddyboss' ); ?></h4>
+		<p><?php esc_html_e( '<em>Logged-Out</em> links are not visible to users who are logged in.', 'buddyboss' ); ?></p>
 
-		<div id="tabs-panel-posttype-<?php echo $post_type_name; ?>-loggedout" class="tabs-panel tabs-panel-active">
+		<div id="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-loggedout" class="tabs-panel tabs-panel-active">
 			<ul id="buddypress-menu-checklist-loggedout" class="categorychecklist form-no-clear">
 				<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', $tabs['loggedout']['pages'] ), 0, (object) $args ); ?>
 			</ul>
@@ -1292,9 +1293,7 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 					wp_nav_menu_disabled_check( $nav_menu_selected_id );
 				endif;
 				?>
-				 class="button-secondary submit-add-to-menu right"
-					   value="<?php esc_attr_e( 'Add to Menu', 'buddyboss' ); ?>" name="add-custom-menu-item"
-					   id="submit-buddypress-menu"/>
+				 class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss' ); ?>" name="add-custom-menu-item" id="submit-buddypress-menu"/>
 				<span class="spinner"></span>
 			</span>
 		</p>
@@ -1712,6 +1711,7 @@ function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_member_type_labels_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_member_type_permissions_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-label-color', esc_html__( 'Label Colors', 'buddyboss' ), 'bb_member_type_labelcolor_metabox', null, 'normal', 'high' );
 	if ( 'add' != $screen->action ) {
 		add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 	}
@@ -1783,8 +1783,8 @@ function bp_member_type_labels_metabox( $post ) {
 function bp_member_type_permissions_metabox( $post ) {
 
 	$meta                 = get_post_custom( $post->ID );
-	$enable_filter        = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default
-	$enable_profile_field = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default
+	$enable_filter        = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default.
+	$enable_profile_field = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default.
 	?>
 	<!-- accesslint:ignore -->
 	<table class="widefat bp-postbox-table">
@@ -1812,7 +1812,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		<tr>
 			<td colspan="2">
 				<?php
-				$enable_remove = isset( $meta['_bp_member_type_enable_remove'] ) ? $meta['_bp_member_type_enable_remove'][0] : 0; // enabled by default
+				$enable_remove = isset( $meta['_bp_member_type_enable_remove'] ) ? $meta['_bp_member_type_enable_remove'][0] : 0; // enabled by default.
 				?>
 				<input type='checkbox' name='bp-member-type[enable_remove]' value='1'
 					<?php
@@ -2002,7 +2002,7 @@ function bp_member_type_permissions_metabox( $post ) {
 				<tbody>
 				<tr>
 					<td colspan="2">
-						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registerd and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
+						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registered and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
 					</td>
 				</tr>
 
@@ -2037,7 +2037,7 @@ function bp_member_type_permissions_metabox( $post ) {
 	if ( true === bp_disable_invite_member_type() && bp_is_active( 'invites' ) ) {
 
 		// Allow a specific profile type to send invitations to new members and specify their profile type upon registration.
-		$enable_invite = isset( $meta['_bp_member_type_enable_invite'] ) ? $meta['_bp_member_type_enable_invite'][0] : 1; // enabled by default
+		$enable_invite = isset( $meta['_bp_member_type_enable_invite'] ) ? $meta['_bp_member_type_enable_invite'][0] : 1; // enabled by default.
 		?>
 		<!-- accesslint:ignore -->
 		<table class="widefat bp-postbox-table">
@@ -2117,7 +2117,7 @@ function bp_member_type_wprole_metabox( $post ) {
 	global $wp_roles;
 	$all_roles = $wp_roles->role_names;
 
-	// remove bbPress roles
+	// remove bbPress roles.
 	unset( $all_roles['bbp_keymaster'] );
 	unset( $all_roles['bbp_spectator'] );
 	unset( $all_roles['bbp_blocked'] );
@@ -2179,7 +2179,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	$post = get_post( $post_id );
 
-	if ( $post->post_type !== bp_get_member_type_post_type() ) {
+	if ( bp_get_member_type_post_type() !== $post->post_type ) {
 		return;
 	}
 
@@ -2187,39 +2187,39 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		return;
 	}
 
-	// verify nonce
-	if ( ! wp_verify_nonce( $_POST['_bp-member-type-nonce'], 'bp-member-type-edit-member-type' ) ) {
+	// verify nonce.
+	if ( ! wp_verify_nonce( sanitize_text_field( $_POST['_bp-member-type-nonce'] ), 'bp-member-type-edit-member-type' ) ) {
 		return;
 	}
 
-	// Save data
-	$data = isset( $_POST['bp-member-type'] ) ? $_POST['bp-member-type'] : array();
-
+	// Save data.
+	$data = isset( $_POST['bp-member-type'] ) ? function_exists( 'map_deep' ) ? map_deep( wp_unslash( $_POST['bp-member-type'] ), 'sanitize_text_field' ) : sanitize_text_field( $_POST['bp-member-type'] ) : array();
 	if ( empty( $data ) ) {
 		return;
 	}
 
 	$error = false;
 
-	$post_title = wp_kses( $_POST['post_title'], wp_kses_allowed_html( 'strip' ) );
+	$post_title = wp_kses( sanitize_text_field( $_POST['post_title'] ), wp_kses_allowed_html( 'strip' ) );
 
-	// key
+	// key.
 	$key = get_post_field( 'post_name', $post_id );
 
-	// for label
+	// for label.
 	$label_name    = isset( $data['label_name'] ) ? wp_kses( $data['label_name'], wp_kses_allowed_html( 'strip' ) ) : $post_title;
 	$singular_name = isset( $data['label_singular_name'] ) ? wp_kses( $data['label_singular_name'], wp_kses_allowed_html( 'strip' ) ) : $post_title;
 
-	// Remove space
+	// Remove space.
 	$label_name    = trim( $label_name );
 	$singular_name = trim( $singular_name );
 
-	$enable_filter        = isset( $data['enable_filter'] ) ? absint( $data['enable_filter'] ) : 0; // default inactive
-	$enable_remove        = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive
-	$enable_search_remove = isset( $data['enable_search_remove'] ) ? absint( $data['enable_search_remove'] ) : 0; // default inactive
-	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active
+	$enable_filter        = isset( $data['enable_filter'] ) ? absint( $data['enable_filter'] ) : 0; // default inactive.
+	$enable_remove        = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive.
+	$enable_search_remove = isset( $data['enable_search_remove'] ) ? absint( $data['enable_search_remove'] ) : 0; // default inactive.
+	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active.
+	$label_color          = isset( $data['label_color'] ) ? $data['label_color'] : '';
 
-	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array
+	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array.
 	$wp_roles         = isset( $data['wp_roles'] ) ? $data['wp_roles'] : '';
 
 	$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
@@ -2232,10 +2232,14 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$get_existing = get_post_meta( $post_id, '_bp_member_type_key', true );
 	( '' === $get_existing ) ? update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) ) : '';
 
-	$enable_group_type_create        = isset( $_POST['bp-group-type'] ) ? $_POST['bp-group-type'] : '';
-	$enable_group_type_auto_join     = isset( $_POST['bp-group-type-auto-join'] ) ? $_POST['bp-group-type-auto-join'] : '';
-	$enable_group_type_invite        = isset( $_POST['bp-member-type-invite'] ) ? $_POST['bp-member-type-invite'] : '';
-	$enable_group_type_enable_invite = isset( $_POST['bp-member-type-enabled-invite'] ) ? $_POST['bp-member-type-enabled-invite'] : '';
+	$enable_group_type_create        = filter_input( INPUT_POST, 'bp-group-type', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$enable_group_type_create        = ! empty( $enable_group_type_create ) ? $enable_group_type_create : '';
+	$enable_group_type_auto_join     = filter_input( INPUT_POST, 'bp-group-type-auto-join', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$enable_group_type_auto_join     = ! empty( $enable_group_type_auto_join ) ? $enable_group_type_auto_join : '';
+	$enable_group_type_invite        = filter_input( INPUT_POST, 'bp-member-type-invite', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$enable_group_type_invite        = ! empty( $enable_group_type_invite ) ? $enable_group_type_invite : '';
+	$enable_group_type_enable_invite = filter_input( INPUT_POST, 'bp-member-type-enabled-invite', FILTER_DEFAULT );
+	$enable_group_type_enable_invite = ! empty( $enable_group_type_enable_invite ) ? $enable_group_type_enable_invite : '';
 
 	update_post_meta( $post_id, '_bp_member_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
@@ -2247,6 +2251,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $enable_group_type_auto_join );
 	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $enable_group_type_invite );
 	update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_group_type_enable_invite );
+	update_post_meta( $post_id, '_bp_member_type_label_color', $label_color );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
@@ -2283,7 +2288,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 				if ( ! in_array( $current_user_role, $wp_roles ) ) {
 					$bp_error_message_string = __( 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.', 'buddyboss' );
 					$error_message           = apply_filters( 'bp_member_type_admin_error_message', $bp_error_message_string );
-					// Define the settings error to display
+					// Define the settings error to display.
 					add_settings_error(
 						'bp-invalid-role-selection',
 						'bp-invalid-role-selection',
@@ -2299,7 +2304,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 		update_post_meta( $post_id, '_bp_member_type_wp_roles', $wp_roles );
 
-		// term exist
+		// term exist.
 		if ( $type_term ) {
 
 			// Get selected profile type role.
@@ -2310,10 +2315,10 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 					foreach ( $get_user_ids as $single_user ) {
 						$bp_user = new WP_User( $single_user );
 						foreach ( $bp_user->roles as $role ) {
-							// Remove role
+							// Remove role.
 							$bp_user->remove_role( $role );
 						}
-						// Add role
+						// Add role.
 						$bp_user->add_role( $wp_roles[0] );
 					}
 				}
@@ -2332,20 +2337,22 @@ add_action( 'save_post', 'bp_save_member_type_post_metabox_data' );
  */
 function bp_member_type_invalid_role_error_callback() {
 
-	// If there are no errors, then we'll exit the function
+	// If there are no errors, then we'll exit the function.
 	if ( ! ( $errors = get_transient( 'bp_invalid_role_selection' ) ) ) {
 		return;
 	}
 
-	// Otherwise, build the list of errors that exist in the settings errores
+	// Otherwise, build the list of errors that exist in the settings errores.
 	$message = '<div id="message" class="error">';
 	foreach ( $errors as $error ) {
 		$message .= '<p>' . $error['message'] . '</p>';
 	}
 	$message .= '</div><!-- #error --><style>div.updated{display: none;}</style>';
-	// Write them out to the screen
-	echo $message;
-	// Clear and the transient and unhook any other notices so we don't see duplicate messages
+
+	// Write them out to the screen.
+	echo wp_kses_post( $message );
+
+	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection' );
 	remove_action( 'admin_notices', 'bp_member_type_invalid_role_error_callback' );
 
@@ -2394,7 +2401,7 @@ function bp_delete_member_type( $post_id ) {
 
 	$post = get_post( $post_id );
 
-	// Return if post is not 'bp-member-type' type
+	// Return if post is not 'bp-member-type' type.
 	if ( bp_get_member_type_post_type() !== $post->post_type ) {
 		return;
 	}
@@ -2402,7 +2409,7 @@ function bp_delete_member_type( $post_id ) {
 	$member_type_name = bp_get_member_type_key( $post_id );
 	$type_term        = get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get profile type term data from database by name field.
 
-	// term exist
+	// term exist.
 	if ( $type_term ) {
 
 		// Removes a profile type term from the database.
@@ -2413,7 +2420,7 @@ function bp_delete_member_type( $post_id ) {
 	}
 }
 
-// delete post
+// delete post.
 add_action( 'before_delete_post', 'bp_delete_member_type' );
 
 // Register submenu page for profile type import.
@@ -2427,7 +2434,7 @@ add_action( 'admin_menu', 'bp_register_member_type_import_submenu_page' );
 function bp_register_member_type_import_submenu_page() {
 
 	add_submenu_page(
-		null,   // or 'options.php'
+		'',
 		__( 'Repair Community', 'buddyboss' ),
 		__( 'Repair Community', 'buddyboss' ),
 		'manage_options',
@@ -2436,7 +2443,7 @@ function bp_register_member_type_import_submenu_page() {
 	);
 
 	add_submenu_page(
-		null,   // or 'options.php'
+		'',
 		'Import Member Types',
 		'Import Member Types',
 		'manage_options',
@@ -2465,7 +2472,16 @@ function bp_member_type_import_submenu_page() {
 			<div class="boss-import-area">
 				<form id="bp-member-type-import-form" method="post" action="">
 					<div class="import-panel-content">
-						<h2><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h2>
+						<h2>
+							<?php
+							$meta_icon = bb_admin_icons( 'bp-member-type-import' );
+							if ( ! empty( $meta_icon ) ) {
+								?>
+								<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+								<?php
+							}
+							esc_html_e( 'Import Profile Types', 'buddyboss' ); ?>
+						</h2>
 						<p>
 							<?php
 							printf(
@@ -2479,7 +2495,7 @@ function bp_member_type_import_submenu_page() {
 							);
 							?>
 						</p><br/>
-						<input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>"
+						<input type="submit" value="<?php esc_attr_e( 'Run Migration', 'buddyboss' ); ?>"
 							   id="bp-member-type-import-submit" name="bp-member-type-import-submit"
 							   class="button-primary">
 					</div>
@@ -2490,7 +2506,6 @@ function bp_member_type_import_submenu_page() {
 	<br/>
 
 	<?php
-
 	if ( isset( $_POST['bp-member-type-import-submit'] ) ) {
 
 		if ( is_multisite() && bp_is_network_activated() ) {
@@ -2511,14 +2526,14 @@ function bp_member_type_import_submenu_page() {
 		if ( empty( $registered_member_types ) ) {
 			?>
 			<div class="wrap">
-				<div class="error notice " id="message"><p><?php _e( 'Nothing to import', 'buddyboss' ); ?></p></div>
+				<div class="error notice " id="message"><p><?php esc_html_e( 'Nothing to import', 'buddyboss' ); ?></p></div>
 			</div>
 			<?php
 		}
 
 		foreach ( $registered_member_types as $key => $import_types_data ) {
 			$sing_name = ucfirst( $import_types_data );
-			// Create post object
+			// Create post object.
 			$my_post = array(
 				'post_type'   => bp_get_member_type_post_type(),
 				'post_title'  => $sing_name,
@@ -2526,7 +2541,7 @@ function bp_member_type_import_submenu_page() {
 				'post_author' => get_current_user_id(),
 			);
 
-			// Insert the post into the database
+			// Insert the post into the database.
 			$post_id = wp_insert_post( $my_post );
 
 			if ( $post_id ) {
@@ -2543,7 +2558,7 @@ function bp_member_type_import_submenu_page() {
 				update_post_meta( $post_id, '_bp_member_type_label_singular_name', $sing_name );
 
 				?>
-				<div class="updated notice " id="message"><p><?php _e( 'Successfully Imported', 'buddyboss' ); ?></p>
+				<div class="updated notice " id="message"><p><?php esc_html_e( 'Successfully Imported', 'buddyboss' ); ?></p>
 				</div>
 				<?php
 			}
@@ -2563,20 +2578,20 @@ function bp_member_type_import_submenu_page() {
  */
 function bp_member_type_invalid_role_extended_profile_error_callback() {
 
-	// If there are no errors, then we'll exit the function
+	// If there are no errors, then we'll exit the function.
 	if ( ! ( $errors = get_transient( 'bp_invalid_role_selection_extended_profile' ) ) ) {
 		return;
 	}
 
-	// Otherwise, build the list of errors that exist in the settings errores
+	// Otherwise, build the list of errors that exist in the settings errores.
 	$message = '<div id="message" class="error">';
 	foreach ( $errors as $error ) {
 		$message .= '<p>' . $error['message'] . '</p>';
 	}
 	$message .= '</div><!-- #error --><style>div.updated{display: none;}</style>';
-	// Write them out to the screen
-	echo $message;
-	// Clear and the transient and unhook any other notices so we don't see duplicate messages
+	// Write them out to the screen.
+	echo wp_kses_post( $message );
+	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection_extended_profile' );
 	remove_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error_callback' );
 
@@ -2605,7 +2620,7 @@ function bp_core_admin_create_background_page() {
 	if ( isset( $valid_pages[ $_POST['page'] ] ) ) {
 
 		$default_title = bp_core_get_directory_page_default_titles();
-		$title         = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
+		$title = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
 
 		$new_page = array(
 			'post_title'     => $title,
@@ -2620,7 +2635,7 @@ function bp_core_admin_create_background_page() {
 		$page_ids[ $_POST['page'] ] = (int) $page_id;
 
 		// If forums page then store into the _bbp_root_slug_custom_slug option.
-		if ( 'new_forums_page' === $_POST['page'] ) {
+		if ( 'new_forums_page' === sanitize_text_field( $_POST['page'] ) ) {
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
 			// Else store into the directory pages.
 		} else {
@@ -2628,7 +2643,7 @@ function bp_core_admin_create_background_page() {
 		}
 
 		// If forums page then change the BBPress root slug _bbp_root_slug and flush the redirect rule.
-		if ( 'new_forums_page' === $_POST['page'] ) {
+		if ( 'new_forums_page' === sanitize_text_field( $_POST['page'] ) ) {
 			$slug = get_page_uri( $page_id );
 			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			flush_rewrite_rules( true );
@@ -2911,7 +2926,7 @@ function bp_core_tools_settings_admin_tabs( $active_tab = '' ) {
 	$tabs_html    = '';
 	$idle_class   = '';
 	$active_class = 'current';
-	$active_tab   = isset( $_GET['tab'] ) ? $_GET['tab'] : 'bp-tools';
+	$active_tab   = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bp-tools';
 
 	/**
 	 * Filters the admin tabs to be displayed.
@@ -2960,7 +2975,7 @@ function bp_core_tools_settings_admin_tabs( $active_tab = '' ) {
  */
 function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 
-	// Tabs for the BuddyBoss > Tools
+	// Tabs for the BuddyBoss > Tools.
 	$tabs = array(
 		'0' => array(
 			'href' => bp_get_admin_url(
@@ -3089,13 +3104,13 @@ add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );
  */
 function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 
-	// if called by autosave, then bail here
+	// if called by autosave, then bail here.
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
 
 	// if this "post" post type?
-	if ( $post->post_type != 'page' ) {
+	if ( 'page' !== $post->post_type ) {
 		return;
 	}
 
@@ -3186,6 +3201,7 @@ add_action( 'bp_init', 'bb_block_init_category_filter' );
 
 function bp_document_ajax_check_file_mime_type() {
 	$response = array();
+
 	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'bp_document_check_file_mime_type' === $_POST['action'] && ! empty( $_FILES ) ) {
 		$files = $_FILES;
 		foreach ( $files as $input => $info_arr ) {
@@ -3265,7 +3281,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 					'admin.php'
 				)
 			),
-			'name'  => esc_html__( 'Blocked Members', 'buddyboss' ),
+			'name'  => esc_html__( 'Flagged Members', 'buddyboss' ),
 			'class' => 'bp-blocked-members',
 		);
 	}
@@ -3304,3 +3320,138 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 	 */
 	return apply_filters( 'bp_core_get_moderation_admin_tabs', $tabs );
 }
+
+/**
+ * Get label with platform pro notice if the platform is not active or not validate.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @return string
+ */
+function bb_get_pro_label_notice() {
+	static $bb_pro_notice = '';
+
+	if ( '' !== $bb_pro_notice ) {
+		return $bb_pro_notice;
+	}
+
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
+		$bb_pro_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
+			esc_html__( 'Update to', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' )
+		);
+	} else {
+		$bb_pro_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
+			esc_html__( 'Install', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' )
+		);
+	}
+
+	return $bb_pro_notice;
+}
+
+/**
+ * Get class for buddyboss pro settings fields.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @return string
+ */
+function bb_get_pro_fields_class() {
+	static $pro_class = '';
+
+	if ( '' !== $pro_class ) {
+		return $pro_class;
+	}
+
+	$pro_class = 'bb-pro-inactive';
+	if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
+		$pro_class = 'bb-pro-active';
+	}
+
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
+		$pro_class = 'bb-pro-inactive';
+	}
+
+	return $pro_class;
+}
+
+
+add_action( 'admin_head', 'bb_disable_multiple_select_situation', 99999 );
+
+/**
+ * Disable the multi select in situation.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @return void
+ */
+function bb_disable_multiple_select_situation() {
+
+	global $typenow;
+
+	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $typenow ) {
+		?>
+
+		<script type="text/javascript">
+			jQuery( document ).ready( function ( $ ) {
+				jQuery( document ).on( 'change', '#taxonomy-<?php echo esc_js( bp_get_email_post_type() ); ?>-type input[type="checkbox"]', function () {
+					var group = 'input[type="checkbox"][name="' + jQuery( this ).attr( 'name' ) + '"]';
+					jQuery( group ).not( this ).prop( 'checked', false );
+				} );
+			} );
+		</script>
+
+		<?php
+	}
+}
+
+/**
+ * Added new meta box as text and background color for member types label.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param $post Post data object.
+ */
+function bb_member_type_labelcolor_metabox( $post ) {
+	$post_type         = isset( $post->post_type ) ? $post->post_type : 'bp-member-type';
+	$meta_data         = get_post_meta( $post->ID, '_bp_member_type_label_color', true );
+	$label_color_data  = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : array();
+	$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+	$colorpicker_class = 'default' === $color_type ? $post_type . '-hide-colorpicker' : $post_type . '-show-colorpicker';
+	if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {
+		$background_color = buddyboss_theme_get_option( 'label_background_color' );
+		$text_color       = buddyboss_theme_get_option( 'label_text_color' );
+	} else {
+		$background_color = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+		$text_color       = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+	}
+	?>
+	<div class="bb-meta-box-label-color-main">
+		<p><?php esc_html_e( 'Select which label colors to use for profiles using this profile type. Profile Type labels are used in places such as member directories and profile headers.', 'buddyboss' ); ?></p>
+		<p>
+			<select name="<?php echo esc_attr( $post_type ); ?>[label_color][type]" id="<?php echo esc_attr( $post_type ); ?>-label-color-type">
+				<option value="default" <?php selected( $color_type, 'default' ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+				<option value="custom" <?php selected( $color_type, 'custom' ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
+			</select>
+		</p>
+		<div id="<?php echo esc_attr( $post_type ); ?>-color-settings" class="<?php echo esc_attr( $post_type ); ?>-colorpicker <?php echo esc_attr( $colorpicker_class ); ?>">
+			<div class="bb-meta-box-colorpicker">
+				<div class="bb-colorpicker-row-one" id="<?php echo esc_attr( $post_type ); ?>-background-color-colorpicker">
+					<label class="bb-colorpicker-label"><?php esc_html_e( 'Background Color', 'buddyboss' ); ?></label>
+					<input id="<?php echo esc_attr( $post_type ); ?>-label-background-color" name="<?php echo esc_attr( $post_type ); ?>[label_color][background_color]" type="text" value="<?php echo esc_attr( $background_color ); ?>"/>
+				</div>
+				<div class="bb-colorpicker-row-one" id="<?php echo esc_attr( $post_type ); ?>-text-color-colorpicker">
+					<label class="bb-colorpicker-label"><?php esc_html_e( 'Text Color', 'buddyboss' ); ?></label>
+					<input id="<?php echo esc_attr( $post_type ); ?>-label-text-color" name="<?php echo esc_attr( $post_type ); ?>[label_color][text_color]" type="text" value="<?php echo esc_attr( $text_color ); ?>"/>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php
+}
+

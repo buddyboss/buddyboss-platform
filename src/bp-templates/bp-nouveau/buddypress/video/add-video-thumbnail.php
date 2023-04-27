@@ -25,7 +25,7 @@
 						<span id="bp-video-thumbnail-uploader-modal-status-text" style="display: none;"></span>
 
 						<a class="bb-model-close-button bp-video-thumbnail-uploader-close" id="" href="#">
-							<span class="bb-icon bb-icon-close"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 
@@ -35,13 +35,13 @@
 							<ul class="video-thumb-list loading">
 								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">
 									<div class="video-thumb-block">
-										<i class="bb-icon-loader animate-spin"></i>
+										<i class="bb-icon-l bb-icon-loader animate-spin"></i>
 										<span>Generating thumbnail…</span>
 									</div>
 								</li>
 								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader">
 									<div class="video-thumb-block">
-										<i class="bb-icon-loader animate-spin"></i>
+										<i class="bb-icon-l bb-icon-loader animate-spin"></i>
 										<span>Generating thumbnail…</span>
 									</div>
 								</li>
@@ -51,7 +51,7 @@
 						<div class="bb-dropzone-wrap bp-video-thumbnail-upload-tab-content bp-upload-tab-content bp-video-thumbnail-dropzone-content" id="custom_image_ele">
 							<input id="bb-video-5711" class="bb-custom-check" type="radio" value="5766" name="bb-video-thumbnail-select">
 							<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="Select" for="bb-video-5711">
-								<span class="bb-icon bb-icon-check"></span>
+								<span class="bb-icon-l bb-icon-check"></span>
 							</label>
 							<div class="bb-field-wrap">
 								<div class="video-thumbnail-uploader-wrapper">
@@ -62,7 +62,7 @@
 												<img data-dz-thumbnail />
 											</div>
 											<div class="dz-progress-ring-wrap">
-												<i class="bb-icon bb-icon-camera-fill"></i>
+												<i class="bb-icon-f bb-icon-camera"></i>
 												<svg class="dz-progress-ring" width="54" height="54">
 													<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 												</svg>

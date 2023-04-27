@@ -76,6 +76,10 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
+		if ( ! has_action( 'bp_notification_settings' ) ) {
+			bp_core_remove_subnav_item( BP_SETTINGS_SLUG, 'notifications' );
+		}
+
 		$user_nav = buddypress()->members->nav;
 		if ( ! empty( $user_nav ) ) {
 			$navs = $user_nav->get_secondary(
@@ -85,6 +89,8 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 				)
 			);
 		}
+
+		$request->set_param( 'user_nav', $user_nav );
 
 		// if it's nouveau then let it order the tabs.
 		if ( function_exists( 'bp_nouveau_set_nav_item_order' ) ) {
@@ -163,8 +169,28 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 			'name'     => $nav->name,
 			'slug'     => $nav->slug,
 			'position' => $nav->position,
+			'children' => array(),
 			'link'     => $nav->link,
 		);
+
+		$parent_slug   = $nav->parent_slug . '_' . $nav->slug;
+		$user_nav      = $request->get_param( 'user_nav' );
+		$secondary_nav = $user_nav->get_secondary(
+			array(
+				'parent_slug'     => $parent_slug,
+				'user_has_access' => true,
+			)
+		);
+
+		if ( ! empty( $secondary_nav ) ) {
+			if ( ! empty( $secondary_nav ) ) {
+				foreach ( $secondary_nav as $child_nav ) {
+					$data['children'][] = $this->prepare_response_for_collection(
+						$this->prepare_item_for_response( $child_nav, $request )
+					);
+				}
+			}
+		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -194,7 +220,13 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 	 * @return array Links for the given group.
 	 */
 	protected function prepare_links( $nav_slug ) {
-		$base  = '/' . $this->namespace . '/' . $this->rest_base;
+		$base = '/' . $this->namespace . '/' . $this->rest_base;
+
+		if ( 'subscriptions' === $nav_slug ) {
+			$base     = '/' . $this->namespace;
+			$nav_slug = 'subscription-types';
+		}
+
 		$links = array(
 			'options' => array(
 				'embeddable' => true,
@@ -234,6 +266,12 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 					'description' => __( 'The position of the current navigation item.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
+				),
+				'children' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Child navigation items.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'array',
 				),
 				'link'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),

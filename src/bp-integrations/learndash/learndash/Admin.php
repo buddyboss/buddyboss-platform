@@ -62,7 +62,7 @@ class Admin {
 	 */
 	public function asyncMetaboxHtml() {
 		$groupId           = get_the_ID();
-		$generator         = bp_ld_sync( 'learndash' )->sync->generator( null, $groupId );
+		$generator         = bp_ld_sync( 'learndash' )->sync->generator( 0, $groupId );
 		$hasBpGroup        = $generator->hasBpGroup();
 		$bpGroupId         = $hasBpGroup ? $generator->getBpGroupId() : 0;
 		$bpGroup           = groups_get_group( $bpGroupId );

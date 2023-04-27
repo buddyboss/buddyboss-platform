@@ -115,7 +115,6 @@
 
 .dropzone .dz-remove {
 	color: #9ea8b3;
-	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 	background: #e7e7ea;
 }
 
@@ -139,7 +138,7 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	letter-spacing: normal;
-	font-weight: 300;
+	font-weight: 400;
 	margin-top: 8px;
 }
 
@@ -604,8 +603,8 @@
 	.dz-default.dz-message {
 		display: flex;
 		min-height: 1px;
-		max-width: 139px;
-		height: 139px;
+		max-width: 130px;
+		height: 130px;
 		font-size: 12px;
 		text-align: center;
 		line-height: 1.3;
@@ -628,7 +627,7 @@
 	}
 
 	.dz-image img {
-		width: 139px;
+		width: 130px;
 	}
 
 	.dz-progress-ring-wrap {
@@ -657,16 +656,24 @@
 
 		}
 
-		.bb-icon {
+		[class*=" bb-icon-"] {
 			position: absolute;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
 			color: #fff;
 			z-index: 11;
-			font-size: 18px;
+			font-size: 24px;
 		}
 
+	}
+
+	&.dz-error .dz-progress-ring-wrap {
+		background-color: rgba(0, 0, 0, 0.05);
+
+		[class*=" bb-icon-"] {
+			color: $light-text;
+		}
 	}
 
 }
@@ -680,7 +687,7 @@
 			.dz-progress-ring-wrap {
 				background-color: rgba(0, 0, 0, 0.05);
 
-				.bb-icon {
+				[class*=" bb-icon-"] {
 					color: rgba(18, 43, 70, 0.5);
 				}
 			}
@@ -694,7 +701,7 @@
 		.dz-progress-ring-wrap {
 			background-color: rgba(0, 0, 0, 0.05);
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				color: rgba(18, 43, 70, 0.5);
 			}
 		}
@@ -715,7 +722,7 @@
 			.dz-filename {
 				position: static;
 				padding-right: 0;
-				margin-top: 8px;
+				margin-top: 11px;
 			}
 
 			.dz-size {
@@ -724,13 +731,14 @@
 
 			.dz-icon {
 				display: block;
-				height: 28px;
+				height: 38px;
+				line-height: 1;
 				margin-top: 25px;
 				position: relative;
 
 				&:before {
-					content: "\e98e";
-					font-size: 28px;
+					content: "\ee6e";
+					font-size: 38px;
 					color: #92949d;
 					font-family: "bb-icons";/* stylelint-disable-line */
 					display: inline-block;
@@ -741,8 +749,8 @@
 					transform: translateX(-50%);
 				}
 
-				[class*="bb-icon"] {
-					font-size: 28px;
+				[class*="bb-icons"] {
+					font-size: 38px;
 					color: rgba(18, 43, 70, 0.5);
 					left: 50%;
 					display: block;
@@ -760,6 +768,7 @@
 				left: 10px;
 				right: 0;
 				font-size: 13px;
+				line-height: 19.5px;
 				color: rgba(18, 43, 70, 0.5);
 				padding-right: 20px;
 			}
@@ -767,12 +776,85 @@
 			.dz-size {
 				display: none;
 				font-size: 13px;
+				font-weight: 500;
+				line-height: 19.5px;
 				color: rgba(18, 43, 70, 0.5);
-				font-weight: 300;
 			}
 
 		}
 
+	}
+
+}
+
+// Dropzone global progress UI
+.dropzone.dz-progress-view {
+	padding-bottom: 45px;
+	position: relative;
+
+	.dz-global-progress {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding-right: 25px;
+
+		p {
+			color: $light-text;
+			font-size: 13px;
+			line-height: 1.5;
+			margin: 0 !important;
+
+			strong {
+				font-weight: 500;
+			}
+
+		}
+
+		.dz-progress-bar-full {
+			background-color: $light-grey;
+			border-radius: 100px;
+			height: 8px;
+			width: 100%;
+			margin-bottom: 6px;
+			overflow: hidden;
+		}
+
+		.dz-progress {
+			background-color: $blue;
+			display: block;
+			height: 100%;
+			width: 100%;
+		}
+
+		.dz-remove-all {
+
+			@include center-vert();
+			justify-content: center;
+			background-color: $light-grey;
+			border-radius: 50%;
+			cursor: pointer;
+			height: 20px;
+			width: 20px;
+			position: absolute;
+			top: -6px;
+			right: 0;
+
+			&:before {
+				color: $light-text;
+				font-size: 18px;
+			}
+		}
+
+	}
+
+	&.files-uploaded {
+		padding-bottom: 0;
+		position: static;
+
+		.dz-global-progress {
+			display: none;
+		}
 	}
 
 }

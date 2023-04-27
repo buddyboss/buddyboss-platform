@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
@@ -67,6 +67,21 @@ window.bp = window.bp || {};
 			// Legal agreement enable/disabled submit button.
 			this.enableSubmitOnLegalAgreement();
 
+			// Profile Notification setting
+			this.profileNotificationSetting();
+
+			// Bail if not set.
+			if ( 'undefined' !== typeof BB_Nouveau_Presence ) {
+				// User Presence status.
+				this.userPresenceStatus();
+			}
+
+			var _this = this;
+
+			$( document ).on( 'bb_trigger_toast_message', function ( event, title, message, type, url, autoHide, autohide_interval ) {
+				_this.bbToastMessage( title, message, type, url, autoHide, autohide_interval );
+			} );
+
 			// Check for lazy images and load them also register scroll event to load on scroll.
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -75,6 +90,90 @@ window.bp = window.bp || {};
 					bp.Nouveau.lazyLoad( '.lazy' );
 				}
 			);
+		},
+
+		/*
+		 *	Toast Message
+		 */
+		 bbToastMessage: function ( title, message, type, url, autoHide, autohide_interval ) {
+
+			if ( ! message || message.trim() == '' ) { // Toast Message can't be triggered without content.
+				return;
+			}
+
+			function getTarget() {
+				if ( $( '.bb-toast-messages-enable' ).length ) {
+					return '.bb-toast-messages-enable .toast-messages-list';
+				}
+
+				if ( $( '.bb-onscreen-notification-enable ul.notification-list' ).length ) {
+					var toastPosition = $( '.bb-onscreen-notification' ).hasClass( 'bb-position-left' ) ? 'left' : 'right';
+					var toastMessageWrapPosition = $( '<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-' + toastPosition + ' single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>' );
+					$( '.bb-onscreen-notification' ).show();
+					$( toastMessageWrapPosition ).insertBefore( '.bb-onscreen-notification-enable ul.notification-list' );
+				} else {
+					var toastMessageWrap = $( '<div class="bb-toast-messages-enable bb-toast-messages-enable-mobile-support"><div class="bb-toast-messages bb-position-right single-toast-messages"><ul class="toast-messages-list bb-toast-messages-list"></u></div></div>' );
+					$( 'body' ).append( toastMessageWrap );
+				}
+				return '.bb-toast-messages-enable .toast-messages-list';
+			}
+
+			function hideMessage() {
+				$( currentEl ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
+			}
+
+			// Add Toast Message
+			var unique_id = 'unique-' + Math.floor( Math.random() * 1000000 );
+			var currentEl = '.' + unique_id;
+			var urlClass = '';
+			var bp_msg_type = '';
+			var bp_icon_type = '';
+			/* jshint ignore:start */
+			var autohide_interval = autohide_interval && typeof autohide_interval == 'number' ? ( autohide_interval * 1000 ) : 5000;
+			/* jshint ignore:end */
+
+			if ( type ) {
+				bp_msg_type = type;
+				if ( bp_msg_type === 'success' ) {
+					bp_icon_type = 'check';
+				} else if ( bp_msg_type === 'warning' ) {
+					bp_icon_type = 'exclamation-triangle';
+				} else {
+					bp_icon_type = 'info';
+				}
+			}
+
+			if ( url !== null ) {
+				urlClass = 'has-url';
+			}
+
+			var messageContent = '';
+			messageContent += '<div class="toast-messages-icon"><i class="bb-icon bb-icon-' + bp_icon_type + '"></i></div>';
+			messageContent += '<div class="toast-messages-content">';
+			if ( title ) {
+				messageContent += '<span class="toast-messages-title">' + title + '</span>';
+			}
+
+			if ( message ) {
+				messageContent += '<span class="toast-messages-content">' + message + '</span>';
+			}
+
+			messageContent += '</div>';
+			messageContent += '<div class="actions"><a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="' + BP_Nouveau.close + '"><i class="bb-icon bb-icon-times" aria-hidden="true"></i></a></div>';
+			messageContent += url ? '<a class="toast-messages-url" href="' + url + '"></a>' : '';
+
+			$( getTarget() ).append( '<li class="item-list read-item pull-animation bp-message-' + bp_msg_type + ' ' + unique_id + ' ' + urlClass + '"> ' + messageContent + ' </li>' );
+
+			if ( autoHide ) {
+				setInterval( function () {
+					hideMessage();
+				}, autohide_interval );
+			}
+
+			$( currentEl + ' .actions .action-close' ).on( 'click', function () {
+				hideMessage();
+			} );
+
 		},
 
 		/**
@@ -303,16 +402,19 @@ window.bp = window.bp || {};
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
 				$( '.bp-suggestions' ).bp_mentions( bp.mentions.users );
-				$( '#whats-new' ).on( 'inserted.atwho', function () { //Get caret position when user adds mention
-					if (window.getSelection && document.createRange) {
-						var sel = window.getSelection && window.getSelection();
-						if (sel && sel.rangeCount > 0) {
-							window.activityCaretPosition = sel.getRangeAt(0);
+				$( '#whats-new' ).on(
+					'inserted.atwho',
+					function () { // Get caret position when user adds mention.
+						if (window.getSelection && document.createRange) {
+							var sel = window.getSelection && window.getSelection();
+							if (sel && sel.rangeCount > 0) {
+								window.activityCaretPosition = sel.getRangeAt( 0 );
+							}
+						} else {
+							window.activityCaretPosition = document.selection.createRange();
 						}
-					} else {
-						window.activityCaretPosition = document.selection.createRange();
 					}
-				});
+				);
 			}
 		},
 		/**
@@ -326,7 +428,7 @@ window.bp = window.bp || {};
 		hideSingleUrl: function () {
 			var _findtext  = $( this ).find( '.activity-inner > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
 			var _url       = '',
-				newString = '',
+				newString  = '',
 				startIndex = '',
 				_is_exist  = 0;
 			if ( 0 <= _findtext.indexOf( 'http://' ) ) {
@@ -605,9 +707,9 @@ window.bp = window.bp || {};
 					// Check the querystring to eventually include the search terms.
 					if ( null !== self.querystring ) {
 						if ( undefined !== self.querystring[ object + '_search' ] ) {
-							search_terms = self.querystring[ object + '_search' ];
+							search_terms = decodeURI( self.querystring[ object + '_search' ] );
 						} else if ( undefined !== self.querystring.s ) {
-							search_terms = self.querystring.s;
+							search_terms = decodeURI( self.querystring.s );
 						}
 
 						if ( search_terms ) {
@@ -690,9 +792,21 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .bp-messages-content' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '.awaiting_response_friend', this, this.awaitingButtonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '.awaiting_response_friend', this, this.awaitingButtonHoverout );
+			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
+			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
+			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
+			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
+			$( document ).on( 'click', '.show-action-popup', this.showActionPopup );
+			$( document ).on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
+			$( document ).on( 'click', '#message-threads .report-content', this.threadListReportPopup );
+			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -709,7 +823,7 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert );
 
-			//More Option Dropdown
+			// More Option Dropdown.
 			$( document ).on( 'click', this.toggleMoreOption.bind( this ) );
 			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
@@ -723,6 +837,9 @@ window.bp = window.bp || {};
 
 			// Following widget more button click.
 			$( document ).on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
+
+			// Accordion open/close event
+			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 		},
 
 		/**
@@ -732,10 +849,10 @@ window.bp = window.bp || {};
 		 * @param  {[type]} data  [description]
 		 * @return {[type]}       [description]
 		 */
-		 bbHeartbeatSend: function( event, data ) {
+		bbHeartbeatSend: function( event, data ) {
 			data.onScreenNotifications = true;
 
-			// Add an heartbeat send event to possibly any BuddyPress pages
+			// Add an heartbeat send event to possibly any BuddyPress pages.
 			$( '#buddypress' ).trigger( 'bb_heartbeat_send', data );
 		},
 
@@ -747,8 +864,8 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		bbHeartbeatTick: function(  event, data ) {
-            // Inject on-screen notification.
-			bp.Nouveau.bbInjectOnScreenNotifications(  event, data );
+			// Inject on-screen notification.
+			bp.Nouveau.bbInjectOnScreenNotifications( event, data );
 		},
 
 		/**
@@ -765,47 +882,54 @@ window.bp = window.bp || {};
 			}
 
 			var wrap          = $( '.bb-onscreen-notification' ),
-			    list          = wrap.find( '.notification-list' ),
-			    removedItems  = list.data('removed-items'),
-				animatedItems = list.data('animated-items'),
+				list          = wrap.find( '.notification-list' ),
+				removedItems  = list.data( 'removed-items' ),
+				animatedItems = list.data( 'animated-items' ),
 				newItems      = [],
-			    notifications = $( $.parseHTML( '<ul>'+data.on_screen_notifications+'</ul>' ) );
+				notifications = $( $.parseHTML( '<ul>' + data.on_screen_notifications + '</ul>' ) );
 
 			// Ignore all view notifications.
-			$.each( removedItems, function( index, id ) {
-				var removedItem = notifications.find( '[data-notification-id='+id+']' );
+			$.each(
+				removedItems,
+				function( index, id ) {
+					var removedItem = notifications.find( '[data-notification-id=' + id + ']' );
 
-				if ( removedItem.length ) {
-					removedItem.closest( '.read-item' ).remove();
+					if ( removedItem.length ) {
+						removedItem.closest( '.read-item' ).remove();
+					}
 				}
-			} );
+			);
 
 			var appendItems = notifications.find( '.read-item' );
 
-			appendItems.each( function( index, item ) {
-				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+			appendItems.each(
+				function( index, item ) {
+					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
 
-				if ( '-1' == $.inArray( id, animatedItems ) ) {
-					$( item ).addClass( 'pull-animation' );
-					animatedItems.push( id );
-					newItems.push( id );
-				} else {
-					$( item ).removeClass( 'pull-animation' );
+					if ( '-1' == $.inArray( id, animatedItems ) ) {
+						$( item ).addClass( 'pull-animation' );
+						animatedItems.push( id );
+						newItems.push( id );
+					} else {
+						$( item ).removeClass( 'pull-animation' );
+					}
 				}
-			} );
+			);
 
 			// Remove brder when new item is appear.
 			if ( newItems.length ) {
-				appendItems.each( function( index, item ) {
-					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
-					if ( '-1' == $.inArray( id, newItems ) ) {
-						$( item ).removeClass( 'recent-item' );
-						var borderItems  = list.data( 'border-items' );
-						borderItems.push( id );
-						list.attr( 'data-border-items', JSON.stringify( borderItems ) );
+				appendItems.each(
+					function( index, item ) {
+						var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+						if ( '-1' == $.inArray( id, newItems ) ) {
+							$( item ).removeClass( 'recent-item' );
+							var borderItems = list.data( 'border-items' );
+							borderItems.push( id );
+							list.attr( 'data-border-items', JSON.stringify( borderItems ) );
 
+						}
 					}
-				} );
+				);
 			}
 
 			// Store animated notification id in 'animated-items' data attribute.
@@ -819,7 +943,7 @@ window.bp = window.bp || {};
 			wrap.removeClass( 'close-all-items' );
 
 			// Set class 'bb-more-item' in item when more than three notifications.
-			appendItems.eq(2).nextAll().addClass( 'bb-more-item' );
+			appendItems.eq( 2 ).nextAll().addClass( 'bb-more-item' );
 
 			if ( appendItems.length > 3 ) {
 				list.addClass( 'bb-more-than-3' );
@@ -846,21 +970,23 @@ window.bp = window.bp || {};
 		 * Remove notification border.
 		 */
 		notificationBorder: function() {
-			var wrap         = $( '.bb-onscreen-notification' ),
-				list         = wrap.find( '.notification-list' ),
-				borderItems  = list.data( 'border-items' );
-				//newItems     = [];
+			var wrap        = $( '.bb-onscreen-notification' ),
+				list        = wrap.find( '.notification-list' ),
+				borderItems = list.data( 'border-items' );
+			// newItems     = [];
 
 			// Remove border for single notificaiton after 30s later.
-			list.find( '.read-item' ).each( function( index, item ) {
-				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+			list.find( '.read-item' ).each(
+				function( index, item ) {
+					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
 
-				if ( '-1' != $.inArray( id, borderItems ) ) {
-					return;
+					if ( '-1' != $.inArray( id, borderItems ) ) {
+						return;
+					}
+
+					$( item ).addClass( 'recent-item' );
 				}
-
-				$( item ).addClass( 'recent-item' );
-			} );
+			);
 
 			// Store removed notification id in 'auto-removed-items' data attribute.
 			list.attr( 'data-border-items', JSON.stringify( borderItems ) );
@@ -870,14 +996,14 @@ window.bp = window.bp || {};
 		 * Notification count in browser tab.
 		 */
 		browserTabCountNotification: function() {
-			var wrap         = $( '.bb-onscreen-notification' ),
-				list         = wrap.find( '.notification-list' ),
-				items        = list.find( '.read-item' ),
-				titleTag     = $('html').find( 'title' ),
-				title        = wrap.data( 'title-tag' );
+			var wrap     = $( '.bb-onscreen-notification' ),
+				list     = wrap.find( '.notification-list' ),
+				items    = list.find( '.read-item' ),
+				titleTag = $( 'html' ).find( 'title' ),
+				title    = wrap.data( 'title-tag' );
 
 			if ( items.length > 0 ) {
-				titleTag.text( '('+items.length+') ' + title );
+				titleTag.text( '(' + items.length + ') ' + title );
 			} else {
 				titleTag.text( title );
 			}
@@ -887,7 +1013,7 @@ window.bp = window.bp || {};
 		 * Inject notification on browser tab.
 		 */
 		browserTabFlashNotification: function() {
-			var wrap = $( '.bb-onscreen-notification' ),
+			var wrap      = $( '.bb-onscreen-notification' ),
 				broserTab = wrap.data( 'broser-tab' );
 
 			// Check notification broser tab settings option.
@@ -912,20 +1038,22 @@ window.bp = window.bp || {};
 				list = wrap.find( '.notification-list' );
 
 			var items        = list.find( '.read-item' ),
-				notification = items.first().find('.notification-content .bb-full-link a').text(),
-				titleTag     = $('html').find( 'title' ),
+				notification = items.first().find( '.notification-content .bb-full-link a' ).text(),
+				titleTag     = $( 'html' ).find( 'title' ),
 				title        = wrap.attr( 'data-title-tag' ),
 				flashStatus  = wrap.attr( 'data-flash-status' ),
 				flashItems   = list.data( 'flash-items' );
 
 			if ( ! document.hidden ) {
-				items.each( function( index, item ) {
-					var id = $( item ).find( '.actions .action-close' ).attr( 'data-notification-id' );
+				items.each(
+					function( index, item ) {
+						var id = $( item ).find( '.actions .action-close' ).attr( 'data-notification-id' );
 
-					if ( '-1' == $.inArray( id, flashItems ) ) {
-						flashItems.push( id );
+						if ( '-1' == $.inArray( id, flashItems ) ) {
+							flashItems.push( id );
+						}
 					}
-				} );
+				);
 
 				list.attr( 'data-flash-items', JSON.stringify( flashItems ) );
 			}
@@ -938,7 +1066,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( 'default_title' === flashStatus ) {
-				titleTag.text( '('+items.length+') ' + title );
+				titleTag.text( '(' + items.length + ') ' + title );
 				var id = items.first().find( '.actions .action-close' ).attr( 'data-notification-id' );
 
 				if ( '-1' == $.inArray( id, flashItems ) ) {
@@ -956,7 +1084,7 @@ window.bp = window.bp || {};
 		notificationAutoHide: function() {
 			var wrap         = $( '.bb-onscreen-notification' ),
 				list         = wrap.find( '.notification-list' ),
-				removedItems = list.data('auto-removed-items'),
+				removedItems = list.data( 'auto-removed-items' ),
 				visibility   = wrap.data( 'visibility' );
 
 			// Check notification autohide settings option.
@@ -971,21 +1099,26 @@ window.bp = window.bp || {};
 			}
 
 			// Remove single notification according setting option time.
-			list.find( '.read-item' ).each( function( index, item ) {
-				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+			list.find( '.read-item' ).each(
+				function( index, item ) {
+					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
 
-				if ( '-1' != $.inArray( id, removedItems ) ) {
-					return;
-				}
-
-				removedItems.push( id );
-
-				setTimeout( function() {
-					if ( list.find( '.actions .action-close[data-notification-id='+id+']' ).length ) {
-						list.find( '.actions .action-close[data-notification-id='+id+']' ).trigger( 'click' );
+					if ( '-1' != $.inArray( id, removedItems ) ) {
+						return;
 					}
-				}, 1000*hideAfter );
-			} );
+
+					removedItems.push( id );
+
+					setTimeout(
+						function() {
+							if ( list.find( '.actions .action-close[data-notification-id=' + id + ']' ).length ) {
+								list.find( '.actions .action-close[data-notification-id=' + id + ']' ).trigger( 'click' );
+							}
+						},
+						1000 * hideAfter
+					);
+				}
+			);
 
 			// Store removed notification id in 'auto-removed-items' data attribute.
 			list.attr( 'data-auto-removed-items', JSON.stringify( removedItems ) );
@@ -995,87 +1128,100 @@ window.bp = window.bp || {};
 		 * Click event for remove single notification.
 		 */
 		notificationRemovedAction: function() {
-			$('.bb-onscreen-notification .notification-list').on('click', '.action-close', function(e) {
-				e.preventDefault();
-				bp.Nouveau.removeOnScreenNotification( this );
-			});
+			$( '.bb-onscreen-notification .notification-list' ).on(
+				'click',
+				'.action-close',
+				function(e) {
+					e.preventDefault();
+					bp.Nouveau.removeOnScreenNotification( this );
+				}
+			);
 		},
 
 		/**
 		 * Remove single notification.
 		 */
 		removeOnScreenNotification: function( self ) {
-			var list         = $(self).closest( '.notification-list' ),
-				item         = $(self).closest( '.read-item' ),
-				id           = $(self).data( 'notification-id' ),
+			var list         = $( self ).closest( '.notification-list' ),
+				item         = $( self ).closest( '.read-item' ),
+				id           = $( self ).data( 'notification-id' ),
 				removedItems = list.data( 'removed-items' );
 
-			item.addClass('close-item');
+			item.addClass( 'close-item' );
 
-			setTimeout(function() {
-				removedItems.push(id);
+			setTimeout(
+				function() {
+					removedItems.push( id );
 
-				// Set the removed notification id in data-removed-items attribute.
-				list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
-				item.remove();
-				bp.Nouveau.browserTabCountNotification();
-				bp.Nouveau.visibilityOnScreenClearButton();
+					// Set the removed notification id in data-removed-items attribute.
+					list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
+					item.remove();
+					bp.Nouveau.browserTabCountNotification();
+					bp.Nouveau.visibilityOnScreenClearButton();
 
-				// After removed get, rest of the notification.
-				var items = list.find( '.read-item' );
+					// After removed get, rest of the notification.
+					var items = list.find( '.read-item' );
 
-				if ( ! items.length ) {
-					list.closest( '.bb-onscreen-notification' ).hide();
-					return;
-				}
+					if ( items.length < 4 ) {
+						list.removeClass( 'bb-more-than-3' );
+					}
 
-				if ( items.length < 4 ) {
-					list.removeClass( 'bb-more-than-3' );
-				}
+					// items.first().addClass( 'recent-item' );
+					items.slice( 0, 3 ).removeClass( 'bb-more-item' );
 
-				//items.first().addClass( 'recent-item' );
-				items.slice(0, 3).removeClass( 'bb-more-item' );
-
-			}, 500 );
+				},
+				500
+			);
 		},
 
 		/**
 		 * Remove all notifications.
 		 */
 		removeAllNotification: function() {
-			$('.bb-onscreen-notification .bb-remove-all-notification').on('click', '.action-close', function(e) {
-				e.preventDefault();
+			$( '.bb-onscreen-notification .bb-remove-all-notification' ).on(
+				'click',
+				'.action-close',
+				function(e) {
+					e.preventDefault();
 
-				var list         = $(this).closest( '.bb-onscreen-notification' ).find( '.notification-list' ),
-					items        = list.find( '.read-item' ),
-					removedItems = list.data( 'removed-items' );
+					var list         = $( this ).closest( '.bb-onscreen-notification' ).find( '.notification-list' ),
+						items        = list.find( '.read-item' ),
+						removedItems = list.data( 'removed-items' );
 
-				// Collect all removed notification ids.
-				items.each( function( index, item ) {
-					var id = $(item).find('.actions .action-close').data( 'notification-id' );
+					// Collect all removed notification ids.
+					items.each(
+						function( index, item ) {
+							var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
 
-					if ( id ) {
-						removedItems.push( id );
-					}
-				} );
+							if ( id ) {
+								removedItems.push( id );
+							}
+						}
+					);
 
-				// Set all removed notification ids in data-removed-items attribute.
-				list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
-				items.remove();
-				bp.Nouveau.browserTabCountNotification();
-				bp.Nouveau.visibilityOnScreenClearButton();
-				list.closest( '.bb-onscreen-notification' ).addClass('close-all-items');
-				$('.bb-onscreen-notification').fadeOut(200);
-				list.removeClass( 'bb-more-than-3' );
-			});
+					// Set all removed notification ids in data-removed-items attribute.
+					list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
+					items.remove();
+					bp.Nouveau.browserTabCountNotification();
+					bp.Nouveau.visibilityOnScreenClearButton();
+					list.closest( '.bb-onscreen-notification' ).addClass( 'close-all-items' );
+					$( '.toast-messages-list > li' ).each( function () {
+						$( this ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
+					} );
+					$( '.toast-messages-list > li' ).each( function () {
+						$( this ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
+					} );
+					list.removeClass( 'bb-more-than-3' );
+				}
+			);
 		},
 
 		/**
 		 * Set title tag in notification data attribute.
 		 */
 		setTitle: function() {
-			var title = $('html head').find( 'title' ).text();
-			$('.bb-onscreen-notification').attr( 'data-title-tag', title );
+			var title = $( 'html head' ).find( 'title' ).text();
+			$( '.bb-onscreen-notification' ).attr( 'data-title-tag', title );
 		},
 
 		/**
@@ -1087,13 +1233,13 @@ window.bp = window.bp || {};
 				items = list.find( '.read-item' );
 
 			if ( items.length > 1 ) {
-				wrap.removeClass('single-notification');
-				wrap.addClass('active-button');
-				wrap.find( '.bb-remove-all-notification .action-close' ).fadeIn(600);
+				wrap.removeClass( 'single-notification' );
+				wrap.addClass( 'active-button' );
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeIn( 600 );
 			} else {
-				wrap.addClass('single-notification');
-				wrap.removeClass('active-button');
-				wrap.find( '.bb-remove-all-notification .action-close' ).fadeOut(200);
+				wrap.addClass( 'single-notification' );
+				wrap.removeClass( 'active-button' );
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeOut( 200 );
 			}
 		},
 
@@ -1726,7 +1872,7 @@ window.bp = window.bp || {};
 				nonceUrl   = target.data( 'bp-nonce' ),
 				item       = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
 				item_inner = target.closest( '.list-wrap' ),
-				object     = item.data( 'bp-item-component' ), nonce = '';
+				object     = item.data( 'bp-item-component' ), nonce = '', component = item.data( 'bp-used-to-component' );
 
 			// Simply let the event fire if we don't have needed values.
 			if ( ! action || ! item_id || ! object ) {
@@ -1758,8 +1904,52 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
-				return false;
+			if ( 'is_friend' !== action ) {
+
+				if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
+					return false;
+				}
+
+			}
+
+			// show popup if it is leave_group action.
+			var leave_group_popup        = $( '.bb-leave-group-popup' );
+			var leave_group__name        = $( target ).data( 'bb-group-name' );
+			var leave_group_anchor__link = $( target ).data( 'bb-group-link' );
+			if ( 'leave_group' === action && 'true' !== $( target ).attr( 'data-popup-shown' ) ) {
+				if ( leave_group_popup.length ) {
+					leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '<a href="' + leave_group_anchor__link + '">' + leave_group__name + '</a>' );
+					$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
+					leave_group_popup.show();
+					$( target ).attr( 'data-current-anchor', 'true' );
+					$( target ).attr( 'data-popup-shown', 'true' );
+					return false;
+				}
+			} else {
+				$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'false' );
+				$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
+				leave_group_popup.hide();
+			}
+
+			// show popup if it is is_friend action.
+			var remove_connection_popup = $( '.bb-remove-connection' );
+			var member__name            = $( target ).data( 'bb-user-name' );
+			var member_link             = $( target ).data( 'bb-user-link' );
+			if ( 'is_friend' === action && 'opened' !== $( target ).attr( 'data-popup-shown' ) ) {
+				if ( remove_connection_popup.length ) {
+					remove_connection_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '<a href="' + member_link + '">' + member__name + '</a>' );
+					$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
+					remove_connection_popup.show();
+					$( target ).attr( 'data-current-anchor', 'true' );
+					$( target ).attr( 'data-popup-shown', 'opened' );
+					return false;
+				}
+			} else {
+				$( 'body' ).find( '[data-popup-shown="opened"]' ).attr( 'data-popup-shown' , 'closed' );
+				$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+				remove_connection_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '' );
+				remove_connection_popup.hide();
 			}
 
 			// Find the required wpnonce string.
@@ -1769,7 +1959,11 @@ window.bp = window.bp || {};
 			if ( nonceUrl ) {
 				nonce = self.getLinkParams( nonceUrl, '_wpnonce' );
 			} else {
-				nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				if ( 'undefined' === typeof target.prop( 'href' ) ) {
+					nonce = self.getLinkParams( target.attr( 'href' ), '_wpnonce' );
+				} else {
+					nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				}
 			}
 
 			// Unfortunately unlike groups.
@@ -1800,10 +1994,29 @@ window.bp = window.bp || {};
 			// Add a pending class to prevent queries while we're processing the action.
 			target.addClass( 'pending loading' );
 
+			var current_page = '';
+			if ( ( $( document.body ).hasClass( 'directory' ) && $( document.body ).hasClass( 'members' ) ) || $( document.body ).hasClass( 'group-members' ) ) {
+				current_page = 'directory';
+			} else if ( $( document.body ).hasClass( 'bp-user' ) ) {
+				current_page = 'single';
+			}
+
+			var button_clicked  = 'primary';
+			var button_activity = ( 'single' === current_page ) ? target.closest( '.header-dropdown' ) : target.closest( '.footer-button-wrap' );
+
+			if ( typeof button_activity.length !== 'undefined' && button_activity.length > 0 ) {
+				button_clicked = 'secondary';
+			}
+
+			component = 'undefined' === typeof component ? object : component;
+
 			self.ajax(
 				{
 					action: object + '_' + action,
 					item_id: item_id,
+					current_page: current_page,
+					button_clicked: button_clicked,
+					component: component,
 					_wpnonce: nonce
 				},
 				object,
@@ -1823,6 +2036,23 @@ window.bp = window.bp || {};
 							}
 						}
 
+						if (
+							'undefined' !== typeof response.data.is_group_subscription &&
+							true === response.data.is_group_subscription &&
+							'undefined' !== typeof response.data.feedback
+						) {
+							$( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + response.data.feedback + '</div>',
+									'error',
+									null,
+									true
+								]
+							);
+						}
+
 					} else {
 						// Specific cases for groups.
 						if ( 'groups' === object ) {
@@ -1835,6 +2065,23 @@ window.bp = window.bp || {};
 									return window.location.reload();
 								}
 							}
+
+							if (
+								'undefined' !== typeof response.data.is_group_subscription &&
+								true === response.data.is_group_subscription &&
+								'undefined' !== typeof response.data.feedback
+							) {
+								$( document ).trigger(
+									'bb_trigger_toast_message',
+									[
+										'',
+										'<div>' + response.data.feedback + '</div>',
+										'info',
+										null,
+										true
+									]
+								);
+							}
 						}
 
 						// User main nav update friends counts.
@@ -1845,7 +2092,7 @@ window.bp = window.bp || {};
 							// Check friend count set.
 							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
 								// Check friend count > 0 then show the count span.
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
@@ -1858,7 +2105,7 @@ window.bp = window.bp || {};
 									$( friend_with_count ).hide();
 								}
 							} else if ( undefined !== response.data.friend_count ) {
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
@@ -1902,8 +2149,39 @@ window.bp = window.bp || {};
 							$( self.objectNavParent + ' [data-bp-scope="personal"] span' ).html( personal_count );
 						}
 
+						if ( 'follow' === object && item.find( '.followers-wrap' ).length > 0 && typeof response.data.count !== 'undefined' && response.data.count !== '' ) {
+							item.find( '.followers-wrap' ).replaceWith( response.data.count );
+						}
+
 						target.parent().replaceWith( response.data.contents );
 					}
+				}
+			).fail(
+				function () {
+
+					if ( ['unsubscribe', 'subscribe'].includes( action ) ) {
+						var title = $( target ).data( 'bb-group-name' );
+
+						if ( 25 < title.length ) {
+							title = title.substring( 0, 25 ) + '...';
+						}
+
+						var display_error = '<div>' + BP_Nouveau.subscriptions.error + '<strong>' + title + '</strong>.</div>';
+						if ( 'subscribe' === action ) {
+							display_error = '<div>' + BP_Nouveau.subscriptions.subscribe_error + '<strong>' + title + '</strong></div>';
+						}
+						jQuery( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								display_error,
+								'error',
+								null,
+								true
+							]
+						);
+					}
+					target.removeClass( 'pending loading' );
 				}
 			);
 		},
@@ -1929,6 +2207,206 @@ window.bp = window.bp || {};
 				target.removeClass( 'bp-toggle-action-button-clicked' ); // remove class to detect event.
 				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 			}
+		},
+
+		/**
+		 * [buttonHover description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		buttonHover: function ( event ) {
+			var target = $( event.currentTarget ), action = target.data( 'bp-btn-action' ),
+				item   = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
+				object = item.data( 'bp-item-component' );
+
+			// Simply let the event fire if we don't have needed values.
+			if ( ! action || ! item_id || ! object ) {
+				return event;
+			}
+
+			// Stop event propagation.
+			event.preventDefault();
+
+			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button' );
+					target.addClass( 'bp-toggle-action-button-hover' );
+					return false;
+				}
+
+				// support for buddyboss theme for button actions and icons and texts.
+				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
+					if ( ! target.hasClass( 'following' ) ) {
+						target.attr( 'data-balloon', target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ) );
+					}
+					target.find( 'span' ).html( target.data( 'title' ) );
+					target.html( target.data( 'title' ) );
+				} else {
+					target.html( target.data( 'title' ) );
+				}
+
+				target.removeClass( 'bp-toggle-action-button' );
+				target.addClass( 'bp-toggle-action-button-hover' );
+				return false;
+			}
+		},
+
+		/**
+		 * [buttonHoverout description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		buttonHoverout: function ( event ) {
+			var target = $( event.currentTarget );
+
+			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
+
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
+					target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
+					return false;
+				}
+
+				// support for BuddyBoss theme for button actions and icons and texts.
+				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
+					if ( ! target.hasClass( 'following' ) ) {
+						target.attr( 'data-balloon', target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ) );
+					}
+					target.find( 'span' ).html( target.data( 'title-displayed' ) );
+					target.html( target.data( 'title-displayed' ) );
+				} else {
+					target.html( target.data( 'title-displayed' ) ); // change text to displayed context.
+				}
+
+				target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
+				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
+			}
+		},
+
+		/**
+		 * [awaitingButtonHover description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		awaitingButtonHover: function ( event ) {
+			var target = $( event.currentTarget );
+
+			// Stop event propagation.
+			event.preventDefault();
+
+			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+
+				// support for buddyboss theme for button actions and icons and texts.
+				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
+					if ( ! target.hasClass( 'following' ) ) {
+						target.attr( 'data-balloon', target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ) );
+					}
+					target.find( 'span' ).html( target.data( 'title' ) );
+					target.html( target.data( 'title' ) );
+				} else {
+					target.html( target.data( 'title' ) );
+				}
+
+				target.removeClass( 'bp-toggle-action-button' );
+				target.addClass( 'bp-toggle-action-button-hover' );
+				return false;
+			}
+		},
+
+		/**
+		 * [buttonHoverout description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		awaitingButtonHoverout: function ( event ) {
+			var target = $( event.currentTarget );
+
+			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
+
+				// support for BuddyBoss theme for button actions and icons and texts.
+				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
+					if ( ! target.hasClass( 'following' ) ) {
+						target.attr( 'data-balloon', target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ) );
+					}
+					target.find( 'span' ).html( target.data( 'title-displayed' ) );
+					target.html( target.data( 'title-displayed' ) );
+				} else {
+					target.html( target.data( 'title-displayed' ) ); // change text to displayed context.
+				}
+
+				target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
+				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
+			}
+		},
+
+		/**
+		 * [Leave Group Action]
+		 *
+		 * @param event
+		 */
+		leaveGroupAction: function ( event ) {
+			event.preventDefault();
+			$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
+			$( 'body' ).find( '[data-current-anchor="true"]' ).trigger( 'click' );
+		},
+
+		/**
+		 * [Leave Group Close]
+		 *
+		 * @param event
+		 */
+		leaveGroupClose: function ( event ) {
+			event.preventDefault();
+			var target            = $( event.currentTarget );
+			var leave_group_popup = $( target ).closest( '.bb-leave-group-popup' );
+
+			$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+			$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'false' );
+			leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
+			leave_group_popup.hide();
+		},
+
+		/**
+		 * [Remove Connection Action]
+		 *
+		 * @param event
+		 */
+		removeConnectionAction: function ( event ) {
+			event.preventDefault();
+			$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
+			$( 'body' ).find( '[data-current-anchor="true"]' ).trigger( 'click' );
+		},
+
+		/**
+		 * [Remove Connection Close]
+		 *
+		 * @param event
+		 */
+		removeConnectionClose: function ( event ) {
+			event.preventDefault();
+			var target            = $( event.currentTarget );
+			var leave_group_popup = $( target ).closest( '.bb-remove-connection' );
+
+			$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+			$( 'body' ).find( '[data-popup-shown="opened"]' ).attr( 'data-popup-shown' , 'closed' );
+			leave_group_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '' );
+			leave_group_popup.hide();
 		},
 
 		/**
@@ -2180,26 +2658,121 @@ window.bp = window.bp || {};
 				);
 			}
 		},
+
+		threadListBlockPopup: function ( e ) {
+			e.preventDefault();
+			var contentId   = $( this ).data( 'bp-content-id' );
+			var contentType = $( this ).data( 'bp-content-type' );
+			var nonce       = $( this ).data( 'bp-nonce' );
+			var currentHref = $( this ).attr( 'href' );
+
+			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+				$( document ).find( '.bp-report-form-err' ).empty();
+				var mf_content = $( currentHref );
+				mf_content.find( '.bp-content-id' ).val( contentId );
+				mf_content.find( '.bp-content-type' ).val( contentType );
+				mf_content.find( '.bp-nonce' ).val( nonce );
+			}
+			if ( $( '#message-threads .block-member' ).length > 0 ) {
+				$( '#message-threads .block-member' ).magnificPopup(
+					{
+						items: {
+							src: currentHref,
+							type: 'inline'
+						},
+					}
+				).magnificPopup( 'open' );
+			}
+		},
+
+		threadListReportPopup: function ( e ) {
+			e.preventDefault();
+			var contentId   = $( this ).data( 'bp-content-id' );
+			var contentType = $( this ).data( 'bp-content-type' );
+			var nonce       = $( this ).data( 'bp-nonce' );
+			var currentHref = $( this ).attr( 'href' );
+			var reportType  = $( this ).attr( 'reported_type' );
+			var mf_content  = $( currentHref );
+
+			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+				$( document ).find( '.bp-report-form-err' ).empty();
+				mf_content.find( '.bp-content-id' ).val( contentId );
+				mf_content.find( '.bp-content-type' ).val( contentType );
+				mf_content.find( '.bp-nonce' ).val( nonce );
+			}
+			if ( $( '#message-threads .report-content' ).length > 0 ) {
+
+				$( '#bb-report-content .form-item-category' ).show();
+				if ( 'user_report' === contentType ) {
+					$( '#bb-report-content .form-item-category.content' ).hide();
+				} else {
+					$( '#bb-report-content .form-item-category.members' ).hide();
+				}
+
+				$( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' ).attr( 'checked', true );
+
+				if ( ! $( '#bb-report-content .form-item-category:visible label input[type="radio"]' ).length ) {
+					$( '#report-category-other' ).attr( 'checked', true );
+					$( '#report-category-other' ).trigger( 'click' );
+					$( 'label[for="report-category-other"]' ).hide();
+				}
+
+				if ( 'undefined' !== typeof reportType ) {
+					mf_content.find( '.bp-reported-type' ).text( reportType );
+				}
+
+				$( '#message-threads .report-content' ).magnificPopup(
+					{
+						items: {
+							src: currentHref,
+							type: 'inline'
+						},
+					}
+				).magnificPopup( 'open' );
+			}
+		},
+
 		reportPopUp: function () {
 			if ( $( '.report-content, .block-member' ).length > 0 ) {
-				var _this = this;
 				$( '.report-content, .block-member' ).magnificPopup(
 					{
 						type: 'inline',
 						midClick: true,
 						callbacks: {
 							open: function () {
+								console.log( 'called' );
+								$( '#notes-error' ).hide();
 								var contentId   = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
 								var nonce       = this.currItem.el.data( 'bp-nonce' );
 								var reportType  = this.currItem.el.attr( 'reported_type' );
-								if ( 'undefined' !== typeof reportType ) {
-									var mf_content = $( '#content-report' );
-									mf_content.find( '.bp-reported-type' ).text( reportType );
+								$( '#bb-report-content .form-item-category' ).show();
+								if ( 'user_report' === contentType ) {
+									$( '#bb-report-content .form-item-category.content' ).hide();
+								} else {
+									$( '#bb-report-content .form-item-category.members' ).hide();
 								}
+
+								$( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' ).attr( 'checked', true );
+
+								if ( ! $( '#bb-report-content .form-item-category:visible label input[type="radio"]' ).length ) {
+									$( '#report-category-other' ).attr( 'checked', true );
+									$( '#report-category-other' ).trigger( 'click' );
+									$( 'label[for="report-category-other"]' ).hide();
+								}
+
+								var content_report = $( '#content-report' );
+								content_report.find( '.bp-reported-type' ).text( this.currItem.el.data( 'reported_type' ) );
+								if ( 'undefined' !== typeof reportType ) {
+									content_report.find( '.bp-reported-type' ).text( reportType );
+								}
+
 								if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
 									$( document ).find( '.bp-report-form-err' ).empty();
-									_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
+									var mf_content = $( '.mfp-content' );
+									mf_content.find( '.bp-content-id' ).val( contentId );
+									mf_content.find( '.bp-content-type' ).val( contentType );
+									mf_content.find( '.bp-nonce' ).val( nonce );
 								}
 							}
 						}
@@ -2226,16 +2799,19 @@ window.bp = window.bp || {};
 				function () {
 					if ( 'other' === this.value ) {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).removeClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', true );
 					} else {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).addClass( 'bp-hide' );
-						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).prop( 'required', false );
 					}
 				}
 			);
 
 			$( '#bb-report-content' ).submit(
 				function ( e ) {
+
+					if ( $( '#report-category-other' ).is( ':checked' ) && '' === $( '#report-note' ).val() ) {
+						$( '#notes-error' ).show();
+						return false;
+					}
 
 					$( '#bb-report-content' ).find( '.report-submit' ).addClass( 'loading' );
 
@@ -2260,6 +2836,10 @@ window.bp = window.bp || {};
 								_this.changeReportButtonStatus( response.data );
 								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 								$( '.mfp-close' ).trigger( 'click' );
+								jQuery( document ).trigger(
+									'bb_trigger_toast_message',
+									[ '', response.data.toast_message, 'info', null, true ]
+								);
 							} else {
 								$( '#bb-report-content' ).find( '.report-submit' ).removeClass( 'loading' );
 								_this.handleReportError( response.data.message.errors, e.currentTarget );
@@ -2344,7 +2924,7 @@ window.bp = window.bp || {};
 						midClick: true,
 						callbacks: {
 							open: function () {
-								var contentType = this.currItem.el.attr( 'reported_type' );
+								var contentType = undefined !== this.currItem.el.attr( 'reported_type' ) ? this.currItem.el.attr( 'reported_type' ) : this.currItem.el.data( 'reported_type' );
 								if ( 'undefined' !== typeof contentType ) {
 									var mf_content = $( '#reported-content' );
 									mf_content.find( '.bp-reported-type' ).text( contentType );
@@ -2370,12 +2950,6 @@ window.bp = window.bp || {};
 			}
 
 			jQuery( target ).closest( '.bb-report-type-wrp' ).find( '.bp-report-form-err' ).html( message );
-		},
-		setFormValues: function ( data ) {
-			var mf_content = $( '.mfp-content' );
-			mf_content.find( '.bp-content-id' ).val( data.contentId );
-			mf_content.find( '.bp-content-type' ).val( data.contentType );
-			mf_content.find( '.bp-nonce' ).val( data.nonce );
 		},
 		togglePassword: function () {
 			$( document ).on(
@@ -2407,7 +2981,7 @@ window.bp = window.bp || {};
 				! _.isUndefined( BP_Nouveau.media.emoji ) &&
 				! $targetEl.closest( '.post-emoji' ).length &&
 				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
-				$( '.emojionearea-button.active' ).removeClass( 'active' );
+				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 			}
 		},
 
@@ -2420,7 +2994,7 @@ window.bp = window.bp || {};
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
 				if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					! _.isUndefined( BP_Nouveau.media.emoji ) ) {
-					$( '.emojionearea-button.active' ).removeClass( 'active' );
+					$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 				}
 			}
 		},
@@ -2562,10 +3136,10 @@ window.bp = window.bp || {};
 		 */
 		toggleMoreOption: function( event ) {
 
-			if( $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) ) {
+			if ( $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) ) {
 				event.preventDefault();
 
-				if( $( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
+				if ( $( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
 					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
 				} else {
 					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
@@ -2574,6 +3148,7 @@ window.bp = window.bp || {};
 
 			} else {
 				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+				$( '.optionsOpen' ).removeClass( 'optionsOpen' );
 			}
 		},
 
@@ -2587,6 +3162,7 @@ window.bp = window.bp || {};
 				var video         = document.createElement( 'video' );
 				var videoDuration = null;
 				video.src         = url;
+				var attempts 	  = 0;
 				var timer         = setInterval(
 					function () {
 						if (video.readyState > 0) {
@@ -2597,22 +3173,13 @@ window.bp = window.bp || {};
 									video.pause();
 								}
 							};
-
-							video.addEventListener(
-								'loadeddata',
-								function () {
-									if ( snapImage() ) {
-										video.removeEventListener( 'timeupdate', timeupdate );
-									}
-								}
-							);
 							var snapImage = function () {
 								var canvas    = document.createElement( 'canvas' );
 								canvas.width  = video.videoWidth;
 								canvas.height = video.videoHeight;
 								canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
 								var image   = canvas.toDataURL();
-								var success = image.length > 100000;
+								var success = image.length > 50000;
 								if ( success ) {
 									var img = document.createElement( 'img' );
 									img.src = image;
@@ -2634,6 +3201,11 @@ window.bp = window.bp || {};
 									}
 
 									URL.revokeObjectURL( url );
+								} else {
+									if( attempts >= 2 ) {
+										$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-no-thumbnail' );
+										clearInterval( timer );
+									}
 								}
 								return success;
 							};
@@ -2643,11 +3215,16 @@ window.bp = window.bp || {};
 							video.muted       = true;
 							video.playsInline = true;
 							if ( videoDuration != null ) {
-								video.currentTime = Math.floor( Math.random() * Math.floor( videoDuration ) ); // Seek random second before capturing thumbnail
+								video.currentTime = Math.floor( videoDuration ); // Seek fixed second before capturing thumbnail.
 							}
 							video.play();
 							clearInterval( timer );
 						}
+						if( attempts >= 2 ) {
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-no-thumbnail' );
+							clearInterval( timer );
+						}
+						attempts++;
 					},
 					500
 				);
@@ -2676,8 +3253,8 @@ window.bp = window.bp || {};
 		 */
 		bbWidgetMoreFollowing: function ( event ) {
 			var target = $( event.currentTarget ),
-				link = target.attr( 'href' );
-			var parts = link.split( '#' );
+				link   = target.attr( 'href' );
+			var parts  = link.split( '#' );
 			if ( parts.length > 1 ) {
 				var hash_text = parts.pop();
 				if ( hash_text && $( '[data-bp-scope="' + hash_text + '"]' ).length > 0 ) {
@@ -2688,82 +3265,414 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * [toggleAccordion description]
+		 * @return {[type]} [description]
+		 */
+		 toggleAccordion: function() {
+			var accordion = $( this ).closest( '.bb-accordion' );
+			if( accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded' ) == 'true' ) {
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'false' );
+				accordion.find( '.bb-icon-angle-up' ).removeClass( 'bb-icon-angle-up' ).addClass( 'bb-icon-angle-down' );
+			} else {
+				accordion.find( '.bb-accordion_trigger' ).attr( 'aria-expanded', 'true' );
+				accordion.find( '.bb-icon-angle-down' ).removeClass( 'bb-icon-angle-down' ).addClass( 'bb-icon-angle-up' );
+			}
+			accordion.toggleClass('is_closed');
+			accordion.find( '.bb-accordion_panel' ).slideToggle();
+		},
+
+		/**
 		 *  Make Medium Editor buttons wrap.
+		 *
 		 *  @param  {JQuery node} editorWrap The jQuery node.
 		 */
-		mediumEditorButtonsWarp: function ( editorWrap ) { //Pass jQuery $(node)
-			if( editorWrap.hasClass( 'wrappingInitialised' ) ) { // Do not go through if it is initialed already
+		mediumEditorButtonsWarp: function ( editorWrap ) { // Pass jQuery $(node).
+			if ( editorWrap.hasClass( 'wrappingInitialised' ) ) { // Do not go through if it is initialed already.
 				return;
 			}
 			editorWrap.addClass( 'wrappingInitialised' );
 			var buttonsWidth = 0;
-			editorWrap.find( '.medium-editor-toolbar-actions > li' ).each( function() {
-				buttonsWidth += $( this ).outerWidth();
-			});
-			if( buttonsWidth > editorWrap.width() - 10 ) { //No need to calculate if space is available
-				editorWrap.data('childerWith', buttonsWidth);
-				if( buttonsWidth > editorWrap.width() ) {
-					if( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length === 0 ) {
-						editorWrap.find( '.medium-editor-toolbar-actions' ).append( '<li class="medium-editor-action-more"><button class="medium-editor-action medium-editor-action-more-button"><b></b></button><ul></ul></li>' );	
-					}
-					editorWrap.find( '.medium-editor-action-more').show();
-					buttonsWidth += editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).outerWidth();
-					$( editorWrap.find('.medium-editor-action').get().reverse() ).each( function() {
-						if( $( this ).hasClass( 'medium-editor-action-more-button') ) {
-							return;
-						}
-						if( buttonsWidth > editorWrap.width() ) {
-							buttonsWidth -= $( this ).outerWidth();
-							editorWrap.find( '.medium-editor-action-more > ul').prepend( $( this ).parent() );
-						}
-						
-					});
+			editorWrap.find( '.medium-editor-toolbar-actions > li' ).each(
+				function() {
+					buttonsWidth += $( this ).outerWidth();
 				}
-			} else { // If space is available then append <li> to parent again
-				if( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length ) {
-					$( editorWrap.find('.medium-editor-action-more ul > li') ).each( function() {
-						if( buttonsWidth + 35 < editorWrap.width() ) {
-							buttonsWidth += $( this ).outerWidth();
-							$( this ).insertBefore( editorWrap.find( '.medium-editor-action-more') );
+			);
+			if ( buttonsWidth > editorWrap.width() - 10 ) { // No need to calculate if space is available.
+				editorWrap.data( 'childerWith', buttonsWidth );
+				if ( buttonsWidth > editorWrap.width() ) {
+					if ( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length === 0 ) {
+						editorWrap.find( '.medium-editor-toolbar-actions' ).append( '<li class="medium-editor-action-more"><button class="medium-editor-action medium-editor-action-more-button"><b></b></button><ul></ul></li>' );
+					}
+					editorWrap.find( '.medium-editor-action-more' ).show();
+					buttonsWidth += editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).outerWidth();
+					$( editorWrap.find( '.medium-editor-action' ).get().reverse() ).each(
+						function() {
+							if ( $( this ).hasClass( 'medium-editor-action-more-button' ) ) {
+								return;
+							}
+							if ( buttonsWidth > editorWrap.width() ) {
+								buttonsWidth -= $( this ).outerWidth();
+								editorWrap.find( '.medium-editor-action-more > ul' ).prepend( $( this ).parent() );
+							}
+
 						}
-					});
-					if( editorWrap.find( '.medium-editor-action-more ul > li').length === 0 ) {
-						editorWrap.find( '.medium-editor-action-more').hide();
+					);
+				}
+			} else { // If space is available then append <li> to parent again.
+				if ( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length ) {
+					$( editorWrap.find( '.medium-editor-action-more ul > li' ) ).each(
+						function() {
+							if ( buttonsWidth + 35 < editorWrap.width() ) {
+								buttonsWidth += $( this ).outerWidth();
+								$( this ).insertBefore( editorWrap.find( '.medium-editor-action-more' ) );
+							}
+						}
+					);
+					if ( editorWrap.find( '.medium-editor-action-more ul > li' ).length === 0 ) {
+						editorWrap.find( '.medium-editor-action-more' ).hide();
 					}
 				}
 			}
 
-			$( editorWrap ).find( '.medium-editor-action-more-button' ).on( 'click', function( event ) {
-				event.preventDefault();
-				$( this ).parent( '.medium-editor-action-more').toggleClass( 'active' );
-			});
+			$( editorWrap ).find( '.medium-editor-action-more-button' ).on(
+				'click',
+				function( event ) {
+					event.preventDefault();
+					$( this ).parent( '.medium-editor-action-more' ).toggleClass( 'active' );
+				}
+			);
 
-			$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).on( 'click', function( event ) {
-				event.preventDefault();
-				$( this ).closest( '.medium-editor-action-more').toggleClass( 'active' );
-			});
+			$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).on(
+				'click',
+				function( event ) {
+					event.preventDefault();
+					$( this ).closest( '.medium-editor-action-more' ).toggleClass( 'active' );
+				}
+			);
 
-			$( window ).one( 'resize', function() { //Attach event once only.
-				editorWrap.removeClass( 'wrappingInitialised' ); // Remove class to run trough again as screen has resized
-				$( editorWrap ).find( '.medium-editor-action-more-button' ).unbind('click');
-				$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind('click');
-			});
+			$( window ).one(
+				'resize',
+				function() { // Attach event once only.
+					editorWrap.removeClass( 'wrappingInitialised' ); // Remove class to run trough again as screen has resized.
+					$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind( 'click' );
+				}
+			);
 
 		},
 
 		/**
 		 *  Check if string is a valid URL
+		 *
 		 *  @param  {String} URL The URL to check.
 		 *  @return {Boolean} Return true if it's URL or false if not.
 		 */
 		isURL: function ( URL ) {
 			var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
 			return regexp.test( $.trim( URL ) );
-		}
+		},
+
+		/**
+		 *  Close Action Popup
+		 *
+		 *  @param  {object} event The event object.
+		 *  @return {function}
+		 */
+		closeActionPopup: function( event ) {
+			event.preventDefault();
+			$( this ).closest( '.bb-action-popup' ).hide();
+		},
+
+		/**
+		 *  Show Action Popup
+		 *
+		 *  @param  {object} event The event object.
+		 *  @return {function}
+		 */
+		showActionPopup: function( event ) {
+			event.preventDefault();
+			$( $( event.currentTarget ).attr( 'href' ) ).show();
+		},
+
+		/**
+		 *  handle profile notification setting events
+		 */
+		profileNotificationSetting: function () {
+			var self = this;
+			self.profileNotificationSettingInputs(['.email', '.web', '.app'] );
+
+			//Learn More section hide/show for mobile
+			$( '.notification_info .notification_learn_more' ).click( function( e ) {
+				e.preventDefault();
+
+				$( this ).find( 'a span' ).toggleClass( function() {
+					if ( $( this ).hasClass( 'bb-icon-chevron-down' ) ) {
+						return 'bb-icon-chevron-up';
+					} else {
+						return 'bb-icon-chevron-down';
+					}
+				});
+				$( this ).toggleClass( 'show' ).parent().find( '.notification_type' ).toggleClass( 'show' );
+
+			});
+
+			//Notification settings Mobile UI
+			$( '.main-notification-settings' ).each( function() {
+				self.NotificationMobileDropdown( $( this ).find( 'tr:not( .notification_heading )' ) );
+			});
+
+			$( document ).on( 'click', '.bb-mobile-setting ul li', function( e ) {
+				e.preventDefault();
+				if ( $( this ).find( 'input' ).is( ':checked' ) ) {
+					$( this ).find( 'input' ).prop( 'checked', false );
+					$( $( 'input#' + $( this ).find( 'label' ).attr( 'data-for' ) ) ).trigger( 'click' );
+				} else {
+					$( this ).find( 'input' ).prop( 'checked', true );
+					$( $( 'input#' + $( this ).find( 'label' ).attr( 'data-for' ) ) ).trigger( 'click' );
+				}
+				self.NotificationMobileDropdown( $( this ).closest( 'tr' ) );
+			});
+
+			$( document ).on( 'click', '.bb-mobile-setting .bb-mobile-setting-anchor', function() {
+				$( this ).parent().toggleClass( 'active');
+				$( '.bb-mobile-setting' ).not( $( this ).parent() ).removeClass( 'active' );
+			});
+
+			$( document ).on( 'click', function( e ) {
+				if ( ! $( e.target ).hasClass( 'bb-mobile-setting-anchor' ) ) {
+					$( '.bb-mobile-setting' ).removeClass( 'active' );
+				}
+			});
+
+		},
+
+		/**
+		 *  Enable Disable profile notification setting inputs
+		 */
+		profileNotificationSettingInputs: function ( node ) {
+			for(var i = 0; i < node.length; i++){
+				/* jshint ignore:start */
+				(function (_i) {
+					$( document ).on( 'click', '.main-notification-settings th' + node[_i] + ' input[type="checkbox"]', function() {
+						if ( $( this ).is( ':checked' ) ) {
+							$( '.main-notification-settings' ).find( 'td' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
+							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
+						} else {
+							$( '.main-notification-settings' ).find( 'td' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
+							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
+						}
+						bp.Nouveau.NotificationMobileDropdown( $( this ).closest( '#settings-form' ).find( 'tr:not( .notification_heading )' ) );
+					});
+				})(i);
+				/* jshint ignore:end */
+			}
+		},
+
+		/**
+		 *  Notification Mobile UI
+		 */
+		NotificationMobileDropdown: function ( node ) {
+			var textAll = $( '.main-notification-settings' ).data( 'text-all' );
+			var textNone = $( '.main-notification-settings' ).data( 'text-none' );
+			node.each( function() {
+				var selected_text = '';
+				var available_option = '';
+				var nodeSelector = $( this ).find( 'td' ).length ? 'td' : 'th';
+				var allInputsChecked = 0;
+				$( this ).find( nodeSelector + ':not(:first-child)' ).each( function () {
+					if ( $( this ).find( 'input[type="checkbox"]' ).length ) {
+						var inputText = $( this ).find( 'label' ).text();
+						var inputChecked = $( this ).find( 'input' ).is( ':checked' ) ? 'checked' : '';
+						var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
+						available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
+					}
+					if ( $( this ).hasClass( 'disabled' ) ) {
+						return;
+					}
+					if ( ! $( this ).find( 'input:checked' ).length ) {
+						return;
+					}
+					selected_text += selected_text === '' ? $( this ).find( 'input[type="checkbox"] + label' ).text().trim() : ', ' + $( this ).find( 'input[type="checkbox"] + label' ).text().trim();
+					allInputsChecked++;
+				} );
+				if ( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
+					if ( $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length == 1 ) {
+						selected_text = selected_text;
+					} else {
+						selected_text = textAll;
+					}
+				} else {
+					selected_text = selected_text === '' ? textNone : selected_text;
+				}
+				if ( $( this ).find( nodeSelector + ':first-child .bb-mobile-setting' ).length === 0 ) {
+					$( this ).find( nodeSelector + ':first-child' ).append( '<div class="bb-mobile-setting"><span class="bb-mobile-setting-anchor">' + selected_text + '</span><ul></ul></div>' );
+				} else {
+					$( this ).find( nodeSelector + ':first-child .bb-mobile-setting .bb-mobile-setting-anchor' ).text( selected_text );
+				}
+				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).html( '' );
+				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).append( available_option );
+			});
+		},
+
+		/**
+		 *  Register Dropzone Global Progress UI
+		 *
+		 *  @param  {object} dropzone The Dropzone object.
+		 *  @return {function}
+		 */
+		 dropZoneGlobalProgress: function( dropzone ) {
+
+			if ( $( dropzone.element ).find( '.dz-global-progress' ).length == 0 ) {
+				$( dropzone.element ).append( '<div class="dz-global-progress"><div class="dz-progress-bar-full"><span class="dz-progress"></span></div><p></p><span class="bb-icon-f bb-icon-times dz-remove-all"></span></div>' );
+				$( dropzone.element ).addClass( 'dz-progress-view' );
+				$( dropzone.element ).find( '.dz-remove-all' ).click( function() {
+					$.each( dropzone.files, function( index, file ) {
+						dropzone.removeFile( file );
+					});
+				});
+			}
+
+			var message = '';
+			var progress = 0,
+				totalProgress = 0;
+			if ( dropzone.files.length == 1 ) {
+				$( dropzone.element ).addClass( 'dz-single-view' );
+				message = 'Uploading <strong>' + dropzone.files[0].name + '</strong>';
+				progress = dropzone.files[0].upload.progress;
+			} else {
+				$( dropzone.element ).removeClass( 'dz-single-view' );
+				totalProgress = 0;
+				$.each( dropzone.files, function( index, file ) {
+					totalProgress += file.upload.progress;
+				});
+				progress = totalProgress / dropzone.files.length;
+				message = 'Uploading <strong>' + dropzone.files.length + ' files</strong>';
+			}
+
+			$( dropzone.element ).find( '.dz-global-progress .dz-progress').css( 'width', progress + '%' );
+			$( dropzone.element ).find( '.dz-global-progress > p').html( message );
+		},
+
+		userPresenceStatus: function() {
+		 	// Active user on page load.
+			window.bb_is_user_active = true;
+			var idle_interval = parseInt( BB_Nouveau_Presence.idle_inactive_span ) * 1000;
+
+			// setup the idle time user check.
+			bp.Nouveau.userPresenceChecker( idle_interval );
+
+			if ( '' !== BB_Nouveau_Presence.heartbeat_enabled && parseInt( BB_Nouveau_Presence.presence_interval ) <= 60 ) {
+				$( document ).on( 'heartbeat-send', function ( event, data ) {
+					if (
+						'undefined' !== typeof window.bb_is_user_active &&
+						true === window.bb_is_user_active
+					) {
+						var paged_user_id  = bp.Nouveau.getPageUserIDs();
+						// Add user data to Heartbeat.
+						data.presence_users = paged_user_id.join( ',' );
+					}
+
+				} );
+
+				$( document ).on( 'heartbeat-tick', function ( event, data ) {
+					// Check for our data, and use it.
+					if ( ! data.users_presence ) {
+						return;
+					}
+
+					bp.Nouveau.updateUsersPresence( data.users_presence );
+				} );
+			} else {
+				setInterval(
+					function () {
+						var params = {};
+
+						if (
+							'undefined' !== typeof window.bb_is_user_active &&
+							true === window.bb_is_user_active
+						) {
+							params.ids = bp.Nouveau.getPageUserIDs();
+						}
+
+						if (
+							'undefined' !== typeof params.ids &&
+							'undefined' !== typeof params.ids.length &&
+							0 < params.ids.length
+						) {
+							var url = '1' === BB_Nouveau_Presence.native_presence ? BB_Nouveau_Presence.native_presence_url : BB_Nouveau_Presence.presence_rest_url;
+							$.ajax(
+								{
+									type: 'POST',
+									url: url,
+									data: params,
+									beforeSend: function ( xhr ) {
+										xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
+									},
+									success: function ( data ) {
+										// Check for our data, and use it.
+										if ( ! data ) {
+											return;
+										}
+
+										bp.Nouveau.updateUsersPresence( data );
+									}
+								}
+							);
+						}
+					},
+					parseInt( BB_Nouveau_Presence.presence_default_interval ) * 1000 // 1 min.
+				);
+			}
+		},
+
+		getPageUserIDs: function() {
+			var user_ids = [];
+			var all_presence = $( document ).find( '.member-status[data-bb-user-id]' );
+			if ( all_presence.length > 0 ) {
+				all_presence.each( function () {
+					var user_id = $( this ).attr( 'data-bb-user-id' );
+					if ( $.inArray( parseInt( user_id ), user_ids ) == -1 ) {
+						user_ids.push( parseInt( user_id ) );
+					}
+				} );
+			}
+
+			return user_ids;
+		},
+
+		updateUsersPresence: function ( presence_data ) {
+			if ( presence_data && presence_data.length > 0 ) {
+				$.each( presence_data, function ( index, user ) {
+					bp.Nouveau.updateUserPresence( user.id, user.status );
+				} );
+			}
+		},
+
+		updateUserPresence: function( user_id, status ) {
+			$( document )
+				.find( '.member-status[data-bb-user-id="' + user_id + '"]' )
+				.removeClass( 'offline online' )
+				.addClass( status )
+				.attr( 'data-bb-user-presence', status );
+		},
+
+		userPresenceChecker: function (inactive_timeout) {
+
+			var wait = setTimeout( function () {
+				window.bb_is_user_active = false;
+			}, inactive_timeout );
+
+			document.onmousemove = document.mousedown = document.mouseup = document.onkeydown = document.onkeyup = document.focus = function () {
+				clearTimeout( wait );
+				wait = setTimeout( function () {
+					window.bb_is_user_active = false;
+				}, inactive_timeout );
+				window.bb_is_user_active = true;
+			};
+		},
 
 	};
 
-	// Launch BP Nouveau.
-	bp.Nouveau.start();
+   // Launch BP Nouveau.
+   bp.Nouveau.start();
 
 } )( bp, jQuery );
