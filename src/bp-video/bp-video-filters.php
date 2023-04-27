@@ -76,6 +76,8 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_video_preview' );
 add_filter( 'query_vars', 'bb_setup_attachment_video_preview_query' );
 add_action( 'template_include', 'bb_setup_attachment_video_preview_template', PHP_INT_MAX );
 
+add_action( 'bb_video_upload', 'bb_messages_video_save' );
+
 /**
  * Add video theatre template for activity pages.
  *
@@ -710,6 +712,43 @@ function bp_video_forums_embed_attachments( $content, $id ) {
 }
 
 /**
+ * Put video attachment as media.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $attachment
+ */
+function bb_messages_video_save( $attachment ) {
+
+	if ( bp_is_messages_component() && bp_is_messages_video_support_enabled() && ! empty( $attachment ) ) {
+		$videos[] = array(
+			'id'         => $attachment->ID,
+			'name'       => $attachment->post_title,
+			'privacy'    => 'message',
+		);
+
+		remove_action( 'bp_video_add', 'bp_activity_video_add', 9 );
+		remove_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
+
+		$video_ids = bp_video_add_handler( $videos, 'message' );
+
+		if ( ! is_wp_error( $video_ids ) ) {
+			update_post_meta( $attachment->ID, 'bp_media_parent_message_id', 0 );
+
+			// Message not actually sent.
+			update_post_meta( $attachment->ID, 'bp_video_saved', 0 );
+		}
+
+		add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
+		add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
+		
+		return $video_ids;
+	}
+
+	return false;
+}
+
+/**
  * Attach video to the message object
  *
  * @since BuddyBoss 1.7.0
@@ -718,27 +757,54 @@ function bp_video_forums_embed_attachments( $content, $id ) {
  */
 function bp_video_attach_video_to_message( &$message ) {
 
-	if ( bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['video'] ) ) { // phpcs:ignore
-		remove_action( 'bp_video_add', 'bp_activity_video_add', 9 );
-		remove_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
+	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['video'] ) ) {
 
-		$videos = $_POST['video']; // phpcs:ignore
-		if ( ! empty( $videos ) ) {
-			foreach ( $videos as $k => $video ) {
-				if ( array_key_exists( 'group_id', $video ) ) {
-					unset( $videos[ $k ]['group_id'] );
-				}
+		$video_attachments = $_POST['video'];
+		if ( ! empty( $video_attachments ) ) {
+			foreach ( $video_attachments as $attachment ) {
+
+				// Get media_id from the attachment ID.
+				$video_media_id = get_post_meta( $attachment['id'], 'bp_media_id', true );
+				$video_ids[]    = $video_media_id;
+
+				// Attach already created media.
+				$video             = new BP_Video( $video_media_id );
+				$video->privacy    = 'message';
+				$video->message_id = $message->id;
+				$video->save();
+
+				update_post_meta( $video->attachment_id, 'bp_video_saved', true );
+				update_post_meta( $video->attachment_id, 'bp_media_parent_message_id', $message->id );
+				update_post_meta( $video->attachment_id, 'thread_id', $message->thread_id );
+
+			}
+			if ( ! empty( $video_ids ) ) {
+				bp_messages_update_meta( $message->id, 'bp_video_ids', implode( ',', $video_ids ) );
 			}
 		}
-
-		$video_ids = bp_video_add_handler( $videos, 'message' );
-
-		add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
-		add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
-
-		// save video meta for message.
-		bp_messages_update_meta( $message->id, 'bp_video_ids', implode( ',', $video_ids ) );
 	}
+
+	// if ( bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['video'] ) ) { // phpcs:ignore
+	// 	remove_action( 'bp_video_add', 'bp_activity_video_add', 9 );
+	// 	remove_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
+
+	// 	$videos = $_POST['video']; // phpcs:ignore
+	// 	if ( ! empty( $videos ) ) {
+	// 		foreach ( $videos as $k => $video ) {
+	// 			if ( array_key_exists( 'group_id', $video ) ) {
+	// 				unset( $videos[ $k ]['group_id'] );
+	// 			}
+	// 		}
+	// 	}
+
+	// 	$video_ids = bp_video_add_handler( $videos, 'message' );
+
+	// 	add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
+	// 	add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
+
+	// 	// save video meta for message.
+	// 	bp_messages_update_meta( $message->id, 'bp_video_ids', implode( ',', $video_ids ) );
+	// }
 }
 
 /**

@@ -247,7 +247,7 @@ class BP_Video {
 
 		// If we have an existing ID, update the video item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id ); //phpcs:ignore
+			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id ); //phpcs:ignore
 		} else {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );  //phpcs:ignore
 		}

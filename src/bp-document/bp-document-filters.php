@@ -762,6 +762,43 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 }
 
 /**
+ * Put document attachment as media.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $attachment
+ */
+function bb_messages_document_save( $attachment ) {
+
+	if ( bp_is_messages_component() && bp_is_messages_document_support_enabled() && ! empty( $attachment ) ) {
+		$documents[] = array(
+			'id'         => $attachment->ID,
+			'name'       => $attachment->post_title,
+			'privacy'    => 'message',
+		);
+
+		remove_action( 'bp_document_add', 'bp_activity_video_add', 9 );
+		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
+		$document_ids = bp_document_add_handler( $documents, 'message' );
+
+		if ( ! is_wp_error( $document_ids ) ) {
+			update_post_meta( $attachment->ID, 'bp_media_parent_message_id', 0 );
+
+			// Message not actually sent.
+			update_post_meta( $attachment->ID, 'bp_document_saved', 0 );
+		}
+
+		add_action( 'bp_document_add', 'bp_activity_video_add', 9 );
+		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+		
+		return $document_ids;
+	}
+
+	return false;
+}
+
+/**
  * Attach document to the message object.
  *
  * @param $message
@@ -769,6 +806,33 @@ function bp_document_forums_embed_attachments( $content, $id ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_attach_document_to_message( &$message ) {
+
+	if ( bp_is_active( 'document' ) && bp_is_messages_document_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['document'] ) ) {
+
+		$media_attachments = $_POST['video'];
+		if ( ! empty( $media_attachments ) ) {
+			foreach ( $media_attachments as $attachment ) {
+
+				// Get media_id from the attachment ID.
+				$document_id    = get_post_meta( $attachment['id'], 'bp_document_id', true );
+				$document_ids[] = $document_id;
+
+				// Attach already created media.
+				$document             = new BP_Document( $document_id );
+				$document->privacy    = 'message';
+				$document->message_id = $message->id;
+				$document->save();
+
+				update_post_meta( $document->attachment_id, 'bp_media_saved', true );
+				update_post_meta( $document->attachment_id, 'bp_media_parent_message_id', $message->id );
+				update_post_meta( $document->attachment_id, 'thread_id', $message->thread_id );
+
+			}
+			if ( ! empty( $document_ids ) ) {
+				bp_messages_update_meta( $message->id, 'bp_document_ids', implode( ',', $document_ids ) );
+			}
+		}
+	}
 
 	if ( bp_is_messages_document_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['document'] ) ) {
 

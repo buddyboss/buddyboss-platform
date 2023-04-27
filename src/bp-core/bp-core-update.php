@@ -421,6 +421,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19991 ) {
 			bb_update_to_2_3_1();
 		}
+
+		if ( $raw_db_version < 20201 ) {
+			bb_update_to_2_3_4();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2611,4 +2615,39 @@ function bb_update_to_2_3_1() {
 	}
 
 	bb_repair_member_profile_links_callback( true );
+}
+
+/**
+ * Migration to add index and new column to media tables.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_4() {
+	global $wpdb;
+
+	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	$tables = array(
+		$wpdb->prefix . 'bp_media'    => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'type', 'menu_order', 'date_created' ),
+		$wpdb->prefix . 'bp_document' => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'type', 'menu_order', 'date_created', 'date_modified' ),
+	);
+
+	foreach ( $tables as $table_name => $indexes ) {
+		if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
+			$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$table_name}' AND column_name = 'message_id'" );
+			if ( empty( $row ) ) {
+				$wpdb->query( "ALTER TABLE {$table_name} ADD message_id BIGINT(20) DEFAULT 0 AFTER activity_id" );
+			}
+			foreach ( $indexes as $index ) {
+				$wpdb->query( "ALTER TABLE {$table_name} ADD INDEX ({$index})" );
+			}
+		}
+	}
+
+	set_transient( 'bb_update_to_2_3_4', 1, DAY_IN_SECONDS );
 }

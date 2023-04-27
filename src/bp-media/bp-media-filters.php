@@ -76,7 +76,6 @@ add_action( 'bp_media_after_save', 'bp_media_create_symlinks' );
 add_action( 'bp_media_before_delete', 'bp_media_clear_media_symlinks_on_delete', 10 );
 
 add_action( 'bb_media_upload', 'bb_messages_media_save' );
-add_action( 'bb_video_upload', 'bb_messages_video_save' );
 
 // Filter attachments in the query to filter media and documents.
 add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
@@ -970,10 +969,8 @@ function bp_media_attach_media_to_message( &$message ) {
 
 				update_post_meta( $media->attachment_id, 'bp_media_saved', true );
 				update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $message->id );
+				update_post_meta( $media->attachment_id, 'thread_id', $message->thread_id );
 
-				if ( isset( $_POST ) && isset( $_POST['thread_id'] ) && 'message' === $media->privacy ) {
-					update_post_meta( $media->attachment_id, 'thread_id', $_POST['thread_id'] );
-				}
 			}
 			if ( ! empty( $media_ids ) ) {
 				bp_messages_update_meta( $message->id, 'bp_media_ids', implode( ',', $media_ids ) );
@@ -981,7 +978,6 @@ function bp_media_attach_media_to_message( &$message ) {
 		}
 	}
 }
-
 
 /**
  * Put photo attachment as media.
@@ -998,7 +994,6 @@ function bb_messages_media_save( $attachment ) {
 			'id'         => $attachment->ID,
 			'name'       => $attachment->post_title,
 			'privacy'    => 'message',
-			'message_id' => 0,
 		);
 
 		remove_action( 'bp_media_add', 'bp_activity_media_add', 9 );
@@ -1018,44 +1013,6 @@ function bb_messages_media_save( $attachment ) {
 		
 		return $media_ids;
 	
-	}
-
-	return false;
-}
-
-/**
- * Put video attachment as media.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param $attachment
- */
-function bb_messages_video_save( $attachment ) {
-
-	if ( bp_is_messages_component() && bp_is_messages_video_support_enabled() && ! empty( $attachment ) ) {
-		$videos[] = array(
-			'id'         => $attachment->ID,
-			'name'       => $attachment->post_title,
-			'privacy'    => 'message',
-			'message_id' => 0,
-		);
-
-		remove_action( 'bp_video_add', 'bp_activity_video_add', 9 );
-		remove_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
-
-		$video_ids = bp_video_add_handler( $videos, 'message' );
-
-		if ( ! is_wp_error( $video_ids ) ) {
-			update_post_meta( $attachment->ID, 'bp_media_parent_message_id', 0 );
-
-			// Message not actually sent.
-			update_post_meta( $attachment->ID, 'bp_video_saved', 0 );
-		}
-
-		add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
-		add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
-		
-		return $video_ids;
 	}
 
 	return false;
