@@ -3735,7 +3735,7 @@ window.bp = window.bp || {};
 					e.preventDefault();
 					self.options.link_images = [];
 					self.options.link_image_index = 0;
-					self.options.link_image_index_save = '0';
+					self.options.link_image_index_save = '';
 					self.render( self.options );
 				});
 
