@@ -153,8 +153,13 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			$where['moderation_where'] .= ' AND ';
 		}
 
-		$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )' . $exclude_group_sql;
+		// Need to add $sql again because we add $exclude_group_sql.
+		$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 
+		if ( ! empty( $exclude_group_sql ) ) {
+			$sql = $this->exclude_where_query( false );
+			$where['moderation_where'] .=  $exclude_group_sql . ' AND ( ' . $sql . ' ) ';
+		}
 		return $where;
 	}
 

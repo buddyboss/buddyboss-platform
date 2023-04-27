@@ -263,16 +263,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		if ( ! empty( array_filter( $where ) ) ) {
 
-			$exclude_group_sql = '';
-			// Allow group activities from blocked/suspended users.
-			if (
-				bp_is_active( 'groups' ) &&
-				function_exists( 'did_action' ) && ! did_action( 'get_template_part_activity/widget' )
-			) {
-				$exclude_group_sql = ' OR a.component = "groups"';
-			}
-
-			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 		}
 
 		return $where_conditions;
