@@ -3986,8 +3986,8 @@ window.bp = window.bp || {};
 				if ( response.error === '' ) {
 					var urlImages = response.images;
 					self.options.link_image_index = 0;
-					var urlImagesIndex = '';
-					if ( '' !== self.options.link_image_index_save ) {
+					var urlImagesIndex = '0';
+					if ( '' !== self.options.link_image_index_save && ! _.isUndefined( self.options.link_image_index_save ) ) {
 						urlImagesIndex =  parseInt( self.options.link_image_index_save );
 					}
 					if( self.options.link_image_index_save === '-1' ) {
