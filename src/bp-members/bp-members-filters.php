@@ -967,7 +967,7 @@ function bb_validate_member_unique_identifier( $user_id ) {
 	if ( bb_is_exists_user_unique_identifier( $unique_identifier, $user_id ) ) {
 
 		// If unique identifier exists then generate a new an update.
-		bb_set_user_profile_slug( $user_id );
+		bb_set_user_profile_slug( $user_id, true );
 	}
 }
 add_action( 'profile_update', 'bb_validate_member_unique_identifier', 10, 1 );
