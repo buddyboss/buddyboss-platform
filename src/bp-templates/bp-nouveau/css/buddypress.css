@@ -9409,6 +9409,10 @@ body.register .buddypress-wrap .page ul {
   display: none;
 }
 
+.profile .bp-widget:has(.field_type_socialnetworks) #social-networks-popup {
+  display: none;
+}
+
 .buddypress-wrap .bp-widget.social .bp-tables-user {
   overflow: visible;
 }
