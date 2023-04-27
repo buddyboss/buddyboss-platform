@@ -3712,7 +3712,7 @@ window.bp = window.bp || {};
 						link_title: self.options.link_title,
 						link_description: self.options.link_description,
 						link_embed: self.options.link_embed,
-						link_image: ( "undefined" !== typeof self.options.link_images ) ? self.options.link_images[ self.options.link_image_index_save ] : '',
+						link_image: ( 'undefined' !== typeof self.options.link_images ) ? self.options.link_images[ self.options.link_image_index_save ] : '',
 						link_image_index_save: self.options.link_image_index_save
 					};
 
@@ -3735,7 +3735,7 @@ window.bp = window.bp || {};
 					e.preventDefault();
 					self.options.link_images = [];
 					self.options.link_image_index = 0;
-					self.options.link_image_index_save = '';
+					self.options.link_image_index_save = '-1';
 					self.render( self.options );
 				});
 
@@ -3810,6 +3810,16 @@ window.bp = window.bp || {};
 			scrapURL: function ( urlText, targetPreviewParent, targetDataInput ) {
 				var self = this;
 				var urlString = '';
+
+				if ( targetPreviewParent ) {
+					var formEl = targetPreviewParent.closest( 'form' );
+					if( formEl.find( 'input#bb_link_url' ).length > 0 && formEl.find( 'input#bb_link_url' ).val() !== '' ){
+						var currentValue = JSON.parse( formEl.find( 'input#bb_link_url').val() );
+						self.options.link_url = currentValue.url ? currentValue.url : '';
+						self.options.link_image_index_save = currentValue.link_image_index_save;
+					}
+				}
+				
 		
 				if ( urlText === null ) {
 					return;
@@ -3856,6 +3866,8 @@ window.bp = window.bp || {};
 		
 				if ( '' !== urlString ) {
 					this.loadURLPreview( urlString );
+				} else if( self.options.link_url ) {
+					this.loadURLPreview( self.options.link_url );
 				}
 			},
 		
@@ -3973,15 +3985,14 @@ window.bp = window.bp || {};
 		
 				if ( response.error === '' ) {
 					var urlImages = response.images;
-					// if (
-					// 	true === self.options[ 'edit_activity' ] && 'undefined' === typeof self.options[ 'link_image_index_save' ] && '' === self.options[ 'link_image_index_save' ]
-					// ) {
-					// 	urlImages = '';
-					// }
 					self.options.link_image_index = 0;
 					var urlImagesIndex = '';
-					if ( '' !== self.options.link_image_index ) {
-						urlImagesIndex =  parseInt( self.options.link_image_index );
+					if ( '' !== self.options.link_image_index_save ) {
+						urlImagesIndex =  parseInt( self.options.link_image_index_save );
+					}
+					if( self.options.link_image_index_save === '-1' ) {
+						urlImagesIndex = '';
+						urlImages = [];
 					}
 					Object.assign( self.options, {
 							link_success: true,
@@ -3990,34 +4001,12 @@ window.bp = window.bp || {};
 							link_description: response.description,
 							link_images: urlImages,
 							link_image_index: urlImagesIndex,
-							link_image_index_save: 0,
 							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
 						}
 					);
 		
 					self.loadedURLs.push( { 'url': url, 'response': response } );
-		
-					// Set form values for link preview.
-					// self.currentTargetForm = jQuery( self.currentTarget.elements[0] ).closest( 'form' );
-					// if ( jQuery( self.currentTargetForm ).find('#link_preview_data').length > 0 ) {
-
-					// 	var link_preview_data = {
-					// 		link_url: url,
-					// 		link_title: response.title,
-					// 		link_description: response.description,
-					// 		link_embed: self.options.link_embed,
-					// 		link_image: urlImages[ self.options.link_image_index_save ],
-					// 		link_image_index_save: self.options.link_image_index_save,
-					// 	};
-
-					// 	jQuery( self.currentTargetForm ).find('#link_preview_data').val( JSON.stringify( link_preview_data ) );
-
-					// 	self.render( self.options );
-					// }
-
-					self.render( self.options );
-					
-		
+					self.render( self.options );		
 				} else {
 					Object.assign( self.options, {
 							link_success: false,
@@ -4027,314 +4016,9 @@ window.bp = window.bp || {};
 							link_images: []
 						}
 					);
-
 					self.render( self.options );
 				}
-			},
-		
-			// postUpdate: function ( event ) {
-			// 	var self = this,
-			// 		meta = {}, edit = false;
-		
-			// 	if ( event ) {
-			// 		if ( 'keydown' === event.type && ( 13 !== event.keyCode || ! event.ctrlKey ) ) {
-			// 			return event;
-			// 		}
-		
-			// 		event.preventDefault();
-			// 	}
-		
-			// 	// unset all errors before submit.
-			// 	self.model.unset( 'errors' );
-		
-			// 	// Set the content and meta.
-			// 	_.each(
-			// 		self.$el.serializeArray(),
-			// 		function ( pair ) {
-			// 			pair.name = pair.name.replace( '[]', '' );
-			// 			if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in' ], pair.name ) ) {
-			// 				if ( _.isUndefined( meta[ pair.name ] ) ) {
-			// 					meta[ pair.name ] = pair.value;
-			// 				} else {
-			// 					if ( ! _.isArray( meta[pair.name] ) ) {
-			// 						meta[pair.name] = [ meta[pair.name] ];
-			// 					}
-		
-			// 					meta[ pair.name ].push( pair.value );
-			// 				}
-			// 			}
-			// 		}
-			// 	);
-		
-			// 	// Post content.
-			// 	var $whatsNew = self.$el.find( '#whats-new' );
-		
-			// 	var atwho_query = $whatsNew.find( 'span.atwho-query' );
-			// 	for ( var i = 0; i < atwho_query.length; i++ ) {
-			// 		jQuery( atwho_query[ i ] ).replaceWith( atwho_query[ i ].innerText );
-			// 	}
-		
-			// 	// transform other emoji into emojionearea emoji.
-			// 	$whatsNew.find( 'img.emoji' ).each(
-			// 		function( index, Obj) {
-			// 			jQuery( Obj ).addClass( 'emojioneemoji' );
-			// 			var emojis = jQuery( Obj ).attr( 'alt' );
-			// 			jQuery( Obj ).attr( 'data-emoji-char', emojis );
-			// 			jQuery( Obj ).removeClass( 'emoji' );
-			// 		}
-			// 	);
-		
-			// 	// Add valid line breaks.
-			// 	var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-			// 	content     = content.replace( /&nbsp;/g, ' ' );
-		
-			// 	self.model.set( 'content', content, { silent: true } );
-		
-			// 	// Silently add meta.
-			// 	self.model.set( meta, { silent: true } );
-		
-			// 	var medias = self.model.get( 'media' );
-			// 	if ( 'group' == self.model.get( 'object' ) && ! _.isUndefined( medias ) && medias.length ) {
-			// 		for ( var k = 0; k < medias.length; k++ ) {
-			// 			medias[ k ].group_id = self.model.get( 'item_id' );
-			// 		}
-			// 		self.model.set( 'media', medias );
-			// 	}
-		
-			// 	var document = self.model.get( 'document' );
-			// 	if ( 'group' == self.model.get( 'object' ) && ! _.isUndefined( document ) && document.length ) {
-			// 		for ( var d = 0; d < document.length; d++ ) {
-			// 			document[ d ].group_id = self.model.get( 'item_id' );
-			// 		}
-			// 		self.model.set( 'document', document );
-			// 	}
-		
-			// 	var video = self.model.get( 'video' );
-			// 	if ( 'group' == self.model.get( 'object' ) && ! _.isUndefined( video ) && video.length ) {
-			// 		for ( var v = 0; v < video.length; v++ ) {
-			// 			video[ v ].group_id = self.model.get( 'item_id' );
-			// 		}
-			// 		self.model.set( 'video', video );
-			// 	}
-		
-			// 	// validation for content editor.
-			// 	if ( jQuery( $.parseHTML( content ) ).text().trim() === '' && ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true !== this.model.get( 'link_success' ) ) && ( ( ! _.isUndefined( self.model.get( 'video' ) ) && ! self.model.get( 'video' ).length ) && ( ! _.isUndefined( self.model.get( 'document' ) ) && ! self.model.get( 'document' ).length ) && ( ! _.isUndefined( self.model.get( 'media' ) ) && ! self.model.get( 'media' ).length ) && ( ! _.isUndefined( self.model.get( 'gif_data' ) ) && ! Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
-			// 		self.model.set(
-			// 			'errors',
-			// 			{
-			// 				type: 'error',
-			// 				value: BP_Nouveau.activity.params.errors.empty_post_update
-			// 			}
-			// 		);
-			// 		return false;
-			// 	}
-		
-			// 	// update posting status true.
-			// 	self.model.set( 'posting', true );
-		
-			// 	var data = {
-			// 		'_wpnonce_post_update': BP_Nouveau.activity.params.post_nonce
-			// 	};
-		
-			// 	// Add the Akismet nonce if it exists.
-			// 	if ( jQuery( '#_bp_as_nonce' ).val() ) {
-			// 		data._bp_as_nonce = jQuery( '#_bp_as_nonce' ).val();
-			// 	}
-		
-			// 	// Remove all unused model attribute.
-			// 	data = _.omit(
-			// 		_.extend( data, this.model.attributes ),
-			// 		[
-			// 			'link_images',
-			// 			'link_image_index',
-			// 			'link_image_index_save',
-			// 			'link_success',
-			// 			'link_error',
-			// 			'link_error_msg',
-			// 			'link_scrapping',
-			// 			'link_loading',
-			// 			'posting'
-			// 		]
-			// 	);
-		
-			// 	// Form link preview data to pass in request if available.
-			// 	if ( self.model.get( 'link_success' ) ) {
-			// 		var images = self.model.get( 'link_images' ),
-			// 			index  = self.model.get( 'link_image_index' ),
-			// 			indexConfirm  = self.model.get( 'link_image_index_save' );
-			// 		if ( images && images.length ) {
-			// 			data = _.extend(
-			// 				data,
-			// 				{
-			// 					'link_image': images[ indexConfirm ],
-			// 					'link_image_index': index,
-			// 					'link_image_index_save' : indexConfirm
-			// 				}
-			// 			);
-			// 		}
-		
-			// 	} else {
-			// 		data = _.omit(
-			// 			data,
-			// 			[
-			// 				'link_title',
-			// 				'link_description',
-			// 				'link_url'
-			// 			]
-			// 		);
-			// 	}
-		
-			// 	// check if edit activity.
-			// 	if ( self.model.get( 'id' ) > 0 ) {
-			// 		edit      = true;
-			// 		data.edit = 1;
-		
-			// 		if ( ! bp.privacyEditable ) {
-			// 			data.privacy = bp.privacy;
-			// 		}
-			// 	}
-		
-			// 	bp.ajax.post( 'post_update', data ).done(
-			// 		function ( response ) {
-		
-			// 			// check if edit activity then scroll up 1px so image will load automatically.
-			// 			if ( self.model.get( 'id' ) > 0 ) {
-			// 				jQuery( 'html, body' ).animate(
-			// 					{
-			// 						scrollTop: jQuery( window ).scrollTop() + 1
-			// 					}
-			// 				);
-			// 			}
-		
-			// 			// At first, hide the modal.
-			// 			bp.Nouveau.Activity.postForm.postActivityEditHideModal();
-		
-			// 			var store       = bp.Nouveau.getStorage( 'bp-activity' ),
-			// 				searchTerms = jQuery( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
-			// 				toPrepend   = false;
-		
-			// 			// Look for matches if the stream displays search results.
-			// 			if ( searchTerms ) {
-			// 				searchTerms = new RegExp( searchTerms, 'im' );
-			// 				matches     = response.activity.match( searchTerms );
-			// 			}
-		
-			// 			/**
-			// 			 * Before injecting the activity into the stream, we need to check the filter
-			// 			 * and search terms are consistent with it when posting from a single item or
-			// 			 * from the Activity directory.
-			// 			 */
-			// 			if ( ( ! searchTerms || matches ) ) {
-			// 				toPrepend = ! store.filter || 0 === parseInt( store.filter, 10 ) || 'activity_update' === store.filter;
-			// 			}
-		
-			// 			/**
-			// 			 * "My Groups" tab is active.
-			// 			 */
-			// 			if ( toPrepend && response.is_directory ) {
-			// 				toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || 'group' === self.model.get( 'object' ) ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
-			// 			}
-		
-			// 			/**
-			// 			 * In the user activity timeline, user is posting on other user's timeline
-			// 			 * it will not have activity to prepend/append because of scope and privacy.
-			// 			 */
-			// 			if ( '' === response.activity && response.is_user_activity && response.is_active_activity_tabs ) {
-			// 				toPrepend = false;
-			// 			}
-		
-			// 			var medias = self.model.get( 'media' );
-			// 			if ( ! _.isUndefined( medias ) && medias.length ) {
-			// 				for ( var k = 0; k < medias.length; k++ ) {
-			// 					medias[ k ].saved = true;
-			// 				}
-			// 				self.model.set( 'media', medias );
-			// 			}
-		
-			// 			var link_embed = false;
-			// 			if ( self.model.get( 'link_embed' ) == true ) {
-			// 				link_embed = true;
-			// 			}
-		
-			// 			var documents = self.model.get( 'document' );
-			// 			if ( ! _.isUndefined( documents ) && documents.length ) {
-			// 				for ( var d = 0; d < documents.length; d++ ) {
-			// 					documents[ d ].saved = true;
-			// 				}
-			// 				self.model.set( 'document', documents );
-			// 			}
-		
-			// 			var videos = self.model.get( 'video' );
-			// 			if ( ! _.isUndefined( videos ) && videos.length ) {
-			// 				for ( var v = 0; v < videos.length; v++ ) {
-			// 					videos[ v ].saved = true;
-			// 				}
-			// 				self.model.set( 'video', videos );
-			// 			}
-		
-			// 			if ( '' === self.model.get( 'id' ) || 0 === parseInt( self.model.get( 'id' ) ) ) {
-			// 				// Reset draft activity.
-			// 				bp.Nouveau.Activity.postForm.resetDraftActivity( false );
-			// 			}
-		
-			// 			// Reset the form.
-			// 			self.resetForm();
-		
-			// 			// Display a successful feedback if the acticity is not consistent with the displayed stream.
-			// 			if ( ! toPrepend ) {
-		
-			// 				self.views.add(
-			// 					new bp.Views.activityFeedback(
-			// 						{
-			// 							value: response.message,
-			// 							type: 'updated'
-			// 						}
-			// 					)
-			// 				);
-			// 				jQuery( '#whats-new-form' ).addClass( 'bottom-notice' );
-		
-			// 				// Edit activity.
-			// 			} else if ( edit ) {
-			// 				jQuery( '#activity-' + response.id ).replaceWith( response.activity );
-		
-			// 				// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
-			// 			} else if ( ! jQuery( '#activity-' + response.id ).length ) {
-		
-			// 				// It's the very first activity, let's make sure the container can welcome it!
-			// 				if ( ! jQuery( '#activity-stream ul.activity-list' ).length ) {
-			// 					jQuery( '#activity-stream' ).html( jQuery( '<ul></ul>' ).addClass( 'activity-list item-list bp-list' ) );
-			// 				}
-		
-			// 				// Prepend the activity.
-			// 				bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
-		
-			// 				// replace dummy image with original image by faking scroll event.
-			// 				jQuery( window ).scroll();
-		
-			// 				if ( link_embed ) {
-			// 					if ( ! _.isUndefined( window.instgrm ) ) {
-			// 						window.instgrm.Embeds.process();
-			// 					}
-			// 					if ( ! _.isUndefined( window.FB ) && ! _.isUndefined( window.FB.XFBML ) ) {
-			// 						window.FB.XFBML.parse( jQuery( document ).find( '#activity-' + response.id ).get( 0 ) );
-			// 					}
-			// 				}
-			// 			}
-		
-			// 		}
-			// 	).fail(
-			// 		function ( response ) {
-			// 			self.model.set( 'posting', false );
-			// 			self.model.set(
-			// 				'errors',
-			// 				{
-			// 					type: 'error',
-			// 					value:  undefined === response.message ? BP_Nouveau.activity.params.errors.post_fail : response.message
-			// 				}
-			// 			);
-			// 		}
-			// 	);
-			// },
+			}
 		}
 			
 
