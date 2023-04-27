@@ -1757,22 +1757,8 @@ function bbp_topic_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-topic_' . bbp_get_topic_id() );
 
-		$link_url = '';
-		$link_preview_data = get_post_meta( bbp_get_topic_id(), '_link_preview_data', true );
-		if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
-			$link_url = ! empty ( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
-		}
+		bb_topic_reply_edit_link_preview_field( bbp_get_topic_id() );
 
-		$link_embed = get_post_meta( bbp_get_topic_id(), '_link_embed', true );
-		if ( ! empty( $link_embed ) ) {
-			$link_url = $link_embed;
-		}
-
-		if ( ! empty( $link_url ) ) {
-			?>
-			<input type="hidden" name="bbp_topic_link_url" id="bbp_topic_link_url" value="<?php echo $link_url; ?>" />
-			<?php
-		}
 	} else {
 
 		if ( bbp_is_single_forum() ) :
@@ -1830,22 +1816,8 @@ function bbp_reply_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-reply_' . bbp_get_reply_id() );
 
-		$link_url = '';
-		$link_preview_data = get_post_meta( bbp_get_reply_id(), '_link_preview_data', true );
-		if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
-			$link_url = ! empty ( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
-		}
+		bb_topic_reply_edit_link_preview_field( bbp_get_reply_id() );
 
-		$link_embed = get_post_meta( bbp_get_reply_id(), '_link_embed', true );
-		if ( ! empty( $link_embed ) ) {
-			$link_url = $link_embed;
-		}
-
-		if ( ! empty( $link_url ) ) {
-			?>
-			<input type="hidden" name="bbp_reply_link_url" id="bbp_reply_link_url" value="<?php echo $link_url; ?>" />
-			<?php
-		}
 	} else {
 		?>
 
@@ -2986,4 +2958,34 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 	// Filter and return
 	return apply_filters( 'bbp_title', $new_title, $sep, $seplocation );
+}
+
+/**
+ * Link preview edit field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @param integer $post_id Topic or Reply id.
+ */
+function bb_topic_reply_edit_link_preview_field( $post_id ){
+	$link_data         = [];
+	$link_preview_data = get_post_meta( $post_id, '_link_preview_data', true );
+	if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
+		$link_data['embed']                 = 0;
+		$link_data['url']                   = ! empty ( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
+		$link_data['link_image_index_save'] = ! empty ( $link_preview_data['link_image_index_save'] ) ? $link_preview_data['link_image_index_save'] : 0;
+	}
+
+	$link_embed = get_post_meta( $post_id, '_link_embed', true );
+	if ( ! empty( $link_embed ) ) {
+		$link_data['url']   = $link_embed;
+		$link_data['embed'] = 1;
+	}
+
+	if ( isset( $link_data['url'] ) && ! empty( $link_data['url'] ) ) {
+		$link_data_string = htmlentities( wp_json_encode( $link_data ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+		?>
+		<input type="hidden" name="bb_link_url" id="bb_link_url" value="<?php echo $link_data_string; ?>" />
+		<?php
+	}
 }
