@@ -853,11 +853,10 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 		);
 	} else {
 
-		// Get all users while it runs from background.
+		// Get all users who have not generate unique slug while it runs from background.
 		$user_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE LENGTH(meta_value) = %d AND `meta_key` = %s ORDER BY user_id ASC",
-				40,
+				"SELECT `{$wpdb->prefix}users`.ID FROM `{$wpdb->prefix}users` LEFT JOIN `{$wpdb->prefix}usermeta` ON ( `{$wpdb->prefix}users`.ID = `{$wpdb->prefix}usermeta`.user_id AND `{$wpdb->prefix}usermeta`.meta_key = %s ) WHERE `{$wpdb->prefix}usermeta`.user_id IS NULL ORDER BY `{$wpdb->prefix}users`.ID ASC",
 				'bb_profile_slug'
 			)
 		);
