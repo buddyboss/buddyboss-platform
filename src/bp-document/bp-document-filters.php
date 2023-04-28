@@ -71,6 +71,8 @@ add_action( 'bp_document_before_save', 'bp_document_delete_symlinks' );
 // Create symlinks for documents when saved.
 add_action( 'bp_document_after_save', 'bp_document_create_symlinks' );
 
+add_action( 'bb_document_upload', 'bb_messages_document_save' );
+
 // Clear document symlinks on delete.
 add_action( 'bp_document_before_delete', 'bp_document_clear_document_symlinks_on_delete', 10 );
 
@@ -777,7 +779,7 @@ function bb_messages_document_save( $attachment ) {
 			'privacy'    => 'message',
 		);
 
-		remove_action( 'bp_document_add', 'bp_activity_video_add', 9 );
+		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
 		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 
 		$document_ids = bp_document_add_handler( $documents, 'message' );
@@ -789,7 +791,7 @@ function bb_messages_document_save( $attachment ) {
 			update_post_meta( $attachment->ID, 'bp_document_saved', 0 );
 		}
 
-		add_action( 'bp_document_add', 'bp_activity_video_add', 9 );
+		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
 		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 		
 		return $document_ids;
@@ -809,9 +811,9 @@ function bp_document_attach_document_to_message( &$message ) {
 
 	if ( bp_is_active( 'document' ) && bp_is_messages_document_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['document'] ) ) {
 
-		$media_attachments = $_POST['video'];
-		if ( ! empty( $media_attachments ) ) {
-			foreach ( $media_attachments as $attachment ) {
+		$documents = $_POST['document'];
+		if ( ! empty( $documents ) ) {
+			foreach ( $documents as $attachment ) {
 
 				// Get media_id from the attachment ID.
 				$document_id    = get_post_meta( $attachment['id'], 'bp_document_id', true );
@@ -823,47 +825,16 @@ function bp_document_attach_document_to_message( &$message ) {
 				$document->message_id = $message->id;
 				$document->save();
 
-				update_post_meta( $document->attachment_id, 'bp_media_saved', true );
+				update_post_meta( $document->attachment_id, 'bp_document_saved', true );
 				update_post_meta( $document->attachment_id, 'bp_media_parent_message_id', $message->id );
 				update_post_meta( $document->attachment_id, 'thread_id', $message->thread_id );
+				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
 
 			}
 			if ( ! empty( $document_ids ) ) {
 				bp_messages_update_meta( $message->id, 'bp_document_ids', implode( ',', $document_ids ) );
 			}
 		}
-	}
-
-	if ( bp_is_messages_document_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['document'] ) ) {
-
-		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
-
-		$document_list = $_POST['document'];
-
-		if ( ! empty( $document_list ) ) {
-			foreach ( $document_list as $k => $document ) {
-				if ( array_key_exists( 'group_id', $document ) ) {
-					unset( $document_list[ $k ]['group_id'] );
-				}
-			}
-		}
-
-		$document_ids = bp_document_add_handler( $document_list, 'message' );
-
-		if ( ! empty( $document_ids ) ) {
-			foreach ( $document_ids as $document_id ) {
-				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
-			}
-		}
-
-		$document_ids = implode( ',', $document_ids );
-
-		// save document meta for message.
-		bp_messages_update_meta( $message->id, 'bp_document_ids', $document_ids );
-
-		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 	}
 }
 

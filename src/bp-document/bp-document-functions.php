@@ -551,6 +551,7 @@ function bp_document_add( $args = '' ) {
 
 	// document is saved for attachment.
 	update_post_meta( $document->attachment_id, 'bp_document_saved', true );
+	update_post_meta( $document->attachment_id, 'bp_document_id', $document->id );
 
 	/**
 	 * Fires at the end of the execution of adding a new document item, before returning the new document item ID.
