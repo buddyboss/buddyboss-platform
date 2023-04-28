@@ -3821,7 +3821,7 @@ window.bp = window.bp || {};
 				}
 				
 		
-				if ( urlText === null ) {
+				if ( urlText === null || urlText === '' ) {
 					return;
 				}
 
