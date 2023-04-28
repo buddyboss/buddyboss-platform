@@ -87,7 +87,8 @@ function bp_video_upload() {
 		if ( empty( $thumbnail_url ) ) {
 			$thumbnail_url = bb_get_video_default_placeholder_image();
 		}
-		$video_message_url = bb_video_get_symlink( $video_id );
+		$attachment_url    = bb_video_get_symlink( $video_id );
+		$video_message_url = $attachment_url;
 	}
 
 	$result = array(
