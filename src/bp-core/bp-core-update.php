@@ -2634,7 +2634,7 @@ function bb_update_to_2_3_4() {
 
 	$tables = array(
 		$wpdb->prefix . 'bp_media'    => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'type', 'menu_order', 'date_created' ),
-		$wpdb->prefix . 'bp_document' => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'type', 'menu_order', 'date_created', 'date_modified' ),
+		$wpdb->prefix . 'bp_document' => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'menu_order', 'date_created', 'date_modified' ),
 	);
 
 	foreach ( $tables as $table_name => $indexes ) {
