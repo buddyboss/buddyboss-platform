@@ -58,7 +58,7 @@ function bp_video_upload() {
 	do_action( 'bb_video_upload', $attachment );
 
 	// get saved video id.
-	$video_id = get_post_meta( $attachment->ID, 'bp_video_id', true );
+	$video_id = (int) get_post_meta( $attachment->ID, 'bp_video_id', true );
 
 	$name = $attachment->post_title;
 
