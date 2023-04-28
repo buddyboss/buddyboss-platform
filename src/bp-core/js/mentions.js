@@ -52,7 +52,7 @@ window.bp = window.bp || {};
 			true,
 			{},
 			{
-				delay: 200,
+				delay: 500,
 				hideWithoutSuffix: true,
 				insertTpl: BP_Mentions_Options.insert_tpl,
 				limit: 10,
