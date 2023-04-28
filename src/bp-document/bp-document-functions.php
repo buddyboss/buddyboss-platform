@@ -1404,11 +1404,18 @@ function bp_document_upload() {
 
 	do_action( 'bb_document_upload', $attachment );
 
+	// get saved document id.
+	$document_id = get_post_meta( $attachment->ID, 'bp_document_id', true );
+
 	// Generate document attachment preview link.
 	$attachment_id   = 'forbidden_' . $attachment->ID;
 	$attachment_url  = home_url( '/' ) . 'bb-attachment-document-preview/' . base64_encode( $attachment_id );
 	$attachment_file = get_attached_file( $attachment->ID );
 	$attachment_size = is_file( $attachment_file ) ? bp_document_size_format( filesize( get_attached_file( $attachment->ID ) ) ) : 0;
+
+	if ( ! empty( $document_id ) && bp_is_messages_component() ) {
+		$attachment_url = bp_document_get_preview_url( $document_id, $attachment->ID );
+	}
 
 	if ( 0 === $attachment_size ) {
 
