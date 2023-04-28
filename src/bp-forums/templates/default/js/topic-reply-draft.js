@@ -242,7 +242,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Media.reply_topic_display_post = 'edit';
 
 			// Remove class to display draft.
-			$( '#new-post' ).removeClass( 'has-draft has-content has-media has-gif' );
+			$( '#new-post' ).removeClass( 'has-draft has-content has-media has-gif has-link-preview' );
 		},
 
 		resetTopicReplyDraftPostForm: function() {
