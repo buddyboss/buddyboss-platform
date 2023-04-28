@@ -140,6 +140,18 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
+		// Need to add $sql again because we add $exclude_group_sql.
+		if (
+			function_exists( 'bb_did_filter' ) &&
+			! bb_did_filter( 'bp_activity_comments_search_where_conditions' ) &&
+			! bb_did_filter( 'bp_activity_search_where_conditions' )
+		) {
+			if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
+				$where['moderation_where'] .= ' AND ';
+			}
+
+			$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		}
 		return $where;
 	}
 

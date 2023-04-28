@@ -150,7 +150,9 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		}
 
 		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		if ( function_exists( 'bb_did_filter' ) && ! bb_did_filter( 'bp_activity_comments_search_where_conditions' ) ) {
+			$where['suspend_where'] = $this->exclude_where_query();
+		}
 
 		/**
 		 * Filters the hidden activity comment Where SQL statement.

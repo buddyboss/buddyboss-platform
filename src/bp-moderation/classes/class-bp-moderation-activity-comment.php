@@ -128,7 +128,12 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
-		$sql = $this->exclude_where_query();
+		$blocked_user_query = true;
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bp_activity_comments_search_where_conditions' ) ) {
+			$blocked_user_query = false;
+		}
+
+		$sql = $this->exclude_where_query( $blocked_user_query );
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
 		}
