@@ -422,7 +422,7 @@ function bp_version_updater() {
 			bb_update_to_2_3_1();
 		}
 
-		if ( $raw_db_version < 20201 ) {
+		if ( $raw_db_version < 20101 ) {
 			bb_update_to_2_3_4();
 		}
 	}
@@ -2627,11 +2627,6 @@ function bb_update_to_2_3_1() {
 function bb_update_to_2_3_4() {
 	global $wpdb;
 
-	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
-	if ( $is_already_run ) {
-		return;
-	}
-
 	$tables = array(
 		$wpdb->prefix . 'bp_media'    => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'type', 'menu_order', 'date_created' ),
 		$wpdb->prefix . 'bp_document' => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'menu_order', 'date_created', 'date_modified' ),
@@ -2648,6 +2643,4 @@ function bb_update_to_2_3_4() {
 			}
 		}
 	}
-
-	set_transient( 'bb_update_to_2_3_4', 1, DAY_IN_SECONDS );
 }
