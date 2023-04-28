@@ -1156,7 +1156,7 @@ function bb_forums_save_link_preview_data( $post_id ) {
 
 	$link_preview_data = array();
 
-	if ( isset( $_POST['action'] ) && ! in_array( $_POST['action'], array( 'bbp-new-topic', 'bbp-new-reply', 'reply' ) ) ) {
+	if ( isset( $_POST['action'] ) && ! in_array( $_POST['action'], array( 'bbp-new-topic', 'bbp-new-reply', 'reply', 'bbp-edit-topic', 'bbp-edit-reply' ) ) ) {
 		return false;
 	}
 
@@ -1188,7 +1188,10 @@ function bb_forums_save_link_preview_data( $post_id ) {
 	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
 		update_post_meta( $post_id, '_link_embed', $link_url );
+		update_post_meta( $post_id, '_link_preview_data', '' );
 		return;
+	} else {
+		update_post_meta( $post_id, '_link_embed', '0' );
 	}
 
 	$preview_data['url'] = $link_url;
