@@ -771,7 +771,6 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 function bp_document_attach_document_to_message( &$message ) {
 
 	if (
-		bp_is_active( 'document' ) &&
 		bp_is_messages_document_support_enabled() &&
 		! empty( $message->id ) &&
 		! empty( $_POST['document'] )
