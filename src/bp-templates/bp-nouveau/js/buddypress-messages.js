@@ -5090,11 +5090,18 @@ window.bp = window.bp || {};
 				}
 
 				if ( 'undefined' !== typeof first_message.video && first_message.video.length > 0 ) {
-					var videos = first_message.video;
+					var videos    = first_message.video;
+					var tmp_video = this.model.attributes.video;
 					$.each(
 						videos,
 						function ( index, video ) {
 							var blobData = BP_Nouveau.messages.video_default_url;
+
+							if ( tmp_video.length > 0 ) { 
+								blobData = tmp_video[ index ].thumb;
+								video.vid_ids_fake = tmp_video[ index ].vid_msg_url;
+							}
+
 							video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + blobData + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.vid_ids_fake + '" type="video/' + video.ext + '"></source></video>';
 							videos[ index ] = video;
 						}

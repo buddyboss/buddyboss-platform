@@ -57,6 +57,9 @@ function bp_video_upload() {
 	 */
 	do_action( 'bb_video_upload', $attachment );
 
+	// get saved video id.
+	$video_id = get_post_meta( $attachment->ID, 'bp_video_id', true );
+
 	$name = $attachment->post_title;
 
 	// Generate video attachment preview link.
@@ -77,9 +80,19 @@ function bp_video_upload() {
 		$ext = 'mp4';
 	}
 
+	$thumbnail_url = '';
+
+	if ( ! empty( $video_id ) && bp_is_messages_component() ) {
+		$thumbnail_url = bb_video_get_thumb_url( $video_id, $attachment->ID, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+		if ( empty( $thumbnail_url ) ) {
+			$thumbnail_url = bb_get_video_default_placeholder_image();
+		}
+		$video_message_url = bb_video_get_symlink( $video_id );
+	}
+
 	$result = array(
 		'id'          => (int) $attachment->ID,
-		'thumb'       => '',
+		'thumb'       => $thumbnail_url,
 		'url'         => esc_url( untrailingslashit( $attachment_url) ),
 		'name'        => esc_attr( $name ),
 		'ext'         => esc_attr( $ext ),
