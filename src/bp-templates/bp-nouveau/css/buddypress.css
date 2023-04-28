@@ -28437,6 +28437,10 @@ span.icons:before {
   width: 100%;
 }
 
+.bb-link-preview-container .bb-link-preview-info .bb-link-preview-excerpt {
+  display: grid;
+}
+
 .bb-link-preview-container .bb-link-preview-info .bb-link-preview-excerpt p {
   white-space: nowrap;
   width: 100%;

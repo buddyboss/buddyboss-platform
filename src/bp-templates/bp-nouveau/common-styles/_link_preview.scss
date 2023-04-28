@@ -60,12 +60,17 @@
 			width: 100%;
 		}
 
-		.bb-link-preview-excerpt p {
-			white-space: nowrap;
-			width: 100%;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			margin-bottom: 0 !important;
+		.bb-link-preview-excerpt {
+			display: grid;
+
+			p {
+				white-space: nowrap;
+				width: 100%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				margin-bottom: 0 !important;
+			}
+
 		}
 	}
 
