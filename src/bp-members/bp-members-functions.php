@@ -5539,26 +5539,7 @@ function bb_set_bluk_user_profile_slug( $user_ids ) {
 	}
 
 	foreach ( $user_ids as $user_id ) {
-		$user_id           = (int) $user_id;
-		$unique_identifier = bb_generate_user_profile_slug( $user_id );
-		if ( ! empty( $unique_identifier ) ) {
-
-			// Backward compatible to store 40 characters long unique slug.
-			$old_unique_identifier = bb_core_get_user_slug( $user_id );
-			if ( ! empty( $old_unique_identifier ) ) {
-
-				// Delete the existing meta.
-				bp_delete_user_meta( $user_id, 'bb_profile_slug_' . $old_unique_identifier );
-
-				// Backed up 40 characters long unique identifier.
-				if ( ! bb_is_short_user_unique_identifier( $old_unique_identifier ) ) {
-					bp_update_user_meta( $user_id, 'bb_profile_long_slug_' . $old_unique_identifier, $user_id );
-				}
-			}
-
-			bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
-			bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
-		}
+		bb_set_user_profile_slug( (int) $user_id );
 	}
 }
 
