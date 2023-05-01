@@ -8544,24 +8544,28 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $max_ids How many unique  ID’s need to be generated. Default 1.
+ * @param int $length  The length of the unique ID. Default 8.
  *
  * @return array
  */
-function bb_generate_uuids( $max_ids = 1 ) {
-	$length        = 8;
+function bb_generate_uuids( $max_ids = 1, $length = 8 ) {
+	$max_ids       = absint( $max_ids );
+	$length        = absint( $length );
 	$start         = 0;
-	$generated_ids = []; // holds the generated ids.
+	$generated_ids = array(); // Holds the generated ids.
+	$loop          = 1;
 
-	$loop = 1;
+	$pass_length = max( $length, 12 );
+
 	while ( $loop <= $max_ids ) {
-		$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 12, false ) ), $start, $length ) );
+		$generated_ids[] = strtolower( substr( sha1( wp_generate_password( $pass_length, false ) ), $start, $length ) );
 		$loop ++;
 	}
 
 	$generated_ids   = array_unique( $generated_ids );
 	$total_generated = count( $generated_ids );
 
-	if ( $max_ids < $total_generated ) {
+	if ( $max_ids > $total_generated ) {
 		$remaining_uuids = bb_generate_uuids( $max_ids - $total_generated );
 		$generated_ids   = array_merge( $generated_ids, $remaining_uuids );
 	}
