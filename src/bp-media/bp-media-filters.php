@@ -717,7 +717,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 
 		// save media meta for activity.
 		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
-			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+			update_post_meta( $main_activity_id, 'bp_media_ids', $media_ids );
 		}
 
 		// delete medias which were not saved or removed from form.
