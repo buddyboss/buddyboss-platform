@@ -5376,32 +5376,8 @@ function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
-
 		$new_unique_identifier = bb_generate_uuids();
 		$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
-		$loop                  = 1;
-		$length                = 8;
-
-		while ( bb_is_exists_user_unique_identifier( $unique_identifier ) ) {
-
-			// Break the loop if run more than 10 times.
-			if ( 10 < $loop ) {
-				break;
-			}
-
-			// Increment the uuid length based on loop count.
-			if ( 0 === $loop % 2 ) {
-				$length++;
-			}
-
-			// If length more than 12 than forcefully set 12.
-			$length = min( 12, $length );
-
-			$new_unique_identifier = bb_generate_uuids( 1, $length );
-			$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
-
-			$loop++;
-		}
 	}
 
 	return $unique_identifier;
@@ -5548,6 +5524,49 @@ function bb_set_bluk_user_profile_slug( $user_ids ) {
 }
 
 /**
+ * Function to generate the unique keys.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $max_ids How many unique  ID’s need to be generated. Default 1.
+ *
+ * @return array
+ */
+function bb_generate_uuids( $max_ids = 1 ) {
+	$max_ids       = absint( $max_ids );
+	$start         = 0;
+	$length        = 8;
+	$loop_count    = 1;
+	$max_length    = 12;
+	$generated_ids = array(); // holds the generated ids.
+
+	while ( $max_ids > count( $generated_ids ) ) {
+
+		$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 12, false ) ), $start, $length ) );
+
+		while ( bb_is_exists_user_unique_identifier( end( $generated_ids ) ) ) {
+
+			array_pop( $generated_ids );
+
+			// Break the loop if run more than 10 times.
+			if ( 6 < $loop_count ) {
+				$loop_count = 1;
+
+				if ( $length <= $max_length ) {
+					$length ++;
+				}
+			}
+
+			$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 12, false ) ), $start, $length ) );
+
+			$loop_count ++;
+		}
+	}
+
+	return $generated_ids;
+}
+
+/**
  * Function to check the newly generated slug is exists or not.
  *
  * @since BuddyBoss [BBVERSION]
@@ -5562,15 +5581,21 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 
 	// Prepare the statement to check unique identifier.
 	$prepare_query = $wpdb->prepare(
-		"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` = %s AND `meta_value` = %s",
+		"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) LEFT JOIN `{$wpdb->prefix}usermeta` AS um2 ON ( u.ID = um2.user_id AND um2.meta_key = %s ) WHERE ( u.user_login = %s OR u.user_nicename = %s OR ( um.meta_key = %s AND um.meta_value = %s ) OR ( um2.meta_key = %s AND um2.meta_value = %s ) )",
 		'bb_profile_slug',
+		'nickname',
+		$unique_identifier,
+		$unique_identifier,
+		'bb_profile_slug',
+		$unique_identifier,
+		'nickname',
 		$unique_identifier
 	);
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
 		$prepare_query = $wpdb->prepare(
-			$prepare_query . " AND user_id != %d",
+			$prepare_query . " AND u.ID != %d",
 			$user_id
 		);
 	}
