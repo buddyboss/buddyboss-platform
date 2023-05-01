@@ -5379,9 +5379,19 @@ function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 
 		$new_unique_identifier = bb_generate_uuids();
 		$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
+		$loop                  = 1;
+		$length                = 8;
 
 		while ( bb_is_exists_user_unique_identifier( $unique_identifier ) ) {
-			$new_unique_identifier = bb_generate_uuids();
+			$loop++;
+			$length++;
+
+			// Break the loop if run more than 10 times.
+			if ( 10 < $loop ) {
+				break;
+			}
+
+			$new_unique_identifier = bb_generate_uuids( 1, $length );
 			$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
 		}
 	}
