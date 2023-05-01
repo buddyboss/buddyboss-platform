@@ -5533,34 +5533,35 @@ function bb_set_bluk_user_profile_slug( $user_ids ) {
  * @return array
  */
 function bb_generate_uuids( $max_ids = 1 ) {
-	$max_ids       = absint( $max_ids );
-	$start         = 0;
-	$length        = 8;
-	$loop_count    = 1;
-	$max_length    = 12;
-	$generated_ids = array(); // holds the generated ids.
+	$max_ids         = absint( $max_ids );
+	$start           = 0;
+	$length          = 8;
+	$loop_count      = 1;
+	$max_length      = 12;
+	$generated_ids   = array(); // holds the generated ids.
+	$total_generated = 0;
 
-	while ( $max_ids > count( $generated_ids ) ) {
+	while ( $total_generated < $max_ids ) {
 
 		$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 12, false ) ), $start, $length ) );
-
 		while ( bb_is_exists_user_unique_identifier( end( $generated_ids ) ) ) {
 
 			array_pop( $generated_ids );
 
-			// Break the loop if run more than 10 times.
+			// Break the loop if run more than 6 times.
 			if ( 6 < $loop_count ) {
 				$loop_count = 1;
 
-				if ( $length <= $max_length ) {
+				if ( $length < $max_length ) {
 					$length ++;
 				}
 			}
 
 			$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 12, false ) ), $start, $length ) );
-
 			$loop_count ++;
 		}
+
+		$total_generated = count( $generated_ids );
 	}
 
 	return $generated_ids;
