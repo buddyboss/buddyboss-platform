@@ -844,7 +844,7 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 		// Set limit while repair the member slug.
 		$user_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT `{$wpdb->prefix}users`.ID FROM `{$wpdb->prefix}users` LEFT JOIN `{$wpdb->prefix}usermeta` ON ( `{$wpdb->prefix}users`.ID = `{$wpdb->prefix}usermeta`.user_id AND `{$wpdb->prefix}usermeta`.meta_key = %s ) WHERE ( `{$wpdb->prefix}usermeta`.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY `{$wpdb->prefix}users`.ID ASC LIMIT %d, %d",
+				"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID ASC LIMIT %d, %d",
 				'bb_profile_slug',
 				40,
 				0,
@@ -856,7 +856,7 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 		// Get all users who have not generate unique slug while it runs from background.
 		$user_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT `{$wpdb->prefix}users`.ID FROM `{$wpdb->prefix}users` LEFT JOIN `{$wpdb->prefix}usermeta` ON ( `{$wpdb->prefix}users`.ID = `{$wpdb->prefix}usermeta`.user_id AND `{$wpdb->prefix}usermeta`.meta_key = %s ) WHERE `{$wpdb->prefix}usermeta`.user_id IS NULL ORDER BY `{$wpdb->prefix}users`.ID ASC",
+				"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE um.user_id IS NULL ORDER BY u.ID ASC",
 				'bb_profile_slug'
 			)
 		);
