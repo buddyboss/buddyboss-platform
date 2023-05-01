@@ -5383,16 +5383,24 @@ function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 		$length                = 8;
 
 		while ( bb_is_exists_user_unique_identifier( $unique_identifier ) ) {
-			$loop++;
-			$length++;
 
 			// Break the loop if run more than 10 times.
 			if ( 10 < $loop ) {
 				break;
 			}
 
+			// Increment the uuid length based on loop count.
+			if ( 0 === $loop % 2 ) {
+				$length++;
+			}
+
+			// If length more than 12 than forcefully set 12.
+			$length = min( 12, $length );
+
 			$new_unique_identifier = bb_generate_uuids( 1, $length );
 			$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
+
+			$loop++;
 		}
 	}
 
