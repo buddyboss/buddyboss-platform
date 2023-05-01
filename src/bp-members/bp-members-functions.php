@@ -5372,31 +5372,17 @@ function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 		}
 	}
 
-	// If slug is long or not exists then generate a new slug.
-	$character_length = 8;
-
 	// Get user by ID.
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
 
-		if ( $force ) {
-			// Increment length when forcefully generate new slug.
-			$character_length++;
-		}
-
-		$new_unique_identifier = strtolower( sha1( $user->user_email . $user->user_nicename . $user->ID ) );
-		$unique_identifier     = substr( $new_unique_identifier, 0, $character_length );
+		$new_unique_identifier = bb_generate_uuids();
+		$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
 
 		while ( bb_is_exists_user_unique_identifier( $unique_identifier ) ) {
-
-			// Increment length if the slug already exists.
-			$character_length++;
-
-			// Generate new a new between 8 and 12 characters long.
-			if ( $character_length >= 8 && $character_length <= 12 ) {
-				$unique_identifier = substr( $new_unique_identifier, 0, $character_length );
-			}
+			$new_unique_identifier = bb_generate_uuids();
+			$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
 		}
 	}
 

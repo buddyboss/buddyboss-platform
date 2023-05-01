@@ -8537,3 +8537,34 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 
 	}
 }
+
+/**
+ * Function to generate the unique keys.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $max_ids How many unique  ID’s need to be generated. Default 1.
+ *
+ * @return array
+ */
+function bb_generate_uuids( $max_ids = 1 ) {
+	$length        = 8;
+	$start         = 0;
+	$generated_ids = []; // holds the generated ids.
+
+	$loop = 1;
+	while ( $loop <= $max_ids ) {
+		$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 12, false ) ), $start, $length ) );
+		$loop ++;
+	}
+
+	$generated_ids   = array_unique( $generated_ids );
+	$total_generated = count( $generated_ids );
+
+	if ( $max_ids < $total_generated ) {
+		$remaining_uuids = bb_generate_uuids( $max_ids - $total_generated );
+		$generated_ids   = array_merge( $generated_ids, $remaining_uuids );
+	}
+
+	return $generated_ids;
+}
