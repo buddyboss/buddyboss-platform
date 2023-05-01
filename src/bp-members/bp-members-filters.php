@@ -844,9 +844,9 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 		// Set limit while repair the member slug.
 		$user_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE LENGTH(meta_value) = %d AND `meta_key` = %s ORDER BY user_id ASC LIMIT %d, %d",
-				40,
+				"SELECT `{$wpdb->prefix}users`.ID FROM `{$wpdb->prefix}users` LEFT JOIN `{$wpdb->prefix}usermeta` ON ( `{$wpdb->prefix}users`.ID = `{$wpdb->prefix}usermeta`.user_id AND `{$wpdb->prefix}usermeta`.meta_key = %s ) WHERE ( `{$wpdb->prefix}usermeta`.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY `{$wpdb->prefix}users`.ID ASC LIMIT %d, %d",
 				'bb_profile_slug',
+				40,
 				0,
 				$per_page
 			)
