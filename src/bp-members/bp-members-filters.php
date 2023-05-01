@@ -948,26 +948,3 @@ function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member
 		}
 	}
 }
-
-/**
- * Function to validate the unique identifier slug for user while update the own information's.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $user_id ID of user.
- *
- * @return void
- */
-function bb_validate_member_unique_identifier( $user_id ) {
-
-	// Get user unique identifier.
-	$unique_identifier = bb_core_get_user_slug( $user_id );
-
-	// Check that the unique identifier exists or not.
-	if ( bb_is_exists_user_unique_identifier( $unique_identifier, $user_id ) ) {
-
-		// If unique identifier exists then generate a new an update.
-		bb_set_user_profile_slug( $user_id, true );
-	}
-}
-add_action( 'profile_update', 'bb_validate_member_unique_identifier', 10, 1 );
