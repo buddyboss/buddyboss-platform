@@ -789,9 +789,9 @@ function bp_document_attach_document_to_message( &$message ) {
 		if ( ! empty( $documents ) ) {
 			foreach ( $documents as $attachment ) {
 
-				if ( ! empty( $_POST['video'] ) ) {
+				if ( ! empty( $_POST['document'] ) ) {
 					$attachment_id = $attachment['id'];
-				} else if ( ! empty( $_POST['bp_video_ids'] ) ) {
+				} else if ( ! empty( $_POST['bp_document_ids'] ) ) {
 					$attachment_id = $attachment;
 				}
 
