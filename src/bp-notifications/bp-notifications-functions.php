@@ -1834,28 +1834,37 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * @return bool
  */
 function bb_notification_is_read_only( $notification ) {
+	static $cache = array();
 	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
 	$allowed_component_action = array(
 		'bb_connections_request_accepted',
 		'bb_connections_new_request',
 	);
 
+	if ( empty( $notification->id ) ) {
+		return false;
+	}
+
+	$cache_key = 'bb_notification_is_read_only_' . $notification->id;
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
 	$retval = ! empty( $notification ) &&
 	(
 		(
-			(
 				! in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->secondary_item_id ) &&
 				bp_is_user_inactive( $notification->secondary_item_id )
-			) ||
-			(
+		) ||
+		(
 				in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->item_id ) &&
 				bp_is_user_inactive( $notification->item_id )
-			)
-			) ||
-			(
-				bp_is_active( 'moderation' ) &&
+		) ||
+		(
+			bp_is_active( 'moderation' ) &&
 			(
 				(
 					! in_array( $notification->component_action, $allowed_component_action, true ) &&
@@ -1875,7 +1884,11 @@ function bb_notification_is_read_only( $notification ) {
 		)
 	);
 
-	return (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
+	$retval = (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
+
+	$cache[ $cache_key ] = $retval;
+
+	return $retval;
 }
 
 /**
