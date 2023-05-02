@@ -647,7 +647,11 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 
 		// save video meta for activity.
 		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
-			bp_activity_update_meta( $main_activity_id, 'bp_video_ids', $video_ids );
+			if ( ! empty( $video_ids ) ) {
+				bp_activity_update_meta( $main_activity_id, 'bp_video_ids', $video_ids );
+			} else {
+				bp_activity_delete_meta( $main_activity_id, 'bp_video_ids' );
+			}
 		}
 
 		// delete videos which were not saved or removed from form.
