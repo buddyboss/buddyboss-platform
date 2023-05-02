@@ -2642,6 +2642,13 @@ function bb_update_to_2_3_3() {
 
 	wp_cache_flush();
 
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	// 2. Migrate to remove duplicate bb_profile_slug_ entries.
 	bb_repair_member_unique_slug();
 
 	$defaults = array(
@@ -2689,12 +2696,6 @@ function bb_update_to_2_3_3() {
 				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
 			)
 		);
-	}
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 
 }
