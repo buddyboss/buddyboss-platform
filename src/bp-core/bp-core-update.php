@@ -2641,6 +2641,9 @@ function bb_update_to_2_3_3() {
 	}
 
 	wp_cache_flush();
+
+	bb_repair_member_unique_slug();
+
 	$defaults = array(
 		'post_status' => 'publish',
 		'post_type'   => bp_get_email_post_type(),
@@ -2694,7 +2697,6 @@ function bb_update_to_2_3_3() {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 
-	bb_repair_member_unique_slug();
 }
 
 /**
