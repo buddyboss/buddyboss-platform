@@ -830,39 +830,55 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 		return;
 	}
 
-	$per_page = 50;
+	global $wpdb;
 
-	if ( $is_background ) {
-		$offset = ( ( $paged - 1 ) * $per_page );
-	} else {
+	// Define default values.
+	$per_page = 50;
+	$offset   = 0;
+
+	if ( ! $is_background ) {
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+
+		// Set limit while repair the member slug.
+		$user_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID ASC LIMIT %d, %d",
+				'bb_profile_slug',
+				40,
+				0,
+				$per_page
+			)
+		);
+	} else {
+
+		// Get all users who have not generate unique slug while it runs from background.
+		$user_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE um.user_id IS NULL ORDER BY u.ID ASC",
+				'bb_profile_slug'
+			)
+		);
 	}
-
-	$args = array(
-		'fields' => 'ID',
-		'number' => $per_page,
-		'offset' => $offset,
-	);
-
-	$user_ids = get_users( $args );
 
 	global $bp_background_updater;
 
-	if ( ! empty( $user_ids ) ) {
+	if ( ! is_wp_error( $user_ids ) && ! empty( $user_ids ) ) {
 		if ( $is_background ) {
 
-			$bp_background_updater->data(
-				array(
+			foreach ( array_chunk( $user_ids, $per_page ) as $chunked_user_ids ) {
+				$bp_background_updater->data(
 					array(
-						'callback' => 'bb_set_bluk_user_profile_slug',
-						'args'     => array( $user_ids ),
-					),
-				)
-			);
-			$bp_background_updater->save()->dispatch();
-			$paged++;
-			bb_repair_member_profile_links_callback( $is_background, $paged++ );
+						array(
+							'callback' => 'bb_set_bluk_user_profile_slug',
+							'args'     => array( $chunked_user_ids ),
+						),
+					)
+				);
+				$bp_background_updater->save()->dispatch();
+			}
+
 		} else {
 			bb_set_bluk_user_profile_slug( $user_ids );
 
