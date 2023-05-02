@@ -425,6 +425,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20001 ) {
 			bb_update_to_2_3_3();
 		}
+
+		if ( $raw_db_version < 20101 ) {
+			bb_update_to_2_3_4();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2771,4 +2775,24 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
 
 	$paged++;
 	bb_repair_member_unique_slug( $paged );
+}
+
+/**
+ * Updated buddyboss mu file.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_4() {
+	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+
+		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		}
+
+		$wp_files_system = new \WP_Filesystem_Direct( array() );
+		$wp_files_system->delete( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', false, 'f' );
+	}
 }
