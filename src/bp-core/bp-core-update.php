@@ -423,7 +423,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 20001 ) {
-			bb_update_to_2_3_2();
+			bb_update_to_2_3_3();
 		}
 	}
 
@@ -2625,7 +2625,7 @@ function bb_update_to_2_3_1() {
  *
  * @return void
  */
-function bb_update_to_2_3_2() {
+function bb_update_to_2_3_3() {
 	$defaults = array(
 		'post_status' => 'publish',
 		'post_type'   => bp_get_email_post_type(),
