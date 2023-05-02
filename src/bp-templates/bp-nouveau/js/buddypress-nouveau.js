@@ -3993,6 +3993,8 @@ window.bp = window.bp || {};
 					if( self.options.link_image_index_save === '-1' ) {
 						urlImagesIndex = '';
 						urlImages = [];
+					} else if( _.isUndefined( self.options.link_image_index_save ) ) {
+						self.options.link_image_index_save = '0';
 					}
 					Object.assign( self.options, {
 							link_success: true,
