@@ -360,6 +360,8 @@ window.bp = window.bp || {};
 			if ( jQuery( currentTargetForm ).find('#link_preview_data').length > 0 ) {
 				jQuery( currentTargetForm ).find('#link_preview_data').val( '' );
 			}
+			jQuery( currentTargetForm ).find( '.bb-url-scrapper-container' ).remove();
+			jQuery( currentTargetForm ).find( '#bb_link_url' ).remove();
 		},
 
 		collectTopicReplyDraftActivity: function() {
@@ -408,6 +410,17 @@ window.bp = window.bp || {};
 			}
 			if ( 'undefined' !== typeof meta.bbp_media_gif && ( '' !== meta.bbp_media_gif && '[]' !== meta.bbp_media_gif ) ) {
 				media_valid = true;
+			}
+			if ( 'undefined' !== typeof meta.link_preview_data && ( '' !== meta.link_preview_data && '[]' !== meta.link_preview_data ) ) {
+				media_valid = true;
+
+				var link_preview_data = JSON.parse( meta.link_preview_data );
+
+				var preview_data               = {};
+				preview_data.embed                 = ( false === link_preview_data.link_embed ) ? 0 : 1;
+				preview_data.url                   = link_preview_data.link_url;
+				preview_data.link_image_index_save = 0;
+				meta.bb_link_url                   = JSON.stringify( preview_data );
 			}
 
 			var content_valid = true;
@@ -603,7 +616,7 @@ window.bp = window.bp || {};
 						$form.addClass( 'has-content' );
 					}
 				}
-				
+
 			}
 
 			// Stick topic.
@@ -650,7 +663,10 @@ window.bp = window.bp || {};
 				activity_data = this.all_draft_data[this.topic_reply_draft.data_key];
 			}
 
-			if ( 'undefined' === typeof activity_data.bbp_reply_content ) {
+			if (
+				'undefined' === typeof activity_data.bbp_reply_content &&
+				'undefined' === typeof activity_data.bb_link_url
+			) {
 				return;
 			}
 
@@ -700,6 +716,18 @@ window.bp = window.bp || {};
 
 				tags_element.trigger( 'change' );
 			}
+
+			// Link preview.
+			if ( 'undefined' !== typeof activity_data.bb_link_url && '' !== activity_data.bb_link_url ) {
+				$form.find( '#bb_link_url' ).remove();
+				$('<input>').attr({
+					type: 'hidden',
+					id: 'bb_link_url',
+					name: 'bb_link_url',
+					value: activity_data.bb_link_url
+				}).appendTo( $form );
+			}
+
 
 			bp.Nouveau.TopicReplyDraft.previewDraftMedia( $form, activity_data );
 		},
