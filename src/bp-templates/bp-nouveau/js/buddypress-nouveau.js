@@ -3770,7 +3770,7 @@ window.bp = window.bp || {};
 					var imageIndex = self.options.link_image_index;
 					if ( imageIndex > 0 ) {
 						Object.assign( self.options, {
-							link_image_index : imageIndex - 1,
+							link_image_index : parseInt( imageIndex ) - 1,
 							link_swap_image_button : 1
 						} );
 						self.render( self.options );
@@ -3784,7 +3784,7 @@ window.bp = window.bp || {};
 					var images = self.options.link_images;
 					if ( imageIndex < images.length - 1 ) {
 						Object.assign( self.options, {
-							link_image_index : imageIndex + 1,
+							link_image_index : parseInt( imageIndex ) + 1,
 							link_swap_image_button : 1
 						} );
 						self.render( self.options );
@@ -3994,7 +3994,7 @@ window.bp = window.bp || {};
 						urlImagesIndex = '';
 						urlImages = [];
 					} else if( _.isUndefined( self.options.link_image_index_save ) ) {
-						self.options.link_image_index_save = '0';
+						self.options.link_image_index_save = 0;
 					}
 					Object.assign( self.options, {
 							link_success: true,
