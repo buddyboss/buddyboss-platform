@@ -9330,17 +9330,39 @@ body.register .buddypress-wrap .page ul {
   opacity: 1;
 }
 
-.users-header #social-networks-popup {
+.users-header #social-networks-popup,
+.bp-widget.social #social-networks-popup {
   display: none;
 }
 
-.users-header #social-networks-popup .bb-action-popup-content {
+.users-header #social-networks-popup .bb-action-popup-content,
+.bp-widget.social #social-networks-popup .bb-action-popup-content {
   padding: 26px 30px 35px;
   text-align: right;
 }
 
-.users-header #social-networks-popup .bb-action-popup-content .social {
+.users-header #social-networks-popup .bb-action-popup-content .social,
+.bp-widget.social #social-networks-popup .bb-action-popup-content .social {
   margin-top: 7px;
+}
+
+.bp-widget.social #social-networks-popup .bb-model-header > p {
+  margin-right: auto;
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+.bp-widget.social #social-networks-popup .bb-action-popup-content .social {
+  margin-top: 9px;
+  width: 24px;
+}
+
+.bp-widget.social .social-networks-popup-hide {
+  display: none;
+}
+
+.buddypress-wrap .bp-widget.social .bp-tables-user {
+  overflow: visible;
 }
 
 .users-header #item-header-avatar a.link-change-profile-image {
