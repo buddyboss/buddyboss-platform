@@ -3951,6 +3951,8 @@ window.bp = window.bp || {};
 						}
 					);
 
+					self.controlsAdded = null;
+
 					self.render( self.options );
 		
 					if ( ! urlResponse ) {
