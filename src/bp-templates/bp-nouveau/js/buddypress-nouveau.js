@@ -809,6 +809,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
 			$( document ).on( 'click', '#message-threads .report-content', this.threadListReportPopup );
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
+			$( document ).on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
+			$( document ).on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -3382,6 +3384,59 @@ window.bp = window.bp || {};
 		closeActionPopup: function( event ) {
 			event.preventDefault();
 			$( this ).closest( '.bb-action-popup' ).hide();
+		},
+
+		/**
+		 *  Show/Hide Search reset button
+		 *
+		 *  @return {function}
+		 */
+		directorySearchInput: function() {
+			var $form = $( this ).closest( '.search-form-has-reset' );
+			var $resetButton = $form.find( '.search-form_reset' );
+
+			if ( $( this ).val().length > 0 ) {
+				$resetButton.show();
+			} else {
+				$resetButton.hide();
+
+				// Trigger search event
+				if( $form.hasClass( 'bp-invites-search-form') ) {
+					$form.find( 'input[type="search"]').val('');
+					$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
+				}
+			}
+
+			if ( !$( this ).hasClass( 'ui-autocomplete-input' ) ) {
+				$form.find( '.search-form_submit' ).trigger( 'click' );
+			}
+
+		},
+
+		/**
+		 *  Reset search results
+		 *
+		 *  @param  {object} event The event object.
+		 *  @return {function}
+		 */
+		resetDirectorySearch: function( e ) {
+			e.preventDefault();
+			var $form = $( this ).closest( 'form' );
+			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
+				$form.find( 'input[type="search"]').val('');
+				$form.find( '.search-form_submit' ).trigger( 'click' );
+			} else {
+				$form.find( '#bbp_search' ).val('');
+			}
+
+			$( this ).hide();
+
+			// Trigger search event
+			if ( $form.hasClass( 'bp-invites-search-form') ) {
+				$form.find( 'input[type="search"]').val('');
+				$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
+			}
+
 		},
 
 		/**

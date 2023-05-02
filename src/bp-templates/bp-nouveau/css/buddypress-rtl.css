@@ -2684,13 +2684,15 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   left: 12px;
   transform: translate(0, -50%);
   z-index: 6;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   cursor: pointer;
 }
 
 .activity-autocomplete-wrapper .activity-autocomplete-clear i {
-  font-size: 20px;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1;
   color: rgba(18, 43, 70, 0.4);
   display: block;
 }
@@ -21440,7 +21442,7 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
 
 .bp-document-listing .media-search-form .bp-dir-search-form #group-document-search {
   background-image: none;
-  padding: 6px 32px 6px 10px;
+  padding: 6px 32px 6px 30px;
   height: auto;
   font-size: 14px;
 }
@@ -21451,6 +21453,38 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
 
 .bp-document-listing .bp-media-header-wrap .bb-title {
   width: auto;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset,
+.search-form-has-reset {
+  position: relative;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset .search-form_reset,
+.search-form-has-reset .search-form_reset {
+  font-size: 13px;
+  color: #767676;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  opacity: 0.4;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
+  display: none;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset .search-form_reset:hover,
+.search-form-has-reset .search-form_reset:hover {
+  opacity: 1;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset input[type="search"],
+.buddypress .buddypress-wrap .search-form-has-reset #bbp_search,
+.search-form-has-reset input[type="search"],
+.search-form-has-reset #bbp_search {
+  padding-left: 30px;
 }
 
 body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
@@ -21553,7 +21587,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .bp-dir-search-form #group-document-search {
   background-image: none;
-  padding: 6px 32px 6px 10px;
+  padding: 6px 32px 6px 30px;
   height: auto;
   font-size: 14px;
 }
