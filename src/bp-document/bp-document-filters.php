@@ -773,17 +773,30 @@ function bp_document_attach_document_to_message( &$message ) {
 	if (
 		bp_is_messages_document_support_enabled() &&
 		! empty( $message->id ) &&
-		! empty( $_POST['document'] )
+		( ! empty( $_POST['document'] ) || ! empty( $_POST['bp_document_ids'] ) )
 	) {
 
-		$documents    = $_POST['document'];
+		$documents = array();
+
+		if ( ! empty( $_POST['document'] ) ) {
+			$documents = $_POST['document'];
+		} else if ( ! empty( $_POST['bp_document_ids'] ) ) {
+			$documents = $_POST['bp_document_ids'];
+		}
+
 		$document_ids = array();
 
 		if ( ! empty( $documents ) ) {
 			foreach ( $documents as $attachment ) {
 
+				if ( ! empty( $_POST['video'] ) ) {
+					$attachment_id = $attachment['id'];
+				} else if ( ! empty( $_POST['bp_video_ids'] ) ) {
+					$attachment_id = $attachment;
+				}
+
 				// Get media_id from the attachment ID.
-				$document_id = get_post_meta( $attachment['id'], 'bp_document_id', true );
+				$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
 
 				if ( ! empty( $document_id ) ) {
 
@@ -2111,7 +2124,8 @@ add_filter( 'redirect_canonical', 'bb_document_remove_specific_trailing_slash', 
 function bb_messages_document_save( $attachment ) {
 
 	if (
-		bp_is_messages_component() &&
+		( bp_is_group_messages() || bp_is_messages_component() ||
+		( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) ) &&
 		bp_is_messages_document_support_enabled() &&
 		! empty( $attachment )
 	) {

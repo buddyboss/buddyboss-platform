@@ -948,21 +948,32 @@ function bp_media_forums_save_gif_data( $post_id ) {
  * @param $message
  */
 function bp_media_attach_media_to_message( &$message ) {
-
 	if (
 		bp_is_messages_media_support_enabled() &&
 		! empty( $message->id ) &&
-		! empty( $_POST['media'] )
+		( ! empty( $_POST['media'] ) || ! empty( $_POST['bp_media_ids'] ) )
 	) {
+		$media_attachments = array();
 
-		$media_attachments = $_POST['media'];
-		$media_ids         = array();
+		if ( ! empty( $_POST['media'] ) ) {
+			$media_attachments = $_POST['media'];
+		} else if ( ! empty( $_POST['bp_media_ids'] ) ) {
+			$media_attachments = $_POST['bp_media_ids'];
+		}
+		
+		$media_ids = array();
 
 		if ( ! empty( $media_attachments ) ) {
 			foreach ( $media_attachments as $attachment ) {
 
+				if ( ! empty( $_POST['media'] ) ) {
+					$attachment_id = $attachment['id'];
+				} else if ( ! empty( $_POST['bp_media_ids'] ) ) {
+					$attachment_id = $attachment;
+				}
+				
 				// Get media_id from the attachment ID.
-				$media_id = get_post_meta( $attachment['id'], 'bp_media_id', true );
+				$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
 
 				if ( ! empty( $media_id ) ) {
 					$media_ids[] = $media_id;
@@ -2786,7 +2797,8 @@ add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 999
 function bb_messages_media_save( $attachment ) {
 
 	if (
-		bp_is_messages_component() &&
+		( bp_is_group_messages() || bp_is_messages_component() ||
+		( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) ) &&
 		bp_is_messages_media_support_enabled() &&
 		! empty( $attachment )
 	) {

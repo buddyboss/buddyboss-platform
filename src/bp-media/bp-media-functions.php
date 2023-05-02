@@ -62,7 +62,13 @@ function bp_media_upload() {
 
 	$name = $attachment->post_title;
 
-	if ( ! empty( $media_id ) && bp_is_messages_component() ) {
+	if ( 
+		! empty( $media_id ) &&
+		( 
+			bp_is_group_messages() || bp_is_messages_component() ||
+			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) 
+		)
+	) {
 		$attachment_url         = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-photos-popup-image' );
 		$attachment_thumb_url   = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-activity-image' );
 		$attachment_medium      = $attachment_thumb_url;

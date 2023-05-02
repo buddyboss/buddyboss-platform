@@ -720,7 +720,12 @@ function bp_video_forums_embed_attachments( $content, $id ) {
  */
 function bb_messages_video_save( $attachment ) {
 
-	if ( bp_is_messages_component() && bp_is_messages_video_support_enabled() && ! empty( $attachment ) ) {
+	if ( 
+		( bp_is_group_messages() || bp_is_messages_component() ||
+		( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) ) &&
+		bp_is_messages_video_support_enabled() &&
+		! empty( $attachment ) 
+	) {
 		$videos[] = array(
 			'id'         => $attachment->ID,
 			'name'       => $attachment->post_title,
@@ -757,16 +762,33 @@ function bb_messages_video_save( $attachment ) {
  */
 function bp_video_attach_video_to_message( &$message ) {
 
-	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['video'] ) ) {
+	if ( 
+		bp_is_messages_video_support_enabled() && 
+		! empty( $message->id ) &&
+		( ! empty( $_POST['media'] ) || ! empty( $_POST['bp_video_ids'] ) )
+	) {
 
-		$video_attachments = $_POST['video'];
+		$video_attachments = array();
+
+		if ( ! empty( $_POST['video'] ) ) {
+			$video_attachments = $_POST['video'];
+		} else if ( ! empty( $_POST['bp_video_ids'] ) ) {
+			$video_attachments = $_POST['bp_video_ids'];
+		}
+
+		$video_ids = array();
+
 		if ( ! empty( $video_attachments ) ) {
-			foreach ( $video_attachments as $k => $attachment ) {
-				if ( array_key_exists( 'group_id', $attachment ) ) {
-					unset( $video_attachments[ $k ]['group_id'] );
+			foreach ( $video_attachments as $attachment ) {
+
+				if ( ! empty( $_POST['video'] ) ) {
+					$attachment_id = $attachment['id'];
+				} else if ( ! empty( $_POST['bp_video_ids'] ) ) {
+					$attachment_id = $attachment;
 				}
+
 				// Get media_id from the attachment ID.
-				$video_media_id = get_post_meta( $attachment['id'], 'bp_video_id', true );
+				$video_media_id = get_post_meta( $attachment_id, 'bp_video_id', true );
 				$video_ids[]    = $video_media_id;
 
 				// Attach already created media.

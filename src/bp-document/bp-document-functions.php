@@ -1413,7 +1413,13 @@ function bp_document_upload() {
 	$attachment_file = get_attached_file( $attachment->ID );
 	$attachment_size = is_file( $attachment_file ) ? bp_document_size_format( filesize( get_attached_file( $attachment->ID ) ) ) : 0;
 
-	if ( ! empty( $document_id ) && bp_is_messages_component() ) {
+	if ( 
+		! empty( $document_id ) &&
+		( 
+			bp_is_group_messages() || bp_is_messages_component() ||
+			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) 
+		)
+	) {
 		$attachment_url = bp_document_get_preview_url( $document_id, $attachment->ID );
 	}
 

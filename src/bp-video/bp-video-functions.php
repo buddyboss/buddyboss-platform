@@ -82,7 +82,13 @@ function bp_video_upload() {
 
 	$thumbnail_url = '';
 
-	if ( ! empty( $video_id ) && bp_is_messages_component() ) {
+	if ( 
+		! empty( $video_id ) &&
+		( 
+			bp_is_group_messages() || bp_is_messages_component() ||
+			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) 
+		)
+	) {
 		$thumbnail_url = bb_video_get_thumb_url( $video_id, $attachment->ID, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 		if ( empty( $thumbnail_url ) ) {
 			$thumbnail_url = bb_get_video_default_placeholder_image();
