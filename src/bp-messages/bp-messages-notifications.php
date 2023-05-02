@@ -242,10 +242,11 @@ function bp_messages_message_sent_add_notification( $message ) {
 			}
 		}
 
+		$min_count = (int) apply_filters( 'bb_new_message_notifications_count', 20 );
 		if (
 			function_exists( 'bb_notifications_background_enabled' ) &&
 			true === bb_notifications_background_enabled() &&
-			count( $message->recipients ) > 20
+			count( $message->recipients ) > $min_count
 		) {
 			global $bb_notifications_background_updater;
 			$recipients = (array) $message->recipients;

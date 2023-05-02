@@ -97,11 +97,22 @@ function bb_disabled_email_queue() {
  */
 function bb_email_queue_has_min_count( $recipients ) {
 	$min_recipients = false;
-	$min_count      = (int) apply_filters( 'bb_email_queue_min_count', 20 );
+	$min_count      = bb_get_email_queue_min_count();
 
 	if ( $min_count < count( (array) $recipients ) ) {
 		$min_recipients = true;
 	}
 
 	return $min_recipients;
+}
+
+/**
+ * Function to return minimum queue count to chunk large record.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_get_email_queue_min_count() {
+	return (int) apply_filters( 'bb_email_queue_min_count', 20 );
 }
