@@ -422,8 +422,8 @@ function bp_version_updater() {
 			bb_update_to_2_3_1();
 		}
 
-		if ( $raw_db_version < 20001 ) {
-			bb_update_to_2_3_2();
+		if ( $raw_db_version < 20101 ) {
+			bb_update_to_2_3_4();
 		}
 	}
 
@@ -2624,7 +2624,7 @@ function bb_update_to_2_3_1() {
  *
  * @return void
  */
-function bb_update_to_2_3_2() {
+function bb_update_to_2_3_4() {
 	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
 
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
