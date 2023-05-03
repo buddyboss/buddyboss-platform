@@ -2621,32 +2621,11 @@ function bb_update_to_2_3_1() {
 /**
  * Install email template for activity following post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @return void
  */
 function bb_update_to_2_3_3() {
-	$is_already_run = get_transient( 'bb_migrate_favorites' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
-
-	// 1. Migrate the topic favorites.
-	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
-		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
-	}
-
-	wp_cache_flush();
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
-
-	// 2. Migrate to remove duplicate bb_profile_slug_ entries.
 	bb_repair_member_unique_slug();
 
 	$defaults = array(
@@ -2701,7 +2680,7 @@ function bb_update_to_2_3_3() {
 /**
  * Background job to repair user profile slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @param int $paged Number of page.
  *
@@ -2751,7 +2730,7 @@ function bb_repair_member_unique_slug( $paged = 1 ) {
 /**
  * Delete duplicate bb_profile_slug_ key from the usermeta table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @param array $user_ids Array of user ID.
  * @param int   $paged    Number of page.
