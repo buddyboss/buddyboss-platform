@@ -2664,9 +2664,10 @@ function bbp_get_form_reply_content() {
 	// Get _POST data
 	if ( bbp_is_post_request() && isset( $_POST['bbp_reply_content'] ) ) {
 		$reply_content = stripslashes( $_POST['bbp_reply_content'] );
-		if ( '<p></p>' === $reply_content || '<p><br></p>' === $reply_content ) {
-			$reply_content = '';
-		}
+		
+		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
+		$pattern       = '/^(<p>(<br \/>|<br\/>|<\/p>)*|<p><br ?\/?><\/p>)/i';
+		$reply_content = preg_replace( $pattern, '', $reply_content );
 
 		// Get edit data
 	} elseif ( bbp_is_reply_edit() ) {

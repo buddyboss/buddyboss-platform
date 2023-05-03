@@ -140,10 +140,6 @@ function bbp_kses_data( $data = '' ) {
  */
 function bbp_code_trick( $content = '' ) {
 
-	if ( '<p></p>' === $content || '<p><br></p>' === $content ) {
-		$content = '';
-	}
-
 	$content = str_replace( array( "\r\n", "\r" ), "\n", $content );
 	/**
 	 * Added for convert &nbsp; to space fron content

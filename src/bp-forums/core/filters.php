@@ -446,3 +446,21 @@ function bb_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, 
 	}
 }
 add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_update_group_meta', 10, 4 );
+
+/**
+ * Remove unintentional empty paragraph coming from the medium editor when only link preview.
+ *
+ * @since Buddyboss[BBVERSION]
+ *
+ * @param string $content Topic and reply content
+ * @return string $content Topic and reply content
+ */
+function bbp_filter_empty_editor_content( $content = '' ){
+	$pattern = '/^(<p>(<br \/>|<br\/>|<\/p>)*|<p><br ?\/?><\/p>)/i';
+	$content = preg_replace( $pattern, '', $content );
+}
+
+add_filter( 'bbp_new_topic_pre_content', 'bbp_filter_empty_editor_content', 1 );
+add_filter( 'bbp_new_reply_pre_content', 'bbp_filter_empty_editor_content', 1 );
+add_filter( 'bbp_edit_topic_pre_content', 'bbp_filter_empty_editor_content', 1 );
+add_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_empty_editor_content', 1 );
