@@ -1049,6 +1049,12 @@ fieldset div.avatar {
 				}
 			}
 
+			> .twitter-timeline,
+			iframe {
+				width: 100% !important;
+			}
+
+
 		}
 
 	}

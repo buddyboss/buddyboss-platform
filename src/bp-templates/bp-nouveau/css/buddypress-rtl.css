@@ -15920,6 +15920,15 @@ fieldset div.avatar {
   text-align: right;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap > .twitter-timeline,
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap iframe,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap > .twitter-timeline,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap iframe,
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap > .twitter-timeline,
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap iframe {
+  width: 100% !important;
+}
+
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap .emoji,
 .activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap .emoji,
 .activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap .emoji {
