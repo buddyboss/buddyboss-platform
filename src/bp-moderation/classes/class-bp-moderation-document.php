@@ -272,7 +272,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Prepare Where sql for exclude Blocked items
+	 * Prepare Where sql for exclude Blocked items.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
