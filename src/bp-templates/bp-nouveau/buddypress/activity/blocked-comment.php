@@ -68,9 +68,7 @@ if ( bp_is_active( 'moderation' ) ) {
 
 		echo $activity_comment_content; // phpcs:ignore
 
-		if ( bb_is_group_activity_comment( bp_get_activity_comment_id() ) ) {
-			do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
-		}
+		do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
 		?>
 
 	</div>
