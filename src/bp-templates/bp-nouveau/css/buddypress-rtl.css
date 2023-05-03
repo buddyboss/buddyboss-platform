@@ -3515,6 +3515,10 @@ input.search-query-input {
   word-break: break-word;
 }
 
+.activity-list .activity-item .activity-inner iframe {
+  max-width: 100%;
+}
+
 .activity-list .activity-item .activity-inner p:empty {
   min-height: 1em;
 }
