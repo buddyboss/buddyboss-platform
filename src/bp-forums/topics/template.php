@@ -4159,8 +4159,9 @@ function bbp_get_form_topic_content() {
 		$topic_content = stripslashes( $_POST['bbp_topic_content'] );
 
 		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
-		$pattern       = '/^(<p>(<br \/>|<br\/>|<\/p>)*|<p><br ?\/?><\/p>)/i';
-		$topic_content = preg_replace( $pattern, '', $topic_content );
+		if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $topic_content ) ) {
+			$topic_content = '';
+		}
 
 		// Get edit data
 	} elseif ( bbp_is_topic_edit() ) {
