@@ -56,19 +56,45 @@ if ( bp_is_active( 'moderation' ) ) {
 
 		<?php
 		$activity_comment_content = bp_get_activity_comment_content();
+		$hide_media               = false;
 		if ( $check_hidden_content ) {
 			$activity_comment_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			$hide_media               = true;
 		} elseif ( $is_user_suspended ) {
-			$activity_comment_content = bb_moderation_is_suspended_message( $activity_comment_content, BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
+			$activity_suspend_comment_content = bb_moderation_is_suspended_message( $activity_comment_content, BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
+			if ( $activity_comment_content !== $activity_suspend_comment_content ) {
+				$activity_comment_content = $activity_suspend_comment_content;
+				$hide_media               = true;
+			}
 		} elseif ( $is_user_blocked_by ) {
-			$activity_comment_content = bb_moderation_is_blocked_message( $activity_comment_content, BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
+			$activity_is_blocked_comment_content = bb_moderation_is_blocked_message( $activity_comment_content, BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
+			if ( $activity_comment_content !== $activity_is_blocked_comment_content ) {
+				$activity_comment_content = $activity_is_blocked_comment_content;
+				$hide_media               = true;
+			}
 		} elseif ( $is_user_blocked ) {
-			$activity_comment_content = bb_moderation_has_blocked_message( $activity_comment_content, BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
+			$activity_has_blocked_comment_content = bb_moderation_has_blocked_message( $activity_comment_content, BP_Moderation_Activity_Comment::$moderation_type, bp_get_activity_comment_user_id() );
+			if ( $activity_comment_content !== $activity_has_blocked_comment_content ) {
+				$activity_comment_content = $activity_has_blocked_comment_content;
+				$hide_media               = true;
+			}
 		}
 
 		echo $activity_comment_content; // phpcs:ignore
 
+		if ( true === $hide_media ) {
+			remove_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
+			remove_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
+			remove_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
+			remove_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+		}
 		do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() );
+		if ( true === $hide_media ) {
+			add_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
+			add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
+			add_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
+			add_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+		}
 		?>
 
 	</div>
