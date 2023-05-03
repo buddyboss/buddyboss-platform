@@ -2622,88 +2622,20 @@ function bb_update_to_2_3_1() {
 }
 
 /**
- * Migration favorites from user meta to topic meta and install email template for activity following post.
+ * Function to run while update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @return void
  */
 function bb_update_to_2_3_3() {
-	$is_already_run = get_transient( 'bb_migrate_favorites' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
-	// Migrate the topic favorites.
-	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
-		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
-	}
-
-	wp_cache_flush();
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
-
-	// 2. Migrate to remove duplicate bb_profile_slug_ entries.
 	bb_repair_member_unique_slug();
-
-	$defaults = array(
-		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
-	);
-
-	$email = array(
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
-	);
-
-	$id = 'new-comment-reply';
-
-	if (
-		term_exists( $id, bp_get_email_tax_type() ) &&
-		get_terms(
-			array(
-				'taxonomy' => bp_get_email_tax_type(),
-				'slug'     => $id,
-				'fields'   => 'count',
-			)
-		) > 0
-	) {
-		return;
-	}
-
-	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
-	if ( ! $post_id ) {
-		return;
-	}
-
-	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
-
-	foreach ( $tt_ids as $tt_id ) {
-		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
-		wp_update_term(
-			(int) $term->term_id,
-			bp_get_email_tax_type(),
-			array(
-				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
-			)
-		);
-	}
-
 }
 
 /**
  * Background job to repair user profile slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @param int $paged Number of page.
  *
@@ -2753,7 +2685,7 @@ function bb_repair_member_unique_slug( $paged = 1 ) {
 /**
  * Delete duplicate bb_profile_slug_ key from the usermeta table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @param array $user_ids Array of user ID.
  * @param int   $paged    Number of page.
@@ -2781,6 +2713,8 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
 }
 
 /**
+ * Migration favorites from user meta to topic meta.
+ * Install email template for activity following post.
  * Updated buddyboss mu file.
  *
  * @since BuddyBoss [BBVERSION]
@@ -2788,6 +2722,72 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
  * @return void
  */
 function bb_update_to_2_3_4() {
+	$is_already_run = get_transient( 'bb_migrate_favorites' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
+	// Migrate the topic favorites.
+	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
+		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
+	}
+
+	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$email = array(
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
+	);
+
+	$id = 'new-comment-reply';
+
+	if (
+		term_exists( $id, bp_get_email_tax_type() ) &&
+		get_terms(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'slug'     => $id,
+				'fields'   => 'count',
+			)
+		) > 0
+	) {
+		return;
+	}
+
+	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+
+	foreach ( $tt_ids as $tt_id ) {
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		wp_update_term(
+			(int) $term->term_id,
+			bp_get_email_tax_type(),
+			array(
+				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
+			)
+		);
+	}
+
 	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
 
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
