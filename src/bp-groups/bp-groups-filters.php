@@ -1390,7 +1390,7 @@ add_action( 'bb_video_after_create_parent_activity', 'bb_subscription_send_subsc
  * 
  * @return mixed Where SQL
  */
-function bb_groups_count_filter_where_sql( $where_conditions, $args = array() ) {
+function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) {
 
 	if ( ! bp_is_user_groups() && bp_is_groups_directory() && true === (bool) bp_enable_group_hide_subgroups() ) {
 		$where_conditions[] = "g.parent_id = 0";
