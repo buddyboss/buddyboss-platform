@@ -1411,6 +1411,17 @@ function bp_nouveau_ajax_delete_thread() {
 		 * @since BuddyBoss 1.5.6
 		 */
 		do_action( 'bp_messages_message_delete_thread', $thread_id, $thread_recipients );
+
+		/**
+		 * Fires after an entire message thread is deleted.
+		 *
+		 * @since BuddyPress [BBVERSION]
+		 *
+		 * @param int   $thread_id   ID of the thread being deleted.
+		 * @param array $message_ids IDs of messages being deleted.
+		 *
+		 */
+		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids );
 	}
 
 	wp_send_json_success(
