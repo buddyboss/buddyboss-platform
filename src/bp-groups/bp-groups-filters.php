@@ -98,7 +98,7 @@ add_filter( 'bp_repair_list', 'bb_groups_repair_group_subscriptions', 11 );
 add_action( 'bp_actions', 'bb_group_subscriptions_handler' );
 
 // Filter group count.
-add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_filter_where_sql', 10, 2 );
+add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_update_where_sql', 10, 2 );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
