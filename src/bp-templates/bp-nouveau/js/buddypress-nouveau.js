@@ -3821,7 +3821,7 @@ window.bp = window.bp || {};
 				}
 				
 		
-				if ( urlText === null || urlText === '' ) {
+				if ( ( urlText === null || urlText === '' ) && self.options.link_url === undefined ) {
 					return;
 				}
 
