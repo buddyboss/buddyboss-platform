@@ -2622,14 +2622,106 @@ function bb_update_to_2_3_1() {
 }
 
 /**
+ * Function to run while update.
+ *
+ * @since BuddyBoss 2.3.3
+ *
+ * @return void
+ */
+function bb_update_to_2_3_3() {
+	bb_repair_member_unique_slug();
+}
+
+/**
+ * Background job to repair user profile slug.
+ *
+ * @since BuddyBoss 2.3.3
+ *
+ * @param int $paged Number of page.
+ *
+ * @return void
+ */
+function bb_repair_member_unique_slug( $paged = 1 ) {
+	global $bp_background_updater;
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 50;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	$user_ids = get_users(
+		array(
+			'fields'     => 'ids',
+			'number'     => $per_page,
+			'offset'     => $offset,
+			'orderby'    => 'ID',
+			'order'      => 'ASC',
+			'meta_query' => array(
+				array(
+					'key'     => 'bb_profile_slug',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_remove_duplicate_member_slug',
+				'args'     => array( $user_ids, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Delete duplicate bb_profile_slug_ key from the usermeta table.
+ *
+ * @since BuddyBoss 2.3.3
+ *
+ * @param array $user_ids Array of user ID.
+ * @param int   $paged    Number of page.
+ *
+ * @return void
+ */
+function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
+	global $wpdb;
+
+	foreach ( $user_ids as $user_id ) {
+		$unique_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
+
+		$wpdb->query(
+			$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+				"DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s AND user_id = %d",
+				"bb_profile_slug_{$unique_slug}",
+				$user_id
+			)
+		);
+	}
+
+	$paged++;
+	bb_repair_member_unique_slug( $paged );
+}
+
+/**
  * Migration favorites from user meta to topic meta.
  * Install email template for activity following post.
+ * Updated buddyboss mu file.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
-function bb_update_to_2_3_3() {
+function bb_update_to_2_3_4() {
 	$is_already_run = get_transient( 'bb_migrate_favorites' );
 	if ( $is_already_run ) {
 		return;
@@ -2697,97 +2789,6 @@ function bb_update_to_2_3_3() {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 
-	bb_repair_member_unique_slug();
-}
-
-/**
- * Background job to repair user profile slug.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $paged Number of page.
- *
- * @return void
- */
-function bb_repair_member_unique_slug( $paged = 1 ) {
-	global $bp_background_updater;
-
-	if ( empty( $paged ) ) {
-		$paged = 1;
-	}
-
-	$per_page = 50;
-	$offset   = ( ( $paged - 1 ) * $per_page );
-
-	$user_ids = get_users(
-		array(
-			'fields'     => 'ids',
-			'number'     => $per_page,
-			'offset'     => $offset,
-			'orderby'    => 'ID',
-			'order'      => 'ASC',
-			'meta_query' => array(
-				array(
-					'key'     => 'bb_profile_slug',
-					'compare' => 'EXISTS',
-				),
-			),
-		)
-	);
-
-	if ( empty( $user_ids ) ) {
-		return;
-	}
-
-	$bp_background_updater->data(
-		array(
-			array(
-				'callback' => 'bb_remove_duplicate_member_slug',
-				'args'     => array( $user_ids, $paged ),
-			),
-		)
-	);
-	$bp_background_updater->save()->schedule_event();
-}
-
-/**
- * Delete duplicate bb_profile_slug_ key from the usermeta table.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $user_ids Array of user ID.
- * @param int   $paged    Number of page.
- *
- * @return void
- */
-function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
-	global $wpdb;
-
-	foreach ( $user_ids as $user_id ) {
-		$unique_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
-
-		$wpdb->query(
-			$wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
-				"DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s AND user_id = %d",
-				"bb_profile_slug_{$unique_slug}",
-				$user_id
-			)
-		);
-	}
-
-	$paged++;
-	bb_repair_member_unique_slug( $paged );
-}
-
-/**
- * Updated buddyboss mu file.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_update_to_2_3_4() {
 	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
 
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
