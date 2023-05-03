@@ -837,7 +837,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) &&
 					( $bb_email_background_updater instanceof BP_Email_Background_Updater )
 				) {
-					$chunk_members = array_chunk( $members, 10 );
+					$chunk_members = array_chunk( $members, function_exists( 'bb_get_email_queue_min_count' ) ? bb_get_email_queue_min_count() : 10 );
 					if ( ! empty( $chunk_members ) ) {
 						foreach ( $chunk_members as $key => $members ) {
 							$bb_email_background_updater->data(
