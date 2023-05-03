@@ -48,7 +48,7 @@
 	}
 
 	var senderName = data.sender_name;
-	if ( ! data.is_group && data.recipients && 1 === parseInt( data.recipientsCount ) ) {
+	if ( ! data.is_group_thread && data.recipients && 1 === parseInt( data.recipientsCount ) ) {
 		senderName = '';
 	}
 
