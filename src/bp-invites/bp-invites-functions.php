@@ -144,6 +144,11 @@ function bp_invites_member_invite_remove_registration_lock() {
 				'value'   => $email,
 				'compare' => '=',
 			),
+			array(
+				'key'     => '_bp_invitee_status',
+				'value'   => 0,
+				'compare' => '=',
+			),
 		),
 	);
 
