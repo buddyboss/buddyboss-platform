@@ -109,7 +109,7 @@ function bb_email_queue_has_min_count( $recipients ) {
 /**
  * Function to return minimum queue count to chunk large record.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @return int
  */

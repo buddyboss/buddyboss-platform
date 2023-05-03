@@ -2620,7 +2620,7 @@ function bb_update_to_2_3_1() {
 /**
  * Function to run while update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @return void
  */
@@ -2631,7 +2631,7 @@ function bb_update_to_2_3_3() {
 /**
  * Background job to repair user profile slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @param int $paged Number of page.
  *
@@ -2681,7 +2681,7 @@ function bb_repair_member_unique_slug( $paged = 1 ) {
 /**
  * Delete duplicate bb_profile_slug_ key from the usermeta table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.3
  *
  * @param array $user_ids Array of user ID.
  * @param int   $paged    Number of page.
