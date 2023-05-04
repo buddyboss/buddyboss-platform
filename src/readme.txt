@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.3 =
+* Profiles - Resolved critical issue of duplicate unique identifiers
+* Profiles - Handled 'Social Network' field with multiple types shows random modal issue when redirected to the profile
+* Notifications - Handled small notification read/unread issue when newly registered members login for the first time
+* Forums - Handled forum discussion uploaded text file preview issue
+* Forums - Handled forum discussion and reply tags suggestions dropdown layout issue
+* Forums - Handled create discussion and reply formatting issues when an option is disabled from the settings
+* Forums - Handled broken layout on the single forum reply screen
+* Activity - Handled activity comment form, post button disabled issue when specific steps followed
+* Messages - Handled message screen and dropdown 'sent a video' label inconsistency
+* Emails - Resolved UI issue in group and blog post emails when view group/post button labels were translated to non-English languages
+* Core - Improved the search form across the network by adding an option to clear the search field
+* Core - Provided hooks to update activities pagination and number of entries to process in the background process
+* Core - Handled messages and notification dropdown specific performance issues by refactoring code
+* REST API - Handled profile fields endpoint returns HTML entity name for special characters
+* REST API - Handled group settings endpoint permission issue for the group organizer
 
 = 2.3.2 =
 * Profiles - Handled non-selectable profile types not showing issue in Edit Profile even when configured from the admin dashboard

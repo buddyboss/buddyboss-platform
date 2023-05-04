@@ -1004,6 +1004,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 								bbp_set_query_name( 'bbp_reply_form' );
 								bbp_get_template_part( 'form', 'reply' );
 							endif;
+						else :
+							bbp_get_template_part( 'content', 'single-reply' );
 						endif;
 						break;
 				endswitch;
