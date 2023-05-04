@@ -5353,6 +5353,7 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
  * Generate user profile slug.
  *
  * @since BuddyBoss 2.3.1
+ * @since BuddyBoss [BBVERSION] The `$force` parameter was added.
  *
  * @param int  $user_id user id.
  * @param bool $force   Optional. If true then will generate new slug forcefully.
@@ -5414,27 +5415,15 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 	if ( ! isset( $cache[ $cache_key ] ) ) {
 		global $wpdb;
 
-		if ( bb_is_short_user_unique_identifier( $profile_slug ) ) {
-
-			// Get the user who has 8 to 12 characters long unique slug.
-			$user_query = $wpdb->prepare(
-				"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` = %s",
-				"bb_profile_slug_{$profile_slug}"
-			);
-
-		} else {
-
-			// Backward compatible to check 40 characters long unique slug.
-			$user_query = $wpdb->prepare(
-				"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
-				"bb_profile_slug_{$profile_slug}",
-				"bb_profile_long_slug_{$profile_slug}"
-			);
-
-		}
+		// Backward compatible to check 40 characters long unique slug or new slug as well.
+		$user_query = $wpdb->prepare(
+			"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
+			"bb_profile_slug_{$profile_slug}",
+			"bb_profile_long_slug_{$profile_slug}"
+		);
 
 		// Get the user ID from the created query based on string length.
-		$found_users = $wpdb->get_var( $user_query );
+		$found_users = $wpdb->get_var( $user_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		// Validate the user ID.
 		$user = ( ! empty( $found_users ) && ! is_wp_error( $found_users ) ? $found_users : 0 );
@@ -5482,6 +5471,7 @@ function bb_core_get_user_slug( int $user_id ) {
  * Setup the user profile hash to the user meta.
  *
  * @since BuddyBoss 2.3.1
+ * @since BuddyBoss [BBVERSION] The `$force` parameter was added.
  *
  * @param int  $user_id User ID.
  * @param bool $force   Optional. If true then will generate new slug and update forcefully.
@@ -5536,7 +5526,7 @@ function bb_set_bluk_user_profile_slug( $user_ids ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $max_ids How many unique  ID’s need to be generated. Default 1.
+ * @param int $max_ids How many unique IDs need to be generated? Default 1.
  *
  * @return array
  */
@@ -5590,9 +5580,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 
 	// Prepare the statement to check unique identifier.
 	$prepare_query = $wpdb->prepare(
-		"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) LEFT JOIN `{$wpdb->prefix}usermeta` AS um2 ON ( u.ID = um2.user_id AND um2.meta_key = %s ) WHERE ( u.user_login = %s OR u.user_nicename = %s OR ( um.meta_key = %s AND um.meta_value = %s ) OR ( um2.meta_key = %s AND um2.meta_value = %s ) )",
-		'bb_profile_slug',
-		'nickname',
+		"SELECT DISTINCT u.ID FROM `{$wpdb->prefix}users` AS u WHERE ( u.user_login = %s OR u.user_nicename = %s ) OR u.ID IN( SELECT DISTINCT um.user_id FROM `{$wpdb->prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value = %s ) OR ( um.meta_key = %s AND um.meta_value = %s ) )",
 		$unique_identifier,
 		$unique_identifier,
 		'bb_profile_slug',

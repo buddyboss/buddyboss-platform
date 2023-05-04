@@ -839,7 +839,8 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 	if ( ! $is_background ) {
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+		$offset   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+		$per_page = 20;
 
 		// Set limit while repair the member slug.
 		$user_ids = $wpdb->get_col(
