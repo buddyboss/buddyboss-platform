@@ -4997,10 +4997,8 @@ function bb_document_delete_message_orphaned_documents() {
 
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
 		$results = $wpdb->get_results( 
-			$wpdb->prepare( 
-				"SELECT id, attachment_id FROM {$table_name} WHERE privacy = 'message' AND message_id = 0 AND
-				date_created < ( now() - interval 6 HOUR ) ORDER BY id"
-			)
+			"SELECT id, attachment_id FROM {$table_name} WHERE privacy = 'message' AND message_id = 0 AND
+			date_created < ( now() - interval 6 HOUR ) ORDER BY id"
 		);
 
 		foreach ( (array) $results as $row ) {
