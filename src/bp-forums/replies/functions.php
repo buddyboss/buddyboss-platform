@@ -523,7 +523,6 @@ function bbp_new_reply_handler( $action = '' ) {
 			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 		}
 
-
 		/** Additional Actions (After Save) */
 
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
@@ -2550,14 +2549,20 @@ function bbp_list_replies( $args = array() ) {
 	if ( $r['page'] > 1 ) {
 
 		// Get top level replies.
-		$top_level_replies = array_filter( bbpress()->reply_query->posts, function( $post ) {
-			return empty( $post->reply_to ) ? true : false;
-		} );
+		$top_level_replies = array_filter(
+			bbpress()->reply_query->posts,
+			function( $post ) {
+				return empty( $post->reply_to );
+			}
+		);
 
 		// Get all child level replies.
-		$child_level_replies = array_filter( bbpress()->reply_query->posts, function( $post ) {
-			return ! empty( $post->reply_to ) ? true : false;
-		} );
+		$child_level_replies = array_filter(
+			bbpress()->reply_query->posts,
+			function( $post ) {
+				return ! empty( $post->reply_to );
+			}
+		);
 
 		// Get top level replies upto current page.
 		$length                = ( (int) $r['page'] - 1 ) * (int) $r['per_page'];
@@ -2749,15 +2754,15 @@ function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_i
  */
 function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
 
-	if ( empty( $posts) || empty( $top_reply_ids ) ) {
+	if ( empty( $posts ) || empty( $top_reply_ids ) ) {
 		return $count;
 	}
 
-	$child_posts = [];
+	$child_posts = array();
 	foreach ( $posts as $index => $child_post ) {
 		if ( in_array( $child_post->reply_to, $top_reply_ids, true ) ) {
 			$child_posts[] = $child_post;
-			unset( $posts[$index] );
+			unset( $posts[ $index ] );
 		}
 	}
 
