@@ -402,7 +402,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
 
 			// Check if link embed or link preview and append the content accordingly.
-			if( bbp_use_autoembed() ) {
+			if ( bbp_use_autoembed() ) {
 				$post_id    = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? $topic->ID : $topic_id;
 				$link_embed = get_post_meta( $post_id, '_link_embed', true );
 				if ( ! empty( $link_embed ) ) {

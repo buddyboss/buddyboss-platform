@@ -1735,10 +1735,11 @@ function bbp_forum_form_fields() {
  */
 function bbp_topic_form_fields() {
 
-	?>
-	<input type="hidden" name="link_preview_data" id="link_preview_data" />
-
-	<?php
+	if ( bbp_use_autoembed() ) {
+		?>
+		<input type="hidden" name="link_preview_data" id="link_preview_data" />
+		<?php
+	}
 
 	if ( bbp_is_topic_edit() ) {
 		?>
@@ -1757,7 +1758,7 @@ function bbp_topic_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-topic_' . bbp_get_topic_id() );
 
-		bb_topic_reply_edit_link_preview_field( bbp_get_topic_id() );
+		bb_forums_edit_link_preview_field( bbp_get_topic_id() );
 
 	} else {
 
@@ -1794,10 +1795,11 @@ function bbp_topic_form_fields() {
  */
 function bbp_reply_form_fields() {
 
-	?>
-	<input type="hidden" name="link_preview_data" id="link_preview_data" />
-
-	<?php
+	if ( bbp_use_autoembed() ) {
+		?>
+		<input type="hidden" name="link_preview_data" id="link_preview_data" />
+		<?php
+	}
 
 	if ( bbp_is_reply_edit() ) {
 		$forum_redirect_to = isset( $_REQUEST['forum_redirect_to'] ) ? (int) $_REQUEST['forum_redirect_to'] : 1
@@ -1816,7 +1818,7 @@ function bbp_reply_form_fields() {
 		<?php
 		wp_nonce_field( 'bbp-edit-reply_' . bbp_get_reply_id() );
 
-		bb_topic_reply_edit_link_preview_field( bbp_get_reply_id() );
+		bb_forums_edit_link_preview_field( bbp_get_reply_id() );
 
 	} else {
 		?>
@@ -2967,7 +2969,7 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
  *
  * @param integer $post_id Topic or Reply id.
  */
-function bb_topic_reply_edit_link_preview_field( $post_id ) {
+function bb_forums_edit_link_preview_field( $post_id ) {
 	$link_data         = array();
 	$link_preview_data = get_post_meta( $post_id, '_link_preview_data', true );
 	if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {

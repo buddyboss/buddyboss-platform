@@ -2177,21 +2177,6 @@ function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 
 			if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
 				$embed_code = $embed_data['description'];
-			} else {
-				$embed_code = wp_oembed_get( $link_embed, array( 'discover' => false ) );
-
-				if ( ! empty( $embed_code ) ) {
-					$parsed_url_data = array(
-						'title'       => ' ',
-						'description' => $embed_code,
-						'images'      => '',
-						'error'       => '',
-						'wp_embed'    => true,
-					);
-					$cache_key       = 'bb_oembed_' . md5( maybe_serialize( $link_embed ) );
-					// set the transient.
-					set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
-				}
 			}
 
 			if ( ! empty( $embed_code ) ) {

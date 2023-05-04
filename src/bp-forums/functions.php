@@ -1177,7 +1177,21 @@ function bb_forums_save_link_preview_data( $post_id ) {
 	if ( ! empty( $_POST['link_preview_data'] ) ) {
 		$link_preview_data = get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) );
 	} else {
-		$link_preview_data = $_POST;
+
+		// Allow Link preview related keys.
+		$allowed_keys = array(
+			'link_url',
+			'link_embed',
+			'link_title',
+			'link_description',
+			'link_image',
+			'link_image_index_save'
+		);
+
+		// Filter the $_POST array to only include allowed keys.
+		$link_preview_data = array_filter( $_POST, function( $key ) use ( $allowed_keys ) {
+			return in_array( $key, $allowed_keys );
+		}, ARRAY_FILTER_USE_KEY );
 	}
 
 	$link_url   = ! empty( $link_preview_data['link_url'] ) ? filter_var( $link_preview_data['link_url'], FILTER_VALIDATE_URL ) : '';
@@ -1243,8 +1257,8 @@ add_action( 'bbp_edit_reply', 'bb_forums_save_link_preview_data' );
 /**
  * Embed link preview in activity content
  *
- * @param $content
- * @param $post_id
+ * @param string $content Topic/Reply content.
+ * @param int    $post_id Topic/Reply id.
  *
  * @since BuddyBoss [BBVERSION]
  *
