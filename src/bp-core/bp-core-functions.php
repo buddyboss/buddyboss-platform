@@ -8543,7 +8543,7 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $file The URL of the image to download
+ * @param string $file The URL of the image to download.
  *
  * @return int|void
  */
@@ -8593,8 +8593,8 @@ function bb_media_sideload_attachment( $file ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $file_array Array similar to a {@link $_FILES} upload array
- * @param array $post_data  allows you to overwrite some of the attachment
+ * @param array $file_array Array similar to a {@link $_FILES} upload array.
+ * @param array $post_data  allows you to overwrite some of the attachment.
  *
  * @return int|object The ID of the attachment or a WP_Error on failure
  */
@@ -8655,7 +8655,7 @@ function bb_media_handle_sideload( $file_array, $post_data = array() ) {
 		unset( $attachment['ID'] );
 	}
 
-	// Save the attachment metadata
+	// Save the attachment metadata.
 	$id = wp_insert_attachment( $attachment, $file );
 
 	if ( ! is_wp_error( $id ) ) {

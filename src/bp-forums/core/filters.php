@@ -452,13 +452,15 @@ add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_upd
  *
  * @since Buddyboss[BBVERSION]
  *
- * @param string $content Topic and reply content
+ * @param string $content Topic and reply content.
+ *
  * @return string $content Topic and reply content
  */
-function bb_filter_empty_editor_content( $content = '' ){	
-	if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $content ) ) {
+function bb_filter_empty_editor_content( $content = '' ) {
+	if ( preg_match( '/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $content ) ) {
 		$content = '';
 	}
+
 	return $content;
 }
 

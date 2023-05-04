@@ -676,12 +676,19 @@ function bbp_edit_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
-	     && empty( $_POST['bbp_media'] )
-	     && empty( $_POST['bbp_document'] )
-	     && empty( $_POST['bbp_video'] )
-	     && empty( $_POST['bbp_media_gif'] )
-		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $_POST['link_preview_data'] ) ) )
+	if (
+		empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
+		&& empty( $_POST['bbp_media'] )
+		&& empty( $_POST['bbp_document'] )
+		&& empty( $_POST['bbp_video'] )
+		&& empty( $_POST['bbp_media_gif'] )
+		&& (
+			false === bbp_use_autoembed() ||
+			(
+				false !== bbp_use_autoembed() &&
+				empty( $_POST['link_preview_data'] )
+			)
+		)
 	) {
 		bbp_add_error( 'bbp_edit_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
@@ -3699,7 +3706,7 @@ function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 		$embed_urls = array_unique( $embed_urls );
 
 		foreach ( $embed_urls as $url ) {
-			if ( $flag == false ) {
+			if ( false === $flag ) {
 				continue;
 			}
 
@@ -3717,7 +3724,8 @@ function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 		if ( empty( $topic_id ) ) {
 			$topic_id = bbp_get_topic_id();
 		}
-		// check if preview url was used or not, if not return content without embed
+
+		// check if preview url was used or not, if not return content without embed.
 		$link_embed = get_post_meta( $topic_id, '_link_embed', true );
 		if ( ! empty( $link_embed ) ) {
 			$embed_data = bp_core_parse_url( $link_embed );
@@ -3748,7 +3756,8 @@ function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 				if ( ! empty( $content_url ) && empty( $content_tag ) ) {
 					$content = sprintf( '<p>%s</p>', $content );
 				}
-				return  $content .= $embed_code;
+
+				return $content .= $embed_code;
 			}
 		}
 	}

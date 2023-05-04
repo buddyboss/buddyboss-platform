@@ -1125,10 +1125,10 @@ function bb_is_forum_group_forum( $forum_id = 0 ) {
  */
 function bb_forums_link_preview_parse_url() {
 	// Get URL.
-	$url = $_POST['url'];
+	$url = isset( $_POST['url'] ) ? $_POST['url'] : ''; // phpcs:ignore
 
 	// Check if URL is validated.
-	if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
 		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss' ) ) );
 	}
 
@@ -1143,6 +1143,7 @@ function bb_forums_link_preview_parse_url() {
 	// send json success.
 	wp_send_json( $parse_url_data );
 }
+
 add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
 
 /**
@@ -1150,13 +1151,26 @@ add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $post_id Topic or Reply id.
+ * @param int $post_id Discussion/Reply id.
  */
 function bb_forums_save_link_preview_data( $post_id ) {
 
 	$link_preview_data = array();
 
-	if ( isset( $_POST['action'] ) && ! in_array( $_POST['action'], array( 'bbp-new-topic', 'bbp-new-reply', 'reply', 'bbp-edit-topic', 'bbp-edit-reply' ) ) ) {
+	if (
+		empty( $_POST['action'] ) || //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		! in_array(
+			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			array(
+				'bbp-new-topic',
+				'bbp-new-reply',
+				'reply',
+				'bbp-edit-topic',
+				'bbp-edit-reply',
+			),
+			true
+		)
+	) {
 		return false;
 	}
 
@@ -1189,6 +1203,7 @@ function bb_forums_save_link_preview_data( $post_id ) {
 	if ( true === $link_embed && ! empty( $link_url ) ) {
 		update_post_meta( $post_id, '_link_embed', $link_url );
 		update_post_meta( $post_id, '_link_preview_data', '' );
+
 		return;
 	} else {
 		update_post_meta( $post_id, '_link_embed', '0' );
@@ -1238,7 +1253,7 @@ add_action( 'bbp_edit_reply', 'bb_forums_save_link_preview_data' );
 function bb_forums_link_preview( $content, $post_id ) {
 
 	// Check if link preview/embed enabled.
-	if( ! bbp_use_autoembed() ) {
+	if ( ! bbp_use_autoembed() ) {
 		return $content;
 	}
 

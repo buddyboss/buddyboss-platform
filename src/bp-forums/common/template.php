@@ -1737,7 +1737,7 @@ function bbp_topic_form_fields() {
 
 	?>
 	<input type="hidden" name="link_preview_data" id="link_preview_data" />
-		
+
 	<?php
 
 	if ( bbp_is_topic_edit() ) {
@@ -1796,7 +1796,7 @@ function bbp_reply_form_fields() {
 
 	?>
 	<input type="hidden" name="link_preview_data" id="link_preview_data" />
-		
+
 	<?php
 
 	if ( bbp_is_reply_edit() ) {
@@ -2964,15 +2964,15 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
  * Link preview edit field.
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @param integer $post_id Topic or Reply id.
  */
-function bb_topic_reply_edit_link_preview_field( $post_id ){
-	$link_data         = [];
+function bb_topic_reply_edit_link_preview_field( $post_id ) {
+	$link_data         = array();
 	$link_preview_data = get_post_meta( $post_id, '_link_preview_data', true );
 	if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
 		$link_data['embed']                 = 0;
-		$link_data['url']                   = ! empty ( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
+		$link_data['url']                   = ( ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '' );
 		$link_data['link_image_index_save'] = $link_preview_data['link_image_index_save'];
 	}
 
@@ -2985,7 +2985,7 @@ function bb_topic_reply_edit_link_preview_field( $post_id ){
 	if ( isset( $link_data['url'] ) && ! empty( $link_data['url'] ) ) {
 		$link_data_string = htmlentities( wp_json_encode( $link_data ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 		?>
-		<input type="hidden" name="bb_link_url" id="bb_link_url" value="<?php echo $link_data_string; ?>" />
+		<input type="hidden" name="bb_link_url" id="bb_link_url" value="<?php echo $link_data_string; ?>"/>
 		<?php
 	}
 }

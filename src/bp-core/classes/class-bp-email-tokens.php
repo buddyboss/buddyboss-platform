@@ -717,14 +717,15 @@ class BP_Email_Tokens {
 														remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
 													}
 
+													// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 													echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
 
 													if ( $removed_autoembed_filter ) {
 														add_filter( 'bp_get_activity_content_body', array( $bp->embed, 'autoembed' ), 8, 2 );
 														add_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
 													}
-
 												} else {
+													// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 													echo $content;
 												}
 												?>
@@ -2389,6 +2390,7 @@ class BP_Email_Tokens {
 																remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
 															}
 
+															// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 															echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
 
 															if ( $removed_autoembed_filter ) {
@@ -3003,6 +3005,7 @@ class BP_Email_Tokens {
 																remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
 															}
 
+															// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 															echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
 
 															if ( $removed_autoembed_filter ) {
