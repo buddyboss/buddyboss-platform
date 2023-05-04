@@ -2549,21 +2549,23 @@ function bbp_list_replies( $args = array() ) {
 
 	if ( $r['page'] > 1 ) {
 
-		$loop_run     = $r['page'] - 1;
-		$offset_total = 0;
-		for ( $i = 1; $i <= $loop_run; $i++ ) {
+		// Get top level replies.
+		$top_level_replies = array_filter( bbpress()->reply_query->posts, function( $post ) {
+			return empty( $post->reply_to ) ? true : false;
+		} );
 
-			$walker_offset = new stdClass();
-			ob_start();
-			$walker_offset = new BBP_Walker_Reply();
+		// Get all child level replies.
+		$child_level_replies = array_filter( bbpress()->reply_query->posts, function( $post ) {
+			return ! empty( $post->reply_to ) ? true : false;
+		} );
 
-			$walker_offset->paged_walk( bbpress()->reply_query->posts, $r['max_depth'], $i, $r['per_page'], $r );
-			ob_get_clean();
+		// Get top level replies upto current page.
+		$length                = ( (int) $r['page'] - 1 ) * (int) $r['per_page'];
+		$top_replies_upto_page = array_slice( $top_level_replies, 0, $length );
+		$top_reply_ids         = wp_list_pluck( $top_replies_upto_page, 'ID' );
+		$offset_total          = bbp_replies_count_walk( $child_level_replies, $top_reply_ids, count( $top_reply_ids ) );
 
-			$offset_total = $offset_total + $walker_offset->total_items_per_page;
-		}
 		bbpress()->reply_query->offset = $offset_total;
-
 	} else {
 		bbpress()->reply_query->offset = 0;
 	}
@@ -2732,4 +2734,35 @@ function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_i
 	}
 
 	return apply_filters( 'bb_map_group_forum_reply_meta_caps', $caps, $cap, $user_id, $args );
+}
+
+/**
+ * Get the total count of all replies upto possible depth.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $posts         List of child level reply posts.
+ * @param array $top_reply_ids List of top level reply posts.
+ * @param int   $count         Count of replies.
+ *
+ * @return int $count
+ */
+function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
+
+	if ( empty( $posts) || empty( $top_reply_ids ) ) {
+		return $count;
+	}
+
+	$child_posts = [];
+	foreach ( $posts as $index => $child_post ) {
+		if ( in_array( $child_post->reply_to, $top_reply_ids, true ) ) {
+			$child_posts[] = $child_post;
+			unset( $posts[$index] );
+		}
+	}
+
+	$child_reply_ids = wp_list_pluck( $child_posts, 'ID' );
+	$count           = $count + bbp_replies_count_walk( $posts, $child_reply_ids, count( $child_reply_ids ) );
+
+	return $count;
 }
