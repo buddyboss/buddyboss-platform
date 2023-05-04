@@ -5406,27 +5406,15 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 	if ( ! isset( $cache[ $cache_key ] ) ) {
 		global $wpdb;
 
-		if ( bb_is_short_user_unique_identifier( $profile_slug ) ) {
-
-			// Get the user who has 8 to 12 characters long unique slug.
-			$user_query = $wpdb->prepare(
-				"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` = %s",
-				"bb_profile_slug_{$profile_slug}"
-			);
-
-		} else {
-
-			// Backward compatible to check 40 characters long unique slug.
-			$user_query = $wpdb->prepare(
-				"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
-				"bb_profile_slug_{$profile_slug}",
-				"bb_profile_long_slug_{$profile_slug}"
-			);
-
-		}
+		// Backward compatible to check 40 characters long unique slug or new slug as well.
+		$user_query = $wpdb->prepare(
+			"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
+			"bb_profile_slug_{$profile_slug}",
+			"bb_profile_long_slug_{$profile_slug}"
+		);
 
 		// Get the user ID from the created query based on string length.
-		$found_users = $wpdb->get_var( $user_query );
+		$found_users = $wpdb->get_var( $user_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		// Validate the user ID.
 		$user = ( ! empty( $found_users ) && ! is_wp_error( $found_users ) ? $found_users : 0 );
