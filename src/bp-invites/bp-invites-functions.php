@@ -144,6 +144,11 @@ function bp_invites_member_invite_remove_registration_lock() {
 				'value'   => $email,
 				'compare' => '=',
 			),
+			array(
+				'key'     => '_bp_invitee_status',
+				'value'   => 0,
+				'compare' => '=',
+			),
 		),
 	);
 
@@ -155,12 +160,12 @@ function bp_invites_member_invite_remove_registration_lock() {
 	}
 
 	// To support old versions of BP, we have to force the overloaded
-	// site_options property in some cases
+	// site_options property in some cases.
 	if ( is_multisite() ) {
 		$site_options = $bp->site_options;
-		if ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'blog' ) {
+		if ( ! empty( $bp->site_options['registration'] ) && 'blog' === $bp->site_options['registration'] ) {
 			$site_options['registration'] = 'all';
-		} elseif ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'none' ) {
+		} elseif ( ! empty( $bp->site_options['registration'] ) && 'none' === $bp->site_options['registration'] ) {
 			$site_options['registration'] = 'user';
 		}
 		$bp->site_options = $site_options;
