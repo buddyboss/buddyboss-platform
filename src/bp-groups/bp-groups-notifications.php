@@ -1491,10 +1491,11 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 		unset( $user_ids[ $unset_sender_key ] );
 	}
 
+	$min_count = (int) apply_filters( 'bb_groups_details_updated_notifications_count', 20 );
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
-		count( $user_ids ) > 20
+		count( $user_ids ) > $min_count
 	) {
 		global $bb_notifications_background_updater;
 		$bb_notifications_background_updater->data(

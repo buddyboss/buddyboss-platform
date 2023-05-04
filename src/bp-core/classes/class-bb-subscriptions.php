@@ -15,6 +15,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 	 *
 	 * @since BuddyBoss 2.2.6
 	 */
+	#[\AllowDynamicProperties]
 	class BB_Subscriptions {
 
 		/**

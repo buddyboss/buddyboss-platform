@@ -70,6 +70,8 @@ window.bp = window.bp || {};
 			// Profile Notification setting
 			this.profileNotificationSetting();
 
+			this.xProfileBlock();
+
 			// Bail if not set.
 			if ( 'undefined' !== typeof BB_Nouveau_Presence ) {
 				// User Presence status.
@@ -807,6 +809,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
 			$( document ).on( 'click', '#message-threads .report-content', this.threadListReportPopup );
 			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
+			$( document ).on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
+			$( document ).on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -840,7 +844,6 @@ window.bp = window.bp || {};
 
 			// Accordion open/close event
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
-
 		},
 
 		/**
@@ -1960,7 +1963,11 @@ window.bp = window.bp || {};
 			if ( nonceUrl ) {
 				nonce = self.getLinkParams( nonceUrl, '_wpnonce' );
 			} else {
-				nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				if ( 'undefined' === typeof target.prop( 'href' ) ) {
+					nonce = self.getLinkParams( target.attr( 'href' ), '_wpnonce' );
+				} else {
+					nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
+				}
 			}
 
 			// Unfortunately unlike groups.
@@ -2033,6 +2040,23 @@ window.bp = window.bp || {};
 							}
 						}
 
+						if (
+							'undefined' !== typeof response.data.is_group_subscription &&
+							true === response.data.is_group_subscription &&
+							'undefined' !== typeof response.data.feedback
+						) {
+							$( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									'<div>' + response.data.feedback + '</div>',
+									'error',
+									null,
+									true
+								]
+							);
+						}
+
 					} else {
 						// Specific cases for groups.
 						if ( 'groups' === object ) {
@@ -2045,6 +2069,23 @@ window.bp = window.bp || {};
 									return window.location.reload();
 								}
 							}
+
+							if (
+								'undefined' !== typeof response.data.is_group_subscription &&
+								true === response.data.is_group_subscription &&
+								'undefined' !== typeof response.data.feedback
+							) {
+								$( document ).trigger(
+									'bb_trigger_toast_message',
+									[
+										'',
+										'<div>' + response.data.feedback + '</div>',
+										'info',
+										null,
+										true
+									]
+								);
+							}
 						}
 
 						// User main nav update friends counts.
@@ -2055,7 +2096,7 @@ window.bp = window.bp || {};
 							// Check friend count set.
 							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
 								// Check friend count > 0 then show the count span.
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
@@ -2068,7 +2109,7 @@ window.bp = window.bp || {};
 									$( friend_with_count ).hide();
 								}
 							} else if ( undefined !== response.data.friend_count ) {
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
@@ -2119,6 +2160,33 @@ window.bp = window.bp || {};
 						target.parent().replaceWith( response.data.contents );
 					}
 				}
+			).fail(
+				function () {
+
+					if ( ['unsubscribe', 'subscribe'].includes( action ) ) {
+						var title = $( target ).data( 'bb-group-name' );
+
+						if ( 25 < title.length ) {
+							title = title.substring( 0, 25 ) + '...';
+						}
+
+						var display_error = '<div>' + BP_Nouveau.subscriptions.error + '<strong>' + title + '</strong>.</div>';
+						if ( 'subscribe' === action ) {
+							display_error = '<div>' + BP_Nouveau.subscriptions.subscribe_error + '<strong>' + title + '</strong></div>';
+						}
+						jQuery( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								display_error,
+								'error',
+								null,
+								true
+							]
+						);
+					}
+					target.removeClass( 'pending loading' );
+				}
 			);
 		},
 
@@ -2165,6 +2233,17 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button' );
+					target.addClass( 'bp-toggle-action-button-hover' );
+					return false;
+				}
 
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
@@ -2193,6 +2272,18 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget );
 
 			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
+
+				if (
+					target.hasClass( 'group-subscription' ) &&
+					'undefined' !== typeof target.data( 'title' ) &&
+					'undefined' !== typeof target.data( 'title-displayed' ) &&
+					0 === target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ).length &&
+					0 === target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ).length
+				) {
+					target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
+					target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
+					return false;
+				}
 
 				// support for BuddyBoss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
@@ -3075,6 +3166,7 @@ window.bp = window.bp || {};
 				var video         = document.createElement( 'video' );
 				var videoDuration = null;
 				video.src         = url;
+				var attempts 	  = 0;
 				var timer         = setInterval(
 					function () {
 						if (video.readyState > 0) {
@@ -3085,22 +3177,13 @@ window.bp = window.bp || {};
 									video.pause();
 								}
 							};
-
-							video.addEventListener(
-								'loadeddata',
-								function () {
-									if ( snapImage() ) {
-										video.removeEventListener( 'timeupdate', timeupdate );
-									}
-								}
-							);
 							var snapImage = function () {
 								var canvas    = document.createElement( 'canvas' );
 								canvas.width  = video.videoWidth;
 								canvas.height = video.videoHeight;
 								canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
 								var image   = canvas.toDataURL();
-								var success = image.length > 100000;
+								var success = image.length > 50000;
 								if ( success ) {
 									var img = document.createElement( 'img' );
 									img.src = image;
@@ -3122,6 +3205,11 @@ window.bp = window.bp || {};
 									}
 
 									URL.revokeObjectURL( url );
+								} else {
+									if( attempts >= 2 ) {
+										$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-no-thumbnail' );
+										clearInterval( timer );
+									}
 								}
 								return success;
 							};
@@ -3136,6 +3224,11 @@ window.bp = window.bp || {};
 							video.play();
 							clearInterval( timer );
 						}
+						if( attempts >= 2 ) {
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-no-thumbnail' );
+							clearInterval( timer );
+						}
+						attempts++;
 					},
 					500
 				);
@@ -3294,6 +3387,59 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 *  Show/Hide Search reset button
+		 *
+		 *  @return {function}
+		 */
+		directorySearchInput: function() {
+			var $form = $( this ).closest( '.search-form-has-reset' );
+			var $resetButton = $form.find( '.search-form_reset' );
+
+			if ( $( this ).val().length > 0 ) {
+				$resetButton.show();
+			} else {
+				$resetButton.hide();
+
+				// Trigger search event
+				if( $form.hasClass( 'bp-invites-search-form') ) {
+					$form.find( 'input[type="search"]').val('');
+					$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
+				}
+			}
+
+			if ( !$( this ).hasClass( 'ui-autocomplete-input' ) ) {
+				$form.find( '.search-form_submit' ).trigger( 'click' );
+			}
+
+		},
+
+		/**
+		 *  Reset search results
+		 *
+		 *  @param  {object} event The event object.
+		 *  @return {function}
+		 */
+		resetDirectorySearch: function( e ) {
+			e.preventDefault();
+			var $form = $( this ).closest( 'form' );
+			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
+				$form.find( 'input[type="search"]').val('');
+				$form.find( '.search-form_submit' ).trigger( 'click' );
+			} else {
+				$form.find( '#bbp_search' ).val('');
+			}
+
+			$( this ).hide();
+
+			// Trigger search event
+			if ( $form.hasClass( 'bp-invites-search-form') ) {
+				$form.find( 'input[type="search"]').val('');
+				$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
+			}
+
+		},
+
+		/**
 		 *  Show Action Popup
 		 *
 		 *  @param  {object} event The event object.
@@ -3354,6 +3500,15 @@ window.bp = window.bp || {};
 				}
 			});
 
+		},
+
+		/**
+		 *  Add socialnetworks profile field type related class
+		 */
+		xProfileBlock: function () {
+			$( '.profile-fields .field_type_socialnetworks' ).each( function () {
+				$( this ).closest( '.bp-widget' ).addClass( 'social' );
+			} );
 		},
 
 		/**
@@ -3509,10 +3664,11 @@ window.bp = window.bp || {};
 							'undefined' !== typeof params.ids.length &&
 							0 < params.ids.length
 						) {
+							var url = '1' === BB_Nouveau_Presence.native_presence ? BB_Nouveau_Presence.native_presence_url : BB_Nouveau_Presence.presence_rest_url;
 							$.ajax(
 								{
 									type: 'POST',
-									url: '/wp-json/buddyboss/v1/members/presence',
+									url: url,
 									data: params,
 									beforeSend: function ( xhr ) {
 										xhr.setRequestHeader( 'X-WP-Nonce', BB_Nouveau_Presence.rest_nonce );
@@ -3578,7 +3734,7 @@ window.bp = window.bp || {};
 				}, inactive_timeout );
 				window.bb_is_user_active = true;
 			};
-		}
+		},
 
 	};
 

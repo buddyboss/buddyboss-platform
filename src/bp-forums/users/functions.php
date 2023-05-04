@@ -690,7 +690,8 @@ function bbp_get_user_subscribed_forum_ids( $user_id = 0 ) {
 			'user_id' => $user_id,
 			'type'    => 'forum',
 			'fields'  => 'item_id',
-		)
+		),
+		true
 	);
 
 	$subscriptions = array();
@@ -725,7 +726,8 @@ function bbp_get_user_subscribed_topic_ids( $user_id = 0 ) {
 			'user_id' => $user_id,
 			'type'    => 'topic',
 			'fields'  => 'item_id',
-		)
+		),
+		true
 	);
 
 	$subscriptions = array();

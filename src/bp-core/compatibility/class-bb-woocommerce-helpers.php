@@ -48,6 +48,10 @@ class BB_Woocommerce_Helpers {
 	public function compatibility_init() {
 
 		add_filter( 'bb_is_enable_custom_registration', array( $this, 'bb_check_woocommerce_enable_myaccount_registration' ), 9, 2 );
+
+		if ( class_exists( 'WC_Subscriptions' ) ) {
+			add_action( 'bp_init', array( $this, 'bb_wcs_add_subscription_compatibility' ), 9999 );
+		}
 	}
 
 	/**
@@ -75,6 +79,34 @@ class BB_Woocommerce_Helpers {
 		}
 
 		return $validate;
+	}
+
+	/**
+	 * Function to make compatible WooCommerce and BuddyBoss subscriptions.
+	 *
+	 * @since BuddyBoss 2.2.9.1
+	 *
+	 * @return void
+	 */
+	public function bb_wcs_add_subscription_compatibility() {
+		add_filter( 'woocommerce_get_query_vars', array( $this, 'bb_wcs_remove_query_vars' ) );
+	}
+
+	/**
+	 * Function to set query vars to enable BuddyBoss subscriptions.
+	 *
+	 * @since BuddyBoss 2.2.9.1
+	 *
+	 * @param array $q_vars Query vars.
+	 *
+	 * @return array
+	 */
+	public function bb_wcs_remove_query_vars( $q_vars ) {
+		if ( 'subscriptions' === bp_action_variable() && isset( $q_vars['subscriptions'] ) ) {
+			unset( $q_vars['subscriptions'] );
+		}
+
+		return $q_vars;
 	}
 }
 

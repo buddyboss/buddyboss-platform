@@ -46,6 +46,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$default_profile_avatar_type_before_saving = bb_get_default_profile_avatar_type();
 		$bp_enable_profile_gravatar_before_saving  = bp_enable_profile_gravatar();
 		$profile_cover_type_before_saving          = bb_get_default_profile_cover_type();
+		$profile_slug_format_before_saving         = bb_get_profile_slug_format();
 
 		parent::settings_save();
 
@@ -55,6 +56,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$default_profile_avatar_type_after_saving = bb_get_default_profile_avatar_type();
 		$bp_enable_profile_gravatar_after_saving  = bp_enable_profile_gravatar();
 		$profile_cover_type_after_saving          = bb_get_default_profile_cover_type();
+		$profile_slug_format_after_saving         = bb_get_profile_slug_format();
 
 		/**
 		 * Sync bp-enable-member-dashboard with customizer settings.
@@ -67,7 +69,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
-		$bb_display_name_format = filter_input( INPUT_POST, 'bp-display-name-format', FILTER_SANITIZE_STRING );
+		$bb_display_name_format = bb_filter_input_string( INPUT_POST, 'bp-display-name-format' );
 
 		// Set requirement for last name based on display format.
 		if ( isset( $bb_display_name_format ) ) {
@@ -99,9 +101,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			}
 		}
 
-		$bb_profile_avatar_type           = filter_input( INPUT_POST, 'bp-profile-avatar-type', FILTER_SANITIZE_STRING );
-		$bb_default_custom_profile_avatar = filter_input( INPUT_POST, 'bp-default-custom-profile-avatar', FILTER_SANITIZE_STRING );
-		$bb_default_custom_profile_cover  = filter_input( INPUT_POST, 'bp-default-custom-profile-cover', FILTER_SANITIZE_STRING );
+		$bb_profile_avatar_type           = bb_filter_input_string( INPUT_POST, 'bp-profile-avatar-type' );
+		$bb_default_custom_profile_avatar = bb_filter_input_string( INPUT_POST, 'bp-default-custom-profile-avatar' );
+		$bb_default_custom_profile_cover  = bb_filter_input_string( INPUT_POST, 'bp-default-custom-profile-cover' );
 
 		/**
 		 * Enable Gravatar's set disable if Profile Avatars is WordPress.
@@ -157,6 +159,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-xprofile' ) );
 			exit();
 		}
+
+		if ( $profile_slug_format_before_saving !== $profile_slug_format_after_saving ) {
+			wp_cache_flush();
+
+			// Purge all the cache for API.
+			if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+				BuddyBoss\Performance\Cache::instance()->purge_all();
+			}
+		}
+
 	}
 
 	/**
@@ -195,6 +207,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args          = array();
 		$args['class'] = 'nick-name-options display-options';
 		$this->add_field( 'bp-hide-nickname-last-name', '', 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
+
+		// Section for Profile Links.
+		$this->add_section( 'bb_profile_slug_settings', __( 'Profile Links', 'buddyboss' ), '', 'bb_profile_slug_tutorial' );
+
+		// Display name format.
+		$this->add_field(
+			'bb_profile_slug_format',
+			__( 'Link Format', 'buddyboss' ),
+			array( $this, 'bb_profile_slug_format_callback' )
+		);
 
 		// Profile Avatar.
 		$avatar_type         = bb_get_profile_avatar_type();
@@ -758,6 +780,36 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				'error'   => false,
 			),
 			$upload_dir
+		);
+	}
+
+	/**
+	 * Display profile slug format.
+	 *
+	 * @since BuddyBoss 2.3.1
+	 */
+	public function bb_profile_slug_format_callback() {
+		$options = array(
+			'username'          => esc_html__( 'Username', 'buddyboss' ),
+			'unique_identifier' => esc_html__( 'Unique Identifier', 'buddyboss' ),
+		);
+
+		$current_value = bb_get_profile_slug_format();
+
+		printf( '<select name="%1$s" for="%2$s">', 'bb_profile_slug_format', 'bb_profile_slug_format' );
+		foreach ( $options as $key => $value ) {
+			printf(
+				'<option value="%1$s" %2$s>%3$s</option>',
+				esc_attr( $key ),
+				selected( $key === $current_value, true, false ),
+				esc_attr( $value )
+			);
+		}
+		printf( '</select>' );
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__( 'Select the format of your member’s profile links (i.e. /members/username). Both formats will open the member’s profile, so you can safely change without breaking previously shared links.', 'buddyboss' )
 		);
 	}
 }

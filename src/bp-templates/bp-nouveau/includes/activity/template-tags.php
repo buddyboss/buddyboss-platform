@@ -1527,7 +1527,7 @@ function bp_nouveau_edit_activity_data() {
  * @return string The Activity edit data.
  */
 function bp_nouveau_get_edit_activity_data() {
-	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ) );
+	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
 
 /**
