@@ -204,7 +204,7 @@ jQuery( document ).ready(
 								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 							}
 
-							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) ) {
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 								if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
 									clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
 								}
@@ -222,22 +222,24 @@ jQuery( document ).ready(
 						}
 					);
 
-					var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
-					var form = jQuery(element).closest( 'form' );
-					bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+					if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+						var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
+						var form = jQuery(element).closest( 'form' );
+						bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 
-					var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
-					if( link_preview_input.length > 0) {
-						link_preview_input.on( 'change', function() {
-							if( link_preview_input.val() !== '' ) {
-								var link_preview_data = JSON.parse( link_preview_input.val() );
-								if( link_preview_data && link_preview_data.link_url !== '' ) {
-									jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
-								} else {
-									jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+						var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+						if( link_preview_input.length > 0) {
+							link_preview_input.on( 'change', function() {
+								if( link_preview_input.val() !== '' ) {
+									var link_preview_data = JSON.parse( link_preview_input.val() );
+									if( link_preview_data && link_preview_data.link_url !== '' ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+									}
 								}
-							}
-						});
+							});
+						}
 					}
 
 					jQuery('a.bp-suggestions-mention:empty').remove();
@@ -362,7 +364,7 @@ jQuery( document ).ready(
 								jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 							}
 
-							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) ) {
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 								if ( window.forums_medium_topic_editor[key].linkTimeout != null ) {
 									clearTimeout( window.forums_medium_topic_editor[key].linkTimeout );
 								}
@@ -380,22 +382,24 @@ jQuery( document ).ready(
 						}
 					);
 
-					var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
-					var form = jQuery(element).closest( 'form' );
-					bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+					if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+						var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
+						var form = jQuery(element).closest( 'form' );
+						bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 
-					var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
-					if( link_preview_input.length > 0) {
-						link_preview_input.on( 'change', function() {
-							if( link_preview_input.val() !== '' ) {
-								var link_preview_data = JSON.parse( link_preview_input.val() );
-								if( link_preview_data && link_preview_data.link_url !== '' ) {
-									jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
-								} else {
-									jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+						var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+						if( link_preview_input.length > 0) {
+							link_preview_input.on( 'change', function() {
+								if( link_preview_input.val() !== '' ) {
+									var link_preview_data = JSON.parse( link_preview_input.val() );
+									if( link_preview_data && link_preview_data.link_url !== '' ) {
+										jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+									} else {
+										jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+									}
 								}
-							}
-						});
+							});
+						}
 					}
 
 					jQuery('a.bp-suggestions-mention:empty').remove();
@@ -578,7 +582,7 @@ jQuery( document ).ready(
 										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 									}
 
-									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) ) {
+									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 										if ( window.forums_medium_forum_editor[key].linkTimeout != null ) {
 											clearTimeout( window.forums_medium_forum_editor[key].linkTimeout );
 										}
@@ -596,22 +600,24 @@ jQuery( document ).ready(
 								}
 							);
 
-							var bbp_forum_content = jQuery(element).closest('form').find( '#bbp_forum_content' );
-							var form = jQuery(element).closest( 'form' );
-							bp.Nouveau.linkPreviews.scrapURL( bbp_forum_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+								var bbp_forum_content = jQuery(element).closest('form').find( '#bbp_forum_content' );
+								var form = jQuery(element).closest( 'form' );
+								bp.Nouveau.linkPreviews.scrapURL( bbp_forum_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 
-							var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
-							if( link_preview_input.length > 0) {
-								link_preview_input.on( 'change', function() {
-									if( link_preview_input.val() !== '' ) {
-										var link_preview_data = JSON.parse( link_preview_input.val() );
-										if( link_preview_data && link_preview_data.link_url !== '' ) {
-											jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
-										} else {
-											jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+								var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+								if( link_preview_input.length > 0) {
+									link_preview_input.on( 'change', function() {
+										if( link_preview_input.val() !== '' ) {
+											var link_preview_data = JSON.parse( link_preview_input.val() );
+											if( link_preview_data && link_preview_data.link_url !== '' ) {
+												jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+											} else {
+												jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+											}
 										}
-									}
-								});
+									});
+								}
 							}
 
 						});
@@ -679,7 +685,7 @@ jQuery( document ).ready(
 										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 									}
 
-									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) ) {
+									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 										if ( window.forums_medium_reply_editor[key].linkTimeout != null ) {
 											clearTimeout( window.forums_medium_reply_editor[key].linkTimeout );
 										}
@@ -697,22 +703,24 @@ jQuery( document ).ready(
 								}
 							);
 
-							var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
-							var form = jQuery(element).closest( 'form' );
-							bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+								var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
+								var form = jQuery(element).closest( 'form' );
+								bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 
-							var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
-							if( link_preview_input.length > 0) {
-								link_preview_input.on( 'change', function() {
-									if( link_preview_input.val() !== '' ) {
-										var link_preview_data = JSON.parse( link_preview_input.val() );
-										if( link_preview_data && link_preview_data.link_url !== '' ) {
-											jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
-										} else {
-											jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+								var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+								if( link_preview_input.length > 0) {
+									link_preview_input.on( 'change', function() {
+										if( link_preview_input.val() !== '' ) {
+											var link_preview_data = JSON.parse( link_preview_input.val() );
+											if( link_preview_data && link_preview_data.link_url !== '' ) {
+												jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+											} else {
+												jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+											}
 										}
-									}
-								});
+									});
+								}
 							}
 						});
 					}
@@ -780,7 +788,7 @@ jQuery( document ).ready(
 										jQuery( element ).closest( 'form' ).removeClass( 'has-content' )
 									}
 
-									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) ) {
+									if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 										if ( window.forums_medium_topic_editor[key].linkTimeout != null ) {
 											clearTimeout( window.forums_medium_topic_editor[key].linkTimeout );
 										}
@@ -798,22 +806,24 @@ jQuery( document ).ready(
 								}
 							);
 
-							var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
-							var form = jQuery(element).closest( 'form' );
-							bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
+							if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
+								var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
+								var form = jQuery(element).closest( 'form' );
+								bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
 
-							var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
-							if( link_preview_input.length > 0) {
-								link_preview_input.on( 'change', function() {
-									if( link_preview_input.val() !== '' ) {
-										var link_preview_data = JSON.parse( link_preview_input.val() );
-										if( link_preview_data && link_preview_data.link_url !== '' ) {
-											jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
-										} else {
-											jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+								var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
+								if( link_preview_input.length > 0) {
+									link_preview_input.on( 'change', function() {
+										if( link_preview_input.val() !== '' ) {
+											var link_preview_data = JSON.parse( link_preview_input.val() );
+											if( link_preview_data && link_preview_data.link_url !== '' ) {
+												jQuery( element ).closest( 'form' ).addClass( 'has-link-preview' );
+											} else {
+												jQuery( element ).closest( 'form' ).removeClass( 'has-link-preview' );
+											}
 										}
-									}
-								});
+									});
+								}
 							}
 						});
 					}

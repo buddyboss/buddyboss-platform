@@ -3833,7 +3833,7 @@ window.bp = window.bp || {};
 					self.currentPreviewParent = targetPreviewParent.find( '.bb-url-scrapper-container' );
 				}
 
-				if( targetDataInput && targetDataInput.prop('tagName').toLowerCase() === 'input' ){
+				if( targetDataInput.length > 0 && targetDataInput.prop('tagName').toLowerCase() === 'input' ){
 					self.dataInput = targetDataInput;
 				}
 		
