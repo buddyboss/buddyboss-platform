@@ -1145,6 +1145,9 @@ function bb_forums_link_preview_parse_url() {
 }
 
 add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+if ( bbp_allow_anonymous() ) {
+	add_action( 'wp_ajax_nopriv_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+}
 
 /**
  * Save link preview data into topic/reply meta key "_link_preview_data"
