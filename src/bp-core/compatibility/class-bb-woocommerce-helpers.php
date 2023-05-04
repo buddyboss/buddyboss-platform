@@ -52,6 +52,9 @@ class BB_Woocommerce_Helpers {
 		if ( class_exists( 'WC_Subscriptions' ) ) {
 			add_action( 'bp_init', array( $this, 'bb_wcs_add_subscription_compatibility' ), 9999 );
 		}
+
+		// Perform validation before new user is registered.
+		add_action( 'woocommerce_process_registration_errors', array( $this, 'bb_invites_validate_invitation_before_wc_registration' ), PHP_INT_MAX, 4 );
 	}
 
 	/**
@@ -107,6 +110,32 @@ class BB_Woocommerce_Helpers {
 		}
 
 		return $q_vars;
+	}
+
+	/**
+	 * Validates the invitation before a new signup for woocommerce registration.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param WP_Error $validation_error A WP_Error object containing any errors encountered during registration.
+	 * @param string   $username         User's username after it has been sanitized.
+	 * @param string   $password         User's password.
+	 * @param string   $email            User's email.
+	 *
+	 * @return WP_Error
+	 */
+	public function bb_invites_validate_invitation_before_wc_registration( $validation_error, $username, $password, $email ) {
+
+		if ( bp_is_active( 'invites' ) && ! empty( $_REQUEST['inviter'] ) && ! empty( $email ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$inviter  = sanitize_text_field( wp_unslash( $_REQUEST['inviter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$is_valid = bb_invites_validate_invitation_before_registration( $email, $inviter );
+
+			if ( is_string( $is_valid ) ) {
+				$validation_error->add( 'email_error', $is_valid );
+			}
+		}
+
+		return $validation_error;
 	}
 }
 

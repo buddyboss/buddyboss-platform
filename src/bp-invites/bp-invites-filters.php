@@ -17,7 +17,6 @@ add_action( 'register_form', 'bb_invites_add_invite_fields_after_wp_registration
 // Perform validation before new user is registered.
 add_filter( 'registration_errors', 'bb_invites_validate_invitation_before_wp_registration', PHP_INT_MAX, 3 );
 add_action( 'bp_signup_pre_validate', 'bb_invites_validate_invitation_before_bb_registration', PHP_INT_MAX );
-add_action( 'woocommerce_process_registration_errors', 'bb_invites_validate_invitation_before_wc_registration', PHP_INT_MAX, 4 );
 
 /**
  * Set default avatar when sent invite.
@@ -128,33 +127,6 @@ function bb_invites_validate_invitation_before_bb_registration() {
 		}
 	}
 }
-
-/**
- * Validates the invitation before a new signup for woocommerce registration.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param WP_Error $validation_error A WP_Error object containing any errors encountered during registration.
- * @param string   $username         User's username after it has been sanitized.
- * @param string   $password         User's password.
- * @param string   $email            User's email.
- *
- * @return WP_Error
- */
-function bb_invites_validate_invitation_before_wc_registration( $validation_error, $username, $password, $email ) {
-
-	if ( ! empty( $_REQUEST['inviter'] ) && ! empty( $email ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$inviter  = sanitize_text_field( wp_unslash( $_REQUEST['inviter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$is_valid = bb_invites_validate_invitation_before_registration( $email, $inviter );
-
-		if ( is_string( $is_valid ) ) {
-			$validation_error->add( 'email_error', $is_valid );
-		}
-	}
-
-	return $validation_error;
-}
-
 
 /**
  * Validates invitation and appends any errors to prevent new user registration.
