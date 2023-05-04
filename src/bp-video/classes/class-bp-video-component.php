@@ -183,14 +183,14 @@ class BP_Video_Component extends BP_Component {
 
 		// Perform a daily tidy up.
 		if ( ! wp_next_scheduled( 'bp_video_delete_orphaned_attachments_hook' ) ) {
-			wp_schedule_event( time(), 'daily', 'bp_video_delete_orphaned_attachments_hook' );
+			wp_schedule_event( strtotime('tomorrow midnight'), 'daily', 'bp_video_delete_orphaned_attachments_hook' );
 		}
 
 		add_action( 'bp_video_delete_orphaned_attachments_hook', 'bp_video_delete_orphaned_attachments' );
 
 		// Perform a daily tidy up for message videos.
 		if ( ! wp_next_scheduled( 'bb_video_delete_message_orphaned_videos_hook' ) ) {
-			wp_schedule_event( time(), 'daily', 'bb_video_delete_message_orphaned_videos_hook' );
+			wp_schedule_event( strtotime('tomorrow midnight'), 'daily', 'bb_video_delete_message_orphaned_videos_hook' );
 		}
 
 		add_action( 'bb_video_delete_message_orphaned_videos_hook', 'bb_video_delete_message_orphaned_videos' );
