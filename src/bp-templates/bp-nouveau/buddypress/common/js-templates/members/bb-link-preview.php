@@ -69,10 +69,10 @@
 					<% } %>
 				</div>
 			<% } %>
+			<% if ( link_error && ! link_success ) { %>
+				<div id="bb-url-error" class="bb-url-error"><%= link_error_msg %></div>
+			<% } %>
 		</div>
-	<% } %>
-	<% if ( link_error && ! link_success ) { %>
-		<div id="bb-url-error" class="bb-url-error"><%= link_error_msg %></div>
 	<% } %>
 <% } %>
 </script>
