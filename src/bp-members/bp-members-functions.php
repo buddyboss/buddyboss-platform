@@ -5582,9 +5582,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 
 	// Prepare the statement to check unique identifier.
 	$prepare_query = $wpdb->prepare(
-		"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) LEFT JOIN `{$wpdb->prefix}usermeta` AS um2 ON ( u.ID = um2.user_id AND um2.meta_key = %s ) WHERE ( u.user_login = %s OR u.user_nicename = %s OR ( um.meta_key = %s AND um.meta_value = %s ) OR ( um2.meta_key = %s AND um2.meta_value = %s ) )",
-		'bb_profile_slug',
-		'nickname',
+		"SELECT u.ID FROM `{$wpdb->prefix}users` AS u WHERE ( u.user_login = %s OR u.user_nicename = %s ) OR u.ID IN( SELECT um.user_id FROM `{$wpdb->prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value = %s ) OR ( um.meta_key = %s AND um.meta_value = %s ) )",
 		$unique_identifier,
 		$unique_identifier,
 		'bb_profile_slug',
