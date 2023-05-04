@@ -1033,6 +1033,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	$params['forums'] = array(
 		'params'  => array(
 			'bb_current_user_id' => $user_id,
+			'link_preview'       => bbp_use_autoembed() ? true : false,
 		),
 		'nonces'  => array(
 			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
@@ -1115,4 +1116,206 @@ function bb_is_forum_group_forum( $forum_id = 0 ) {
 	$retval = function_exists( 'bbp_is_group_forums_active' ) && function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_group_forums_active() && bbp_is_forum_group_forum( $forum_id );
 
 	return (bool) apply_filters( 'bb_is_forum_group_forum', $retval, $forum_id );
+}
+
+/**
+ * AJAX endpoint for link preview URL parser.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_forums_link_preview_parse_url() {
+	// Get URL.
+	$url = isset( $_POST['url'] ) ? $_POST['url'] : ''; // phpcs:ignore
+
+	// Check if URL is validated.
+	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss' ) ) );
+	}
+
+	// Get URL parsed data.
+	$parse_url_data = bp_core_parse_url( $url );
+
+	// If empty data then send error.
+	if ( empty( $parse_url_data ) ) {
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
+	}
+
+	// send json success.
+	wp_send_json( $parse_url_data );
+}
+
+add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+if ( bbp_allow_anonymous() ) {
+	add_action( 'wp_ajax_nopriv_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+}
+
+/**
+ * Save link preview data into topic/reply meta key "_link_preview_data"
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $post_id Discussion/Reply id.
+ */
+function bb_forums_save_link_preview_data( $post_id ) {
+
+	$link_preview_data = array();
+
+	if (
+		empty( $_POST['action'] ) || //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		! in_array(
+			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			array(
+				'bbp-new-topic',
+				'bbp-new-reply',
+				'reply',
+				'bbp-edit-topic',
+				'bbp-edit-reply',
+			),
+			true
+		)
+	) {
+		return false;
+	}
+
+	if ( ! empty( $_POST['link_preview_data'] ) ) {
+		$link_preview_data = get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) );
+	} else {
+
+		// Allow Link preview related keys.
+		$allowed_keys = array(
+			'link_url',
+			'link_embed',
+			'link_title',
+			'link_description',
+			'link_image',
+			'link_image_index_save'
+		);
+
+		// Filter the $_POST array to only include allowed keys.
+		$link_preview_data = array_filter( $_POST, function( $key ) use ( $allowed_keys ) {
+			return in_array( $key, $allowed_keys );
+		}, ARRAY_FILTER_USE_KEY );
+	}
+
+	$link_url   = ! empty( $link_preview_data['link_url'] ) ? filter_var( $link_preview_data['link_url'], FILTER_VALIDATE_URL ) : '';
+	$link_embed = isset( $link_preview_data['link_embed'] ) ? filter_var( $link_preview_data['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+	// Check if link url is set or not.
+	if ( empty( $link_url ) ) {
+		if ( false === $link_embed ) {
+			update_post_meta( $post_id, '_link_embed', '0' );
+
+			// This will remove the preview data if the activity don't have anymore link in content.
+			update_post_meta( $post_id, '_link_preview_data', '' );
+		}
+
+		return;
+	}
+
+	$link_title       = ! empty( $link_preview_data['link_title'] ) ? filter_var( $link_preview_data['link_title'] ) : '';
+	$link_description = ! empty( $link_preview_data['link_description'] ) ? filter_var( $link_preview_data['link_description'] ) : '';
+	$link_image       = ! empty( $link_preview_data['link_image'] ) ? filter_var( $link_preview_data['link_image'], FILTER_VALIDATE_URL ) : '';
+
+	// Check if link embed was used.
+	if ( true === $link_embed && ! empty( $link_url ) ) {
+		update_post_meta( $post_id, '_link_embed', $link_url );
+		update_post_meta( $post_id, '_link_preview_data', '' );
+
+		return;
+	} else {
+		update_post_meta( $post_id, '_link_embed', '0' );
+	}
+
+	$preview_data['url'] = $link_url;
+
+	if ( ! empty( $link_image ) ) {
+		$attachment_id = bb_media_sideload_attachment( $link_image );
+		if ( $attachment_id ) {
+			$preview_data['attachment_id'] = $attachment_id;
+		} else {
+			// store non downloadable urls as it is in preview data.
+			$preview_data['image_url'] = $link_image;
+		}
+	}
+
+	$preview_data['link_image_index_save'] = isset( $link_preview_data['link_image_index_save'] ) ? filter_var( $link_preview_data['link_image_index_save'] ) : '';
+
+	if ( ! empty( $link_title ) ) {
+		$preview_data['title'] = $link_title;
+	}
+
+	if ( ! empty( $link_description ) ) {
+		$preview_data['description'] = $link_description;
+	}
+
+	update_post_meta( $post_id, '_link_preview_data', $preview_data );
+}
+
+add_action( 'bbp_new_topic', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_edit_topic', 'bb_forums_save_link_preview_data' );
+add_action( 'bbp_edit_reply', 'bb_forums_save_link_preview_data' );
+
+
+/**
+ * Embed link preview in Topic/Reply content
+ *
+ * @param string $content Topic/Reply content.
+ * @param int    $post_id Topic/Reply id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_forums_link_preview( $content, $post_id ) {
+
+	$preview_data = get_post_meta( $post_id, '_link_preview_data', true );
+
+	if ( empty( $preview_data['url'] ) ) {
+		return $content;
+	}
+
+	$preview_data = bp_parse_args(
+		$preview_data,
+		array(
+			'title'       => '',
+			'description' => '',
+		)
+	);
+
+	$parse_url   = wp_parse_url( $preview_data['url'] );
+	$domain_name = '';
+	if ( ! empty( $parse_url['host'] ) ) {
+		$domain_name = str_replace( 'www.', '', $parse_url['host'] );
+	}
+
+	$description = $preview_data['description'];
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
+	$description = wp_trim_words( $description, 40, $read_more );
+
+	$content = make_clickable( $content );
+
+	$content .= '<div class="bb-link-preview-container">';
+	if ( ! empty( $preview_data['attachment_id'] ) ) {
+		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
+		$content  .= '<div class="bb-link-preview-image">';
+		$content  .= '<div class="bb-link-preview-image-cover">';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
+		$content  .= '</div>';
+		$content  .= '</div>';
+	} elseif ( ! empty( $preview_data['image_url'] ) ) {
+		$content .= '<div class="bb-link-preview-image">';
+		$content .= '<div class="bb-link-preview-image-cover">';
+		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
+		$content .= '</div>';
+		$content .= '</div>';
+	}
+	$content .= '<div class="bb-link-preview-info">';
+	$content .= '<p class="bb-link-preview-link-name">' . esc_html( $domain_name ) . '</p>';
+	$content .= '<p class="bb-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
+	$content .= '<div class="bb-link-preview-excerpt"><p>' . $description . '</p></div>';
+	$content .= '</div>';
+	$content .= '</div>';
+
+	return $content;
 }

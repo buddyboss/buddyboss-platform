@@ -289,7 +289,7 @@ class BP_Embed extends WP_Embed {
 							'error'       => '',
 							'wp_embed'    => true,
 						);
-						$cache_key       = 'bp_activity_oembed_' . md5( maybe_serialize( $link_embed ) );
+						$cache_key       = 'bb_oembed_' . md5( maybe_serialize( $link_embed ) );
 						// set the transient.
 						set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
 					}

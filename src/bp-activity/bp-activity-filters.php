@@ -295,7 +295,7 @@ function bp_activity_save_link_data( $activity ) {
 	$preview_data['url'] = $link_url;
 
 	if ( ! empty( $link_image ) ) {
-		$attachment_id = bp_activity_media_sideload_attachment( $link_image );
+		$attachment_id = bb_media_sideload_attachment( $link_image );
 		if ( $attachment_id ) {
 			$preview_data['attachment_id'] = $attachment_id;
 		} else {
