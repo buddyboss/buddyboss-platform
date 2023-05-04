@@ -80,6 +80,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
 		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
 
+		add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_member_directories_remove_profile_actions' ), 9999, 2 );
+		add_filter( 'bp_member_type_name_string', array( $this, 'bb_remove_member_type_name_string' ), 9999, 3 );
 	}
 
 	/**
@@ -147,6 +149,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			(
 				function_exists( 'bp_is_group_members' ) &&
 				bp_is_group_members()
+			) ||
+			(
+				function_exists( 'bp_get_group_current_admin_tab' ) &&
+				'manage-members' === bp_get_group_current_admin_tab()
 			) ||
 			(
 				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
@@ -458,5 +464,46 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 			add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
 		}
+	}
+
+	/**
+	 * Function to remove profile action if member is hasblocked/isblocked.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $buttons Member profile actions.
+	 * @param int   $user_id Member ID.
+	 *
+	 * @return array|string Return the member actions.
+	 */
+	public function bb_member_directories_remove_profile_actions( $buttons, $user_id ) {
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			$buttons['primary']   = '';
+			$buttons['secondary'] = '';
+		} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+			$buttons['primary']   = '';
+			$buttons['secondary'] = '';
+		}
+
+		return $buttons;
+	}
+
+	/**
+	 * Logged in member is blocked by members from group, then loggedin member can not see member type of is blocked by members.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $string      Member type html.
+	 * @param string $member_type Member type.
+	 * @param int    $user_id     Member ID.
+	 *
+	 * @return array|string Return the member actions.
+	 */
+	public function bb_remove_member_type_name_string( $string, $member_type, $user_id ) {
+		if ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+			$string = '';
+		}
+
+		return $string;
 	}
 }

@@ -2629,6 +2629,14 @@ function bb_update_to_2_3_1() {
  * @return void
  */
 function bb_update_to_2_3_3() {
+	// Clear cache.
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
 	bb_repair_member_unique_slug();
 }
 

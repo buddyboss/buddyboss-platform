@@ -1348,7 +1348,18 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 		bp_is_active( 'groups' ) &&
 		(
 			bp_is_group_members() ||
-			( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum() )
+			(
+				function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum()
+			) ||
+			(
+				function_exists( 'bp_get_group_current_admin_tab' ) &&
+				'manage-members' === bp_get_group_current_admin_tab()
+			) ||
+			(
+				wp_doing_ajax() &&
+				isset( $_POST['action'] ) &&
+				'video_get_video_description' === $_POST['action']
+			)
 		)
 	) {
 		$group_id = bp_get_current_group_id();
