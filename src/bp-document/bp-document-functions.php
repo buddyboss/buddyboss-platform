@@ -4995,29 +4995,3 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 
 	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
 }
-
-/**
- * Delete message orphaned message document.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_document_delete_message_orphaned_documents() {
-	global $wpdb;
-
-	$table_name = $wpdb->prefix . 'bp_document';
-
-	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
-		$results = $wpdb->get_results(
-			"SELECT id, attachment_id FROM {$table_name} WHERE privacy = 'message' AND message_id = 0 AND
-			date_created < ( now() - interval 6 HOUR ) ORDER BY id"
-		);
-
-		if ( ! empty( $results ) ) {
-			foreach ( (array) $results as $row ) {
-				if ( ! empty( $row->attachment_id ) ) {
-					wp_delete_attachment( $row->attachment_id, true );
-				}
-			}
-		}
-	}
-}

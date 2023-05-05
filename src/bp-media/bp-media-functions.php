@@ -4059,29 +4059,3 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 	}
 	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
 }
-
-/**
- * Delete message orphaned message media.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_media_delete_message_orphaned_medias() {
-	global $wpdb;
-
-	$table_name = $wpdb->prefix . 'bp_media';
-
-	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
-		$results = $wpdb->get_results(
-			"SELECT id, attachment_id FROM {$table_name} WHERE privacy = 'message' AND message_id = 0 AND
-			type='photo' AND date_created < ( now() - interval 6 HOUR ) ORDER BY id"
-		);
-
-		if ( ! empty( $results ) ) {
-			foreach ( (array) $results as $row ) {
-				if ( ! empty( $row->attachment_id ) ) {
-					wp_delete_attachment( $row->attachment_id, true );
-				}
-			}
-		}
-	}
-}

@@ -230,13 +230,6 @@ class BP_Media_Component extends BP_Component {
 
 		add_action( 'bp_media_delete_orphaned_attachments_hook', 'bp_media_delete_orphaned_attachments' );
 
-		// Perform a daily tidy up for message medias.
-		if ( ! wp_next_scheduled( 'bb_media_delete_message_orphaned_medias_hook' ) ) {
-			wp_schedule_event( strtotime('tomorrow midnight'), 'daily', 'bb_media_delete_message_orphaned_medias_hook' );
-		}
-
-		add_action( 'bb_media_delete_message_orphaned_medias_hook', 'bb_media_delete_message_orphaned_medias' );
-
 		parent::setup_actions();
 	}
 
