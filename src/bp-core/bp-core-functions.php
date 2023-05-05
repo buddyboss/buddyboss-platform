@@ -4567,17 +4567,7 @@ function bp_ajax_get_suggestions() {
 
 	wp_send_json_success(
 		array(
-			'results'     => array_map(
-				function ( $result ) {
-					return array(
-						'id'    => "@{$result->ID}",
-						'text'  => esc_html( $result->name ),
-						'image' => esc_url( $result->image ),
-						'html'  => sprintf( '<div class="cur"><img class="avatar" src="%s"><span class="username"><strong>%s</strong></span></div>', esc_url( $result->image ), esc_html( $result->name ) ),
-					);
-				},
-				$results
-			),
+			'results'     => $results,
 			'total_pages' => ceil( $results_total / 10 ),
 		)
 	);
