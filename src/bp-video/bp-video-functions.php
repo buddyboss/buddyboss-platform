@@ -80,8 +80,6 @@ function bp_video_upload() {
 		$ext = 'mp4';
 	}
 
-	$thumbnail_url = '';
-
 	if (
 		! empty( $video_id ) &&
 		(
@@ -89,18 +87,13 @@ function bp_video_upload() {
 			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] )
 		)
 	) {
-		$thumbnail_url = bb_video_get_thumb_url( $video_id, $attachment->ID, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
-		if ( empty( $thumbnail_url ) ) {
-			$thumbnail_url = bb_get_video_default_placeholder_image();
-		}
-		$attachment_url    = bb_video_get_symlink( $video_id );
-		$video_message_url = $attachment_url;
+		$attachment_url = bb_video_get_symlink( $video_id );
 	}
 
 	$result = array(
 		'id'          => (int) $attachment->ID,
-		'thumb'       => $thumbnail_url,
-		'url'         => esc_url( untrailingslashit( $attachment_url) ),
+		'thumb'       => '',
+		'url'         => esc_url( untrailingslashit( $attachment_url ) ),
 		'name'        => esc_attr( $name ),
 		'ext'         => esc_attr( $ext ),
 		'vid_msg_url' => esc_url( untrailingslashit( $video_message_url ) ),
