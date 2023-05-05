@@ -148,6 +148,16 @@ function bp_video_activity_entry() {
 		$args['privacy'][] = 'forums';
 	}
 
+	/**
+	 * Hide video from content which is created by blocked/isblocked/suspended member. Also,
+	 * filters( bb_moderation_has_blocked_message, bb_moderation_is_blocked_message ) should applied to hide content.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( bp_get_activity_id() ) : false;
+
+	if ( true === $hide_forum_activity ) {
+		return;
+	}
+
 	if ( ! empty( $video_ids ) && bp_has_video( $args ) ) {
 		$classes = array(
 			esc_attr( 'bb-video-length-' . $video_template->video_count ),

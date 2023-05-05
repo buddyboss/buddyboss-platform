@@ -156,6 +156,16 @@ function bp_document_activity_entry() {
 		$document_ids = BP_Document::get_activity_document_id( bp_get_activity_id() );
 	}
 
+	/**
+	 * Hide document from content which is created by blocked/isblocked/suspended member. Also,
+	 * filters( bb_moderation_has_blocked_message, bb_moderation_is_blocked_message ) should applied to hide content.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( bp_get_activity_id() ) : false;
+
+	if ( true === $hide_forum_activity ) {
+		return;
+	}
+
 	if ( ! empty( $document_ids ) && bp_has_document(
 		array(
 			'include'  => $document_ids,

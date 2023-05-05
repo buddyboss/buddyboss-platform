@@ -186,37 +186,10 @@ function bp_media_activity_entry() {
 	 * Hide media from content which is created by blocked/isblocked/suspended member. Also,
 	 * filters( bb_moderation_has_blocked_message, bb_moderation_is_blocked_message ) should applied to hide content.
 	 */
-	$hide_media = false;
-	if (
-		bp_is_active( 'moderation' ) &&
-		true === $is_forum_activity &&
-		in_array(
-			bp_get_activity_type(),
-			array(
-				'bbp_reply_create',
-			),
-			true
-		)
-	) {
-		$activity_data = new BP_Activity_Activity( bp_get_activity_id() );
-		if ( bp_moderation_is_user_blocked( bp_get_activity_user_id() ) ) {
-			$content = bb_moderation_has_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, bp_get_activity_user_id() );
-			if ( $activity_data->content !== $content ) {
-				$hide_media = true;
-			}
-		}
-		if ( bb_moderation_is_user_blocked_by( bp_get_activity_user_id() ) ) {
-			$content = bb_moderation_is_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, bp_get_activity_user_id() );
-			if ( $activity_data->content !== $content ) {
-				$hide_media = true;
-			}
-		}
-		if ( bp_moderation_is_user_suspended( bp_get_activity_user_id() ) ) {
-			$content = bb_moderation_is_suspended_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, bp_get_activity_user_id() );
-			if ( $activity_data->content !== $content ) {
-				$hide_media = true;
-			}
-		}
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( bp_get_activity_id() ) : false;
+
+	if ( true === $hide_forum_activity ) {
+		return;
 	}
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) { ?>
@@ -229,17 +202,9 @@ function bp_media_activity_entry() {
 		">
 			<?php
 			bp_get_template_part( 'media/media-move' );
-			if (
-				true !== $is_forum_activity ||
-				(
-					true === $is_forum_activity &&
-					false === $hide_media
-				)
-			) {
-				while ( bp_media() ) {
-					bp_the_media();
-					bp_get_template_part( 'media/activity-entry' );
-				}
+			while ( bp_media() ) {
+				bp_the_media();
+				bp_get_template_part( 'media/activity-entry' );
 			}
 			?>
 		</div>
@@ -1220,6 +1185,16 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 	$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 	$preview_url = $preview_url . '?' . wp_rand() . '=' . wp_rand();
 	$video_url   = $video_url . '?' . wp_rand() . '=' . wp_rand();
+
+	/**
+	 * Hide gif from content which is created by blocked/isblocked/suspended member. Also,
+	 * filters( bb_moderation_has_blocked_message, bb_moderation_is_blocked_message ) should applied to hide content.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( $activity_id ) : false;
+
+	if ( true === $hide_forum_activity ) {
+		return;
+	}
 
 	ob_start();
 	?>
