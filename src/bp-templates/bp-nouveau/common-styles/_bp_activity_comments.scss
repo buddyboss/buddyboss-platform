@@ -171,6 +171,27 @@
 			}
 		}
 
+		.ac-form {
+
+			&.has-gif,
+			&.has-content,
+			&.has-media {
+
+				.ac-reply-content input[name="ac_form_submit"] {
+					opacity: 1;
+					pointer-events: initial;
+				}
+
+			}
+
+			&.media-uploading .ac-reply-content input[name="ac_form_submit"],
+			.ac-reply-content input[name="ac_form_submit"] {
+				opacity: 0.4;
+				pointer-events: none;
+			}
+
+		}
+
 	} // close .activity-comments
 
 	// Activity li.mini Comments

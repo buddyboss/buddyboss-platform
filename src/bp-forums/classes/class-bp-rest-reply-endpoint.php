@@ -172,6 +172,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$args['offset'] = $request['offset'];
 		}
 
+		// Added support for fetch user replies by order.
+		if ( isset( $request['hierarchical'] ) ) {
+			$args['hierarchical'] = (bool) $request['hierarchical'];
+		}
+
 		if ( isset( $request['thread_replies'] ) ) {
 			$thread_replies = (bool) $request['thread_replies'];
 		} else {

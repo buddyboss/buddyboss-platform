@@ -1068,9 +1068,8 @@ class BP_Document {
 		$documents = self::array_msort( $documents, array( $r['order_by'] => $direction ) );
 
 		$retval['total']          = ( ! empty( $documents ) ? count( $documents ) : 0 );
-		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
 
-		if ( isset( $r['per_page'] ) && isset( $r['page'] ) && ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $retval['has_more_items'] ) {
+		if ( isset( $r['per_page'] ) && isset( $r['page'] ) && ! empty( $r['per_page'] ) && ! empty( $r['page'] ) ) {
 			$total                    = count( $documents );
 			$current_page             = $r['page'];
 			$item_per_page            = $r['per_page'];
@@ -1079,7 +1078,8 @@ class BP_Document {
 			$retval['has_more_items'] = $total > ( $current_page * $item_per_page );
 			$retval['documents']      = $documents;
 		} else {
-			$retval['documents'] = $documents;
+			$retval['documents']      = $documents;
+			$retval['has_more_items'] = false;
 		}
 
 		if ( ! empty( $documents ) && 'ids' !== $r['fields'] ) {

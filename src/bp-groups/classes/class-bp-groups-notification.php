@@ -1274,7 +1274,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						$activity_excerpt
 					);
 				} elseif ( $media_ids ) {
-					$media_ids = array_filter( explode( ',', $media_ids ) );
+					$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 					if ( count( $media_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
@@ -1289,7 +1289,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						);
 					}
 				} elseif ( $document_ids ) {
-					$document_ids = array_filter( explode( ',', $document_ids ) );
+					$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 					if ( count( $document_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
@@ -1304,7 +1304,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						);
 					}
 				} elseif ( $video_ids ) {
-					$video_ids = array_filter( explode( ',', $video_ids ) );
+					$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 					if ( count( $video_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
@@ -1352,7 +1352,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 							$activity_excerpt
 						);
 					} elseif ( $media_ids ) {
-						$media_ids = array_filter( explode( ',', $media_ids ) );
+						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
@@ -1369,7 +1369,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( $document_ids ) {
-						$document_ids = array_filter( explode( ',', $document_ids ) );
+						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
@@ -1386,7 +1386,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 							);
 						}
 					} elseif ( $video_ids ) {
-						$video_ids = array_filter( explode( ',', $video_ids ) );
+						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
