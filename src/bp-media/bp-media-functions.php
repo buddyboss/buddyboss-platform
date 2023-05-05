@@ -62,17 +62,17 @@ function bp_media_upload() {
 
 	$name = $attachment->post_title;
 
-	if ( 
+	if (
 		! empty( $media_id ) &&
-		( 
+		(
 			bp_is_group_messages() || bp_is_messages_component() ||
-			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) 
+			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] )
 		)
 	) {
 		$attachment_url         = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-photos-popup-image' );
 		$attachment_thumb_url   = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-activity-image' );
 		$attachment_medium      = $attachment_thumb_url;
-		$attachment_message_url = $attachment_url;
+		$attachment_message_url = $attachment_thumb_url;
 	} else {
 		// Generate document attachment preview link.
 		$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
@@ -4060,7 +4060,7 @@ function bb_media_delete_message_orphaned_medias() {
 	$table_name = $wpdb->prefix . 'bp_media';
 
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
-		$results = $wpdb->get_results( 
+		$results = $wpdb->get_results(
 			"SELECT id, attachment_id FROM {$table_name} WHERE privacy = 'message' AND message_id = 0 AND
 			type='photo' AND date_created < ( now() - interval 6 HOUR ) ORDER BY id"
 		);

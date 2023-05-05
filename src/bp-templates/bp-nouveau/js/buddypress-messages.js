@@ -5077,22 +5077,6 @@ window.bp = window.bp || {};
 
 				var first_message = _.first( messagePusherData );
 
-				// Message load the thumbnail instead of dropzone preview.
-				if ( 'undefined' !== typeof first_message.media && first_message.media.length > 0 ) {
-					var medias    = first_message.media;
-					var tmp_media = this.model.attributes.media;
-					if ( tmp_media.length > 0 ) {
-						$.each(
-							medias,
-							function ( index, media ) {
-								media.thumbnail = tmp_media[ index ].msg_url;
-								medias[ index ] = media;
-							}
-						);
-						first_message.media = medias;
-					}
-				}
-
 				if ( 'undefined' !== typeof first_message.video && first_message.video.length > 0 ) {
 					var videos    = first_message.video;
 					$.each(
