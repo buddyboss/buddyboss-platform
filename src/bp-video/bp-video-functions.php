@@ -83,8 +83,12 @@ function bp_video_upload() {
 	if (
 		! empty( $video_id ) &&
 		(
-			bp_is_group_messages() || bp_is_messages_component() ||
-			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] )
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
 		)
 	) {
 		$attachment_url = bb_video_get_symlink( $video_id );
@@ -1858,12 +1862,12 @@ function bp_video_delete_orphaned_attachments() {
 				'value'   => '',
 			),
 		),
-		'date_query'    => array(
+		'date_query'     => array(
 			array(
 				'column' => 'post_date_gmt',
-				'before' => '6 hours ago'
-			)
-		)
+				'before' => '6 hours ago',
+			),
+		),
 	);
 
 	$video_wp_query = new WP_query( $args );
@@ -4457,9 +4461,11 @@ function bb_video_delete_message_orphaned_videos() {
 			type='video' AND date_created < ( now() - interval 6 HOUR ) ORDER BY id"
 		);
 
-		foreach ( (array) $results as $row ) {
-			if ( ! empty( $row->attachment_id ) ) {
-				wp_delete_attachment( $row->attachment_id, true );
+		if ( ! empty( $results ) ) {
+			foreach ( (array) $results as $row ) {
+				if ( ! empty( $row->attachment_id ) ) {
+					wp_delete_attachment( $row->attachment_id, true );
+				}
 			}
 		}
 	}

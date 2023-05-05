@@ -773,7 +773,10 @@ function bp_document_attach_document_to_message( &$message ) {
 	if (
 		bp_is_messages_document_support_enabled() &&
 		! empty( $message->id ) &&
-		( ! empty( $_POST['document'] ) || ! empty( $_POST['bp_document_ids'] ) )
+		(
+			! empty( $_POST['document'] ) ||
+			! empty( $_POST['bp_document_ids'] )
+		)
 	) {
 
 		$documents = array();
@@ -2122,8 +2125,14 @@ add_filter( 'redirect_canonical', 'bb_document_remove_specific_trailing_slash', 
 function bb_messages_document_save( $attachment ) {
 
 	if (
-		( bp_is_group_messages() || bp_is_messages_component() ||
-		( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) ) &&
+		(
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
+		) &&
 		bp_is_messages_document_support_enabled() &&
 		! empty( $attachment )
 	) {

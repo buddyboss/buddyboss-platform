@@ -951,7 +951,10 @@ function bp_media_attach_media_to_message( &$message ) {
 	if (
 		bp_is_messages_media_support_enabled() &&
 		! empty( $message->id ) &&
-		( ! empty( $_POST['media'] ) || ! empty( $_POST['bp_media_ids'] ) )
+		(
+			! empty( $_POST['media'] ) ||
+			! empty( $_POST['bp_media_ids'] )
+		)
 	) {
 		$media_attachments = array();
 
@@ -2795,8 +2798,14 @@ add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 999
 function bb_messages_media_save( $attachment ) {
 
 	if (
-		( bp_is_group_messages() || bp_is_messages_component() ||
-		( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) ) &&
+		(
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
+		) &&
 		bp_is_messages_media_support_enabled() &&
 		! empty( $attachment )
 	) {

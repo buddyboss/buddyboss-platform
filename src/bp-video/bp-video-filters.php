@@ -723,8 +723,14 @@ function bp_video_forums_embed_attachments( $content, $id ) {
 function bb_messages_video_save( $attachment ) {
 
 	if (
-		( bp_is_group_messages() || bp_is_messages_component() ||
-		( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) ) &&
+		(
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
+		) &&
 		bp_is_messages_video_support_enabled() &&
 		! empty( $attachment )
 	) {
@@ -775,7 +781,10 @@ function bp_video_attach_video_to_message( &$message ) {
 	if (
 		bp_is_messages_video_support_enabled() &&
 		! empty( $message->id ) &&
-		( ! empty( $_POST['video'] ) || ! empty( $_POST['bp_video_ids'] ) )
+		(
+			! empty( $_POST['video'] ) ||
+			! empty( $_POST['bp_video_ids'] )
+		)
 	) {
 
 		$video_attachments = array();

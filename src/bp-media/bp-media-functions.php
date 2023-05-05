@@ -65,8 +65,12 @@ function bp_media_upload() {
 	if (
 		! empty( $media_id ) &&
 		(
-			bp_is_group_messages() || bp_is_messages_component() ||
-			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] )
+			bp_is_group_messages() ||
+			bp_is_messages_component() ||
+			(
+				! empty( $_POST['component'] ) &&
+				'messages' === $_POST['component']
+			)
 		)
 	) {
 		$attachment_url         = bp_media_get_preview_image_url( $media_id, $attachment->ID, 'bb-media-photos-popup-image' );
@@ -1313,12 +1317,12 @@ function bp_media_delete_orphaned_attachments() {
 				'value'   => '',
 			),
 		),
-		'date_query'    => array(
+		'date_query'     => array(
 			array(
 				'column' => 'post_date_gmt',
-				'before' => '6 hours ago'
-			)
-		)
+				'before' => '6 hours ago',
+			),
+		),
 	);
 
 	$media_wp_query = new WP_query( $args );
@@ -4072,9 +4076,11 @@ function bb_media_delete_message_orphaned_medias() {
 			type='photo' AND date_created < ( now() - interval 6 HOUR ) ORDER BY id"
 		);
 
-		foreach ( (array) $results as $row ) {
-			if ( ! empty( $row->attachment_id ) ) {
-				wp_delete_attachment( $row->attachment_id, true );
+		if ( ! empty( $results ) ) {
+			foreach ( (array) $results as $row ) {
+				if ( ! empty( $row->attachment_id ) ) {
+					wp_delete_attachment( $row->attachment_id, true );
+				}
 			}
 		}
 	}
