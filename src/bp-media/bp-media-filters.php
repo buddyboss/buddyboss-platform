@@ -181,8 +181,23 @@ function bp_media_activity_entry() {
 		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
 	}
+
+	/**
+	 * Hide media from content which is created by blocked/isblocked/suspended member. Also,
+	 * filters( bb_moderation_has_blocked_message, bb_moderation_is_blocked_message ) should applied to hide content.
+	 */
 	$hide_media = false;
-	if ( bp_is_active( 'moderation' ) && true === $is_forum_activity ) {
+	if (
+		bp_is_active( 'moderation' ) &&
+		true === $is_forum_activity &&
+		in_array(
+			bp_get_activity_type(),
+			array(
+				'bbp_reply_create',
+			),
+			true
+		)
+	) {
 		$activity_data = new BP_Activity_Activity( bp_get_activity_id() );
 		if ( bp_moderation_is_user_blocked( bp_get_activity_user_id() ) ) {
 			$content = bb_moderation_has_blocked_message( $activity_data->content, BP_Moderation_Activity::$moderation_type, bp_get_activity_user_id() );
