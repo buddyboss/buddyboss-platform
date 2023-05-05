@@ -2078,7 +2078,7 @@ function bb_setup_attachment_document_preview_template( $template ) {
 /**
  * Enable document preview without trailing slash.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.2
  *
  * @param string $redirect_url URL to render.
  *

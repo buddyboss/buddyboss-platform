@@ -53,7 +53,7 @@ class BB_Pmpro_Helpers {
 	/**
 	 * Function to remove Paid Membership Pro shortcode.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.2
 	 *
 	 * @param  string $content The page content.
 	 *
