@@ -2733,19 +2733,6 @@ function bb_update_to_2_3_4() {
 		$wp_files_system->delete( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', false, 'f' );
 	}
 
-	$is_already_run = get_transient( 'bb_migrate_favorites' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
-	// Migrate the topic favorites.
-	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
-		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
-	}
-
-	wp_cache_flush();
-
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear API cache.
@@ -2798,5 +2785,18 @@ function bb_update_to_2_3_4() {
 			)
 		);
 	}
+
+	$is_already_run = get_transient( 'bb_migrate_favorites' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
+	// Migrate the topic favorites.
+	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
+		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
+	}
+
+	wp_cache_flush();
 
 }
