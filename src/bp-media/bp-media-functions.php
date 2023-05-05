@@ -2487,6 +2487,13 @@ function bp_media_get_thread_id( $media_id ) {
 				}
 			}
 		}
+
+		if ( empty( $thread_id ) ) {
+			$media_object = new BP_Media( $media_id );
+			if ( ! empty( $media_object->attachment_id ) ) {
+				$thread_id = get_post_meta( $media_object->attachment_id, 'thread_id', true );
+			}
+		}
 	}
 
 	return apply_filters( 'bp_media_get_thread_id', $thread_id, $media_id );

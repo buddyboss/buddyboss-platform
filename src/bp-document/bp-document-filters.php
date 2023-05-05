@@ -2143,6 +2143,14 @@ function bb_messages_document_save( $attachment ) {
 
 			// Message not actually sent.
 			update_post_meta( $attachment->ID, 'bp_document_saved', 0 );
+
+			$thread_id = 0;
+			if ( ! empty( $_POST['thread_id'] ) ) {
+				$thread_id = absint( $_POST['thread_id'] );
+			}
+
+			// Message not actually sent.
+			update_post_meta( $attachment->ID, 'thread_id', $thread_id );
 		}
 
 		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );

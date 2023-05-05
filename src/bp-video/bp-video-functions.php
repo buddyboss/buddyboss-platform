@@ -82,11 +82,11 @@ function bp_video_upload() {
 
 	$thumbnail_url = '';
 
-	if ( 
+	if (
 		! empty( $video_id ) &&
-		( 
+		(
 			bp_is_group_messages() || bp_is_messages_component() ||
-			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) 
+			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] )
 		)
 	) {
 		$thumbnail_url = bb_video_get_thumb_url( $video_id, $attachment->ID, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
@@ -2242,6 +2242,13 @@ function bp_video_get_thread_id( $video_id ) {
 				if ( $thread_id ) {
 					break;
 				}
+			}
+		}
+
+		if ( empty( $thread_id ) ) {
+			$video_object = new BP_Video( $video_id );
+			if ( ! empty( $video_object->attachment_id ) ) {
+				$thread_id = get_post_meta( $video_object->attachment_id, 'thread_id', true );
 			}
 		}
 	}
@@ -4452,7 +4459,7 @@ function bb_video_delete_message_orphaned_videos() {
 	$table_name = $wpdb->prefix . 'bp_media';
 
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
-		$results = $wpdb->get_results( 
+		$results = $wpdb->get_results(
 			"SELECT id, attachment_id FROM {$table_name} WHERE privacy = 'message' AND message_id = 0 AND
 			type='video' AND date_created < ( now() - interval 6 HOUR ) ORDER BY id"
 		);

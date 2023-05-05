@@ -1419,11 +1419,11 @@ function bp_document_upload() {
 	$attachment_file = get_attached_file( $attachment->ID );
 	$attachment_size = is_file( $attachment_file ) ? bp_document_size_format( filesize( get_attached_file( $attachment->ID ) ) ) : 0;
 
-	if ( 
+	if (
 		! empty( $document_id ) &&
-		( 
+		(
 			bp_is_group_messages() || bp_is_messages_component() ||
-			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) 
+			( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] )
 		)
 	) {
 		$attachment_url = bp_document_get_preview_url( $document_id, $attachment->ID );
@@ -3703,6 +3703,13 @@ function bp_document_get_thread_id( $document_id ) {
 				}
 			}
 		}
+
+		if ( empty( $thread_id ) ) {
+			$document_object = new BP_Document( $document_id );
+			if ( ! empty( $document_object->attachment_id ) ) {
+				$thread_id = get_post_meta( $document_object->attachment_id, 'thread_id', true );
+			}
+		}
 	}
 
 	return apply_filters( 'bp_document_get_thread_id', $thread_id, $document_id );
@@ -4996,7 +5003,7 @@ function bb_document_delete_message_orphaned_documents() {
 	$table_name = $wpdb->prefix . 'bp_document';
 
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
-		$results = $wpdb->get_results( 
+		$results = $wpdb->get_results(
 			"SELECT id, attachment_id FROM {$table_name} WHERE privacy = 'message' AND message_id = 0 AND
 			date_created < ( now() - interval 6 HOUR ) ORDER BY id"
 		);
