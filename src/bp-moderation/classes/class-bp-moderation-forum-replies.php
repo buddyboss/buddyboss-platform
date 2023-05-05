@@ -347,13 +347,13 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 		if ( true === $is_forum_activity ) {
 			if ( bp_moderation_is_user_blocked( $activity->user_id ) ) {
-				$content = bb_moderation_has_blocked_message( $content, BP_Moderation_Activity::$moderation_type, $activity->user_id );
+				$content = bb_moderation_has_blocked_message( $content, $this->item_type, $activity->user_id );
 			}
 			if ( bb_moderation_is_user_blocked_by( $activity->user_id ) ) {
-				$content = bb_moderation_is_blocked_message( $content, BP_Moderation_Activity::$moderation_type, $activity->user_id );
+				$content = bb_moderation_is_blocked_message( $content, $this->item_type, $activity->user_id );
 			}
 			if ( bp_moderation_is_user_suspended( $activity->user_id ) ) {
-				$content = bb_moderation_is_suspended_message( $content, BP_Moderation_Activity::$moderation_type, $activity->user_id );
+				$content = bb_moderation_is_suspended_message( $content, $this->item_type, $activity->user_id );
 			}
 		}
 
