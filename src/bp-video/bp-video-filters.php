@@ -716,7 +716,9 @@ function bp_video_forums_embed_attachments( $content, $id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $attachment
+ * @param WP_Post $attachment Attachment Post object.
+ *
+ * @return mixed
  */
 function bb_messages_video_save( $attachment ) {
 
@@ -781,11 +783,7 @@ function bp_video_attach_video_to_message( &$message ) {
 		if ( ! empty( $video_attachments ) ) {
 			foreach ( $video_attachments as $attachment ) {
 
-				if ( ! empty( $_POST['video'] ) ) {
-					$attachment_id = $attachment['id'];
-				} else if ( ! empty( $_POST['bp_video_ids'] ) ) {
-					$attachment_id = $attachment;
-				}
+				$attachment_id =  ( is_array( $attachment['id'] ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
 
 				// Get media_id from the attachment ID.
 				$video_media_id = get_post_meta( $attachment_id, 'bp_video_id', true );

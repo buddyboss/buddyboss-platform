@@ -966,11 +966,7 @@ function bp_media_attach_media_to_message( &$message ) {
 		if ( ! empty( $media_attachments ) ) {
 			foreach ( $media_attachments as $attachment ) {
 
-				if ( ! empty( $_POST['media'] ) ) {
-					$attachment_id = $attachment['id'];
-				} else if ( ! empty( $_POST['bp_media_ids'] ) ) {
-					$attachment_id = $attachment;
-				}
+				$attachment_id =  ( is_array( $attachment['id'] ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
 				
 				// Get media_id from the attachment ID.
 				$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
@@ -2792,7 +2788,9 @@ add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 999
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $attachment
+ * @param WP_Post $attachment Attachment Post object.
+ *
+ * @return mixed
  */
 function bb_messages_media_save( $attachment ) {
 

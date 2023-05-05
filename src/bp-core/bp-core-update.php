@@ -2643,14 +2643,18 @@ function bb_update_to_2_3_4() {
 			}
 			$table_exists[ $table_name ] = true;
 		}
-		set_transient( 'bb_update_to_2_3_4_table_exists', $table_exists, DAY_IN_SECONDS );
 	}
 
 	// Update older data.
-	bb_create_background_message_media_document_update();
+	bb_create_background_message_media_document_update( $table_exists );
 }
 
-function bb_create_background_message_media_document_update( $paged = 1 ) {
+/**
+ * Schedule event for message media and document migration.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_create_background_message_media_document_update( $table_exists, $paged = 1 ) {
 	global $wpdb, $bp_background_updater;
 
 	if ( empty( $paged ) ) {
@@ -2682,14 +2686,19 @@ function bb_create_background_message_media_document_update( $paged = 1 ) {
 		array(
 			array(
 				'callback' => 'bb_migrate_message_media_document',
-				'args'     => array( $results, $paged ),
+				'args'     => array( $table_exists, $results, $paged ),
 			),
 		)
 	);
 	$bp_background_updater->save()->schedule_event();
 }
 
-function bb_migrate_message_media_document( $results, $paged ) {
+/**
+ * Message media and document migration callback.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	global $wpdb;
 
 	if ( empty( $results ) ) {
@@ -2701,7 +2710,6 @@ function bb_migrate_message_media_document( $results, $paged ) {
 		if ( 'bp_document_ids' === $result->meta_key ) {
 			$table_name = $wpdb->prefix . 'bp_document';
 		}
-		$table_exists = get_transient( 'bb_update_to_2_3_4_table_exists' ); 
 
 		// Check valid ids & update message_id column.
 		if ( ! empty( $table_exists ) && array_key_exists( $table_name, $table_exists ) && isset( $result->message_id ) 
@@ -2728,5 +2736,5 @@ function bb_migrate_message_media_document( $results, $paged ) {
 
 	// Call recursive to finish update for all records.
 	$paged++;
-	bb_create_background_message_media_document_update( $paged );
+	bb_create_background_message_media_document_update( $table_exists, $paged );
 }
