@@ -181,6 +181,28 @@ function bp_media_activity_entry() {
 		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
 	}
+	$hide_media = false;
+	if ( bp_is_active( 'moderation' ) && true === $is_forum_activity ) {
+		$activity_data = new BP_Activity_Activity( bp_get_activity_id() );
+		if ( bp_moderation_is_user_blocked( bp_get_activity_user_id() ) ) {
+			$content = bb_moderation_has_blocked_message( $activity_data->content, BP_Moderation_Activity::$moderation_type, bp_get_activity_user_id() );
+			if ( $activity_data->content !== $content ) {
+				$hide_media = true;
+			}
+		}
+		if ( bb_moderation_is_user_blocked_by( bp_get_activity_user_id() ) ) {
+			$content = bb_moderation_is_blocked_message( $activity_data->content, BP_Moderation_Activity::$moderation_type, bp_get_activity_user_id() );
+			if ( $activity_data->content !== $content ) {
+				$hide_media = true;
+			}
+		}
+		if ( bp_moderation_is_user_suspended( bp_get_activity_user_id() ) ) {
+			$content = bb_moderation_is_suspended_message( $activity_data->content, BP_Moderation_Activity::$moderation_type, bp_get_activity_user_id() );
+			if ( $activity_data->content !== $content ) {
+				$hide_media = true;
+			}
+		}
+	}
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) { ?>
 		<div class="bb-activity-media-wrap
@@ -192,9 +214,17 @@ function bp_media_activity_entry() {
 		">
 			<?php
 			bp_get_template_part( 'media/media-move' );
-			while ( bp_media() ) {
-				bp_the_media();
-				bp_get_template_part( 'media/activity-entry' );
+			if (
+				true !== $is_forum_activity ||
+				(
+					true === $is_forum_activity &&
+					false === $hide_media
+				)
+			) {
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				}
 			}
 			?>
 		</div>
