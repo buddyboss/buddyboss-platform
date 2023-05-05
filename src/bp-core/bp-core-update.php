@@ -425,6 +425,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20001 ) {
 			bb_update_to_2_3_3();
 		}
+
+		if ( $raw_db_version < 20101 ) {
+			bb_update_to_2_3_4();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2625,14 +2629,6 @@ function bb_update_to_2_3_1() {
  * @return void
  */
 function bb_update_to_2_3_3() {
-	// Clear cache.
-	wp_cache_flush();
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
-
 	bb_repair_member_unique_slug();
 }
 
@@ -2714,4 +2710,19 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
 
 	$paged++;
 	bb_repair_member_unique_slug( $paged );
+}
+
+/**
+ * Function to clear cache while plugin update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_3_4() {
+	// Clear cache.
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 }
