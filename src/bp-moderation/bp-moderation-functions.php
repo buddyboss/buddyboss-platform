@@ -1882,3 +1882,52 @@ function bb_moderation_allowed_specific_notification( $args ) {
 
 	return $retval;
 }
+
+/**
+ * If the content has been changed by these filters bb_moderation_has_blocked_message,
+ * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+ * it will hide forums activity content from activity screen
+ * which is created by blocked/blocked/suspended member.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id Activity Id.
+ *
+ * @return bool
+ */
+function bb_moderation_to_hide_forum_activity( $activity_id ) {
+	$activity_data = new BP_Activity_Activity( $activity_id );
+	$hide_activity = false;
+	if (
+		bp_is_active( 'activity' ) &&
+		bp_is_active( 'forums' ) &&
+		in_array(
+			$activity_data->type,
+			array(
+				'bbp_reply_create',
+			),
+			true
+		)
+	) {
+		if ( bp_moderation_is_user_blocked( $activity_data->user_id ) ) {
+			$content = bb_moderation_has_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+			if ( $activity_data->content !== $content ) {
+				$hide_activity = true;
+			}
+		}
+		if ( bb_moderation_is_user_blocked_by( $activity_data->user_id ) ) {
+			$content = bb_moderation_is_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+			if ( $activity_data->content !== $content ) {
+				$hide_activity = true;
+			}
+		}
+		if ( bp_moderation_is_user_suspended( $activity_data->user_id ) ) {
+			$content = bb_moderation_is_suspended_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+			if ( $activity_data->content !== $content ) {
+				$hide_activity = true;
+			}
+		}
+	}
+
+	return $hide_activity;
+}

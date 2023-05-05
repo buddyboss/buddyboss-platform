@@ -77,6 +77,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
 			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
+
+		add_filter( 'bb_forum_before_activity_content', array( $this, 'bb_blocked_forum_before_activity_content' ), 10, 2 );
 	}
 
 	/**
@@ -309,6 +311,51 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 
 		$content = bb_moderation_remove_mention_link( $content );
+
+		return $content;
+	}
+
+	/**
+	 * Function to prevent forum activity content if content will created by hasblocked/isblocked members
+	 * and applied filters ( bb_moderation_has_blocked_message, bb_moderation_is_blocked_message ) to restrict content.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param $content  Forum reply content.
+	 * @param $activity Activity object data.
+	 *
+	 * @return string
+	 */
+	public function bb_blocked_forum_before_activity_content( $content, $activity ) {
+		if ( empty( $activity ) ) {
+			return;
+		}
+
+		$is_forum_activity = false;
+		if (
+			bp_is_active( 'forums' )
+			&& in_array(
+				$activity->type,
+				array(
+					'bbp_reply_create',
+				),
+				true
+			)
+			&& bp_is_forums_media_support_enabled()
+		) {
+			$is_forum_activity = true;
+		}
+		if ( true === $is_forum_activity ) {
+			if ( bp_moderation_is_user_blocked( $activity->user_id ) ) {
+				$content = bb_moderation_has_blocked_message( $content, $this->item_type, $activity->id );
+			}
+			if ( bb_moderation_is_user_blocked_by( $activity->user_id ) ) {
+				$content = bb_moderation_is_blocked_message( $content, $this->item_type, $activity->id );
+			}
+			if ( bp_moderation_is_user_suspended( $activity->user_id ) ) {
+				$content = bb_moderation_is_suspended_message( $content, $this->item_type, $activity->id );
+			}
+		}
 
 		return $content;
 	}

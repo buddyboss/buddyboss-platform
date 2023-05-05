@@ -2629,14 +2629,6 @@ function bb_update_to_2_3_1() {
  * @return void
  */
 function bb_update_to_2_3_3() {
-	// Clear cache.
-	wp_cache_flush();
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
-
 	bb_repair_member_unique_slug();
 }
 
@@ -2800,12 +2792,6 @@ function bb_update_to_2_3_4() {
 		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
 	}
 
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
-
 	$is_already_run = get_transient( 'bb_migrate_favorites' );
 	if ( $is_already_run ) {
 		return;
@@ -2818,4 +2804,10 @@ function bb_update_to_2_3_4() {
 	}
 
 	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 }
