@@ -1884,8 +1884,10 @@ function bb_moderation_allowed_specific_notification( $args ) {
 }
 
 /**
- * Function to hide forum medias activity if applied filters
- * ( bb_moderation_has_blocked_message, bb_moderation_is_blocked_message, bb_moderation_is_suspended_message ) to change content.
+ * If the content has been changed by these filters bb_moderation_has_blocked_message,
+ * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+ * it will hide forums activity content from activity screen
+ * which is created by blocked/blocked/suspended member.
  *
  * @since BuddyBoss [BBVERSION]
  *
