@@ -3230,6 +3230,7 @@ function bp_core_get_suggestions( $args ) {
 	 * @param array|WP_Error $retval Array of results or WP_Error object.
 	 * @param array          $args   Array of arguments for suggestions.
 	 */
+
 	return apply_filters( 'bp_core_get_suggestions', $retval, $args );
 }
 
@@ -4538,6 +4539,7 @@ function bp_ajax_get_suggestions() {
 	$args = array(
 		'term' => sanitize_text_field( $_GET['term'] ),
 		'type' => sanitize_text_field( $_GET['type'] ),
+		'count_total'     => 'count_query',
 	);
 
 	if ( ! empty( $_GET['page'] ) ) {
@@ -4560,7 +4562,25 @@ function bp_ajax_get_suggestions() {
 		exit;
 	}
 
-	wp_send_json_success( $results );
+	$results_total = apply_filters( 'bp_members_suggestions_results_total', isset( $results['total'] ) ? $results['total'] : 0 );
+	$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
+
+	wp_send_json_success(
+		array(
+			'results'     => array_map(
+				function ( $result ) {
+					return array(
+						'id'    => "@{$result->ID}",
+						'text'  => esc_html( $result->name ),
+						'image' => esc_url( $result->image ),
+						'html'  => sprintf( '<div class="cur"><img class="avatar" src="%s"><span class="username"><strong>%s</strong></span></div>', esc_url( $result->image ), esc_html( $result->name ) ),
+					);
+				},
+				$results
+			),
+			'total_pages' => ceil( $results_total / 10 ),
+		)
+	);
 }
 add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
 
