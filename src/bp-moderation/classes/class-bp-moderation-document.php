@@ -143,7 +143,6 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 			$where['moderation_where'] .= ' AND ';
 		}
 		$where['moderation_where'] .= ' ( d.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) OR ( d.privacy = "comment" OR d.privacy = "forums" ) ) ';
-		//error_log( print_r( $where, true ) );
 		return $where;
 	}
 
