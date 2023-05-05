@@ -2733,12 +2733,6 @@ function bb_update_to_2_3_4() {
 		$wp_files_system->delete( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', false, 'f' );
 	}
 
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
-
 	$defaults = array(
 		'post_status' => 'publish',
 		'post_type'   => bp_get_email_post_type(),
@@ -2798,5 +2792,11 @@ function bb_update_to_2_3_4() {
 	}
 
 	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 
 }
