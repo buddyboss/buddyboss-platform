@@ -775,7 +775,7 @@ function bp_video_attach_video_to_message( &$message ) {
 	if (
 		bp_is_messages_video_support_enabled() &&
 		! empty( $message->id ) &&
-		( ! empty( $_POST['media'] ) || ! empty( $_POST['bp_video_ids'] ) )
+		( ! empty( $_POST['video'] ) || ! empty( $_POST['bp_video_ids'] ) )
 	) {
 
 		$video_attachments = array();
@@ -790,6 +790,8 @@ function bp_video_attach_video_to_message( &$message ) {
 
 		if ( ! empty( $video_attachments ) ) {
 			foreach ( $video_attachments as $attachment ) {
+
+				error_log( print_r( $attachment, 1 ) );
 
 				$attachment_id = ( is_array( $attachment ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
 
