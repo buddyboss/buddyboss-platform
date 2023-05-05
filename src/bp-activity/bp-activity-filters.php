@@ -258,7 +258,20 @@ function bp_activity_check_blacklist_keys( $activity ) {
 function bp_activity_save_link_data( $activity ) {
 
 	// bail if the request is for privacy update.
-	if ( isset( $_POST['action'] ) && $_POST['action'] === 'activity_update_privacy' ) {
+	if ( 
+		isset( $_POST['action'] ) && 
+		in_array(
+			$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			array(
+				'activity_update_privacy',
+				'bbp-new-topic',
+				'bbp-new-reply',
+				'bbp-edit-topic',
+				'bbp-edit-reply',
+			),
+			true
+		)
+	) {
 		return;
 	}
 
