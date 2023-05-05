@@ -274,7 +274,7 @@ class BP_Moderation {
 		 */
 		$bp        = buddypress();
 		$cache_key = 'bp_moderation_populate_' . $this->id . '_' . $this->user_id . '_' . ( ! empty( $user_report ) ? $user_report : $this->item_type );
-		if ( ! isset( $bb_report_row_query[ $cache_key ] ) ) {
+		if ( empty( $bb_report_row_query[ $cache_key ] ) ) {
 			if ( BP_Moderation_Members::$moderation_type_report === $user_report ) {
 				$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d and user_report = 1", $this->id, $this->user_id ) ); // phpcs:ignore
 			} else {
