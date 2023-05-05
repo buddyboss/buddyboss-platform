@@ -226,7 +226,7 @@ window.bp = window.bp || {};
 									}
 
 									var data = $.map(
-										response.data,
+										response.data.results,
 										/**
 										 * Create a composite index to determine ordering of results;
 										 * nicename matches will appear on top.
