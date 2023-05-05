@@ -960,14 +960,14 @@ function bp_media_attach_media_to_message( &$message ) {
 		} else if ( ! empty( $_POST['bp_media_ids'] ) ) {
 			$media_attachments = $_POST['bp_media_ids'];
 		}
-		
+
 		$media_ids = array();
 
 		if ( ! empty( $media_attachments ) ) {
 			foreach ( $media_attachments as $attachment ) {
 
-				$attachment_id =  ( is_array( $attachment['id'] ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
-				
+				$attachment_id = ( is_array( $attachment ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
+
 				// Get media_id from the attachment ID.
 				$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
 

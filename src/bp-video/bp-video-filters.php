@@ -722,11 +722,11 @@ function bp_video_forums_embed_attachments( $content, $id ) {
  */
 function bb_messages_video_save( $attachment ) {
 
-	if ( 
+	if (
 		( bp_is_group_messages() || bp_is_messages_component() ||
 		( ! empty( $_POST['component'] ) && 'messages' === $_POST['component'] ) ) &&
 		bp_is_messages_video_support_enabled() &&
-		! empty( $attachment ) 
+		! empty( $attachment )
 	) {
 		$videos[] = array(
 			'id'         => $attachment->ID,
@@ -748,7 +748,7 @@ function bb_messages_video_save( $attachment ) {
 
 		add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
 		add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
-		
+
 		return $video_ids;
 	}
 
@@ -764,8 +764,8 @@ function bb_messages_video_save( $attachment ) {
  */
 function bp_video_attach_video_to_message( &$message ) {
 
-	if ( 
-		bp_is_messages_video_support_enabled() && 
+	if (
+		bp_is_messages_video_support_enabled() &&
 		! empty( $message->id ) &&
 		( ! empty( $_POST['media'] ) || ! empty( $_POST['bp_video_ids'] ) )
 	) {
@@ -783,7 +783,7 @@ function bp_video_attach_video_to_message( &$message ) {
 		if ( ! empty( $video_attachments ) ) {
 			foreach ( $video_attachments as $attachment ) {
 
-				$attachment_id =  ( is_array( $attachment['id'] ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
+				$attachment_id = ( is_array( $attachment ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
 
 				// Get media_id from the attachment ID.
 				$video_media_id = get_post_meta( $attachment_id, 'bp_video_id', true );

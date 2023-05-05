@@ -789,7 +789,7 @@ function bp_document_attach_document_to_message( &$message ) {
 		if ( ! empty( $documents ) ) {
 			foreach ( $documents as $attachment ) {
 
-				$attachment_id =  ( is_array( $attachment['id'] ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
+				$attachment_id = ( is_array( $attachment ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
 
 				// Get media_id from the attachment ID.
 				$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
