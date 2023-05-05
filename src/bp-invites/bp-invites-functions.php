@@ -118,7 +118,7 @@ function bp_invites_member_invite_invitation_page() {
 function bp_invites_member_invite_remove_registration_lock() {
 	global $bp;
 
-	if ( ! bp_invites_member_invite_invitation_page() ) {
+	if ( ! bp_invites_member_invite_invitation_page() || ! bp_enable_site_registration() ) {
 		return;
 	}
 
