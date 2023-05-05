@@ -791,8 +791,6 @@ function bp_video_attach_video_to_message( &$message ) {
 		if ( ! empty( $video_attachments ) ) {
 			foreach ( $video_attachments as $attachment ) {
 
-				error_log( print_r( $attachment, 1 ) );
-
 				$attachment_id = ( is_array( $attachment ) && ! empty( $attachment['id'] ) ) ? $attachment['id'] : $attachment;
 
 				// Get media_id from the attachment ID.
@@ -804,6 +802,17 @@ function bp_video_attach_video_to_message( &$message ) {
 				$video->privacy    = 'message';
 				$video->message_id = $message->id;
 				$video->save();
+
+				if ( ! empty( $attachment['js_preview'] ) ) {
+					$video_array               = json_decode( json_encode( $video ), true );
+					$video_array['js_preview'] = $attachment['js_preview'];
+					$video_array['id']         = $attachment_id;
+					bp_video_preview_image_by_js( $video_array );
+				}
+
+				if ( ! empty( $video_media_id ) ) {
+					bp_video_add_generate_thumb_background_process( $video_media_id );
+				}
 
 				update_post_meta( $video->attachment_id, 'bp_video_saved', true );
 				update_post_meta( $video->attachment_id, 'bp_media_parent_message_id', $message->id );
