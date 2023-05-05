@@ -27,7 +27,7 @@ function bb_core_default_install_emails( $default_components ) {
 
 		// Load members notification file.
 		if ( file_exists( buddypress()->plugin_dir . 'bp-members/classes/class-bp-members-notification.php' ) ) {
-		require buddypress()->plugin_dir . 'bp-members/classes/class-bp-members-notification.php';
+			require buddypress()->plugin_dir . 'bp-members/classes/class-bp-members-notification.php';
 		}
 
 		BP_Members_Notification::instance();
@@ -44,53 +44,58 @@ function bb_core_default_install_emails( $default_components ) {
 		BP_Members_Mentions_Notification::instance();
 	}
 
-	// Load Activity notification file.
-	if ( file_exists( buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php' ) ) {
-		require buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php';
-	}
-
 	// Called Activity Notification class.
-	if ( class_exists( 'BP_Activity_Notification' ) ) {
+	if ( ! class_exists( 'BP_Activity_Notification' ) ) {
+
+		// Load Activity notification file.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php' ) ) {
+			require buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php';
+		}
+
 		BP_Activity_Notification::instance();
 	}
 
-	// Load Groups notification file.
-	if ( file_exists( buddypress()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php' ) ) {
-		require buddypress()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php';
-	}
-
 	// Called Groups Notification class.
-	if ( class_exists( 'BP_Groups_Notification' ) ) {
+	if ( ! class_exists( 'BP_Groups_Notification' ) ) {
+
+		// Load Groups notification file.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php' ) ) {
+			require buddypress()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php';
+		}
+
 		BP_Groups_Notification::instance();
 	}
 
-	// Load Friends notification file.
-	if ( file_exists( buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php' ) ) {
-		require buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php';
-	}
-
 	// Called Friends Notification class.
-	if ( class_exists( 'BP_Friends_Notification' ) ) {
+	if ( ! class_exists( 'BP_Friends_Notification' ) ) {
+
+		// Load Friends notification file.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php' ) ) {
+			require buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php';
+		}
+
 		BP_Friends_Notification::instance();
 	}
 
-	// Load Forums notification file.
-	if ( file_exists( buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php' ) ) {
-		require buddypress()->plugin_dir . 'bp-forums/classes/class-bp-forums-notification.php';
-	}
-
 	// Called Forums Notification class.
-	if ( class_exists( 'BP_Forums_Notification' ) ) {
+	if ( ! class_exists( 'BP_Forums_Notification' ) ) {
+
+		// Load Forums notification file.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-forums/classes/class-bp-forums-notification.php' ) ) {
+			require buddypress()->plugin_dir . 'bp-forums/classes/class-bp-forums-notification.php';
+		}
+
 		BP_Forums_Notification::instance();
 	}
 
-	// Load Messages notification file.
-	if ( file_exists( buddypress()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php' ) ) {
-		require buddypress()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php';
-	}
-
 	// Called Messages Notification class.
-	if ( class_exists( 'BP_Messages_Notification' ) ) {
+	if ( ! class_exists( 'BP_Messages_Notification' ) ) {
+
+		// Load Messages notification file.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php' ) ) {
+			require buddypress()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php';
+		}
+
 		BP_Messages_Notification::instance();
 	}
 }

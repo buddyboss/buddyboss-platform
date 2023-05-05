@@ -377,7 +377,7 @@ function bp_has_members( $args = array() ) {
 	$member_type__not_in = array();
 
 	$args = bp_parse_args( $args, array() );
-	// Exclude Member Types
+	// Exclude Member Types.
 	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ( ! bp_is_user() && empty( $member_type ) && empty( $args['member_type'] ) ) ) {
 		// get all excluded member types.
 		$bp_member_type_ids = bp_get_removed_member_types();
@@ -824,7 +824,7 @@ function bp_get_member_avatar( $args = '' ) {
 		'alt'    => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname ),
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	/**
@@ -1098,7 +1098,7 @@ function bp_get_member_profile_data( $args = '' ) {
 		'user_id' => $default_user_id,
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// If we're in a members loop, get the data from the global.
 	if ( ! empty( $members_template->member->profile_data ) ) {
@@ -1178,7 +1178,7 @@ function bp_member_registered( $args = array() ) {
 function bp_get_member_registered( $args = array() ) {
 	global $members_template;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'relative' => true,
@@ -1536,7 +1536,7 @@ function bp_loggedin_user_avatar( $args = '' ) {
 	 */
 function bp_get_loggedin_user_avatar( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'item_id' => bp_loggedin_user_id(),
@@ -1594,7 +1594,7 @@ function bp_displayed_user_avatar( $args = '' ) {
 	 */
 function bp_get_displayed_user_avatar( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'item_id' => bp_displayed_user_id(),
@@ -2491,7 +2491,7 @@ function bp_get_signup_avatar( $args = '' ) {
 		'alt'   => __( 'Your Profile Photo', 'buddyboss' ),
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	// Avatar DIR is found.
@@ -2694,7 +2694,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 
 	$old_user = bp_current_member_switched();
 
-	$button_args = wp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+	$button_args = bp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
 
 	$user = get_userdata( $user_id );
 	$link = BP_Core_Members_Switching::maybe_switch_url( $user );
@@ -2711,7 +2711,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	);
 
 	if ( $old_user && ( $old_user->ID === $user->ID || bp_is_my_profile() ) ) {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_switch',
 				'component'         => 'members',
@@ -2728,7 +2728,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 			$button_args
 		);
 	} else {
-		$button = wp_parse_args(
+		$button = bp_parse_args(
 			array(
 				'id'                => 'member_switch',
 				'component'         => 'members',

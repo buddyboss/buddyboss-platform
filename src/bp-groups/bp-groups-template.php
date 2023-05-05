@@ -692,6 +692,10 @@ function bp_get_group_name( $group = false ) {
 		$group =& $groups_template->group;
 	}
 
+	if ( empty( $group->id ) || empty( $group->name ) ) {
+		return '';
+	}
+
 	/**
 	 * Filters the name of the current group in the loop.
 	 *
@@ -1401,6 +1405,49 @@ function bp_get_group_description_editable( $group = false ) {
 }
 
 /**
+ * Output the name for the current group in the loop, for use in a textbox.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ */
+function bp_group_name_editable( $group = false ) {
+	echo bp_get_group_name_editable( $group );
+}
+
+/**
+ * Return the permalink for the current group in the loop, for use in a textarea.
+ *
+ * 'bp_get_group_name_editable' does not have the formatting
+ * filters that 'bp_get_group_name' has, which makes it
+ * appropriate for "raw" editing.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ * @return string
+ */
+function bp_get_group_name_editable( $group = false ) {
+	global $groups_template;
+
+	if ( empty( $group ) ) {
+		$group =& $groups_template->group;
+	}
+
+	/**
+	 * Filters the name of the current group in the loop.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param string $name  Name of the current group in the loop.
+	 * @param object $group Group object.
+	 */
+	return apply_filters( 'bp_get_group_name_editable', $group->name, $group );
+}
+
+/**
  * Output an excerpt of the group description.
  *
  * @since BuddyPress 1.0.0
@@ -1938,7 +1985,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
@@ -2900,6 +2947,10 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 			// If we can't resolve the user_id, don't proceed with a zero value.
 			return array();
 		}
+	}
+
+	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+		$user_id = false;
 	}
 
 	// First, get a list of descendants (don't pass a user id--we want them all).

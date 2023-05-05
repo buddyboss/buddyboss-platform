@@ -133,7 +133,7 @@ add_action( 'bp_activation', 'bp_add_activation_redirect' );
 
 // Add Platform plugin updater code.
 if ( is_admin() ) {
-	add_action( 'bp_init', 'bp_platform_plugin_updater' );
+	add_action( 'bp_admin_init', 'bp_platform_plugin_updater' );
 }
 
 // Email unsubscribe.
@@ -482,24 +482,25 @@ add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 
 /**
  * Function will run after plugin successfully update.
  *
- * @param $upgrader_object WP_Upgrader instance.
- * @param $options         Array of bulk item update data
- *
  * @since BuddyBoss 1.9.1
+ *
+ * @param object $upgrader_object WP_Upgrader instance.
+ * @param array  $options         Array of bulk item update data.
  */
 function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
-	$show_display_popup = true;
-	// The path to our plugin's main file
+	$show_display_popup = false;
+	// The path to our plugin's main file.
 	$our_plugin = 'buddyboss-platform/bp-loader.php';
 	if ( ! empty( $options ) && 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
 		foreach ( $options['plugins'] as $plugin ) {
 			if ( ! empty( $plugin ) && $plugin === $our_plugin ) {
 				update_option( '_bb_is_update', $show_display_popup );
+				flush_rewrite_rules(); // Flush rewrite rules when update the Buddyboss platform plugin.
 			}
 		}
 	}
 }
-add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback', 10, 2);
+add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback', 10, 2 );
 
 /**
  * Render registered notifications into frontend.
@@ -519,3 +520,80 @@ function bb_render_notification_settings() {
 		}
 	}
 }
+
+/**
+ * Clear interval time when heartbeat enable/disabled.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $old_value Previous saved value.
+ * @param int $value     Newly updated value.
+ *
+ * @return void
+ */
+function bb_clear_interval_on_enable_disabled_heartbeat( $old_value, $value ) {
+	if ( $old_value !== $value ) {
+		bp_delete_option( 'bb_presence_interval' );
+	}
+}
+
+add_action( 'update_option_bp_wp_heartbeat_disabled', 'bb_clear_interval_on_enable_disabled_heartbeat', 10, 2 );
+
+/**
+ * Redirect old forums subscriptions links to new one.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @return void
+ */
+function bb_forums_subscriptions_redirect() {
+
+	if ( bp_is_my_profile() && function_exists( 'bbp_get_user_subscriptions_slug' ) ) {
+		global $wp;
+		$url = explode( '/', untrailingslashit( $wp->request ) );
+		if (
+			! empty( $url ) &&
+			end( $url ) === bbp_get_user_subscriptions_slug() &&
+			isset( buddypress()->forums ) &&
+			! empty( buddypress()->forums->id ) &&
+			buddypress()->forums->id === $url[ count( $url ) - 2 ] &&
+			bp_is_active( 'settings' ) &&
+			! empty( bb_get_subscriptions_types() )
+		) {
+			$user_domain   = bp_loggedin_user_domain();
+			$slug          = bp_get_settings_slug();
+			$settings_link = trailingslashit( $user_domain . $slug ) . 'notifications/subscriptions';
+			if ( wp_safe_redirect( $settings_link ) ) {
+				exit;
+			}
+		}
+	}
+}
+
+add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
+
+/**
+ * Load Presence API mu plugin.
+ *
+ * @since BuddyBoss 2.3.1
+ */
+function bb_load_presence_api_mu() {
+	if ( class_exists( 'BB_Presence' ) ) {
+		BB_Presence::bb_load_presence_api_mu_plugin();
+	}
+}
+
+add_action( 'bp_admin_init', 'bb_load_presence_api_mu' );
+
+/**
+ * Function to check server allow to load php file directly or not.
+ *
+ * @since BuddyBoss 2.3.1
+ */
+function bb_check_presence_load_directly() {
+	if ( class_exists( 'BB_Presence' ) ) {
+		BB_Presence::bb_check_native_presence_load_directly();
+	}
+}
+
+add_action( 'bp_init', 'bb_check_presence_load_directly' );

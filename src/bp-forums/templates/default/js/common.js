@@ -14,14 +14,41 @@ jQuery( document ).ready(
 				}
 
 				jQuery( element ).select2( {
+					dropdownParent: jQuery( element ).closest('form').parent(),
 					placeholder: jQuery( element ).attr( 'placeholder' ),
 					minimumInputLength: 1,
 					closeOnSelect: true,
 					tags: true,
-					language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
-					dropdownCssClass: 'bb-select-dropdown',
+					language: {
+						errorLoading: function () {
+							return bp_select2.i18n.errorLoading;
+						},
+						inputTooLong: function ( e ) {
+							var n = e.input.length - e.maximum;
+							return bp_select2.i18n.inputTooLong.replace( '%%', n );
+						},
+						inputTooShort: function ( e ) {
+							return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
+						},
+						loadingMore: function () {
+							return bp_select2.i18n.loadingMore;
+						},
+						maximumSelected: function ( e ) {
+							return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
+						},
+						noResults: function () {
+							return bp_select2.i18n.noResults;
+						},
+						searching: function () {
+							return bp_select2.i18n.searching;
+						},
+						removeAllItems: function () {
+							return bp_select2.i18n.removeAllItems;
+						}
+					},
+					dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
 					containerCssClass: 'bb-select-container',
-					tokenSeparators: [ ',', ' ' ],
+					tokenSeparators: [ ',' ],
 					ajax: {
 						url: bbpCommonJsData.ajax_url,
 						dataType: 'json',
@@ -146,7 +173,23 @@ jQuery( document ).ready(
 									if ( typeof window.forums_medium_forum_editor !== 'undefined' && typeof window.forums_medium_forum_editor[ key ] !== 'undefined' ) {
 										window.forums_medium_forum_editor[ key ].checkContentChanged();
 									}
+									if ( typeof window.forums_medium_topic_editor == 'undefined' ) {
+										$( '#bbpress-forums .bbp-the-content' ).keyup();
+									}
 									jQuery( '#' + elem_id )[ 0 ].emojioneArea.hidePicker();
+								},
+								search_keypress: function() {
+									var _this = this;
+									var small = _this.search.val().toLowerCase();
+									_this.search.val(small);
+								},
+								
+								picker_show: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+								},
+
+								picker_hide: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
 								},
 							}
 						}
@@ -162,13 +205,40 @@ jQuery( document ).ready(
 				if ( $tagsSelect.length ) {
 					$tagsSelect.select2( {
 						placeholder: $tagsSelect.attr( 'placeholder' ),
+						dropdownParent: jQuery( element ).closest('form').parent(),
 						minimumInputLength: 1,
 						closeOnSelect: true,
 						tags: true,
-						language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
-						dropdownCssClass: 'bb-select-dropdown',
+						language: {
+							errorLoading: function () {
+								return bp_select2.i18n.errorLoading;
+							},
+							inputTooLong: function ( e ) {
+								var n = e.input.length - e.maximum;
+								return bp_select2.i18n.inputTooLong.replace( '%%', n );
+							},
+							inputTooShort: function ( e ) {
+								return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
+							},
+							loadingMore: function () {
+								return bp_select2.i18n.loadingMore;
+							},
+							maximumSelected: function ( e ) {
+								return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
+							},
+							noResults: function () {
+								return bp_select2.i18n.noResults;
+							},
+							searching: function () {
+								return bp_select2.i18n.searching;
+							},
+							removeAllItems: function () {
+								return bp_select2.i18n.removeAllItems;
+							}
+						},
+						dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
 						containerCssClass: 'bb-select-container',
-						tokenSeparators: [ ',', ' ' ],
+						tokenSeparators: [ ',' ],
 						ajax: {
 							url: bbpCommonJsData.ajax_url,
 							dataType: 'json',
@@ -227,5 +297,38 @@ jQuery( document ).ready(
 				}
 			} );
 		}
+
+		jQuery( document ).on( 'keyup', '#bbp_topic_title', function ( e ) {
+			if ( jQuery( e.currentTarget ).val().trim() !== '' ) {
+				jQuery( e.currentTarget ).closest( 'form' ).addClass( 'has-title' );
+			} else {
+				jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-title' );
+			}
+		} );
+
+		if ( jQuery( 'textarea#bbp_topic_content' ).length !== 0 ) {
+			// Enable submit button if content is available.
+			jQuery( '#bbp_topic_content' ).on( 'keyup', function() {
+				var $reply_content = jQuery( '#bbp_topic_content' ).val().trim();
+				if ( $reply_content !== '' ) {
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+				} else {
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+				}
+			} );
+		}
+
+		if ( jQuery( 'textarea#bbp_reply_content' ).length !== 0 ) {
+			// Enable submit button if content is available.
+			jQuery( '#bbp_reply_content' ).on( 'keyup', function() {
+				var $reply_content = jQuery( '#bbp_reply_content' ).val().trim();
+				if ( $reply_content !== '' ) {
+					jQuery( this ).closest( 'form' ).addClass( 'has-content' )
+				} else {
+					jQuery( this ).closest( 'form' ).removeClass( 'has-content' )
+				}
+			} );
+		}
+
 	}
 );

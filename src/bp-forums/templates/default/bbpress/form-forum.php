@@ -7,10 +7,10 @@
  */
 
 ?>
-
+<div id="bbpress-forums">
 <?php if ( bbp_is_forum_edit() ) : ?>
 
-<div id="bbpress-forums">
+
 
 	<?php bbp_breadcrumb(); ?>
 
@@ -65,6 +65,8 @@
 					<?php bbp_the_content( array( 'context' => 'forum' ) ); ?>
 
 					<?php do_action( 'bbp_theme_after_forum_form_content' ); ?>
+
+					<?php bbp_get_template_part( 'form', 'forum-attachments' ); ?>
 
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
@@ -160,8 +162,6 @@
 
 <?php endif; ?>
 
-<?php if ( bbp_is_forum_edit() ) : ?>
 
 </div>
 
-<?php endif; ?>
