@@ -2653,6 +2653,9 @@ function bb_update_to_2_3_4() {
  * Schedule event for message media and document migration.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $table_exists List of tables.
+ * @param int   $paged        Page number.
  */
 function bb_create_background_message_media_document_update( $table_exists, $paged = 1 ) {
 	global $wpdb, $bp_background_updater;
@@ -2697,6 +2700,10 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
  * Message media and document migration callback.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $table_exists List of tables.
+ * @param array $results      Results from message meta table.
+ * @param int   $paged        Page number.
  */
 function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	global $wpdb;
@@ -2712,23 +2719,30 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 		}
 
 		// Check valid ids & update message_id column.
-		if ( ! empty( $table_exists ) && array_key_exists( $table_name, $table_exists ) && isset( $result->message_id ) 
-			&& isset( $result->meta_value ) && preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value ) ) {
+		if (
+			! empty( $table_exists ) &&
+			array_key_exists( $table_name, $table_exists ) &&
+			isset( $result->message_id ) &&
+			isset( $result->meta_value ) &&
+			preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value )
+		) {
 
 			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id );
 
 			$wpdb->query( $query );
 
 			$id_array = explode( ',', $result->meta_value );
-			foreach( $id_array as $media_id ) {
-				$media = '';
-				if ( 'bp_document_ids' === $result->meta_key && class_exists( 'BP_Document' ) ) {
-					$media = new BP_Document( $media_id );
-				} else if ( class_exists( 'BP_Media' ) ) {
-					$media = new BP_Media( $media_id );
-				}
-				if ( ! empty( $media ) ) {
-					update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $media->message_id );
+			if ( ! empty( $id_array ) ) {
+				foreach ( $id_array as $media_id ) {
+					$media = '';
+					if ( 'bp_document_ids' === $result->meta_key && class_exists( 'BP_Document' ) ) {
+						$media = new BP_Document( $media_id );
+					} else if ( class_exists( 'BP_Media' ) ) {
+						$media = new BP_Media( $media_id );
+					}
+					if ( ! empty( $media ) ) {
+						update_post_meta( $media->attachment_id, 'bp_media_parent_message_id', $media->message_id );
+					}
 				}
 			}
 		}

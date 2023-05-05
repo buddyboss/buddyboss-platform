@@ -735,9 +735,9 @@ function bb_messages_video_save( $attachment ) {
 		! empty( $attachment )
 	) {
 		$videos[] = array(
-			'id'         => $attachment->ID,
-			'name'       => $attachment->post_title,
-			'privacy'    => 'message',
+			'id'      => $attachment->ID,
+			'name'    => $attachment->post_title,
+			'privacy' => 'message',
 		);
 
 		remove_action( 'bp_video_add', 'bp_activity_video_add', 9 );
