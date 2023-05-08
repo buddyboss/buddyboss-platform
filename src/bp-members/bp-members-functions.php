@@ -5541,8 +5541,10 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
 		return $generated_ids;
 	};
 
+	// Initially generate the UUIDs.
 	$generated_ids = $generate_ids_func( $generated_ids );
 
+	// Check the generated UUIDs already exists or not?
 	$match_found = bb_is_exists_user_unique_identifier( $generated_ids );
 
 	// Validate the ID's with existing matches in DB.
@@ -5564,10 +5566,11 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
 		}
 
 		$generated_ids = $generate_ids_func( $generated_ids );
+		$match_found   = bb_is_exists_user_unique_identifier( $generated_ids );
 		$loop_count ++;
 	}
 
-	return $generated_ids;
+	return array_values( $generated_ids );
 }
 
 /**
@@ -5575,8 +5578,8 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $unique_identifier Newly generated unique identifier.
- * @param int    $user_id           Optional. ID of user to exclude from the search.
+ * @param array|string $unique_identifier Newly generated unique identifier.
+ * @param int          $user_id           Optional. ID of user to exclude from the search.
  *
  * @return array
  */
@@ -5588,7 +5591,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 	}
 
 	// Prepare the statement to check unique identifier.
-	$prepare_user_query = "SELECT DISTINCT u.ID, u.user_nicename, u.user_login FROM `{$wpdb->prefix}users` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
+	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$wpdb->prefix}users` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
@@ -5603,21 +5606,13 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 
 	$matched_uuids = array();
 	if ( ! empty( $user_val ) ) {
-		foreach ( $user_val as $u_login ) {
-
-			if ( ! empty( $u_login->user_nicename ) ) {
-				$matched_uuids[] = $u_login->user_nicename;
-			}
-
-			if ( ! empty( $u_login->user_login ) ) {
-				$matched_uuids[] = $u_login->user_login;
-			}
-		}
+		$matched_uuids = array_column( $user_val, 'user_nicename' );
+		$matched_uuids = array_merge( $matched_uuids, array_column( $user_val, 'user_login' ) );
 	}
 
 	// Prepare the statement to check unique identifier.
 	$prepare_meta_query = $wpdb->prepare(
-		"SELECT DISTINCT um.user_id, um.meta_value FROM `{$wpdb->prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		"SELECT DISTINCT um.meta_value FROM `{$wpdb->prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		'bb_profile_slug',
 		'nickname'
 	);
@@ -5625,7 +5620,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
 		$prepare_meta_query = $wpdb->prepare(
-			$prepare_meta_query . ' AND u.ID != %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$prepare_meta_query . ' AND um.user_id != %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$user_id
 		);
 	}
@@ -5634,11 +5629,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 	$meta_val = $wpdb->get_results( $prepare_meta_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 	if ( ! empty( $meta_val ) ) {
-		foreach ( $meta_val as $value ) {
-			if ( ! empty( $value->meta_value ) ) {
-				$matched_uuids[] = $value->meta_value;
-			}
-		}
+		$matched_uuids = array_merge( $matched_uuids, array_column( $meta_val, 'meta_value' ) );
 	}
 
 	return array_filter( array_unique( $matched_uuids ) );
