@@ -5377,7 +5377,7 @@ function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
-		$new_unique_identifier = bb_generate_uuids();
+		$new_unique_identifier = bb_generate_user_random_profile_slugs();
 		$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
 	}
 
@@ -5522,7 +5522,7 @@ function bb_set_bluk_user_profile_slug( $user_ids ) {
  *
  * @return array
  */
-function bb_generate_uuids( $max_ids = 1 ) {
+function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
 	$max_ids         = absint( $max_ids );
 	$start           = 0;
 	$length          = 8;
