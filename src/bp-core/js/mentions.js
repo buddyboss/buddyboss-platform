@@ -55,7 +55,7 @@ window.bp = window.bp || {};
 				delay: 500,
 				hideWithoutSuffix: true,
 				insertTpl: BP_Mentions_Options.insert_tpl,
-				limit: 10,
+				limit: 100,
 				startWithSpace: false,
 
 				callbacks: {
@@ -195,10 +195,16 @@ window.bp = window.bp || {};
 					 */
 					remoteFilter: function ( query, render_view ) {
 						var params = {};
+						var mentions_dropdown = this.$el;
+						var $self = this;
+						$self.data;
 
 						mentionsItem = mentionsQueryCache[ query ];
 						if ( typeof mentionsItem === 'object' ) {
-							render_view( mentionsItem );
+							mentions_dropdown.data( 'page', 1 );
+							mentions_dropdown.data( 'page_limit', mentionsItem.total_pages );
+							render_view( mentionsItem.results );
+							$self.data = mentionsItem.results;
 							return;
 						}
 
@@ -207,6 +213,15 @@ window.bp = window.bp || {};
 						}
 
 						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
+
+						
+						if( mentions_dropdown.data( 'page' ) ) {
+							params.page = mentions_dropdown.data( 'page' );
+							mentions_dropdown.data( 'page', params.page );
+						} else {
+							params.page = 1;
+							mentions_dropdown.data( 'page', 1 );
+						}
 
 						if ( $.isNumeric( this.$inputor.data( 'suggestions-group-id' ) ) ) {
 							params[ 'group-id' ] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
@@ -225,7 +240,7 @@ window.bp = window.bp || {};
 										return;
 									}
 
-									var data = $.map(
+									$self.data = $.map(
 										response.data.results,
 										/**
 										 * Create a composite index to determine ordering of results;
@@ -241,8 +256,58 @@ window.bp = window.bp || {};
 										}
 									);
 
-									mentionsQueryCache[ query ] = data;
-									render_view( data );
+									mentions_dropdown.data( 'page_limit',  response.data.total_pages);
+									mentionsQueryCache[ query ] = response.data;
+									render_view( $self.data );
+
+									if( !mentions_dropdown.hasClass( 'has-events' ) ) {
+										var mentions_dropdown_list = mentions_dropdown.find( 'ul' );
+										mentions_dropdown_list.on( 'scroll', function() {
+											if( mentions_dropdown_list.scrollTop() + mentions_dropdown_list.innerHeight() >= mentions_dropdown_list[0].scrollHeight ) {
+												if ( mentions_dropdown_list.hasClass( 'list-loading' ) || mentions_dropdown.data( 'page_limit') == mentions_dropdown.data( 'page' ) ) {
+													return;
+												}
+												mentions_dropdown_list.addClass( 'list-loading' );
+												if( !mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
+													mentions_dropdown_list.append('<li class="list-loader">Loading more results…</li>');
+												}
+												params.page = mentions_dropdown.data( 'page' ) + 1;
+												mentions_dropdown.data( 'page', params.page );
+												bp.mentions.xhr = $.getJSON( ajaxurl, params ).done(
+													function ( response ) {
+														if ( !response.success ) {
+															return;
+														}
+					
+														var new_data = $.map(
+															response.data.results,
+															/**
+															 * Create a composite index to determine ordering of results;
+															 * nicename matches will appear on top.
+															 *
+															 * @param {array} suggestion A suggestion's original data.
+															 * @return {array} A suggestion's new data.
+															 * @since BuddyPress 2.1.0
+															 */
+															function ( suggestion ) {
+																suggestion.search = suggestion.search || suggestion.ID + ' ' + suggestion.name;
+																return suggestion;
+															}
+														);
+
+														$self.data.concat( new_data );
+														if($self.data.length > 100 ){
+															$self.data = $self.data.slice( -100 );
+														}
+														mentions_dropdown_list.find( '.list-loader' ).remove();
+														render_view( $self.data );
+														mentions_dropdown_list.removeClass( 'list-loading' );
+													}
+												);
+											}
+										});
+										mentions_dropdown.addClass( 'has-events' );
+									}
 								}
 							);
 					},
@@ -281,6 +346,13 @@ window.bp = window.bp || {};
 			BP_Mentions_Options.extra_options,
 			mentions
 		);
+
+		this.on('blur.atwhoInner', function () {
+			// Reset mention dropdown data
+			jQuery( '#atwho-ground-whats-new' ).data( 'page', 1 ).removeData('page_limit');
+			jQuery( '#atwho-ground-whats-new' ).find( '.list-loader' ).remove();
+			jQuery( '#atwho-ground-whats-new' ).find( '.list-loading' ).removeClass( 'list-loading' );
+		});
 
 		// Update medium editors when mention inserted into editor.
 		this.on( 'inserted.atwho', function ( event ) {
@@ -353,6 +425,11 @@ window.bp = window.bp || {};
 					}
 				}
 			}
+
+			// Reset mention dropdown data
+			jQuery( '#atwho-ground-whats-new' ).data( 'page', 1 ).removeData('page_limit');
+			jQuery( '#atwho-ground-whats-new' ).find( '.list-loader' ).remove();
+			jQuery( '#atwho-ground-whats-new' ).find( '.list-loading' ).removeClass( 'list-loading' );
 
 			jQuery( this ).focus();
 
