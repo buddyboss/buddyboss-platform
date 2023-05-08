@@ -179,7 +179,7 @@ window.bp = window.bp || {};
 			}
 		},
 
-		displayEditActivity: function ( activity_data ) {
+		displayEditActivity: function ( activity_data, activity_URL_preview ) {
 			bp.draft_activity.allow_delete_media = true;
 			bp.draft_activity.display_post       = 'edit';
 			var self                             = this;
@@ -201,7 +201,7 @@ window.bp = window.bp || {};
 				function() {
 
 					var bpActivityEvent = new Event( 'bp_activity_edit' );
-					bp.Nouveau.Activity.postForm.displayEditDraftActivityData( activity_data, bpActivityEvent );
+					bp.Nouveau.Activity.postForm.displayEditDraftActivityData( activity_data, bpActivityEvent, activity_URL_preview );
 				},
 				0
 			);
@@ -253,7 +253,7 @@ window.bp = window.bp || {};
 		 *
 		 * @param activity_data
 		 */
-		displayEditActivityForm : function( activity_data ) {
+		displayEditActivityForm : function( activity_data, activity_URL_preview ) {
 			var self = this;
 
 			var $activityForm            = $( '#bp-nouveau-activity-form' );
@@ -272,7 +272,7 @@ window.bp = window.bp || {};
 			bp.privacy         = activity_data.privacy;
 
 			// Set the activity value.
-			self.displayEditActivity( activity_data );
+			self.displayEditActivity( activity_data, activity_URL_preview );
 			this.model.set( 'edit_activity', true );
 
 			var edit_activity_editor         = $( '#whats-new' )[0];
@@ -388,11 +388,14 @@ window.bp = window.bp || {};
 			);
 		},
 
-		displayEditDraftActivityData: function ( activity_data, bpActivityEvent ) {
+		displayEditDraftActivityData: function ( activity_data, bpActivityEvent, activity_URL_preview ) {
 			var self = this;
 
 			self.postForm.$el.parent( '#bp-nouveau-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
+			if( activity_URL_preview != null ) {
+				self.postForm.$el.find( '#whats-new' ).data( 'activity-url-preview', activity_URL_preview );
+			}
 			var element = self.postForm.$el.find( '#whats-new' ).get( 0 );
 			element.focus();
 
@@ -3237,8 +3240,9 @@ window.bp = window.bp || {};
 
 			scrapURL: function ( urlText ) {
 				var urlString = '';
+				var activity_URL_preview = this.$el.closest( '#whats-new' ).data( 'activity-url-preview' );
 
-				if ( urlText === null ) {
+				if ( urlText === null && activity_URL_preview === undefined ) {
 					return;
 				}
 
@@ -3271,8 +3275,8 @@ window.bp = window.bp || {};
 
 				if ( '' !== urlString ) {
 					this.loadURLPreview( urlString );
-				} else {
-					$( '#activity-close-link-suggestion' ).click();
+				} else if( activity_URL_preview !== undefined ){
+					this.loadURLPreview( activity_URL_preview );
 				}
 			},
 
@@ -5112,7 +5116,7 @@ window.bp = window.bp || {};
 				var dropzone_error_check = this.$el.find( '.dz-preview.dz-error' ).length;
 				content     = content.replace( /&nbsp;/g, ' ' );
 
-				if ( dropzone_error_check === 0 && ( $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) ) ) {
+				if ( dropzone_error_check === 0 && $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) ) {
 					this.$el.removeClass( 'focus-in--empty' );
 				} else {
 					this.$el.addClass( 'focus-in--empty' );
@@ -5142,7 +5146,7 @@ window.bp = window.bp || {};
 				if ( 'focusin' === event.type ) {
 					$( '#whats-new-form' ).closest( 'body' ).removeClass( 'initial-post-form-open' ).addClass( event.type + '-post-form-open' );
 				}
-				this.model.on( 'change:video change:document change:media change:gif_data change:privacy', this.postValidate, this );
+				this.model.on( 'change:video change:document change:media change:gif_data change:privacy, change:link_success', this.postValidate, this );
 
 				// Remove feedback.
 				var self = this;
@@ -5370,6 +5374,9 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
+				//Reset activity link preview
+				$( '#whats-new' ).removeData( 'activity-url-preview' );
+
 				// Remove footer wrapper
 				this.$el.find( '.whats-new-form-footer' ).remove();
 
@@ -5494,7 +5501,7 @@ window.bp = window.bp || {};
 				}
 
 				// validation for content editor.
-				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( ! _.isUndefined( self.model.get( 'video' ) ) && ! self.model.get( 'video' ).length ) && ( ! _.isUndefined( self.model.get( 'document' ) ) && ! self.model.get( 'document' ).length ) && ( ! _.isUndefined( self.model.get( 'media' ) ) && ! self.model.get( 'media' ).length ) && ( ! _.isUndefined( self.model.get( 'gif_data' ) ) && ! Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
+				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true !== this.model.get( 'link_success' ) ) && ( ( ! _.isUndefined( self.model.get( 'video' ) ) && ! self.model.get( 'video' ).length ) && ( ! _.isUndefined( self.model.get( 'document' ) ) && ! self.model.get( 'document' ).length ) && ( ! _.isUndefined( self.model.get( 'media' ) ) && ! self.model.get( 'media' ).length ) && ( ! _.isUndefined( self.model.get( 'gif_data' ) ) && ! Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
 					self.model.set(
 						'errors',
 						{

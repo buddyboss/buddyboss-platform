@@ -1165,7 +1165,18 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	// Strip tags from text and setup mail data.
 	$topic_title   = wp_strip_all_tags( bbp_get_topic_title( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
-	$reply_content = wp_kses_post( bbp_get_reply_content( $reply_id ) );
+	$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
+
+	// Check if link embed or link preview and append the content accordingly.
+	if ( bbp_use_autoembed() ) {
+		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
+		if ( empty( preg_replace( '/(?:<p>\s*<\/p>\s*)+|<p>(\s|(?:<br>|<\/br>|<br\/?>))*<\/p>/', '', $reply_content ) ) && ! empty( $link_embed ) ) {
+			$reply_content .= bbp_make_clickable( $link_embed );
+		} else {
+			$reply_content = bb_forums_link_preview( $reply_content, $reply_id );
+		}
+	}
+
 	$reply_url     = bbp_get_reply_url( $reply_id );
 
 	$forum_title = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
@@ -1295,6 +1306,16 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	$topic_url     = get_permalink( $topic_id );
 	$forum_title   = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
 	$forum_url     = esc_url( bbp_get_forum_permalink( $forum_id ) );
+
+	// Check if link embed or link preview and append the content accordingly.
+	if ( bbp_use_autoembed() ) {
+		$link_embed = get_post_meta( $topic_id, '_link_embed', true );
+		if ( empty( preg_replace( '/(?:<p>\s*<\/p>\s*)+|<p>(\s|(?:<br>|<\/br>|<br\/?>))*<\/p>/', '', $topic_content ) ) && ! empty( $link_embed ) ) {
+			$topic_content .= bbp_make_clickable( $link_embed );
+		} else {
+			$topic_content = bb_forums_link_preview( $topic_content, $topic_id );
+		}
+	}
 
 	$args = array(
 		'tokens' => array(

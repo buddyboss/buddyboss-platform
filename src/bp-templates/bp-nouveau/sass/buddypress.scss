@@ -534,7 +534,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 /*
 *-----------------------------------------
-* @section 20.0 - Toast Messages
+* @section 19.0 - Toast Messages
 *-----------------------------------------
 */
 
@@ -544,10 +544,21 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 /*
 *-----------------------------------------
-* @section 19.0 - Emojione Area custom Override
+* @section 20.0 - Emojione Area custom Override
 *-----------------------------------------
 */
 
 // Import Emojione Area custom Override
 
 @import "../common-styles/_bp_emojione_area";
+
+
+/*
+*-----------------------------------------
+* @section 21.0 - Link Preview
+*-----------------------------------------
+*/
+
+// Import Link Preview
+
+@import "../common-styles/_link_preview";

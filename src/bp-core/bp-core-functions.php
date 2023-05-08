@@ -4798,7 +4798,7 @@ function bp_core_parse_url( $url ) {
 		}
 	}
 
-	$cache_key = 'bp_activity_oembed_' . md5( maybe_serialize( $url ) );
+	$cache_key = 'bb_oembed_' . md5( maybe_serialize( $url ) );
 
 	// get transient data for url.
 	$parsed_url_data = get_transient( $cache_key );
@@ -8551,4 +8551,131 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 		return $string;
 
 	}
+}
+
+/**
+ * Download an image from the specified URL and attach it to a post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $file The URL of the image to download.
+ *
+ * @return int|void
+ */
+function bb_media_sideload_attachment( $file ) {
+	if ( empty( $file ) ) {
+		return;
+	}
+
+	// Set variables for storage, fix file filename for query strings.
+	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|svg|bmp|mp4)\b/i', $file, $matches );
+	$file_array = array();
+
+	if ( empty( $matches ) ) {
+		return;
+	}
+
+	$file_array['name'] = basename( $matches[0] );
+
+	// Load function download_url if not exists.
+	if ( ! function_exists( 'download_url' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+	}
+
+	// Download file to temp location.
+	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
+	$file                   = str_replace( '&amp;', '&', $file );
+	$file_array['tmp_name'] = download_url( $file );
+
+	// If error storing temporarily, return the error.
+	if ( is_wp_error( $file_array['tmp_name'] ) ) {
+		return;
+	}
+
+	// Do the validation and storage stuff.
+	$id = bb_media_handle_sideload( $file_array );
+
+	// If error storing permanently, unlink.
+	if ( is_wp_error( $id ) ) {
+		return;
+	}
+
+	return $id;
+}
+
+/**
+ * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $file_array Array similar to a {@link $_FILES} upload array.
+ * @param array $post_data  allows you to overwrite some of the attachment.
+ *
+ * @return int|object The ID of the attachment or a WP_Error on failure
+ */
+function bb_media_handle_sideload( $file_array, $post_data = array() ) {
+
+	$overrides = array( 'test_form' => false );
+
+	$time = current_time( 'mysql' );
+	if ( $post = get_post() ) {
+		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
+			$time = $post->post_date;
+		}
+	}
+
+	$file = wp_handle_sideload( $file_array, $overrides, $time );
+	if ( isset( $file['error'] ) ) {
+		return new WP_Error( 'upload_error', $file['error'] );
+	}
+
+	$url     = $file['url'];
+	$type    = $file['type'];
+	$file    = $file['file'];
+	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
+	$content = '';
+
+	// Load function wp_read_image_metadata if not exists.
+	if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+	}
+
+	// Use image exif/iptc data for title and caption defaults if possible.
+	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
+		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
+			$title = $image_meta['title'];
+		}
+		if ( trim( $image_meta['caption'] ) ) {
+			$content = $image_meta['caption'];
+		}
+	}
+
+	if ( isset( $desc ) ) {
+		$title = $desc;
+	}
+
+	// Construct the attachment array.
+	$attachment = array_merge(
+		array(
+			'post_mime_type' => $type,
+			'guid'           => $url,
+			'post_title'     => $title,
+			'post_content'   => $content,
+		),
+		$post_data
+	);
+
+	// This should never be set as it would then overwrite an existing attachment.
+	if ( isset( $attachment['ID'] ) ) {
+		unset( $attachment['ID'] );
+	}
+
+	// Save the attachment metadata.
+	$id = wp_insert_attachment( $attachment, $file );
+
+	if ( ! is_wp_error( $id ) ) {
+		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
+	}
+
+	return $id;
 }

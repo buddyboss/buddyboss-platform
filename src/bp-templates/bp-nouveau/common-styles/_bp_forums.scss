@@ -1042,6 +1042,12 @@ fieldset div.avatar {
 				}
 			}
 
+			> .twitter-timeline,
+			iframe {
+				width: 100% !important;
+			}
+
+
 		}
 
 	}
@@ -1645,7 +1651,8 @@ h2.bbp-form-title.entry-title {
 
 	&.has-gif,
 	&.has-media,
-	&.has-content {
+	&.has-content,
+	&.has-link-preview {
 
 		.bbp-form #bbp_reply_submit {
 			opacity: 1;
@@ -1668,7 +1675,8 @@ h2.bbp-form-title.entry-title {
 
 		&.has-gif,
 		&.has-media,
-		&.has-content {
+		&.has-content,
+		&.has-link-preview {
 
 			.bbp-form {
 
@@ -1694,10 +1702,19 @@ h2.bbp-form-title.entry-title {
 
 }
 
-.topic-edit #new-post .bbp-form #bbp_topic_submit,
-.reply-edit #new-post .bbp-form #bbp_reply_submit {
-	opacity: 1;
-	pointer-events: initial;
+.topic-edit #new-post .bbp-form,
+.reply-edit #new-post .bbp-form {
+
+	#bbp_topic_submit,
+	#bbp_reply_submit {
+		opacity: 1;
+		pointer-events: initial;
+	}
+
+	.bb-url-scrapper-container {
+		max-width: 100%;
+	}
+
 }
 
 

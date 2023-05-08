@@ -254,6 +254,10 @@
 				word-break: break-word;
 			}
 
+			iframe {
+				max-width: 100%;
+			}
+
 			p:empty {
 				min-height: 1em;
 			}

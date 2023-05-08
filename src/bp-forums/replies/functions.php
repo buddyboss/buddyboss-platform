@@ -295,6 +295,7 @@ function bbp_new_reply_handler( $action = '' ) {
 		 && empty( $_POST['bbp_video'] )
 		 && empty( $_POST['bbp_media_gif'] )
 		 && empty( $_POST['bbp_document'] )
+		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $_POST['link_preview_data'] ) ) )
 	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -716,6 +717,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 		&& empty( $_POST['bbp_video'] )
 		&& empty( $_POST['bbp_media_gif'] )
 		&& empty( $_POST['bbp_document'] )
+		&& ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $_POST['link_preview_data'] ) ) )
 	) {
 		bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -2117,11 +2119,12 @@ function bb_validate_reply_embed( $content ) {
 /**
  * Add oembed to forum reply.
  *
- * @param $content
+ * @param $content  Reply content.
+ * @param $reply_id Optional Reply id.
  *
  * @return string
  */
-function bbp_reply_content_autoembed_paragraph( $content ) {
+function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 	global $wp_embed;
 
 	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
@@ -2148,7 +2151,7 @@ function bbp_reply_content_autoembed_paragraph( $content ) {
 		$embed_urls = array_unique( $embed_urls );
 
 		foreach ( $embed_urls as $url ) {
-			if ( $flag == false ) {
+			if ( false === $flag ) {
 				continue;
 			}
 
@@ -2158,10 +2161,37 @@ function bbp_reply_content_autoembed_paragraph( $content ) {
 				$embeds_array[] = wpautop( $embed );
 			}
 		}
+
+		// Put the line breaks back.
+		return $content . implode( '', $embeds_array );
+
+	} else {
+		if ( empty( $reply_id ) ) {
+			$reply_id = bbp_get_reply_id();
+		}
+		// if not urls in content then check if embed was used or not, if not return content without embed.
+		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
+		if ( ! empty( $link_embed ) ) {
+			$embed_data = bp_core_parse_url( $link_embed );
+
+			if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
+				$embed_code = $embed_data['description'];
+			}
+
+			if ( ! empty( $embed_code ) ) {
+				preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+				preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+				if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+					$content = sprintf( '<p>%s</p>', $content );
+				}
+
+				return $content .= $embed_code;
+			}
+		}
 	}
 
-	// Put the line breaks back.
-	return $content . implode( '', $embeds_array );
+	return $content;
 }
 
 /** Filters *******************************************************************/
