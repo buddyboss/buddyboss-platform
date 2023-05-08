@@ -5523,18 +5523,17 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
  * @return array
  */
 function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
-	$max_ids         = absint( $max_ids );
-	$start           = 0;
-	$length          = 8;
-	$loop_count      = 1;
-	$max_length      = 12;
-	$generated_ids   = array(); // holds the generated ids.
-	$total_generated = 0;
+	$max_ids       = absint( $max_ids );
+	$start         = 0;
+	$length        = 8;
+	$loop_count    = 1;
+	$max_length    = 12;
+	$generated_ids = array(); // holds the generated ids.
 
 	/**
 	 * Generate the missing ids.
 	 */
-	$generate_ids_func = function( $generated_ids ) use ( $max_ids, $total_generated, $start, $length ) {
+	$generate_ids_func = function( $generated_ids ) use ( $max_ids, $start, $length ) {
 		while ( count( $generated_ids ) < $max_ids ) { // phpcs:ignore Squiz.PHP.DisallowSizeFunctionsInLoops.Found
 			$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 40 ) ), $start, $length ) );
 		}
