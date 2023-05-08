@@ -765,6 +765,7 @@ class BuddyPress {
 			'BP_REST_Topics_Actions_Endpoint'              => 'forums',
 			'BP_REST_Reply_Endpoint'                       => 'forums',
 			'BP_REST_Reply_Actions_Endpoint'               => 'forums',
+			'BB_REST_Forums_Link_Preview_Endpoint'         => 'forums',
 			'BP_REST_Invites_Endpoint'                     => 'invites',
 			'BP_REST_Account_Settings_Endpoint'            => 'settings',
 			'BP_REST_Account_Settings_Options_Endpoint'    => 'settings',
