@@ -5502,7 +5502,7 @@ function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
  *
  * @param array $user_ids User IDs.
  */
-function bb_set_bluk_user_profile_slug( $user_ids ) {
+function bb_set_bulk_user_profile_slug( $user_ids ) {
 
 	if ( empty( $user_ids ) ) {
 		return;

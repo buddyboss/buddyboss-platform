@@ -872,7 +872,7 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 				$bp_background_updater->data(
 					array(
 						array(
-							'callback' => 'bb_set_bluk_user_profile_slug',
+							'callback' => 'bb_set_bulk_user_profile_slug',
 							'args'     => array( $chunked_user_ids ),
 						),
 					)
@@ -881,7 +881,7 @@ function bb_repair_member_profile_links_callback( $is_background = false, $paged
 			}
 
 		} else {
-			bb_set_bluk_user_profile_slug( $user_ids );
+			bb_set_bulk_user_profile_slug( $user_ids );
 
 			$total           = $offset + count( $user_ids );
 			$records_updated = sprintf(
