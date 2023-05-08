@@ -2736,6 +2736,12 @@ function bb_update_to_2_3_4() {
 
 	wp_cache_flush();
 
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
 	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
 
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
@@ -2792,12 +2798,6 @@ function bb_update_to_2_3_4() {
 				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
 			)
 		);
-	}
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 
 }
