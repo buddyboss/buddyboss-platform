@@ -48,6 +48,9 @@ function bp_core_install( $active_components = false ) {
 	// Install the signups table.
 	bp_core_maybe_install_signups();
 
+	// Install item subscriptions.
+	bb_core_install_subscription();
+
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
 		bp_core_install_notifications();
@@ -1298,4 +1301,41 @@ function bp_core_install_moderation_emails() {
 	 * @since BuddyBoss 1.5.6
 	 */
 	do_action( 'bp_core_install_moderation_emails' );
+}
+
+/** Subscription *********************************************************/
+/**
+ * Install database tables for the subscriptions
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @uses  get_charset_collate()
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
+ */
+function bb_core_install_subscription() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bb_notifications_subscriptions (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   blog_id bigint(20) NOT NULL,
+	   user_id bigint(20) NOT NULL,
+	   type varchar(255) NOT NULL,
+	   item_id bigint(20) NOT NULL,
+	   secondary_item_id bigint(20) NOT NULL,
+	   status tinyint(1) NOT NULL DEFAULT '1',
+	   date_recorded datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   PRIMARY KEY  (id),
+	   KEY blog_id (blog_id),
+	   KEY user_id (user_id),
+	   KEY type (type),
+	   KEY item_id (item_id),
+	   KEY secondary_item_id (secondary_item_id),
+	   KEY status (status),
+	   KEY date_recorded (date_recorded)
+   	) {$charset_collate};";
+
+	dbDelta( $sql );
 }

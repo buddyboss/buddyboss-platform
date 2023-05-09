@@ -238,20 +238,26 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 
 		if ( 'socialnetworks' === $field_type ) {
 			$social_tags = array(
-				'div'  => array(
+				'div'    => array(
+					'class' => 1,
+					'id'    => 1,
+				),
+				'span'   => array(
 					'class' => 1,
 				),
-				'span' => array(
+				'i'      => array(
 					'class' => 1,
 				),
-				'p'    => array(),
-				'i'    => array(
-					'class' => 1,
-				),
-				'a'    => array(
+				'a'      => array(
 					'href'   => 1,
 					'target' => 1,
 					'data-*' => 1,
+					'class'  => 1,
+				),
+				'p'      => array(),
+				'h4'     => array(),
+				'header' => array(
+					'class' => 1,
 				),
 			);
 
@@ -844,14 +850,28 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	$value      = strtolower( $value );
 	$field_name = xprofile_get_field( $field_id )->name;
 
-	// Empty nickname
+	// Empty nickname.
 	if ( '' === trim( $value ) ) {
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
-	// only alpha numeric, underscore, dash
+	// only alpha numeric, underscore, dash.
 	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
 		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
+	}
+
+	// Check user unique identifier exist.
+	$check_exists = $wpdb->get_var( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s",
+			'bb_profile_slug',
+			$value
+		)
+	);
+
+	if ( $check_exists > 0 ) {
+		// translators: Nickname field.
+		return sprintf( __( 'Invalid %s.', 'buddyboss' ), $field_name );
 	}
 
 	// must be shorter then 32 characters
@@ -1052,8 +1072,8 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 
 	if ( 1 === $field->is_required ) {
 		foreach ( $value as $key => $val ) {
-			$value = trim( $val );
-			if ( empty( $value ) ) {
+			$val = trim( $val );
+			if ( empty( $val ) ) {
 				return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 			}
 		}

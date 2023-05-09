@@ -435,7 +435,7 @@ class BP_XProfile_Group {
 
 		// Fetch the fields.
 		$cache_field_key = 'bp_xprofile_field_ids_' . md5( maybe_serialize( $r ) );
-		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) ) {
+		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) || is_admin() ) {
 			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
 			$bp_xprofile_field_ids[ $cache_field_key ] = $field_ids;
 		} else {
@@ -902,7 +902,7 @@ class BP_XProfile_Group {
 						<div id="post-body-content">
 							<div id="titlediv">
 								<div class="titlewrap">
-									<label id="title-prompt-text" for="title"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
+									<label id="title-prompt-text" for="title" class="screen-reader-text"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
 									<input type="text" name="group_name" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 								</div>
 							</div>

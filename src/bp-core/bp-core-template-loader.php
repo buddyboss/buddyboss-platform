@@ -403,7 +403,7 @@ function bp_get_query_template( $type, $templates = array() ) {
 	 * The current theme is using the WordPress Full Site Editing feature.
 	 * BuddyPress then needs to use the WordPress template canvas to retrieve the community content.
 	 */
-	if ( current_theme_supports( 'block-templates' ) && get_theme_file_path( 'index.php' ) === $template ) {
+	if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() && get_theme_file_path( 'index.php' ) === $template ) {
 		$template = ABSPATH . WPINC . '/template-canvas.php';
 	}
 

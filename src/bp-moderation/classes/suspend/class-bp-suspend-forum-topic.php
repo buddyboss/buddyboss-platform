@@ -67,6 +67,9 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		if ( bp_is_active( 'activity' ) ) {
 			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
 		}
+
+		// Update the where condition for forum Subscriptions.
+		add_filter( 'bb_subscriptions_get_where_conditions', array( $this, 'bb_subscriptions_topic_where_conditions' ), 11, 2 );
 	}
 
 	/**
@@ -486,5 +489,56 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		}
 
 		return $restrict;
+	}
+
+	/**
+	 * Prepare subscription topic Where SQL query to filter blocked Forum.
+	 *
+	 * @since BuddyBoss 2.2.6
+	 *
+	 * @param array $where_conditions Subscription topic Where sql.
+	 * @param array $r                Array of subscription arguments.
+	 *
+	 * @return mixed Where SQL
+	 */
+	public function bb_subscriptions_topic_where_conditions( $where_conditions, $r ) {
+		global $bp;
+
+		if ( isset( $r['bypass_moderation'] ) && true === (bool) $r['bypass_moderation'] ) {
+			return $where_conditions;
+		}
+
+		if ( ! empty( $r['type'] ) ) {
+			if ( ! is_array( $r['type'] ) ) {
+				$r['type'] = preg_split( '/[\s,]+/', $r['type'] );
+			}
+			$r['type'] = array_map( 'sanitize_title', $r['type'] );
+		}
+
+		if ( ! empty( $r['type'] ) && ! in_array( 'topic', $r['type'], true ) ) {
+			return $where_conditions;
+		}
+
+		// Get suspended where query for the forum subscription.
+		$where                  = array();
+		$where['suspend_where'] = 'user_suspended = 1';
+
+		/**
+		 * Filters the hidden topic Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.2.6
+		 *
+		 * @param array $where            Query to hide suspended user's topic.
+		 * @param array $this             current class object.
+		 * @param array $where_conditions Subscription topic Where sql.
+		 * @param array $r                Array of subscription arguments.
+		 */
+		$where = apply_filters( 'bb_subscriptions_suspend_topic_get_where_conditions', $where, $this, $where_conditions, $r );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_topic_where'] = "sc.item_id NOT IN ( SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = 'forum_topic' AND ( " . implode( ' OR ', $where ) . ' ) )';
+		}
+
+		return $where_conditions;
 	}
 }
