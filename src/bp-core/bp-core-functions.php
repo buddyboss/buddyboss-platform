@@ -7697,6 +7697,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_xprofile':
 			$meta_icon = $bb_icon_bf . ' bb-icon-user-card';
 			break;
+		case 'bb_profile_slug_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-link';
+			break;
 		case 'bp_member_avatar_settings':
 		case 'bp_groups_avatar_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-image';

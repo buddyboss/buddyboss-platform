@@ -2684,13 +2684,15 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   left: 12px;
   transform: translate(0, -50%);
   z-index: 6;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   cursor: pointer;
 }
 
 .activity-autocomplete-wrapper .activity-autocomplete-clear i {
-  font-size: 20px;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1;
   color: rgba(18, 43, 70, 0.4);
   display: block;
 }
@@ -9328,17 +9330,43 @@ body.register .buddypress-wrap .page ul {
   opacity: 1;
 }
 
-.users-header #social-networks-popup {
+.users-header #social-networks-popup,
+.bp-widget.social #social-networks-popup {
   display: none;
 }
 
-.users-header #social-networks-popup .bb-action-popup-content {
+.users-header #social-networks-popup .bb-action-popup-content,
+.bp-widget.social #social-networks-popup .bb-action-popup-content {
   padding: 26px 30px 35px;
   text-align: right;
 }
 
-.users-header #social-networks-popup .bb-action-popup-content .social {
+.users-header #social-networks-popup .bb-action-popup-content .social,
+.bp-widget.social #social-networks-popup .bb-action-popup-content .social {
   margin-top: 7px;
+}
+
+.bp-widget.social #social-networks-popup .bb-model-header > p {
+  margin-right: auto;
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+.bp-widget.social #social-networks-popup .bb-action-popup-content .social {
+  margin-top: 9px;
+  width: 24px;
+}
+
+.bp-widget.social .social-networks-popup-hide {
+  display: none;
+}
+
+.profile .bp-widget:has(.field_type_socialnetworks) #social-networks-popup {
+  display: none;
+}
+
+.buddypress-wrap .bp-widget.social .bp-tables-user {
+  overflow: visible;
 }
 
 .users-header #item-header-avatar a.link-change-profile-image {
@@ -21418,7 +21446,7 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
 
 .bp-document-listing .media-search-form .bp-dir-search-form #group-document-search {
   background-image: none;
-  padding: 6px 32px 6px 10px;
+  padding: 6px 32px 6px 30px;
   height: auto;
   font-size: 14px;
 }
@@ -21429,6 +21457,38 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
 
 .bp-document-listing .bp-media-header-wrap .bb-title {
   width: auto;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset,
+.search-form-has-reset {
+  position: relative;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset .search-form_reset,
+.search-form-has-reset .search-form_reset {
+  font-size: 13px;
+  color: #767676;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  opacity: 0.4;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
+  display: none;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset .search-form_reset:hover,
+.search-form-has-reset .search-form_reset:hover {
+  opacity: 1;
+}
+
+.buddypress .buddypress-wrap .search-form-has-reset input[type="search"],
+.buddypress .buddypress-wrap .search-form-has-reset #bbp_search,
+.search-form-has-reset input[type="search"],
+.search-form-has-reset #bbp_search {
+  padding-left: 30px;
 }
 
 body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
@@ -21531,7 +21591,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .bp-dir-search-form #group-document-search {
   background-image: none;
-  padding: 6px 32px 6px 10px;
+  padding: 6px 32px 6px 30px;
   height: auto;
   font-size: 14px;
 }
@@ -23885,6 +23945,21 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .video-js .vjs-control-bar .vjs-volume-panel-horizontal.vjs-hover,
 .bb-media-section .video-js .vjs-control-bar .vjs-volume-panel-horizontal.vjs-hover {
   width: auto;
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-volume-panel .vjs-mouse-display .vjs-volume-tooltip,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-volume-panel .vjs-mouse-display .vjs-volume-tooltip,
+.bb-media-section .video-js .vjs-control-bar .vjs-volume-panel .vjs-mouse-display .vjs-volume-tooltip {
+  display: none;
+}
+
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back ~ .vjs-seek-button.skip-back,
+.bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-forward ~ .vjs-seek-button.skip-forward,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back ~ .vjs-seek-button.skip-back,
+.bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-forward ~ .vjs-seek-button.skip-forward,
+.bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back ~ .vjs-seek-button.skip-back,
+.bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-forward ~ .vjs-seek-button.skip-forward {
+  display: none;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar button,
