@@ -2618,7 +2618,7 @@ function bb_update_to_2_3_1() {
 		BB_Presence::bb_check_native_presence_load_directly();
 	}
 
-	bb_repair_member_profile_links_callback( true );
+	bb_generate_member_profile_links_on_update();
 }
 
 /**

@@ -5385,7 +5385,7 @@ function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
-		$new_unique_identifier = bb_generate_uuids();
+		$new_unique_identifier = bb_generate_user_random_profile_slugs();
 		$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
 	}
 
@@ -5510,7 +5510,7 @@ function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
  *
  * @param array $user_ids User IDs.
  */
-function bb_set_bluk_user_profile_slug( $user_ids ) {
+function bb_set_bulk_user_profile_slug( $user_ids ) {
 
 	if ( empty( $user_ids ) ) {
 		return;
@@ -5530,39 +5530,55 @@ function bb_set_bluk_user_profile_slug( $user_ids ) {
  *
  * @return array
  */
-function bb_generate_uuids( $max_ids = 1 ) {
-	$max_ids         = absint( $max_ids );
-	$start           = 0;
-	$length          = 8;
-	$loop_count      = 1;
-	$max_length      = 12;
-	$generated_ids   = array(); // holds the generated ids.
-	$total_generated = 0;
+function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
+	$max_ids       = absint( $max_ids );
+	$start         = 0;
+	$length        = 8;
+	$loop_count    = 1;
+	$max_length    = 12;
+	$generated_ids = array(); // holds the generated ids.
 
-	while ( $total_generated < $max_ids ) {
-
-		$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 12, false ) ), $start, $length ) );
-		while ( bb_is_exists_user_unique_identifier( end( $generated_ids ) ) ) {
-
-			array_pop( $generated_ids );
-
-			// Break the loop if run more than 6 times.
-			if ( 6 < $loop_count ) {
-				$loop_count = 1;
-
-				if ( $length < $max_length ) {
-					$length ++;
-				}
-			}
-
-			$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 12, false ) ), $start, $length ) );
-			$loop_count ++;
+	/**
+	 * Generate the missing ids.
+	 */
+	$generate_ids_func = function( $generated_ids ) use ( $max_ids, $start, $length ) {
+		while ( count( $generated_ids ) < $max_ids ) { // phpcs:ignore Squiz.PHP.DisallowSizeFunctionsInLoops.Found
+			$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 40 ) ), $start, $length ) );
 		}
 
-		$total_generated = count( $generated_ids );
+		return $generated_ids;
+	};
+
+	// Initially generate the UUIDs.
+	$generated_ids = $generate_ids_func( $generated_ids );
+
+	// Check the generated UUIDs already exists or not?
+	$match_found = bb_is_exists_user_unique_identifier( $generated_ids );
+
+	// Validate the ID's with existing matches in DB.
+	while ( ! empty( $match_found ) ) {
+		// unset the match which are found.
+		foreach ( $match_found as $k ) {
+			if ( isset( $generated_ids[ array_search( $k, $generated_ids, true ) ] ) ) {
+				unset( $generated_ids[ array_search( $k, $generated_ids, true ) ] );
+			}
+		}
+
+		// Break the loop if run more than 6 times.
+		if ( 6 < $loop_count ) {
+			$loop_count = 1;
+
+			if ( $length < $max_length ) {
+				$length ++;
+			}
+		}
+
+		$generated_ids = $generate_ids_func( $generated_ids );
+		$match_found   = bb_is_exists_user_unique_identifier( $generated_ids );
+		$loop_count ++;
 	}
 
-	return $generated_ids;
+	return array_values( $generated_ids );
 }
 
 /**
@@ -5570,43 +5586,61 @@ function bb_generate_uuids( $max_ids = 1 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $unique_identifier Newly generated unique identifier.
- * @param int    $user_id           Optional. ID of user to exclude from the search.
+ * @param array|string $unique_identifier Newly generated unique identifier.
+ * @param int          $user_id           Optional. ID of user to exclude from the search.
  *
- * @return bool|int False if unique identifier is not exists otherwise return user ID.
+ * @return array
  */
 function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
 	global $wpdb;
 
+	if ( is_array( $unique_identifier ) ) {
+		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
+	}
+
 	// Prepare the statement to check unique identifier.
-	$prepare_query = $wpdb->prepare(
-		"SELECT DISTINCT u.ID FROM `{$wpdb->prefix}users` AS u WHERE ( u.user_login = %s OR u.user_nicename = %s ) OR u.ID IN( SELECT DISTINCT um.user_id FROM `{$wpdb->prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value = %s ) OR ( um.meta_key = %s AND um.meta_value = %s ) )",
-		$unique_identifier,
-		$unique_identifier,
-		'bb_profile_slug',
-		$unique_identifier,
-		'nickname',
-		$unique_identifier
-	);
+	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$wpdb->prefix}users` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
 
 	// Exclude the user to check unique identifier.
 	if ( ! empty( $user_id ) ) {
-		$prepare_query = $wpdb->prepare(
-			$prepare_query . " AND u.ID != %d",
+		$prepare_user_query = $wpdb->prepare(
+			$prepare_user_query . ' AND u.ID != %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$user_id
 		);
 	}
 
 	// Execute the query.
-	$val = $wpdb->get_var( $prepare_query );
+	$user_val = $wpdb->get_results( $prepare_user_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
-	// Return false if no record found.
-	if ( empty( $val ) ) {
-		return false;
+	$matched_uuids = array();
+	if ( ! empty( $user_val ) ) {
+		$matched_uuids = array_column( $user_val, 'user_nicename' );
+		$matched_uuids = array_merge( $matched_uuids, array_column( $user_val, 'user_login' ) );
 	}
 
-	// Return user ID if already exists the unique identifier.
-	return $val;
+	// Prepare the statement to check unique identifier.
+	$prepare_meta_query = $wpdb->prepare(
+		"SELECT DISTINCT um.meta_value FROM `{$wpdb->prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		'bb_profile_slug',
+		'nickname'
+	);
+
+	// Exclude the user to check unique identifier.
+	if ( ! empty( $user_id ) ) {
+		$prepare_meta_query = $wpdb->prepare(
+			$prepare_meta_query . ' AND um.user_id != %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$user_id
+		);
+	}
+
+	// Execute the query.
+	$meta_val = $wpdb->get_results( $prepare_meta_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+	if ( ! empty( $meta_val ) ) {
+		$matched_uuids = array_merge( $matched_uuids, array_column( $meta_val, 'meta_value' ) );
+	}
+
+	return array_filter( array_unique( $matched_uuids ) );
 }
 
 /**
@@ -5625,7 +5659,6 @@ function bb_is_short_user_unique_identifier( $unique_identifier ) {
 	} else {
 		$length = strlen( $unique_identifier );
 	}
-
 
 	// Check the unique identifier is short then return true.
 	if ( $length >= 8 && $length <= 12 ) {
