@@ -2762,12 +2762,24 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
 
 /**
  * Migration favorites from user meta to topic meta.
+ * Updated buddyboss mu file.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
 function bb_update_to_2_3_4() {
+	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+
+		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		}
+
+		$wp_files_system = new \WP_Filesystem_Direct( array() );
+		$wp_files_system->delete( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', false, 'f' );
+	}
+
 	$is_already_run = get_transient( 'bb_migrate_favorites' );
 	if ( $is_already_run ) {
 		return;
