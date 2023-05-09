@@ -353,7 +353,7 @@ function bp_get_member_invitation_message() {
 
 	$text = '';
 
-	if ( $query->posts ) {
+	if ( ! empty( $query->posts ) ) {
 		if ( $must_use_wpmail ) {
 			$text = $query->posts[0]->post_excerpt;
 		} else {

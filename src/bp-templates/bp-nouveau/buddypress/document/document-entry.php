@@ -180,7 +180,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 					$group_status = bp_get_group_status( $group );
 					?>
 					<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
-					<span class="media-folder_status"><?php echo ucfirst( $group_status ); ?></span>
+					<span class="media-folder_status"><?php echo esc_html__( ucfirst( $group_status ), 'buddyboss' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText ?></span>
 					<?php
 				} else {
 					?>
@@ -242,7 +242,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
+			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 			<div class="media-folder_action__list">
 				<ul>
 					<?php

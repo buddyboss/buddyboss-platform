@@ -939,7 +939,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 			readfile( "{$zip_name}" );
 
-			BP_Document::bp_document_remove_temp_directory( $upload_dir );
+			bp_document_remove_temp_directory( $upload_dir );
 			exit();
 
 		}

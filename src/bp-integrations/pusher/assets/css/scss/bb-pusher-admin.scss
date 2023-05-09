@@ -1,0 +1,33 @@
+#bb_pusher_settings_section {
+
+	.bb-pusher-status {
+		margin-left: 15px;
+	}
+
+	.notes-hidden-header {
+
+		> th {
+			display: none;
+
+			+ td {
+				padding-left: 0;
+				padding-right: 0;
+			}
+		}
+	}
+
+	.hidden-header {
+
+		> th {
+			opacity: 0;
+			visibility: hidden;
+			padding: 0;
+			margin: 0;
+		}
+
+		> td {
+			padding: 0;
+			margin: 0;
+		}
+	}
+}

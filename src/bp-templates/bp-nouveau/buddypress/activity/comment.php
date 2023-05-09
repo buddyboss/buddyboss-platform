@@ -11,6 +11,8 @@
  * @version 1.0.0
  */
 
+bp_nouveau_activity_hook( 'before', 'comment_entry' );
+
 ?>
 
 <li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class() ?>" data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
@@ -46,3 +48,5 @@
 
 	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
 </li>
+<?php
+bp_nouveau_activity_hook( 'after', 'comment_entry' );

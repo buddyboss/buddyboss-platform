@@ -127,7 +127,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 				<?php endwhile; ?>
 			</div>
 			<?php if ( $follower_count_number > $instance['max_users'] && $show_more ) { ?>
-				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
 			<?php echo $args['after_widget']; ?>
@@ -152,7 +152,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 	 * Widget settings form.
 	 */
 	function form( $instance ) {
-		$instance = wp_parse_args(
+		$instance = bp_parse_args(
 			(array) $instance,
 			array(
 				'max_users' => 16,

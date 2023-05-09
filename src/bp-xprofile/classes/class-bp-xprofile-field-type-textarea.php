@@ -80,7 +80,7 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 		do_action( bp_get_the_profile_field_errors_action() );
 
 		if ( ! $richtext_enabled ) {
-			$r = wp_parse_args(
+			$r = bp_parse_args(
 				$raw_properties,
 				array(
 					'cols' => 40,

@@ -283,7 +283,11 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		$user  = bp_rest_get_user( $request['user_id'] );
 		$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
 
-		if ( ! $request['context'] || 'view' === $request['context'] ) {
+		if (
+			! $request['context'] ||
+			'view' === $request['context'] ||
+			'public' === $group->status
+		) {
 			if ( ! groups_join_group( $group->id, $user->ID ) ) {
 				return new WP_Error(
 					'bp_rest_group_member_failed_to_join',
@@ -620,6 +624,23 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 						);
 					}
 				}
+
+				if ( ! is_wp_error( $retval ) && groups_is_user_invited( $user->ID, $group->id ) ) {
+					$messages = array(
+						'ban'     => __( 'Could not ban member from the group.', 'buddyboss' ),
+						'unban'   => __( 'Could not unban member from the group.', 'buddyboss' ),
+						'promote' => __( 'Could not promote member from the group.', 'buddyboss' ),
+						'demote'  => __( 'Could not demote member from the group.', 'buddyboss' ),
+					);
+
+					$retval = new WP_Error(
+						'bp_rest_group_member_cannot_' . $request['action'],
+						$messages[ $request['action'] ],
+						array(
+							'status' => 500,
+						)
+					);
+				}
 			}
 		}
 
@@ -804,7 +825,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $group_member, $request ) {
 		$user        = bp_rest_get_user( $group_member->user_id );
 		$context     = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$member_data = $this->members_endpoint->user_data( $user, $context );
+		$member_data = $this->members_endpoint->user_data( $user, $request );
 
 		$is_friends_connection = true;
 		if ( bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message() && ! friends_check_friendship( bp_loggedin_user_id(), $group_member->user_id ) ) {

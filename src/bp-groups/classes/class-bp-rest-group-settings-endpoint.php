@@ -535,7 +535,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'name'        => 'group-name',
 			'description' => '',
 			'field'       => 'text',
-			'value'       => bp_get_group_name( $group ),
+			'value'       => ( function_exists( 'bp_get_group_name_editable' ) ? bp_get_group_name_editable( $group ) : bp_get_group_name( $group ) ),
 			'options'     => array(),
 		);
 
@@ -639,7 +639,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 											'<li>' . esc_html__( 'This group will not be listed in the groups directory or search results', 'buddyboss' ) . '</li>' .
 											'<li>' . esc_html__( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ) . '</li>' .
 										'</ul>',
-					'is_default_option' => 'private' === bp_get_new_group_status(),
+					'is_default_option' => 'hidden' === bp_get_new_group_status(),
 				),
 			),
 		);
@@ -1138,7 +1138,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			bp_groups_set_group_type( $group_id, $current_types );
 		}
 
-		$parent_id    = isset( $post_fields['bp-groups-parent'] ) && array_key_exists( 'bp-groups-parent', (array) $post_fields ) ? $post_fields['bp-groups-parent'] : '0';
+		$parent_id    = isset( $post_fields['bp-groups-parent'] ) && array_key_exists( 'bp-groups-parent', (array) $post_fields ) ? $post_fields['bp-groups-parent'] : bp_get_parent_group_id( $group->id );
 		$enable_forum = ( isset( $group->enable_forum ) ? $group->enable_forum : false );
 
 		$error  = '';
@@ -1206,56 +1206,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'options'     => array(),
 		);
 
-		if ( bbp_is_user_keymaster() ) {
-			$forum_field = array(
-				'label'       => esc_html__( 'Group Forum:', 'buddyboss' ),
-				'name'        => 'bbp_group_forum_id',
-				'description' => esc_html__( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ),
-				'field'       => 'select',
-				'value'       => $forum_id,
-				'options'     => array(),
-			);
-
-			$forums = get_posts(
-				array(
-					'post_type'              => 'forum',
-					'numberposts'            => - 1,
-					'orderby'                => 'menu_order title',
-					'order'                  => 'ASC',
-					'disable_categories'     => true,
-					'suppress_filters'       => false,
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-				)
-			);
-
-			if ( ! empty( $forums ) ) {
-				$forum_field['options'][] = array(
-					'label'             => esc_html__( '(No Forum)', 'buddyboss' ),
-					'value'             => '',
-					'description'       => '',
-					'is_default_option' => empty( $forum_id ),
-					'disabled'          => false,
-				);
-				foreach ( $forums as $forum ) {
-					$title = $forum->post_title;
-					if ( '' === $title ) {
-						/* translators: %d: ID of a post. */
-						$title = sprintf( __( '#%d (no title)', 'buddyboss' ), $forum->ID );
-					}
-					$forum_field['options'][] = array(
-						'label'             => $title,
-						'value'             => $forum->ID,
-						'description'       => '',
-						'is_default_option' => $forum_id === $forum->ID,
-						'disabled'          => $this->is_option_disabled( $forum, $forum_id ),
-					);
-				}
-			}
-
-			$fields[] = $forum_field;
-		}
-
 		return apply_filters( 'bp_rest_group_settings_forum', $fields, $group_id );
 
 	}
@@ -1265,7 +1215,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Request $request Request used to generate the response.
 	 *
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	protected function update_forum_fields( $request ) {
 		$post_fields                        = $request->get_param( 'fields' );
@@ -1295,14 +1245,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		$group_forum_extention = new BBP_Forums_Group_Extension();
 
-		// Keymasters have the ability to reconfigure forums.
-		if ( bbp_is_user_keymaster() ) {
-			$forum_ids = ( array_key_exists( 'bbp_group_forum_id', (array) $post_fields ) && ! empty( $post_fields['bbp_group_forum_id'] ) ) ? (array) (int) $post_fields['bbp_group_forum_id'] : array();
-
-			// Use the existing forum IDs.
-		} else {
-			$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
-		}
+		$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
 
 		// Normalize group forum relationships now.
 		if ( ! empty( $forum_ids ) ) {
@@ -1367,7 +1310,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$new_forum_args = array( 'forum_id' => $forum_id );
 
 			// If in admin, also include the group ID.
-			if ( is_admin() && ! empty( $group_id ) ) {
+			if ( ! empty( $group_id ) ) {
 				$new_forum_args['group_id'] = $group_id;
 			}
 

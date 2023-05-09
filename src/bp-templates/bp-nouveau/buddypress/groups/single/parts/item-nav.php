@@ -22,7 +22,7 @@
 
 				<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>">
 					<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>">
-						<?php bp_nouveau_nav_link_text(); ?>
+						<div class="bb-single-nav-item-point"><?php bp_nouveau_nav_link_text(); ?></div>
 
 						<?php if ( bp_nouveau_nav_has_count() ) : ?>
 							<span class="count"><?php bp_nouveau_nav_count(); ?></span>

@@ -38,7 +38,7 @@ jQuery( document ).ready(
 					nonce: nonce,
 				};
 
-				$( event.currentTarget ).append( ' <i class="bb-icon bb-icon-loader animate-spin"></i>' );
+				$( event.currentTarget ).append( ' <i class="bb-icon-l bb-icon-spinner animate-spin"></i>' );
 
 				$.post(
 					ajaxurl,
@@ -48,11 +48,13 @@ jQuery( document ).ready(
 						var url     = window.location.href;
 						if (true === response.success) {
 							if ('hide' === sub_action) {
+								curObj.addClass( 'green' );
 								curObj.attr( 'data-action', 'unhide' );
 								curObj.attr( 'title', Bp_Moderation.strings.unhide_label );
 								curObj.text( Bp_Moderation.strings.unhide_label );
 								hideArg = 'hidden';
 							} else if ('unhide' === sub_action) {
+								curObj.removeClass( 'green' );
 								curObj.attr( 'data-action', 'hide' );
 								curObj.attr( 'title', Bp_Moderation.strings.hide_label );
 								curObj.text( Bp_Moderation.strings.hide_label );
@@ -119,7 +121,7 @@ jQuery( document ).ready(
 					nonce: nonce,
 				};
 
-				$( event.currentTarget ).append( ' <i class="bb-icon bb-icon-loader animate-spin"></i>' );
+				$( event.currentTarget ).append( ' <i class="bb-icon-l bb-icon-spinner animate-spin"></i>' );
 
 				$.post(
 					ajaxurl,
@@ -130,6 +132,7 @@ jQuery( document ).ready(
 							var url = window.location.href;
 							if ('suspend' === sub_action) {
 								curObj.attr( 'data-action', 'unsuspend' );
+								curObj.addClass( 'green' );
 								if (curObj.hasClass( 'content-author' )) {
 									curObj.text( Bp_Moderation.strings.unsuspend_author_label );
 									curObj.attr( 'title', Bp_Moderation.strings.unsuspend_author_label );
@@ -140,6 +143,7 @@ jQuery( document ).ready(
 								hideArg = 'suspended';
 							} else if ('unsuspend' === sub_action) {
 								curObj.attr( 'data-action', 'suspend' );
+								curObj.removeClass( 'green' );
 								if (curObj.hasClass( 'content-author' )) {
 									curObj.text( Bp_Moderation.strings.suspend_author_label );
 									curObj.attr( 'title', Bp_Moderation.strings.suspend_author_label );
