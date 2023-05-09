@@ -1074,7 +1074,14 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function can_user_delete_or_update( $group ) {
-		return ( bp_current_user_can( 'bp_moderate' ) || bp_loggedin_user_id() === $group->creator_id );
+		return (
+			bp_current_user_can( 'bp_moderate' ) ||
+			bp_loggedin_user_id() === $group->creator_id ||
+			(
+				function_exists( 'groups_is_user_admin' ) &&
+				groups_is_user_admin( bp_loggedin_user_id(), $group->id )
+			)
+		);
 	}
 
 	/**

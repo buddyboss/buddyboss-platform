@@ -682,7 +682,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			foreach ( $tabs_items as $key => $item ) {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
-				$tabs[ $key ]['count']    = $item['count'];
+				$tabs[ $key ]['count']    = bp_core_number_format( $item['count'] );
 			}
 		}
 
@@ -728,7 +728,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		 * @param int   $count    The count attribute for the nav item.
 		 * @param array $nav_item The current nav item array.
 		 */
-		return (int) apply_filters( 'bp_rest_nouveau_get_nav_count', $count, $nav );
+		return (int) apply_filters( 'bp_rest_nouveau_get_nav_count', bp_core_number_format( $count ), $nav );
 	}
 
 	/**
@@ -766,7 +766,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		$nav_items['all'] = array(
 			'text'     => __( 'All Members', 'buddyboss' ),
 			'position' => 5,
-			'count'    => bp_get_total_member_count(),
+			'count'    => bp_core_number_format( bp_get_total_member_count() ),
 		);
 
 		if ( is_user_logged_in() ) {
@@ -774,7 +774,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				$nav_items['friends'] = array(
 					'text'     => __( 'My Friends', 'buddyboss' ),
 					'position' => 15,
-					'count'    => bp_get_total_friend_count( bp_loggedin_user_id() ),
+					'count'    => bp_core_number_format( bp_get_total_friend_count( bp_loggedin_user_id() ) ),
 				);
 			}
 		}
