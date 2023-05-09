@@ -239,20 +239,26 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 
 		if ( 'socialnetworks' === $field_type ) {
 			$social_tags = array(
-				'div'  => array(
+				'div'    => array(
+					'class' => 1,
+					'id'    => 1,
+				),
+				'span'   => array(
 					'class' => 1,
 				),
-				'span' => array(
+				'i'      => array(
 					'class' => 1,
 				),
-				'p'    => array(),
-				'i'    => array(
-					'class' => 1,
-				),
-				'a'    => array(
+				'a'      => array(
 					'href'   => 1,
 					'target' => 1,
 					'data-*' => 1,
+					'class'  => 1,
+				),
+				'p'      => array(),
+				'h4'     => array(),
+				'header' => array(
+					'class' => 1,
 				),
 			);
 

@@ -1697,6 +1697,8 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	$social_networks_id    = $social_networks_field->id;
 	$social_networks_text  = $social_networks_field->name;
 
+	$is_enabled_header_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+
 	$html = '';
 
 	$original_option_values = array();
@@ -1730,20 +1732,23 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 								<div class="modal-wrapper">
 									<div class="modal-container">
 										<header class="bb-model-header">
-											<h4><span class="target_name">' . esc_attr( $social_networks_text ) . '</span></h4>
-											<a class="bb-close-action-popup bb-model-close-button" href="#">
-												<span class="bb-icon-l bb-icon-times"></span>
-											</a>
+											<h4>
+												<span class="target_name">' . esc_attr( $social_networks_text ) . '</span>
+											</h4>
+											<a class="bb-close-action-popup bb-model-close-button" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 										</header>
 										<div class="bb-action-popup-content">';
-				foreach ( $original_option_values as $key => $original_option_value ) {
-					if ( '' !== $original_option_value ) {
-						$key   = bp_social_network_search_key( $key, $providers );
-						$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
-					}
-					$i++;
-				}
-				$html .= '</div></div></div></div></div>';
+										foreach ( $original_option_values as $key => $original_option_value ) {
+											if ( '' !== $original_option_value ) {
+												$key   = bp_social_network_search_key( $key, $providers );
+												$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
+											}
+										}
+										$html .= '</div>
+									</div>
+								</div>
+							</div>
+						</div>';
 			}
 		}
 	}
