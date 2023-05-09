@@ -789,7 +789,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 
 			$folder_ids[] = $folder_id;
 			$folders      = array(
-				'column'  => 'parent',
+				'column'  => 'folder_id',
 				'compare' => 'IN',
 				'value'   => $folder_ids,
 			);
