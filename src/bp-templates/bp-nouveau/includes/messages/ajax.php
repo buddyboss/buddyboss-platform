@@ -264,12 +264,17 @@ function bp_nouveau_ajax_messages_send_message() {
 				$all_recipients = $messages_template->thread->get_recipients();
 
 				$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
-				$un_access_users = array();
+				$un_access_users = false;
 				if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
 					foreach ( (array) $all_recipients as $recipient ) {
+
+						if ( true === $un_access_users ) {
+							break;
+						}
+
 						if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 							if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-								$un_access_users[] = false;
+								$un_access_users = true;
 							}
 						}
 					}
@@ -884,12 +889,17 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		$all_recipients = $messages_template->thread->get_recipients();
 
 		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $all_recipients );
-		$un_access_users = array();
+		$un_access_users = false;
 		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() && count( $messages_template->thread->recipients ) < 3 ) {
 			foreach ( (array) $all_recipients as $recipient ) {
+
+				if ( true === $un_access_users ) {
+					break;
+				}
+
 				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-						$un_access_users[] = false;
+						$un_access_users = true;
 					}
 				}
 			}
@@ -2121,7 +2131,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
 	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $all_recipients );
-	$un_access_users = array();
+	$un_access_users = false;
 
 	$thread->thread = array(
 		'id'                        => $bp_get_the_thread_id,
@@ -2154,10 +2164,17 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$bp_force_friendship_to_message = bp_force_friendship_to_message();
 
 		foreach ( $thread_template->thread->recipients as $recipient ) {
-			if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && $bp_force_friendship_to_message ) {
+
+			if (
+					$can_message &&
+					! $is_group_thread &&
+					bp_is_active( 'friends' ) &&
+					$bp_force_friendship_to_message &&
+					true !== $un_access_users
+			) {
 				if ( $login_user_id !== $recipient->user_id ) {
 					if ( ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
-						$un_access_users[] = false;
+						$un_access_users = true;
 					}
 				}
 			}
