@@ -7203,6 +7203,10 @@ body.register .registration-popup .mfp-close:hover {
   color: #fff;
 }
 
+.bs-bp-container-reg .bp-feedback + .register-page {
+  margin-top: 15px;
+}
+
 .bb-password-wrap {
   position: relative;
 }
