@@ -2716,6 +2716,7 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
  * Migration favorites from user meta to topic meta.
  * Install email template for activity following post.
  * Updated buddyboss mu file.
+ * Migration to add index and new column to media tables.
  *
  * @since BuddyBoss [BBVERSION]
  *

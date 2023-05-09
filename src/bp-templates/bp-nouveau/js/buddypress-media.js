@@ -4576,9 +4576,11 @@ window.bp = window.bp || {};
 		},
 
 		beforeunloadWindow: function() {
-			$.each( Dropzone.instances, function( index, value ) {
-				value.removeAllFiles( true );
-			});
+			if( $('body.messages').length > 0 ) {
+				$.each( Dropzone.instances, function( index, value ) {
+					value.removeAllFiles( true );
+				});
+			}
 		},
 
 		changeUploadModalTab: function ( event ) {
