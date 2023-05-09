@@ -466,7 +466,7 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
 			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
 		}
 
-		$value = xprofile_filter_kses( $value, $data_obj );
+		$value = xprofile_filter_kses( $value, $data_obj, $field_id );
 	} elseif ( 'socialnetworks' === $field_type ) {
 		$data_obj = null;
 		if ( bp_is_user() ) {
