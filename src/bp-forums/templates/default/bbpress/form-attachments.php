@@ -151,7 +151,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 <div id="whats-new-toolbar" class="<?php echo ( ! bp_is_active( 'media' ) ) ? esc_attr( 'media-off' ) : ''; ?> ">
 
-	<?php if ( bp_is_active( 'media' ) ) : ?>
+	<?php if ( bp_is_active( 'media' ) && bbp_use_wp_editor() ) : ?>
 		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>">
 			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
 				<span class="bb-icon-l bb-icon-font"></span>
