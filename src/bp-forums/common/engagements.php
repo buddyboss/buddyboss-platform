@@ -184,6 +184,10 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * @return bool Returns true on success, false on failure.
 	 */
 	public function add_user_to_object( $object_id = 0, $user_id = 0, $meta_key = '', $meta_type = 'post', $unique = false ) {
+		if ( function_exists( 'bb_forum_favourite_legacy_data_support' ) && bb_forum_favourite_legacy_data_support() ) {
+			$bbp_user = new BBP_User_Engagements_User();
+			$bbp_user->add_user_to_object( $object_id, $user_id, $meta_key );
+		}
 		return add_metadata( $meta_type, $object_id, $meta_key, $user_id, $unique );
 	}
 
@@ -201,6 +205,10 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * @return bool Returns true on success, false on failure.
 	 */
 	public function remove_user_from_object( $object_id = 0, $user_id = 0, $meta_key = '', $meta_type = 'post' ) {
+		if ( function_exists( 'bb_forum_favourite_legacy_data_support' ) && bb_forum_favourite_legacy_data_support() ) {
+			$bbp_user = new BBP_User_Engagements_User();
+			$bbp_user->remove_user_from_object( $object_id, $user_id, $meta_key );
+		}
 		return delete_metadata( $meta_type, $object_id, $meta_key, $user_id, false );
 	}
 

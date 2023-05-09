@@ -1084,3 +1084,16 @@ function bbp_redirect( $location = '', $status = 302 ) {
 	// Exit so the redirect takes place immediately.
 	exit();
 }
+
+/**
+ * Function to check the forums favourite legacy is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @todo Legacy support will disable after certain version.
+ *
+ * @return bool True if forums favourite legacy is enabled otherwise false.
+ */
+function bb_forum_favourite_legacy_data_support() {
+	return (bool) apply_filters( 'bb_forum_favourite_legacy_data_support', true );
+}
