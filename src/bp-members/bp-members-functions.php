@@ -5601,8 +5601,8 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 		);
 	}
 
-	// Execute the query.
-	$user_val = $wpdb->get_results( $prepare_user_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$user_val = $wpdb->get_results( $prepare_user_query );
 
 	$matched_uuids = array();
 	if ( ! empty( $user_val ) ) {
@@ -5625,8 +5625,8 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 		);
 	}
 
-	// Execute the query.
-	$meta_val = $wpdb->get_results( $prepare_meta_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$meta_val = $wpdb->get_results( $prepare_meta_query );
 
 	if ( ! empty( $meta_val ) ) {
 		$matched_uuids = array_merge( $matched_uuids, array_column( $meta_val, 'meta_value' ) );
