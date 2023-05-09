@@ -30,7 +30,7 @@ function bp_activity_media_sideload_attachment( $file ) {
  *
  * @since BuddyBoss 1.0.0
  * @deprecated BuddyBoss [BBVERSION]
- * 
+ *
  * @param array $file_array Array similar to a {@link $_FILES} upload array
  * @param array $post_data  allows you to overwrite some of the attachment
  *
@@ -41,4 +41,16 @@ function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) 
 	_deprecated_function( __FUNCTION__, '[BBVERSION]', 'bb_media_handle_sideload' );
 
 	return bb_media_handle_sideload( $file_array, $post_data );
+}
+
+/**
+ * Setup the user profile hash to the user meta.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param array $user_ids User IDs.
+ */
+function bb_set_bluk_user_profile_slug( $user_ids ) {
+	_deprecated_function( __FUNCTION__, '[BBVERSION]', 'bb_set_bulk_user_profile_slug' );
+	bb_set_bulk_user_profile_slug( $user_ids );
 }
