@@ -20,7 +20,7 @@ add_filter( 'bp_get_loggedin_user_fullname', 'esc_html' );
 // Filter the user registration URL to point to BuddyPress's registration page.
 add_filter( 'register_url', 'bp_get_signup_page' );
 
-// Change the last active display format if users active within 3 minutes then shows 'Active now'.
+// Change the last active display format if users active within interval then shows 'Active now'.
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
 
 // Repair member profile links.
