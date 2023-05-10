@@ -257,31 +257,36 @@ window.bp = window.bp || {};
 				gif_attached_container      = target.find( '#whats-new-attachments .forums-attached-gif-container' );
 
 			// Reset editor.
-			if ( 'topic' === this.topic_reply_draft.object ) {
-				if( window.forums_medium_topic_editor ) {
-					$medium_editor = window.forums_medium_topic_editor[editor_key];
-					$medium_editor.setContent( '' );
+			if ( typeof window.MediumEditor !== 'undefined' ) {
+				if ( 'topic' === this.topic_reply_draft.object ) {
+					if( window.forums_medium_topic_editor ) {
+						$medium_editor = window.forums_medium_topic_editor[editor_key];
+						$medium_editor.setContent( '' );
+					}
+					$editor = target.find( '#bbp_editor_topic_content_' + editor_key );
+					$editor.removeClass( 'error' );
+					target.find( '#bbp_topic_content' ).val( '' );
+					target.find( '#bbp_topic_title' ).val( '' );
+					target.removeClass( 'has-title' );
+				} else if ( 'reply' === this.topic_reply_draft.object ) {
+					if ( window.forums_medium_reply_editor ) {
+						$medium_editor = window.forums_medium_reply_editor[editor_key];
+						$medium_editor.setContent( '' );
+					}
+					$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
+					$editor.removeClass( 'error' );
+					$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
+					target.find( '#bbp_reply_content' ).val( '' );
+					setTimeout(
+						function () {
+							$editor.removeClass( 'error' );
+						},
+						300
+					);
 				}
-				$editor = target.find( '#bbp_editor_topic_content_' + editor_key );
-				$editor.removeClass( 'error' );
-				target.find( '#bbp_topic_content' ).val( '' );
-				target.find( '#bbp_topic_title' ).val( '' );
-				target.removeClass( 'has-title' );
-			} else if ( 'reply' === this.topic_reply_draft.object ) {
-				if ( window.forums_medium_reply_editor ) {
-					$medium_editor = window.forums_medium_reply_editor[editor_key];
-					$medium_editor.setContent( '' );
-				}
-				$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
-				$editor.removeClass( 'error' );
-				$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
+			} else {
+				target.find( '.bbp-the-content:not(.emojionearea)' ).empty();
 				target.find( '#bbp_reply_content' ).val( '' );
-				setTimeout(
-					function () {
-						$editor.removeClass( 'error' );
-					},
-					300
-				);
 			}
 
 			// Reset topic subscription.

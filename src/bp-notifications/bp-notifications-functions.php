@@ -1834,28 +1834,37 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * @return bool
  */
 function bb_notification_is_read_only( $notification ) {
+	static $cache = array();
 	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
 	$allowed_component_action = array(
 		'bb_connections_request_accepted',
 		'bb_connections_new_request',
 	);
 
+	if ( empty( $notification->id ) ) {
+		return false;
+	}
+
+	$cache_key = 'bb_notification_is_read_only_' . $notification->id;
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
 	$retval = ! empty( $notification ) &&
 	(
 		(
-			(
 				! in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->secondary_item_id ) &&
 				bp_is_user_inactive( $notification->secondary_item_id )
-			) ||
-			(
+		) ||
+		(
 				in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->item_id ) &&
 				bp_is_user_inactive( $notification->item_id )
-			)
-			) ||
-			(
-				bp_is_active( 'moderation' ) &&
+		) ||
+		(
+			bp_is_active( 'moderation' ) &&
 			(
 				(
 					! in_array( $notification->component_action, $allowed_component_action, true ) &&
@@ -1875,7 +1884,11 @@ function bb_notification_is_read_only( $notification ) {
 		)
 	);
 
-	return (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
+	$retval = (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
+
+	$cache[ $cache_key ] = $retval;
+
+	return $retval;
 }
 
 /**
@@ -1948,7 +1961,7 @@ function bb_notification_read_for_moderated_members() {
 	}
 
 	global $bp, $wpdb;
-	$select_sql  = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
+	$select_sql  = "SELECT id FROM ( SELECT DISTINCT id FROM {$bp->notifications->table_name}";
 	$select_sql .= ' WHERE is_new = 1 AND user_id = ' . bp_loggedin_user_id();
 
 	$select_sql_where = array();
@@ -1960,7 +1973,7 @@ function bb_notification_read_for_moderated_members() {
 	}
 	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
 
-	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' )';
+	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' ) ) AS notifications';
 
 	$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ({$select_sql})";
 	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
