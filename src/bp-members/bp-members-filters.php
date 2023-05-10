@@ -664,10 +664,10 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 	// Difference in seconds.
 	$since_diff = bp_core_current_time( true, 'timestamp' ) - $last_active_timestamp;
 	if ( $since_diff < HOUR_IN_SECONDS && $since_diff >= 0 ) {
-		$minutes_diff = round( $since_diff / MINUTE_IN_SECONDS );
 
-		// Difference within 3 minutes.
-		if ( 3 >= $minutes_diff ) {
+		$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
+
+		if ( $online_default_time >= $since_diff ) {
 			return esc_html__( 'Active now', 'buddyboss' );
 		}
 	}
