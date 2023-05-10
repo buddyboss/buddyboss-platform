@@ -1303,7 +1303,13 @@ function bb_xprofile_repair_user_nicknames_callback() {
 
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
-			if ( ! empty( $record->xprofile_nickname ) ) {
+			$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $record->xprofile_nickname, $record->ID );
+
+			if (
+				! empty( $record->xprofile_nickname ) &&
+				empty( $invalid ) &&
+				$record->xprofile_nickname === $record->meta_value
+			) {
 				// Skip updating nickname if xprofile field is modified by the user.
 				continue;
 			}
