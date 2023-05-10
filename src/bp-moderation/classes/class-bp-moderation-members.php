@@ -64,6 +64,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 
 		add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+		add_filter( 'bp_core_get_userlink', array( $this, 'bp_core_get_userlink' ), 9999, 2 );
 		add_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
 		add_filter( 'get_the_author_user_login', array( $this, 'get_the_author_name' ), 9999, 2 );
 		add_filter( 'get_the_author_user_email', array( $this, 'get_the_author_name' ), 9999, 2 );
@@ -209,13 +210,40 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function bp_core_get_user_domain( $domain, $user_id ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) && ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
-			return ' '; //To allow to make this function working bp_core_get_userlink().
+		if ( empty( $username_visible ) &&
+			! bp_moderation_is_user_suspended( $user_id ) &&
+			(
+				bp_moderation_is_user_blocked( $user_id ) ||
+				bb_moderation_is_user_blocked_by( $user_id )
+			)
+		) {
+			return ''; // To allow to make this function working bp_core_get_userlink() which update using below function.
 		}
 
 		return $domain;
+	}
+
+	/**
+	 * Filters the link text for the passed in user.
+	 *
+	 * @since BuddyBoss 2.2.5
+	 *
+	 * @param string $value   Link text based on passed parameters.
+	 * @param int    $user_id ID of the user to check.
+	 *
+	 * @return string
+	 */
+	public function bp_core_get_userlink( $value, $user_id ) {
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( empty( $username_visible ) && ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
+			return '<a>' . bp_core_get_user_displayname( $user_id ) . '</a>';
+		}
+
+		return $value;
 	}
 
 	/**
@@ -247,10 +275,16 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_the_author_name( $value, $user_id ) {
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
 			return $value;
+		}
+
+		$user = get_userdata( $user_id );
+
+		if ( empty( $user ) || ! empty( $user->deleted ) ) {
+			return bb_moderation_is_deleted_label();
 		}
 
 		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {

@@ -165,6 +165,11 @@ add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty'
 // Load Activity Notifications.
 add_action( 'bp_activity_includes', 'bb_load_activity_notifications' );
 
+// Remove deleted members link from mention for activity/comment.
+add_filter( 'bp_get_activity_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bp_get_activity_content_body', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bp_activity_comment_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -1825,12 +1830,14 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 			$activity_id = groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $group_id,
 				)
 			);
+			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
@@ -2201,12 +2208,14 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 			$activity_id = groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $group_id,
 				)
 			);
+			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
@@ -2457,10 +2466,10 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 		if ( is_a( $blog_post, 'WP_Post' ) ) {
 			$content_img = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', '', $blog_post->ID );
 			$post_title  = sprintf( '<a class="bb-post-title-link" href="%s"><span class="bb-post-title">%s</span></a>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( $blog_post->post_title ) );
-			$content     = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( get_the_excerpt( $blog_post->ID ) ) ) );
+			$content     = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( get_the_excerpt( $blog_post->ID ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
 
 			if ( empty( $content ) ) {
-				$content = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
+				$content = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
 			}
 
 			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
@@ -2486,7 +2495,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 		}
 	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$comment = get_comment( $activity->secondary_item_id );
-		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
@@ -2520,14 +2529,14 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
-					$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+					$content = bp_create_excerpt( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 					if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 						$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 						$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 						$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
 					}
 				} else {
-					$content = html_entity_decode( $comment->comment_content );
+					$content = html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 				}
 			}
 		}
@@ -2634,7 +2643,7 @@ function bb_remove_discussion_comment_reply_button( $buttons, $activity_comment_
 
 	// Comment is disabled for discussion and reply discussion.
 	if ( ! empty( $buttons['activity_comment_reply'] ) && in_array( $action_name, $disabled_actions, true ) ) {
-		unset( $buttons['activity_comment_reply'] );
+		$buttons['activity_comment_reply'] = '';
 	}
 
 	return $buttons;
@@ -2827,12 +2836,14 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 			$activity_id = groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $group_id,
 				)
 			);
+			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 10, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
@@ -3389,3 +3400,52 @@ add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_po
 add_action( 'bb_media_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_document_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
+
+/**
+ * Function will send notification to following user.
+ *
+ * @since BuddyBoss 2.2.5
+ *
+ * @param BP_Activity_Follow $follower Contains following data.
+ */
+function bb_send_email_to_follower( $follower ) {
+
+	if ( empty( $follower ) || ! bp_is_activity_follow_active() || empty( $follower->leader_id ) ) {
+		return;
+	}
+
+	$user_id           = $follower->follower_id; // Current user id.
+	$following_user_id = $follower->leader_id; // Following user id.
+
+	if ( true === bb_is_notification_enabled( $following_user_id, 'bb_following_new' ) ) {
+		$args                          = array(
+			'tokens' => array(
+				'follower.id'   => $user_id,
+				'follower.name' => bp_core_get_user_displayname( $user_id ),
+				'follower.url'  => esc_url( bp_core_get_user_domain( $user_id ) ),
+			),
+		);
+		$unsubscribe_args              = array(
+			'user_id'           => $following_user_id,
+			'notification_type' => 'new-follower',
+		);
+		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+		// Send notification email.
+		bp_send_email( 'new-follower', $following_user_id, $args );
+	}
+
+	if ( bp_is_active( 'notifications' ) ) {
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => $following_user_id,
+				'item_id'           => $follower->id,
+				'secondary_item_id' => $user_id,
+				'component_name'    => buddypress()->activity->id,
+				'component_action'  => 'bb_following_new',
+				'date_notified'     => bp_core_current_time(),
+				'is_new'            => 1,
+			)
+		);
+	}
+}
+add_action( 'bp_start_following', 'bb_send_email_to_follower' );

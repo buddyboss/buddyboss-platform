@@ -3796,17 +3796,16 @@ table.moderations .column-member {
 	padding: 15px;
 }
 
-.bb-notification-input-tooltip[data-bp-tooltip] {
-	display: inline-block;
+.notification-settings-input {
 
-	&::after {
-		min-width: 140px;
-		white-space: normal;
-		padding: 7px 12px;
-		text-align: center;
+	&[data-bp-tooltip] {
+		display: inline-block;
+
+		&::after {
+			min-width: 140px;
+			white-space: normal;
+			padding: 7px 12px;
+			text-align: center;
+		}
 	}
-}
-
-.bb-notification-input-tooltip input[readonly="readonly"] {
-	pointer-events: none;
 }
