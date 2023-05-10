@@ -53,6 +53,8 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_forum_topic_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bbp_get_topic', array( $this, 'restrict_single_item' ), 10, 2 );
 
+		add_filter( 'bbp_get_topic_content', array( $this, 'bb_topic_content_remove_mention_link' ), 10, 2 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -293,5 +295,25 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		$where['moderation_where'] = $moderation_where;
 
 		return $where;
+	}
+
+	/**
+	 * Remove mentioned link from discussion's content.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $content  Reply content.
+	 * @param int    $reply_id Reply id.
+	 *
+	 * @return string
+	 */
+	public function bb_topic_content_remove_mention_link( $content, $reply_id ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$content = bb_moderation_remove_mention_link( $content );
+
+		return $content;
 	}
 }

@@ -921,6 +921,7 @@ function bp_core_register_page_js() {
 
 	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
 		wp_enqueue_script( 'bp-register-page' );
+		wp_enqueue_editor();
 
 		$data = array(
 			'ajaxurl'        => bp_core_ajax_url(),

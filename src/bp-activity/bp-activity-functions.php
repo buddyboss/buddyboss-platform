@@ -1237,7 +1237,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 				if ( $user_id != $current_user_id ) {
 					$user_display_name = bp_core_get_user_displayname( $user_id );
 					if ( strpos( $like_text, $user_display_name ) === false ) {
-						$carry .= $user_display_name . '&#10;';
+						$carry .= $user_display_name . ',&#10;';
 					}
 				}
 
@@ -1246,7 +1246,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 		);
 	}
 
-	return $favorited_users;
+	return ! empty( $favorited_users ) ? trim( $favorited_users, ',&#10;' ) : '';
 }
 
 /**
@@ -3923,7 +3923,7 @@ function bp_activity_create_summary( $content, $activity ) {
 
 	// Generate a text excerpt for this activity item (and remove any oEmbeds URLs).
 	$summary = bp_create_excerpt(
-		html_entity_decode( $content ),
+		html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 		225,
 		array(
 			'html'              => false,
@@ -4232,9 +4232,22 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	}
 
 	if ( $original_activity->user_id != $commenter_id ) {
+		if (
+			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+			bb_moderation_allowed_specific_notification(
+				array(
+					'type'              => buddypress()->activity->id,
+					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+					'recipient_user_id' => $original_activity->user_id,
+					'sender_id'         => $original_activity->user_id,
+				)
+			)
+		) {
+			return;
+		}
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $original_activity->user_id, $commenter_id ) ) {
+		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4280,9 +4293,22 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	$parent_comment = new BP_Activity_Activity( $params['parent_id'] );
 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
+		if (
+			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
+			bb_moderation_allowed_specific_notification(
+				array(
+					'type'              => buddypress()->activity->id,
+					'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
+					'recipient_user_id' => $parent_comment->user_id,
+					'sender_id'         => $original_activity->user_id,
+				)
+			)
+		) {
+			return;
+		}
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $commenter_id ) ) {
+		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,
@@ -5863,21 +5889,21 @@ function bb_activity_following_post_notification( $args ) {
 	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
 	if ( $media_ids ) {
-		$media_ids = array_filter( explode( ',', $media_ids ) );
+		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 		if ( count( $media_ids ) > 1 ) {
 			$text = __( 'some photos', 'buddyboss' );
 		} else {
 			$text = __( 'a photo', 'buddyboss' );
 		}
 	} elseif ( $document_ids ) {
-		$document_ids = array_filter( explode( ',', $document_ids ) );
+		$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 		if ( count( $document_ids ) > 1 ) {
 			$text = __( 'some documents', 'buddyboss' );
 		} else {
 			$text = __( 'a document', 'buddyboss' );
 		}
 	} elseif ( $video_ids ) {
-		$video_ids = array_filter( explode( ',', $video_ids ) );
+		$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 		if ( count( $video_ids ) > 1 ) {
 			$text = __( 'some videos', 'buddyboss' );
 		} else {

@@ -152,7 +152,7 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		public function set_member_forum_query_vars() {
 
 			// Special handling for forum component
-			if ( ! bp_is_my_profile() ) {
+			if ( ! bp_is_my_profile() && ! bbp_is_single_user() ) {
 				return;
 			}
 
@@ -176,7 +176,7 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		/** Private Methods *******************************************************/
 
 		/**
-		 * Private method used to concatenate user IDs and slugs into URLs
+		 * Private method used to concatenate user IDs and slugs into URLs.
 		 *
 		 * @since bbPress (r6803)
 		 *
@@ -187,22 +187,26 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 */
 		private function get_profile_url( $user_id = 0, $slug = '' ) {
 
-			// Do not filter if not on BuddyPress root blog
+			// Do not filter if not on BuddyPress root blog.
 			if ( empty( $user_id ) || ! bp_is_root_blog() ) {
 				return false;
 			}
 
-			// Setup profile URL
+			// Setup profile URL.
 			$url = array( bp_core_get_user_domain( $user_id ) );
 
-			// Maybe push slug to end of URL array
+			// Maybe push slug to end of URL array.
 			if ( ! empty( $slug ) ) {
 				array_push( $url, bbpress()->extend->buddypress->slug );
 				array_push( $url, $slug );
 			}
 
-			// Return
-			return implode( '', array_map( 'trailingslashit', $url ) );
+			if ( ! empty( array_filter( $url ) ) ) {
+				// Return.
+				return implode( '', array_map( 'trailingslashit', $url ) );
+			}
+
+			return '';
 		}
 	}
 endif;

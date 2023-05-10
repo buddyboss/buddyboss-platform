@@ -255,6 +255,10 @@ add_filter( 'bbp_make_clickable', 'bbp_make_mentions_clickable', 8 ); // @jjj
 // Search forum discussion with tags.
 add_filter( 'posts_where', 'bb_forum_search_by_topic_tags', 10, 2 );
 
+// Remove deleted members link from mention for topic/reply.
+add_filter( 'bbp_get_topic_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'bbp_get_reply_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
 /** Deprecated ****************************************************************/
 
 /**
@@ -334,6 +338,11 @@ add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
 function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 	global $wpdb;
 
+	// If search component is not enabled, return.
+	if ( ! bp_is_active( 'search' ) ) {
+		return $where;
+	}
+
 	// Get query post types array .
 	$post_types      = (array) $wp_query->get( 'post_type' );
 	$topic_post_type = bbp_get_topic_post_type();
@@ -349,7 +358,9 @@ function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 			)
 		);
 
-		$where .= " OR $wpdb->posts.ID IN (SELECT DISTINCT $wpdb->posts.ID FROM $wpdb->posts LEFT JOIN $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id ) WHERE $wpdb->term_relationships.term_taxonomy_id IN (" . implode( ',', $matching_terms ) . ')) ';
+		if ( ! empty( $matching_terms ) && ! is_wp_error( $matching_terms ) ) {
+			$where .= " OR $wpdb->posts.ID IN (SELECT DISTINCT $wpdb->posts.ID FROM $wpdb->posts LEFT JOIN $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id ) WHERE $wpdb->term_relationships.term_taxonomy_id IN (" . implode( ',', $matching_terms ) . ')) ';
+		}
 	}
 
 	return $where;
@@ -387,3 +398,48 @@ function bb_forums_update_subscription_status( $new_status, $old_status, $post )
 }
 
 add_action( 'transition_post_status', 'bb_forums_update_subscription_status', 999, 3 );
+
+/**
+ * Remove forum and topic subscriptions when add forum to group.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param int    $group_id   The ID of group.
+ * @param string $meta_key   The meta key of group.
+ * @param string $meta_value The meta value of group.
+ *
+ * @return void
+ */
+function bb_remove_group_forum_topic_subscriptions_add_group_meta( $group_id, $meta_key, $meta_value ) {
+	if (
+		! empty( $group_id ) &&
+		'forum_id' === $meta_key &&
+		bp_is_active( 'forums' )
+	) {
+		bb_delete_group_forum_topic_subscriptions( $group_id );
+	}
+}
+add_action( 'add_group_meta', 'bb_remove_group_forum_topic_subscriptions_add_group_meta', 10, 3 );
+
+/**
+ * Remove forum and topic subscriptions when update forum to group.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param int    $meta_id    The ID of group meta.
+ * @param int    $group_id   The ID of group.
+ * @param string $meta_key   The meta key of group.
+ * @param string $meta_value The meta value of group.
+ *
+ * @return void
+ */
+function bb_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, $group_id, $meta_key, $meta_value ) {
+	if (
+		! empty( $group_id ) &&
+		'forum_id' === $meta_key &&
+		bp_is_active( 'forums' )
+	) {
+		bb_delete_group_forum_topic_subscriptions( $group_id );
+	}
+}
+add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_update_group_meta', 10, 4 );
