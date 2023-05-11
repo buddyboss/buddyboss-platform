@@ -498,7 +498,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 *
 		 * @uses get_template_part()
 		 */
-		public function display_reply_form( $attr, $content = '' ) {
+		public function display_reply_form( $attr = array(), $content = '' ) {
 
 			if ( isset( $attr['id'] ) && bbp_is_topic( $attr['id'] ) ) {
 				// Unset globals.
