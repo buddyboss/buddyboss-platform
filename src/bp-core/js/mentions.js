@@ -301,7 +301,7 @@ window.bp = window.bp || {};
 															}
 														);
 
-														$self.data.concat( new_data );
+														$self.data = $self.data.concat( new_data );
 														if($self.data.length > 100 ){
 															$self.data = $self.data.slice( -100 );
 														}
