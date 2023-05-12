@@ -1617,7 +1617,7 @@ function bp_core_record_activity() {
 		do_action( 'bp_first_activity_for_member', $user_id );
 	}
 
-    // updated users last activity on each page refresh.
+	// updated users last activity on each page refresh.
 	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
 
 }
@@ -2941,6 +2941,42 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'settings' === $bp_item['slug'] && 'notifications' === $key ) {
 					$key = 'settings-notifications';
+
+					$parent_slug   = $s_nav->parent_slug . '_' . $s_nav->slug;
+					$child_nav_sub = buddypress()->members->nav->get_secondary( array( 'parent_slug' => $parent_slug ) );
+
+					if ( ! empty( $child_nav_sub ) ) {
+						$s_nav_counter_child = hexdec( uniqid() );
+
+						foreach ( $child_nav_sub as $c_nav ) {
+							$c_sub_name = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $c_nav['name'] );
+							$c_sub_name = trim( $c_sub_name );
+							$c_arr_key  = $c_nav['slug'] . '-sub';
+
+							if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+								/* translators: Navigation name */
+								$c_sub_name = sprintf( __( 'Notification %s', 'buddyboss' ), $c_sub_name );
+							} else {
+								/* translators: Navigation name */
+								$c_sub_name = sprintf( __( 'Email %s', 'buddyboss' ), $c_sub_name );
+							}
+
+							$page_args[ $c_arr_key ] =
+								(object) array(
+									'ID'             => $s_nav_counter_child,
+									'post_title'     => $c_sub_name,
+									'object_id'      => $s_nav_counter_child,
+									'post_author'    => 0,
+									'post_date'      => 0,
+									'post_excerpt'   => $c_arr_key,
+									'post_type'      => 'page',
+									'post_status'    => 'publish',
+									'comment_status' => 'closed',
+									'guid'           => $c_nav['link'],
+									'post_parent'    => $nav_counter_child,
+								);
+						}
+					}
 				}
 
 				if ( 'profile' === $key ) {
@@ -4354,49 +4390,73 @@ function bp_core_get_active_custom_post_type_feed() {
  */
 function bp_platform_default_activity_types() {
 
-	$activity_type = apply_filters(
-		'bp_platform_default_activity_types',
+	$settings_fields = array(
 		array(
-			'0' => array(
-				'activity_name'  => 'new_avatar',
-				'activity_label' => __( 'Member changes their profile photo', 'buddyboss' ),
-			),
-			'1' => array(
-				'activity_name'  => 'updated_profile',
-				'activity_label' => __( 'Member updates their profile details', 'buddyboss' ),
-			),
-			'2' => array(
-				'activity_name'  => 'new_member',
-				'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
-			),
-			'3' => array(
-				'activity_name'  => 'friendship_created',
-				'activity_label' => __( 'Two members become connected', 'buddyboss' ),
-			),
-			'4' => array(
-				'activity_name'  => 'created_group',
-				'activity_label' => __( 'Member creates a group', 'buddyboss' ),
-			),
-			'5' => array(
-				'activity_name'  => 'joined_group',
-				'activity_label' => __( 'Member joins a group', 'buddyboss' ),
-			),
-			'6' => array(
-				'activity_name'  => 'group_details_updated',
-				'activity_label' => __( 'Group details are updated', 'buddyboss' ),
-			),
-			'7' => array(
-				'activity_name'  => 'bbp_topic_create',
-				'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' ),
-			),
-			'8' => array(
-				'activity_name'  => 'bbp_reply_create',
-				'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' ),
-			),
-		)
+			'activity_name'  => 'new_avatar',
+			'activity_label' => __( 'Member changes their profile photo', 'buddyboss' ),
+		),
+		array(
+			'activity_name'  => 'updated_profile',
+			'activity_label' => __( 'Member updates their profile details', 'buddyboss' ),
+		),
 	);
 
-	return $activity_type;
+	// Check the registration is enabled or not.
+	if ( function_exists( 'bp_enable_site_registration' ) && bp_enable_site_registration() ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'new_member',
+					'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'friendship_created',
+					'activity_label' => __( 'Two members become connected', 'buddyboss' ),
+				),
+			)
+		);
+	}
+
+	// settings field that dependent on group.
+	if ( bp_is_active( 'groups' ) ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'created_group',
+					'activity_label' => __( 'Member creates a group', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'joined_group',
+					'activity_label' => __( 'Member joins a group', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'group_details_updated',
+					'activity_label' => __( 'Group details are updated', 'buddyboss' ),
+				),
+			)
+		);
+	}
+
+	// Settings field that dependent on forum.
+	if ( bp_is_active( 'forums' ) ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'bbp_topic_create',
+					'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'bbp_reply_create',
+					'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' ),
+				),
+			)
+		);
+	}
+
+	return apply_filters( 'bb_platform_default_activity_types', $settings_fields );
 }
 
 if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
@@ -6709,6 +6769,17 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		$all_notifications
 	);
 
+	$read_only_notifications = array_column( $all_notifications, null, 'key' );
+	if (
+		! empty( $read_only_notifications ) &&
+		isset( $read_only_notifications[ $notification_type ] ) &&
+		! empty( $read_only_notifications[ $notification_type ]['notification_read_only'] ) &&
+		! empty( $read_only_notifications[ $notification_type ]['default'] ) &&
+		'no' === $read_only_notifications[ $notification_type ]['default']
+	) {
+		return false;
+	}
+
 	$main = array();
 
 	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
@@ -7107,6 +7178,29 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
+		$options['fields'] = array_filter(
+			array_map(
+				function ( $fields ) {
+					if (
+						(
+							isset( $fields['notification_read_only'], $fields['default'] ) &&
+							true === (bool) $fields['notification_read_only'] &&
+							'yes' === (string) $fields['default']
+						) ||
+						(
+							! isset( $fields['notification_read_only'] ) ||
+							false === (bool) $fields['notification_read_only']
+						)
+					) {
+						return $fields;
+					}
+				},
+				$options['fields']
+			)
+		);
+	}
+
+	if ( ! empty( $options['fields'] ) ) {
 		?>
 
 		<table class="main-notification-settings">
@@ -7120,6 +7214,14 @@ function bb_render_notification( $notification_group ) {
 			}
 
 			foreach ( $options['fields'] as $field ) {
+
+				if (
+					! empty( $field['notification_read_only'] ) &&
+					true === $field['notification_read_only'] &&
+					'no' === (string) $field['default']
+				) {
+					continue;
+				}
 
 				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
 				?>
@@ -7192,18 +7294,29 @@ function bb_render_notification( $notification_group ) {
  * @return array Settings data.
  */
 function bb_core_notification_preferences_data() {
+	$menu_title   = esc_html__( 'Email Preferences', 'buddyboss' );
+	$screen_title = esc_html__( 'Email Preferences', 'buddyboss' );
+	if ( ! empty( bb_get_subscriptions_types() ) ) {
+		$menu_title   = esc_html__( 'Email Settings', 'buddyboss' );
+		$screen_title = esc_html__( 'Email Settings', 'buddyboss' );
+	}
 
 	$data = array(
-		'menu_title'          => esc_html__( 'Email Preferences', 'buddyboss' ),
-		'screen_title'        => esc_html__( 'Email Preferences', 'buddyboss' ),
+		'menu_title'          => $menu_title,
+		'screen_title'        => $screen_title,
 		'screen_description'  => esc_html__( 'Choose your email notification preferences.', 'buddyboss' ),
 		'show_checkbox_label' => false,
 		'item_css_class'      => 'email-preferences',
 	);
 
 	if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
-		$data['menu_title']          = esc_html__( 'Notification Preferences', 'buddyboss' );
-		$data['screen_title']        = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['menu_title']   = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['screen_title'] = esc_html__( 'Notification Preferences', 'buddyboss' );
+		if ( ! empty( bb_get_subscriptions_types() ) ) {
+			$data['menu_title']   = esc_html__( 'Notification Settings', 'buddyboss' );
+			$data['screen_title'] = esc_html__( 'Notification Settings', 'buddyboss' );
+		}
+
 		$data['screen_description']  = esc_html__( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
 		$data['show_checkbox_label'] = true;
 		$data['item_css_class']      = 'notification-preferences';
@@ -7584,6 +7697,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_xprofile':
 			$meta_icon = $bb_icon_bf . ' bb-icon-user-card';
 			break;
+		case 'bb_profile_slug_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-link';
+			break;
 		case 'bp_member_avatar_settings':
 		case 'bp_groups_avatar_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-image';
@@ -7760,7 +7876,7 @@ function bb_validate_gravatar( $email ) {
  */
 function bb_core_get_os() {
 
-	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
 	$os_platform = '';
 	$os_array    = array(
@@ -8131,7 +8247,13 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', 60 ) );
+	$bb_presence_interval = (int) apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
+
+	if ( $bb_presence_interval !== (int) get_option( 'bb_presence_interval_mu' ) ) {
+		update_option( 'bb_presence_interval_mu', $bb_presence_interval );
+	}
+
+	return $bb_presence_interval;
 }
 
 /**
@@ -8179,5 +8301,239 @@ function bb_pro_pusher_version() {
  * @return int
  */
 function bb_presence_time_span() {
-	return (int) apply_filters( 'bb_presence_time_span', 180 );
+	$bb_presence_time_span = (int) apply_filters( 'bb_presence_time_span', 20 );
+
+	if ( $bb_presence_time_span !== (int) get_option( 'bb_presence_time_span_mu' ) ) {
+		update_option( 'bb_presence_time_span_mu', $bb_presence_time_span );
+	}
+
+	return $bb_presence_time_span;
+}
+
+/**
+ * Function to return the presence default interval time in seconds.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @return int
+ */
+function bb_presence_default_interval() {
+	$bb_presence_default_interval = (int) apply_filters( 'bb_presence_default_interval', 60 );
+
+	if ( $bb_presence_default_interval !== (int) get_option( 'bb_presence_default_interval_mu' ) ) {
+		update_option( 'bb_presence_default_interval_mu', $bb_presence_default_interval );
+	}
+
+	return $bb_presence_default_interval;
+}
+
+/**
+ * Function to return idle the time span for consider user inactive.
+ *
+ * @since BuddyBoss 2.2.7
+ *
+ * @return int
+ */
+function bb_idle_inactive_span() {
+	return (int) apply_filters( 'bb_idle_inactive_span', 180 );
+}
+
+/**
+ * Retrieves the number of times a filter has been applied during the current request.
+ *
+ * @since BuddyBoss 2.2.5
+ *
+ * @global int[] $wp_filters Stores the number of times each filter was triggered.
+ *
+ * @param string $hook_name  The name of the filter hook.
+ *
+ * @return int The number of times the filter hook has been applied.
+ */
+function bb_did_filter( $hook_name ) {
+	global $wp_filters;
+
+	if ( ! isset( $wp_filters[ $hook_name ] ) ) {
+		return 0;
+	}
+
+	return $wp_filters[ $hook_name ];
+}
+
+/**
+ * Locate deleted usernames in an content string, as designated by an @ sign.
+ *
+ * @since BuddyBoss 2.2.7
+ *
+ * @param array  $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param string $content         Content.
+ *
+ * @return array|bool Associative array with username as key and username as
+ *                    value for deleted user. Boolean false if no mentions found.
+ */
+function bb_mention_deleted_users( $mentioned_users, $content ) {
+	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
+	preg_match_all( $pattern, $content, $usernames );
+
+	// Make sure there's only one instance of each username.
+	$usernames = ! empty( $usernames[1] ) ? array_unique( $usernames[1] ) : array();
+
+	// Bail if no usernames.
+	if ( empty( $usernames ) ) {
+		return $mentioned_users;
+	}
+
+	// We've found some mentions! Check to see if users exist.
+	foreach ( (array) array_values( $usernames ) as $username ) {
+		$user_id = bp_get_userid_from_mentionname( trim( $username ) );
+
+		if ( empty( $user_id ) ) {
+			$mentioned_users[ $username ] = $username;
+		}
+	}
+
+	if ( empty( $mentioned_users ) ) {
+		return $mentioned_users;
+	}
+
+	return $mentioned_users;
+}
+
+/**
+ * Function will remove mention link from content if mentioned member is deleted.
+ *
+ * @since BuddyBoss 2.2.7
+ *
+ * @param mixed $content Content.
+ *
+ * @return mixed
+ */
+function bb_mention_remove_deleted_users_link( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	$usernames = bb_mention_deleted_users( array(), $content );
+	// No mentions? Stop now!
+	if ( empty( $usernames ) ) {
+		return $content;
+	}
+
+	foreach ( (array) $usernames as $user_id => $username ) {
+		if ( bp_is_user_inactive( $user_id ) ) {
+			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );			/*preg_match_all( "'<a.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );*/
+			if ( ! empty( $content_matches ) ) {
+				foreach ( $content_matches as $match ) {
+					if ( false !== strpos( $match[0], '@' . $username ) ) {
+						$content = str_replace( $match[0], '@' . $username, $content );
+					}
+				}
+			}
+		}
+	}
+
+	return $content;
+}
+
+/**
+ * Fetch bb icons data.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @param string $key Array key.
+ *
+ * @return array
+ */
+function bb_icon_font_map_data( $key = '' ) {
+	global $bb_icons_data;
+	include buddypress()->plugin_dir . 'bp-templates/bp-nouveau/icons/font-map.php';
+
+	return ! empty( $key ) ? ( isset( $bb_icons_data[ $key ] ) ? $bb_icons_data[ $key ] : false ) : $bb_icons_data;
+}
+
+if ( ! function_exists( 'bb_filter_input_string' ) ) {
+	/**
+	 * Function used to sanitize user input in a manner similar to the (deprecated) FILTER_SANITIZE_STRING.
+	 *
+	 * In many cases, the usage of `FILTER_SANITIZE_STRING` can be easily replaced with `FILTER_SANITIZE_FULL_SPECIAL_CHARS` but
+	 * in some cases, especially when storing the user input, encoding all special characters can result in an stored XSS injection
+	 * so this function can be used to preserve the pre PHP 8.1 behavior where sanitization is expected during the retrieval
+	 * of user input.
+	 *
+	 * @since BuddyBoss 2.3.0
+	 *
+	 * @param string $type          One of INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
+	 * @param string $variable_name Name of a variable to retrieve.
+	 * @param int[]  $flags         Array of supported filter options and flags.
+	 *                              Accepts `FILTER_REQUIRE_ARRAY` in order to require the input to be an array.
+	 *                              Accepts `FILTER_FLAG_NO_ENCODE_QUOTES` to prevent encoding of quotes.
+	 * @return string|string[]|null|boolean Value of the requested variable on success, `false` if the filter fails, or `null` if the `$variable_name` variable is not set.
+	 */
+	function bb_filter_input_string( $type, $variable_name, $flags = array() ) {
+
+		$require_array = in_array( FILTER_REQUIRE_ARRAY, $flags, true );
+		$string        = filter_input( $type, $variable_name, FILTER_UNSAFE_RAW, $require_array ? FILTER_REQUIRE_ARRAY : array() );
+
+		// If we have an empty string or the input var isn't found we can return early.
+		if ( empty( $string ) ) {
+			return $string;
+		}
+
+		/**
+		 * This differs from strip_tags() because it removes the contents of
+		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
+		 * will return 'something'. wp_strip_all_tags will return ''
+		 */
+		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+
+		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
+			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
+		}
+
+		return $string;
+
+	}
+}
+
+if ( ! function_exists( 'bb_filter_var_string' ) ) {
+	/**
+	 * Function used to sanitize user input in a manner similar to the (deprecated) FILTER_SANITIZE_STRING.
+	 *
+	 * In many cases, the usage of `FILTER_SANITIZE_STRING` can be easily replaced with `FILTER_SANITIZE_FULL_SPECIAL_CHARS` but
+	 * in some cases, especially when storing the user input, encoding all special characters can result in an stored XSS injection
+	 * so this function can be used to preserve the pre PHP 8.1 behavior where sanitization is expected during the retrieval
+	 * of user input.
+	 *
+	 * @since BuddyBoss 2.3.0
+	 *
+	 * @param string $variable_name Name of a variable to retrieve.
+	 * @param int[]  $flags         Array of supported filter options and flags.
+	 *                              Accepts `FILTER_REQUIRE_ARRAY` in order to require the input to be an array.
+	 *                              Accepts `FILTER_FLAG_NO_ENCODE_QUOTES` to prevent encoding of quotes.
+	 * @return string|string[]|null|boolean Value of the requested variable on success, `false` if the filter fails, or `null` if the `$variable_name` variable is not set.
+	 */
+	function bb_filter_var_string( $variable_name, $flags = array() ) {
+
+		$require_array = in_array( FILTER_REQUIRE_ARRAY, $flags, true );
+		$string        = filter_var( $variable_name, FILTER_UNSAFE_RAW, $require_array ? FILTER_REQUIRE_ARRAY : array() );
+
+		// If we have an empty string or the input var isn't found we can return early.
+		if ( empty( $string ) ) {
+			return $string;
+		}
+
+		/**
+		 * This differs from strip_tags() because it removes the contents of
+		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
+		 * will return 'something'. wp_strip_all_tags will return ''
+		 */
+		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+
+		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
+			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
+		}
+
+		return $string;
+
+	}
 }

@@ -230,7 +230,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -521,7 +521,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -713,7 +713,7 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 			_deprecated_argument( __FUNCTION__, '4.3.1' );
 		}
 
-		global $wpdb, $wp_hasher;
+		global $wp_hasher;
 		$user = get_userdata( $user_id );
 
 		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -791,7 +791,13 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 			$wp_hasher = new PasswordHash( 8, true );
 		}
 		$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
-		$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
+
+		$key_saved = wp_update_user(
+			array(
+				'ID'                  => $user->ID,
+				'user_activation_key' => $hashed,
+			)
+		);
 
 		$switched_locale = switch_to_locale( get_user_locale( $user ) );
 

@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Messages_Thread {
 
 	/**
@@ -374,43 +375,29 @@ class BP_Messages_Thread {
 
 		$is_group_thread  = self::get_first_message( $thread_id );
 		$message_group_id = (int) bp_messages_get_meta( $is_group_thread->id, 'group_id', true ); // group id.
-		if ( $message_group_id > 0 ) {
-			$args = array(
-				'include_threads' => $thread_id,
-				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-					'relation' => 'AND',
-					array(
-						'key'     => 'bp_messages_deleted',
-						'compare' => 'NOT EXISTS',
-					),
+
+		$args = array(
+			'include_threads' => $thread_id,
+			'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'relation' => 'AND',
+				array(
+					'key'     => 'bp_messages_deleted',
+					'compare' => 'NOT EXISTS',
 				),
-				'per_page'        => 1,
-				'page'            => 1,
-				'count_total'     => false,
+			),
+			'per_page'        => 1,
+			'page'            => 1,
+			'count_total'     => false,
+		);
+
+		if ( $message_group_id > 0 && false === $include_join_left_message ) {
+			$args['meta_query'][] = array(
+				'key'     => 'group_message_group_joined',
+				'compare' => 'NOT EXISTS',
 			);
-			if ( false === $include_join_left_message ) {
-				$args['meta_query'][] = array(
-					'key'     => 'group_message_group_joined',
-					'compare' => 'NOT EXISTS',
-				);
-				$args['meta_query'][] = array(
-					'key'     => 'group_message_group_left',
-					'compare' => 'NOT EXISTS',
-				);
-			}
-		} else {
-			$args = array(
-				'include_threads' => $thread_id,
-				'meta_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-					'relation' => 'AND',
-					array(
-						'key'     => 'bp_messages_deleted',
-						'compare' => 'NOT EXISTS',
-					),
-				),
-				'per_page'        => 1,
-				'page'            => 1,
-				'count_total'     => false,
+			$args['meta_query'][] = array(
+				'key'     => 'group_message_group_left',
+				'compare' => 'NOT EXISTS',
 			);
 		}
 
@@ -1249,6 +1236,10 @@ class BP_Messages_Thread {
 
 		// Sort threads by date_sent.
 		foreach ( (array) $thread_ids as $thread ) {
+			$last_message = self::get_last_message( $thread->thread_id );
+			if ( ! empty( $last_message ) && ! empty( $last_message->date_sent ) && $last_message->date_sent !== $thread->date_sent ) {
+				$thread->date_sent = $last_message->date_sent;
+			}
 			$sorted_threads[ $thread->thread_id ] = strtotime( $thread->date_sent );
 		}
 
