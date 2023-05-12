@@ -6742,7 +6742,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	// Saved notification from backend default settings.
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 	$all_notifications    = array();
-	$default_by_admin     = array();
+	$settings_by_admin    = array();
 
 	if ( ! empty( $preferences ) ) {
 		$preferences = array_column( $preferences, 'fields', null );
@@ -6783,14 +6783,16 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	$main = array();
 
 	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
+
 	if ( ! empty( $enabled_notification ) ) {
 		foreach ( $enabled_notification as $key => $types ) {
 			if ( isset( $types['main'] ) ) {
 				$main[ $key ] = $types['main'];
 			}
+
 			if ( isset( $types[ $type ] ) ) {
-				$key_type                      = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
-				$default_by_admin[ $key_type ] = 'yes';
+				$key_type                       = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
+				$settings_by_admin[ $key_type ] = $types[ $type ];
 			}
 		}
 	}
@@ -6799,14 +6801,23 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		return false;
 	}
 
-	$notifications     = bp_parse_args( $all_notifications, $default_by_admin );
+	$notifications     = bp_parse_args( $settings_by_admin, $all_notifications );
 	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
 	$enable_type_key   = in_array( $type, array( 'web', 'app' ), true ) ? 'enable_notification_' . $type : 'enable_notification';
 
 	if (
-		array_key_exists( $notification_type, $notifications ) &&
 		'no' !== bp_get_user_meta( $user_id, $enable_type_key, true ) &&
-		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
+		(
+			(
+				metadata_exists( 'user', $user_id, $notification_type ) &&
+				'yes' === bp_get_user_meta( $user_id, $notification_type, true )
+			) ||
+			(
+				! metadata_exists( 'user', $user_id, $notification_type ) &&
+				array_key_exists( $notification_type, $notifications ) &&
+				'yes' === $notifications[ $notification_type ]
+			)
+		)
 	) {
 		return true;
 	}
