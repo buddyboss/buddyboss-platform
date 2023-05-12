@@ -197,6 +197,7 @@ window.bp = window.bp || {};
 						var params = {};
 						var mentions_dropdown = this.$el;
 						var $self = this;
+						var mentions_dropdown_list = mentions_dropdown.find( 'ul' );
 						$self.data;
 
 						mentionsItem = mentionsQueryCache[ query ];
@@ -225,6 +226,10 @@ window.bp = window.bp || {};
 
 						if ( $.isNumeric( this.$inputor.data( 'suggestions-group-id' ) ) ) {
 							params[ 'group-id' ] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
+						}
+
+						if( !mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
+							mentions_dropdown_list.append('<li class="list-loader">Loading more results…</li>');
 						}
 
 						bp.mentions.xhr = $.getJSON( ajaxurl, params )
@@ -258,10 +263,11 @@ window.bp = window.bp || {};
 
 									mentions_dropdown.data( 'page_limit',  response.data.total_pages);
 									mentionsQueryCache[ query ] = response.data;
+									mentions_dropdown_list.find( '.list-loader' ).remove();
 									render_view( $self.data );
+									mentions_dropdown_list.removeClass( 'list-loading' );
 
 									if( !mentions_dropdown.hasClass( 'has-events' ) ) {
-										var mentions_dropdown_list = mentions_dropdown.find( 'ul' );
 										mentions_dropdown_list.on( 'scroll', function() {
 											if( mentions_dropdown_list.scrollTop() + mentions_dropdown_list.innerHeight() >= mentions_dropdown_list[0].scrollHeight ) {
 												if ( mentions_dropdown_list.hasClass( 'list-loading' ) || mentions_dropdown.data( 'page_limit') == mentions_dropdown.data( 'page' ) ) {
