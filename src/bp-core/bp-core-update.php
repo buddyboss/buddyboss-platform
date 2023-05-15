@@ -401,6 +401,30 @@ function bp_version_updater() {
 		if ( $raw_db_version < 19481 ) {
 			bb_update_to_2_2_7();
 		}
+
+		if ( $raw_db_version < 19551 ) {
+			bb_update_to_2_2_8();
+		}
+
+		if ( $raw_db_version < 19571 ) {
+			bb_update_to_2_2_9();
+		}
+
+		if ( $raw_db_version < 19871 ) {
+			bb_update_to_2_2_9_1();
+		}
+
+		if ( $raw_db_version < 19971 ) {
+			bb_update_to_2_3_0();
+		}
+
+		if ( $raw_db_version < 19991 ) {
+			bb_update_to_2_3_1();
+		}
+
+		if ( $raw_db_version < 20001 ) {
+			bb_update_to_2_3_3();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2285,7 +2309,7 @@ function bb_migrate_subscriptions() {
 /**
  * Clear web and api cache on the update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @return void
  */
@@ -2323,4 +2347,363 @@ function bb_update_to_2_2_7() {
 		// Clear notifications API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-notifications' );
 	}
+}
+
+/**
+ * Migrate when update the platform to the latest version.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @return void
+ */
+function bb_update_to_2_2_8() {
+	$is_already_run = get_transient( 'bb_migrate_group_subscriptions' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_group_subscriptions', 'yes', HOUR_IN_SECONDS );
+
+	// Default enabled the group subscriptions.
+	bp_update_option( 'bb_enable_group_subscriptions', 1 );
+
+	// Install new group subscription email templates.
+	bb_migrate_group_subscription_email_templates();
+
+	// Migrate group subscriptions.
+	bb_migrate_group_subscription( true );
+}
+
+/**
+ * Install group subscription email templates.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @return void
+ */
+function bb_migrate_group_subscription_email_templates() {
+	$email_templates = array(
+		array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'       => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{activity.content}}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt'     => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+			'post_status'      => 'publish',
+			'post_type'        => bp_get_email_post_type(),
+			'id'               => 'groups-new-activity',
+			'term_description' => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
+		),
+		array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'       => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt'     => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
+			'post_status'      => 'publish',
+			'post_type'        => bp_get_email_post_type(),
+			'id'               => 'groups-new-discussion',
+			'term_description' => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
+		),
+	);
+
+	foreach ( $email_templates as $email_template ) {
+		$email_template_id = $email_template['id'];
+		$term_description  = $email_template['term_description'];
+		unset( $email_template['id'] );
+		unset( $email_template['term_description'] );
+
+		if (
+			term_exists( $email_template_id, bp_get_email_tax_type() ) &&
+			get_terms(
+				array(
+					'taxonomy' => bp_get_email_tax_type(),
+					'slug'     => $email_template_id,
+					'fields'   => 'count',
+				)
+			) > 0
+		) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( $email_template );
+		if ( ! $post_id ) {
+			continue;
+		}
+
+		$tt_ids = wp_set_object_terms( $post_id, $email_template_id, bp_get_email_tax_type() );
+
+		foreach ( $tt_ids as $tt_id ) {
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $term_description,
+				)
+			);
+		}
+	}
+}
+
+/**
+ * Background job to update friends count.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @return void
+ */
+function bb_update_to_2_2_9() {
+	$is_already_run = get_transient( 'bb_update_to_2_2_9' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_2_9', 'yes', HOUR_IN_SECONDS );
+
+	bb_create_background_member_friends_count();
+}
+
+/**
+ * Create a background job to update the friend count when member suspend/un-suspend.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @param int $paged The current page. Default 1.
+ *
+ * @return void
+ */
+function bb_create_background_member_friends_count( $paged = 1 ) {
+	global $bp_background_updater;
+
+	if ( ! bp_is_active( 'friends' ) ) {
+		return;
+	}
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 50;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	$user_ids = get_users(
+		array(
+			'fields'     => 'ids',
+			'number'     => $per_page,
+			'offset'     => $offset,
+			'orderby'    => 'ID',
+			'order'      => 'DESC',
+			'meta_query' => array(
+				array(
+					'key'     => 'total_friend_count',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_migrate_member_friends_count',
+				'args'     => array( $user_ids, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Update the friend count when member suspend/un-suspend.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @param array $user_ids Array of user ID.
+ * @param int   $paged    The current page. Default 1.
+ *
+ * @return void
+ */
+function bb_migrate_member_friends_count( $user_ids, $paged ) {
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		bp_has_members( 'type=alphabetical&page=1&scope=personal&per_page=1&user_id=' . $user_id );
+		$query_friend_count = (int) $GLOBALS['members_template']->total_member_count;
+		$meta_friend_count  = (int) friends_get_total_friend_count( $user_id );
+
+		if ( $query_friend_count !== $meta_friend_count ) {
+			bp_update_user_meta( $user_id, 'total_friend_count', $query_friend_count );
+		}
+	}
+
+	// Call recursive to finish update for all users.
+	$paged++;
+	bb_create_background_member_friends_count( $paged );
+}
+
+/**
+ * Background job to update duplicate subscriptions.
+ *
+ * @since BuddyBoss 2.2.9.1
+ *
+ * @return void
+ */
+function bb_update_to_2_2_9_1() {
+	bb_remove_duplicate_subscriptions();
+}
+
+/**
+ * Migration for the activity widget based on the relevant feed.
+ *
+ * @since BuddyBoss 2.3.0
+ *
+ * @return void
+ */
+function bb_update_to_2_3_0() {
+
+	if ( bp_is_relevant_feed_enabled() ) {
+		$settings = get_option( 'widget_bp_latest_activities' );
+		if ( ! empty( $settings ) ) {
+			foreach ( $settings as $k => $widget_data ) {
+				if ( ! is_int( $k ) ) {
+					continue;
+				}
+
+				if ( ! empty( $widget_data ) ) {
+					if ( ! isset( $widget_data['relevant'] ) ) {
+						$widget_data['relevant'] = (bool) bp_is_relevant_feed_enabled();
+					}
+
+					$settings[ $k ] = $widget_data;
+				}
+			}
+		}
+
+		update_option( 'widget_bp_latest_activities', $settings );
+	}
+}
+
+/**
+ * Background job to generate user profile slug.
+ * Load BuddyBoss Presence API mu plugin.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @return void
+ */
+function bb_update_to_2_3_1() {
+
+	$is_already_run = get_transient( 'bb_update_to_2_3_1' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_3_1', 'yes', DAY_IN_SECONDS );
+
+	if ( class_exists( 'BB_Presence' ) ) {
+		BB_Presence::bb_load_presence_api_mu_plugin();
+		BB_Presence::bb_check_native_presence_load_directly();
+	}
+
+	bb_repair_member_profile_links_callback( true );
+}
+
+/**
+ * Function to run while update.
+ *
+ * @since BuddyBoss 2.3.3
+ *
+ * @return void
+ */
+function bb_update_to_2_3_3() {
+	bb_repair_member_unique_slug();
+}
+
+/**
+ * Background job to repair user profile slug.
+ *
+ * @since BuddyBoss 2.3.3
+ *
+ * @param int $paged Number of page.
+ *
+ * @return void
+ */
+function bb_repair_member_unique_slug( $paged = 1 ) {
+	global $bp_background_updater;
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 50;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	$user_ids = get_users(
+		array(
+			'fields'     => 'ids',
+			'number'     => $per_page,
+			'offset'     => $offset,
+			'orderby'    => 'ID',
+			'order'      => 'ASC',
+			'meta_query' => array(
+				array(
+					'key'     => 'bb_profile_slug',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_remove_duplicate_member_slug',
+				'args'     => array( $user_ids, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Delete duplicate bb_profile_slug_ key from the usermeta table.
+ *
+ * @since BuddyBoss 2.3.3
+ *
+ * @param array $user_ids Array of user ID.
+ * @param int   $paged    Number of page.
+ *
+ * @return void
+ */
+function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
+	global $wpdb;
+
+	foreach ( $user_ids as $user_id ) {
+		$unique_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
+
+		$wpdb->query(
+			$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+				"DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s AND user_id = %d",
+				"bb_profile_slug_{$unique_slug}",
+				$user_id
+			)
+		);
+	}
+
+	$paged++;
+	bb_repair_member_unique_slug( $paged );
 }

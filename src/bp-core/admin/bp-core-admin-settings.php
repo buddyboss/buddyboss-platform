@@ -2956,3 +2956,43 @@ function bb_labs_no_settings_callback() {
 		)
 	);
 }
+
+/**
+ * Allow all users to subscribe groups field.
+ *
+ * @since BuddyBoss 2.2.8
+ */
+function bb_admin_setting_callback_group_subscriptions() {
+	?>
+	<input id="bb_enable_group_subscriptions" name="bb_enable_group_subscriptions" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( bb_enable_group_subscriptions() ); ?> />
+	<label for="bb_enable_group_subscriptions"><?php esc_html_e( 'Allow members to subscribe to groups', 'buddyboss' ); ?></label>
+	<p class="description" id="bb_enable_group_subscriptions"><?php esc_html_e( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Link to profile slug tutorial
+ *
+ * @since BuddyBoss 2.3.1
+ */
+function bb_profile_slug_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 126235,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}

@@ -288,7 +288,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Remove mentioned link from discussion's reply.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.2.7
 	 *
 	 * @param string $content  Reply content.
 	 * @param int    $reply_id Reply id.

@@ -165,11 +165,15 @@ function bp_moderation_get( $args = '' ) {
  *
  * @since BuddyBoss 1.5.6
  *
+ * @param bool $force_cache Bypass cache it true.
+ *
  * @return array $moderation See BP_Moderation::get() for description.
  */
-function bp_moderation_get_hidden_user_ids() {
+function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
 
-	$args         = array(
+	static $cache = array();
+
+	$args = array(
 		'in_types'          => BP_Moderation_Members::$moderation_type,
 		'update_meta_cache' => false,
 		'filter_query'      => array(
@@ -184,12 +188,20 @@ function bp_moderation_get_hidden_user_ids() {
 			),
 		),
 	);
+
+	$cache_key = 'bp_moderation_get_hidden_user_ids_' . BP_Moderation_Members::$moderation_type . '_' . get_current_user_id();
+	if ( isset( $cache[ $cache_key ] ) && false === $force_cache ) {
+		return $cache[ $cache_key ];
+	}
+
 	$hidden_users = bp_moderation_get( $args );
 
 	$hidden_users_ids = array();
 	if ( ! empty( $hidden_users['moderations'] ) ) {
 		$hidden_users_ids = wp_list_pluck( $hidden_users['moderations'], 'item_id' );
 	}
+
+	$cache[ $cache_key ] = $hidden_users_ids;
 
 	return $hidden_users_ids;
 }
@@ -940,7 +952,7 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 		return bp_is_moderation_member_blocking_enable( 0 );
 	}
 
-	$settings = get_option( 'bpm_reporting_content_reporting', array() );
+	$settings = (array) get_option( 'bpm_reporting_content_reporting', array() );
 
 	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
 		$settings[ $content_type ] = bb_is_moderation_member_reporting_enable();
@@ -1633,7 +1645,7 @@ function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id =
 /**
  * Function will remove mention link from content if mentioned member is blocked/blokedby/suspended.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param mixed $content Content.
  *
@@ -1675,7 +1687,7 @@ function bb_moderation_remove_mention_link( $content ) {
 /**
  * Fetch all suspended user_ids.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param bool $force Bypass cache or not.
  *
@@ -1701,13 +1713,25 @@ function bb_moderation_get_suspended_user_ids( $force = false ) {
 /**
  * Fetch all moderated user or check the user is moderated or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param int $user_id User ID.
  *
  * @return array|bool
  */
 function bb_moderation_moderated_user_ids( $user_id = 0 ) {
+	static $cache = array();
+
+	$cache_key = 'bb_moderation_moderated_user_ids';
+
+	if ( ! empty( $user_id ) ) {
+		$cache_key = 'bb_moderation_moderated_user_' . $user_id;
+	}
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
 	$hidden_users_ids   = bp_moderation_get_hidden_user_ids(); // Blocked user_ids.
 	$blocked_by_members = bb_moderation_get_blocked_by_user_ids(); // Blocked by user_ids.
 	$suspended_user_id  = bb_moderation_get_suspended_user_ids();
@@ -1726,16 +1750,22 @@ function bb_moderation_moderated_user_ids( $user_id = 0 ) {
 	}
 
 	if ( empty( $user_id ) ) {
+		$cache[ $cache_key ] = $all_users;
+
 		return $all_users;
 	}
 
-	return in_array( $user_id, $all_users, true );
+	$retval = in_array( $user_id, $all_users, true );
+
+	$cache[ $cache_key ] = $retval;
+
+	return $retval;
 }
 
 /**
  * Function will allow to send specific email/notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.2.7
  *
  * @param array $args It will contain type, recipient id, gorup id and author id.
  *

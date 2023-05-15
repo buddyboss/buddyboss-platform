@@ -928,25 +928,32 @@ class BBP_Topics_Widget extends WP_Widget {
 				?>
 
 				<li class="<?php echo $author_related_class; ?>">
-					<span class="bbp-topic-author-wrapper">
-						<?php if ( ! empty( $author_link ) ) : ?>
-							<a href="<?php echo esc_url( $author_url ); ?>"><?php echo bbp_get_topic_author_avatar( $topic_id ); ?></a>
-						<?php endif; ?>
-					</span>
-					<a class="bbp-forum-title" href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
+					
+					<?php if ( ! empty( $author_link ) ) : ?>
 
-					<?php
-					if ( ! empty( $author_link ) ) :
-						printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
-					endif;
-					?>
-
-					<?php if ( ! empty( $settings['show_date'] ) ) : ?>
-
-						<div class="bbp-topic-time"><?php bbp_topic_last_active_time( $topic_id ); ?></div>
+						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow">
+							<span class="bbp-author-avatar">
+								<?php echo bbp_get_topic_author_avatar( $topic_id ); ?>
+							</span>
+						</a>
 
 					<?php endif; ?>
+				
+					<div class="bbp-topic-info">
+						<a class="bbp-forum-title" href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
 
+						<?php
+						if ( ! empty( $author_link ) ) :
+							printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
+						endif;
+						?>
+
+						<?php if ( ! empty( $settings['show_date'] ) ) : ?>
+
+							<div class="time-since"><?php bbp_topic_last_active_time( $topic_id ); ?></div>
+
+						<?php endif; ?>
+					</div>	
 				</li>
 
 			<?php endwhile; ?>

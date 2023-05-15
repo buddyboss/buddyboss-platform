@@ -172,6 +172,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$args['offset'] = $request['offset'];
 		}
 
+		// Added support for fetch user replies by order.
+		if ( isset( $request['hierarchical'] ) ) {
+			$args['hierarchical'] = (bool) $request['hierarchical'];
+		}
+
 		if ( isset( $request['thread_replies'] ) ) {
 			$thread_replies = (bool) $request['thread_replies'];
 		} else {
@@ -1994,6 +1999,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$this->forum_endpoint->prepare_password_response( $reply->post_password );
 		}
 
+		$data['short_content'] = wp_trim_excerpt( '', $reply->ID );
+
 		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
@@ -2243,6 +2250,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
+				),
+				'short_content'            => array(
+					'description' => __( 'Short content of the reply.', 'buddyboss' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'content'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),

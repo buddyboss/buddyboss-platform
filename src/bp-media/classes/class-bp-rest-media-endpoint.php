@@ -3245,9 +3245,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
-				'media_ids' => $media_ids,
-				'sort'      => 'ASC',
-				'order_by'  => 'menu_order',
+				'media_ids'        => $media_ids,
+				'sort'             => 'ASC',
+				'order_by'         => 'menu_order',
+				'moderation_query' => false,
 			)
 		);
 

@@ -922,7 +922,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			foreach ( $groups as $group ) {
 				$data['groups'][ $group->id ] = array(
-					'name' => $group->name,
+					'name' => wp_specialchars_decode( $group->name, ENT_QUOTES ),
 				);
 
 				foreach ( $group->fields as $item ) {

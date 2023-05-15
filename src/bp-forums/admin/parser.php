@@ -861,18 +861,18 @@ class BBCodeLibrary {
 				print 'ISVALIDURL<br />';
 			}
 			if ( $bbcode->url_targetable !== false && isset( $params['target'] ) ) {
-				$target = ' target="' . htmlspecialchars( $params['target'] ) . '"';
+				$target = ' target="' . htmlspecialchars( $params['target'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '"';
 			} else {
 				$target = '';
 			}
 			if ( $bbcode->url_target !== false ) {
 				if ( ! ( $bbcode->url_targetable == 'override' && isset( $params['target'] ) ) ) {
-					$target = ' target="' . htmlspecialchars( $bbcode->url_target ) . '"';
+					$target = ' target="' . htmlspecialchars( $bbcode->url_target, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '"';
 				}
 			}
-			return '<a href="' . htmlspecialchars( $url ) . '" class="bbcode_url"' . $target . '>' . $content . '</a>';
+			return '<a href="' . htmlspecialchars( $url, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" class="bbcode_url"' . $target . '>' . $content . '</a>';
 		} else {
-			return htmlspecialchars( $params['_tag'] ) . $content . htmlspecialchars( $params['_endtag'] );
+			return htmlspecialchars( $params['_tag'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . $content . htmlspecialchars( $params['_endtag'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 		}
 	}
 	function DoEmail( $bbcode, $action, $name, $default, $params, $content ) {
@@ -881,9 +881,9 @@ class BBCodeLibrary {
 		}
 		$email = is_string( $default ) ? $default : $bbcode->UnHTMLEncode( strip_tags( $content ) );
 		if ( $bbcode->IsValidEmail( $email ) ) {
-			return '<a href="mailto:' . htmlspecialchars( $email ) . '" class="bbcode_email">' . $content . '</a>';
+			return '<a href="mailto:' . htmlspecialchars( $email, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" class="bbcode_email">' . $content . '</a>';
 		} else {
-			return htmlspecialchars( $params['_tag'] ) . $content . htmlspecialchars( $params['_endtag'] );
+			return htmlspecialchars( $params['_tag'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . $content . htmlspecialchars( $params['_endtag'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 		}
 	}
 	function DoSize( $bbcode, $action, $name, $default, $params, $content ) {
@@ -956,7 +956,7 @@ class BBCodeLibrary {
 			$title = trim( $default );
 		}
 		return "<a href=\"{$bbcode->wiki_url}$name\" class=\"bbcode_wiki\">"
-		. htmlspecialchars( $title ) . '</a>';
+		. htmlspecialchars( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '</a>';
 	}
 	function DoImage( $bbcode, $action, $name, $default, $params, $content ) {
 		if ( $action == BBCODE_CHECK ) {
@@ -969,18 +969,18 @@ class BBCodeLibrary {
 					$info = @getimagesize( "{$bbcode->local_img_dir}/{$content}" );
 					if ( $info[2] == IMAGETYPE_GIF || $info[2] == IMAGETYPE_JPEG || $info[2] == IMAGETYPE_PNG ) {
 						return '<img src="'
-						. htmlspecialchars( "{$bbcode->local_img_url}/{$content}" ) . '" alt="'
-						. htmlspecialchars( basename( $content ) ) . '" width="'
-						. htmlspecialchars( $info[0] ) . '" height="'
-						. htmlspecialchars( $info[1] ) . '" class="bbcode_img" />';
+						. htmlspecialchars( "{$bbcode->local_img_url}/{$content}", ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" alt="'
+						. htmlspecialchars( basename( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" width="'
+						. htmlspecialchars( $info[0], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" height="'
+						. htmlspecialchars( $info[1], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" class="bbcode_img" />';
 					}
 				}
 			} elseif ( $bbcode->IsValidURL( $content, false ) ) {
-				return '<img src="' . htmlspecialchars( $content ) . '" alt="'
-				. htmlspecialchars( basename( $content ) ) . '" class="bbcode_img" />';
+				return '<img src="' . htmlspecialchars( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" alt="'
+				. htmlspecialchars( basename( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" class="bbcode_img" />';
 			}
 		}
-		return htmlspecialchars( $params['_tag'] ) . htmlspecialchars( $content ) . htmlspecialchars( $params['_endtag'] );
+		return htmlspecialchars( $params['_tag'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . htmlspecialchars( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . htmlspecialchars( $params['_endtag'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
 	function DoRule( $bbcode, $action, $name, $default, $params, $content ) {
 		if ( $action == BBCODE_CHECK ) {
@@ -994,21 +994,21 @@ class BBCodeLibrary {
 			return true;
 		}
 		if ( isset( $params['name'] ) ) {
-			$title = htmlspecialchars( trim( $params['name'] ) ) . ' wrote';
+			$title = htmlspecialchars( trim( $params['name'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . ' wrote';
 			if ( isset( $params['date'] ) ) {
-				$title .= ' on ' . htmlspecialchars( trim( $params['date'] ) );
+				$title .= ' on ' . htmlspecialchars( trim( $params['date'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 			}
 			$title .= ':';
 			if ( isset( $params['url'] ) ) {
 				$url = trim( $params['url'] );
 				if ( $bbcode->IsValidURL( $url ) ) {
-					$title = '<a href="' . htmlspecialchars( $params['url'] ) . '">' . $title . '</a>';
+					$title = '<a href="' . htmlspecialchars( $params['url'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '">' . $title . '</a>';
 				}
 			}
 		} elseif ( ! is_string( $default ) ) {
 			$title = 'Quote:';
 		} else {
-			$title = htmlspecialchars( trim( $default ) ) . ' wrote:';
+			$title = htmlspecialchars( trim( $default ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . ' wrote:';
 		}
 		return "\n<div class=\"bbcode_quote\">\n<div class=\"bbcode_quote_head\">"
 		. $title . "</div>\n<div class=\"bbcode_quote_body\">"
@@ -1410,11 +1410,11 @@ class BBCode {
 	}
 	function UnHTMLEncode( $string ) {
 		if ( function_exists( 'html_entity_decode' ) ) {
-			return html_entity_decode( $string );
+			return html_entity_decode( $string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 		}
 		$string    = preg_replace_callback( '~&#x([0-9a-f]+);~i', array( $this, '_UnHTMLEncode_chr_callback' ), $string );
 		$string    = preg_replace_callback( '~&#([0-9]+);~', array( $this, '_UnHTMLEncode_chr_hexdec_callback' ), $string );
-		$trans_tbl = get_html_translation_table( HTML_ENTITIES );
+		$trans_tbl = get_html_translation_table( HTML_ENTITIES, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 		$trans_tbl = array_flip( $trans_tbl );
 		return strtr( $string, $trans_tbl );
 	}
@@ -1500,7 +1500,7 @@ $/Dx",
 	}
 	function HTMLEncode( $string ) {
 		if ( ! $this->allow_ampersand ) {
-			return htmlspecialchars( $string );
+			return htmlspecialchars( $string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 		} else {
 			return str_replace(
 				array( '<', '>', '"' ),
@@ -1552,8 +1552,8 @@ $/Dx",
 							$info                        = @getimagesize( $this->smiley_dir . '/' . $this->smileys[ $token ] );
 							$this->smiley_info[ $token ] = $info;
 						}
-						$alt     = htmlspecialchars( $token );
-						$output .= '<img src="' . htmlspecialchars( $this->smiley_url . '/' . $this->smileys[ $token ] ) . '"';
+						$alt     = htmlspecialchars( $token, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+						$output .= '<img src="' . htmlspecialchars( $this->smiley_url . '/' . $this->smileys[ $token ], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '"';
 
 						if ( isset( $info[0] ) ) {
 							$output .= " width=\"{$info[0]}\"";
@@ -1735,7 +1735,7 @@ $/Dx",
 					} elseif ( isset( $flags['k'] ) ) {
 						$value = $this->Wikify( $value );
 					} elseif ( isset( $flags['h'] ) ) {
-						$value = htmlspecialchars( $value );
+						$value = htmlspecialchars( $value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 					} elseif ( isset( $flags['u'] ) ) {
 						$value = urlencode( $value );
 					}
@@ -1889,7 +1889,7 @@ $/Dx",
 		foreach ( $array as $item ) {
 			switch ( @$item[ BBCODE_STACK_TOKEN ] ) {
 				case BBCODE_TEXT:
-					$string .= '"' . htmlspecialchars( @$item[ BBCODE_STACK_TEXT ] ) . '" ';
+					$string .= '"' . htmlspecialchars( @$item[ BBCODE_STACK_TEXT ], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" ';
 					break;
 				case BBCODE_WS:
 					$string .= 'WS ';
@@ -1898,7 +1898,7 @@ $/Dx",
 					$string .= 'NL ';
 					break;
 				case BBCODE_TAG:
-					$string .= '[' . htmlspecialchars( @$item[ BBCODE_STACK_TAG ]['_name'] ) . '] ';
+					$string .= '[' . htmlspecialchars( @$item[ BBCODE_STACK_TAG ]['_name'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '] ';
 					break;
 				default:
 					$string .= 'unknown ';
@@ -2104,7 +2104,7 @@ $/Dx",
 						}
 						if ( isset( $params[ $possible_content ] )
 						&& strlen( $params[ $possible_content ] ) > 0 ) {
-							$result = htmlspecialchars( $params[ $possible_content ] );
+							$result = htmlspecialchars( $params[ $possible_content ], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 							break;
 						}
 					}
@@ -2258,7 +2258,7 @@ $/Dx",
 			$this->text_length += strlen( $this->lexer->text );
 			$this->stack[]      = array(
 				BBCODE_STACK_TOKEN => $token_type,
-				BBCODE_STACK_TEXT  => htmlspecialchars( $this->lexer->text ),
+				BBCODE_STACK_TEXT  => htmlspecialchars( $this->lexer->text, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 				BBCODE_STACK_TAG   => $this->lexer->tag,
 				BBCODE_STACK_CLASS => $this->current_class,
 			);
