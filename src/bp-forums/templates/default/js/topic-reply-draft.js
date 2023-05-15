@@ -573,6 +573,9 @@ window.bp = window.bp || {};
 
 		displayTopicReplyDraft: function() {
 			bp.Nouveau.Media.reply_topic_allow_delete_media = true;
+			if ( _.isUndefined( this.topic_reply_draft ) ) {
+				return;
+			}
 			if ( 'topic' === this.topic_reply_draft.object ) {
 				bp.Nouveau.TopicReplyDraft.appendTopicDraftData();
 			} else {

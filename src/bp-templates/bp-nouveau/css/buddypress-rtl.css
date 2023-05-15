@@ -28704,6 +28704,7 @@ span.icons:before {
 
 .bb-video-preview .bb-link-preview-container {
   padding: 0;
+  background-color: transparent;
 }
 
 .bb-link-preview-container div.fluid-width-video-wrapper {
@@ -28720,6 +28721,10 @@ span.icons:before {
   width: 100%;
 }
 
+.bb-video-preview .bb-link-preview-container .bb-link-preview-info {
+  background-color: transparent;
+}
+
 .bb-link-preview-container .bb-link-preview-info .bb-link-preview-excerpt {
   display: grid;
 }
@@ -28730,6 +28735,10 @@ span.icons:before {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 0 !important;
+}
+
+.bb-link-preview-container .bb-link-preview-info .bb-link-preview-excerpt p iframe {
+  width: 100%;
 }
 
 .bb-link-preview-container .bb-link-preview-title > a:before {
