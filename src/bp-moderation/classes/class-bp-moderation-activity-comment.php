@@ -128,6 +128,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
+		// Allow to search hasblocked members activity comment.
 		$blocked_user_query = true;
 		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bp_activity_comments_search_where_conditions' ) ) {
 			$blocked_user_query = false;
@@ -136,6 +137,20 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$sql = $this->exclude_where_query( $blocked_user_query );
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
+		}
+
+		// Allow to search activity comment for current members which is added by isblocked member activity.
+		if ( false === $blocked_user_query ) {
+			if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
+				$where['moderation_where'] .= ' AND ';
+			}
+			$where['moderation_where'] .= '( ac.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+
+			// If hasblocked members activity hide then all comment of that activities should not be searchable.
+			$blocked_item_ids = $this->bb_blocked_activity_comment_ids();
+			if ( ! empty( $blocked_item_ids ) ) {
+				$where['moderation_where'] .= ' AND ( a.id NOT IN ( ' . implode( ",", $blocked_item_ids ) . ') )';
+			}
 		}
 
 		return $where;
@@ -307,5 +322,45 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$content = bb_moderation_remove_mention_link( $content );
 
 		return $content;
+	}
+
+	/**
+	 * Function to get activity comment id of main parent activity id which is created by blocked members.
+	 * If this activity is hidden then will store that activity comment id in array and return as $blocked_item_ids.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array
+	 */
+	public function bb_blocked_activity_comment_ids() {
+		global $wpdb, $bp;
+		$sql = "SELECT DISTINCT s.item_id FROM {$bp->table_prefix}bp_suspend s";
+		$sql .= " INNER JOIN {$bp->table_prefix}bp_suspend_details sd ON ( s.id = sd.suspend_id AND s.item_type = 'activity_comment' )";
+		if ( ! empty( bp_moderation_get_hidden_user_ids() ) ) {
+			$sql .= " WHERE sd.user_id IN ( " . implode( ",", bp_moderation_get_hidden_user_ids() ) . ")";
+		}
+		$results          = $wpdb->get_col( $sql );
+		$blocked_item_ids = array();
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $item_id ) {
+				$main_parent_activity_id = new BP_Activity_Activity( $item_id );
+				if ( $main_parent_activity_id->item_id === $main_parent_activity_id->secondary_item_id ) {
+					$main_parent_activity_id = $main_parent_activity_id->item_id;
+				} else {
+					while (
+						$main_parent_activity_id->item_id !== $main_parent_activity_id->secondary_item_id &&
+						$main_parent_activity_id->secondary_item_id !== 0
+					) {
+						$main_parent_activity_id = new BP_Activity_Activity( $main_parent_activity_id->secondary_item_id );
+					}
+					$main_parent_activity_id = $main_parent_activity_id->item_id;
+				}
+				if ( BP_Core_Suspend::check_blocked_content( $main_parent_activity_id, 'activity' ) ) {
+					$blocked_item_ids[] = $item_id;
+				}
+			}
+		}
+
+		return $blocked_item_ids;
 	}
 }

@@ -133,6 +133,15 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function update_where_sql( $where, $suspend ) {
+
+		// Allow to search isblocked members activity comment but isblocked members activity should not be searchable.
+		if (
+			function_exists( 'bb_did_filter' ) &&
+			bb_did_filter( 'bp_activity_comments_search_where_conditions' )
+		) {
+			return $where;
+		}
+
 		$this->alias = $suspend->alias;
 
 		$exclude_group_sql = '';
