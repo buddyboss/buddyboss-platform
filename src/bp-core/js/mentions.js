@@ -193,129 +193,117 @@ window.bp = window.bp || {};
 					 * @since BuddyPress 2.1.0
 					 * @since BuddyPress 3.0.0. Renamed from "remote_filter" for at.js v1.5.4 support.
 					 */
-					remoteFilter: function ( query, render_view ) {
-						var params = {};
+					remoteFilter: function(query, render_view) {
 						var mentions_dropdown = this.$el;
+						var mentions_dropdown_list = mentions_dropdown.find('ul');
 						var $self = this;
-						var mentions_dropdown_list = mentions_dropdown.find( 'ul' );
 						$self.data;
-
-						mentionsItem = mentionsQueryCache[ query ];
-						if ( typeof mentionsItem === 'object' ) {
-							mentions_dropdown.data( 'page', 1 );
-							mentions_dropdown.data( 'page_limit', mentionsItem.total_pages );
-							render_view( mentionsItem.results );
-							$self.data = mentionsItem.results;
-							return;
-						}
-
-						if ( bp.mentions.xhr ) {
-							bp.mentions.xhr.abort();
-						}
-
-						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
-
-						
-						if( mentions_dropdown.data( 'page' ) ) {
-							params.page = mentions_dropdown.data( 'page' );
-							mentions_dropdown.data( 'page', params.page );
-						} else {
-							params.page = 1;
-							mentions_dropdown.data( 'page', 1 );
-						}
-
-						if ( $.isNumeric( this.$inputor.data( 'suggestions-group-id' ) ) ) {
-							params[ 'group-id' ] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
-						}
-
-						if( !mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
-							mentions_dropdown_list.append('<li class="list-loader">Loading more results…</li>');
-						}
-
-						bp.mentions.xhr = $.getJSON( ajaxurl, params )
-							/**
-							 * Success callback for the @suggestions lookup.
-							 *
-							 * @param {object} response Details of users matching the query.
-							 * @since BuddyPress 2.1.0
-							 */
-							.done(
-								function ( response ) {
-									if ( !response.success ) {
-										return;
-									}
-
-									$self.data = $.map(
-										response.data.results,
-										/**
-										 * Create a composite index to determine ordering of results;
-										 * nicename matches will appear on top.
-										 *
-										 * @param {array} suggestion A suggestion's original data.
-										 * @return {array} A suggestion's new data.
-										 * @since BuddyPress 2.1.0
-										 */
-										function ( suggestion ) {
-											suggestion.search = suggestion.search || suggestion.ID + ' ' + suggestion.name;
-											return suggestion;
-										}
-									);
-
-									mentions_dropdown.data( 'page_limit',  response.data.total_pages);
-									mentionsQueryCache[ query ] = response.data;
-									mentions_dropdown_list.find( '.list-loader' ).remove();
-									render_view( $self.data );
-									mentions_dropdown_list.removeClass( 'list-loading' );
-
-									if( !mentions_dropdown.hasClass( 'has-events' ) ) {
-										mentions_dropdown_list.on( 'scroll', function() {
-											if( mentions_dropdown_list.scrollTop() + mentions_dropdown_list.innerHeight() >= mentions_dropdown_list[0].scrollHeight ) {
-												if ( mentions_dropdown_list.hasClass( 'list-loading' ) || mentions_dropdown.data( 'page_limit') == mentions_dropdown.data( 'page' ) ) {
-													return;
-												}
-												mentions_dropdown_list.addClass( 'list-loading' );
-												if( !mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
-													mentions_dropdown_list.append('<li class="list-loader">Loading more results…</li>');
-												}
-												params.page = mentions_dropdown.data( 'page' ) + 1;
-												mentions_dropdown.data( 'page', params.page );
-												bp.mentions.xhr = $.getJSON( ajaxurl, params ).done(
-													function ( response ) {
-														if ( !response.success ) {
-															return;
-														}
-					
-														var new_data = $.map(
-															response.data.results,
-															/**
-															 * Create a composite index to determine ordering of results;
-															 * nicename matches will appear on top.
-															 *
-															 * @param {array} suggestion A suggestion's original data.
-															 * @return {array} A suggestion's new data.
-															 * @since BuddyPress 2.1.0
-															 */
-															function ( suggestion ) {
-																suggestion.search = suggestion.search || suggestion.ID + ' ' + suggestion.name;
-																return suggestion;
-															}
-														);
-
-														$self.data = $self.data.concat( new_data );
-														if($self.data.length > 100 ){
-															$self.data = $self.data.slice( -100 );
-														}
-														mentions_dropdown_list.find( '.list-loader' ).remove();
-														render_view( $self.data );
-														mentions_dropdown_list.removeClass( 'list-loading' );
-													}
-												);
-											}
-										});
-										mentions_dropdown.addClass( 'has-events' );
-									}
-								}
+					  
+						mentionsItem = mentionsQueryCache[query];
+						if (typeof mentionsItem === 'object') {
+						  mentions_dropdown.data('page', 1);
+						  mentions_dropdown.data('page_limit', mentionsItem.total_pages);
+						  render_view(mentionsItem.results);
+						  $self.data = mentionsItem.results;
+						  if (!mentions_dropdown.hasClass('has-events')) {
+							mentions_dropdown_list.on(
+							  'scroll',
+							  handleDropdownScroll(mentions_dropdown_list, mentions_dropdown, $self, query, fetchSuggestions)
 							);
+							mentions_dropdown.addClass('has-events');
+						  }
+						  return;
+						}
+					  
+						if (bp.mentions.xhr) {
+						  bp.mentions.xhr.abort();
+						}
+					  
+						if (!mentions_dropdown_list.find('li:last-child').hasClass('list-loader')) {
+						  mentions_dropdown_list.append('<li class="list-loader">Loading more results…</li>');
+						}
+					  
+						fetchSuggestions(query, mentions_dropdown.data('page'), this.$inputor.data('suggestions-group-id'), function(data) {
+						  updateDropdownView.call($self, data);
+						});
+					  
+						if (!mentions_dropdown.hasClass('has-events')) {
+						  mentions_dropdown_list.on(
+							'scroll',
+							handleDropdownScroll(mentions_dropdown_list, mentions_dropdown, $self, query, fetchSuggestions)
+						  );
+						  mentions_dropdown.addClass('has-events');
+						}
+
+						function fetchSuggestions(query, page, groupId, successCallback) {
+							var params = {
+							  action: 'bp_get_suggestions',
+							  term: query,
+							  type: 'members',
+							  page: page || 1
+							};
+						  
+							if ($.isNumeric(groupId)) {
+							  params['group-id'] = parseInt(groupId, 10);
+							}
+						  
+							// Make the AJAX request
+							bp.mentions.xhr = $.getJSON(ajaxurl, params)
+							  .done(function(response) {
+								if (response.success) {
+									if(params.page === 1){
+										mentionsQueryCache[query] = response.data;
+									}
+									successCallback(response.data);
+								}
+							  });
+						}
+
+						function updateDropdownView(data) {
+							var $self = this;
+							var mentions_dropdown = $self.$el;
+							var mentions_dropdown_list = mentions_dropdown.find('ul');
+						  
+							var newData = $.map(data.results, function(suggestion) {
+							  suggestion.search = suggestion.search || suggestion.ID + ' ' + suggestion.name;
+							  return suggestion;
+							});
+
+							$self.data = $self.data ? $self.data.concat( newData ) : newData;
+						  
+							mentions_dropdown.data('page_limit', data.total_pages);
+							mentions_dropdown_list.find('.list-loader').remove();
+							render_view($self.data);
+							mentions_dropdown_list.removeClass('list-loading');
+						}
+
+
+						function handleDropdownScroll(mentions_dropdown_list, mentions_dropdown, $self, query, fetchSuggestions) {
+							return function() {
+							  if (
+								mentions_dropdown_list.scrollTop() + mentions_dropdown_list.innerHeight() >= mentions_dropdown_list[0].scrollHeight
+							  ) {
+								if (
+								  mentions_dropdown_list.hasClass('list-loading') ||
+								  mentions_dropdown.data('page_limit') === mentions_dropdown.data('page')
+								) {
+								  return;
+								}
+								mentions_dropdown_list.addClass('list-loading');
+								if (!mentions_dropdown_list.find('li:last-child').hasClass('list-loader')) {
+								  mentions_dropdown_list.append('<li class="list-loader">Loading more results…</li>');
+								}
+								var page = mentions_dropdown.data('page') + 1;
+								mentions_dropdown.data('page', page);
+								fetchSuggestions(query, page, $self.$inputor.data('suggestions-group-id'), function(data) {
+								  updateDropdownView.call($self, data);
+								});
+							  }
+							};
+						}
+						  
+						  
+						  
 					},
 					beforeReposition: function(offset) {
 						// suggestions left position when RTL.
@@ -327,7 +315,6 @@ window.bp = window.bp || {};
 						}
 					}
 				},
-
 				data: $.map(
 					options.data,
 					/**
