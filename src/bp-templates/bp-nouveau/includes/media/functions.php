@@ -27,7 +27,7 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 		array(
 			'bp-nouveau-media' => array(
 				'file'         => 'js/buddypress-media%s.js',
-				'dependencies' => array( 'bp-nouveau' ),
+				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-codemirror' ),
 				'footer'       => true,
 			),
 		)

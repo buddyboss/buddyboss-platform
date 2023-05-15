@@ -181,7 +181,7 @@ function bp_get_message_thread_excerpt() {
 	 *
 	 * @param string $value Excerpt of the current thread in the loop.
 	 */
-	return apply_filters( 'bp_get_message_thread_excerpt', wp_strip_all_tags( preg_replace('#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', bp_create_excerpt( $messages_template->thread->last_message_content, 75 ) ) ) );
+	return apply_filters( 'bp_get_message_thread_excerpt', bp_create_excerpt( wp_strip_all_tags( preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $messages_template->thread->last_message_content ) ), 75 ) );
 }
 
 /**
@@ -1394,7 +1394,7 @@ function bp_get_send_private_message_link() {
 	 *
 	 * @param string $value URL for the Private Message link in member profile headers.
 	 */
-	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_core_get_username( $user_id ) ) );
+	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_members_get_user_nicename( $user_id ) ) );
 }
 
 /**
@@ -2249,7 +2249,7 @@ function bb_get_the_thread_message_excerpt() {
 	 *
 	 * @param string $message The excerpt of the current message in the loop.
 	 */
-	return apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace('#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
+	return apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
 }
 
 /** Embeds *******************************************************************/
@@ -2374,6 +2374,9 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 		$last_message_date_formatted = $last_message_date;
 	}
 
+	// Add 5mins to check the with the sent date.
+	$five_minutes = date_i18n( 'Y-m-d h:i:s', strtotime( '+5 min', strtotime( $last_message_date_formatted ) ) );
+
 	// Convert UTC to WordPress timezone.
 	$last_message_date = get_date_from_gmt( $last_message_date_formatted );
 
@@ -2381,12 +2384,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	$old_last_date     = $last_message_date;
 	$last_message_date = strtotime( $last_message_date );
 
-	// Calculate the different with current time for past 5 mins.
-	$newer_current_date = strtotime( bp_core_current_time() );
-	$current_since      = $newer_current_date - $last_message_date;
-	$five_seconds       = ( 5 * MINUTE_IN_SECONDS );
-
-	if ( 0 <= $current_since && $current_since <= $five_seconds ) {
+	if ( strtotime( 'now' ) <= strtotime( $five_minutes ) ) {
 		$output = $right_now_text;
 	} else {
 
@@ -2674,9 +2672,11 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
  * @return string
  */
 function bb_get_the_thread_message_sent_time() {
-	$sent_date           = bp_get_the_thread_message_date_sent();
-	$sent_date_formatted = date_i18n( 'Y-m-d h:i:s', $sent_date );
-	$site_sent_date      = get_date_from_gmt( $sent_date_formatted );
+	global $thread_template;
+
+	$sent_date_formatted      = $thread_template->message->date_sent;
+	$site_sent_date           = get_date_from_gmt( $sent_date_formatted );
+	$thread_message_sent_time = date_i18n( 'g:i A', strtotime( $site_sent_date ) );
 
 	/**
 	 * Filters the 'Sent x hours ago' string for the current message.
@@ -2685,7 +2685,7 @@ function bb_get_the_thread_message_sent_time() {
 	 *
 	 * @param string $value Default text of 'Sent x hours ago'.
 	 */
-	return apply_filters( 'bb_get_the_thread_message_sent_time', date_i18n( 'g:i A', strtotime( $site_sent_date ) ) );
+	return apply_filters( 'bb_get_the_thread_message_sent_time', $thread_message_sent_time );
 }
 
 /**

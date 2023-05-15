@@ -378,12 +378,12 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $field, $request ) {
 		$data = array(
 			'name'        => ( isset( $field['name'] ) && ! empty( $field['name'] ) ? $field['name'] : '' ),
-			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? $field['label'] : '' ),
+			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? wp_specialchars_decode( $field['label'], ENT_QUOTES ) : '' ),
 			'type'        => ( isset( $field['field'] ) && ! empty( $field['field'] ) ? $field['field'] : '' ),
 			'value'       => ( isset( $field['value'] ) && ! empty( $field['value'] ) ? $field['value'] : '' ),
 			'placeholder' => ( isset( $field['placeholder'] ) && ! empty( $field['placeholder'] ) ? $field['placeholder'] : '' ),
 			'options'     => ( isset( $field['options'] ) && ! empty( $field['options'] ) ? $field['options'] : array() ),
-			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? $field['group_label'] : '' ),
+			'headline'    => ( isset( $field['group_label'] ) && ! empty( $field['group_label'] ) ? wp_specialchars_decode( $field['group_label'], ENT_QUOTES ) : '' ),
 			'subfields'   => ( isset( $field['subfields'] ) && ! empty( $field['subfields'] ) ? $field['subfields'] : array() ),
 		);
 
@@ -681,6 +681,33 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 				foreach ( $notification_preferences as $group => $group_data ) {
 
+					if ( ! empty( $group_data['fields'] ) ) {
+						$group_data['fields'] = array_filter(
+							array_map(
+								function ( $fields ) {
+									if (
+										(
+											isset( $fields['notification_read_only'], $fields['default'] ) &&
+											true === (bool) $fields['notification_read_only'] &&
+											'yes' === (string) $fields['default']
+										) ||
+										(
+											! isset( $fields['notification_read_only'] ) ||
+											false === (bool) $fields['notification_read_only']
+										)
+									) {
+										return $fields;
+									}
+								},
+								$group_data['fields']
+							)
+						);
+					}
+
+					if ( empty( $group_data['fields'] ) ) {
+						continue;
+					}
+
 					if ( ! empty( $group_data['label'] ) ) {
 						$fields[] = array(
 							'name'        => '',
@@ -913,7 +940,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				$fields        = array_merge( $fields, $fields_groups );
 			}
 
-			if ( bp_is_active( 'forums' ) ) {
+			if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
 				$fields_forums[] = array(
 					'name'        => '',
 					'label'       => '',
@@ -1006,6 +1033,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$field_groups = bp_xprofile_get_groups(
 			array(
 				'fetch_fields'           => true,
+				'user_id'                => bp_loggedin_user_id(),
 				'fetch_field_data'       => true,
 				'fetch_visibility_level' => true,
 			)
