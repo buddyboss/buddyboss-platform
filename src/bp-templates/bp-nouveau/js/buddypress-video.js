@@ -2326,7 +2326,14 @@ window.bp = window.bp || {};
 			self.showVideo();
 			self.navigationCommands();
 
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' && self.current_video.privacy !== 'grouponly' ) {
+			if (
+				typeof BP_Nouveau.activity !== 'undefined' &&
+				self.current_video &&
+				typeof self.current_video.activity_id !== 'undefined' &&
+				self.current_video.activity_id != 0 &&
+				! self.current_video.is_forum &&
+				self.current_video.privacy !== 'comment'
+			) {
 				self.getActivity();
 			} else {
 				self.getVideosDescription();
