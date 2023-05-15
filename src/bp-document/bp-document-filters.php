@@ -156,6 +156,17 @@ function bp_document_activity_entry() {
 		$document_ids = BP_Document::get_activity_document_id( bp_get_activity_id() );
 	}
 
+	/**
+	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
+	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+	 * it will hide document content which is created by blocked/blocked/suspended member.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( bp_get_activity_id() ) : false;
+
+	if ( true === $hide_forum_activity ) {
+		return;
+	}
+
 	if ( ! empty( $document_ids ) && bp_has_document(
 		array(
 			'include'  => $document_ids,

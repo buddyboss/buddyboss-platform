@@ -96,8 +96,9 @@ class BP_Email_Queue {
 			return;
 		}
 
-		if ( count( $data ) > 200 ) {
-			$datas = array_chunk( $data, 200 );
+		$min_count = (int) apply_filters( 'bb_add_email_bulk_record_count', 200 );
+		if ( count( $data ) > $min_count ) {
+			$datas = array_chunk( $data, $min_count );
 		} else {
 			$datas = array( $data );
 		}

@@ -402,7 +402,15 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
 			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
 
-			return $content;
+			/**
+			 * Filters the activity content for forum.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $content  Activity content
+			 * @param array $activity Activity object
+			 */
+			return apply_filters( 'bb_forum_before_activity_content', $content, $activity );
 		}
 
 		/**

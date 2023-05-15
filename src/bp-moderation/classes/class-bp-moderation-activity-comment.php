@@ -159,7 +159,11 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			}
 		}
 
-		if ( $this->is_content_hidden( $activities_template->activity->current_comment->id ) ) {
+		if (
+			// If isBlocked and comment is hidden then blocked comment template will call.
+			$this->is_content_hidden( $activities_template->activity->current_comment->id ) ||
+			bb_moderation_is_user_blocked_by( $activities_template->activity->current_comment->user_id )
+		) {
 			return 'activity/blocked-comment.php';
 		}
 
