@@ -90,7 +90,7 @@ jQuery( document ).ready(
 							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
 
-							var content_text = jQuery( $reply_content ).text();
+							var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
 								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
 							} else {
@@ -197,7 +197,7 @@ jQuery( document ).ready(
 							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
 
-							var content_text = jQuery( $reply_content ).text();
+							var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
 								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
 							} else {
@@ -317,7 +317,7 @@ jQuery( document ).ready(
 							$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 							$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
 
-							var content_text = jQuery( $reply_content ).text();
+							var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 							if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
 								jQuery( element ).closest( 'form' ).addClass( 'has-content' )
 							} else {
@@ -495,7 +495,7 @@ jQuery( document ).ready(
 									$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 									$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
 
-									var content_text = jQuery( $reply_content ).text();
+									var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
 										jQuery( element ).closest( 'form' ).addClass( 'has-content' )
 									} else {
@@ -561,7 +561,7 @@ jQuery( document ).ready(
 									$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 									$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
 
-									var content_text = jQuery( $reply_content ).text();
+									var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
 										jQuery( element ).closest( 'form' ).addClass( 'has-content' )
 									} else {
@@ -628,7 +628,7 @@ jQuery( document ).ready(
 									$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 									$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
 
-									var content_text = jQuery( $reply_content ).text();
+									var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 									if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
 										jQuery( element ).closest( 'form' ).addClass( 'has-content' )
 									} else {
