@@ -337,14 +337,14 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $item_id ) {
 				$main_parent_activity_id   = new BP_Activity_Activity( $item_id );
-				$prent_activity_component  = $main_parent_activity_id->component;
+				$parent_activity_component = $main_parent_activity_id->component;
 				$current_comment_author_id = $main_parent_activity_id->user_id;
 				if ( (int) $main_parent_activity_id->item_id === (int) $main_parent_activity_id->secondary_item_id ) {
-					$prent_activity_id = $main_parent_activity_id->item_id;
-					$activity          = bp_activity_get_specific( array( 'activity_ids' => $prent_activity_id ) );
-					if ( ! empty( $activity ) ) {
-						$prent_activity_component = $activity['activities'][0]->component;
-						$author_id                = $activity['activities'][0]->user_id;
+					$parent_activity_id = $main_parent_activity_id->item_id;
+					$activity_data      = bp_activity_get_specific( array( 'activity_ids' => $parent_activity_id ) );
+					if ( ! empty( $activity_data ) ) {
+						$parent_activity_component = $activity_data['activities'][0]->component;
+						$author_id                 = $activity_data['activities'][0]->user_id;
 					}
 				} else {
 					while (
@@ -353,14 +353,14 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 					) {
 						$main_parent_activity_id = new BP_Activity_Activity( $main_parent_activity_id->secondary_item_id );
 					}
-					$prent_activity_id = $main_parent_activity_id->item_id;
-					$activity          = bp_activity_get_specific( array( 'activity_ids' => $prent_activity_id ) );
-					if ( ! empty( $activity ) ) {
-						$prent_activity_component = $activity['activities'][0]->component;
-						$author_id                = $activity['activities'][0]->user_id;
+					$parent_activity_id = $main_parent_activity_id->item_id;
+					$activity_data      = bp_activity_get_specific( array( 'activity_ids' => $parent_activity_id ) );
+					if ( ! empty( $activity_data ) ) {
+						$parent_activity_component = $activity_data['activities'][0]->component;
+						$author_id                 = $activity_data['activities'][0]->user_id;
 					}
 				}
-				if ( 'groups' !== $prent_activity_component ) {
+				if ( 'groups' !== $parent_activity_component ) {
 					if (
 						! empty( $author_id ) &&
 						(
