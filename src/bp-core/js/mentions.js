@@ -200,6 +200,7 @@ window.bp = window.bp || {};
 						var mentions_dropdown_list = mentions_dropdown.find( 'ul' );
 						$self.allow_scroll = true;
 						$self.render_view = render_view;
+						window.bp_suggestions_page_limit = null;
 
 						mentionsItem = mentionsQueryCache[ query ];
 						if ( typeof mentionsItem === 'object' ) {
@@ -245,7 +246,7 @@ window.bp = window.bp || {};
 									}
 
 									var data = $.map(
-										response.data,
+										response.data.results,
 										/**
 										 * Create a composite index to determine ordering of results;
 										 * nicename matches will appear on top.
@@ -261,12 +262,11 @@ window.bp = window.bp || {};
 									);
 
 									$self.data = data;
+									window.bp_suggestions_page_limit = response.data.total_pages;
 									mentionsQueryCache[ query ] = data;
 									mentions_dropdown_list.find( '.list-loader' ).remove();
 									$self.render_view( data );
 									mentions_dropdown_list.removeClass( 'list-loading' );
-
-
 								}
 							);
 
@@ -280,7 +280,7 @@ window.bp = window.bp || {};
 								) {
 
 									if ( mentions_dropdown_list.hasClass( 'list-loading' ) ||
-										mentions_dropdown.data( 'page_limit' ) == mentions_dropdown.data( 'page' )
+										window.bp_suggestions_page_limit != null && window.bp_suggestions_page_limit == params.page
 									) {
 										return;
 									}
@@ -300,7 +300,7 @@ window.bp = window.bp || {};
 											}
 
 											var new_data = $.map(
-												response.data,
+												response.data.results,
 												/**
 												 * Create a composite index to determine ordering of results;
 												 * nicename matches will appear on top.
@@ -314,7 +314,7 @@ window.bp = window.bp || {};
 														suggestion.ID + ' ' +
 														suggestion.name;
 													return suggestion;
-												},
+												}
 											);
 
 											if ( new_data.length == 0 ) {
@@ -328,7 +328,7 @@ window.bp = window.bp || {};
 											mentions_dropdown_list.find( '.list-loader' ).remove();
 											$self.render_view( $self.data );
 											mentions_dropdown_list.removeClass( 'list-loading' );
-										},
+										}
 									);
 								}
 							} );
@@ -336,7 +336,7 @@ window.bp = window.bp || {};
 						}
 					},
 
-					sorter: function(query, items, search_key) {
+					sorter: function(query, items) {
 						return items;
 					},
 
@@ -381,6 +381,7 @@ window.bp = window.bp || {};
 			jQuery( '#atwho-ground-whats-new' ).data( 'page', 1 );
 			jQuery( '#atwho-ground-whats-new' ).find( '.list-loader' ).remove();
 			jQuery( '#atwho-ground-whats-new' ).find( '.list-loading' ).removeClass( 'list-loading' );
+			window.bp_suggestions_page_limit = null;
 		} );
 
 		// Update medium editors when mention inserted into editor.
@@ -459,6 +460,7 @@ window.bp = window.bp || {};
 			jQuery( '#atwho-ground-whats-new' ).data( 'page', 1 );
 			jQuery( '#atwho-ground-whats-new' ).find( '.list-loader' ).remove();
 			jQuery( '#atwho-ground-whats-new' ).find( '.list-loading' ).removeClass( 'list-loading' );
+			window.bp_suggestions_page_limit = null;
 
 			jQuery( this ).focus();
 
