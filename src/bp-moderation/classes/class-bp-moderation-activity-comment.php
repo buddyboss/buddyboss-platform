@@ -348,11 +348,18 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 				$parent_activity_component = $main_parent_activity_id->component;
 				$current_comment_author_id = $main_parent_activity_id->user_id;
 				if ( (int) $main_parent_activity_id->item_id === (int) $main_parent_activity_id->secondary_item_id ) {
-					$parent_activity_id = $main_parent_activity_id->item_id;
-					$activity_data      = bp_activity_get_specific( array( 'activity_ids' => $parent_activity_id ) );
+
+					// Main Activity.
+					$activity_data = bp_activity_get_specific( array( 'activity_ids' => $main_parent_activity_id->item_id ) );
 					if ( ! empty( $activity_data ) ) {
 						$parent_activity_component = $activity_data['activities'][0]->component;
-						$author_id                 = $activity_data['activities'][0]->user_id;
+						$activity_author_id        = $activity_data['activities'][0]->user_id;
+					}
+
+					// Main Activity comment.
+					$activity_comment_data = new BP_Activity_Activity( $main_parent_activity_id->id );
+					if ( ! empty( $activity_comment_data ) ) {
+						$parent_comment_author_id = $activity_comment_data->user_id;
 					}
 				} else {
 					while (
@@ -361,37 +368,59 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 					) {
 						$main_parent_activity_id = new BP_Activity_Activity( $main_parent_activity_id->secondary_item_id );
 					}
-					$parent_activity_id = $main_parent_activity_id->item_id;
-					$activity_data      = bp_activity_get_specific( array( 'activity_ids' => $parent_activity_id ) );
+
+					// Main Activity.
+					$activity_data = bp_activity_get_specific( array( 'activity_ids' => $main_parent_activity_id->item_id ) );
 					if ( ! empty( $activity_data ) ) {
 						$parent_activity_component = $activity_data['activities'][0]->component;
-						$author_id                 = $activity_data['activities'][0]->user_id;
+						$activity_author_id        = $activity_data['activities'][0]->user_id;
+					}
+
+					// Main Activity comment.
+					$activity_comment_data = new BP_Activity_Activity( $main_parent_activity_id->id );
+					if ( ! empty( $activity_comment_data ) ) {
+						$parent_comment_author_id = $activity_comment_data->user_id;
 					}
 				}
-				if ( 'groups' !== $parent_activity_component ) {
-					if (
-						! empty( $author_id ) &&
+
+				if (
+					'groups' !== $parent_activity_component &&
+					(
+						! empty( $activity_author_id ) &&
 						(
-							bb_moderation_is_user_blocked_by( $author_id ) ||
-							bp_moderation_is_user_blocked( $author_id )
+							bb_moderation_is_user_blocked_by( $activity_author_id ) ||
+							bp_moderation_is_user_blocked( $activity_author_id )
 						) ||
-						// Logged-in member CAN’T see members comments in network search which is created by isblocked/hasblocked members
-						// to other member’s posts.
 						(
-							! empty( $current_comment_author_id ) &&
-							get_current_user_id() !== $author_id &&
+							get_current_user_id() !== $activity_author_id &&
 							(
-								! bb_moderation_is_user_blocked_by( $author_id ) ||
-								! bp_moderation_is_user_blocked( $author_id )
-							) &&
-							(
-								bp_moderation_is_user_blocked( $current_comment_author_id ) ||
-								bb_moderation_is_user_blocked_by( $current_comment_author_id )
+								(
+									! bb_moderation_is_user_blocked_by( $activity_author_id ) ||
+									! bp_moderation_is_user_blocked( $activity_author_id )
+								) &&
+								(
+									! empty( $parent_comment_author_id ) &&
+									(
+										bp_moderation_is_user_blocked( $parent_comment_author_id ) ||
+										bb_moderation_is_user_blocked_by( $parent_comment_author_id )
+									)
+								) ||
+								(
+									(
+										! bp_moderation_is_user_blocked( $parent_comment_author_id ) ||
+										! bb_moderation_is_user_blocked_by( $parent_comment_author_id )
+									) &&
+									(
+										! empty( $current_comment_author_id ) &&
+										bp_moderation_is_user_blocked( $current_comment_author_id ) ||
+										bb_moderation_is_user_blocked_by( $current_comment_author_id )
+									)
+								)
 							)
 						)
-					) {
-						$blocked_item_ids[] = $item_id;
-					}
+					)
+				) {
+					$blocked_item_ids[] = $item_id;
 				}
 			}
 		}
