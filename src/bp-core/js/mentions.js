@@ -336,6 +336,10 @@ window.bp = window.bp || {};
 						}
 					},
 
+					sorter: function(query, items, search_key) {
+						return items;
+					},
+
 					beforeReposition: function(offset) {
 						// suggestions left position when RTL.
 						if ( $( 'body.rtl' ).length > 0 ) {
