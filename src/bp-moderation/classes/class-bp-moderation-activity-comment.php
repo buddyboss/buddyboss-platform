@@ -329,6 +329,14 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function bb_is_blocked_activity_comment_ids() {
+		static $cache = array();
+
+		$cache_key = 'bb_is_blocked_activity_comment_ids';
+
+		if ( isset( $cache[ $cache_key ] ) ) {
+			return $cache[ $cache_key ];
+		}
+
 		global $wpdb, $bp;
 		$sql              = "SELECT DISTINCT a.id FROM {$bp->table_prefix}bp_activity a";
 		$sql              .= " WHERE a.type = 'activity_comment'";
@@ -387,6 +395,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 				}
 			}
 		}
+
+		$cache[ $cache_key ] = $blocked_item_ids;
 
 		return $blocked_item_ids;
 	}
