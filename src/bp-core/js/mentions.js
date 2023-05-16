@@ -198,14 +198,14 @@ window.bp = window.bp || {};
 						var mentions_dropdown = this.$el;
 						var $self = this;
 						var mentions_dropdown_list = mentions_dropdown.find( 'ul' );
-						$self.data;
+						$self.allow_scroll = true;
+						$self.render_view = render_view;
 
 						mentionsItem = mentionsQueryCache[ query ];
 						if ( typeof mentionsItem === 'object' ) {
 							mentions_dropdown.data( 'page', 1 );
-							mentions_dropdown.data( 'page_limit', mentionsItem.total_pages );
-							render_view( mentionsItem.results );
-							$self.data = mentionsItem.results;
+							$self.data = mentionsItem;
+							$self.render_view( mentionsItem );
 							return;
 						}
 
@@ -215,8 +215,7 @@ window.bp = window.bp || {};
 
 						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
 
-						
-						if( mentions_dropdown.data( 'page' ) ) {
+						if ( mentions_dropdown.data( 'page' ) ) {
 							params.page = mentions_dropdown.data( 'page' );
 							mentions_dropdown.data( 'page', params.page );
 						} else {
@@ -228,8 +227,8 @@ window.bp = window.bp || {};
 							params[ 'group-id' ] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
 						}
 
-						if( !mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
-							mentions_dropdown_list.append('<li class="list-loader">Loading more results…</li>');
+						if ( ! mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
+							mentions_dropdown_list.append('<li class="list-loader">Loading more results…</li>' );
 						}
 
 						bp.mentions.xhr = $.getJSON( ajaxurl, params )
@@ -245,8 +244,8 @@ window.bp = window.bp || {};
 										return;
 									}
 
-									$self.data = $.map(
-										response.data.results,
+									var data = $.map(
+										response.data,
 										/**
 										 * Create a composite index to determine ordering of results;
 										 * nicename matches will appear on top.
@@ -261,62 +260,82 @@ window.bp = window.bp || {};
 										}
 									);
 
-									mentions_dropdown.data( 'page_limit',  response.data.total_pages);
-									mentionsQueryCache[ query ] = response.data;
+									$self.data = data;
+									mentionsQueryCache[ query ] = data;
 									mentions_dropdown_list.find( '.list-loader' ).remove();
-									render_view( $self.data );
+									$self.render_view( data );
 									mentions_dropdown_list.removeClass( 'list-loading' );
 
-									if( !mentions_dropdown.hasClass( 'has-events' ) ) {
-										mentions_dropdown_list.on( 'scroll', function() {
-											if( mentions_dropdown_list.scrollTop() + mentions_dropdown_list.innerHeight() >= mentions_dropdown_list[0].scrollHeight ) {
-												if ( mentions_dropdown_list.hasClass( 'list-loading' ) || mentions_dropdown.data( 'page_limit') == mentions_dropdown.data( 'page' ) ) {
-													return;
-												}
-												mentions_dropdown_list.addClass( 'list-loading' );
-												if( !mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
-													mentions_dropdown_list.append('<li class="list-loader">Loading more results…</li>');
-												}
-												params.page = mentions_dropdown.data( 'page' ) + 1;
-												mentions_dropdown.data( 'page', params.page );
-												bp.mentions.xhr = $.getJSON( ajaxurl, params ).done(
-													function ( response ) {
-														if ( !response.success ) {
-															return;
-														}
-					
-														var new_data = $.map(
-															response.data.results,
-															/**
-															 * Create a composite index to determine ordering of results;
-															 * nicename matches will appear on top.
-															 *
-															 * @param {array} suggestion A suggestion's original data.
-															 * @return {array} A suggestion's new data.
-															 * @since BuddyPress 2.1.0
-															 */
-															function ( suggestion ) {
-																suggestion.search = suggestion.search || suggestion.ID + ' ' + suggestion.name;
-																return suggestion;
-															}
-														);
 
-														$self.data = $self.data.concat( new_data );
-														if($self.data.length > 100 ){
-															$self.data = $self.data.slice( -100 );
-														}
-														mentions_dropdown_list.find( '.list-loader' ).remove();
-														render_view( $self.data );
-														mentions_dropdown_list.removeClass( 'list-loading' );
-													}
-												);
-											}
-										});
-										mentions_dropdown.addClass( 'has-events' );
-									}
 								}
 							);
+
+						if ( !mentions_dropdown.hasClass( 'has-events' ) ) {
+							mentions_dropdown_list.on( 'scroll', function () {
+								if (
+									mentions_dropdown_list.scrollTop() +
+									mentions_dropdown_list.innerHeight() >=
+									mentions_dropdown_list[ 0 ].scrollHeight &&
+									true === $self.allow_scroll
+								) {
+
+									if ( mentions_dropdown_list.hasClass( 'list-loading' ) ||
+										mentions_dropdown.data( 'page_limit' ) == mentions_dropdown.data( 'page' )
+									) {
+										return;
+									}
+
+									mentions_dropdown_list.addClass( 'list-loading' );
+									if ( !mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
+										mentions_dropdown_list.append( '<li class="list-loader">Loading more results…</li>' );
+									}
+
+									params.page = mentions_dropdown.data( 'page' ) + 1;
+									mentions_dropdown.data( 'page', params.page );
+
+									bp.mentions.xhr = $.getJSON( ajaxurl, params ).done(
+										function ( response ) {
+											if ( !response.success ) {
+												return;
+											}
+
+											var new_data = $.map(
+												response.data,
+												/**
+												 * Create a composite index to determine ordering of results;
+												 * nicename matches will appear on top.
+												 *
+												 * @param {array} suggestion A suggestion's original data.
+												 * @return {array} A suggestion's new data.
+												 * @since BuddyPress 2.1.0
+												 */
+												function ( suggestion ) {
+													suggestion.search = suggestion.search ||
+														suggestion.ID + ' ' +
+														suggestion.name;
+													return suggestion;
+												},
+											);
+
+											if ( new_data.length == 0 ) {
+												mentions_dropdown_list.find( '.list-loader' ).remove();
+												mentions_dropdown_list.removeClass( 'list-loading' );
+												$self.allow_scroll = false;
+												return;
+											}
+
+											$self.data = $self.data.concat( new_data );
+											mentions_dropdown_list.find( '.list-loader' ).remove();
+											$self.render_view( $self.data );
+											mentions_dropdown_list.removeClass( 'list-loading' );
+										},
+									);
+								}
+							} );
+							mentions_dropdown.addClass( 'has-events' );
+						}
 					},
+
 					beforeReposition: function(offset) {
 						// suggestions left position when RTL.
 						if ( $( 'body.rtl' ).length > 0 ) {
@@ -327,6 +346,7 @@ window.bp = window.bp || {};
 						}
 					}
 				},
+
 				data: $.map(
 					options.data,
 					/**
@@ -352,12 +372,12 @@ window.bp = window.bp || {};
 			mentions
 		);
 
-		this.on('blur.atwhoInner', function () {
-			// Reset mention dropdown data
-			jQuery( '#atwho-ground-whats-new' ).data( 'page', 1 ).removeData('page_limit');
+		this.on( 'blur.atwhoInner', function () {
+			// Reset mention dropdown data.
+			jQuery( '#atwho-ground-whats-new' ).data( 'page', 1 );
 			jQuery( '#atwho-ground-whats-new' ).find( '.list-loader' ).remove();
 			jQuery( '#atwho-ground-whats-new' ).find( '.list-loading' ).removeClass( 'list-loading' );
-		});
+		} );
 
 		// Update medium editors when mention inserted into editor.
 		this.on( 'inserted.atwho', function ( event ) {
@@ -431,8 +451,8 @@ window.bp = window.bp || {};
 				}
 			}
 
-			// Reset mention dropdown data
-			jQuery( '#atwho-ground-whats-new' ).data( 'page', 1 ).removeData('page_limit');
+			// Reset mention dropdown data.
+			jQuery( '#atwho-ground-whats-new' ).data( 'page', 1 );
 			jQuery( '#atwho-ground-whats-new' ).find( '.list-loader' ).remove();
 			jQuery( '#atwho-ground-whats-new' ).find( '.list-loading' ).removeClass( 'list-loading' );
 

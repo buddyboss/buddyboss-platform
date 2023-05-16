@@ -4537,9 +4537,9 @@ function bp_ajax_get_suggestions() {
 	}
 
 	$args = array(
-		'term' => sanitize_text_field( $_GET['term'] ),
-		'type' => sanitize_text_field( $_GET['type'] ),
-		'count_total'     => 'count_query',
+			'term'        => sanitize_text_field( $_GET['term'] ),
+			'type'        => sanitize_text_field( $_GET['type'] ),
+//			'count_total' => 'count_query',
 	);
 
 	if ( ! empty( $_GET['page'] ) ) {
@@ -4561,6 +4561,8 @@ function bp_ajax_get_suggestions() {
 		wp_send_json_error( $results->get_error_message() );
 		exit;
 	}
+
+	wp_send_json_success( $results );
 
 	$results_total = apply_filters( 'bp_members_suggestions_results_total', isset( $results['total'] ) ? $results['total'] : 0 );
 	$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
