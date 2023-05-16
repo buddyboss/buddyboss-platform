@@ -141,15 +141,11 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Allow to search activity comment for current members which is added by isblocked member activity.
 		if ( false === $blocked_user_query ) {
-			if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
-				$where['moderation_where'] .= ' AND ';
-			}
-			$where['moderation_where'] .= '( ac.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 
-			// If hasblocked members activity hide then all comment of that activities should not be searchable.
-			$blocked_item_ids = $this->bb_blocked_activity_comment_ids();
-			if ( ! empty( $blocked_item_ids ) ) {
-				$where['moderation_where'] .= ' AND ( a.id NOT IN ( ' . implode( ",", $blocked_item_ids ) . ') )';
+			// If isblocked/hasblocked members activity hide then all comment of that activities should not be searchable.
+			$is_blocked_item_ids = $this->bb_is_blocked_activity_comment_ids();
+			if ( ! empty( $is_blocked_item_ids ) ) {
+				$where['moderation_where'] .= ' AND ( a.id NOT IN ( ' . implode( ",", $is_blocked_item_ids ) . ') )';
 			}
 		}
 
@@ -332,20 +328,24 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @return array
 	 */
-	public function bb_blocked_activity_comment_ids() {
+	public function bb_is_blocked_activity_comment_ids() {
 		global $wpdb, $bp;
-		$sql = "SELECT DISTINCT s.item_id FROM {$bp->table_prefix}bp_suspend s";
-		$sql .= " INNER JOIN {$bp->table_prefix}bp_suspend_details sd ON ( s.id = sd.suspend_id AND s.item_type = 'activity_comment' )";
-		if ( ! empty( bp_moderation_get_hidden_user_ids() ) ) {
-			$sql .= " WHERE sd.user_id IN ( " . implode( ",", bp_moderation_get_hidden_user_ids() ) . ")";
-		}
+		$sql              = "SELECT DISTINCT a.id FROM {$bp->table_prefix}bp_activity a";
+		$sql              .= " WHERE a.type = 'activity_comment'";
 		$results          = $wpdb->get_col( $sql );
 		$blocked_item_ids = array();
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $item_id ) {
-				$main_parent_activity_id = new BP_Activity_Activity( $item_id );
-				if ( $main_parent_activity_id->item_id === $main_parent_activity_id->secondary_item_id ) {
-					$main_parent_activity_id = $main_parent_activity_id->item_id;
+				$main_parent_activity_id  = new BP_Activity_Activity( $item_id );
+				$prent_activity_component = $main_parent_activity_id->component;
+				$author_id                = $main_parent_activity_id->user_id;
+				if ( (int) $main_parent_activity_id->item_id === (int) $main_parent_activity_id->secondary_item_id ) {
+					$prent_activity_id = $main_parent_activity_id->item_id;
+					$activity          = bp_activity_get_specific( array( 'activity_ids' => $prent_activity_id ) );
+					if ( ! empty( $activity ) ) {
+						$prent_activity_component = $activity['activities'][0]->component;
+						$author_id                = $activity['activities'][0]->user_id;
+					}
 				} else {
 					while (
 						$main_parent_activity_id->item_id !== $main_parent_activity_id->secondary_item_id &&
@@ -353,10 +353,20 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 					) {
 						$main_parent_activity_id = new BP_Activity_Activity( $main_parent_activity_id->secondary_item_id );
 					}
-					$main_parent_activity_id = $main_parent_activity_id->item_id;
+					$prent_activity_id = $main_parent_activity_id->item_id;
+					$activity          = bp_activity_get_specific( array( 'activity_ids' => $prent_activity_id ) );
+					if ( ! empty( $activity ) ) {
+						$prent_activity_component = $activity['activities'][0]->component;
+						$author_id                = $activity['activities'][0]->user_id;
+					}
 				}
-				if ( BP_Core_Suspend::check_blocked_content( $main_parent_activity_id, 'activity' ) ) {
-					$blocked_item_ids[] = $item_id;
+				if ( 'groups' !== $prent_activity_component ) {
+					if (
+						bb_moderation_is_user_blocked_by( $author_id ) ||
+						bp_moderation_is_user_blocked( $author_id )
+					) {
+						$blocked_item_ids[] = $item_id;
+					}
 				}
 			}
 		}
