@@ -336,9 +336,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$blocked_item_ids = array();
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $item_id ) {
-				$main_parent_activity_id  = new BP_Activity_Activity( $item_id );
-				$prent_activity_component = $main_parent_activity_id->component;
-				$author_id                = $main_parent_activity_id->user_id;
+				$main_parent_activity_id   = new BP_Activity_Activity( $item_id );
+				$prent_activity_component  = $main_parent_activity_id->component;
+				$current_comment_author_id = $main_parent_activity_id->user_id;
 				if ( (int) $main_parent_activity_id->item_id === (int) $main_parent_activity_id->secondary_item_id ) {
 					$prent_activity_id = $main_parent_activity_id->item_id;
 					$activity          = bp_activity_get_specific( array( 'activity_ids' => $prent_activity_id ) );
@@ -362,8 +362,25 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 				}
 				if ( 'groups' !== $prent_activity_component ) {
 					if (
-						bb_moderation_is_user_blocked_by( $author_id ) ||
-						bp_moderation_is_user_blocked( $author_id )
+						! empty( $author_id ) &&
+						(
+							bb_moderation_is_user_blocked_by( $author_id ) ||
+							bp_moderation_is_user_blocked( $author_id )
+						) ||
+						// Logged-in member CAN’T see members comments in network search which is created by isblocked/hasblocked members
+						// to other member’s posts.
+						(
+							! empty( $current_comment_author_id ) &&
+							get_current_user_id() !== $author_id &&
+							(
+								! bb_moderation_is_user_blocked_by( $author_id ) ||
+								! bp_moderation_is_user_blocked( $author_id )
+							) &&
+							(
+								bp_moderation_is_user_blocked( $current_comment_author_id ) ||
+								bb_moderation_is_user_blocked_by( $current_comment_author_id )
+							)
+						)
 					) {
 						$blocked_item_ids[] = $item_id;
 					}
