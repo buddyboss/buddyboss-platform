@@ -743,7 +743,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * Setup the user engagements strategy.
 		 *
 		 * @since 2.6.0 bbPress (r6875)
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.4
 		 */
 		public function setup_engagements() {
 

@@ -1063,7 +1063,7 @@ function bb_get_forum_default_image( $size = 'full' ) {
  * in a future version, possibly to the site root.
  *
  * @since 2.6.0 bbPress (r5658)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @see   bbp_redirect_to_field()
  *
@@ -1088,7 +1088,7 @@ function bbp_redirect( $location = '', $status = 302 ) {
 /**
  * Function to check the forums favourite legacy is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @todo Legacy support will disable after certain version.
  *

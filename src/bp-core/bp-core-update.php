@@ -2717,7 +2717,7 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
  * Install email template for activity following post.
  * Updated buddyboss mu file.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @return void
  */
@@ -2739,6 +2739,18 @@ function bb_update_to_2_3_4() {
 	}
 
 	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
+	// Migrate the topic favorites.
+	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
+		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
+	}
+
+	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 
 	$defaults = array(
 		'post_status' => 'publish',
@@ -2787,27 +2799,4 @@ function bb_update_to_2_3_4() {
 		);
 	}
 
-	// Migrate the topic favorites.
-	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
-		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
-	}
-
-	$is_already_run = get_transient( 'bb_migrate_favorites' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
-	// Migrate the topic favorites.
-	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
-		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
-	}
-
-	wp_cache_flush();
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
 }
