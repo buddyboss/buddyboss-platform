@@ -58,7 +58,6 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 2.3.4 =
-* Profiles - Improved members link format unique identifier by reducing the length of auto-generated strings
 * Profiles - Resolved formatting issues with paragraph type fields in profile fields
 * Groups - Handled incorrect group count issue on the directory screen when the sub-groups option is enabled
 * Forums - Enhanced performance of forum discussion favorites by restructuring their data
