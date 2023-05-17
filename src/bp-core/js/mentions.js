@@ -201,6 +201,80 @@ window.bp = window.bp || {};
 						var $self                  = this;
 						var mentions_dropdown_list = mentions_dropdown.find( 'ul' );
 
+						var mention_scroll = function() {
+							if (
+								mentions_dropdown_list.scrollTop() +
+								mentions_dropdown_list.innerHeight() >=
+								mentions_dropdown_list[ 0 ].scrollHeight &&
+								true === $self.allow_scroll
+							) {
+
+								if (
+									mentions_dropdown_list.hasClass( 'list-loading' ) ||
+									( $self.total_pages != null && parseInt( $self.total_pages ) === parseInt( params.page ) ) ||
+									bp.mentions.xhr_scroll
+								) {
+									return;
+								}
+
+								mentions_dropdown_list.addClass( 'list-loading' );
+								if ( ! mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
+									mentions_dropdown_list.append( '<li class="list-loader">Loading more results…</li>' );
+								}
+
+								params.term = $self.s_query;
+								params.page = mentions_dropdown.data( 'page' ) + 1;
+								mentions_dropdown.data( 'page', params.page );
+
+								bp.mentions.xhr_scroll = $.getJSON( ajaxurl, params ).done(
+									function ( response ) {
+										if ( ! response.success ) {
+											return;
+										}
+
+										bp.mentions.xhr_scroll = null;
+
+										if ( typeof response.data.total_pages != 'undefined' ) {
+											$self.total_pages = parseInt( response.data.total_pages );
+										}
+
+										mentionsQueryCache[ $self.s_query ].page = params.page;
+
+										var new_data = $.map(
+											response.data.results,
+											/**
+											 * Create a composite index to determine ordering of results;
+											 * nicename matches will appear on top.
+											 *
+											 * @param {array} suggestion A suggestion's original data.
+											 * @return {array} A suggestion's new data.
+											 * @since BuddyPress 2.1.0
+											 */
+											function ( suggestion ) {
+												suggestion.search = suggestion.search ||
+													suggestion.ID + ' ' +
+													suggestion.name;
+												return suggestion;
+											}
+										);
+
+										if ( new_data.length == 0 ) {
+											mentions_dropdown_list.find( '.list-loader' ).remove();
+											mentions_dropdown_list.removeClass( 'list-loading' );
+											$self.allow_scroll = false;
+											return;
+										}
+
+										$self.data = $self.data.concat( new_data );
+										mentions_dropdown_list.find( '.list-loader' ).remove();
+										$self.render_view( $self.data );
+										mentionsQueryCache[ $self.s_query ].data = $self.data;
+										mentions_dropdown_list.removeClass( 'list-loading' );
+									}
+								);
+							}
+						};
+
 						$self.allow_scroll = true;
 						$self.render_view  = render_view;
 						$self.total_pages  = 1;
@@ -226,6 +300,18 @@ window.bp = window.bp || {};
 								mentions_dropdown_list.append( '<li class="list-loader">Loading more results…</li>' );
 							}
 
+							bp.mentions.xhr_scroll = null;
+
+							if ( ! mentions_dropdown.hasClass( 'has-events' ) ) {
+								mentions_dropdown_list.on(
+									'scroll',
+									function () {
+										mention_scroll();
+									}
+								);
+								mentions_dropdown.addClass( 'has-events' );
+							}
+
 							return;
 						}
 
@@ -237,7 +323,6 @@ window.bp = window.bp || {};
 
 						if ( mentions_dropdown.data( 'page' ) ) {
 							params.page = mentions_dropdown.data( 'page' );
-							mentions_dropdown.data( 'page', params.page );
 						} else {
 							params.page = 1;
 							mentions_dropdown.data( 'page', 1 );
@@ -290,6 +375,8 @@ window.bp = window.bp || {};
 									mentions_dropdown_list.find( '.list-loader' ).remove();
 									$self.render_view( data );
 									mentions_dropdown_list.removeClass( 'list-loading' );
+
+									bp.mentions.xhr_scroll = null;
 								}
 							);
 
@@ -297,75 +384,7 @@ window.bp = window.bp || {};
 							mentions_dropdown_list.on(
 								'scroll',
 								function () {
-									if (
-									mentions_dropdown_list.scrollTop() +
-									mentions_dropdown_list.innerHeight() >=
-									mentions_dropdown_list[ 0 ].scrollHeight &&
-									true === $self.allow_scroll
-									) {
-
-										if (
-										mentions_dropdown_list.hasClass( 'list-loading' ) ||
-										( $self.total_pages != null && parseInt( $self.total_pages ) === parseInt( params.page ) ) ||
-										bp.mentions.xhr_scroll
-										) {
-											return;
-										}
-
-										mentions_dropdown_list.addClass( 'list-loading' );
-										if ( ! mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
-											mentions_dropdown_list.append( '<li class="list-loader">Loading more results…</li>' );
-										}
-
-										params.term = $self.s_query;
-										params.page = mentions_dropdown.data( 'page' ) + 1;
-										mentions_dropdown.data( 'page', params.page );
-
-										bp.mentions.xhr_scroll = $.getJSON( ajaxurl, params ).done(
-											function ( response ) {
-												if ( ! response.success ) {
-													return;
-												}
-
-												if ( typeof response.data.total_pages != 'undefined' ) {
-													$self.total_pages = parseInt( response.data.total_pages );
-												}
-
-												mentionsQueryCache[ $self.s_query ].page = params.page;
-
-												var new_data = $.map(
-													response.data.results,
-													/**
-													 * Create a composite index to determine ordering of results;
-													 * nicename matches will appear on top.
-													 *
-													 * @param {array} suggestion A suggestion's original data.
-													 * @return {array} A suggestion's new data.
-													 * @since BuddyPress 2.1.0
-													 */
-													function ( suggestion ) {
-														suggestion.search = suggestion.search ||
-															suggestion.ID + ' ' +
-															suggestion.name;
-														return suggestion;
-													}
-												);
-
-												if ( new_data.length == 0 ) {
-													mentions_dropdown_list.find( '.list-loader' ).remove();
-													mentions_dropdown_list.removeClass( 'list-loading' );
-													$self.allow_scroll = false;
-													return;
-												}
-
-												$self.data = $self.data.concat( new_data );
-												mentions_dropdown_list.find( '.list-loader' ).remove();
-												$self.render_view( $self.data );
-												mentionsQueryCache[ $self.s_query ].data = $self.data;
-												mentions_dropdown_list.removeClass( 'list-loading' );
-											}
-										);
-									}
+									mention_scroll();
 								}
 							);
 							mentions_dropdown.addClass( 'has-events' );
