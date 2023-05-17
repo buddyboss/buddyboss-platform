@@ -3222,6 +3222,7 @@ function bp_core_get_suggestions( $args ) {
 
 	// Removed action only for xprofile fields First, last and nickname.
 	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+
 	/**
 	 * Filters the available type of at-mentions.
 	 *
@@ -4536,9 +4537,14 @@ function bp_ajax_get_suggestions() {
 	}
 
 	$args = array(
-		'term' => sanitize_text_field( $_GET['term'] ),
-		'type' => sanitize_text_field( $_GET['type'] ),
+			'term'        => sanitize_text_field( $_GET['term'] ),
+			'type'        => sanitize_text_field( $_GET['type'] ),
+			'count_total' => 'count_query',
 	);
+
+	if ( ! empty( $_GET['page'] ) ) {
+		$args['page'] = absint( $_GET['page'] );
+	}
 
 	if ( ! empty( $_GET['only_friends'] ) ) {
 		$args['only_friends'] = absint( $_GET['only_friends'] );
@@ -4556,7 +4562,15 @@ function bp_ajax_get_suggestions() {
 		exit;
 	}
 
-	wp_send_json_success( $results );
+	$results_total = apply_filters( 'bb_members_suggestions_results_total', $results['total'] ?? 0 );
+	$results       = apply_filters( 'bb_members_suggestions_results', $results['members'] ?? array() );
+
+	wp_send_json_success(
+		array(
+			'results'     => $results,
+			'total_pages' => ceil( $results_total / 10 ),
+		)
+	);
 }
 add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
 
@@ -5361,15 +5375,6 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$search_core            = $sql['where']['search'];
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
-
-		if (
-			is_array( $matched_user_ids ) &&
-			count( $matched_user_ids ) > 0 &&
-			! did_action( 'wp_ajax_messages_search_recipients' ) &&
-			$query->query_vars['per_page'] < count( $matched_user_ids )
-		) {
-			$sql['limit'] = ' LIMIT 0, ' . count( $matched_user_ids );
-		}
 	}
 
 	return $sql;
