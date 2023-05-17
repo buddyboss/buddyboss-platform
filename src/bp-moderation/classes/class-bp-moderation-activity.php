@@ -133,7 +133,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function update_where_sql( $where, $suspend ) {
-
 		$this->alias = $suspend->alias;
 
 		$exclude_group_sql = '';
