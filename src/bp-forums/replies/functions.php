@@ -2666,7 +2666,7 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 }
 
 /**
- * Allow group members to have advanced priviledges in group forum topics.
+ * Allow group members to have advanced privileges in group forum topics.
  *
  * @since BuddyBoss 2.1.6
  *
@@ -2684,6 +2684,7 @@ function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_i
 		return $caps;
 	}
 
+	// Allow group member to create a new reply from the activity directory and page/post (using shortcode).
 	if (
 		(
 			function_exists( 'bp_is_activity_directory' ) &&
