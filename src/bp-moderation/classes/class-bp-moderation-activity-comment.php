@@ -351,7 +351,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 					// Main Activity.
 					$activity_data = bp_activity_get_specific( array( 'activity_ids' => $main_parent_activity_id->item_id ) );
-					if ( ! empty( $activity_data ) ) {
+					if ( isset( $activity_data['activities'][0] ) ) {
 						$parent_activity_component = $activity_data['activities'][0]->component;
 						$activity_author_id        = $activity_data['activities'][0]->user_id;
 					}
@@ -371,7 +371,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 					// Main Activity.
 					$activity_data = bp_activity_get_specific( array( 'activity_ids' => $main_parent_activity_id->item_id ) );
-					if ( ! empty( $activity_data ) ) {
+					if ( isset( $activity_data['activities'][0] ) ) {
 						$parent_activity_component = $activity_data['activities'][0]->component;
 						$activity_author_id        = $activity_data['activities'][0]->user_id;
 					}
