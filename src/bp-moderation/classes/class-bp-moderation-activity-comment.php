@@ -350,10 +350,10 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 				if ( (int) $main_parent_activity_id->item_id === (int) $main_parent_activity_id->secondary_item_id ) {
 
 					// Main Activity.
-					$activity_data = bp_activity_get_specific( array( 'activity_ids' => $main_parent_activity_id->item_id ) );
-					if ( isset( $activity_data['activities'][0] ) ) {
-						$parent_activity_component = $activity_data['activities'][0]->component;
-						$activity_author_id        = $activity_data['activities'][0]->user_id;
+					$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name} WHERE id = %d", $main_parent_activity_id->item_id ) );
+					if ( ! empty( $row ) ) {
+						$parent_activity_component = $row->component;
+						$activity_author_id        = $row->user_id;
 					}
 
 					// Main Activity comment.
@@ -370,10 +370,10 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 					}
 
 					// Main Activity.
-					$activity_data = bp_activity_get_specific( array( 'activity_ids' => $main_parent_activity_id->item_id ) );
-					if ( isset( $activity_data['activities'][0] ) ) {
-						$parent_activity_component = $activity_data['activities'][0]->component;
-						$activity_author_id        = $activity_data['activities'][0]->user_id;
+					$activity_data = new BP_Activity_Activity( $main_parent_activity_id->item_id );
+					if ( ! empty( $activity_data ) ) {
+						$parent_activity_component = $activity_data->component;
+						$activity_author_id        = $activity_data->user_id;
 					}
 
 					// Main Activity comment.
@@ -389,14 +389,16 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 						! empty( $activity_author_id ) &&
 						(
 							bb_moderation_is_user_blocked_by( $activity_author_id ) ||
-							bp_moderation_is_user_blocked( $activity_author_id )
+							bp_moderation_is_user_blocked( $activity_author_id ) ||
+							bp_moderation_is_user_suspended( $activity_author_id )
 						) ||
 						(
-							get_current_user_id() !== $activity_author_id &&
+							(int) get_current_user_id() !== (int) $activity_author_id &&
 							(
 								(
 									! bb_moderation_is_user_blocked_by( $activity_author_id ) ||
-									! bp_moderation_is_user_blocked( $activity_author_id )
+									! bp_moderation_is_user_blocked( $activity_author_id ) ||
+									! bp_moderation_is_user_suspended( $activity_author_id )
 								) &&
 								(
 									! empty( $parent_comment_author_id ) &&
