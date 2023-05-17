@@ -2761,10 +2761,10 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
 }
 
 /**
- * Migration favorites from user meta to topic meta.
  * Updated buddyboss mu file.
+ * Migration favorites from user meta to topic meta.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @return void
  */

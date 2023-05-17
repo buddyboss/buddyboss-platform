@@ -49,7 +49,7 @@ function bb_sent_invite_email_avatar_default_avatar( $avatar = '' ) {
 /**
  * Function to add invitation field to use later after submission of form.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  */
 function bb_invites_add_invite_fields_after_wp_registration_fields() {
 
@@ -68,7 +68,7 @@ function bb_invites_add_invite_fields_after_wp_registration_fields() {
 /**
  * Function to validate the invitation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param string $email User's email.
  * @param string $inviter Inviter user ID.
@@ -111,7 +111,7 @@ function bb_invites_validate_invitation_before_registration( $email, $inviter ) 
 /**
  * Function to validate the invitation before a new signup for buddyboss registration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  */
 function bb_invites_validate_invitation_before_bb_registration() {
 
@@ -131,7 +131,7 @@ function bb_invites_validate_invitation_before_bb_registration() {
 /**
  * Validates invitation and appends any errors to prevent new user registration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param WP_Error $errors               A WP_Error object containing any errors encountered during registration.
  * @param string   $sanitized_user_login User's username after it has been sanitized.

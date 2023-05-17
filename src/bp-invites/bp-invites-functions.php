@@ -155,7 +155,7 @@ function bp_invites_member_invite_remove_registration_lock() {
 	$bp_get_invitee_email = new WP_Query( $args );
 
 	if ( ! $bp_get_invitee_email->have_posts() ) {
-		bp_core_add_message( __( "We couldn't find any invitations associated with this email address.", 'buddyboss' ), 'error' );
+		bp_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss' ), 'error' );
 		return;
 	}
 

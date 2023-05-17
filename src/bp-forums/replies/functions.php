@@ -2744,7 +2744,7 @@ function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_i
 /**
  * Get the total count of all replies upto possible depth.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param array $posts         List of child level reply posts.
  * @param array $top_reply_ids List of top level reply posts.

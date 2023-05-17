@@ -227,7 +227,7 @@ function bbp_admin_repair_list() {
 		90  => array( 'bbp-wp-role-restore', __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' ),
 		95  => array( 'bbp-migrate-buddyboss-forum-topic-subscription', __( 'Migrate BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
 		100 => array( 'bbp-migrate-bbpress-forum-topic-subscription', __( 'Migrate BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
-		105 => array( 'bb-migrate-bbpress-user-topic-favorites', __( 'Upgrade user topic favorites', 'buddyboss' ), 'bb_migrate_user_topic_favorites' ),
+		105 => array( 'bb-migrate-bbpress-user-topic-favorites', __( 'Migrate members discussions \'marked as favorites\' data to improve performance', 'buddyboss' ), 'bb_migrate_user_topic_favorites' ),
 	);
 	ksort( $repair_list );
 
@@ -2051,7 +2051,7 @@ add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bp_admin_fo
 /**
  * Migration to update user favorites to post meta table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param bool $is_background The current process is background or not.
  * @param int  $blog_id       The blog ID to migrate for this blog.
@@ -2130,7 +2130,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 /**
  * Upgrading user favorites to post meta table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param array $user_ids Array of user IDs.
  * @param int   $blog_id  The blog ID to migrate for this blog.
