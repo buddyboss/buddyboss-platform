@@ -425,6 +425,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20001 ) {
 			bb_update_to_2_3_3();
 		}
+
+		if ( $raw_db_version < 20011 ) {
+			bb_update_to_2_3_4();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2706,4 +2710,56 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
 
 	$paged++;
 	bb_repair_member_unique_slug( $paged );
+}
+
+/**
+ * Background job to update user profile slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_4() {
+	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_3_4', 'yes', DAY_IN_SECONDS );
+
+	bb_core_update_repaired_member_slug();
+}
+
+/**
+ * Update the member slugs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_update_repaired_member_slug() {
+	global $wpdb, $bp_background_updater;
+
+	$user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
+			'bb_profile_slug',
+			40
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( array_chunk( $user_ids, 100 ) as $chunk ) {
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_set_bulk_user_profile_slug',
+					'args'     => array( $chunk ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->schedule_event();
+	}
 }
