@@ -2727,7 +2727,7 @@ function bb_update_to_2_3_4() {
 
 	set_transient( 'bb_update_to_2_3_4', 'yes', DAY_IN_SECONDS );
 
-	bb_core_update_repaired_member_slug();
+	bb_core_update_repair_member_slug();
 }
 
 /**
@@ -2735,7 +2735,7 @@ function bb_update_to_2_3_4() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_core_update_repaired_member_slug() {
+function bb_core_update_repair_member_slug() {
 	global $wpdb, $bp_background_updater;
 
 	$user_ids = $wpdb->get_col(
