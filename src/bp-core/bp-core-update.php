@@ -2750,7 +2750,7 @@ function bb_core_update_repaired_member_slug() {
 		return;
 	}
 
-	foreach ( array_chunk( $user_ids, 100 ) as $chunk ) {
+	foreach ( array_chunk( $user_ids, 50 ) as $chunk ) {
 		$bp_background_updater->data(
 			array(
 				array(
