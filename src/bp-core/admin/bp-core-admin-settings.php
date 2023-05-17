@@ -2836,10 +2836,10 @@ function bb_admin_setting_callback_private_rss_feeds_public_content() {
 function bb_labs_get_settings_sections() {
 
 	$settings = array(
-		'bp_labs_settings_notifications' => array(
+		'bp_labs_settings' => array(
 			'page'     => 'labs',
 			'title'    => esc_html__( 'BuddyBoss Labs', 'buddyboss' ),
-			'callback' => 'bb_labs_notification_preferences_info_section_callback',
+			'callback' => 'bb_labs_info_section_callback',
 		),
 	);
 
@@ -2878,118 +2878,19 @@ function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
  */
 function bb_labs_get_settings_fields() {
 
-	$fields = array();
+	$fields = (array) apply_filters( 'bb_labs_get_settings_fields', array() );
 
-	$fields['bp_labs_settings_notifications'] = array(
-
-		'bp_labs_notification_preferences_enabled' => array(
-			'title'             => __( 'Notification Preferences', 'buddyboss' ),
-			'callback'          => 'bb_labs_settings_callback_notification_preferences_enabled',
-			'sanitize_callback' => 'absint',
-			'args'              => array(),
-		),
-	);
-
-	return (array) apply_filters( 'bb_labs_get_settings_fields', $fields );
-}
-
-/**
- * Setting > Media > Profile support.
- *
- * @since BuddyBoss 1.9.3
- */
-function bb_labs_settings_callback_notification_preferences_enabled() {
-
-	?>
-	<input name="bp_labs_notification_preferences_enabled" id="bp_labs_notification_preferences_enabled" type="checkbox" value="1"
-		<?php checked( bp_is_labs_notification_preferences_support_enabled() ); ?>
-	/>
-	<label for="bp_labs_notification_preferences_enabled">
-		<?php esc_html_e( 'Enable Notification Preferences', 'buddyboss' ); ?>
-	</label>
-
-	<?php
-	if ( ! bp_is_active( 'notifications' ) ) {
-		printf(
-			'<p class="bp-new-notice-panel-notice">%s</p>',
-			sprintf(
-				/* translators: Components page link. */
-				wp_kses_post( __( 'To make full use of this feature, enable the %s component.', 'buddyboss' ) ),
-				'<strong><a href="' . esc_url(
-					add_query_arg(
-						array( 'page' => 'bp-components' ),
-						admin_url( 'admin.php' )
-					)
-				) . '">' . esc_html__( 'Notifications', 'buddyboss' ) . '</a></strong>'
-			)
-		);
-
-		printf(
-			'<p class="description">%s</p>',
-			esc_html__(
-				'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the Notifications settings.',
-				'buddyboss'
-			)
-		);
-	} else {
-
-		printf(
-			'<p class="description">%s</p>',
-			sprintf(
-				wp_kses_post(
-					/* translators: Notification settings link. */
-					__( 'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.', 'buddyboss' )
-				),
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-settings',
-							'tab'  => 'bp-notifications',
-						),
-						admin_url( 'admin.php' )
-					)
-				)
-			)
+	if ( empty( $fields ) ) {
+		$fields['bp_labs_settings'] = array(
+			'bb_labs_no_settings_callback' => array(
+				'title'    => ' ',
+				'callback' => 'bb_labs_no_settings_callback',
+				'args'     => array( 'class' => 'notes-hidden-header' ),
+			),
 		);
 	}
 
-	printf(
-		'<p class="description">%s</p>',
-		sprintf(
-			'<a href="%1$s" class="button">%2$s</a>',
-			esc_url(
-				bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 125369,
-						),
-						'admin.php'
-					)
-				)
-			),
-			esc_html__( 'View Tutorial', 'buddyboss' )
-		)
-	);
-	?>
-
-	<p class="display-notice bb-lab-notice">
-		<strong><?php esc_html_e( 'Note to Developers', 'buddyboss' ); ?></strong>
-		<br/>
-		<?php
-		printf(
-			/* translators: Tutorial link. */
-			wp_kses_post( __( 'As part of this feature we have changed the methods for registering custom BuddyBoss Notifications, App Push Notifications and Emails. For help updating your custom development and integrations to support this new feature, please %s.', 'buddyboss' ) ),
-			sprintf(
-				'<a href="%s" target="_blank" >' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
-				'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/'
-			)
-		)
-		?>
-	</p>
-
-	<?php
-
+	return $fields;
 }
 
 /**
@@ -2997,7 +2898,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_labs_notification_preferences_info_section_callback() {
+function bb_labs_info_section_callback() {
 	?>
 
 	<p>
@@ -3012,7 +2913,22 @@ function bb_labs_notification_preferences_info_section_callback() {
 						'buddyboss'
 					)
 				),
-				"https://support.buddyboss.com"
+				'https://support.buddyboss.com'
+			)
+		);
+		?>
+	</p>
+
+	<p>
+		<?php
+		printf(
+			'<p class="description">%s</p>',
+			wp_kses_post(
+			/* translators: Support portal. */
+				__(
+					'Please note, customer support will not be able to provide support for these features until their official release.',
+					'buddyboss'
+				)
 			)
 		);
 		?>
@@ -3021,3 +2937,62 @@ function bb_labs_notification_preferences_info_section_callback() {
 	<?php
 }
 
+/**
+ * Function to show the notice about the no labs features available.
+ *
+ * @since BuddyBoss 2.1.5.1
+ *
+ * @return void
+ */
+function bb_labs_no_settings_callback() {
+	printf(
+		'<p class="no-field-notice">%s</p><style>.submit{display:none;}</style>',
+		wp_kses_post(
+		/* translators: Support portal. */
+			__(
+				'There are currently no BuddyBoss Labs features available.',
+				'buddyboss'
+			)
+		)
+	);
+}
+
+/**
+ * Allow all users to subscribe groups field.
+ *
+ * @since BuddyBoss 2.2.8
+ */
+function bb_admin_setting_callback_group_subscriptions() {
+	?>
+	<input id="bb_enable_group_subscriptions" name="bb_enable_group_subscriptions" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( bb_enable_group_subscriptions() ); ?> />
+	<label for="bb_enable_group_subscriptions"><?php esc_html_e( 'Allow members to subscribe to groups', 'buddyboss' ); ?></label>
+	<p class="description" id="bb_enable_group_subscriptions"><?php esc_html_e( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Link to profile slug tutorial
+ *
+ * @since BuddyBoss 2.3.1
+ */
+function bb_profile_slug_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 126235,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}

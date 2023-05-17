@@ -125,10 +125,6 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 		} elseif ( bbp_is_favorites() ) {
 			$base = bbp_get_favorites_permalink( bbp_get_displayed_user_id() );
 
-			// User's subscriptions.
-		} elseif ( bbp_is_subscriptions() ) {
-			$base = bbp_get_subscriptions_permalink( bbp_get_displayed_user_id() );
-
 			// Root profile page.
 		} elseif ( bbp_is_single_user() ) {
 			$base = bbp_get_user_profile_url( bbp_get_displayed_user_id() );
@@ -1657,7 +1653,13 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Get avatar
 		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
+			if ( bp_is_active( 'moderation' ) ) {
+				add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 			$author_links['avatar'] = bbp_get_topic_author_avatar( $topic_id, $r['size'] );
+			if ( bp_is_active( 'moderation' ) ) {
+				remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 		}
 
 		// Get display name

@@ -786,3 +786,75 @@
 	}
 
 }
+
+// Dropzone global progress UI
+.dropzone.dz-progress-view {
+	padding-bottom: 45px;
+	position: relative;
+
+	.dz-global-progress {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding-right: 25px;
+
+		p {
+			color: $light-text;
+			font-size: 13px;
+			line-height: 1.5;
+			margin: 0 !important;
+
+			strong {
+				font-weight: 500;
+			}
+
+		}
+
+		.dz-progress-bar-full {
+			background-color: $light-grey;
+			border-radius: 100px;
+			height: 8px;
+			width: 100%;
+			margin-bottom: 6px;
+			overflow: hidden;
+		}
+
+		.dz-progress {
+			background-color: $blue;
+			display: block;
+			height: 100%;
+			width: 100%;
+		}
+
+		.dz-remove-all {
+
+			@include center-vert();
+			justify-content: center;
+			background-color: $light-grey;
+			border-radius: 50%;
+			cursor: pointer;
+			height: 20px;
+			width: 20px;
+			position: absolute;
+			top: -6px;
+			right: 0;
+
+			&:before {
+				color: $light-text;
+				font-size: 18px;
+			}
+		}
+
+	}
+
+	&.files-uploaded {
+		padding-bottom: 0;
+		position: static;
+
+		.dz-global-progress {
+			display: none;
+		}
+	}
+
+}

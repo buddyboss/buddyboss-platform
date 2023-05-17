@@ -162,6 +162,7 @@
 		li {
 			list-style-type: none !important;
 			margin: 0 !important;
+			padding: 0.2em 0 !important;
 		}
 
 	}
@@ -251,6 +252,15 @@
 
 			.vjs-volume-panel-horizontal.vjs-hover {
 				width: auto;
+			}
+
+			.vjs-volume-panel .vjs-mouse-display .vjs-volume-tooltip {
+				display: none;
+			}
+
+			.vjs-seek-button.skip-back ~ .vjs-seek-button.skip-back,
+			.vjs-seek-button.skip-forward ~ .vjs-seek-button.skip-forward {
+				display: none;
 			}
 
 			button,
@@ -793,7 +803,7 @@ div.video-js {
 	position: relative;
 
 	.bb-activity-video-elem {
-		padding: 3px 0;
+		padding: 3px;
 
 		video.video-js + .bb-video-loader {
 			position: absolute;
@@ -1033,7 +1043,7 @@ div.video-js {
 			&.loading {
 				text-align: center;
 
-				.bb-icon-loader {
+				[class*="bb-icon"] {
 					font-size: 26px;
 					color: #fff;
 					text-align: center;

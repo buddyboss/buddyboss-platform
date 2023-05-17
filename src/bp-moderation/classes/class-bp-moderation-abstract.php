@@ -124,7 +124,7 @@ abstract class BP_Moderation_Abstract {
 		// Get Moderation settings.
 		if ( BP_Moderation_Members::$moderation_type === $args['content_type'] ) {
 			$is_allow = bp_is_moderation_member_blocking_enable();
-		} else if ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
+		} elseif ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
 			$is_allow = bb_is_moderation_member_reporting_enable();
 		} else {
 			$is_allow = bp_is_moderation_content_reporting_enable( 0, $args['content_type'] );
@@ -222,20 +222,24 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
+	 * @param bool $blocked_user_query If true then blocked user query will fire.
+	 *
 	 * @return string|void
 	 */
-	protected function exclude_where_query() {
+	protected function exclude_where_query( $blocked_user_query = true ) {
 		$where = '';
 
 		$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
 		( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
 
-		$blocked_query = $this->blocked_user_query();
-		if ( ! empty( $blocked_query ) ) {
-			if ( ! empty( $where ) ) {
-				$where .= ' AND ';
+		if ( true === $blocked_user_query ) {
+			$blocked_query = $this->blocked_user_query();
+			if ( ! empty( $blocked_query ) ) {
+				if ( ! empty( $where ) ) {
+					$where .= ' AND ';
+				}
+				$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) ) OR {$this->alias}.id IS NULL )";
 			}
-			$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) ) OR {$this->alias}.id IS NULL )";
 		}
 
 		return $where;
@@ -288,6 +292,8 @@ abstract class BP_Moderation_Abstract {
 	 * Check content is hidden or not.
 	 *
 	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param int $item_id Item id.
 	 *
 	 * @return bool
 	 */

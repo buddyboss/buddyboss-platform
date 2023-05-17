@@ -418,31 +418,33 @@ function bp_document_get_specific( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'document_ids' => false,      // A single document_id or array of IDs.
-			'max'          => false,      // Maximum number of results to return.
-			'page'         => 1,          // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,      // Results per page.
-			'sort'         => 'DESC',     // Sort ASC or DESC.
-			'order_by'     => false,      // Sort ASC or DESC.
-			'folder_id'    => false,      // Sort ASC or DESC.
-			'folder'       => false,
-			'meta_query'   => false,
-			'privacy'      => false,      // privacy to filter.
+			'document_ids'     => false,      // A single document_id or array of IDs.
+			'max'              => false,      // Maximum number of results to return.
+			'page'             => 1,          // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,      // Results per page.
+			'sort'             => 'DESC',     // Sort ASC or DESC.
+			'order_by'         => false,      // Sort ASC or DESC.
+			'folder_id'        => false,      // Sort ASC or DESC.
+			'folder'           => false,
+			'meta_query'       => false,
+			'privacy'          => false,      // privacy to filter.
+			'moderation_query' => true,
 		),
 		'document_get_specific'
 	);
 
 	$get_args = array(
-		'in'         => $r['document_ids'],
-		'max'        => $r['max'],
-		'page'       => $r['page'],
-		'per_page'   => $r['per_page'],
-		'sort'       => $r['sort'],
-		'order_by'   => $r['order_by'],
-		'folder_id'  => $r['folder_id'],
-		'folder'     => $r['folder'],
-		'privacy'    => $r['privacy'],      // privacy to filter.
-		'meta_query' => $r['meta_query'],
+		'in'               => $r['document_ids'],
+		'max'              => $r['max'],
+		'page'             => $r['page'],
+		'per_page'         => $r['per_page'],
+		'sort'             => $r['sort'],
+		'order_by'         => $r['order_by'],
+		'folder_id'        => $r['folder_id'],
+		'folder'           => $r['folder'],
+		'privacy'          => $r['privacy'],      // privacy to filter.
+		'meta_query'       => $r['meta_query'],
+		'moderation_query' => $r['moderation_query'],
 	);
 
 	/**
@@ -1232,14 +1234,14 @@ function bp_document_delete_orphaned_attachments() {
 			'relation' => 'AND',
 			array(
 				'key'   => 'bp_document_saved',
-				'value' => '0'
+				'value' => '0',
 			),
 			array(
 				'key'     => 'bb_media_draft',
 				'compare' => 'NOT EXISTS',
-				'value'   => ''
-			)
-		)
+				'value'   => '',
+			),
+		),
 	);
 
 	$document_wp_query = new WP_query( $args );
@@ -1402,22 +1404,33 @@ function bp_document_upload() {
 	$attachment_id   = 'forbidden_' . $attachment->ID;
 	$attachment_url  = home_url( '/' ) . 'bb-attachment-document-preview/' . base64_encode( $attachment_id );
 	$attachment_file = get_attached_file( $attachment->ID );
+	$attachment_size = is_file( $attachment_file ) ? bp_document_size_format( filesize( get_attached_file( $attachment->ID ) ) ) : 0;
 
-	if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	if ( 0 === $attachment_size ) {
+
+		if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		}
+
+		$file_system_direct = new WP_Filesystem_Direct( false );
+		$attachment_size    = bp_document_size_format( $file_system_direct->size( $attachment_file ) );
 	}
 
-	$file_system_direct = new WP_Filesystem_Direct( false );
-	$attachment_size    = $file_system_direct->size( $attachment_file );
+	$extension = bp_document_extension( $attachment->ID );
+	$svg_icon  = bp_document_svg_icon( $extension, $attachment->ID );
 
 	$result = array(
-		'id'        => (int) $attachment->ID,
-		'url'       => esc_url( $attachment_url ),
-		'name'      => esc_attr( pathinfo( basename( get_attached_file( (int) $attachment->ID ) ), PATHINFO_FILENAME ) ),
-		'full_name' => esc_attr( basename( $attachment_file ) ),
-		'type'      => esc_attr( 'document' ),
-		'size'      => $attachment_size,
+		'id'                => (int) $attachment->ID,
+		'url'               => esc_url( untrailingslashit( $attachment_url ) ),
+		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
+		'full_name'         => esc_attr( basename( $attachment_file ) ),
+		'type'              => esc_attr( 'document' ),
+		'size'              => $attachment_size,
+		'extension'         => $extension,
+		'svg_icon'          => $svg_icon,
+		'svg_icon_download' => bp_document_svg_icon( 'download' ),
+		'text'              => bp_document_mirror_text( $attachment->ID ),
 	);
 
 	return $result;
@@ -2046,7 +2059,7 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	$document_folder_table = $bp->document->table_name_folder;
 
-	$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
+	$type = bb_filter_input_string( INPUT_GET, 'type' );
 	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $group_id ) {
@@ -2274,8 +2287,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity document own.
-					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+					$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2346,8 +2359,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity document own.
-							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+							$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -2578,8 +2591,10 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	// Change attachment post metas & rename files.
 	foreach ( get_intermediate_image_sizes() as $size ) {
 		$size_data = image_get_intermediate_size( $attachment_document_id, $size );
-
-		@unlink( $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] );
+		$attachment_path = ! empty( $size_data['path'] ) ? $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] : '';
+		if ( ! empty( $attachment_path ) && file_exists( $attachment_path ) ) {
+			@unlink( $attachment_path );
+		}
 	}
 
 	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
@@ -2664,7 +2679,9 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		)
 	);
 
-	@unlink( $file_abs_path );
+	if ( file_exists( $file_abs_path ) ) {
+		@unlink( $file_abs_path );
+	}
 
 	return $response;
 }
@@ -3561,7 +3578,6 @@ function bp_document_get_forum_id( $document_id ) {
 			}
 		}
 	}
-	wp_reset_postdata();
 
 	if ( ! $forum_id ) {
 		$topics_document_query = new WP_Query(
@@ -3593,7 +3609,6 @@ function bp_document_get_forum_id( $document_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	if ( ! $forum_id ) {
@@ -3628,7 +3643,6 @@ function bp_document_get_forum_id( $document_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	return apply_filters( 'bp_document_get_forum_id', $forum_id, $document_id );
@@ -4350,8 +4364,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			$document_symlinks_path  = bp_document_symlink_path();
 			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy );
 			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
-				$group_object    = groups_get_group( $document->group_id );
-				$group_status    = bp_get_group_status( $group_object );
+				$group_object            = groups_get_group( $document->group_id );
+				$group_status            = bp_get_group_status( $group_object );
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
 			}
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
@@ -4368,6 +4382,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			}
 		}
 	}
+
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter url here to audio url.
@@ -4879,7 +4895,7 @@ function bb_document_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	if ( ! empty ( $list ) ) {
+	if ( ! empty( $list ) ) {
 		do_action( 'bb_document_delete_older_symlinks' );
 	}
 

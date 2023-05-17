@@ -187,6 +187,13 @@ function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_lo
 
 	$username = bp_core_get_username( $user_id, $user_nicename, $user_login );
 
+	if ( 'unique_identifier' === bb_get_profile_slug_format() ) {
+		$username = bb_core_get_user_slug( $user_id );
+		if ( empty( $username ) ) {
+			$username = bb_set_user_profile_slug( $user_id );
+		}
+	}
+
 	if ( bp_is_username_compatibility_mode() ) {
 		$username = rawurlencode( $username );
 	}
@@ -198,6 +205,10 @@ function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_lo
 	// Use the 'bp_core_get_user_domain' filter instead.
 	$domain = apply_filters( 'bp_core_get_user_domain_pre_cache', $domain, $user_id, $user_nicename, $user_login );
 
+	$user_data = get_userdata( $user_id );
+	if ( empty( $user_data ) ) {
+		$domain = '';
+	}
 	/**
 	 * Filters the domain for the passed user.
 	 *
@@ -456,9 +467,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
 		return $display_name;
 	}
 
-	if ( ! $url = bp_core_get_user_domain( $user_id ) ) {
-		return false;
-	}
+	$url = bp_core_get_user_domain( $user_id );
 
 	if ( ! empty( $just_link ) ) {
 		return $url;
@@ -1134,15 +1143,6 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
 		$time = bp_core_current_time();
 	}
 
-	// As of BuddyPress 2.0, last_activity is no longer stored in usermeta.
-	// However, we mirror it there for backward compatibility. Do not use!
-	// Remove our warning and re-add.
-	remove_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10 );
-	remove_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10 );
-	bp_update_user_meta( $user_id, 'last_activity', $time );
-	add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10, 4 );
-	add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 4 );
-
 	return BP_Core_User::update_last_activity( $user_id, $time );
 }
 
@@ -1224,7 +1224,8 @@ add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning'
 function bp_get_user_last_activity( $user_id = 0 ) {
 	$activity = '';
 
-	$last_activity = BP_Core_User::get_last_activity( $user_id );
+	$last_activity = BB_Presence::bb_get_users_last_activity( $user_id );
+
 	if ( ! empty( $last_activity[ $user_id ] ) ) {
 		$activity = $last_activity[ $user_id ]['date_recorded'];
 	}
@@ -2460,7 +2461,15 @@ function bp_core_wpsignup_redirect() {
 	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' === bp_custom_register_page_url() ) {
 		bp_core_redirect( bp_get_signup_page() );
 	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
-		bp_core_redirect( bp_custom_register_page_url() );
+		$bp_custom_register_page_url = bp_custom_register_page_url();
+
+		// Check if custom registration URL is https://site.com/wp-login.php?action=register then we do not need to redirect again.
+		if (
+			false === strpos( $bp_custom_register_page_url, 'wp-login.php' ) &&
+			'register' !== $action
+		) {
+			bp_core_redirect( $bp_custom_register_page_url );
+		}
 	}
 }
 add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
@@ -3086,6 +3095,7 @@ function bp_get_member_type_post_type_labels() {
 			'not_found_in_trash' => __( 'No Profile Types found in trash', 'buddyboss' ),
 			'search_items'       => __( 'Search Profile Types', 'buddyboss' ),
 			'singular_name'      => __( 'Profile Type', 'buddyboss' ),
+			'attributes'         => __( 'Dropdown Order', 'buddyboss' ),
 		)
 	);
 }
@@ -4449,59 +4459,38 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 						$bp_user->add_role( $selected_member_type_wp_roles[0] );
 					}
 				} else {
-					// Assign the default member type to user.
-					bp_set_member_type( $user_id, '' );
-					bp_set_member_type( $user_id, $existing_selected );
-
-					$member_type_id                = bp_member_type_post_by_type( $existing_selected );
-					$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-						$bp_user = new WP_User( $user_id );
-						foreach ( $bp_user->roles as $role ) {
-							// Remove role.
-							$bp_user->remove_role( $role );
-						}
-						// Add role.
-						$bp_user->add_role( $selected_member_type_wp_roles[0] );
-					}
+					/**
+					 * Assign the default member type to user on Admin.
+					 *
+					 * @since BuddyBoss 2.3.2
+					 *
+					 * @param int $user_id ID of user.
+					 * @param string $member_type Default selected member type.
+					 */
+					do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 				}
 				// If user is not invited by send invites then assign default member type.
 			} else {
-				// Assign the default member type to user.
-				bp_set_member_type( $user_id, '' );
-				bp_set_member_type( $user_id, $existing_selected );
-
-				$member_type_id                = bp_member_type_post_by_type( $existing_selected );
-				$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-					$bp_user = new WP_User( $user_id );
-					foreach ( $bp_user->roles as $role ) {
-						// Remove role.
-						$bp_user->remove_role( $role );
-					}
-					// Add role.
-					$bp_user->add_role( $selected_member_type_wp_roles[0] );
-				}
+				/**
+				 * Assign the default member type to user on Admin.
+				 *
+				 * @since BuddyBoss 2.3.2
+				 *
+				 * @param int $user_id ID of user.
+				 * @param string $member_type Default selected member type.
+				 */
+				do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 			}
 		} else {
-			// Assign the default member type to user.
-			bp_set_member_type( $user_id, '' );
-			bp_set_member_type( $user_id, $existing_selected );
-
-			$member_type_id                = bp_member_type_post_by_type( $existing_selected );
-			$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
-
-			if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-				$bp_user = new WP_User( $user_id );
-				foreach ( $bp_user->roles as $role ) {
-					// Remove role.
-					$bp_user->remove_role( $role );
-				}
-				// Add role.
-				$bp_user->add_role( $selected_member_type_wp_roles[0] );
-			}
+			/**
+			 * Assign the default member type to user on Admin.
+			 *
+			 * @since BuddyBoss 2.3.2
+			 *
+			 * @param int $user_id ID of user.
+			 * @param string $member_type Default selected member type.
+			 */
+			do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 		}
 	}
 
@@ -4826,30 +4815,16 @@ function bp_get_hidden_member_types() {
 }
 
 /**
- * Current user online status.
- *
- * @since BuddyPress 1.7.0
- *
- * @param int $user_id User id.
- *
- * @return void
- */
-function bb_current_user_status( $user_id ) {
-	if ( bb_is_online_user( $user_id ) ) {
-		echo '<span class="member-status online"></span>';
-	}
-}
-
-/**
  * Current user online activity time.
  *
  * @since BuddyPress 1.7.0
  *
- * @param int $user_id User id.
+ * @param int      $user_id User id.
+ * @param bool|int $expiry  Given time or whether to check degault timeframe.
  *
  * @return string
  */
-function bb_is_online_user( $user_id ) {
+function bb_is_online_user( $user_id, $expiry = false ) {
 
 	if ( ! function_exists( 'bp_get_user_last_activity' ) ) {
 		return;
@@ -4861,9 +4836,15 @@ function bb_is_online_user( $user_id ) {
 		return false;
 	}
 
-	// the activity timeframe is 5 minutes.
-	$activity_timeframe = 5 * MINUTE_IN_SECONDS;
-	return ( time() - $last_activity <= $activity_timeframe );
+	if ( is_int( $expiry ) && ! empty( $expiry ) ) {
+		$timeframe = $expiry;
+	} else {
+		$timeframe = bb_presence_interval() + bb_presence_time_span();
+	}
+
+	$online_time = apply_filters( 'bb_default_online_presence_time', $timeframe );
+
+	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $online_time ), $user_id );
 }
 
 /**
@@ -5102,7 +5083,25 @@ function bb_member_get_profile_action_arguments( $page = 'directory', $clicked =
  * @return void
  */
 function bb_members_notifications_mark_read() {
-	if ( ! is_user_logged_in() || ! bp_core_can_edit_settings() || ! bp_current_action() ) {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	// Mark individual notification as read for member following.
+	if ( ! empty( $_GET['rid'] ) ) {
+		BP_Notifications_Notification::update(
+			array(
+				'is_new' => false,
+			),
+			array(
+				'user_id'          => bp_loggedin_user_id(),
+				'id'               => (int) $_GET['rid'],
+				'component_action' => 'bb_following_new',
+			)
+		);
+	}
+
+	if ( ! bp_core_can_edit_settings() || ! bp_current_action() ) {
 		return;
 	}
 
@@ -5267,4 +5266,227 @@ function bb_get_member_type_label_colors( $type ) {
 	}
 
 	return apply_filters( 'bb_get_member_type_label_colors', $bp_member_type_label_color );
+}
+
+add_filter( 'gettext', 'bb_profile_drop_down_order_metabox_translate_order_text', 10, 3 );
+
+/**
+ * Translate the order text in the Profile Drop Down Order metabox.
+ *
+ * @since BuddyBoss 2.1.6
+ *
+ * @param string $translated_text   Translated text.
+ * @param string $untranslated_text Untranslated text.
+ * @param string $domain            Domain.
+ *
+ * @return mixed|string|void
+ */
+function bb_profile_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
+
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return $translated_text;
+	}
+	$current_screen = get_current_screen();
+
+	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_get_member_type_post_type' ) || bp_get_member_type_post_type() !== $current_screen->id ) {
+		return $translated_text;
+	}
+
+	if ( 'Order' === $untranslated_text ) {
+		return __( 'Number', 'buddyboss' );
+	}
+
+	return $translated_text;
+}
+
+/**
+ * Get the given user ID online/offline status.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $user_id User id.
+ *
+ * @return string
+ */
+function bb_get_user_presence( $user_id, $expiry = false ) {
+	if ( bb_is_online_user( $user_id, $expiry ) ) {
+		return 'online';
+	} else {
+		return 'offline';
+	}
+}
+
+/**
+ * Get online html string.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int  $user_id User id.
+ * @param bool $expiry  Consider expiry time.
+ *
+ * @return string
+ */
+function bb_get_user_presence_html( $user_id, $expiry = true ) {
+	return sprintf(
+		'<span class="member-status %s" data-bb-user-id="%d" data-bb-user-presence="%s"></span>',
+		bb_get_user_presence( $user_id, $expiry ),
+		$user_id,
+		bb_get_user_presence( $user_id, $expiry )
+	);
+}
+
+/**
+ * Get online html string.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int  $user_id User id.
+ * @param bool $expiry  Consider expiry time.
+ *
+ * @return void
+ */
+function bb_user_presence_html( $user_id, $expiry = true ) {
+	echo bb_get_user_presence_html( $user_id, $expiry ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+/**
+ * Generate user profile slug.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param int $user_id user id.
+ *
+ * @return string
+ */
+function bb_generate_user_profile_slug( int $user_id ) {
+	$unique_identifier = '';
+	if ( empty( $user_id ) ) {
+		return $unique_identifier;
+	}
+
+	$user_profile_slug = bb_core_get_user_slug( $user_id );
+	if ( ! empty( $user_profile_slug ) ) {
+		return $unique_identifier;
+	}
+
+	$user = get_user_by( 'ID', (int) $user_id );
+
+	if ( $user ) {
+		$unique_identifier = sha1( $user->user_email . $user->user_nicename . $user->ID );
+	}
+
+	return $unique_identifier;
+}
+
+/**
+ * Get the user ID based on the profile hash.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param string $profile_slug profile slug to check.
+ *
+ * @return int The ID of the matched user on success, null on failure.
+ */
+function bb_get_user_by_profile_slug( $profile_slug ) {
+
+	// Bail if empty.
+	if ( empty( $profile_slug ) ) {
+		return false;
+	}
+
+	static $cache = array();
+
+	$cache_key = 'bb_profile_slug_' . $profile_slug;
+
+	if ( ! isset( $cache[ $cache_key ] ) ) {
+
+		$found_users = get_users(
+			array(
+				'meta_key'    => 'bb_profile_slug', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value'  => $profile_slug, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'number'      => 1,
+				'count_total' => false,
+				'fields'      => 'ID',
+			)
+		);
+
+		$user = ( ! empty( $found_users ) ? current( $found_users ) : 0 );
+
+		$cache[ $cache_key ] = $user;
+	} else {
+		$user = isset( $cache[ $cache_key ] ) ? $cache[ $cache_key ] : 0;
+	}
+
+	return apply_filters( 'bb_get_user_by_profile_slug', ! empty( $user ) ? $user : 0, $profile_slug );
+}
+
+/**
+ * Get the profile slug based on the user ID.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param int $user_id User ID to check.
+ *
+ * @return string
+ */
+function bb_core_get_user_slug( int $user_id ) {
+
+	if ( empty( $user_id ) ) {
+		return '';
+	}
+
+	$profile_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
+
+	/**
+	 * Filters the profile slug based on originally provided user ID.
+	 *
+	 * @since BuddyBoss 2.3.1
+	 *
+	 * @param string $profile_slug User profile slug.
+	 * @param int    $user_id User ID.
+	 */
+	return apply_filters( 'bb_core_get_user_slug', $profile_slug, $user_id );
+}
+
+/**
+ * Setup the user profile hash to the user meta.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param int $user_id User ID.
+ *
+ * @return string
+ */
+function bb_set_user_profile_slug( int $user_id ) {
+
+	$unique_identifier = bb_generate_user_profile_slug( $user_id );
+	if ( ! empty( $unique_identifier ) ) {
+		bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
+		bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
+	}
+
+	return $unique_identifier;
+}
+
+/**
+ * Setup the user profile hash to the user meta.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param array $user_ids User IDs.
+ */
+function bb_set_bluk_user_profile_slug( $user_ids ) {
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		$user_id           = (int) $user_id;
+		$unique_identifier = bb_generate_user_profile_slug( $user_id );
+		if ( ! empty( $unique_identifier ) ) {
+			bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
+			bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
+		}
+	}
 }
