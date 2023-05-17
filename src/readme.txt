@@ -57,6 +57,25 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.3.4 =
+* Profiles - Resolved formatting issues with paragraph type fields in profile fields
+* Groups - Handled incorrect group count issue on the directory screen when the sub-groups option is enabled
+* Forums - Enhanced performance of forum discussion favorites by restructuring their data
+* Forums - Resolved performance issues with discussions having a large number of replies through efficient pagination
+* Forums - Fixed a database error that occurred when updating a forum reply with attached media
+* Forums - Introduced a new parameter for the [bbp-reply-form] shortcode to pass the discussion ID
+* Forums - Fixed the issue where an auto-generated discussion would have preceding empty space
+* Activity - Fixed the problem with the discard draft option in the activity form
+* Activity - Handled the issue with auto-generated activity for comments links on custom post types not being clickable
+* Activity - Addressed the formatting issue where highlighted text did not maintain proper formatting when a link was applied
+* Media - Addressed the issue where the 'move photos' option was not functioning as expected
+* Media - Provided hooks to modify privacy options for media files
+* Registration - Enhanced invite flow to prevent multiple registrations using the same email invite
+* Core - Updated performance API MU plugin file name for improved consistency
+* Core - Improved code to load templates with block themes
+* REST API - Resolved the problem where the profile avatar was not returning in the notification endpoint
+* REST API - Fixed the issue where the group privacy option was being removed when updated using the group settings endpoint
+
 = 2.3.3 =
 * Profiles - Resolved critical issue of duplicate unique identifiers
 * Profiles - Handled 'Social Network' field with multiple types shows random modal issue when redirected to the profile
