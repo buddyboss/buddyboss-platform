@@ -2680,11 +2680,18 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
  */
 function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
-	if ( ! function_exists( 'bp_is_activity_directory' ) || ! isset( $_POST['bbp_topic_id'] ) || ! isset( $_POST['bbp_reply_form_action'] ) || 'bbp-new-reply' !== $_POST['bbp_reply_form_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( ! isset( $_POST['bbp_topic_id'] ) || ! isset( $_POST['bbp_reply_form_action'] ) || 'bbp-new-reply' !== $_POST['bbp_reply_form_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		return $caps;
 	}
 
-	if ( bp_is_activity_directory() ) {
+	if (
+		(
+			function_exists( 'bp_is_activity_directory' ) &&
+			bp_is_activity_directory()
+		) ||
+		is_page() ||
+		is_single()
+	) {
 		$topic_id = filter_input( INPUT_POST, 'bbp_topic_id', FILTER_VALIDATE_INT );
 
 		if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
