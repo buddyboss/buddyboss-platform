@@ -3222,6 +3222,7 @@ function bp_core_get_suggestions( $args ) {
 
 	// Removed action only for xprofile fields First, last and nickname.
 	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+
 	/**
 	 * Filters the available type of at-mentions.
 	 *
@@ -3230,7 +3231,6 @@ function bp_core_get_suggestions( $args ) {
 	 * @param array|WP_Error $retval Array of results or WP_Error object.
 	 * @param array          $args   Array of arguments for suggestions.
 	 */
-
 	return apply_filters( 'bp_core_get_suggestions', $retval, $args );
 }
 
@@ -4562,8 +4562,8 @@ function bp_ajax_get_suggestions() {
 		exit;
 	}
 
-	$results_total = apply_filters( 'bp_members_suggestions_results_total', isset( $results['total'] ) ? $results['total'] : 0 );
-	$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
+	$results_total = apply_filters( 'bb_members_suggestions_results_total', $results['total'] ?? 0 );
+	$results       = apply_filters( 'bb_members_suggestions_results', $results['members'] ?? array() );
 
 	wp_send_json_success(
 		array(
