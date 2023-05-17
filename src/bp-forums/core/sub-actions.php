@@ -486,7 +486,7 @@ function bbp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = ar
  * Setup the user engagements strategy.
  *
  * @since 2.6.0 bbPress (r6875)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  */
 function bbp_setup_engagements() {
 	do_action( 'bbp_setup_engagements' );
