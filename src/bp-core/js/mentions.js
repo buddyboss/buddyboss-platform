@@ -374,6 +374,7 @@ window.bp = window.bp || {};
 									$self.render_view( data );
 									mentions_dropdown_list.removeClass( 'list-loading' );
 
+									$self.$inputor.trigger( 'keyup' );
 									bp.mentions.xhr_scroll = null;
 								}
 							);
