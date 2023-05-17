@@ -47,8 +47,8 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 		$group_avatar_type_after_saving = bb_get_default_group_avatar_type();
 		$group_cover_type_after_saving  = bb_get_default_group_cover_type();
-		$bb_default_custom_group_avatar = filter_input( INPUT_POST, 'bp-default-custom-group-avatar', FILTER_SANITIZE_STRING );
-		$bb_default_custom_group_cover  = filter_input( INPUT_POST, 'bp-default-custom-group-cover', FILTER_SANITIZE_STRING );
+		$bb_default_custom_group_avatar = bb_filter_input_string( INPUT_POST, 'bp-default-custom-group-avatar' );
+		$bb_default_custom_group_cover  = bb_filter_input_string( INPUT_POST, 'bp-default-custom-group-cover' );
 
 		/**
 		 * Validate custom option for group avatar and cover.

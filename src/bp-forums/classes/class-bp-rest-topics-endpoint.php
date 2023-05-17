@@ -2039,7 +2039,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$this->forum_endpoint->prepare_password_response( $topic->post_password );
 		}
 
-		$data['short_content'] = wp_trim_excerpt( $topic->post_content );
+		$data['short_content'] = wp_trim_excerpt( '', $topic->ID );
 
 		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );

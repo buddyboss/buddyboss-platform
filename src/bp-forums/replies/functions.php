@@ -290,7 +290,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
 	// No reply content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		 && empty( $_POST['bbp_media'] )
 		 && empty( $_POST['bbp_video'] )
 		 && empty( $_POST['bbp_media_gif'] )
@@ -712,7 +712,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// No reply content.
 	if (
-		empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+		empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		&& empty( $_POST['bbp_media'] )
 		&& empty( $_POST['bbp_video'] )
 		&& empty( $_POST['bbp_media_gif'] )

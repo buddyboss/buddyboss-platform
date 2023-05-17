@@ -795,6 +795,20 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 							'post_status' => $status,
 						)
 					);
+
+					$child_forums = bb_get_all_nested_subforums( $forum_id );
+					if ( $child_forums ) {
+						foreach ( $child_forums as $child_forum_id ) {
+							if ( get_post_status( $child_forum_id ) !== $status ) {
+								wp_update_post(
+									array(
+										'ID'          => $child_forum_id,
+										'post_status' => $status,
+									)
+								);
+							}
+						}
+					}
 				}
 			}
 		}
