@@ -250,9 +250,14 @@ function bbp_new_reply_handler( $action = '' ) {
 
 				// Forum is hidden and user cannot access.
 			} elseif ( bbp_is_forum_hidden( $forum_id ) ) {
+
+				add_filter( 'bbp_map_meta_caps', 'bb_map_group_forum_reply_meta_caps', 10, 4 );
+
 				if ( ! current_user_can( 'read_hidden_forums' ) ) {
 					bbp_add_error( 'bbp_new_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
 				}
+
+				remove_filter( 'bbp_map_meta_caps', 'bb_map_group_forum_reply_meta_caps', 10, 4 );
 			}
 		}
 	}
@@ -285,7 +290,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
 	// No reply content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		 && empty( $_POST['bbp_media'] )
 		 && empty( $_POST['bbp_video'] )
 		 && empty( $_POST['bbp_media_gif'] )
@@ -518,7 +523,6 @@ function bbp_new_reply_handler( $action = '' ) {
 			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 		}
 
-
 		/** Additional Actions (After Save) */
 
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
@@ -707,7 +711,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// No reply content.
 	if (
-		empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
+		empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		&& empty( $_POST['bbp_media'] )
 		&& empty( $_POST['bbp_video'] )
 		&& empty( $_POST['bbp_media_gif'] )
@@ -903,7 +907,7 @@ function bbp_edit_reply_handler( $action = '' ) {
  * @uses update_post_meta() To update the reply metas
  * @uses set_transient() To update the flood check transient for the ip
  * @uses bbp_update_user_last_posted() To update the users last posted time
- * @uses bbp_is_subscriptions_active() To check if the subscriptions feature is
+ * @uses bb_is_enabled_subscription() To check if the subscriptions feature is
  *                                      activated or not
  * @uses bbp_is_user_subscribed() To check if the user is subscribed
  * @uses bbp_remove_user_subscription() To remove the user's subscription
@@ -972,8 +976,19 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
 		}
 	}
 
+	// Get the post type.
+	$post_type = get_post_type( $topic_id );
+	if ( empty( $post_type ) ) {
+		return;
+	}
+
+	$subscribe_type = 'topic';
+	if ( bbp_get_forum_post_type() === $post_type ) {
+		$subscribe_type = 'forum';
+	}
+
 	// Handle Subscription Checkbox.
-	if ( bbp_is_subscriptions_active() && ! empty( $author_id ) && ! empty( $topic_id ) ) {
+	if ( bb_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ! empty( $topic_id ) ) {
 		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 
@@ -2533,21 +2548,29 @@ function bbp_list_replies( $args = array() ) {
 
 	if ( $r['page'] > 1 ) {
 
-		$loop_run     = $r['page'] - 1;
-		$offset_total = 0;
-		for ( $i = 1; $i <= $loop_run; $i++ ) {
+		// Get top level replies.
+		$top_level_replies = array_filter(
+			bbpress()->reply_query->posts,
+			function( $post ) {
+				return empty( $post->reply_to );
+			}
+		);
 
-			$walker_offset = new stdClass();
-			ob_start();
-			$walker_offset = new BBP_Walker_Reply();
+		// Get all child level replies.
+		$child_level_replies = array_filter(
+			bbpress()->reply_query->posts,
+			function( $post ) {
+				return ! empty( $post->reply_to );
+			}
+		);
 
-			$walker_offset->paged_walk( bbpress()->reply_query->posts, $r['max_depth'], $i, $r['per_page'], $r );
-			ob_get_clean();
+		// Get top level replies upto current page.
+		$length                = ( (int) $r['page'] - 1 ) * (int) $r['per_page'];
+		$top_replies_upto_page = array_slice( $top_level_replies, 0, $length );
+		$top_reply_ids         = wp_list_pluck( $top_replies_upto_page, 'ID' );
+		$offset_total          = bbp_replies_count_walk( $child_level_replies, $top_reply_ids, count( $top_reply_ids ) );
 
-			$offset_total = $offset_total + $walker_offset->total_items_per_page;
-		}
 		bbpress()->reply_query->offset = $offset_total;
-
 	} else {
 		bbpress()->reply_query->offset = 0;
 	}
@@ -2640,4 +2663,111 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		esc_html( $display_role ),
 		$args['after']
 	);
+}
+
+/**
+ * Allow group members to have advanced priviledges in group forum topics.
+ *
+ * @since BuddyBoss 2.1.6
+ *
+ * @param array  $caps      Primitive capabilities required of the user.
+ * @param string $cap       Capability being checked.
+ * @param int    $user_id   The user ID.
+ * @param array  $args      Adds context to the capability check, typically
+ *                          starting with an object ID.
+ *
+ * @return array
+ */
+function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+
+	if ( ! function_exists( 'bp_is_activity_directory' ) || ! isset( $_POST['bbp_topic_id'] ) || ! isset( $_POST['bbp_reply_form_action'] ) || 'bbp-new-reply' !== $_POST['bbp_reply_form_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return $caps;
+	}
+
+	if ( bp_is_activity_directory() ) {
+		$topic_id = filter_input( INPUT_POST, 'bbp_topic_id', FILTER_VALIDATE_INT );
+
+		if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$forum_id = bbp_get_topic_forum_id( $topic_id );
+		} else {
+			// Get the forum id.
+			$forum_id = filter_input( INPUT_POST, 'bbp_forum_id', FILTER_VALIDATE_INT );
+		}
+
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_id  = reset( $group_ids );
+
+		if ( $group_id ) {
+			$is_member = groups_is_user_member( get_current_user_id(), $group_id );
+			$is_mod    = groups_is_user_mod( get_current_user_id(), $group_id );
+			$is_admin  = groups_is_user_admin( get_current_user_id(), $group_id );
+
+			switch ( $cap ) {
+
+				// If user is a group member, allow them to create content.
+				case 'read_forum':
+				case 'publish_replies':
+				case 'publish_topics':
+				case 'read_hidden_forums':
+				case 'read_private_forums':
+					if ( $is_member || $is_mod || $is_admin ) {
+						$caps = array( 'participate' );
+					}
+					break;
+
+				// If user is a group mod ar admin, map to participate cap.
+				case 'moderate':
+				case 'edit_topic':
+				case 'edit_reply':
+				case 'view_trash':
+				case 'edit_others_replies':
+				case 'edit_others_topics':
+					if ( $is_mod || $is_admin ) {
+						$caps = array( 'participate' );
+					}
+					break;
+
+				// If user is a group admin, allow them to delete topics and replies.
+				case 'delete_topic':
+				case 'delete_reply':
+					if ( $is_admin ) {
+						$caps = array( 'participate' );
+					}
+					break;
+			}
+		}
+	}
+
+	return apply_filters( 'bb_map_group_forum_reply_meta_caps', $caps, $cap, $user_id, $args );
+}
+
+/**
+ * Get the total count of all replies upto possible depth.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $posts         List of child level reply posts.
+ * @param array $top_reply_ids List of top level reply posts.
+ * @param int   $count         Count of replies.
+ *
+ * @return int $count
+ */
+function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
+
+	if ( empty( $posts ) || empty( $top_reply_ids ) ) {
+		return $count;
+	}
+
+	$child_posts = array();
+	foreach ( $posts as $index => $child_post ) {
+		if ( in_array( $child_post->reply_to, $top_reply_ids, true ) ) {
+			$child_posts[] = $child_post;
+			unset( $posts[ $index ] );
+		}
+	}
+
+	$child_reply_ids = wp_list_pluck( $child_posts, 'ID' );
+	$count           = $count + bbp_replies_count_walk( $posts, $child_reply_ids, count( $child_reply_ids ) );
+
+	return $count;
 }

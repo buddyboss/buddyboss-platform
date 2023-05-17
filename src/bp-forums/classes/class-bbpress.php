@@ -292,6 +292,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			// Common
 			require $this->includes_dir . 'common/ajax.php';
 			require $this->includes_dir . 'common/classes.php';
+			require $this->includes_dir . 'common/engagements.php';
 			require $this->includes_dir . 'common/functions.php';
 			require $this->includes_dir . 'common/formatting.php';
 			require $this->includes_dir . 'common/locale.php';
@@ -320,6 +321,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Users
 			require $this->includes_dir . 'users/capabilities.php';
+			require $this->includes_dir . 'users/engagements.php';
 			require $this->includes_dir . 'users/functions.php';
 			require $this->includes_dir . 'users/template.php';
 			require $this->includes_dir . 'users/options.php';
@@ -329,6 +331,9 @@ if ( ! class_exists( 'bbPress' ) ) :
 			require $this->includes_dir . 'core/extend.php';
 			require $this->includes_dir . 'core/actions.php';
 			require $this->includes_dir . 'core/filters.php';
+
+			// Legacy subscriptions.
+			require $this->includes_dir . 'classes/class-bp-forums-legacy.php';
 
 			/** Admin */
 
@@ -361,6 +366,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			$actions = array(
 				'setup_theme',              // Setup the default theme compat
 				'setup_current_user',       // Setup currently logged in user
+				'setup_engagements',        // Setup user engagements strategy.
 				'register_post_types',      // Register post types (forum|topic|reply)
 				'register_post_statuses',   // Register post statuses (closed|spam|orphan|hidden)
 				'register_taxonomies',      // Register taxonomies (topic-tag)
@@ -462,6 +468,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'query_var'           => true,
 						'menu_icon'           => '',
 						'show_in_menu'        => false,
+						'source'              => 'bbpress',
 					)
 				)
 			);
@@ -493,6 +500,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'query_var'           => true,
 						'menu_icon'           => '',
 						'show_in_menu'        => false,
+						'source'              => 'bbpress',
 					)
 				)
 			);
@@ -522,6 +530,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'query_var'           => true,
 						'menu_icon'           => '',
 						'show_in_menu'        => false,
+						'source'              => 'bbpress',
 					)
 				)
 			);
@@ -551,6 +560,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'label_count'       => _n_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'buddyboss' ),
 						'public'            => true,
 						'show_in_admin_all' => true,
+						'source'            => 'bbpress',
 					)
 				)
 			);
@@ -567,6 +577,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
 						'show_in_admin_all_list'    => false,
+						'source'                    => 'bbpress',
 					)
 				)
 			);
@@ -583,6 +594,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
 						'show_in_admin_all_list'    => false,
+						'source'                    => 'bbpress',
 					)
 				)
 			);
@@ -599,6 +611,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
 						'show_in_admin_all_list'    => true,
+						'source'                    => 'bbpress',
 					)
 				)
 			);
@@ -635,7 +648,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 */
 		public static function register_taxonomies() {
 
-			// Register the topic-tag taxonomy
+			// Register the topic-tag taxonomy.
 			register_taxonomy(
 				bbp_get_topic_tag_tax_id(),
 				bbp_get_topic_post_type(),
@@ -653,6 +666,8 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'public'                => true,
 						'show_ui'               => bbp_allow_topic_tags() && current_user_can( 'bbp_topic_tags_admin' ),
 						'show_in_menu'          => false,
+						'show_in_rest'          => true,
+						'source'                => 'bbpress',
 					)
 				)
 			);
@@ -722,6 +737,22 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 */
 		public function setup_current_user() {
 			$this->current_user = wp_get_current_user();
+		}
+
+		/**
+		 * Setup the user engagements strategy.
+		 *
+		 * @since 2.6.0 bbPress (r6875)
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function setup_engagements() {
+
+			// Setup the class name.
+			$strategy   = ucwords( bbp_engagements_strategy() );
+			$class_name = "BBP_User_Engagements_{$strategy}";
+
+			// Setup the engagements interface.
+			$this->engagements = new $class_name();
 		}
 
 		/** Custom Rewrite Rules **************************************************/

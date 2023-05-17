@@ -922,7 +922,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			foreach ( $groups as $group ) {
 				$data['groups'][ $group->id ] = array(
-					'name' => $group->name,
+					'name' => wp_specialchars_decode( $group->name, ENT_QUOTES ),
 				);
 
 				foreach ( $group->fields as $item ) {
@@ -1552,7 +1552,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	/**
 	 * Function will return original avatar of blocked by member.
 	 *
-	 * @since BuddyBoss 2.1.5
+	 * @since BuddyBoss 2.1.6.2
 	 *
 	 * @param string $avatar_url     Updated avatar url.
 	 * @param string $old_avatar_url Old avatar url before updated.

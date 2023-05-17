@@ -1029,3 +1029,71 @@ function bbp_get_empty_datetime() {
 	return (string) apply_filters( 'bbp_get_default_zero_date', $retval, $db_version );
 }
 
+/**
+ * Get default forum image URL.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ *
+ * @return string Return default forum image URL.
+ */
+function bb_get_forum_default_image( $size = 'full' ) {
+	$filename = 'bb-default-forum.png';
+	if ( 'full' !== $size ) {
+		$filename = 'bb-default-forum-150.png';
+	}
+	/**
+	 * Filters default forum image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default forum image URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_forum_default_image', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $filename ), $size );
+}
+
+/**
+ * Perform a safe, local redirect somewhere inside the current site.
+ *
+ * On some setups, passing the value of wp_get_referer() may result in an empty
+ * value for $location, which results in an error on redirection. If $location
+ * is empty, we can safely redirect back to the forum root. This might change
+ * in a future version, possibly to the site root.
+ *
+ * @since 2.6.0 bbPress (r5658)
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @see   bbp_redirect_to_field()
+ *
+ * @param string $location The URL to redirect the user to.
+ * @param int    $status   Optional. The numeric code to give in the redirect
+ *                         headers. Default: 302.
+ */
+function bbp_redirect( $location = '', $status = 302 ) {
+
+	// Prevent errors from empty $location.
+	if ( empty( $location ) ) {
+		$location = bbp_get_forums_url();
+	}
+
+	// Setup the safe redirect.
+	wp_safe_redirect( $location, $status );
+
+	// Exit so the redirect takes place immediately.
+	exit();
+}
+
+/**
+ * Function to check the forums favourite legacy is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @todo Legacy support will disable after certain version.
+ *
+ * @return bool True if forums favourite legacy is enabled otherwise false.
+ */
+function bb_forum_favourite_legacy_data_support() {
+	return (bool) apply_filters( 'bb_forum_favourite_legacy_data_support', true );
+}

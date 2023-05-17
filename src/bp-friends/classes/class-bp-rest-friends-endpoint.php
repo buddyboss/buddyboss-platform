@@ -387,7 +387,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! friends_add_friend( $initiator_id->ID, $friend_id->ID, $request['force'] ) ) {
 			return new WP_Error(
 				'bp_rest_friends_create_item_failed',
-				__( 'There was an error trying to create the friendship.', 'buddyboss' ),
+				__( 'There was a problem sending the connection request.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)

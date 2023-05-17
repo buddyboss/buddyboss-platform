@@ -27,7 +27,7 @@
 
 			<?php
 				printf(
-					'<p><a href="%1$s">%2$s</a></p>',
+					'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
 					esc_url( wp_login_url( bp_get_root_domain() ) ),
 					esc_html__( 'Log In', 'buddyboss' )
 				);

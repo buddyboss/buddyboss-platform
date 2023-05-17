@@ -59,7 +59,7 @@ class Sync {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function generator( $bpGroupId = null, $ldGroupId = null ) {
+	public function generator( $bpGroupId = 0, $ldGroupId = 0 ) {
 		return new SyncGenerator( $bpGroupId, $ldGroupId );
 	}
 
@@ -137,7 +137,7 @@ class Sync {
 		$this->deletingSyncedLdGroupId = null;
 
 		if ( ! bp_ld_sync( 'settings' )->get( 'buddypress.delete_ld_on_delete' ) ) {
-			$this->generator( null, $ldGroupId )->desyncFromBuddypress();
+			$this->generator( 0, $ldGroupId )->desyncFromBuddypress();
 			return;
 		}
 

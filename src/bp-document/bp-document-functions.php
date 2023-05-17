@@ -418,31 +418,33 @@ function bp_document_get_specific( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'document_ids' => false,      // A single document_id or array of IDs.
-			'max'          => false,      // Maximum number of results to return.
-			'page'         => 1,          // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,      // Results per page.
-			'sort'         => 'DESC',     // Sort ASC or DESC.
-			'order_by'     => false,      // Sort ASC or DESC.
-			'folder_id'    => false,      // Sort ASC or DESC.
-			'folder'       => false,
-			'meta_query'   => false,
-			'privacy'      => false,      // privacy to filter.
+			'document_ids'     => false,      // A single document_id or array of IDs.
+			'max'              => false,      // Maximum number of results to return.
+			'page'             => 1,          // Page 1 without a per_page will result in no pagination.
+			'per_page'         => false,      // Results per page.
+			'sort'             => 'DESC',     // Sort ASC or DESC.
+			'order_by'         => false,      // Sort ASC or DESC.
+			'folder_id'        => false,      // Sort ASC or DESC.
+			'folder'           => false,
+			'meta_query'       => false,
+			'privacy'          => false,      // privacy to filter.
+			'moderation_query' => true,
 		),
 		'document_get_specific'
 	);
 
 	$get_args = array(
-		'in'         => $r['document_ids'],
-		'max'        => $r['max'],
-		'page'       => $r['page'],
-		'per_page'   => $r['per_page'],
-		'sort'       => $r['sort'],
-		'order_by'   => $r['order_by'],
-		'folder_id'  => $r['folder_id'],
-		'folder'     => $r['folder'],
-		'privacy'    => $r['privacy'],      // privacy to filter.
-		'meta_query' => $r['meta_query'],
+		'in'               => $r['document_ids'],
+		'max'              => $r['max'],
+		'page'             => $r['page'],
+		'per_page'         => $r['per_page'],
+		'sort'             => $r['sort'],
+		'order_by'         => $r['order_by'],
+		'folder_id'        => $r['folder_id'],
+		'folder'           => $r['folder'],
+		'privacy'          => $r['privacy'],      // privacy to filter.
+		'meta_query'       => $r['meta_query'],
+		'moderation_query' => $r['moderation_query'],
 	);
 
 	/**
@@ -1420,7 +1422,7 @@ function bp_document_upload() {
 
 	$result = array(
 		'id'                => (int) $attachment->ID,
-		'url'               => esc_url( $attachment_url ),
+		'url'               => esc_url( untrailingslashit( $attachment_url ) ),
 		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
 		'full_name'         => esc_attr( basename( $attachment_file ) ),
 		'type'              => esc_attr( 'document' ),
@@ -2057,7 +2059,7 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	$document_folder_table = $bp->document->table_name_folder;
 
-	$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
+	$type = bb_filter_input_string( INPUT_GET, 'type' );
 	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $group_id ) {
@@ -2285,8 +2287,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity document own.
-					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+					$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2357,8 +2359,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity document own.
-							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
-							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
+							$status                      = bp_is_active( 'groups' ) ? bp_get_group_status( groups_get_group( $activity->item_id ) ) : '';
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -2589,8 +2591,10 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	// Change attachment post metas & rename files.
 	foreach ( get_intermediate_image_sizes() as $size ) {
 		$size_data = image_get_intermediate_size( $attachment_document_id, $size );
-
-		@unlink( $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] );
+		$attachment_path = ! empty( $size_data['path'] ) ? $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] : '';
+		if ( ! empty( $attachment_path ) && file_exists( $attachment_path ) ) {
+			@unlink( $attachment_path );
+		}
 	}
 
 	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
@@ -2675,7 +2679,9 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		)
 	);
 
-	@unlink( $file_abs_path );
+	if ( file_exists( $file_abs_path ) ) {
+		@unlink( $file_abs_path );
+	}
 
 	return $response;
 }
@@ -3572,7 +3578,6 @@ function bp_document_get_forum_id( $document_id ) {
 			}
 		}
 	}
-	wp_reset_postdata();
 
 	if ( ! $forum_id ) {
 		$topics_document_query = new WP_Query(
@@ -3604,7 +3609,6 @@ function bp_document_get_forum_id( $document_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	if ( ! $forum_id ) {
@@ -3639,7 +3643,6 @@ function bp_document_get_forum_id( $document_id ) {
 				}
 			}
 		}
-		wp_reset_postdata();
 	}
 
 	return apply_filters( 'bp_document_get_forum_id', $forum_id, $document_id );
@@ -4379,6 +4382,8 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			}
 		}
 	}
+
+	$attachment_url = ! empty( $attachment_url ) && ! bb_enable_symlinks() ? untrailingslashit( $attachment_url ) : $attachment_url;
 
 	/**
 	 * Filter url here to audio url.
