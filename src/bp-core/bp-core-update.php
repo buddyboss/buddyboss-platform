@@ -426,8 +426,8 @@ function bp_version_updater() {
 			bb_update_to_2_3_3();
 		}
 
-		if ( $raw_db_version < 20011 ) {
-			bb_update_to_2_3_4();
+		if ( $raw_db_version < 20111 ) {
+			bb_update_to_2_3_5();
 		}
 	}
 
@@ -2719,7 +2719,7 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
  *
  * @return void
  */
-function bb_update_to_2_3_4() {
+function bb_update_to_2_3_5() {
 	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
 	if ( $is_already_run ) {
 		return;
