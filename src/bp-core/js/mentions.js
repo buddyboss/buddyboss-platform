@@ -196,7 +196,7 @@ window.bp = window.bp || {};
 					 * @since BuddyPress 3.0.0. Renamed from "remote_filter" for at.js v1.5.4 support.
 					 */
 					remoteFilter: function ( query, render_view ) {
-						var params                 = {};
+						var params                 = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
 						var mentions_dropdown      = this.$el;
 						var $self                  = this;
 						var mentions_dropdown_list = mentions_dropdown.find( 'ul' );
@@ -318,8 +318,6 @@ window.bp = window.bp || {};
 						if ( ! mentions_dropdown_list.find( 'li:last-child' ).hasClass( 'list-loader' ) ) {
 							mentions_dropdown_list.append( '<li class="list-loader">Loading more results…</li>' );
 						}
-
-						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
 
 						if ( mentions_dropdown.data( 'page' ) ) {
 							params.page = mentions_dropdown.data( 'page' );
