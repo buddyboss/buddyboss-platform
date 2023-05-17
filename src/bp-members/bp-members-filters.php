@@ -820,11 +820,9 @@ function bb_repair_member_profile_links( $repair_list ) {
  *
  * @since BuddyBoss 2.3.1
  *
- * @param bool $is_background The current process is background or not.
- *
  * @return array|void
  */
-function bb_repair_member_profile_links_callback( $is_background = false ) {
+function bb_repair_member_profile_links_callback() {
 	if ( ! bp_is_active( 'members' ) ) {
 		return;
 	}
