@@ -6,7 +6,7 @@
  * This file contains the common classes and functions for interacting with the
  * bbPress engagements API. See `includes/users/engagements.php` for more.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @package    bbPress
  * @subpackage Common
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * Return the strategy used for storing user engagements.
  *
  * @since 2.6.0 bbPress (r6722)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param string $rel_key  The key used to index this relationship.
  * @param string $rel_type The type of meta to look in.
@@ -35,7 +35,7 @@ function bbp_user_engagements_interface( $rel_key = '', $rel_type = 'post' ) {
  * classes will extend.
  *
  * @since 2.6.0 bbPress (r6722)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  */
 class BBP_User_Engagements_Base {
 
@@ -43,7 +43,7 @@ class BBP_User_Engagements_Base {
 	 * Type of strategy being used.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @var string
 	 */
@@ -53,7 +53,7 @@ class BBP_User_Engagements_Base {
 	 * Add a user id to an object.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param int    $user_id   The user id.
@@ -69,7 +69,7 @@ class BBP_User_Engagements_Base {
 	 * Remove a user id from an object.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param int    $user_id   The user id.
@@ -84,7 +84,7 @@ class BBP_User_Engagements_Base {
 	 * Remove a user id from all objects.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $user_id   The user id.
 	 * @param string $meta_key  The relationship key.
@@ -98,7 +98,7 @@ class BBP_User_Engagements_Base {
 	 * Remove an object from all users.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param string $meta_key  The relationship key.
@@ -112,7 +112,7 @@ class BBP_User_Engagements_Base {
 	 * Remove all users from all objects.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $meta_key  The relationship key.
 	 * @param string $meta_type The relationship type (usually 'post').
@@ -125,7 +125,7 @@ class BBP_User_Engagements_Base {
 	 * Get users of an object.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param string $meta_key  The key used to index this relationship.
@@ -139,7 +139,7 @@ class BBP_User_Engagements_Base {
 	 * Get the part of the query responsible for JOINing objects to relationships.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param array  $args        Default query arguments.
 	 * @param string $context_key Additional context.
@@ -155,7 +155,7 @@ class BBP_User_Engagements_Base {
  * Meta strategy for interfacing with User Engagements.
  *
  * @since 2.6.0 bbPress (r6722)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  */
 class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 
@@ -163,7 +163,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * Type of strategy being used.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @var string
 	 */
@@ -173,7 +173,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * Add a user id to an object.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param int    $user_id   The user id.
@@ -195,7 +195,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * Remove a user id from an object.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param int    $user_id   The user id.
@@ -216,7 +216,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * Remove a user id from all objects.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $user_id   The user id.
 	 * @param string $meta_key  The relationship key.
@@ -232,7 +232,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * Remove an object from all users.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param string $meta_key  The relationship key.
@@ -248,7 +248,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * Remove all users from all objects.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $meta_key  The relationship key.
 	 * @param string $meta_type The relationship type (usually 'post').
@@ -263,7 +263,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * Get users of an object.
 	 *
 	 * @since 2.6.0 bbPress (r6722)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param string $meta_key  The key used to index this relationship.
@@ -279,7 +279,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * Get the part of the query responsible for JOINing objects to relationships.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param array  $args        Default query arguments.
 	 * @param string $context_key Additional context.
@@ -323,7 +323,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
  * Term strategy for interfacing with User Engagements.
  *
  * @since 2.6.0 bbPress (r6737)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  */
 class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 
@@ -331,7 +331,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * Type of strategy being used.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @var string
 	 */
@@ -341,7 +341,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * Register an engagement taxonomy just-in-time for immediate use.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $tax_key     Taxonomy key.
 	 * @param string $object_type The object type.
@@ -386,7 +386,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * Add a user id to an object.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param int    $user_id   The user id.
@@ -408,7 +408,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * Remove a user id from an object.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param int    $user_id   The user id.
@@ -429,7 +429,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * Remove a user id from all objects.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $user_id   The user id.
 	 * @param string $meta_key  The relationship key.
@@ -450,7 +450,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * Remove an object from all users.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param string $meta_key  The relationship key.
@@ -466,7 +466,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * Remove all users from all objects.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $meta_key  The relationship key.
 	 * @param string $meta_type The relationship type (usually 'post').
@@ -481,7 +481,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * Get users of an object.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param string $meta_key  The key used to index this relationship.
@@ -518,7 +518,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 	 * Get the part of the query responsible for JOINing objects to relationships.
 	 *
 	 * @since 2.6.0 bbPress (r6737)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param array  $args        Default query arguments.
 	 * @param string $context_key Additional context.
@@ -574,7 +574,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
  * strategy as an example when building your own.
  *
  * @since 2.6.0 bbPress (r6844)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  */
 class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 
@@ -582,7 +582,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * Type of strategy being used.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @var string
 	 */
@@ -592,7 +592,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * Private function to map 2.6 meta keys to 2.5 user-option keys.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $meta_key  Meta key.
 	 * @param int    $object_id Object Id.
@@ -644,7 +644,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * which had caching surrounding the FIND_IN_SET usermeta queries.
 	 *
 	 * @since 2.6.3 bbPress (r6991)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $meta_key  The meta key.
 	 * @param int    $object_id The object id.
@@ -695,7 +695,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * which had caching surrounding the FIND_IN_SET queries in usermeta.
 	 *
 	 * @since 2.6.3 bbPress (r6991)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $meta_key  The meta key.
 	 * @param int    $object_id The object id.
@@ -715,7 +715,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * which had caching surrounding the FIND_IN_SET queries in usermeta.
 	 *
 	 * @since 2.6.3 bbPress (r6991)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $meta_key  Meta key.
 	 * @param int    $object_id Object Id.
@@ -737,7 +737,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * which had caching surrounding the FIND_IN_SET queries in usermeta.
 	 *
 	 * @since 2.6.3 bbPress (r6991)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $meta_key  Meta key.
 	 * @param int    $object_id Object Id.
@@ -754,7 +754,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * Turn a comma-separated string into an array of integers.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $results The comma-separated results.
 	 *
@@ -768,7 +768,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * Add a user id to an object.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param int    $user_id   The user id.
@@ -804,7 +804,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * Remove a user id from an object.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param int    $user_id   The user id.
@@ -842,7 +842,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * Remove a user id from all objects.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $user_id   The user id.
 	 * @param string $meta_key  The relationship key.
@@ -876,7 +876,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * Remove an object from all users.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param string $meta_key  The relationship key.
@@ -914,7 +914,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * Remove all users from all objects.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param string $meta_key  The relationship key.
 	 * @param string $meta_type The relationship type (usually 'post').
@@ -956,7 +956,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * older than 2.6, but no longer are to avoid cache pollution.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param int    $object_id The object id.
 	 * @param string $meta_key  The key used to index this relationship.
@@ -987,7 +987,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * Get the part of the query responsible for JOINing objects to relationships.
 	 *
 	 * @since 2.6.0 bbPress (r6844)
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param array  $args        Default query arguments.
 	 * @param string $context_key Additional context.
