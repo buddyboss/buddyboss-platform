@@ -3778,10 +3778,16 @@ window.bp = window.bp || {};
 
 				if ( self.dataInput !== null && self.dataInput.length > 0 ) {
 
+					var tmp_link_description = self.options.link_description;
+
+					if ( self.options.link_embed ) {
+						tmp_link_description = '';
+					}
+
 					var link_preview_data = {
 						link_url: self.options.link_url,
 						link_title: self.options.link_title,
-						link_description: self.options.link_description,
+						link_description: tmp_link_description,
 						link_embed: self.options.link_embed,
 						link_image: ( 'undefined' !== typeof self.options.link_images ) ? self.options.link_images[ self.options.link_image_index_save ] : '',
 						link_image_index_save: self.options.link_image_index_save
