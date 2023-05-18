@@ -349,12 +349,12 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 				// Fetch main parent activity/comment id based on comment id.
 				$parent_data               = $this->bb_get_parent_activity_or_comment_id( $item_id );
-				$parent_comment_id         = ! empty( $parent_data ) ? $parent_data['comment_id'] : '';
-				$activity_author_id        = ! empty( $parent_data ) ? $parent_data['user_id'] : '';
-				$parent_activity_component = ! empty( $parent_data ) ? $parent_data['component'] : '';
+				$parent_comment_id         = ! empty( $parent_data ) && isset( $parent_data['comment_id'] ) ? $parent_data['comment_id'] : 0;
+				$activity_author_id        = ! empty( $parent_data ) && isset( $parent_data['user_id'] ) ? $parent_data['user_id'] : 0;
+				$parent_activity_component = ! empty( $parent_data ) && isset( $parent_data['component'] ) ? $parent_data['component'] : '';
 
 				// Implement static cache.
-				$parent_comment_author_cache_key = 'bb_parent_comment_author_id';
+				$parent_comment_author_cache_key = 'bb_parent_comment_author_id_'  . $parent_comment_id;
 				if ( ! isset( $parent_comment_author_cache[ $parent_comment_author_cache_key ] ) && ! empty( $parent_comment_id ) ) {
 					// SQL query to fetch parent comment author id.
 					$parent_comment_author_id = $wpdb->get_var(
@@ -439,29 +439,31 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			empty( $result ) ||
 			(int) $result->item_id === (int) $result->secondary_item_id
 		) {
-			$parent_activity_key = 'bb_main_parent_activity_id_' . $result->item_id;
-			if ( ! isset( $parent_activity_cache[ $parent_activity_key ] ) ) {
-				$row                                           = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name} WHERE id = %d", $result->item_id ) );
-				$parent_activity_cache[ $parent_activity_key ] = $row;
-			}
-			$row                 = $parent_activity_cache[ $parent_activity_key ];
-			$activity_author_id  = ! empty( $row ) ? $row->user_id : 0;
-			$component           = ! empty( $row ) ? $row->component : '';
 			$cache[ $cache_key ] = array(
 				'comment_id'  => $comment_id,
-				'activity_id' => $result->item_id,
-				'user_id'     => $activity_author_id,
-				'component'   => $component,
 			);
+			if ( isset( $result->item_id ) ) {
+				$parent_activity_key = 'bb_main_parent_activity_id_' . $result->item_id;
+				if ( ! isset( $parent_activity_cache[ $parent_activity_key ] ) ) {
+					$row                                           = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name} WHERE id = %d", $result->item_id ) );
+					$parent_activity_cache[ $parent_activity_key ] = $row;
+				}
+				$row                                = $parent_activity_cache[ $parent_activity_key ];
+				$activity_author_id                 = ! empty( $row ) ? $row->user_id : 0;
+				$component                          = ! empty( $row ) ? $row->component : '';
+				$cache[ $cache_key ]['activity_id'] = $result->item_id;
+				$cache[ $cache_key ]['user_id']     = $activity_author_id;
+				$cache[ $cache_key ]['component']   = $component;
+			}
 
 			return $cache[ $cache_key ];
 		} else {
 			$parent_comment      = $this->bb_get_parent_activity_or_comment_id( $result->secondary_item_id );
 			$cache[ $cache_key ] = array(
-				'comment_id'  => $parent_comment['comment_id'],
-				'activity_id' => $parent_comment['activity_id'],
-				'user_id'     => $parent_comment['user_id'],
-				'component'   => $parent_comment['component'],
+				'comment_id'  => ! empty( $parent_comment['comment_id'] ) ? $parent_comment['comment_id'] : 0,
+				'activity_id' => ! empty( $parent_comment['activity_id'] ) ? $parent_comment['activity_id'] : 0,
+				'user_id'     => ! empty( $parent_comment['user_id'] ) ? $parent_comment['user_id'] : 0,
+				'component'   => ! empty( $parent_comment['component'] ) ? $parent_comment['component'] : '',
 			);
 
 			return $cache[ $cache_key ];
