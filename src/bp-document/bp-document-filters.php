@@ -683,7 +683,11 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 
 		// save document meta for activity.
 		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
-			bp_activity_update_meta( $main_activity_id, 'bp_document_ids', $document_ids );
+			if ( ! empty( $document_ids ) ) {
+				bp_activity_update_meta( $main_activity_id, 'bp_document_ids', $document_ids );
+			} else {
+				bp_activity_delete_meta( $main_activity_id, 'bp_document_ids' );
+			}
 		}
 
 		// delete documents which were not saved or removed from form.
