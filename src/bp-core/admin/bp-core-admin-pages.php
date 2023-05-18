@@ -67,12 +67,15 @@ function bp_custom_pages_do_settings_sections( $page ) {
 	foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 		echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 		if ( $section['title'] ) {
-			$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
-			echo "<h2 class=". $has_tutorial_btn .">{$section['title']}";
-			if( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) {
-				?> <div class="bbapp-tutorial-btn"> <?php
-				call_user_func( $section['tutorial_callback'], $section );
-				?> </div> <?php
+			$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
+			$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="' . $section['icon'] . '"></i>' : '';
+			echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . $has_icon . wp_kses_post( $section['title'] );
+			if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
+				?>
+				<div class="bbapp-tutorial-btn">
+					<?php call_user_func( $section['tutorial_callback'], $section ); ?>
+				</div>
+				<?php
 			}
 			echo "</h2>\n";
 		}
@@ -139,10 +142,14 @@ function bp_custom_pages_do_settings_fields( $page, $section ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_register_page_fields() {
+	global $wp_settings_sections;
 	$existing_pages  = bp_core_get_directory_page_ids();
 	$directory_pages = bp_core_admin_get_directory_pages();
 	$description     = '';
 	add_settings_section( 'bp_pages', __( 'Component Pages', 'buddyboss' ), 'bp_core_admin_directory_pages_description', 'bp-pages' );
+	if ( function_exists( 'bb_admin_icons' ) ) {
+		$wp_settings_sections['bp-pages']['bp_pages']['icon'] = bb_admin_icons( 'bp_pages' );
+	}
 	foreach ( $directory_pages as $name => $label ) {
 
 		if ( 'members' === $name ) {
@@ -187,7 +194,10 @@ function bp_core_admin_register_registration_page_fields() {
 	}
 
 	add_settings_section( 'bp_registration_pages', $section_title, 'bp_core_admin_registration_pages_description', 'bp-pages' );
-	$wp_settings_sections[ 'bp-pages' ][ 'bp_registration_pages' ][ 'tutorial_callback' ] = 'bb_registration_page_tutorial';
+	$wp_settings_sections['bp-pages']['bp_registration_pages']['tutorial_callback'] = 'bb_registration_page_tutorial';
+	if ( function_exists( 'bb_admin_icons' ) ) {
+		$wp_settings_sections['bp-pages']['bp_registration_pages']['icon'] = bb_admin_icons( 'bp_registration_pages' );
+	}
 
 	$existing_pages = bp_core_get_directory_page_ids();
 	$static_pages   = bp_core_admin_get_static_pages();
@@ -437,7 +447,7 @@ function bp_core_admin_maybe_save_pages_settings() {
 			if ( isset( $_POST['bp_pages'] ) && '' === $_POST['bp_pages']['new_forums_page'] ) {
 				bp_update_option( '_bbp_root_slug_custom_slug', '' );
 			} else {
-				$slug    = get_page_uri( (int) $_POST['bp_pages']['new_forums_page'] );
+				$slug = get_page_uri( (int) $_POST['bp_pages']['new_forums_page'] );
 				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 				bp_update_option( '_bbp_root_slug_custom_slug', (int) $_POST['bp_pages']['new_forums_page'] );
 			}

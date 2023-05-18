@@ -80,6 +80,18 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
+			array(
+				'groups_subscribe' => array(
+					'function' => 'bb_nouveau_ajax_group_subscription',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_unsubscribe' => array(
+					'function' => 'bb_nouveau_ajax_group_subscription',
+					'nopriv'   => false,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -347,7 +359,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		wp_send_json_error( $response );
 	}
 
-	$request = wp_parse_args(
+	$request = bp_parse_args(
 		$_POST,
 		array(
 			'scope' => 'members',
@@ -574,12 +586,11 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						<p class="status">
 							<?php
 							if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] && false === $user['is_sent'] ) {
-								?>
-								<?php esc_html_e( 'The invite has not been sent.', 'buddyboss' ); ?>
-								<?php
+								esc_html_e( 'The invite has not been sent.', 'buddyboss' );
 							} else {
-								?>
-								<?php esc_html_e( 'The invite has been sent.', 'buddyboss' ); ?><?php } ?>
+								esc_html_e( 'The invite has been sent.', 'buddyboss' );
+							}
+							?>
 						</p>
 					</div>
 				<?php } ?>
@@ -591,24 +602,16 @@ function bp_nouveau_ajax_get_users_to_invite() {
 														<?php
 														if ( isset( $user['selected'] ) && $user['selected'] ) {
 															?>
-						 selected<?php } ?>" data-bp-tooltip-pos="left" data-bp-tooltip="
-						<?php
-						if ( isset( $user['selected'] ) && $user['selected'] ) {
-							?>
-												<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>
-							<?php
-						} else {
-							?>
-							<?php esc_attr_e( 'Invite', 'buddyboss' ); ?><?php } ?>">
+                            selected<?php } ?>" data-bp-tooltip-pos="left"
+                            data-bp-tooltip="<?php echo ( isset( $user['selected'] ) && $user['selected'] ) ? esc_attr__( 'Cancel invitation', 'buddyboss' ) : esc_attr__( 'Invite', 'buddyboss' ); ?>">
 						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 						<?php
 						if ( isset( $user['selected'] ) && $user['selected'] ) {
-							?>
-							<?php esc_html_e( 'Cancel invitation', 'buddyboss' ); ?>
-							<?php
+							esc_html_e( 'Cancel invitation', 'buddyboss' );
 						} else {
-							?>
-							<?php esc_html_e( 'Invite', 'buddyboss' ); ?><?php } ?>
+							esc_html_e( 'Invite', 'buddyboss' );
+						}
+						?>
 					</span>
 					</button>
 				<?php } ?>
@@ -649,7 +652,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		?>
 		<li class="load-more">
 			<div class="center">
-				<i class="bb-icons bb-icon-loader animate-spin"></i>
+				<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 			</div>
 		</li>
 		<?php
@@ -910,11 +913,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		);
 	}
 
-	$group_members   = groups_get_group_members( $args );
-	$html            = '';
-	$paginate        = '';
-	$result          = array();
-	$total_page      = 0;
+	$group_members = groups_get_group_members( $args );
+	$html          = '';
+	$paginate      = '';
+	$result        = array();
+	$total_page    = 0;
 
 	if ( empty( $group_members['members'] ) ) {
 		wp_send_json_success( array( 'results' => 'no_member' ) );
@@ -931,20 +934,26 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						'type'    => 'thumb',
 						'class'   => '',
 					)
-				)
+				),
+				ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401
 			);
 
 			$name = bp_core_get_user_displayname( $member->ID );
 
 			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
 			$is_friends_connection  = true;
-            if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-                if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
-                    $is_friends_connection  = false;
-                }
-            }
+			if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
+					$is_friends_connection = false;
+				}
+			}
 			?>
-			<li class="group-message-member-li <?php echo $member->ID; echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg'; ?>">
+			<li class="group-message-member-li 
+			<?php
+			echo $member->ID;
+			echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
+			?>
+			">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 						<?php echo $image; ?>
@@ -974,7 +983,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 					} else {
 						?>
 						<span data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Restricted', 'buddyboss' ); ?>">
-							<i class="bb-icon-slash" aria-hidden="true"></i>
+							<i class="bb-icon-l bb-icon-cancel" aria-hidden="true"></i>
 						</span>
 						<?php
 					}
@@ -988,7 +997,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="load-more">
 				<div class="center">
-					<i class="bb-icon-loader animate-spin"></i>
+					<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 				</div>
 			</li>
 			<?php
@@ -1027,10 +1036,10 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 		}
 
-		$html        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_html', $html );
-		$total_page  = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total_page', $total_page );
-		$page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
-		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
+		$html       = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_html', $html );
+		$total_page = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total_page', $total_page );
+		$page       = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
+		$paginate   = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
 
 		wp_send_json_success(
 			array(
@@ -1071,7 +1080,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	$wp_nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	$wp_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 
 	if ( empty( $wp_nonce ) || ! wp_verify_nonce( $wp_nonce, 'send_messages_users' ) ) {
 		wp_send_json_error( $response );
@@ -1083,18 +1092,30 @@ function bp_nouveau_ajax_groups_send_message() {
 	$video    = filter_input( INPUT_POST, 'video', FILTER_DEFAULT );
 	$message  = '';
 
+	if ( isset( $_POST['gif_data'] ) ) {
+		unset( $_POST['gif_data'] );
+	}
 	if ( isset( $gif_data ) && '' !== $gif_data ) {
 		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $gif_data ), true );
 	}
 
+	if ( isset( $_POST['media'] ) ) {
+		unset( $_POST['media'] );
+	}
 	if ( isset( $media ) && '' !== $media ) {
 		$_POST['media'] = json_decode( wp_kses_stripslashes( $media ), true );
 	}
 
+	if ( isset( $_POST['document'] ) ) {
+		unset( $_POST['document'] );
+	}
 	if ( isset( $document ) && '' !== $document ) {
 		$_POST['document'] = json_decode( wp_kses_stripslashes( $document ), true );
 	}
 
+	if ( isset( $_POST['video'] ) ) {
+		unset( $_POST['video'] );
+	}
 	if ( isset( $video ) && '' !== $video ) {
 		$_POST['video'] = json_decode( wp_kses_stripslashes( $video ), true );
 	}
@@ -1104,13 +1125,13 @@ function bp_nouveau_ajax_groups_send_message() {
 	/**
 	 * Filter to validate message content.
 	 *
-	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param bool   $validated_content True if message is valid, false otherwise.
 	 * @param string $content           Content of the message.
 	 * @param array  $_POST             POST Request Object.
 	 *
-	 * @return bool True if message is not valid, false otherwise.
+	 * @return bool True if message is valid, false otherwise.
 	 */
-	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $content, $_POST );
 
 	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
@@ -1118,13 +1139,9 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	if ( '' === $content || empty( $content ) ) {
-		$content = '&nbsp;';
-	}
-
 	$group         = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ); // Group id.
-	$message_users = filter_input( INPUT_POST, 'users', FILTER_SANITIZE_STRING ); // all - individual.
-	$message_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ); // open - private.
+	$message_users = bb_filter_input_string( INPUT_POST, 'users' ); // all - individual.
+	$message_type  = bb_filter_input_string( INPUT_POST, 'type' ); // open - private.
 
 	// Get Members list if "All Group Members" selected.
 	if ( 'all' === $message_users ) {
@@ -1367,7 +1384,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				$new_reply = bp_groups_messages_new_message(
 					array(
 						'thread_id'    => $group_thread_id,
-						'subject'      => wp_trim_words( $content, messages_get_default_subject_length() ),
+						'subject'      => false,
 						'content'      => $content,
 						'date_sent'    => bp_core_current_time(),
 						'mark_visible' => true,
@@ -1695,7 +1712,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				$new_reply = bp_groups_messages_new_message(
 					array(
 						'thread_id'    => $individual_thread_id,
-						'subject'      => wp_trim_words( $content, messages_get_default_subject_length() ),
+						'subject'      => false,
 						'content'      => $content,
 						'date_sent'    => bp_core_current_time(),
 						'mark_visible' => true,
@@ -1711,8 +1728,15 @@ function bp_nouveau_ajax_groups_send_message() {
 	} else {
 
 		if ( ! empty( $members ) ) {
+
+			// Comma separated members list to find in meta query.
+			$message_users_ids = implode( ',', $members );
+
+			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
+			$_POST['message_meta_users_list'] = $message_users_ids;
+
 			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-				$chunk_members = array_chunk( $members, 10 );
+				$chunk_members = array_chunk( $members, bb_get_email_queue_min_count() );
 				if ( ! empty( $chunk_members ) ) {
 					foreach ( $chunk_members as $key => $members ) {
 						$bb_email_background_updater->data(
@@ -1771,4 +1795,184 @@ function bp_groups_messages_validate_message( $send, $type = 'all' ) {
 		$response['type']          = 'success';
 		wp_send_json_success( $response );
 	}
+}
+
+/**
+ * Subscribe or un-subscribe a group when clicking the bell button via a POST request.
+ *
+ * @since BuddyBoss [BBVERIOSN]
+ */
+function bb_nouveau_ajax_group_subscription() {
+	$response = array(
+		'feedback'              => esc_html__( 'There was a problem subscribing/unsubscribing.', 'buddyboss' ),
+		'is_group_subscription' => true,
+		'type'                  => 'error',
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() || empty( $_POST['action'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['nonce'] ) || empty( $_POST['item_id'] ) || ! bp_is_active( 'groups' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Cast gid as integer.
+	$group_id = (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
+	$user_id  = bp_loggedin_user_id();
+
+	// Use default nonce.
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
+	$check = 'bb-group-subscription-' . $group_id;
+
+	// Use a specific one for actions needed it.
+	if ( ! empty( $_POST['_wpnonce'] ) ) {
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+	}
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! bb_is_enabled_subscription( 'group' ) ) {
+		wp_send_json_error(
+			array(
+				'feedback'              => esc_html__( 'Subscriptions are no longer active.', 'buddyboss' ),
+				'is_group_subscription' => true,
+			)
+		);
+	}
+
+	// Validate and get the group.
+	$group = groups_get_group( $group_id );
+
+	if ( empty( $group->id ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$group_name = bp_get_group_name( $group );
+	$group_name = bp_create_excerpt( $group_name, 35, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
+	$group_name = sprintf(
+		'<strong>%s</strong>',
+		$group_name
+	);
+
+	// Check the current user's member of the group or not.
+	$is_group_member = groups_is_user_member( $user_id, $group_id );
+	if ( false === (bool) $is_group_member ) {
+		wp_send_json_error( $response );
+	}
+
+	$is_subscription = bb_is_member_subscribed_group( $group_id, $user_id );
+
+	// Manage all button's possible actions here.
+	switch ( $_POST['action'] ) {
+
+		case 'groups_subscribe':
+			if ( $is_subscription ) {
+				$response = array(
+					'feedback'              => esc_html__( 'You are already subscribe this group.', 'buddyboss' ),
+					'type'                  => 'error',
+					'is_group_subscription' => true,
+				);
+			} else {
+
+				$subscription_id = bb_create_subscription(
+					array(
+						'user_id'           => $user_id,
+						'item_id'           => $group_id,
+						'type'              => 'group',
+						'secondary_item_id' => $group->parent_id,
+					)
+				);
+
+				if ( is_wp_error( $subscription_id ) ) {
+					$response = array(
+						'feedback'              => sprintf(
+							/* translators: Group name. */
+							esc_html__( 'There was a problem subscribing to %s.', 'buddyboss' ),
+							$group_name
+						),
+						'type'                  => 'error',
+						'is_group_subscription' => true,
+					);
+				} else {
+
+					ob_start();
+					bp_nouveau_group_header_buttons(
+						array(
+							'type'           => 'subscription',
+							'button_element' => 'button',
+							'container'      => '',
+						)
+					);
+					$contents = ob_get_clean();
+
+					$response = array(
+						'contents'              => $contents,
+						'is_group_subscription' => true,
+						'type'                  => 'success',
+						'feedback'              => sprintf(
+						/* translators: Group name. */
+							esc_html__( 'You\'ve been subscribed to %s.', 'buddyboss' ),
+							$group_name
+						),
+					);
+				}
+			}
+			break;
+
+		case 'groups_unsubscribe':
+			if ( $is_subscription && bb_delete_subscription( $is_subscription ) ) {
+				ob_start();
+				bp_nouveau_group_header_buttons(
+					array(
+						'type'           => 'subscription',
+						'button_element' => 'button',
+						'container'      => '',
+					)
+				);
+				$contents = ob_get_clean();
+
+				$response = array(
+					'contents'              => $contents,
+					'is_group_subscription' => true,
+					'type'                  => 'success',
+					'feedback'              => sprintf(
+					/* translators: Group name. */
+						esc_html__( 'You\'ve been unsubscribed from %s.', 'buddyboss' ),
+						$group_name
+					),
+				);
+			} else {
+				$response = array(
+					'feedback'              => sprintf(
+					/* translators: Group name. */
+						esc_html__( 'There was a problem unsubscribing from %s.', 'buddyboss' ),
+						$group_name
+					),
+					'type'                  => 'error',
+					'is_group_subscription' => true,
+				);
+			}
+			break;
+	}
+
+	/**
+	 * Filters change the success/fail message.
+	 *
+	 * @since BuddyBoss [BBVERIOSN]
+	 *
+	 * @param array $response Array of response message.
+	 * @param int   $group_id Group id.
+	 */
+	$response = apply_filters( 'bb_nouveau_ajax_group_subscription', $response, $group_id );
+
+	if ( 'error' === $response['type'] ) {
+		wp_send_json_error( $response );
+	}
+
+	wp_send_json_success( $response );
 }

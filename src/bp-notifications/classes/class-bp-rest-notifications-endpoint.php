@@ -618,12 +618,14 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			),
 			'link_url'          => '',
 			'rest_actions'      => '',
+			'readonly'          => isset( $notification->readonly ) ? $notification->readonly : false,
 		);
 
-		$component = $notification->component_name;
-		$object    = $notification->component_name;
-		$item_id   = $notification->item_id;
-		$object_id = $notification->item_id;
+		$component        = $notification->component_name;
+		$object           = $notification->component_name;
+		$item_id          = $notification->item_id;
+		$object_id        = $notification->item_id;
+		$component_action = $notification->component_action;
 
 		switch ( $component ) {
 			case 'groups':
@@ -646,6 +648,23 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 					$object = 'user';
 				}
 				break;
+		}
+
+		if (
+			! empty( $notification->secondary_item_id ) &&
+			in_array(
+				$component_action,
+				array(
+					'bb_groups_new_request',
+					'bb_groups_subscribed_discussion',
+					'bb_groups_subscribed_activity',
+				),
+				true
+			)
+		) {
+			$item_id   = $notification->secondary_item_id;
+			$object_id = $notification->secondary_item_id;
+			$object    = 'user';
 		}
 
 		// Avatars.
@@ -821,6 +840,71 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'embeddable' => true,
 			),
 		);
+
+		if (
+			'bb_forums_subscribed_reply' === $notification->component_action ||
+			'bbp_new_reply' === $notification->component_action
+		) {
+
+			$description = bp_get_the_notification_description( $notification );
+			$url         = '';
+			$page        = '';
+			$topic_id    = '';
+			$reply_id    = '';
+
+			if ( ! empty( $description ) ) {
+				// Extract the first URL from Description.
+				preg_match( '/\bhttps?:\/\/[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|\/))/', $description, $matches_url );
+
+				if ( isset( $matches_url[0] ) && wp_http_validate_url( $matches_url[0] ) ) {
+					$url = $matches_url[0];
+				}
+			}
+
+			if ( ! empty( $url ) ) {
+				$url   = urldecode( wp_specialchars_decode( $url ) );
+				$parse = wp_parse_url( $url );
+				if ( ! empty( $parse['fragment'] ) ) {
+					wp_parse_str( $url, $params );
+				}
+				if ( ! empty( $params ) ) {
+					$topic_id = ( isset( $params['topic_id'] ) ? $params['topic_id'] : '' );
+					$reply_id = ( isset( $params['reply_id'] ) ? $params['reply_id'] : '' );
+				}
+				$explode = explode( '/', $url );
+				if ( ! empty( $explode ) ) {
+					$val = array_search( 'page', $explode, true );
+					if ( $val ) {
+						$page = $explode[ $val + 1 ];
+					}
+				}
+			}
+
+			if ( ! empty( $topic_id ) ) {
+				$topic_base     = sprintf( '/%s/%s/', $this->namespace, 'topics' );
+				$topic_url      = $topic_base . $topic_id;
+				$links['topic'] = array(
+					'href' => rest_url( $topic_url ),
+				);
+			}
+
+			if ( ! empty( $topic_id ) && ! empty( $reply_id ) && ! empty( $page ) ) {
+				$reply_base = sprintf( '/%s/%s/', $this->namespace, 'reply' );
+				$reply_url  = add_query_arg(
+					array(
+						'_embed'     => true,
+						'parent'     => $topic_id,
+						'page'       => $page,
+						'reply_jump' => $reply_id,
+					),
+					$reply_base
+				);
+
+				$links['reply'] = array(
+					'href' => rest_url( $reply_url ),
+				);
+			}
+		}
 
 		/**
 		 * Filter links prepared for the REST response.
@@ -999,6 +1083,11 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'rest_actions'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Rest Actions which perform accept/reject based on the status.', 'buddyboss' ),
+					'type'        => 'object',
+				),
+				'readonly'          => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Readonly for the moderated members notification.', 'buddyboss' ),
 					'type'        => 'object',
 				),
 			),

@@ -1010,6 +1010,8 @@ function bbp_is_edit() {
  */
 function bbp_body_class( $wp_classes, $custom_classes = false ) {
 
+	global $post;
+
 	$bbp_classes = array();
 
 	/** Archives */
@@ -1106,19 +1108,25 @@ function bbp_body_class( $wp_classes, $custom_classes = false ) {
 	} elseif ( bbp_is_search_results() ) {
 		$bbp_classes[] = 'bbp-search-results';
 		$bbp_classes[] = 'forum-search-results';
+	} elseif ( isset( $post->post_content ) && ( has_shortcode( $post->post_content, 'bbp-forum-form' ) || has_shortcode( $post->post_content, 'bbp-reply-form' ) || has_shortcode( $post->post_content, 'bbp-topic-form' ) ) ) {
+		$bbp_classes[] = 'forum';
+		$bbp_classes[] = 'bbpress';
+		$bbp_classes[] = 'forum-template-default';
+		$bbp_classes[] = 'single';
+		$bbp_classes[] = 'single-forum';
 	}
 
 	/** Clean up */
 
-	// Add Forums class if we are within a Forums page
+	// Add Forums class if we are within a Forums page.
 	if ( ! empty( $bbp_classes ) ) {
 		$bbp_classes[] = 'bbpress';
 	}
 
-	// Merge WP classes with Forums classes and remove any duplicates
+	// Merge WP classes with Forums classes and remove any duplicates.
 	$classes = array_unique( array_merge( (array) $bbp_classes, (array) $wp_classes ) );
 
-	// Deprecated filter (do not use)
+	// Deprecated filter (do not use).
 	$classes = apply_filters( 'bbp_get_the_body_class', $classes, $bbp_classes, $wp_classes, $custom_classes );
 
 	return apply_filters( 'bbp_body_class', $classes, $bbp_classes, $wp_classes, $custom_classes );
@@ -1657,7 +1665,7 @@ function bbp_reply_attributes_meta_box_discussion_reply_title( $title, $post ) {
 		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $post->post_content ), 8, '...' ), 'buddyboss' );
 	}
 
-	return $title;
+	return apply_filters( 'bbp_reply_attributes_meta_box_discussion_reply_title', $title, $post );
 }
 
 /**
@@ -1974,9 +1982,7 @@ function bbp_get_the_content( $args = array() ) {
 		$editor_unique_id = bp_unique_id( 'forums_editor_' );
 
 		?>
-			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>>
-			<?php echo $post_content; ?>
-			</div>
+			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . bp_get_current_group_id() . '"' : ''; ?>><?php echo wp_kses_post( $post_content ); ?></div>
 			<input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo esc_attr( $post_content ); ?>" />
 			<?php
 
@@ -2009,7 +2015,7 @@ function bbp_get_the_content( $args = array() ) {
 		else :
 			?>
 
-			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>><?php echo $post_content; ?></textarea>
+			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . bp_get_current_group_id() . '"' : ''; ?>><?php echo esc_textarea( $post_content ); ?></textarea>
 
 			<?php
 		endif;
@@ -2613,18 +2619,19 @@ function bbp_get_breadcrumb( $args = array() ) {
 function bbp_allowed_tags() {
 	echo bbp_get_allowed_tags();
 }
-	/**
-	 * Display all of the allowed tags in HTML format with attributes.
-	 *
-	 * This is useful for displaying in the post area, which elements and
-	 * attributes are supported. As well as any plugins which want to display it.
-	 *
-	 * @since bbPress (r2780)
-	 *
-	 * @uses bbp_kses_allowed_tags() To get the allowed tags
-	 * @uses apply_filters() Calls 'bbp_allowed_tags' with the tags
-	 * @return string HTML allowed tags entity encoded.
-	 */
+
+/**
+ * Display all of the allowed tags in HTML format with attributes.
+ *
+ * This is useful for displaying in the post area, which elements and
+ * attributes are supported. As well as any plugins which want to display it.
+ *
+ * @since bbPress (r2780)
+ *
+ * @uses bbp_kses_allowed_tags() To get the allowed tags
+ * @uses apply_filters() Calls 'bbp_allowed_tags' with the tags
+ * @return string HTML allowed tags entity encoded.
+ */
 function bbp_get_allowed_tags() {
 
 	$allowed = '';
@@ -2639,7 +2646,7 @@ function bbp_get_allowed_tags() {
 		$allowed .= '> ';
 	}
 
-	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed ) );
+	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 }
 
 /** Errors & Messages *********************************************************/

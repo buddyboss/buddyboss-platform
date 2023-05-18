@@ -61,15 +61,18 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		add_filter( 'bp_groups_get_join_count_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_groups_get_where_count_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// invitation
+		// invitation.
 		add_filter( 'bp_invitations_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_invitations_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// Search group
+		// Search group.
 		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+
+		// Update the where condition for group subscriptions.
+		add_filter( 'bb_subscriptions_get_where_conditions', array( $this, 'bb_subscriptions_group_where_conditions' ), 10, 2 );
 	}
 
 	/**
@@ -206,7 +209,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	public function manage_hidden_group( $group_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $group_id,
@@ -253,7 +256,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $group_id,
@@ -461,5 +464,56 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 				'force_bg_process' => true,
 			)
 		);
+	}
+
+	/**
+	 * Prepare subscription group where SQL query to filter blocked groups.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param array $where_conditions Subscription where sql.
+	 * @param array $r                Array of subscription arguments.
+	 *
+	 * @return mixed Where SQL
+	 */
+	public function bb_subscriptions_group_where_conditions( $where_conditions, $r ) {
+		global $bp;
+
+		if ( isset( $r['bypass_moderation'] ) && true === (bool) $r['bypass_moderation'] ) {
+			return $where_conditions;
+		}
+
+		if ( ! empty( $r['type'] ) ) {
+			if ( ! is_array( $r['type'] ) ) {
+				$r['type'] = preg_split( '/[\s,]+/', $r['type'] );
+			}
+			$r['type'] = array_map( 'sanitize_title', $r['type'] );
+		}
+
+		if ( ! empty( $r['type'] ) && ! in_array( 'group', $r['type'], true ) ) {
+			return $where_conditions;
+		}
+
+		// Get suspended where query for the forum subscription.
+		$where                  = array();
+		$where['suspend_where'] = 'user_suspended = 1';
+
+		/**
+		 * Filters the hidden forum where SQL statement.
+		 *
+		 * @since BuddyBoss 2.2.8
+		 *
+		 * @param array $where            Query to hide suspended groups.
+		 * @param array $this             current class object.
+		 * @param array $where_conditions Subscription where sql.
+		 * @param array $r                Array of subscription arguments.
+		 */
+		$where = apply_filters( 'bb_subscriptions_suspend_group_get_where_conditions', $where, $this, $where_conditions, $r );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_group_where'] = "sc.item_id NOT IN ( SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = 'groups' AND ( " . implode( ' OR ', $where ) . ' ) )';
+		}
+
+		return $where_conditions;
 	}
 }

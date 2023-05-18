@@ -118,7 +118,7 @@ function bp_invites_member_invite_invitation_page() {
 function bp_invites_member_invite_remove_registration_lock() {
 	global $bp;
 
-	if ( ! bp_invites_member_invite_invitation_page() ) {
+	if ( ! bp_invites_member_invite_invitation_page() || ! bp_enable_site_registration() ) {
 		return;
 	}
 
@@ -144,23 +144,28 @@ function bp_invites_member_invite_remove_registration_lock() {
 				'value'   => $email,
 				'compare' => '=',
 			),
+			array(
+				'key'     => '_bp_invitee_status',
+				'value'   => 0,
+				'compare' => '=',
+			),
 		),
 	);
 
 	$bp_get_invitee_email = new WP_Query( $args );
 
 	if ( ! $bp_get_invitee_email->have_posts() ) {
-		bp_core_add_message( __( "We couldn't find any invitations associated with this email address.", 'buddyboss' ), 'error' );
+		bp_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss' ), 'error' );
 		return;
 	}
 
 	// To support old versions of BP, we have to force the overloaded
-	// site_options property in some cases
+	// site_options property in some cases.
 	if ( is_multisite() ) {
 		$site_options = $bp->site_options;
-		if ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'blog' ) {
+		if ( ! empty( $bp->site_options['registration'] ) && 'blog' === $bp->site_options['registration'] ) {
 			$site_options['registration'] = 'all';
-		} elseif ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'none' ) {
+		} elseif ( ! empty( $bp->site_options['registration'] ) && 'none' === $bp->site_options['registration'] ) {
 			$site_options['registration'] = 'user';
 		}
 		$bp->site_options = $site_options;
@@ -353,7 +358,7 @@ function bp_get_member_invitation_message() {
 
 	$text = '';
 
-	if ( $query->posts ) {
+	if ( ! empty( $query->posts ) ) {
 		if ( $must_use_wpmail ) {
 			$text = $query->posts[0]->post_excerpt;
 		} else {

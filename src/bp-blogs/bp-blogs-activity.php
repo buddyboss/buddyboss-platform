@@ -495,7 +495,7 @@ function bp_blogs_record_activity( $args = '' ) {
 		'hide_sitewide'     => false,
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	if ( ! empty( $r['action'] ) ) {
 
@@ -860,6 +860,16 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	if ( ! empty( $params['parent_id'] ) && ! empty( $post_type ) ) {
 		$comment_parent = bp_activity_get_meta( $params['parent_id'], "bp_blogs_{$post_type}_comment_id" );
 	}
+
+	/**
+	 * Filters the content of a comment.
+	 *
+	 * @since BuddyBoss 2.0.3
+	 *
+	 * @param string $content         Content for the posted comment.
+	 * @param int    $comment_id      The activity ID for the posted activity comment.
+	 */
+	$params['content'] = apply_filters( 'bp_activity_comment_content', $params['content'], $comment_id );
 
 	// Comment args.
 	$args = array(

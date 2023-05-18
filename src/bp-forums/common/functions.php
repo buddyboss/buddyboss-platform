@@ -1101,7 +1101,7 @@ function bbp_get_do_not_reply_address() {
  * @param mixed $anonymous_data Array of anonymous user data
  * @param int   $reply_author ID of the topic author ID
  *
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_reply_id() To validate the reply ID
  * @uses bbp_get_topic_id() To validate the topic ID
  * @uses bbp_get_forum_id() To validate the forum ID
@@ -1128,7 +1128,7 @@ function bbp_get_do_not_reply_address() {
 function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $reply_author = 0 ) {
 
 	// Bail if subscriptions are turned off.
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 		return false;
 	}
 
@@ -1198,63 +1198,17 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 
 	do_action( 'bbp_pre_notify_subscribers', $reply_id, $topic_id, $user_ids );
 
-	// check if it has enough recipients to use batch emails.
-	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
-
-	$type_key = 'notification_forums_following_reply';
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		$type_key = bb_get_prefences_key( 'legacy', $type_key );
-	}
-
-	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-		global $bb_email_background_updater;
-		$chunk_user_ids = array_chunk( $user_ids, 10 );
-		if ( ! empty( $chunk_user_ids ) ) {
-			foreach ( $chunk_user_ids as $key => $member_ids ) {
-				$bb_email_background_updater->data(
-					array(
-						array(
-							'callback' => 'bb_render_email_notify_subscribers',
-							'args'     => array(
-								$member_ids,
-								'bbp-new-forum-reply',
-								$reply_author,
-								$type_key,
-								$args
-							),
-						),
-					)
-				);
-				$bb_email_background_updater->save();
-			}
-			$bb_email_background_updater->dispatch();
-		}
-
-	} else {
-		// Loop through users.
-		foreach ( (array) $user_ids as $user_id ) {
-
-			// Don't send notifications to the person who made the post.
-			if ( ! empty( $reply_author ) && (int) $user_id === (int) $reply_author ) {
-				continue;
-			}
-
-			// Bail if member opted out of receiving this email.
-			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
-				continue;
-			}
-
-			$unsubscribe_args = array(
-				'user_id'           => $user_id,
-				'notification_type' => 'bbp-new-forum-reply',
-			);
-
-			$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
-
-			// Send notification email.
-			bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
-		}
-	}
+	bb_send_notifications_to_subscribers(
+		array(
+			'type'    => 'topic',
+			'item_id' => $topic_id,
+			'data'    => array(
+				'reply_id'     => $reply_id,
+				'author_id'    => $reply_author,
+				'email_tokens' => $args,
+			),
+		)
+	);
 
 	do_action( 'bbp_post_notify_subscribers', $reply_id, $topic_id, $user_ids );
 
@@ -1280,7 +1234,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
  * @param mixed $anonymous_data Array of anonymous user data
  * @param int   $topic_author ID of the topic author ID
  *
- * @uses bbp_is_subscriptions_active() To check if the subscriptions are active
+ * @uses bb_is_enabled_subscription() To check if the subscriptions are active
  * @uses bbp_get_topic_id() To validate the topic ID
  * @uses bbp_get_forum_id() To validate the forum ID
  * @uses bbp_is_topic_published() To make sure the topic is published
@@ -1302,7 +1256,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_data = false, $topic_author = 0 ) {
 
 	// Bail if subscriptions are turned off.
-	if ( ! bbp_is_subscriptions_active() ) {
+	if ( ! bb_is_enabled_subscription( 'forum' ) && ! bb_is_enabled_subscription( 'group' ) ) {
 		return false;
 	}
 
@@ -1355,8 +1309,42 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		),
 	);
 
-	// Get topic subscribers and bail if empty.
-	$user_ids = bbp_get_forum_subscribers( $forum_id, true );
+	// Check if discussion is attached in a group then send group subscription notifications.
+	$group_ids = bp_is_active( 'groups' ) && function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+	$item_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+	if ( bp_is_active( 'groups' ) && bb_is_enabled_subscription( 'group' ) && ! empty( $item_id ) ) {
+		$type  = 'group';
+		$group = groups_get_group( $item_id );
+
+		if ( empty( $group ) ) {
+			return false;
+		}
+
+		// Get group subscribers and bail if empty.
+		$get_subscriptions = bb_get_subscription_users(
+			array(
+				'item_id' => $item_id,
+				'type'    => 'group',
+				'count'   => false,
+			),
+			true
+		);
+
+		$user_ids = array();
+		if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
+			$user_ids = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
+		}
+
+		$args['tokens']['group.name'] = bp_get_group_name( $group );
+		$args['tokens']['group.url']  = esc_url( bp_get_group_permalink( $group ) );
+		$notification_from            = 'bb_groups_subscribed_discussion';
+	} else {
+		// Get topic subscribers and bail if empty.
+		$user_ids          = bbp_get_forum_subscribers( $forum_id );
+		$type              = 'forum';
+		$item_id           = $forum_id;
+		$notification_from = 'bb_forums_subscribed_discussion';
+	}
 
 	// Dedicated filter to manipulate user ID's to send emails to.
 	$user_ids = (array) apply_filters( 'bbp_forum_subscription_user_ids', $user_ids, $topic_id, $forum_id );
@@ -1368,62 +1356,22 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 	do_action( 'bbp_pre_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
 
-	// check if it has enough recipients to use batch emails.
-	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
-
-	$type_key = 'notification_forums_following_topic';
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	if ( empty( $item_id ) ) {
+		return false;
 	}
 
-	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-		global $bb_email_background_updater;
-		$chunk_user_ids = array_chunk( $user_ids, 10 );
-		if ( ! empty( $chunk_user_ids ) ) {
-			foreach ( $chunk_user_ids as $key => $member_ids ) {
-				$bb_email_background_updater->data(
-					array(
-						array(
-							'callback' => 'bb_render_email_notify_subscribers',
-							'args'     => array(
-								$member_ids,
-								'bbp-new-forum-topic',
-								$topic_author,
-								$type_key,
-								$args,
-							),
-						),
-					)
-				);
-				$bb_email_background_updater->save();
-			}
-			$bb_email_background_updater->dispatch();
-		}
-	} else {
-		// Loop through users.
-		foreach ( (array) $user_ids as $user_id ) {
-
-			// Don't send notifications to the person who made the post.
-			if ( ! empty( $topic_author ) && (int) $user_id === (int) $topic_author ) {
-				continue;
-			}
-
-			// Bail if member opted out of receiving this email.
-			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
-				continue;
-			}
-
-			$unsubscribe_args = array(
-				'user_id'           => $user_id,
-				'notification_type' => 'bbp-new-forum-topic',
-			);
-
-			$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
-
-			// Send notification email.
-			bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $args );
-		}
-	}
+	bb_send_notifications_to_subscribers(
+		array(
+			'type'              => $type,
+			'item_id'           => $item_id,
+			'notification_from' => $notification_from,
+			'data'              => array(
+				'topic_id'     => $topic_id,
+				'author_id'    => bbp_get_topic_author_id( $topic_id ),
+				'email_tokens' => $args,
+			),
+		)
+	);
 
 	do_action( 'bbp_post_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
 
@@ -2250,7 +2198,114 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 			continue;
 		}
 
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $sender_id ) ) {
+			continue;
+		}
+
 		// Send notification email.
 		bp_send_email( $email_type, (int) $user_id, $args );
 	}
+}
+
+/**
+ * Function will get all parent ids of the topic replies.
+ *
+ * @since BuddyBoss 2.0.6
+ *
+ * @param int    $topic_id  Topic ID.
+ * @param string $post_type Post type.
+ *
+ * @return array Array of topic parent reply ids.
+ */
+function bb_get_parent_replies_ids( $topic_id, $post_type = 'post' ) {
+	global $wpdb;
+
+	// Bail if nothing passed.
+	if ( empty( $topic_id ) ) {
+		return false;
+	}
+	$cache_id   = 'bb_parent_all_' . $topic_id . '_type_' . $post_type . '_parent_ids';
+	$parent_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
+
+	// If nothing is found, build the object.
+	if ( false === $parent_ids ) {
+		$post_status = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
+		// WP_Query arguments.
+		$args               = array(
+			'fields'         => 'ids',
+			'post_parent'    => $topic_id,
+			'posts_per_page' => - 1,
+			'post_type'      => $post_type,
+			'post_status'    => $post_status,
+			'meta_query'     => array(
+				array(
+					'key'     => '_bbp_reply_to',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		);
+
+		$get_replies_parent = new WP_Query( $args );
+
+		if ( ! is_wp_error( $get_replies_parent ) && $get_replies_parent->have_posts() ) {
+			$parent_ids = $get_replies_parent->posts;
+			// Cache the whole WP_Query object in the cache.
+			wp_cache_set( $cache_id, $parent_ids, 'bbpress_posts' );
+		}
+	}
+
+	// Filter and return.
+	return apply_filters( 'bb_get_parent_replies_ids', $parent_ids, (int) $topic_id, $post_type );
+}
+
+/**
+ * Return array of bbPress registered post types
+ *
+ * @since 2.6.0 bbPress (r6813)
+ *
+ * @param array $args Array of arguments to pass into `get_post_types()`
+ *
+ * @return array
+ */
+function bbp_get_post_types( $args = array() ) {
+
+	// Parse args
+	$r = bbp_parse_args( $args, array(
+		'source' => 'bbpress'
+	), 'get_post_types' );
+
+	// Return post types
+	return get_post_types( $r );
+}
+
+/**
+ * Assist pagination by returning correct page number for sub-forums.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @uses  get_query_var() To get the 'forum-paged' value.
+ *
+ * @return int Current page number
+ */
+function bb_get_forum_paged() {
+	global $wp_query;
+
+	// Check the query var.
+	if ( get_query_var( 'forum-paged' ) ) {
+		$paged = get_query_var( 'forum-paged' );
+
+		// Check query paged.
+	} elseif ( ! empty( $wp_query->query['forum-paged'] ) ) {
+		$paged = $wp_query->query['forum-paged'];
+	} elseif ( isset( $_GET['forum-paged'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$paged = intval( $_GET['forum-paged'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	}
+
+	// Paged found.
+	if ( ! empty( $paged ) ) {
+		return (int) $paged;
+	}
+
+	// Default to first page.
+	return 1;
 }

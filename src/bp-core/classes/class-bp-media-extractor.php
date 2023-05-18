@@ -933,7 +933,7 @@ class BP_Media_Extractor {
 	 * @return string
 	 */
 	protected function strip_markup( $richtext ) {
-		$plaintext = strip_shortcodes( html_entity_decode( strip_tags( $richtext ) ) );
+		$plaintext = strip_shortcodes( html_entity_decode( strip_tags( $richtext ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 
 		/**
 		 * Filters the generated plain text version of the content passed to the extractor.
