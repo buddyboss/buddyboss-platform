@@ -2941,6 +2941,14 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
  * @return void
  */
 function bb_update_to_2_3_5() {
+	// Clear cache.
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
 	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
 	if ( $is_already_run ) {
 		return;
