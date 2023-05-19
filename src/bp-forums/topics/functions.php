@@ -194,13 +194,22 @@ function bbp_new_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+
 	// No topic content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
-		 && empty( $_POST['bbp_media'] )
-		 && empty( $_POST['bbp_document'] )
-		 && empty( $_POST['bbp_video'] )
-		 && empty( $_POST['bbp_media_gif'] )
-		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $_POST['link_preview_data'] ) ) )
+	if ( 
+		empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
+		&& empty( $_POST['bbp_media'] )
+		&& empty( $_POST['bbp_document'] )
+		&& empty( $_POST['bbp_video'] )
+		&& empty( $_POST['bbp_media_gif'] )
+		&& ( 
+			false === bbp_use_autoembed() ||
+			(
+				false !== bbp_use_autoembed() &&
+				empty( $link_preview_post_data['link_url'] )
+			) 
+		)
 	) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
@@ -676,6 +685,8 @@ function bbp_edit_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+
 	if (
 		empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		&& empty( $_POST['bbp_media'] )
@@ -686,7 +697,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 			false === bbp_use_autoembed() ||
 			(
 				false !== bbp_use_autoembed() &&
-				empty( $_POST['link_preview_data'] )
+				empty( $link_preview_post_data['link_url'] )
 			)
 		)
 	) {

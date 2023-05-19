@@ -289,13 +289,15 @@ function bbp_new_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+
 	// No reply content.
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		 && empty( $_POST['bbp_media'] )
 		 && empty( $_POST['bbp_video'] )
 		 && empty( $_POST['bbp_media_gif'] )
 		 && empty( $_POST['bbp_document'] )
-		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $_POST['link_preview_data'] ) ) )
+		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -710,6 +712,8 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+
 	// No reply content.
 	if (
 		empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
@@ -717,7 +721,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 		&& empty( $_POST['bbp_video'] )
 		&& empty( $_POST['bbp_media_gif'] )
 		&& empty( $_POST['bbp_document'] )
-		&& ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $_POST['link_preview_data'] ) ) )
+		&& ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
 		bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
