@@ -120,6 +120,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * Introduce new params $where_conditions and $search_term.
+	 *
 	 * @param string $where            Activity Where sql.
 	 * @param object $suspend          suspend object.
 	 * @param array  $where_conditions Where condition for activity comment search.
