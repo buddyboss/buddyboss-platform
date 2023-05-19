@@ -120,10 +120,12 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param string $where   Activity Where sql.
-	 * @param object $suspend suspend object.
+	 * @param string $where            Activity Where sql.
+	 * @param object $suspend          suspend object.
+	 * @param array  $where_conditions Where condition for activity comment search.
+	 * @param string $term             Search term.
 	 *
-	 * @return array
+	 * @return array|mixed
 	 */
 	public function update_where_sql( $where, $suspend, $where_conditions, $term ) {
 		$this->alias = $suspend->alias;
@@ -243,6 +245,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
+	 * @param int $item_id Itm id.
+	 *
 	 * @return bool
 	 */
 	protected function is_content_hidden( $item_id ) {
@@ -325,6 +329,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * If this activity is hidden then will store that activity comment id in array and return as $blocked_item_ids.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $where_conditions Where condition for activity comment search.
+	 * @param string $search_term      Search term.
 	 *
 	 * @return array
 	 */
