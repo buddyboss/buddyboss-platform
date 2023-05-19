@@ -2461,7 +2461,15 @@ function bp_core_wpsignup_redirect() {
 	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' === bp_custom_register_page_url() ) {
 		bp_core_redirect( bp_get_signup_page() );
 	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
-		bp_core_redirect( bp_custom_register_page_url() );
+		$bp_custom_register_page_url = bp_custom_register_page_url();
+
+		// Check if custom registration URL is https://site.com/wp-login.php?action=register then we do not need to redirect again.
+		if (
+			false === strpos( $bp_custom_register_page_url, 'wp-login.php' ) &&
+			'register' !== $action
+		) {
+			bp_core_redirect( $bp_custom_register_page_url );
+		}
 	}
 }
 add_action( 'bp_init', 'bp_core_wpsignup_redirect' );

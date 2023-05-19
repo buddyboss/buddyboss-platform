@@ -429,6 +429,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20101 ) {
 			bb_update_to_2_3_4();
 		}
+
+		if ( $raw_db_version < 20111 ) {
+			bb_update_to_2_3_5();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2713,13 +2717,47 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
 }
 
 /**
+ * Updated buddyboss mu file.
+ * Migration favorites from user meta to topic meta.
+ *
+ * @since BuddyBoss 2.3.4
+ *
+ * @return void
+ */
+function bb_update_to_2_3_4() {
+	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+
+		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		}
+
+		$wp_files_system = new \WP_Filesystem_Direct( array() );
+		$wp_files_system->delete( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', false, 'f' );
+	}
+
+	$is_already_run = get_transient( 'bb_migrate_favorites' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
+	// Migrate the topic favorites.
+	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
+		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
+	}
+
+	wp_cache_flush();
+}
+
+/**
  * Migration to add index and new column to media tables.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
-function bb_update_to_2_3_4() {
+function bb_update_to_2_3_5() {
 	global $wpdb;
 
 	$tables = array(
@@ -2758,15 +2796,15 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 	if ( empty( $paged ) ) {
 		$paged = 1;
 	}
-	
+
 	$per_page = 50;
 	$offset   = ( ( $paged - 1 ) * $per_page );
 	$results  = array();
 
 	$message_meta_table_name = $wpdb->prefix . 'bp_messages_meta';
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
-		$results = $wpdb->get_results( 
-			$wpdb->prepare( 
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
 				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN 
 				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !='' 
 				ORDER BY message_id LIMIT %d offset %d",
