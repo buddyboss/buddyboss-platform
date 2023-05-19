@@ -299,7 +299,11 @@ function bp_activity_save_link_data( $activity ) {
 	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
 		bp_activity_update_meta( $activity->id, '_link_embed', $link_url );
+		bp_activity_update_meta( $activity->id, '_link_preview_data', '' );
+
 		return;
+	} else {
+		bp_activity_update_meta( $activity->id, '_link_embed', '0' );
 	}
 
 	$preview_data['url'] = $link_url;

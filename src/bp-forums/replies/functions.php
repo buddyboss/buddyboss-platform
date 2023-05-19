@@ -730,7 +730,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	}
 
 	// Reply past edit lock checking.
-	if ( ! current_user_can( 'edit_others_replies' ) && bbp_past_edit_lock( $reply->post_date_gmt ) ) {
+	if ( false && ! current_user_can( 'edit_others_replies' ) && bbp_past_edit_lock( $reply->post_date_gmt ) ) {
 		bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss' ) );
 	}
 
