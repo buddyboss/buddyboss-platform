@@ -46,7 +46,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
-		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 4 );
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
 		add_filter( 'bp_activity_comment_content', array( $this, 'bb_activity_comment_remove_mention_link' ), 10, 1 );
@@ -125,7 +125,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @return array
 	 */
-	public function update_where_sql( $where, $suspend ) {
+	public function update_where_sql( $where, $suspend, $where_conditions, $term ) {
 		$this->alias = $suspend->alias;
 
 		// Allow to search hasblocked members activity comment.
@@ -143,9 +143,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		if ( false === $blocked_user_query ) {
 
 			// If isblocked/hasblocked members activity hide then all comment of that activities should not be searchable.
-			$is_blocked_item_ids = $this->bb_is_blocked_activity_comment_ids();
+			$is_blocked_item_ids = $this->bb_is_blocked_activity_comment_ids( $where_conditions, $term );
 			if ( ! empty( $is_blocked_item_ids ) ) {
-				$where['moderation_where'] .= ' AND ( a.id NOT IN ( ' . implode( ",", $is_blocked_item_ids ) . ') )';
+				$where['moderation_where'] .= ' AND ( a.id NOT IN ( ' . implode( ',', $is_blocked_item_ids ) . ') )';
 			}
 		}
 
@@ -250,7 +250,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$author_id = self::get_content_owner_id( $item_id );
 
 		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
-			 ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+		     ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
 			return true;
 		}
 		return false;
@@ -328,8 +328,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @return array
 	 */
-	public function bb_is_blocked_activity_comment_ids() {
-		static $cache = array();
+	public function bb_is_blocked_activity_comment_ids( $where_conditions, $search_term ) {
+		static $cache                       = array();
 		static $parent_comment_author_cache = array();
 
 		$cache_key = 'bb_is_blocked_activity_comment_ids';
@@ -338,50 +338,67 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		}
 
 		global $wpdb, $bp;
-		$sql              = "SELECT DISTINCT a.id FROM {$bp->table_prefix}bp_activity a";
-		$sql              .= " WHERE a.type = 'activity_comment'";
-		$results          = $wpdb->get_col( $sql );
+		$sql['select']     = "SELECT DISTINCT a.id , a.user_id FROM {$bp->activity->table_name} a inner join {$bp->activity->table_name} ac ON ac.id = a.item_id";
+		$sql['where']      = 'WHERE ' . join( ' AND ', $where_conditions );
+		$sql               = "{$sql['select']} {$sql['where']}";
+		$query_placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+		$sql               = $wpdb->prepare( $sql, $query_placeholder );
+		$results           = $wpdb->get_results( $sql );
 		$blocked_item_ids = array();
 		if ( ! empty( $results ) ) {
-			foreach ( $results as $item_id ) {
-				$current_comment_data      = new BP_Activity_Activity( $item_id );
+			foreach ( $results as $ac_id ) {
+				$current_comment_data      = $ac_id;
 				$current_comment_author_id = $current_comment_data->user_id;
 
 				// Fetch main parent activity/comment id based on comment id.
-				$parent_data               = $this->bb_get_parent_activity_or_comment_id( $item_id );
-				$parent_comment_id         = ! empty( $parent_data ) && isset( $parent_data['comment_id'] ) ? $parent_data['comment_id'] : 0;
-				$activity_author_id        = ! empty( $parent_data ) && isset( $parent_data['user_id'] ) ? $parent_data['user_id'] : 0;
-				$parent_activity_component = ! empty( $parent_data ) && isset( $parent_data['component'] ) ? $parent_data['component'] : '';
+				$parent_data = bp_parse_args(
+					$this->bb_get_parent_activity_or_comment_id( $current_comment_data->id ),
+					array(
+						'comment_id' => 0,
+						'user_id'    => 0,
+						'component'  => '',
+					)
+				);
+
+				$parent_comment_id         = $parent_data['comment_id'];
+				$activity_author_id        = $parent_data['user_id'];
+				$parent_activity_component = $parent_data['component'];
 
 				// Implement static cache.
-				$parent_comment_author_cache_key = 'bb_parent_comment_author_id_'  . $parent_comment_id;
-				if ( ! isset( $parent_comment_author_cache[ $parent_comment_author_cache_key ] ) && ! empty( $parent_comment_id ) ) {
-					// SQL query to fetch parent comment author id.
-					$parent_comment_author_id = $wpdb->get_var(
-						$wpdb->prepare( "SELECT user_id FROM {$wpdb->prefix}bp_activity WHERE id = %d", $parent_comment_id )
-					);
-					$parent_comment_author_cache[ $parent_comment_author_cache_key ] = $parent_comment_author_id;
+				$parent_comment_author_cache_key = 'bb_parent_comment_author_id_' . $parent_comment_id;
+				if (
+					! empty( $parent_comment_id ) &&
+					! isset( $parent_comment_author_cache[ $parent_comment_author_cache_key ] )
+				) {
+
+					$parent_ac_comment = $this->bb_get_moderated_activity( $parent_comment_id );
+
+					$parent_comment_author_cache[ $parent_comment_author_cache_key ] = ( ! empty( $parent_ac_comment->user_id ) ? $parent_ac_comment->user_id : 0 );
 				}
+
 				$parent_comment_author_id = $parent_comment_author_cache[ $parent_comment_author_cache_key ];
 
 				if (
 					! empty( $parent_activity_component ) &&
-					'groups' !== $parent_activity_component &&
+					'groups' !== $parent_activity_component && // check for group activity component.
+
+					// Check if activity author is blocked by current user.
 					(
-						! empty( $activity_author_id ) &&
 						(
-							bb_moderation_is_user_blocked_by( $activity_author_id ) ||
-							bp_moderation_is_user_blocked( $activity_author_id ) ||
-							bp_moderation_is_user_suspended( $activity_author_id )
-						) ||
-						(
-							(int) get_current_user_id() !== (int) $activity_author_id &&
+							! empty( $activity_author_id ) &&
 							(
-								(
-									! bb_moderation_is_user_blocked_by( $activity_author_id ) ||
-									! bp_moderation_is_user_blocked( $activity_author_id ) ||
-									! bp_moderation_is_user_suspended( $activity_author_id )
-								) &&
+								bb_moderation_is_user_blocked_by( $activity_author_id ) ||
+								bp_moderation_is_user_blocked( $activity_author_id ) ||
+								bp_moderation_is_user_suspended( $activity_author_id )
+							)
+						) ||
+
+						// Hide comment on other users post.
+						(
+							get_current_user_id() !== (int) $activity_author_id &&
+							(
+								// Check the main parent comment author.
 								(
 									! empty( $parent_comment_author_id ) &&
 									(
@@ -389,13 +406,10 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 										bb_moderation_is_user_blocked_by( $parent_comment_author_id )
 									)
 								) ||
+								// Check the comment author.
 								(
+									! empty( $current_comment_author_id ) &&
 									(
-										! bp_moderation_is_user_blocked( $parent_comment_author_id ) ||
-										! bb_moderation_is_user_blocked_by( $parent_comment_author_id )
-									) &&
-									(
-										! empty( $current_comment_author_id ) &&
 										bp_moderation_is_user_blocked( $current_comment_author_id ) ||
 										bb_moderation_is_user_blocked_by( $current_comment_author_id )
 									)
@@ -404,7 +418,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 						)
 					)
 				) {
-					$blocked_item_ids[] = $item_id;
+					$blocked_item_ids[] = $current_comment_data->id;
 				}
 			}
 		}
@@ -423,7 +437,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function bb_get_parent_activity_or_comment_id( $comment_id ) {
-		static $cache = array();
+		static $cache                 = array();
 		static $parent_activity_cache = array();
 
 		$cache_key = 'bb_main_parent_comment_id_' . $comment_id;
@@ -432,41 +446,55 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $cache[ $cache_key ];
 		}
 
-		global $wpdb, $bp;
-		$query  = $wpdb->prepare( "SELECT item_id, secondary_item_id, user_id, component FROM {$bp->table_prefix}bp_activity WHERE id = %d ", $comment_id );
-		$result = $wpdb->get_row( $query );
+		$result = $this->bb_get_moderated_activity( $comment_id );
+
 		if (
 			empty( $result ) ||
-			(int) $result->item_id === (int) $result->secondary_item_id
+			$result->item_id === $result->secondary_item_id
 		) {
 			$cache[ $cache_key ] = array(
-				'comment_id'  => $comment_id,
+				'comment_id' => $comment_id,
 			);
 			if ( isset( $result->item_id ) ) {
 				$parent_activity_key = 'bb_main_parent_activity_id_' . $result->item_id;
 				if ( ! isset( $parent_activity_cache[ $parent_activity_key ] ) ) {
-					$row                                           = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name} WHERE id = %d", $result->item_id ) );
+					$row = $this->bb_get_moderated_activity( $result->item_id );
+
 					$parent_activity_cache[ $parent_activity_key ] = $row;
 				}
-				$row                                = $parent_activity_cache[ $parent_activity_key ];
-				$activity_author_id                 = ! empty( $row ) ? $row->user_id : 0;
-				$component                          = ! empty( $row ) ? $row->component : '';
-				$cache[ $cache_key ]['activity_id'] = $result->item_id;
-				$cache[ $cache_key ]['user_id']     = $activity_author_id;
-				$cache[ $cache_key ]['component']   = $component;
+				$row                              = $parent_activity_cache[ $parent_activity_key ];
+				$activity_author_id               = ! empty( $row ) ? $row->user_id : 0;
+				$component                        = ! empty( $row ) ? $row->component : '';
+				$cache[ $cache_key ]['user_id']   = $activity_author_id;
+				$cache[ $cache_key ]['component'] = $component;
 			}
 
 			return $cache[ $cache_key ];
 		} else {
 			$parent_comment      = $this->bb_get_parent_activity_or_comment_id( $result->secondary_item_id );
 			$cache[ $cache_key ] = array(
-				'comment_id'  => ! empty( $parent_comment['comment_id'] ) ? $parent_comment['comment_id'] : 0,
-				'activity_id' => ! empty( $parent_comment['activity_id'] ) ? $parent_comment['activity_id'] : 0,
-				'user_id'     => ! empty( $parent_comment['user_id'] ) ? $parent_comment['user_id'] : 0,
-				'component'   => ! empty( $parent_comment['component'] ) ? $parent_comment['component'] : '',
+				'comment_id' => ! empty( $parent_comment['comment_id'] ) ? $parent_comment['comment_id'] : 0,
+				'user_id'    => ! empty( $parent_comment['user_id'] ) ? $parent_comment['user_id'] : 0,
+				'component'  => ! empty( $parent_comment['component'] ) ? $parent_comment['component'] : '',
 			);
 
 			return $cache[ $cache_key ];
 		}
+	}
+
+	/**
+	 * Fetch activity data using bypass moderation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $activity_id Activity id.
+	 *
+	 * @return BP_Activity_Activity
+	 */
+	protected function bb_get_moderated_activity( $activity_id ) {
+		do_action( 'bb_moderation_before_get_related_activity', $activity_id );
+		$activity = new BP_Activity_Activity( $activity_id );
+		do_action( 'bb_moderation_after_get_related_activity', $activity_id );
+		return $activity;
 	}
 }

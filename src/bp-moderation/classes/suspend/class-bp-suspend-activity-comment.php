@@ -139,15 +139,12 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array $where_conditions Activity Where sql.
-	 * @param array $args             Query arguments.
+	 * @param array  $where_conditions Activity Where sql.
+	 * @param string $args             Search terms.
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions, $args = array() ) {
-		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
-			return $where_conditions;
-		}
+	public function update_where_sql( $where_conditions, $args = '' ) {
 
 		$where                  = array();
 		if ( function_exists( 'bb_did_filter' ) && ! bb_did_filter( 'bp_activity_comments_search_where_conditions' ) ) {
@@ -162,7 +159,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's activity comment.
 		 * @param array $class current class object.
 		 */
-		$where = apply_filters( 'bp_suspend_activity_comment_get_where_conditions', $where, $this );
+		$where = apply_filters( 'bp_suspend_activity_comment_get_where_conditions', $where, $this, $where_conditions, $args );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
