@@ -5353,7 +5353,7 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
  * Generate user profile slug.
  *
  * @since BuddyBoss 2.3.1
- * @since BuddyBoss [BBVERSION] The `$force` parameter was added.
+ * @since BuddyBoss 2.3.41 The `$force` parameter was added.
  *
  * @param int  $user_id user id.
  * @param bool $force   Optional. If true then will generate new slug forcefully.
@@ -5471,7 +5471,7 @@ function bb_core_get_user_slug( int $user_id ) {
  * Setup the user profile hash to the user meta.
  *
  * @since BuddyBoss 2.3.1
- * @since BuddyBoss [BBVERSION] The `$force` parameter was added.
+ * @since BuddyBoss 2.3.41 The `$force` parameter was added.
  *
  * @param int  $user_id User ID.
  * @param bool $force   Optional. If true then will generate new slug and update forcefully.
@@ -5532,7 +5532,7 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 /**
  * Function to generate the unique keys.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  *
  * @param int $max_ids How many unique IDs need to be generated? Default 1.
  *
@@ -5592,7 +5592,7 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
 /**
  * Function to check the newly generated slug is exists or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  *
  * @param array|string $unique_identifier Newly generated unique identifier.
  * @param int          $user_id           Optional. ID of user to exclude from the search.
@@ -5654,7 +5654,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 /**
  * Function to check the unique identifier slug is short or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  *
  * @param string $unique_identifier User unique identifier.
  *
