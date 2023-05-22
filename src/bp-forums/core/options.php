@@ -623,7 +623,7 @@ function bbp_get_config_location( $default = '' ) {
  * - 'term' Alternate. Uses taxonomy term relationships.
  *
  * @since 2.6.0 bbPress (r6875)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param string $default Optional. Default value false.
  *

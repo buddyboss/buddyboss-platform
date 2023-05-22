@@ -2,7 +2,7 @@
 /**
  * bbPress User Engagement Functions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @package    bbPress
  * @subpackage Engagements
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * Add a user id to an object.
  *
  * @since 2.6.0 bbPress (r6109)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int    $object_id The object id.
  * @param int    $user_id   The user id.
@@ -38,7 +38,7 @@ function bbp_add_user_to_object( $object_id = 0, $user_id = 0, $rel_key = '', $r
  * Remove a user id from an object.
  *
  * @since 2.6.0 bbPress (r6109)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int    $object_id The object id.
  * @param int    $user_id   The user id.
@@ -58,7 +58,7 @@ function bbp_remove_user_from_object( $object_id = 0, $user_id = 0, $rel_key = '
  * Remove a user id from all objects.
  *
  * @since 2.6.0 bbPress (r6109)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int    $user_id  The user id.
  * @param string $rel_key  The relationship key.
@@ -78,7 +78,7 @@ function bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $rel_typ
  * Remove an object from all users.
  *
  * @since 2.6.0 bbPress (r6109)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int    $object_id The object id.
  * @param string $rel_key   The relationship key.
@@ -98,7 +98,7 @@ function bbp_remove_object_from_all_users( $object_id = 0, $rel_key = '', $rel_t
  * Remove all users from all objects.
  *
  * @since 2.6.0 bbPress (r6109)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param string $rel_key  The relationship key.
  * @param string $rel_type The relationship type (usually 'post').
@@ -116,7 +116,7 @@ function bbp_remove_all_users_from_all_objects( $rel_key = '', $rel_type = 'post
  * Get users of an object.
  *
  * @since 2.6.0 bbPress (r6109)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int    $object_id The object id.
  * @param string $rel_key   The key used to index this relationship.
@@ -136,7 +136,7 @@ function bbp_get_users_for_object( $object_id = 0, $rel_key = '', $rel_type = 'p
  * Check if an object has a specific user.
  *
  * @since 2.6.0 bbPress (r6109)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int    $object_id The object id.
  * @param int    $user_id   The user id.
@@ -159,7 +159,7 @@ function bbp_is_object_of_user( $object_id = 0, $user_id = 0, $rel_key = '', $re
  * Get the query part responsible for JOINing objects to user IDs.
  *
  * @since 2.6.0 bbPress (r6747)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param array  $args     Default query arguments.
  * @param string $context  Additional context.
@@ -181,7 +181,7 @@ function bbp_get_user_object_query( $args = array(), $context = '', $rel_key = '
  * Get the users who have engaged in a topic.
  *
  * @since 2.6.0 bbPress (r6320)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $topic_id Optional. Topic id.
  *
@@ -201,7 +201,7 @@ function bbp_get_topic_engagements( $topic_id = 0 ) {
  * See: https://bbpress.trac.wordpress.org/ticket/3083
  *
  * @since 2.6.0 bbPress (r6522)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $topic_id The Topic Id.
  *
@@ -242,7 +242,7 @@ UNION
  *
  * @since 2.6.0 bbPress (r6320)
  * @since 2.6.0 bbPress (r6618) Signature changed to accept an array of arguments.
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param array $args Optional. Arguments to pass into bbp_has_replies().
  *
@@ -260,7 +260,7 @@ function bbp_get_user_engagements( $args = array() ) {
  * Check if a user is engaged in a topic or not.
  *
  * @since 2.6.0 bbPress (r6320)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $user_id  Optional. User id.
  * @param int $topic_id Optional. Topic id.
@@ -285,7 +285,7 @@ function bbp_is_user_engaged( $user_id = 0, $topic_id = 0 ) {
  * improve performance on topics with many engaged users.
  *
  * @since 2.6.0 bbPress (r6320)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $user_id  Optional. User id.
  * @param int $topic_id Optional. Topic id.
@@ -318,7 +318,7 @@ function bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
  * Remove a topic from user's engagements.
  *
  * @since 2.6.0 bbPress (r6320)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $user_id  Optional. User id.
  * @param int $topic_id Optional. Topic id.
@@ -357,7 +357,7 @@ function bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
  * count accuracy is important.
  *
  * @since 2.6.0 bbPress (r6522)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int  $topic_id The topic id.
  * @param bool $force    If force true the recalcualate topic engaged.
@@ -410,7 +410,7 @@ function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
  * if not anonymous, passes it into bbp_add_user_engagement().
  *
  * @since 2.6.0 bbPress (r6526)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $topic_id The topic id.
  *
@@ -460,7 +460,7 @@ function bbp_update_topic_engagements( $topic_id = 0 ) {
  * Get the users who have made the topic favorite.
  *
  * @since 2.0.0 bbPress (r2658)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $topic_id Optional. Topic id.
  *
@@ -479,7 +479,7 @@ function bbp_get_topic_favoriters( $topic_id = 0 ) {
  *
  * @since 2.0.0 bbPress (r2652)
  * @since 2.6.0 bbPress (r6618) Signature changed to accept an array of arguments.
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param array $args Optional. Arguments to pass into bbp_has_topics().
  *
@@ -499,7 +499,7 @@ function bbp_get_user_favorites( $args = array() ) {
  * Check if a topic is in user's favorites or not.
  *
  * @since 2.0.0 bbPress (r2652)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $user_id  Optional. User id.
  * @param int $topic_id Optional. Topic id.
@@ -522,7 +522,7 @@ function bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
  * improve performance on topics with many engaged users.
  *
  * @since 2.0.0 bbPress (r2652)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $user_id  Optional. User id.
  * @param int $topic_id Optional. Topic id.
@@ -557,7 +557,7 @@ function bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
  * Remove a topic from user's favorites.
  *
  * @since 2.0.0 bbPress (r2652)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $user_id  Optional. User id.
  * @param int $topic_id Optional. Topic id.
@@ -706,7 +706,7 @@ function bbp_favorites_handler( $action = '' ) {
  * parameters available inside of the various query APIs.
  *
  * @since 2.6.0 bbPress (r6606)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param array $args The arguments to override defaults.
  *
@@ -778,7 +778,7 @@ function bbp_get_user_object_ids( $args = array() ) {
  * Get array of forum IDs that a user can moderate.
  *
  * @since 2.6.0 bbPress (r5834)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $user_id User id.
  *
@@ -799,7 +799,7 @@ function bbp_get_moderator_forum_ids( $user_id = 0 ) {
  * Get a user's engaged topic ids.
  *
  * @since 2.6.0 bbPress (r6320)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $user_id Optional. User id.
  *
@@ -819,7 +819,7 @@ function bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
  * Get a user's favorite topic ids.
  *
  * @since 2.0.0 bbPress (r2652)
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param int $user_id Optional. User id.
  *

@@ -2051,7 +2051,7 @@ add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bp_admin_fo
 /**
  * Migration to update user favorites to post meta table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param bool $is_background The current process is background or not.
  * @param int  $blog_id       The blog ID to migrate for this blog.
@@ -2130,7 +2130,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 /**
  * Upgrading user favorites to post meta table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.4
  *
  * @param array $user_ids Array of user IDs.
  * @param int   $blog_id  The blog ID to migrate for this blog.

@@ -1383,7 +1383,7 @@ add_action( 'bb_video_after_create_parent_activity', 'bb_subscription_send_subsc
 /**
  * Filters the Where SQL statement.
  *
- * @since [BBVERSION]
+ * @since 2.3.4
  *
  * @param array $where_conditions Group Where sql.
  * @param array $args             Query arguments.

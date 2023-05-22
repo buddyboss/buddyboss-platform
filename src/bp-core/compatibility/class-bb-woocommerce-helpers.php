@@ -115,7 +115,7 @@ class BB_Woocommerce_Helpers {
 	/**
 	 * Validates the invitation before a new signup for woocommerce registration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.4
 	 *
 	 * @param WP_Error $validation_error A WP_Error object containing any errors encountered during registration.
 	 * @param string   $username         User's username after it has been sanitized.
