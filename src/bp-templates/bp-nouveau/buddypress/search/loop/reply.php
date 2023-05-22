@@ -40,7 +40,7 @@ $topic_id = bbp_get_reply_topic_id( $reply_id );
 				$bbp_get_reply_author_url = bbp_get_reply_author_url( $reply_id );
 				if ( ! empty( $bbp_get_reply_author_url ) ) {
 					?>
-					<a href="<?php echo bbp_get_reply_author_url( $reply_id ); ?>"><?php bbp_reply_author_display_name( $reply_id ); ?></a>
+					<a href="<?php echo $bbp_get_reply_author_url; ?>"><?php bbp_reply_author_display_name( $reply_id ); ?></a>
 					<?php
 				} else {
 					?>
