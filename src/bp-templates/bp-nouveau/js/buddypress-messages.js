@@ -2038,7 +2038,6 @@ window.bp = window.bp || {};
 				'input #message_content': 'focusEditorOnChange',
 				'input #message_content': 'postValidate',// jshint ignore:line
 				'change .medium-editor-toolbar-input': 'mediumLink',
-				'paste': 'handlePaste',
 			},
 
 			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
@@ -2125,18 +2124,6 @@ window.bp = window.bp || {};
 				if ( value !== '' ) {
 					$( '#bp-message-content' ).addClass( 'focus-in--content' );
 				}
-			},
-
-			handlePaste: function ( event ) {
-				// Get user's pasted data.
-				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-					data = clipboardData.getData( 'text/plain' );
-
-				// Insert the filtered content.
-				document.execCommand( 'insertHTML', false, data );
-
-				// Prevent the standard paste behavior.
-				event.preventDefault();
 			},
 
 			initialize: function() {
