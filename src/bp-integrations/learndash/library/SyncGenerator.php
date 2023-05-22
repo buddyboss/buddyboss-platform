@@ -745,7 +745,7 @@ class SyncGenerator {
 		$groupMember = new BP_Groups_Member( $userId, $this->bpGroupId );
 
 		// ignore moderator in syncing as there's no moderator in learndash.
-		if ( $groupMember->is_mod === 1 ) {
+		if ( 1 === $groupMember->is_mod ) {
 			return false;
 		}
 
