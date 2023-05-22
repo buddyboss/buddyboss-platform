@@ -913,7 +913,7 @@ function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member
 /**
  * This function will work as migration process which will repair member profile links.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  *
  * @return array|void
  */

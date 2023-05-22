@@ -2921,7 +2921,7 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 /**
  * Background job to update user profile slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  *
  * @return void
  */
@@ -2947,7 +2947,7 @@ function bb_update_to_2_3_5() {
 /**
  * Update the member slugs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  */
 function bb_core_update_repair_member_slug() {
 	global $wpdb, $bp_background_updater;
