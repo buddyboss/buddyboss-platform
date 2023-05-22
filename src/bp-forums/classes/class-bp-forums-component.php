@@ -25,6 +25,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 	 *
 	 * @since bbPress (r3552)
 	 */
+	#[\AllowDynamicProperties]
 	class BP_Forums_Component extends BP_Component {
 
 		/**

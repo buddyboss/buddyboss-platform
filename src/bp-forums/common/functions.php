@@ -1256,7 +1256,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_data = false, $topic_author = 0 ) {
 
 	// Bail if subscriptions are turned off.
-	if ( ! bb_is_enabled_subscription( 'forum' ) ) {
+	if ( ! bb_is_enabled_subscription( 'forum' ) && ! bb_is_enabled_subscription( 'group' ) ) {
 		return false;
 	}
 
@@ -1309,8 +1309,42 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		),
 	);
 
-	// Get topic subscribers and bail if empty.
-	$user_ids = bbp_get_forum_subscribers( $forum_id, true );
+	// Check if discussion is attached in a group then send group subscription notifications.
+	$group_ids = bp_is_active( 'groups' ) && function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+	$item_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+	if ( bp_is_active( 'groups' ) && bb_is_enabled_subscription( 'group' ) && ! empty( $item_id ) ) {
+		$type  = 'group';
+		$group = groups_get_group( $item_id );
+
+		if ( empty( $group ) ) {
+			return false;
+		}
+
+		// Get group subscribers and bail if empty.
+		$get_subscriptions = bb_get_subscription_users(
+			array(
+				'item_id' => $item_id,
+				'type'    => 'group',
+				'count'   => false,
+			),
+			true
+		);
+
+		$user_ids = array();
+		if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
+			$user_ids = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
+		}
+
+		$args['tokens']['group.name'] = bp_get_group_name( $group );
+		$args['tokens']['group.url']  = esc_url( bp_get_group_permalink( $group ) );
+		$notification_from            = 'bb_groups_subscribed_discussion';
+	} else {
+		// Get topic subscribers and bail if empty.
+		$user_ids          = bbp_get_forum_subscribers( $forum_id );
+		$type              = 'forum';
+		$item_id           = $forum_id;
+		$notification_from = 'bb_forums_subscribed_discussion';
+	}
 
 	// Dedicated filter to manipulate user ID's to send emails to.
 	$user_ids = (array) apply_filters( 'bbp_forum_subscription_user_ids', $user_ids, $topic_id, $forum_id );
@@ -1322,13 +1356,18 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 	do_action( 'bbp_pre_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
 
+	if ( empty( $item_id ) ) {
+		return false;
+	}
+
 	bb_send_notifications_to_subscribers(
 		array(
-			'type'    => 'forum',
-			'item_id' => $forum_id,
-			'data'    => array(
+			'type'              => $type,
+			'item_id'           => $item_id,
+			'notification_from' => $notification_from,
+			'data'              => array(
 				'topic_id'     => $topic_id,
-				'author_id'    => $topic_author,
+				'author_id'    => bbp_get_topic_author_id( $topic_id ),
 				'email_tokens' => $args,
 			),
 		)

@@ -432,7 +432,8 @@ class BP_Activity_Activity {
 				'spam'              => 'ham_only',      // Spam status.
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
-			)
+			),
+			'bb_get_activities'
 		);
 
 		// Select conditions.
@@ -1550,12 +1551,12 @@ class BP_Activity_Activity {
 		// We store the string 'none' to cache the fact that the
 		// activity item has no comments.
 		if ( 'none' === $comments ) {
-			$comments = false;
+			$comments = array();
 
 			// A true cache miss.
 		} elseif ( empty( $comments ) ) {
-
-			$bp = buddypress();
+			$comments = array();
+			$bp       = buddypress();
 
 			// Select the user's fullname with the query.
 			if ( bp_is_active( 'xprofile' ) ) {
@@ -1725,7 +1726,7 @@ class BP_Activity_Activity {
 			// miss the next time the activity comments are fetched.
 			// Storing the string 'none' is a hack workaround to
 			// avoid unnecessary queries.
-			if ( false === $comments ) {
+			if ( false === $comments || empty( $comments ) ) {
 				$cache_value = 'none';
 			} else {
 				$cache_value = $comments;

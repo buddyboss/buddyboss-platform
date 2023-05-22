@@ -4390,49 +4390,73 @@ function bp_core_get_active_custom_post_type_feed() {
  */
 function bp_platform_default_activity_types() {
 
-	$activity_type = apply_filters(
-		'bp_platform_default_activity_types',
+	$settings_fields = array(
 		array(
-			'0' => array(
-				'activity_name'  => 'new_avatar',
-				'activity_label' => __( 'Member changes their profile photo', 'buddyboss' ),
-			),
-			'1' => array(
-				'activity_name'  => 'updated_profile',
-				'activity_label' => __( 'Member updates their profile details', 'buddyboss' ),
-			),
-			'2' => array(
-				'activity_name'  => 'new_member',
-				'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
-			),
-			'3' => array(
-				'activity_name'  => 'friendship_created',
-				'activity_label' => __( 'Two members become connected', 'buddyboss' ),
-			),
-			'4' => array(
-				'activity_name'  => 'created_group',
-				'activity_label' => __( 'Member creates a group', 'buddyboss' ),
-			),
-			'5' => array(
-				'activity_name'  => 'joined_group',
-				'activity_label' => __( 'Member joins a group', 'buddyboss' ),
-			),
-			'6' => array(
-				'activity_name'  => 'group_details_updated',
-				'activity_label' => __( 'Group details are updated', 'buddyboss' ),
-			),
-			'7' => array(
-				'activity_name'  => 'bbp_topic_create',
-				'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' ),
-			),
-			'8' => array(
-				'activity_name'  => 'bbp_reply_create',
-				'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' ),
-			),
-		)
+			'activity_name'  => 'new_avatar',
+			'activity_label' => __( 'Member changes their profile photo', 'buddyboss' ),
+		),
+		array(
+			'activity_name'  => 'updated_profile',
+			'activity_label' => __( 'Member updates their profile details', 'buddyboss' ),
+		),
 	);
 
-	return $activity_type;
+	// Check the registration is enabled or not.
+	if ( function_exists( 'bp_enable_site_registration' ) && bp_enable_site_registration() ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'new_member',
+					'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'friendship_created',
+					'activity_label' => __( 'Two members become connected', 'buddyboss' ),
+				),
+			)
+		);
+	}
+
+	// settings field that dependent on group.
+	if ( bp_is_active( 'groups' ) ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'created_group',
+					'activity_label' => __( 'Member creates a group', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'joined_group',
+					'activity_label' => __( 'Member joins a group', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'group_details_updated',
+					'activity_label' => __( 'Group details are updated', 'buddyboss' ),
+				),
+			)
+		);
+	}
+
+	// Settings field that dependent on forum.
+	if ( bp_is_active( 'forums' ) ) {
+		$settings_fields = array_merge(
+			$settings_fields,
+			array(
+				array(
+					'activity_name'  => 'bbp_topic_create',
+					'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' ),
+				),
+				array(
+					'activity_name'  => 'bbp_reply_create',
+					'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' ),
+				),
+			)
+		);
+	}
+
+	return apply_filters( 'bb_platform_default_activity_types', $settings_fields );
 }
 
 if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
@@ -7673,6 +7697,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_xprofile':
 			$meta_icon = $bb_icon_bf . ' bb-icon-user-card';
 			break;
+		case 'bb_profile_slug_settings':
+			$meta_icon = $bb_icon_bf . ' bb-icon-link';
+			break;
 		case 'bp_member_avatar_settings':
 		case 'bp_groups_avatar_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-image';
@@ -7849,7 +7876,7 @@ function bb_validate_gravatar( $email ) {
  */
 function bb_core_get_os() {
 
-	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
 	$os_platform = '';
 	$os_array    = array(
@@ -8220,7 +8247,13 @@ function bb_is_heartbeat_enabled() {
  * @return int
  */
 function bb_presence_interval() {
-	return apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
+	$bb_presence_interval = (int) apply_filters( 'bb_presence_interval', bp_get_option( 'bb_presence_interval', bb_presence_default_interval() ) );
+
+	if ( $bb_presence_interval !== (int) get_option( 'bb_presence_interval_mu' ) ) {
+		update_option( 'bb_presence_interval_mu', $bb_presence_interval );
+	}
+
+	return $bb_presence_interval;
 }
 
 /**
@@ -8268,7 +8301,13 @@ function bb_pro_pusher_version() {
  * @return int
  */
 function bb_presence_time_span() {
-	return (int) apply_filters( 'bb_presence_time_span', 20 );
+	$bb_presence_time_span = (int) apply_filters( 'bb_presence_time_span', 20 );
+
+	if ( $bb_presence_time_span !== (int) get_option( 'bb_presence_time_span_mu' ) ) {
+		update_option( 'bb_presence_time_span_mu', $bb_presence_time_span );
+	}
+
+	return $bb_presence_time_span;
 }
 
 /**
@@ -8279,7 +8318,13 @@ function bb_presence_time_span() {
  * @return int
  */
 function bb_presence_default_interval() {
-	return apply_filters( 'bb_presence_default_interval', 60 );
+	$bb_presence_default_interval = (int) apply_filters( 'bb_presence_default_interval', 60 );
+
+	if ( $bb_presence_default_interval !== (int) get_option( 'bb_presence_default_interval_mu' ) ) {
+		update_option( 'bb_presence_default_interval_mu', $bb_presence_default_interval );
+	}
+
+	return $bb_presence_default_interval;
 }
 
 /**
@@ -8388,4 +8433,107 @@ function bb_mention_remove_deleted_users_link( $content ) {
 	}
 
 	return $content;
+}
+
+/**
+ * Fetch bb icons data.
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @param string $key Array key.
+ *
+ * @return array
+ */
+function bb_icon_font_map_data( $key = '' ) {
+	global $bb_icons_data;
+	include buddypress()->plugin_dir . 'bp-templates/bp-nouveau/icons/font-map.php';
+
+	return ! empty( $key ) ? ( isset( $bb_icons_data[ $key ] ) ? $bb_icons_data[ $key ] : false ) : $bb_icons_data;
+}
+
+if ( ! function_exists( 'bb_filter_input_string' ) ) {
+	/**
+	 * Function used to sanitize user input in a manner similar to the (deprecated) FILTER_SANITIZE_STRING.
+	 *
+	 * In many cases, the usage of `FILTER_SANITIZE_STRING` can be easily replaced with `FILTER_SANITIZE_FULL_SPECIAL_CHARS` but
+	 * in some cases, especially when storing the user input, encoding all special characters can result in an stored XSS injection
+	 * so this function can be used to preserve the pre PHP 8.1 behavior where sanitization is expected during the retrieval
+	 * of user input.
+	 *
+	 * @since BuddyBoss 2.3.0
+	 *
+	 * @param string $type          One of INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
+	 * @param string $variable_name Name of a variable to retrieve.
+	 * @param int[]  $flags         Array of supported filter options and flags.
+	 *                              Accepts `FILTER_REQUIRE_ARRAY` in order to require the input to be an array.
+	 *                              Accepts `FILTER_FLAG_NO_ENCODE_QUOTES` to prevent encoding of quotes.
+	 * @return string|string[]|null|boolean Value of the requested variable on success, `false` if the filter fails, or `null` if the `$variable_name` variable is not set.
+	 */
+	function bb_filter_input_string( $type, $variable_name, $flags = array() ) {
+
+		$require_array = in_array( FILTER_REQUIRE_ARRAY, $flags, true );
+		$string        = filter_input( $type, $variable_name, FILTER_UNSAFE_RAW, $require_array ? FILTER_REQUIRE_ARRAY : array() );
+
+		// If we have an empty string or the input var isn't found we can return early.
+		if ( empty( $string ) ) {
+			return $string;
+		}
+
+		/**
+		 * This differs from strip_tags() because it removes the contents of
+		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
+		 * will return 'something'. wp_strip_all_tags will return ''
+		 */
+		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+
+		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
+			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
+		}
+
+		return $string;
+
+	}
+}
+
+if ( ! function_exists( 'bb_filter_var_string' ) ) {
+	/**
+	 * Function used to sanitize user input in a manner similar to the (deprecated) FILTER_SANITIZE_STRING.
+	 *
+	 * In many cases, the usage of `FILTER_SANITIZE_STRING` can be easily replaced with `FILTER_SANITIZE_FULL_SPECIAL_CHARS` but
+	 * in some cases, especially when storing the user input, encoding all special characters can result in an stored XSS injection
+	 * so this function can be used to preserve the pre PHP 8.1 behavior where sanitization is expected during the retrieval
+	 * of user input.
+	 *
+	 * @since BuddyBoss 2.3.0
+	 *
+	 * @param string $variable_name Name of a variable to retrieve.
+	 * @param int[]  $flags         Array of supported filter options and flags.
+	 *                              Accepts `FILTER_REQUIRE_ARRAY` in order to require the input to be an array.
+	 *                              Accepts `FILTER_FLAG_NO_ENCODE_QUOTES` to prevent encoding of quotes.
+	 * @return string|string[]|null|boolean Value of the requested variable on success, `false` if the filter fails, or `null` if the `$variable_name` variable is not set.
+	 */
+	function bb_filter_var_string( $variable_name, $flags = array() ) {
+
+		$require_array = in_array( FILTER_REQUIRE_ARRAY, $flags, true );
+		$string        = filter_var( $variable_name, FILTER_UNSAFE_RAW, $require_array ? FILTER_REQUIRE_ARRAY : array() );
+
+		// If we have an empty string or the input var isn't found we can return early.
+		if ( empty( $string ) ) {
+			return $string;
+		}
+
+		/**
+		 * This differs from strip_tags() because it removes the contents of
+		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
+		 * will return 'something'. wp_strip_all_tags will return ''
+		 */
+		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+
+		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
+			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
+		}
+
+		return $string;
+
+	}
 }
