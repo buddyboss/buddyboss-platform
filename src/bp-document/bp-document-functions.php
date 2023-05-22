@@ -1438,7 +1438,7 @@ function bp_document_upload() {
 		}
 
 		if ( empty( $attachment_url ) ) {
-			$attachment_url = bp_document_download_link( $attachment->ID, $document_id );
+			$attachment_url = bp_document_get_preview_url( $attachment->ID, $document_id );
 		}
 
 	}
