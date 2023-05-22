@@ -465,7 +465,7 @@ function bp_theme_compat_reset_post( $args = array() ) {
 
 	// Switch defaults if post is set.
 	if ( isset( $wp_query->post ) ) {
-		$dummy = wp_parse_args(
+		$dummy = bp_parse_args(
 			$args,
 			array(
 				'ID'                    => $wp_query->post->ID,
@@ -501,7 +501,7 @@ function bp_theme_compat_reset_post( $args = array() ) {
 			)
 		);
 	} else {
-		$dummy = wp_parse_args(
+		$dummy = bp_parse_args(
 			$args,
 			array(
 				'ID'                    => -9999,

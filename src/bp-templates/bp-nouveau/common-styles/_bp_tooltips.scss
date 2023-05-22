@@ -79,6 +79,7 @@ button[data-bp-tooltip] {
 
 	// Fixing iOS Safari event issue. More info at: https://goo.gl/w8JF4W
 	cursor: pointer;
+	display: block;
 
 	&:after {
 
@@ -114,7 +115,6 @@ button[data-bp-tooltip] {
 		&:after {
 
 			@include opacity(1);
-
 			pointer-events: auto;
 		}
 	}
@@ -456,6 +456,17 @@ button[data-bp-tooltip] {
 		&:after {
 			white-space: normal;
 			width: 100%;
+		}
+	}
+}
+
+.post-emoji.bp-tooltip.active {
+
+	&[data-bp-tooltip] {
+
+		&:after,
+		&:before {
+			display: none;
 		}
 	}
 }

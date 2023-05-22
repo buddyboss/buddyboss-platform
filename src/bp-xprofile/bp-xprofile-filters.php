@@ -105,7 +105,7 @@ add_action( 'xprofile_avatar_uploaded', 'bp_core_xprofile_update_profile_complet
 add_action( 'xprofile_cover_image_uploaded', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When cover photo uploaded from profile in Frontend.
 add_action( 'bp_core_delete_existing_avatar', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When profile photo deleted from profile in Frontend.
 add_action( 'xprofile_cover_image_deleted', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When cover photo deleted from profile in Frontend.
-add_action( 'xprofile_updated_profile', 'bp_core_xprofile_update_profile_completion_user_progress' ); // On Profile updated from frontend.
+add_action( 'xprofile_updated_profile', 'bp_core_xprofile_update_profile_completion_user_progress', 20, 5 ); // On Profile updated from frontend.
 add_action( 'wp_ajax_xprofile_reorder_fields', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When fields inside fieldset are dragged and dropped in wp-admin > buddybpss > profile.
 
 // Profile Completion Admin Actions.
@@ -115,6 +115,9 @@ add_action( 'xprofile_fields_deleted_field', 'bp_core_xprofile_clear_all_user_pr
 add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On profile group deleted in wp-admin.
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
+add_action( 'xprofile_groups_saved_group', 'bb_core_xprofile_clear_group_cache' );
+add_action( 'xprofile_groups_deleted_group', 'bb_core_xprofile_clear_group_cache' );
+add_action( 'xprofile_fields_deleted_field', 'bb_core_xprofile_clear_group_cache' );
 
 // Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
@@ -128,6 +131,11 @@ add_filter( 'bp_repair_list', 'bb_xprofile_repair_user_nicknames' );
 // Validate user_nickname when user created from the backend
 add_filter( 'insert_user_meta', 'bb_validate_user_nickname_on_user_register', 10, 3 );
 add_action( 'user_profile_update_errors', 'bb_validate_user_nickname_on_user_update', 10, 3 );
+
+add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_param' );
+
+// When email changed then check profile completion for gravatar.
+add_action( 'profile_update', 'bb_profile_update_completion_user_progress', 10, 2 );
 
 /**
  * Sanitize each field option name for saving to the database.
@@ -186,31 +194,31 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 	if ( $field_id && bp_xprofile_is_richtext_enabled_for_field( $field_id ) ) {
 		$richtext_tags = array(
 			'img'  => array(
-				'id'      => 1,
-				'class'   => 1,
-				'src'     => 1,
-				'alt'     => 1,
-				'width'   => 1,
-				'height'  => 1,
+				'id'     => 1,
+				'class'  => 1,
+				'src'    => 1,
+				'alt'    => 1,
+				'width'  => 1,
+				'height' => 1,
 			),
 			'ul'   => array(
-				'id'     => 1,
-				'class'  => 1,
+				'id'    => 1,
+				'class' => 1,
 			),
 			'ol'   => array(
-				'id'     => 1,
-				'class'  => 1,
+				'id'    => 1,
+				'class' => 1,
 			),
 			'li'   => array(
-				'id'     => 1,
-				'class'  => 1,
+				'id'    => 1,
+				'class' => 1,
 			),
 			'span' => array(),
 			'p'    => array(),
 			'a'    => array(
 				'href'   => 1,
-				'target' => 1
-			)
+				'target' => 1,
+			),
 		);
 
 		// Allow style attributes on certain elements for capable users
@@ -220,6 +228,41 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 		}
 
 		$xprofile_allowedtags = array_merge( $allowedtags, $richtext_tags );
+	}
+
+	// If the field type is social network then allow some tags.
+	if ( $field_id ) {
+
+		$field      = xprofile_get_field( $field_id );
+		$field_type = $field->type ?? '';
+
+		if ( 'socialnetworks' === $field_type ) {
+			$social_tags = array(
+				'div'    => array(
+					'class' => 1,
+					'id'    => 1,
+				),
+				'span'   => array(
+					'class' => 1,
+				),
+				'i'      => array(
+					'class' => 1,
+				),
+				'a'      => array(
+					'href'   => 1,
+					'target' => 1,
+					'data-*' => 1,
+					'class'  => 1,
+				),
+				'p'      => array(),
+				'h4'     => array(),
+				'header' => array(
+					'class' => 1,
+				),
+			);
+
+			$xprofile_allowedtags = array_merge( $allowedtags, $social_tags );
+		}
 	}
 
 	/**
@@ -422,6 +465,12 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
 			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
 		}
 
+		$value = xprofile_filter_kses( $value, $data_obj, $field_id );
+	} elseif ( 'socialnetworks' === $field_type ) {
+		$data_obj = null;
+		if ( bp_is_user() ) {
+			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
+		}
 		$value = xprofile_filter_kses( $value, $data_obj );
 	} else {
 		$value = esc_html( $value );
@@ -801,14 +850,28 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	$value      = strtolower( $value );
 	$field_name = xprofile_get_field( $field_id )->name;
 
-	// Empty nickname
+	// Empty nickname.
 	if ( '' === trim( $value ) ) {
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
-	// only alpha numeric, underscore, dash
+	// only alpha numeric, underscore, dash.
 	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
 		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
+	}
+
+	// Check user unique identifier exist.
+	$check_exists = $wpdb->get_var( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s",
+			'bb_profile_slug',
+			$value
+		)
+	);
+
+	if ( $check_exists > 0 ) {
+		// translators: Nickname field.
+		return sprintf( __( 'Invalid %s.', 'buddyboss' ), $field_name );
 	}
 
 	// must be shorter then 32 characters
@@ -1009,8 +1072,8 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 
 	if ( 1 === $field->is_required ) {
 		foreach ( $value as $key => $val ) {
-			$value = trim( $val );
-			if ( empty( $value ) ) {
+			$val = trim( $val );
+			if ( empty( $val ) ) {
 				return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 			}
 		}
@@ -1317,4 +1380,56 @@ function bb_validate_user_nickname_on_user_update( WP_Error $errors, bool $updat
 			$errors->add( 'nickname', esc_html( $invalid ) );
 		}
 	}
+}
+
+/**
+ * Function will check if user confirmed change email address then
+ * update profile completion widget based on change email's gravatar.
+ *
+ * @since BuddyBoss 2.0.9
+ *
+ * @param int   $user_id       Get current user id.
+ * @param array $old_user_data Old user data.
+ */
+function bb_profile_update_completion_user_progress( $user_id, $old_user_data ) {
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+	if ( defined( 'IS_PROFILE_PAGE' ) && IS_PROFILE_PAGE && isset( $_GET['newuseremail'] ) && $user_id ) {
+		$new_email = get_user_meta( $user_id, '_new_email', true );
+		if ( $new_email && hash_equals( $new_email['hash'], $_GET['newuseremail'] ) ) {
+			bp_core_xprofile_update_profile_completion_user_progress();
+		}
+	}
+}
+
+/**
+ * Set social network param to profile query.
+ *
+ * @since BuddyBoss 2.1.0
+ *
+ * @param array $args Arguments.
+ *
+ * @return array
+ */
+function bb_xprofile_set_social_network_param( $args = array() ) {
+
+	if ( bp_is_user_profile() ) {
+		$is_enabled_social_networks = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+
+		if ( ! $is_enabled_social_networks ) {
+			$args['fetch_social_network_fields'] = true;
+		}
+	}
+
+	return $args;
+}
+
+/**
+ * Function trigger when fieldset is added or deleted or field deleted.
+ *
+ * @since BuddyBoss 2.1.6
+ */
+function bb_core_xprofile_clear_group_cache() {
+	BP_XProfile_Group::$bp_xprofile_group_ids = array();
 }

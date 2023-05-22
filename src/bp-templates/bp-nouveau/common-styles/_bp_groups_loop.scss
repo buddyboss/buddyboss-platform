@@ -75,11 +75,19 @@
 
 }
 
-//Leave group confirmation popups
+//Action Popups
 .bb-action-popup {
+
+	.action-popup-overlay {
+		position: fixed;
+		inset: 0;
+	}
+
 
 	.modal-container {
 		padding-bottom: 0;
+		position: relative;
+		z-index: 1;
 	}
 
 	.bb-model-header {
@@ -128,6 +136,26 @@
 			float: none;
 		}
 
+	}
+
+	&#group-description-popup {
+
+		.bb-action-popup-content {
+			padding-bottom: 1px;
+
+			p {
+				margin-bottom: 1.6875rem;
+
+				&:empty {
+					display: none;
+				}
+			}
+
+			ul {
+				margin: 0 0 1.6875rem 1.6875rem;
+				list-style-type: disc;
+			}
+		}
 	}
 
 }

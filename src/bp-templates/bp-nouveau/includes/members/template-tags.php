@@ -217,7 +217,7 @@ function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
 		);
 	}
 
-	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-menu-dots-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
+	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -639,7 +639,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'class' => $parent_class,
 				),
 				'button_attr'              => array(
-					'href'                 => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_core_get_username( $user_id ) ),
+					'href'                 => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_members_get_user_nicename( $user_id ) ),
 					'id'                   => false,
 					'class'                => $button_args['link_class'],
 					'rel'                  => '',
@@ -715,18 +715,34 @@ function bp_nouveau_get_members_buttons( $args ) {
 		unset( bp_nouveau()->members->button_args );
 	}
 
-	if ( is_user_logged_in() && bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
-		$buttons['member_report'] = bp_member_get_report_link(
-			array(
-				'parent_element' => $parent_element,
-				'parent_attr'    => array(
-					'id'    => $button_args['wrapper_id'],
-					'class' => $parent_class,
-				),
-				'button_element' => $button_element,
-				'position'       => 29,
-			)
-		);
+	if ( is_user_logged_in() && bp_is_active( 'moderation' ) ) {
+		if ( bp_is_moderation_member_blocking_enable() ) {
+			$buttons['member_block'] = bp_member_get_report_link(
+				array(
+					'parent_element' => $parent_element,
+					'parent_attr'    => array(
+						'id'    => $button_args['wrapper_id'],
+						'class' => $parent_class,
+					),
+					'button_element' => $button_element,
+					'position'       => 29,
+				)
+			);
+		}
+		if ( bb_is_moderation_member_reporting_enable() ) {
+			$buttons['member_report'] = bp_member_get_report_link(
+				array(
+					'parent_element' => $parent_element,
+					'parent_attr'    => array(
+						'id'    => $button_args['wrapper_id'],
+						'class' => $parent_class,
+					),
+					'button_element' => $button_element,
+					'position'       => 25,
+					'report_user'    => true,
+				)
+			);
+		}
 	}
 
 	/**
@@ -776,7 +792,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 	uksort(
 		$return,
 		function ( $key1, $key2 ) use ( $order ) {
-			return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
+			return ( array_search( $key1, $order ) <=> array_search( $key2, $order ) );
 		}
 	);
 
@@ -1208,5 +1224,5 @@ function bb_get_member_joined_date( $user_id = 0 ) {
 	 * @param string The user registered date meta.
 	 * @param string The user registered date.
 	 */
-	return apply_filters( 'bp_nouveau_get_member_meta', $user_registered_date, $register_date );
+	return apply_filters( 'bb_get_member_joined_date', $user_registered_date, $register_date );
 }

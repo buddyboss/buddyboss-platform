@@ -21,12 +21,14 @@ if ( ! empty( $group_type ) ) {
 
 
 $args = array(
+	'orderby'    => 'menu_order',
+	'order'      => 'ASC',
 	'meta_query' => array(
 		array(
 			'key'   => '_bp_group_type_enable_filter',
 			'value' => 1,
 		),
-	)
+	),
 );
 
 // Get active group types.

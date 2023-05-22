@@ -61,7 +61,7 @@ function bb_get_profile_header_elements() {
 		);
 	}
 
-	if ( bp_member_type_enable_disable() && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks() ) {
+	if ( function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks() ) {
 		$elements[] = array(
 			'element_name'  => 'social-networks',
 			'element_label' => esc_html__( 'Social Networks', 'buddyboss' ),

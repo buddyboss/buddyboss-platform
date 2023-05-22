@@ -68,7 +68,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		$bp->active_components = $active_components;
 		bp_core_install( $bp->active_components );
-		bp_core_add_page_mappings( $bp->active_components );
+
+		// Mapping the component pages in page settings except registration pages.
+		bp_core_add_page_mappings( $bp->active_components, 'keep', false );
 		bp_update_option( 'bp-active-components', $bp->active_components );
 
 	}
@@ -156,15 +158,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					// create field for each of custom post type.
 					$this->add_field( $post_type_option_name, __( 'Custom Post Types', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
 
-					$fields['args']['class'] = 'child-no-padding bp-display-none';
+					$fields['args']['class'] = 'child-no-padding bp-display-none child-custom-post-type';
 					$this->add_field( $comment_option_name, '', 'bb_feed_settings_callback_post_type_comments', 'intval', $fields['args'] );
 				} else {
 
-					$fields['args']['class'] = 'child-no-padding-first';
+					$fields['args']['class'] = 'child-no-padding';
 					// create field for each of custom post type.
 					$this->add_field( $post_type_option_name, '&#65279;', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
 
-					$fields['args']['class'] = 'child-no-padding bp-display-none';
+					$fields['args']['class'] = 'child-no-padding bp-display-none child-custom-post-type';
 					$this->add_field( $comment_option_name, '', 'bb_feed_settings_callback_post_type_comments', 'intval', $fields['args'] );
 				}
 				$count ++;

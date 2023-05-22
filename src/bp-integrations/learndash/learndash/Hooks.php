@@ -65,7 +65,7 @@ class Hooks {
 			$course_settings = learndash_get_setting( $field->value );
 
 			// Skip the leardash course field from member search when course price type or course mode is 'open'.
-			if ( 'open' === $course_settings['course_price_type'] ) {
+			if ( isset( $course_settings['course_price_type'] ) && 'open' === $course_settings['course_price_type'] ) {
 				return false;
 			}
 		}

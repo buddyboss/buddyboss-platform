@@ -82,6 +82,7 @@ add_action( 'bbp_init', 'bbp_register', 0 );
 add_action( 'bbp_init', 'bbp_add_rewrite_tags', 20 );
 add_action( 'bbp_init', 'bbp_add_rewrite_rules', 30 );
 add_action( 'bbp_init', 'bbp_add_permastructs', 40 );
+add_action( 'bbp_init', 'bbp_setup_engagements', 50  );
 add_action( 'bbp_init', 'bbp_ready', 999 );
 
 /**
@@ -214,12 +215,10 @@ add_action( 'bbp_trash_topic', 'bbp_remove_topic_from_all_favorites' );
 add_action( 'bbp_delete_topic', 'bbp_remove_topic_from_all_favorites' );
 
 // Subscriptions.
-add_action( 'bbp_trash_topic', 'bbp_remove_topic_from_all_subscriptions' );
 add_action( 'bbp_delete_topic', 'bbp_remove_topic_from_all_subscriptions' );
-add_action( 'bbp_trash_forum', 'bbp_remove_forum_from_all_subscriptions' );
 add_action( 'bbp_delete_forum', 'bbp_remove_forum_from_all_subscriptions' );
-add_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 11, 5 );
-add_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 11, 4 );
+add_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 9999, 5 );
+add_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );
 
 // Sticky.
 add_action( 'bbp_trash_topic', 'bbp_unstick_topic' );
@@ -302,6 +301,10 @@ add_action( 'bbp_get_request', 'bbp_search_results_redirect', 10 );
 // Maybe convert the users password.
 add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 
+add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
+
+add_action( 'wp_footer', 'bb_forum_add_content_popup' );
+
 /**
  * Register the forum notifications.
  *
@@ -328,7 +331,7 @@ function forums_notification_settings() {
 	}
 
 	// Bail out if legacy method not enabled.
-	if ( false === bb_enabled_legacy_email_preference() ) {
+	if ( false === bb_enabled_legacy_email_preference() || ! bbp_is_subscriptions_active() ) {
 		return;
 	}
 
@@ -400,3 +403,191 @@ function forums_notification_settings() {
 	<?php
 }
 add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
+
+/**
+ * Save topic/reply draft data.
+ *
+ * @since BuddyBoss 2.0.4
+ */
+function bb_post_topic_reply_draft() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_topic_reply = $_REQUEST['draft_topic_reply'] ?? '';
+	$usermeta_key      = 'bb_user_topic_reply_draft';
+	$user_id           = bp_loggedin_user_id();
+	$all_data          = array();
+
+	if ( ! empty( $_REQUEST['draft_topic_reply'] ) && ! is_array( $_REQUEST['draft_topic_reply'] ) ) {
+		$draft_topic_reply = json_decode( stripslashes( $draft_topic_reply ), true );
+	}
+
+	if ( ! empty( $_REQUEST['all_data'] ) && ! is_array( $_REQUEST['all_data'] ) ) {
+		$all_data = json_decode( stripslashes( $_REQUEST['all_data'] ), true );
+	}
+
+	if ( is_array( $draft_topic_reply ) && isset( $draft_topic_reply['data_key'], $draft_topic_reply['object'] ) ) {
+
+		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+
+		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
+			$removed_data = $existing_draft[ $draft_topic_reply['data_key'] ];
+
+			// Delete medias.
+			if ( isset( $removed_data['bbp_media'] ) && ! empty( $removed_data['bbp_media'] ) ) {
+				$remove_media_data = json_decode( stripslashes( $removed_data['bbp_media'] ), true );
+
+				if ( ! empty( $remove_media_data ) ) {
+					foreach ( $remove_media_data as $media_attachment ) {
+						if ( ! empty( $media_attachment['id'] ) && 0 < (int) $media_attachment['id'] ) {
+							wp_delete_attachment( $media_attachment['id'], true );
+						}
+					}
+				}
+			}
+
+			// Delete documents.
+			if ( isset( $removed_data['bbp_document'] ) && ! empty( $removed_data['bbp_document'] ) ) {
+				$remove_document_data = json_decode( stripslashes( $removed_data['bbp_document'] ), true );
+
+				if ( ! empty( $remove_document_data ) ) {
+					foreach ( $remove_document_data as $document_attachment ) {
+						if ( ! empty( $document_attachment['id'] ) && 0 < (int) $document_attachment['id'] ) {
+							wp_delete_attachment( $document_attachment['id'], true );
+						}
+					}
+				}
+			}
+
+			// Delete videos.
+			if ( isset( $removed_data['bbp_video'] ) && ! empty( $removed_data['bbp_video'] ) ) {
+				$remove_video_data = json_decode( stripslashes( $removed_data['bbp_video'] ), true );
+
+				if ( ! empty( $remove_video_data ) ) {
+					foreach ( $remove_video_data as $video_attachment ) {
+						if ( ! empty( $video_attachment['id'] ) && 0 < (int) $video_attachment['id'] ) {
+							wp_delete_attachment( $video_attachment['id'], true );
+						}
+					}
+				}
+			}
+
+			unset( $existing_draft[ $draft_topic_reply['data_key'] ] );
+		}
+
+		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
+			$existing_draft = array();
+		}
+
+		if ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] ) {
+
+			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_topic_reply['data']['bbp_media'] ) && ! empty( $draft_topic_reply['data']['bbp_media'] ) ) {
+				$new_media_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_media'] ), true );
+
+				if ( ! empty( $new_media_data ) ) {
+					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
+						if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+							$new_media_data[ $media_key ]['bb_media_draft'] = 1;
+							update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
+						}
+					}
+				}
+
+				$draft_topic_reply['data']['bbp_media'] = wp_json_encode( $new_media_data );
+			}
+
+			// Set document draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_topic_reply['data']['bbp_document'] ) && ! empty( $draft_topic_reply['data']['bbp_document'] ) ) {
+				$new_document_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_document'] ), true );
+
+				if ( ! empty( $new_document_data ) ) {
+					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
+						if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+							$new_document_data[ $document_key ]['bb_media_draft'] = 1;
+							update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
+						}
+					}
+				}
+
+				$draft_topic_reply['data']['bbp_document'] = wp_json_encode( $new_document_data );
+			}
+
+			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_topic_reply['data']['bbp_video'] ) && ! empty( $draft_topic_reply['data']['bbp_video'] ) ) {
+				$new_video_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_video'] ), true );
+
+				if ( ! empty( $new_video_data ) ) {
+					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
+						if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+							$new_video_data[ $video_key ]['bb_media_draft'] = 1;
+							update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
+						}
+					}
+				}
+
+				$draft_topic_reply['data']['bbp_video'] = wp_json_encode( $new_video_data );
+			}
+
+			$existing_draft[ $draft_topic_reply['data_key'] ] = $draft_topic_reply;
+
+			if ( ! empty( $all_data ) ) {
+
+				foreach ( $all_data as $data_key => $d_data ) {
+
+					// Avoid conflict with current data.
+					if ( $draft_topic_reply['data_key'] === $data_key ) {
+						continue;
+					}
+
+					// Update the all data.
+					if ( isset( $existing_draft[ $data_key ] ) ) {
+						$existing_draft[ $data_key ]['data'] = $d_data;
+					}
+				}
+			}
+		}
+
+		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+	}
+
+	wp_send_json_success(
+		array(
+			'draft_activity' => $draft_topic_reply,
+		)
+	);
+}
+
+/**
+ * Function add pop up for single page forum content.
+ *
+ * @since BuddyBoss 2.2.1
+ */
+function bb_forum_add_content_popup() {
+	if ( ! bbp_is_single_forum() ) {
+		return;
+	}
+	?>
+	<!-- Forum description popup -->
+	<div class="bb-action-popup" id="single-forum-description-popup" style="display: none">
+		<transition name="modal">
+			<div class="modal-mask bb-white bbm-model-wrap">
+				<div class="modal-wrapper">
+					<div class="modal-container">
+						<header class="bb-model-header">
+							<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
+							<a class="bb-close-action-popup bb-model-close-button" href="#">
+								<span class="bb-icon-l bb-icon-times"></span>
+							</a>
+						</header>
+						<div class="bb-action-popup-content">
+							<?php bbp_forum_content(); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</transition>
+	</div> <!-- .bb-action-popup -->
+	<?php
+}

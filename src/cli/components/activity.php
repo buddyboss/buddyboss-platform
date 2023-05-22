@@ -103,7 +103,7 @@ class Activity extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$assoc_args,
 			array(
 				'component'         => '',
@@ -260,7 +260,7 @@ class Activity extends BuddypressCommand {
 	public function _list( $_, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$assoc_args,
 			array(
 				'page'        => 1,
@@ -760,7 +760,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					// stolen from groups_join_group.
-					$r['action'] = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group_obj ) . '">' . esc_attr( $group_obj->name ) . '</a>' );
+					$r['action'] = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group_obj ) . '">' . bp_get_group_name( $group_obj ) . '</a>' );
 				} else {
 					// old way, for some other kind of update.
 					$r['action'] = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ) );
