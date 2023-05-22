@@ -3677,6 +3677,10 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 		letter-spacing: -0.15px;
 		line-height: 1.1875;
 		width: auto;
+
+		.bp-tooltip {
+			display: inline-block;
+		}
 	}
 
 	.media-album_group_name a {

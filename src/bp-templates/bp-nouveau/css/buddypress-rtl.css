@@ -21193,6 +21193,13 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
   width: auto;
 }
 
+.search-video-list .media-album_group .bp-tooltip,
+.search-video-list .media-album_visibility .bp-tooltip,
+.search-media-list .media-album_group .bp-tooltip,
+.search-media-list .media-album_visibility .bp-tooltip {
+  display: inline-block;
+}
+
 .search-video-list .media-album_group_name a,
 .search-media-list .media-album_group_name a {
   color: #4d5c6d;
