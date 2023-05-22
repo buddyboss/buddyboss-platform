@@ -20753,6 +20753,12 @@ div.dropzone .dz-preview .dz-filename {
   display: none;
 }
 
+.search-document-list .media-folder_items .media-folder_details__bottom .bp-tooltip,
+#media-folder-document-data-table .media-folder_items .media-folder_details__bottom .bp-tooltip {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .search-document-list .media-folder_items .media-folder_actions,
 #media-folder-document-data-table .media-folder_items .media-folder_actions {
   display: -webkit-box;
