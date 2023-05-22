@@ -1411,7 +1411,7 @@ function bp_document_upload() {
 	do_action( 'bb_document_upload', $attachment );
 
 	// get saved document id.
-	$document_id = get_post_meta( $attachment->ID, 'bp_document_id', true );
+	$document_id = (int) get_post_meta( $attachment->ID, 'bp_document_id', true );
 
 	// Generate document attachment preview link.
 	$attachment_id   = 'forbidden_' . $attachment->ID;
@@ -1431,6 +1431,16 @@ function bp_document_upload() {
 		)
 	) {
 		$attachment_url = bp_document_get_preview_url( $document_id, $attachment->ID );
+		$extension      = bp_document_extension( $attachment->ID );
+
+		if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
+			$attachment_url = bb_document_video_get_symlink( $document_id, true );
+		}
+
+		if ( empty( $attachment_url ) ) {
+			$attachment_url = bp_document_download_link( $attachment->ID, $document_id );
+		}
+
 	}
 
 	if ( 0 === $attachment_size ) {

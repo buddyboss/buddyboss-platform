@@ -91,7 +91,8 @@ function bp_video_upload() {
 			)
 		)
 	) {
-		$attachment_url = bb_video_get_symlink( $video_id );
+		$attachment_url    = bb_video_get_symlink( $video_id );
+		$video_message_url = $attachment_url;
 	}
 
 	$result = array(
