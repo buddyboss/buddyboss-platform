@@ -5519,6 +5519,14 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	foreach ( $user_ids as $user_id ) {
 		bb_set_user_profile_slug( (int) $user_id );
 	}
+
+	// Flush WP cache.
+	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 }
 
 /**
