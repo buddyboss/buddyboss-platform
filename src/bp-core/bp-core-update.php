@@ -425,6 +425,14 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20001 ) {
 			bb_update_to_2_3_3();
 		}
+
+		if ( $raw_db_version < 20101 ) {
+			bb_update_to_2_3_4();
+		}
+
+		if ( $raw_db_version < 20111 ) {
+			bb_update_to_2_3_5();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2614,7 +2622,7 @@ function bb_update_to_2_3_1() {
 		BB_Presence::bb_check_native_presence_load_directly();
 	}
 
-	bb_repair_member_profile_links_callback( true );
+	bb_generate_member_profile_links_on_update();
 }
 
 /**
@@ -2706,4 +2714,90 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
 
 	$paged++;
 	bb_repair_member_unique_slug( $paged );
+}
+
+/**
+ * Updated buddyboss mu file.
+ * Migration favorites from user meta to topic meta.
+ *
+ * @since BuddyBoss 2.3.4
+ *
+ * @return void
+ */
+function bb_update_to_2_3_4() {
+	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+
+		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		}
+
+		$wp_files_system = new \WP_Filesystem_Direct( array() );
+		$wp_files_system->delete( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', false, 'f' );
+	}
+
+	$is_already_run = get_transient( 'bb_migrate_favorites' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
+	// Migrate the topic favorites.
+	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
+		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
+	}
+
+	wp_cache_flush();
+}
+
+/**
+ * Background job to update user profile slug.
+ *
+ * @since BuddyBoss 2.3.41
+ *
+ * @return void
+ */
+function bb_update_to_2_3_5() {
+	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_3_4', 'yes', DAY_IN_SECONDS );
+
+	bb_core_update_repair_member_slug();
+}
+
+/**
+ * Update the member slugs.
+ *
+ * @since BuddyBoss 2.3.41
+ */
+function bb_core_update_repair_member_slug() {
+	global $wpdb, $bp_background_updater;
+
+	$user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
+			'bb_profile_slug',
+			40
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( array_chunk( $user_ids, 50 ) as $chunk ) {
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_set_bulk_user_profile_slug',
+					'args'     => array( $chunk ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->schedule_event();
+	}
 }
