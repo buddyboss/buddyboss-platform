@@ -2434,7 +2434,7 @@ add_action( 'admin_menu', 'bp_register_member_type_import_submenu_page' );
 function bp_register_member_type_import_submenu_page() {
 
 	add_submenu_page(
-		null,   // or 'options.php'.
+		'',
 		__( 'Repair Community', 'buddyboss' ),
 		__( 'Repair Community', 'buddyboss' ),
 		'manage_options',
@@ -2443,7 +2443,7 @@ function bp_register_member_type_import_submenu_page() {
 	);
 
 	add_submenu_page(
-		null,   // or 'options.php'.
+		'',
 		'Import Member Types',
 		'Import Member Types',
 		'manage_options',

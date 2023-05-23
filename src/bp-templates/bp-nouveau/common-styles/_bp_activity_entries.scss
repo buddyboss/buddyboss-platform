@@ -253,6 +253,10 @@
 			p {
 				word-break: break-word;
 			}
+
+			p:empty {
+				min-height: 1em;
+			}
 		}
 
 		.activity-read-more {
@@ -623,7 +627,7 @@
 
 			.activity-content {
 				margin: 0;
-				position: relative;
+				position: static;
 
 				&:after {
 					clear: both;
@@ -1347,7 +1351,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .activity-list .activity-item .activity-content.video-activity-wrap,
 .activity-list .activity-item .activity-content.document-activity {
-	position: relative;
+	position: static;
 
 	.activity-inner {
 		overflow: visible;
@@ -1485,6 +1489,7 @@ span.dashicons.dashicons-admin-file:before {
 			flex: 0 0 100% !important;
 			max-width: 100% !important;
 			min-width: auto !important;
+			position: relative;
 
 			.entry-img {
 				padding-top: 55.56% !important;

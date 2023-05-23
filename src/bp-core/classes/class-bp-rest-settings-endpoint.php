@@ -556,10 +556,20 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$results['bb-presence-interval'] = (
 			function_exists( 'bb_presence_interval' ) ?
-			( bb_presence_interval() <= 60 ? bb_presence_interval() : 60 )
+			( bb_presence_interval() <= 60 ? bb_presence_interval() : bb_presence_default_interval() )
 			: 0
 		);
 
+		if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
+			$results['bbp_enable_forum_subscriptions'] = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'forum' );
+			$results['bbp_enable_topic_subscriptions'] = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'topic' );
+			$results['bb_enable_group_subscriptions']  = function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' );
+		}
+
+		$results['bb-presence-idle-inactive-span'] = function_exists( 'bb_idle_inactive_span' ) ? bb_idle_inactive_span() : 180;
+
+		$native_presence               = (bool) bp_get_option( 'bb_use_core_native_presence', false );
+		$results['bb-native-presence'] = true === $native_presence ? buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php' : '';
 		return $results;
 	}
 

@@ -174,6 +174,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Meta button for activity discussion.
 			add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
+
+			// Allow slash in topic reply.
+			add_filter( 'bbp_activity_topic_create_excerpt', 'addslashes', 5 );
+			add_filter( 'bbp_activity_reply_create_excerpt', 'addslashes', 5 );
 		}
 
 		/**
@@ -396,7 +400,14 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$topic_permalink = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? bbp_get_reply_url( $topic->ID ) : bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 			$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
-			$content         = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
+
+			if ( ! empty( $reply_to_text ) && ! empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
+			} elseif ( empty( $reply_to_text ) && ! empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s</div>', esc_url( $topic_permalink ), $topic_title, $content );
+			} elseif ( ! empty( $reply_to_text ) && empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s</div>', esc_url( $topic_permalink ), $reply_to_text, $content );
+			}
 
 			return $content;
 		}

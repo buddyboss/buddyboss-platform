@@ -837,7 +837,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) &&
 					( $bb_email_background_updater instanceof BP_Email_Background_Updater )
 				) {
-					$chunk_members = array_chunk( $members, 10 );
+					$chunk_members = array_chunk( $members, function_exists( 'bb_get_email_queue_min_count' ) ? bb_get_email_queue_min_count() : 10 );
 					if ( ! empty( $chunk_members ) ) {
 						foreach ( $chunk_members as $key => $members ) {
 							$bb_email_background_updater->data(
@@ -1111,6 +1111,8 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				)
 			);
 		} elseif ( ! empty( $send ) ) {
+			BP_Messages_Thread::$noCache = true;
+
 			$thread     = new BP_Messages_Thread( (int) $send );
 			$recipients = $thread->get_recipients();
 
@@ -1126,12 +1128,15 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				$retval['message'] = __( 'Your message was sent to all members of this group.', 'buddyboss' );
 			}
 
-			$last_message  = wp_list_filter( $thread->messages, array( 'id' => $thread->last_message_id ) );
-			$last_message  = reset( $last_message );
-			$fields_update = $this->update_additional_fields_for_object( $last_message, $request );
+			$last_message = wp_list_filter( $thread->messages, array( 'id' => $thread->last_message_id ) );
+			$last_message = reset( $last_message );
 
-			if ( is_wp_error( $fields_update ) ) {
-				return $fields_update;
+			if ( ! empty( $last_message ) ) {
+				$fields_update = $this->update_additional_fields_for_object( $last_message, $request );
+
+				if ( is_wp_error( $fields_update ) ) {
+					return $fields_update;
+				}
 			}
 
 			$retval['data'][] = $this->prepare_response_for_collection(

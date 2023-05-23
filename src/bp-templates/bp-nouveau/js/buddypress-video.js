@@ -2298,6 +2298,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-next-media', this.next.bind( this ) );
 			$( document ).on( 'click', '.bp-add-video-activity-description', this.openVideoActivityDescription.bind( this ) );
 			$( document ).on( 'click', '#bp-activity-description-new-reset', this.closeVideoActivityDescription.bind( this ) );
+			$( document ).on( 'keyup', '.bp-edit-video-activity-description #add-activity-description', this.MediaActivityDescriptionUpdate.bind(this));
 			$( document ).on( 'click', '#bp-activity-description-new-submit', this.submitVideoActivityDescription.bind( this ) );
 			$( document ).on( 'bp_activity_ajax_delete_request_video', this.videoActivityDeleted.bind( this ) );
 
@@ -2321,7 +2322,7 @@ window.bp = window.bp || {};
 			self.showVideo();
 			self.navigationCommands();
 
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' ) {
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' && self.current_video.privacy !== 'grouponly' ) {
 				self.getActivity();
 			} else {
 				self.getVideosDescription();
@@ -2707,6 +2708,14 @@ window.bp = window.bp || {};
 			target.parents( '.activity-video-description' ).find( '.bp-video-activity-description' ).show();
 			target.parents( '.activity-video-description' ).find( '#add-activity-description' ).val( default_value );
 			target.parents( '.activity-video-description' ).find( '.bp-edit-video-activity-description' ).hide().removeClass( 'open' );
+		},
+
+		MediaActivityDescriptionUpdate: function( event ) {
+			if( $( event.currentTarget ).val().trim() !== '' ) {
+				$( event.currentTarget ).closest( '.bp-edit-video-activity-description' ).addClass( 'has-content' );
+			} else {
+				$( event.currentTarget ).closest( '.bp-edit-video-activity-description' ).removeClass( 'has-content' );
+			}
 		},
 
 		submitVideoActivityDescription: function ( event ) {

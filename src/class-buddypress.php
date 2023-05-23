@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 18981;
+		$this->db_version = 20111;
 
 		/** Loading */
 
@@ -559,6 +559,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
 		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
+		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -590,6 +591,8 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.7.0.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.8.6.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.1.4.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.2.6.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.3.5.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
@@ -607,7 +610,7 @@ class BuddyPress {
 	public function autoload( $class ) {
 		$class_parts = explode( '_', strtolower( $class ) );
 
-		if ( 'bp' !== $class_parts[0] ) {
+		if ( 'bp' !== $class_parts[0] && 'bb' !== $class_parts[0] ) {
 			return;
 		}
 
@@ -636,6 +639,7 @@ class BuddyPress {
 
 		// These classes don't have a name that matches their component.
 		$irregular_map = array(
+			'BB_Presence'                                  => 'core',
 			'BP_Akismet'                                   => 'activity',
 			'BP_Admin'                                     => 'core',
 			'BP_Background_Updater'                        => 'core',
@@ -707,6 +711,7 @@ class BuddyPress {
 			'BP_Suspend_Album'                             => 'suspend',
 			'BP_Suspend_Comment'                           => 'suspend',
 			'BP_Suspend_Message'                           => 'suspend',
+			'BB_Subscriptions'                             => 'core',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
@@ -766,6 +771,7 @@ class BuddyPress {
 			'BP_REST_Account_Settings_Options_Endpoint'    => 'settings',
 			'BP_REST_Moderation_Endpoint'                  => 'moderation',
 			'BP_REST_Moderation_Report_Endpoint'           => 'moderation',
+			'BB_REST_Subscriptions_Endpoint'               => 'core',
 		);
 
 		$component = null;
