@@ -5353,26 +5353,40 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
  * Generate user profile slug.
  *
  * @since BuddyBoss 2.3.1
+ * @since BuddyBoss 2.3.41 The `$force` parameter was added.
  *
- * @param int $user_id user id.
+ * @param int  $user_id user id.
+ * @param bool $force   Optional. If true then will generate new slug forcefully.
  *
  * @return string
  */
-function bb_generate_user_profile_slug( int $user_id ) {
+function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 	$unique_identifier = '';
+
+	// If empty user ID.
 	if ( empty( $user_id ) ) {
 		return $unique_identifier;
 	}
 
-	$user_profile_slug = bb_core_get_user_slug( $user_id );
-	if ( ! empty( $user_profile_slug ) ) {
-		return $unique_identifier;
+	if ( ! $force ) {
+		// Get user slug if already exists.
+		$user_profile_slug = bb_core_get_user_slug( $user_id );
+
+		// Check the slug and it's not long.
+		if (
+			! empty( $user_profile_slug ) &&
+			bb_is_short_user_unique_identifier( $user_profile_slug )
+		) {
+			return $user_profile_slug;
+		}
 	}
 
+	// Get user by ID.
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
-		$unique_identifier = sha1( $user->user_email . $user->user_nicename . $user->ID );
+		$new_unique_identifier = bb_generate_user_random_profile_slugs();
+		$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
 	}
 
 	return $unique_identifier;
@@ -5399,21 +5413,26 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 	$cache_key = 'bb_profile_slug_' . $profile_slug;
 
 	if ( ! isset( $cache[ $cache_key ] ) ) {
+		global $wpdb;
 
-		$found_users = get_users(
-			array(
-				'meta_key'    => 'bb_profile_slug', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-				'meta_value'  => $profile_slug, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-				'number'      => 1,
-				'count_total' => false,
-				'fields'      => 'ID',
-			)
+		// Backward compatible to check 40 characters long unique slug or new slug as well.
+		$user_query = $wpdb->prepare(
+			"SELECT user_id FROM `{$wpdb->prefix}usermeta` WHERE `meta_key` IN ( %s, %s )",
+			"bb_profile_slug_{$profile_slug}",
+			"bb_profile_long_slug_{$profile_slug}"
 		);
 
-		$user = ( ! empty( $found_users ) ? current( $found_users ) : 0 );
+		// Get the user ID from the created query based on string length.
+		$found_users = $wpdb->get_var( $user_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
+		// Validate the user ID.
+		$user = ( ! empty( $found_users ) && ! is_wp_error( $found_users ) ? $found_users : 0 );
+
+		// Set in static cache.
 		$cache[ $cache_key ] = $user;
 	} else {
+
+		// If already cached then return from the cache.
 		$user = isset( $cache[ $cache_key ] ) ? $cache[ $cache_key ] : 0;
 	}
 
@@ -5452,15 +5471,31 @@ function bb_core_get_user_slug( int $user_id ) {
  * Setup the user profile hash to the user meta.
  *
  * @since BuddyBoss 2.3.1
+ * @since BuddyBoss 2.3.41 The `$force` parameter was added.
  *
- * @param int $user_id User ID.
+ * @param int  $user_id User ID.
+ * @param bool $force   Optional. If true then will generate new slug and update forcefully.
  *
  * @return string
  */
-function bb_set_user_profile_slug( int $user_id ) {
+function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
 
-	$unique_identifier = bb_generate_user_profile_slug( $user_id );
+	$unique_identifier = bb_generate_user_profile_slug( $user_id, $force );
 	if ( ! empty( $unique_identifier ) ) {
+
+		// Backward compatible to store 40 characters long unique slug.
+		$old_unique_identifier = bb_core_get_user_slug( $user_id );
+		if ( ! empty( $old_unique_identifier ) ) {
+
+			// Delete the existing meta.
+			bp_delete_user_meta( $user_id, 'bb_profile_slug_' . $old_unique_identifier );
+
+			// Backed up 40 characters long unique identifier.
+			if ( ! bb_is_short_user_unique_identifier( $old_unique_identifier ) ) {
+				bp_update_user_meta( $user_id, 'bb_profile_long_slug_' . $old_unique_identifier, $user_id );
+			}
+		}
+
 		bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
 		bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
 	}
@@ -5475,18 +5510,169 @@ function bb_set_user_profile_slug( int $user_id ) {
  *
  * @param array $user_ids User IDs.
  */
-function bb_set_bluk_user_profile_slug( $user_ids ) {
+function bb_set_bulk_user_profile_slug( $user_ids ) {
 
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
 	foreach ( $user_ids as $user_id ) {
-		$user_id           = (int) $user_id;
-		$unique_identifier = bb_generate_user_profile_slug( $user_id );
-		if ( ! empty( $unique_identifier ) ) {
-			bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
-			bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
-		}
+		bb_set_user_profile_slug( (int) $user_id );
 	}
+
+	// Flush WP cache.
+	wp_cache_flush();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+}
+
+/**
+ * Function to generate the unique keys.
+ *
+ * @since BuddyBoss 2.3.41
+ *
+ * @param int $max_ids How many unique IDs need to be generated? Default 1.
+ *
+ * @return array
+ */
+function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
+	$max_ids       = absint( $max_ids );
+	$start         = 0;
+	$length        = 8;
+	$loop_count    = 1;
+	$max_length    = 12;
+	$generated_ids = array(); // holds the generated ids.
+
+	/**
+	 * Generate the missing ids.
+	 */
+	$generate_ids_func = function( $generated_ids ) use ( $max_ids, $start, $length ) {
+		while ( count( $generated_ids ) < $max_ids ) { // phpcs:ignore Squiz.PHP.DisallowSizeFunctionsInLoops.Found
+			$generated_ids[] = strtolower( substr( sha1( wp_generate_password( 40 ) ), $start, $length ) );
+		}
+
+		return $generated_ids;
+	};
+
+	// Initially generate the UUIDs.
+	$generated_ids = $generate_ids_func( $generated_ids );
+
+	// Check the generated UUIDs already exists or not?
+	$match_found = bb_is_exists_user_unique_identifier( $generated_ids );
+
+	// Validate the ID's with existing matches in DB.
+	while ( ! empty( $match_found ) ) {
+		// unset the match which are found.
+		foreach ( $match_found as $k ) {
+			if ( isset( $generated_ids[ array_search( $k, $generated_ids, true ) ] ) ) {
+				unset( $generated_ids[ array_search( $k, $generated_ids, true ) ] );
+			}
+		}
+
+		// Break the loop if run more than 6 times.
+		if ( 6 < $loop_count ) {
+			$loop_count = 1;
+
+			if ( $length < $max_length ) {
+				$length ++;
+			}
+		}
+
+		$generated_ids = $generate_ids_func( $generated_ids );
+		$match_found   = bb_is_exists_user_unique_identifier( $generated_ids );
+		$loop_count ++;
+	}
+
+	return array_values( $generated_ids );
+}
+
+/**
+ * Function to check the newly generated slug is exists or not.
+ *
+ * @since BuddyBoss 2.3.41
+ *
+ * @param array|string $unique_identifier Newly generated unique identifier.
+ * @param int          $user_id           Optional. ID of user to exclude from the search.
+ *
+ * @return array
+ */
+function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
+	global $wpdb;
+
+	if ( is_array( $unique_identifier ) ) {
+		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
+	}
+
+	// Prepare the statement to check unique identifier.
+	$prepare_user_query = "SELECT DISTINCT u.user_nicename, u.user_login FROM `{$wpdb->prefix}users` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
+
+	// Exclude the user to check unique identifier.
+	if ( ! empty( $user_id ) ) {
+		$prepare_user_query = $wpdb->prepare(
+			$prepare_user_query . ' AND u.ID != %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$user_id
+		);
+	}
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$user_val = $wpdb->get_results( $prepare_user_query );
+
+	$matched_uuids = array();
+	if ( ! empty( $user_val ) ) {
+		$matched_uuids = array_column( $user_val, 'user_nicename' );
+		$matched_uuids = array_merge( $matched_uuids, array_column( $user_val, 'user_login' ) );
+	}
+
+	// Prepare the statement to check unique identifier.
+	$prepare_meta_query = $wpdb->prepare(
+		"SELECT DISTINCT um.meta_value FROM `{$wpdb->prefix}usermeta` AS um WHERE ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) ) OR ( um.meta_key = %s AND um.meta_value IN ({$unique_identifier}) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		'bb_profile_slug',
+		'nickname'
+	);
+
+	// Exclude the user to check unique identifier.
+	if ( ! empty( $user_id ) ) {
+		$prepare_meta_query = $wpdb->prepare(
+			$prepare_meta_query . ' AND um.user_id != %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$user_id
+		);
+	}
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$meta_val = $wpdb->get_results( $prepare_meta_query );
+
+	if ( ! empty( $meta_val ) ) {
+		$matched_uuids = array_merge( $matched_uuids, array_column( $meta_val, 'meta_value' ) );
+	}
+
+	return array_filter( array_unique( $matched_uuids ) );
+}
+
+/**
+ * Function to check the unique identifier slug is short or not.
+ *
+ * @since BuddyBoss 2.3.41
+ *
+ * @param string $unique_identifier User unique identifier.
+ *
+ * @return bool False if unique identifier is 40 characters long otherwise return true.
+ */
+function bb_is_short_user_unique_identifier( $unique_identifier ) {
+	// Get length of provided unique identifier.
+	if ( function_exists( 'mb_strlen' ) ) {
+		$length = mb_strlen( $unique_identifier );
+	} else {
+		$length = strlen( $unique_identifier );
+	}
+
+	// Check the unique identifier is short then return true.
+	if ( $length >= 8 && $length <= 12 ) {
+		return true;
+	}
+
+	// Return false because unique identifier is 40 characters long.
+	return false;
 }
