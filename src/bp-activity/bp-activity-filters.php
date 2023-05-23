@@ -2495,7 +2495,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 		}
 	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$comment = get_comment( $activity->secondary_item_id );
-		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
+		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
 		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
@@ -2529,14 +2529,14 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
-					$content = bp_create_excerpt( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
+					$content = bp_create_excerpt( make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
 					if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 						$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 						$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 						$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
 					}
 				} else {
-					$content = html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+					$content = make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 				}
 			}
 		}
