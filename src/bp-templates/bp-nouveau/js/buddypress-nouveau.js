@@ -4030,6 +4030,18 @@ window.bp = window.bp || {};
 
 					self.controlsAdded = null;
 
+					if ( 'undefined' !== typeof self.currentPreviewParent && self.currentPreviewParent.length ) {
+						var formEl = self.currentPreviewParent.closest( 'form' );
+						if( formEl.find( 'input#bb_link_url' ).length > 0 && formEl.find( 'input#bb_link_url' ).val() !== '' ){
+							var prev_preview_value = JSON.parse( formEl.find( 'input#bb_link_url').val() );
+							if ( '' !== prev_preview_value.url && prev_preview_value.url !== url ) {
+
+								// Reset older preview data.
+								self.options.link_image_index_save = 0;
+								formEl.find( 'input#bb_link_url').val('');
+							}
+						}
+					}
 					self.render( self.options );
 		
 					if ( ! urlResponse ) {

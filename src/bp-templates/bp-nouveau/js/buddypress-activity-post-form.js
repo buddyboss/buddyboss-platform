@@ -3136,6 +3136,17 @@ window.bp = window.bp || {};
 					if ( '' !== self.options.activity.get( 'link_image_index' ) ) {
 						urlImagesIndex =  parseInt( self.options.activity.get( 'link_image_index' ) );
 					}
+
+					var prev_activity_preview_url = this.$el.closest( '#whats-new' ).data( 'activity-url-preview' );
+					var link_image_index_save     = self.options.activity.get( 'link_image_index_save' );
+					if ( '' !== prev_activity_preview_url && prev_activity_preview_url !== url ) {
+
+						// Reset older preview data
+						urlImagesIndex        = 0;
+						link_image_index_save = 0;
+						this.$el.closest( '#whats-new' ).data( 'activity-url-preview', url );
+
+					}
 					self.options.activity.set(
 						{
 							link_success: true,
@@ -3143,7 +3154,7 @@ window.bp = window.bp || {};
 							link_description: response.description,
 							link_images: urlImages,
 							link_image_index: urlImagesIndex,
-							link_image_index_save: self.options.activity.get( 'link_image_index_save' ),
+							link_image_index_save: link_image_index_save,
 							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
 						}
 					);
