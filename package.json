@@ -2,7 +2,7 @@
 	"description": "BuddyBoss adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
 	"devDependencies": {
 		"@wordpress/stylelint-config": "^20.0.3",
-		"apidoc": "^0.54.0",
+		"apidoc": "^0.22.0",
 		"check-dependencies": "^1.1.0",
 		"grunt": "^1.5.3",
 		"grunt-apidoc": "^0.11.0",
@@ -29,7 +29,7 @@
 		"jira-prepare-commit-msg": "^1.7.2",
 		"matchdep": "^2.0.0",
 		"node-sass": "^7.0.3",
-		"postcss": "^8.4.19",
+		"postcss": "^8.4.23",
 		"postcss-scss": "^4.0.5",
 		"stylelint": "^14.5.1"
 	},

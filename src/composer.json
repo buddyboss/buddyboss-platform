@@ -29,5 +29,10 @@
 		"install-scripts": [
 			"composer dump-autoload"
 		]
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
 	}
 }
