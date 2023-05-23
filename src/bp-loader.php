@@ -303,20 +303,6 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	define( 'BP_REQUIRED_PHP_VERSION', '5.3.0' );
 
 	/**
-	 * The main function responsible for returning the one true BuddyBoss Instance to functions everywhere.
-	 *
-	 * Use this function like you would a global variable, except without needing
-	 * to declare the global.
-	 *
-	 * Example: <?php $bp = buddypress(); ?>
-	 *
-	 * @return BuddyPress|null The one true BuddyPress Instance.
-	 */
-	function buddypress() {
-		return BuddyPress::instance();
-	}
-
-	/**
 	 * Adds an admin notice to installations that don't meet minimum PHP requirement.
 	 *
 	 * @since BuddyPress 2.8.0
@@ -346,6 +332,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		return;
 	} else {
 		require dirname( __FILE__ ) . '/class-buddypress.php';
+
+		/**
+		 * The main function responsible for returning the one true BuddyBoss Instance to functions everywhere.
+		 *
+		 * Use this function like you would a global variable, except without needing
+		 * to declare the global.
+		 *
+		 * Example: <?php $bp = buddypress(); ?>
+		 *
+		 * @return BuddyPress|null The one true BuddyPress Instance.
+		 */
+		function buddypress() {
+			return BuddyPress::instance();
+		}
 
 		// load the member switch class so all the hook prior to bp_init can be hook in.
 		require dirname( __FILE__ ) . '/bp-members/classes/class-bp-core-members-switching.php';
