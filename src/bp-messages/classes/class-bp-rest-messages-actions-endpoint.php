@@ -235,8 +235,9 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			 * Fires when messages thread was marked as read.
 			 *
 			 * @param int $thread_id The message thread ID.
+			 * @param int $user_id   Logged in user ID.
 			 */
-			do_action( 'messages_thread_mark_as_read', $thread_id );
+			do_action( 'bb_messages_thread_unarchived', $thread_id, bp_loggedin_user_id() );
 			return true;
 		} elseif ( ! empty( $value ) ) {
 			// phpcs:ignore
@@ -246,8 +247,9 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			 * Fires when messages thread was marked as read.
 			 *
 			 * @param int $thread_id The message thread ID.
+			 * @param int $user_id   Logged in user ID.
 			 */
-			do_action( 'messages_thread_mark_as_read', $thread_id );
+			do_action( 'bb_messages_thread_archived', $thread_id, bp_loggedin_user_id() );
 			return true;
 		}
 

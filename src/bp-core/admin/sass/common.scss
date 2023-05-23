@@ -3766,6 +3766,7 @@ table.moderations .column-member {
 	display: none;
 }
 
+#bp_labs_settings,
 #bp_web_push_notification_settings {
 
 	table.form-table {
@@ -3788,3 +3789,23 @@ table.moderations .column-member {
 	}
 }
 
+.no-field-notice {
+	background-color: #f6f6f8;
+	border: 1px solid #ccd0d4;
+	border-radius: 3px;
+	padding: 15px;
+}
+
+.notification-settings-input {
+
+	&[data-bp-tooltip] {
+		display: inline-block;
+
+		&::after {
+			min-width: 140px;
+			white-space: normal;
+			padding: 7px 12px;
+			text-align: center;
+		}
+	}
+}

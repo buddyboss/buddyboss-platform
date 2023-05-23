@@ -200,7 +200,7 @@ window.bp = window.bp || {};
 				$('.wp-heading-inline').append( $( '#bb_reporting_category_description' ) );
 			}
 
-			$( 'span:contains("Slug")' ).each( function () {
+			$( 'body.taxonomy-bpm_category span:contains("Slug")' ).each( function () {
 				$( this ).parent().remove();
 			} );
 
@@ -801,9 +801,9 @@ window.bp = window.bp || {};
 			}
 
 			// Show/Hide options ( Display Name Fields ) based on the ( Display Name Format ) selected.
-			if ( $( '.display-options' ).length ) {
+			if ( $( '.display-options:not(.button)' ).length ) {
 
-					var selectorAll    = $( '.display-options' );
+					var selectorAll    = $( '.display-options:not(.button)' );
 					var displayOptions = $( 'select[name=bp-display-name-format]' );
 					var currentValue   = displayOptions.val();
 

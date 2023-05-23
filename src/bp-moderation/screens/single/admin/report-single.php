@@ -6,7 +6,7 @@
  * @package BuddyBoss
  */
 
-$current_tab       = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+$current_tab       = bb_filter_input_string( INPUT_GET, 'tab' );
 $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_tab;
 $error             = isset( $_REQUEST['error'] ) ? $_REQUEST['error'] : false; // phpcs:ignore
 $user_id           = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );

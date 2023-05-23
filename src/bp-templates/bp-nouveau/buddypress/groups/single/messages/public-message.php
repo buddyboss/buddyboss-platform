@@ -93,7 +93,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							</div>
 							<?php
 						endif;
-						if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) :
+						if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( bp_loggedin_user_id(), $group_id ) || bp_is_activity_directory() ) ) :
 							?>
 							<div class="dropzone closed video-dropzone" id="bp-group-messages-post-video-uploader"></div>
 							<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>

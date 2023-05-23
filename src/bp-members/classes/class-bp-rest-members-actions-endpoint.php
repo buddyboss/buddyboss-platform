@@ -239,13 +239,11 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	public function presence_item( $request ) {
 
 		if ( isset( $request['ids'] ) ) {
-			bp_core_record_activity( true );
+			bp_core_record_activity();
 		}
 
-		$users         = $request->get_param( 'ids' );
-		$interval_time = bb_presence_interval();
-		$compare_time  = $interval_time + 5;
-		$retval        = bb_get_users_presence( $users, $compare_time );
+		$users  = $request->get_param( 'ids' );
+		$retval = bb_get_users_presence( $users );
 
 		$response = rest_ensure_response( $retval );
 

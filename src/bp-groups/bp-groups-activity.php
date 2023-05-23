@@ -768,7 +768,7 @@ function bp_groups_leave_group_delete_recent_activity( $group_id, $user_id ) {
 	$membership = new BP_Groups_Member( $user_id, $group_id );
 
 	// Check the time period, and maybe delete their recent group activity.
-	if ( time() <= strtotime( '+5 minutes', (int) strtotime( $membership->date_modified ) ) ) {
+	if ( $membership->date_modified && time() <= strtotime( '+5 minutes', (int) strtotime( $membership->date_modified ) ) ) {
 		bp_activity_delete(
 			array(
 				'component' => buddypress()->groups->id,
@@ -782,3 +782,43 @@ function bp_groups_leave_group_delete_recent_activity( $group_id, $user_id ) {
 add_action( 'groups_leave_group', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 add_action( 'groups_remove_member', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
+
+/**
+ * Function will append join query to display group lists in the activity feed.
+ *
+ * @since BuddyBoss 2.1.7
+ *
+ * @param string $sql From SQL statement.
+ * @param array  $r   Array of parsed arguments for the get method.
+ *
+ * @return string
+ */
+function bb_groups_get_join_sql_for_activity( $sql, $r ) {
+	global $wpdb;
+	$sql .= ' LEFT JOIN ' . $wpdb->prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id )';
+
+	return $sql;
+}
+
+/**
+ * Function will append where condition to display group lists in the activity feed.
+ *
+ * @since BuddyBoss 2.1.7
+ *
+ * @param array $where_conditions Where conditions SQL statement.
+ * @param array $r                Array of parsed arguments for the get method.
+ *
+ * @return mixed
+ */
+function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
+	$where_conditions['exclude_where'] = ' ( 
+		mt.meta_key = "activity_feed_status" AND 
+		( 
+			( mt.meta_value = "mods" AND ( m.is_mod = "1" OR m.is_admin = "1" ) ) OR 
+			( mt.meta_value = "admins" AND m.is_admin = "1" ) OR 
+			( mt.meta_value = "members" ) 
+		) 
+	)';
+
+	return $where_conditions;
+}

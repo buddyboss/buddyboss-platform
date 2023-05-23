@@ -341,12 +341,25 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function enqueue_styles() {
+		global $pagenow;
+
+		if (
+			! empty( $pagenow ) &&
+			in_array( $pagenow, array( 'plugin-editor.php', 'theme-editor.php' ), true )
+		) {
+			return;
+		}
+
 		$min = bp_core_get_minified_asset_suffix();
 		$rtl = '';
 
 		if ( is_rtl() ) {
 			$rtl = '-rtl';
 		}
+
+		// BB icon version.
+		$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
+		$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : $this->version;
 
 		/**
 		 * Filters the BuddyPress Nouveau CSS dependencies.
@@ -373,7 +386,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 				'file' => 'icons/css/icons-map%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
 			),
 			'bp-nouveau-bb-icons' => array(
-				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
+				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $bb_icon_version,
 			),
 			'bp-nouveau' => array(
 				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
@@ -603,6 +616,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'show_x_comments'    => __( 'View previous comments', 'buddyboss' ),
 			'unsaved_changes'    => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 			'object_nav_parent'  => '#buddypress',
+			'anchorPlaceholderText' => __( 'Paste or type a link', 'buddyboss' ),
 			'empty_field'        => __( 'New Field', 'buddyboss' ),
 			'close'              => __( 'Close', 'buddyboss' ),
 		);
@@ -673,11 +687,16 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function presence_localize_scripts() {
 
 		$params = array(
-			'heartbeat_enabled'  => bb_is_heartbeat_enabled(),
-			'presence_interval' => bb_presence_interval(),
-			'rest_nonce'         => wp_create_nonce( 'wp_rest' ),
+			'heartbeat_enabled'         => bb_is_heartbeat_enabled(),
+			'presence_interval'         => bb_presence_interval(),
+			'presence_default_interval' => bb_presence_default_interval(),
+			'presence_time_span'        => bb_presence_time_span(),
+			'idle_inactive_span'        => bb_idle_inactive_span(),
+			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
+			'native_presence'           => (bool) bp_get_option( 'bb_use_core_native_presence', false ),
+			'native_presence_url'       => buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php',
+			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
 		);
-
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
