@@ -3514,7 +3514,7 @@ table.moderations .column-member img {
 
 .bp-admin-card .password-toggle > input {
   padding-right: 30px;
-  width: 100%;
+  width: 100% !important;
 }
 
 .bp-admin-card .password-toggle .bb-hide-pw {
