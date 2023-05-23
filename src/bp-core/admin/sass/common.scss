@@ -3811,17 +3811,18 @@ table.moderations .column-member {
 }
 
 .bp-admin-card {
+
 	.password-toggle {
 
 		position: relative;
 		display: inline-block;
 		width: 50%;
-	
-		input[type=password] {
+
+		> input {
 			padding-right: 30px;
 			width: 100%;
 		}
-	
+
 		.bb-hide-pw {
 			position: absolute;
 			right: 0;
@@ -3832,13 +3833,13 @@ table.moderations .column-member {
 			padding: 0;
 			background: none !important;
 			box-shadow: none;
-	
+
 			.bb-icon {
 				font-size: 16px;
 				line-height: 1;
 			}
 		}
-	
+
 		input[type="text"] + .bb-hide-pw .bb-icon::before {
 			content: "\ee6a";
 		}

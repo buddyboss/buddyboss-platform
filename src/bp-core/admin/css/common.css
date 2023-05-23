@@ -3512,7 +3512,7 @@ table.moderations .column-member img {
   width: 50%;
 }
 
-.bp-admin-card .password-toggle input[type=password] {
+.bp-admin-card .password-toggle > input {
   padding-right: 30px;
   width: 100%;
 }

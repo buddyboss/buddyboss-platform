@@ -2409,6 +2409,23 @@ window.bp = window.bp || {};
 					} );
 				}
 			}
+
+			
+			$( document ).on(
+				'click',
+				'.bb-hide-pw',
+				function ( e ) {
+					e.preventDefault();
+					var $this  = $( this );
+					var $input = $this.closest( '.password-toggle' ).find( 'input' );
+					$this.toggleClass( 'bb-show-pass' );
+					if ( $this.hasClass( 'bb-show-pass' ) ) {
+						$input.attr( 'type', 'text' );
+					} else {
+						$input.attr( 'type', 'password' );
+					}
+				}
+			);
 		}
 	);
 
