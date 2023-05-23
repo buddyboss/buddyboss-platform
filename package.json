@@ -13,7 +13,7 @@
 		"grunt-contrib-cssmin": "^4.0.0",
 		"grunt-contrib-imagemin": "^4.0.0",
 		"grunt-contrib-jshint": "~3.1.1",
-		"grunt-contrib-uglify": "~5.0.1",
+		"grunt-contrib-uglify": "^5.2.2",
 		"grunt-contrib-watch": "^1.1.0",
 		"grunt-exec": "~3.0.0",
 		"grunt-json2php": "^0.1.4",
@@ -22,16 +22,16 @@
 		"grunt-patch-wordpress": "^3.0.1",
 		"grunt-replace": "^2.0.2",
 		"grunt-rtlcss": "^2.0.2",
-		"grunt-sass": "~3.1.0",
+		"grunt-sass": "^3.1.0",
 		"grunt-stylelint": "^0.17.0",
 		"grunt-wp-i18n": "^1.0.3",
-		"husky": "^7.0.4",
+		"husky": "^8.0.3",
 		"jira-prepare-commit-msg": "^1.7.2",
 		"matchdep": "^2.0.0",
-		"node-sass": "^7.0.3",
-		"postcss": "^8.4.23",
+		"node-sass": "^8.0.0",
+		"postcss": "^8.4.19",
 		"postcss-scss": "^4.0.5",
-		"stylelint": "^14.5.1"
+		"stylelint": "^15.4.0"
 	},
 	"scripts": {
 		"prepare": "npm install husky jira-prepare-commit-msg --save-dev && npx husky install"
