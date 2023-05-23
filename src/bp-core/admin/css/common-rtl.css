@@ -903,16 +903,18 @@ body.users_page_bp-signups td.count_sent {
 }
 
 .activity-attached-gif-container .gif-icon {
-  background: url(../../images/gif-symbol.png) bottom right no-repeat;
+  background: url(../images/GIF.svg) center no-repeat;
   position: absolute;
-  width: 100%;
-  height: 100%;
   display: block;
+  height: 28px;
+  width: 44px;
   bottom: 0;
-  right: 10px;
-  background-size: 40px 30px;
-  max-width: 40px;
-  max-height: 30px;
+  right: 0;
+  border-radius: 4px 0 0 0;
+  background-size: 28px;
+  padding: 8px;
+  background-color: #000;
+  opacity: 0.45;
 }
 
 /*
@@ -2382,6 +2384,51 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   border-radius: 4px;
 }
 
+/* Status Block */
+.status-line {
+  display: inline-block;
+  font-size: 14px;
+  padding: 10px 15px;
+  background: #f0f0f1;
+  border-radius: 5px;
+  color: #808080;
+}
+
+.status-line:before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #808080;
+  margin-left: 10px;
+  vertical-align: baseline;
+}
+
+.status-line.error-connected {
+  color: #ce1010;
+}
+
+.status-line.error-connected:before {
+  background: #ce1010;
+}
+
+.status-line.connected {
+  color: #858585;
+}
+
+.status-line.connected:before {
+  background: #8fd14f;
+}
+
+.status-line.warn-connected {
+  color: #858585;
+}
+
+.status-line.warn-connected:before {
+  background: #fac710;
+}
+
 /*------------------------------------------------------------------------------
  * 12.0 Profile Photo UI
  *----------------------------------------------------------------------------*/
@@ -3199,6 +3246,19 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   margin-top: 0;
 }
 
+#bp_messaging_notification_settings table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_messaging_notification_settings table.form-table .notes-hidden-header > th + td {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+#bp_messaging_notification_settings table.form-table .no-padding {
+  padding: 0;
+}
+
 /*------------------------------------------------------------------------------
  * 15.0 Admin bar Notification
  *----------------------------------------------------------------------------*/
@@ -3412,15 +3472,36 @@ table.moderations .column-member img {
   display: none;
 }
 
+#bp_labs_settings table.form-table .notes-hidden-header > th,
 #bp_web_push_notification_settings table.form-table .notes-hidden-header > th {
   display: none;
 }
 
+#bp_labs_settings table.form-table .notes-hidden-header > th + td,
 #bp_web_push_notification_settings table.form-table .notes-hidden-header > th + td {
   padding-right: 0;
   padding-left: 0;
 }
 
+#bp_labs_settings table.form-table .no-padding,
 #bp_web_push_notification_settings table.form-table .no-padding {
   padding: 0;
+}
+
+.no-field-notice {
+  background-color: #f6f6f8;
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  padding: 15px;
+}
+
+.notification-settings-input[data-bp-tooltip] {
+  display: inline-block;
+}
+
+.notification-settings-input[data-bp-tooltip]::after {
+  min-width: 140px;
+  white-space: normal;
+  padding: 7px 12px;
+  text-align: center;
 }

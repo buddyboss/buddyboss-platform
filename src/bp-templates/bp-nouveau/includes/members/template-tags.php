@@ -639,7 +639,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'class' => $parent_class,
 				),
 				'button_attr'              => array(
-					'href'                 => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_core_get_username( $user_id ) ),
+					'href'                 => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_members_get_user_nicename( $user_id ) ),
 					'id'                   => false,
 					'class'                => $button_args['link_class'],
 					'rel'                  => '',

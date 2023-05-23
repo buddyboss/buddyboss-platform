@@ -410,7 +410,7 @@ function bp_has_groups( $args = '' ) {
 
 	$parent_id = null;
 
-	if ( bp_is_groups_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && true === (bool) bp_enable_group_hide_subgroups() ) {
+	if ( bp_is_groups_directory() && true === (bool) bp_enable_group_hide_subgroups() ) {
 		$parent_id = 0;
 	}
 
@@ -690,6 +690,10 @@ function bp_get_group_name( $group = false ) {
 
 	if ( empty( $group ) ) {
 		$group =& $groups_template->group;
+	}
+
+	if ( empty( $group->id ) || empty( $group->name ) ) {
+		return '';
 	}
 
 	/**
@@ -1981,7 +1985,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(

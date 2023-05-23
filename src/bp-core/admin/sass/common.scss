@@ -971,16 +971,18 @@ body.users_page_bp-signups td.count_sent {
 }
 
 .activity-attached-gif-container .gif-icon {
-	background: url(../../images/gif-symbol.png) bottom left no-repeat;
+	background: url(../images/GIF.svg) center no-repeat;
 	position: absolute;
-	width: 100%;
-	height: 100%;
 	display: block;
+	height: 28px;
+	width: 44px;
 	bottom: 0;
-	left: 10px;
-	background-size: 40px 30px;
-	max-width: 40px;
-	max-height: 30px;
+	left: 0;
+	border-radius: 0 4px 0 0;
+	background-size: 28px;
+	padding: 8px;
+	background-color: #000;
+	opacity: 0.45;
 }
 
 /*
@@ -2531,6 +2533,51 @@ h2.has_tutorial_btn {
 	border-radius: 4px;
 }
 
+/* Status Block */
+.status-line {
+	display: inline-block;
+	font-size: 14px;
+	padding: 10px 15px;
+	background: #f0f0f1;
+	border-radius: 5px;
+	color: #808080;
+
+	&:before {
+		content: "";
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		border-radius: 100%;
+		background: #808080;
+		margin-right: 10px;
+		vertical-align: baseline;
+	}
+
+	&.error-connected {
+		color: #ce1010;
+
+		&:before {
+			background: #ce1010;
+		}
+	}
+
+	&.connected {
+		color: #858585;
+
+		&:before {
+			background: #8fd14f;
+		}
+	}
+
+	&.warn-connected {
+		color: #858585;
+
+		&:before {
+			background: #fac710;
+		}
+	}
+
+}
 
 /*------------------------------------------------------------------------------
  * 12.0 Profile Photo UI
@@ -3439,6 +3486,27 @@ table tbody td .bb-description {
 
 }
 
+#bp_messaging_notification_settings {
+
+	table.form-table {
+
+		.notes-hidden-header {
+
+			> th {
+				display: none;
+
+				+ td {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+		}
+
+		.no-padding {
+			padding: 0;
+		}
+	}
+}
 
 /*------------------------------------------------------------------------------
  * 15.0 Admin bar Notification
@@ -3698,6 +3766,7 @@ table.moderations .column-member {
 	display: none;
 }
 
+#bp_labs_settings,
 #bp_web_push_notification_settings {
 
 	table.form-table {
@@ -3720,3 +3789,23 @@ table.moderations .column-member {
 	}
 }
 
+.no-field-notice {
+	background-color: #f6f6f8;
+	border: 1px solid #ccd0d4;
+	border-radius: 3px;
+	padding: 15px;
+}
+
+.notification-settings-input {
+
+	&[data-bp-tooltip] {
+		display: inline-block;
+
+		&::after {
+			min-width: 140px;
+			white-space: normal;
+			padding: 7px 12px;
+			text-align: center;
+		}
+	}
+}

@@ -7,7 +7,7 @@
  * @since BuddyBoss 1.0.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class BP_Email_Tokens {
 
 	/**
-	 * message sender id
+	 * Message sender id.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -30,13 +30,15 @@ class BP_Email_Tokens {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
-		// set new email tokens added in BuddyBoss 1.0.0
+		// set new email tokens added in BuddyBoss 1.0.0.
 		add_filter( 'bp_email_set_tokens', array( $this, 'set_tokens' ), 10, 3 );
 
 		// tokens for email after a new message is received, does not contain usable info about sender user
 		// we need to acquire this info before we process tokens for that email
-		// priority 9 is importent
+		// priority 9 is importent.
 		add_action( 'messages_message_sent', array( $this, 'messages_message_sent' ), 9 );
+
+		add_action( 'bp_email_get_property', array( $this, 'bb_email_subject_strip_all_tags' ), 9999, 3 );
 	}
 
 	/**
@@ -49,7 +51,7 @@ class BP_Email_Tokens {
 	 * @return array
 	 */
 	function set_tokens( $formatted_tokens, $tokens, $bp_email ) {
-		if ( 'html' == $bp_email->get_content_type() ) {
+		if ( 'html' === $bp_email->get_content_type() ) {
 			$email_content = $bp_email->get_content_html();
 
 			$all_tokens = $this->get_tokens();
@@ -128,6 +130,22 @@ class BP_Email_Tokens {
 				'function'    => array( $this, 'token__reply_content' ),
 				'description' => __( 'Display the reply content.', 'buddyboss' ),
 			),
+			'sender.name'          => array(
+				'function'    => array( $this, 'token__sender_name' ),
+				'description' => __( 'Display the sender name with link.', 'buddyboss' ),
+			),
+			'group.name'           => array(
+				'function'    => array( $this, 'token__group_name' ),
+				'description' => __( 'Display the group name with link.', 'buddyboss' ),
+			),
+			'unread.count'         => array(
+				'function'    => array( $this, 'token__unread_count' ),
+				'description' => __( 'Display the unread count with link.', 'buddyboss' ),
+			),
+			'activity.content'     => array(
+				'function'    => array( $this, 'token__activity_content' ),
+				'description' => __( 'Display the activity post content, along with member\'s photo and name.', 'buddyboss' ),
+			),
 		);
 
 		return $tokens;
@@ -192,7 +210,7 @@ class BP_Email_Tokens {
 									<tr>
 										<td width="20%" class="mobile-block-full">
 											<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>"
-											   style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 104px;">
+											   style="display: block; width: 104px;">
 												<?php
 												$group_avatar = bp_core_fetch_avatar(
 													array(
@@ -206,7 +224,7 @@ class BP_Email_Tokens {
 													)
 												);
 												?>
-												<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="100" height="100" border="0" style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
+												<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="100" height="100" border="0" style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display:block;" />
 											</a>
 										</td>
 										<td width="4%" class="mobile-hide">&nbsp;</td>
@@ -252,7 +270,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: block;border-radius: 100px;text-align: center; height: 16px;line-height: 16px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 110px;padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -264,7 +282,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: inline-block;border-radius: 100px;text-align: center; line-height: 16px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;min-width: 110px;padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -315,6 +333,8 @@ class BP_Email_Tokens {
 	 */
 	public function token__group_card( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
+
+		$settings = bp_email_get_appearance_settings();
 
 		$group = isset( $tokens['group'] ) ? $tokens['group'] : false;
 		if ( empty( $group ) ) {
@@ -575,7 +595,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td>
-					<a href="<?php echo esc_attr( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 		</table>
@@ -840,7 +860,7 @@ class BP_Email_Tokens {
 			</tr>
 
 			<tr>
-				<td><a href="<?php echo esc_url( $tokens['thread.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a></td>
+				<td><a href="<?php echo esc_url( $tokens['thread.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a></td>
 			</tr>
 		</table>
 		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
@@ -875,22 +895,90 @@ class BP_Email_Tokens {
 	public function token__message( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
 
+		if ( in_array( $bp_email->get( 'type' ), array( 'messages-unread-digest', 'group-message-digest' ), true ) ) {
+			return $this->token__delay_message( $bp_email, $formatted_tokens, $tokens );
+		}
+
 		$allow_type = array(
 			'group-message-email',
 			'messages-unread',
 		);
 
-		if ( ! in_array( $bp_email->get( 'type' ), $allow_type ) ) {
+		if ( ! in_array( $bp_email->get( 'type' ), $allow_type, true ) ) {
 			return $output;
 		}
 
 		$settings = bp_email_get_appearance_settings();
 
-		$media_ids       = false;
+		// Check the thread is group or not.
+		$thread_id    = 0;
+		$message_id   = $tokens['message_id'] ?? 0;
+		$group_name   = '';
+		$group_link   = '';
+		$group_avatar = '';
+		$group        = $tokens['group'] ?? false;
+
+		if ( ! empty( $message_id ) ) {
+			$thread_id = bb_get_thread_id_by_message_id( $message_id );
+		}
+
+		if ( empty( $group ) ) {
+			$group_id      = $tokens['group.id'] ?? false;
+			$message_type  = '';
+			$message_users = '';
+			if ( empty( $group_id ) ) {
+				$group_id      = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual.
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private.
+			}
+
+			if ( ! empty( $group_id ) && 'open' === $message_type && 'all' === $message_users ) {
+				$group = groups_get_group( $group_id );
+			}
+		}
+
+		if ( ! empty( $group ) ) {
+			$group_name   = bp_get_group_name( $group );
+			$group_link   = bp_get_group_permalink( $group );
+			$group_avatar = bp_core_fetch_avatar(
+				array(
+					'item_id'    => $group->id,
+					'avatar_dir' => 'group-avatars',
+					'type'       => 'full',
+					'object'     => 'group',
+					'width'      => 200,
+					'height'     => 200,
+					'html'       => false,
+				)
+			);
+		}
+
+		$sender_name   = '';
+		$sender_link   = '';
+		$sender_avatar = '';
+
+		if ( empty( $this->_message_sender_id ) ) {
+			$this->_message_sender_id = ! empty( $tokens['sender.id'] ) ? $tokens['sender.id'] : 0;
+		}
+
+		if ( $this->_message_sender_id ) {
+			$sender_name   = $tokens['sender.name'] ?? bp_core_get_user_displayname( $this->_message_sender_id );
+			$sender_link   = bp_core_get_user_domain( $this->_message_sender_id );
+			$sender_avatar = bp_core_fetch_avatar(
+				array(
+					'item_id' => $this->_message_sender_id,
+					'width'   => 100,
+					'height'  => 100,
+					'type'    => 'full',
+					'html'    => false,
+				)
+			);
+		}
+
+		$media_ids       = '';
 		$total_media_ids = 0;
 		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$media_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_media_ids', true );
-
 			if ( ! empty( $media_ids ) ) {
 				$media_ids       = explode( ',', $media_ids );
 				$total_media_ids = count( $media_ids );
@@ -898,7 +986,29 @@ class BP_Email_Tokens {
 			}
 		}
 
-		$gif_data = false;
+		$video_ids       = '';
+		$total_video_ids = 0;
+		if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+			$video_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_video_ids', true );
+			if ( ! empty( $video_ids ) ) {
+				$video_ids       = explode( ',', $video_ids );
+				$total_video_ids = count( $video_ids );
+				$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
+			}
+		}
+
+		$document_ids       = '';
+		$total_document_ids = 0;
+		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+			$document_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_document_ids', true );
+			if ( ! empty( $document_ids ) ) {
+				$document_ids       = explode( ',', $document_ids );
+				$total_document_ids = count( $document_ids );
+				$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );
+			}
+		}
+
+		$gif_data = array();
 		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$gif_data = bp_messages_get_meta( $tokens['message_id'], '_gif_data', true );
 		}
@@ -906,33 +1016,39 @@ class BP_Email_Tokens {
 		ob_start();
 		?>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
-			<?php if ( $this->_message_sender_id ) : ?>
+			<?php if ( ! empty( $sender_name ) || ! empty( $group_name ) ) : ?>
 				<tr>
 					<td>
 						<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%">
 							<tbody>
 								<tr>
-									<td valign="middle" width="65px" style="vertical-align: middle;">
-										<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>" target="_blank" rel="nofollow">
-																								 <?php
-																									$avatar_url = bp_core_fetch_avatar(
-																										array(
-																											'item_id' => $this->_message_sender_id,
-																											'width' => 100,
-																											'height' => 100,
-																											'type' => 'full',
-																											'html' => false,
-																										)
-																									);
-																									?>
-											<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
-										</a>
-									</td>
-									<td width="88%" style="vertical-align: middle;">
-										<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-											<a href="<?php echo esc_url( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;"><?php echo $tokens['sender.name']; ?></a>
-										</div>
-									</td>
+									<?php if ( ! empty( $group_name ) ) { ?>
+										<td valign="middle" width="65px" style="vertical-align: middle;">
+											<a style="display: block; width: 47px;" href="<?php echo esc_url( $group_link ); ?>" target="_blank" rel="nofollow">
+												<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+											</a>
+										</td>
+										<td width="88%" style="vertical-align: middle;">
+											<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+												<a href="<?php echo esc_url( $group_link ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;text-decoration: none;">
+													<?php echo esc_html( $group_name ); ?>
+												</a>
+											</div>
+										</td>
+									<?php } else { ?>
+										<td valign="middle" width="65px" style="vertical-align: middle;">
+											<a style="display: block; width: 47px;" href="<?php echo esc_url( $sender_link ); ?>" target="_blank" rel="nofollow">
+												<img alt="" src="<?php echo esc_url( $sender_avatar ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+											</a>
+										</td>
+										<td width="88%" style="vertical-align: middle;">
+											<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+												<a href="<?php echo esc_url( $sender_link ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;text-decoration: none;">
+													<?php echo esc_html( $sender_name ); ?>
+												</a>
+											</div>
+										</td>
+									<?php } ?>
 								</tr>
 							</tbody>
 						</table>
@@ -956,7 +1072,18 @@ class BP_Email_Tokens {
 									<table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
 										<tbody>
 											<tr>
-												<td>
+												<?php if ( ! empty( $group_name ) ) { ?>
+													<td valign="middle" width="55px" style="vertical-align: top;">
+														<a style="display: block; width: 47px;" href="<?php echo esc_url( $sender_link ); ?>" target="_blank" rel="nofollow">
+															<img alt="" src="<?php echo esc_url( $sender_avatar ); ?>" width="40" height="40" border="0" style="margin:0; padding:0; border:none; display:block; width: 40px; height: 40px; border-radius: 50%;" />
+														</a>
+													</td>
+												<?php } ?>
+
+												<td width="<?php echo ! empty( $group_name ) ? esc_attr( '88%' ) : esc_attr( '100%' ); ?>" style="<?php echo ! empty( $group_name ) ? esc_attr( 'vertical-align: top;padding-bottom:20px;' ) : ''; ?>">
+													<?php if ( ! empty( $group_name ) ) { ?>
+														<a href="<?php echo esc_url( $sender_link ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( $sender_name ); ?></a>
+													<?php } ?>
 													<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 														<?php echo nl2br( $tokens['usermessage'] ); ?>
 													</div>
@@ -973,32 +1100,111 @@ class BP_Email_Tokens {
 															<?php
 															while ( bp_media() ) {
 																bp_the_media();
+
+																$attachment_id = base64_encode( 'forbidden_' . bp_get_media_attachment_id() );
+																$media_url     = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $thread_id );
 																?>
-																<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
-																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																		<img src="<?php echo esc_url( wp_get_attachment_image_url( bp_get_media_attachment_id() ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;">
+																	<a href="<?php echo esc_url( $tokens['message.url'] ); ?>">
+																		<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																	</a>
+																</div>
+																<?php if ( $total_media_ids > 1 ) : ?>
+																	<p style="height: 6px;background: rgba(0, 0, 0, 0.3);border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;"></p>
+																	<p style="height: 6px;background: rgba(0, 0, 0, 0.1);border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;"></p>
+																<?php endif; ?>
+																<?php
+																break;
+															}
+															?>
+														</div>
+														<?php
+													endif;
+
+													if ( ! empty( $video_ids ) && bp_has_video(
+														array(
+															'include' => $video_ids,
+															'order_by' => 'menu_order',
+															'sort' => 'ASC',
+														)
+													) ) :
+														?>
+														<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+															<?php
+															while ( bp_video() ) {
+																bp_the_video();
+
+																$poster_thumb = bp_get_video_activity_thumb();
+																if ( empty( $poster_thumb ) ) {
+																	$poster_thumb = bp_get_video_popup_thumb();
+																}
+																if ( empty( $poster_thumb ) ) {
+																	$poster_thumb = bb_get_video_default_placeholder_image();
+																}
+																?>
+																<div class="bb-activity-media-elem"  style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;">
+																	<a href="<?php echo esc_url( $tokens['message.url'] ); ?>">
+																		<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_get_video_title() ); ?>" />
+																	</a>
+																</div>
+																<?php if ( $total_video_ids > 1 ) : ?>
+																	<p style="height: 6px;background: rgba(0, 0, 0, 0.3);border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;"></p>
+																	<p style="height: 6px;background: rgba(0, 0, 0, 0.1);border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;"></p>
+																<?php endif; ?>
+																<?php
+																break;
+															}
+															?>
+														</div>
+														<?php
+													endif;
+
+													if ( ! empty( $document_ids ) && bp_has_document(
+														array(
+															'include' => $document_ids,
+															'order_by' => 'menu_order',
+															'sort' => 'ASC',
+														)
+													) ) :
+														?>
+														<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+															<?php
+															while ( bp_document() ) {
+																bp_the_document();
+
+																$attachment_id = bp_get_document_attachment_id();
+																$filename      = basename( get_attached_file( $attachment_id ) );
+																$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+																$extension     = bp_get_document_extension();
+																?>
+																<div class="bb-activity-media-elem">
+																	<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" style="font-size:14px; text-decoration:none;">
+																		<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
+																		<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( $size ); ?></span>
+																		<span style="font-size: 13px; margin-left:3px; text-transform: uppercase; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
 																	</a>
 																</div>
 																<?php
 															}
 															?>
-															<?php if ( $total_media_ids > 5 ) : ?>
-																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_media_ids - 5 ); ?></a>
+															<?php if ( $total_document_ids > 5 ) : ?>
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>"><?php echo sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
 															<?php endif; ?>
 														</div>
-													<?php endif; ?>
-													<?php if ( ! empty( $gif_data ) ) : ?>
+														<?php
+													endif;
+
+													if ( ! empty( $gif_data ) ) :
+														?>
 														<div class="activity-attached-gif-container">
 															<div class="gif-image-container">
-																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
-																	<span class="bb-icon-l bb-icon-play"></span>
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" class="gif-play-button">
 																	<?php if ( is_int( $gif_data['still'] ) ) { ?>
-																		<img alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
+																		<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
 																	<?php } else { ?>
-																		<img alt="" src="<?php echo esc_url( $gif_data['still'] ); ?>" />
+																		<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( $gif_data['still'] ); ?>" />
 																	<?php } ?>
 																</a>
-																<span class="gif-icon"></span>
 															</div>
 														</div>
 													<?php endif; ?>
@@ -1022,7 +1228,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td>
-					<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 		</table>
@@ -1063,6 +1269,9 @@ class BP_Email_Tokens {
 			case 'groups-invitation':
 				$member_id = isset( $tokens['inviter.id'] ) ? $tokens['inviter.id'] : false;
 				break;
+			case 'new-follower':
+				$member_id = isset( $tokens['follower.id'] ) ? $tokens['follower.id'] : false;
+				break;
 		}
 
 		// maybe search for some other token
@@ -1095,7 +1304,7 @@ class BP_Email_Tokens {
 												);
 											?>
 											<a class="avatar-wrap mobile-center" href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" style="display: block; border-radius: 3px; width: 140px;">
-												<img alt="" src="<?php echo esc_url( $avatar_src ); ?>" width="140" height="140" style="margin:0; padding:0; border:none; display:block;" border="0" />
+												<img alt="" src="<?php echo esc_url( $avatar_src ); ?>" width="140" height="140" style="margin:0; padding:0; border:none;float:left;" border="0" />
 											</a>
 										</td>
 										<td width="4%" class="mobile-hide">&nbsp;</td>
@@ -1456,7 +1665,15 @@ class BP_Email_Tokens {
 	public function token__discussion_content( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
 
-		if ( empty( $formatted_tokens['discussion.content'] ) || empty( $formatted_tokens['discussion.id'] ) ) {
+		if ( empty( $formatted_tokens['discussion.id'] ) ) {
+			return $output;
+		}
+
+		if ( 'groups-new-discussion' === $bp_email->get( 'type' ) ) {
+			return $this->token__group_discussion_content( $bp_email, $formatted_tokens, $tokens );
+		}
+
+		if ( empty( $formatted_tokens['discussion.content'] ) ) {
 			return $output;
 		}
 
@@ -1484,7 +1701,7 @@ class BP_Email_Tokens {
 										)
 									);
 									?>
-									<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+									<img src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
@@ -1531,6 +1748,1398 @@ class BP_Email_Tokens {
 			</tr>
 		</table>
 		<div class="spacer" style="font-size: 30px; line-height: 30px; height: 30px;">&nbsp;</div>
+		<?php
+		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
+
+		return $output;
+	}
+
+	/**
+	 * Generate the output for token delay message
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output
+	 */
+	public function token__delay_message( $bp_email, $formatted_tokens, $tokens ) {
+		$output = '';
+
+		$allow_type = array(
+			'group-message-digest',
+			'messages-unread-digest',
+		);
+
+		if ( ! in_array( $bp_email->get( 'type' ), $allow_type, true ) || empty( $tokens['message'] ) ) {
+			return $output;
+		}
+
+		$settings   = bp_email_get_appearance_settings();
+		$sender_ids = array_column( $tokens['message'], 'sender_id' );
+		$sender_ids = array_unique( wp_parse_id_list( $sender_ids ) );
+
+		// Find the group.
+		$group = $tokens['group'] ?? false;
+		if ( empty( $group ) ) {
+			$group_id = $tokens['group.id'] ?? false;
+			if ( empty( $group_id ) ) {
+				$message_ids = array_column( $tokens['message'], 'message_id' );
+				$message_ids = array_unique( wp_parse_id_list( $message_ids ) );
+				$message_id  = ! empty( $message_ids ) ? current( $message_ids ) : false;
+				$group_id    = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+			}
+
+			if ( ! empty( $group_id ) ) {
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual.
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private.
+				if ( 'open' === $message_type && 'all' === $message_users ) {
+					$group = groups_get_group( $group_id );
+				}
+			}
+		}
+
+		ob_start();
+		?>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<?php if ( ! empty( $sender_ids ) || ! empty( $group ) ) : ?>
+				<tr>
+					<td>
+						<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%">
+							<tbody>
+							<?php
+							if ( ! empty( $group ) ) {
+								$group_avatar = bp_core_fetch_avatar(
+									array(
+										'item_id'    => $group->id,
+										'avatar_dir' => 'group-avatars',
+										'type'       => 'full',
+										'object'     => 'group',
+										'width'      => 200,
+										'height'     => 200,
+										'html'       => false,
+									)
+								);
+								?>
+								<tr>
+									<td valign="middle" width="65px" style="vertical-align: middle;">
+										<a style="display: block; width: 52px;" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" target="_blank" rel="nofollow">
+											<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="52" height="52" border="0" style="margin:0; padding:0; border:none; display:block; width: 52px; height: 52px; border-radius: 50%;" />
+										</a>
+									</td>
+									<td width="88%" style="vertical-align: middle;">
+										<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; font-weight: 500;">
+											<a href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?> !important;text-decoration: none;"><?php echo esc_html( bp_get_group_name( $group ) ); ?></a>
+										</div>
+									</td>
+								</tr>
+								<?php
+							} elseif ( ! empty( $sender_ids ) ) {
+
+								$sender_avatars    = array();
+								$sender_names      = array();
+								$avatars_count     = count( $sender_ids );
+								$avatars_iteration = 0;
+								foreach ( $sender_ids as $sender_id ) {
+
+									$avatar_url = bp_core_fetch_avatar(
+										array(
+											'item_id' => $sender_id,
+											'width'   => 100,
+											'height'  => 100,
+											'type'    => 'full',
+											'html'    => false,
+										)
+									);
+
+									if ( $avatars_count > 1 ) {
+
+										if ( 0 === $avatars_iteration ) {
+											$sender_avatars[] = '<div style="height:17px;with:17px;"><a style="display: block; width: 35px;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; width: 35px; height: 35px; border-radius: 50%;" /></a></div>';
+										} elseif ( 1 === $avatars_iteration ) {
+											$sender_avatars[] = '<div style="padding-left: 17px; opacity: 0.999;"><a style="display: block; width: 35px;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; width: 35px; height: 35px; border-radius: 50%; border: 2px solid #fff;" /></a></div>';
+										}
+									} else {
+										$sender_avatars[] = '<div><a style="display: block;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="52" height="52" border="0" style="margin:0; padding:0; border:none; display:block; width: 52px; height: 52px; border-radius: 50%;" /></a></div>';
+									}
+
+									$sender_names[] = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['body_secondary_text_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_core_get_user_displayname( $sender_id ) ) . '</a>';
+									$avatars_iteration++;
+								}
+								?>
+								<tr>
+									<td valign="middle" width="65px" style="vertical-align: middle;">
+										<?php echo implode( ' ', $sender_avatars ); ?>
+									</td>
+									<td width="88%" style="vertical-align: middle;">
+										<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+											<?php echo implode( ', ', $sender_names ); ?>
+										</div>
+									</td>
+								</tr>
+								<?php
+							}
+							?>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+				</tr>
+			<?php endif; ?>
+
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+						<tbody>
+						<tr>
+							<td height="30px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+						</tr>
+						<tr>
+							<td align="center">
+								<table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
+									<tbody>
+									<?php
+									$total_messages = count( $tokens['message'] );
+									$message_index  = 1;
+									foreach ( $tokens['message'] as $message ) {
+										?>
+										<tr style="<?php echo ( $total_messages !== $message_index ) ? 'border-bottom: 1px solid' . esc_attr( $settings['body_border_color'] ) . ';' : ''; ?>">
+											<td valign="middle" width="55px" style="vertical-align: top;">
+												<a style="display: block; width: 40px;" href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow">
+													<?php
+													$avatar_url = bp_core_fetch_avatar(
+														array(
+															'item_id' => $message['sender_id'],
+															'width' => 100,
+															'height' => 100,
+															'type' => 'full',
+															'html' => false,
+														)
+													);
+													?>
+													<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="40" height="40" border="0" style="margin:0; padding:0; border:none; display:block; width: 40px; height: 40px; border-radius: 50%;" />
+												</a>
+											</td>
+											<td width="88%" style="vertical-align: top;padding-bottom:20px;">
+												<p style="margin:0 0 5px 0;">
+													<a href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( bp_core_get_user_displayname( $message['sender_id'] ) ); ?></a>
+												</p>
+												<div class="bb-email-message-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+													<?php echo stripslashes( wpautop( $message['message'] ) ); ?>
+												</div>
+												<?php
+												$media_ids       = '';
+												$total_media_ids = 0;
+												if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $message['message_id'] ) ) {
+													$media_ids = bp_messages_get_meta( $message['message_id'], 'bp_media_ids', true );
+
+													if ( ! empty( $media_ids ) ) {
+														$media_ids       = explode( ',', $media_ids );
+														$total_media_ids = count( $media_ids );
+														$media_ids       = implode( ',', array_slice( $media_ids, 0, 5 ) );
+													}
+												}
+
+												$video_ids       = '';
+												$total_video_ids = 0;
+												if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() && ! empty( $message['message_id'] ) ) {
+													$video_ids = bp_messages_get_meta( $message['message_id'], 'bp_video_ids', true );
+
+													if ( ! empty( $video_ids ) ) {
+														$video_ids       = explode( ',', $video_ids );
+														$total_video_ids = count( $video_ids );
+														$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
+													}
+												}
+
+												$document_ids       = '';
+												$total_document_ids = 0;
+												if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() && ! empty( $message['message_id'] ) ) {
+													$document_ids = bp_messages_get_meta( $message['message_id'], 'bp_document_ids', true );
+
+													if ( ! empty( $document_ids ) ) {
+														$document_ids       = explode( ',', $document_ids );
+														$total_document_ids = count( $document_ids );
+														$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );
+													}
+												}
+
+												$gif_data = array();
+												if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() && ! empty( $message['message_id'] ) ) {
+													$gif_data = bp_messages_get_meta( $message['message_id'], '_gif_data', true );
+												}
+
+												if ( ! empty( $media_ids ) && bp_has_media(
+													array(
+														'include' => $media_ids,
+														'order_by' => 'menu_order',
+														'sort' => 'ASC',
+													)
+												) ) :
+													?>
+													<div class="bb-activity-media-wrap" style="padding: 10px 0; width: 250px; height: 200px;">
+														<?php
+														while ( bp_media() ) {
+															bp_the_media();
+
+															$attachment_id = base64_encode( 'forbidden_' . bp_get_media_attachment_id() );
+															$media_url     = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $message['thread_id'] );
+															?>
+															<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;">
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>">
+																	<img style="border-radius: 4px; min-width: 100%; min-height: 100%; max-width: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+																</a>
+															</div>
+															<?php if ( $total_media_ids > 1 ) : ?>
+																<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;width:100%;background-color: #b5b7bb;padding:0;"></p>
+																<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;width:100%;background-color: #e1e4e8;padding:0;"></p>
+															<?php endif; ?>
+															<?php
+															break;
+														}
+														?>
+													</div>
+													<?php
+												endif;
+
+												if ( ! empty( $video_ids ) && bp_has_video(
+													array(
+														'include' => $video_ids,
+														'order_by' => 'menu_order',
+														'sort' => 'ASC',
+													)
+												) ) :
+													?>
+													<div class="bb-activity-media-wrap" style="padding: 10px 0; width: 250px;">
+														<?php
+														while ( bp_video() ) {
+															bp_the_video();
+
+															$poster_thumb = bp_get_video_activity_thumb();
+															if ( empty( $poster_thumb ) ) {
+																$poster_thumb = bp_get_video_popup_thumb();
+															}
+															if ( empty( $poster_thumb ) ) {
+																$poster_thumb = bb_get_video_default_placeholder_image();
+															}
+															?>
+															<div class="bb-activity-media-elem" style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;padding:0;">
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>">
+																	<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_get_video_title() ); ?>" />
+																</a>
+															</div>
+															<?php if ( $total_video_ids > 1 ) : ?>
+																<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;width:100%;background-color: #b5b7bb;padding:0;"></p>
+																<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;width:100%;background-color: #e1e4e8;padding:0;"></p>
+															<?php endif; ?>
+															<?php
+															break;
+														}
+														?>
+													</div>
+													<?php
+												endif;
+
+												if ( ! empty( $document_ids ) && bp_has_document(
+													array(
+														'include' => $document_ids,
+														'order_by' => 'menu_order',
+														'sort' => 'ASC',
+													)
+												) ) :
+													?>
+													<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+														<?php
+														while ( bp_document() ) {
+															bp_the_document();
+
+															$attachment_id = bp_get_document_attachment_id();
+															$filename      = basename( get_attached_file( $attachment_id ) );
+															$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+															$extension     = bp_get_document_extension();
+															?>
+															<div class="bb-activity-media-elem">
+																<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" style="font-size:14px; text-decoration:none;">
+																	<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
+																	<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( strtolower( $size ) ); ?></span>
+																	<span style="font-size: 13px; margin-left:3px; text-transform: uppercase; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
+																</a>
+															</div>
+															<?php
+														}
+														?>
+														<?php if ( $total_document_ids > 5 ) : ?>
+															<a href="<?php echo esc_url( $tokens['message.url'] ); ?>"><?php echo sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+														<?php endif; ?>
+													</div>
+													<?php
+												endif;
+
+												if ( ! empty( $gif_data ) ) :
+													?>
+													<div class="activity-attached-gif-container">
+														<div class="gif-image-container">
+															<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" class="gif-play-button">
+																<?php if ( is_int( $gif_data['still'] ) ) { ?>
+																	<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
+																<?php } else { ?>
+																	<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( $gif_data['still'] ); ?>" />
+																<?php } ?>
+															</a>
+														</div>
+													</div>
+													<?php
+												endif;
+												?>
+											</td>
+										</tr>
+										<tr>
+											<td height="20px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+										</tr>
+										<?php
+										$message_index++;
+									}
+									?>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td>
+					<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; text-align: center; height: 16px; line-height: 16px; padding: 10px 28px;"><?php esc_html_e( 'View Conversation', 'buddyboss' ); ?></a>
+				</td>
+			</tr>
+		</table>
+		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
+		<?php
+		$output = str_replace( array( "\r", "\n" ), '', ob_get_contents() );
+		ob_end_clean();
+
+		return $output;
+	}
+
+	/**
+	 * Generate the output for token delay message
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__sender_name( $bp_email, $formatted_tokens, $tokens ) {
+		$output = $tokens['sender.name'] ?? '';
+
+		if ( ! in_array( $bp_email->get( 'type' ), array( 'group-message-email', 'messages-unread' ), true ) || ! isset( $tokens['message_id'] ) ) {
+			return $output;
+		}
+
+		$settings = bp_email_get_appearance_settings();
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'bp_messages_messages';
+		$sender_id  = $wpdb->get_var(
+			$wpdb->prepare(
+				'SELECT sender_id FROM `' . $table_name . '` WHERE id = %d',
+				$tokens['message_id']
+			)
+		);
+
+		if ( ! empty( $sender_id ) ) {
+			$output = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_core_get_user_displayname( $sender_id ) ) . '</a>';
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Generate the output for token delay message
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__group_name( $bp_email, $formatted_tokens, $tokens ) {
+		$output = $tokens['group.name'] ?? '';
+
+		if ( ! in_array( $bp_email->get( 'type' ), array( 'group-message-email', 'group-message-digest' ), true ) ) {
+			return $output;
+		}
+
+		$group = $tokens['group'] ?? false;
+		if ( empty( $group ) ) {
+			$group_id = $tokens['group.id'] ?? false;
+			if ( empty( $group_id ) ) {
+				$message_id = $tokens['message_id'] ?? false;
+				$group_id   = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+			}
+
+			if ( empty( $group_id ) ) {
+				return $output;
+			}
+
+			$group = groups_get_group( $group_id );
+		}
+
+		if ( empty( $group ) ) {
+			return $output;
+		}
+
+		$settings = bp_email_get_appearance_settings();
+
+		$output = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_get_group_name( $group ) ) . '</a>';
+
+		return $output;
+	}
+
+	/**
+	 * Generate the output for token delay message
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__unread_count( $bp_email, $formatted_tokens, $tokens ) {
+		$output = $tokens['unread.count'] ?? '';
+
+		if ( ! in_array( $bp_email->get( 'type' ), array( 'messages-unread-digest', 'group-message-digest' ), true ) ) {
+			return $output;
+		}
+
+		$settings = bp_email_get_appearance_settings();
+
+		if ( isset( $tokens['message.url'], $tokens['unread.count'] ) && ! empty( $tokens['message.url'] ) ) {
+			$output = '<a href="' . esc_url( $tokens['message.url'] ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( $tokens['unread.count'] ) . '</a>';
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Strip all tags from the subject.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param string $retval Property value.
+	 * @param string $property_name Property name.
+	 * @param string $transform How to transform the return value.
+	 *                          Accepts 'raw' (default) or 'replace-tokens'.
+	 *
+	 * @return string The subject output without tags for subject.
+	 */
+	public function bb_email_subject_strip_all_tags( $retval, $property_name, $transform ) {
+
+		if ( 'subject' === $property_name && 'replace-tokens' === $transform ) {
+			return wp_strip_all_tags( $retval );
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Generate the output for token activity.content
+	 *
+	 * @since BuddyBoss 2.2.3
+	 *
+	 * @param \BP_Email $bp_email
+	 * @param array     $formatted_tokens
+	 * @param array     $tokens
+	 *
+	 * @return string html for the output
+	 */
+	public function token__activity_content( $bp_email, $formatted_tokens, $tokens ) {
+		$output   = '';
+		$settings = bp_email_get_appearance_settings();
+		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : '';
+
+		if ( 'groups-new-activity' === $bp_email->get( 'type' ) ) {
+			return $this->token__group_activity_content( $bp_email, $formatted_tokens, $tokens );
+		}
+
+		if (
+			empty( $activity ) ||
+			in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
+		) {
+			return $output;
+		}
+
+		ob_start();
+		?>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<tr>
+				<td align="center">
+					<table cellpadding="0" cellspacing="0" border="0" width="100%">
+						<tbody>
+						<tr>
+							<td valign="middle" width="65px" style="vertical-align: middle;">
+								<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( $activity->user_id ) ); ?>" target="_blank" rel="nofollow">
+									<?php
+									$avatar_url = bp_core_fetch_avatar(
+										array(
+											'item_id' => $activity->user_id,
+											'width'   => 100,
+											'height'  => 100,
+											'type'    => 'full',
+											'html'    => false,
+										)
+									);
+									?>
+									<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"/>
+								</a>
+							</td>
+							<td width="88%" style="vertical-align: middle;">
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>;">
+						<tbody>
+						<tr>
+							<td>
+								<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+									<tbody>
+									<tr>
+										<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
+									</tr>
+									<tr>
+										<td align="center">
+											<table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
+												<tbody>
+												<tr>
+													<td width="88%" style="vertical-align: top;">
+														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+															<?php
+															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
+																$activity->content = '';
+															}
+															echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+															?>
+														</div>
+														<?php
+														$media_ids       = '';
+														$total_media_ids = 0;
+
+														if ( bp_is_active( 'media' ) && bp_is_profile_media_support_enabled() ) {
+															$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+															if ( ! empty( $media_ids ) ) {
+																$media_ids       = explode( ',', $media_ids );
+																$total_media_ids = count( $media_ids );
+																$media_ids       = implode( ',', array_slice( $media_ids, 0, 5 ) );
+															}
+														}
+
+														$video_ids       = '';
+														$total_video_ids = 0;
+														if ( bp_is_active( 'media' ) && bp_is_profile_video_support_enabled() ) {
+															$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+
+															if ( ! empty( $video_ids ) ) {
+																$video_ids       = explode( ',', $video_ids );
+																$total_video_ids = count( $video_ids );
+																$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
+															}
+														}
+
+														$document_ids       = '';
+														$total_document_ids = 0;
+														if ( bp_is_active( 'media' ) && bp_is_profile_document_support_enabled() ) {
+															$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+
+															if ( ! empty( $document_ids ) ) {
+																$document_ids       = explode( ',', $document_ids );
+																$total_document_ids = count( $document_ids );
+																$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );
+															}
+														}
+
+														$gif_data = array();
+														if ( bp_is_active( 'media' ) && bp_is_profiles_gif_support_enabled() ) {
+															$gif_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
+														}
+
+														if (
+															! empty( $media_ids ) &&
+															bp_has_media(
+																array(
+																	'include'  => $media_ids,
+																	'order_by' => 'menu_order',
+																	'sort'     => 'ASC',
+																)
+															)
+														) {
+															?>
+															<div class="bb-activity-media-wrap" style="padding: 15px 0; width: 250px; height: 200px;">
+																<?php
+																while ( bp_media() ) {
+																	bp_the_media();
+
+																	$media_id      = 'forbidden_' . bp_get_media_id();
+																	$attachment_id = 'forbidden_' . bp_get_media_attachment_id();
+																	$media_url     = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id );
+																	?>
+																	<div class="bb-activity-media-elem" style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;">
+																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>">
+																			<img style="border-radius: 4px; min-width: 100%; min-height: 100%; max-width: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
+																		</a>
+																	</div>
+																	<?php if ( $total_media_ids > 1 ) : ?>
+																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;width:100%;background-color: #b5b7bb;padding:0;"></p>
+																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;width:100%;background-color: #e1e4e8;padding:0;"></p>
+																	<?php endif; ?>
+																	<?php
+																	break;
+																}
+																?>
+															</div>
+															<?php
+														}
+
+														if (
+															! empty( $video_ids ) &&
+															bp_has_video(
+																array(
+																	'include'  => $video_ids,
+																	'order_by' => 'menu_order',
+																	'sort'     => 'ASC',
+																)
+															)
+														) {
+															?>
+															<div class="bb-activity-media-wrap" style="padding: 15px 0; width: 250px;">
+																<?php
+																while ( bp_video() ) {
+																	bp_the_video();
+																	$poster_thumb = bp_get_video_activity_thumb();
+																	if ( empty( $poster_thumb ) ) {
+																		$poster_thumb = bp_get_video_popup_thumb();
+																	}
+																	if ( empty( $poster_thumb ) ) {
+																		$poster_thumb = bb_get_video_default_placeholder_image();
+																	}
+																	?>
+																	<div class="bb-activity-media-elem" style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;padding:0;">
+																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>">
+																			<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_get_video_title() ); ?>"/>
+																		</a>
+																	</div>
+																	<?php if ( $total_video_ids > 1 ) : ?>
+																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;width:100%;background-color: #b5b7bb;padding:0;"></p>
+																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;width:100%;background-color: #e1e4e8;padding:0;"></p>
+																		<?php
+																	endif;
+
+																	break;
+																}
+																?>
+															</div>
+															<?php
+														}
+
+														if (
+															! empty( $document_ids ) &&
+															bp_has_document(
+																array(
+																	'include'  => $document_ids,
+																	'order_by' => 'menu_order',
+																	'sort'     => 'ASC',
+																)
+															)
+														) {
+															?>
+															<div class="bb-activity-media-wrap" style="padding: 15px 0 15px 0; width: 250px;">
+																<?php
+																while ( bp_document() ) {
+																	bp_the_document();
+																	$attachment_id = bp_get_document_attachment_id();
+																	$filename      = basename( get_attached_file( $attachment_id ) );
+																	$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+																	$extension     = bp_get_document_extension();
+																	?>
+																	<div class="bb-activity-media-elem" style="width:100%">
+																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" style="font-size:14px; text-decoration:none;">
+																			<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
+																			<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( strtolower( $size ) ); ?></span>
+																			<span style="font-size: 13px; margin-left:3px; text-transform: uppercase; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
+																		</a>
+																	</div>
+																	<?php
+																}
+																?>
+																<?php if ( $total_document_ids > 5 ) : ?>
+																	<a href=""><?php echo sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+																<?php endif; ?>
+															</div>
+															<?php
+														}
+
+														if ( ! empty( $gif_data ) ) {
+															?>
+															<div style="padding: 15px 0;">
+																<div>
+																	<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" class="gif-play-button">
+																		<?php if ( is_int( $gif_data['still'] ) ) { ?>
+																			<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>"/>
+																		<?php } else { ?>
+																			<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( $gif_data['still'] ); ?>"/>
+																		<?php } ?>
+																	</a>
+																</div>
+															</div>
+															<?php
+														}
+														?>
+													</td>
+												</tr>
+												<tr>
+													<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
+												</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td><a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" target="_blank" rel="nofollow"
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
+			</tr>
+		</table>
+		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
+		<?php
+		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
+
+		return $output;
+	}
+
+	/**
+	 * Generate the output for token group discussion.content.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output
+	 */
+	public function token__group_discussion_content( $bp_email, $formatted_tokens, $tokens ) {
+		$output = '';
+
+		$settings = bp_email_get_appearance_settings();
+
+		$media_ids       = '';
+		$total_media_ids = 0;
+		if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+			$media_ids = get_post_meta( $tokens['discussion.id'], 'bp_media_ids', true );
+			if ( ! empty( $media_ids ) ) {
+				$media_ids       = explode( ',', $media_ids );
+				$total_media_ids = count( $media_ids );
+				$media_ids       = implode( ',', array_slice( $media_ids, 0, 5 ) );
+			}
+		}
+
+		$video_ids       = '';
+		$total_video_ids = 0;
+		if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+			$video_ids = get_post_meta( $tokens['discussion.id'], 'bp_video_ids', true );
+			if ( ! empty( $video_ids ) ) {
+				$video_ids       = explode( ',', $video_ids );
+				$total_video_ids = count( $video_ids );
+				$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
+			}
+		}
+
+		$document_ids       = '';
+		$total_document_ids = 0;
+		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+			$document_ids = get_post_meta( $tokens['discussion.id'], 'bp_document_ids', true );
+			if ( ! empty( $document_ids ) ) {
+				$document_ids       = explode( ',', $document_ids );
+				$total_document_ids = count( $document_ids );
+				$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );
+			}
+		}
+
+		$gif_data = array();
+		if ( bp_is_active( 'media' ) && bp_is_groups_gif_support_enabled() && ! empty( $tokens['discussion.id'] ) ) {
+			$gif_data = get_post_meta( $tokens['discussion.id'], '_gif_data', true );
+		}
+
+		ob_start();
+		?>
+		<div class="spacer" style="font-size: 5px; line-height: 5px; height: 5px;">&nbsp;</div>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+
+			<tr>
+				<td height="5px" style="font-size: 24px; line-height: 5px;">&nbsp;</td>
+			</tr>
+			<tr>
+				<td>
+					<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; font-weight: 500; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+						<?php echo wp_kses_post( $formatted_tokens['discussion.title'] ); ?>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<table cellpadding="0" cellspacing="0" border="0" width="100%">
+						<tbody>
+						<tr>
+							<td valign="middle" width="65px" style="vertical-align: middle;">
+								<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( bbp_get_topic_author_id( $formatted_tokens['discussion.id'] ) ) ); ?>" target="_blank" rel="nofollow">
+									<?php
+									$avatar_url = bp_core_fetch_avatar(
+										array(
+											'item_id' => bbp_get_topic_author_id( $formatted_tokens['discussion.id'] ),
+											'width'   => 100,
+											'height'  => 100,
+											'type'    => 'full',
+											'html'    => false,
+										)
+									);
+									?>
+									<img src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+								</a>
+							</td>
+							<td width="88%" style="vertical-align: middle;">
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo wp_kses_post( bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'] ) ); ?></div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+						<tbody>
+						<tr>
+							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+						</tr>
+						<tr>
+							<td align="center">
+								<table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
+									<tbody>
+									<tr>
+										<td>
+											<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+												<?php echo wpautop( $formatted_tokens['discussion.content'] ); ?>
+											</div>
+										</td>
+									</tr>
+
+									<?php
+									if ( ! empty( $media_ids ) && bp_has_media(
+										array(
+											'include'  => $media_ids,
+											'order_by' => 'menu_order',
+											'sort'     => 'ASC',
+											'privacy'  => false,
+										)
+									) ) :
+										?>
+										<tr>
+											<td>
+												<div class="bb-activity-media-wrap" style="padding: 5px 0 10px;">
+												<?php
+												while ( bp_media() ) {
+													bp_the_media();
+
+													$media_id      = 'forbidden_' . bp_get_media_id();
+													$attachment_id = 'forbidden_' . bp_get_media_attachment_id();
+													$media_url     = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/bb-media-activity-image';
+													?>
+													<div class="bb-activity-media-elem"  style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;">
+														<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>">
+															<img style="border-radius: 4px; width:100%; height: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
+														</a>
+													</div>
+													<?php if ( $total_media_ids > 1 ) : ?>
+														<p style="height: 6px;background: rgba(0, 0, 0, 0.3);border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;"></p>
+														<p style="height: 6px;background: rgba(0, 0, 0, 0.1);border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;"></p>
+													<?php endif; ?>
+													<?php
+													break;
+												}
+												?>
+											</div>
+											</td>
+										</tr>
+										<?php
+									endif;
+
+									if ( ! empty( $video_ids ) && bp_has_video(
+										array(
+											'include'  => $video_ids,
+											'order_by' => 'menu_order',
+											'sort'     => 'ASC',
+											'privacy'  => false,
+										)
+									) ) :
+										?>
+										<tr>
+											<td>
+												<div class="bb-activity-media-wrap" style="padding: 5px 0 10px;">
+													<?php
+													while ( bp_video() ) {
+														bp_the_video();
+
+														$poster_thumb = bp_get_video_activity_thumb();
+														if ( empty( $poster_thumb ) ) {
+															$poster_thumb = bp_get_video_popup_thumb();
+														}
+														if ( empty( $poster_thumb ) ) {
+															$poster_thumb = bb_get_video_default_placeholder_image();
+														}
+														?>
+														<div class="bb-activity-media-elem"  style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;">
+															<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>">
+																<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_get_video_title() ); ?>" />
+															</a>
+														</div>
+														<?php if ( $total_video_ids > 1 ) : ?>
+															<p style="height: 6px;background: rgba(0, 0, 0, 0.3);border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;"></p>
+															<p style="height: 6px;background: rgba(0, 0, 0, 0.1);border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;"></p>
+														<?php endif; ?>
+														<?php
+														break;
+													}
+													?>
+												</div>
+											</td>
+										</tr>
+										<?php
+									endif;
+
+									if ( ! empty( $document_ids ) && bp_has_document(
+										array(
+											'include'  => $document_ids,
+											'order_by' => 'menu_order',
+											'sort'     => 'ASC',
+											'privacy'  => false,
+										)
+									) ) :
+										?>
+										<tr>
+											<td>
+												<div style="padding: 5px 0 10px;">
+												<?php
+												while ( bp_document() ) {
+													bp_the_document();
+
+													$attachment_id = bp_get_document_attachment_id();
+													$filename      = basename( get_attached_file( $attachment_id ) );
+													$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+													$extension     = bp_get_document_extension();
+													?>
+													<div class="bb-activity-media-elem">
+														<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>" style="font-size:14px; text-decoration:none;">
+															<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
+															<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( $size ); ?></span>
+															<span style="font-size: 13px; margin-left:3px; text-transform: uppercase; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
+														</a>
+													</div>
+													<?php
+												}
+
+												if ( $total_document_ids > 5 ) :
+													?>
+													<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>">
+														<?php
+														echo sprintf(
+														/* translators: The more documents. */
+															__( 'and %d more', 'buddyboss' ),
+															$total_document_ids - 5
+														);
+														?>
+													</a>
+												<?php endif; ?>
+											</div>
+											</td>
+										</tr>
+										<?php
+									endif;
+
+									if ( ! empty( $gif_data ) ) :
+										?>
+									<tr>
+										<td>
+											<div class="activity-attached-gif-container">
+												<div class="gif-image-container">
+													<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>">
+														<?php if ( is_int( $gif_data['still'] ) ) { ?>
+															<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
+														<?php } else { ?>
+															<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( $gif_data['still'] ); ?>" />
+														<?php } ?>
+													</a>
+												</div>
+											</div>
+										</td>
+									</tr>
+									<?php endif; ?>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td>
+					<a href="<?php echo esc_url( $tokens['discussion.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 150px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'View Discussion', 'buddyboss' ); ?></a>
+				</td>
+			</tr>
+		</table>
+		<div class="spacer" style="font-size: 30px; line-height: 30px; height: 30px;">&nbsp;</div>
+		<?php
+		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
+
+		return $output;
+	}
+
+	/**
+	 * Generate the output for token group activity.content
+	 *
+	 * @since BuddyBoss 2.2.9.1
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output
+	 */
+	public function token__group_activity_content( $bp_email, $formatted_tokens, $tokens ) {
+		$output   = '';
+		$settings = bp_email_get_appearance_settings();
+		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : '';
+
+		ob_start();
+		?>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<tr>
+				<td align="center">
+					<table cellpadding="0" cellspacing="0" border="0" width="100%">
+						<tbody>
+							<tr>
+								<td valign="middle" width="65px" style="vertical-align: middle;">
+									<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( $activity->user_id ) ); ?>" target="_blank" rel="nofollow">
+										<?php
+										$avatar_url = bp_core_fetch_avatar(
+												array(
+														'item_id' => $activity->user_id,
+														'width'   => 100,
+														'height'  => 100,
+														'type'    => 'full',
+														'html'    => false,
+												)
+										);
+										?>
+										<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"/>
+									</a>
+								</td>
+								<td width="88%" style="vertical-align: middle;">
+									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>;">
+						<tbody>
+						<tr>
+							<td>
+								<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+									<tbody>
+									<tr>
+										<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
+									</tr>
+									<tr>
+										<td align="center">
+											<table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
+												<tbody>
+												<tr>
+													<td width="88%" style="vertical-align: top;">
+														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+															<?php
+															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
+																$activity->content = '';
+															}
+															echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+															?>
+														</div>
+														<?php
+														$media_ids       = '';
+														$total_media_ids = 0;
+														if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && ! empty( $activity->id ) ) {
+															$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+															if ( ! empty( $media_ids ) ) {
+																$media_ids       = explode( ',', $media_ids );
+																$total_media_ids = count( $media_ids );
+																$media_ids       = implode( ',', array_slice( $media_ids, 0, 5 ) );
+															}
+														}
+
+														$video_ids       = '';
+														$total_video_ids = 0;
+														if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && ! empty( $activity->id ) ) {
+															$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+
+															if ( ! empty( $video_ids ) ) {
+																$video_ids       = explode( ',', $video_ids );
+																$total_video_ids = count( $video_ids );
+																$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
+															}
+														}
+
+														$document_ids       = '';
+														$total_document_ids = 0;
+														if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && ! empty( $activity->id ) ) {
+															$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+
+															if ( ! empty( $document_ids ) ) {
+																$document_ids       = explode( ',', $document_ids );
+																$total_document_ids = count( $document_ids );
+																$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );
+															}
+														}
+
+														$gif_data = array();
+														if ( bp_is_active( 'media' ) && bp_is_groups_gif_support_enabled() && ! empty( $activity->id ) ) {
+															$gif_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
+														}
+
+														if (
+															! empty( $media_ids ) &&
+															bp_has_media(
+																array(
+																	'include'  => $media_ids,
+																	'order_by' => 'menu_order',
+																	'sort'     => 'ASC',
+																)
+															)
+														) {
+															?>
+															<div class="bb-activity-media-wrap" style="padding: 15px 0; width: 250px; height: 200px;">
+																<?php
+																while ( bp_media() ) {
+																	bp_the_media();
+
+																	$media_id      = 'forbidden_' . bp_get_media_id();
+																	$attachment_id = 'forbidden_' . bp_get_media_attachment_id();
+																	$media_url     = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id );
+																	?>
+																	<div class="bb-activity-media-elem" style="width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;">
+																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>">
+																			<img style="border-radius: 4px; min-width: 100%; min-height: 100%; max-width: 100%; object-fit: cover;" src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
+																		</a>
+																	</div>
+																	<?php if ( $total_media_ids > 1 ) : ?>
+																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;width:100%;background-color: #b5b7bb;padding:0;"></p>
+																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;width:100%;background-color: #e1e4e8;padding:0;"></p>
+																	<?php endif; ?>
+																	<?php
+																	break;
+																}
+																?>
+															</div>
+															<?php
+														}
+
+														if (
+															! empty( $video_ids ) &&
+															bp_has_video(
+																array(
+																	'include'  => $video_ids,
+																	'order_by' => 'menu_order',
+																	'sort'     => 'ASC',
+																)
+															)
+														) {
+															?>
+															<div class="bb-activity-media-wrap" style="padding: 15px 0; width: 250px;">
+																<?php
+																while ( bp_video() ) {
+																	bp_the_video();
+																	$poster_thumb = bp_get_video_activity_thumb();
+																	if ( empty( $poster_thumb ) ) {
+																		$poster_thumb = bp_get_video_popup_thumb();
+																	}
+																	if ( empty( $poster_thumb ) ) {
+																		$poster_thumb = bb_get_video_default_placeholder_image();
+																	}
+																	?>
+																	<div class="bb-activity-media-elem" style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;padding:0;">
+																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>">
+																			<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_get_video_title() ); ?>"/>
+																		</a>
+																	</div>
+																	<?php if ( $total_video_ids > 1 ) : ?>
+																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;width:100%;background-color: #b5b7bb;padding:0;"></p>
+																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;width:100%;background-color: #e1e4e8;padding:0;"></p>
+																	<?php
+																	endif;
+
+																	break;
+																}
+																?>
+															</div>
+															<?php
+														}
+
+														if (
+															! empty( $document_ids ) &&
+															bp_has_document(
+																array(
+																	'include'  => $document_ids,
+																	'order_by' => 'menu_order',
+																	'sort'     => 'ASC',
+																)
+															)
+														) {
+															?>
+															<div class="bb-activity-media-wrap" style="padding: 15px 0 15px 0; width: 250px;">
+																<?php
+																while ( bp_document() ) {
+																	bp_the_document();
+																	$attachment_id = bp_get_document_attachment_id();
+																	$filename      = basename( get_attached_file( $attachment_id ) );
+																	$size          = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+																	$extension     = bp_get_document_extension();
+																	?>
+																	<div class="bb-activity-media-elem" style="width:100%">
+																		<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" style="font-size:14px; text-decoration:none;">
+																			<span style="font-weight:500;"><?php echo esc_html( $filename ); ?></span>
+																			<span style="font-size: 13px; margin-left:5px; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo esc_html( strtolower( $size ) ); ?></span>
+																			<span style="font-size: 13px; margin-left:3px; text-transform: uppercase; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;"><?php echo $extension ? esc_attr( $extension ) : ''; ?></span>
+																		</a>
+																	</div>
+																	<?php
+																}
+																?>
+																<?php if ( $total_document_ids > 5 ) : ?>
+																	<a href=""><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+																<?php endif; ?>
+															</div>
+															<?php
+														}
+
+														if ( ! empty( $gif_data ) ) {
+															?>
+															<div style="padding: 15px 0;">
+																<div>
+																	<a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" class="gif-play-button">
+																		<?php if ( is_int( $gif_data['still'] ) ) { ?>
+																			<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>"/>
+																		<?php } else { ?>
+																			<img style="max-width: 250px;max-height: 185px;object-fit: cover;border-radius: 4px;" alt="" src="<?php echo esc_url( $gif_data['still'] ); ?>"/>
+																		<?php } ?>
+																	</a>
+																</div>
+															</div>
+															<?php
+														}
+														?>
+													</td>
+												</tr>
+												<tr>
+													<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
+												</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td><a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
+			</tr>
+		</table>
+		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
 		<?php
 		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
 

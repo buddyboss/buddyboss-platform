@@ -201,6 +201,17 @@ window.bp = window.bp || {};
 							if ( response.data.video_attachments ) {
 								$( '.video-action_list .edit_thumbnail_video a[data-video-attachment-id="' + response.data.video_attachment_id + '"]' ).attr( 'data-video-attachments', response.data.video_attachments );
 							}
+
+							// Remove class if thumbnail is available for activity directory page.
+							if ( -1 === response.data.thumbnail.toLowerCase().indexOf( 'video-placeholder.jpg' ) ) {
+
+								// Activity directory page.
+								$( '.bb-activity-video-elem[data-id="' + videoId + '"]' ).removeClass( 'has-no-thumbnail' );
+
+								// Video directory page.
+								$( 'a.bb-video-cover-wrap[data-id="' + videoId + '"]' ).parent().removeClass( 'has-no-thumbnail' );
+							}
+
 							self.closeEditThumbnailUploader( event );
 						}
 						target.removeClass( 'saving' );
@@ -1381,6 +1392,7 @@ window.bp = window.bp || {};
 				this.video_dropzone_obj.destroy();
 			}
 			this.dropzone_video = [];
+			$( '#bp-video-post-content' ).val('');
 
 			var currentPopup = $( event.currentTarget ).closest( '#bp-video-uploader' );
 
@@ -1702,7 +1714,7 @@ window.bp = window.bp || {};
 
 			this.closeUploader( event );
 			$( '#bp-video-create-album' ).hide();
-			$( '#bb-album-title' ).val( '' );
+			$( '#bb-album-title' ).val( '' ).removeClass( 'error' );
 
 		},
 
@@ -2286,6 +2298,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-next-media', this.next.bind( this ) );
 			$( document ).on( 'click', '.bp-add-video-activity-description', this.openVideoActivityDescription.bind( this ) );
 			$( document ).on( 'click', '#bp-activity-description-new-reset', this.closeVideoActivityDescription.bind( this ) );
+			$( document ).on( 'keyup', '.bp-edit-video-activity-description #add-activity-description', this.MediaActivityDescriptionUpdate.bind(this));
 			$( document ).on( 'click', '#bp-activity-description-new-submit', this.submitVideoActivityDescription.bind( this ) );
 			$( document ).on( 'bp_activity_ajax_delete_request_video', this.videoActivityDeleted.bind( this ) );
 
@@ -2309,7 +2322,7 @@ window.bp = window.bp || {};
 			self.showVideo();
 			self.navigationCommands();
 
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' ) {
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' && self.current_video.privacy !== 'grouponly' ) {
 				self.getActivity();
 			} else {
 				self.getVideosDescription();
@@ -2341,6 +2354,9 @@ window.bp = window.bp || {};
 			self.is_open_video = false;
 
 			self.resetRemoveActivityCommentsData();
+
+			// Remove class from video theatre for the activity directory, forum topic and reply, video directory.
+			$( target ).closest( '.bb-media-model-wrapper' ).find( 'figure' ).removeClass( 'has-no-thumbnail' );
 
 			self.current_video = false;
 		},
@@ -2424,6 +2440,16 @@ window.bp = window.bp || {};
 							m.is_message = false;
 						}
 
+						m.thumbnail_class = '';
+						// Add class to video theatre for the activity directory, Message, and forum topic and reply .
+						if ( video_element.closest( '.bb-activity-video-elem' ).hasClass( 'has-no-thumbnail' ) ) {
+							m.thumbnail_class = 'has-no-thumbnail';
+
+						// Add class to video theatre for the video directory.
+						} else if ( video_element.closest( '.bb-video-thumb' ).hasClass( 'has-no-thumbnail' ) ) {
+							m.thumbnail_class = 'has-no-thumbnail';
+						}
+
 						self.videos.push( m );
 					}
 				}
@@ -2472,6 +2498,8 @@ window.bp = window.bp || {};
 					video_privacy_wrap.hide();
 				}
 			}
+
+			$( '.bb-media-model-wrapper.video' ).find( 'figure' ).removeClass( 'has-no-thumbnail' ).addClass( self.current_video.thumbnail_class );
 
 			// update navigation.
 			self.navigationCommands();
@@ -2682,6 +2710,14 @@ window.bp = window.bp || {};
 			target.parents( '.activity-video-description' ).find( '.bp-edit-video-activity-description' ).hide().removeClass( 'open' );
 		},
 
+		MediaActivityDescriptionUpdate: function( event ) {
+			if( $( event.currentTarget ).val().trim() !== '' ) {
+				$( event.currentTarget ).closest( '.bp-edit-video-activity-description' ).addClass( 'has-content' );
+			} else {
+				$( event.currentTarget ).closest( '.bp-edit-video-activity-description' ).removeClass( 'has-content' );
+			}
+		},
+
 		submitVideoActivityDescription: function ( event ) {
 			event.preventDefault();
 
@@ -2818,8 +2854,9 @@ window.bp = window.bp || {};
 			$( '.video-js:not(.loaded)' ).each(
 				function () {
 
-					var self    = this;
-					var options = { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
+					var self   		= this;
+					var options 	= { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
+					var player_id 	= $( this ).attr( 'id' );
 
 					var videoIndex                   = $( this ).attr( 'id' );
 					player[ $( this ).attr( 'id' ) ] = videojs(
@@ -2846,8 +2883,8 @@ window.bp = window.bp || {};
                         }
 					);
 
-					if ( player[ $( this ).attr( 'id' ) ] !== undefined) {
-						player[ $( this ).attr( 'id' ) ].seekButtons(
+					if ( player[ player_id ] !== undefined && ( $( this ).find('.skip-back').length == 0 && $( this ).find('.skip-forward').length == 0 ) ) {
+						player[ player_id ].seekButtons(
 							{
 								forward: 5,
 								back: 5
@@ -2926,6 +2963,9 @@ window.bp = window.bp || {};
 						Enter_fullscreen_btn.attr( 'data-balloon-pos', 'up' );
 						Enter_fullscreen_btn.attr( 'data-balloon', BP_Nouveau.video.i18n_strings.video_fullscreen_text );
 					}
+
+					// Add video Picture in Picture notice
+					$( self ).parent().find( '.video-js' ).append( '<div class="pcture-in-picture-notice">' + BP_Nouveau.video.i18n_strings.video_picture_in_text + '</div>' );
 
 					// Add Tooltips to control buttons
 					var vjsallControlsButton = $( self ).parent().find( '.vjs-control-bar > button, .vjs-control-bar > div' );

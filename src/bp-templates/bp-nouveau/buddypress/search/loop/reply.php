@@ -36,8 +36,8 @@ $topic_id = bbp_get_reply_topic_id( $reply_id );
 
 		<div class="item">
 			<div class="entry-title item-title">
-				<a href="<?php bbp_reply_url( $reply_id ); ?>"><?php bbp_reply_author_display_name( $reply_id ); ?></a>
-				<?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?>
+				<a href="<?php echo bbp_get_reply_author_url( $reply_id ); ?>"><?php bbp_reply_author_display_name( $reply_id ); ?></a>
+				<a href="<?php bbp_reply_url( $reply_id ); ?>"><?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?></a>
 			</div>
 			<div class="entry-content entry-summary">
 				<?php echo wp_kses_post( wp_trim_words( bbp_get_reply_content( $reply_id ), 30, '...' ) ); ?>

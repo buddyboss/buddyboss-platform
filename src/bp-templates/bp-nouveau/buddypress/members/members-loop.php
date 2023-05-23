@@ -127,10 +127,14 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 					<div class="list-wrap-inner">
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>">
+							<?php
+							$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_get_member_user_id() ) ? 'bp-user-suspended' : '';
+							$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_get_member_user_id() ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+							?>
+							<a href="<?php bp_member_permalink(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 								<?php
-								if ( $enabled_online_status && function_exists( 'bb_current_user_status' ) ) {
-									bb_current_user_status( bp_get_member_user_id() );
+								if ( $enabled_online_status ) {
+									bb_user_presence_html( bp_get_member_user_id() );
 								}
 								bp_member_avatar( bp_nouveau_avatar_args() );
 								?>

@@ -23,13 +23,24 @@ $upload_dir      = wp_upload_dir();
 $upload_dir      = $upload_dir['basedir'];
 $output_file_src = '';
 
+$encode_thread_id = base64_decode( get_query_var( 'media-thread-id' ) );
+$thread_arr       = explode( 'thread_', $encode_thread_id );
+
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
 
-	$attachment_id  = (int) $explode_arr[1];
+	$attachment_id = (int) $explode_arr[1];
 
 	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d AND type= %s", $attachment_id, 'photo' ) );
 
-	if ( $media ) {
+	if (
+		$media &&
+		 (
+			 ! isset( $thread_arr ) ||
+			 empty( $thread_arr ) ||
+			 ! isset( $thread_arr[1] ) ||
+			 (int) $thread_arr[1] <= 0
+		 )
+	) {
 		echo '// Silence is golden.';
 		exit();
 	}
@@ -57,7 +68,6 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 					$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
 				}
 			}
-
 		} elseif ( ! $file ) {
 
 			bp_media_regenerate_attachment_thumbnails( $attachment_id );
