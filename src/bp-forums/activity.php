@@ -409,7 +409,15 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s</div>', esc_url( $topic_permalink ), $reply_to_text, $content );
 			}
 
-			return $content;
+			/**
+			 * Filters the activity content for forum.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $content  Activity content
+			 * @param array $activity Activity object
+			 */
+			return apply_filters( 'bb_forum_before_activity_content', $content, $activity );
 		}
 
 		/**

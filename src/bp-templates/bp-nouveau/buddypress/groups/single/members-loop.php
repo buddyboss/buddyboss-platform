@@ -65,8 +65,16 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 			// Get Primary action.
 			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
-			$moderation_class   = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_get_group_member_id() ) ? 'bp-user-suspended' : '';
-			$moderation_class   = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_get_group_member_id() ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+			$is_blocked         = false;
+			$moderation_class   = '';
+			if ( bp_is_active( 'moderation' ) ) {
+				if ( bp_moderation_is_user_suspended( bp_get_member_user_id() ) ) {
+					$moderation_class .= 'bp-user-suspended';
+				} elseif ( bb_moderation_is_user_blocked_by( bp_get_member_user_id() ) ) {
+					$is_blocked       = true;
+					$moderation_class .= ' bp-user-blocked';
+				}
+			}
 			?>
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( bp_get_group_member_id() ); ?>" data-bp-item-component="members">
 				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? esc_attr( ' has_hook_content' ) : esc_attr( '' ); ?> <?php echo ! empty( $profile_actions['secondary'] ) ? esc_attr( 'secondary-buttons' ) : esc_attr( 'no-secondary-buttons' ); ?> <?php echo ! empty( $primary_action_btn ) ? esc_attr( 'primary-button' ) : esc_attr( 'no-primary-buttons' ); ?>">
@@ -103,7 +111,21 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 								}
 								?>
 
-								<?php if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) : ?>
+								<?php
+								if (
+									! $is_blocked &&
+									(
+										(
+											$enabled_last_active &&
+											$member_last_activity
+										) ||
+										(
+											$enabled_joined_date &&
+											$member_joined_date
+										)
+									)
+								) :
+									?>
 									<p class="item-meta last-activity">
 
 										<?php
@@ -123,12 +145,20 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 										?>
 
 									</p>
-								<?php endif; ?>
+								<?php
+								endif;
+								?>
 							</div>
 
-							<div class="flex align-items-center follow-container justify-center">
-								<?php echo wp_kses_post( $followers_count ); ?>
-							</div>
+							<?php
+							if ( ! $is_blocked ) {
+								?>
+								<div class="flex align-items-center follow-container justify-center">
+									<?php echo wp_kses_post( $followers_count ); ?>
+								</div>
+								<?php
+							}
+							?>
 
 							<div class="flex only-grid-view align-items-center primary-action justify-center">
 								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>

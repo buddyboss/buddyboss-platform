@@ -973,6 +973,7 @@ function bb_moderation_before_activity_entry_callback() {
 add_action( 'bp_before_activity_entry', 'bb_moderation_before_activity_entry_callback' );
 add_action( 'bp_before_activity_comment_entry', 'bb_moderation_before_activity_entry_callback' );
 add_action( 'bp_before_group_members_list', 'bb_moderation_before_activity_entry_callback' );
+add_action( 'bp_before_group_manage_members_list', 'bb_moderation_before_activity_entry_callback' );
 
 /**
  * Filter to update the avatar url for the after activity comment, group posts/comment, group members.
@@ -987,4 +988,5 @@ function bb_moderation_after_activity_entry_callback() {
 add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );
+add_action( 'bp_after_group_manage_members_list', 'bb_moderation_before_activity_entry_callback' );
 
