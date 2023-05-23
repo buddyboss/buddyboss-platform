@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @return mixed
  */
 function bb_global_search_default_items_to_search( $value ) {
+	_deprecated_function( __FUNCTION__, '2.3.6' );
 	if ( empty( $value ) ) {
 		/**
 		 * Setting > what to search?
@@ -62,6 +63,7 @@ function bb_global_search_default_items_to_search( $value ) {
  * @return mixed
  */
 function bp_search_remove_search_types_for_guests( $search_types ) {
+	_deprecated_function( __FUNCTION__, '2.3.6' );
 	if ( ! is_admin() && ! empty( $search_types ) && ! is_user_logged_in() ) {
 		$items_to_remove       = array( 'messages', 'notifications' );
 		$filtered_search_types = array();
