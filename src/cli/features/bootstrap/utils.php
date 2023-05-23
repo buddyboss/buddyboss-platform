@@ -434,7 +434,7 @@ function run_mysql_command( $cmd, $assoc_args, $descriptors = null ) {
 	}
 
 	if ( isset( $assoc_args['host'] ) ) {
-		$assoc_args = array_merge( $assoc_args, mysql_host_to_cli_args( $assoc_args['host'] ) );
+		$assoc_args = array_merge( $assoc_args, mysql_host_to_cli_args( $assoc_args['host'] ) ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_host_to_cli_args, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 	}
 
 	$pass = $assoc_args['pass'];

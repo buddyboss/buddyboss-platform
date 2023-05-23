@@ -16,6 +16,7 @@
 		"grunt-contrib-uglify": "~5.0.1",
 		"grunt-contrib-watch": "^1.1.0",
 		"grunt-exec": "~3.0.0",
+		"grunt-json2php": "^0.1.4",
 		"grunt-jsvalidate": "~0.2.2",
 		"grunt-legacy-util": "^2.0.1",
 		"grunt-patch-wordpress": "^3.0.1",
@@ -25,7 +26,7 @@
 		"grunt-stylelint": "^0.17.0",
 		"grunt-wp-i18n": "^1.0.3",
 		"husky": "^7.0.4",
-		"jira-prepare-commit-msg": "^1.6.2",
+		"jira-prepare-commit-msg": "^1.7.2",
 		"matchdep": "^2.0.0",
 		"node-sass": "^7.0.0",
 		"postcss": "^8.4.4",
@@ -40,5 +41,5 @@
 	},
 	"license": "GPL-2.0-or-later",
 	"version": "3.1.0",
-	"BBVersion": "2.1.7.2"
+	"BBVersion": "2.3.41"
 }

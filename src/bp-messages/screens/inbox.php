@@ -27,10 +27,11 @@ function messages_screen_inbox() {
 			break;
 		endwhile;
 
-		if ( $thread_id ) {
+		// Redirect happening with backbone js to allow visibility of thread list on mobile screens
+		/*if ( $thread_id ) {
 			wp_safe_redirect( bp_get_message_thread_view_link( $thread_id ) );
 			exit;
-		}
+		}*/
 	} else {
 		wp_safe_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/compose' ) );
 		exit;

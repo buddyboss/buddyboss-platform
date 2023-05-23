@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.4.0
  */
+#[\AllowDynamicProperties]
 class BP_Document_Template {
 
 	/**
@@ -153,7 +154,8 @@ class BP_Document_Template {
 			'user_directory'      => true,
 			'meta_query_document' => false,
 			'meta_query_folder'   => false,
-			'meta_query'          => false
+			'meta_query'          => false,
+			'moderation_query'    => true,
 		);
 
 		$r = bp_parse_args( $args, $defaults );
@@ -171,19 +173,20 @@ class BP_Document_Template {
 
 			$this->documents = bp_document_get_specific(
 				array(
-					'document_ids'   => ( ! is_array( $include ) ? explode( ',', $include ) : $include ),
-					'max'            => $max,
-					'count_total'    => $count_total,
-					'page'           => $this->pag_page,
-					'per_page'       => $this->pag_num,
-					'sort'           => $sort,
-					'order_by'       => $order_by,
-					'user_id'        => $user_id,
-					'folder_id'      => $folder_id,
-					'folder'         => $folder,
-					'user_directory' => $user_directory,
-					'meta_query'     => $meta_query,
-					'privacy'        => $privacy,
+					'document_ids'     => ( ! is_array( $include ) ? explode( ',', $include ) : $include ),
+					'max'              => $max,
+					'count_total'      => $count_total,
+					'page'             => $this->pag_page,
+					'per_page'         => $this->pag_num,
+					'sort'             => $sort,
+					'order_by'         => $order_by,
+					'user_id'          => $user_id,
+					'folder_id'        => $folder_id,
+					'folder'           => $folder,
+					'user_directory'   => $user_directory,
+					'meta_query'       => $meta_query,
+					'privacy'          => $privacy,
+					'moderation_query' => $moderation_query,
 				)
 			);
 
@@ -207,7 +210,7 @@ class BP_Document_Template {
 					'folder'              => $folder,
 					'user_directory'      => $user_directory,
 					'meta_query_document' => $meta_query_document,
-					'meta_query_folder'   => $meta_query_folder
+					'meta_query_folder'   => $meta_query_folder,
 				)
 			);
 		}
