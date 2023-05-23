@@ -156,7 +156,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			) ||
 			(
 				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
-				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches )
+				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches ) &&
+				empty( $_REQUEST['scope'] ) &&
+				empty( $_REQUEST['show-all'] )
 			)
 		) {
 			$blocked_user_query = false;
