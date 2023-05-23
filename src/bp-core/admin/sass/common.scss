@@ -3840,7 +3840,7 @@ table.moderations .column-member {
 			}
 		}
 
-		input[type="text"] + .bb-hide-pw .bb-icon::before {
+		.bb-hide-pw.bb-show-pass .bb-icon::before {
 			content: "\ee6a";
 		}
 	}

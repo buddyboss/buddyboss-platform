@@ -3534,6 +3534,6 @@ table.moderations .column-member img {
   line-height: 1;
 }
 
-.bp-admin-card .password-toggle input[type="text"] + .bb-hide-pw .bb-icon::before {
+.bp-admin-card .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
   content: "\ee6a";
 }
