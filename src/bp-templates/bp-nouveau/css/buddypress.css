@@ -20838,6 +20838,12 @@ div.dropzone .dz-preview .dz-filename {
   display: none;
 }
 
+.search-document-list .media-folder_items .media-folder_details__bottom .bp-tooltip,
+#media-folder-document-data-table .media-folder_items .media-folder_details__bottom .bp-tooltip {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .search-document-list .media-folder_items .media-folder_actions,
 #media-folder-document-data-table .media-folder_items .media-folder_actions {
   display: -webkit-box;
@@ -21288,6 +21294,13 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
   letter-spacing: -0.15px;
   line-height: 1.1875;
   width: auto;
+}
+
+.search-video-list .media-album_group .bp-tooltip,
+.search-video-list .media-album_visibility .bp-tooltip,
+.search-media-list .media-album_group .bp-tooltip,
+.search-media-list .media-album_visibility .bp-tooltip {
+  display: inline-block;
 }
 
 .search-video-list .media-album_group_name a,
