@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.3.4\n"
+"Project-Id-Version: BuddyBoss Platform 2.3.41\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-05-17 09:19:36+00:00\n"
+"POT-Creation-Date: 2023-05-22 10:02:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1831,13 +1831,13 @@ msgid "A new post by someone a member is following"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:588
-#: bp-core/bp-core-update.php:2150
+#: bp-core/bp-core-update.php:2154
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}}."
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:590
-#: bp-core/bp-core-update.php:2152
+#: bp-core/bp-core-update.php:2156
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n"
@@ -1846,7 +1846,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:592
-#: bp-core/bp-core-update.php:2154
+#: bp-core/bp-core-update.php:2158
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} posted {{activity.type}}:\n"
@@ -1857,7 +1857,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:593
-#: bp-core/bp-core-update.php:2185
+#: bp-core/bp-core-update.php:2189
 msgid "New activity post by someone a member is following"
 msgstr ""
 
@@ -1971,13 +1971,13 @@ msgid "A member is followed by someone"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:843
-#: bp-core/bp-core-update.php:2228
+#: bp-core/bp-core-update.php:2232
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{follower.name}} started following you"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:845
-#: bp-core/bp-core-update.php:2230
+#: bp-core/bp-core-update.php:2234
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n"
@@ -1986,7 +1986,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:847
-#: bp-core/bp-core-update.php:2232
+#: bp-core/bp-core-update.php:2236
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{follower.name}} started following you.\n"
@@ -1995,7 +1995,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:848
-#: bp-core/bp-core-update.php:2263
+#: bp-core/bp-core-update.php:2267
 msgid "A member receives a new follower"
 msgstr ""
 
@@ -2863,7 +2863,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-component.php:282
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:119
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:187
-#: bp-core/bp-core-functions.php:788 bp-core/bp-core-update.php:957
+#: bp-core/bp-core-functions.php:788 bp-core/bp-core-update.php:961
 msgid "Sites"
 msgstr ""
 
@@ -4819,7 +4819,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:129
 #: bp-core/admin/settings/bp-admin-setting-groups.php:232
 #: bp-core/bp-core-functions.php:789 bp-core/bp-core-template.php:561
-#: bp-core/bp-core-update.php:959 bp-core/classes/class-bp-email-tokens.php:442
+#: bp-core/bp-core-update.php:963 bp-core/classes/class-bp-email-tokens.php:442
 #: bp-forums/admin/topics.php:679 bp-groups/bp-groups-admin.php:1444
 #: bp-groups/bp-groups-admin.php:2101 bp-groups/bp-groups-functions.php:4304
 #: bp-groups/bp-groups-functions.php:4323
@@ -4880,7 +4880,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:120
 #: bp-core/admin/settings/bp-admin-setting-groups.php:24
 #: bp-core/bp-core-functions.php:787 bp-core/bp-core-template.php:565
-#: bp-core/bp-core-update.php:958
+#: bp-core/bp-core-update.php:962
 #: bp-core/compatibility/bp-rankmath-plugin-helpers.php:38
 #: bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:37
@@ -5091,7 +5091,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1672 bp-forums/admin/tools.php:1674
 #: bp-forums/admin/tools.php:1746 bp-forums/admin/tools.php:1748
 #: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1838
-#: bp-members/bp-members-filters.php:891 bp-video/bp-video-filters.php:1020
+#: bp-members/bp-members-filters.php:869 bp-video/bp-video-filters.php:1020
 msgid "Complete!"
 msgstr ""
 
@@ -7558,7 +7558,7 @@ msgstr ""
 msgid "Activate a new account and site"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3993 bp-core/bp-core-update.php:1853
+#: bp-core/bp-core-functions.php:3993 bp-core/bp-core-update.php:1857
 msgid "A member is mentioned in an activity post"
 msgstr ""
 
@@ -7566,7 +7566,7 @@ msgstr ""
 msgid "You will no longer receive emails when someone mentions you in an update."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4001 bp-core/bp-core-update.php:1854
+#: bp-core/bp-core-functions.php:4001 bp-core/bp-core-update.php:1858
 msgid "A member is mentioned in a group activity post"
 msgstr ""
 
@@ -7899,45 +7899,45 @@ msgstr ""
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:956
+#: bp-core/bp-core-update.php:960
 msgid "Site-Wide Activity"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1327
+#: bp-core/bp-core-update.php:1331
 #: bp-templates/bp-nouveau/includes/video/functions.php:312
 msgid "MP4"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1335
+#: bp-core/bp-core-update.php:1339
 #: bp-templates/bp-nouveau/includes/video/functions.php:320
 msgid "WebM"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1343
+#: bp-core/bp-core-update.php:1347
 #: bp-templates/bp-nouveau/includes/video/functions.php:328
 msgid "Ogg"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1351
+#: bp-core/bp-core-update.php:1355
 #: bp-templates/bp-nouveau/includes/video/functions.php:336
 msgid "Quicktime"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1855
+#: bp-core/bp-core-update.php:1859
 msgid "A Zoom meeting is scheduled in a group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1856
+#: bp-core/bp-core-update.php:1860
 msgid "A Zoom webinar is scheduled in a group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2392
+#: bp-core/bp-core-update.php:2396
 #: bp-groups/classes/class-bp-groups-notification.php:793
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2394
+#: bp-core/bp-core-update.php:2398
 #: bp-groups/classes/class-bp-groups-notification.php:795
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -7947,7 +7947,7 @@ msgid ""
 "{{{activity.content}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2396
+#: bp-core/bp-core-update.php:2400
 #: bp-groups/classes/class-bp-groups-notification.php:797
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -7958,18 +7958,18 @@ msgid ""
 "View the post: {{{activity.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2400
+#: bp-core/bp-core-update.php:2404
 #: bp-groups/classes/class-bp-groups-notification.php:798
 msgid "New activity post in a group a member is subscribed to"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2404
+#: bp-core/bp-core-update.php:2408
 #: bp-groups/classes/class-bp-groups-notification.php:836
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] New discussion in {{group.name}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2406
+#: bp-core/bp-core-update.php:2410
 #: bp-groups/classes/class-bp-groups-notification.php:838
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -7979,7 +7979,7 @@ msgid ""
 "{{{discussion.content}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2408
+#: bp-core/bp-core-update.php:2412
 #: bp-groups/classes/class-bp-groups-notification.php:840
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
@@ -7991,7 +7991,7 @@ msgid ""
 "Discussion Link: {{discussion.url}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2412
+#: bp-core/bp-core-update.php:2416
 #: bp-groups/classes/class-bp-groups-notification.php:841
 msgid "New forum discussion in a group a member is subscribed to"
 msgstr ""
@@ -22965,14 +22965,14 @@ msgstr ""
 msgid "Repair member profile links"
 msgstr ""
 
-#: bp-members/bp-members-filters.php:872
+#: bp-members/bp-members-filters.php:853
 #. translators: total user
 msgid "%d user unique identifier generated successfully"
 msgid_plural "%d users unique identifier generated successfully"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-members/bp-members-filters.php:886
+#: bp-members/bp-members-filters.php:864
 #. translators: Status of current action.
 msgid "Profile unique identifier generated for all users; %s"
 msgstr ""
@@ -32861,7 +32861,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:913
+#: class-buddypress.php:914
 msgid "BuddyPress Nouveau"
 msgstr ""
 
