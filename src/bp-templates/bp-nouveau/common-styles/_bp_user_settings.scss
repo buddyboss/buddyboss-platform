@@ -4,9 +4,8 @@
 // 1. Settings Global
 // 1. General (email/password change)
 // 2. notifications
-// 3. Profile visibility
-// 4. group Invites
-// 5. Notification Subscription
+// 3. Notification Subscription
+// 4. Settings
 
 // Settings Global
 
@@ -654,11 +653,41 @@
 
 /*__ Notification Subscription __*/
 
+/*__ Settings __*/
 
-// Profile visibility
+#buddypress .password-toggle {
 
-/*__ Profile visibility __*/
+	position: relative;
+	display: inline-block;
+	width: 100%;
 
-// Group Invites
+	> input {
+		padding-right: 30px !important;
+		width: 100% !important;
+	}
 
-/*__ Group Invites __*/
+	.bb-hide-pw {
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 100%;
+		width: 30px;
+		border: 0;
+		padding: 0;
+		background: none !important;
+		box-shadow: none;
+
+		.bb-icon {
+			font-size: 16px;
+			line-height: 1;
+			color: $dark-grey;
+			font-weight: 400;
+		}
+	}
+
+	.bb-hide-pw.bb-show-pass .bb-icon::before {
+		content: "\ee6a";
+	}
+}
+
+/*__ Settings __*/
