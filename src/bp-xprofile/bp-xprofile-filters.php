@@ -238,20 +238,26 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 
 		if ( 'socialnetworks' === $field_type ) {
 			$social_tags = array(
-				'div'  => array(
+				'div'    => array(
+					'class' => 1,
+					'id'    => 1,
+				),
+				'span'   => array(
 					'class' => 1,
 				),
-				'span' => array(
+				'i'      => array(
 					'class' => 1,
 				),
-				'p'    => array(),
-				'i'    => array(
-					'class' => 1,
-				),
-				'a'    => array(
+				'a'      => array(
 					'href'   => 1,
 					'target' => 1,
 					'data-*' => 1,
+					'class'  => 1,
+				),
+				'p'      => array(),
+				'h4'     => array(),
+				'header' => array(
+					'class' => 1,
 				),
 			);
 
@@ -459,7 +465,7 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
 			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
 		}
 
-		$value = xprofile_filter_kses( $value, $data_obj );
+		$value = xprofile_filter_kses( $value, $data_obj, $field_id );
 	} elseif ( 'socialnetworks' === $field_type ) {
 		$data_obj = null;
 		if ( bp_is_user() ) {

@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.1.1
+Tested up to: 6.2.1
 Requires PHP: 5.6.20
-Stable tag: 2.3.1.1
+Stable tag: 2.3.41
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,67 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.41 =
+* Profiles - Improved members profile link by reducing the length auto-generated unique identifier
+
+= 2.3.4 =
+* Profiles - Resolved formatting issues with paragraph type fields in profile fields
+* Groups - Handled incorrect group count issue on the directory screen when the sub-groups option is enabled
+* Forums - Enhanced performance of forum discussion favorites by restructuring their data
+* Forums - Resolved performance issues with discussions having a large number of replies through efficient pagination
+* Forums - Fixed a database error that occurred when updating a forum reply with attached media
+* Forums - Introduced a new parameter for the [bbp-reply-form] shortcode to pass the discussion ID
+* Forums - Fixed the issue where an auto-generated discussion would have preceding empty space
+* Activity - Fixed the problem with the discard draft option in the activity form
+* Activity - Handled the issue with auto-generated activity for comments links on custom post types not being clickable
+* Activity - Addressed the formatting issue where highlighted text did not maintain proper formatting when a link was applied
+* Media - Addressed the issue where the 'move photos' option was not functioning as expected
+* Media - Provided hooks to modify privacy options for media files
+* Registration - Enhanced invite flow to prevent multiple registrations using the same email invite
+* Core - Updated performance API MU plugin file name for improved consistency
+* Core - Improved code to load templates with block themes
+* REST API - Resolved the problem where the profile avatar was not returning in the notification endpoint
+* REST API - Fixed the issue where the group privacy option was being removed when updated using the group settings endpoint
+
+= 2.3.3 =
+* Profiles - Resolved critical issue of duplicate unique identifiers
+* Profiles - Handled 'Social Network' field with multiple types shows random modal issue when redirected to the profile
+* Notifications - Handled small notification read/unread issue when newly registered members login for the first time
+* Forums - Handled forum discussion uploaded text file preview issue
+* Forums - Handled forum discussion and reply tags suggestions dropdown layout issue
+* Forums - Handled create discussion and reply formatting issues when an option is disabled from the settings
+* Forums - Handled broken layout on the single forum reply screen
+* Activity - Handled activity comment form, post button disabled issue when specific steps followed
+* Messages - Handled message screen and dropdown 'sent a video' label inconsistency
+* Emails - Resolved UI issue in group and blog post emails when view group/post button labels were translated to non-English languages
+* Core - Improved the search form across the network by adding an option to clear the search field
+* Core - Provided hooks to update activities pagination and number of entries to process in the background process
+* Core - Handled messages and notification dropdown specific performance issues by refactoring code
+* REST API - Handled profile fields endpoint returns HTML entity name for special characters
+* REST API - Handled group settings endpoint permission issue for the group organizer
+
+= 2.3.2 =
+* Profiles - Handled non-selectable profile types not showing issue in Edit Profile even when configured from the admin dashboard
+* Profiles - Handled profile types field validation issue for administrator and editor role members
+* Profiles - Small improvement for the 'add user' action in the admin dashboard by assigning a selected role instead of the default profile type role configured
+* Profiles - Handled small performance issue for member search action with the help of cache
+* Groups - Handled delete activity post permission issue in the social group for the group organizer
+* Forums - Handled forums search not working issue when search by 'discussion tag' option enabled in network search
+* Forums - Handled quick reply form formatting option not working issue on forum discussion auto-generated activity
+* Activity - Handled empty markup getting added issue when editing activity post with @mention
+* Media - Small improvements to media link by removing trailing slash when symlink is disabled
+* Media - Handled uploaded video default thumbnail issue in Safari browser
+* Messages - Handled error notice on messages screen when visiting triggered push notification
+* Emails - Handled email template layout issue for the iOS email app
+* Moderation - Handled newly registered member display name shows as 'Unknown Member' when moderation component is enabled
+* Network Search - Handled network search page results content showing shortcode issue
+* Registration - Handled register page validation issue when paragraph and profile type fields were added together
+* Login - Handled small typo issue when only the 'Terms of Service' page is configured
+* Core - Small performance and security improvement by updating a bunch of JS libraries
+
+= 2.3.1.2 =
+* Forums - Handled forum discussion and reply form disabled post button cache issue
 
 = 2.3.1.1 =
 * Profiles - Small icon fix for 'Profile Links' option in the dashboard

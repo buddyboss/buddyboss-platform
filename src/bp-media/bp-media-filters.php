@@ -717,7 +717,11 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 
 		// save media meta for activity.
 		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
-			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+			if ( ! empty( $media_ids ) ) {
+				bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+			} else {
+				bp_activity_delete_meta( $main_activity_id, 'bp_media_ids' );
+			}
 		}
 
 		// delete medias which were not saved or removed from form.
@@ -2740,3 +2744,24 @@ function bb_setup_attachment_media_preview_template( $template ) {
 
 	return $template;
 }
+
+
+/**
+ * Enable media preview without trailing slash.
+ *
+ * @since BuddyBoss 2.3.2
+ *
+ * @param string $redirect_url URL to render.
+ *
+ * @return mixed|string
+ */
+function bb_media_remove_specific_trailing_slash( $redirect_url ) {
+	if (
+		strpos( $redirect_url, 'bb-attachment-media-preview' ) !== false ||
+		strpos( $redirect_url, 'bb-media-preview' ) !== false
+	) {
+		$redirect_url = untrailingslashit( $redirect_url );
+	}
+	return $redirect_url;
+}
+add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 9999 );

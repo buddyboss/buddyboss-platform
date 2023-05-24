@@ -2163,10 +2163,16 @@ window.bp = window.bp || {};
 							response.data.uuid       = file.upload.uuid;
 							response.data.group_id   = ! _.isUndefined( BP_Nouveau.video ) && ! _.isUndefined( BP_Nouveau.video.group_id ) ? BP_Nouveau.video.group_id : false;
 							response.data.saved      = false;
-							response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
-							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-							self.video.push( response.data );
-							self.model.set( 'video', self.video );
+
+							var thumbnailCheck = setInterval( function () {
+								if( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+									response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+									response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+									self.video.push( response.data );
+									self.model.set( 'video', self.video );
+									clearInterval( thumbnailCheck );
+								}
+							});
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -4927,6 +4933,8 @@ window.bp = window.bp || {};
 					// Display draft activity.
 					bp.Nouveau.Activity.postForm.displayDraftActivity();
 				}
+
+				$('a.bp-suggestions-mention:empty').remove();
 			},
 
 			activityHideModalEvent: function () {
@@ -5594,6 +5602,8 @@ window.bp = window.bp || {};
 				var whats_new_form = $( '#whats-new-form' );
 
 				whats_new_form.find( '#public.bp-activity-privacy__input' ).prop( 'checked', true );
+				whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object__radio' ).prop( 'checked', false ).removeAttr( 'checked' );
+				whats_new_form.find( '#bp-activity-group-ac-items .bb-radio-style.selected' ).removeClass( 'selected' );
 
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				$( '#show-toolbar-button' ).removeClass( 'active' );
