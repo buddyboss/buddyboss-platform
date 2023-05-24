@@ -868,7 +868,7 @@ function bp_media_settings_callback_gif_key() {
 	?>
 	<div class="password-toggle">
 		<input type="password" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo esc_attr( bp_media_get_gif_api_key() ); ?>" placeholder="<?php esc_html_e( 'GIPHY API Key', 'buddyboss' ); ?>" <?php echo ! empty( bp_media_get_gif_api_key() ) ? 'readonly' : ''; ?> />
-		<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js">
+		<button type="button" class="button button-secondary bb-hide-pw hide-if-no-js" aria-label="<?php esc_attr_e( 'Toggle ', 'buddyboss' ); ?>">
 			<span class="bb-icon bb-icon-eye-small" aria-hidden="true"></span>
 		</button>
 	</div>
