@@ -252,7 +252,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#forums-document-button', this.openForumsDocumentUploader.bind( this ) );
 			$( document ).on( 'click', '#forums-video-button', this.openForumsVideoUploader.bind( this ) );
 			$( document ).on( 'click', '#forums-gif-button', this.toggleGifSelector.bind( this ) );
-			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'keyup', '.search-query-input', this.searchGif.bind( this ) );
+			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'keydown', '.search-query-input', this.searchGif.bind( this ) );
 			$( document ).on( 'click', '.bbpress-forums-activity #whats-new-toolbar .found-media-item', this.selectGif.bind( this ) );
 			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			$( document ).find( 'form #whats-new-toolbar .gif-search-results, .forum form #whats-new-toolbar .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
@@ -1739,15 +1739,16 @@ window.bp = window.bp || {};
 		},
 
 		searchGif: function ( e ) {
+			// Prevent search dropdown from closing with enter key
+			if ( e.key === 'Enter' || e.keyCode === 13 ) {
+				e.preventDefault();
+				return false;
+			}
+
 			var self = this;
 
 			if ( self.gif_timeout != null ) {
 				clearTimeout( this.gif_timeout );
-			}
-
-			if ( '' === e.target.value ) {
-				this.toggleGifSelector( e );
-				return;
 			}
 
 			self.gif_timeout = setTimeout(
