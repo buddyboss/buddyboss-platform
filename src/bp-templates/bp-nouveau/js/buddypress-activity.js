@@ -130,15 +130,15 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
-			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( document ).on( 'click', '#bb-media-model-container .activity-list .activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
 
 			// forums.
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
+			$( document ).on( 'click', '#buddypress .activity-list .ac-reply-media-button, #buddypress [data-bp-list="activity"] .ac-reply-media-button, #bb-media-model-container .activity-list .ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( document ).on( 'click', '#buddypress .activity-list .ac-reply-document-button, #buddypress [data-bp-list="activity"] .ac-reply-document-button, #bb-media-model-container .activity-list .ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
+			$( document ).on( 'click', '#buddypress .activity-list .ac-reply-video-button, #buddypress [data-bp-list="activity"] .ac-reply-video-button, #bb-media-model-container .activity-list .ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
+			$( document ).on( 'click', '#buddypress .activity-list .ac-reply-gif-button, #buddypress [data-bp-list="activity"] .ac-reply-gif-button, #bb-media-model-container .activity-list .ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
 			//Activity More Option Dropdown
 			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
@@ -461,7 +461,7 @@ window.bp = window.bp || {};
 					comment_items.each(
 						function( i, item ) {
 							if ( i < comment_items.length - 4 ) {
-								
+
 								// Prepend a link to display all.
 								if ( ! i ) {
 									$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
@@ -1134,7 +1134,7 @@ window.bp = window.bp || {};
 					);
 				}
 			}
-			
+
 			if ( target.hasClass( 'activity-state-no-comments' ) ) {
 				// Stop event propagation.
 				event.preventDefault();
@@ -1260,7 +1260,7 @@ window.bp = window.bp || {};
 											activity_comments.append( '<ul></ul>' );
 										}
 									}
-									
+
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 									$( form ).find( '.ac-input' ).first().html( '' );
 
