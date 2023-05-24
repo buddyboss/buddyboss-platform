@@ -433,6 +433,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20111 ) {
 			bb_update_to_2_3_5();
 		}
+
+		if ( $raw_db_version < 20211 ) {
+			bb_update_to_2_3_5_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2757,7 +2761,7 @@ function bb_update_to_2_3_4() {
  *
  * @return void
  */
-function bb_update_to_2_3_5() {
+function bb_update_to_2_3_5_0() {
 	global $wpdb;
 
 	$tables = array(
