@@ -21707,10 +21707,6 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   text-align: center;
 }
 
-#bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .bp-dir-search-form {
-  border: 0;
-}
-
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .bp-dir-search-form .nouveau-search-submit {
   opacity: 0;
 }
