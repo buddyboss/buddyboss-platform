@@ -2710,13 +2710,107 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
  * Install email template for activity following post.
  * Updated buddyboss mu file.
  * Migration to add index and new column to media tables.
+ * Updated buddyboss mu file.
  *
  * @since BuddyBoss 2.3.4
  *
  * @return void
  */
 function bb_update_to_2_3_4() {
+	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
+
+		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		}
+
+		$wp_files_system = new \WP_Filesystem_Direct( array() );
+		$wp_files_system->delete( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', false, 'f' );
+	}
+
+	$is_already_run = get_transient( 'bb_migrate_favorites' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
+	// Migrate the topic favorites.
+	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
+		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
+	}
+
+	wp_cache_flush();
+}
+
+/**
+ * Background job to update user profile slug.
+ *
+ * @since BuddyBoss 2.3.41
+ *
+ * @return void
+ */
+function bb_update_to_2_3_5() {
+	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_3_4', 'yes', DAY_IN_SECONDS );
+
+	bb_core_update_repair_member_slug();
+}
+
+/**
+ * Update the member slugs.
+ *
+ * @since BuddyBoss 2.3.41
+ */
+function bb_core_update_repair_member_slug() {
+	global $wpdb, $bp_background_updater;
+
+	$user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
+			'bb_profile_slug',
+			40
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( array_chunk( $user_ids, 50 ) as $chunk ) {
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_set_bulk_user_profile_slug',
+					'args'     => array( $chunk ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->schedule_event();
+	}
+}
+
+/**
+ * Migration to add index and new column to media tables.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_5_0() {
 	global $wpdb;
+
+	// Clear cache.
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 
 	$tables = array(
 		$wpdb->prefix . 'bp_media'    => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'type', 'menu_order', 'date_created' ),
@@ -2738,36 +2832,6 @@ function bb_update_to_2_3_4() {
 
 	// Update older data.
 	bb_create_background_message_media_document_update( $table_exists );
-
-	$is_already_run = get_transient( 'bb_migrate_favorites' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
-	// Migrate the topic favorites.
-	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
-		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
-	}
-
-	wp_cache_flush();
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
-
-	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
-
-		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
-		}
-
-		$wp_files_system = new \WP_Filesystem_Direct( array() );
-		$wp_files_system->delete( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', false, 'f' );
-	}
 
 	$defaults = array(
 		'post_status' => 'publish',
@@ -2815,7 +2879,6 @@ function bb_update_to_2_3_4() {
 			)
 		);
 	}
-
 }
 
 /**
@@ -2841,8 +2904,8 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
-				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !=''
+				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN 
+				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !='' 
 				ORDER BY message_id LIMIT %d offset %d",
 				$per_page,
 				$offset
@@ -2920,79 +2983,4 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	// Call recursive to finish update for all records.
 	$paged++;
 	bb_create_background_message_media_document_update( $table_exists, $paged );
-}
-
-/**
- * Background job to update user profile slug.
- *
- * @since BuddyBoss 2.3.41
- *
- * @return void
- */
-function bb_update_to_2_3_5() {
-	// Clear cache.
-	wp_cache_flush();
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
-
-	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_update_to_2_3_4', 'yes', DAY_IN_SECONDS );
-
-	bb_core_update_repair_member_slug();
-}
-
-/**
- * Update the member slugs.
- *
- * @since BuddyBoss 2.3.41
- */
-function bb_core_update_repair_member_slug() {
-	global $wpdb, $bp_background_updater;
-
-	$user_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT u.ID FROM `{$wpdb->prefix}users` AS u LEFT JOIN `{$wpdb->prefix}usermeta` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID",
-			'bb_profile_slug',
-			40
-		)
-	);
-
-	if ( empty( $user_ids ) ) {
-		return;
-	}
-
-	foreach ( array_chunk( $user_ids, 50 ) as $chunk ) {
-		$bp_background_updater->data(
-			array(
-				array(
-					'callback' => 'bb_set_bulk_user_profile_slug',
-					'args'     => array( $chunk ),
-				),
-			)
-		);
-
-		$bp_background_updater->save()->schedule_event();
-	}
-}
-
-/**
- * Function to clear cache while plugin update.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_update_to_2_3_5_0() {
-	// Clear cache.
-	wp_cache_flush();
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		// Clear API cache.
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
 }
