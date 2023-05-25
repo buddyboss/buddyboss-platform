@@ -11848,13 +11848,13 @@ body .bp-messages-user-threads {
 }
 
 #buddypress .password-toggle > input {
-  padding-left: 30px !important;
+  padding-left: 35px !important;
   width: 100% !important;
 }
 
 #buddypress .password-toggle .bb-hide-pw {
   position: absolute;
-  left: 0;
+  left: 5px;
   top: 0;
   height: 100%;
   width: 30px;
