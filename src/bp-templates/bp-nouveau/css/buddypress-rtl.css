@@ -11865,6 +11865,7 @@ body .password-toggle .bb-hide-pw {
   padding: 0;
   background: none !important;
   box-shadow: none;
+  cursor: pointer;
 }
 
 #buddypress .password-toggle .bb-hide-pw .bb-icon,
