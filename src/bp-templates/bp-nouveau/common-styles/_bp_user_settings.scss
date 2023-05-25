@@ -655,38 +655,41 @@
 
 /*__ Settings __*/
 
-#buddypress .password-toggle {
+.password-toggle {
 
-	position: relative;
-	display: inline-block;
-	width: 100%;
+	#buddypress &,
+	body & {
+		position: relative;
+		display: inline-block;
+		width: 100%;
 
-	> input {
-		padding-right: 35px !important;
-		width: 100% !important;
-	}
-
-	.bb-hide-pw {
-		position: absolute;
-		right: 5px;
-		top: 0;
-		height: 100%;
-		width: 30px;
-		border: 0;
-		padding: 0;
-		background: none !important;
-		box-shadow: none;
-
-		.bb-icon {
-			font-size: 16px;
-			line-height: 1;
-			color: $dark-grey;
-			font-weight: 400;
+		> input {
+			padding-right: 35px !important;
+			width: 100% !important;
 		}
-	}
 
-	.bb-hide-pw.bb-show-pass .bb-icon::before {
-		content: "\ee6a";
+		.bb-hide-pw {
+			position: absolute;
+			right: 5px;
+			top: 0;
+			height: 100%;
+			width: 30px;
+			border: 0;
+			padding: 0;
+			background: none !important;
+			box-shadow: none;
+
+			.bb-icon {
+				font-size: 16px;
+				line-height: 1;
+				color: $dark-grey;
+				font-weight: 400;
+			}
+		}
+
+		.bb-hide-pw.bb-show-pass .bb-icon::before {
+			content: "\ee6a";
+		}
 	}
 }
 

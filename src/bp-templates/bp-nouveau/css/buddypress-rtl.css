@@ -11841,18 +11841,21 @@ body .bp-messages-user-threads {
 
 /*__ Notification Subscription __*/
 /*__ Settings __*/
-#buddypress .password-toggle {
+#buddypress .password-toggle,
+body .password-toggle {
   position: relative;
   display: inline-block;
   width: 100%;
 }
 
-#buddypress .password-toggle > input {
+#buddypress .password-toggle > input,
+body .password-toggle > input {
   padding-left: 35px !important;
   width: 100% !important;
 }
 
-#buddypress .password-toggle .bb-hide-pw {
+#buddypress .password-toggle .bb-hide-pw,
+body .password-toggle .bb-hide-pw {
   position: absolute;
   left: 5px;
   top: 0;
@@ -11864,14 +11867,16 @@ body .bp-messages-user-threads {
   box-shadow: none;
 }
 
-#buddypress .password-toggle .bb-hide-pw .bb-icon {
+#buddypress .password-toggle .bb-hide-pw .bb-icon,
+body .password-toggle .bb-hide-pw .bb-icon {
   font-size: 16px;
   line-height: 1;
   color: #555;
   font-weight: 400;
 }
 
-#buddypress .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
+#buddypress .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before,
+body .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
   content: "\ee6a";
 }
 
