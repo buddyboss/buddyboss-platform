@@ -129,6 +129,7 @@ jQuery( document ).ready(
 			jQuery( 'medium-editor-action' ).removeClass( 'medium-editor-button-active' );
 			jQuery( '.medium-editor-toolbar-actions' ).show();
 			jQuery( '.medium-editor-toolbar-form' ).removeClass( 'medium-editor-toolbar-form-active' );
+			jQuery( '#whats-new-attachments .bb-url-scrapper-container' ).remove();
 		} );
 
 		var topicReplyButton = jQuery( 'body .bbp-topic-reply-link' );

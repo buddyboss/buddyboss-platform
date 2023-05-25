@@ -263,6 +263,18 @@ class BP_Embed extends WP_Embed {
 		$is_activity = isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type );
 		$link_embed  = false;
 
+		// Check the type of activity and return if not a bbPress activity.
+		if (
+			! empty( $type ) &&
+			is_object( $type ) &&
+			! empty( $type->component ) &&
+			'bbpress' === $type->component &&
+			! empty( $type->type ) &&
+			in_array( $type->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true )
+		) {
+			return $content;
+		}
+
 		if ( $is_activity ) {
 
 			if ( ! empty( $content ) && false !== strpos( '<iframe', $content ) ) {
@@ -289,7 +301,7 @@ class BP_Embed extends WP_Embed {
 							'error'       => '',
 							'wp_embed'    => true,
 						);
-						$cache_key       = 'bp_activity_oembed_' . md5( maybe_serialize( $link_embed ) );
+						$cache_key       = 'bb_oembed_' . md5( maybe_serialize( $link_embed ) );
 						// set the transient.
 						set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
 					}

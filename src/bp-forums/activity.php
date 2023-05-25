@@ -401,6 +401,19 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
 			$reply_to_text   = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss' ) ) : '';
 
+			// Check if link embed or link preview and append the content accordingly.
+			$post_id    = ( ! empty( $topic->ID ) && bbp_is_reply( $topic->ID ) ) ? $topic->ID : $topic_id;
+			$link_embed = get_post_meta( $post_id, '_link_embed', true );
+			if ( ! empty( $link_embed ) ) {
+				if ( bbp_is_reply( $post_id ) ) {
+					$content = bbp_reply_content_autoembed_paragraph( $content, $post_id );
+				} else { 
+					$content = bbp_topic_content_autoembed_paragraph( $content, $post_id );
+				}
+			} else {
+				$content = bb_forums_link_preview( $content, $post_id );
+			}
+
 			if ( ! empty( $reply_to_text ) && ! empty( $topic_title ) ) {
 				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
 			} elseif ( empty( $reply_to_text ) && ! empty( $topic_title ) ) {
