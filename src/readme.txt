@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.3.42 =
+* Registration - Resolved invited users can't register issue when registration option is disabled for non-members
+
 = 2.3.41 =
 * Profiles - Improved members profile link by reducing the length auto-generated unique identifier
 
