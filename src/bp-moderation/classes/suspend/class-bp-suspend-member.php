@@ -73,6 +73,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 
+		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
+		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
 	}
 
 	/**
@@ -523,7 +525,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
-		if ( bp_moderation_is_user_suspended( $user_id ) ) {
+
+		if (
+			bp_moderation_is_user_suspended( $user_id ) &&
+			false === $this->bb_activity_allow_group_single( $user_id ) &&
+			! ( bp_is_single_activity() && wp_doing_ajax() )
+		) {
 			buddypress()->displayed_user->id = 0;
 			bp_do_404();
 
@@ -690,7 +697,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) && bp_moderation_is_user_suspended( $user_id ) ) {
+		if (
+			empty( $username_visible ) &&
+			bp_moderation_is_user_suspended( $user_id ) &&
+			false === $this->bb_activity_allow_group_single( $user_id )
+		) {
 			if ( current_user_can( 'manage_options' ) ) {
 				$edit_link = add_query_arg( array( 'action' => 'edit' ), admin_url( 'user-edit.php?user_id=' . $user_id ) );
 				return $edit_link;
@@ -730,13 +741,19 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return string
 	 */
 	public function get_the_author_name( $value, $user_id ) {
-
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
 			return $value;
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
+			if (
+				current_filter() === 'get_the_author_user_nicename' &&
+				true === $this->bb_activity_allow_group_single( $user_id )
+			) {
+				return $value;
+			}
+
 			return bb_moderation_is_suspended_label( $user_id );
 		}
 
@@ -861,5 +878,104 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Function to allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_before_permalink_redirect_url( $activity ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			remove_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
+
+			remove_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+			remove_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
+		}
+	}
+
+	/**
+	 * Function to dis-allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_after_permalink_redirect_url( $activity ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
+
+			add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+			add_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
+		}
+	}
+
+	/**
+	 * Allow suspended member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id User id.
+	 *
+	 * @return false
+	 */
+	protected function bb_activity_allow_group_single( $user_id ) {
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$current_uri = ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' );
+		$uri         = array_filter( ! empty( $current_uri ) ? explode( '/', $current_uri ) : array() );
+
+		if (
+			! empty( $uri ) &&
+			! empty( $uri[ count( $uri ) - 1 ] ) &&
+			'activity' === $uri[ count( $uri ) - 1 ] &&
+			0 !== (int) end( $uri ) &&
+			bp_is_active( 'activity' ) &&
+			bp_is_active( 'groups' )
+		) {
+
+			$activity = $this->bb_fetch_moderated_activity( (int) end( $uri ) );
+
+			if (
+				! empty( $activity ) &&
+				! empty( $activity->id ) &&
+				! empty( $activity->user_id ) &&
+				(int) $activity->user_id === (int) $user_id &&
+				'groups' === $activity->component
+			) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Fetch Activity for the suspend user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $id Activity id.
+	 *
+	 * @return array|mixed|object|stdClass|null
+	 */
+	private function bb_fetch_moderated_activity( $id ) {
+		global $wpdb, $bp;
+		static $cache = array();
+
+		$key = 'bb_activity_' . $id;
+		if ( isset( $cache[ $key ] ) ) {
+			return $cache[ $key ];
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$activity = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->members->table_name_last_activity} WHERE id = %d", $id ) );
+
+		if ( ! empty( $activity ) ) {
+			$cache[ $key ] = $activity;
+		}
+
+		return $activity;
 	}
 }
