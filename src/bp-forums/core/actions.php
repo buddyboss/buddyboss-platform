@@ -82,6 +82,7 @@ add_action( 'bbp_init', 'bbp_register', 0 );
 add_action( 'bbp_init', 'bbp_add_rewrite_tags', 20 );
 add_action( 'bbp_init', 'bbp_add_rewrite_rules', 30 );
 add_action( 'bbp_init', 'bbp_add_permastructs', 40 );
+add_action( 'bbp_init', 'bbp_setup_engagements', 50  );
 add_action( 'bbp_init', 'bbp_ready', 999 );
 
 /**
@@ -214,9 +215,7 @@ add_action( 'bbp_trash_topic', 'bbp_remove_topic_from_all_favorites' );
 add_action( 'bbp_delete_topic', 'bbp_remove_topic_from_all_favorites' );
 
 // Subscriptions.
-add_action( 'bbp_trash_topic', 'bbp_remove_topic_from_all_subscriptions' );
 add_action( 'bbp_delete_topic', 'bbp_remove_topic_from_all_subscriptions' );
-add_action( 'bbp_trash_forum', 'bbp_remove_forum_from_all_subscriptions' );
 add_action( 'bbp_delete_forum', 'bbp_remove_forum_from_all_subscriptions' );
 add_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 9999, 5 );
 add_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );
@@ -332,7 +331,7 @@ function forums_notification_settings() {
 	}
 
 	// Bail out if legacy method not enabled.
-	if ( false === bb_enabled_legacy_email_preference() ) {
+	if ( false === bb_enabled_legacy_email_preference() || ! bbp_is_subscriptions_active() ) {
 		return;
 	}
 
@@ -566,6 +565,9 @@ function bb_post_topic_reply_draft() {
  * @since BuddyBoss 2.2.1
  */
 function bb_forum_add_content_popup() {
+	if ( ! bbp_is_single_forum() ) {
+		return;
+	}
 	?>
 	<!-- Forum description popup -->
 	<div class="bb-action-popup" id="single-forum-description-popup" style="display: none">

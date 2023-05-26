@@ -279,7 +279,7 @@ class BP_User_Query {
 				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
 				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
 
-				$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_time_span() );
+				$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
 
 				/**
 				 * Filters the threshold for activity timestamp minutes since to indicate online status.

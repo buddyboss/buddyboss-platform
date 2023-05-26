@@ -2619,18 +2619,19 @@ function bbp_get_breadcrumb( $args = array() ) {
 function bbp_allowed_tags() {
 	echo bbp_get_allowed_tags();
 }
-	/**
-	 * Display all of the allowed tags in HTML format with attributes.
-	 *
-	 * This is useful for displaying in the post area, which elements and
-	 * attributes are supported. As well as any plugins which want to display it.
-	 *
-	 * @since bbPress (r2780)
-	 *
-	 * @uses bbp_kses_allowed_tags() To get the allowed tags
-	 * @uses apply_filters() Calls 'bbp_allowed_tags' with the tags
-	 * @return string HTML allowed tags entity encoded.
-	 */
+
+/**
+ * Display all of the allowed tags in HTML format with attributes.
+ *
+ * This is useful for displaying in the post area, which elements and
+ * attributes are supported. As well as any plugins which want to display it.
+ *
+ * @since bbPress (r2780)
+ *
+ * @uses bbp_kses_allowed_tags() To get the allowed tags
+ * @uses apply_filters() Calls 'bbp_allowed_tags' with the tags
+ * @return string HTML allowed tags entity encoded.
+ */
 function bbp_get_allowed_tags() {
 
 	$allowed = '';
@@ -2645,7 +2646,7 @@ function bbp_get_allowed_tags() {
 		$allowed .= '> ';
 	}
 
-	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed ) );
+	return apply_filters( 'bbp_get_allowed_tags', htmlentities( $allowed, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 }
 
 /** Errors & Messages *********************************************************/

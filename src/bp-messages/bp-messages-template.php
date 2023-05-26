@@ -1394,7 +1394,7 @@ function bp_get_send_private_message_link() {
 	 *
 	 * @param string $value URL for the Private Message link in member profile headers.
 	 */
-	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_core_get_username( $user_id ) ) );
+	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_members_get_user_nicename( $user_id ) ) );
 }
 
 /**
@@ -2674,14 +2674,9 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 function bb_get_the_thread_message_sent_time() {
 	global $thread_template;
 
-	$sent_date_formatted = $thread_template->message->date_sent;
-	$site_sent_date      = get_date_from_gmt( $sent_date_formatted );
-
-	if ( strtotime( 'now' ) <= strtotime( '+5 min', strtotime( $sent_date_formatted ) ) ) {
-		$thread_message_sent_time = apply_filters( 'bb_thread_message_sent_time_right_now_text', __( 'Now', 'buddyboss' ) );
-	} else {
-		$thread_message_sent_time = date_i18n( 'g:i A', strtotime( $site_sent_date ) );
-	}
+	$sent_date_formatted      = $thread_template->message->date_sent;
+	$site_sent_date           = get_date_from_gmt( $sent_date_formatted );
+	$thread_message_sent_time = date_i18n( 'g:i A', strtotime( $site_sent_date ) );
 
 	/**
 	 * Filters the 'Sent x hours ago' string for the current message.

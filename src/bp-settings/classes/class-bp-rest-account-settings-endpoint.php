@@ -90,6 +90,8 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		$request->set_param( 'user_nav', $user_nav );
+
 		// if it's nouveau then let it order the tabs.
 		if ( function_exists( 'bp_nouveau_set_nav_item_order' ) ) {
 			bp_nouveau_set_nav_item_order( $navs, bp_nouveau_get_appearance_settings( 'user_nav_order' ) );
@@ -164,11 +166,31 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $nav, $request ) {
 		$data = array(
-			'name'     => $nav->name,
+			'name'     => wp_specialchars_decode( $nav->name, ENT_QUOTES ),
 			'slug'     => $nav->slug,
 			'position' => $nav->position,
+			'children' => array(),
 			'link'     => $nav->link,
 		);
+
+		$parent_slug   = $nav->parent_slug . '_' . $nav->slug;
+		$user_nav      = $request->get_param( 'user_nav' );
+		$secondary_nav = $user_nav->get_secondary(
+			array(
+				'parent_slug'     => $parent_slug,
+				'user_has_access' => true,
+			)
+		);
+
+		if ( ! empty( $secondary_nav ) ) {
+			if ( ! empty( $secondary_nav ) ) {
+				foreach ( $secondary_nav as $child_nav ) {
+					$data['children'][] = $this->prepare_response_for_collection(
+						$this->prepare_item_for_response( $child_nav, $request )
+					);
+				}
+			}
+		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -198,7 +220,13 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 	 * @return array Links for the given group.
 	 */
 	protected function prepare_links( $nav_slug ) {
-		$base  = '/' . $this->namespace . '/' . $this->rest_base;
+		$base = '/' . $this->namespace . '/' . $this->rest_base;
+
+		if ( 'subscriptions' === $nav_slug ) {
+			$base     = '/' . $this->namespace;
+			$nav_slug = 'subscription-types';
+		}
+
 		$links = array(
 			'options' => array(
 				'embeddable' => true,
@@ -238,6 +266,12 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 					'description' => __( 'The position of the current navigation item.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
+				),
+				'children' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Child navigation items.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'array',
 				),
 				'link'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
