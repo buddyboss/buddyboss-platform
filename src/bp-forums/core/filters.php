@@ -449,19 +449,24 @@ add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_upd
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string  $template The path of the template to include.
- * 
+ * @param string $template The path of the template to include.
+ *
  * @return string $template Template file to use.
  */
-function bb_redirect_to_404_single_topic_no_replies( $template ) {
-    if ( bbp_is_single_topic() ) {
-		if( ! bbp_has_replies() ) {
+function bb_single_topic_no_replies_redirect_to_404( $template ) {
+	if ( bbp_is_single_topic() && ! bp_is_activity_component() ) {
+		if ( ! bbp_has_replies() && bbp_get_paged() > 1 ) {
 			$template_404 = locate_template( '404.php' );
 			if ( ! empty( $template_404 ) ) {
+				global $wp_query;
+				$wp_query->set_404();
+				status_header( 404 );
 				return $template_404;
 			}
 		}
-    }
+	}
+
 	return $template;
 }
-add_filter( 'template_include', 'bb_redirect_to_404_single_topic_no_replies' );
+
+add_filter( 'template_include', 'bb_single_topic_no_replies_redirect_to_404' );
