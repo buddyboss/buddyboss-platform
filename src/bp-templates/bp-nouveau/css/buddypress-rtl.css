@@ -2104,7 +2104,6 @@ a.layout-grid-view {
   max-height: calc(100vh - 280px);
   overflow: auto;
   width: 100%;
-  overscroll-behavior: contain;
   padding-bottom: 10px;
 }
 
