@@ -297,8 +297,10 @@ function bbp_has_replies( $args = '' ) {
 		}
 	}
 
+	$have_replies = ( isset( $total_pages ) && $bbp->reply_query->paged > $total_pages ) ? false : $bbp->reply_query->have_posts();
+
 	// Return object
-	return apply_filters( 'bbp_has_replies', $bbp->reply_query->have_posts(), $bbp->reply_query );
+	return apply_filters( 'bbp_has_replies', $have_replies, $bbp->reply_query );
 }
 
 /**
