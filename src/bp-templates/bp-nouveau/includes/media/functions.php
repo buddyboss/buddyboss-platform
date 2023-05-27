@@ -42,19 +42,24 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 function bp_nouveau_media_enqueue_scripts() {
 
 	if ( bp_is_user_media() ||
-		 bp_is_single_album() ||
-		 bp_is_media_directory() ||
-		 bp_is_document_directory() ||
-		 bp_is_video_directory() ||
-		 bp_is_activity_component() ||
-		 bp_is_group_activity() ||
-		 bp_is_group_media() ||
-		 bp_is_group_albums() ||
-		 bp_is_group_document() ||
-		 bp_is_group_video() ||
-		 bp_is_group_folders() ||
-		 bp_is_group_messages() ||
-		 bp_is_messages_component()
+		bp_is_single_album() ||
+		bp_is_media_directory() ||
+		bp_is_document_directory() ||
+		bp_is_video_directory() ||
+		bp_is_activity_component() ||
+		bp_is_group_activity() ||
+		bp_is_group_media() ||
+		bp_is_group_albums() ||
+		bp_is_group_document() ||
+		bp_is_group_video() ||
+		bp_is_group_folders() ||
+		bp_is_group_messages() ||
+		bp_is_messages_component() ||
+		(
+			bp_is_active( 'search' ) &&
+			isset( $_REQUEST ) &&
+			isset( $_REQUEST['bp_search'] )
+		)
 	) {
 
 		$gif = false;
