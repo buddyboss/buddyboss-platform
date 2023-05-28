@@ -6394,7 +6394,7 @@ span.dashicons.dashicons-admin-file:before {
   color: #5087e5;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .item-avatar {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .item-avatar > a[href=""] {
   position: relative;
   pointer-events: none;
   opacity: 0.7;
@@ -6405,7 +6405,7 @@ span.dashicons.dashicons-admin-file:before {
   opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta > .author-name[href=""] {
   pointer-events: none;
   opacity: 0.7;
 }
