@@ -3241,9 +3241,9 @@ class BP_Email_Tokens {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param \BP_Email $bp_email
-	 * @param array     $formatted_tokens
-	 * @param array     $tokens
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
 	 *
 	 * @return string html for the output.
 	 */
@@ -3266,9 +3266,9 @@ class BP_Email_Tokens {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param \BP_Email $bp_email
-	 * @param array     $formatted_tokens
-	 * @param array     $tokens
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
 	 *
 	 * @return string html for the output.
 	 */
@@ -3379,9 +3379,9 @@ class BP_Email_Tokens {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param \BP_Email $bp_email
-	 * @param array     $formatted_tokens
-	 * @param array     $tokens
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
 	 *
 	 * @return string html for the output.
 	 */
@@ -3400,9 +3400,9 @@ class BP_Email_Tokens {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param \BP_Email $bp_email
-	 * @param array     $formatted_tokens
-	 * @param array     $tokens
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
 	 *
 	 * @return string html for the output.
 	 */

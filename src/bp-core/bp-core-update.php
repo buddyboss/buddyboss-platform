@@ -427,11 +427,11 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 20111 ) {
-			bb_update_to_2_3_5();
+			bb_update_to_2_3_41();
 		}
 
 		if ( $raw_db_version < 20211 ) {
-			bb_update_to_2_3_5_0();
+			bb_update_to_2_3_50();
 		}
 	}
 
@@ -2749,7 +2749,7 @@ function bb_update_to_2_3_4() {
  *
  * @return void
  */
-function bb_update_to_2_3_5() {
+function bb_update_to_2_3_41() {
 	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
 	if ( $is_already_run ) {
 		return;
@@ -2801,9 +2801,8 @@ function bb_core_update_repair_member_slug() {
  *
  * @return void
  */
-function bb_update_to_2_3_5_0() {
+function bb_update_to_2_3_50() {
 	global $wpdb;
-
 	// Clear cache.
 	wp_cache_flush();
 	// Purge all the cache for API.
@@ -2904,8 +2903,8 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN 
-				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !='' 
+				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
+				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !=''
 				ORDER BY message_id LIMIT %d offset %d",
 				$per_page,
 				$offset
