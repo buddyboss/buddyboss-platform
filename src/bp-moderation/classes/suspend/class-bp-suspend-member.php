@@ -748,7 +748,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
 			if (
-				current_filter() === 'get_the_author_user_nicename' &&
+				'get_the_author_user_nicename' === current_filter() &&
 				true === $this->bb_activity_allow_group_single( $user_id )
 			) {
 				return $value;
@@ -922,30 +922,30 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return false
 	 */
 	protected function bb_activity_allow_group_single( $user_id ) {
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		$current_uri = ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' );
+		$current_uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL );
 		$uri         = array_filter( ! empty( $current_uri ) ? explode( '/', $current_uri ) : array() );
 
 		if (
-			! empty( $uri ) &&
-			! empty( $uri[ count( $uri ) - 1 ] ) &&
-			'activity' === $uri[ count( $uri ) - 1 ] &&
-			0 !== (int) end( $uri ) &&
-			bp_is_active( 'activity' ) &&
-			bp_is_active( 'groups' )
+			! bp_is_active( 'activity' ) ||
+			! bp_is_active( 'groups' ) ||
+			empty( $uri ) ||
+			empty( $uri[ count( $uri ) - 1 ] ) ||
+			'activity' !== $uri[ count( $uri ) - 1 ] ||
+			0 === (int) end( $uri )
 		) {
+			return false;
+		}
 
-			$activity = $this->bb_fetch_moderated_activity( (int) end( $uri ) );
+		$activity = $this->bb_fetch_moderated_activity( (int) end( $uri ) );
 
-			if (
-				! empty( $activity ) &&
-				! empty( $activity->id ) &&
-				! empty( $activity->user_id ) &&
-				(int) $activity->user_id === (int) $user_id &&
-				'groups' === $activity->component
-			) {
-				return true;
-			}
+		if (
+			! empty( $activity ) &&
+			! empty( $activity->id ) &&
+			! empty( $activity->user_id ) &&
+			(int) $activity->user_id === (int) $user_id &&
+			'groups' === $activity->component
+		) {
+			return true;
 		}
 
 		return false;
