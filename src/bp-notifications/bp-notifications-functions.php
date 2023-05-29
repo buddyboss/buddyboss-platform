@@ -2111,3 +2111,33 @@ function bb_notification_excluded_component_actions() {
 
 	return apply_filters( 'bb_notification_excluded_component_actions', $actions );
 }
+
+/**
+ * Function to add the notification for post new comment reply.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $comment_id   The comment ID.
+ * @param int   $commenter_id Commenter ID.
+ * @param array $commentdata  Comment data.
+ */
+function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
+
+	// Specify the Notification type.
+	$component_action = 'bb_posts_new_comment_reply';
+	$parent_comment   = get_comment( $commentdata['comment_parent'] );
+
+	bp_notifications_add_notification(
+		array(
+			'user_id'           => (int) $parent_comment->user_id,
+			'item_id'           => $comment_id,
+			'secondary_item_id' => $commenter_id,
+			'component_name'    => 'core',
+			'component_action'  => $component_action,
+			'date_notified'     => bp_core_current_time(),
+			'is_new'            => 1,
+		)
+	);
+
+}
+add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );
