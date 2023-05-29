@@ -5906,21 +5906,21 @@ function bb_activity_following_post_notification( $args ) {
 	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
 	if ( $media_ids ) {
-		$media_ids = array_filter( explode( ',', $media_ids ) );
+		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 		if ( count( $media_ids ) > 1 ) {
 			$text = __( 'some photos', 'buddyboss' );
 		} else {
 			$text = __( 'a photo', 'buddyboss' );
 		}
 	} elseif ( $document_ids ) {
-		$document_ids = array_filter( explode( ',', $document_ids ) );
+		$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 		if ( count( $document_ids ) > 1 ) {
 			$text = __( 'some documents', 'buddyboss' );
 		} else {
 			$text = __( 'a document', 'buddyboss' );
 		}
 	} elseif ( $video_ids ) {
-		$video_ids = array_filter( explode( ',', $video_ids ) );
+		$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 		if ( count( $video_ids ) > 1 ) {
 			$text = __( 'some videos', 'buddyboss' );
 		} else {
@@ -5999,4 +5999,47 @@ function bb_activity_following_post_notification( $args ) {
 			remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
+}
+
+/**
+ * Check whether activity comment is group comment or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object|int $comment Activity comment ID or object.
+ *
+ * @return bool
+ */
+function bb_is_group_activity_comment( $comment = 0 ) {
+
+	$comment_id = 0;
+	if ( empty( $comment ) ) {
+		global $activities_template;
+		$comment_id = isset( $activities_template->activity->current_comment->id ) ? $activities_template->activity->current_comment->id : 0;
+	} elseif ( is_array( $comment ) ) {
+		$comment_id = (int) $comment['id'];
+	} elseif ( is_object( $comment ) ) {
+		$comment_id = (int) $comment->id;
+	} elseif ( is_int( $comment ) ) {
+		$comment_id = (int) $comment;
+	}
+
+	if ( empty( $comment_id ) ) {
+		return false;
+	}
+
+	$comment = new BP_Activity_Activity( $comment_id );
+
+	if ( ! empty( $comment->item_id ) && ! empty( $comment->user_id ) ) {
+		$main_activity = new BP_Activity_Activity( $comment->item_id );
+
+		if (
+			! empty( $main_activity->component ) &&
+			'groups' === $main_activity->component
+		) {
+			return true;
+		}
+	}
+
+	return false;
 }

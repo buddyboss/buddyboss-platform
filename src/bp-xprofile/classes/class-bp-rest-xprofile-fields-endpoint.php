@@ -1141,7 +1141,11 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		$unserialized_value = maybe_unserialize( $value );
 		if ( ! is_array( $unserialized_value ) ) {
-			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value );
+			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value, ENT_QUOTES );
+		} elseif ( ! empty( $unserialized_value ) && is_array( $unserialized_value ) ) {
+			foreach ( $unserialized_value as $k => $v ) {
+				$unserialized_value[ $k ] = wp_specialchars_decode( $v, ENT_QUOTES );
+			}
 		}
 
 		return $unserialized_value;
@@ -1521,7 +1525,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
 				$key     = get_post_meta( $post->ID, '_bp_member_type_key', true );
-				if ( '' === $enabled || '1' === $enabled || ! empty( $request['show_all'] ) ) {
+				if ( '' === $enabled || '1' === $enabled || $post_selected === $post->ID || ! empty( $request['show_all'] ) ) {
 					$options[] = array(
 						'id'                => $post->ID,
 						'group_id'          => $field->group_id,
