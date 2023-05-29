@@ -431,7 +431,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 20111 ) {
-			bb_update_to_2_3_5();
+			bb_update_to_2_3_41();
 		}
 
 		if ( $raw_db_version < 20211 ) {
@@ -2761,7 +2761,7 @@ function bb_update_to_2_3_4() {
  *
  * @return void
  */
-function bb_update_to_2_3_5() {
+function bb_update_to_2_3_41() {
 	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
 	if ( $is_already_run ) {
 		return;
