@@ -157,7 +157,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		if ( ! empty( $exclude_group_sql ) ) {
 			$sql = $this->exclude_where_query( false );
-			$where['moderation_where'] .=  $exclude_group_sql . ' AND ( ' . $sql . ' ) ';
+
+			$where['moderation_where'] .= $exclude_group_sql . ' AND ( ' . $sql . ' ) ';
 		}
 		return $where;
 	}
@@ -592,7 +593,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 2.2.7
 	 *
 	 * @param string $content  Activity content.
-	 * @param object $activity Activity object.
 	 *
 	 * @return string
 	 */
