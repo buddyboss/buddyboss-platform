@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Replies Loop - Single Reply
  *

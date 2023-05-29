@@ -138,8 +138,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
-		$notification  = bp_notifications_get_notification( $notification_id );
-
+		$notification = bp_notifications_get_notification( $notification_id );
 		if ( ! empty( $notification ) && 'bb_posts_new_comment_reply' === $notification->component_action &&
 			in_array( $notification->component_name, array( 'core' ), true ) ) {
 			$comment           = get_comment( $notification->item_id );
