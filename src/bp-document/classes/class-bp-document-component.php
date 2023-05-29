@@ -223,7 +223,7 @@ class BP_Document_Component extends BP_Component {
 
 		// Perform a daily tidy up.
 		if ( ! wp_next_scheduled( 'bp_document_delete_orphaned_attachments_hook' ) ) {
-			wp_schedule_event( time(), 'daily', 'bp_document_delete_orphaned_attachments_hook' );
+			wp_schedule_event( strtotime('tomorrow midnight'), 'daily', 'bp_document_delete_orphaned_attachments_hook' );
 		}
 
 		add_action( 'bp_document_delete_orphaned_attachments_hook', 'bp_document_delete_orphaned_attachments' );
