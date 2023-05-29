@@ -531,3 +531,30 @@ function bb_forums_link_preview( $content, $post_id ) {
 
 	return $content;
 }
+
+/**
+ * Redirect to the 404 page if the no replies for single topic page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $template The path of the template to include.
+ *
+ * @return string $template Template file to use.
+ */
+function bb_single_topic_no_replies_redirect_to_404( $template ) {
+	if ( bbp_is_single_topic() && ! bp_is_activity_component() ) {
+		if ( ! bbp_has_replies() && bbp_get_paged() > 1 ) {
+			$template_404 = locate_template( '404.php' );
+			if ( ! empty( $template_404 ) ) {
+				global $wp_query;
+				$wp_query->set_404();
+				status_header( 404 );
+				return $template_404;
+			}
+		}
+	}
+
+	return $template;
+}
+
+add_filter( 'template_include', 'bb_single_topic_no_replies_redirect_to_404' );
