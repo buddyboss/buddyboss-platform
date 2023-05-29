@@ -126,6 +126,7 @@ add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
 // Load Post Notifications.
 add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
 add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 20, 3 );
+add_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 20, 3 );
 
 // Load the admin.
@@ -742,6 +743,22 @@ function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) 
 		in_array( $old_status, array( 'unapproved', 'spam' ), true )
 	) {
 		$commentdata = get_object_vars( $comment );
+		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
+	}
+}
+
+/**
+ * Call new blog post comment reply notification in case of REST API.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string     $comment_ID Comment id.
+ * @param WP_Comment $comment    Comment data.
+ */
+function bb_post_new_comment_reply_notification_helper( $comment_ID, $comment ) {
+	$commentdata               = get_object_vars( $comment );
+	$notification_already_sent = get_comment_meta( $comment_ID, 'bb_comment_notified_after_approved', true );
+	if ( empty( $notification_already_sent ) && 1 === (int) $commentdata['comment_approved'] ) {
 		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
 	}
 }

@@ -75,10 +75,19 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_post_comment_reply() {
 
-		$default = false;
-		if ( bp_is_install() ) {
+		$default                 = false;
+		$bb_enabled_notification = bp_get_option( 'bb_enabled_notification', false );
+		if (
+			false !== get_transient( '_bp_is_new_install' ) ||
+			(
+				empty( $bb_enabled_notification ) &&
+				true === (bool) bp_get_option( 'bb_posts_new_comment_reply_default_setting', false )
+			)
+		) {
 			$default = true;
+			bp_update_option( 'bb_posts_new_comment_reply_default_setting', true );
 		}
+
 		$this->register_notification_type(
 			'bb_posts_new_comment_reply',
 			esc_html__( 'A member replies to your post comment', 'buddyboss' ),
@@ -131,11 +140,8 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 
 		$notification = bp_notifications_get_notification( $notification_id );
 
-		if (
-			! empty( $notification ) &&
-			'bb_posts_new_comment_reply' === $notification->component_action &&
-			in_array( $notification->component_name, array( 'core' ), true )
-		) {
+		if ( ! empty( $notification ) && 'bb_posts_new_comment_reply' === $notification->component_action &&
+			in_array( $notification->component_name, array( 'core' ), true ) ) {
 			$comment           = get_comment( $notification->item_id );
 			$excerpt           = wp_strip_all_tags( $comment->comment_content );
 			$notification_link = add_query_arg( 'cid', (int) $notification_id, get_comment_link( $comment ) );

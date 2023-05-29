@@ -14,7 +14,7 @@ jQuery( document ).ready(
 				}
 
 				jQuery( element ).select2( {
-					dropdownParent: ( jQuery( element ).closest('.bb-modal').length > 0 ? jQuery( element ).closest('.bb-modal') : jQuery( document.body ) ),
+					dropdownParent: jQuery( element ).closest('form').parent(),
 					placeholder: jQuery( element ).attr( 'placeholder' ),
 					minimumInputLength: 1,
 					closeOnSelect: true,
@@ -81,17 +81,22 @@ jQuery( document ).ready(
 				} );
 
 				// Add element into the Arrdata array.
-				jQuery( element ).on( 'select2:select', function ( e ) {
-					var select_options = jQuery( 'body #bbp_topic_tags_dropdown option' );
-					var tagsArrayData = jQuery.map( select_options, function ( option ) {
-						return option.text;
-					} );
-					var tags = tagsArrayData.join( ',' );
-					jQuery( 'body #bbp_topic_tags' ).val( tags );
+				jQuery( element ).on(
+					'select2:select',
+					function ( e ) {
+						var bbp_topic_tags = jQuery( 'body #bbp_topic_tags' ),
+							existingTags   = bbp_topic_tags.val(),
+							tagsArrayData  = ( existingTags.length > 0 ) ? existingTags.split( ',' ) : [],
+							data           = e.params.data;
 
-					jQuery( 'body .select2-search__field' ).trigger( 'click' );
-					jQuery( 'body .select2-search__field' ).trigger( 'click' );
-				} );
+						tagsArrayData.push( data.id );
+						var tags = tagsArrayData.join( ',' );
+						bbp_topic_tags.val( tags );
+
+						jQuery( 'body .select2-search__field' ).trigger( 'click' );
+						jQuery( 'body .select2-search__field' ).trigger( 'click' );
+					}
+				);
 
 				// Remove element into the Arrdata array.
 				jQuery( element ).on( 'select2:unselect', function ( e ) {
@@ -173,6 +178,9 @@ jQuery( document ).ready(
 									if ( typeof window.forums_medium_forum_editor !== 'undefined' && typeof window.forums_medium_forum_editor[ key ] !== 'undefined' ) {
 										window.forums_medium_forum_editor[ key ].checkContentChanged();
 									}
+									if ( typeof window.forums_medium_topic_editor == 'undefined' ) {
+										$( '#bbpress-forums .bbp-the-content' ).keyup();
+									}
 									jQuery( '#' + elem_id )[ 0 ].emojioneArea.hidePicker();
 								},
 								search_keypress: function() {
@@ -202,7 +210,7 @@ jQuery( document ).ready(
 				if ( $tagsSelect.length ) {
 					$tagsSelect.select2( {
 						placeholder: $tagsSelect.attr( 'placeholder' ),
-						dropdownParent: ( $tagsSelect.closest('.bb-modal').length > 0 ? $tagsSelect.closest('.bb-modal') : jQuery( document.body ) ),
+						dropdownParent: jQuery( element ).closest('form').parent(),
 						minimumInputLength: 1,
 						closeOnSelect: true,
 						tags: true,

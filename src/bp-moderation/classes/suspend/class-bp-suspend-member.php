@@ -586,16 +586,21 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				if ( $this->background_disabled ) {
 					$this->bb_update_member_friend_count( $member_id, $friend_ids, $action );
 				} else {
-					foreach ( array_chunk( $friend_ids, 50 ) as $chunk ) {
-						$bp_background_updater->data(
-							array(
+					$min_count     = (int) apply_filters( 'bb_update_member_friend_count', 50 );
+					$chunk_results = array_chunk( $friend_ids, $min_count );
+					if ( ! empty( $chunk_results ) ) {
+						foreach ( $chunk_results as $chunk_result ) {
+							$bp_background_updater->data(
 								array(
-									'callback' => array( $this, 'bb_update_member_friend_count' ),
-									'args'     => array( $member_id, $chunk, $action ),
-								),
-							)
-						);
-						$bp_background_updater->save()->dispatch();
+									array(
+										'callback' => array( $this, 'bb_update_member_friend_count' ),
+										'args'     => array( $member_id, $chunk_result, $action ),
+									),
+								)
+							);
+
+							$bp_background_updater->save()->dispatch();
+						}
 					}
 				}
 			}

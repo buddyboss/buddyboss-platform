@@ -3222,6 +3222,7 @@ function bp_core_get_suggestions( $args ) {
 
 	// Removed action only for xprofile fields First, last and nickname.
 	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+
 	/**
 	 * Filters the available type of at-mentions.
 	 *
@@ -4536,9 +4537,14 @@ function bp_ajax_get_suggestions() {
 	}
 
 	$args = array(
-		'term' => sanitize_text_field( $_GET['term'] ),
-		'type' => sanitize_text_field( $_GET['type'] ),
+			'term'        => sanitize_text_field( $_GET['term'] ),
+			'type'        => sanitize_text_field( $_GET['type'] ),
+			'count_total' => 'count_query',
 	);
+
+	if ( ! empty( $_GET['page'] ) ) {
+		$args['page'] = absint( $_GET['page'] );
+	}
 
 	if ( ! empty( $_GET['only_friends'] ) ) {
 		$args['only_friends'] = absint( $_GET['only_friends'] );
@@ -4556,7 +4562,15 @@ function bp_ajax_get_suggestions() {
 		exit;
 	}
 
-	wp_send_json_success( $results );
+	$results_total = apply_filters( 'bb_members_suggestions_results_total', $results['total'] ?? 0 );
+	$results       = apply_filters( 'bb_members_suggestions_results', $results['members'] ?? array() );
+
+	wp_send_json_success(
+		array(
+			'results'     => $results,
+			'total_pages' => ceil( $results_total / 10 ),
+		)
+	);
 }
 add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
 
@@ -5360,15 +5374,6 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$search_core            = $sql['where']['search'];
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
-
-		if (
-			is_array( $matched_user_ids ) &&
-			count( $matched_user_ids ) > 0 &&
-			! did_action( 'wp_ajax_messages_search_recipients' ) &&
-			$query->query_vars['per_page'] < count( $matched_user_ids )
-		) {
-			$sql['limit'] = ' LIMIT 0, ' . count( $matched_user_ids );
-		}
 	}
 
 	return $sql;
@@ -5468,7 +5473,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
  * @param string $output_file_src Absolute path of the site.
  * @param string $attachment_path Symbolising path to generate.
  */
-function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path ) {
+function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, string $attachment_path ) {
 
 	if ( true === bb_check_server_disabled_symlink() ) {
 		return;
@@ -6742,7 +6747,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	// Saved notification from backend default settings.
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 	$all_notifications    = array();
-	$default_by_admin     = array();
+	$settings_by_admin    = array();
 
 	if ( ! empty( $preferences ) ) {
 		$preferences = array_column( $preferences, 'fields', null );
@@ -6783,14 +6788,16 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	$main = array();
 
 	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
+
 	if ( ! empty( $enabled_notification ) ) {
 		foreach ( $enabled_notification as $key => $types ) {
 			if ( isset( $types['main'] ) ) {
 				$main[ $key ] = $types['main'];
 			}
+
 			if ( isset( $types[ $type ] ) ) {
-				$key_type                      = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
-				$default_by_admin[ $key_type ] = 'yes';
+				$key_type                       = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
+				$settings_by_admin[ $key_type ] = $types[ $type ];
 			}
 		}
 	}
@@ -6799,14 +6806,23 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		return false;
 	}
 
-	$notifications     = bp_parse_args( $all_notifications, $default_by_admin );
+	$notifications     = bp_parse_args( $settings_by_admin, $all_notifications );
 	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
 	$enable_type_key   = in_array( $type, array( 'web', 'app' ), true ) ? 'enable_notification_' . $type : 'enable_notification';
 
 	if (
-		array_key_exists( $notification_type, $notifications ) &&
 		'no' !== bp_get_user_meta( $user_id, $enable_type_key, true ) &&
-		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
+		(
+			(
+				metadata_exists( 'user', $user_id, $notification_type ) &&
+				'yes' === bp_get_user_meta( $user_id, $notification_type, true )
+			) ||
+			(
+				! metadata_exists( 'user', $user_id, $notification_type ) &&
+				array_key_exists( $notification_type, $notifications ) &&
+				'yes' === $notifications[ $notification_type ]
+			)
+		)
 	) {
 		return true;
 	}
@@ -6869,17 +6885,25 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 	$notification_type = array_filter(
 		array_map(
 			function ( $n ) use ( $component_name, $component_action ) {
+
 				if (
 					'bb_new_mention' === $component_action &&
-					in_array( $component_name, array( 'activity', 'forums', 'members', 'core' ), true )
+					in_array( $component_name, array( 'activity', 'forums', 'members', 'core' ), true ) &&
+					$component_action === $n['component_action']
 				) {
 					return $n['notification_type'];
 				} elseif (
 					'bb_groups_new_message' === $component_action &&
-					in_array( $component_name, array( 'messages', 'groups' ), true )
+					in_array( $component_name, array( 'messages', 'groups' ), true ) &&
+					$component_action === $n['component_action']
 				) {
 					return $n['notification_type'];
-				} elseif ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
+				} elseif (
+					! empty( $n['component'] ) &&
+					! empty( $n['component_action'] ) &&
+					$component_name === $n['component'] &&
+					$component_action === $n['component_action']
+				) {
 					return $n['notification_type'];
 				}
 			},
@@ -6992,12 +7016,8 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	$email_checked = bp_get_user_meta( $user_id, $field['key'], true );
-	if ( ! $email_checked ) {
-		if ( $user_id ) {
-			$email_checked = 'yes';
-		} else {
-			$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
-		}
+	if ( empty( $email_checked ) ) {
+		$email_checked = $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'];
 	}
 
 	$options['email'] = array(
@@ -7009,12 +7029,8 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 
 	if ( bb_web_notification_enabled() ) {
 		$web_checked = bp_get_user_meta( $user_id, $field['key'] . '_web', true );
-		if ( ! $web_checked ) {
-			if ( $user_id ) {
-				$web_checked = 'yes';
-			} else {
-				$web_checked = ( $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'] );
-			}
+		if ( empty( $web_checked ) ) {
+			$web_checked = $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'];
 		}
 
 		$options['web'] = array(
@@ -7027,12 +7043,8 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 
 	if ( bb_app_notification_enabled() ) {
 		$app_checked = bp_get_user_meta( $user_id, $field['key'] . '_app', true );
-		if ( ! $app_checked ) {
-			if ( $user_id ) {
-				$app_checked = 'yes';
-			} else {
-				$app_checked = ( $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'] );
-			}
+		if ( empty( $app_checked ) ) {
+			$app_checked = $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'];
 		}
 
 		$options['app'] = array(
@@ -7224,6 +7236,7 @@ function bb_render_notification( $notification_group ) {
 				}
 
 				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
+
 				?>
 				<tr>
 					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
@@ -8536,4 +8549,15 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 		return $string;
 
 	}
+}
+
+/**
+ * Return to check its working with WP CLI or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_wp_cli() {
+	return defined( 'WP_CLI' ) && WP_CLI;
 }

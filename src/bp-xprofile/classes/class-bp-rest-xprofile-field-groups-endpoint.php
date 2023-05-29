@@ -682,7 +682,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $group, $request ) {
 		$data = array(
 			'id'               => (int) $group->id,
-			'name'             => wp_specialchars_decode( $group->name ),
+			'name'             => wp_specialchars_decode( $group->name, ENT_QUOTES ),
 			'description'      => array(
 				'raw'      => $group->description,
 				'rendered' => wp_specialchars_decode( apply_filters( 'bp_get_the_profile_field_description', $group->description ) ),
