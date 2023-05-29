@@ -127,7 +127,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param string $where   Activity Where sql.
+	 * @param array  $where   Activity Where sql.
 	 * @param object $suspend Suspend object.
 	 *
 	 * @return array
@@ -153,8 +153,13 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			$where['moderation_where'] .= ' AND ';
 		}
 
-		$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )' . $exclude_group_sql;
+		$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 
+		if ( ! empty( $exclude_group_sql ) ) {
+			$sql = $this->exclude_where_query( false );
+
+			$where['moderation_where'] .= $exclude_group_sql . ' AND ( ' . $sql . ' ) ';
+		}
 		return $where;
 	}
 
@@ -180,7 +185,15 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && $this->is_content_hidden( (int) $activity->id ) ) {
+		if (
+			'activity_comment' !== $activity->type &&
+			$this->is_content_hidden( (int) $activity->id ) &&
+			(
+				// Allow comment to group activity.
+				! bp_is_active( 'groups' ) ||
+				'groups' !== $activity->component
+			)
+		) {
 			return false;
 		}
 
@@ -580,7 +593,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 2.2.7
 	 *
 	 * @param string $content  Activity content.
-	 * @param object $activity Activity object.
 	 *
 	 * @return string
 	 */
