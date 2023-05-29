@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 					}
 				}
 			);
-		
+
 			/**
 			 * Function for hide/show auto suspend fields on member reporting enable/disabled.
 			 */
@@ -2410,7 +2410,6 @@ window.bp = window.bp || {};
 				}
 			}
 
-			
 			$( document ).on(
 				'click',
 				'.bb-hide-pw',

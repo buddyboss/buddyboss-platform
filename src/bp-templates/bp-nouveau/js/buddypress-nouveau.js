@@ -2961,9 +2961,9 @@ window.bp = window.bp || {};
 				'.bb-toggle-password, .bb-hide-pw',
 				function ( e ) {
 					e.preventDefault();
-					var $this  = $( this );
-					var $input;
-					if( $this.hasClass( 'bb-hide-pw' ) ){
+					var $this = $( this ), $input;
+
+					if ( $this.hasClass( 'bb-hide-pw' ) ) {
 						$input = $this.closest( '.password-toggle' ).find( 'input' );
 					} else {
 						$input = $this.next( 'input' );
@@ -2978,6 +2978,7 @@ window.bp = window.bp || {};
 				}
 			);
 		},
+
 		/**
 		 * Close emoji picker whenever clicked outside of emoji container
 		 *
