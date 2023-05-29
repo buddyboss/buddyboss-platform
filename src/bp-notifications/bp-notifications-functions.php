@@ -895,7 +895,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	$all_notifications = array();
 
 	// Enabled default notification from backend.
-	$default_by_admin = array();
+	$settings_by_admin = array();
 
 	if ( empty( $preferences ) ) {
 		return;
@@ -947,12 +947,12 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 				$admin_excluded_actions = array_merge( $admin_excluded_actions, $all_actions[ $key . '_' . $type ] );
 			}
 			if ( isset( $types[ $type ] ) ) {
-				$default_by_admin[ $key . '_' . $type ] = 'yes';
+				$settings_by_admin[ $key . '_' . $type ] = $types[ $type ];
 			}
 		}
 	}
 
-	$notifications          = bp_parse_args( $default_by_admin, $all_notifications );
+	$notifications          = bp_parse_args( $settings_by_admin, $all_notifications );
 	$excluded_actions       = array();
 	$notifications_type_key = 'enable_notification';
 	if ( in_array( $type, array( 'web', 'app' ), true ) ) {
