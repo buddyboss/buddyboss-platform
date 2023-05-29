@@ -229,7 +229,10 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		}
 
 		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		// Remove suspended members reply from widget.
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
+			$where['suspend_where'] = $this->exclude_where_query();
+		}
 
 		/**
 		 * Filters the hidden forum reply Where SQL statement.
