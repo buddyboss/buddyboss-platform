@@ -2552,7 +2552,7 @@ window.bp = window.bp || {};
 			q: null,
 			requests: [],
 			events: {
-				'keyup .search-query-input': 'search',
+				'keydown .search-query-input': 'search',
 				'click .found-media-item': 'select'
 			},
 
@@ -2576,6 +2576,13 @@ window.bp = window.bp || {};
 			},
 
 			search: function ( e ) {
+				
+				// Prevent search dropdown from closing with enter key
+				if ( e.key === 'Enter' || e.keyCode === 13 ) {
+					e.preventDefault();
+					return false;
+				}
+
 				var self = this;
 
 				if ( this.Timeout != null ) {
@@ -2594,6 +2601,7 @@ window.bp = window.bp || {};
 					},
 					1000
 				);
+				
 			},
 
 			searchGif: function ( q ) {
@@ -5602,6 +5610,8 @@ window.bp = window.bp || {};
 				var whats_new_form = $( '#whats-new-form' );
 
 				whats_new_form.find( '#public.bp-activity-privacy__input' ).prop( 'checked', true );
+				whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object__radio' ).prop( 'checked', false ).removeAttr( 'checked' );
+				whats_new_form.find( '#bp-activity-group-ac-items .bb-radio-style.selected' ).removeClass( 'selected' );
 
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				$( '#show-toolbar-button' ).removeClass( 'active' );

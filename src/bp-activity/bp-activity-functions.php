@@ -5983,3 +5983,46 @@ function bb_activity_following_post_notification( $args ) {
 		}
 	}
 }
+
+/**
+ * Check whether activity comment is group comment or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object|int $comment Activity comment ID or object.
+ *
+ * @return bool
+ */
+function bb_is_group_activity_comment( $comment = 0 ) {
+
+	$comment_id = 0;
+	if ( empty( $comment ) ) {
+		global $activities_template;
+		$comment_id = isset( $activities_template->activity->current_comment->id ) ? $activities_template->activity->current_comment->id : 0;
+	} elseif ( is_array( $comment ) ) {
+		$comment_id = (int) $comment['id'];
+	} elseif ( is_object( $comment ) ) {
+		$comment_id = (int) $comment->id;
+	} elseif ( is_int( $comment ) ) {
+		$comment_id = (int) $comment;
+	}
+
+	if ( empty( $comment_id ) ) {
+		return false;
+	}
+
+	$comment = new BP_Activity_Activity( $comment_id );
+
+	if ( ! empty( $comment->item_id ) && ! empty( $comment->user_id ) ) {
+		$main_activity = new BP_Activity_Activity( $comment->item_id );
+
+		if (
+			! empty( $main_activity->component ) &&
+			'groups' === $main_activity->component
+		) {
+			return true;
+		}
+	}
+
+	return false;
+}
