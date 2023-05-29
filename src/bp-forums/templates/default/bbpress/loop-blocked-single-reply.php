@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Replies Loop - Single Reply
  *
@@ -22,10 +21,10 @@ if ( bp_is_active( 'moderation' ) ) {
 }
 ?>
 
-<div id="post-<?php bbp_reply_id(); ?>" class="bbp-reply-header <?php echo $check_hidden_content ? 'bs-reply-suspended-block' : ''; ?>">
+<div id="post-<?php bbp_reply_id(); ?>" class="bbp-reply-header <?php echo $check_hidden_content ? esc_attr( 'bs-reply-suspended-block' ) : ''; ?>">
 
 	<div <?php bbp_reply_class(); ?>>
-	
+
 		<div class="bbp-reply-author">
 			<?php
 			bbp_reply_author_link(

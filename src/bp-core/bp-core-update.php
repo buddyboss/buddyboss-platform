@@ -435,7 +435,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 20211 ) {
-			bb_update_to_2_3_5_0();
+			bb_update_to_2_3_50();
 		}
 	}
 
@@ -2813,7 +2813,7 @@ function bb_core_update_repair_member_slug() {
  *
  * @return void
  */
-function bb_update_to_2_3_5_0() {
+function bb_update_to_2_3_50() {
 	// Clear cache.
 	wp_cache_flush();
 	// Purge all the cache for API.
