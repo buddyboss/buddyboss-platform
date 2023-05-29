@@ -625,6 +625,7 @@ function bb_load_post_notifications() {
  * @param array      $commentdata      Comment data.
  */
 function bb_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
+
 	// Don't send notification if the comment hasn't been approved.
 	if ( empty( $comment_approved ) ) {
 		return false;
@@ -678,7 +679,16 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 	// Send an email if the user hasn't opted-out.
 	if ( ! empty( $parent_comment_author_id ) ) {
 
-		if ( true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
+		$usernames = bp_find_mentions_by_at_sign( array(), $comment_content );
+		$send_mail = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $parent_comment_author_id, $usernames ) ) {
+			if ( true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_new_mention' ) ) {
+				$send_mail = false;
+			}
+		}
+
+		if ( true === $send_mail && true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment_author_id,
@@ -757,7 +767,6 @@ function bb_post_new_comment_reply_notification_helper( $comment_ID, $comment ) 
  * Mark blog comment notifications as read.
  *
  * @since BuddyBoss [BBVERSION]
- *
  */
 function bb_core_read_blog_comment_notification() {
 	if ( ! is_user_logged_in() ) {
@@ -772,7 +781,7 @@ function bb_core_read_blog_comment_notification() {
 
 	// Mark individual notification as read.
 	if ( ! empty( $comment_id ) ) {
-		BP_Notifications_Notification::update(
+		$updated = BP_Notifications_Notification::update(
 			array(
 				'is_new' => false,
 			),
@@ -781,7 +790,240 @@ function bb_core_read_blog_comment_notification() {
 				'id'      => $comment_id,
 			)
 		);
+
+		if ( 1 === $updated ) {
+			$notifications_data = bp_notifications_get_notification( $comment_id );
+			if ( isset( $notifications_data->item_id ) ) {
+				BP_Notifications_Notification::update(
+					array(
+						'is_new' => false,
+					),
+					array(
+						'user_id'        => bp_loggedin_user_id(),
+						'item_id'        => $notifications_data->item_id,
+						'component_name' => $notifications_data->component_name,
+					)
+				);
+
+				if ( bp_is_active( 'activity' ) ) {
+					$activity_id = get_comment_meta( $notifications_data->item_id, 'bp_activity_comment_id', true );
+					if ( ! empty( $activity_id ) ) {
+						BP_Notifications_Notification::update(
+							array(
+								'is_new' => false,
+							),
+							array(
+								'user_id'        => bp_loggedin_user_id(),
+								'item_id'        => $activity_id,
+								'component_name' => 'activity',
+							)
+						);
+					}
+				}
+			}
+		}
 	}
 }
 
 add_action( 'template_redirect', 'bb_core_read_blog_comment_notification', 99 );
+
+/**
+ * Fire an email when someone mentioned users into the blog post comment and post published.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param int  $comment_id  ID of the comment.
+ * @param bool $is_approved Whether the comment is approved or not.
+ */
+function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
+
+	if ( ! function_exists( 'bp_find_mentions_by_at_sign' ) ) {
+		return;
+	}
+
+	// Get the users comment.
+	$post_type_comment = get_comment( $comment_id );
+
+	// Don't record activity if the comment hasn't been approved.
+	if ( empty( $is_approved ) ) {
+		return false;
+	}
+
+	// Don't record activity if no email address has been included.
+	if ( empty( $post_type_comment->comment_author_email ) ) {
+		return false;
+	}
+
+	// Don't record activity if the comment has already been marked as spam.
+	if ( 'spam' === $is_approved ) {
+		return false;
+	}
+
+	// Get the user by the comment author email.
+	$user = get_user_by( 'email', $post_type_comment->comment_author_email );
+
+	// If user isn't registered, don't record activity.
+	if ( empty( $user ) ) {
+		return false;
+	}
+
+	// Get the user_id.
+	$comment_user_id = (int) $user->ID;
+
+	// Get the post.
+	$post = get_post( $post_type_comment->comment_post_ID );
+
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return false;
+	}
+
+	if (
+		! empty( $post->post_type ) &&
+		bp_is_active( 'activity' ) &&
+		(
+			bp_is_post_type_feed_enable( $post->post_type ) ||
+			(
+				bp_is_post_type_feed_enable( $post->post_type ) &&
+				! bb_is_post_type_feed_comment_enable( $post->post_type )
+			)
+		)
+	) {
+		return;
+	}
+
+	// Try to find mentions.
+	$usernames = bp_find_mentions_by_at_sign( array(), $post_type_comment->comment_content );
+
+	if ( empty( $usernames ) ) {
+		return;
+	}
+
+	// Replace @mention text with userlinks.
+	foreach ( (array) $usernames as $user_id => $username ) {
+		$post_type_comment->comment_content = preg_replace( '/(@' . $username . '\b)/', "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $post_type_comment->comment_content );
+	}
+
+	// Send @mentions and setup BP notifications.
+	foreach ( (array) $usernames as $user_id => $username ) {
+
+		// Check the sender is blocked by recipient or not.
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $comment_user_id ) ) {
+			continue;
+		}
+
+		// User Mentions email.
+		if (
+			(
+				! bb_enabled_legacy_email_preference() &&
+				true === bb_is_notification_enabled( $user_id, 'bb_new_mention' )
+			) ||
+			(
+				bb_enabled_legacy_email_preference() &&
+				true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
+			)
+		) {
+
+			// Poster name.
+			$reply_author_name = bp_core_get_user_displayname( $comment_user_id );
+			$author_id         = $comment_user_id;
+
+			/** Mail */
+			// Strip tags from text and setup mail data.
+			$reply_content = apply_filters( 'comment_text', $post_type_comment->comment_content, $post_type_comment, array() );
+			$reply_url     = get_comment_link( $post_type_comment );
+			$title_text    = get_the_title( $post );
+
+			$email_type = 'new-mention';
+
+			$unsubscribe_args = array(
+				'user_id'           => $user_id,
+				'notification_type' => $email_type,
+			);
+
+			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+
+			$args = array(
+				'tokens' => array(
+					'usermessage'       => wp_strip_all_tags( $reply_content ),
+					'mentioned.url'     => $reply_url,
+					'poster.name'       => $reply_author_name,
+					'receiver-user.id'  => $user_id,
+					'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					'mentioned.type'    => $notification_type_html,
+					'mentioned.content' => $reply_content,
+					'author_id'         => $author_id,
+					'reply_text'        => esc_html__( 'View Comment', 'buddyboss' ),
+					'title_text'        => $title_text,
+				),
+			);
+
+			bp_send_email( $email_type, $user_id, $args );
+		}
+
+		if ( bp_is_active( 'notifications' ) ) {
+			// Specify the Notification type.
+			$component_action = 'bb_new_mention';
+			$component_name   = 'core';
+
+			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $comment_id,
+					'secondary_item_id' => $comment_user_id,
+					'component_name'    => $component_name,
+					'component_action'  => $component_action,
+					'date_notified'     => bp_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
+			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+		}
+	}
+
+}
+
+add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
+
+/**
+ * Fired and mention email when comment has been approved.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string     $new_status New comment status.
+ * @param string     $old_status Previous comment status.
+ * @param WP_Comment $comment Comment data.
+ *
+ * @return void
+ */
+function bb_mention_post_type_comment_status_change( $new_status, $old_status, $comment ) {
+
+	if (
+		'approved' === $new_status &&
+		in_array( $old_status, array( 'unapproved', 'spam' ), true )
+	) {
+		$commentdata = get_object_vars( $comment );
+		bb_mention_post_type_comment( $commentdata['comment_ID'], $commentdata['comment_approved'] );
+	}
+}
+
+add_action( 'transition_comment_status', 'bb_mention_post_type_comment_status_change', 10, 3 );
+
+/**
+ * Registered component name for the core.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $component_names Array of registered component names.
+ *
+ * @return mixed
+ */
+function bb_core_registered_notification_components( $component_names ) {
+	if ( ! in_array( 'core', $component_names, true ) ) {
+		$component_names[] = 'core';
+	}
+
+	return $component_names;
+}
+
+add_action( 'bp_notifications_get_registered_components', 'bb_core_registered_notification_components', 20, 1 );

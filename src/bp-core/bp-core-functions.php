@@ -5473,7 +5473,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
  * @param string $output_file_src Absolute path of the site.
  * @param string $attachment_path Symbolising path to generate.
  */
-function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path ) {
+function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, string $attachment_path ) {
 
 	if ( true === bb_check_server_disabled_symlink() ) {
 		return;
@@ -6888,7 +6888,7 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 
 				if (
 					'bb_new_mention' === $component_action &&
-					in_array( $component_name, array( 'activity', 'forums', 'members' ), true ) &&
+					in_array( $component_name, array( 'activity', 'forums', 'members', 'core' ), true ) &&
 					$component_action === $n['component_action']
 				) {
 					return $n['notification_type'];
