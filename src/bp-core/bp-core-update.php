@@ -433,6 +433,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20111 ) {
 			bb_update_to_2_3_5();
 		}
+
+		if ( $raw_db_version < 20211 ) {
+			bb_update_to_2_3_50();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2799,5 +2803,22 @@ function bb_core_update_repair_member_slug() {
 		);
 
 		$bp_background_updater->save()->schedule_event();
+	}
+}
+
+/**
+ * Clear web and api cache on the update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_50() {
+	// Clear cache.
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 }
