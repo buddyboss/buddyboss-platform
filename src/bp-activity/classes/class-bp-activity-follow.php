@@ -144,11 +144,19 @@ class BP_Activity_Follow {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $user_id The user ID.
+	 * @param int   $user_id    The user ID.
+	 * @param array $query_args Query arguments.
+	 * 
 	 * @return array
 	 */
-	public static function get_followers( $user_id ) {
+	public static function get_followers( $user_id, $query_args = array() ) {
 		global $bp, $wpdb;
+
+		$defaults = array(
+			'user_id' => $user_id,
+		);
+
+		$query_args = bp_parse_args( $query_args, $defaults );
 
 		$sql['select'] = "SELECT u.follower_id FROM {$bp->activity->table_name_follow} u ";
 		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'follower_id' );
@@ -158,6 +166,10 @@ class BP_Activity_Follow {
 		
 		$where_sql      = 'WHERE ' . join( ' AND ', $sql['where'] );
 		$followers_sql  = "{$sql['select']} {$where_sql}";
+
+		if ( ! empty( $query_args['page'] ) && ! empty( $query_args['per_page'] ) ) {
+			$followers_sql .= $wpdb->prepare( ' LIMIT %d, %d', intval( ( $query_args['page'] - 1 ) * $query_args['per_page'] ), intval( $query_args['per_page'] ) );
+		}
 
 		$cached = bp_core_get_incremented_cache( $followers_sql, 'bp_activity_follow' );
 
@@ -176,11 +188,19 @@ class BP_Activity_Follow {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $user_id The user ID to fetch.
+	 * @param int   $user_id    The user ID to fetch.
+	 * @param array $query_args Query arguments.
+	 * 
 	 * @return array
 	 */
-	public static function get_following( $user_id ) {
+	public static function get_following( $user_id, $query_args = array() ) {
 		global $bp, $wpdb;
+
+		$defaults = array(
+			'user_id' => $user_id,
+		);
+
+		$query_args = bp_parse_args( $query_args, $defaults );
 
 		$sql['select'] = "SELECT u.leader_id FROM {$bp->activity->table_name_follow} u ";
 		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'leader_id' );
@@ -190,6 +210,10 @@ class BP_Activity_Follow {
 		
 		$where_sql      = 'WHERE ' . join( ' AND ', $sql['where'] );
 		$following_sql  = "{$sql['select']} {$where_sql}";
+
+		if ( ! empty( $query_args['page'] ) && ! empty( $query_args['per_page'] ) ) {
+			$following_sql .= $wpdb->prepare( ' LIMIT %d, %d', intval( ( $query_args['page'] - 1 ) * $query_args['per_page'] ), intval( $query_args['per_page'] ) );
+		}
 
 		$cached = bp_core_get_incremented_cache( $following_sql, 'bp_activity_follow' );
 

@@ -4920,7 +4920,16 @@ function bp_get_followers( $args = '' ) {
 		)
 	);
 
-	return apply_filters( 'bp_get_followers', BP_Activity_Follow::get_followers( $r['user_id'] ) );
+
+	$query_args = array();
+	if ( ! empty( $r['page'] ) && ! empty( $r['per_page'] ) ) {
+		$query_args = array(
+			'page'     => $r['page'],
+			'per_page' => $r['per_page'],
+		);
+	}
+
+	return apply_filters( 'bp_get_followers', BP_Activity_Follow::get_followers( $r['user_id'], $query_args ) );
 }
 
 /**
@@ -4943,7 +4952,15 @@ function bp_get_following( $args = '' ) {
 		)
 	);
 
-	return apply_filters( 'bp_get_following', BP_Activity_Follow::get_following( $r['user_id'] ) );
+	$query_args = array();
+	if ( ! empty( $r['page'] ) && ! empty( $r['per_page'] ) ) {
+		$query_args = array(
+			'page'     => $r['page'],
+			'per_page' => $r['per_page'],
+		);
+	}
+
+	return apply_filters( 'bp_get_following', BP_Activity_Follow::get_following( $r['user_id'], $query_args  ) );
 }
 
 /**
@@ -5873,8 +5890,11 @@ function bb_activity_following_post_notification( $args ) {
 			'usernames' => array(),
 			'item_id'   => '',
 			'user_ids'  => array(),
+			'paged'     => 1,
 		)
 	);
+
+	$paged = $r['paged'];
 
 	if ( empty( $r['user_ids'] ) || empty( $r['activity'] ) ) {
 		return;
@@ -5981,5 +6001,50 @@ function bb_activity_following_post_notification( $args ) {
 			);
 			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
+	}
+
+	// Call recursive to finish update for all records.
+	$paged++;
+	bb_create_background_activity_following_post_notification( $args, $paged );
+}
+
+/**
+ * Function to create a paginated backgroud job for activity following notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args  Array of arguments.
+ * @param array $paged Current page number for pagination.
+ */
+function bb_create_background_activity_following_post_notification( $parse_args, $paged = 1 ) {
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page       = 20;
+	$follower_users = bp_get_followers( 
+		array( 'user_id' => bp_loggedin_user_id() ),
+		array( 'per_page' => $per_page, 'paged' => $paged )
+	);
+	if ( empty( $follower_users ) ) {
+		return;
+	}
+
+	if ( count( $follower_users ) > 0 ) {
+		global $bp_background_updater;
+
+		$parse_args['user_ids'] = $follower_users;
+		$parse_args['paged']    = $paged;
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_activity_following_post_notification',
+					'args'     => array( $parse_args ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->schedule_event();
+
 	}
 }
