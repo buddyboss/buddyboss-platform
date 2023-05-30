@@ -6003,9 +6003,15 @@ function bb_activity_following_post_notification( $args ) {
 		}
 	}
 
+	$parse_args = array(
+		'activity'  => $r['activity'],
+		'usernames' => $r['usernames'],
+		'item_id'   => $r['item_id'],
+	);
+
 	// Call recursive to finish update for all records.
 	$paged++;
-	bb_create_background_activity_following_post_notification( $args, $paged );
+	bb_create_background_activity_following_post_notification( $parse_args, $paged );
 }
 
 /**
@@ -6023,8 +6029,11 @@ function bb_create_background_activity_following_post_notification( $parse_args,
 
 	$per_page       = 20;
 	$follower_users = bp_get_followers( 
-		array( 'user_id' => bp_loggedin_user_id() ),
-		array( 'per_page' => $per_page, 'paged' => $paged )
+		array ( 
+			'user_id'  => $parse_args['item_id'],
+			'per_page' => $per_page,
+			'page'     => $paged
+		)
 	);
 	if ( empty( $follower_users ) ) {
 		return;
