@@ -700,7 +700,7 @@ function bbp_get_reply_excerpt( $reply_id = 0, $length = 100 ) {
 	}
 
 	if ( ! empty( $length ) && ( $excerpt_length > $length ) ) {
-		$excerpt  = substr( $excerpt, 0, $length - 1 );
+		$excerpt  = function_exists( 'mb_substr' ) ? mb_substr( $excerpt, 0, $length - 1 ) : substr( $excerpt, 0, $length - 1 );
 		$excerpt .= '&hellip;';
 	}
 

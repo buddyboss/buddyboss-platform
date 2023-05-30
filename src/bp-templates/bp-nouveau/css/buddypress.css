@@ -24331,6 +24331,13 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   }
 }
 
+div.video-js .vjs-poster > img {
+  position: absolute;
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+}
+
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap {
   position: absolute;
   right: 15px;
