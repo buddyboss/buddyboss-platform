@@ -1168,8 +1168,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				remove_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
 			}
 
+			// Removed link preview from content.
+			remove_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
+
 			// Removed lazyload from link preview.
 			add_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
+
 			// Removed Iframe embedded from content.
 			if (
 				function_exists( 'bp_use_embed_in_activity' ) &&
@@ -1190,6 +1194,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 
 			remove_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
+
+			// Restore the link preview.
+			add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
 
 			// removed combined gif data with content.
 			if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
@@ -1301,6 +1308,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity );
 		}
 
+		// Add link preview data in separate object.
+		$link_preview = bp_activity_link_preview( '', $activity );
+		if ( ! empty( $link_preview ) ) {
+			$data['preview_data'] = $link_preview;
+		}
+
 		// remove comment options from media/document/video activity.
 		if ( ! empty( $activity->secondary_item_id ) && ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) && 'activity_comment' !== $activity->type ) {
 			$secondary_activity = new BP_Activity_Activity( $activity->secondary_item_id );
@@ -1322,8 +1335,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $activity->children ) ) {
 			$data['comment_count'] = bp_activity_recurse_comment_count( $activity );
 
-			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] && $data['can_comment'] ) {
-				$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
+			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] ) {
+				// First check the comment is disabled from the activity settings for post type.
+				// For more information please check this PROD-2475.
+				if ( 'activity_comment' !== $activity->type && $data['can_comment'] ) {
+					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
+					// This is for activity comment to attach the comment in the feed.
+				} elseif ( 'activity_comment' === $activity->type ) {
+					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
+				}
 			}
 		} else {
 			$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id );
@@ -1638,15 +1658,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function get_activity_object( $request ) {
 		$activity_id = is_numeric( $request ) ? $request : (int) $request['id'];
 
-		$activity = bp_activity_get_specific(
-			array(
-				'activity_ids'     => array( $activity_id ),
-				'display_comments' => true,
-			)
-		);
+		$activity = new BP_Activity_Activity( $activity_id );
 
-		if ( is_array( $activity ) && ! empty( $activity['activities'][0] ) ) {
-			return $activity['activities'][0];
+		if ( is_object( $activity ) && ! empty( $activity->id ) ) {
+			return $activity;
 		}
 
 		return '';
