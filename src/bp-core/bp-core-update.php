@@ -437,6 +437,11 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20211 ) {
 			bb_update_to_2_3_5_0();
 		}
+
+		if ( $raw_db_version < 20311 ) {
+			bb_update_to_2_3_6_0();
+		}
+
 	}
 
 	/* All done! *************************************************************/
@@ -2819,4 +2824,31 @@ function bb_update_to_2_3_5_0() {
 		// Clear API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
+}
+
+/**
+ * Function to save the default notification types.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_3_6_0() {
+
+	// Get if default notification types are already stored.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	// Mapping with all registered preferences.
+	$notification_preferences = bb_register_notification_preferences();
+	if ( ! empty( $notification_preferences ) ) {
+		foreach ( $notification_preferences as $group => $group_data ) {
+			if ( ! empty( $group_data['fields'] ) ) {
+				foreach ( $group_data['fields'] as $field ) {
+					if ( ! isset( $enabled_notification[ $field['key'] ] )  ) {
+						$enabled_notification[ $field['key'] ]['main'] = $field['default'];
+					}
+				}
+			}
+		}
+	}
+
+	bp_update_option( 'bb_enabled_notification', $enabled_notification );
 }
