@@ -534,6 +534,11 @@ window.bp = window.bp || {};
 			} else {
 				$( this.objectNavParent + ' [data-bp-scope]:eq(0), #object-nav li.current' ).addClass( 'selected loading' );
 			}
+
+			// Add loader for group single member listing search
+			if( data.object === 'group_members' && $( 'body' ).hasClass( 'group-members') ) {
+				$( '.groups .group-search.members-search' ).addClass( 'loading' );
+			}
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).text('');
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).show();
 			$( '#buddypress [data-bp-filter="' + data.object + '"] option[value="' + data.filter + '"]' ).prop( 'selected', true );
@@ -571,6 +576,7 @@ window.bp = window.bp || {};
 
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( '' );
+					$( '.group-search.members-search' ).removeClass( 'loading' );
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
 						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );

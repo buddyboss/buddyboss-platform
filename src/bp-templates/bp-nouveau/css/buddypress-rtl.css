@@ -663,6 +663,27 @@ body.buddypress article.page > .entry-header .entry-title {
   }
 }
 
+.groups.group-members .buddypress-wrap .subnav-filters .group-search.members-search.loading {
+  position: relative;
+}
+
+.groups.group-members .buddypress-wrap .subnav-filters .group-search.members-search.loading:after {
+  content: "\ef30";
+  font-weight: 400;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 20px;
+  line-height: 1;
+  position: absolute;
+  left: -30px;
+  top: 7px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+
 .buddypress-wrap .notifications-options-nav input#notification-bulk-manage {
   border: 0;
   border-radius: 0;
