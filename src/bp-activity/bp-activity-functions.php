@@ -4920,7 +4920,6 @@ function bp_get_followers( $args = '' ) {
 		)
 	);
 
-
 	$query_args = array();
 	if ( ! empty( $r['page'] ) && ! empty( $r['per_page'] ) ) {
 		$query_args = array(
@@ -6029,7 +6028,7 @@ function bb_create_background_activity_following_post_notification( $parse_args,
 
 	$per_page       = 20;
 	$follower_users = bp_get_followers( 
-		array ( 
+		array( 
 			'user_id'  => $parse_args['item_id'],
 			'per_page' => $per_page,
 			'page'     => $paged
