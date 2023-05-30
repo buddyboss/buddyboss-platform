@@ -20,7 +20,7 @@ add_filter( 'bp_get_loggedin_user_fullname', 'esc_html' );
 // Filter the user registration URL to point to BuddyPress's registration page.
 add_filter( 'register_url', 'bp_get_signup_page' );
 
-// Change the last active display format if users active within 5 minutes then shows 'Active now'.
+// Change the last active display format if users active within interval then shows 'Active now'.
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
 
 // Repair member profile links.
@@ -664,10 +664,10 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 	// Difference in seconds.
 	$since_diff = bp_core_current_time( true, 'timestamp' ) - $last_active_timestamp;
 	if ( $since_diff < HOUR_IN_SECONDS && $since_diff >= 0 ) {
-		$minutes_diff = round( $since_diff / MINUTE_IN_SECONDS );
 
-		// Difference within 5 minutes.
-		if ( 5 >= $minutes_diff ) {
+		$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
+
+		if ( $online_default_time >= $since_diff ) {
 			return esc_html__( 'Active now', 'buddyboss' );
 		}
 	}
@@ -913,7 +913,7 @@ function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member
 /**
  * This function will work as migration process which will repair member profile links.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  *
  * @return array|void
  */

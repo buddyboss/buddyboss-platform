@@ -173,7 +173,13 @@ abstract class BP_Suspend_Abstract {
 
 						if (
 							BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
-							BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+							(
+								(
+									! empty( $args['action_suspend'] ) ||
+									! empty( $args['user_suspended'] )
+								) &&
+								BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+							)
 						) {
 							continue;
 						}
@@ -322,7 +328,13 @@ abstract class BP_Suspend_Abstract {
 							) &&
 							! (
 								BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
-								BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+								(
+									(
+										! empty( $args['action_suspend'] ) ||
+										! empty( $args['user_suspended'] )
+									) &&
+									BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+								)
 							)
 						) {
 							continue;

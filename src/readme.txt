@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.2.1
 Requires PHP: 5.6.20
-Stable tag: 2.3.4
+Stable tag: 2.3.42
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,38 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.3.50 =
+* Profiles - Addressed the issue where the password updated email was triggered when the account email is updated in the profile
+* Profiles - Resolved the incorrect last active stats issue on Members and profile pages
+* Notifications - Introduced new notification type to trigger when members create a reply to a blog post comment
+* Notifications - Improved the business logic for notification preferences, now loading from admin default if not updated
+* Notifications - Improved to send @mention email for blog post comments
+* Groups - Resolved the hidden group not showing issue for WP CLI commands
+* Groups - Resolved the activity not getting created issue for WP CLI commands
+* Groups - Handled the forum option not showing issue while creating a group when the forums slug is updated
+* Forums - Handled create discussion UX issue when selecting auto-generated tags
+* Activity - Improved the @mention dropdown by providing load more pagination
+* Activity - Fixed the multiple @mention option not working issue
+* Activity - Resolved the post form GIF search option UX issue
+* Media - Resolved the video thumbnail issue for videos with portrait orientation or a small-sized
+* Media - Fixed the documents search not working issue when the document is in the folder
+* Media - Addressed the media modal issue that was not showing the option to like and comment
+* Messages - Fixed the duplicate text issue when copy-pasting in the send message editor
+* Moderation - Improved the logic for handling suspended and blocked members content in Social groups, Network Search, Forums, Activity, and Widgets
+* Moderation - Handled the report member option UX issue, preventing multiple reports
+* Moderation - Addressed a minor accessibility issue with the 'report group' option
+* Network Search - Addressed the incorrect count issue when modifying search results using a hook
+* Core - Improvement by loading minified JS and CSS for third-party libraries
+* Core - Fixed the 'Repair user nicknames' tool that was not working as expected
+* REST API - Provided API support for social groups, activity, and forums moderation related updates
+* REST API - Handled the Forum discussion images URL issue in the API
+* REST API - Addressed the selected profile type not returning issue in the users endpoint
+* REST API - Resolved the join group action not working issue in the API for private and hidden groups when auto-approval is enabled
+* REST API - Fixed the read more option not working issue in the API for activity when it contains a link
+
+= 2.3.42 =
+* Registration - Resolved invited users can't register issue when registration option is disabled for non-members
 
 = 2.3.41 =
 * Profiles - Improved members profile link by reducing the length auto-generated unique identifier

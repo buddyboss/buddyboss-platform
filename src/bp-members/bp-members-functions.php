@@ -5154,82 +5154,6 @@ function bb_members_get_user_mentionname( $user_id ) {
 }
 
 /**
- * Sync the user's notification settings based on the admin default settings.
- *
- * @since BuddyBoss 1.9.3
- *
- * @param int $user_id ID of the user.
- */
-function bb_core_sync_user_notification_settings( $user_id ) {
-
-	if (
-		function_exists( 'bb_enabled_legacy_email_preference' ) &&
-		bb_enabled_legacy_email_preference()
-	) {
-		return false;
-	}
-
-	if ( ! $user_id ) {
-		return false;
-	}
-
-	// All preferences registered.
-	$preferences = bb_register_notification_preferences();
-
-	// Saved notification from backend default settings.
-	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
-	$all_notifications    = array();
-	$default_by_admin     = array();
-
-	if ( ! empty( $preferences ) ) {
-		$preferences = array_column( $preferences, 'fields', null );
-		foreach ( $preferences as $key => $val ) {
-			$all_notifications = array_merge( $all_notifications, $val );
-		}
-	}
-
-	$main = array();
-
-	if ( ! empty( $enabled_notification ) ) {
-		foreach ( $enabled_notification as $key => $types ) {
-			if ( isset( $types['main'] ) ) {
-				$main[ $key ] = $types['main'];
-			}
-			if ( isset( $types['email'] ) ) {
-				$default_by_admin[ $key ] = $types['email'];
-			}
-			foreach ( array( 'web', 'app' ) as $device ) {
-				if ( isset( $types[ $device ] ) ) {
-					$key_type                      = $key . '_' . $device;
-					$default_by_admin[ $key_type ] = $types[ $device ];
-				}
-			}
-		}
-	}
-
-	$all_notifications_keys = array_column( $all_notifications, 'default', 'key' );
-	$notifications          = bp_parse_args( $main, $all_notifications_keys );
-
-	foreach ( $notifications as $k => $v ) {
-		if ( ( ! isset( $default_by_admin[ $k ] ) || ( array_key_exists( $k, $default_by_admin ) && 'no' !== $default_by_admin[ $k ] ) ) && 'no' !== $v ) {
-			update_user_meta( $user_id, $k, 'yes' );
-		} else {
-			update_user_meta( $user_id, $k, 'no' );
-		}
-		foreach ( array( 'web', 'app' ) as $device ) {
-			$key_type = $k . '_' . $device;
-			if ( ( ! isset( $default_by_admin[ $key_type ] ) || ( array_key_exists( $key_type, $default_by_admin ) && 'no' !== $default_by_admin[ $key_type ] ) ) && 'no' !== $v ) {
-				update_user_meta( $user_id, $key_type, 'yes' );
-			} else {
-				update_user_meta( $user_id, $key_type, 'no' );
-			}
-		}
-	}
-
-}
-add_action( 'user_register', 'bb_core_sync_user_notification_settings' );
-
-/**
  * Function will return label background and text color's for specific member type.
  *
  * @since BuddyBoss 2.0.0
@@ -5353,7 +5277,7 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
  * Generate user profile slug.
  *
  * @since BuddyBoss 2.3.1
- * @since BuddyBoss [BBVERSION] The `$force` parameter was added.
+ * @since BuddyBoss 2.3.41 The `$force` parameter was added.
  *
  * @param int  $user_id user id.
  * @param bool $force   Optional. If true then will generate new slug forcefully.
@@ -5471,7 +5395,7 @@ function bb_core_get_user_slug( int $user_id ) {
  * Setup the user profile hash to the user meta.
  *
  * @since BuddyBoss 2.3.1
- * @since BuddyBoss [BBVERSION] The `$force` parameter was added.
+ * @since BuddyBoss 2.3.41 The `$force` parameter was added.
  *
  * @param int  $user_id User ID.
  * @param bool $force   Optional. If true then will generate new slug and update forcefully.
@@ -5532,7 +5456,7 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 /**
  * Function to generate the unique keys.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  *
  * @param int $max_ids How many unique IDs need to be generated? Default 1.
  *
@@ -5592,7 +5516,7 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1 ) {
 /**
  * Function to check the newly generated slug is exists or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  *
  * @param array|string $unique_identifier Newly generated unique identifier.
  * @param int          $user_id           Optional. ID of user to exclude from the search.
@@ -5654,7 +5578,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
 /**
  * Function to check the unique identifier slug is short or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.41
  *
  * @param string $unique_identifier User unique identifier.
  *
