@@ -663,11 +663,11 @@ body.buddypress article.page > .entry-header .entry-title {
   }
 }
 
-.groups.group-members .buddypress-wrap .subnav-filters .group-search.members-search.loading {
+.buddypress-wrap .subnav-filters .group-search.loading {
   position: relative;
 }
 
-.groups.group-members .buddypress-wrap .subnav-filters .group-search.members-search.loading:after {
+.buddypress-wrap .subnav-filters .group-search.loading:after {
   content: "\ef30";
   font-weight: 400;
   font-family: "bb-icons";
@@ -21499,6 +21499,28 @@ body.search-results.bb-template-v2 .search_results .search-document-list .media-
   width: auto;
 }
 
+.bp-document-listing .bp-media-header-wrap .bb-title.loading {
+  position: relative;
+  padding-left: 30px;
+}
+
+.bp-document-listing .bp-media-header-wrap .bb-title.loading:after {
+  content: "\ef30";
+  font-weight: 400;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 20px;
+  line-height: 1;
+  position: absolute;
+  left: 0;
+  top: 7px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+
 .buddypress .buddypress-wrap .search-form-has-reset,
 .search-form-has-reset {
   position: relative;
@@ -21558,6 +21580,26 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   -webkit-flex-basis: 25%;
   -ms-flex-preferred-size: 25%;
   flex-basis: 25%;
+}
+
+#bp-media-single-folder .bb-single-album-header .bb-title.loading {
+  position: relative;
+  padding-left: 30px;
+}
+
+#bp-media-single-folder .bb-single-album-header .bb-title.loading:after {
+  content: "\ef30";
+  font-weight: 400;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 20px;
+  line-height: 1;
+  margin-right: 10px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
 }
 
 @media screen and (max-width: 1120px) {
