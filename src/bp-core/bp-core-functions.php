@@ -8579,35 +8579,28 @@ function bb_is_notification_type_enabled( $notification_type, $type = 'main' ) {
 	}
 
 	// Check If given notification type is enabled or disabled in DB.
-	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$enabled_notifications = bp_get_option( 'bb_enabled_notification', array() );
 
 	if (
-		isset( $enabled_notification[ $notification_type ][ $type ] ) &&
-		'yes' === $enabled_notification[ $notification_type ][ $type ] ) {
-		return true;
-	}
-
-	if (
-		isset( $enabled_notification[ $notification_type ][ $type ] ) &&
-		'no' === $enabled_notification[ $notification_type ][ $type ] ) {
-		return false;
+		! empty( $enabled_notifications[ $notification_type ] ) &&
+		isset( $enabled_notifications[ $notification_type ][ $type ] )
+	) {
+		return 'yes' === $enabled_notifications[ $notification_type ][ $type ];
 	}
 
 	// Check if default notification type is already set.
 	$notification_preferences = bb_register_notification_preferences();
+	$notifications            = [];
 	if ( ! empty( $notification_preferences ) ) {
-		foreach ( $notification_preferences as $group => $group_data ) {
-			if ( ! empty( $group_data['fields'] ) ) {
-				foreach ( $group_data['fields'] as $field ) {
-					if ( ! empty( $field['key'] ) && $field['key'] === $notification_type ) {
-						return ( ! empty( $field['default'] ) && 'yes' === $field['default'] ) ? true : false ;
-					}
-				}
-			}
+		$notification_preferences = array_column( $notification_preferences, 'fields' );
+		foreach ( $notification_preferences as $key => $val ) {
+			$notifications = array_merge( $notifications, $val );
 		}
+
+		$notifications = array_column( $notifications, 'default', 'key' );
 	}
 
-	return false;
+	return ! empty( $notifications[ $notification_type ] ) && 'yes' === $notifications[ $notification_type ];
 }
 
 /**
