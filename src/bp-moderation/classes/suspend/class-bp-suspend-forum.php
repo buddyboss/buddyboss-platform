@@ -198,9 +198,11 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			}
 		}
 
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
-
+		$where = array();
+		// Remove suspended members forum from widget.
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_forum_widget_settings_parse_args' ) ) {
+			$where['suspend_where'] = $this->exclude_where_query();
+		}
 		/**
 		 * Filters the hidden forum Where SQL statement.
 		 *
@@ -238,12 +240,6 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		if ( ! empty( $username_visible ) ) {
 			return $post;
-		}
-
-		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
-
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
-			return null;
 		}
 
 		return $post;
@@ -493,8 +489,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		// Get suspended where query for the forum subscription.
-		$where                  = array();
-		$where['suspend_where'] = 'user_suspended = 1';
+		$where = array();
 
 		/**
 		 * Filters the hidden forum Where SQL statement.
