@@ -540,7 +540,7 @@ window.bp = window.bp || {};
 
 				var component_conditions = [
 					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members' ),
-					data.object === 'activity' && $( 'body' ).hasClass( 'group-type-public' ),
+					data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
 					data.object === 'document' && $( 'body' ).hasClass( 'documents' ),
 					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) ),
 				];
