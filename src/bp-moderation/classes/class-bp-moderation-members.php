@@ -156,7 +156,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			) ||
 			(
 				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
-				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches )
+				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches ) &&
+				empty( $_REQUEST['scope'] ) &&
+				empty( $_REQUEST['show-all'] )
 			)
 		) {
 			$blocked_user_query = false;
@@ -443,7 +445,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Function to allowed blocked member URL for group single activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param BP_Activity_Activity $activity Activity object.
 	 */
@@ -456,7 +458,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Function to dis-allowed blocked member URL for group single activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param BP_Activity_Activity $activity Activity object.
 	 */
@@ -469,7 +471,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Function to remove profile action if member is hasblocked/isblocked.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param array $buttons Member profile actions.
 	 * @param int   $user_id Member ID.
@@ -491,7 +493,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Logged in member is blocked by members from group, then loggedin member can not see member type of is blocked by members.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param string $string      Member type html.
 	 * @param string $member_type Member type.

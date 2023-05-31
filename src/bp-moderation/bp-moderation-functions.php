@@ -281,7 +281,11 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
+	BP_Moderation::$no_cache = true;
+
 	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
+
+	BP_Moderation::$no_cache = false;
 
 	if ( $is_reported ) {
 		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
@@ -1889,7 +1893,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
  * it will hide forums activity content from activity screen
  * which is created by blocked/blocked/suspended member.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param int $activity_id Activity Id.
  *
