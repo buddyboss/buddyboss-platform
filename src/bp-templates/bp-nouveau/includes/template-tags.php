@@ -1328,7 +1328,11 @@ function bp_nouveau_get_nav_count() {
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = (int) str_replace( ',', '', $nav_item->count );
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
-		$count = (int) groups_get_current_group()->total_member_count;
+		$args = array(
+			'exclude_admins_mods' => false
+		);
+		$total_members = groups_get_group_members( $args );
+		$count = (int) $total_members['count'];
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 		// } elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
