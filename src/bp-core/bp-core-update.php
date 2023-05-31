@@ -2870,7 +2870,7 @@ function bb_update_to_2_3_50() {
 function bb_update_to_2_3_60() {
 	global $wpdb;
 
-	$tables = array(
+	$tables       = array(
 		$wpdb->prefix . 'bp_media'    => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'type', 'menu_order', 'date_created' ),
 		$wpdb->prefix . 'bp_document' => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'menu_order', 'date_created', 'date_modified' ),
 	);
@@ -2890,6 +2890,12 @@ function bb_update_to_2_3_60() {
 
 	// Update older data.
 	bb_create_background_message_media_document_update( $table_exists );
+
+	// Disabled notification for post type comment reply notification.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
+		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
+	}
 }
 
 /**
@@ -2980,7 +2986,7 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 					$media = '';
 					if ( 'bp_document_ids' === $result->meta_key && class_exists( 'BP_Document' ) ) {
 						$media = new BP_Document( $media_id );
-					} else if ( class_exists( 'BP_Media' ) ) {
+					} elseif ( class_exists( 'BP_Media' ) ) {
 						$media = new BP_Media( $media_id );
 					}
 					if ( ! empty( $media ) ) {
