@@ -431,11 +431,11 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 20111 ) {
-			bb_update_to_2_3_5();
+			bb_update_to_2_3_41();
 		}
 
 		if ( $raw_db_version < 20211 ) {
-			bb_update_to_2_3_5_0();
+			bb_update_to_2_3_50();
 		}
 	}
 
@@ -2630,7 +2630,7 @@ function bb_update_to_2_3_1() {
 }
 
 /**
- * Install email template for activity following post.
+ * Function to run while update.
  *
  * @since BuddyBoss 2.3.3
  *
@@ -2638,54 +2638,6 @@ function bb_update_to_2_3_1() {
  */
 function bb_update_to_2_3_3() {
 	bb_repair_member_unique_slug();
-
-	$defaults = array(
-		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
-	);
-
-	// 3. Register email templates for new replied comment.
-	$email = array(
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
-	);
-
-	$id = 'new-comment-reply';
-
-	if (
-		term_exists( $id, bp_get_email_tax_type() ) &&
-		get_terms(
-			array(
-				'taxonomy' => bp_get_email_tax_type(),
-				'slug'     => $id,
-				'fields'   => 'count',
-			)
-		) > 0
-	) {
-		return;
-	}
-
-	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
-	if ( ! $post_id ) {
-		return;
-	}
-
-	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
-
-	foreach ( $tt_ids as $tt_id ) {
-		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
-		wp_update_term(
-			(int) $term->term_id,
-			bp_get_email_tax_type(),
-			array(
-				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
-			)
-		);
-	}
 }
 
 /**
@@ -2802,7 +2754,6 @@ function bb_update_to_2_3_4() {
 	wp_cache_flush();
 }
 
-
 /**
  * Background job to update user profile slug.
  *
@@ -2810,7 +2761,7 @@ function bb_update_to_2_3_4() {
  *
  * @return void
  */
-function bb_update_to_2_3_5() {
+function bb_update_to_2_3_41() {
 	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
 	if ( $is_already_run ) {
 		return;
@@ -2856,16 +2807,14 @@ function bb_core_update_repair_member_slug() {
 }
 
 /**
- * Function to clear cache while plugin update.
- * Migration to add index and new column to media tables.
+ * Clear web and api cache on the update.
+ * Install email template for activity following post.
  *
- * @since BuddyBoss [BBVERSION]
- * 
+ * @since BuddyBoss 2.3.50
+ *
  * @return void
  */
-function bb_update_to_2_3_5_0() {
-	global $wpdb;
-
+function bb_update_to_2_3_50() {
 	// Clear cache.
 	wp_cache_flush();
 	// Purge all the cache for API.
@@ -2873,11 +2822,86 @@ function bb_update_to_2_3_5_0() {
 		// Clear API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
-	
-	$tables = array(
-		$wpdb->prefix . 'bp_media'    => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'type', 'menu_order', 'date_created' ),
-		$wpdb->prefix . 'bp_document' => array( 'blog_id', 'message_id', 'group_id', 'privacy', 'menu_order', 'date_created', 'date_modified' ),
+
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
 	);
+
+	$email = array(
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
+	);
+
+	$id = 'new-comment-reply';
+
+	if (
+		term_exists( $id, bp_get_email_tax_type() ) &&
+		get_terms(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'slug'     => $id,
+				'fields'   => 'count',
+			)
+		) > 0
+	) {
+		return;
+	}
+
+	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+
+	foreach ( $tt_ids as $tt_id ) {
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		wp_update_term(
+			(int) $term->term_id,
+			bp_get_email_tax_type(),
+			array(
+				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
+			)
+		);
+	}
+}
+
+/**
+ * Migration to add index and new column to media tables.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_60() {
+	global $wpdb;
+
+	$tables = array(
+		$wpdb->prefix . 'bp_media'    => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'type',
+			'menu_order',
+			'date_created',
+		),
+		$wpdb->prefix . 'bp_document' => array(
+			'blog_id',
+			'message_id',
+			'group_id',
+			'privacy',
+			'menu_order',
+			'date_created',
+			'date_modified',
+		),
+	);
+
 	$table_exists = array();
 	foreach ( $tables as $table_name => $indexes ) {
 		if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
@@ -2919,8 +2943,8 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN 
-				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !='' 
+				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
+				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !=''
 				ORDER BY message_id LIMIT %d offset %d",
 				$per_page,
 				$offset
@@ -2996,6 +3020,6 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	}
 
 	// Call recursive to finish update for all records.
-	$paged++;
+	$paged ++;
 	bb_create_background_message_media_document_update( $table_exists, $paged );
 }

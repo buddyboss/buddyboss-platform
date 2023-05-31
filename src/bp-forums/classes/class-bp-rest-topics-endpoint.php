@@ -2010,7 +2010,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			'sticky'                => bbp_is_topic_sticky( $topic->ID ),
 			'total_reply_count'     => ( bbp_show_lead_topic() ? bbp_get_topic_reply_count( $topic->ID ) : bbp_get_topic_post_count( $topic->ID ) ),
 			'last_reply_id'         => bbp_get_topic_last_reply_id( $topic->ID ),
-			'last_active_author'    => bbp_get_topic_last_active_id( $topic->ID ),
+			'last_active_author'    => bbp_get_reply_author_id( bbp_get_topic_last_active_id( $topic->ID ) ),
 			'last_active_time'      => $this->forum_endpoint->bbp_rest_get_topic_last_active_time( $topic->ID ),
 			'is_closed'             => bbp_is_topic_closed( $topic->ID ),
 			'voice_count'           => (int) get_post_meta( $topic->ID, '_bbp_voice_count', true ),

@@ -1208,14 +1208,14 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 
 	// Array of time period chunks.
 	$chunks = array(
-			YEAR_IN_SECONDS,
-			YEAR_IN_SECONDS / 6,
-			30 * DAY_IN_SECONDS,
-			WEEK_IN_SECONDS,
-			DAY_IN_SECONDS,
-			HOUR_IN_SECONDS,
-			MINUTE_IN_SECONDS,
-			1,
+		YEAR_IN_SECONDS,
+		YEAR_IN_SECONDS / 6,
+		30 * DAY_IN_SECONDS,
+		WEEK_IN_SECONDS,
+		DAY_IN_SECONDS,
+		HOUR_IN_SECONDS,
+		MINUTE_IN_SECONDS,
+		1,
 	);
 
 	if ( ! empty( $older_date ) && ! is_numeric( $older_date ) ) {
@@ -1271,64 +1271,64 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
 					$output = $count < 2 ? esc_html__( 'a year', 'buddyboss' ) : sprintf(
-					/* translators: The display years count from the older date. */
-							_n( '%s year', '%s years', $count, 'buddyboss' ),
-							$count
+						/* translators: The display years count from the older date. */
+						_n( '%s year', '%s years', $count, 'buddyboss' ),
+						$count
 					);
 					break;
 				case YEAR_IN_SECONDS / 6:
 					$month_seconds = floor( $since / ( 30 * DAY_IN_SECONDS ) );
 					$output        = sprintf(
-					/* translators: The display months count from the older date. */
-							_n( '%s month', '%s months', $month_seconds, 'buddyboss' ),
-							$month_seconds
+						/* translators: The display months count from the older date. */
+						_n( '%s month', '%s months', $month_seconds, 'buddyboss' ),
+						$month_seconds
 					);
 					break;
 				case 30 * DAY_IN_SECONDS:
 					$week_seconds = floor( $since / WEEK_IN_SECONDS );
 					$output       = $count < 2 ? sprintf(
-					/* translators: The display weeks count from the older date. */
-							_n( '%s week', '%s weeks', $week_seconds, 'buddyboss' ),
-							$week_seconds
+						/* translators: The display weeks count from the older date. */
+						_n( '%s week', '%s weeks', $week_seconds, 'buddyboss' ),
+						$week_seconds
 					) : sprintf(
-					/* translators: The display months count from the older date. */
-							_n( '%s month', '%s months', $count, 'buddyboss' ),
-							$count
+						/* translators: The display months count from the older date. */
+						_n( '%s month', '%s months', $count, 'buddyboss' ),
+						$count
 					);
 					break;
 				case WEEK_IN_SECONDS:
 					$output = $count < 2 ? esc_html__( 'a week', 'buddyboss' ) : sprintf(
-					/* translators: The display weeks count from the older date. */
-							_n( '%s week', '%s weeks', $count, 'buddyboss' ),
-							$count
+						/* translators: The display weeks count from the older date. */
+						_n( '%s week', '%s weeks', $count, 'buddyboss' ),
+						$count
 					);
 					break;
 				case DAY_IN_SECONDS:
 					$output = $count < 2 ? esc_html__( 'a day', 'buddyboss' ) : sprintf(
-					/* translators: The display days count from the older date. */
-							_n( '%s day', '%s days', $count, 'buddyboss' ),
-							$count
+						/* translators: The display days count from the older date. */
+						_n( '%s day', '%s days', $count, 'buddyboss' ),
+						$count
 					);
 					break;
 				case HOUR_IN_SECONDS:
 					$output = $count < 2 ? esc_html__( 'an hour', 'buddyboss' ) : sprintf(
-					/* translators: The display hours count from the older date.. */
-							_n( '%s hour', '%s hours', $count, 'buddyboss' ),
-							$count
+						/* translators: The display hours count from the older date.. */
+						_n( '%s hour', '%s hours', $count, 'buddyboss' ),
+						$count
 					);
 					break;
 				case MINUTE_IN_SECONDS:
 					$output = $count < 2 ? esc_html__( 'a minute', 'buddyboss' ) : sprintf(
-					/* translators: The display minutes count from the older date. */
-							_n( '%s minute', '%s minutes', $count, 'buddyboss' ),
-							$count
+						/* translators: The display minutes count from the older date. */
+						_n( '%s minute', '%s minutes', $count, 'buddyboss' ),
+						$count
 					);
 					break;
 				default:
 					$output = $count < 2 ? $right_now_text : sprintf(
-					/* translators: The display seconds count from the older date.. */
-							_n( '%s second', '%s seconds', $count, 'buddyboss' ),
-							$count
+						/* translators: The display seconds count from the older date.. */
+						_n( '%s second', '%s seconds', $count, 'buddyboss' ),
+						$count
 					);
 			}
 
@@ -1383,10 +1383,10 @@ function bp_core_get_iso8601_date( $timestamp = '' ) {
 
 		// Not a valid date, so return blank string.
 	} catch ( Exception $e ) {
-			 return '';
+		return '';
 	}
 
-		 return $date->format( DateTime::ISO8601 );
+	return $date->format( DateTime::ISO8601 );
 }
 
 /**
@@ -5473,7 +5473,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
  * @param string $output_file_src Absolute path of the site.
  * @param string $attachment_path Symbolising path to generate.
  */
-function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path ) {
+function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, string $attachment_path ) {
 
 	if ( true === bb_check_server_disabled_symlink() ) {
 		return;
@@ -6007,7 +6007,7 @@ function bb_restricate_rss_feed() {
 		strpos( $actual_link, 'admin-ajax.php' ) === false &&
 		strpos( $actual_link, 'wp-json' ) === false
 	) {
-		$request_url = untrailingslashit( $actual_link );
+		$request_url      = untrailingslashit( $actual_link );
 		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
@@ -6074,7 +6074,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 	$current_endpoint = $request->get_route();
 	// Add mandatory endpoint here for app which you want to exclude from restriction.
 	// ex: /buddyboss-app/auth/v1/jwt/token.
-	$default_exclude_endpoint = array(
+	$default_exclude_endpoint   = array(
 		'/buddyboss/v1/signup/form',
 		'/buddyboss/v1/signup/(?P<id>[\w-]+)',
 		'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
@@ -6674,21 +6674,21 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 	}
 
 	if ( $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
-		/* translators: 1: theme setting url 2: app plugin url */
 		$info_text = sprintf(
+			/* translators: 1: theme setting url 2: app plugin url */
 			__( 'In a browser, the <strong>Cover Image Background</strong> color can be changed in the <a href="%1$s">Theme Options</a>. In the app, it can be changed in the <a href="%2$s">Color</a> settings.', 'buddyboss' ),
 			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' ),
 			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
 		);
 	} elseif ( $is_buddyboss_theme_active && ! $is_buddyboss_app_plugin_active ) {
-		/* translators: 1: theme setting url */
 		$info_text = sprintf(
+			/* translators: 1: theme setting url */
 			__( 'The <strong>Cover Image Background</strong> color can be changed in the <a href="%s">Theme Options</a>.', 'buddyboss' ),
 			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' )
 		);
 	} elseif ( ! $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
-		/* translators: 1: app plugin url */
 		$info_text = sprintf(
+			/* translators: 1: app plugin url */
 			__( 'In a browser, the <strong>Cover Image Background</strong> color can be changed with custom CSS. In the app, it can be changed in the <a href="%s">Color</a> settings.', 'buddyboss' ),
 			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
 		);
@@ -6888,7 +6888,7 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 
 				if (
 					'bb_new_mention' === $component_action &&
-					in_array( $component_name, array( 'activity', 'forums', 'members' ), true ) &&
+					in_array( $component_name, array( 'activity', 'forums', 'members', 'core' ), true ) &&
 					$component_action === $n['component_action']
 				) {
 					return $n['notification_type'];
@@ -8554,7 +8554,7 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 /**
  * Return to check its working with WP CLI or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @return bool
  */

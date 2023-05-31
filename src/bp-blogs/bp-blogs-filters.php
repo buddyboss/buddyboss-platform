@@ -174,7 +174,7 @@ add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_in
 /**
  * Notification for mentions in blog comment
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param int        $activity_id The activity comment ID.
  * @param WP_Comment $comment WP Comment object.

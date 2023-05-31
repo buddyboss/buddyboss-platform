@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BB_Post_Notification class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  */
 class BB_Post_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @var object
 	 */
@@ -28,7 +28,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @return null|BB_Post_Notification|Controller|object
 	 */
@@ -43,7 +43,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 */
 	public function __construct() {
 		// Initialize.
@@ -53,7 +53,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @return mixed|void
 	 */
@@ -71,7 +71,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for posts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 */
 	public function register_notification_for_post_comment_reply() {
 
@@ -123,7 +123,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
@@ -138,8 +138,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
-		$notification  = bp_notifications_get_notification( $notification_id );
-
+		$notification = bp_notifications_get_notification( $notification_id );
 		if ( ! empty( $notification ) && 'bb_posts_new_comment_reply' === $notification->component_action &&
 			in_array( $notification->component_name, array( 'core' ), true ) ) {
 			$comment           = get_comment( $notification->item_id );
