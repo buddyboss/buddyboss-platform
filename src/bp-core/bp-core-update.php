@@ -2881,9 +2881,6 @@ function bb_update_to_2_3_50() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_2_3_60() {
-
-	error_log( print_r( 'bb_update_to_2_3_60', 1 ) );
-
 	// Disabled notification for post type comment reply notification.
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
