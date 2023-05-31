@@ -2758,7 +2758,6 @@ function bb_update_to_2_3_4() {
 	wp_cache_flush();
 }
 
-
 /**
  * Background job to update user profile slug.
  *
