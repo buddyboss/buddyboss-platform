@@ -324,7 +324,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	/**
 	 * Check content is hidden or not.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param int $item_id Item id.
 	 *
