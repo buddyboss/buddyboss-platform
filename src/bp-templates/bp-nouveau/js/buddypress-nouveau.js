@@ -598,9 +598,11 @@ window.bp = window.bp || {};
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( '' );
 
-					component_targets.forEach( function( target ) {
-						target.removeClass( 'loading' );
-					});
+					if( $( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ){
+						component_targets.forEach( function( target ) {
+							target.removeClass( 'loading' );
+						});
+					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
 						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
