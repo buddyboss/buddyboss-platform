@@ -274,7 +274,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Where sql for exclude Blocked items.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param bool $blocked_user_query If true then blocked user query will fire.
 	 *

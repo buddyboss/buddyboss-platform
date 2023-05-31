@@ -2061,7 +2061,7 @@ class BP_Activity_Activity {
 	/**
 	 * Hide all is/has blocked user activity comments on other member posts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param array|object $activity_comments The activity object or array.
 	 *

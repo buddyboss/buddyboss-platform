@@ -156,7 +156,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.3.50
 		 * Introduce new params $where_conditions and $search_term.
 		 *
 		 * @param array  $where            Query to hide suspended user's activity comment.
