@@ -31,7 +31,7 @@
 		"node-sass": "^8.0.0",
 		"postcss": "^8.4.19",
 		"postcss-scss": "^4.0.5",
-		"stylelint": "^15.4.0"
+		"stylelint": "^14.16.1"
 	},
 	"scripts": {
 		"prepare": "npm install husky jira-prepare-commit-msg --save-dev && npx husky install"
