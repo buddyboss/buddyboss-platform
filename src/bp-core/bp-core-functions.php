@@ -8582,25 +8582,30 @@ function bb_is_notification_type_enabled( $notification_type, $type = 'main' ) {
 	$enabled_notifications = bp_get_option( 'bb_enabled_notification', array() );
 
 	if (
-		! empty( $enabled_notifications[ $notification_type ] ) &&
-		isset( $enabled_notifications[ $notification_type ][ $type ] )
+			! empty( $enabled_notifications[ $notification_type ] ) &&
+			isset( $enabled_notifications[ $notification_type ][ $type ] )
 	) {
 		return 'yes' === $enabled_notifications[ $notification_type ][ $type ];
 	}
 
 	// Check if default notification type is already set.
 	$notification_preferences = bb_register_notification_preferences();
-	$notifications            = [];
+	$all_preferences          = array();
 	if ( ! empty( $notification_preferences ) ) {
-		$notification_preferences = array_column( $notification_preferences, 'fields' );
-		foreach ( $notification_preferences as $key => $val ) {
-			$notifications = array_merge( $notifications, $val );
+		foreach ( $notification_preferences as $preference ) {
+			if ( ! empty( $preference['fields'] ) ) {
+				$all_preferences = array_merge( $all_preferences, $preference['fields'] );
+			}
 		}
-
-		$notifications = array_column( $notifications, 'default', 'key' );
 	}
 
-	return ! empty( $notifications[ $notification_type ] ) && 'yes' === $notifications[ $notification_type ];
+	if ( ! empty( $all_preferences ) ) {
+		$notifications = array_column( $all_preferences, 'default', 'key' );
+
+		return ! empty( $notifications[ $notification_type ] ) && 'yes' === $notifications[ $notification_type ];
+	}
+
+	return false;
 }
 
 /**
@@ -8611,46 +8616,66 @@ function bb_is_notification_type_enabled( $notification_type, $type = 'main' ) {
  * @param string $notification_type Notification type.
  * @param string $type              Type of notification.
  *
- * @return void
+ * @return bool
  */
 function bb_enable_notification_type( $notification_type, $type = 'main' ) {
 
 	if ( empty( $notification_type ) ) {
-		return;
+		return false;
 	}
 
 	// Check if notification types is already enable or not.
 	if ( bb_is_notification_type_enabled( $notification_type, $type ) ) {
-		return;
+		return false;
+	}
+
+	if (
+		( 'web' === $type && ! bb_web_push_notification_enabled() ) ||
+		( 'app' === $type && ! bb_app_notification_enabled() )
+	) {
+		return false;
 	}
 
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
 	$enabled_notification[ $notification_type ][ $type ] = 'yes';
 	update_option( 'bb_enabled_notification', $enabled_notification );
+
+	return true;
 }
 
 /**
- * Disable the notification type if enable.
+ * Disable the notification type if enabled.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $notification_type Notification type.
  * @param string $type              Type of notification.
  *
- * @return void
+ * @return bool
  */
 function bb_disable_notification_type( $notification_type, $type = 'main' ) {
 
 	if ( empty( $notification_type ) ) {
-		return;
+		return false;
 	}
 
 	// Check if notification types is already disable or not.
 	if ( ! bb_is_notification_type_enabled( $notification_type, $type ) ) {
-		return;
+		return false;
+	}
+
+	if (
+		( 'web' === $type && ! bb_web_push_notification_enabled() ) ||
+		( 'app' === $type && ! bb_app_notification_enabled() )
+	) {
+		return false;
 	}
 
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
 	$enabled_notification[ $notification_type ][ $type ] = 'no';
 	update_option( 'bb_enabled_notification', $enabled_notification );
+
+	return true;
 }
