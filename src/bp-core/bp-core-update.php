@@ -437,6 +437,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20211 ) {
 			bb_update_to_2_3_50();
 		}
+
+		if ( $raw_db_version < 20261 ) {
+			bb_update_to_2_3_60();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2943,8 +2947,8 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
-				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !=''
+				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN 
+				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !='' 
 				ORDER BY message_id LIMIT %d offset %d",
 				$per_page,
 				$offset
