@@ -323,7 +323,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 * Function to prevent forum activity content if content will created by hasblocked/isblocked members
 	 * and applied filters ( bb_moderation_has_blocked_message, bb_moderation_is_blocked_message ) to restrict content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.50
 	 *
 	 * @param $content  Forum reply content.
 	 * @param $activity Activity object data.

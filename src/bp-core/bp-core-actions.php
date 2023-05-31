@@ -607,7 +607,7 @@ add_action( 'bp_init', 'bb_check_presence_load_directly' );
 /**
  * Register the post comment reply notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  */
 function bb_load_post_notifications() {
 	if ( class_exists( 'BB_Post_Notification' ) ) {
@@ -618,7 +618,7 @@ function bb_load_post_notifications() {
 /**
  * Send new post comment reply notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param int        $comment_id       The comment ID.
  * @param int|string $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
@@ -715,7 +715,7 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 		/**
 		 * Fires at the point that notifications should be sent for new comment reply.
 		 *
-		 * @since BuddyPress [BBVERSION]
+		 * @since BuddyPress 2.3.50
 		 *
 		 * @param int   $comment_id   ID for the newly received comment reply.
 		 * @param int   $commenter_id ID of the user who made the comment reply.
@@ -728,7 +728,7 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 /**
  * Check post comment status on transition_comment_status hook and send the new comment reply notification if not sent already.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param string     $new_status New comment status.
  * @param string     $old_status Previous comment status.
@@ -750,7 +750,7 @@ function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) 
 /**
  * Call new blog post comment reply notification in case of REST API.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param string     $comment_ID Comment id.
  * @param WP_Comment $comment    Comment data.
@@ -766,7 +766,7 @@ function bb_post_new_comment_reply_notification_helper( $comment_ID, $comment ) 
 /**
  * Mark blog comment notifications as read.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  */
 function bb_core_read_blog_comment_notification() {
 	if ( ! is_user_logged_in() ) {
@@ -988,7 +988,7 @@ add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
 /**
  * Fired and mention email when comment has been approved.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param string     $new_status New comment status.
  * @param string     $old_status Previous comment status.
@@ -1012,7 +1012,7 @@ add_action( 'transition_comment_status', 'bb_mention_post_type_comment_status_ch
 /**
  * Registered component name for the core.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param array $component_names Array of registered component names.
  *

@@ -8554,7 +8554,7 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 /**
  * Return to check its working with WP CLI or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @return bool
  */
