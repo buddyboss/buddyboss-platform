@@ -8582,8 +8582,8 @@ function bb_is_notification_type_enabled( $notification_type, $type = 'main' ) {
 	$enabled_notifications = bp_get_option( 'bb_enabled_notification', array() );
 
 	if (
-			! empty( $enabled_notifications[ $notification_type ] ) &&
-			isset( $enabled_notifications[ $notification_type ][ $type ] )
+		! empty( $enabled_notifications[ $notification_type ] ) &&
+		isset( $enabled_notifications[ $notification_type ][ $type ] )
 	) {
 		return 'yes' === $enabled_notifications[ $notification_type ][ $type ];
 	}
