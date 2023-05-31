@@ -535,28 +535,28 @@ window.bp = window.bp || {};
 				$( this.objectNavParent + ' [data-bp-scope]:eq(0), #object-nav li.current' ).addClass( 'selected loading' );
 			}
 
-			// Add loader at custom place for few search types 
-			if( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ){
+			// Add loader at custom place for few search types
+			if ( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ) {
 
 				var component_conditions = [
-					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members'),
-					data.object === 'activity' && $( 'body' ).hasClass( 'group-type-public'),
+					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members' ),
+					data.object === 'activity' && $( 'body' ).hasClass( 'group-type-public' ),
 					data.object === 'document' && $( 'body' ).hasClass( 'documents' ),
-					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) )
+					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) ),
 				];
-	
+
 				var component_targets = [
 					$( '.groups .group-search.members-search' ),
 					$( '.groups .group-search.activity-search' ),
 					$( '.documents .bp-document-listing .bb-title' ),
-					$( '#bp-media-single-folder .bb-title')
+					$( '#bp-media-single-folder .bb-title' ),
 				];
 
-				component_conditions.forEach( function( condition, i ) {
-					if( condition ) {
-						component_targets[i].addClass( 'loading' );
+				component_conditions.forEach( function ( condition, i ) {
+					if ( condition ) {
+						component_targets[ i ].addClass( 'loading' );
 					}
-				});
+				} );
 
 			}
 
@@ -598,10 +598,10 @@ window.bp = window.bp || {};
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( '' );
 
-					if( $( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ){
-						component_targets.forEach( function( target ) {
+					if ( $( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ) {
+						component_targets.forEach( function ( target ) {
 							target.removeClass( 'loading' );
-						});
+						} );
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
