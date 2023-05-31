@@ -1331,7 +1331,7 @@ function bb_xprofile_repair_user_nicknames( $repair_list ) {
  * This function will work as migration process which will update user nicknames.
  *
  * @since BuddyBoss 1.7.9
- * @since BuddyBoss [BBVERSION] Added support to skip updating nickname if modified by the user.
+ * @since BuddyBoss 2.3.50 Added support to skip updating nickname if modified by the user.
  */
 function bb_xprofile_repair_user_nicknames_callback() {
 	global $wpdb;

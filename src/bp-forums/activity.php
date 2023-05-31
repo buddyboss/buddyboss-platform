@@ -425,7 +425,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			/**
 			 * Filters the activity content for forum.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.3.50
 			 *
 			 * @param array $content  Activity content
 			 * @param array $activity Activity object

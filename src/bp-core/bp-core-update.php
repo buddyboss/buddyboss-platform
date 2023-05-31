@@ -2797,7 +2797,7 @@ function bb_core_update_repair_member_slug() {
 /**
  * Migration to add index and new column to media tables.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @return void
  */
