@@ -839,7 +839,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					/* translators: do not remove {} brackets or translate its contents. */
 					'email_plain_content' => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 					'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
-					'unsubscribe_text'    => __( 'You will no longer receive emails of new discussions in groups your subscribed to.', 'buddyboss' ),
+					'unsubscribe_text'    => __( 'You will no longer receive emails of new discussions in groups you\'re subscribed to.', 'buddyboss' ),
 				),
 				'bb_groups_subscribed_discussion'
 			);
