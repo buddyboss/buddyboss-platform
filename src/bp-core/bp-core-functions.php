@@ -8566,7 +8566,7 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 /**
  * Download an image from the specified URL and attach it to a post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param string $file The URL of the image to download.
  *

@@ -202,7 +202,7 @@ function bp_blogs_filter_meta_column_name( $retval ) {
 /**
  * Notification for mentions in blog comment
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.50
  *
  * @param int        $activity_id The activity comment ID.
  * @param WP_Comment $comment WP Comment object.
