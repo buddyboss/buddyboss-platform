@@ -433,6 +433,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20211 ) {
 			bb_update_to_2_3_50();
 		}
+
+		if ( $raw_db_version < 20261 ) {
+			bb_update_to_2_3_60();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2915,5 +2919,18 @@ function bb_update_to_2_3_50() {
 				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
 			)
 		);
+	}
+}
+
+/**
+ * Function to save the default notification types.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_3_60() {
+	// Disabled notification for post type comment reply notification.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
+		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
 	}
 }
