@@ -120,7 +120,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 * Introduce new params $where_conditions and $search_term.
 	 *
 	 * @param string $where            Activity Where sql.
@@ -331,7 +331,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * Function to get activity comment id of main parent activity id which is created by blocked members.
 	 * If this activity is hidden then will store that activity comment id in array and return as $blocked_item_ids.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param array  $where_conditions Where condition for activity comment search.
 	 * @param string $search_term      Search term.
@@ -440,7 +440,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Fetch main parent comment id based on specific comment id.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param int $comment_id Current comment id.
 	 *
@@ -495,7 +495,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Fetch activity data using bypass moderation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param int $activity_id Activity id.
 	 *

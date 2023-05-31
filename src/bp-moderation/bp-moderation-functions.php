@@ -1893,7 +1893,7 @@ function bb_moderation_allowed_specific_notification( $args ) {
  * it will hide forums activity content from activity screen
  * which is created by blocked/blocked/suspended member.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.42
  *
  * @param int $activity_id Activity Id.
  *

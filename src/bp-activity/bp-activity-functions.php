@@ -6004,7 +6004,7 @@ function bb_activity_following_post_notification( $args ) {
 /**
  * Check whether activity comment is group comment or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.42
  *
  * @param object|int $comment Activity comment ID or object.
  *

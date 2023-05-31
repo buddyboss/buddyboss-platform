@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.42
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BB_Post_Notification class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.42
  */
 class BB_Post_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @var object
 	 */
@@ -28,7 +28,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @return null|BB_Post_Notification|Controller|object
 	 */
@@ -43,7 +43,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 */
 	public function __construct() {
 		// Initialize.
@@ -53,7 +53,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @return mixed|void
 	 */
@@ -71,7 +71,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for posts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 */
 	public function register_notification_for_post_comment_reply() {
 
@@ -123,7 +123,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.

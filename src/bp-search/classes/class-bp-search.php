@@ -754,7 +754,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			/**
 			 * Filters out the search results.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.3.42
 			 *
 			 * @param array  $search_results Array of search results.
 			 * @param object $this           Object of BP_Search class.

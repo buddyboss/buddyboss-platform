@@ -3164,7 +3164,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token commenter.name
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.
@@ -3189,7 +3189,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token comment_reply.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.
@@ -3302,7 +3302,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token comment.url
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.
@@ -3323,7 +3323,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token commenter.url
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.

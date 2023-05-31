@@ -273,7 +273,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Where sql for exclude Blocked items.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param bool $blocked_user_query If true then blocked user query will fire.
 	 *

@@ -2810,7 +2810,7 @@ function bb_core_update_repair_member_slug() {
  * Clear web and api cache on the update.
  * Install email template for activity following post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.42
  *
  * @return void
  */

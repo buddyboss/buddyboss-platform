@@ -151,7 +151,7 @@ class BP_Moderation {
 	/**
 	 * Bypass the cache and force a DB query.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @var bool
 	 */

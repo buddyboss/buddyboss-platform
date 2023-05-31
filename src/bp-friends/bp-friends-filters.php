@@ -460,7 +460,7 @@ add_action( 'bp_friends_includes', 'bb_load_friends_notifications' );
 /**
  * Function to prevent friendship to that user who has blocked and who is blocked the current user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.42
  *
  * @param BP_Friends_Friendship $value Current friendship request object.
  */

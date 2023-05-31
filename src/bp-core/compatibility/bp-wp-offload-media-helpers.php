@@ -294,7 +294,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	/**
 	 * Fix the media url issue with API post_content on API.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.42
 	 *
 	 * @param string $content Post content.
 	 *
