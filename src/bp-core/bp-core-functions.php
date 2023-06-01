@@ -8567,6 +8567,17 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 }
 
 /**
+ * Return to check its working with WP CLI or not.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @return bool
+ */
+function bb_is_wp_cli() {
+	return defined( 'WP_CLI' ) && WP_CLI;
+}
+
+/**
  * Download an image from the specified URL and attach it to a post.
  *
  * @since BuddyBoss 2.3.50
