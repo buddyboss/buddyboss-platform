@@ -1234,7 +1234,7 @@ function bp_admin_repair_tools_wrapper_function() {
 		),
 	);
 
-	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$type = bb_filter_input_string( INPUT_POST, 'type' );
 
 	if ( empty( $type ) ) {
 		wp_send_json_error( $response );
@@ -1483,9 +1483,7 @@ function bb_sync_profile_completion_widget() {
 						 * There is not any direct way to check gravatar set for user.
 						 * Need to check $profile_url is send 200 status or not.
 						 */
-						remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
 						$profile_url = get_avatar_url( $user->ID, array( 'default' => '404' ) );
-						add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
 
 						$headers = get_headers( $profile_url, 1 );
 						if ( $headers[0] === 'HTTP/1.1 200 OK' && isset( $headers['Link'] ) ) {

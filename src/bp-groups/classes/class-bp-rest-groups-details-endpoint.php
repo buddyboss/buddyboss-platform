@@ -256,12 +256,16 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			$default_tab = bp_nouveau_get_appearance_settings( 'group_default_tab' );
 		}
 
-		$nav_items = $group_nav->get_secondary(
-			array(
-				'parent_slug'     => $group_slug,
-				'user_has_access' => true,
-			)
-		);
+		$nav_items = array();
+		// Check if get_secondary method is exists.
+		if ( ! empty( $group_nav ) && method_exists( $group_nav, 'get_secondary' ) ) {
+			$nav_items = $group_nav->get_secondary(
+				array(
+					'parent_slug'     => $group_slug,
+					'user_has_access' => true,
+				)
+			);
+		}
 
 		if ( ! empty( $nav_items ) ) {
 			foreach ( $nav_items as $nav ) {
@@ -605,7 +609,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				break;
 		}
 
-		return $count;
+		return bp_core_number_format( $count );
 	}
 
 	/**
@@ -639,7 +643,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return $count;
+		return bp_core_number_format( $count );
 	}
 
 	/**
