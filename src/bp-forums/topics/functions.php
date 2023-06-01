@@ -3704,28 +3704,56 @@ function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 		return $content;
 	}
 
-	if ( empty( $topic_id ) ) {
-		$topic_id = bbp_get_topic_id();
+	$embed_urls = $embeds_array = array();
+	$flag       = true;
+
+	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 	}
 
-	// Check if preview url was used or not, if not return content without embed.
-	$link_embed = get_post_meta( $topic_id, '_link_embed', true );
-	if ( ! empty( $link_embed ) ) {
-		$embed_data = bp_core_parse_url( $link_embed );
+	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
+		$embed_urls = array_filter( $embed_urls[0] );
+		$embed_urls = array_unique( $embed_urls );
 
-		if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
-			$embed_code = $embed_data['description'];
-		}
-
-		if ( ! empty( $embed_code ) ) {
-			preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
-			preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
-
-			if ( ! empty( $content_url ) && empty( $content_tag ) ) {
-				$content = sprintf( '<p>%s</p>', $content );
+		foreach ( $embed_urls as $url ) {
+			if ( false === $flag ) {
+				continue;
 			}
 
-			return $content .= $embed_code;
+			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
+			if ( $embed ) {
+				$flag           = false;
+				$embeds_array[] = wpautop( $embed );
+			}
+		}
+
+		// Put the line breaks back.
+		return $content . implode( '', $embeds_array );
+
+	} else {
+		if ( empty( $topic_id ) ) {
+			$topic_id = bbp_get_topic_id();
+		}
+
+		// check if preview url was used or not, if not return content without embed.
+		$link_embed = get_post_meta( $topic_id, '_link_embed', true );
+		if ( ! empty( $link_embed ) ) {
+			$embed_data = bp_core_parse_url( $link_embed );
+
+			if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
+				$embed_code = $embed_data['description'];
+			}
+
+			if ( ! empty( $embed_code ) ) {
+				preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+				preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+				if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+					$content = sprintf( '<p>%s</p>', $content );
+				}
+
+				return $content .= $embed_code;
+			}
 		}
 	}
 
