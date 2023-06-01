@@ -896,13 +896,15 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				$members_query      = groups_get_group_members(
+				$members_query = groups_get_group_members(
 					array(
 						'group_id'            => $group_id,
 						'exclude_admins_mods' => false,
 						'per_page'            => 1,
 					)
 				);
+
+				// Fetch group members count.
 				$total_member_count = (int) $members_query['count'];
 				if ( 'hide' === $type && in_array( $user_id, $group_ids, true ) ) {
 					$total_member_count --;
