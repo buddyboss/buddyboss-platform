@@ -896,11 +896,16 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				$total_member_count = groups_get_total_member_count( $group_id );
+				$members_query      = groups_get_group_members(
+					array(
+						'group_id'            => $group_id,
+						'exclude_admins_mods' => false,
+						'per_page'            => 1,
+					)
+				);
+				$total_member_count = (int) $members_query['count'];
 				if ( 'hide' === $type && in_array( $user_id, $group_ids, true ) ) {
-					$total_member_count--;
-				} elseif ( 'unhide' === $type && ! in_array( $user_id, $group_ids, true ) ) {
-					$total_member_count++;
+					$total_member_count --;
 				}
 				groups_update_groupmeta( $group_id, 'total_member_count', (int) $total_member_count );
 			}
