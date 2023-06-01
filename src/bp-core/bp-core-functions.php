@@ -8072,17 +8072,6 @@ function bb_get_user_id_by_activity_mentionname( $mention_names ) {
 }
 
 /**
- * Return to check its working with WP CLI or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool
- */
-function bb_is_wp_cli() {
-	return defined( 'WP_CLI' ) && WP_CLI;
-}
-
-/**
  * A group of regex replaces used to identify text formatted with newlines.
  * The remaining line breaks after conversion become <<br />> tags, unless $br is set to '0' or 'false'.
  *
