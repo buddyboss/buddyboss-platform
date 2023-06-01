@@ -2959,10 +2959,7 @@ function bb_migrate_group_member_count( $group_ids, $paged ) {
 			)
 		);
 		$query_friend_count = (int) $members_query['count'];
-		$meta_friend_count  = (int) groups_get_total_member_count( $group_id );
-		if ( $query_friend_count !== $meta_friend_count ) {
-			groups_update_groupmeta( $group_id, 'total_member_count', $query_friend_count );
-		}
+		groups_update_groupmeta( $group_id, 'total_member_count', $query_friend_count );
 	}
 
 	// Call recursive to finish update for all users.
