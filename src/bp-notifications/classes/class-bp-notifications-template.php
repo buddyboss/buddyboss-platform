@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
+#[\AllowDynamicProperties]
 class BP_Notifications_Template {
 
 	/**
@@ -153,7 +154,7 @@ class BP_Notifications_Template {
 	public function __construct( $args = array() ) {
 
 		// Parse arguments.
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'id'                => false,

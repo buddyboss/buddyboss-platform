@@ -26,6 +26,6 @@
 		<span>
 	</h3>
 	<a class="bb-model-close-button" href="#">
-		<span class="bb-icon bb-icon-close"></span>
+		<span class="bb-icon-l bb-icon-times"></span>
 	</a>
 </script>

@@ -159,6 +159,7 @@ function bbp_clean_post_cache( $_post = '' ) {
 		wp_cache_delete( 'bbp_parent_' . $_post->ID . '_type_' . $post_type . '_child_count', 'bbpress_posts' );
 		wp_cache_delete( 'bbp_parent_public_' . $_post->ID . '_type_' . $post_type . '_child_ids', 'bbpress_posts' );
 		wp_cache_delete( 'bbp_parent_all_' . $_post->ID . '_type_' . $post_type . '_child_ids', 'bbpress_posts' );
+		wp_cache_delete( 'bb_parent_all_' . $_post->ID . '_type_' . $post_type . '_parent_ids', 'bbpress_posts' );
 	}
 
 	// Invalidate parent caches

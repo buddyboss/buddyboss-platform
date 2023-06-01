@@ -161,7 +161,7 @@ function bb_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
 				'link_text'      => sprintf( '<span class="text">%1$s %2$s</span>', esc_html__( 'View', 'buddyboss' ), esc_attr( ucfirst( $post_type_obj->labels->singular_name ) ) ),
 				'button_attr'    => array(
 					'href'  => esc_url( get_permalink( $blog_post->ID ) ),
-					'class' => 'button bb-icon-arrow-circle bp-secondary-action',
+					'class' => 'button bb-icon-arrow-down bb-icons bp-secondary-action',
 				),
 			);
 		}
@@ -170,6 +170,133 @@ function bb_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
 	return $buttons;
 }
 add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_inner_blogs_buttons', 10, 1 );
+
+/**
+ * Notification for mentions in blog comment
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param int        $activity_id The activity comment ID.
+ * @param WP_Comment $comment WP Comment object.
+ * @param array      $activity_args Activity comment arguments.
+ * @param object     $activity_post_object The post type tracking args object.
+ */
+function bb_blogs_comment_mention_notification( $activity_id, $comment, $activity_args, $activity_post_object ) {
+	// Are mentions disabled?
+	if ( ! bp_activity_do_mentions() ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+	if ( empty( $activity->component ) ) {
+		return;
+	}
+
+	// If activity was marked as spam, stop the rest of this function.
+	if ( ! empty( $activity->is_spam ) ) {
+		return;
+	}
+
+	// Try to find mentions.
+	$usernames = bp_activity_find_mentions( $comment->comment_content );
+
+	// We have mentions!
+	if ( ! empty( $usernames ) ) {
+
+		// Are mentions disabled?
+		if (
+			! bp_activity_do_mentions() ||
+			(
+				! empty( $activity->privacy ) &&
+				'onlyme' === $activity->privacy
+			)
+		) {
+			return;
+		}
+
+		$comment_post = get_post( $comment->comment_post_ID );
+
+		$activity->content = $comment->comment_content;
+
+		// Send @mentions and setup BP notifications.
+		foreach ( (array) $usernames as $user_id => $username ) {
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $activity->user_id ) ) {
+				continue;
+			}
+
+			// User Mentions email.
+			if (
+				(
+					! bb_enabled_legacy_email_preference() &&
+					true === bb_is_notification_enabled( $user_id, 'bb_new_mention' )
+				) ||
+				(
+					bb_enabled_legacy_email_preference() &&
+					true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
+				)
+			) {
+
+				$poster_name   = bp_core_get_user_displayname( $activity->user_id );
+				$title_text    = get_the_title( $comment_post );
+				$reply_content = apply_filters( 'comment_text', $comment->comment_content, $comment, array() );
+				$reply_url     = get_comment_link( $comment );
+
+				$email_type = 'new-mention';
+
+				$unsubscribe_args = array(
+					'user_id'           => $user_id,
+					'notification_type' => $email_type,
+				);
+
+				$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+
+				$args = array(
+					'tokens' => array(
+						'usermessage'       => wp_strip_all_tags( $activity->content ),
+						'mentioned.url'     => $reply_url,
+						'poster.name'       => $poster_name,
+						'receiver-user.id'  => $user_id,
+						'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'mentioned.type'    => $notification_type_html,
+						'mentioned.content' => $reply_content,
+						'author_id'         => $activity->user_id,
+						'reply_text'        => esc_html__( 'View Comment', 'buddyboss' ),
+						'title_text'        => $title_text,
+					),
+				);
+
+				bp_send_email( $email_type, $user_id, $args );
+
+				// Updates mention count for the user.
+				bp_activity_update_mention_count_for_user( $user_id, $activity->id );
+			}
+
+			if ( bp_is_active( 'notifications' ) ) {
+
+				// Specify the Notification type.
+				$component_action = 'bb_new_mention';
+				$component_name   = 'core';
+
+				bp_notifications_add_notification(
+					array(
+						'user_id'           => $user_id,
+						'item_id'           => $comment->comment_ID,
+						'secondary_item_id' => $comment->user_id,
+						'component_name'    => $component_name,
+						'component_action'  => $component_action,
+						'date_notified'     => bp_core_current_time(),
+						'is_new'            => 1,
+					)
+				);
+			}
+		}
+	}
+}
+
+// Action notification for mentions in single page blog comments.
+add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 10, 4 );
 
 /**
  * Filters the column name during blog metadata queries.
@@ -197,4 +324,3 @@ function bp_blogs_filter_meta_column_name( $retval ) {
 	}
 	return $retval;
 }
-

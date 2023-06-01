@@ -91,9 +91,10 @@
 			box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
 
 			&.loading:after {
-				content: "\e838";
+				content: "\ef30";
 				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 18px;
+				font-weight: 300;
 				line-height: 1;
 				margin-left: 10px;
 				text-align: center;
@@ -127,7 +128,6 @@
 #item-header-cover-image {
 	margin-bottom: 1em;
 	position: relative;
-	z-index: 2;
 
 	&.bb-disable-cover-img #item-header-content {
 
@@ -145,6 +145,7 @@
 		margin-top: -70px;
 		padding: 0 1em;
 		position: relative;
+		z-index: 2;
 
 		img.avatar {
 			max-width: 150px;

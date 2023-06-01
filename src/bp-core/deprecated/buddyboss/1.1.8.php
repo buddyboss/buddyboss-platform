@@ -101,7 +101,7 @@ function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $o
 	if( $object != 'groups' )
 		return $qs;
 
-	$args = wp_parse_args( $qs );
+	$args = bp_parse_args( $qs );
 
 	if( ! empty( $args['exclude'] ) )
 		$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_group_ids );

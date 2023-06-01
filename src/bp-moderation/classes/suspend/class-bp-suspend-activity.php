@@ -262,6 +262,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_activity_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
+
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 		}
 
@@ -290,7 +291,15 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
+		if (
+			'activity_comment' !== $activity->type &&
+			BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) &&
+			(
+				// Allow comment to group activity.
+				! bp_is_active( 'groups' ) ||
+				'groups' !== $activity->component
+			)
+		) {
 			return false;
 		}
 
@@ -309,7 +318,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public function manage_hidden_activity( $activity_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $activity_id,
@@ -353,7 +362,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	public function manage_unhidden_activity( $activity_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $activity_id,

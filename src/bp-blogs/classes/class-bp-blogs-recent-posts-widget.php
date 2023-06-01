@@ -147,7 +147,7 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 	 * @return void
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args(
+		$instance = bp_parse_args(
 			(array) $instance,
 			array(
 				'title'      => __( 'Recent Networkwide Posts', 'buddyboss' ),

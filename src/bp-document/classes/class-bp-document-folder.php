@@ -222,7 +222,7 @@ class BP_Document_Folder {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'page'         => 1,               // The current page.
@@ -599,7 +599,7 @@ class BP_Document_Folder {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r  = bp_parse_args(
 			$args,
 			array(
 				'id'           => false,
