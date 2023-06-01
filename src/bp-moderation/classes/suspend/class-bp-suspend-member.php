@@ -607,9 +607,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'groups' ) ) {
-			$groups = groups_get_user_groups( $member_id );
-			if ( ! empty( $groups['groups'] ) ) {
-				$group_ids = $groups['groups'];
+			$groups    = groups_get_user_groups( $member_id );
+			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
+			if ( ! empty( $group_ids ) ) {
 				if ( $this->background_disabled ) {
 					$this->bb_update_group_member_count( $member_id, $group_ids, $action );
 				} else {
