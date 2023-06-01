@@ -97,6 +97,9 @@ add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
 add_filter( 'bp_repair_list', 'bb_groups_repair_group_subscriptions', 11 );
 add_action( 'bp_actions', 'bb_group_subscriptions_handler' );
 
+// Filter group count.
+add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_update_where_sql', 10, 2 );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -786,7 +789,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 
 			$folder_ids[] = $folder_id;
 			$folders      = array(
-				'column'  => 'parent',
+				'column'  => 'folder_id',
 				'compare' => 'IN',
 				'value'   => $folder_ids,
 			);
@@ -1376,3 +1379,22 @@ function bb_subscription_send_subscribe_group_media_notifications( $content, $us
 add_action( 'bb_media_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
 add_action( 'bb_document_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
 add_action( 'bb_video_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
+
+/**
+ * Filters the Where SQL statement.
+ *
+ * @since 2.3.4
+ *
+ * @param array $where_conditions Group Where sql.
+ * @param array $args             Query arguments.
+ *
+ * @return mixed Where SQL
+ */
+function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) {
+
+	if ( ! bp_is_user_groups() && bp_is_groups_directory() && true === (bool) bp_enable_group_hide_subgroups() ) {
+		$where_conditions[] = 'g.parent_id = 0';
+	}
+
+	return $where_conditions;
+}

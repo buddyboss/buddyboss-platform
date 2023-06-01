@@ -49,6 +49,20 @@
 	padding: 8px 10px;
 }
 
+.atwho-view ul li.list-loader {
+	color: #92949d;
+}
+
+.atwho-view ul li.list-loader:before {
+	content: "\ef30";
+	display: inline-block;
+	font-family: "bb-icons";/* stylelint-disable-line */
+	font-size: 22px;
+	margin-right: 8px;
+	font-weight: 400;
+	animation: spin 2s infinite linear;
+}
+
 .atwho-view ul li .username {
 	display: inline-block;
 	color: #92949d;

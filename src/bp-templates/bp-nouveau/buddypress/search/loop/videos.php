@@ -62,29 +62,6 @@ $video_created = bp_get_video_date_created();
 					</div>
 				</div>
 
-				<div class="media-album_group">
-					<div class="media-album_details__bottom">
-						<?php
-						if ( bp_is_active( 'groups' ) ) {
-							$group_id = bp_get_video_group_id();
-							if ( $group_id > 0 ) {
-								// Get the group from the database.
-								$group        = groups_get_group( $group_id );
-								$group_name   = isset( $group->name ) ? bp_get_group_name( $group ) : '';
-								$group_link   = sprintf( '<a href="%s" class="bp-group-home-link %s-home-link">%s</a>', esc_url( $video_link ), esc_attr( bp_get_group_slug( $group ) ), esc_html( bp_get_group_name( $group ) ) );
-								$group_status = bp_get_group_status( $group );
-								?>
-								<span class="middot">&middot;</span>
-								<span class="media-album_group_name"><?php echo wp_kses_post( $group_link ); ?></span>
-								<span class="middot">&middot;</span>
-								<span class="media-album_status"><?php echo esc_html( ucfirst( $group_status ) ); ?></span>
-								<?php
-							}
-						}
-						?>
-					</div>
-				</div>
-
 				<div class="media-album_visibility">
 					<div class="media-album_details__bottom">
 						<?php

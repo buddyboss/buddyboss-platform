@@ -407,16 +407,30 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( ! empty( $link_embed ) ) {
 				if ( bbp_is_reply( $post_id ) ) {
 					$content = bbp_reply_content_autoembed_paragraph( $content, $post_id );
-				} else { 
+				} else {
 					$content = bbp_topic_content_autoembed_paragraph( $content, $post_id );
 				}
 			} else {
 				$content = bb_forums_link_preview( $content, $post_id );
 			}
 
-			$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
+			if ( ! empty( $reply_to_text ) && ! empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s %3$s</a></p> <div class="bb-content-inr-wrap">%4$s</div>', esc_url( $topic_permalink ), $reply_to_text, $topic_title, $content );
+			} elseif ( empty( $reply_to_text ) && ! empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s</div>', esc_url( $topic_permalink ), $topic_title, $content );
+			} elseif ( ! empty( $reply_to_text ) && empty( $topic_title ) ) {
+				$content = sprintf( '<p class = "activity-discussion-title-wrap"><a href="%1$s">%2$s</a></p> <div class="bb-content-inr-wrap">%3$s</div>', esc_url( $topic_permalink ), $reply_to_text, $content );
+			}
 
-			return $content;
+			/**
+			 * Filters the activity content for forum.
+			 *
+			 * @since BuddyBoss 2.3.50
+			 *
+			 * @param array $content  Activity content
+			 * @param array $activity Activity object
+			 */
+			return apply_filters( 'bb_forum_before_activity_content', $content, $activity );
 		}
 
 		/**
@@ -680,9 +694,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 					// Mark as spam.
 					bp_activity_mark_as_spam( $activity );
-					$activity->save();									
+					$activity->save();
 				}
-				return false;								
+				return false;
 			} else {
 				$this->topic_delete( $topic_id );
 			}
@@ -841,7 +855,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 				$this->reply_create( $reply_id, $topic_id, $forum_id, array(), $reply_author_id );
 			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
-				
+
 				// Mark related activity as spam if reply marked as spam.
 				if ( $activity_id = $this->get_activity_id( $reply_id ) ) {
 
@@ -855,9 +869,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 					// Mark as spam.
 					bp_activity_mark_as_spam( $activity );
-					$activity->save();									
+					$activity->save();
 				}
-				return false;								
+				return false;
 			} else {
 				$this->reply_delete( $reply_id );
 			}

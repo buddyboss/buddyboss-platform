@@ -600,6 +600,12 @@ div.video-js {
 
 	}
 
+	.vjs-poster > img {
+		position: absolute;
+		object-fit: contain;
+		height: 100%;
+		width: 100%;
+	}
 }
 
 //Video more option dropdown in theater
