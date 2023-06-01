@@ -2917,7 +2917,7 @@ function bb_background_update_group_member_count( $paged = 1 ) {
 	// Fetch all groups.
 	$sql       = 'SELECT DISTINCT `id` FROM `' . $wpdb->prefix . 'bp_groups` ORDER BY id DESC LIMIT ' . $per_page . ' OFFSET ' . $offset;
 	$result    = $wpdb->get_results( $sql );
-	$group_ids = array_column( $result, 'id' );
+	$group_ids = ! empty( $result ) ? array_column( $result, 'id' ) : array();
 
 	if ( empty( $group_ids ) ) {
 		return;
