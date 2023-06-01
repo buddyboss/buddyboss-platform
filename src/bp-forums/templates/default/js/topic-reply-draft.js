@@ -611,14 +611,14 @@ window.bp = window.bp || {};
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_topic_content ) {
 				var element = $editor.get( 0 );
-				$meditor = window.MediumEditor.getEditorFromElement(element);
+				$meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
 				if ( $meditor !== null ) {
 					$meditor.setContent( activity_data.bbp_topic_content );
 					if ( $( element ).text() !== '' ) {
 						$form.addClass( 'has-content' );
 					}
 				} else {
-					element.focus();
+					$form.find( '#bbp_topic_content' ).focus();
 					$form.find( '#bbp_topic_content' ).val( activity_data.bbp_topic_content );
 					if ( $( element ).val() !== '' ) {
 						$form.addClass( 'has-content' );
@@ -684,14 +684,14 @@ window.bp = window.bp || {};
 			// Content.
 			if ( 'undefined' !== typeof activity_data.bbp_reply_content ) {
 				var element = $editor.get( 0 );
-				$meditor = window.MediumEditor.getEditorFromElement(element);
+				$meditor = window.MediumEditor ? window.MediumEditor.getEditorFromElement(element) : null;
 				if ( $meditor !== null ) {
 					$meditor.setContent( activity_data.bbp_reply_content );
 					if ( $( element ).text() !== '' ) {
 						$form.addClass( 'has-content' );
 					}
 				} else {
-					element.focus();
+					$form.find( '#bbp_reply_content' ).focus();
 					$form.find( '#bbp_reply_content' ).val( activity_data.bbp_reply_content );
 					if ( $( element ).val() !== '' ) {
 						$form.addClass( 'has-content' );
