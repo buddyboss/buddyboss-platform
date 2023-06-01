@@ -2142,55 +2142,28 @@ function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 		return $content;
 	}
 
-	$embed_urls = $embeds_array = array();
-	$flag       = true;
-
-	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
-		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+	if ( empty( $reply_id ) ) {
+		$reply_id = bbp_get_reply_id();
 	}
 
-	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
-		$embed_urls = array_filter( $embed_urls[0] );
-		$embed_urls = array_unique( $embed_urls );
+	// Check if preview url was used or not, if not return content without embed.
+	$link_embed = get_post_meta( $reply_id, '_link_embed', true );
+	if ( ! empty( $link_embed ) ) {
+		$embed_data = bp_core_parse_url( $link_embed );
 
-		foreach ( $embed_urls as $url ) {
-			if ( false === $flag ) {
-				continue;
-			}
-
-			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
-			if ( $embed ) {
-				$flag           = false;
-				$embeds_array[] = wpautop( $embed );
-			}
+		if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
+			$embed_code = $embed_data['description'];
 		}
 
-		// Put the line breaks back.
-		return $content . implode( '', $embeds_array );
+		if ( ! empty( $embed_code ) ) {
+			preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+			preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
 
-	} else {
-		if ( empty( $reply_id ) ) {
-			$reply_id = bbp_get_reply_id();
-		}
-		// if not urls in content then check if embed was used or not, if not return content without embed.
-		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
-		if ( ! empty( $link_embed ) ) {
-			$embed_data = bp_core_parse_url( $link_embed );
-
-			if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
-				$embed_code = $embed_data['description'];
+			if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+				$content = sprintf( '<p>%s</p>', $content );
 			}
 
-			if ( ! empty( $embed_code ) ) {
-				preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
-				preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
-
-				if ( ! empty( $content_url ) && empty( $content_tag ) ) {
-					$content = sprintf( '<p>%s</p>', $content );
-				}
-
-				return $content .= $embed_code;
-			}
+			return $content .= $embed_code;
 		}
 	}
 
