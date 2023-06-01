@@ -2951,18 +2951,20 @@ function bb_migrate_group_member_count( $group_ids, $paged ) {
 	}
 
 	foreach ( $group_ids as $group_id ) {
-		$members_query      = groups_get_group_members(
+		$members_query = groups_get_group_members(
 			array(
 				'group_id'            => $group_id,
 				'exclude_admins_mods' => false,
 				'per_page'            => 1,
 			)
 		);
+
+		// Fetch group members count.
 		$query_friend_count = (int) $members_query['count'];
 		groups_update_groupmeta( $group_id, 'total_member_count', $query_friend_count );
 	}
 
-	// Call recursive to finish update for all users.
+	// Call recursive to finish update for all groups.
 	$paged++;
 	bb_background_update_group_member_count( $paged );
 }
