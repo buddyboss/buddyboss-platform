@@ -407,7 +407,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( ! empty( $link_embed ) ) {
 				if ( bbp_is_reply( $post_id ) ) {
 					$content = bbp_reply_content_autoembed_paragraph( $content, $post_id );
-				} else { 
+				} else {
 					$content = bbp_topic_content_autoembed_paragraph( $content, $post_id );
 				}
 			} else {
@@ -694,9 +694,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 					// Mark as spam.
 					bp_activity_mark_as_spam( $activity );
-					$activity->save();									
+					$activity->save();
 				}
-				return false;								
+				return false;
 			} else {
 				$this->topic_delete( $topic_id );
 			}
@@ -855,7 +855,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 				$this->reply_create( $reply_id, $topic_id, $forum_id, array(), $reply_author_id );
 			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
-				
+
 				// Mark related activity as spam if reply marked as spam.
 				if ( $activity_id = $this->get_activity_id( $reply_id ) ) {
 
@@ -869,9 +869,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 					// Mark as spam.
 					bp_activity_mark_as_spam( $activity );
-					$activity->save();									
+					$activity->save();
 				}
-				return false;								
+				return false;
 			} else {
 				$this->reply_delete( $reply_id );
 			}
