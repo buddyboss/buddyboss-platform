@@ -437,6 +437,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 20211 ) {
 			bb_update_to_2_3_50();
 		}
+
+		if ( $raw_db_version < 20261 ) {
+			bb_update_to_2_3_60();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -2869,4 +2873,99 @@ function bb_update_to_2_3_50() {
 			)
 		);
 	}
+}
+
+/**
+ * Update background job once plugin update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_3_60() {
+	$is_already_run = get_transient( 'bb_update_to_2_3_60' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_3_60', 'yes', HOUR_IN_SECONDS );
+
+	bb_background_update_group_member_count();
+}
+
+/**
+ * Function to update group member count with background updater.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $paged Page number.
+ */
+function bb_background_update_group_member_count( $paged = 1 ) {
+	global $wpdb, $bp_background_updater;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	if ( empty( $paged ) ) {
+		$paged = 1;
+	}
+
+	$per_page = 10;
+	$offset   = ( $paged - 1 ) * $per_page;
+
+	// Fetch all groups.
+	$sql       = 'SELECT DISTINCT `id` FROM `' . $wpdb->prefix . 'bp_groups` ORDER BY id DESC LIMIT ' . $per_page . ' OFFSET ' . $offset;
+	$result    = $wpdb->get_results( $sql );
+	$group_ids = array_column( $result, 'id' );
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	$bp_background_updater->data(
+		array(
+			array(
+				'callback' => 'bb_migrate_group_member_count',
+				'args'     => array( $group_ids, $paged ),
+			),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+}
+
+/**
+ * Update the group member count.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $group_ids Array of group IDs.
+ * @param int   $paged     The current page. Default 1.
+ *
+ * @return void
+ */
+function bb_migrate_group_member_count( $group_ids, $paged ) {
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	foreach ( $group_ids as $group_id ) {
+		$members_query      = groups_get_group_members(
+			array(
+				'group_id'            => $group_id,
+				'exclude_admins_mods' => false,
+				'per_page'            => 1,
+			)
+		);
+		$query_friend_count = (int) $members_query['count'];
+		$meta_friend_count  = (int) groups_get_total_member_count( $group_id );
+		if ( $query_friend_count !== $meta_friend_count ) {
+			groups_update_groupmeta( $group_id, 'total_member_count', $query_friend_count );
+		}
+	}
+
+	// Call recursive to finish update for all users.
+	$paged++;
+	bb_background_update_group_member_count( $paged );
 }

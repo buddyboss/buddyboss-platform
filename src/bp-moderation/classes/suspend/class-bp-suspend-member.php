@@ -606,11 +606,31 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		/*
 		if ( bp_is_active( 'groups' ) ) {
-			$related_contents[ BP_Suspend_Group::$type ] = BP_Suspend_Group::get_member_group_ids( $member_id );
+			$groups = groups_get_user_groups( $member_id );
+			if ( ! empty( $groups['groups'] ) ) {
+				$group_ids = $groups['groups'];
+				if ( $this->background_disabled ) {
+					$this->bb_update_group_member_count( $member_id, $group_ids, $action );
+				} else {
+					$min_count     = (int) apply_filters( 'bb_update_group_member_count', 10 );
+					$chunk_results = array_chunk( $group_ids, $min_count );
+					if ( ! empty( $chunk_results ) ) {
+						foreach ( $chunk_results as $chunk_result ) {
+							$bp_background_updater->data(
+								array(
+									array(
+										'callback' => array( $this, 'bb_update_group_member_count' ),
+										'args'     => array( $member_id, $chunk_result, $action ),
+									),
+								)
+							);
+							$bp_background_updater->save()->dispatch();
+						}
+					}
+				}
+			}
 		}
-		*/
 
 		if ( bp_is_active( 'forums' ) ) {
 			$related_contents[ BP_Suspend_Forum::$type ]       = BP_Suspend_Forum::get_member_forum_ids( $member_id, $action, $page );
@@ -859,6 +879,30 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 					bp_update_user_meta( $member_id, 'total_friend_count', (int) $total_friend_count );
 				}
+			}
+		}
+	}
+
+	/**
+	 * Update group member count.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $user_id   User ID.
+	 * @param array  $group_ids Array group IDs.
+	 * @param string $type      Member hide or un-hide.
+	 */
+	public function bb_update_group_member_count( $user_id, $group_ids, $type ) {
+
+		if ( ! empty( $group_ids ) ) {
+			foreach ( $group_ids as $group_id ) {
+				$total_member_count = groups_get_total_member_count( $group_id );
+				if ( 'hide' === $type && in_array( $user_id, $group_ids, true ) ) {
+					$total_member_count--;
+				} elseif ( 'unhide' === $type && ! in_array( $user_id, $group_ids, true ) ) {
+					$total_member_count++;
+				}
+				groups_update_groupmeta( $group_id, 'total_member_count', (int) $total_member_count );
 			}
 		}
 	}
