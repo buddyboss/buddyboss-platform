@@ -197,18 +197,18 @@ function bbp_new_topic_handler( $action = '' ) {
 	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
 
 	// No topic content.
-	if ( 
+	if (
 		empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
 		&& empty( $_POST['bbp_media'] )
 		&& empty( $_POST['bbp_document'] )
 		&& empty( $_POST['bbp_video'] )
 		&& empty( $_POST['bbp_media_gif'] )
-		&& ( 
+		&& (
 			false === bbp_use_autoembed() ||
 			(
 				false !== bbp_use_autoembed() &&
 				empty( $link_preview_post_data['link_url'] )
-			) 
+			)
 		)
 	) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
@@ -3704,37 +3704,11 @@ function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 		return $content;
 	}
 
-	$embed_urls = $embeds_array = array();
-	$flag       = true;
-
-	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
-		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+	if ( empty( $topic_id ) ) {
+		$topic_id = bbp_get_topic_id();
 	}
 
-	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
-		$embed_urls = array_filter( $embed_urls[0] );
-		$embed_urls = array_unique( $embed_urls );
-
-		foreach ( $embed_urls as $url ) {
-			if ( false === $flag ) {
-				continue;
-			}
-
-			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
-			if ( $embed ) {
-				$flag           = false;
-				$embeds_array[] = wpautop( $embed );
-			}
-		}
-
-		// Put the line breaks back.
-		return $content . implode( '', $embeds_array );
-
-	} else {
-		if ( empty( $topic_id ) ) {
-			$topic_id = bbp_get_topic_id();
-		}
-
+	if ( metadata_exists( 'post', $topic_id, '_link_embed' ) ) {
 		// check if preview url was used or not, if not return content without embed.
 		$link_embed = get_post_meta( $topic_id, '_link_embed', true );
 		if ( ! empty( $link_embed ) ) {
@@ -3754,6 +3728,35 @@ function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 
 				return $content .= $embed_code;
 			}
+		}
+	} else {
+		// Added embed support before release link preview.
+		$embed_urls = $embeds_array = array();
+		$flag       = true;
+
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+		}
+
+		if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
+			$embed_urls = array_filter( $embed_urls[0] );
+			$embed_urls = array_unique( $embed_urls );
+
+			foreach ( $embed_urls as $url ) {
+				if ( false === $flag ) {
+					continue;
+				}
+
+				$embed = wp_oembed_get( $url, array( 'discover' => false ) );
+				if ( $embed ) {
+					$flag           = false;
+					$embeds_array[] = wpautop( $embed );
+				}
+			}
+
+			// Put the line breaks back.
+			return $content . implode( '', $embeds_array );
+
 		}
 	}
 

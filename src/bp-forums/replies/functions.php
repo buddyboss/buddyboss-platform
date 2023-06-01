@@ -2143,36 +2143,11 @@ function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 		return $content;
 	}
 
-	$embed_urls = $embeds_array = array();
-	$flag       = true;
-
-	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
-		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+	if ( empty( $reply_id ) ) {
+		$reply_id = bbp_get_reply_id();
 	}
 
-	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
-		$embed_urls = array_filter( $embed_urls[0] );
-		$embed_urls = array_unique( $embed_urls );
-
-		foreach ( $embed_urls as $url ) {
-			if ( false === $flag ) {
-				continue;
-			}
-
-			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
-			if ( $embed ) {
-				$flag           = false;
-				$embeds_array[] = wpautop( $embed );
-			}
-		}
-
-		// Put the line breaks back.
-		return $content . implode( '', $embeds_array );
-
-	} else {
-		if ( empty( $reply_id ) ) {
-			$reply_id = bbp_get_reply_id();
-		}
+	if ( metadata_exists( 'post', $reply_id, '_link_embed' ) ) {
 		// if not urls in content then check if embed was used or not, if not return content without embed.
 		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
 		if ( ! empty( $link_embed ) ) {
@@ -2192,6 +2167,35 @@ function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 
 				return $content .= $embed_code;
 			}
+		}
+	} else {
+		// Added embed support before release link preview.
+		$embed_urls = $embeds_array = array();
+		$flag       = true;
+
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+		}
+
+		if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
+			$embed_urls = array_filter( $embed_urls[0] );
+			$embed_urls = array_unique( $embed_urls );
+
+			foreach ( $embed_urls as $url ) {
+				if ( false === $flag ) {
+					continue;
+				}
+
+				$embed = wp_oembed_get( $url, array( 'discover' => false ) );
+				if ( $embed ) {
+					$flag           = false;
+					$embeds_array[] = wpautop( $embed );
+				}
+			}
+
+			// Put the line breaks back.
+			return $content . implode( '', $embeds_array );
+
 		}
 	}
 
