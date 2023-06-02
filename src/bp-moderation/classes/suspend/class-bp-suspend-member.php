@@ -234,7 +234,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( ! empty( $hidden_members ) ) {
 			$where['blocked_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
 		}
-// phpcs:ignore
+
+		// phpcs:ignore
 		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s AND ( {$this->alias}.user_suspended = 1 )", 'user' );
 		$where['suspend_where'] = '( r.user_id NOT IN( ' . $sql . ' ) )';
 		/**
@@ -607,28 +608,24 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'groups' ) ) {
-			$groups    = groups_get_user_groups( $member_id );
+			$groups    = BP_Groups_Member::get_group_ids( $member_id, false, false, true );
 			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
-			if ( ! empty( $group_ids ) ) {
-				if ( $this->background_disabled ) {
-					$this->bb_update_group_member_count( $member_id, $group_ids, $action );
-				} else {
-					$min_count     = (int) apply_filters( 'bb_update_group_member_count', 10 );
-					$chunk_results = array_chunk( $group_ids, $min_count );
-					if ( ! empty( $chunk_results ) ) {
-						foreach ( $chunk_results as $chunk_result ) {
-							$bp_background_updater->data(
-								array(
-									array(
-										'callback' => array( $this, 'bb_update_group_member_count' ),
-										'args'     => array( $member_id, $chunk_result, $action ),
-									),
-								)
-							);
-							$bp_background_updater->save()->dispatch();
-						}
-					}
+			$min_count = (int) apply_filters( 'bb_update_group_member_count', 50 );
+
+			if ( count( $group_ids ) > $min_count ) {
+				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
+					$bp_background_updater->data(
+						array(
+							array(
+								'callback' => 'bb_update_group_member_count',
+								'args'     => array( $chunk ),
+							),
+						)
+					);
+					$bp_background_updater->save()->schedule_event();
 				}
+			} else {
+				bb_update_group_member_count( $group_ids );
 			}
 		}
 
@@ -883,36 +880,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 	}
 
-	/**
-	 * Update group member count.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int    $user_id   User ID.
-	 * @param array  $group_ids Array group IDs.
-	 * @param string $type      Member hide or un-hide.
-	 */
-	public function bb_update_group_member_count( $user_id, $group_ids, $type ) {
+	public function manage_suspended_member( $user_id ) {
 
-		if ( empty( $user_id ) || empty( $group_ids ) ) {
-			return;
-		}
-
-		foreach ( $group_ids as $group_id ) {
-			$members_query = groups_get_group_members(
-				array(
-					'group_id'            => $group_id,
-					'exclude_admins_mods' => false,
-					'per_page'            => 1,
-				)
-			);
-
-			// Fetch group members count.
-			$total_member_count = (int) $members_query['count'];
-			if ( 'hide' === $type && in_array( $user_id, $group_ids, true ) ) {
-				$total_member_count --;
-			}
-			groups_update_groupmeta( $group_id, 'total_member_count', (int) $total_member_count );
-		}
 	}
 }
