@@ -1842,7 +1842,7 @@ class BP_Groups_Group {
 
 			// Where conditions.
 			$where_conditions = array();
-			$where_conditions['where'] = " m.group_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
+			$where_conditions['where'] = "m.group_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
 
 			/**
 			 * Filters the MySQL WHERE conditions for the group members count.
