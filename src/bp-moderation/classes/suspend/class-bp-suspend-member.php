@@ -879,8 +879,4 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 	}
-
-	public function manage_suspended_member( $user_id ) {
-
-	}
 }
