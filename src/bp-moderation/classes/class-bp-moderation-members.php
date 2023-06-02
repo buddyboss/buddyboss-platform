@@ -82,6 +82,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_member_directories_remove_profile_actions' ), 9999, 2 );
 		add_filter( 'bp_member_type_name_string', array( $this, 'bb_remove_member_type_name_string' ), 9999, 3 );
+
+		// Update the where condition for group member count.
+		add_filter( 'bb_group_member_count_join_sql', array( $this, 'bb_group_member_count_join_sql' ), 10, 2 );
+		add_filter( 'bb_group_member_count_where_sql', array( $this, 'bb_group_member_count_where_sql' ), 10, 1 );
 	}
 
 	/**
@@ -507,5 +511,62 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $string;
+	}
+
+	/**
+	 * Prepare group member count join SQL query with suspend table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $join_sql Join table query.
+	 * @param string $uid_name moderation type.
+	 *
+	 * @return mixed|string|void
+	 */
+	public function bb_group_member_count_join_sql( $join_sql, $uid_name ) {
+
+		$join_sql .= $this->exclude_joint_query( 'm.' . $uid_name, 'user' );
+
+		/**
+		 * Filters the group members count Where SQL statement.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $join_sql Join sql query
+		 * @param array $class    current class object.
+		 */
+		$join_sql = apply_filters( 'bp_suspend_member_get_join', $join_sql, $this );
+
+		return $join_sql;
+	}
+
+	/**
+	 * Prepare group member count where SQL query with suspend table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $where_sql Where sql.
+	 *
+	 * @return mixed
+	 */
+	public function bb_group_member_count_where_sql( $where_sql ) {
+
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
+
+		/**
+		 * Filters the group members count Where SQL statement.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $where Query to update group members count.
+		 * @param array $class current class object.
+		 */
+		$where = apply_filters( 'bp_suspend_group_member_count_where_conditions', $where, $this );
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_sql['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_sql;
 	}
 }
