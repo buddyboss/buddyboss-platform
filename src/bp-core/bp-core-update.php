@@ -2896,6 +2896,8 @@ function bb_update_to_2_3_60() {
 	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
 		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
 	}
+
+	bb_background_update_group_member_count();
 }
 
 /**
@@ -3001,3 +3003,43 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	$paged++;
 	bb_create_background_message_media_document_update( $table_exists, $paged );
 }
+
+/**
+ * Function to update group member count with background updater.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_background_update_group_member_count() {
+	global $wpdb, $bp_background_updater;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	// Fetch all groups.
+	$sql       = "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC";
+	$group_ids = $wpdb->get_col( $sql );
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+
+	if ( count( $group_ids ) > $min_count ) {
+		foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_update_group_member_count',
+						'args'     => array( $chunk ),
+					),
+				)
+			);
+			$bp_background_updater->save()->schedule_event();
+		}
+	} else {
+		bb_update_group_member_count( $group_ids );
+	}
+}
+
