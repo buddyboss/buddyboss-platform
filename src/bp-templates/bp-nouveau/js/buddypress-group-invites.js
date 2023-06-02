@@ -489,6 +489,11 @@ window.bp = window.bp || {};
 							'page'     : page
 						};
 
+						feedbackSelectorLeftClass.show().parent().show();
+						feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+						feedbackSelectorLeftClass.addClass( 'info' );
+						feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
+
 						$.ajax(
 							{
 								type: 'POST',
@@ -968,6 +973,11 @@ window.bp = window.bp || {};
 						'page'     	   : page,
 						'search_terms' : searchText
 					};
+
+					feedbackSelectorLeftClass.show().parent().show();
+					feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+					feedbackSelectorLeftClass.addClass( 'info' );
+					feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
 
 					$.ajax(
 						{
