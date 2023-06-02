@@ -2883,13 +2883,6 @@ function bb_update_to_2_3_50() {
  * @return void
  */
 function bb_update_to_2_3_60() {
-	$is_already_run = get_transient( 'bb_update_to_2_3_60' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_update_to_2_3_60', 'yes', HOUR_IN_SECONDS );
-
 	bb_background_update_group_member_count();
 }
 

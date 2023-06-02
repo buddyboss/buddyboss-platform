@@ -610,7 +610,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( bp_is_active( 'groups' ) ) {
 			$groups    = BP_Groups_Member::get_group_ids( $member_id, false, false, true );
 			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
-			$min_count = (int) apply_filters( 'bb_update_group_member_count', 50 );
+			$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
 
 			if ( count( $group_ids ) > $min_count ) {
 				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
