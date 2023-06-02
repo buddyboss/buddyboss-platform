@@ -3424,6 +3424,14 @@ window.bp = window.bp || {};
 		 *  @return {function}
 		 */
 		directorySearchInput: function() {
+			// Check if the current value of the input field is equal to the last recorded value,
+			// OR if the current value is empty and there is no previously recorded value
+			if( $( this ).val() === $( this ).data( 'last-value' ) || ( $( this ).val() === '' && $( this ).data( 'last-value' ) === undefined ) ) {
+				// Return early to skip unnecessary actions
+				return;
+			}
+			$( this ).data( 'last-value', $( this ).val() );
+
 			var $form = $( this ).closest( '.search-form-has-reset' );
 			var $resetButton = $form.find( '.search-form_reset' );
 
