@@ -2193,7 +2193,6 @@ function bbp_get_topic_types() {
 		array(
 			'unstick' => __( 'Normal', 'buddyboss' ),
 			'stick'   => __( 'Sticky', 'buddyboss' ),
-			'super'   => __( 'Super Sticky', 'buddyboss' ),
 		)
 	);
 }
