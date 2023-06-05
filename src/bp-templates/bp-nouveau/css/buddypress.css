@@ -11911,8 +11911,48 @@ body .bp-messages-user-threads {
 }
 
 /*__ Notification Subscription __*/
-/*__ Profile visibility __*/
-/*__ Group Invites __*/
+/*__ Settings __*/
+#buddypress .password-toggle,
+body .password-toggle {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+#buddypress .password-toggle > input,
+body .password-toggle > input {
+  padding-right: 35px !important;
+  width: 100% !important;
+}
+
+#buddypress .password-toggle .bb-hide-pw,
+body .password-toggle .bb-hide-pw {
+  position: absolute;
+  right: 5px;
+  top: 0;
+  height: 100%;
+  width: 30px;
+  border: 0;
+  padding: 0;
+  background: none !important;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+#buddypress .password-toggle .bb-hide-pw .bb-icon,
+body .password-toggle .bb-hide-pw .bb-icon {
+  font-size: 16px;
+  line-height: 1;
+  color: #555;
+  font-weight: 400;
+}
+
+#buddypress .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before,
+body .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
+  content: "\ee6a";
+}
+
+/*__ Settings __*/
 /**
 *-------------------------------------------------------------------------------
 * @section 6.0 - Forms  - General
