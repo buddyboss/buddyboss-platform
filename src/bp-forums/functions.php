@@ -874,11 +874,10 @@ function bbp_forum_recursive_group_id( $forum_id ) {
 	return false;
 }
 
-
 /**
  * Check if there's a parent forum that is associated with private group.
  *
- * @since Buddyboss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param int $forum_id Forum id.
  *
@@ -890,7 +889,7 @@ function bb_forum_has_parent_with_private_group( $forum_id ) {
 		return false;
 	}
 
-	$group_id	= bbp_forum_recursive_group_id( $forum_id );
+	$group_id = bbp_forum_recursive_group_id( $forum_id );
 	if ( empty( $group_id ) ) {
 		$group_id = current( bbp_get_forum_group_ids( $forum_id ) );
 	}
