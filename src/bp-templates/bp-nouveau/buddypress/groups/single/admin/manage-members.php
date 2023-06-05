@@ -7,6 +7,8 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+bp_nouveau_group_hook( 'before', 'manage_members_list' );
 ?>
 
 <h2 class="bp-screen-title
@@ -182,4 +184,6 @@ else :
 	bp_nouveau_user_feedback( 'group-manage-members-none' );
 
 endif;
+
+bp_nouveau_group_hook( 'after', 'manage_members_list' );
 ?>

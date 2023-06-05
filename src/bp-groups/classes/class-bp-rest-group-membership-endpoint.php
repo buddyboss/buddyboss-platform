@@ -718,6 +718,8 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		$user  = bp_rest_get_user( $request['user_id'] );
 		$group = $this->groups_endpoint->get_group_object( $request['group_id'] );
 
+		$response->add_links( $this->prepare_links( $user, $request ) );
+
 		/**
 		 * Fires after a group member is deleted via the REST API.
 		 *

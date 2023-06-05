@@ -144,7 +144,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'emojionearea'                  => array(
-			'file'         => "{$url}emojionearea-edited.js",
+			'file'         => "{$url}emojionearea-edited{$min}.js",
 			'dependencies' => array( 'emojione' ),
 			'footer'       => true,
 		),
