@@ -1259,6 +1259,11 @@ function bp_private_network_template_redirect() {
 						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
 						$un_trailing_slash_it_url = untrailingslashit( $url );
 
+						// If Home URL is whitelisted, check if it's network search result page.
+						if ( ( untrailingslashit( home_url() ) === $un_trailing_slash_it_url ) && bp_search_is_search() ) {
+							break;
+						}
+
 						// Match request URL(actual/actual with slash) to public URL.
 						if ( ! empty( $actual_url ) && ! empty( $actual_slash_url ) && ! empty( $un_trailing_slash_it_url ) && ( ( $actual_url === $un_trailing_slash_it_url ) || ( $actual_slash_url === $un_trailing_slash_it_url ) ) ) {
 							return;
