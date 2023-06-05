@@ -6081,15 +6081,15 @@ function bb_is_group_activity_comment( $comment = 0 ) {
  * @param array $args  Array of arguments.
  * @param array $paged Current page number for pagination.
  */
-function bb_create_background_activity_following_post_notification( $parse_args, $paged = 1 ) {
+function bb_create_background_activity_following_post_notification( $args, $paged = 1 ) {
 	if ( empty( $paged ) ) {
 		$paged = 1;
 	}
 
-	$per_page       = 20;
+	$per_page       = apply_filters( 'bb_following_min_count', 20 );
 	$follower_users = bp_get_followers(
 		array(
-			'user_id'  => $parse_args['item_id'],
+			'user_id'  => $args['item_id'],
 			'per_page' => $per_page,
 			'page'     => $paged
 		)
@@ -6101,13 +6101,13 @@ function bb_create_background_activity_following_post_notification( $parse_args,
 	if ( count( $follower_users ) > 0 ) {
 		global $bp_background_updater;
 
-		$parse_args['user_ids'] = $follower_users;
-		$parse_args['paged']    = $paged;
+		$args['user_ids'] = $follower_users;
+		$args['paged']    = $paged;
 		$bp_background_updater->data(
 			array(
 				array(
 					'callback' => 'bb_activity_following_post_notification',
-					'args'     => array( $parse_args ),
+					'args'     => array( $args ),
 				),
 			)
 		);
