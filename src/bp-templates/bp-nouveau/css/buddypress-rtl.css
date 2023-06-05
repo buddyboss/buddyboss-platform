@@ -15875,14 +15875,17 @@ ul.bbp-lead-topic .item-description p:empty {
   margin-bottom: 10px;
 }
 
-.widget_display_topics ul > li {
+.widget_display_topics ul > li,
+.widget_display_replies ul > li {
   display: flex;
   margin-bottom: 15px;
 }
 
-.widget_display_topics .bbp-author-link {
+.widget_display_topics .bbp-author-link,
+.widget_display_replies .bbp-author-link {
   flex: 0 0 40px;
   margin-left: 10px;
+  height: 40px;
 }
 
 /* =Avatars
