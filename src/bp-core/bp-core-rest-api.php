@@ -402,7 +402,7 @@ function bp_rest_register_field( $component_id, $attribute, $args = array(), $ob
 /**
  * Function to check its BuddyBoss rest route or not.
  *
- * @since BuddyBoss [VERSION]
+ * @since BuddyBoss 1.8.2
  *
  * @return bool
  */
@@ -425,4 +425,32 @@ function bb_input_clean( $var ) {
 	} else {
 		return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 	}
+}
+
+/**
+ * Function to remove mentioned link for moderated and deleted members from content.
+ *
+ * @since BuddyBoss 2.2.7
+ *
+ * @param string $content Content.
+ *
+ * @return string $content
+ */
+function bb_rest_raw_content( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	$content = function_exists( 'bb_moderation_remove_mention_link' ) ? bb_moderation_remove_mention_link( $content ) : $content;
+	$content = function_exists( 'bb_mention_remove_deleted_users_link' ) ? bb_mention_remove_deleted_users_link( $content ) : $content;
+
+	/**
+	 * Function will return content without mentioned link for moderated/deleted members.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $content Content.
+	 */
+	return apply_filters( 'bb_rest_raw_content', $content );
 }

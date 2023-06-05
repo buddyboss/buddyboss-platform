@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.7
  */
 class BB_Tutor_Pro_Plugin_Compatibility {
 
@@ -19,7 +19,7 @@ class BB_Tutor_Pro_Plugin_Compatibility {
 	 *
 	 * @var self
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.7
 	 */
 	private static $instance = null;
 
@@ -33,7 +33,7 @@ class BB_Tutor_Pro_Plugin_Compatibility {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.7
 	 *
 	 * @return Controller|null
 	 */
@@ -48,7 +48,7 @@ class BB_Tutor_Pro_Plugin_Compatibility {
 	/**
 	 * Register the compatibility hooks for the plugin.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.7
 	 *
 	 * @return void
 	 */
@@ -59,7 +59,7 @@ class BB_Tutor_Pro_Plugin_Compatibility {
 	/**
 	 * Check if it is group's zoom tab.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.7
 	 *
 	 * @return void
 	 */
@@ -72,7 +72,7 @@ class BB_Tutor_Pro_Plugin_Compatibility {
 	/**
 	 * Deregister timepicker script and style for group's zoom tab
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.1.7
 	 *
 	 * @return void
 	 */

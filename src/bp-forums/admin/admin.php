@@ -16,6 +16,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 	 *
 	 * @since bbPress (r2464)
 	 */
+	#[\AllowDynamicProperties]
 	class BBP_Admin {
 
 		/** Directory *************************************************************/
@@ -486,7 +487,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			wp_enqueue_script( 'suggest' );
 
 			// Get the version to use for JS
-			$version = bbp_get_version();
+			$version = bp_get_version();
 
 			// Post type checker (only topics and replies)
 			if ( 'post' === get_current_screen()->base ) {
@@ -553,7 +554,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 				'bbp-admin-css',
 				$this->styles_url . 'admin.min.css',
 				array( 'dashicons' ),
-				bbp_get_version()
+				bp_get_version()
 			);
 
 			// Mint
@@ -603,7 +604,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 */
 		public function register_admin_scripts() {
 			// Get the version to use for JS.
-			$version = bbp_get_version();
+			$version = bp_get_version();
 
 			// Header JS.
 			wp_register_script( 'bbp-admin-common-js', $this->js_url . 'common.js', array( 'jquery' ), $version );

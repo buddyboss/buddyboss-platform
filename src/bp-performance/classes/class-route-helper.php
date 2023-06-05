@@ -51,10 +51,20 @@ class Route_Helper {
 		}
 
 		// STEP-1) Capture group for ":parameter".
-		$param_chars         = '[a-zA-Z\_\-]+';
-		$allowed_value_chars = '[a-zA-Z0-9-]+';
-		$pattern             = preg_replace(
-			'/<(' . $param_chars . ')>/', // Replace "<parameter>".
+		$param_chars          = '[a-zA-Z\_\-]+';
+		$allowed_value_chars  = '[a-zA-Z0-9-]+';
+		$allowed_value_number = '[0-9-]+';
+
+		// Replace <id> to only numberic value.
+		$pattern = preg_replace(
+			'/<(id)>/', // Replace "<parameter>".
+			'(?<$1>' . $allowed_value_number . ')', // with "(?<parameter>[0-9\_\-]+)".
+			$pattern
+		);
+
+		// Replace the character exclude the <id>.
+		$pattern = preg_replace(
+			'/<((?!id)' . $param_chars . ')>/', // Replace "<parameter>".
 			'(?<$1>' . $allowed_value_chars . ')', // with "(?<parameter>[a-zA-Z0-9\_\-]+)".
 			$pattern
 		);
@@ -94,7 +104,7 @@ class Route_Helper {
 	 *
 	 * @param string $endpoint_pattern "bbpress/v1/topic/<param>".
 	 * @param string $current_endpoint "bbpress/v1/topic/488".
-	 * @param string $request_method "GET|POST"
+	 * @param string $request_method   "GET|POST".
 	 *
 	 * @return boolean
 	 */

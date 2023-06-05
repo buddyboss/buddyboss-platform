@@ -768,7 +768,7 @@ function bp_groups_leave_group_delete_recent_activity( $group_id, $user_id ) {
 	$membership = new BP_Groups_Member( $user_id, $group_id );
 
 	// Check the time period, and maybe delete their recent group activity.
-	if ( time() <= strtotime( '+5 minutes', (int) strtotime( $membership->date_modified ) ) ) {
+	if ( $membership->date_modified && time() <= strtotime( '+5 minutes', (int) strtotime( $membership->date_modified ) ) ) {
 		bp_activity_delete(
 			array(
 				'component' => buddypress()->groups->id,
@@ -786,7 +786,7 @@ add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity',
 /**
  * Function will append join query to display group lists in the activity feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.7
  *
  * @param string $sql From SQL statement.
  * @param array  $r   Array of parsed arguments for the get method.
@@ -803,7 +803,7 @@ function bb_groups_get_join_sql_for_activity( $sql, $r ) {
 /**
  * Function will append where condition to display group lists in the activity feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.1.7
  *
  * @param array $where_conditions Where conditions SQL statement.
  * @param array $r                Array of parsed arguments for the get method.
