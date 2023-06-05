@@ -2703,7 +2703,7 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 }
 
 /**
- * Allow group members to have advanced priviledges in group forum topics.
+ * Allow group members to have advanced privileges in group forum topics.
  *
  * @since BuddyBoss 2.1.6
  *
@@ -2717,61 +2717,65 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
  */
 function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
-	if ( ! function_exists( 'bp_is_activity_directory' ) || ! isset( $_POST['bbp_topic_id'] ) || ! isset( $_POST['bbp_reply_form_action'] ) || 'bbp-new-reply' !== $_POST['bbp_reply_form_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if (
+		! isset( $_POST['bbp_topic_id'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		! isset( $_POST['bbp_reply_form_action'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		'bbp-new-reply' !== $_POST['bbp_reply_form_action'] // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	) {
 		return $caps;
 	}
 
-	if ( bp_is_activity_directory() ) {
-		$topic_id = filter_input( INPUT_POST, 'bbp_topic_id', FILTER_VALIDATE_INT );
+	$topic_id = filter_input( INPUT_POST, 'bbp_topic_id', FILTER_VALIDATE_INT );
+	$forum_id = filter_input( INPUT_POST, 'bbp_forum_id', FILTER_VALIDATE_INT );
 
-		if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$forum_id = bbp_get_topic_forum_id( $topic_id );
-		} else {
-			// Get the forum id.
-			$forum_id = filter_input( INPUT_POST, 'bbp_forum_id', FILTER_VALIDATE_INT );
-		}
+	if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$forum_id = bbp_get_topic_forum_id( $topic_id );
+	}
 
-		$group_ids = bbp_get_forum_group_ids( $forum_id );
-		$group_id  = reset( $group_ids );
+	if ( empty( $forum_id ) ) {
+		return $caps;
+	}
 
-		if ( $group_id ) {
-			$is_member = groups_is_user_member( get_current_user_id(), $group_id );
-			$is_mod    = groups_is_user_mod( get_current_user_id(), $group_id );
-			$is_admin  = groups_is_user_admin( get_current_user_id(), $group_id );
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_id  = reset( $group_ids );
 
-			switch ( $cap ) {
+	if ( $group_id ) {
+		$is_member = groups_is_user_member( get_current_user_id(), $group_id );
+		$is_mod    = groups_is_user_mod( get_current_user_id(), $group_id );
+		$is_admin  = groups_is_user_admin( get_current_user_id(), $group_id );
 
-				// If user is a group member, allow them to create content.
-				case 'read_forum':
-				case 'publish_replies':
-				case 'publish_topics':
-				case 'read_hidden_forums':
-				case 'read_private_forums':
-					if ( $is_member || $is_mod || $is_admin ) {
-						$caps = array( 'participate' );
-					}
-					break;
+		switch ( $cap ) {
 
-				// If user is a group mod ar admin, map to participate cap.
-				case 'moderate':
-				case 'edit_topic':
-				case 'edit_reply':
-				case 'view_trash':
-				case 'edit_others_replies':
-				case 'edit_others_topics':
-					if ( $is_mod || $is_admin ) {
-						$caps = array( 'participate' );
-					}
-					break;
+			// If user is a group member, allow them to create content.
+			case 'read_forum':
+			case 'publish_replies':
+			case 'publish_topics':
+			case 'read_hidden_forums':
+			case 'read_private_forums':
+				if ( $is_member || $is_mod || $is_admin ) {
+					$caps = array( 'participate' );
+				}
+				break;
 
-				// If user is a group admin, allow them to delete topics and replies.
-				case 'delete_topic':
-				case 'delete_reply':
-					if ( $is_admin ) {
-						$caps = array( 'participate' );
-					}
-					break;
-			}
+			// If user is a group mod ar admin, map to participate cap.
+			case 'moderate':
+			case 'edit_topic':
+			case 'edit_reply':
+			case 'view_trash':
+			case 'edit_others_replies':
+			case 'edit_others_topics':
+				if ( $is_mod || $is_admin ) {
+					$caps = array( 'participate' );
+				}
+				break;
+
+			// If user is a group admin, allow them to delete topics and replies.
+			case 'delete_topic':
+			case 'delete_reply':
+				if ( $is_admin ) {
+					$caps = array( 'participate' );
+				}
+				break;
 		}
 	}
 

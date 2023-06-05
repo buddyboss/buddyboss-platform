@@ -15875,14 +15875,17 @@ ul.bbp-lead-topic .item-description p:empty {
   margin-bottom: 10px;
 }
 
-.widget_display_topics ul > li {
+.widget_display_topics ul > li,
+.widget_display_replies ul > li {
   display: flex;
   margin-bottom: 15px;
 }
 
-.widget_display_topics .bbp-author-link {
+.widget_display_topics .bbp-author-link,
+.widget_display_replies .bbp-author-link {
   flex: 0 0 40px;
   margin-right: 10px;
+  height: 40px;
 }
 
 /* =Avatars
@@ -21682,10 +21685,6 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .dropzone * {
   text-align: center;
-}
-
-#bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .bp-dir-search-form {
-  border: 0;
 }
 
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .bp-dir-search-form .nouveau-search-submit {
