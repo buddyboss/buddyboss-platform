@@ -125,10 +125,6 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 		} elseif ( bbp_is_favorites() ) {
 			$base = bbp_get_favorites_permalink( bbp_get_displayed_user_id() );
 
-			// User's subscriptions.
-		} elseif ( bbp_is_subscriptions() ) {
-			$base = bbp_get_subscriptions_permalink( bbp_get_displayed_user_id() );
-
 			// Root profile page.
 		} elseif ( bbp_is_single_user() ) {
 			$base = bbp_get_user_profile_url( bbp_get_displayed_user_id() );

@@ -59,9 +59,6 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		add_filter( 'bp_media_get_join_count_sql', array( $this, 'update_join_media_sql' ), 10, 2 );
 		add_filter( 'bp_media_get_where_count_conditions', array( $this, 'update_where_media_sql' ), 10, 2 );
 
-		add_filter( 'bp_media_search_join_sql_photo', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_media_search_where_conditions_photo', array( $this, 'update_where_sql' ), 10, 2 );
-
 		add_filter( 'bp_video_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_video_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
@@ -333,7 +330,14 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_video_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+			$exclude_group_sql = '';
+			// Allow group medias from blocked/suspended users.
+			if ( bp_is_active( 'groups' ) ) {
+				$exclude_group_sql = ' OR m.privacy = "grouponly" ';
+			}
+			$exclude_group_sql .= ' OR ( m.privacy = "comment" OR m.privacy = "forums" ) ';
+
+			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}
 
 		return $where_conditions;

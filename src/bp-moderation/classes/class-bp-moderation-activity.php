@@ -53,6 +53,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
 		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 
+		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_activity_content_remove_mention_link' ), 10, 1 );
+		add_filter( 'bp_get_activity_content', array( $this, 'bb_activity_content_remove_mention_link' ), 10, 1 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -124,7 +127,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param string $where   Activity Where sql.
+	 * @param array  $where   Activity Where sql.
 	 * @param object $suspend Suspend object.
 	 *
 	 * @return array
@@ -132,11 +135,37 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
+		$exclude_group_sql = '';
+		// Allow group activities from blocked/suspended users.
+		if (
+			bp_is_active( 'groups' ) &&
+			function_exists( 'did_action' ) && ! did_action( 'get_template_part_activity/widget' )
+		) {
+			$exclude_group_sql = ' OR a.component = "groups"';
+		}
+
 		$sql = $this->exclude_where_query();
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
 		}
 
+		// Allow to search isblocked members activity comment but isblocked members activity should not be searchable.
+		if (
+			function_exists( 'bb_did_filter' ) &&
+			! bb_did_filter( 'bp_activity_comments_search_where_conditions' )
+		) {
+			if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
+				$where['moderation_where'] .= ' AND ';
+			}
+
+			$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		}
+
+		if ( ! empty( $exclude_group_sql ) ) {
+			$sql = $this->exclude_where_query( false );
+
+			$where['moderation_where'] .= $exclude_group_sql . ' AND ( ' . $sql . ' ) ';
+		}
 		return $where;
 	}
 
@@ -162,7 +191,15 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && $this->is_content_hidden( (int) $activity->id ) ) {
+		if (
+			'activity_comment' !== $activity->type &&
+			$this->is_content_hidden( (int) $activity->id ) &&
+			(
+				// Allow comment to group activity.
+				! bp_is_active( 'groups' ) ||
+				'groups' !== $activity->component
+			)
+		) {
 			return false;
 		}
 
@@ -554,5 +591,24 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		) {
 			$follow->leader_id = '';
 		}
+	}
+
+	/**
+	 * Remove mentioned link from activity post.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $content  Activity content.
+	 *
+	 * @return string
+	 */
+	public function bb_activity_content_remove_mention_link( $content ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$content = bb_moderation_remove_mention_link( $content );
+
+		return $content;
 	}
 }
