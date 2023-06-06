@@ -1600,14 +1600,14 @@ window.bp = window.bp || {};
 								) {
 									$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
 								}
-								
+
 								if (
 									'undefined' !== typeof response.data &&
 									'undefined' !== typeof response.data.video_group_count
 								) {
 									$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
 								}
-								
+
 								buddyPressSelector.find( '.video-list:not(.existing-video-list)' ).find( '.bb-video-check-wrap [name="bb-video-select"]:checked' ).each(
 									function () {
 										$( this ).closest( 'li' ).remove();
@@ -2322,7 +2322,14 @@ window.bp = window.bp || {};
 			self.showVideo();
 			self.navigationCommands();
 
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' && self.current_video.privacy !== 'grouponly' ) {
+			if (
+				typeof BP_Nouveau.activity !== 'undefined' &&
+				self.current_video &&
+				typeof self.current_video.activity_id !== 'undefined' &&
+				self.current_video.activity_id != 0 &&
+				! self.current_video.is_forum &&
+				self.current_video.privacy !== 'comment'
+			) {
 				self.getActivity();
 			} else {
 				self.getVideosDescription();

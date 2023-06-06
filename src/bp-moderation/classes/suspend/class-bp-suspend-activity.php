@@ -262,6 +262,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_activity_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
+
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 		}
 
@@ -290,7 +291,15 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
+		if (
+			'activity_comment' !== $activity->type &&
+			BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) &&
+			(
+				// Allow comment to group activity.
+				! bp_is_active( 'groups' ) ||
+				'groups' !== $activity->component
+			)
+		) {
 			return false;
 		}
 
