@@ -4535,11 +4535,15 @@ window.bp = window.bp || {};
 						},
 						success: function ( response ) {
 							if ( response.success ) {
-								document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
-								document_name.html( response.data.response.title );
-								document_edit.removeClass( 'submitting' );
-								document_edit.parent().find( '.animate-spin' ).remove();
-								document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+								if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
+									$( event.currentTarget ).closest( '.media-folder_items' ).html( $( response.data.document ).html() );
+								} else {
+									document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
+									document_name.html( response.data.response.title );
+									document_edit.removeClass( 'submitting' );
+									document_edit.parent().find( '.animate-spin' ).remove();
+									document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+								}
 							} else {
 								document_edit.removeClass( 'submitting' );
 								document_edit.parent().find( '.animate-spin' ).remove();
