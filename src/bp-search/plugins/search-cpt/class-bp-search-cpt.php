@@ -112,7 +112,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 
 			if ( ! empty( $enrolled_courses ) ) {
 				$courses_id_in = '"' . implode( '","', $enrolled_courses ) . '"';
-				$sql .= " AND p.ID IN ( SELECT post_id FROM {$wpdb->postmeta} lpm WHERE lpm.meta_key = 'course_id' AND lpm.meta_value IN ({$courses_id_in}) )";
+				$sql .= " AND p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'course_id' AND meta_value IN ({$courses_id_in}) )";
 			}
 
 			$query_placeholder[] = $this->cpt_name;
