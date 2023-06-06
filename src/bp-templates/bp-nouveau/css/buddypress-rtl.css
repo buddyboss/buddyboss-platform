@@ -6394,7 +6394,7 @@ span.dashicons.dashicons-admin-file:before {
   color: #5087e5;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .item-avatar {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .item-avatar > a[href=""] {
   position: relative;
   pointer-events: none;
   opacity: 0.7;
@@ -6405,7 +6405,7 @@ span.dashicons.dashicons-admin-file:before {
   opacity: 0.7;
 }
 
-.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta {
+.buddypress-wrap .activity-comments .comment-item.suspended-comment-item > .acomment-meta > .author-name[href=""] {
   pointer-events: none;
   opacity: 0.7;
 }
@@ -20753,6 +20753,12 @@ div.dropzone .dz-preview .dz-filename {
   display: none;
 }
 
+.search-document-list .media-folder_items .media-folder_details__bottom .bp-tooltip,
+#media-folder-document-data-table .media-folder_items .media-folder_details__bottom .bp-tooltip {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .search-document-list .media-folder_items .media-folder_actions,
 #media-folder-document-data-table .media-folder_items .media-folder_actions {
   display: -webkit-box;
@@ -21191,6 +21197,13 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
   letter-spacing: -0.15px;
   line-height: 1.1875;
   width: auto;
+}
+
+.search-video-list .media-album_group .bp-tooltip,
+.search-video-list .media-album_visibility .bp-tooltip,
+.search-media-list .media-album_group .bp-tooltip,
+.search-media-list .media-album_visibility .bp-tooltip {
+  display: inline-block;
 }
 
 .search-video-list .media-album_group_name a,
@@ -24072,7 +24085,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
@@ -24316,6 +24329,13 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
     font-size: 40px;
     margin-bottom: 10px;
   }
+}
+
+div.video-js .vjs-poster > img {
+  position: absolute;
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
 }
 
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap {
