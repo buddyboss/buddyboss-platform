@@ -508,7 +508,8 @@ window.bp = window.bp || {};
 					collection.options &&
 					collection.options.search_terms &&
 					collection.options.search_terms != '' &&
-					filters_view.$el
+					'undefined' !== typeof filters_view.$el &&
+					filters_view.$el.length > 0
 				) {
 					$( filters_view.$el ).find( 'input[type=search]' ).val( collection.options.search_terms );
 				}
@@ -4347,7 +4348,8 @@ window.bp = window.bp || {};
 					target.closest( '.bp-messages-nav-panel' ).removeClass( 'threads-scrolled' );
 				}
 
-				if ( ( target[0].scrollHeight - target.scrollTop() ) >= ( target.innerHeight() - 5 ) &&
+				if (
+					( target.scrollTop() + target.innerHeight() >= target[ 0 ].scrollHeight - 5 ) &&
 					this.collection.length &&
 					this.collection.options.page < this.collection.options.total_page &&
 					! target.find( '.bp-user-messages-loading' ).length

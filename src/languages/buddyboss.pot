@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.3.50\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2023-06-06 10:55:39+00:00\n"
+"POT-Creation-Date: 2023-06-07 06:37:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3048,11 +3048,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:738
 #: bp-templates/bp-nouveau/includes/document/ajax.php:844
 #: bp-templates/bp-nouveau/includes/document/ajax.php:981
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1095
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1182
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1322
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1504
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1574
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1082
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1169
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1309
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1491
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1561
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:52
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:70
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:118
@@ -7755,8 +7755,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:49
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:74
 #: bp-templates/bp-nouveau/includes/document/ajax.php:907
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1245
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1403
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1232
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1390
 #: bp-templates/bp-nouveau/includes/members/functions.php:457
 msgid "Name"
 msgstr ""
@@ -16468,8 +16468,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:74
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:41
 #: bp-templates/bp-nouveau/includes/document/ajax.php:921
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1259
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1417
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1246
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1404
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1693
 msgid "Visibility"
 msgstr ""
@@ -27668,8 +27668,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:68
 #: bp-templates/bp-nouveau/buddypress/video/video-loop.php:38
 #: bp-templates/bp-nouveau/includes/document/ajax.php:944
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1283
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1441
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1270
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1428
 #: bp-templates/bp-nouveau/includes/media/ajax.php:164
 #: bp-templates/bp-nouveau/includes/video/ajax.php:187
 msgid "Load More"
@@ -28348,8 +28348,8 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:55
 #: bp-templates/bp-nouveau/includes/document/ajax.php:914
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1252
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1410
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1239
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1397
 msgid "Modified"
 msgstr ""
 
@@ -29686,14 +29686,14 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:648
 #: bp-templates/bp-nouveau/includes/document/ajax.php:758
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1118
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1105
 msgid "Please enter title of folder."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:654
 #: bp-templates/bp-nouveau/includes/document/ajax.php:768
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1054
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1127
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1041
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1114
 msgid "Invalid folder name"
 msgstr ""
 
@@ -29712,8 +29712,8 @@ msgid "You don't have permission to move this document."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:904
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1242
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1400
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1229
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1387
 msgid "Sort By:"
 msgstr ""
 
@@ -29721,48 +29721,48 @@ msgstr ""
 msgid "You don't have a permission to rename the document."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1061
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1048
 msgid "You don't have permission to rename folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1140
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1127
 msgid "You don't have permission to rename this folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1160
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1147
 msgid "There was a problem when trying to rename the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1347
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1355
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1334
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1342
 msgid "You don't have permission to move this folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1368
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1355
 msgid "Couldn’t move item. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1380
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1367
 msgid "Couldn’t move item because it's parent folder. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1483
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1470
 msgid " Documents"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1514
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1501
 msgid "Please login to edit a privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1535
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1522
 msgid "You don't have permission to update this folder privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1543
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1530
 msgid "You don't have permission to update this document privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1550
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1537
 #: bp-templates/bp-nouveau/includes/media/ajax.php:618
 #: bp-templates/bp-nouveau/includes/video/ajax.php:706
 msgid "Invalid privacy status."
