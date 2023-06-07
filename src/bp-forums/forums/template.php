@@ -155,7 +155,11 @@ function bbp_has_forums( $args = '' ) {
 		'has_forums'
 	);
 
-	// Run the query
+	if ( ! empty( $default_post_parent ) ) {
+		$bbp_f['paged'] = bb_get_forum_paged();
+	}
+
+	// Run the query.
 	$bbp       = bbpress();
 	$cache_key = 'bbp_has_forums_' . md5( maybe_serialize( $bbp_f ) );
 	if ( ! isset( $bbp_forum_query_cache[ $cache_key ] ) ) {
@@ -166,21 +170,32 @@ function bbp_has_forums( $args = '' ) {
 		$bbp->forum_query = $bbp_forum_query_cache[ $cache_key ];
 	}
 
-	// Add pagination values to query object
+	// Add pagination values to query object.
 	$bbp->forum_query->posts_per_page = $bbp_f['posts_per_page'];
 	$bbp->forum_query->paged          = $bbp_f['paged'];
 
-	// Only add pagination if query returned results
+	// Only add pagination if query returned results.
 	if ( ( (int) $bbp->forum_query->post_count || (int) $bbp->forum_query->found_posts ) && (int) $bbp->forum_query->posts_per_page ) {
 
-		// Limit the number of forums shown based on maximum allowed pages
+		// Limit the number of forums shown based on maximum allowed pages.
 		if ( ( ! empty( $bbp_f['max_num_pages'] ) ) && $bbp->forum_query->found_posts > $bbp->forum_query->max_num_pages * $bbp->forum_query->post_count ) {
 			$bbp->forum_query->found_posts = $bbp->forum_query->max_num_pages * $bbp->forum_query->post_count;
 		}
 
-		$base = $base = add_query_arg( 'paged', '%#%', bbp_get_forums_url() );
+		if ( ! empty( $default_post_parent ) ) {
 
-		// Pagination settings with filter
+			if ( bbp_get_paged() !== 1 ) {
+				$base = trailingslashit( bbp_get_forum_permalink( $default_post_parent ) ) . user_trailingslashit( bbp_get_paged_slug() . '/' . bbp_get_paged() . '/' );
+			} else {
+				$base = bbp_get_forum_permalink( $default_post_parent );
+			}
+
+			$base = add_query_arg( 'forum-paged', '%#%',  $base ); // If a forum has subforums, this is the URL to their first page
+		} else {
+			$base = add_query_arg( 'paged', '%#%', bbp_get_forums_url() );
+		}
+
+		// Pagination settings with filter.
 		$bbp_topic_pagination = apply_filters(
 			'bbp_forum_pagination',
 			array(
@@ -194,11 +209,13 @@ function bbp_has_forums( $args = '' ) {
 			)
 		);
 
-		// Add pagination to query object
+		// Add pagination to query object.
 		$bbp->forum_query->pagination_links = paginate_links( $bbp_topic_pagination );
 
-		// Remove first page from pagination
-		$bbp->forum_query->pagination_links = str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links );
+		if ( ! empty( $bbp->forum_query->pagination_links ) ) {
+			// Remove first page from pagination.
+			$bbp->forum_query->pagination_links = str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links );
+		}
 	}
 
 	return apply_filters( 'bbp_has_forums', $bbp->forum_query->have_posts(), $bbp->forum_query );
@@ -2922,4 +2939,22 @@ function bb_get_child_forum_group_ids( $forum_id ) {
 	}
 
 	return array();
+}
+
+/**
+ * Return the content of the forum
+ *
+ * @since BuddyBoss 2.2.1
+ *
+ * @param int $forum_id Optional. Topic id.
+ *
+ * @return string Content of the forum with more link.
+ */
+function bbp_get_forum_content_excerpt_view_more( $forum_id = 0 ) {
+	$forum_id      = bbp_get_forum_id( $forum_id );
+	$forum_content = bbp_get_forum_content( $forum_id );
+
+	$forum_link = '... <br/> <a href="#single-forum-description-popup" class="bb-more-link show-action-popup button outline">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
+
+	return bp_create_excerpt( $forum_content, 250, array( 'ending' => $forum_link ) );
 }

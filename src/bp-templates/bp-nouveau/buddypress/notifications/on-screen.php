@@ -11,6 +11,7 @@
 
 remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 add_filter( 'bp_ajax_querystring', 'bb_notifications_on_screen_notifications_add', 20, 2 );
+add_filter( 'bb_notifications_get_where_conditions', 'bb_notifications_on_screen_get_where_conditions', 20, 3 );
 $on_screen_notification_query_string = apply_filters( 'bb_on_screen_notification_query_string', bp_ajax_querystring( 'notifications' ) );
 
 if ( bp_has_notifications( $on_screen_notification_query_string ) ) :
@@ -40,5 +41,6 @@ if ( bp_has_notifications( $on_screen_notification_query_string ) ) :
 		<?php
 	endwhile;
 endif;
+remove_filter( 'bb_notifications_get_where_conditions', 'bb_notifications_on_screen_get_where_conditions', 20, 3 );
 remove_filter( 'bp_ajax_querystring', 'bb_notifications_on_screen_notifications_add', 20, 2 );
 add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );

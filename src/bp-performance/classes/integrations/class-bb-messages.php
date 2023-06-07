@@ -57,6 +57,9 @@ class BB_Messages extends Integration_Abstract {
 			'groups_leave_group', // When member leave the group thread.
 			'groups_remove_member', // When admin/moderator removed user from the thread.
 
+			'groups_promote_member', // When group member promoted.
+			'groups_demote_member', // When group member demoted.
+
 		);
 
 		$this->purge_event( 'bp-messages', $purge_events );
@@ -105,6 +108,8 @@ class BB_Messages extends Integration_Abstract {
 			'groups_leave_group'                           => 1, // When member leave the group thread.
 			'groups_remove_member'                         => 1, // When admin/moderator removed user from the thread.
 			'updated_group_meta'                           => 3, // When admin/moderator removed user from the thread.
+			'groups_promote_member'                        => 1, // When group member promoted.
+			'groups_demote_member'                         => 1, // When group member demoted.
 
 			// User Friendship updates.
 			'friends_friendship_requested'                 => 3, // User sent the friendship.
@@ -166,6 +171,7 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	public function event_messages_delete_thread( $thread_ids ) {
 		if ( ! empty( $thread_ids ) ) {
+			$thread_ids = ! is_array( $thread_ids ) ? array( $thread_ids ) : $thread_ids;
 			foreach ( $thread_ids as $thread_id ) {
 				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
 			}
@@ -673,6 +679,34 @@ class BB_Messages extends Integration_Abstract {
 
 		if ( $friend_user_id ) {
 			Cache::instance()->purge_by_user_id( $friend_user_id, 'bp-messages' );
+		}
+	}
+
+	/**
+	 * Fire when group member promoted.
+	 *
+	 * @param int $group_id Group id.
+	 *
+	 * @return void
+	 */
+	public function event_groups_promote_member( $group_id ) {
+		$thread_id = $this->get_group_thread_id( $group_id );
+		if ( $thread_id ) {
+			Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
+		}
+	}
+
+	/**
+	 * Fire when group member demoted.
+	 *
+	 * @param int $group_id Group id.
+	 *
+	 * @return void
+	 */
+	public function event_groups_demote_member( $group_id ) {
+		$thread_id = $this->get_group_thread_id( $group_id );
+		if ( $thread_id ) {
+			Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
 		}
 	}
 

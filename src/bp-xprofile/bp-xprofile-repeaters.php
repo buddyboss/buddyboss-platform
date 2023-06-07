@@ -169,6 +169,7 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 }
 
 add_action( 'xprofile_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
+add_action( 'bb_xprofile_error_on_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
 
 /**
  * Update/Sort repeater fields when profile data is updated.
@@ -178,10 +179,6 @@ add_action( 'xprofile_updated_profile', 'bp_profile_repeaters_update_field_data'
 function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
 	global $wpdb;
 	$bp = buddypress();
-
-	if ( ! empty( $errors ) ) {
-		return;
-	}
 
 	$field_group_id = 0;
 
@@ -766,7 +763,7 @@ function bp_print_add_repeater_set_button() {
 	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
 		echo "<button id='btn_add_repeater_set' class='button outline' data-nonce='" . wp_create_nonce( 'bp_xprofile_add_repeater_set' ) . "' data-group='{$group_id}'>"; // disabled='disabled' style='pointer-events:none;'
-		echo '<span class="dashicons dashicons-plus-alt"></span>';
+		echo '<i class="bb-icon-f bb-icon-plus"></i>';
 		printf(
 			/* translators: %s = profile field group name */
 			__( 'Add Another', 'buddyboss' ),

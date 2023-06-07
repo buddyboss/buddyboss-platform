@@ -716,6 +716,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'album_id'      => $media->album_id,
 			'activity_id'   => $media->activity_id,
 			'user_id'       => $media->user_id,
+			'menu_order'    => $media->menu_order,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -1403,7 +1404,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_id'         => $media->attachment_id,
 			'user_id'               => $media->user_id,
 			'title'                 => $media->title,
-			'description'           => get_post_field( 'post_content', $media->attachment_id ),
+			'description'           => wp_specialchars_decode( get_post_field( 'post_content', $media->attachment_id ), ENT_QUOTES ),
 			'album_id'              => $media->album_id,
 			'group_id'              => $media->group_id,
 			'activity_id'           => $media->activity_id,
@@ -1886,19 +1887,23 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			// extract the nice title name.
 			$title = get_the_title( $wp_attachment_id );
 
-			$media_id = bp_media_add(
-				array(
-					'id'            => $id,
-					'attachment_id' => $wp_attachment_id,
-					'title'         => $title,
-					'activity_id'   => $media_activity_id,
-					'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
-					'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
-					'privacy'       => $media_privacy,
-					'user_id'       => $user_id,
-					'error_type'    => 'wp_error',
-				)
+			$add_media_args = array(
+				'id'            => $id,
+				'attachment_id' => $wp_attachment_id,
+				'title'         => $title,
+				'activity_id'   => $media_activity_id,
+				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
+				'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
+				'privacy'       => $media_privacy,
+				'user_id'       => $user_id,
+				'error_type'    => 'wp_error',
 			);
+
+			if ( isset( $args['menu_order'] ) ) {
+				$add_media_args['menu_order'] = ( ! empty( $args['menu_order'] ) ? $args['menu_order'] : 0 );
+			}
+
+			$media_id = bp_media_add( $add_media_args );
 
 			if ( is_int( $media_id ) ) {
 
@@ -2307,6 +2312,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			array(
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -2467,7 +2473,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				foreach ( $old_media_ids as $media_id ) {
 
 					if ( ! in_array( (int) $media_id, $media_ids, true ) ) {
-						bp_media_delete( array( 'id' => $media_id ) );
+						bp_media_delete( array( 'id' => $media_id ), 'activity' );
 					}
 				}
 			}
@@ -2861,6 +2867,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			array(
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
+				'order_by'  => 'menu_order',
 			)
 		);
 
@@ -3238,8 +3245,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data(
 			array(
-				'media_ids' => $media_ids,
-				'sort'      => 'ASC',
+				'media_ids'        => $media_ids,
+				'sort'             => 'ASC',
+				'order_by'         => 'menu_order',
+				'moderation_query' => false,
 			)
 		);
 

@@ -56,7 +56,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 			$htmlDom = new DOMDocument;
 
 			// Parse the HTML of the page using DOMDocument::loadHTML
-			$htmlDom->loadHTML( htmlentities( $link['settings'] ) );
+			$htmlDom->loadHTML( htmlentities( $link['settings'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 
 			// Extract the links from the HTML.
 			$links = $htmlDom->getElementsByTagName( 'a' );

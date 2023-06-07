@@ -109,20 +109,14 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 
 			$select .= " FROM {$wpdb->posts} p";
 
-			// Tax query left join.
-			if ( ! empty( $tax ) ) {
-				$select .= " LEFT JOIN {$wpdb->term_relationships} r ON p.ID = r.object_id";
-			}
-
 			// WHERE.
 			$where .= ' WHERE 1=1 AND (';
 			$where .= $this->parse_search_query( $search_term_array );
 
 			// Tax query.
 			if ( ! empty( $tax ) ) {
-
 				$tax_in_arr = array_map(
-					function( $t_name ) {
+					function ( $t_name ) {
 						return "'" . $t_name . "'";
 					},
 					$tax
@@ -130,7 +124,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 
 				$tax_in = implode( ', ', $tax_in_arr );
 
-				$where .= $wpdb->prepare( " OR  r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN (%s) )", $placeholder, $placeholder, $tax_in );
+				$where .= $wpdb->prepare( " OR p.ID IN ( SELECT DISTINCT r.object_id from {$wpdb->term_relationships} r INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = r.term_taxonomy_id INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND tt.taxonomy IN( {$tax_in} ) )", $placeholder, $placeholder );
 			}
 
 			// Meta query.
@@ -178,6 +172,12 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			);
 
 			if ( $qry->have_posts() ) {
+
+				// Remove Boots Frond End Builder App.
+				if ( class_exists( 'ET_Builder_Plugin' ) ) {
+					remove_filter( 'the_content', 'et_fb_app_boot', 1 );
+				}
+
 				while ( $qry->have_posts() ) {
 					$qry->the_post();
 					$result = array(
@@ -188,6 +188,11 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 					);
 
 					$this->search_results['items'][ get_the_ID() ] = $result;
+				}
+
+				// Add Boots Frond End Builder App.
+				if ( class_exists( 'ET_Builder_Plugin' ) ) {
+					add_filter( 'the_content', 'et_fb_app_boot', 1 );
 				}
 			}
 			wp_reset_postdata();
@@ -294,7 +299,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			}
 
 			if ( ! empty( $meta_where ) ) {
-				$meta_query = " OR p.ID IN ( SELECT post_id FROM {$wpdb->postmeta} WHERE ({$meta_where}) )";
+				$meta_query = " OR p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE ({$meta_where}) )";
 			}
 
 			return $meta_query;
@@ -306,7 +311,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param string $search_term Search string.
-		 * @param string $search_type
+		 * @param string $search_type Search type.
 		 *
 		 * @return int Total result count.
 		 */
