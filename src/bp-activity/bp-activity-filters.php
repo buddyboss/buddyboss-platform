@@ -3236,7 +3236,9 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 		'usernames' => $usernames,
 		'item_id'   => $user_id,
 	);
-	bb_create_background_activity_following_post_notification( $parse_args );
+
+	// Send notification to followers.
+	bb_activity_create_following_post_notification( $parse_args );
 }
 
 add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );

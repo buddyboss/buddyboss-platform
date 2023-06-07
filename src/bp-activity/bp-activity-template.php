@@ -4014,18 +4014,13 @@ function bp_get_follower_ids( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false
 		)
 	);
 
-	$query_args = array( 'user_id' => $r['user_id'] );
-
-	if ( ! empty( $r['page'] ) && ! empty( $r['per_page'] ) ) {
-		$query_args['page']     = $r['page'];
-		$query_args['per_page'] = $r['per_page'];
-	}
-
-	$ids = implode( ',', (array) bp_get_followers( $query_args ) );
+	$ids = implode( ',', (array) bp_get_followers( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
@@ -4062,17 +4057,12 @@ function bp_get_following_ids( $args = '' ) {
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	$query_args = array( 'user_id' => $r['user_id'] );
-
-	if ( ! empty( $r['page'] ) && ! empty( $r['per_page'] ) ) {
-		$query_args['page']     = $r['page'];
-		$query_args['per_page'] = $r['per_page'];
-	}
-
-	$ids = implode( ',', (array) bp_get_following( $query_args ) );
+	$ids = implode( ',', (array) bp_get_following( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 

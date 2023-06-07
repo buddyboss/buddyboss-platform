@@ -143,11 +143,11 @@ class BP_Activity_Follow {
 	 * Get the follower IDs for a given user.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @since BuddyBoss [BBVERSION] added support for query arguments.
-	 * 
+	 * @since BuddyBoss [BBVERSION] Added support for query arguments.
+	 *
 	 * @param int   $user_id    The user ID.
 	 * @param array $query_args Query arguments.
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function get_followers( $user_id, $query_args = array() ) {
@@ -164,7 +164,7 @@ class BP_Activity_Follow {
 
 		$sql['where'][] = $wpdb->prepare( "leader_id = %d", $user_id );
 		$sql['where']   = apply_filters( 'bp_user_query_where_sql', $sql['where'], 'follower_id' );
-		
+
 		$where_sql      = 'WHERE ' . join( ' AND ', $sql['where'] );
 		$followers_sql  = "{$sql['select']} {$where_sql}";
 
@@ -188,11 +188,11 @@ class BP_Activity_Follow {
 	 * Get the user IDs that a user is following.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @since BuddyBoss [BBVERSION] added support for query arguments.
-	 * 
+	 * @since BuddyBoss [BBVERSION] Added support for query arguments.
+	 *
 	 * @param int   $user_id    The user ID to fetch.
 	 * @param array $query_args Query arguments.
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function get_following( $user_id, $query_args = array() ) {
@@ -209,7 +209,7 @@ class BP_Activity_Follow {
 
 		$sql['where'][] = $wpdb->prepare( "follower_id = %d", $user_id );
 		$sql['where']   = apply_filters( 'bp_user_query_where_sql', $sql['where'], 'leader_id' );
-		
+
 		$where_sql      = 'WHERE ' . join( ' AND ', $sql['where'] );
 		$following_sql  = "{$sql['select']} {$where_sql}";
 
