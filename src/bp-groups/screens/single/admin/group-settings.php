@@ -36,7 +36,7 @@ function groups_screen_group_admin_settings() {
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
-		$invite_status         = isset( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
+		$invite_status         = isset( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : current( $allowed_invite_status );
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */

@@ -359,7 +359,7 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed invite statuses.
 		 */
 		$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
-		$invite_status         = in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
+		$invite_status         = in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : current( $allowed_invite_status );
 
 		/**
 		 * Filters the allowed activity feed status values for the group.
