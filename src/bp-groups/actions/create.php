@@ -142,7 +142,7 @@ function groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
-			$invite_status         = ! empty( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : current( $allowed_invite_status );
+			$invite_status         = ! empty( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : bb_groups_settings_default_fallback( 'invite_status', current( $allowed_invite_status ) );
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'invite_status', $invite_status );
 
@@ -156,7 +156,7 @@ function groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
-			$activity_feed_status         = ! empty( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
+			$activity_feed_status         = ! empty( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : bb_groups_settings_default_fallback( 'activity_feed_status', current( $allowed_activity_feed_status ) );
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'activity_feed_status', $activity_feed_status );
 
@@ -170,7 +170,7 @@ function groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_media_status = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
-			$media_status         = ! empty( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
+			$media_status         = ! empty( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : bb_groups_settings_default_fallback( 'media_status', current( $allowed_media_status ) );
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'media_status', $media_status );
 
@@ -184,7 +184,7 @@ function groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
-			$document_status         = ! empty( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
+			$document_status         = ! empty( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : bb_groups_settings_default_fallback( 'document_status', current( $allowed_document_status ) );
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'document_status', $document_status );
 
@@ -199,7 +199,7 @@ function groups_action_create_group() {
 			 */
 			$allowed_video_status    = apply_filters( 'groups_allowed_video_status', array( 'members', 'mods', 'admins' ) );
 			$post_group_video_status = bb_filter_input_string( INPUT_POST, 'group-video-status' );
-			$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : 'members';
+			$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : bb_groups_settings_default_fallback( 'video_status', current( $allowed_video_status ) );
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'video_status', $video_status );
 
@@ -213,12 +213,12 @@ function groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
-			$album_status         = ! empty( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
+			$album_status         = ! empty( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : bb_groups_settings_default_fallback( 'album_status', current( $allowed_album_status ) );
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'album_status', $album_status );
 
 			$allowed_message_status = apply_filters( 'groups_allowed_message_status', array( 'mods', 'admins', 'members' ) );
-			$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : 'mods';
+			$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : bb_groups_settings_default_fallback( 'message_status', current( $allowed_message_status ) );
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'message_status', $message_status );
 

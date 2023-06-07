@@ -5146,3 +5146,29 @@ function bb_group_single_header_actions() {
 	</div>
 	<?php
 }
+
+/**
+ * Default group settings fallback function.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $setting_type Type of group settings.
+ * @param string $val          Value of group settings.
+ *
+ * @return string
+ */
+function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
+
+	if ( empty( $val ) ) {
+		$val = ( 'message_status' === $setting_type ) ? 'mods' : 'members';
+	}
+
+	/**
+	 * Filters to set default value of a group settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $val Value of group settings.
+	 */
+	return apply_filters( 'bp_group_' . $setting_type . '_fallback', $val );
+}

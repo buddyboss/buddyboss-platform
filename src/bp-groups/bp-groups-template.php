@@ -2561,7 +2561,7 @@ function bp_group_get_invite_status( $group_id = false ) {
 
 	// Backward compatibility. When 'invite_status' is not set, fall back to a default value.
 	if ( ! $invite_status ) {
-		$invite_status = apply_filters( 'bp_group_invite_status_fallback', 'members' );
+		$invite_status = bb_groups_settings_default_fallback( 'invite_status', 'members' );
 	}
 
 	/**
@@ -2631,7 +2631,7 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
 
 	// Backward compatibility. When 'invite_status' is not set, fall back to a default value.
 	if ( ! $activity_feed_status ) {
-		$activity_feed_status = apply_filters( 'bp_group_activity_feed_status_fallback', 'members' );
+		$activity_feed_status = bb_groups_settings_default_fallback( 'activity_feed_status', 'members' );
 	}
 
 	/**
@@ -2701,7 +2701,7 @@ function bp_group_get_album_status( $group_id = false ) {
 
 	// Backward compatibility. When 'album_status' is not set, fall back to a default value.
 	if ( ! $album_status ) {
-		$album_status = apply_filters( 'bp_group_album_status_fallback', 'members' );
+		$album_status = bb_groups_settings_default_fallback( 'album_status', 'members' );
 	}
 
 	/**
@@ -2809,7 +2809,7 @@ function bp_group_get_media_status( $group_id = false ) {
 
 	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
 	if ( ! $media_status ) {
-		$media_status = apply_filters( 'bp_group_media_status_fallback', 'members' );
+		$media_status = bb_groups_settings_default_fallback( 'media_status', 'members' );
 	}
 
 	/**
@@ -2860,7 +2860,7 @@ function bp_group_get_document_status( $group_id = false ) {
 
 	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
 	if ( ! $document_status ) {
-		$document_status = apply_filters( 'bp_group_document_status_fallback', 'members' );
+		$document_status = bb_groups_settings_default_fallback( 'document_status', 'members' );
 	}
 
 	/**
@@ -7746,7 +7746,7 @@ function bp_group_get_message_status( $group_id = false ) {
 
 	// Backward compatibility. When 'message_status' is not set, fall back to a default value.
 	if ( ! $message_status ) {
-		$message_status = apply_filters( 'bp_group_message_status_fallback', 'mods' );
+		$message_status = bb_groups_settings_default_fallback( 'message_status', 'mods' );
 	}
 
 	/**
@@ -7848,7 +7848,7 @@ function bp_group_get_video_status( $group_id = false ) {
 
 	// Backward compatibility. When 'video_status' is not set, fall back to a default value.
 	if ( ! $video_status ) {
-		$video_status = apply_filters( 'bp_group_video_status_fallback', 'members' );
+		$video_status = bb_groups_settings_default_fallback( 'video_status', 'members' );
 	}
 
 	/**
