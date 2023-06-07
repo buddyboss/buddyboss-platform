@@ -6091,7 +6091,7 @@ function bb_activity_create_following_post_notification( $args, $paged = 1 ) {
 			)
 		);
 
-		$bp_background_updater->save()->schedule_event();
+		$bp_background_updater->save()->dispatch();
 	}
 
 	if ( isset( $args['user_ids'] ) ) {
