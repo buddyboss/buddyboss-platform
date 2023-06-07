@@ -4024,7 +4024,7 @@ function bp_get_follower_ids( $args = '' ) {
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'], $r );
 }
 
 /**
@@ -4066,7 +4066,7 @@ function bp_get_following_ids( $args = '' ) {
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'], $r );
 }
 
 /**

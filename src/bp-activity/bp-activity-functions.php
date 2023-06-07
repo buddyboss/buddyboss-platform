@@ -5898,8 +5898,6 @@ function bb_activity_following_post_notification( $args ) {
 		)
 	);
 
-	$paged = $r['paged'];
-
 	if ( empty( $r['user_ids'] ) || empty( $r['activity'] ) ) {
 		return;
 	}
