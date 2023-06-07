@@ -5894,7 +5894,6 @@ function bb_activity_following_post_notification( $args ) {
 			'usernames' => array(),
 			'item_id'   => '',
 			'user_ids'  => array(),
-			'paged'     => 1,
 		)
 	);
 
