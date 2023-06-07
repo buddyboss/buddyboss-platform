@@ -465,7 +465,7 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
 			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
 		}
 
-		$value = xprofile_filter_kses( $value, $data_obj );
+		$value = xprofile_filter_kses( $value, $data_obj, $field_id );
 	} elseif ( 'socialnetworks' === $field_type ) {
 		$data_obj = null;
 		if ( bp_is_user() ) {
@@ -1286,51 +1286,61 @@ function bb_xprofile_repair_user_nicknames( $repair_list ) {
  * This function will work as migration process which will update user nicknames.
  *
  * @since BuddyBoss 1.7.9
+ * @since BuddyBoss 2.3.50 Added support to skip updating nickname if modified by the user.
  */
 function bb_xprofile_repair_user_nicknames_callback() {
 	global $wpdb;
 
 	$records_updated = 0;
-	$users_query     = "
-		SELECT
-			users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value
-		FROM
-			`{$wpdb->users}` as users, `{$wpdb->usermeta}` as meta
-		WHERE
-			users.ID = meta.user_ID
-			and meta.meta_key = 'nickname'
-			and users.user_nicename != meta.meta_value";
-	$records         = $wpdb->get_results( $users_query );
+
+	$users_query = "SELECT users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value, xprofile.value as xprofile_nickname
+					FROM `{$wpdb->users}` as users
+					LEFT JOIN `{$wpdb->usermeta}` as meta ON users.ID = meta.user_ID AND meta.meta_key = 'nickname'
+					LEFT JOIN `{$wpdb->prefix}bp_xprofile_data` as xprofile ON users.ID = xprofile.user_id AND xprofile.field_id = %d
+					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)";
+
+	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) );
 
 	if ( ! empty( $records ) ) {
-		$wpdb->query(
-			"UPDATE
-				`{$wpdb->usermeta}` as meta, `{$wpdb->users}` as users
-			SET
-				meta.meta_value = users.user_nicename
-			WHERE
-				users.ID = meta.user_ID
-				and meta.meta_key = 'nickname'
-				and users.user_nicename != meta.meta_value"
-		);
-		$wpdb->query(
-			$wpdb->prepare(
-				"UPDATE
-					`{$wpdb->users}` as users, `{$wpdb->prefix}bp_xprofile_data` as xprofile
-				SET
-					xprofile.value = users.user_nicename
-				WHERE
-					users.ID = xprofile.user_id
-					and xprofile.field_id = %d
-					and users.user_nicename != xprofile.value",
-				bp_xprofile_nickname_field_id()
-			)
-		);
-		$records_updated = sprintf( __( '%s user nicknames updated successfully.', 'buddyboss' ), number_format_i18n( count( $records ) ) );
+		foreach ( $records as $record ) {
+			$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $record->xprofile_nickname, $record->ID );
+
+			if (
+				! empty( $record->xprofile_nickname ) &&
+				empty( $invalid ) &&
+				$record->xprofile_nickname === $record->meta_value
+			) {
+				// Skip updating nickname if xprofile field is modified by the user.
+				continue;
+			}
+
+			$wpdb->update(
+				$wpdb->usermeta,
+				array( 'meta_value' => $record->user_nicename ),
+				array( 'user_id' => $record->ID, 'meta_key' => 'nickname' ),
+				array( '%s' ),
+				array( '%d', '%s' )
+			);
+
+			$wpdb->update(
+				"{$wpdb->prefix}bp_xprofile_data",
+				array( 'value' => $record->user_nicename ),
+				array( 'user_id' => $record->ID, 'field_id' => bp_xprofile_nickname_field_id() ),
+				array( '%s' ),
+				array( '%d', '%d' )
+			);
+
+			$records_updated ++;
+		}
 	}
+
 	return array(
 		'status'  => 1,
-		'records' => $records_updated,
+		'records' => sprintf(
+			/* translators: updated records count. */
+			__( '%s user nicknames updated successfully.', 'buddyboss' ),
+			bp_core_number_format( $records_updated )
+		),
 		'message' => __( 'Repairing user nicknames &hellip; Complete!', 'buddyboss' ),
 	);
 }

@@ -148,6 +148,17 @@ function bp_video_activity_entry() {
 		$args['privacy'][] = 'forums';
 	}
 
+	/**
+	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
+	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+	 * it will hide video content which is created by blocked/blocked/suspended member.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( bp_get_activity_id() ) : false;
+
+	if ( true === $hide_forum_activity ) {
+		return;
+	}
+
 	if ( ! empty( $video_ids ) && bp_has_video( $args ) ) {
 		$classes = array(
 			esc_attr( 'bb-video-length-' . $video_template->video_count ),
@@ -647,7 +658,11 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 
 		// save video meta for activity.
 		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
-			bp_activity_update_meta( $main_activity_id, 'bp_video_ids', $video_ids );
+			if ( ! empty( $video_ids ) ) {
+				bp_activity_update_meta( $main_activity_id, 'bp_video_ids', $video_ids );
+			} else {
+				bp_activity_delete_meta( $main_activity_id, 'bp_video_ids' );
+			}
 		}
 
 		// delete videos which were not saved or removed from form.
