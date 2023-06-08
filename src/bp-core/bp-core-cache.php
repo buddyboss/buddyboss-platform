@@ -341,8 +341,13 @@ function bp_core_delete_incremented_cache( $key, $group ) {
  * @return string
  */
 function bp_core_get_incremented_cache_key( $key, $group ) {
+	global $wpdb;
 	$incrementor = bp_core_get_incrementor( $group );
-	$cache_key   = md5( $key . $incrementor );
+
+	// Replace wpdb placeholder in the SQL statement used by the cache key.
+	$key       = $wpdb->remove_placeholder_escape( $key );
+	$cache_key = md5( $key . $incrementor );
+
 	return $cache_key;
 }
 
