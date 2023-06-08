@@ -8562,6 +8562,13 @@ function bb_is_wp_cli() {
 	return defined( 'WP_CLI' ) && WP_CLI;
 }
 
+/**
+ * Create user last activity on activity table based on active user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
 function bb_core_create_last_activity() {
 	global $wpdb, $bp;
 
