@@ -5148,6 +5148,33 @@ function bb_group_single_header_actions() {
 }
 
 /**
+ * Function to return groups settings statues.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $setting_type Type of group settings.
+ *
+ * @return array
+ */
+function bb_groups_get_settings_status( $setting_type ) {
+
+	$statuses = array( 'members', 'mods', 'admins' );
+	if ( 'message' === $setting_type ) {
+		$statuses = array( 'mods', 'admins', 'members' );
+	}
+
+	/**
+	 * Filters the allowed settings statuses.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $statuses     The settings statuses.
+	 * @param string $setting_type Type of group settings.
+	 */
+	return apply_filters( 'groups_allowed_' . $setting_type . '_status', $statuses, $setting_type );
+}
+
+/**
  * Default group settings fallback function.
  *
  * @since BuddyBoss [BBVERSION]
@@ -5160,7 +5187,7 @@ function bb_group_single_header_actions() {
 function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 
 	if ( empty( $val ) ) {
-		$val = ( 'message_status' === $setting_type ) ? 'mods' : 'members';
+		$val = ( 'message' === $setting_type ) ? 'mods' : 'members';
 	}
 
 	/**
@@ -5170,5 +5197,5 @@ function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
 	 *
 	 * @param string $val Value of group settings.
 	 */
-	return apply_filters( 'bp_group_' . $setting_type . '_fallback', $val );
+	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
 }
