@@ -5158,6 +5158,8 @@ function bb_group_single_header_actions() {
  */
 function bb_groups_get_settings_status( $setting_type ) {
 
+	$setting_type = str_replace( '-', '_', sanitize_key( $setting_type ) );
+
 	$statuses = array( 'members', 'mods', 'admins' );
 	if ( 'message' === $setting_type ) {
 		$statuses = array( 'mods', 'admins', 'members' );
@@ -5185,6 +5187,8 @@ function bb_groups_get_settings_status( $setting_type ) {
  * @return string
  */
 function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
+
+	$setting_type = str_replace( '-', '_', sanitize_key( $setting_type ) );
 
 	if ( empty( $val ) ) {
 		$val = ( 'message' === $setting_type ) ? 'mods' : 'members';
