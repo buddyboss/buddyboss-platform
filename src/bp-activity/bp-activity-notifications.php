@@ -652,7 +652,7 @@ function bb_activity_add_notification_metas( $notification ) {
  *
  * @param BP_Activity_Follow $follower Contains following data.
  */
-function bb_activity_follow_withdrawn_notifications_by_item_id( $follower ) {
+function bb_activity_follow_withdrawn_notifications( $follower ) {
 
 	if ( empty( $follower ) || ! bp_is_activity_follow_active() || empty( $follower->leader_id ) ) {
 		return;
@@ -666,4 +666,4 @@ function bb_activity_follow_withdrawn_notifications_by_item_id( $follower ) {
 		$follower->follower_id // Current user id.
 	);
 }
-add_action( 'bp_stop_following', 'bb_activity_follow_withdrawn_notifications_by_item_id', 10, 1 );
+add_action( 'bp_stop_following', 'bb_activity_follow_withdrawn_notifications', 10, 1 );
