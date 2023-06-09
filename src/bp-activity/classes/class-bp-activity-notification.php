@@ -861,7 +861,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'New Follower', 'buddyboss' ),
+			esc_html__( 'New followers', 'buddyboss' ),
 			array( 'bb_following_new' ),
 			17
 		);

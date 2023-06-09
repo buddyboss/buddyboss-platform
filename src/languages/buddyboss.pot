@@ -2012,7 +2012,7 @@ msgid "You will no longer receive emails when someone follows you."
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:864
-msgid "New Follower"
+msgid "New followers"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:194
