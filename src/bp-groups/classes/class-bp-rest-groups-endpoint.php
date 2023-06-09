@@ -157,6 +157,11 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		if ( isset( $request['scope'] ) ) {
 			if ( 'personal' === $request['scope'] ) {
 				$args['user_id'] = ( ! empty( $request['user_id'] ) ? (int) $request['user_id'] : get_current_user_id() );
+
+				// Child groups should always display on my groups section.
+				if ( isset( $args['parent_id'] ) ) {
+					unset( $args['parent_id'] );
+				}
 			}
 		}
 
