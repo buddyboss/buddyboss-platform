@@ -344,7 +344,7 @@ function bp_core_get_incremented_cache_key( $key, $group ) {
 	global $wpdb;
 	$incrementor = bp_core_get_incrementor( $group );
 
-	// Replace wpdb placeholder in the SQL statement used by the cache key.
+	// Removes the placeholder escape strings from a query.
 	$key       = $wpdb->remove_placeholder_escape( $key );
 	$cache_key = md5( $key . $incrementor );
 
