@@ -3325,32 +3325,3 @@ function bb_send_email_to_follower( $follower ) {
 	}
 }
 add_action( 'bp_start_following', 'bb_send_email_to_follower' );
-
-/**
- * Function will remove follow notice when a member withdraws their following.
- *
- * @since BuddyBoss 2.3.1.1
- *
- * @param BP_Activity_Follow $follower Contains following data.
- */
-function bp_activity_follow_withdrawn_notifications_by_item_id( $follower ) {
-
-	if ( empty( $follower ) || ! bp_is_activity_follow_active() || empty( $follower->leader_id ) ) {
-		return;
-	}
-
-	$item_id           = $follower->id;
-	$user_id           = $follower->follower_id; // Current user id.
-	$following_user_id = $follower->leader_id; // Following user id.
-
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_delete_notifications_by_item_id(
-			$following_user_id,
-			$item_id,
-			buddypress()->activity->id,
-			'bb_following_new',
-			$user_id
-		);
-	}
-}
-add_action( 'bp_stop_following', 'bp_activity_follow_withdrawn_notifications_by_item_id' );

@@ -645,4 +645,25 @@ function bb_activity_add_notification_metas( $notification ) {
 	}
 }
 
+/**
+ * Function will remove follow notice when a member withdraws their following.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Activity_Follow $follower Contains following data.
+ */
+function bb_activity_follow_withdrawn_notifications_by_item_id( $follower ) {
 
+	if ( empty( $follower ) || ! bp_is_activity_follow_active() || empty( $follower->leader_id ) ) {
+		return;
+	}
+
+	bp_notifications_delete_notifications_by_item_id(
+		$follower->leader_id, // Following user id.
+		$follower->id,
+		buddypress()->activity->id,
+		'bb_following_new',
+		$follower->follower_id // Current user id.
+	);
+}
+add_action( 'bp_stop_following', 'bb_activity_follow_withdrawn_notifications_by_item_id', 10, 1 );
