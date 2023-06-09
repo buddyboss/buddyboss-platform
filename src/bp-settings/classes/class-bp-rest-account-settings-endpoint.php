@@ -166,7 +166,7 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $nav, $request ) {
 		$data = array(
-			'name'     => $nav->name,
+			'name'     => wp_specialchars_decode( $nav->name, ENT_QUOTES ),
 			'slug'     => $nav->slug,
 			'position' => $nav->position,
 			'children' => array(),

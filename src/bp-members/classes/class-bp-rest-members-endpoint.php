@@ -762,6 +762,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			: '0'
 		);
 
+		$data['can_follow'] = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();;
+
 		if ( 'edit' === $context ) {
 			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
 			$data['roles']              = (array) array_values( $user_data->roles );
@@ -922,7 +924,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			foreach ( $groups as $group ) {
 				$data['groups'][ $group->id ] = array(
-					'name' => $group->name,
+					'name' => wp_specialchars_decode( $group->name, ENT_QUOTES ),
 				);
 
 				foreach ( $group->fields as $item ) {
@@ -1223,6 +1225,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				),
 				'is_wp_admin'        => array(
 					'description' => __( 'Whether the member is an administrator.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'can_follow'         => array(
+					'description' => __( 'Check if a user can follow or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
