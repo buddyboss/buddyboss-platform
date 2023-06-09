@@ -182,7 +182,6 @@ window.bp = window.bp || {};
 					navigator.oGetUserMedia
 				);
 
-				if ( typeof navigator.getUserMedia !== 'undefined' ) {
 					// We need to add some cropping stuff to use bp.Avatar.setAvatar()
 					params = _.extend(
 						_.pick(
@@ -198,13 +197,12 @@ window.bp = window.bp || {};
 							x: 0,
 							y: 0,
 							type: 'camera'
-							}
+						}
 					);
 
-						this.model.set( params );
-				}
+					this.model.set( params );
 
-					this.on( 'ready', this.useStream, this );
+				this.on( 'ready', this.useStream, this );
 			},
 
 			useStream:function() {

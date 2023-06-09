@@ -2212,7 +2212,7 @@ function bp_avatar_use_webcam() {
 	 *
 	 * @see http://caniuse.com/#feat=stream
 	 */
-	if ( $is_safari || $is_IE || ( $is_chrome && ! is_ssl() ) ) {
+	if ( $is_IE || ( $is_chrome && ! is_ssl() ) ) {
 		return false;
 	}
 
