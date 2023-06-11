@@ -2197,7 +2197,7 @@ function bp_avatar_is_front_edit() {
  * @return bool True to load the Webcam Avatar UI part. False otherwise.
  */
 function bp_avatar_use_webcam() {
-	global $is_safari, $is_IE, $is_chrome;
+	global $is_IE, $is_chrome;
 
 	/**
 	 * Do not use the webcam feature for mobile devices
