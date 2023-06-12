@@ -2524,6 +2524,13 @@ h2.has_tutorial_btn {
 	border-radius: 4px;
 }
 
+.bb-warning-section-wrap.hidden-header > th {
+	opacity: 0;
+	visibility: hidden;
+	padding: 0;
+	margin: 0;
+}
+
 .bb-warning-section {
 	padding: 10px;
 	margin-left: -210px;
