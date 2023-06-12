@@ -179,9 +179,11 @@ window.bp = window.bp || {};
 					navigator.webkitGetUserMedia ||
 					navigator.mozGetUserMedia ||
 					navigator.msGetUserMedia ||
-					navigator.oGetUserMedia
+					navigator.oGetUserMedia ||
+					navigator.mediaDevices.getUserMedia
 				);
 
+				if ( typeof navigator.getUserMedia !== 'undefined' ) {
 					// We need to add some cropping stuff to use bp.Avatar.setAvatar()
 					params = _.extend(
 						_.pick(
@@ -201,6 +203,7 @@ window.bp = window.bp || {};
 					);
 
 					this.model.set( params );
+				}
 
 				this.on( 'ready', this.useStream, this );
 			},
