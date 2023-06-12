@@ -2197,7 +2197,8 @@ function bp_avatar_is_front_edit() {
  * @return bool True to load the Webcam Avatar UI part. False otherwise.
  */
 function bp_avatar_use_webcam() {
-	global $is_IE, $is_chrome;
+	global $is_safari, $is_IE, $is_chrome;
+	$browser = bb_core_get_browser();
 
 	/**
 	 * Do not use the webcam feature for mobile devices
@@ -2212,7 +2213,7 @@ function bp_avatar_use_webcam() {
 	 *
 	 * @see http://caniuse.com/#feat=stream
 	 */
-	if ( $is_IE || ( $is_chrome && ! is_ssl() ) ) {
+	if ( ( $is_safari && isset( $browser['version'] ) && $browser['version'] < 11 ) || $is_IE || ( $is_chrome && ! is_ssl() ) ) {
 		return false;
 	}
 
