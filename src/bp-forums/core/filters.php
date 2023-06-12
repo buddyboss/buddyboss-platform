@@ -259,10 +259,8 @@ add_filter( 'posts_where', 'bb_forum_search_by_topic_tags', 10, 2 );
 add_filter( 'bbp_get_topic_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bbp_get_reply_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 
-if ( bbp_use_autoembed() ) {
-	add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 999, 2 );
-	add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
-}
+add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 999, 2 );
+add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
 
 /** Deprecated ****************************************************************/
 
