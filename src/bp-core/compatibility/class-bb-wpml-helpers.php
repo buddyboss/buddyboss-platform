@@ -59,6 +59,10 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			add_action( 'parse_query', array( $this, 'bp_core_fix_wpml_redirection' ), 5 );
 
 			add_filter( 'bp_core_get_root_domain', array( $this, 'bp_core_wpml_fix_get_root_domain' ) );
+			add_filter( 'bp_core_get_directory_page_ids', array( $this, 'bb_core_get_wpml_directory_page_ids' ), 10, 1 );
+
+			// Trigger function to delete profile completion data when switch language.
+			add_action( 'wpml_language_has_switched', 'bp_core_xprofile_clear_all_user_progress_cache' );
 		}
 
 		/**
@@ -145,6 +149,24 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 */
 		public function bp_core_wpml_fix_get_root_domain( $url ) {
 			return untrailingslashit( $url );
+		}
+
+		/**
+		 * Update BP Core pages with WPML if available otherwise return original IDs.
+		 *
+		 * @since BuddyBoss 2.1.0
+		 *
+		 * @param array $page_ids BP Core pages ID.
+		 *
+		 * @return array
+		 */
+		public function bb_core_get_wpml_directory_page_ids( $page_ids ) {
+			// Loop through pages.
+			foreach ( $page_ids as $component_name => $page_id ) {
+				$page_ids[ $component_name ] = apply_filters( 'wpml_object_id', $page_id, get_post_type( $page_id ), true );
+			}
+
+			return $page_ids;
 		}
 
 	}

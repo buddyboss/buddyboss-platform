@@ -156,6 +156,17 @@ function bp_document_activity_entry() {
 		$document_ids = BP_Document::get_activity_document_id( bp_get_activity_id() );
 	}
 
+	/**
+	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
+	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+	 * it will hide document content which is created by blocked/blocked/suspended member.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( bp_get_activity_id() ) : false;
+
+	if ( true === $hide_forum_activity ) {
+		return;
+	}
+
 	if ( ! empty( $document_ids ) && bp_has_document(
 		array(
 			'include'  => $document_ids,
@@ -190,13 +201,20 @@ function bp_document_activity_append_document( $content, $activity ) {
 
 	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
+	$args = array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+	);
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
+		$args['privacy'] = array( 'grouponly' );
+		if ( 'activity_comment' === $activity->type ) {
+			$args['privacy'][] = 'comment';
+		}
+	}
+
+	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		ob_start();
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
@@ -357,8 +375,13 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	$documents           = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$documents           = ! empty( $documents ) ? $documents : array();
-	$actions             = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$actions             = bb_filter_input_string( INPUT_POST, 'action' );
 	$moderated_documents = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+
+	if ( ! empty( $documents ) ) {
+		$document_order = array_column( $documents, 'menu_order' );
+		array_multisort( $document_order, SORT_ASC, $documents );
+	}
 
 	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_documents ) ) {
 		$moderated_documents = explode( ',', $moderated_documents );
@@ -432,7 +455,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 						$document_ids[] = $document_id;
 					}
 					if ( ! in_array( $document_id, $document_ids ) ) {
-						bp_document_delete( array( 'id' => $document_id ) );
+						bp_document_delete( array( 'id' => $document_id ), 'activity' );
 					}
 				}
 
@@ -563,6 +586,11 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 		// save document.
 		$documents = json_decode( stripslashes( $_POST['bbp_document'] ), true );
 
+		if ( ! empty( $documents ) ) {
+			$document_order = array_column( $documents, 'menu_order' );
+			array_multisort( $document_order, SORT_ASC, $documents );
+		}
+
 		// fetch currently uploaded document ids.
 		$existing_document                = array();
 		$existing_document_ids            = get_post_meta( $post_id, 'bp_document_ids', true );
@@ -655,7 +683,11 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 
 		// save document meta for activity.
 		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
-			bp_activity_update_meta( $main_activity_id, 'bp_document_ids', $document_ids );
+			if ( ! empty( $document_ids ) ) {
+				bp_activity_update_meta( $main_activity_id, 'bp_document_ids', $document_ids );
+			} else {
+				bp_activity_delete_meta( $main_activity_id, 'bp_document_ids' );
+			}
 		}
 
 		// delete documents which were not saved or removed from form.
@@ -1856,13 +1888,13 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'size'        => $size,
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
+					'full_name'   => esc_attr( basename( $file ) ),
 				);
 
 				if ( 0 === $folder_id && $document->folder_id > 0 ) {
 					$folder_id                    = $document->folder_id;
 					$activity['can_edit_privacy'] = false;
 				}
-
 			}
 		}
 
@@ -2057,3 +2089,23 @@ function bb_setup_attachment_document_preview_template( $template ) {
 
 	return $template;
 }
+
+/**
+ * Enable document preview without trailing slash.
+ *
+ * @since BuddyBoss 2.3.2
+ *
+ * @param string $redirect_url URL to render.
+ *
+ * @return mixed|string
+ */
+function bb_document_remove_specific_trailing_slash( $redirect_url ) {
+	if (
+		strpos( $redirect_url, 'bb-document-preview' ) !== false ||
+		strpos( $redirect_url, 'bb-attachment-document-preview' ) !== false
+	) {
+		$redirect_url = untrailingslashit( $redirect_url );
+	}
+	return $redirect_url;
+}
+add_filter( 'redirect_canonical', 'bb_document_remove_specific_trailing_slash', 9999 );

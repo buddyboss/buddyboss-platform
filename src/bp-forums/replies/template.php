@@ -700,7 +700,7 @@ function bbp_get_reply_excerpt( $reply_id = 0, $length = 100 ) {
 	}
 
 	if ( ! empty( $length ) && ( $excerpt_length > $length ) ) {
-		$excerpt  = substr( $excerpt, 0, $length - 1 );
+		$excerpt  = function_exists( 'mb_substr' ) ? mb_substr( $excerpt, 0, $length - 1 ) : substr( $excerpt, 0, $length - 1 );
 		$excerpt .= '&hellip;';
 	}
 
@@ -1325,7 +1325,13 @@ function bbp_get_reply_author_link( $args = '' ) {
 
 		// Get avatar
 		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
+			if ( bp_is_active( 'moderation' ) ) {
+				add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 			$author_links['avatar'] = bbp_get_reply_author_avatar( $reply_id, $r['size'] );
+			if ( bp_is_active( 'moderation' ) ) {
+				remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 		}
 
 		// Get display name
