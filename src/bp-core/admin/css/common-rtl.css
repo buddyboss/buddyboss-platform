@@ -2383,6 +2383,11 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin: 0;
 }
 
+.bb-warning-section-wrap.hidden-header > th + td {
+  padding-right: 0;
+  padding-left: 0;
+}
+
 .bb-warning-section {
   padding: 10px;
   margin-right: -210px;
@@ -2391,6 +2396,12 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   line-height: 1.5;
   border: 1px solid #ffeeb3;
   border-radius: 4px;
+}
+
+@media screen and (max-width: 782px) {
+  .bb-warning-section {
+    margin-right: 0;
+  }
 }
 
 /* Status Block */
