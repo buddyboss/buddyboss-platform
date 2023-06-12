@@ -2371,6 +2371,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin-right: -210px;
   background: #ffdcdc;
   color: #d42929;
+  line-height: 1.5;
   border: 1px solid #ffc5ca;
   border-radius: 4px;
 }
@@ -2387,6 +2388,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin-right: -210px;
   background: #fff3c8;
   color: #8b6300;
+  line-height: 1.5;
   border: 1px solid #ffeeb3;
   border-radius: 4px;
 }
