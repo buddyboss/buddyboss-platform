@@ -840,6 +840,8 @@ class BP_Core_User {
 					array(
 						'user_id'       => $last_activity->user_id,
 						'date_recorded' => $last_activity->date_recorded,
+						'db_recorded'   => $last_activity->date_recorded,
+						'cache_status'  => false,
 						'activity_id'   => $last_activity->id,
 					),
 					'bp_last_activity'
@@ -876,75 +878,8 @@ class BP_Core_User {
 	 * @return bool True on success, false on failure.
 	 */
 	public static function update_last_activity( $user_id, $time ) {
-		global $wpdb;
 
-		$table_name = buddypress()->members->table_name_last_activity;
-
-		$activity = self::get_last_activity( $user_id );
-
-		if ( ! empty( $activity[ $user_id ] ) ) {
-			$updated = $wpdb->update(
-				$table_name,
-				// Data to update.
-				array(
-					'date_recorded' => $time,
-				),
-				// WHERE.
-				array(
-					'id' => $activity[ $user_id ]['activity_id'],
-				),
-				// Data sanitization format.
-				array(
-					'%s',
-				),
-				// WHERE sanitization format.
-				array(
-					'%d',
-				)
-			);
-
-			// Add new date to existing activity entry for caching.
-			$activity[ $user_id ]['date_recorded'] = $time;
-
-		} else {
-			$updated = $wpdb->insert(
-				$table_name,
-				// Data.
-				array(
-					'user_id'       => $user_id,
-					'component'     => buddypress()->members->id,
-					'type'          => 'last_activity',
-					'action'        => '',
-					'content'       => '',
-					'primary_link'  => '',
-					'item_id'       => 0,
-					'date_recorded' => $time,
-				),
-				// Data sanitization format.
-				array(
-					'%d',
-					'%s',
-					'%s',
-					'%s',
-					'%s',
-					'%s',
-					'%d',
-					'%s',
-				)
-			);
-
-			// Set up activity array for caching.
-			// View the foreach loop in the get_last_activity() method for format.
-			$activity             = array();
-			$activity[ $user_id ] = array(
-				'user_id'       => $user_id,
-				'date_recorded' => $time,
-				'activity_id'   => $wpdb->insert_id,
-			);
-		}
-
-		// Set cache.
-		wp_cache_set( $user_id, $activity[ $user_id ], 'bp_last_activity' );
+		$updated = BB_Presence::bb_update_last_activity( $user_id, $time );
 
 		/**
 		 * Fires when a user's last_activity value has been updated.

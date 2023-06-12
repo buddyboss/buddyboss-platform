@@ -1161,10 +1161,6 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	if ( '' === $content || empty( $content ) ) {
-		$content = '&nbsp;';
-	}
-
 	$group         = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ); // Group id.
 	$message_users = bb_filter_input_string( INPUT_POST, 'users' ); // all - individual.
 	$message_type  = bb_filter_input_string( INPUT_POST, 'type' ); // open - private.
@@ -1762,7 +1758,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
 			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-				$chunk_members = array_chunk( $members, 10 );
+				$chunk_members = array_chunk( $members, bb_get_email_queue_min_count() );
 				if ( ! empty( $chunk_members ) ) {
 					foreach ( $chunk_members as $key => $members ) {
 						$bb_email_background_updater->data(

@@ -166,7 +166,7 @@ function bp_messages_filter_kses( $content ) {
  */
 function maybe_redirects_to_previous_thread_message() {
 	$recipient = bp_get_messages_username_value();
-	$user_id   = bp_core_get_userid( $recipient );
+	$user_id   = bp_core_get_userid_from_nicename( $recipient );
 
 	$thread_id = BP_Messages_Message::get_existing_thread( array( $user_id ), bp_loggedin_user_id() );
 	if ( ! $thread_id ) {
@@ -1207,7 +1207,7 @@ function bb_digest_message_email_notifications() {
 					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 						global $bb_email_background_updater;
 
-						$chunk_recipient_array = array_chunk( $thread['recipients'], 10 );
+						$chunk_recipient_array = array_chunk( $thread['recipients'], bb_get_email_queue_min_count() );
 
 						if ( ! empty( $chunk_recipient_array ) ) {
 							foreach ( $chunk_recipient_array as $chunk_recipient ) {

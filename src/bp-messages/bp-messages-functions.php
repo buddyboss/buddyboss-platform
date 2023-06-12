@@ -1081,7 +1081,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 
 	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 		global $bb_email_background_updater;
-		$chunk_recipients = array_chunk( $recipients, 10 );
+		$chunk_recipients = array_chunk( $recipients, bb_get_email_queue_min_count() );
 		if ( ! empty( $chunk_recipients ) ) {
 			foreach ( $chunk_recipients as $key => $data_recipients ) {
 				$bb_email_background_updater->data(
@@ -2162,7 +2162,7 @@ function bb_get_message_response_object( $message ) {
 	if ( false === bp_core_get_core_userdata( $sender_id ) ) {
 		$content = esc_html__( 'This message was deleted', 'buddyboss' );
 	}
-	$content    = preg_replace( '#(<p></p>)#', '<p><br></p>', apply_filters( 'bp_get_message_thread_content', $content ) );
+	$content    = preg_replace( '#(<p></p>)#', '<p><br></p>', apply_filters( 'bp_get_the_thread_message_content', $content ) );
 	$excerpt    = apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
 	$message_id = $message->id;
 	$excerpt    = wp_trim_words( wp_strip_all_tags( $excerpt ) );

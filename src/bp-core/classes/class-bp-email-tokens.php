@@ -146,6 +146,22 @@ class BP_Email_Tokens {
 				'function'    => array( $this, 'token__activity_content' ),
 				'description' => __( 'Display the activity post content, along with member\'s photo and name.', 'buddyboss' ),
 			),
+			'commenter.name'       => array(
+				'function'    => array( $this, 'token__commenter_name' ),
+				'description' => __( 'Display the commenter name.', 'buddyboss' ),
+			),
+			'commenter.url'        => array(
+				'function'    => array( $this, 'token__commenter_url' ),
+				'description' => __( 'Display the commenter link.', 'buddyboss' ),
+			),
+			'comment.url'          => array(
+				'function'    => array( $this, 'token__comment_reply_url' ),
+				'description' => __( 'Display the post comment url.', 'buddyboss' ),
+			),
+			'comment_reply'        => array(
+				'function'    => array( $this, 'token__comment_reply' ),
+				'description' => __( 'Display the post comment reply content.', 'buddyboss' ),
+			),
 		);
 
 		return $tokens;
@@ -209,8 +225,7 @@ class BP_Email_Tokens {
 									<tbody>
 									<tr>
 										<td width="20%" class="mobile-block-full">
-											<a class="group-avatar-wrap mobile-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>"
-											   style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 104px;">
+											<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>" style="display: block; width: 104px;">
 												<?php
 												$group_avatar = bp_core_fetch_avatar(
 													array(
@@ -224,7 +239,7 @@ class BP_Email_Tokens {
 													)
 												);
 												?>
-												<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="100" height="100" border="0" style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
+												<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="100" height="100" border="0" style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display:block;" />
 											</a>
 										</td>
 										<td width="4%" class="mobile-hide">&nbsp;</td>
@@ -270,7 +285,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: block;border-radius: 100px;text-align: center; height: 16px;line-height: 16px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 110px;padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -282,7 +297,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: inline-block;border-radius: 100px;text-align: center; line-height: 16px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;min-width: 110px;padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -2074,7 +2089,7 @@ class BP_Email_Tokens {
 														}
 														?>
 														<?php if ( $total_document_ids > 5 ) : ?>
-															<a href="<?php echo esc_url( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+															<a href="<?php echo esc_url( $tokens['message.url'] ); ?>"><?php echo sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
 														<?php endif; ?>
 													</div>
 													<?php
@@ -2502,7 +2517,7 @@ class BP_Email_Tokens {
 																}
 																?>
 																<?php if ( $total_document_ids > 5 ) : ?>
-																	<a href=""><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
+																	<a href=""><?php echo sprintf( __( 'and %d more', 'buddyboss' ), $total_document_ids - 5 ); ?></a>
 																<?php endif; ?>
 															</div>
 															<?php
@@ -2548,7 +2563,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td><a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
 			</tr>
 		</table>
 		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
@@ -2890,13 +2905,13 @@ class BP_Email_Tokens {
 									<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( $activity->user_id ) ); ?>" target="_blank" rel="nofollow">
 										<?php
 										$avatar_url = bp_core_fetch_avatar(
-												array(
-														'item_id' => $activity->user_id,
-														'width'   => 100,
-														'height'  => 100,
-														'type'    => 'full',
-														'html'    => false,
-												)
+											array(
+												'item_id' => $activity->user_id,
+												'width'   => 100,
+												'height'  => 100,
+												'type'    => 'full',
+												'html'    => false,
+											)
 										);
 										?>
 										<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"/>
@@ -3050,7 +3065,7 @@ class BP_Email_Tokens {
 																	<?php if ( $total_video_ids > 1 ) : ?>
 																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 240px;margin: 0;margin-left: 5px;width:100%;background-color: #b5b7bb;padding:0;"></p>
 																		<p style="height: 6px;border-radius: 0px 0px 4px 4px;max-width: 222px;margin: 0;margin-left: 14px;width:100%;background-color: #e1e4e8;padding:0;"></p>
-																	<?php
+																		<?php
 																	endif;
 
 																	break;
@@ -3136,7 +3151,7 @@ class BP_Email_Tokens {
 			</tr>
 
 			<tr>
-				<td><a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
+				<td><a href="<?php echo esc_url( $tokens['activity.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 20px; line-height: 20px; padding: 9px 18px;"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></td>
 			</tr>
 		</table>
 		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
@@ -3145,4 +3160,182 @@ class BP_Email_Tokens {
 
 		return $output;
 	}
+
+	/**
+	 * Generate the output for token commenter.name
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__commenter_name( $bp_email, $formatted_tokens, $tokens ) {
+
+		$user_id        = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
+		$commenter_name = '';
+
+		if ( ! empty( $user_id ) ) {
+			$commenter_name = bp_core_get_user_displayname( $user_id );
+		} elseif ( ! empty( $tokens['commenter.name'] ) ) {
+			$commenter_name = $tokens['commenter.name'];
+		}
+
+		return $commenter_name;
+	}
+
+	/**
+	 * Generate the output for token comment_reply.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__comment_reply( $bp_email, $formatted_tokens, $tokens ) {
+
+		$output        = '';
+		$comment_reply = '';
+
+		$settings     = bp_email_get_appearance_settings();
+		$comment_id   = isset( $tokens['comment.id'] ) ? $tokens['comment.id'] : false;
+		$commenter_id = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
+		if ( ! empty( $tokens['comment_reply'] ) ) {
+			$comment_reply = $tokens['comment_reply'];
+		}
+
+		if ( empty( $comment_id ) ) {
+			return $comment_reply;
+		}
+
+		$commenter_url        = ! empty( $commenter_id ) ? esc_url( bp_core_get_user_domain( $commenter_id ) ) : '#';
+		$commenter_avatar_url = bp_core_fetch_avatar(
+			array(
+				'item_id' => $commenter_id,
+				'width'   => 100,
+				'height'  => 100,
+				'type'    => 'full',
+				'html'    => false,
+			)
+		);
+
+		$commenter_name = isset( $tokens['commenter.name'] ) ? $tokens['commenter.name'] : '';
+
+		ob_start();
+		?>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<tr>
+				<td align="center">
+					<table cellpadding="0" cellspacing="0" border="0" width="100%">
+						<tbody>
+						<tr>
+							<td valign="middle" width="65px" style="vertical-align: middle;">
+								<a style="display: block; width: 47px;" href="<?php echo $commenter_url; ?>" target="_blank" rel="nofollow">
+									<img alt="" src="<?php echo esc_url( $commenter_avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+								</a>
+							</td>
+							<td width="88%" style="vertical-align: middle;">
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo $commenter_name; ?></div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+						<tbody>
+							<tr>
+								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+							</tr>
+							<tr>
+								<td align="center">
+									<table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
+										<tbody>
+											<tr>
+												<td>
+													<div class="bb-content-body" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;">
+														<?php
+														echo wpautop( $comment_reply );
+														?>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td><a href="<?php echo esc_url( $tokens['comment.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 10px 28px;"><?php esc_html_e( 'View Comment', 'buddyboss' ); ?></a></td>
+			</tr>
+		</table>
+		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
+		<?php
+		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
+
+		return $output;
+	}
+
+	/**
+	 * Generate the output for token comment.url
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__comment_reply_url( $bp_email, $formatted_tokens, $tokens ) {
+
+		$comment_reply_url = '';
+		if ( ! empty( $tokens['comment.url'] ) ) {
+			$comment_reply_url = str_replace( array( "\r", "\n" ), '', $tokens['comment.url'] );
+		}
+
+		return $comment_reply_url;
+	}
+
+	/**
+	 * Generate the output for token commenter.url
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param \BP_Email $bp_email         Core component classes.
+	 * @param array     $formatted_tokens Formatted token array.
+	 * @param array     $tokens           Token array.
+	 *
+	 * @return string html for the output.
+	 */
+	public function token__commenter_url( $bp_email, $formatted_tokens, $tokens ) {
+		$commenter_id  = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
+		$commenter_url = ! empty( $commenter_id ) ? esc_url( bp_core_get_user_domain( $commenter_id ) ) : '#';
+
+		return $commenter_url;
+	}
+
 }
