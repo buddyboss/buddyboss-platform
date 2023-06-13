@@ -431,7 +431,11 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 20111 ) {
-			bb_update_to_2_3_5();
+			bb_update_to_2_3_41();
+		}
+
+		if ( $raw_db_version < 20211 ) {
+			bb_update_to_2_3_50();
 		}
 	}
 
@@ -2757,7 +2761,7 @@ function bb_update_to_2_3_4() {
  *
  * @return void
  */
-function bb_update_to_2_3_5() {
+function bb_update_to_2_3_41() {
 	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
 	if ( $is_already_run ) {
 		return;
@@ -2799,5 +2803,70 @@ function bb_core_update_repair_member_slug() {
 		);
 
 		$bp_background_updater->save()->schedule_event();
+	}
+}
+
+/**
+ * Clear web and api cache on the update.
+ * Install email template for activity following post.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @return void
+ */
+function bb_update_to_2_3_50() {
+	// Clear cache.
+	wp_cache_flush();
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$email = array(
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
+		/* translators: do not remove {} brackets or translate its contents. */
+		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
+	);
+
+	$id = 'new-comment-reply';
+
+	if (
+		term_exists( $id, bp_get_email_tax_type() ) &&
+		get_terms(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'slug'     => $id,
+				'fields'   => 'count',
+			)
+		) > 0
+	) {
+		return;
+	}
+
+	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+
+	foreach ( $tt_ids as $tt_id ) {
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		wp_update_term(
+			(int) $term->term_id,
+			bp_get_email_tax_type(),
+			array(
+				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
+			)
+		);
 	}
 }
