@@ -2460,7 +2460,7 @@ function bb_get_user_social_networks_field_value( $user_id = null ) {
  *
  * @return BP_XProfile_Field_Type|null Field Type object if found, otherwise null.
  */
-function bp_xprofile_get_field_type( $field_id ) {
+function bb_xprofile_get_field_type( $field_id ) {
 	$field_type = null;
 	$field      = xprofile_get_field( $field_id, null, false );
 
