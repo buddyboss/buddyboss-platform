@@ -134,12 +134,12 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
  * @since BuddyBoss 1.0.0
  *
  * @param int   $field_group_id Xprofile group ID.
- * @param bool  $force_cache    Default true. Return result from cache if it's true. Added [BBVERSION].
  *
  * @return array
  * @global wpdb $wpdb           WordPress database abstraction object.
+ *
  */
-function bp_get_repeater_clone_field_ids_all( $field_group_id, $force_cache = true ) {
+function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 	static $bp_clone_field_ids_all = array();
 	global $wpdb;
 	$bp        = buddypress();
@@ -147,7 +147,7 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id, $force_cache = tr
 
 	$ids = array();
 
-	if ( isset( $bp_clone_field_ids_all[ $cache_key ] ) && $force_cache ) {
+	if ( isset( $bp_clone_field_ids_all[ $cache_key ] ) ) {
 		return $bp_clone_field_ids_all[ $cache_key ];
 	}
 
