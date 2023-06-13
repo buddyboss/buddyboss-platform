@@ -1356,7 +1356,7 @@ function bb_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $group_i
 
 	if ( ! empty( $user_ids ) ) {
 		$repeater_template_fields = bp_get_repeater_template_field_ids( $group_id );
-		$field_ids                = bp_get_repeater_clone_field_ids_all( $group_id );
+		$field_ids                = bp_get_repeater_clone_field_ids_all( $group_id, false );
 		$field_ids_in             = "'" . implode( "','", $field_ids ) . "'";
 
 		foreach ( $user_ids as $user_id ) {
