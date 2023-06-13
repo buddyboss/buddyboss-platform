@@ -565,29 +565,49 @@ function bb_post_topic_reply_draft() {
  * @since BuddyBoss 2.2.1
  */
 function bb_forum_add_content_popup() {
-	if ( ! bbp_is_single_forum() ) {
+	global $post;
+
+	$has_bbp_single_forum_shortcode = false;
+	if ( has_shortcode( $post->post_content, 'bbp-single-forum' ) ) {
+		$has_bbp_single_forum_shortcode = true;
+	}
+
+	if ( ! ( bbp_is_single_forum() ) && ! $has_bbp_single_forum_shortcode ) {
 		return;
 	}
+
+	if ( $has_bbp_single_forum_shortcode ) {
+		$pattern = '/\[bbp-single-forum\s+id=(\d+)\]/';
+		preg_match_all( $pattern, $post->post_content, $matches );
+
+		$forum_ids = $matches[1]; // Extracted forum IDs
+	} else {
+		$forum_ids[] = bbp_get_forum_id();
+	}
+
+	// Output the extracted IDs
+	foreach ( $forum_ids as $forum_id ) {
 	?>
-	<!-- Forum description popup -->
-	<div class="bb-action-popup" id="single-forum-description-popup" style="display: none">
-		<transition name="modal">
-			<div class="modal-mask bb-white bbm-model-wrap">
-				<div class="modal-wrapper">
-					<div class="modal-container">
-						<header class="bb-model-header">
-							<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
-							<a class="bb-close-action-popup bb-model-close-button" href="#">
-								<span class="bb-icon-l bb-icon-times"></span>
-							</a>
-						</header>
-						<div class="bb-action-popup-content">
-							<?php bbp_forum_content(); ?>
+		<!-- Forum description popup -->
+		<div class="bb-action-popup" id="single-forum-description-popup-<?php echo $forum_id;?>" style="display: none">
+			<transition name="modal">
+				<div class="modal-mask bb-white bbm-model-wrap">
+					<div class="modal-wrapper">
+						<div class="modal-container">
+							<header class="bb-model-header">
+								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
+								<a class="bb-close-action-popup bb-model-close-button" href="#">
+									<span class="bb-icon-l bb-icon-times"></span>
+								</a>
+							</header>
+							<div class="bb-action-popup-content">
+								<?php bbp_forum_content( $forum_id ); ?>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</transition>
-	</div> <!-- .bb-action-popup -->
+			</transition>
+		</div> <!-- .bb-action-popup -->
 	<?php
+	}
 }
