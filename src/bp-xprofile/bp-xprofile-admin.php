@@ -1351,72 +1351,17 @@ add_action( 'xprofile_group_after_save', 'bb_xprofile_migrate_simple_to_repeater
  * @param int   $group_id Xprofile group ID.
  */
 function bb_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $group_id ) {
-	global $wpdb, $bp;
-	static $static_field_ids = array();
-
 	if ( ! empty( $user_ids ) ) {
-		$repeater_template_fields = bp_get_repeater_template_field_ids( $group_id );
-		$field_ids                = bp_get_repeater_clone_field_ids_all( $group_id, false );
-		$field_ids_in             = "'" . implode( "','", $field_ids ) . "'";
-
 		foreach ( $user_ids as $user_id ) {
-
-			// Check the data exists or not for repeater fields.
-			$results = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT * FROM {$bp->profile->table_name_data} WHERE field_id IN({$field_ids_in}) AND user_id = %d",
-					$user_id
-				)
-			);
-
-			// Prepare insert query user wise.
-			$insert_query         = "INSERT INTO {$bp->profile->table_name_data} ( field_id, user_id, value, last_updated ) VALUES";
-			$place_holder_queries = array();
-
-			// If data doesn't exist the insert.
-			if ( empty( $results ) && ! empty( $repeater_template_fields ) ) {
-				foreach ( $repeater_template_fields as $template_field ) {
-
-					// Check the simple fields data exists or not.
-					$template_data = $wpdb->get_row(
-						$wpdb->prepare(
-							"SELECT * FROM {$bp->profile->table_name_data} WHERE field_id = %d AND user_id = %d ORDER BY id ASC",
-							$template_field,
-							$user_id
-						),
-						ARRAY_A
-					);
-
-					if ( ! empty( $template_data ) ) {
-
-						$cache_key = 'template_field_' . $template_field;
-						if ( isset( $static_field_ids[ $cache_key ] ) ) {
-							$field_id = $static_field_ids[ $cache_key ];
-						} else {
-							// Get repeater field ID by template field ID.
-							$field_ids = $wpdb->get_col(
-								$wpdb->prepare(
-									"select object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = %d ORDER BY id ASC LIMIT 1",
-									$template_field
-								)
-							);
-
-							if ( ! empty( $field_ids ) ) {
-								$field_id                       = current( $field_ids );
-								$static_field_ids[ $cache_key ] = $field_id;
-							}
-						}
-
-						if ( ! empty( $field_id ) ) {
-							$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %s)', $field_id, $user_id, $template_data['value'], $template_data['last_updated'] );
-						}
+			$clone_fields = bp_get_repeater_clone_field_ids_subset( $group_id, 1 );
+			if ( ! empty( $clone_fields ) ) {
+				foreach ( $clone_fields as $clone_field_id ) {
+					$data              = xprofile_get_field_data( $clone_field_id, $user_id );
+					$template_field_id = bp_xprofile_get_meta( $clone_field_id, 'field', '_cloned_from', true );
+					if ( empty( $data ) && ! empty( $template_field_id ) && null !== bp_xprofile_get_field_type( $template_field_id ) ) {
+						xprofile_set_field_data( $clone_field_id, $user_id, xprofile_get_field_data( $template_field_id, $user_id ) );
 					}
 				}
-			}
-
-			if ( ! empty( $place_holder_queries ) ) {
-				$place_holder_queries = implode( ', ', $place_holder_queries );
-				$wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
 			}
 		}
 	}
