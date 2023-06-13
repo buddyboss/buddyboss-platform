@@ -829,7 +829,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				'get_the_author_user_nicename' === current_filter() &&
 				true === $this->bb_activity_allow_group_single( $user_id )
 			) {
-				return $value;
+				return bb_core_get_user_slug( $user_id );
 			}
 
 			return bb_moderation_is_suspended_label( $user_id );
@@ -966,11 +966,16 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @param BP_Activity_Activity $activity Activity object.
 	 */
 	public function bb_activity_before_permalink_redirect_url( $activity ) {
-		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if (
+			bp_is_active( 'groups' ) &&
+			buddypress()->groups->id === $activity->component &&
+			bp_moderation_is_user_suspended( $activity->user_id )
+		) {
 			remove_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 
 			remove_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
 			remove_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
+			add_filter( 'bp_core_get_user_domain', array( $this, 'bb_setup_hash_domain_url' ), 9999, 2 );
 		}
 	}
 
@@ -982,11 +987,16 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @param BP_Activity_Activity $activity Activity object.
 	 */
 	public function bb_activity_after_permalink_redirect_url( $activity ) {
-		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if (
+			bp_is_active( 'groups' ) &&
+			buddypress()->groups->id === $activity->component &&
+			bp_moderation_is_user_suspended( $activity->user_id )
+		) {
 			add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 
 			add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
 			add_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
+			remove_filter( 'bp_core_get_user_domain', array( $this, 'bb_setup_hash_domain_url' ), 9999, 2 );
 		}
 	}
 
@@ -1023,6 +1033,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			(int) $activity->user_id === (int) $user_id &&
 			'groups' === $activity->component
 		) {
+			$username = bb_core_get_user_slug( $user_id );
+			if ( empty( $username ) ) {
+				bb_set_user_profile_slug( $user_id );
+			}
+
 			return true;
 		}
 
@@ -1055,5 +1070,31 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		return $activity;
+	}
+
+	/**
+	 * Setup unique hash URL for suspended member.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $domain        Domain for the passed user.
+	 * @param int    $user_id       ID of the passed user.
+	 *
+	 * @return string
+	 */
+	public function bb_setup_hash_domain_url( $domain, $user_id ) {
+		$username = bb_core_get_user_slug( $user_id );
+		if ( empty( $username ) ) {
+			$username = bb_set_user_profile_slug( $user_id );
+		}
+
+		if ( bp_is_username_compatibility_mode() ) {
+			$username = rawurlencode( $username );
+		}
+
+		$after_domain = bp_core_enable_root_profiles() ? $username : bp_get_members_root_slug() . '/' . $username;
+		$domain       = trailingslashit( bp_get_root_domain() . '/' . $after_domain );
+
+		return $domain;
 	}
 }
