@@ -1297,6 +1297,13 @@ function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
 	) {
 		$repeater_template_fields = bp_get_repeater_template_field_ids( $xprofile->id );
 
+		// Check if clone fields not created then create it.
+		$repeater_fields = bp_get_repeater_clone_field_ids_all( $xprofile->id );
+		if ( empty( $repeater_fields ) ) {
+			$user_field_set_count = bp_get_profile_field_set_count( $xprofile->id, get_current_user_id() );
+			bp_get_repeater_clone_field_ids_subset( $xprofile->id, $user_field_set_count );
+		}
+
 		if ( ! empty( $repeater_template_fields ) ) {
 			$repeater_template_fields_in = "'" . implode( "','", $repeater_template_fields ) . "'";
 
