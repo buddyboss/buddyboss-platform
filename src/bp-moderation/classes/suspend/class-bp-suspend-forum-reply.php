@@ -229,7 +229,10 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		}
 
 		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		// Remove suspended members reply from widget.
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
+			$where['suspend_where'] = $this->exclude_where_query();
+		}
 
 		/**
 		 * Filters the hidden forum reply Where SQL statement.
@@ -264,7 +267,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	public function manage_hidden_reply( $reply_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $reply_id,
@@ -308,7 +311,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	public function manage_unhidden_reply( $reply_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $reply_id,

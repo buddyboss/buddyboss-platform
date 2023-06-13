@@ -245,7 +245,14 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_document_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+			$exclude_group_sql = '';
+			// Allow group medias from blocked/suspended users.
+			if ( bp_is_active( 'groups' ) ) {
+				$exclude_group_sql = ' OR d.privacy = "grouponly" ';
+			}
+			$exclude_group_sql .= ' OR ( d.privacy = "comment" OR d.privacy = "forums" ) ';
+
+			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}
 
 		return $where_conditions;
@@ -263,7 +270,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public function manage_hidden_document( $document_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $document_id,
@@ -307,7 +314,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public function manage_unhidden_document( $document_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $document_id,

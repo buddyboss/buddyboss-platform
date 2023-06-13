@@ -125,10 +125,6 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 		} elseif ( bbp_is_favorites() ) {
 			$base = bbp_get_favorites_permalink( bbp_get_displayed_user_id() );
 
-			// User's subscriptions.
-		} elseif ( bbp_is_subscriptions() ) {
-			$base = bbp_get_subscriptions_permalink( bbp_get_displayed_user_id() );
-
 			// Root profile page.
 		} elseif ( bbp_is_single_user() ) {
 			$base = bbp_get_user_profile_url( bbp_get_displayed_user_id() );
@@ -1497,12 +1493,16 @@ function bbp_get_topic_author_display_name( $topic_id = 0 ) {
 		// Get the author ID
 		$author_id = bbp_get_topic_author_id( $topic_id );
 
-		// Try to get a display name
-		$author_name = get_the_author_meta( 'display_name', $author_id );
+		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id ) : '';
 
-		// Fall back to user login
 		if ( empty( $author_name ) ) {
-			$author_name = get_the_author_meta( 'user_login', $author_id );
+			// Try to get a display name
+			$author_name = get_the_author_meta( 'display_name', $author_id );
+
+			// Fall back to user login
+			if ( empty( $author_name ) ) {
+				$author_name = get_the_author_meta( 'user_login', $author_id );
+			}
 		}
 
 		// User does not have an account
@@ -1653,7 +1653,13 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Get avatar
 		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
+			if ( bp_is_active( 'moderation' ) ) {
+				add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 			$author_links['avatar'] = bbp_get_topic_author_avatar( $topic_id, $r['size'] );
+			if ( bp_is_active( 'moderation' ) ) {
+				remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 		}
 
 		// Get display name

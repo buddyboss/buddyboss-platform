@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.3.0
  */
+#[\AllowDynamicProperties]
 class BP_Attachment_Avatar extends BP_Attachment {
 
 	/**
@@ -213,6 +214,16 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		} else {
 			$avatar_dir = sanitize_key( $args['object'] ) . '-avatars';
 		}
+
+		/**
+		 * Update avatar directory based on argument conditionally.
+		 *
+		 * @since BuddyBoss 2.0.4
+		 *
+		 * @param string $avatar_dir Avatar Directory.
+		 * @param array  $args       Avatar Data.
+		 */
+		$avatar_dir = apply_filters( 'bb_avatar_crop_set_avatar_dir', $avatar_dir, $args );
 
 		$args['item_id'] = (int) $args['item_id'];
 		$item_type       = isset( $args['item_type'] ) ? $args['item_type'] : null;

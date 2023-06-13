@@ -53,6 +53,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_forum_reply_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
+		add_filter( 'bbp_get_reply_content', array( $this, 'bb_reply_content_remove_mention_link' ), 10, 2 );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -75,6 +77,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
 			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
+
+		add_filter( 'bb_forum_before_activity_content', array( $this, 'bb_blocked_forum_before_activity_content' ), 10, 2 );
 	}
 
 	/**
@@ -133,9 +137,20 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
-		$sql = $this->exclude_where_query();
-		if ( ! empty( $sql ) ) {
-			$where['moderation_where'] = $sql;
+		// Remove has blocked/is blocked members replies from widget.
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
+			// Remove has blocked members replies from widget.
+			$sql = $this->exclude_where_query();
+			if ( ! empty( $sql ) ) {
+				$where['moderation_where'] = $sql;
+			}
+
+			// Remove is blocked members replies from widget.
+			$where['moderation_widget_forums'] = '( wp_posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		}
+
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
+			$where['moderation_widget_replies'] = '( wp_posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
 		return $where;
@@ -179,9 +194,10 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			}
 		}
 
-		$reply_id = bbp_get_reply_id();
+		$reply_id        = bbp_get_reply_id();
+		$reply_author_id = bbp_get_reply_author_id( $reply_id );
 
-		if ( $this->is_content_hidden( $reply_id ) ) {
+		if ( $this->is_content_hidden( $reply_id ) || bb_moderation_is_user_blocked_by( $reply_author_id ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 
@@ -281,5 +297,70 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		$report_button = bp_moderation_get_report_button( $args, false );
 
 		return $report_button;
+	}
+
+	/**
+	 * Remove mentioned link from discussion's reply.
+	 *
+	 * @since BuddyBoss 2.2.7
+	 *
+	 * @param string $content  Reply content.
+	 * @param int    $reply_id Reply id.
+	 *
+	 * @return string
+	 */
+	public function bb_reply_content_remove_mention_link( $content, $reply_id ) {
+		if ( empty( $content ) ) {
+			return $content;
+		}
+
+		$content = bb_moderation_remove_mention_link( $content );
+
+		return $content;
+	}
+
+	/**
+	 * Function to prevent forum activity content if content will created by hasblocked/isblocked members
+	 * and applied filters ( bb_moderation_has_blocked_message, bb_moderation_is_blocked_message ) to restrict content.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param $content  Forum reply content.
+	 * @param $activity Activity object data.
+	 *
+	 * @return string
+	 */
+	public function bb_blocked_forum_before_activity_content( $content, $activity ) {
+		if ( empty( $activity ) ) {
+			return;
+		}
+
+		$is_forum_activity = false;
+		if (
+			bp_is_active( 'forums' )
+			&& in_array(
+				$activity->type,
+				array(
+					'bbp_reply_create',
+				),
+				true
+			)
+			&& bp_is_forums_media_support_enabled()
+		) {
+			$is_forum_activity = true;
+		}
+		if ( true === $is_forum_activity ) {
+			if ( bp_moderation_is_user_blocked( $activity->user_id ) ) {
+				$content = bb_moderation_has_blocked_message( $content, $this->item_type, $activity->id );
+			}
+			if ( bb_moderation_is_user_blocked_by( $activity->user_id ) ) {
+				$content = bb_moderation_is_blocked_message( $content, $this->item_type, $activity->id );
+			}
+			if ( bp_moderation_is_user_suspended( $activity->user_id ) ) {
+				$content = bb_moderation_is_suspended_message( $content, $this->item_type, $activity->id );
+			}
+		}
+
+		return $content;
 	}
 }

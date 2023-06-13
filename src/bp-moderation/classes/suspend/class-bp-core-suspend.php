@@ -70,6 +70,15 @@ class BP_Core_Suspend {
 		if ( bp_is_active( 'messages' ) ) {
 			new BP_Suspend_Message();
 		}
+
+		/**
+		 * Handle notification.
+		 *
+		 * @since BuddyBoss 2.0.3
+		 */
+		if ( bp_is_active( 'notifications' ) ) {
+			new BP_Suspend_Notification();
+		}
 	}
 
 	/**
@@ -117,6 +126,14 @@ class BP_Core_Suspend {
 				'item_id'   => $args['item_id'],
 				'item_type' => $args['item_type'],
 			);
+
+			if ( empty( $args['user_report'] ) ) {
+				unset( $args['user_report'] );
+			}
+
+			if ( empty( $args['report'] ) ) {
+				unset( $args['report'] );
+			}
 
 			$wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 		} else {

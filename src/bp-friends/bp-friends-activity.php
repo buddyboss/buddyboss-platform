@@ -38,7 +38,7 @@ function friends_record_activity( $args = '' ) {
 		return false;
 	}
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id'           => bp_loggedin_user_id(),

@@ -83,6 +83,18 @@ class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 		// Actually, query it.
 		$f = bp_profile_search_escaped_form_data( $args['form_id'] );
 
+		if ( ! empty( $f->fields ) ) {
+			foreach ( $f->fields as $k => $field ) {
+				if ( ! empty( $field->options ) ) {
+					$options = array();
+					foreach ( $field->options as $key => $label ) {
+						$options[ wp_specialchars_decode( $key, ENT_QUOTES ) ] = wp_specialchars_decode( $label, ENT_QUOTES );
+					}
+					$f->fields[ $k ]->options = $options;
+				}
+			}
+		}
+
 		$response = rest_ensure_response( $f );
 
 		/**
