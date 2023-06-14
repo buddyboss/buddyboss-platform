@@ -600,7 +600,7 @@ function bb_forum_add_content_popup() {
 /**
  * Save link preview data into topic/reply meta key "_link_preview_data"
  *
- * @since BuddyBoss 2.3.50
+ * @since BuddyBoss 2.3.60
  *
  * @param int $post_id Discussion/Reply id.
  */

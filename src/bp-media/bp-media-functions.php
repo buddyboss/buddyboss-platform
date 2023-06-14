@@ -53,7 +53,7 @@ function bp_media_upload() {
 	 *
 	 * @param mixed $attachment attachment
 	 *
-	 * @since BuddyBoss 2.3.50
+	 * @since BuddyBoss 2.3.60
 	 */
 	do_action( 'bb_media_upload', $attachment );
 

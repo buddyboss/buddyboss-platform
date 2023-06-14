@@ -3,7 +3,7 @@
  * BP REST: BB_REST_Forums_Link_Preview_Endpoint class
  *
  * @package BuddyBoss
- * @since 2.3.50
+ * @since 2.3.60
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Forums link preview endpoints.
  *
- * @since 2.3.50
+ * @since 2.3.60
  */
 class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since 2.3.50
+	 * @since 2.3.60
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -28,7 +28,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 2.3.50
+	 * @since 2.3.60
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -59,7 +59,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 2.3.50
+	 * @since 2.3.60
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/forums/link-preview Link Preview
 	 * @apiName        GetBBForumsLinkPreview
@@ -116,7 +116,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 2.3.50
+		 * @since 2.3.60
 		 */
 		do_action( 'bb_rest_forums_link_preview_get_items', $response, $request );
 
@@ -129,7 +129,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 2.3.50
+	 * @since 2.3.60
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -170,7 +170,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 2.3.50
+		 * @since 2.3.60
 		 */
 		return apply_filters( 'bb_rest_forums_link_preview_get_items_permissions_check', $retval, $request );
 	}
@@ -180,7 +180,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 	 * Get the plugin schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 2.3.50
+	 * @since 2.3.60
 	 */
 	public function get_item_schema() {
 		$schema = array(

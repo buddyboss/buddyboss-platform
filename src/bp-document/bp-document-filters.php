@@ -2131,7 +2131,7 @@ add_filter( 'redirect_canonical', 'bb_document_remove_specific_trailing_slash', 
 /**
  * Put document attachment as media.
  *
- * @since BuddyBoss 2.3.50
+ * @since BuddyBoss 2.3.60
  *
  * @param WP_Post $attachment Attachment Post object.
  *
