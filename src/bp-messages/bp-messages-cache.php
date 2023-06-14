@@ -145,3 +145,44 @@ add_action( 'messages_delete_thread', 'bb_core_clear_message_cache' );
 add_action( 'messages_send_notice', 'bb_core_clear_message_cache' );
 add_action( 'messages_message_sent', 'bb_core_clear_message_cache' );
 add_action( 'messages_thread_mark_as_read', 'bb_core_clear_message_cache' );
+
+/**
+ * Clear cache when group messages has been disabled by admin.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param array $old_value Old values of array.
+ * @param array $value     New values of the array.
+ *
+ * @return void
+ */
+function bb_clear_cache_while_group_messsage_settings_updated( $old_value, $value ) {
+
+	if ( $old_value !== $value ) {
+		global $wp_object_cache;
+		if ( isset( $wp_object_cache->cache['bp_messages_unread_count'] ) ) {
+			unset( $wp_object_cache->cache['bp_messages_unread_count'] );
+		}
+
+		bp_core_reset_incrementor( 'bp_messages' );
+	}
+}
+
+add_action( 'update_option_bp-disable-group-messages', 'bb_clear_cache_while_group_messsage_settings_updated', 10, 2 );
+
+/**
+ * Clear unread message count cache after archive/un-archive thread.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $thread_id Thread ID.
+ * @param int $user_id   User ID.
+ *
+ * @return void
+ */
+function bp_messages_clear_message_unread_cache_on_thread_archived( $thread_id, $user_id ) {
+	wp_cache_delete( $user_id, 'bp_messages_unread_count' );
+	wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
+}
+add_action( 'bb_messages_thread_archived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
+add_action( 'bb_messages_thread_unarchived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );

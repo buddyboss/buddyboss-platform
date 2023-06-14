@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
+#[\AllowDynamicProperties]
 class BP_Groups_Component extends BP_Component {
 
 	/**
@@ -255,14 +256,16 @@ class BP_Groups_Component extends BP_Component {
 
 		// Global tables for groups component.
 		$global_tables = array(
-			'table_name'           => $bp->table_prefix . 'bp_groups',
-			'table_name_members'   => $bp->table_prefix . 'bp_groups_members',
-			'table_name_groupmeta' => $bp->table_prefix . 'bp_groups_groupmeta',
+			'table_name'            => $bp->table_prefix . 'bp_groups',
+			'table_name_members'    => $bp->table_prefix . 'bp_groups_members',
+			'table_name_groupmeta'  => $bp->table_prefix . 'bp_groups_groupmeta',
+			'table_name_membermeta' => $bp->table_prefix . 'bp_groups_membermeta',
 		);
 
 		// Metadata tables for groups component.
 		$meta_tables = array(
-			'group' => $bp->table_prefix . 'bp_groups_groupmeta',
+			'group'  => $bp->table_prefix . 'bp_groups_groupmeta',
+			'member' => $bp->table_prefix . 'bp_groups_membermeta',
 		);
 
 		// Fetch the default directory title.
@@ -513,7 +516,7 @@ class BP_Groups_Component extends BP_Component {
 		$user_has_access = $this->current_group->user_has_access;
 		$is_visible      = $this->current_group->is_visible;
 
-		if ( ! $user_has_access && $is_visible ) {
+		if ( ! $user_has_access && $is_visible && is_user_logged_in() ) {
 			$bp->current_action = 'request-membership';
 		}
 

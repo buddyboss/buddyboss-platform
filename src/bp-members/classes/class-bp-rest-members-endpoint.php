@@ -661,7 +661,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 */
 	public function prepare_item_for_response( $user, $request ) {
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$data     = $this->user_data( $user, $context );
+		$data     = $this->user_data( $user, $request );
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
@@ -696,7 +696,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @return array
 	 * @since 0.1.0
 	 */
-	public function user_data( $user, $context = 'view' ) {
+	public function user_data( $user, $request ) {
+		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$user_data = get_userdata( $user->ID );
 		$followers = $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) );
 		$following = $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) );
@@ -761,6 +762,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			: '0'
 		);
 
+		$data['can_follow'] = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();;
+
 		if ( 'edit' === $context ) {
 			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
 			$data['roles']              = (array) array_values( $user_data->roles );
@@ -778,6 +781,24 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		// Avatars.
 		if ( ! empty( $schema['properties']['avatar_urls'] ) ) {
+			$blocked_by_show_avatar = false;
+			$group_ids               = $request->get_param( 'group_id' );
+			if ( ! empty( $group_ids ) ) {
+				$group_ids = strpos( $group_ids, ',' ) !== false ? explode( ',', $group_ids ) : array( $group_ids );
+				foreach ( $group_ids as $group_id ) {
+					if (
+						groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
+						groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+					) {
+						$blocked_by_show_avatar = true;
+						break;
+					}
+				}
+			}
+			if ( true === $blocked_by_show_avatar ) {
+				remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+				add_filter( 'bb_get_blocked_avatar_url', array( $this, 'bb_moderation_fetch_avatar_url_filter', ), 10, 3 );
+			}
 			$data['avatar_urls'] = array(
 				'full'       => bp_core_fetch_avatar(
 					array(
@@ -794,6 +815,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				),
 				'is_default' => ! bp_get_user_has_avatar( $user->ID ),
 			);
+			if ( true === $blocked_by_show_avatar ) {
+				remove_filter( 'bb_get_blocked_avatar_url', array( $this, 'bb_moderation_fetch_avatar_url_filter' ), 10, 3 );
+				add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+			}
 		}
 
 		// Cover Image.
@@ -899,7 +924,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			foreach ( $groups as $group ) {
 				$data['groups'][ $group->id ] = array(
-					'name' => $group->name,
+					'name' => wp_specialchars_decode( $group->name, ENT_QUOTES ),
 				);
 
 				foreach ( $group->fields as $item ) {
@@ -1200,6 +1225,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				),
 				'is_wp_admin'        => array(
 					'description' => __( 'Whether the member is an administrator.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'can_follow'         => array(
+					'description' => __( 'Check if a user can follow or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
@@ -1526,4 +1557,18 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		return apply_filters( 'bp_member_last_active', $last_activity, $r );
 	}
 
+	/**
+	 * Function will return original avatar of blocked by member.
+	 *
+	 * @since BuddyBoss 2.1.6.2
+	 *
+	 * @param string $avatar_url     Updated avatar url.
+	 * @param string $old_avatar_url Old avatar url before updated.
+	 * @param array  $params         Array of parameters for the request.
+	 *
+	 * @return string $old_avatar_url  Old avatar url before updated.
+	 */
+	public function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
+		return $old_avatar_url;
+	}
 }

@@ -144,7 +144,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'emojionearea'                  => array(
-			'file'         => "{$url}emojionearea-edited.js",
+			'file'         => "{$url}emojionearea-edited{$min}.js",
 			'dependencies' => array( 'emojione' ),
 			'footer'       => true,
 		),
@@ -241,26 +241,19 @@ function bp_core_register_common_scripts() {
 	/**
 	 * Translation for select2 script text.
 	 */
-	$bp_select2 = array( 'lang' => 'en' );
-
-	if ( ! function_exists( 'wp_get_available_translations' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/translation-install.php';
-		$translations = wp_get_available_translations();
-	} else {
-		$translations = wp_get_available_translations();
-	}
-
-	if ( ! empty( $translations ) ) {
-		$file_path = buddypress()->plugin_dir . 'bp-core/js/';
-		if ( isset( $translations[ get_locale() ] ) && ! empty( current( $translations[ get_locale() ]['iso'] ) ) && file_exists( $file_path . 'vendor/i18n/' . current( $translations[ get_locale() ]['iso'] ) . '.js' ) ) {
-			$lang               = current( $translations[ get_locale() ]['iso'] );
-			$bp_select2['lang'] = $lang;
-			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
-		} elseif ( ! empty( get_bloginfo( 'language' ) ) && file_exists( $file_path . 'vendor/i18n/' . get_bloginfo( 'language' ) . '.js' ) ) {
-			$bp_select2['lang'] = get_bloginfo( 'language' );
-			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
-		}
-	}
+	$bp_select2 = array(
+		'i18n' => array(
+			'errorLoading'     => esc_js( __( 'The results could not be loaded.', 'buddyboss' ) ),
+			'inputTooLong'     => esc_js( __( 'Please delete %% character', 'buddyboss' ) ),
+			'inputTooShort'    => esc_js( __( 'Please enter %% or more characters', 'buddyboss' ) ),
+			'loadingMore'      => esc_js( __( 'Loading more results…', 'buddyboss' ) ),
+			'maximumSelected'  => esc_js( __( 'You can only select %% item', 'buddyboss' ) ),
+			'noResults'        => esc_js( __( 'No results found', 'buddyboss' ) ),
+			'searching'        => esc_js( __( 'Searching…', 'buddyboss' ) ),
+			'removeAllItems'   => esc_js( __( 'Remove all items', 'buddyboss' ) ),
+			'msginputTooShort' => esc_js( __( 'Start typing to find members', 'buddyboss' ) ),
+		),
+	);
 
 	wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
 
@@ -928,6 +921,7 @@ function bp_core_register_page_js() {
 
 	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
 		wp_enqueue_script( 'bp-register-page' );
+		wp_enqueue_editor();
 
 		$data = array(
 			'ajaxurl'        => bp_core_ajax_url(),

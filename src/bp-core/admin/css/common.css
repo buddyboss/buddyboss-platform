@@ -39,6 +39,7 @@ TABLE OF CONTENTS:
 13.0 Group Directories Enhancement
 14.0 BB Pro Active/Inactive Notices
 15.0 Admin bar Notification
+16.0 Moderation
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -902,16 +903,18 @@ body.users_page_bp-signups td.count_sent {
 }
 
 .activity-attached-gif-container .gif-icon {
-  background: url(../../images/gif-symbol.png) bottom left no-repeat;
+  background: url(../images/GIF.svg) center no-repeat;
   position: absolute;
-  width: 100%;
-  height: 100%;
   display: block;
+  height: 28px;
+  width: 44px;
   bottom: 0;
-  left: 10px;
-  background-size: 40px 30px;
-  max-width: 40px;
-  max-height: 30px;
+  left: 0;
+  border-radius: 0 4px 0 0;
+  background-size: 28px;
+  padding: 8px;
+  background-color: #000;
+  opacity: 0.45;
 }
 
 /*
@@ -1871,7 +1874,7 @@ body.post-type-bp_ps_form .page-title-action {
 /* Notices */
 .buddypress .wrap div#message,
 .buddypress .wrap div.notice {
-  margin: 25px 0 0;
+  margin: 25px 0 15px;
 }
 
 tr.child-no-padding th {
@@ -2080,6 +2083,24 @@ body .section-repair_community .settings fieldset .checkbox label code {
   margin-right: 5px;
 }
 
+#the-moderation-request-list [data-colname] a {
+  outline: 0;
+  box-shadow: none;
+}
+
+#the-moderation-request-list [data-colname] a img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#the-moderation-request-list .content_type strong {
+  color: #1d2327;
+}
+
+#the-moderation-request-list .content_type strong > span {
+  color: #808080;
+}
+
 @keyframes contentLoader {
   0% {
     top: 8px;
@@ -2114,9 +2135,18 @@ body .section-repair_community .settings fieldset .checkbox label code {
   margin-bottom: 30px;
 }
 
+#bp_moderation_settings_blocking label.is_disabled,
+#bp_moderation_settings_reporting label.is_disabled,
 #bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled {
   pointer-events: none;
   opacity: 0.5;
+}
+
+#bp_moderation_settings_blocking label.is_disabled input[type="checkbox"]:disabled,
+#bp_moderation_settings_reporting label.is_disabled input[type="checkbox"]:disabled,
+#bp_moderation_settings_reporting label.bpm_reporting_content_content_label + label.is_disabled input[type="checkbox"]:disabled {
+  opacity: 1;
+  border-color: inherit;
 }
 
 /*Deactivation Popup*/
@@ -2352,6 +2382,51 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   color: #8b6300;
   border: 1px solid #ffeeb3;
   border-radius: 4px;
+}
+
+/* Status Block */
+.status-line {
+  display: inline-block;
+  font-size: 14px;
+  padding: 10px 15px;
+  background: #f0f0f1;
+  border-radius: 5px;
+  color: #808080;
+}
+
+.status-line:before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #808080;
+  margin-right: 10px;
+  vertical-align: baseline;
+}
+
+.status-line.error-connected {
+  color: #ce1010;
+}
+
+.status-line.error-connected:before {
+  background: #ce1010;
+}
+
+.status-line.connected {
+  color: #858585;
+}
+
+.status-line.connected:before {
+  background: #8fd14f;
+}
+
+.status-line.warn-connected {
+  color: #858585;
+}
+
+.status-line.warn-connected:before {
+  background: #fac710;
 }
 
 /*------------------------------------------------------------------------------
@@ -3171,6 +3246,19 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   margin-top: 0;
 }
 
+#bp_messaging_notification_settings table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_messaging_notification_settings table.form-table .notes-hidden-header > th + td {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#bp_messaging_notification_settings table.form-table .no-padding {
+  padding: 0;
+}
+
 /*------------------------------------------------------------------------------
  * 15.0 Admin bar Notification
  *----------------------------------------------------------------------------*/
@@ -3231,15 +3319,189 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   line-height: 1.4;
 }
 
+/*------------------------------------------------------------------------------
+ * 16.0 Moderation
+ *----------------------------------------------------------------------------*/
+table.moderations .column-content_type a[data-action="unhide"],
+table.moderations .column-content_type a[data-action="unsuspend"],
+table.moderations .column-member a[data-action="unhide"],
+table.moderations .column-member a[data-action="unsuspend"] {
+  color: #5f9a22;
+}
+
+table.moderations thead tr th,
+table.moderations tfoot tr th {
+  font-weight: 600;
+}
+
+table.moderations tbody tr .column-suspend .dashicons {
+  color: #000;
+  font-size: 24px;
+}
+
+.buddyboss_page_bp-moderation .dashicons {
+  font-weight: 700;
+}
+
+.buddyboss_page_bp-moderation .bb-back {
+  display: inline-block;
+  margin-top: 15px;
+  text-decoration: none;
+}
+
+.buddyboss_page_bp-moderation .bb-back [class*="bb-icon"] {
+  display: inline-block;
+  font-size: 17px;
+  margin: -1px 3px 0 0;
+  vertical-align: middle;
+}
+
+.buddyboss_page_bp-moderation table.reports thead tr th,
+.buddyboss_page_bp-moderation table.reports tfoot tr th {
+  font-weight: 600;
+}
+
+table.moderations .content_owner img,
+table.reports .column-reporter img,
+table.moderations .column-member img {
+  vertical-align: middle;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+#bp_moderation_action > .inside {
+  margin: 0;
+  padding: 0 20px;
+}
+
+#bp_moderation_action > .inside .tablenav.bottom {
+  height: auto;
+  min-height: 20px;
+  margin: 0;
+  padding-top: 0;
+}
+
+#bp_moderation_action > .inside .tablenav.bottom .tablenav-pages {
+  margin: 20px 0;
+}
+
+#bp_moderation_action .report-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #dfdfdf;
+  margin: 0 -20px;
+  padding: 20px;
+}
+
+#bp_moderation_action .report-header_content_id {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1d2327;
+  margin-bottom: 10px;
+}
+
+#bp_moderation_action .report-header_content_id span {
+  color: #808080;
+  margin-left: 5px;
+}
+
+#bp_moderation_action .report-header_content_id a {
+  text-decoration: none;
+}
+
+#bp_moderation_action .report-header_content_id a i {
+  font-weight: 300;
+  font-size: 18px;
+  transform: translateY(-1px);
+  display: inline-block;
+}
+
+#bp_moderation_action .report-header_user {
+  display: flex;
+  align-items: center;
+}
+
+#bp_moderation_action .report-header_user strong a {
+  text-decoration: none;
+  font-size: 16px;
+  box-shadow: none;
+}
+
+#bp_moderation_action .report-header_user img {
+  border-radius: 50%;
+  max-width: 35px;
+  height: auto;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+#bp_moderation_action .report-header_content {
+  text-align: center;
+  font-weight: 600;
+}
+
+#bp_moderation_action .report-header_content strong {
+  display: block;
+  font-size: 24px;
+}
+
+#bp_moderation_action .report-header_action .report-header_button {
+  color: #b32d2e;
+  border-color: #b32d2e;
+}
+
+#bp_moderation_action .report-header_action .report-header_button.green {
+  color: #5f9a22;
+  border-color: #afcc90;
+}
+
+#bp_moderation_action .report-header_action .report-header_button + .report-header_button {
+  margin-left: 10px;
+}
+
+.moderation-table-heading.form-table td {
+  padding: 15px 0;
+}
+
+#the-moderation-report-list .reporter a {
+  box-shadow: none;
+}
+
+.taxonomy-bpm_category .form-field.term-slug-wrap {
+  display: none;
+}
+
+#bp_labs_settings table.form-table .notes-hidden-header > th,
 #bp_web_push_notification_settings table.form-table .notes-hidden-header > th {
   display: none;
 }
 
+#bp_labs_settings table.form-table .notes-hidden-header > th + td,
 #bp_web_push_notification_settings table.form-table .notes-hidden-header > th + td {
   padding-left: 0;
   padding-right: 0;
 }
 
+#bp_labs_settings table.form-table .no-padding,
 #bp_web_push_notification_settings table.form-table .no-padding {
   padding: 0;
+}
+
+.no-field-notice {
+  background-color: #f6f6f8;
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  padding: 15px;
+}
+
+.notification-settings-input[data-bp-tooltip] {
+  display: inline-block;
+}
+
+.notification-settings-input[data-bp-tooltip]::after {
+  min-width: 140px;
+  white-space: normal;
+  padding: 7px 12px;
+  text-align: center;
 }

@@ -153,6 +153,71 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			/**
+			 * Function for hide/show auto suspend fields on member blocking enable/disabled.
+			 */
+			$( document ).on(
+				'change',
+				'#bpm_blocking_member_blocking',
+				function () {
+					$( 'label[for="bpm_blocking_auto_suspend"' ).toggleClass( 'is_disabled' );
+					$( '#bpm_blocking_auto_suspend' ).prop( 'checked', false );
+					$( 'label[for="bpm_blocking_email_notification"' ).removeClass( 'is_disabled' );
+					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
+						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
+						$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+					}
+				}
+			);
+		
+			/**
+			 * Function for hide/show auto suspend fields on member reporting enable/disabled.
+			 */
+			$( document ).on(
+				'change',
+				'#bb_blocking_member_reporting',
+				function () {
+					$( 'label[for="bb_reporting_auto_suspend"]' ).toggleClass('is_disabled');
+					$( '#bb_reporting_auto_suspend' ).prop( 'checked', false );
+					$( 'label[for="bpm_blocking_email_notification"' ).removeClass( 'is_disabled' );
+					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
+						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
+						$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+					}
+				}
+			);
+
+			/**
+			 * Checked if member block and reporting both inactive then disabled the email notification for it.
+			 */
+			if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
+				$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
+				$( 'label[for="bpm_blocking_email_notification"' ).addClass( 'is_disabled' );
+			}
+
+			if( $( '#bb_reporting_category_description' ).length ) {
+				$('.wp-heading-inline').append( $( '#bb_reporting_category_description' ) );
+			}
+
+			$( 'body.taxonomy-bpm_category span:contains("Slug")' ).each( function () {
+				$( this ).parent().remove();
+			} );
+
+			$( '.taxonomy-bpm_category #the-list' ).on( 'click', 'button.editinline', function ( e ) {
+				e.preventDefault();
+				var $tr = $( this ).closest( 'tr' );
+				var val = $tr.find( 'td.bb_category_show_when_reporting' ).text();
+				if ( val !== '' ) {
+					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' )
+						.prop( 'selected', false );
+					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' )
+						.filter( function () {
+							return this.text === val;
+						} )
+						.prop( 'selected', true );
+				}
+			} );
 		}
 	);
 
@@ -736,9 +801,9 @@ window.bp = window.bp || {};
 			}
 
 			// Show/Hide options ( Display Name Fields ) based on the ( Display Name Format ) selected.
-			if ( $( '.display-options' ).length ) {
+			if ( $( '.display-options:not(.button)' ).length ) {
 
-					var selectorAll    = $( '.display-options' );
+					var selectorAll    = $( '.display-options:not(.button)' );
 					var displayOptions = $( 'select[name=bp-display-name-format]' );
 					var currentValue   = displayOptions.val();
 
@@ -997,6 +1062,61 @@ window.bp = window.bp || {};
 							}
 						}
 					);
+			}
+
+			if ( $( '#bb-giphy-connect' ).length ) {
+
+				$( document ).on(
+					'click',
+					'#bb-giphy-connect',
+					function( e ) {
+						e.preventDefault();
+						if ( $( '#bb-giphy-connect' ).data( 'connected' ) ) {
+							$( '#bb-giphy-connect' ).data( 'connected', false );
+							$( '#bb-giphy-connect' ).addClass( 'button-primary' );
+							$( '#bp_media_gif_api_key' ).attr( 'readonly', false );
+							$( '#bp_media_gif_api_key' ).val( '' );
+							$( '#bp_media_profiles_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bp_media_groups_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bp_media_messages_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bp_media_forums_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bb-giphy-connect' ).val( $( '#bb-giphy-connect' ).data( 'connect-text' ) );
+							return false;
+						}
+						$( '#bb-giphy-connect' ).addClass( 'disable-btn' );
+						$( '#bp_media_settings_gifs .bp-new-notice-panel-notice' ).addClass( 'hidden' );
+						$.ajax(
+							{
+								'url' : BP_ADMIN.ajax_url,
+								'method' : 'POST',
+								'data' : {
+									'action' : 'bb_admin_check_valid_giphy_key',
+									'key'    : $( '#bp_media_gif_api_key' ).val(),
+									'nonce'  : $( '#bb-giphy-connect' ).data( 'nonce' )
+								},
+								'success' : function( response ) {
+									if ( response.data.code && 200 === response.data.code ) {
+										$( '#bb-giphy-connect' ).data( 'connected', true );
+										$( '#bb-giphy-connect' ).removeClass( 'button-primary' );
+										$( '#bp_media_gif_api_key' ).attr( 'readonly', true );
+										$( '#bp_media_profiles_gif_support' ).attr( 'disabled', false );
+										$( '#bp_media_groups_gif_support' ).attr( 'disabled', false );
+										$( '#bp_media_messages_gif_support' ).attr( 'disabled', false );
+										$( '#bp_media_forums_gif_support' ).attr( 'disabled', false );
+										$( '#bb-giphy-connect' ).val( $( '#bb-giphy-connect' ).data( 'disconnect-text' ) );
+									} else {
+										$( '#bp_media_settings_gifs .bp-new-notice-panel-notice' ).removeClass( 'hidden' );
+										$( '#bp_media_settings_gifs .bp-new-notice-panel-notice span#giphy_response_code' ).html( response.data.code );
+										$( '#bp_media_settings_gifs .bp-new-notice-panel-notice span#giphy_response_message' ).html( response.data.message );
+									}
+								},
+								'error' : function() {
+									$( '#bb-giphy-connect' ).removeClass( 'disable-btn' );
+								}
+							}
+						);
+					}
+				);
 			}
 
 			if ( $( '#bp-tools-forum-submit' ).length ) {
@@ -2186,8 +2306,21 @@ window.bp = window.bp || {};
 					} else {
 						$( this ).parent().next( 'label' ).addClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).removeProp( 'checked' ).removeAttr( 'checked' ).prop( 'disabled', 'disabled' );
 					}
+					$( 'label[for="bpm_reporting_email_notification"' ).removeClass( 'is_disabled' );
+					if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
+						$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
+						$( 'label[for="bpm_reporting_email_notification"' ).addClass( 'is_disabled' );
+					}
 				}
 			);
+
+			/**
+			 * Checked all item reporting inactive then disabled the email notification for it.
+			 */
+			if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
+				$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
+				$( 'label[for="bpm_reporting_email_notification"' ).addClass( 'is_disabled' );
+			}
 
 			$( document ).on(
 				'click',

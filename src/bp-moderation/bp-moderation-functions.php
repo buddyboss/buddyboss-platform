@@ -165,11 +165,15 @@ function bp_moderation_get( $args = '' ) {
  *
  * @since BuddyBoss 1.5.6
  *
+ * @param bool $force_cache Bypass cache it true.
+ *
  * @return array $moderation See BP_Moderation::get() for description.
  */
-function bp_moderation_get_hidden_user_ids() {
+function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
 
-	$args         = array(
+	static $cache = array();
+
+	$args = array(
 		'in_types'          => BP_Moderation_Members::$moderation_type,
 		'update_meta_cache' => false,
 		'filter_query'      => array(
@@ -184,12 +188,20 @@ function bp_moderation_get_hidden_user_ids() {
 			),
 		),
 	);
+
+	$cache_key = 'bp_moderation_get_hidden_user_ids_' . BP_Moderation_Members::$moderation_type . '_' . get_current_user_id();
+	if ( isset( $cache[ $cache_key ] ) && false === $force_cache ) {
+		return $cache[ $cache_key ];
+	}
+
 	$hidden_users = bp_moderation_get( $args );
 
 	$hidden_users_ids = array();
 	if ( ! empty( $hidden_users['moderations'] ) ) {
 		$hidden_users_ids = wp_list_pluck( $hidden_users['moderations'], 'item_id' );
 	}
+
+	$cache[ $cache_key ] = $hidden_users_ids;
 
 	return $hidden_users_ids;
 }
@@ -238,6 +250,9 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		$button_text          = __( 'Block', 'buddyboss' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
+	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+		$button_text          = __( 'Report Member', 'buddyboss' );
+		$reported_button_text = __( 'Report Member', 'buddyboss' );
 	} else {
 		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
 		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
@@ -266,14 +281,18 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
+	BP_Moderation::$no_cache = true;
+
 	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
 
+	BP_Moderation::$no_cache = false;
+
 	if ( $is_reported ) {
-		$button['link_text']                    = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
-		$button['button_attr']['class']         = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
-		$button['button_attr']['item_id']       = $item_id;
-		$button['button_attr']['item_type']     = $item_type;
-		$button['button_attr']['href']          = '#reported-content';
+		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
+		$button['button_attr']['class']     = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
+		$button['button_attr']['item_id']   = $item_id;
+		$button['button_attr']['item_type'] = $item_type;
+		$button['button_attr']['href']      = '#reported-content';
 		unset( $button['button_attr']['data-bp-content-id'] );
 		unset( $button['button_attr']['data-bp-content-type'] );
 		unset( $button['button_attr']['data-bp-nonce'] );
@@ -312,7 +331,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 }
 
 /**
- * Function to Check content Reported by current usr or not.
+ * Function to Check content Reported by current user or not.
  *
  * @since BuddyBoss 1.5.6
  *
@@ -327,7 +346,10 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
 
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
 		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
-		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
+		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && empty( $moderation->user_report ) );
+		if ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+			$response = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && ! empty( $moderation->user_report ) );
+		}
 	}
 
 	return $response;
@@ -338,7 +360,7 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int $user_id          The ID for the user.
+ * @param int $user_id          The ID for the current user.
  * @param int $blocking_user_id The ID for the user who blocked user.
  *
  * @return bool True if suspended, otherwise false.
@@ -503,6 +525,10 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
 			return false;
 		}
+	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+		if ( ! bb_is_moderation_member_reporting_enable( 0 ) ) {
+			return false;
+		}
 	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 		return false;
 	}
@@ -530,12 +556,16 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		return false;
 	}
 
+	if ( in_array( $item_sub_type, array( BP_Moderation_Members::$moderation_type_report ), true ) && bp_loggedin_user_id() === $item_sub_id ) {
+		return false;
+	}
+
 	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 		return false;
 	}
 
 	$owner_ids = bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type );
-	if ( ! is_array( $owner_ids ) ){
+	if ( ! is_array( $owner_ids ) ) {
 		$owner_ids = array( $owner_ids );
 	}
 
@@ -589,7 +619,12 @@ function bp_moderation_add( $args = array() ) {
 	$response = false;
 
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		// Called member class externally when content_type = report_member.
+		if ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
+			$class = BP_Moderation_Abstract::get_class( BP_Moderation_Members::$moderation_type );
+		} else {
+			$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		}
 
 		if ( method_exists( $class, 'report' ) ) {
 			$response = $class::report( $args );
@@ -837,6 +872,48 @@ function bp_moderation_auto_suspend_threshold( $default = 5 ) {
 }
 
 /**
+ * Checks if Moderation Member reporting feature is enabled.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is member reporting enabled or not.
+ * @uses get_option() To get the bb_blocking_member_reporting option.
+ */
+function bb_is_moderation_member_reporting_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bb_is_moderation_member_reporting_enable', (bool) get_option( 'bb_blocking_member_reporting', $default ) );
+}
+
+/**
+ * Checks if Moderation Member auto suspend report feature is enabled.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is auto suspend report enabled or not.
+ * @uses get_option() To get the bb_reporting_auto_suspend option.
+ */
+function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend', $default ) );
+}
+
+/**
+ * Checks if Moderation Member auto suspend report feature is enabled.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @param int $default bool Optional.Default value true.
+ *
+ * @return bool Is search autocomplete enabled or not.
+ * @uses bp_moderation_get_setting() To get the bb_reporting_auto_suspend_threshold option.
+ */
+function bb_moderation_auto_suspend_report_threshold( $default = 5 ) {
+	return apply_filters( 'bb_moderation_auto_suspend_report_threshold', (int) bp_moderation_get_setting( 'bb_reporting_auto_suspend_threshold', $default ) );
+}
+
+/**
  * Checks if Moderation Member auto suspend email notification feature is enabled.
  *
  * @since BuddyBoss 1.5.6
@@ -862,8 +939,12 @@ function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
  * @uses  get_option() To get the bp_search_autocomplete option
  */
 function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
-	// Check for folder type and content type as document.
-	if ( BP_Moderation_Folder::$moderation_type === $content_type ) {
+
+	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
+		$content_type = BP_Moderation_Members::$moderation_type_report;
+
+		// Check for folder type and content type as document.
+	} elseif ( BP_Moderation_Folder::$moderation_type === $content_type ) {
 		$content_type = BP_Moderation_Document::$moderation_type;
 
 		// Check for album type and content type as media.
@@ -872,13 +953,17 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 
 		// Check for message type and content type as user.
 	} elseif ( BP_Moderation_Message::$moderation_type === $content_type ) {
-		return bp_is_moderation_member_blocking_enable(0);
+		return bp_is_moderation_member_blocking_enable( 0 );
 	}
 
-	$settings = get_option( 'bpm_reporting_content_reporting', array() );
+	$settings = (array) get_option( 'bpm_reporting_content_reporting', array() );
+
+	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
+		$settings[ $content_type ] = bb_is_moderation_member_reporting_enable();
+	}
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -906,7 +991,7 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
 
 	$settings = get_option( 'bpm_reporting_auto_hide', array() );
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -931,7 +1016,7 @@ function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_typ
 	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
-		if ( empty( $settings ) ){
+		if ( empty( $settings ) ) {
 			$settings = array();
 		}
 		$settings[ $content_type ] = $default;
@@ -969,7 +1054,7 @@ function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
 	$user_ids = 0;
-	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
+	$class    = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
 	if ( method_exists( $class, 'get_content_owner_id' ) ) {
 		$user_ids = $class::get_content_owner_id( $moderation_item_id );
@@ -1149,4 +1234,704 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
 	 * @param int    $item_id     Item id.
 	 */
 	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss' ), $item_id );
+}
+
+/**
+ * Function to get reporting categories show when fields array.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @return array
+ */
+function bb_moderation_get_reporting_category_fields_array() {
+
+	$result = array(
+		'content'         => esc_html__( 'Content', 'buddyboss' ),
+		'members'         => esc_html__( 'Members', 'buddyboss' ),
+		'content_members' => esc_html__( 'Content & Members', 'buddyboss' ),
+	);
+
+	/**
+	 * Filters the reported button text for different components
+	 *
+	 * @since BuddyBoss 2.1.1
+	 *
+	 * @param array $result Options for show when field.
+	 */
+	return apply_filters( 'bb_moderation_get_reporting_category_fields_array', $result );
+}
+
+/**
+ * Fetch the user id by blocked by.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int  $user_id User id.
+ * @param bool $force   Whether to bypass the static cache or not.
+ *
+ * @return array|mixed
+ */
+function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
+	static $cache = array();
+	global $wpdb;
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$cache_key = 'bb_moderation_blocked_by_' . $user_id;
+	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
+		$sql  = bb_moderation_get_blocked_by_sql( $user_id );
+		$data = $wpdb->get_col( $sql ); // phpcs:ignore
+		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
+
+		$cache[ $cache_key ] = $data;
+	} else {
+		$data = $cache[ $cache_key ];
+	}
+
+	return $data;
+}
+
+/**
+ * Return SQL to fetch the query for blocked by users.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @param int $user_id User ID.
+ *
+ * @return string|void
+ */
+function bb_moderation_get_blocked_by_sql( $user_id = 0 ) {
+	global $wpdb;
+	$bp = buddypress();
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$type = BP_Moderation_Members::$moderation_type;
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	return $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d AND s.reported != 0 AND m.user_report != 1", $type, $user_id );
+}
+
+/**
+ * Check whether a user has been marked as a blocked by another user.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $user_id The ID for the user.
+ *
+ * @return bool
+ */
+function bb_moderation_is_user_blocked_by( $user_id ) {
+	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+		return false;
+	}
+
+	$blocked_by_members = bb_moderation_get_blocked_by_user_ids();
+
+	return ( ! empty( $blocked_by_members ) && in_array( (int) $user_id, $blocked_by_members, true ) );
+}
+
+/**
+ * Group organizers should be able to see the names/avatars of members in all places in their group,
+ * even if they’re blocked by that member.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param string $avatar_url     Updated avatar url.
+ * @param string $old_avatar_url Old avatar url before updated.
+ * @param array  $params         Array of parameters for the request.
+ *
+ * @return string $avatar_url    Updated avatar url.
+ */
+function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
+	// Check for group.
+	if (
+		bp_is_active( 'groups' ) &&
+		(
+			bp_is_group_members() ||
+			(
+				function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum()
+			) ||
+			(
+				function_exists( 'bp_get_group_current_admin_tab' ) &&
+				'manage-members' === bp_get_group_current_admin_tab()
+			) ||
+			(
+				wp_doing_ajax() &&
+				isset( $_POST['action'] ) &&
+				'video_get_video_description' === $_POST['action']
+			)
+		)
+	) {
+		$group_id = bp_get_current_group_id();
+		if (
+			groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
+			groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+		) {
+			return $old_avatar_url;
+		}
+	}
+
+	// Check for activity.
+	$activity_id = bp_is_active( 'activity' ) && function_exists( 'bp_get_activity_id' ) ? bp_get_activity_id() : 0;
+	if ( ! empty( $activity_id ) ) {
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		// check activity exists.
+		if ( empty( $activity->id ) ) {
+			return $avatar_url;
+		}
+
+		$activity_component = $activity->component;
+		$group_id           = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+
+		if ( ! empty( $group_id ) && 'groups' === $activity_component ) {
+			if (
+				groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
+				groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+			) {
+				return $old_avatar_url;
+			}
+		}
+	}
+
+	return $avatar_url;
+}
+
+/**
+ * Function to fetch the blocked by user label.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param string $value   Current user display name.
+ * @param int    $user_id User id.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
+
+	/**
+	 * Filter to update is_blocked_label.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param string $value   Current user display name.
+	 * @param int    $user_id User id.
+	 */
+	return apply_filters( 'bb_moderation_is_blocked_label', $value, $user_id );
+}
+
+/**
+ * Function to fetch the blocked user label.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param string $value   Current user display name.
+ * @param int    $user_id User id.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
+
+	/**
+	 * Filter to update has_blocked_label.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param string $value   Current user display name.
+	 * @param int    $user_id User id.
+	 */
+	return apply_filters( 'bb_moderation_has_blocked_label', $value, $user_id );
+}
+
+/**
+ * Function to fetch the blocked by user avatar.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int   $user_id User id.
+ * @param array $args    Arguments passed to get_avatar_data(), after processing.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
+
+	/**
+	 * Filter to update is_blocked_avatar.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param string Get default avatar image URL based on settings.
+	 * @param int   $user_id User id.
+	 * @param array $args    Arguments passed to get_avatar_data(), after processing.
+	 */
+	return apply_filters( 'bb_moderation_is_blocked_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
+}
+
+/**
+ * Function to fetch the blocked user avatar.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param string $avatar_url Current avatar URL.
+ * @param int    $user_id    User id.
+ * @param array  $args       Arguments passed to get_avatar_data(), after processing.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array() ) {
+
+	/**
+	 * Filter to update has_blocked_avatar.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param string $avatar_url Current avatar URL.
+	 * @param int    $user_id    User id.
+	 * @param array  $args       Arguments passed to get_avatar_data(), after processing.
+	 */
+	return apply_filters( 'bb_moderation_has_blocked_avatar', $avatar_url, $user_id, $args );
+}
+
+/**
+ * Function to fetch the suspended by user label.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $user_id User id.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_suspended_label( $user_id = 0 ) {
+
+	/**
+	 * Filter to update is_suspended_label.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param string Default suspended label.
+	 * @param int $user_id User id.
+	 */
+	return apply_filters( 'bb_moderation_is_suspended_label', esc_html__( 'Unknown Member', 'buddyboss' ), $user_id );
+}
+
+/**
+ * Function to fetch the suspended by user avatar.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int   $user_id User id.
+ * @param array $args    Arguments passed to get_avatar_data(), after processing.
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
+
+	/**
+	 * Filter to update is_suspended_avatar.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 *
+	 * @param string Get default avatar image URL based on settings.
+	 * @param int   $user_id User id.
+	 * @param array $args    Arguments passed to get_avatar_data(), after processing.
+	 */
+	return apply_filters( 'bb_moderation_is_suspended_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
+}
+
+/**
+ * Function to fetch the delete user's label.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_deleted_label() {
+
+	/**
+	 * Filter to fetch the delete user's label.
+	 *
+	 * @since BuddyBoss 2.2.4
+	 *
+	 * @param string Default delete label.
+	 */
+	return apply_filters( 'bb_moderation_is_deleted_label', esc_html__( 'Unknown Member', 'buddyboss' ) );
+}
+
+/**
+ * Function to fetch the delete users avatar.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @return mixed|void
+ */
+function bb_moderation_is_deleted_avatar() {
+
+	/**
+	 * Filter to fetch the delete users avatar.
+	 *
+	 * @since BuddyBoss 2.2.4
+	 *
+	 * @param string Get default avatar image URL based on settings.
+	 */
+	return apply_filters( 'bb_moderation_is_deleted_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
+}
+
+/**
+ * Function will return text when current user blocked to other user.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @param string $value     Current content.
+ * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
+ *
+ * @return string
+ */
+function bb_moderation_has_blocked_message( $value, $item_type = '', $item_id = 0 ) {
+
+	/**
+	 * Filter will return text when current user blocked to other user.
+	 *
+	 * @since BuddyBoss 2.2.4
+	 *
+	 * @param string $value     Current content.
+	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
+	 */
+
+	return apply_filters( 'bb_moderation_has_blocked_message', $value, $item_type, $item_id );
+}
+
+/**
+ * Function will return text when current user blocked by other user.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @param string $value     Current content.
+ * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
+ *
+ * @return string
+ */
+function bb_moderation_is_blocked_message( $value, $item_type = '', $item_id = 0 ) {
+
+	/**
+	 * Filter will return text when current user blocked by other user.
+	 *
+	 * @since BuddyBoss 2.2.4
+	 *
+	 * @param string $value     Current content.
+	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
+	 */
+	return apply_filters( 'bb_moderation_is_blocked_message', $value, $item_type, $item_id );
+}
+
+/**
+ * Function will return text when user is suspended.
+ *
+ * @since BuddyBoss 2.2.4
+ *
+ * @param string $value     Current content.
+ * @param string $item_type Moderation type.
+ * @param int    $item_id   Item id for the content. i.e - comment_id etc
+ *
+ * @return string
+ */
+function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id = 0 ) {
+
+	/**
+	 * Filter will return text when user is suspended.
+	 *
+	 * @since BuddyBoss 2.2.4
+	 *
+	 * @param string $value     Current content.
+	 * @param string $item_type Moderation type.
+	 * @param int    $item_id   Item id for the content. i.e - comment_id etc
+	 */
+
+	return apply_filters( 'bb_moderation_is_suspended_message', $value, $item_type, $item_id );
+}
+
+/**
+ * Function will remove mention link from content if mentioned member is blocked/blokedby/suspended.
+ *
+ * @since BuddyBoss 2.2.7
+ *
+ * @param mixed $content Content.
+ *
+ * @return mixed
+ */
+function bb_moderation_remove_mention_link( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	$usernames = bp_find_mentions_by_at_sign( array(), $content );
+
+	// No mentions? Stop now!
+	if ( empty( $usernames ) ) {
+		return $content;
+	}
+
+	foreach ( (array) $usernames as $user_id => $username ) {
+		if (
+			bp_moderation_is_user_blocked( $user_id ) ||
+			bb_moderation_is_user_blocked_by( $user_id ) ||
+			bp_moderation_is_user_suspended( $user_id )
+		) {
+			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
+			if ( ! empty( $content_matches ) ) {
+				foreach ( $content_matches as $match ) {
+					if ( false !== strpos( $match[0], '@' . $username ) ) {
+						$content = str_replace( $match[0], '@' . $username, $content );
+					}
+				}
+			}
+		}
+	}
+
+	return $content;
+}
+
+/**
+ * Fetch all suspended user_ids.
+ *
+ * @since BuddyBoss 2.2.7
+ *
+ * @param bool $force Bypass cache or not.
+ *
+ * @return array|mixed
+ */
+function bb_moderation_get_suspended_user_ids( $force = false ) {
+	static $cache = array();
+	global $wpdb, $bp;
+
+	$cache_key = 'bb_moderation_suspended_user_ids';
+	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
+		$result = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT item_id FROM {$bp->moderation->table_name} WHERE item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
+		$data   = ! empty( $result ) ? array_map( 'intval', $result ) : array();
+
+		$cache[ $cache_key ] = $data;
+	} else {
+		$data = $cache[ $cache_key ];
+	}
+
+	return $data;
+}
+
+/**
+ * Fetch all moderated user or check the user is moderated or not.
+ *
+ * @since BuddyBoss 2.2.7
+ *
+ * @param int $user_id User ID.
+ *
+ * @return array|bool
+ */
+function bb_moderation_moderated_user_ids( $user_id = 0 ) {
+	static $cache = array();
+
+	$cache_key = 'bb_moderation_moderated_user_ids';
+
+	if ( ! empty( $user_id ) ) {
+		$cache_key = 'bb_moderation_moderated_user_' . $user_id;
+	}
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
+	$hidden_users_ids   = bp_moderation_get_hidden_user_ids(); // Blocked user_ids.
+	$blocked_by_members = bb_moderation_get_blocked_by_user_ids(); // Blocked by user_ids.
+	$suspended_user_id  = bb_moderation_get_suspended_user_ids();
+
+	$all_users = array();
+	if ( ! empty( $hidden_users_ids ) ) {
+		$all_users = array_unique( array_merge( $hidden_users_ids, $all_users ) );
+	}
+
+	if ( ! empty( $blocked_by_members ) ) {
+		$all_users = array_unique( array_merge( $blocked_by_members, $all_users ) );
+	}
+
+	if ( ! empty( $suspended_user_id ) ) {
+		$all_users = array_unique( array_merge( $suspended_user_id, $all_users ) );
+	}
+
+	if ( empty( $user_id ) ) {
+		$cache[ $cache_key ] = $all_users;
+
+		return $all_users;
+	}
+
+	$retval = in_array( $user_id, $all_users, true );
+
+	$cache[ $cache_key ] = $retval;
+
+	return $retval;
+}
+
+/**
+ * Function will allow to send specific email/notification.
+ *
+ * @since BuddyBoss 2.2.7
+ *
+ * @param array $args It will contain type, recipient id, gorup id and author id.
+ *
+ * @return bool
+ */
+function bb_moderation_allowed_specific_notification( $args ) {
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'              => '',
+			'group_id'          => '',
+			'recipient_user_id' => '',
+			'sender_id'         => '',
+		)
+	);
+
+	$retval = false;
+	if ( empty( $r['recipient_user_id'] ) ) {
+		return $retval;
+	}
+
+	switch ( $r['type'] ) {
+		case 'activity':
+			if (
+				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
+				(
+					(
+						empty( $r['group_id'] ) &&
+						(
+							bp_moderation_is_user_blocked( $r['recipient_user_id'] ) ||
+							bb_moderation_is_user_blocked_by( $r['recipient_user_id'] )
+						)
+					) ||
+					(
+						bp_is_active( 'groups' ) &&
+						! empty( $r['group_id'] ) &&
+						bb_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
+						(
+							! groups_is_user_admin( $r['sender_id'], $r['group_id'] ) &&
+							! groups_is_user_mod( $r['sender_id'], $r['group_id'] )
+						)
+					)
+				)
+			) {
+				$retval = true;
+			}
+			break;
+		case 'messages':
+			if (
+				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
+				(
+					(
+						empty( $r['group_id'] ) &&
+						(
+							bp_moderation_is_user_blocked( $r['recipient_user_id'] ) ||
+							bb_moderation_is_user_blocked_by( $r['recipient_user_id'] )
+						)
+					) ||
+					(
+						bp_is_active( 'groups' ) &&
+						! empty( $r['group_id'] ) &&
+						bb_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
+						(
+							! groups_is_user_admin( $r['recipient_user_id'], $r['group_id'] ) &&
+							! groups_is_user_mod( $r['recipient_user_id'], $r['group_id'] )
+						)
+					)
+				)
+			) {
+				$retval = true;
+			}
+			break;
+		case 'forums':
+		case 'groups':
+			if (
+				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
+				(
+					bb_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
+					(
+						(
+							empty( $r['group_id'] ) &&
+							(int) $r['recipient_user_id'] !== (int) $r['sender_id']
+						)
+						||
+						(
+							bp_is_active( 'groups' ) &&
+							! empty( $r['group_id'] ) &&
+							(
+								! groups_is_user_admin( $r['recipient_user_id'], $r['group_id'] ) &&
+								! groups_is_user_mod( $r['recipient_user_id'], $r['group_id'] )
+							)
+						)
+					)
+				)
+			) {
+				$retval = true;
+			}
+			break;
+		default:
+			$retval = false;
+	}
+
+	return $retval;
+}
+
+/**
+ * If the content has been changed by these filters bb_moderation_has_blocked_message,
+ * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+ * it will hide forums activity content from activity screen
+ * which is created by blocked/blocked/suspended member.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param int $activity_id Activity Id.
+ *
+ * @return bool
+ */
+function bb_moderation_to_hide_forum_activity( $activity_id ) {
+	$activity_data = new BP_Activity_Activity( $activity_id );
+	$hide_activity = false;
+	if (
+		bp_is_active( 'activity' ) &&
+		bp_is_active( 'forums' ) &&
+		in_array(
+			$activity_data->type,
+			array(
+				'bbp_reply_create',
+			),
+			true
+		)
+	) {
+		if ( bp_moderation_is_user_blocked( $activity_data->user_id ) ) {
+			$content = bb_moderation_has_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+			if ( $activity_data->content !== $content ) {
+				$hide_activity = true;
+			}
+		}
+		if ( bb_moderation_is_user_blocked_by( $activity_data->user_id ) ) {
+			$content = bb_moderation_is_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+			if ( $activity_data->content !== $content ) {
+				$hide_activity = true;
+			}
+		}
+		if ( bp_moderation_is_user_suspended( $activity_data->user_id ) ) {
+			$content = bb_moderation_is_suspended_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+			if ( $activity_data->content !== $content ) {
+				$hide_activity = true;
+			}
+		}
+	}
+
+	return $hide_activity;
 }

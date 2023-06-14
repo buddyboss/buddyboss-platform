@@ -170,9 +170,6 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			wp_enqueue_script( 'bp-select2' );
-			if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
-				wp_enqueue_script( 'bp-select2-local' );
-			}
 			wp_enqueue_style( 'bp-select2' );
 
 			// Forum-specific scripts.
@@ -231,7 +228,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Enqueue the scripts.
 			foreach ( $scripts as $handle => $attributes ) {
-				bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
+				bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], bp_get_version(), 'screen' );
 			}
 
 			$no_load_topic = true;
@@ -712,7 +709,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 * @uses  bbp_get_topic_id() To get the topic id
 		 * @uses  bbp_get_favorites_permalink() To get the favorites permalink
 		 * @uses  bbp_is_user_favorite() To check if the topic is in user's favorites
-		 * @uses  bbp_is_subscriptions_active() To check if the subscriptions are active
+		 * @uses  bb_is_enabled_subscription() To check if the subscriptions are active
 		 * @uses  bbp_is_user_subscribed() To check if the user is subscribed to topic
 		 * @uses  bbp_get_topic_permalink() To get the topic permalink
 		 * @uses  wp_localize_script() To localize the script
@@ -753,7 +750,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r5155)
 		 *
-		 * @uses  bbp_is_subscriptions_active() To check if the subscriptions are active
+		 * @uses  bb_is_enabled_subscription() To check if the subscriptions are active
 		 * @uses  bbp_is_user_logged_in() To check if user is logged in
 		 * @uses  bbp_get_current_user_id() To get the current user id
 		 * @uses  current_user_can() To check if the current user can edit the user
@@ -767,7 +764,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		public function ajax_forum_subscription() {
 
 			// Bail if subscriptions are not active.
-			if ( ! bbp_is_subscriptions_active() ) {
+			if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
 			}
 
@@ -889,7 +886,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses  bbp_is_subscriptions_active() To check if the subscriptions are active
+		 * @uses  bb_is_enabled_subscription() To check if the subscriptions are active
 		 * @uses  bbp_is_user_logged_in() To check if user is logged in
 		 * @uses  bbp_get_current_user_id() To get the current user id
 		 * @uses  current_user_can() To check if the current user can edit the user
@@ -903,7 +900,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		public function ajax_subscription() {
 
 			// Bail if subscriptions are not active.
-			if ( ! bbp_is_subscriptions_active() ) {
+			if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
 			}
 

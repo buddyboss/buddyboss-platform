@@ -614,7 +614,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$last_item = end( $items );
 							$end_html  = '</ul>';
 
-							if ( $total_results > 3 ) {
+							if ( $total_results > $args['number'] ) {
 								$end_html .= "<footer class='results-group-footer'>";
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
 											   sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
@@ -635,7 +635,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 						foreach ( $ordered_items_group as $type => $grouped_items ) {
 
 							// Remove last item from list
-							if ( count( $grouped_items ) > 3 ) {
+							if ( count( $grouped_items ) > $args['number'] ) {
 								array_pop( $grouped_items );
 							}
 
@@ -750,6 +750,16 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 				$this->search_results['all']['total_match_count'] = $all_items_count;
 			}
+
+			/**
+			 * Filters out the search results.
+			 *
+			 * @since BuddyBoss 2.3.50
+			 *
+			 * @param array  $search_results Array of search results.
+			 * @param object $this           Object of BP_Search class.
+			 */
+			$this->search_results = apply_filters( 'bp_search_query_final_results', $this->search_results, $this );
 		}
 
 		/**
