@@ -2307,6 +2307,7 @@ class BP_Activity_Activity {
 				'search_terms'      => false,           // Terms to search by.
 				'privacy'           => false,           // public, loggedin, onlyme, friends, media.
 				'display_comments'  => false,           // Whether to include activity comments.
+				'show_hidden'       => false,           // Show items marked hide_sitewide.
 				'spam'              => 'ham_only',      // Spam status.
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
@@ -2399,6 +2400,11 @@ class BP_Activity_Activity {
 		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
 			$order_by = 'FIELD(a.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
 			$sort     = '';
+		}
+
+		// Hide Hidden Items?
+		if ( ! $r['show_hidden'] ) {
+			$where_conditions['hidden_sql'] = 'a.hide_sitewide = 0';
 		}
 
 		// Exclude specified items.

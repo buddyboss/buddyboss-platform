@@ -4262,6 +4262,7 @@ function bb_has_activities_comments( $args = '' ) {
 			'max'               => false,        // Max number to return.
 			'fields'            => 'all',
 			'count_total'       => false,
+			'show_hidden'       => $show_hidden, // Show activity items that are hidden site-wide?
 			'spam'              => 'ham_only',   // Hide spammed items.
 
 			// Filtering.
