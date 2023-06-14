@@ -1847,7 +1847,7 @@ class BP_Groups_Group {
 			/**
 			 * Filters the MySQL WHERE conditions for the group members count.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.3.60
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $ud_name          moderation type
@@ -1860,7 +1860,7 @@ class BP_Groups_Group {
 			/**
 			 * Filters the MySQL JOIN conditions for the group members count.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.3.60
 			 *
 			 * @param array  $join_sql Current conditions for MySQL JOIN statement.
 			 * @param string $ud_name  moderation type

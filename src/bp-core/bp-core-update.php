@@ -2861,14 +2861,24 @@ function bb_update_to_2_3_50() {
 }
 
 /**
+ * Update background job once plugin update.
  * Migration to add index and new column to media tables.
+ * Save the default notification types.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @return void
  */
 function bb_update_to_2_3_60() {
 	global $wpdb;
+
+	// Disabled notification for post type comment reply notification.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
+		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
+	}
+
+	bb_background_update_group_member_count();
 
 	$tables = array(
 		$wpdb->prefix . 'bp_media'    => array(
@@ -2907,20 +2917,51 @@ function bb_update_to_2_3_60() {
 
 	// Update older data.
 	bb_create_background_message_media_document_update( $table_exists );
+}
 
-	// Disabled notification for post type comment reply notification.
-	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
-	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
-		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
+/**
+ * Function to update group member count with background updater.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_background_update_group_member_count() {
+	global $wpdb, $bp_background_updater;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
 	}
 
-	bb_background_update_group_member_count();
+	// Fetch all groups.
+	$sql       = "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC";
+	$group_ids = $wpdb->get_col( $sql );
+
+	if ( empty( $group_ids ) ) {
+		return;
+	}
+
+	$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+
+	if ( count( $group_ids ) > $min_count ) {
+		foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
+			$bp_background_updater->data(
+				array(
+					array(
+						'callback' => 'bb_update_group_member_count',
+						'args'     => array( $chunk ),
+					),
+				)
+			);
+			$bp_background_updater->save()->schedule_event();
+		}
+	} else {
+		bb_update_group_member_count( $group_ids );
+	}
 }
 
 /**
  * Schedule event for message media and document migration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param array $table_exists List of tables.
  * @param int   $paged        Page number.
@@ -2940,8 +2981,8 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN 
-				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !='' 
+				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
+				('bp_media_ids', 'bp_video_ids', 'bp_document_ids') AND meta_value !=''
 				ORDER BY message_id LIMIT %d offset %d",
 				$per_page,
 				$offset
@@ -2967,7 +3008,7 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 /**
  * Message media and document migration callback.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param array $table_exists List of tables.
  * @param array $results      Results from message meta table.
@@ -3020,43 +3061,3 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	$paged ++;
 	bb_create_background_message_media_document_update( $table_exists, $paged );
 }
-
-/**
- * Function to update group member count with background updater.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_background_update_group_member_count() {
-	global $wpdb, $bp_background_updater;
-
-	if ( ! bp_is_active( 'groups' ) ) {
-		return;
-	}
-
-	// Fetch all groups.
-	$sql       = "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC";
-	$group_ids = $wpdb->get_col( $sql );
-
-	if ( empty( $group_ids ) ) {
-		return;
-	}
-
-	$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
-
-	if ( count( $group_ids ) > $min_count ) {
-		foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
-			$bp_background_updater->data(
-				array(
-					array(
-						'callback' => 'bb_update_group_member_count',
-						'args'     => array( $chunk ),
-					),
-				)
-			);
-			$bp_background_updater->save()->schedule_event();
-		}
-	} else {
-		bb_update_group_member_count( $group_ids );
-	}
-}
-

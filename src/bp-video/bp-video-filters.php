@@ -729,7 +729,7 @@ function bp_video_forums_embed_attachments( $content, $id ) {
 /**
  * Put video attachment as media.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param WP_Post $attachment Attachment Post object.
  *
