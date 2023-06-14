@@ -1073,7 +1073,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		 * Removed notification sent and called additionally.
 		 * Due to we have moved all filters on title and content.
 		 */
-		remove_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 11, 4 );
+		remove_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );
 
 		/** Update counts, etc... */
 		do_action( 'bbp_new_topic', $topic_id, $forum_id, $anonymous_data, $topic_author );
@@ -2010,7 +2010,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			'sticky'                => bbp_is_topic_sticky( $topic->ID ),
 			'total_reply_count'     => ( bbp_show_lead_topic() ? bbp_get_topic_reply_count( $topic->ID ) : bbp_get_topic_post_count( $topic->ID ) ),
 			'last_reply_id'         => bbp_get_topic_last_reply_id( $topic->ID ),
-			'last_active_author'    => bbp_get_topic_last_active_id( $topic->ID ),
+			'last_active_author'    => bbp_get_reply_author_id( bbp_get_topic_last_active_id( $topic->ID ) ),
 			'last_active_time'      => $this->forum_endpoint->bbp_rest_get_topic_last_active_time( $topic->ID ),
 			'is_closed'             => bbp_is_topic_closed( $topic->ID ),
 			'voice_count'           => (int) get_post_meta( $topic->ID, '_bbp_voice_count', true ),
