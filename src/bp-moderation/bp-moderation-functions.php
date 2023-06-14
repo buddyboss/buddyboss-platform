@@ -165,11 +165,15 @@ function bp_moderation_get( $args = '' ) {
  *
  * @since BuddyBoss 1.5.6
  *
+ * @param bool $force_cache Bypass cache it true.
+ *
  * @return array $moderation See BP_Moderation::get() for description.
  */
-function bp_moderation_get_hidden_user_ids() {
+function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
 
-	$args         = array(
+	static $cache = array();
+
+	$args = array(
 		'in_types'          => BP_Moderation_Members::$moderation_type,
 		'update_meta_cache' => false,
 		'filter_query'      => array(
@@ -184,12 +188,20 @@ function bp_moderation_get_hidden_user_ids() {
 			),
 		),
 	);
+
+	$cache_key = 'bp_moderation_get_hidden_user_ids_' . BP_Moderation_Members::$moderation_type . '_' . get_current_user_id();
+	if ( isset( $cache[ $cache_key ] ) && false === $force_cache ) {
+		return $cache[ $cache_key ];
+	}
+
 	$hidden_users = bp_moderation_get( $args );
 
 	$hidden_users_ids = array();
 	if ( ! empty( $hidden_users['moderations'] ) ) {
 		$hidden_users_ids = wp_list_pluck( $hidden_users['moderations'], 'item_id' );
 	}
+
+	$cache[ $cache_key ] = $hidden_users_ids;
 
 	return $hidden_users_ids;
 }
@@ -269,7 +281,11 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
+	BP_Moderation::$no_cache = true;
+
 	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
+
+	BP_Moderation::$no_cache = false;
 
 	if ( $is_reported ) {
 		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
@@ -1336,7 +1352,18 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 		bp_is_active( 'groups' ) &&
 		(
 			bp_is_group_members() ||
-			( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum() )
+			(
+				function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum()
+			) ||
+			(
+				function_exists( 'bp_get_group_current_admin_tab' ) &&
+				'manage-members' === bp_get_group_current_admin_tab()
+			) ||
+			(
+				wp_doing_ajax() &&
+				isset( $_POST['action'] ) &&
+				'video_get_video_description' === $_POST['action']
+			)
 		)
 	) {
 		$group_id = bp_get_current_group_id();
@@ -1708,6 +1735,18 @@ function bb_moderation_get_suspended_user_ids( $force = false ) {
  * @return array|bool
  */
 function bb_moderation_moderated_user_ids( $user_id = 0 ) {
+	static $cache = array();
+
+	$cache_key = 'bb_moderation_moderated_user_ids';
+
+	if ( ! empty( $user_id ) ) {
+		$cache_key = 'bb_moderation_moderated_user_' . $user_id;
+	}
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
 	$hidden_users_ids   = bp_moderation_get_hidden_user_ids(); // Blocked user_ids.
 	$blocked_by_members = bb_moderation_get_blocked_by_user_ids(); // Blocked by user_ids.
 	$suspended_user_id  = bb_moderation_get_suspended_user_ids();
@@ -1726,10 +1765,16 @@ function bb_moderation_moderated_user_ids( $user_id = 0 ) {
 	}
 
 	if ( empty( $user_id ) ) {
+		$cache[ $cache_key ] = $all_users;
+
 		return $all_users;
 	}
 
-	return in_array( $user_id, $all_users, true );
+	$retval = in_array( $user_id, $all_users, true );
+
+	$cache[ $cache_key ] = $retval;
+
+	return $retval;
 }
 
 /**
@@ -1840,4 +1885,53 @@ function bb_moderation_allowed_specific_notification( $args ) {
 	}
 
 	return $retval;
+}
+
+/**
+ * If the content has been changed by these filters bb_moderation_has_blocked_message,
+ * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+ * it will hide forums activity content from activity screen
+ * which is created by blocked/blocked/suspended member.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param int $activity_id Activity Id.
+ *
+ * @return bool
+ */
+function bb_moderation_to_hide_forum_activity( $activity_id ) {
+	$activity_data = new BP_Activity_Activity( $activity_id );
+	$hide_activity = false;
+	if (
+		bp_is_active( 'activity' ) &&
+		bp_is_active( 'forums' ) &&
+		in_array(
+			$activity_data->type,
+			array(
+				'bbp_reply_create',
+			),
+			true
+		)
+	) {
+		if ( bp_moderation_is_user_blocked( $activity_data->user_id ) ) {
+			$content = bb_moderation_has_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+			if ( $activity_data->content !== $content ) {
+				$hide_activity = true;
+			}
+		}
+		if ( bb_moderation_is_user_blocked_by( $activity_data->user_id ) ) {
+			$content = bb_moderation_is_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+			if ( $activity_data->content !== $content ) {
+				$hide_activity = true;
+			}
+		}
+		if ( bp_moderation_is_user_suspended( $activity_data->user_id ) ) {
+			$content = bb_moderation_is_suspended_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+			if ( $activity_data->content !== $content ) {
+				$hide_activity = true;
+			}
+		}
+	}
+
+	return $hide_activity;
 }

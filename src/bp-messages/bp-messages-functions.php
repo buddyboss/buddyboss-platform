@@ -1081,7 +1081,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 
 	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 		global $bb_email_background_updater;
-		$chunk_recipients = array_chunk( $recipients, 10 );
+		$chunk_recipients = array_chunk( $recipients, bb_get_email_queue_min_count() );
 		if ( ! empty( $chunk_recipients ) ) {
 			foreach ( $chunk_recipients as $key => $data_recipients ) {
 				$bb_email_background_updater->data(
@@ -2443,7 +2443,7 @@ function bb_get_message_response_object( $message ) {
 				$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
 				$full_attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
 
-				if ( $attachment_url ) {
+				if ( $attachment_url && ! in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 					?>
 					<div class="document-preview-wrap">
 						<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>

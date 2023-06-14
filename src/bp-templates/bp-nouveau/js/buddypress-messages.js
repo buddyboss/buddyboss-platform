@@ -2038,7 +2038,6 @@ window.bp = window.bp || {};
 				'input #message_content': 'focusEditorOnChange',
 				'input #message_content': 'postValidate',// jshint ignore:line
 				'change .medium-editor-toolbar-input': 'mediumLink',
-				'paste': 'handlePaste',
 			},
 
 			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
@@ -2125,18 +2124,6 @@ window.bp = window.bp || {};
 				if ( value !== '' ) {
 					$( '#bp-message-content' ).addClass( 'focus-in--content' );
 				}
-			},
-
-			handlePaste: function ( event ) {
-				// Get user's pasted data.
-				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-					data = clipboardData.getData( 'text/plain' );
-
-				// Insert the filtered content.
-				document.execCommand( 'insertHTML', false, data );
-
-				// Prevent the standard paste behavior.
-				event.preventDefault();
 			},
 
 			initialize: function() {
@@ -2877,6 +2864,10 @@ window.bp = window.bp || {};
 							bp.Nouveau.dropZoneGlobalProgress( this );
 						}
 						Backbone.trigger( 'triggerMediaInProgress' );
+
+						if ( bp.Nouveau.getVideoThumb ) {
+							bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+						}
 
 						var tool_box = self.$el.parents( '#bp-message-content' );
 						if ( tool_box.find( '#messages-document-button' ) ) {
@@ -5074,13 +5065,15 @@ window.bp = window.bp || {};
 				var first_message = _.first( messagePusherData );
 
 				if ( 'undefined' !== typeof first_message.video && first_message.video.length > 0 ) {
-					var videos = first_message.video;
+					var videos    = first_message.video;
 					$.each(
 						videos,
 						function ( index, video ) {
 							var blobData = BP_Nouveau.messages.video_default_url;
-							video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + blobData + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.vid_ids_fake + '" type="video/' + video.ext + '"></source></video>';
-							videos[ index ] = video;
+							if ( 'undefined' !== typeof video.vid_ids_fake ) {
+								video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + blobData + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.vid_ids_fake + '" type="video/' + video.ext + '"></source></video>';
+								videos[ index ] = video;
+							}
 						}
 					);
 					first_message.video = videos;

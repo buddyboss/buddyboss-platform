@@ -76,6 +76,12 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
+		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
+
+		add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_member_directories_remove_profile_actions' ), 9999, 2 );
+		add_filter( 'bp_member_type_name_string', array( $this, 'bb_remove_member_type_name_string' ), 9999, 3 );
 	}
 
 	/**
@@ -145,8 +151,14 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 				bp_is_group_members()
 			) ||
 			(
+				function_exists( 'bp_get_group_current_admin_tab' ) &&
+				'manage-members' === bp_get_group_current_admin_tab()
+			) ||
+			(
 				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
-				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches )
+				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches ) &&
+				empty( $_REQUEST['scope'] ) &&
+				empty( $_REQUEST['show-all'] )
 			)
 		) {
 			$blocked_user_query = false;
@@ -191,7 +203,13 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
-		if ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
+		if (
+			! bp_is_single_activity() &&
+			(
+				bp_moderation_is_user_blocked( $user_id ) ||
+				bb_moderation_is_user_blocked_by( $user_id )
+			)
+		) {
 			buddypress()->displayed_user->id = 0;
 			bp_do_404();
 
@@ -213,7 +231,16 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) &&
+		// Alowed to view single group activity.
+		if (
+			bp_is_single_activity() &&
+			! wp_doing_ajax()
+		) {
+			return $domain;
+		}
+
+		if (
+			empty( $username_visible ) &&
 			! bp_moderation_is_user_suspended( $user_id ) &&
 			(
 				bp_moderation_is_user_blocked( $user_id ) ||
@@ -281,7 +308,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return $value;
 		}
 
-		if ( bp_is_user_inactive( $user_id ) ) {
+		$user = get_userdata( $user_id );
+
+		if ( empty( $user ) || ! empty( $user->deleted ) ) {
 			return bb_moderation_is_deleted_label();
 		}
 
@@ -411,5 +440,72 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Function to allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_before_permalink_redirect_url( $activity ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			remove_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+		}
+	}
+
+	/**
+	 * Function to dis-allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_after_permalink_redirect_url( $activity ) {
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+		}
+	}
+
+	/**
+	 * Function to remove profile action if member is hasblocked/isblocked.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param array $buttons Member profile actions.
+	 * @param int   $user_id Member ID.
+	 *
+	 * @return array|string Return the member actions.
+	 */
+	public function bb_member_directories_remove_profile_actions( $buttons, $user_id ) {
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			$buttons['primary']   = '';
+			$buttons['secondary'] = '';
+		} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+			$buttons['primary']   = '';
+			$buttons['secondary'] = '';
+		}
+
+		return $buttons;
+	}
+
+	/**
+	 * Logged in member is blocked by members from group, then loggedin member can not see member type of is blocked by members.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param string $string      Member type html.
+	 * @param string $member_type Member type.
+	 * @param int    $user_id     Member ID.
+	 *
+	 * @return array|string Return the member actions.
+	 */
+	public function bb_remove_member_type_name_string( $string, $member_type, $user_id ) {
+		if ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+			$string = '';
+		}
+
+		return $string;
 	}
 }

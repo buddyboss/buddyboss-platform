@@ -259,6 +259,9 @@ add_filter( 'posts_where', 'bb_forum_search_by_topic_tags', 10, 2 );
 add_filter( 'bbp_get_topic_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 add_filter( 'bbp_get_reply_content', 'bb_mention_remove_deleted_users_link', 20, 1 );
 
+add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 999, 2 );
+add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
+
 /** Deprecated ****************************************************************/
 
 /**
@@ -358,7 +361,9 @@ function bb_forum_search_by_topic_tags( $where, $wp_query ) {
 			)
 		);
 
-		$where .= " OR $wpdb->posts.ID IN (SELECT DISTINCT $wpdb->posts.ID FROM $wpdb->posts LEFT JOIN $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id ) WHERE $wpdb->term_relationships.term_taxonomy_id IN (" . implode( ',', $matching_terms ) . ')) ';
+		if ( ! empty( $matching_terms ) && ! is_wp_error( $matching_terms ) ) {
+			$where .= " OR $wpdb->posts.ID IN (SELECT DISTINCT $wpdb->posts.ID FROM $wpdb->posts LEFT JOIN $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id ) WHERE $wpdb->term_relationships.term_taxonomy_id IN (" . implode( ',', $matching_terms ) . ')) ';
+		}
 	}
 
 	return $where;
@@ -441,3 +446,88 @@ function bb_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, 
 	}
 }
 add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_update_group_meta', 10, 4 );
+
+/**
+ * Remove unintentional empty paragraph coming from the medium editor when only link preview.
+ *
+ * @since Buddyboss[BBVERSION]
+ *
+ * @param string $content Topic and reply content.
+ *
+ * @return string $content Topic and reply content
+ */
+function bb_filter_empty_editor_content( $content = '' ) {
+	if ( preg_match( '/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $content ) ) {
+		$content = '';
+	}
+
+	return $content;
+}
+
+add_filter( 'bbp_new_topic_pre_content', 'bb_filter_empty_editor_content', 1 );
+add_filter( 'bbp_new_reply_pre_content', 'bb_filter_empty_editor_content', 1 );
+add_filter( 'bbp_edit_topic_pre_content', 'bb_filter_empty_editor_content', 1 );
+add_filter( 'bbp_edit_reply_pre_content', 'bb_filter_empty_editor_content', 1 );
+
+/**
+ * Embed link preview in Topic/Reply content
+ *
+ * @param string $content Topic/Reply content.
+ * @param int    $post_id Topic/Reply id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_forums_link_preview( $content, $post_id ) {
+
+	$preview_data = get_post_meta( $post_id, '_link_preview_data', true );
+
+	if ( empty( $preview_data['url'] ) ) {
+		return $content;
+	}
+
+	$preview_data = bp_parse_args(
+		$preview_data,
+		array(
+			'title'       => '',
+			'description' => '',
+		)
+	);
+
+	$parse_url   = wp_parse_url( $preview_data['url'] );
+	$domain_name = '';
+	if ( ! empty( $parse_url['host'] ) ) {
+		$domain_name = str_replace( 'www.', '', $parse_url['host'] );
+	}
+
+	$description = $preview_data['description'];
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
+	$description = wp_trim_words( $description, 40, $read_more );
+
+	$content = make_clickable( $content );
+
+	$content .= '<div class="bb-link-preview-container">';
+	if ( ! empty( $preview_data['attachment_id'] ) ) {
+		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
+		$content  .= '<div class="bb-link-preview-image">';
+		$content  .= '<div class="bb-link-preview-image-cover">';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
+		$content  .= '</div>';
+		$content  .= '</div>';
+	} elseif ( ! empty( $preview_data['image_url'] ) ) {
+		$content .= '<div class="bb-link-preview-image">';
+		$content .= '<div class="bb-link-preview-image-cover">';
+		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
+		$content .= '</div>';
+		$content .= '</div>';
+	}
+	$content .= '<div class="bb-link-preview-info">';
+	$content .= '<p class="bb-link-preview-link-name">' . esc_html( $domain_name ) . '</p>';
+	$content .= '<p class="bb-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . esc_html( $preview_data['title'] ) . '</a></p>';
+	$content .= '<div class="bb-link-preview-excerpt"><p>' . $description . '</p></div>';
+	$content .= '</div>';
+	$content .= '</div>';
+
+	return $content;
+}
