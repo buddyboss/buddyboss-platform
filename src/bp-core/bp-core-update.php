@@ -2894,63 +2894,24 @@ function bb_update_to_2_3_60() {
 }
 
 /**
- * Function will fetch duplicate following notification data.
+ * Function will fetch and delete duplicate following notification data.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_core_update_repair_duplicate_following_notification() {
-	global $wpdb, $bp_background_updater;
+	global $wpdb;
 	$bp = buddypress();
 
-	$sql = "SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
+	$sql = "DELETE FROM {$bp->notifications->table_name}";
+	$sql .= " WHERE id IN (";
+	$sql .= " SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
 	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
 	$sql .= " WHERE n1.secondary_item_id = n2.secondary_item_id";
 	$sql .= " AND n1.date_notified < n2.date_notified";
 	$sql .= " AND n1.component_name = %s AND n1.component_action = %s";
 	$sql .= " ORDER BY n1.id DESC";
+	$sql .= " )";
 
-	// Fetch duplicate notification ids.
-	$notification_ids = $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
-
-	if ( empty( $notification_ids ) ) {
-		return;
-	}
-
-	$min_count = (int) apply_filters( 'bb_remove_duplicate_following_notification', 50 );
-
-	if ( count( $notification_ids ) > $min_count ) {
-		foreach ( array_chunk( $notification_ids, $min_count ) as $chunk ) {
-			$bp_background_updater->data(
-				array(
-					array(
-						'callback' => 'bb_remove_duplicate_following_notification',
-						'args'     => array( $chunk ),
-					),
-				)
-			);
-			$bp_background_updater->save()->schedule_event();
-		}
-	} else {
-		bb_remove_duplicate_following_notification( $notification_ids );
-	}
-}
-
-/**
- * Remove the duplicate following notification.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $notification_ids Array of notification IDs.
- *
- * @return void
- */
-function bb_remove_duplicate_following_notification( $notification_ids = array() ) {
-
-	if ( empty( $notification_ids ) ) {
-		return;
-	}
-
-	foreach ( $notification_ids as $item_id ) {
-		BP_Notifications_Notification::delete( array( 'id' => $item_id ) );
-	}
+	// Remove duplicate notification ids.
+	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
 }
