@@ -2965,7 +2965,7 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 /**
  * Link preview edit field.
  *
- * @since BuddyBoss 2.3.50
+ * @since BuddyBoss 2.3.60
  *
  * @param integer $post_id Topic or Reply id.
  */

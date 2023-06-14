@@ -81,7 +81,7 @@ class BP_Media {
 	/**
 	 * Message ID of the media item.
 	 *
-	 * @since BuddyBoss 2.3.50
+	 * @since BuddyBoss 2.3.60
 	 * @var int
 	 */
 	var $message_id;
