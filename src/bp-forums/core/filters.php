@@ -450,7 +450,7 @@ add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_upd
 /**
  * Remove unintentional empty paragraph coming from the medium editor when only link preview.
  *
- * @since Buddyboss[BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param string $content Topic and reply content.
  *
@@ -475,7 +475,7 @@ add_filter( 'bbp_edit_reply_pre_content', 'bb_filter_empty_editor_content', 1 );
  * @param string $content Topic/Reply content.
  * @param int    $post_id Topic/Reply id.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @return string
  */
@@ -535,7 +535,7 @@ function bb_forums_link_preview( $content, $post_id ) {
 /**
  * Redirect to the 404 page if the no replies for single topic page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param string $template The path of the template to include.
  *

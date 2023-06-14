@@ -1421,6 +1421,19 @@ function bp_nouveau_ajax_delete_thread() {
 		 * @since BuddyBoss 1.5.6
 		 */
 		do_action( 'bp_messages_message_delete_thread', $thread_id, $thread_recipients );
+
+		/**
+		 * Fires before an entire message thread is deleted.
+		 *
+		 * @since BuddyPress 2.2.0
+		 *
+		 * @param array $message_ids   IDs of messages being deleted.
+		 * @param int   $user_id       ID of the user the threads were deleted for.
+		 * @param bool  $thread_delete True entire thread will be deleted.
+		 *
+		 * @param int   $thread_id     ID of the thread being deleted.
+		 */
+		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, bp_loggedin_user_id(), true );
 	}
 
 	wp_send_json_success(
@@ -2689,7 +2702,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
 					$full_attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
 
-					if ( '' !== $attachment_url ) {
+					if ( $attachment_url && ! in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 						?>
 						<div class="document-preview-wrap">
 							<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>

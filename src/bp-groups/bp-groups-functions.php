@@ -5151,7 +5151,7 @@ function bb_group_single_header_actions() {
 /**
  * Update the group member count.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param array $group_ids Array of group IDs.
  *

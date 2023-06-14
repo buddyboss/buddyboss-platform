@@ -1121,7 +1121,7 @@ function bb_is_forum_group_forum( $forum_id = 0 ) {
 /**
  * AJAX endpoint for link preview URL parser.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  */
 function bb_forums_link_preview_parse_url() {
 	// Get URL.

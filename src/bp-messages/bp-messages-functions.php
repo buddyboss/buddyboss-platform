@@ -2448,7 +2448,7 @@ function bb_get_message_response_object( $message ) {
 				$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
 				$full_attachment_url = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
 
-				if ( $attachment_url ) {
+				if ( $attachment_url && ! in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 					?>
 					<div class="document-preview-wrap">
 						<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
