@@ -2863,6 +2863,7 @@ function bb_update_to_2_3_50() {
 /**
  * Update background job once plugin update.
  * Migration to add index and new column to media tables.
+ * Save the default notification types.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2870,6 +2871,12 @@ function bb_update_to_2_3_50() {
  */
 function bb_update_to_2_3_60() {
 	global $wpdb;
+
+	// Disabled notification for post type comment reply notification.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
+		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
+	}
 
 	bb_background_update_group_member_count();
 
