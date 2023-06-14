@@ -1073,7 +1073,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		 * Removed notification sent and called additionally.
 		 * Due to we have moved all filters on title and content.
 		 */
-		remove_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 11, 4 );
+		remove_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );
 
 		/** Update counts, etc... */
 		do_action( 'bbp_new_topic', $topic_id, $forum_id, $anonymous_data, $topic_author );
