@@ -1237,7 +1237,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 				if ( $user_id != $current_user_id ) {
 					$user_display_name = bp_core_get_user_displayname( $user_id );
 					if ( strpos( $like_text, $user_display_name ) === false ) {
-						$carry .= $user_display_name . '&#10;';
+						$carry .= $user_display_name . ',&#10;';
 					}
 				}
 
@@ -1246,7 +1246,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 		);
 	}
 
-	return $favorited_users;
+	return ! empty( $favorited_users ) ? trim( $favorited_users, ',&#10;' ) : '';
 }
 
 /**
@@ -3923,7 +3923,7 @@ function bp_activity_create_summary( $content, $activity ) {
 
 	// Generate a text excerpt for this activity item (and remove any oEmbeds URLs).
 	$summary = bp_create_excerpt(
-		html_entity_decode( $content ),
+		html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 		225,
 		array(
 			'html'              => false,
@@ -4148,7 +4148,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 					$title_text             = get_the_title( $parent_activity->secondary_item_id );
-					$message_link           = get_permalink( $activity->secondary_item_id );
+					$message_link           = get_permalink( $parent_activity->secondary_item_id );
 				} else {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 				}
@@ -4214,6 +4214,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	$original_activity = new BP_Activity_Activity( $params['activity_id'] );
 	$poster_name       = bp_core_get_user_displayname( $commenter_id );
 	$thread_link       = bp_activity_get_permalink( $params['activity_id'] );
+	$usernames         = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
 
 	remove_filter( 'bp_get_activity_content_body', 'convert_smilies' );
 	remove_filter( 'bp_get_activity_content_body', 'wpautop' );
@@ -4246,8 +4247,16 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 			return;
 		}
 
+		$send_email = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $original_activity->user_id, $usernames ) ) {
+			if ( true === bb_is_notification_enabled( $original_activity->user_id, 'bb_new_mention' ) ) {
+				$send_email = false;
+			}
+		}
+
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
+		if ( true === $send_email && true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4307,8 +4316,16 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 			return;
 		}
 
+		$send_email = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $parent_comment->user_id, $usernames ) ) {
+			if ( true === bb_is_notification_enabled( $parent_comment->user_id, 'bb_new_mention' ) ) {
+				$send_email = false;
+			}
+		}
+
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
+		if ( true === $send_email && true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,
@@ -5275,133 +5292,6 @@ function bp_activity_action_parse_url() {
 add_action( 'wp_ajax_bp_activity_parse_url', 'bp_activity_action_parse_url' );
 
 /**
- * Download an image from the specified URL and attach it to a post.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $file The URL of the image to download
- *
- * @return int|void
- */
-function bp_activity_media_sideload_attachment( $file ) {
-	if ( empty( $file ) ) {
-		return;
-	}
-
-	// Set variables for storage, fix file filename for query strings.
-	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|svg|bmp|mp4)\b/i', $file, $matches );
-	$file_array = array();
-
-	if ( empty( $matches ) ) {
-		return;
-	}
-
-	$file_array['name'] = basename( $matches[0] );
-
-	// Load function download_url if not exists.
-	if ( ! function_exists( 'download_url' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-	}
-
-	// Download file to temp location.
-	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
-	$file                   = str_replace( '&amp;', '&', $file );
-	$file_array['tmp_name'] = download_url( $file );
-
-	// If error storing temporarily, return the error.
-	if ( is_wp_error( $file_array['tmp_name'] ) ) {
-		return;
-	}
-
-	// Do the validation and storage stuff.
-	$id = bp_activity_media_handle_sideload( $file_array );
-
-	// If error storing permanently, unlink.
-	if ( is_wp_error( $id ) ) {
-		return;
-	}
-
-	return $id;
-}
-
-/**
- * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
- *
- * @since BuddyBoss 1.0.0
- *
- * @param array $file_array Array similar to a {@link $_FILES} upload array
- * @param array $post_data  allows you to overwrite some of the attachment
- *
- * @return int|object The ID of the attachment or a WP_Error on failure
- */
-function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) {
-
-	$overrides = array( 'test_form' => false );
-
-	$time = current_time( 'mysql' );
-	if ( $post = get_post() ) {
-		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
-			$time = $post->post_date;
-		}
-	}
-
-	$file = wp_handle_sideload( $file_array, $overrides, $time );
-	if ( isset( $file['error'] ) ) {
-		return new WP_Error( 'upload_error', $file['error'] );
-	}
-
-	$url     = $file['url'];
-	$type    = $file['type'];
-	$file    = $file['file'];
-	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
-	$content = '';
-
-	// Load function wp_read_image_metadata if not exists.
-	if ( ! function_exists( 'wp_read_image_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-	}
-
-	// Use image exif/iptc data for title and caption defaults if possible.
-	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
-		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
-			$title = $image_meta['title'];
-		}
-		if ( trim( $image_meta['caption'] ) ) {
-			$content = $image_meta['caption'];
-		}
-	}
-
-	if ( isset( $desc ) ) {
-		$title = $desc;
-	}
-
-	// Construct the attachment array.
-	$attachment = array_merge(
-		array(
-			'post_mime_type' => $type,
-			'guid'           => $url,
-			'post_title'     => $title,
-			'post_content'   => $content,
-		),
-		$post_data
-	);
-
-	// This should never be set as it would then overwrite an existing attachment.
-	if ( isset( $attachment['ID'] ) ) {
-		unset( $attachment['ID'] );
-	}
-
-	// Save the attachment metadata
-	$id = wp_insert_attachment( $attachment, $file );
-
-	if ( ! is_wp_error( $id ) ) {
-		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
-	}
-
-	return $id;
-}
-
-/**
  * Function to add the content on top of activity listing
  *
  * @since BuddyBoss 1.2.5
@@ -5889,21 +5779,21 @@ function bb_activity_following_post_notification( $args ) {
 	$video_ids        = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
 	if ( $media_ids ) {
-		$media_ids = array_filter( explode( ',', $media_ids ) );
+		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 		if ( count( $media_ids ) > 1 ) {
 			$text = __( 'some photos', 'buddyboss' );
 		} else {
 			$text = __( 'a photo', 'buddyboss' );
 		}
 	} elseif ( $document_ids ) {
-		$document_ids = array_filter( explode( ',', $document_ids ) );
+		$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 		if ( count( $document_ids ) > 1 ) {
 			$text = __( 'some documents', 'buddyboss' );
 		} else {
 			$text = __( 'a document', 'buddyboss' );
 		}
 	} elseif ( $video_ids ) {
-		$video_ids = array_filter( explode( ',', $video_ids ) );
+		$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 		if ( count( $video_ids ) > 1 ) {
 			$text = __( 'some videos', 'buddyboss' );
 		} else {
@@ -5967,7 +5857,7 @@ function bb_activity_following_post_notification( $args ) {
 		}
 
 		if ( true === $send_notification && bp_is_active( 'notifications' ) ) {
-			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 			bp_notifications_add_notification(
 				array(
 					'user_id'           => $user_id,
@@ -5979,7 +5869,50 @@ function bb_activity_following_post_notification( $args ) {
 					'is_new'            => 1,
 				)
 			);
-			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
+}
+
+/**
+ * Check whether activity comment is group comment or not.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param object|int $comment Activity comment ID or object.
+ *
+ * @return bool
+ */
+function bb_is_group_activity_comment( $comment = 0 ) {
+
+	$comment_id = 0;
+	if ( empty( $comment ) ) {
+		global $activities_template;
+		$comment_id = isset( $activities_template->activity->current_comment->id ) ? $activities_template->activity->current_comment->id : 0;
+	} elseif ( is_array( $comment ) ) {
+		$comment_id = (int) $comment['id'];
+	} elseif ( is_object( $comment ) ) {
+		$comment_id = (int) $comment->id;
+	} elseif ( is_int( $comment ) ) {
+		$comment_id = (int) $comment;
+	}
+
+	if ( empty( $comment_id ) ) {
+		return false;
+	}
+
+	$comment = new BP_Activity_Activity( $comment_id );
+
+	if ( ! empty( $comment->item_id ) && ! empty( $comment->user_id ) ) {
+		$main_activity = new BP_Activity_Activity( $comment->item_id );
+
+		if (
+			! empty( $main_activity->component ) &&
+			'groups' === $main_activity->component
+		) {
+			return true;
+		}
+	}
+
+	return false;
 }

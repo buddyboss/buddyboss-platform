@@ -58,6 +58,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
+		// Update the where condition for group member count.
+		add_filter( 'bb_group_member_count_join_sql', array( $this, 'bb_group_member_count_join_sql' ), 10, 2 );
+		add_filter( 'bb_group_member_count_where_sql', array( $this, 'bb_group_member_count_where_sql' ), 10, 1 );
+
 		add_filter( 'authenticate', array( $this, 'boot_suspended_user' ), 30 );
 		add_filter( 'bp_init', array( $this, 'bp_stop_live_suspended' ), 5 );
 		add_action( 'login_form_bp-suspended', array( $this, 'bp_live_suspended_login_error' ) );
@@ -73,6 +77,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 
+		add_action( 'bb_activity_before_permalink_redirect_url', array( $this, 'bb_activity_before_permalink_redirect_url' ), 10, 1 );
+		add_action( 'bb_activity_after_permalink_redirect_url', array( $this, 'bb_activity_after_permalink_redirect_url' ), 10, 1 );
 	}
 
 	/**
@@ -208,6 +214,63 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	}
 
 	/**
+	 * Prepare group member count join SQL query with suspend table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $join_sql Join table query.
+	 * @param string $uid_name moderation type.
+	 *
+	 * @return mixed|string|void
+	 */
+	public function bb_group_member_count_join_sql( $join_sql, $uid_name ) {
+
+		$join_sql .= $this->exclude_joint_query( 'm.' . $uid_name, 'user' );
+
+		/**
+		 * Filters the group members count Where SQL statement.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $join_sql Join sql query
+		 * @param array $class    current class object.
+		 */
+		$join_sql = apply_filters( 'bp_suspend_member_get_join', $join_sql, $this );
+
+		return $join_sql;
+	}
+
+	/**
+	 * Prepare group member count where SQL query with suspend table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $where_sql Where sql.
+	 *
+	 * @return mixed
+	 */
+	public function bb_group_member_count_where_sql( $where_sql ) {
+
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
+
+		/**
+		 * Filters the group members count Where SQL statement.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $where Query to update group members count.
+		 * @param array $class current class object.
+		 */
+		$where = apply_filters( 'bp_suspend_group_member_count_where_conditions', $where, $this );
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_sql['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_sql;
+	}
+
+	/**
 	 * Exclude moderated members from message recipients lists.
 	 *
 	 * @since BuddyBoss 1.7.8
@@ -234,7 +297,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( ! empty( $hidden_members ) ) {
 			$where['blocked_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
 		}
-// phpcs:ignore
+
+		// phpcs:ignore
 		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s AND ( {$this->alias}.user_suspended = 1 )", 'user' );
 		$where['suspend_where'] = '( r.user_id NOT IN( ' . $sql . ' ) )';
 		/**
@@ -523,7 +587,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
-		if ( bp_moderation_is_user_suspended( $user_id ) ) {
+
+		if (
+			bp_moderation_is_user_suspended( $user_id ) &&
+			false === $this->bb_activity_allow_group_single( $user_id ) &&
+			! ( bp_is_single_activity() && wp_doing_ajax() )
+		) {
 			buddypress()->displayed_user->id = 0;
 			bp_do_404();
 
@@ -586,26 +655,47 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				if ( $this->background_disabled ) {
 					$this->bb_update_member_friend_count( $member_id, $friend_ids, $action );
 				} else {
-					foreach ( array_chunk( $friend_ids, 50 ) as $chunk ) {
-						$bp_background_updater->data(
-							array(
+					$min_count     = (int) apply_filters( 'bb_update_member_friend_count', 50 );
+					$chunk_results = array_chunk( $friend_ids, $min_count );
+					if ( ! empty( $chunk_results ) ) {
+						foreach ( $chunk_results as $chunk_result ) {
+							$bp_background_updater->data(
 								array(
-									'callback' => array( $this, 'bb_update_member_friend_count' ),
-									'args'     => array( $member_id, $chunk, $action ),
-								),
-							)
-						);
-						$bp_background_updater->save()->dispatch();
+									array(
+										'callback' => array( $this, 'bb_update_member_friend_count' ),
+										'args'     => array( $member_id, $chunk_result, $action ),
+									),
+								)
+							);
+
+							$bp_background_updater->save()->dispatch();
+						}
 					}
 				}
 			}
 		}
 
-		/*
 		if ( bp_is_active( 'groups' ) ) {
-			$related_contents[ BP_Suspend_Group::$type ] = BP_Suspend_Group::get_member_group_ids( $member_id );
+			$groups    = BP_Groups_Member::get_group_ids( $member_id, false, false, true );
+			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
+			$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+
+			if ( count( $group_ids ) > $min_count ) {
+				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
+					$bp_background_updater->data(
+						array(
+							array(
+								'callback' => 'bb_update_group_member_count',
+								'args'     => array( $chunk ),
+							),
+						)
+					);
+					$bp_background_updater->save()->schedule_event();
+				}
+			} else {
+				bb_update_group_member_count( $group_ids );
+			}
 		}
-		*/
 
 		if ( bp_is_active( 'forums' ) ) {
 			$related_contents[ BP_Suspend_Forum::$type ]       = BP_Suspend_Forum::get_member_forum_ids( $member_id, $action, $page );
@@ -685,7 +775,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) && bp_moderation_is_user_suspended( $user_id ) ) {
+		if (
+			empty( $username_visible ) &&
+			bp_moderation_is_user_suspended( $user_id ) &&
+			false === $this->bb_activity_allow_group_single( $user_id )
+		) {
 			if ( current_user_can( 'manage_options' ) ) {
 				$edit_link = add_query_arg( array( 'action' => 'edit' ), admin_url( 'user-edit.php?user_id=' . $user_id ) );
 				return $edit_link;
@@ -725,13 +819,19 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return string
 	 */
 	public function get_the_author_name( $value, $user_id ) {
-
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
 			return $value;
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
+			if (
+				'get_the_author_user_nicename' === current_filter() &&
+				true === $this->bb_activity_allow_group_single( $user_id )
+			) {
+				return bb_core_get_user_slug( $user_id );
+			}
+
 			return bb_moderation_is_suspended_label( $user_id );
 		}
 
@@ -856,5 +956,145 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Function to allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_before_permalink_redirect_url( $activity ) {
+		if (
+			bp_is_active( 'groups' ) &&
+			buddypress()->groups->id === $activity->component &&
+			bp_moderation_is_user_suspended( $activity->user_id )
+		) {
+			remove_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
+
+			remove_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+			remove_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
+			add_filter( 'bp_core_get_user_domain', array( $this, 'bb_setup_hash_domain_url' ), 9999, 2 );
+		}
+	}
+
+	/**
+	 * Function to dis-allowed blocked member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Activity_Activity $activity Activity object.
+	 */
+	public function bb_activity_after_permalink_redirect_url( $activity ) {
+		if (
+			bp_is_active( 'groups' ) &&
+			buddypress()->groups->id === $activity->component &&
+			bp_moderation_is_user_suspended( $activity->user_id )
+		) {
+			add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
+
+			add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
+			add_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
+			remove_filter( 'bp_core_get_user_domain', array( $this, 'bb_setup_hash_domain_url' ), 9999, 2 );
+		}
+	}
+
+	/**
+	 * Allow suspended member URL for group single activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id User id.
+	 *
+	 * @return false
+	 */
+	protected function bb_activity_allow_group_single( $user_id ) {
+		$current_uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL );
+		$uri         = array_filter( ! empty( $current_uri ) ? explode( '/', $current_uri ) : array() );
+
+		if (
+			! bp_is_active( 'activity' ) ||
+			! bp_is_active( 'groups' ) ||
+			empty( $uri ) ||
+			empty( $uri[ count( $uri ) - 1 ] ) ||
+			'activity' !== $uri[ count( $uri ) - 1 ] ||
+			0 === (int) end( $uri )
+		) {
+			return false;
+		}
+
+		$activity = $this->bb_fetch_moderated_activity( (int) end( $uri ) );
+
+		if (
+			! empty( $activity ) &&
+			! empty( $activity->id ) &&
+			! empty( $activity->user_id ) &&
+			(int) $activity->user_id === (int) $user_id &&
+			'groups' === $activity->component
+		) {
+			$username = bb_core_get_user_slug( $user_id );
+			if ( empty( $username ) ) {
+				bb_set_user_profile_slug( $user_id );
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Fetch Activity for the suspend user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $id Activity id.
+	 *
+	 * @return array|mixed|object|stdClass|null
+	 */
+	private function bb_fetch_moderated_activity( $id ) {
+		global $wpdb, $bp;
+		static $cache = array();
+
+		$key = 'bb_activity_' . $id;
+		if ( isset( $cache[ $key ] ) ) {
+			return $cache[ $key ];
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$activity = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->members->table_name_last_activity} WHERE id = %d", $id ) );
+
+		if ( ! empty( $activity ) ) {
+			$cache[ $key ] = $activity;
+		}
+
+		return $activity;
+	}
+
+	/**
+	 * Setup unique hash URL for suspended member.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $domain        Domain for the passed user.
+	 * @param int    $user_id       ID of the passed user.
+	 *
+	 * @return string
+	 */
+	public function bb_setup_hash_domain_url( $domain, $user_id ) {
+		$username = bb_core_get_user_slug( $user_id );
+		if ( empty( $username ) ) {
+			$username = bb_set_user_profile_slug( $user_id );
+		}
+
+		if ( bp_is_username_compatibility_mode() ) {
+			$username = rawurlencode( $username );
+		}
+
+		$after_domain = bp_core_enable_root_profiles() ? $username : bp_get_members_root_slug() . '/' . $username;
+		$domain       = trailingslashit( bp_get_root_domain() . '/' . $after_domain );
+
+		return $domain;
 	}
 }

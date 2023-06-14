@@ -895,7 +895,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	$all_notifications = array();
 
 	// Enabled default notification from backend.
-	$default_by_admin = array();
+	$settings_by_admin = array();
 
 	if ( empty( $preferences ) ) {
 		return;
@@ -947,12 +947,12 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 				$admin_excluded_actions = array_merge( $admin_excluded_actions, $all_actions[ $key . '_' . $type ] );
 			}
 			if ( isset( $types[ $type ] ) ) {
-				$default_by_admin[ $key . '_' . $type ] = 'yes';
+				$settings_by_admin[ $key . '_' . $type ] = $types[ $type ];
 			}
 		}
 	}
 
-	$notifications          = bp_parse_args( $default_by_admin, $all_notifications );
+	$notifications          = bp_parse_args( $settings_by_admin, $all_notifications );
 	$excluded_actions       = array();
 	$notifications_type_key = 'enable_notification';
 	if ( in_array( $type, array( 'web', 'app' ), true ) ) {
@@ -1111,7 +1111,7 @@ function bb_notification_avatar() {
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
+			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
 				echo bp_core_fetch_avatar(
 					array(
@@ -1121,7 +1121,10 @@ function bb_notification_avatar() {
 				);
 
 				// Get the small icon for the notification which will print beside the avatar.
-				echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
+				$notification_icon = bb_notification_small_icon( $component_action, true, $notification );
+				if ( ! empty( $notification_icon ) ) {
+					echo wp_kses_post( $notification_icon );
+				}
 				?>
 				<?php ( isset( $user ) ? bb_user_presence_html( $user->ID ) : '' ); ?>
 			</a>
@@ -1321,7 +1324,9 @@ function bb_get_notification_conditional_icon( $notification ) {
 	switch ( $notification->component_action ) {
 		case 'bb_new_mention':
 			$notification_type = bp_notifications_get_meta( $notification->id, 'type', true );
-			if ( 'activity_comment' === $notification_type ) {
+			if ( ! empty( $notification->component_name ) && 'core' === $notification->component_name ) {
+				$icon_class = 'bb-icon-f bb-icon-comment-square-dots';
+			} elseif ( 'activity_comment' === $notification_type ) {
 				$icon_class = 'bb-icon-f bb-icon-comment-activity';
 			} elseif ( 'activity_post' === $notification_type ) {
 				$icon_class = 'bb-icon-f bb-icon-activity';
@@ -1706,25 +1711,57 @@ function bb_notification_after_save_meta( $notification ) {
 				array(
 					'bb_activity_following_post',
 					'bb_groups_subscribed_activity',
+					'bb_activity_comment',
 				),
 				true
 			)
 		) {
-			$activity  = new BP_Activity_Activity( $notification->item_id );
+			$activity = new BP_Activity_Activity( $notification->item_id );
+
+			if ( ! empty( $activity ) && empty( $activity->content ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
+				add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
+				$activity->content = bp_blogs_activity_comment_content_with_read_more( '', $activity );
+				add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_true' );
+			}
+
 			$usernames = ! empty( $activity ) && ! empty( $activity->content ) && bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
+		} elseif (
+			'core' === $notification->component_name &&
+			in_array(
+				$notification->component_action,
+				array(
+					'bb_posts_new_comment_reply',
+				),
+				true
+			)
+		) {
+			$comment   = get_comment( $notification->item_id );
+			$usernames = ! empty( $comment ) && ! empty( $comment->comment_content ) ? bp_find_mentions_by_at_sign( array(), $comment->comment_content ) : array();
 		} elseif (
 			bp_is_active( 'forums' ) &&
 			in_array(
 				$notification->component_action,
 				array(
 					'bb_groups_subscribed_discussion',
+					'bb_forums_subscribed_reply',
+					'bb_forums_subscribed_discussion',
+					'bbp_new_reply',
 				),
 				true
 			)
 		) {
 			$content = '';
-			if ( 'bb_groups_subscribed_discussion' === $notification->component_action ) {
+			if (
+				'bb_groups_subscribed_discussion' === $notification->component_action ||
+				'bb_forums_subscribed_discussion' === $notification->component_action
+			) {
 				$content = bbp_kses_data( bbp_get_topic_content( $notification->item_id ) );
+			}
+			if (
+				'bb_forums_subscribed_reply' === $notification->component_action ||
+				'bbp_new_reply' === $notification->component_action
+			) {
+				$content = bbp_kses_data( bbp_get_reply_content( $notification->item_id ) );
 			}
 			$usernames = ! empty( $content ) ? bp_find_mentions_by_at_sign( array(), $content ) : array();
 		}
@@ -1771,6 +1808,9 @@ function bb_notification_manage_app_push_notification( $content, $component_name
 				'bb_activity_following_post',
 				'bb_groups_subscribed_activity',
 				'bb_groups_subscribed_discussion',
+				'bb_forums_subscribed_reply',
+				'bb_forums_subscribed_discussion',
+				'bbp_new_reply',
 			),
 			true
 		)
@@ -1816,28 +1856,37 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * @return bool
  */
 function bb_notification_is_read_only( $notification ) {
+	static $cache = array();
 	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
 	$allowed_component_action = array(
 		'bb_connections_request_accepted',
 		'bb_connections_new_request',
 	);
 
+	if ( empty( $notification->id ) ) {
+		return false;
+	}
+
+	$cache_key = 'bb_notification_is_read_only_' . $notification->id;
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
 	$retval = ! empty( $notification ) &&
 	(
 		(
-			(
 				! in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->secondary_item_id ) &&
 				bp_is_user_inactive( $notification->secondary_item_id )
-			) ||
-			(
+		) ||
+		(
 				in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->item_id ) &&
 				bp_is_user_inactive( $notification->item_id )
-			)
-			) ||
-			(
-				bp_is_active( 'moderation' ) &&
+		) ||
+		(
+			bp_is_active( 'moderation' ) &&
 			(
 				(
 					! in_array( $notification->component_action, $allowed_component_action, true ) &&
@@ -1857,7 +1906,11 @@ function bb_notification_is_read_only( $notification ) {
 		)
 	);
 
-	return (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
+	$retval = (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
+
+	$cache[ $cache_key ] = $retval;
+
+	return $retval;
 }
 
 /**
@@ -1930,7 +1983,7 @@ function bb_notification_read_for_moderated_members() {
 	}
 
 	global $bp, $wpdb;
-	$select_sql  = "SELECT DISTINCT id FROM {$bp->notifications->table_name}";
+	$select_sql  = "SELECT id FROM ( SELECT DISTINCT id FROM {$bp->notifications->table_name}";
 	$select_sql .= ' WHERE is_new = 1 AND user_id = ' . bp_loggedin_user_id();
 
 	$select_sql_where = array();
@@ -1942,7 +1995,7 @@ function bb_notification_read_for_moderated_members() {
 	}
 	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
 
-	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' )';
+	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' ) ) AS notifications';
 
 	$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ({$select_sql})";
 	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -2080,3 +2133,35 @@ function bb_notification_excluded_component_actions() {
 
 	return apply_filters( 'bb_notification_excluded_component_actions', $actions );
 }
+
+/**
+ * Function to add the notification for post new comment reply.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param int   $comment_id   The comment ID.
+ * @param int   $commenter_id Commenter ID.
+ * @param array $commentdata  Comment data.
+ */
+function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
+
+	// Specify the Notification type.
+	$component_action = 'bb_posts_new_comment_reply';
+	$parent_comment   = get_comment( $commentdata['comment_parent'] );
+
+	add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+	bp_notifications_add_notification(
+		array(
+			'user_id'           => (int) $parent_comment->user_id,
+			'item_id'           => $comment_id,
+			'secondary_item_id' => $commenter_id,
+			'component_name'    => 'core',
+			'component_action'  => $component_action,
+			'date_notified'     => bp_core_current_time(),
+			'is_new'            => 1,
+		)
+	);
+	remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+
+}
+add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );

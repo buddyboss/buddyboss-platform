@@ -926,7 +926,9 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		// Added options for selectbox, multiselectbox, radio and checkbox fields.
 		if ( 'selectbox' === $field->type || 'multiselectbox' === $field->type || 'radio' === $field->type || 'checkbox' === $field->type ) {
+			add_filter( 'bp_xprofile_field_get_children', array( $this, 'bb_rest_xprofile_field_get_children' ), 20, 1 );
 			$data['options'] = $field->get_children();
+			remove_filter( 'bp_xprofile_field_get_children', array( $this, 'bb_rest_xprofile_field_get_children' ), 20, 1 );
 		}
 
 		if ( 'gender' === $field->type ) {
@@ -1104,7 +1106,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 
 			if ( 'telephone' === $profile_field->type ) {
-				$value = wp_strip_all_tags( html_entity_decode( $value ) );
+				$value = wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 			}
 		}
 
@@ -1133,13 +1135,17 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 
 			if ( 'telephone' === $profile_field->type ) {
-				$value = wp_strip_all_tags( html_entity_decode( $value ) );
+				$value = wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 			}
 		}
 
 		$unserialized_value = maybe_unserialize( $value );
 		if ( ! is_array( $unserialized_value ) ) {
-			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value );
+			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value, ENT_QUOTES );
+		} elseif ( ! empty( $unserialized_value ) && is_array( $unserialized_value ) ) {
+			foreach ( $unserialized_value as $k => $v ) {
+				$unserialized_value[ $k ] = wp_specialchars_decode( $v, ENT_QUOTES );
+			}
 		}
 
 		return $unserialized_value;
@@ -1508,9 +1514,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$member_type = bp_get_member_type( ! empty( $request['user_id'] ) ? (int) $request['user_id'] : get_current_user_id() );
+		$member_type   = bp_get_member_type( ! empty( $request['user_id'] ) ? (int) $request['user_id'] : get_current_user_id() );
+		$post_selected = 0;
 		if ( '' !== $member_type ) {
-			$post_selected = bp_member_type_post_by_type( $member_type );
+			$post_selected = (int) bp_member_type_post_by_type( $member_type );
 		}
 
 		$options = array();
@@ -1519,7 +1526,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
 				$key     = get_post_meta( $post->ID, '_bp_member_type_key', true );
-				if ( '' === $enabled || '1' === $enabled || ! empty( $request['show_all'] ) ) {
+				if ( '' === $enabled || '1' === $enabled || $post_selected === $post->ID || ! empty( $request['show_all'] ) ) {
 					$options[] = array(
 						'id'                => $post->ID,
 						'group_id'          => $field->group_id,
@@ -1907,5 +1914,27 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$response->set_data( $data );
 
 		return $response;
+	}
+
+	/**
+	 * Filters the found children for a field.
+	 *
+	 * @param object $children Found children for a field.
+	 *
+	 * @return mixed
+	 */
+	public function bb_rest_xprofile_field_get_children( $children ) {
+
+		if ( empty( $children ) ) {
+			return $children;
+		}
+
+		foreach ( $children as $k => $option ) {
+			if ( ! empty( $option->name ) ) {
+				$option->name = stripslashes_deep( $option->name );
+			}
+		}
+
+		return $children;
 	}
 }

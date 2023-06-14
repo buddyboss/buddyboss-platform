@@ -179,6 +179,13 @@ class BP_Friends_Friendship {
 		 */
 		do_action_ref_array( 'friends_friendship_before_save', array( &$this ) );
 
+		// friend user ID is required
+		// this allows plugins to bail out of saving a follow relationship
+		// use hooks above to redeclare 'friend_user_id' so it is empty if you need to bail
+		if ( empty( $this->friend_user_id ) ) {
+			return false;
+		}
+
 		// Update.
 		if ( ! empty( $this->id ) ) {
 			$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->friends->table_name} SET initiator_user_id = %d, friend_user_id = %d, is_confirmed = %d, is_limited = %d, date_created = %s WHERE id = %d", $this->initiator_user_id, $this->friend_user_id, $this->is_confirmed, $this->is_limited, $this->date_created, $this->id ) );

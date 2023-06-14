@@ -187,7 +187,9 @@ function bbp_admin_tools_feedback( $message, $class = false ) {
 
 	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
 	$message = str_replace( "'", "\'", $message );
-	$lambda  = create_function( '', "echo '$message';" );
+	$lambda  = function () use ( $message ) {
+		echo $message;
+	};
 
 	add_action( 'admin_notices', $lambda );
 
@@ -225,6 +227,7 @@ function bbp_admin_repair_list() {
 		90  => array( 'bbp-wp-role-restore', __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' ),
 		95  => array( 'bbp-migrate-buddyboss-forum-topic-subscription', __( 'Migrate BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
 		100 => array( 'bbp-migrate-bbpress-forum-topic-subscription', __( 'Migrate BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
+		105 => array( 'bb-migrate-bbpress-user-topic-favorites', __( 'Migrate members discussions \'marked as favorites\' data to improve performance', 'buddyboss' ), 'bb_migrate_user_topic_favorites' ),
 	);
 	ksort( $repair_list );
 
@@ -2029,6 +2032,8 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		$status = bb_subscriptions_migrate_users_forum_topic();
 	} elseif ( 'bbp-migrate-bbpress-forum-topic-subscription' === $type ) {
 		$status = bb_subscriptions_migrate_bbpress_users_forum_topic( false, $site_id );
+	} elseif ( 'bb-migrate-bbpress-user-topic-favorites' === $type ) {
+		$status = bb_admin_upgrade_user_favorites( false, $site_id );
 	}
 
 	if ( is_multisite() && bp_is_network_activated() ) {
@@ -2042,3 +2047,127 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	}
 }
 add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bp_admin_forum_repair_tools_wrapper_function' );
+
+/**
+ * Migration to update user favorites to post meta table.
+ *
+ * @since BuddyBoss 2.3.4
+ *
+ * @param bool $is_background The current process is background or not.
+ * @param int  $blog_id       The blog ID to migrate for this blog.
+ *
+ * @return array|void An array of the status code and the message.
+ */
+function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
+	global $wpdb, $bp_background_updater;
+
+	if ( $is_background ) {
+		$offset = get_site_option( 'bb_upgrade_user_favorites_offset', 0 );
+	} else {
+		$offset = (int) filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
+		$offset = ! empty( $offset ) ? ( $offset - 1 ) : 0;
+	}
+
+	$results = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE um.meta_key = %s GROUP BY u.ID ORDER BY u.ID ASC LIMIT %d OFFSET %d", $wpdb->prefix . '_bbp_favorites', 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	if ( ! empty( $results ) ) {
+		$min_count = (int) apply_filters( 'bb_user_favorites_queue_min_count', 10 );
+
+		if ( $is_background ) {
+			$chunk_results = array_chunk( $results, $min_count );
+			if ( ! empty( $chunk_results ) ) {
+				foreach ( $chunk_results as $chunk_result ) {
+					$bp_background_updater->data(
+						array(
+							array(
+								'callback' => 'bb_migrate_users_topic_favorites',
+								'args'     => array( $chunk_result, $blog_id ),
+							),
+						)
+					);
+
+					$bp_background_updater->save();
+				}
+			}
+
+			$bp_background_updater->dispatch();
+		} else {
+			bb_migrate_users_topic_favorites( $results, $blog_id );
+			$offset ++;
+		}
+
+		// Update the offset.
+		$final_offset = $offset + count( $results );
+
+		if ( ! $is_background ) {
+			// The current process is in progress!
+			return array(
+				'status'  => 'running',
+				'offset'  => $final_offset,
+				'records' => sprintf(
+				/* translators: total members */
+					__( 'Copies %s favorites from user meta to topic meta.', 'buddyboss' ),
+					bp_core_number_format( $final_offset )
+				),
+			);
+		} else {
+			update_site_option( 'bb_upgrade_user_favorites_offset', $final_offset );
+			bb_admin_upgrade_user_favorites( $is_background, $blog_id );
+		}
+	} else {
+		delete_site_option( 'bb_upgrade_user_favorites_offset' );
+
+		if ( ! $is_background ) {
+			// All done!
+			return array(
+				'status'  => 1,
+				'message' => __( 'Copies favorites from user meta to topic meta&hellip; Complete!', 'buddyboss' ),
+			);
+		}
+	}
+}
+
+/**
+ * Upgrading user favorites to post meta table.
+ *
+ * @since BuddyBoss 2.3.4
+ *
+ * @param array $user_ids Array of user IDs.
+ * @param int   $blog_id  The blog ID to migrate for this blog.
+ *
+ * @return void
+ */
+function bb_migrate_users_topic_favorites( $user_ids, $blog_id ) {
+	global $wpdb;
+
+	$switch = false;
+	if ( is_multisite() && get_current_blog_id() !== $blog_id ) {
+		$switch = true;
+		switch_to_blog( $blog_id );
+	}
+
+	if ( ! empty( $user_ids ) ) {
+		foreach ( $user_ids as $user_id ) {
+
+			$new_favorite_key = '_bbp_favorite';
+			$favorite_key     = $wpdb->prefix . '_bbp_favorites';
+			$favorite_topics  = get_user_meta( $user_id, $favorite_key, true );
+			$favorite_topics  = array_filter( wp_parse_id_list( $favorite_topics ) );
+			if ( ! empty( $favorite_topics ) ) {
+				foreach ( $favorite_topics as $post_id ) {
+					// Skip if already exists.
+					if ( $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = %s AND meta_value = %s", $post_id, $new_favorite_key, $user_id ) ) ) { // phpcs:ignore
+						continue;
+					}
+
+					// Add the post meta.
+					add_post_meta( $post_id, $new_favorite_key, $user_id, false );
+				}
+			}
+		}
+	}
+
+	if ( $switch ) {
+		restore_current_blog();
+	}
+}

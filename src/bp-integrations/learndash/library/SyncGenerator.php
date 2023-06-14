@@ -679,7 +679,7 @@ class SyncGenerator {
 
 		$this->bpGroupId = groups_create_group(
 			array(
-				'name'      => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
+				'name'      => $ldGroup->post_title ?: sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId ),
 				'status'    => $settings->get( 'learndash.default_bp_privacy' ),
 				'parent_id' => $bp_parent_group_id,
 			)
@@ -743,7 +743,13 @@ class SyncGenerator {
 	 */
 	protected function addUserToBpGroup( $userId, $type, $remove ) {
 		$groupMember = new BP_Groups_Member( $userId, $this->bpGroupId );
-		$syncTo      = $this->getLdSyncToRole( $type );
+
+		$syncTo = $this->getLdSyncToRole( $type );
+
+		// ignore moderator in syncing as there's no moderator in learndash.
+		if ( 1 === $groupMember->is_mod && 'admin' === $syncTo ) {
+			return false;
+		}
 
 		if ( $remove ) {
 			if ( bp_is_active( 'messages' ) ) {
@@ -874,8 +880,8 @@ class SyncGenerator {
 				array(
 					'group_id'    => $groupId,
 					'creator_id'  => $ldGroup->post_author,
-					'name'        => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
-					'status'      => $settings->get( 'learndash.default_bp_privacy' ),
+					'name'        => $ldGroup->post_title ?: sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId ),
+					//'status'      => $settings->get( 'learndash.default_bp_privacy' ),
 					'description' => $ldGroup->post_content,
 					'slug'        => $ldGroup->post_name,
 					'parent_id'   => $bp_parent_group_id,

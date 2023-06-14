@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
+#[\AllowDynamicProperties]
 class BP_Groups_Group {
 
 	/**
@@ -1208,7 +1209,15 @@ class BP_Groups_Group {
 		) {
 			// Exclude all other hidden group.
 			$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", ( ! empty( $r['user_id'] ) ? $r['user_id'] : bp_loggedin_user_id() ) );
-		} elseif ( empty( $r['show_hidden'] ) || ( ! empty( $r['show_hidden'] ) && ! is_user_logged_in() ) ) {
+		} elseif (
+			(
+				empty( $r['show_hidden'] ) ||
+				(
+					! empty( $r['show_hidden'] ) &&
+					! is_user_logged_in()
+				)
+			) && ! bb_is_wp_cli()
+		) {
 			$where_conditions['hidden'] = "g.status != 'hidden'";
 		}
 
@@ -1828,7 +1837,38 @@ class BP_Groups_Group {
 		$record    = wp_cache_get( $cache_key, 'bp_groups' );
 
 		if ( false === $record ) {
-			$record = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 1 AND is_banned = 0", $group_id ) );
+			$select_sql = "SELECT COUNT(m.id) FROM {$bp->groups->table_name_members} m";
+			$join_sql   = '';
+
+			// Where conditions.
+			$where_conditions = array();
+			$where_conditions['where'] = "m.group_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
+
+			/**
+			 * Filters the MySQL WHERE conditions for the group members count.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $ud_name          moderation type
+			 */
+			$where_conditions = apply_filters( 'bb_group_member_count_where_sql', $where_conditions, 'user_id' );
+
+			// Join the where conditions together.
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			/**
+			 * Filters the MySQL JOIN conditions for the group members count.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $join_sql Current conditions for MySQL JOIN statement.
+			 * @param string $ud_name  moderation type
+			 */
+			$join_sql = apply_filters( 'bb_group_member_count_join_sql', $join_sql, 'user_id' );
+
+			$sql    = $wpdb->prepare( "{$select_sql} {$join_sql} {$where_sql}", $group_id );
+			$record = $wpdb->get_var( $sql );
 			wp_cache_set( $cache_key, $record, 'bp_groups' );
 		}
 
