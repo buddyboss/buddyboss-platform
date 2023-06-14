@@ -81,7 +81,7 @@ class BP_Video {
 	/**
 	 * Message ID of the video item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.3.60
 	 * @var int
 	 */
 	var $message_id;

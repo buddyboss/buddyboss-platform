@@ -2865,7 +2865,7 @@ function bb_update_to_2_3_50() {
  * Migration to add index and new column to media tables.
  * Save the default notification types.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @return void
  */
@@ -2922,7 +2922,7 @@ function bb_update_to_2_3_60() {
 /**
  * Function to update group member count with background updater.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  */
 function bb_background_update_group_member_count() {
 	global $wpdb, $bp_background_updater;
@@ -2961,7 +2961,7 @@ function bb_background_update_group_member_count() {
 /**
  * Schedule event for message media and document migration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param array $table_exists List of tables.
  * @param int   $paged        Page number.
@@ -3008,7 +3008,7 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 /**
  * Message media and document migration callback.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.3.60
  *
  * @param array $table_exists List of tables.
  * @param array $results      Results from message meta table.
