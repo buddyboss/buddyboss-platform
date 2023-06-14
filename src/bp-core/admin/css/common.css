@@ -3525,3 +3525,35 @@ table.moderations .column-member img {
   padding: 7px 12px;
   text-align: center;
 }
+
+.bp-admin-card .password-toggle {
+  position: relative;
+  display: inline-block;
+  width: 50%;
+}
+
+.bp-admin-card .password-toggle > input {
+  padding-right: 30px;
+  width: 100% !important;
+}
+
+.bp-admin-card .password-toggle .bb-hide-pw {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 30px;
+  border: 0;
+  padding: 0;
+  background: none !important;
+  box-shadow: none;
+}
+
+.bp-admin-card .password-toggle .bb-hide-pw .bb-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.bp-admin-card .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
+  content: "\ee6a";
+}
