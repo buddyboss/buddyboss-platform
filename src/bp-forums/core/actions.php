@@ -565,31 +565,17 @@ function bb_post_topic_reply_draft() {
  * @since BuddyBoss 2.2.1
  */
 function bb_forum_add_content_popup() {
-	global $post;
+	global $template_forum_ids;
 
-	$has_bbp_single_forum_shortcode = false;
-	if ( has_shortcode( $post->post_content, 'bbp-single-forum' ) ) {
-		$has_bbp_single_forum_shortcode = true;
-	}
-
-	if ( ! ( bbp_is_single_forum() ) && ! $has_bbp_single_forum_shortcode ) {
+	if ( empty( $template_forum_ids ) ) {
 		return;
 	}
 
-	if ( $has_bbp_single_forum_shortcode ) {
-		$pattern = '/\[bbp-single-forum\s+id=(\d+)\]/';
-		preg_match_all( $pattern, $post->post_content, $matches );
-
-		$forum_ids = $matches[1]; // Extracted forum IDs
-	} else {
-		$forum_ids[] = bbp_get_forum_id();
-	}
-
-	// Output the extracted IDs
-	foreach ( $forum_ids as $forum_id ) {
+	// Output the extracted IDs.
+	foreach ( $template_forum_ids as $forum_id ) {
 	?>
 		<!-- Forum description popup -->
-		<div class="bb-action-popup" id="single-forum-description-popup-<?php echo $forum_id;?>" style="display: none">
+		<div class="bb-action-popup" id="single-forum-description-popup-<?php echo esc_attr( $forum_id ); ?>" style="display: none">
 			<transition name="modal">
 				<div class="modal-mask bb-white bbm-model-wrap">
 					<div class="modal-wrapper">
@@ -610,4 +596,6 @@ function bb_forum_add_content_popup() {
 		</div> <!-- .bb-action-popup -->
 	<?php
 	}
+
+	unset( $template_forum_ids );
 }
