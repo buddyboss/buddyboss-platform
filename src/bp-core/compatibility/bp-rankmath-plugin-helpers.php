@@ -26,13 +26,13 @@ class BP_RankMath_Title implements IPaper {
 	 */
 	public function title( $title = '' ) {
 		if ( bp_is_user() && bp_is_current_component( 'xprofile' ) ) {
-			$title = get_user_meta( bp_displayed_user_id(), 'first_name', true );
-			if ( empty( $title ) ) {
-				$title = get_user_meta( bp_displayed_user_id(), 'nickname', true );
+			$custom_title = get_user_meta( bp_displayed_user_id(), 'first_name', true );
+			if ( empty( $custom_title ) ) {
+				$custom_title = get_user_meta( bp_displayed_user_id(), 'nickname', true );
 			}
 		} else {
-			$action = bp_current_action();
-			$title  = ! empty( $title ) ? $title : get_the_title();
+			$action       = bp_current_action();
+			$custom_title = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : get_the_title();
 			if ( 'admin' === $action ) {
 				$action = esc_html__( 'Manage', 'buddyboss' );
 			}
@@ -42,11 +42,11 @@ class BP_RankMath_Title implements IPaper {
 			}
 
 			if ( isset( $action ) && ! empty( $action ) ) {
-				$title = ucfirst( $action ) . ' - ' . $title;
+				$custom_title = ucfirst( $action ) . ' - ' . ( ! empty( $title ) ? $title : $custom_title . ' - ' . bp_get_site_name() );
 			}
 		}
 
-		return $title;
+		return $custom_title;
 	}
 
 	/**
