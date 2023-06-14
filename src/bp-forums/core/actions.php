@@ -571,6 +571,8 @@ function bb_forum_add_content_popup() {
 		return;
 	}
 
+	$template_forum_ids = array_unique( $template_forum_ids );
+
 	// Output the extracted IDs.
 	foreach ( $template_forum_ids as $forum_id ) {
 	?>
@@ -587,7 +589,7 @@ function bb_forum_add_content_popup() {
 								</a>
 							</header>
 							<div class="bb-action-popup-content">
-								<?php bbp_forum_content( $forum_id ); ?>
+								<?php echo wpautop( wp_kses_post( bbp_get_forum_content( $forum_id ) ) ); ?>
 							</div>
 						</div>
 					</div>
