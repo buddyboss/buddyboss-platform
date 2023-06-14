@@ -4163,6 +4163,11 @@ function bbp_get_form_topic_content() {
 	if ( bbp_is_post_request() && isset( $_POST['bbp_topic_content'] ) ) {
 		$topic_content = stripslashes( $_POST['bbp_topic_content'] );
 
+		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
+		if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $topic_content ) ) {
+			$topic_content = '';
+		}
+
 		// Get edit data
 	} elseif ( bbp_is_topic_edit() ) {
 		$topic_content = bbp_get_global_post_field( 'post_content', 'raw' );
