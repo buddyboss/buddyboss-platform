@@ -147,11 +147,11 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			}
 
 			// Remove is blocked members replies from widget.
-			$where['moderation_widget_forums'] = '( '. $wpdb->prefix . 'posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+			$where['moderation_widget_forums'] = '( ' . $wpdb->prefix . 'posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
 		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
-			$where['moderation_widget_replies'] = '( '. $wpdb->prefix . 'posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+			$where['moderation_widget_replies'] = '( ' . $wpdb->prefix . 'posts.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
 		return $where;
