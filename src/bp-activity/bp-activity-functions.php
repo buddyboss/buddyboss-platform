@@ -2082,6 +2082,7 @@ function bp_activity_comment_get( $args = '' ) {
 			'in'                => false,        // Comma-separated list or array of activity IDs to which you
 											 // want to limit the query.
 			'spam'              => 'ham_only',   // 'ham_only' (default), 'spam_only' or 'all'.
+			'show_hidden'       => false,        // Show activity items that are hidden site-wide?
 			'update_meta_cache' => true,
 			'count_total'       => false,
 
@@ -2114,6 +2115,7 @@ function bp_activity_comment_get( $args = '' ) {
 			'filter_query'      => $r['filter_query'],
 			'filter'            => $r['filter'],
 			'display_comments'  => $r['display_comments'],
+			'show_hidden'       => $r['show_hidden'],
 			'exclude'           => $r['exclude'],
 			'in'                => $r['in'],
 			'spam'              => $r['spam'],
@@ -6135,6 +6137,9 @@ function bb_activity_new_comment( $args = '' ) {
 		$privacy = 'public';
 	}
 
+	// Check to see if the parent activity is hidden, and if so, hide this comment publicly.
+	$is_hidden = $activity->hide_sitewide ? 1 : 0;
+
 	/**
 	 * Filters the content of a new comment.
 	 *
@@ -6154,6 +6159,7 @@ function bb_activity_new_comment( $args = '' ) {
 			'user_id'        => $r['user_id'],
 			'activity_id'    => $activity_id,
 			'comment_parent' => $r['parent_id'],
+			'hide_sitewide'  => $is_hidden,
 			'privacy'        => $privacy,
 			'error_type'     => $r['error_type'],
 		)
@@ -6252,6 +6258,7 @@ function bb_comment_activity_add( $args = '' ) {
 			'activity_id'    => false, // Optional: The ID of the specific item being recorded, e.g. a blog_id.
 			'comment_parent' => false, // Optional: A second ID used to further filter e.g. a comment_id.
 			'recorded_time'  => bp_core_current_time(), // The GMT time that this activity was recorded.
+			'hide_sitewide'  => false, // Should this be hidden on the sitewide activity feed?
 			'is_spam'        => false, // Is this activity item to be marked as spam?
 			'privacy'        => 'public', // privacy of the activity
 			'error_type'     => 'bool',
@@ -6267,6 +6274,7 @@ function bb_comment_activity_add( $args = '' ) {
 	$activity_comment->activity_id    = $r['activity_id'];
 	$activity_comment->comment_parent = $r['comment_parent'];
 	$activity_comment->date_recorded  = empty( $r['id'] ) ? $r['recorded_time'] : $activity_comment->date_recorded;
+	$activity_comment->hide_sitewide  = $r['hide_sitewide'];
 	$activity_comment->is_spam        = $r['is_spam'];
 	$activity_comment->privacy        = $r['privacy'];
 	$activity_comment->error_type     = $r['error_type'];

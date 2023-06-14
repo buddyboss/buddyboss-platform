@@ -221,10 +221,6 @@ class BP_Activity_Activity {
 			$row->action = '';
 		}
 
-		if ( ! property_exists( $row, 'hide_sitewide' ) ) {
-			$row->hide_sitewide = '0';
-		}
-
 		if ( ! property_exists( $row, 'type' ) ) {
 			$row->type = 'activity_comment';
 		}
@@ -388,6 +384,7 @@ class BP_Activity_Activity {
 		$this->content        = apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) );
 		$this->date_recorded  = apply_filters_ref_array( 'bp_activity_date_recorded_before_save', array( $this->date_recorded, &$this ) );
 		$this->mptt_left      = apply_filters_ref_array( 'bp_activity_mptt_left_before_save', array( $this->mptt_left, &$this ) );
+		$this->hide_sitewide  = apply_filters_ref_array( 'bp_activity_hide_sitewide_before_save', array( $this->hide_sitewide, &$this ) );
 		$this->mptt_right     = apply_filters_ref_array( 'bp_activity_mptt_right_before_save', array( $this->mptt_right, &$this ) );
 		$this->is_spam        = apply_filters_ref_array( 'bp_activity_is_spam_before_save', array( $this->is_spam, &$this ) );
 		$this->privacy        = apply_filters_ref_array( 'bp_activity_privacy_before_save', array( $this->privacy, &$this ) );
@@ -409,9 +406,9 @@ class BP_Activity_Activity {
 
 		// If we have an existing ID, update the activity item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name_comment} SET user_id = %d, content = %s, date_recorded = %s, activity_id = %d, comment_parent = %d, is_spam = %d, privacy = %s WHERE id = %d", $this->user_id, $this->content, $this->date_recorded, $this->activity_id, $this->comment_parent, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name_comment} SET user_id = %d, content = %s, date_recorded = %s, activity_id = %d, comment_parent = %d, is_spam = %d, privacy = %s, hide_sitewide = %d WHERE id = %d", $this->user_id, $this->content, $this->date_recorded, $this->activity_id, $this->comment_parent, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->hide_sitewide, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name_comment} ( user_id, content, date_recorded, activity_id, comment_parent, is_spam, privacy ) VALUES ( %d, %s, %s, %d, %d, %d, %s )", $this->user_id, $this->content, $this->date_recorded, $this->activity_id, $this->comment_parent, $this->is_spam, $this->privacy );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name_comment} ( user_id, content, date_recorded, activity_id, comment_parent, is_spam, privacy, hide_sitewide ) VALUES ( %d, %s, %s, %d, %d, %d, %s, %d )", $this->user_id, $this->content, $this->date_recorded, $this->activity_id, $this->comment_parent, $this->is_spam, $this->privacy, $this->hide_sitewide );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -1059,7 +1056,7 @@ class BP_Activity_Activity {
 				$activity->mptt_left         = (int) $activity->mptt_left;
 				$activity->type              = 'activity_comment';
 				$activity->component         = 'activity';
-				$activity->hide_sitewide     = 0;
+				$activity->hide_sitewide     = (int) $activity->hide_sitewide;
 				$activity->mptt_right        = (int) $activity->mptt_right;
 				$activity->is_spam           = (int) $activity->is_spam;
 			}
@@ -1979,9 +1976,9 @@ class BP_Activity_Activity {
 		if ( 1 === $left ) {
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET mptt_left = %d, mptt_right = %d WHERE id = %d", $left, $right, $parent_id ) );
 		} else {
-			if ( apply_filters( 'bb_activity_legacy_comment', true ) ) {
-				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET mptt_left = %d, mptt_right = %d WHERE type = 'activity_comment' AND id = %d", $left, $right, $parent_id ) );
-			}
+//			if ( apply_filters( 'bb_activity_legacy_comment', true ) ) {
+//				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET mptt_left = %d, mptt_right = %d WHERE type = 'activity_comment' AND id = %d", $left, $right, $parent_id ) );
+//			}
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->activity->table_name_comment} SET mptt_left = %d, mptt_right = %d WHERE id = %d", $left, $right, $parent_id ) );
 		}
 
